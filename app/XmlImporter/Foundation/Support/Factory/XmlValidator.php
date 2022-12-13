@@ -4,6 +4,38 @@ declare(strict_types=1);
 
 namespace App\XmlImporter\Foundation\Support\Factory;
 
+use App\Http\Requests\Activity\Budget\BudgetRequest;
+use App\Http\Requests\Activity\CapitalSpend\CapitalSpendRequest;
+use App\Http\Requests\Activity\CollaborationType\CollaborationTypeRequest;
+use App\Http\Requests\Activity\Condition\ConditionRequest;
+use App\Http\Requests\Activity\ContactInfo\ContactInfoRequest;
+use App\Http\Requests\Activity\CountryBudgetItem\CountryBudgetItemRequest;
+use App\Http\Requests\Activity\Date\DateRequest;
+use App\Http\Requests\Activity\DefaultAidType\DefaultAidTypeRequest;
+use App\Http\Requests\Activity\DefaultFinanceType\DefaultFinanceTypeRequest;
+use App\Http\Requests\Activity\DefaultFlowType\DefaultFlowTypeRequest;
+use App\Http\Requests\Activity\DefaultTiedStatus\DefaultTiedStatusRequest;
+use App\Http\Requests\Activity\Description\DescriptionRequest;
+use App\Http\Requests\Activity\DocumentLink\DocumentLinkRequest;
+use App\Http\Requests\Activity\HumanitarianScope\HumanitarianScopeRequest;
+use App\Http\Requests\Activity\Indicator\IndicatorRequest;
+use App\Http\Requests\Activity\LegacyData\LegacyDataRequest;
+use App\Http\Requests\Activity\Location\LocationRequest;
+use App\Http\Requests\Activity\OtherIdentifier\OtherIdentifierRequest;
+use App\Http\Requests\Activity\ParticipatingOrganization\ParticipatingOrganizationRequest;
+use App\Http\Requests\Activity\Period\PeriodRequest;
+use App\Http\Requests\Activity\PlannedDisbursement\PlannedDisbursementRequest;
+use App\Http\Requests\Activity\PolicyMarker\PolicyMarkerRequest;
+use App\Http\Requests\Activity\RecipientCountry\RecipientCountryRequest;
+use App\Http\Requests\Activity\RecipientRegion\RecipientRegionRequest;
+use App\Http\Requests\Activity\RelatedActivity\RelatedActivityRequest;
+use App\Http\Requests\Activity\ReportingOrg\ReportingOrgRequest;
+use App\Http\Requests\Activity\Result\ResultRequest;
+use App\Http\Requests\Activity\Scope\ScopeRequest;
+use App\Http\Requests\Activity\Sector\SectorRequest;
+use App\Http\Requests\Activity\Status\StatusRequest;
+use App\Http\Requests\Activity\Tag\TagRequest;
+use App\Http\Requests\Activity\Transaction\TransactionRequest;
 use Illuminate\Support\Arr;
 
 class XmlValidator
@@ -33,18 +65,20 @@ class XmlValidator
     {
         $activity = $this->activity;
         $rules = [];
-        $rules['activity_status'] = sprintf('nullable|in:%s', $this->validCodeList('ActivityStatus'));
-        $rules['activity_scope'] = sprintf('in:%s', $this->validCodeList('ActivityScope'));
-        $rules['default_flow_type'] = sprintf('in:%s', $this->validCodeList('FlowType'));
-        $rules['collaboration_type'] = sprintf('in:%s', $this->validCodeList('CollaborationType'));
-        $rules['default_finance_type'] = sprintf('in:%s', $this->validCodeList('FinanceType'));
-        $rules['default_tied_status'] = sprintf('in:%s', $this->validCodeList('TiedStatus'));
-        $rules['capital_spend'] = 'numeric|max:100|min:0';
+
         $tempRules = [
-            $this->rulesForTitle($activity),
+            $this->rulesForActivityStatus($activity),
+            $this->rulesForActivityScope($activity),
+            $this->rulesForCollaborationType($activity),
+            $this->rulesForDefaultFlowType($activity),
+            $this->rulesForDefaultFinanceType($activity),
+            $this->rulesForDefaultTiedStatus($activity),
+            $this->rulesForCapitalSpend($activity),
+            // $this->rulesForTitle($activity),
             $this->rulesForDescription($activity),
             $this->rulesForOtherIdentifier($activity),
             $this->rulesForActivityDate($activity),
+            $this->rulesForDefaultAidType($activity),
             $this->rulesForContactInfo($activity),
             $this->rulesForParticipatingOrg($activity),
             $this->rulesForRecipientCountry($activity),
@@ -63,7 +97,6 @@ class XmlValidator
             $this->rulesForCondition($activity),
             $this->rulesForTransaction($activity),
             $this->rulesForResult($activity),
-            $this->rulesForDefaultAidType($activity),
             $this->rulesForReportingOrganization($activity),
         ];
 
@@ -85,23 +118,20 @@ class XmlValidator
     {
         $activity = $this->activity;
         $messages = [];
-        $messages['activity_status.required'] = trans('validation.required', ['attribute' => trans('element.activity_status')]);
-        $messages['activity_status.in'] = trans('validation.code_list', ['attribute' => trans('element.activity_status')]);
-        $messages['activity_scope.required'] = trans('validation.required', ['attribute' => trans('element.activity_scope')]);
-        $messages['activity_scope.in'] = trans('validation.code_list', ['attribute' => trans('element.activity_scope')]);
-        $messages['collaboration_type.in'] = trans('validation.code_list', ['attribute' => trans('element.collaboration_type')]);
-        $messages['default_flow_type.in'] = trans('validation.code_list', ['attribute' => trans('element.default_flow_type')]);
-        $messages['default_finance_type.in'] = trans('validation.code_list', ['attribute' => trans('element.default_finance_type')]);
-        $messages['default_tied_status.in'] = trans('validation.code_list', ['attribute' => trans('element.default_tied_status')]);
-        $messages['capital_spend.numeric'] = trans('validation.numeric', ['attribute' => trans('element.capital_spend')]);
-        $messages['capital_spend.max'] = trans('validation.max.numeric', ['attribute' => trans('element.capital_spend'), 'max' => 100]);
-        $messages['capital_spend.min'] = trans('validation.negative', ['attribute' => trans('element.capital_spend')]);
 
         $tempMessages = [
-            $this->messagesForTitle($activity),
+            $this->messagesForActivityStatus($activity),
+            $this->messagesForActivityScope($activity),
+            $this->messagesForCollaborationType($activity),
+            $this->messagesForDefaultFlowType($activity),
+            $this->messagesForDefaultFinanceType($activity),
+            $this->messagesForDefaultTiedStatus($activity),
+            $this->messagesForCapitalSpend($activity),
+            // $this->messagesForTitle($activity),
             $this->messagesForDescription($activity),
             $this->messagesForOtherIdentifier($activity),
             $this->messagesForActivityDate($activity),
+            $this->messagesForDefaultAidType($activity),
             $this->messagesForContactInfo($activity),
             $this->messagesForParticipatingOrg($activity),
             $this->messagesForRecipientCountry($activity),
@@ -112,7 +142,6 @@ class XmlValidator
             $this->messagesForCountryBudgetItems($activity),
             $this->messagesForHumanitarianScope($activity),
             $this->messagesForPolicyMarker($activity),
-            $this->messagesForDefaultAidType($activity),
             $this->messagesForBudget($activity),
             $this->messagesForPlannedDisbursement($activity),
             $this->messagesForDocumentLink($activity),
@@ -141,15 +170,192 @@ class XmlValidator
     }
 
     /**
-     * @param bool $shouldBeUnique
+     * @param bool $isDuplicate
+     * @param bool $duplicateTransaction
      *
      * @return array
      */
-    public function validateActivity(bool $shouldBeUnique = false): array
+    public function validateActivity(bool $isDuplicate, bool $duplicateTransaction): array
     {
         return $this->factory->initialize($this->activity, $this->rules(), $this->messages())
             ->passes()
-            ->withErrors($shouldBeUnique);
+            ->withErrors($isDuplicate, $duplicateTransaction);
+    }
+
+    public function getBaseRules($baseRules, $element, $data, $indexRequired = true): array
+    {
+        $rules = [];
+
+        if (!empty($data)) {
+            foreach ($data as $idx => $value) {
+                foreach ($baseRules as $elementName => $baseRule) {
+                    $fieldName = $indexRequired ? $element . '.' . $idx . '.' . $elementName : $element . '.' . $elementName;
+                    $rules[$fieldName] = $baseRule;
+                }
+            }
+        }
+
+        return $rules;
+    }
+
+    public function getBaseMessages($baseMessages, $element, $data, $indexRequired = true): array
+    {
+        $messages = [];
+
+        if (is_array($data)) {
+            foreach ($data as $idx => $value) {
+                foreach ($baseMessages as $elementName => $baseMessage) {
+                    $fieldName = $indexRequired ? $element . '.' . $idx . '.' . $elementName : $element . '.' . $elementName;
+                    $messages[$fieldName] = $baseMessage;
+                }
+            }
+        } else {
+            foreach ($baseMessages as $elementName => $baseMessage) {
+                $messages[$element . '.' . $elementName] = $baseMessage;
+            }
+        }
+
+        return $messages;
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function rulesForActivityStatus(array $activity): array
+    {
+        return (new StatusRequest())->rules(Arr::get($activity, 'activity_status'));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function messagesForActivityStatus(array $activity): array
+    {
+        return $this->getBaseMessages((new StatusRequest())->messages(), 'activity_status', Arr::get($activity, 'activity_status', ''));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function rulesForActivityScope(array $activity): array
+    {
+        return (new ScopeRequest())->rules(Arr::get($activity, 'activity_scope'));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function messagesForActivityScope(array $activity): array
+    {
+        return $this->getBaseMessages((new ScopeRequest())->messages(), 'activity_scope', Arr::get($activity, 'activity_scope', ''));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function rulesForCollaborationType(array $activity): array
+    {
+        return (new CollaborationTypeRequest())->rules(Arr::get($activity, 'collaboration_type'));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function messagesForCollaborationType(array $activity): array
+    {
+        return $this->getBaseMessages((new CollaborationTypeRequest())->messages(), 'collaboration_type', Arr::get($activity, 'collaboration_type', ''));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function rulesForDefaultFlowType(array $activity): array
+    {
+        return (new DefaultFlowTypeRequest())->rules(Arr::get($activity, 'default_flow_type'));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function messagesForDefaultFlowType(array $activity): array
+    {
+        return $this->getBaseMessages((new DefaultFlowTypeRequest())->messages(), 'default_flow_type', Arr::get($activity, 'default_flow_type', ''));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function rulesForDefaultFinanceType(array $activity): array
+    {
+        return (new DefaultFinanceTypeRequest())->rules(Arr::get($activity, 'default_finance_type'));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function messagesForDefaultFinanceType(array $activity): array
+    {
+        return $this->getBaseMessages((new DefaultFinanceTypeRequest())->messages(), 'default_finance_type', Arr::get($activity, 'default_finance_type', ''));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function rulesForDefaultTiedStatus(array $activity): array
+    {
+        return (new DefaultTiedStatusRequest())->rules(Arr::get($activity, 'default_tied_status'));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function messagesForDefaultTiedStatus(array $activity): array
+    {
+        return $this->getBaseMessages((new DefaultTiedStatusRequest())->messages(), 'default_tied_status', Arr::get($activity, 'default_tied_status', ''));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function rulesForCapitalSpend(array $activity): array
+    {
+        return (new CapitalSpendRequest())->rules(Arr::get($activity, 'capital_spend'));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function messagesForCapitalSpend(array $activity): array
+    {
+        return $this->getBaseMessages((new CapitalSpendRequest())->messages(), 'capital_spend', Arr::get($activity, 'capital_spend', ''));
     }
 
     /**
@@ -160,7 +366,7 @@ class XmlValidator
     protected function rulesForTitle(array $activity): array
     {
         $title = Arr::get($activity, 'title', []);
-        $rules['title'] = 'nullable';
+        $rules['title'] = 'nullable|unique_lang';
 
         return $rules;
     }
@@ -173,7 +379,6 @@ class XmlValidator
     protected function messagesForTitle(array $activity): array
     {
         $title = Arr::get($activity, 'title', []);
-        $messages['title.required'] = trans('validation.required', ['attribute' => trans('element.title')]);
         $messages['title.unique_lang'] = trans('validation.unique', ['attribute' => trans('element.language')]);
 
         foreach ($title as $narrativeIndex => $narrative) {
@@ -190,171 +395,48 @@ class XmlValidator
      * Rules for Description.
      *
      * @param array $activity
+     *
      * @return array
      */
     protected function rulesForDescription(array $activity): array
     {
-        $rules = [];
-        $descriptions = Arr::get($activity, 'description');
-        $rules['description'] = 'nullable';
-
-        foreach ($descriptions as $descriptionIndex => $description) {
-            $rules[sprintf('description.%s.type', $descriptionIndex)] = sprintf(
-                'nullable|in:%s',
-                $this->validCodeList('DescriptionType')
-            );
-
-            $tempRules = $this->factory->getRulesForNarrative(Arr::get($description, 'narrative', []), sprintf('description.%s', $descriptionIndex));
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
+        return (new DescriptionRequest())->getRulesForDescription(Arr::get($activity, 'description', []));
     }
 
     /**
      * Messages for Description.
      *
      * @param array $activity
+     *
      * @return array
      */
     protected function messagesForDescription(array $activity): array
     {
-        $messages = [];
-        $descriptions = Arr::get($activity, 'description');
-
-        $messages['description.required'] = trans('validation.required', ['attribute' => trans('element.description')]);
-
-        foreach ($descriptions as $descriptionIndex => $description) {
-            $messages[sprintf('description.%s.type.required', $descriptionIndex)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.description_type')]
-            );
-            $messages[sprintf('description.%s.type.in', $descriptionIndex)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.description_type')]
-            );
-
-            $tempMessages = $this->factory->getMessagesForNarrative(Arr::get($description, 'narrative', []), sprintf('description.%s', $descriptionIndex));
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
+        return (new DescriptionRequest())->getMessagesForDescription(Arr::get($activity, 'description', []));
     }
 
     /**
      * Rules for Other Identifier.
      *
      * @param array $activity
+     *
      * @return array
      */
     public function rulesForOtherIdentifier(array $activity): array
     {
-        $rules = [];
-        $otherIdentifiers = Arr::get($activity, 'other_identifier', []);
-
-        foreach ($otherIdentifiers as $otherIdentifierIndex => $otherIdentifier) {
-            $otherIdentifierBase = sprintf('other_identifier.%s', $otherIdentifierIndex);
-            $rules[sprintf('%s.reference', $otherIdentifierBase)] = 'required';
-            $rules[sprintf('%s.reference_type', $otherIdentifierBase)] = sprintf(
-                'required|in:%s',
-                $this->validCodeList('OtherIdentifierType')
-            );
-            $tempRules = $this->rulesForOwnerOrg(Arr::get($otherIdentifier, 'owner_org', []), $otherIdentifierBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
+        return (new OtherIdentifierRequest())->getRulesForOtherIdentifier(Arr::get($activity, 'other_identifier', []));
     }
 
     /**
      * Messages for Other Identifier.
      *
      * @param array $activity
+     *
      * @return array
      */
     public function messagesForOtherIdentifier(array $activity): array
     {
-        $messages = [];
-        $otherIdentifiers = Arr::get($activity, 'other_identifier', []);
-
-        foreach ($otherIdentifiers as $otherIdentifierIndex => $otherIdentifier) {
-            $otherIdentifierBase = sprintf('other_identifier.%s', $otherIdentifierIndex);
-            $messages[sprintf('%s.reference.required', $otherIdentifierBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.reference')]
-            );
-            $messages[sprintf('%s.reference_type.required', $otherIdentifierBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.type')]
-            );
-            $messages[sprintf('%s.type.in', $otherIdentifierBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.type')]
-            );
-            $tempMessages = $this->messagesForOwnerOrg(Arr::get($otherIdentifier, 'owner_org', []), $otherIdentifierBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * Rules for Owner Organization.
-     *
-     * @param $ownerOrgData
-     * @param $otherIdentifierBase
-     * @return array
-     */
-    public function rulesForOwnerOrg($ownerOrgData, $otherIdentifierBase): array
-    {
-        $rules = [];
-
-        foreach ($ownerOrgData as $ownerOrgIndex => $ownerOrg) {
-            $ownerOrgBase = sprintf('%s.owner_org.%s', $otherIdentifierBase, $ownerOrgIndex);
-            $tempRules = $this->factory->getRulesForNarrative(Arr::get($ownerOrg, 'narrative', []), $ownerOrgBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * Messages for Owner Organization.
-     *
-     * @param $ownerOrgData
-     * @param $otherIdentifierBase
-     * @return array
-     */
-    public function messagesForOwnerOrg($ownerOrgData, $otherIdentifierBase): array
-    {
-        $messages = [];
-
-        foreach ($ownerOrgData as $ownerOrgIndex => $ownerOrg) {
-            $ownerOrgBase = sprintf('%s.owner_org.%s', $otherIdentifierBase, $ownerOrgIndex);
-
-            $tempMessages = $this->factory->getMessagesForNarrative($ownerOrg['narrative'], $ownerOrgBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
+        return (new OtherIdentifierRequest())->getMessagesForOtherIdentifier(Arr::get($activity, 'other_identifier', []));
     }
 
     /**
@@ -365,25 +447,7 @@ class XmlValidator
      */
     protected function rulesForActivityDate(array $activity): array
     {
-        $rules = [];
-        $activityDates = Arr::get($activity, 'activity_date', []);
-        $rules['activity_date'] = 'required|start_date_required|start_end_date';
-
-        foreach ($activityDates as $activityDateIndex => $activityDate) {
-            $activityDateBase = sprintf('activity_date.%s', $activityDateIndex);
-            $rules[sprintf('%s.type', $activityDateBase)] = sprintf(
-                'required|in:%s',
-                $this->validCodeList('ActivityDateType')
-            );
-            $rules[sprintf('%s.date', $activityDateBase)] = 'date|actual_date|nullable';
-            $tempRules = $this->factory->getRulesForNarrative($activityDate['narrative'], $activityDateBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
+        return (new DateRequest())->getRulesForDate(Arr::get($activity, 'activity_date', []));
     }
 
     /**
@@ -394,50 +458,7 @@ class XmlValidator
      */
     protected function messagesForActivityDate(array $activity): array
     {
-        $activityDates = Arr::get($activity, 'activity_date', []);
-
-        $messages = [
-            'activity_date.required' => trans('validation.required', ['attribute' => trans('element.activity_date')]),
-            'activity_date.start_date_required' => trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.actual_start_date') . ' ' . trans('global.or') . ' ' . trans('elementForm.planned_start_date')]
-            ),
-            'activity_date.start_end_date' => trans(
-                'validation.before',
-                [
-                    'attribute' => trans('elementForm.actual_start_date') . ' ' . trans('global.or') . ' ' . trans('elementForm.planned_start_date'),
-                    'date' => trans('elementForm.actual_end_date') . ' ' . trans('global.or') . ' ' . trans('elementForm.planned_end_date'),
-                ]
-            ),
-        ];
-
-        foreach ($activityDates as $activityDateIndex => $activityDate) {
-            $activityDateBase = sprintf('activity_date.%s', $activityDateIndex);
-            $messages[sprintf('%s.date.required', $activityDateBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.date')]
-            );
-            $messages[sprintf('%s.date.actual_date', $activityDateBase)] = trans('validation.actual_date');
-            $messages[sprintf('%s.date.date', $activityDateBase)] = trans(
-                'validation.date',
-                ['attribute' => trans('element.activity_date')]
-            );
-            $messages[sprintf('%s.type.required', $activityDateBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.type')]
-            );
-            $messages[sprintf('%s.type.in', $activityDateBase)] = trans(
-                'validation.date',
-                ['attribute' => trans('element.activity_date')]
-            );
-            $tempMessages = $this->factory->getMessagesForNarrative($activityDate['narrative'], $activityDateBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
+        return (new DateRequest())->getMessagesForDate(Arr::get($activity, 'activity_date', []));
     }
 
     /**
@@ -448,33 +469,7 @@ class XmlValidator
      */
     protected function rulesForContactInfo(array $activity): array
     {
-        $rules = [];
-        $contacts = Arr::get($activity, 'contact_info', []);
-
-        foreach ($contacts as $contactInfoIndex => $contactInfo) {
-            $contactInfoBase = sprintf('contact_info.%s', $contactInfoIndex);
-            $rules[sprintf('%s.type', $contactInfoBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('ContactType')
-            );
-            $tempRules = [
-                $this->getRulesForDepartment(Arr::get($contactInfo, 'department', []), $contactInfoBase),
-                $this->getRulesForOrganization(Arr::get($contactInfo, 'organization', []), $contactInfoBase),
-                $this->getRulesForPersonName(Arr::get($contactInfo, 'person_name', []), $contactInfoBase),
-                $this->getRulesForJobTitle(Arr::get($contactInfo, 'job_title', []), $contactInfoBase),
-                $this->getRulesForMailingAddress(Arr::get($contactInfo, 'mailing_address', []), $contactInfoBase),
-                $this->getRulesForEmail(Arr::get($contactInfo, 'email', []), $contactInfoBase),
-                $this->getRulesForWebsite(Arr::get($contactInfo, 'website', []), $contactInfoBase),
-            ];
-
-            foreach ($tempRules as $tempRule) {
-                foreach ($tempRules as $idx => $rule) {
-                    $rules[$idx] = $rule;
-                }
-            }
-        }
-
-        return $rules;
+        return (new ContactInfoRequest())->getRulesforContactInfo(Arr::get($activity, 'contact_info', []));
     }
 
     /**
@@ -485,335 +480,7 @@ class XmlValidator
      */
     protected function messagesForContactInfo(array $activity): array
     {
-        $messages = [];
-        $contacts = Arr::get($activity, 'contact_info', []);
-
-        foreach ($contacts as $contactInfoIndex => $contactInfo) {
-            $contactInfoBase = sprintf('contact_info.%s', $contactInfoIndex);
-            $messages[sprintf('%s.type.in', $contactInfoBase)] = 'Invalid Contact Info Type';
-            $tempMessages = [
-                $this->getMessagesForDepartment(Arr::get($contactInfo, 'department', []), $contactInfoBase),
-                $this->getMessagesForOrganization(Arr::get($contactInfo, 'organization', []), $contactInfoBase),
-                $this->getMessagesForPersonName(Arr::get($contactInfo, 'person_name', []), $contactInfoBase),
-                $this->getMessagesForJobTitle(Arr::get($contactInfo, 'job_title', []), $contactInfoBase),
-                $this->getMessagesForMailingAddress(Arr::get($contactInfo, 'mailing_address', []), $contactInfoBase),
-                $this->getMessagesForEmail(Arr::get($contactInfo, 'email', []), $contactInfoBase),
-                $this->getMessagesForWebsite(Arr::get($contactInfo, 'website', []), $contactInfoBase),
-            ];
-
-            foreach ($tempMessages as $tempMessage) {
-                foreach ($tempMessage as $idx => $message) {
-                    $messages[$idx] = $message;
-                }
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * Rules for Contact Info Organization.
-     *
-     * @param $organizationData
-     * @param $contactBase
-     * @return array
-     */
-    protected function getRulesForOrganization($organizationData, $contactBase): array
-    {
-        $rules = [];
-
-        foreach ($organizationData as $organizationIndex => $organization) {
-            $organizationBase = sprintf('%s.organization.%s', $contactBase, $organizationIndex);
-            $tempRules = $this->factory->getRulesForNarrative($organization['narrative'], $organizationBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * Messages for Contact Info Organization.
-     *
-     * @param $organizationData
-     * @param $contactBase
-     * @return array
-     */
-    protected function getMessagesForOrganization($organizationData, $contactBase): array
-    {
-        $messages = [];
-
-        foreach ($organizationData as $organizationIndex => $organization) {
-            $organizationBase = sprintf('%s.organization.%s', $contactBase, $organizationIndex);
-            $tempMessages = $this->factory->getMessagesForNarrative($organization['narrative'], $organizationBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * Rules for Contact Info Department.
-     *
-     * @param $departments
-     * @param $contactBase
-     * @return array
-     */
-    protected function getRulesForDepartment($departments, $contactBase): array
-    {
-        $rules = [];
-
-        foreach ($departments as $departmentIndex => $department) {
-            $departmentBase = sprintf('%s.department.%s', $contactBase, $departmentIndex);
-            $tempRules = $this->factory->getRulesForNarrative($department['narrative'], $departmentBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * Messages for Contact Info Department.
-     *
-     * @param $departments
-     * @param $contactBase
-     * @return array
-     */
-    protected function getMessagesForDepartment($departments, $contactBase): array
-    {
-        $messages = [];
-
-        foreach ($departments as $departmentIndex => $department) {
-            $departmentBase = sprintf('%s.department.%s', $contactBase, $departmentIndex);
-            $tempMessages = $this->factory->getMessagesForNarrative($department['narrative'], $departmentBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * Rules for Contact Info Person Name.
-     *
-     * @param $personNames
-     * @param $contactBase
-     * @return array
-     */
-    protected function getRulesForPersonName($personNames, $contactBase): array
-    {
-        $rules = [];
-
-        foreach ($personNames as $personNameIndex => $personName) {
-            $personNameBase = sprintf('%s.person_name.%s', $contactBase, $personNameIndex);
-            $tempRules = $this->factory->getRulesForNarrative($personName['narrative'], $personNameBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * Messages for Contact Info Person Name.
-     *
-     * @param $personNames
-     * @param $contactBase
-     * @return array
-     */
-    protected function getMessagesForPersonName($personNames, $contactBase): array
-    {
-        $messages = [];
-
-        foreach ($personNames as $personNameIndex => $personName) {
-            $personNameBase = sprintf('%s.person_name.%s', $contactBase, $personNameIndex);
-            $tempMessages = $this->factory->getMessagesForNarrative($personName['narrative'], $personNameBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * Rules for Contact Info Job Title.
-     *
-     * @param $jobTitles
-     * @param $contactBase
-     * @return array
-     */
-    protected function getRulesForJobTitle($jobTitles, $contactBase): array
-    {
-        $rules = [];
-
-        foreach ($jobTitles as $jobTitleIndex => $jobTitle) {
-            $jobTitleBase = sprintf('%s.job_title.%s', $contactBase, $jobTitleIndex);
-            $tempRules = $this->factory->getRulesForNarrative($jobTitle['narrative'], $jobTitleBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $messages[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * Messages for Contact Info Job Title.
-     *
-     * @param $jobTitles
-     * @param $contactBase
-     * @return array
-     */
-    protected function getMessagesForJobTitle($jobTitles, $contactBase): array
-    {
-        $messages = [];
-
-        foreach ($jobTitles as $jobTitleIndex => $jobTitle) {
-            $jobTitleBase = sprintf('%s.job_title.%s', $contactBase, $jobTitleIndex);
-            $tempMessages = $this->factory->getMessagesForNarrative($jobTitle['narrative'], $jobTitleBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * Rules for Contact Info Mailing Address.
-     *
-     * @param $mailingAddresses
-     * @param $contactBase
-     * @return array
-     */
-    protected function getRulesForMailingAddress($mailingAddresses, $contactBase): array
-    {
-        $rules = [];
-
-        foreach ($mailingAddresses as $mailingAddressIndex => $mailingAddress) {
-            $mailingAddressBase = sprintf('%s.mailing_address.%s', $contactBase, $mailingAddressIndex);
-            $tempRules = $this->factory->getRulesForNarrative(Arr::get($mailingAddress, 'narrative', []), $mailingAddressBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * Messages for Contact Info Mailing Address.
-     *
-     * @param $mailingAddresses
-     * @param $contactBase
-     * @return array
-     */
-    protected function getMessagesForMailingAddress($mailingAddresses, $contactBase): array
-    {
-        $messages = [];
-
-        foreach ($mailingAddresses as $mailingAddressIndex => $mailingAddress) {
-            $mailingAddressBase = sprintf('%s.mailing_address.%s', $contactBase, $mailingAddressIndex);
-            $tempMessages = $this->factory->getMessagesForNarrative(Arr::get($mailingAddress, 'narrative', []), $mailingAddressBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * Rules for Contact Info Email.
-     *
-     * @param $emails
-     * @param $contactBase
-     * @return array
-     */
-    protected function getRulesForEmail($emails, $contactBase): array
-    {
-        $rules = [];
-
-        foreach ($emails as $emailIndex => $email) {
-            $rules[sprintf('%s.email.%s.email', $contactBase, $emailIndex)] = 'email';
-        }
-
-        return $rules;
-    }
-
-    /**
-     * Messages for Contact Info Email.
-     *
-     * @param $emails
-     * @param $contactBase
-     * @return array
-     */
-    protected function getMessagesForEmail($emails, $contactBase): array
-    {
-        $messages = [];
-
-        foreach ($emails as $emailIndex => $email) {
-            $messages[sprintf('%s.email.%s.email.email', $contactBase, $emailIndex)] = trans(
-                'validation.email',
-                ['attribute' => trans('elementForm.email')]
-            );
-        }
-
-        return $messages;
-    }
-
-    /**
-     * Rules for Contact Info Website.
-     *
-     * @param $websites
-     * @param $contactBase
-     * @return array
-     */
-    protected function getRulesForWebsite($websites, $contactBase): array
-    {
-        $rules = [];
-
-        foreach ($websites as $websiteIndex => $website) {
-            $rules[sprintf('%s.website.%s.website', $contactBase, $websiteIndex)] = 'nullable|url';
-        }
-
-        return $rules;
-    }
-
-    /**
-     * Messages for Contact Info Website.
-     *
-     * @param $websites
-     * @param $contactBase
-     * @return array
-     */
-    protected function getMessagesForWebsite($websites, $contactBase): array
-    {
-        $messages = [];
-
-        foreach ($websites as $websiteIndex => $website) {
-            $messages[sprintf('%s.website.%s.website.url', $contactBase, $websiteIndex)] = trans('validation.url');
-        }
-
-        return $messages;
+        return (new ContactInfoRequest())->getMessagesForContactInfo(Arr::get($activity, 'contact_info', []));
     }
 
     /**
@@ -823,38 +490,7 @@ class XmlValidator
      */
     public function rulesForParticipatingOrg(array $activity): array
     {
-        $rules = [];
-        $participatingOrganizations = Arr::get($activity, 'participating_organization', []);
-
-        $rules['participating_organization'] = 'required';
-
-        foreach ($participatingOrganizations as $participatingOrgIndex => $participatingOrg) {
-            $participatingOrgBase = 'participating_organization.' . $participatingOrgIndex;
-            $rules[$participatingOrgBase . '.organization_role'] = sprintf(
-                'required|in:%s',
-                $this->validCodeList('OrganisationRole', 'Organization')
-            );
-            $rules[$participatingOrgBase . '.type'] = sprintf(
-                'in:%s',
-                $this->validCodeList('OrganizationType', 'Organization')
-            );
-            $identifier = $participatingOrgBase . '.identifier';
-            $narrative = sprintf('%s.narrative.0.narrative', $participatingOrgBase);
-            $rules[$identifier] = 'exclude_operators|required_without:' . $narrative;
-            $rules[$participatingOrgBase . '.crs_channel_code'] = sprintf(
-                'nullable|in:%s',
-                $this->validCodeList('CRSChannelCode')
-            );
-            $rules[$narrative] = [];
-            $rules[$narrative][] = 'required_without:' . $identifier;
-            $tempRules = $this->factory->getRulesForNarrative($participatingOrg['narrative'], $participatingOrgBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
+        return (new ParticipatingOrganizationRequest())->getRulesForParticipatingOrg(Arr::get($activity, 'participating_org', []));
     }
 
     /**
@@ -864,50 +500,7 @@ class XmlValidator
      */
     public function messagesForParticipatingOrg(array $activity): array
     {
-        $messages = [];
-        $participatingOrganizations = Arr::get($activity, 'participating_organization', []);
-
-        $messages['participating_organization.required'] = trans(
-            'validation.required',
-            ['attribute' => trans('element.participating_organisation')]
-        );
-
-        foreach ($participatingOrganizations as $participatingOrgIndex => $participatingOrg) {
-            $participatingOrgBase = 'participating_organization.' . $participatingOrgIndex;
-            $messages[$participatingOrgBase . '.organization_role.required'] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.organisation_role')]
-            );
-            $messages[$participatingOrgBase . '.organization_role.in'] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.organisation_role')]
-            );
-            $messages[$participatingOrgBase . '.type.in'] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.organisation_type')]
-            );
-            $identifier = $participatingOrgBase . '.identifier';
-            $narrative = sprintf('%s.narrative.0.narrative', $participatingOrgBase);
-            $messages[$identifier . '.required_without'] = trans(
-                'validation.required_without',
-                ['attribute' => trans('elementForm.identifier'), 'values' => trans('elementForm.narrative')]
-            );
-            $messages[$participatingOrgBase . '.crs_channel_code.in'] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.organisation_crs_channel_code')]
-            );
-            $messages[$narrative . '.required_without'] = trans(
-                'validation.required_without',
-                ['attribute' => trans('elementForm.narrative'), 'values' => trans('elementForm.identifier')]
-            );
-            $tempMessages = $this->factory->getMessagesForNarrative($participatingOrg['narrative'], $participatingOrgBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
+        return (new ParticipatingOrganizationRequest())->getMessagesForParticipatingOrg(Arr::get($activity, 'participating_org', []));
     }
 
     /**
@@ -917,27 +510,7 @@ class XmlValidator
      */
     public function rulesForRecipientCountry(array $activity): array
     {
-        $rules = [];
-        $recipientCountries = Arr::get($activity, 'recipient_country', []);
-
-        foreach ($recipientCountries as $recipientCountryIndex => $recipientCountry) {
-            $recipientCountryBase = 'recipient_country.' . $recipientCountryIndex;
-            $rules[$recipientCountryBase . '.country_code'] = sprintf(
-                'required|in:%s',
-                $this->validCodeList('Country', 'Organization')
-            );
-            $rules[$recipientCountryBase . '.percentage'] = 'nullable|numeric|max:100';
-            if (count($recipientCountries) > 1) {
-                $rules[$recipientCountryBase . '.percentage'] = 'required|numeric|max:100';
-            }
-            $tempRules = $this->factory->getRulesForNarrative($recipientCountry['narrative'], $recipientCountryBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
+        return (new RecipientCountryRequest())->getRulesForRecipientCountry(Arr::get($activity, 'recipient_country', []), true, );
     }
 
     /**
@@ -947,39 +520,7 @@ class XmlValidator
      */
     public function messagesForRecipientCountry(array $activity): array
     {
-        $messages = [];
-        $recipientCountries = Arr::get($activity, 'recipient_country', []);
-
-        foreach ($recipientCountries as $recipientCountryIndex => $recipientCountry) {
-            $recipientCountryBase = 'recipient_country.' . $recipientCountryIndex;
-            $messages[$recipientCountryBase . '.country_code.required'] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.country_code')]
-            );
-            $messages[$recipientCountryBase . '.country_code.in'] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.country_code')]
-            );
-            $messages[$recipientCountryBase . '.percentage.numeric'] = trans(
-                'validation.numeric',
-                ['attribute' => trans('elementForm.percentage')]
-            );
-            $messages[$recipientCountryBase . '.percentage.max'] = trans(
-                'validation.max.numeric',
-                ['attribute' => trans('elementForm.percentage'), 'max' => 100]
-            );
-            $messages[$recipientCountryBase . '.percentage.required'] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.percentage')]
-            );
-            $tempMessages = $this->factory->getMessagesForNarrative($recipientCountry['narrative'], $recipientCountryBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
+        return (new RecipientCountryRequest())->getMessagesForRecipientCountry(Arr::get($activity, 'recipient_country', []));
     }
 
     /**
@@ -989,33 +530,7 @@ class XmlValidator
      */
     public function rulesForRecipientRegion(array $activity): array
     {
-        $rules = [];
-        $recipientRegions = Arr::get($activity, 'recipient_region', []);
-
-        foreach ($recipientRegions as $recipientRegionIndex => $recipientRegion) {
-            $recipientRegionBase = 'recipient_region.' . $recipientRegionIndex;
-
-            if (Arr::get($recipientRegion, 'region_vocabulary', 1) === 1 || Arr::get($recipientRegion, 'region_vocabulary', 1) === '1') {
-                $rules[$recipientRegionBase . '.region_code'] = sprintf(
-                    'required|in:%s',
-                    $this->validCodeList('Region')
-                );
-            } else {
-                $rules[$recipientRegionBase . '.custom_code'] = 'required';
-            }
-
-            $rules[$recipientRegionBase . '.percentage'] = 'nullable|numeric|max:100';
-            if (count($recipientRegions) > 1) {
-                $rules[$recipientRegionBase . '.percentage'] = 'required|numeric|max:100';
-            }
-            $tempRules = $this->factory->getRulesForNarrative(Arr::get($recipientRegion, 'narrative', []), $recipientRegionBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
+        return (new RecipientRegionRequest())->getRulesForRecipientRegion(Arr::get($activity, 'recipient_region', []), true, Arr::get($activity, 'recipient_country', []));
     }
 
     /**
@@ -1025,48 +540,27 @@ class XmlValidator
      */
     public function messagesForRecipientRegion(array $activity): array
     {
-        $messages = [];
-        $recipientRegions = Arr::get($activity, 'recipient_region', []);
+        return (new RecipientRegionRequest())->getMessagesForRecipientRegion(Arr::get($activity, 'recipient_region', []));
+    }
 
-        foreach ($recipientRegions as $recipientRegionIndex => $recipientRegion) {
-            $recipientRegionBase = 'recipient_region.' . $recipientRegionIndex;
+    /**
+     * returns rules for sector form.
+     * @param array $activity
+     * @return array
+     */
+    protected function rulesForSector(array $activity): array
+    {
+        return (new SectorRequest())->getSectorsRules(Arr::get($activity, 'sector', []), true);
+    }
 
-            if (Arr::get($recipientRegion, 'region_vocabulary', 1) === 1 || Arr::get($recipientRegion, 'region_vocabulary', 1) === '1') {
-                $messages[$recipientRegionBase . '.region_code.required'] = trans(
-                    'validation.required',
-                    ['attribute' => trans('elementForm.recipient_region_code')]
-                );
-                $messages[$recipientRegionBase . '.region_code.in'] = trans(
-                    'validation.code_list',
-                    ['attribute' => trans('elementForm.region_code')]
-                );
-            } else {
-                $messages[$recipientRegionBase . '.custom_code.required'] = trans(
-                    'validation.required',
-                    ['attribute' => trans('elementForm.recipient_region_code')]
-                );
-            }
-
-            $messages[$recipientRegionBase . '.percentage.numeric'] = trans(
-                'validation.numeric',
-                ['attribute' => trans('elementForm.percentage')]
-            );
-            $messages[$recipientRegionBase . '.percentage.max'] = trans(
-                'validation.max.numeric',
-                ['attribute' => trans('elementForm.percentage'), 'max' => 100]
-            );
-            $messages[$recipientRegionBase . '.percentage.required'] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.percentage')]
-            );
-            $tempMessages = $this->factory->getMessagesForNarrative(Arr::get($recipientRegion, 'narrative', []), $recipientRegionBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
+    /**
+     * returns messages for sector form.
+     * @param array $activity
+     * @return array
+     */
+    protected function messagesForSector(array $activity): array
+    {
+        return (new SectorRequest())->getSectorsMessages(Arr::get($activity, 'sector', []));
     }
 
     /**
@@ -1076,53 +570,7 @@ class XmlValidator
      */
     protected function rulesForLocation(array $activity): array
     {
-        $rules = [];
-        $locations = Arr::get($activity, 'location', []);
-
-        foreach ($locations as $locationIndex => $location) {
-            $locationBase = 'location.' . $locationIndex;
-            $rules[sprintf('%s.location_reach.*.code', $locationBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('GeographicLocationReach')
-            );
-            $rules[sprintf('%s.location_id.*.vocabulary', $locationBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('GeographicVocabulary')
-            );
-            $rules[sprintf('%s.administrative.*.vocabulary', $locationBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('GeographicVocabulary')
-            );
-            $rules[sprintf('%s.exactness.*.code', $locationBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('GeographicExactness')
-            );
-            $rules[sprintf('%s.location_class.*.code', $locationBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('GeographicLocationClass')
-            );
-            $rules[sprintf('%s.feature_designation.*.code', $locationBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('LocationType')
-            );
-
-            $tempRules = [
-                $this->getRulesForLocationId(Arr::get($location, 'location_id', []), $locationBase),
-                $this->getRulesForName(Arr::get($location, 'name', []), $locationBase),
-                $this->getRulesForLocationDescription(Arr::get($location, 'location_description', []), $locationBase),
-                $this->getRulesForActivityDescription(Arr::get($location, 'activity_description', []), $locationBase),
-                $this->getRulesForAdministrative(Arr::get($location, 'administrative', []), $locationBase),
-                $this->getRulesForPoint(Arr::get($location, 'point', []), $locationBase),
-            ];
-
-            foreach ($tempRules as $tempRule) {
-                foreach ($tempRule as $idx => $rule) {
-                    $rules[$idx] = $rule;
-                }
-            }
-        }
-
-        return $rules;
+        return (new LocationRequest())->getRulesForLocation(Arr::get($activity, 'location', []));
     }
 
     /**
@@ -1132,657 +580,7 @@ class XmlValidator
      */
     protected function messagesForLocation(array $activity): array
     {
-        $messages = [];
-        $locations = Arr::get($activity, 'location', []);
-
-        foreach ($locations as $locationIndex => $location) {
-            $locationBase = 'location.' . $locationIndex;
-            $messages[sprintf('%s.location_reach.*.code.in', $locationBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.location_reach_code')]
-            );
-            $messages[sprintf('%s.location_id.*.vocabulary.in', $locationBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.location_id_vocabulary')]
-            );
-            $messages[sprintf('%s.administrative.*.vocabulary.in', $locationBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.administrative_vocabulary')]
-            );
-            $messages[sprintf('%s.exactness.*.code.in', $locationBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.exactness_code')]
-            );
-            $messages[sprintf('%s.location_class.*.code.in', $locationBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.location_class')]
-            );
-            $messages[sprintf('%s.feature_designation.*.code.in', $locationBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.feature_designation_code')]
-            );
-
-            $tempMessages = [
-                $this->getMessagesForLocationId(Arr::get($location, 'location_id', []), $locationBase),
-                $this->getMessagesForName(Arr::get($location, 'name', []), $locationBase),
-                $this->getMessagesForLocationDescription(
-                    Arr::get($location, 'locaton_description', []),
-                    $locationBase
-                ),
-                $this->getMessagesForActivityDescription(
-                    Arr::get($location, 'activty_description', []),
-                    $locationBase
-                ),
-                $this->getMessagesForAdministrative(Arr::get($location, 'administrative', []), $locationBase),
-                $this->getMessagesForPoint(Arr::get($location, 'point', []), $locationBase),
-            ];
-
-            foreach ($tempMessages as $tempMessage) {
-                foreach ($tempMessage as $idx => $message) {
-                    $messages[$idx] = $message;
-                }
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * returns rules for location id.
-     * @param $locationsIds
-     * @param $locationBase
-     * @return array
-     */
-    protected function getRulesForLocationId($locationsIds, $locationBase): array
-    {
-        $rules = [];
-
-        foreach ($locationsIds as $locationIdIndex => $locationId) {
-            $locationIdBase = sprintf('%s.location_id.%s', $locationBase, $locationIdIndex);
-            if ($locationId['code'] !== '') {
-                $rules[sprintf('%s.vocabulary', $locationIdBase)] = 'required_with:' . sprintf(
-                    '%s.code',
-                    $locationIdBase
-                );
-            }
-            if ($locationId['vocabulary'] !== '') {
-                $rules[sprintf('%s.code', $locationIdBase)] = 'required_with:' . sprintf(
-                    '%s.vocabulary',
-                    $locationIdBase
-                );
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * returns messages for location id.
-     * @param $locationsIds
-     * @param $locationBase
-     * @return array
-     */
-    protected function getMessagesForLocationId($locationsIds, $locationBase): array
-    {
-        $messages = [];
-
-        foreach ($locationsIds as $locationIdIndex => $locationId) {
-            $locationIdBase = sprintf('%s.location_id.%s', $locationBase, $locationIdIndex);
-            if ($locationId['code'] !== '') {
-                $messages[sprintf('%s.vocabulary.required_with', $locationIdBase)] = trans(
-                    'validation.required_with',
-                    ['attribute' => trans('elementForm.location_id_vocabulary'), 'values' => trans('elementForm.code')]
-                );
-            }
-
-            if ($locationId['vocabulary'] !== '') {
-                $messages[sprintf('%s.code.required_with', $locationIdBase)] = trans(
-                    'validation.required_with',
-                    ['attribute' => trans('elementForm.code'), 'values' => trans('elementForm.location_id_vocabulary')]
-                );
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * returns rules for name.
-     *
-     * @param $locationName
-     * @param $locationBase
-     *
-     * @return array
-     */
-    protected function getRulesForName($locationName, $locationBase): array
-    {
-        $rules = [];
-
-        foreach ($locationName as $nameIndex => $name) {
-            $narrativeBase = sprintf('%s.name.%s', $locationBase, $nameIndex);
-            $tempRules = $this->factory->getRulesForNarrative($name['narrative'], $narrativeBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * returns messages for name.
-     * @param $locationName
-     * @param $locationBase
-     * @return array
-     */
-    protected function getMessagesForName($locationName, $locationBase): array
-    {
-        $messages = [];
-
-        foreach ($locationName as $nameIndex => $name) {
-            $narrativeBase = sprintf('%s.name.%s', $locationBase, $nameIndex);
-            $tempMessages = $this->factory->getMessagesForNarrative($name['narrative'], $narrativeBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * returns rules for location description.
-     * @param $locationDescription
-     * @param $locationBase
-     * @return array
-     */
-    protected function getRulesForLocationDescription($locationDescription, $locationBase): array
-    {
-        $rules = [];
-
-        foreach ($locationDescription as $descriptionIndex => $description) {
-            $narrativeBase = sprintf('%s.location_description.%s', $locationBase, $descriptionIndex);
-            $tempRules = $this->factory->getRulesForNarrative($description['narrative'], $narrativeBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $messages[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * returns messages for location description.
-     * @param $locationDescription
-     * @param $locationBase
-     * @return array
-     */
-    protected function getMessagesForLocationDescription($locationDescription, $locationBase): array
-    {
-        $messages = [];
-
-        foreach ($locationDescription as $descriptionIndex => $description) {
-            $narrativeBase = sprintf('%s.location_description.%s', $locationBase, $descriptionIndex);
-            $tempMessages = $this->factory->getMessagesForNarrative($description['narrative'], $narrativeBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * returns rules for activity description.
-     *
-     * @param array $activityDescription
-     * @param       $locationBase
-     *
-     * @return array
-     */
-    protected function getRulesForActivityDescription(array $activityDescription, $locationBase): array
-    {
-        $rules = [];
-
-        foreach ($activityDescription as $descriptionIndex => $description) {
-            $narrativeBase = sprintf('%s.activity_description.%s', $locationBase, $descriptionIndex);
-            $tempRules = $this->factory->getRulesForNarrative($description['narrative'], $narrativeBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $messages[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * returns messages for activity description.
-     *
-     * @param array $activityDescription
-     * @param       $locationBase
-     *
-     * @return array
-     */
-    protected function getMessagesForActivityDescription(array $activityDescription, $locationBase): array
-    {
-        $messages = [];
-        foreach ($activityDescription as $descriptionIndex => $description) {
-            $narrativeBase = sprintf('%s.activity_description.%s', $locationBase, $descriptionIndex);
-            $tempMessages = $this->factory->getMessagesForNarrative($description['narrative'], $narrativeBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * returns rules for administrative.
-     * @param $administrativeData
-     * @param $locationBase
-     * @return array
-     */
-    protected function getRulesForAdministrative($administrativeData, $locationBase): array
-    {
-        $rules = [];
-        foreach ($administrativeData as $administrativeIndex => $administrative) {
-            $administrativeBase = sprintf('%s.administrative.%s', $locationBase, $administrativeIndex);
-            $rules[sprintf('%s.level', $administrativeBase)] = 'min:0|integer';
-        }
-
-        return $rules;
-    }
-
-    /**
-     * returns messages for administrative.
-     * @param $administrativeData
-     * @param $locationBase
-     * @return array
-     */
-    protected function getMessagesForAdministrative($administrativeData, $locationBase): array
-    {
-        $messages = [];
-        foreach ($administrativeData as $administrativeIndex => $administrative) {
-            $administrativeBase = sprintf('%s.administrative.%s', $locationBase, $administrativeIndex);
-            $messages[sprintf('%s.level.integer', $administrativeBase)] = trans(
-                'validation.integer',
-                ['attribute' => trans('elementForm.level')]
-            );
-        }
-
-        return $messages;
-    }
-
-    /**
-     * returns rules for point.
-     * @param $points
-     * @param $locationBase
-     * @return array
-     */
-    protected function getRulesForPoint($points, $locationBase): array
-    {
-        $rules = [];
-        $pointBase = sprintf('%s.point.0', $locationBase);
-        $rules[sprintf('%s.srs_name', $pointBase)] = 'required';
-        $positionBase = sprintf('%s.position.0', $pointBase);
-        $latitude = sprintf('%s.latitude', $positionBase);
-        $longitude = sprintf('%s.longitude', $positionBase);
-        $rules[$latitude] = sprintf('required_with:%s|numeric', $longitude);
-        $rules[$longitude] = sprintf('required_with:%s|numeric', $latitude);
-
-        return $rules;
-    }
-
-    /**
-     * returns messages for point.
-     * @param $formFields
-     * @param $locationBase
-     * @return array
-     */
-    protected function getMessagesForPoint($formFields, $locationBase): array
-    {
-        $messages = [];
-        $pointBase = sprintf('%s.point.0', $locationBase);
-        $messages[sprintf('%s.srs_name.required', $pointBase)] = trans(
-            'validation.required',
-            ['attribute' => trans('elementForm.srs_name')]
-        );
-        $positionBase = sprintf('%s.position.0', $pointBase);
-        $messages[sprintf('%s.latitude.required_with', $positionBase)] = trans(
-            'validation.required_with',
-            ['attribute' => trans('elementForm.latitude'), 'values' => trans('elementForm.longitude')]
-        );
-        $messages[sprintf('%s.latitude.numeric', $positionBase)] = trans(
-            'validation.numeric',
-            ['attribute' => trans('elementForm.latitude')]
-        );
-        $messages[sprintf('%s.longitude.required_with', $positionBase)] = trans(
-            'validation.required_with',
-            ['attribute' => trans('elementForm.longitude'), 'values' => trans('elementForm.latitude')]
-        );
-        $messages[sprintf('%s.longitude.numeric', $positionBase)] = trans(
-            'validation.numeric',
-            ['attribute' => trans('elementForm.longitude')]
-        );
-
-        return $messages;
-    }
-
-    /**
-     * returns rules for sector.
-     *
-     * @param array $activity
-     *
-     * @return array
-     */
-    public function rulesForSector(array $activity): array
-    {
-        $rules = [];
-        $sectors = Arr::get($activity, 'sector', []);
-
-        foreach ($sectors as $sectorIndex => $sector) {
-            $sectorBase = sprintf('sector.%s', $sectorIndex);
-            $rules[sprintf('%s.vocabulary_uri', $sectorBase)] = 'nullable|url';
-            $rules[sprintf('%s.sector_vocabulary', $sectorBase)] = sprintf(
-                'required|in:%s',
-                $this->validCodeList('SectorVocabulary')
-            );
-            $rules[sprintf('%s.code', $sectorBase)] = sprintf('in:%s', $this->validCodeList('SectorCode'));
-            $rules[sprintf('%s.category_code', $sectorBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('SectorCategory')
-            );
-
-            if ($sector['sector_vocabulary'] === '1' || $sector['sector_vocabulary'] === '2') {
-                if ($sector['sector_vocabulary'] === '1') {
-                    $rules[sprintf(
-                        '%s.code',
-                        $sectorBase
-                    )] = sprintf(
-                        'in:%s|required_with:' . $sectorBase . '.sector_vocabulary',
-                        $this->validCodeList('SectorCode')
-                    );
-                }
-                if ($sector['code'] !== '') {
-                    $rules[sprintf(
-                        '%s.sector_vocabulary',
-                        $sectorBase
-                    )] = sprintf(
-                        'in:%s|required_with:' . $sectorBase . '.code',
-                        $this->validCodeList('SectorVocabulary')
-                    );
-                }
-                if ($sector['sector_vocabulary'] === '2') {
-                    $rules[sprintf(
-                        '%s.category_code',
-                        $sectorBase
-                    )] = sprintf(
-                        'in:%s|required_with:' . $sectorBase . '.sector_vocabulary',
-                        $this->validCodeList('SectorCategory')
-                    );
-                }
-                if ($sector['category_code'] !== '') {
-                    $rules[sprintf(
-                        '%s.sector_vocabulary',
-                        $sectorBase
-                    )] = sprintf(
-                        'in:%s|required_with:' . $sectorBase . '.category_code',
-                        $this->validCodeList('SectorVocabulary')
-                    );
-                }
-            } else {
-                if ($sector['sector_vocabulary'] !== '') {
-                    $rules[sprintf(
-                        '%s.text',
-                        $sectorBase
-                    )] = 'required_with:' . $sectorBase . '.sector_vocabulary';
-                }
-
-                if ($sector['text'] !== '') {
-                    $rules[sprintf(
-                        '%s.sector_vocabulary',
-                        $sectorBase
-                    )] = sprintf(
-                        'in:%s|required_with:' . $sectorBase . '.text',
-                        $this->validCodeList('SectorVocabulary')
-                    );
-                }
-
-                if ($sector['sector_vocabulary'] === '99' || $sector['sector_vocabulary'] === '98') {
-                    $rules[sprintf(
-                        '%s.vocabulary_uri',
-                        $sectorBase
-                    )] = 'url|required_with:' . $sectorBase . '.sector_vocabulary';
-
-                    foreach (Arr::get($sector, 'narrative', []) as $narrativeKey => $narrative) {
-                        $rules[sprintf(
-                            '%s.narrative.%s.narrative',
-                            $sectorBase,
-                            $narrativeKey
-                        )] = 'required|required_with_language';
-                    }
-                }
-            }
-
-            $rules[sprintf('%s.percentage', $sectorBase)] = 'nullable|numeric|max:100';
-
-            if (count($sectors) > 1) {
-                $rules[sprintf('%s.percentage', $sectorBase)] = 'required|numeric|max:100';
-            }
-
-            $tempRules = $this->factory->getRulesForNarrative($sector['narrative'], $sectorBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        $totalPercentage = $this->getRulesForPercentage($sectors);
-
-        $indexes = [];
-
-        foreach ($totalPercentage as $index => $value) {
-            if (is_numeric($index) && $value != 100) {
-                $indexes[] = $index;
-            }
-        }
-
-        $fields = [];
-
-        foreach ($totalPercentage as $i => $percentage) {
-            foreach ($indexes as $index) {
-                if ($index == $percentage) {
-                    $fields[] = $i;
-                }
-            }
-        }
-
-        foreach ($fields as $field) {
-            $rules[$field] = 'required|sum|numeric|max:100';
-        }
-
-        return $rules;
-    }
-
-    /**
-     * returns messages for sector.
-     * @param array $activity
-     * @return array
-     */
-    public function messagesForSector(array $activity): array
-    {
-        $messages = [];
-        $sectors = Arr::get($activity, 'sector', []);
-
-        foreach ($sectors as $sectorIndex => $sector) {
-            $sectorBase = sprintf('sector.%s', $sectorIndex);
-            $messages[sprintf('%s.vocabulary_uri.url', $sectorBase)] = trans('validation.url');
-            $messages[sprintf('%s.sector_vocabulary.required', $sectorBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.sector_vocabulary')]
-            );
-            $messages[sprintf('%s.sector_vocabulary.in', $sectorBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.sector_vocabulary')]
-            );
-            $messages[sprintf('%s.code.in', $sectorBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.code')]
-            );
-            $messages[sprintf('%s.category_code.in', $sectorBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.code')]
-            );
-
-            if ($sector['sector_vocabulary'] === '1' || $sector['sector_vocabulary'] === '2') {
-                if ($sector['sector_vocabulary'] === '1') {
-                    $messages[sprintf('%s.code.%s', $sectorBase, 'required_with')] = trans(
-                        'validation.required_with',
-                        [
-                            'attribute' => trans('elementForm.code'),
-                            'values' => trans('elementForm.sector_vocabulary'),
-                        ]
-                    );
-                }
-                if ($sector['code'] !== '') {
-                    $messages[sprintf('%s.sector_vocabulary.%s', $sectorBase, 'required_with')] = trans(
-                        'validation.required_with',
-                        [
-                            'attribute' => trans('elementForm.sector_vocabulary'),
-                            'values' => trans('elementForm.code'),
-                        ]
-                    );
-                }
-                if ($sector['sector_vocabulary'] === '2') {
-                    $messages[sprintf('%s.category_code.%s', $sectorBase, 'required_with')] = trans(
-                        'validation.required_with',
-                        [
-                            'attribute' => trans('elementForm.code'),
-                            'values' => trans('elementForm.sector_vocabulary'),
-                        ]
-                    );
-                }
-                if ($sector['category_code'] !== '') {
-                    $messages[sprintf('%s.sector_vocabulary.%s', $sectorBase, 'required_with')] = trans(
-                        'validation.required_with',
-                        [
-                            'attribute' => trans('elementForm.sector_vocabulary'),
-                            'values' => trans('elementForm.code'),
-                        ]
-                    );
-                }
-            } else {
-                if ($sector['sector_vocabulary'] !== '') {
-                    $messages[sprintf('%s.text.%s', $sectorBase, 'required_with')] = trans(
-                        'validation.required_with',
-                        [
-                            'attribute' => trans('elementForm.code'),
-                            'values' => trans('elementForm.sector_vocabulary'),
-                        ]
-                    );
-                }
-
-                if ($sector['text'] !== '') {
-                    $messages[sprintf('%s.sector_vocabulary.%s', $sectorBase, 'required_with')] = trans(
-                        'validation.required_with',
-                        [
-                            'attribute' => trans('elementForm.sector_vocabulary'),
-                            'values' => trans('elementForm.code'),
-                        ]
-                    );
-                }
-
-                if ($sector['sector_vocabulary'] === '99' || $sector['sector_vocabulary'] === '98') {
-                    $messages[sprintf('%s.vocabulary_uri.%s', $sectorBase, 'required_with')] = trans(
-                        'validation.required_with',
-                        [
-                            'attribute' => trans('elementForm.vocabulary_uri'),
-                            'values' => trans('elementForm.sector_vocabulary'),
-                        ]
-                    );
-                    foreach (Arr::get($sector, 'narrative', []) as $narrativeKey => $narrative) {
-                        $messages[sprintf(
-                            '%s.narrative.%s.narrative.%s',
-                            $sectorBase,
-                            $narrativeKey,
-                            'required'
-                        )] = trans(
-                            'validation.required',
-                            ['attribute' => trans('elementForm.narrative')]
-                        );
-                        $messages[sprintf(
-                            '%s.narrative.%s.narrative.required_with_language',
-                            $sectorBase,
-                            $narrativeKey
-                        )] = trans('validation.required_with', [
-                            'attribute' => trans('elementForm.narrative'),
-                            'values' => trans('elementForm.languages'),
-                        ]);
-                    }
-                }
-            }
-
-            $messages[sprintf('%s.percentage.numeric', $sectorBase)] = trans(
-                'validation.numeric',
-                ['attribute' => trans('elementForm.percentage')]
-            );
-            $messages[sprintf('%s.percentage.max', $sectorBase)] = trans(
-                'validation.max.numeric',
-                ['attribute' => trans('elementForm.percentage'), 'max' => 100]
-            );
-            $messages[sprintf('%s.percentage.required', $sectorBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.percentage')]
-            );
-            $messages[sprintf('%s.percentage.sum', $sectorBase)] = trans(
-                'validation.sum',
-                ['attribute' => trans('element.sector')]
-            );
-
-            $tempMessages = $this->factory->getMessagesForNarrative($sector['narrative'], $sectorBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * write brief description.
-     * @param $sectors
-     * @return array
-     */
-    protected function getRulesForPercentage($sectors): array
-    {
-        $array = [];
-
-        if (count($sectors) > 1) {
-            foreach ($sectors as $sectorIndex => $sector) {
-                $sectorForm = sprintf('sector.%s', $sectorIndex);
-                $percentage = $sector['percentage'];
-                $sectorVocabulary = $sector['sector_vocabulary'];
-
-                if (array_key_exists($sectorVocabulary, $array)) {
-                    $totalPercentage = (int) $array[$sectorVocabulary] + (float) $percentage;
-                    $array[$sectorVocabulary] = $totalPercentage;
-                    $array[sprintf('%s.percentage', $sectorForm)] = $sectorVocabulary;
-                } else {
-                    $array[$sectorVocabulary] = $percentage;
-                    $array[sprintf('%s.percentage', $sectorForm)] = $sectorVocabulary;
-                }
-            }
-        }
-
-        return $array;
+        return (new LocationRequest())->getMessagesForLocation(Arr::get($activity, 'location', []));
     }
 
     /**
@@ -1792,25 +590,34 @@ class XmlValidator
      */
     public function rulesForCountryBudgetItems(array $activity): array
     {
-        $rules = [];
         $countryBudgetItems = Arr::get($activity, 'country_budget_items', []);
+        $rules = [];
+        $tempRules = (new CountryBudgetItemRequest())->getRulesForCountryBudgetItem(Arr::get($countryBudgetItems, key($countryBudgetItems), []));
 
-        foreach ($countryBudgetItems as $countryBudgetItemIndex => $countryBudgetItem) {
-            $countryBudgetItemBase = sprintf('country_budget_items.%s', $countryBudgetItemIndex);
-            $rules[sprintf('%s.budget_item.0.%s', $countryBudgetItemBase, 'code')] = 'required';
-            $rules[sprintf('%s.country_budget_vocabulary', $countryBudgetItemBase)] = sprintf(
-                'required|in:%s',
-                $this->validCodeList('BudgetIdentifierVocabulary')
-            );
-
-            $tempRules = $this->getBudgetItemRules($countryBudgetItem['budget_item'], $countryBudgetItemBase, 'code', $countryBudgetItem);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
+        foreach ($tempRules as $idx => $rule) {
+            $rules['country_budget_item.0.' . $idx] = $rule;
         }
 
         return $rules;
+
+        // $rules = [];
+
+        // foreach ($countryBudgetItems as $countryBudgetItemIndex => $countryBudgetItem) {
+        //     $countryBudgetItemBase = sprintf('country_budget_items.%s', $countryBudgetItemIndex);
+        //     $rules[sprintf('%s.budget_item.0.%s', $countryBudgetItemBase, 'code')] = 'required';
+        //     $rules[sprintf('%s.country_budget_vocabulary', $countryBudgetItemBase)] = sprintf(
+        //         'required|in:%s',
+        //         $this->validCodeList('BudgetIdentifierVocabulary')
+        //     );
+
+        //     $tempRules = $this->getBudgetItemRules($countryBudgetItem['budget_item'], $countryBudgetItemBase, 'code', $countryBudgetItem);
+
+        //     foreach ($tempRules as $idx => $tempRule) {
+        //         $rules[$idx] = $tempRule;
+        //     }
+        // }
+
+        // return $rules;
     }
 
     /**
@@ -1820,217 +627,229 @@ class XmlValidator
      */
     public function messagesForCountryBudgetItems(array $activity): array
     {
-        $messages = [];
         $countryBudgetItems = Arr::get($activity, 'country_budget_items', []);
-
-        foreach ($countryBudgetItems as $countryBudgetItemIndex => $countryBudgetItem) {
-            $countryBudgetItemBase = sprintf('country_budget_items.%s', $countryBudgetItemIndex);
-            $code = 'code';
-            $messages[sprintf(
-                '%s.budget_item.0.%s.required',
-                $countryBudgetItemBase,
-                $code
-            )] = trans('validation.required', ['attribute' => trans('elementForm.code')]);
-            $messages[sprintf('%s.country_budget_vocabulary.required', $countryBudgetItemBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.country_budget_item_vocabulary')]
-            );
-            $messages[sprintf('%s.country_budget_vocabulary.in', $countryBudgetItemBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.country_budget_item_vocabulary')]
-            );
-            $tempMessages = $this->getBudgetItemMessages(Arr::get($countryBudgetItem, 'budget_item', []), $countryBudgetItemBase, $code, $countryBudgetItem);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * returns budget item validation rules.
-     * @param $budgetItems
-     * @param $countryBudgetItemBase
-     * @param $code
-     * @param $countryBudgetItem
-     * @return array
-     */
-    public function getBudgetItemRules($budgetItems, $countryBudgetItemBase, $code, $countryBudgetItem): array
-    {
-        $rules = [];
-        foreach ($budgetItems as $budgetItemIndex => $budgetItem) {
-            $budgetItemBase = sprintf('%s.budget_item.%s', $countryBudgetItemBase, $budgetItemIndex);
-            $rules[sprintf('%s.percentage', $budgetItemBase)] = 'nullable|numeric|max:100';
-            $rules[sprintf('%s.%s', $budgetItemBase, $code)] = 'required';
-            ($code !== 'code') ?: $rules[sprintf('%s.%s', $budgetItemBase, $code)] = sprintf(
-                'in:%s',
-                $this->validCodeList('BudgetIdentifier')
-            );
-            $tempRules = [
-                $this->getBudgetItemDescriptionRules(Arr::get($budgetItem, 'description', []), $budgetItemBase),
-                $this->getRulesForBudgetPercentage($countryBudgetItemBase, $countryBudgetItem),
-            ];
-
-            foreach ($tempRules as $tempRule) {
-                foreach ($tempRule as $idx => $rule) {
-                    $rules[$idx] = $rule;
-                }
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * return budget item error message.
-     * @param       $budgetItems
-     * @param       $countryBudgetItemBase
-     * @param       $code
-     * @param       $countryBudgetItem
-     * @return array
-     */
-    public function getBudgetItemMessages($budgetItems, $countryBudgetItemBase, $code, $countryBudgetItem): array
-    {
+        $tempMessages = (new CountryBudgetItemRequest())->getMessagesForCountryBudgetItem(Arr::get($countryBudgetItems, key($countryBudgetItems), []));
         $messages = [];
 
-        foreach ($budgetItems as $budgetItemIndex => $budgetItem) {
-            $budgetItemBase = sprintf('%s.budget_item.%s', $countryBudgetItemBase, $budgetItemIndex);
-            $messages[sprintf('%s.%s.required', $budgetItemBase, $code)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.budget_item_code')]
-            );
-            $messages[sprintf('%s.%s.in', $budgetItemBase, $code)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.budget_item_code')]
-            );
-            $messages[sprintf('%s.percentage.%s', $budgetItemBase, 'numeric')] = trans(
-                'validation.numeric',
-                ['attribute' => trans('elementForm.percentage')]
-            );
-            $messages[sprintf('%s.percentage.%s', $budgetItemBase, 'max')] = trans(
-                'validation.numeric.max',
-                ['attribute' => trans('elementForm.percentage'), 'max' => 100]
-            );
-            $messages[sprintf('%s.percentage.sum', $budgetItemBase)] = trans(
-                'validation.sum',
-                ['attribute' => trans('elementForm.budget_items)')]
-            );
-            $messages[sprintf('%s.percentage.required', $budgetItemBase)] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.percentage'), 'values' => trans('global.multiple_codes')]
-            );
-            $messages[sprintf('%s.percentage.total', $budgetItemBase)] = trans(
-                'validation.total',
-                ['attribute' => trans('elementForm.percentage'), 'values' => trans('elementForm.budget_item)')]
-            );
-            $tempMessages = [
-                $this->getBudgetItemDescriptionMessages(Arr::get($budgetItem, 'description', []), $budgetItemBase),
-                $this->getMessagesForBudgetPercentage($countryBudgetItemBase, $countryBudgetItem),
-            ];
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
+        foreach ($tempMessages as $idx => $message) {
+            $messages['country_budget_item.0.' . $idx] = $message;
         }
 
         return $messages;
+
+        // return (new CountryBudgetItemRequest())->getMessagesForCountryBudgetItem(Arr::get($activity, 'country_budget_items', []));
+
+        // $messages = [];
+        // $countryBudgetItems = Arr::get($activity, 'country_budget_items', []);
+
+        // foreach ($countryBudgetItems as $countryBudgetItemIndex => $countryBudgetItem) {
+        //     $countryBudgetItemBase = sprintf('country_budget_items.%s', $countryBudgetItemIndex);
+        //     $code = 'code';
+        //     $messages[sprintf(
+        //         '%s.budget_item.0.%s.required',
+        //         $countryBudgetItemBase,
+        //         $code
+        //     )] = trans('validation.required', ['attribute' => trans('elementForm.code')]);
+        //     $messages[sprintf('%s.country_budget_vocabulary.required', $countryBudgetItemBase)] = trans(
+        //         'validation.required',
+        //         ['attribute' => trans('elementForm.country_budget_item_vocabulary')]
+        //     );
+        //     $messages[sprintf('%s.country_budget_vocabulary.in', $countryBudgetItemBase)] = trans(
+        //         'validation.code_list',
+        //         ['attribute' => trans('elementForm.country_budget_item_vocabulary')]
+        //     );
+        //     $tempMessages = $this->getBudgetItemMessages(Arr::get($countryBudgetItem, 'budget_item', []), $countryBudgetItemBase, $code, $countryBudgetItem);
+
+        //     foreach ($tempMessages as $idx => $tempMessage) {
+        //         $messages[$idx] = $tempMessage;
+        //     }
+        // }
+
+        // return $messages;
     }
 
-    /**
-     * return budget item description rule.
-     * @param $descriptions
-     * @param $budgetItemBase
-     * @return array
-     */
-    public function getBudgetItemDescriptionRules($descriptions, $budgetItemBase): array
-    {
-        $rules = [];
-        foreach ($descriptions as $descriptionIndex => $description) {
-            $descriptionBase = sprintf('%s.description.%s', $budgetItemBase, $descriptionIndex);
-            $rules = $this->factory->getRulesForNarrative($description['narrative'], $descriptionBase);
-        }
+    // /**
+    //  * returns budget item validation rules.
+    //  * @param $budgetItems
+    //  * @param $countryBudgetItemBase
+    //  * @param $code
+    //  * @param $countryBudgetItem
+    //  * @return array
+    //  */
+    // public function getBudgetItemRules($budgetItems, $countryBudgetItemBase, $code, $countryBudgetItem): array
+    // {
+    //     $rules = [];
+    //     foreach ($budgetItems as $budgetItemIndex => $budgetItem) {
+    //         $budgetItemBase = sprintf('%s.budget_item.%s', $countryBudgetItemBase, $budgetItemIndex);
+    //         $rules[sprintf('%s.percentage', $budgetItemBase)] = 'nullable|numeric|max:100';
+    //         $rules[sprintf('%s.%s', $budgetItemBase, $code)] = 'required';
+    //         ($code !== 'code') ?: $rules[sprintf('%s.%s', $budgetItemBase, $code)] = sprintf(
+    //             'in:%s',
+    //             $this->validCodeList('BudgetIdentifier')
+    //         );
+    //         $tempRules = [
+    //             $this->getBudgetItemDescriptionRules(Arr::get($budgetItem, 'description', []), $budgetItemBase),
+    //             $this->getRulesForBudgetPercentage($countryBudgetItemBase, $countryBudgetItem),
+    //         ];
 
-        return $rules;
-    }
+    //         foreach ($tempRules as $tempRule) {
+    //             foreach ($tempRule as $idx => $rule) {
+    //                 $rules[$idx] = $rule;
+    //             }
+    //         }
+    //     }
 
-    /**
-     * return budget item description error message.
-     * @param $descriptions
-     * @param $budgetItemBase
-     * @return array
-     */
-    public function getBudgetItemDescriptionMessages($descriptions, $budgetItemBase): array
-    {
-        $messages = [];
+    //     return $rules;
+    // }
 
-        foreach ($descriptions as $descriptionIndex => $description) {
-            $descriptionBase = sprintf('%s.description.%s', $budgetItemBase, $descriptionIndex);
-            $messages = $this->factory->getMessagesForNarrative($description['narrative'], $descriptionBase);
-        }
+    // /**
+    //  * return budget item error message.
+    //  * @param       $budgetItems
+    //  * @param       $countryBudgetItemBase
+    //  * @param       $code
+    //  * @param       $countryBudgetItem
+    //  * @return array
+    //  */
+    // public function getBudgetItemMessages($budgetItems, $countryBudgetItemBase, $code, $countryBudgetItem): array
+    // {
+    //     $messages = [];
 
-        return $messages;
-    }
+    //     foreach ($budgetItems as $budgetItemIndex => $budgetItem) {
+    //         $budgetItemBase = sprintf('%s.budget_item.%s', $countryBudgetItemBase, $budgetItemIndex);
+    //         $messages[sprintf('%s.%s.required', $budgetItemBase, $code)] = trans(
+    //             'validation.required',
+    //             ['attribute' => trans('elementForm.budget_item_code')]
+    //         );
+    //         $messages[sprintf('%s.%s.in', $budgetItemBase, $code)] = trans(
+    //             'validation.code_list',
+    //             ['attribute' => trans('elementForm.budget_item_code')]
+    //         );
+    //         $messages[sprintf('%s.percentage.%s', $budgetItemBase, 'numeric')] = trans(
+    //             'validation.numeric',
+    //             ['attribute' => trans('elementForm.percentage')]
+    //         );
+    //         $messages[sprintf('%s.percentage.%s', $budgetItemBase, 'max')] = trans(
+    //             'validation.numeric.max',
+    //             ['attribute' => trans('elementForm.percentage'), 'max' => 100]
+    //         );
+    //         $messages[sprintf('%s.percentage.sum', $budgetItemBase)] = trans(
+    //             'validation.sum',
+    //             ['attribute' => trans('elementForm.budget_items)')]
+    //         );
+    //         $messages[sprintf('%s.percentage.required', $budgetItemBase)] = trans(
+    //             'validation.required_with',
+    //             ['attribute' => trans('elementForm.percentage'), 'values' => trans('global.multiple_codes')]
+    //         );
+    //         $messages[sprintf('%s.percentage.total', $budgetItemBase)] = trans(
+    //             'validation.total',
+    //             ['attribute' => trans('elementForm.percentage'), 'values' => trans('elementForm.budget_item)')]
+    //         );
+    //         $tempMessages = [
+    //             $this->getBudgetItemDescriptionMessages(Arr::get($budgetItem, 'description', []), $budgetItemBase),
+    //             $this->getMessagesForBudgetPercentage($countryBudgetItemBase, $countryBudgetItem),
+    //         ];
 
-    /** Returns rules for percentage.
-     *
-     * @param $countryBudgetItemBase
-     * @param $countryBudget
-     *
-     * @return array
-     */
-    protected function getRulesForBudgetPercentage($countryBudgetItemBase, $countryBudget): array
-    {
-        $countryBudgetItems = Arr::get($countryBudget, 'budget_item', []);
-        $totalPercentage = 0;
-        $isEmpty = false;
-        $countryBudgetPercentage = 0;
-        $rules = [];
+    //         foreach ($tempMessages as $idx => $tempMessage) {
+    //             $messages[$idx] = $tempMessage;
+    //         }
+    //     }
 
-        if (count($countryBudgetItems) > 1) {
-            foreach ($countryBudgetItems as $key => $countryBudgetItem) {
-                ($countryBudgetItem['percentage'] !== '') ? $countryBudgetPercentage = $countryBudgetItem['percentage'] : $isEmpty = true;
-                $totalPercentage = $totalPercentage + $countryBudgetPercentage;
-            }
+    //     return $messages;
+    // }
 
-            foreach ($countryBudgetItems as $key => $countryBudgetItem) {
-                if ($isEmpty) {
-                    $rules[sprintf('%s.budget_item.%s.percentage', $countryBudgetItemBase, $key)] = 'required';
-                } elseif ($totalPercentage !== 100) {
-                    $rules[sprintf('%s.budget_item.%s.percentage', $countryBudgetItemBase, $key)] = 'sum';
-                }
-            }
-        } else {
-            $rules[sprintf('%s.budget_item.0.percentage', $countryBudgetItemBase)] = 'total';
-        }
+    // /**
+    //  * return budget item description rule.
+    //  * @param $descriptions
+    //  * @param $budgetItemBase
+    //  * @return array
+    //  */
+    // public function getBudgetItemDescriptionRules($descriptions, $budgetItemBase): array
+    // {
+    //     $rules = [];
+    //     foreach ($descriptions as $descriptionIndex => $description) {
+    //         $descriptionBase = sprintf('%s.description.%s', $budgetItemBase, $descriptionIndex);
+    //         $rules = $this->factory->getRulesForNarrative($description['narrative'], $descriptionBase);
+    //     }
 
-        return $rules;
-    }
+    //     return $rules;
+    // }
 
-    /** Returns messages for percentage.
-     *
-     * @param $countryBudgetItemBase
-     * @param $countryBudget
-     *
-     * @return array
-     */
-    protected function getMessagesForBudgetPercentage($countryBudgetItemBase, $countryBudget): array
-    {
-        $countryBudgetItems = Arr::get($countryBudget, 'budget_item', []);
-        $messages = [];
+    // /**
+    //  * return budget item description error message.
+    //  * @param $descriptions
+    //  * @param $budgetItemBase
+    //  * @return array
+    //  */
+    // public function getBudgetItemDescriptionMessages($descriptions, $budgetItemBase): array
+    // {
+    //     $messages = [];
 
-        if (count($countryBudgetItems) > 1) {
-            foreach ($countryBudgetItems as $key => $countryBudgetItem) {
-                $messages[sprintf('%s.budget_item.%s.percentage.required', $countryBudgetItemBase, $key)] = trans('validation.required', ['attribute' => 'budget_item_percentage']);
-                $messages[sprintf('%s.budget_item.%s.percentage.sum', $countryBudgetItemBase, $key)] = 'The sum of percentages must be 100.';
-            }
-        } else {
-            $messages[sprintf('%s.budget_item.0.percentage.total', $countryBudgetItemBase)] = trans('validation.total', ['attribute' => 'budget_item_percentage', 'values' => 'budget_item']);
-        }
+    //     foreach ($descriptions as $descriptionIndex => $description) {
+    //         $descriptionBase = sprintf('%s.description.%s', $budgetItemBase, $descriptionIndex);
+    //         $messages = $this->factory->getMessagesForNarrative($description['narrative'], $descriptionBase);
+    //     }
 
-        return $messages;
-    }
+    //     return $messages;
+    // }
+
+    // /** Returns rules for percentage.
+    //  *
+    //  * @param $countryBudgetItemBase
+    //  * @param $countryBudget
+    //  *
+    //  * @return array
+    //  */
+    // protected function getRulesForBudgetPercentage($countryBudgetItemBase, $countryBudget): array
+    // {
+    //     $countryBudgetItems = Arr::get($countryBudget, 'budget_item', []);
+    //     $totalPercentage = 0;
+    //     $isEmpty = false;
+    //     $countryBudgetPercentage = 0;
+    //     $rules = [];
+
+    //     if (count($countryBudgetItems) > 1) {
+    //         foreach ($countryBudgetItems as $key => $countryBudgetItem) {
+    //             ($countryBudgetItem['percentage'] !== '') ? $countryBudgetPercentage = $countryBudgetItem['percentage'] : $isEmpty = true;
+    //             $totalPercentage = $totalPercentage + $countryBudgetPercentage;
+    //         }
+
+    //         foreach ($countryBudgetItems as $key => $countryBudgetItem) {
+    //             if ($isEmpty) {
+    //                 $rules[sprintf('%s.budget_item.%s.percentage', $countryBudgetItemBase, $key)] = 'required';
+    //             } elseif ($totalPercentage !== 100) {
+    //                 $rules[sprintf('%s.budget_item.%s.percentage', $countryBudgetItemBase, $key)] = 'sum';
+    //             }
+    //         }
+    //     } else {
+    //         $rules[sprintf('%s.budget_item.0.percentage', $countryBudgetItemBase)] = 'total';
+    //     }
+
+    //     return $rules;
+    // }
+
+    // /** Returns messages for percentage.
+    //  *
+    //  * @param $countryBudgetItemBase
+    //  * @param $countryBudget
+    //  *
+    //  * @return array
+    //  */
+    // protected function getMessagesForBudgetPercentage($countryBudgetItemBase, $countryBudget): array
+    // {
+    //     $countryBudgetItems = Arr::get($countryBudget, 'budget_item', []);
+    //     $messages = [];
+
+    //     if (count($countryBudgetItems) > 1) {
+    //         foreach ($countryBudgetItems as $key => $countryBudgetItem) {
+    //             $messages[sprintf('%s.budget_item.%s.percentage.required', $countryBudgetItemBase, $key)] = trans('validation.required', ['attribute' => 'budget_item_percentage']);
+    //             $messages[sprintf('%s.budget_item.%s.percentage.sum', $countryBudgetItemBase, $key)] = 'The sum of percentages must be 100.';
+    //         }
+    //     } else {
+    //         $messages[sprintf('%s.budget_item.0.percentage.total', $countryBudgetItemBase)] = trans('validation.total', ['attribute' => 'budget_item_percentage', 'values' => 'budget_item']);
+    //     }
+
+    //     return $messages;
+    // }
 
     /**
      * returns rules for HumanitarianScope.
@@ -2039,32 +858,7 @@ class XmlValidator
      */
     public function rulesForHumanitarianScope(array $activity): array
     {
-        $rules = [];
-        $humanitarianScopes = Arr::get($activity, 'humanitarian_scope', []);
-
-        foreach ($humanitarianScopes as $humanitarianScopeIndex => $humanitarianScope) {
-            $humanitarianScopeBase = 'humanitarian_scope.' . $humanitarianScopeIndex;
-            $rules[$humanitarianScopeBase . '.type'] = sprintf(
-                'required|in:%s',
-                $this->validCodeList('HumanitarianScopeType')
-            );
-            $rules[$humanitarianScopeBase . '.vocabulary'] = sprintf(
-                'required|in:%s',
-                $this->validCodeList('HumanitarianScopeVocabulary')
-            );
-            $rules[$humanitarianScopeBase . '.vocabulary_uri'] = 'nullable|url';
-            if (Arr::get($humanitarianScope, 'vocabulary') === '99') {
-                $rules[$humanitarianScopeBase . '.vocabulary_uri'] = 'url|required';
-            }
-            $rules[$humanitarianScopeBase . '.code'] = 'required|string';
-            $tempRules = $this->factory->getRulesForNarrative(Arr::get($humanitarianScope, 'narrative', []), $humanitarianScopeBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
+        return (new HumanitarianScopeRequest())->getRulesForHumanitarianScope(Arr::get($activity, 'humanitarian_scope', []));
     }
 
     /**
@@ -2075,50 +869,7 @@ class XmlValidator
      */
     public function messagesForHumanitarianScope(array $activity): array
     {
-        $messages = [];
-        $humanitarianScopes = Arr::get($activity, 'humanitarian_scope', []);
-
-        foreach ($humanitarianScopes as $humanitarianScopeIndex => $humanitarianScope) {
-            $humanitarianScopeForm = 'humanitarian_scope.' . $humanitarianScopeIndex;
-            $messages[$humanitarianScopeForm . '.type.required'] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.humanitarian_scope_type')]
-            );
-            $messages[$humanitarianScopeForm . '.type.in'] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.humanitarian_scope_type')]
-            );
-            $messages[$humanitarianScopeForm . '.vocabulary.required'] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.humanitarian_scope_vocabulary')]
-            );
-            $messages[$humanitarianScopeForm . '.vocabulary.in'] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.humanitarian_scope_vocabulary')]
-            );
-            $messages[$humanitarianScopeForm . '.code.required'] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.humanitarian_scope_code')]
-            );
-            $messages[$humanitarianScopeForm . '.code.string'] = trans(
-                'validation.string',
-                ['attribute' => trans('element.humanitarian_scope')]
-            );
-            $messages[$humanitarianScopeForm . '.vocabulary_uri.url'] = trans('validation.url');
-            if (Arr::get($humanitarianScope, 'vocabulary') === '99') {
-                $messages[$humanitarianScopeForm . '.vocabulary_uri.required'] = trans(
-                    'validation.required',
-                    ['attribute' => trans('elementForm.vocabulary_uri')]
-                );
-            }
-            $tempMessages = $this->factory->getMessagesForNarrative(Arr::get($humanitarianScope, 'narrative', []), $humanitarianScopeForm);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
+        return (new HumanitarianScopeRequest())->getMessagesForHumanitarianScope(Arr::get($activity, 'humanitarian_scope', []));
     }
 
     /**
@@ -2129,38 +880,7 @@ class XmlValidator
      */
     public function rulesForPolicyMarker(array $activity): array
     {
-        $rules = [];
-        $policyMarkers = Arr::get($activity, 'policy_marker', []);
-
-        foreach ($policyMarkers as $policyMarkerIndex => $policyMarker) {
-            $policyMarkerForm = sprintf('policy_marker.%s', $policyMarkerIndex);
-            $rules[sprintf('%s.vocabulary', $policyMarkerForm)] = sprintf(
-                'in:%s',
-                $this->validCodeList('PolicyMarkerVocabulary')
-            );
-            $rules[sprintf('%s.vocabulary_uri', $policyMarkerForm)] = 'nullable|url';
-
-            if (Arr::get($policyMarker, 'vocabulary') === '99') {
-                $rules[sprintf('%s.policy_marker_text', $policyMarkerForm)] = 'required';
-                $rules[sprintf('%s.vocabulary_uri', $policyMarkerForm)] = 'url|required';
-            } else {
-                $rules[sprintf('%s.policy_marker', $policyMarkerForm)] = sprintf(
-                    'required|in:%s',
-                    $this->validCodeList('PolicyMarker')
-                );
-            }
-            $rules[sprintf('%s.significance', $policyMarkerForm)] = sprintf(
-                'in:%s',
-                $this->validCodeList('PolicySignificance')
-            );
-            $tempRules = $this->factory->getRulesForNarrative($policyMarker['narrative'], $policyMarkerForm);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
+        return (new PolicyMarkerRequest())->getRulesForPolicyMarker(Arr::get($activity, 'policy_marker', []));
     }
 
     /**
@@ -2171,48 +891,7 @@ class XmlValidator
      */
     public function messagesForPolicyMarker(array $activity): array
     {
-        $messages = [];
-        $policyMarkers = Arr::get($activity, 'policy_marker', []);
-
-        foreach ($policyMarkers as $policyMarkerIndex => $policyMarker) {
-            $policyMarkerForm = sprintf('policy_marker.%s', $policyMarkerIndex);
-            $messages[sprintf('%s.vocabulary.in', $policyMarkerForm)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.policy_marker_vocabulary')]
-            );
-            $messages[sprintf('%s.vocabulary_uri.url', $policyMarkerForm)] = trans('validation.url');
-
-            if (Arr::get($policyMarker, 'vocabulary') === '99') {
-                $messages[sprintf('%s.policy_marker_text.required', $policyMarkerForm)] = trans(
-                    'validation.required',
-                    ['attribute' => trans('element.policy_marker')]
-                );
-                $messages[sprintf('%s.vocabulary_uri.required', $policyMarkerForm)] = trans(
-                    'validation.required',
-                    ['attribute' => trans('elementForm.vocabulary_uri')]
-                );
-            } else {
-                $messages[sprintf('%s.policy_marker.required', $policyMarkerForm)] = trans(
-                    'validation.required',
-                    ['attribute' => trans('element.policy_marker')]
-                );
-                $messages[sprintf('%s.policy_marker.in', $policyMarkerForm)] = trans(
-                    'validation.code_list',
-                    ['attribute' => trans('element.policy_maker_code')]
-                );
-            }
-            $messages[sprintf('%s.significance.in', $policyMarkerForm)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('element.significance_code')]
-            );
-            $tempMessages = $this->factory->getMessagesForNarrative($policyMarker['narrative'], $policyMarkerForm);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
+        return (new PolicyMarkerRequest())->getMessagesForPolicyMarker(Arr::get($activity, 'policy_marker', []));
     }
 
     /**
@@ -2223,41 +902,7 @@ class XmlValidator
      */
     protected function rulesForBudget(array $activity): array
     {
-        $rules = [];
-        $budgets = Arr::get($activity, 'budget', []);
-
-        foreach ($budgets as $budgetIndex => $budget) {
-            $budgetBase = sprintf('budget.%s', $budgetIndex);
-            $rules[sprintf('%s.budget_status', $budgetBase)] = sprintf(
-                'required|in:%s',
-                $this->validCodeList('BudgetStatus')
-            );
-            $rules[sprintf('%s.budget_type', $budgetBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('BudgetType')
-            );
-            $tempRules = [
-                $this->factory->getRulesForPeriodStart($budget['period_start'], $budgetBase),
-                $this->factory->getRulesForPeriodEnd($budget['period_end'], $budgetBase),
-                $this->getRulesForBudgetValue($budget['budget_value'], $budgetBase),
-            ];
-
-            foreach ($tempRules as $tempRule) {
-                foreach ($tempRule as $idx => $rule) {
-                    $rules[$idx] = $rule;
-                }
-            }
-
-            $startDate = Arr::get($budget, 'period_start.0.date');
-            $newDate = $startDate ? date('Y-m-d', strtotime($startDate . '+1year')) : '';
-
-            if ($newDate) {
-                $rules[$budgetBase . '.period_end.0.date'] = [];
-                $rules[$budgetBase . '.period_end.0.date'][] = sprintf('before:%s', $newDate);
-            }
-        }
-
-        return $rules;
+        return (new BudgetRequest())->getRulesForBudget(Arr::get($activity, 'budget', []));
     }
 
     /**
@@ -2268,138 +913,7 @@ class XmlValidator
      */
     protected function messagesForBudget(array $activity): array
     {
-        $messages = [];
-        $budgets = Arr::get($activity, 'budget', []);
-
-        foreach ($budgets as $budgetIndex => $budget) {
-            $budgetBase = sprintf('budget.%s', $budgetIndex);
-
-            $messages[sprintf('%s.budget_status.required', $budgetBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.budget_status')]
-            );
-            $messages[sprintf('%s.budget_status.in', $budgetBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.budget_status')]
-            );
-            $messages[sprintf('%s.budget_type.in', $budgetBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.budget_code')]
-            );
-            $tempMessages = [
-                $this->factory->getMessagesForPeriodStart($budget['period_start'], $budgetBase),
-                $this->factory->getMessagesForPeriodEnd($budget['period_end'], $budgetBase),
-                $this->getMessagesForBudgetValue($budget['budget_value'], $budgetBase),
-            ];
-
-            foreach ($tempMessages as $tempMessage) {
-                foreach ($tempMessage as $idx => $message) {
-                    $messages[$idx] = $message;
-                }
-            }
-
-            $messages[$budgetBase . '.period_end.0.date.before'] = trans(
-                'validation.before',
-                ['attribute' => trans('elementForm.period_end'), 'date' => trans('elementForm.period_start')]
-            );
-        }
-
-        return $messages;
-    }
-
-    /**
-     * @param $budgetValues
-     * @param $budgetBase
-     *
-     * @return array
-     */
-    protected function getRulesForValue($budgetValues, $budgetBase): array
-    {
-        $rules = [];
-
-        foreach ($budgetValues as $valueIndex => $value) {
-            $valueBase = sprintf('%s.value.%s', $budgetBase, $valueIndex);
-            $rules[sprintf('%s.amount', $valueBase)] = 'required|numeric';
-            $rules[sprintf('%s.value_date', $valueBase)] = 'required';
-        }
-
-        return $rules;
-    }
-
-    /**
-     * @param $budgetValues
-     * @param $budgetBase
-     *
-     * @return array
-     */
-    protected function getRulesForBudgetValue($budgetValues, $budgetBase): array
-    {
-        $rules = [];
-
-        foreach ($budgetValues as $valueIndex => $value) {
-            $valueBase = sprintf('%s.budget_value.%s', $budgetBase, $valueIndex);
-            $rules[sprintf('%s.amount', $valueBase)] = 'required|numeric';
-            $rules[sprintf('%s.value_date', $valueBase)] = 'required';
-        }
-
-        return $rules;
-    }
-
-    /**
-     * @param $budgetValues
-     * @param $budgetBase
-     * @return array
-     */
-    protected function getMessagesForValue($budgetValues, $budgetBase): array
-    {
-        $messages = [];
-
-        foreach ($budgetValues as $valueIndex => $value) {
-            $valueBase = sprintf('%s.value.%s', $budgetBase, $valueIndex);
-            $messages[sprintf('%s.amount.required', $valueBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.amount')]
-            );
-            $messages[sprintf('%s.amount.numeric', $valueBase)] = trans(
-                'validation.numeric',
-                ['attribute' => trans('elementForm.amount')]
-            );
-            $messages[sprintf('%s.value_date.required', $valueBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.date')]
-            );
-        }
-
-        return $messages;
-    }
-
-    /**
-     * @param $budgetValues
-     * @param $budgetBase
-     *
-     * @return array
-     */
-    protected function getMessagesForBudgetValue($budgetValues, $budgetBase): array
-    {
-        $messages = [];
-
-        foreach ($budgetValues as $valueIndex => $value) {
-            $valueBase = sprintf('%s.budget_value.%s', $budgetBase, $valueIndex);
-            $messages[sprintf('%s.amount.required', $valueBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.amount')]
-            );
-            $messages[sprintf('%s.amount.numeric', $valueBase)] = trans(
-                'validation.numeric',
-                ['attribute' => trans('elementForm.amount')]
-            );
-            $messages[sprintf('%s.value_date.required', $valueBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.date')]
-            );
-        }
-
-        return $messages;
+        return (new BudgetRequest())->getMessagesForBudget(Arr::get($activity, 'budget', []));
     }
 
     /**
@@ -2408,32 +922,7 @@ class XmlValidator
      */
     protected function rulesForPlannedDisbursement(array $activity): array
     {
-        $rules = [];
-        $plannedDisbursements = Arr::get($activity, 'planned_disbursement', []);
-
-        foreach ($plannedDisbursements as $plannedDisbursementIndex => $plannedDisbursement) {
-            $plannedDisbursementBase = sprintf('planned_disbursement.%s', $plannedDisbursementIndex);
-            $rules[sprintf('%s.planned_disbursement_type', $plannedDisbursementBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('BudgetType')
-            );
-
-            $tempRules = [
-                $this->factory->getRulesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementBase),
-                $this->factory->getRulesForPeriodEnd($plannedDisbursement['period_end'], $plannedDisbursementBase),
-                $this->getRulesForValue($plannedDisbursement['value'], $plannedDisbursementBase),
-                $this->getRulesForProviderOrg($plannedDisbursement['provider_org'], $plannedDisbursementBase),
-                $this->getRulesForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementBase),
-            ];
-
-            foreach ($tempRules as $tempRule) {
-                foreach ($tempRule as $idx => $rule) {
-                    $rules[$idx] = $rule;
-                }
-            }
-        }
-
-        return $rules;
+        return (new PlannedDisbursementRequest())->getRulesForPlannedDisbursement(Arr::get($activity, 'planned_disbursement', []));
     }
 
     /**
@@ -2442,131 +931,7 @@ class XmlValidator
      */
     protected function messagesForPlannedDisbursement(array $activity): array
     {
-        $messages = [];
-        $plannedDisbursements = Arr::get($activity, 'planned_disbursement', []);
-
-        foreach ($plannedDisbursements as $plannedDisbursementIndex => $plannedDisbursement) {
-            $plannedDisbursementBase = sprintf('planned_disbursement.%s', $plannedDisbursementIndex);
-            $messages[sprintf('%s.planned_disbursement_type.in', $plannedDisbursementBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.planned_disbursement_type')]
-            );
-            $tempMessages = [
-                $this->factory->getMessagesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementBase),
-                $this->factory->getMessagesForPeriodEnd($plannedDisbursement['period_end'], $plannedDisbursementBase),
-                $this->getMessagesForValue($plannedDisbursement['value'], $plannedDisbursementBase),
-                $this->getMessagesForProviderOrg($plannedDisbursement['provider_org'], $plannedDisbursementBase),
-                $this->getMessagesForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementBase),
-            ];
-
-            foreach ($tempMessages as $tempRule) {
-                foreach ($tempRule as $idx => $message) {
-                    $messages[$idx] = $message;
-                }
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * @param array $providerOrgData
-     * @param       $plannedDisbursementBase
-     * @return array
-     */
-    protected function getRulesForProviderOrg(array $providerOrgData, $plannedDisbursementBase): array
-    {
-        $rules = [];
-
-        foreach ($providerOrgData as $providerOrgIndex => $providerOrg) {
-            $providerOrgBase = sprintf('%s.provider_org.%s', $plannedDisbursementBase, $providerOrgIndex);
-            $rules[sprintf('%s.type', $providerOrgBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('OrganizationType', 'Organization')
-            );
-            $tempRules = $this->factory->getRulesForNarrative($providerOrg['narrative'], $providerOrgBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * @param array $providerOrgData
-     * @param       $plannedDisbursementBase
-     * @return array
-     */
-    protected function getMessagesForProviderOrg(array $providerOrgData, $plannedDisbursementBase): array
-    {
-        $message = [];
-
-        foreach ($providerOrgData as $providerOrgIndex => $providerOrg) {
-            $providerOrgBase = sprintf('%s.provider_org.%s', $plannedDisbursementBase, $providerOrgIndex);
-            $message[sprintf('%s.type.in', $providerOrgBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.organisation_type')]
-            );
-            $tempMessages = $this->factory->getMessagesForNarrative($providerOrg['narrative'], $providerOrgBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $message[$idx] = $tempMessage;
-            }
-        }
-
-        return $message;
-    }
-
-    /**
-     * @param array $receiverOrgData
-     * @param       $plannedDisbursementBase
-     * @return array
-     */
-    protected function getRulesForReceiverOrg(array $receiverOrgData, $plannedDisbursementBase): array
-    {
-        $rules = [];
-
-        foreach ($receiverOrgData as $receiverOrgIndex => $receiverOrg) {
-            $receiverOrgBase = sprintf('%s.receiver_org.%s', $plannedDisbursementBase, $receiverOrgIndex);
-            $rules[sprintf('%s.type', $receiverOrgBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('OrganizationType', 'Organization')
-            );
-            $tempRules = $this->factory->getRulesForNarrative($receiverOrg['narrative'], $receiverOrgBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * @param array $receiverOrgData
-     * @param       $plannedDisbursementBase
-     * @return array
-     */
-    protected function getMessagesForReceiverOrg(array $receiverOrgData, $plannedDisbursementBase): array
-    {
-        $message = [];
-
-        foreach ($receiverOrgData as $receiverOrgIndex => $receiverOrg) {
-            $receiverOrgBase = sprintf('%s.receiver_org.%s', $plannedDisbursementBase, $receiverOrgIndex);
-            $message[sprintf('%s.type.in', $receiverOrgBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.organisation_type')]
-            );
-            $tempMessages = $this->factory->getMessagesForNarrative($receiverOrg['narrative'], $receiverOrgBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $message[$idx] = $tempMessage;
-            }
-        }
-
-        return $message;
+        return (new PlannedDisbursementRequest())->getMessagesForPlannedDisbursement(Arr::get($activity, 'planned_disbursement', []));
     }
 
     /**
@@ -2575,36 +940,7 @@ class XmlValidator
      */
     protected function rulesForDocumentLink(array $activity): array
     {
-        $rules = [];
-        $documentLinks = Arr::get($activity, 'document_links', []);
-
-        foreach ($documentLinks as $documentLinkIndex => $documentLink) {
-            $documentLinkBase = sprintf('document_links.%s', $documentLinkIndex);
-            $rules[sprintf('%s.document_link.url', $documentLinkBase)] = 'required|url';
-            $rules[sprintf('%s.document_link.format', $documentLinkBase)] = sprintf(
-                'required|in:%s',
-                $this->validCodeList('FileFormat')
-            );
-            $rules[sprintf('%s.document_link.language.*.language', $documentLinkBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('Language')
-            );
-            $tempRules = [
-                $this->factory->getRulesForNarrative(Arr::get($documentLink, 'document_link.title.0.narrative', []), sprintf('%s.document_link.title.0', $documentLinkBase)),
-                $this->getRulesForDocumentCategory(Arr::get($documentLink, 'document_link.category', []), sprintf('%s.document_link', $documentLinkBase)),
-            ];
-
-            foreach ($tempRules as $tempRule) {
-                foreach ($tempRule as $idx => $rule) {
-                    $rules[$idx] = $rule;
-                }
-            }
-
-            $rules[sprintf('%s.document_link.title.0.narrative.0.narrative', $documentLinkBase)] = [];
-            $rules[sprintf('%s.document_link.title.0.narrative.0.narrative', $documentLinkBase)][] = 'required';
-        }
-
-        return $rules;
+        return (new DocumentLinkRequest())->getRulesForDocumentLink(Arr::get($activity, 'document_link', []));
     }
 
     /**
@@ -2613,92 +949,7 @@ class XmlValidator
      */
     protected function messagesForDocumentLink(array $activity): array
     {
-        $messages = [];
-        $documentLinks = Arr::get($activity, 'document_links', []);
-
-        foreach ($documentLinks as $documentLinkIndex => $documentLink) {
-            $documentLinkBase = sprintf('document_links.%s', $documentLinkIndex);
-            $messages[sprintf('%s.document_link.url.required', $documentLinkBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.url')]
-            );
-            $messages[sprintf('%s.document_link.url.url', $documentLinkBase)] = trans('validation.url');
-            $messages[sprintf('%s.document_link.format.required', $documentLinkBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.format')]
-            );
-            $messages[sprintf('%s.document_link.format.in', $documentLinkBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.document_format_type')]
-            );
-            $messages[sprintf(
-                '%s.document_link.language.*.language.in',
-                $documentLinkBase
-            )] = trans('validation.code_list', ['attribute' => trans('elementForm.language')]);
-            $tempMessages = [
-                $this->factory->getMessagesForNarrative(Arr::get($documentLink, 'document_link.title.0.narrative', []), sprintf('%s.document_link.title.0', $documentLinkBase)),
-                $this->getMessagesForDocumentCategory(Arr::get($documentLink, 'document_link.category', []), sprintf('%s.document_link', $documentLinkBase)),
-            ];
-
-            foreach ($tempMessages as $tempMessage) {
-                foreach ($tempMessage as $idx => $message) {
-                    $messages[$idx] = $message;
-                }
-            }
-
-            $messages[sprintf(
-                '%s.document_link.title.0.narrative.0.narrative.required',
-                $documentLinkBase
-            )] = trans('validation.required', ['attribute' => trans('elementForm.narrative')]);
-        }
-
-        return $messages;
-    }
-
-    /**
-     * @param $categories
-     * @param $documentLinkBase
-     * @return array
-     */
-    protected function getRulesForDocumentCategory($categories, $documentLinkBase): array
-    {
-        $rules = [];
-        foreach ($categories as $documentCategoryIndex => $documentCategory) {
-            $rules[sprintf(
-                '%s.category.%s.code',
-                $documentLinkBase,
-                $documentCategoryIndex
-            )] = sprintf('required|in:%s', $this->validCodeList('DocumentCategory'));
-        }
-
-        return $rules;
-    }
-
-    /**
-     * @param $categories
-     * @param $documentLinkBase
-     * @return array
-     */
-    protected function getMessagesForDocumentCategory($categories, $documentLinkBase): array
-    {
-        $messages = [];
-        foreach ($categories as $documentCategoryIndex => $documentCategory) {
-            $messages[sprintf(
-                '%s.category.%s.code.required',
-                $documentLinkBase,
-                $documentCategoryIndex
-            )] = trans('validation.required', ['attribute' => trans('elementForm.category')]);
-            $messages[sprintf(
-                '%s.category.%s.code.in',
-                $documentLinkBase,
-                $documentCategoryIndex
-            )] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.category')]
-            );
-        }
-
-        return $messages;
+        return (new DocumentLinkRequest())->getMessagesForDocumentLink(Arr::get($activity, 'document_link', []));
     }
 
     /**
@@ -2707,19 +958,7 @@ class XmlValidator
      */
     protected function rulesForRelatedActivity(array $activity): array
     {
-        $rules = [];
-        $relatedActivities = Arr::get($activity, 'related_activity', []);
-
-        foreach ($relatedActivities as $relatedActivityIndex => $relatedActivity) {
-            $relatedActivityBase = sprintf('related_activity.%s', $relatedActivityIndex);
-            $rules[sprintf('%s.relationship_type', $relatedActivityBase)] = sprintf(
-                'required|in:%s',
-                $this->validCodeList('RelatedActivityType')
-            );
-            $rules[sprintf('%s.activity_identifier', $relatedActivityBase)] = 'required';
-        }
-
-        return $rules;
+        return (new RelatedActivityRequest())->getRulesForRelatedActivity(Arr::get($activity, 'related_activity', []));
     }
 
     /**
@@ -2728,26 +967,7 @@ class XmlValidator
      */
     protected function messagesForRelatedActivity(array $activity): array
     {
-        $messages = [];
-        $relatedActivities = Arr::get($activity, 'related_activity', []);
-
-        foreach ($relatedActivities as $relatedActivityIndex => $relatedActivity) {
-            $relatedActivityBase = sprintf('related_activity.%s', $relatedActivityIndex);
-            $messages[sprintf('%s.relationship_type.required', $relatedActivityBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.type_of_relationship')]
-            );
-            $messages[sprintf('%s.relationship_type.in', $relatedActivityBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.type_of_relationship')]
-            );
-            $messages[sprintf('%s.activity_identifier.required', $relatedActivityBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.activity_identifier')]
-            );
-        }
-
-        return $messages;
+        return (new RelatedActivityRequest())->getMessagesForRelatedActivity(Arr::get($activity, 'related_activity', []));
     }
 
     /**
@@ -2756,16 +976,7 @@ class XmlValidator
      */
     protected function rulesForLegacyData(array $activity): array
     {
-        $rules = [];
-        $legacy = Arr::get($activity, 'legacy_data', []);
-
-        foreach ($legacy as $legacyDataIndex => $legacyData) {
-            $legacyDataBase = sprintf('legacy_data.%s', $legacyDataIndex);
-            $rules[sprintf('%s.legacy_name', $legacyDataBase)] = 'required';
-            $rules[sprintf('%s.value', $legacyDataBase)] = 'required';
-        }
-
-        return $rules;
+        return (new LegacyDataRequest())->getRulesForActivityLegacyData(Arr::get($activity, 'legacy_data', []));
     }
 
     /**
@@ -2774,22 +985,7 @@ class XmlValidator
      */
     protected function messagesForLegacyData(array $activity): array
     {
-        $messages = [];
-        $legacy = Arr::get($activity, 'legacy_data', []);
-
-        foreach ($legacy as $legacyDataIndex => $legacyData) {
-            $legacyDataBase = sprintf('legacy_data.%s', $legacyDataIndex);
-            $messages[sprintf('%s.legacy_name.required', $legacyDataBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.legacy_data_name')]
-            );
-            $messages[sprintf('%s.value.required', $legacyDataBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.legacy_data_value')]
-            );
-        }
-
-        return $messages;
+        return (new LegacyDataRequest())->getMessagesForActivityLegacyData(Arr::get($activity, 'legacy_data', []));
     }
 
     /**
@@ -2798,38 +994,7 @@ class XmlValidator
      */
     protected function rulesForCondition(array $activity): array
     {
-        $rules = [];
-        $conditions = Arr::get($activity, 'conditions', []);
-
-        $rules['conditions.condition_attached'] = 'in:1,0';
-
-        foreach (Arr::get($conditions, 'condition', []) as $conditionIndex => $condition) {
-            $conditionBase = sprintf('conditions.condition.%s', $conditionIndex);
-            $rules[sprintf('%s.condition_type', $conditionBase)] = sprintf(
-                'required_if:condition_attached,1|in:%s',
-                $this->validCodeList('ConditionType')
-            );
-            $tempRules = $this->factory->getRulesForNarrative($condition['narrative'], $conditionBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-
-            foreach ($condition['narrative'] as $narrativeIndex => $narrative) {
-                $rules[sprintf(
-                    '%s.narrative.%s.narrative',
-                    $conditionBase,
-                    $narrativeIndex
-                )] = [];
-                $rules[sprintf(
-                    '%s.narrative.%s.narrative',
-                    $conditionBase,
-                    $narrativeIndex
-                )][] = 'required_if:condition_attached,1';
-            }
-        }
-
-        return $rules;
+        return $this->getBaseRules((new ConditionRequest())->getRulesForCondition(Arr::get($activity, 'conditions.condition', [])), 'conditions', Arr::get($activity, 'conditions.condition', ''), false);
     }
 
     /**
@@ -2838,51 +1003,7 @@ class XmlValidator
      */
     protected function messagesForCondition(array $activity): array
     {
-        $messages = [];
-        $conditions = Arr::get($activity, 'conditions', []);
-
-        $messages['conditions.condition_attached.required'] = trans(
-            'validation.required',
-            ['attribute' => trans('elementForm.condition_attached')]
-        );
-        $messages['conditions.condition_attached.in'] = trans(
-            'validation.code_list',
-            ['attribute' => trans('elementForm.condition_attached')]
-        );
-
-        foreach (Arr::get($conditions, 'condition', []) as $conditionIndex => $condition) {
-            $conditionBase = sprintf('conditions.condition.%s', $conditionIndex);
-            $messages[sprintf('%s.condition_type.required_if', $conditionBase)] = trans(
-                'validation.required_if',
-                [
-                    'attribute' => trans('elementForm.condition_type'),
-                    'values' => trans('elementForm.condition_attached'),
-                    'value' => trans('global.yes'),
-                ]
-            );
-            $messages[sprintf('%s.condition_type.required_if', $conditionBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.condition_type')]
-            );
-            $tempMessages = $this->factory->getMessagesForNarrative($condition['narrative'], $conditionBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-
-            foreach ($condition['narrative'] as $narrativeIndex => $narrative) {
-                $messages[sprintf('%s.narrative.%s.narrative.required_if', $conditionBase, $narrativeIndex)] = trans(
-                    'validation.required_if',
-                    [
-                        'attribute' => trans('elementForm.narrative'),
-                        'values' => trans('elementForm.condition_attached'),
-                        'value' => trans('global.yes'),
-                    ]
-                );
-            }
-        }
-
-        return $messages;
+        return $this->getBaseMessages((new ConditionRequest())->getMessagesForCondition(Arr::get($activity, 'conditions.condition', [])), 'conditions', Arr::get($activity, 'conditions.condition', ''), false);
     }
 
     /**
@@ -2893,84 +1014,13 @@ class XmlValidator
     protected function rulesForTransaction($activity): array
     {
         $rules = [];
-        $transactions = Arr::get($activity, 'transaction', []);
+        $transactions = Arr::get($activity, 'transactions', []);
 
-        foreach ($transactions as $transactionIndex => $transaction) {
-            $references = $this->getReferences($transactions, $transaction['id']);
-            $transactionBase = sprintf('transaction.%s.transaction', $transactionIndex);
+        foreach ($transactions as $idx => $transaction) {
+            $tempRules = $this->getBaseRules((new TransactionRequest())->getRulesForTransaction($transaction, true, $activity), 'transactions.' . $idx, $transaction, false);
 
-            $transactionReferences = [];
-            foreach ($references as $referenceKey => $reference) {
-                $transactionReferences[] = $reference;
-            }
-
-            $transactionReference = implode(',', $transactionReferences);
-            $rules[sprintf('%s.humanitarian', $transactionBase)] = 'in:1,0';
-            $rules[sprintf('%s.reference', $transactionBase)] = 'not_in:' . $transactionReference;
-            $rules[sprintf(
-                '%s.provider_organization.0.organization_identifier_code',
-                $transactionBase
-            )] = 'exclude_operators';
-            $rules[sprintf(
-                '%s.receiver_organization.0.organization_identifier_code',
-                $transactionBase
-            )] = 'exclude_operators';
-            $rules[sprintf('%s.recipient_country.0.country_code', $transactionBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('Country', 'Organization')
-            );
-            $rules[sprintf('%s.recipient_region.0.region_code', $transactionBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('Region')
-            );
-            $rules[sprintf('%s.recipient_region.0.vocabulary', $transactionBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('RegionVocabulary')
-            );
-            $rules[sprintf('%s.flow_type.0.flow_type', $transactionBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('FlowType')
-            );
-            $rules[sprintf('%s.finance_type.0.finance_type', $transactionBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('FinanceType')
-            );
-            $rules[sprintf('%s.aid_type.0.aid_type', $transactionBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('AidType')
-            );
-            $rules[sprintf('%s.tied_status.0.tied_status_code', $transactionBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('TiedStatus')
-            );
-            $tempRules = [
-                $this->getTransactionTypeRules(
-                    Arr::get($transaction, 'transaction.transaction_type', []),
-                    $transactionBase
-                ),
-                $this->getTransactionDateRules(
-                    Arr::get($transaction, 'transaction.transaction_date', []),
-                    $transactionBase
-                ),
-                $this->getValueRules(Arr::get($transaction, 'transaction', 'value', []), $transactionBase),
-                $this->getDescriptionRules(Arr::get($transaction, 'transaction', 'description', []), $transactionBase),
-                $this->getSectorsRules(Arr::get($transaction, 'transaction.sector', []), $transactionBase),
-                $this->getRulesForTransactionProviderOrg(Arr::get(
-                    $transaction,
-                    'transaction.provider_organization',
-                    []
-                ), $transactionBase),
-                $this->getRulesForTransactionReceiverOrg(Arr::get(
-                    $transaction,
-                    'transaction.receiver_organization',
-                    []
-                ), $transactionBase),
-            ];
-
-            foreach ($tempRules as $tempRule) {
-                foreach ($tempRule as $idx => $rule) {
-                    $rules[$idx] = $rule;
-                }
+            foreach ($tempRules as $index => $rule) {
+                $rules[$index] = $rule;
             }
         }
 
@@ -2985,586 +1035,12 @@ class XmlValidator
     protected function messagesForTransaction($activity): array
     {
         $messages = [];
-        $transactions = Arr::get($activity, 'transaction', []);
-
-        foreach ($transactions as $transactionIndex => $transaction) {
-            $transactionBase = sprintf('transaction.%s.transaction', $transactionIndex);
-            $messages[sprintf('%s.reference.not_in', $transactionBase)] = trans(
-                'validation.unique',
-                ['attribute' => trans('elementForm.reference')]
-            );
-            $messages[sprintf('%s.humanitarian.in', $transactionBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.humanitarian_code')]
-            );
-            $messages[sprintf(
-                '%s.recipient_country.0.country_code.in',
-                $transactionBase
-            )] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.recipient_country_code')]
-            );
-            $messages[sprintf('%s.recipient_region.0.region_code.in', $transactionBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.recipient_region_code')]
-            );
-            $messages[sprintf('%s.recipient_region.0.vocabulary.in', $transactionBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.recipient_region_vocabulary')]
-            );
-            $messages[sprintf('%s.flow_type.0.flow_type.in', $transactionBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.flow_type')]
-            );
-            $messages[sprintf('%s.finance_type.0.finance_type.in', $transactionBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.finance_type')]
-            );
-            $messages[sprintf('%s.aid_type.0.aid_type.in', $transactionBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.aid_type')]
-            );
-            $messages[sprintf('%s.tied_status.0.tied_status_code.in', $transactionBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.tied_status_code')]
-            );
-
-            $tempMessages = [
-                $this->getTransactionTypeMessages(
-                    Arr::get($transaction, 'transaction.transaction_type', []),
-                    $transactionBase
-                ),
-                $this->getTransactionDateMessages(
-                    Arr::get($transaction, 'transaction.transaction_date', []),
-                    $transactionBase
-                ),
-                $this->getValueMessages(Arr::get($transaction, 'transaction', 'value', []), $transactionBase),
-                $this->getDescriptionMessages(
-                    Arr::get($transaction, 'transacton.description', []),
-                    $transactionBase
-                ),
-                $this->getSectorsMessages(Arr::get($transaction, 'transaction.sector', []), $transactionBase),
-                $this->getMessagesForTransactionProviderOrg(Arr::get(
-                    $transaction,
-                    'transaction.provider_organization',
-                    []
-                ), $transactionBase),
-                $this->getMessagesForTransactionReceiverOrg(Arr::get(
-                    $transaction,
-                    'transaction.receiver_organization',
-                    []
-                ), $transactionBase),
-            ];
-
-            foreach ($tempMessages as $tempMessage) {
-                foreach ($tempMessage as $idx => $message) {
-                    $messages[$idx] = $message;
-                }
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * @param $transactions
-     * @param $transactionId
-     * @return array
-     */
-    protected function getReferences($transactions, $transactionId): array
-    {
-        $references = [];
-
-        foreach ($transactions as $transaction) {
-            if (Arr::get($transaction, 'id', '') !== $transactionId) {
-                $references[] = Arr::get($transaction, 'transaction.reference');
-            }
-        }
-
-        return $references;
-    }
-
-    /**
-     * @param array     $providers
-     * @param           $transactionBase
-     * @return array
-     */
-    protected function getRulesForTransactionProviderOrg(array $providers, $transactionBase): array
-    {
-        $rules = [];
-
-        foreach ($providers as $providerOrgIndex => $providerOrg) {
-            $providerOrgBase = sprintf('%s.provider_organization.%s', $transactionBase, $providerOrgIndex);
-            $tempRules = $this->factory->getRulesForNarrative($providerOrg['narrative'], $providerOrgBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * @param array   $providers
-     * @param         $transactionBase
-     * @return array
-     */
-    protected function getMessagesForTransactionProviderOrg(array $providers, $transactionBase): array
-    {
-        $message = [];
-
-        foreach ($providers as $providerOrgIndex => $providerOrg) {
-            $providerOrgBase = sprintf('%s.provider_organization.%s', $transactionBase, $providerOrgIndex);
-            $tempMessages = $this->factory->getMessagesForNarrative($providerOrg['narrative'], $providerOrgBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $message[$idx] = $tempMessage;
-            }
-        }
-
-        return $message;
-    }
-
-    /**
-     * @param array $receivers
-     * @param       $transactionBase
-     *
-     * @return array
-     */
-    protected function getRulesForTransactionReceiverOrg(array $receivers, $transactionBase): array
-    {
-        $rules = [];
-
-        foreach ($receivers as $receiverOrgIndex => $receiverOrg) {
-            $receiverOrgBase = sprintf('%s.receiver_organization.%s', $transactionBase, $receiverOrgIndex);
-            $tempRules = $this->factory->getRulesForNarrative($receiverOrg['narrative'], $receiverOrgBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * @param array $receivers
-     * @param       $transactionBase
-     * @return array
-     */
-    protected function getMessagesForTransactionReceiverOrg(array $receivers, $transactionBase): array
-    {
-        $message = [];
-
-        foreach ($receivers as $receiverOrgIndex => $receiverOrg) {
-            $receiverOrgBase = sprintf('%s.receiver_organization.%s', $transactionBase, $receiverOrgIndex);
-            $tempMessages = $this->factory->getMessagesForNarrative($receiverOrg['narrative'], $receiverOrgBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $message[$idx] = $tempMessage;
-            }
-        }
-
-        return $message;
-    }
-
-    /**
-     * returns rules for sector.
-     * @param $sectors
-     * @param $transactionBase
-     * @return array
-     */
-    public function getSectorsRules($sectors, $transactionBase): array
-    {
-        $rules = [];
-
-        foreach ($sectors as $sectorIndex => $sector) {
-            $sectorBase = sprintf('%s.sector.%s', $transactionBase, $sectorIndex);
-            $rules[sprintf('%s.vocabulary_uri', $sectorBase)] = 'nullable|url';
-            $rules[sprintf('%s.vocabulary', $sectorBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('SectorVocabulary')
-            );
-            $rules[sprintf('%s.code', $sectorBase)] = sprintf('in:%s', $this->validCodeList('SectorCode'));
-            $rules[sprintf('%s.category_code', $sectorBase)] = sprintf(
-                'in:%s',
-                $this->validCodeList('SectorCategory')
-            );
-
-            if ($sector['sector_vocabulary'] === '1') {
-                $rules[sprintf(
-                    '%s.code',
-                    $sectorBase
-                )] = sprintf(
-                    'in:%s|required_with:' . $sectorBase . '.sector_vocabulary',
-                    $this->validCodeList('SectorCode')
-                );
-                $rules[sprintf(
-                    '%s.sector_vocabulary',
-                    $sectorBase
-                )] = sprintf(
-                    'in:%s|required_with:' . $sectorBase . '.code',
-                    $this->validCodeList('SectorVocabulary')
-                );
-            } elseif ($sector['sector_vocabulary'] === '2') {
-                $rules[sprintf(
-                    '%s.category_code',
-                    $sectorBase
-                )] = sprintf(
-                    'in:%s|required_with:' . $sectorBase . '.sector_vocabulary',
-                    $this->validCodeList('SectorCategory')
-                );
-                $rules[sprintf(
-                    '%s.sector_vocabulary',
-                    $sectorBase
-                )] = sprintf(
-                    'in:%s|required_with:' . $sectorBase . '.category_code',
-                    $this->validCodeList('SectorVocabulary')
-                );
-            } elseif ($sector['sector_vocabulary'] === '98' || $sector['sector_vocabulary'] === '99') {
-                $rules[sprintf(
-                    '%s.vocabulary_uri',
-                    $sectorBase
-                )] = 'url|required_with:' . $sectorBase . '.sector_vocabulary';
-                foreach (Arr::get($sector, 'narrative', []) as $narrativeKey => $narrative) {
-                    $rules[sprintf(
-                        '%s.narrative.%s.narrative',
-                        $sectorBase,
-                        $narrativeKey
-                    )] = 'required|required_with_language';
-                }
-            } elseif ($sector['sector_vocabulary'] !== '') {
-                $rules[sprintf('%s.text', $sectorBase)] = 'required_with:' . $sectorBase . '.sector_vocabulary';
-                $rules[sprintf(
-                    '%s.sector_vocabulary',
-                    $sectorBase
-                )] = sprintf(
-                    'in:%s|required_with:' . $sectorBase . '.text',
-                    $this->validCodeList('SectorVocabulary')
-                );
-            }
-        }
-        $tempRules = $this->factory->getRulesForTransactionSectorNarrative($sector, $sector['narrative'], $sectorBase);
-
-        foreach ($tempRules as $idx => $tempRule) {
-            $rules[$idx] = $tempRule;
-        }
-
-        return $rules;
-    }
-
-    /**
-     * returns messages for sector.
-     * @param $sectors
-     * @param $transactionBase
-     * @return array
-     */
-    public function getSectorsMessages($sectors, $transactionBase): array
-    {
-        $messages = [];
-
-        foreach ($sectors as $sectorIndex => $sector) {
-            $sectorBase = sprintf('%s.sector.%s', $transactionBase, $sectorIndex);
-            $messages[sprintf('%s.vocabulary_uri.url', $sectorBase)] = trans('validation.url');
-            $messages[sprintf('%s.vocabulary', $sectorBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.sector_vocabulary')]
-            );
-            $messages[sprintf('%s.code', $sectorBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.code')]
-            );
-            $messages[sprintf('%s.category_code', $sectorBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.code')]
-            );
-
-            if ($sector['sector_vocabulary'] === '1') {
-                $messages[sprintf('%s.code.%s', $sectorBase, 'required_with')] = trans(
-                    'validation.required_with',
-                    ['attribute' => trans('elementForm.code'), 'values' => trans('sector_vocabulary')]
-                );
-                $messages[sprintf('%s.sector_vocabulary.%s', $sectorBase, 'required_with')] = trans(
-                    'validation.required_with',
-                    ['attribute' => trans('elementForm.sector_vocabulary'), 'values' => trans('sector_code')]
-                );
-            } elseif ($sector['sector_vocabulary'] === '2') {
-                $messages[sprintf('%s.category_code.%s', $sectorBase, 'required_with')] = trans(
-                    'validation.required_with',
-                    ['attribute' => trans('elementForm.code'), 'values' => trans('sector_vocabulary')]
-                );
-                $messages[sprintf('%s.sector_vocabulary.%s', $sectorBase, 'required_with')] = trans(
-                    'validation.required_with',
-                    ['attribute' => trans('elementForm.sector_vocabulary'), 'values' => trans('sector_code')]
-                );
-            } elseif ($sector['sector_vocabulary'] === '98' || $sector['sector_vocabulary'] === '99') {
-                $messages[sprintf('%s.vocabulary_uri.%s', $sectorBase, 'required_with')] = trans(
-                    'validation.required_with',
-                    [
-                        'attribute' => trans('elementForm.vocabulary_uri'),
-                        'values' => trans('elementForm.sector_vocabulary'),
-                    ]
-                );
-                foreach (Arr::get($sector, 'narrative', []) as $narrativeKey => $narrative) {
-                    $messages[sprintf(
-                        '%s.narrative.%s.narrative.%s',
-                        $sectorBase,
-                        $narrativeKey,
-                        'required'
-                    )] = trans('validation.required', ['attribute' => trans('elementForm.narrative')]);
-                    $messages[sprintf(
-                        '%s.narrative.%s.narrative.required_with_language',
-                        $sectorBase,
-                        $narrativeKey
-                    )] = trans(
-                        'validation.required_with',
-                        ['attribute' => trans('elementForm.narrative'), 'values' => trans('elementForm.languages')]
-                    );
-                }
-            } elseif ($sector['sector_vocabulary'] !== '') {
-                $messages[sprintf('%s.text.%s', $sectorBase, 'required_with')] = trans(
-                    'validation.required_with',
-                    ['attribute' => trans('elementForm.code'), 'values' => trans('sector_vocabulary')]
-                );
-                $messages[sprintf('%s.sector_vocabulary.%s', $sectorBase, 'required_with')] = trans(
-                    'validation.required_with',
-                    ['attribute' => trans('elementForm.sector_vocabulary'), 'values' => trans('sector_code')]
-                );
-            }
-        }
-        $tempMessages = $this->factory->getMessagesForTransactionSectorNarrative($sector, $sector['narrative'], $sectorBase);
-
-        foreach ($tempMessages as $idx => $tempMessage) {
-            $messages[$idx] = $tempMessage;
-        }
-
-        return $messages;
-    }
-
-    /**
-     * returns rules for recipient region.
-     * @param $recipientRegions
-     * @param $transactionBase
-     * @return array|mixed
-     */
-    public function getRecipientRegionRules($recipientRegions, $transactionBase)
-    {
-        $rules = [];
-
-        foreach ($recipientRegions as $recipientRegionIndex => $recipientRegion) {
-            $recipientRegionBase = sprintf('%s.recipient_region.%s', $transactionBase, $recipientRegionIndex);
-            $rules[$recipientRegionBase . '.region_code'] = 'required';
-            $rules[$recipientRegionBase . '.vocabulary_uri'] = 'nullable|url';
-            $tempRules = $this->factory->getRulesForNarrative($recipientRegion['narrative'], $recipientRegionBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * returns messages for recipient region.
-     * @param $recipientRegions
-     * @param $transactionBase
-     * @return array
-     */
-    public function getRecipientRegionMessages($recipientRegions, $transactionBase): array
-    {
-        $messages = [];
-
-        foreach ($recipientRegions as $recipientRegionIndex => $recipientRegion) {
-            $recipientRegionBase = sprintf('%s.recipient_region.%s', $transactionBase, $recipientRegionIndex);
-            $messages[$recipientRegionBase . '.region_code.required'] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.recipient_region_code')]
-            );
-            $messages[$recipientRegionBase . '.vocabulary_uri.url'] = trans('validation.url');
-            $tempMessages = $this->factory->getMessagesForNarrative($recipientRegion['narrative'], $recipientRegionBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * get transaction type rules.
-     * @param $types
-     * @param $transactionBase
-     * @return array
-     */
-    protected function getTransactionTypeRules($types, $transactionBase): array
-    {
-        $rules = [];
-
-        foreach ($types as $typeIndex => $type) {
-            $typeBase = sprintf('%s.transaction_type.%s', $transactionBase, $typeIndex);
-            $rules[sprintf('%s.transaction_type_code', $typeBase)] = sprintf(
-                'required|in:%s',
-                $this->validCodeList('TransactionType')
-            );
-        }
-
-        return $rules;
-    }
-
-    /**
-     * get transaction type error message.
-     * @param $types
-     * @param $transactionBase
-     * @return array
-     */
-    protected function getTransactionTypeMessages($types, $transactionBase): array
-    {
-        $messages = [];
-
-        foreach ($types as $typeIndex => $type) {
-            $typeBase = sprintf('%s.transaction_type.%s', $transactionBase, $typeIndex);
-            $messages[sprintf('%s.transaction_type_code.required', $typeBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.transaction_type')]
-            );
-            $messages[sprintf('%s.transaction_type_code.in', $typeBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.transaction_type')]
-            );
-        }
-
-        return $messages;
-    }
-
-    /**
-     * get transaction date rules.
-     * @param $transactionDate
-     * @param $transactionBase
-     * @return array
-     */
-    protected function getTransactionDateRules($transactionDate, $transactionBase): array
-    {
-        $rules = [];
-
-        foreach ($transactionDate as $dateIndex => $date) {
-            $dateBase = sprintf('%s.transaction_date.%s', $transactionBase, $dateIndex);
-            $rules[sprintf('%s.date', $dateBase)] = 'required';
-        }
-
-        return $rules;
-    }
-
-    /**
-     * get transaction date error message.
-     * @param $transactionDate
-     * @param $transactionBase
-     * @return array
-     */
-    protected function getTransactionDateMessages($transactionDate, $transactionBase): array
-    {
-        $messages = [];
-
-        foreach ($transactionDate as $dateIndex => $date) {
-            $dateBase = sprintf('%s.transaction_date.%s', $transactionBase, $dateIndex);
-            $messages[sprintf('%s.date.required', $dateBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.date')]
-            );
-        }
-
-        return $messages;
-    }
-
-    /**
-     * get values rules.
-     * @param $transactionValue
-     * @param $transactionBase
-     * @return array
-     */
-    protected function getValueRules($transactionValue, $transactionBase): array
-    {
-        $rules = [];
-
-        foreach ($transactionValue as $valueIndex => $value) {
-            $valueBase = sprintf('%s.value.%s', $transactionBase, $valueIndex);
-            $rules[sprintf('%s.current', $valueBase)] = sprintf('in:%s', $this->validCodeList('Currency'));
-            $rules[sprintf('%s.amount', $valueBase)] = 'required|numeric';
-            $rules[sprintf('%s.date', $valueBase)] = 'required';
-        }
-
-        return $rules;
-    }
-
-    /**
-     * get value error message.
-     * @param $transactionValue
-     * @param $transactionBase
-     * @return array
-     */
-    protected function getValueMessages($transactionValue, $transactionBase): array
-    {
-        $messages = [];
-
-        foreach ($transactionValue as $valueIndex => $value) {
-            $valueBase = sprintf('%s.value.%s', $transactionBase, $valueIndex);
-            $messages[sprintf('%s.amount.required', $valueBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.amount')]
-            );
-            $messages[sprintf('%s.amount.numeric', $valueBase)] = trans(
-                'validation.numeric',
-                ['attribute' => trans('elementForm.amount')]
-            );
-            $messages[sprintf('%s.date.required', $valueBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.date')]
-            );
-        }
-
-        return $messages;
-    }
-
-    /**
-     * get description rules.
-     * @param $descriptions
-     * @param $transactionBase
-     * @return array
-     */
-    protected function getDescriptionRules($descriptions, $transactionBase): array
-    {
-        $rules = [];
-
-        foreach ($descriptions as $descriptionIndex => $description) {
-            $narrativeBase = sprintf('%s.description.%s', $transactionBase, $descriptionIndex);
-            $tempRules = $this->factory->getRulesForNarrative($description['narrative'], $narrativeBase);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * get description error message.
-     * @param $descriptions
-     * @param $transactionBase
-     * @return array
-     */
-    protected function getDescriptionMessages($descriptions, $transactionBase): array
-    {
-        $messages = [];
-
-        foreach ($descriptions as $descriptionIndex => $description) {
-            $narrativeBase = sprintf('%s.description.%s', $transactionBase, $descriptionIndex);
-            $tempMessages = $this->factory->getMessagesForNarrative($description['narrative'], $narrativeBase);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
+        $transactions = Arr::get($activity, 'transactions', []);
+
+        foreach ($transactions as $idx => $transaction) {
+            $tempMessage = $this->getBaseMessages((new TransactionRequest())->getMessagesForTransaction($transaction, true, $activity), 'transactions.' . $idx, $transaction, false);
+            foreach ($tempMessage as $index => $message) {
+                $messages[$index] = $message;
             }
         }
 
@@ -3578,25 +1054,25 @@ class XmlValidator
      */
     protected function rulesForResult(array $activity): array
     {
+        $results = Arr::get($activity, 'result', []) ?? [];
+        $indicators = Arr::get($activity, 'indicator', []) ?? [];
         $rules = [];
-        $results = Arr::get($activity, 'results', []);
 
         foreach ($results as $resultIndex => $result) {
-            $resultBase = sprintf('results.%s.result', $resultIndex);
+            $resultBase = sprintf('result.%s', $resultIndex);
             $rules[sprintf('%s.type', $resultBase)] = sprintf(
-                'required|in:%s',
+                'nullable|in:%s',
                 $this->validCodeList('ResultType')
             );
 
             $tempRules = [
-                $this->factory->getRulesForRequiredNarrative(Arr::get($result, 'result.title.0.narrative', []), sprintf('%s.title.0', $resultBase)),
-                $this->factory->getRulesForNarrative(Arr::get($result, 'result.description.0.narrative', []), sprintf('%s.description.0', $resultBase)),
-                $this->getRulesForIndicator(Arr::get($result, 'result.indicator', []), $resultBase),
+                $this->getRulesForIndicator(Arr::get($result, 'indicator', []), $resultBase, $result),
+                (new ResultRequest())->getRulesForResult($result, true, $indicators),
             ];
 
             foreach ($tempRules as $tempRule) {
                 foreach ($tempRule as $idx => $rule) {
-                    $rules[$idx] = $rule;
+                    $rules[$resultBase . '.' . $idx] = $rule;
                 }
             }
         }
@@ -3612,27 +1088,19 @@ class XmlValidator
     protected function messagesForResult($activity): array
     {
         $messages = [];
-        $results = Arr::get($activity, 'results', []);
+        $results = Arr::get($activity, 'result', []) ?? [];
 
         foreach ($results as $resultIndex => $result) {
-            $resultBase = sprintf('results.%s.result', $resultIndex);
-            $messages[sprintf('%s.type.required', $resultBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.result_type')]
-            );
-            $messages[sprintf('%s.type.in', $resultBase)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.result_type')]
-            );
+            $resultBase = sprintf('result.%s', $resultIndex);
+
             $tempMessages = [
-                $this->factory->getMessagesForRequiredNarrative(Arr::get($result, 'result.title.0.narrative', []), sprintf('%s.title.0', $resultBase)),
-                $this->factory->getMessagesForNarrative(Arr::get($result, 'result.description.0.narrative', []), sprintf('%s.description.0', $resultBase)),
-                $this->getMessagesForIndicator(Arr::get($result, 'result.indicator', []), $resultBase),
+                (new ResultRequest())->getMessagesForResult($result, true),
+                $this->getMessagesForIndicator(Arr::get($result, 'indicator', []), $resultBase),
             ];
 
-            foreach ($tempMessages as $tempMessage) {
+            foreach ($tempMessages as $index => $tempMessage) {
                 foreach ($tempMessage as $idx => $message) {
-                    $messages[$idx] = $message;
+                    $messages[$resultBase . '.' . $idx] = $message;
                 }
             }
         }
@@ -3644,31 +1112,25 @@ class XmlValidator
      * returns rules for indicator.
      * @param $indicators
      * @param $resultBase
+     * @param $result
      * @return array
      */
-    protected function getRulesForIndicator($indicators, $resultBase): array
+    protected function getRulesForIndicator($indicators, $resultBase, $result): array
     {
         $rules = [];
 
         foreach ($indicators as $indicatorIndex => $indicator) {
-            $indicatorBase = sprintf('%s.indicator.%s', $resultBase, $indicatorIndex);
-            $rules[sprintf('%s.measure', $indicatorBase)] = sprintf(
-                'required|in:%s',
-                $this->validCodeList('IndicatorMeasure')
-            );
-            $rules[sprintf('%s.ascending', $indicatorBase)] = 'in:1,0';
+            $indicatorBase = sprintf('indicator.%s', $indicatorIndex);
+            $rules[sprintf('%s.ascending', $indicatorBase)] = 'nullable|in:1,0';
 
             $tempRules = [
-                $this->factory->getRulesForResultNarrative($indicator['title'], sprintf('%s.title.0', $indicatorBase)),
-                $this->factory->getRulesForNarrative($indicator['description'], sprintf('%s.description.0', $indicatorBase)),
-                $this->getRulesForReference($indicator['reference'], $indicatorBase),
-                $this->getRulesForBaseline($indicator['baseline'], $indicatorBase),
-                $this->getRulesForPeriod($indicator['period'], $indicatorBase),
+                (new IndicatorRequest())->getRulesForIndicator($indicator, true, $result),
+                $this->getRulesForPeriod(Arr::get($indicator, 'period', []) ?? [], $indicatorBase, $indicator),
             ];
 
-            foreach ($tempRules as $tempRule) {
+            foreach ($tempRules as $index => $tempRule) {
                 foreach ($tempRule as $idx => $rule) {
-                    $rules[$idx] = $rule;
+                    $rules[$indicatorBase . '.' . $idx] = $rule;
                 }
             }
         }
@@ -3688,155 +1150,19 @@ class XmlValidator
 
         foreach ($indicators as $indicatorIndex => $indicator) {
             $indicatorBase = sprintf(
-                '%s.indicator.%s',
-                $resultBase,
+                'indicator.%s',
                 $indicatorIndex
-            );
-            $messages[sprintf('%s.measure.required', $indicatorBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.measure')]
             );
 
             $tempMessages = [
-
-                $this->factory->getMessagesForNarrative($indicator['title'], sprintf('%s.title.0', $indicatorBase)),
-                $this->getMessagesForResultNarrative($indicator['title'], sprintf('%s.title.0', $indicatorBase)),
-                $this->factory->getMessagesForNarrative(
-                    $indicator['description'],
-                    sprintf('%s.description.0', $indicatorBase)
-                ),
-                $this->getMessagesForReference($indicator['reference'], $indicatorBase),
-                $this->getMessagesForBaseline($indicator['baseline'], $indicatorBase),
-                $this->getMessagesForPeriod($indicator['period'], $indicatorBase),
+                (new IndicatorRequest())->getMessagesForIndicator($indicator),
+                $this->getMessagesForPeriod(Arr::get($indicator, 'period', []) ?? [], $indicatorBase, $indicator),
             ];
 
-            foreach ($tempMessages as $tempMessage) {
+            foreach ($tempMessages as $index => $tempMessage) {
                 foreach ($tempMessage as $idx => $message) {
-                    $messages[$idx] = $message;
+                    $messages[$indicatorBase . '.' . $idx] = $message;
                 }
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * returns rules for reference.
-     * @param $formFields
-     * @param $formBase
-     * @return array
-     */
-    protected function getRulesForReference($formFields, $formBase): array
-    {
-        $rules = [];
-
-        foreach ($formFields as $referenceIndex => $reference) {
-            $referenceForm = sprintf(
-                '%s.reference.%s',
-                $formBase,
-                $referenceIndex
-            );
-            $rules[sprintf('%s.indicator_uri', $referenceForm)] = 'nullable|url';
-            $rules[sprintf('%s.vocabulary', $referenceForm)] = sprintf(
-                'in:%s',
-                $this->validCodeList('IndicatorVocabulary')
-            );
-        }
-
-        return $rules;
-    }
-
-    /**
-     * returns messages for reference.
-     * @param $formFields
-     * @param $formBase
-     * @return array
-     */
-    protected function getMessagesForReference($formFields, $formBase): array
-    {
-        $messages = [];
-
-        foreach ($formFields as $referenceIndex => $reference) {
-            $referenceForm = sprintf(
-                '%s.reference.%s',
-                $formBase,
-                $referenceIndex
-            );
-            $messages[sprintf('%s.indicator_uri.url', $referenceForm)] = trans('validation.url');
-            $messages[sprintf('%s.vocabulary.in', $referenceForm)] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.indicator_reference_vocabulary')]
-            );
-        }
-
-        return $messages;
-    }
-
-    /**
-     * returns rules for baseline.
-     * @param $formFields
-     * @param $formBase
-     * @return array
-     */
-    protected function getRulesForBaseline($formFields, $formBase): array
-    {
-        $rules = [];
-
-        foreach ($formFields as $baselineIndex => $baseline) {
-            $baselineForm = sprintf('%s.baseline.%s', $formBase, $baselineIndex);
-            $rules[$baselineForm] = 'year_value_narrative_validation:' . $baselineForm . '.comment.0.narrative';
-            $rules[sprintf('%s.year', $baselineForm)] = sprintf('numeric|required_with:%s.value', $baselineForm);
-            $rules[sprintf('%s.value', $baselineForm)] = sprintf('numeric|required_with:%s.year', $baselineForm);
-            $tempRules = $this->factory->getRulesForNarrative($baseline['comment'][0]['narrative'], sprintf('%s.comment.0', $baselineForm));
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * returns messages for baseline.
-     * @param $formFields
-     * @param $formBase
-     * @return array
-     */
-    protected function getMessagesForBaseline($formFields, $formBase): array
-    {
-        $messages = [];
-
-        foreach ($formFields as $baselineIndex => $baseline) {
-            $baselineForm = sprintf('%s.baseline.%s', $formBase, $baselineIndex);
-            $messages[sprintf('%s.year_value_narrative_validation', $baselineForm)] = trans(
-                'validation.year_value_narrative_validation',
-                [
-                    'year' => trans('elementForm.year'),
-                    'value' => trans('elementForm.value'),
-                    'narrative' => trans('elementForm.narrative'),
-                ]
-            );
-            $messages[sprintf('%s.year.required_with', $baselineForm)] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.year'), 'values' => trans('elementForm.value')]
-            );
-            $messages[sprintf('%s.year.numeric', $baselineForm)] = trans(
-                'validation.numeric',
-                ['attribute' => trans('elementForm.year')]
-            );
-            $messages[sprintf('%s.value.required_with', $baselineForm)] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.value'), 'values' => trans('elementForm.year')]
-            );
-            $messages[sprintf('%s.value.numeric', $baselineForm)] = trans(
-                'validation.numeric',
-                ['attribute' => trans('elementForm.value')]
-            );
-            $tempMessages = $this->factory->getMessagesForNarrative($baseline['comment'][0]['narrative'], sprintf('%s.comment.0', $baselineForm));
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
             }
         }
 
@@ -3849,23 +1175,16 @@ class XmlValidator
      * @param $formBase
      * @return array
      */
-    protected function getRulesForPeriod($formFields, $formBase): array
+    protected function getRulesForPeriod($formFields, $formBase, $indicator): array
     {
         $rules = [];
 
         foreach ($formFields as $periodIndex => $period) {
-            $periodForm = sprintf('%s.period.%s', $formBase, $periodIndex);
-            $tempRules = [
-                $this->getRulesForResultPeriodStart($period['period_start'], $periodForm, $period['period_end']),
-                $this->getRulesForResultPeriodEnd($period['period_end'], $periodForm, $period['period_start']),
-                $this->getRulesForTarget($period['target'], sprintf('%s.target', $periodForm)),
-                $this->getRulesForTarget($period['actual'], sprintf('%s.actual', $periodForm)),
-            ];
+            $periodBase = sprintf('period.%s', $periodIndex);
+            $tempRules = (new PeriodRequest())->getRulesForPeriod($period, true, $indicator);
 
-            foreach ($tempRules as $tempRule) {
-                foreach ($tempRules as $idx => $rule) {
-                    $rules[$idx] = $rule;
-                }
+            foreach ($tempRules as $idx => $rule) {
+                $rules[$periodBase . '.' . $idx] = $rule;
             }
         }
 
@@ -3878,203 +1197,18 @@ class XmlValidator
      * @param $formBase
      * @return array
      */
-    protected function getMessagesForPeriod($formFields, $formBase): array
+    protected function getMessagesForPeriod($formFields, $formBase, $indicator): array
     {
         $messages = [];
 
         foreach ($formFields as $periodIndex => $period) {
-            $periodForm = sprintf('%s.period.%s', $formBase, $periodIndex);
-            $tempMessages = [
-                $this->getMessagesForResultPeriodStart($period['period_start'], $periodForm, $period['period_end']),
-                $this->getMessagesForResultPeriodEnd($period['period_end'], $periodForm, $period['period_start']),
-                $this->getMessagesForTarget($period['target'], sprintf('%s.target', $periodForm)),
-                $this->getMessagesForTarget($period['actual'], sprintf('%s.actual', $periodForm)),
-            ];
+            $periodBase = sprintf('period.%s', $periodIndex);
 
-            foreach ($tempMessages as $tempMessage) {
-                foreach ($tempMessage as $idx => $message) {
-                    $messages[$idx] = $message;
-                }
+            $tempMessage = (new PeriodRequest())->getMessagesForPeriod($period, true, $indicator);
+
+            foreach ($tempMessage as $idx => $message) {
+                $messages[$periodBase . '.' . $idx] = $message;
             }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * returns rules for target.
-     * @param $formFields
-     * @param $formBase
-     * @return array
-     */
-    protected function getRulesForTarget($formFields, $formBase): array
-    {
-        $rules = [];
-
-        foreach ($formFields as $targetIndex => $target) {
-            $targetForm = sprintf('%s.%s', $formBase, $targetIndex);
-            $rules[$targetForm] = 'year_value_narrative_validation';
-            $tempRules = $this->factory->getRulesForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm));
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * returns messages for target.
-     * @param $formFields
-     * @param $formBase
-     * @return array
-     */
-    protected function getMessagesForTarget($formFields, $formBase): array
-    {
-        $messages = [];
-
-        foreach ($formFields as $targetIndex => $target) {
-            $targetForm = sprintf('%s.%s', $formBase, $targetIndex);
-            $messages[sprintf('%s.year_value_narrative_validation', $targetForm)] = trans(
-                'validation.year_narrative_validation',
-                ['year' => trans('elementForm.value'), 'narrative' => trans('elementForm.narrative')]
-            );
-            $tempMessages = $this->factory->getMessagesForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm));
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
-    }
-
-    /**
-     * @param $formFields
-     * @param $formBase
-     * @param $periodEnd
-     * @return array
-     */
-    protected function getRulesForResultPeriodStart($formFields, $formBase, $periodEnd): array
-    {
-        $rules = [];
-
-        foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $periodEndLocation = $formBase . '.period_end.' . $periodStartKey . '.date';
-            if ($periodEnd[$periodStartKey]['date'] !== '') {
-                $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = sprintf(
-                    'required_with:%s|date',
-                    $periodEndLocation
-                );
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * @param $formFields
-     * @param $formBase
-     * @param $periodEnd
-     * @return array
-     */
-    protected function getMessagesForResultPeriodStart($formFields, $formBase, $periodEnd)
-    {
-        $messages = [];
-        foreach ($formFields as $periodStartKey => $periodStartVal) {
-            if ($periodEnd[$periodStartKey]['date'] !== '') {
-                $messages[$formBase . '.period_start.' . $periodStartKey . '.date.required_with'] = trans(
-                    'validation.required_with',
-                    [
-                        'attribute' => trans('elementForm.period_start'),
-                        'values' => trans('elementForm.period_end'),
-                    ]
-                );
-            }
-            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = trans(
-                'validation.date',
-                ['attribute' => trans('elementForm.period_start')]
-            );
-        }
-
-        return $messages;
-    }
-
-    /**
-     * @param $formFields
-     * @param $formBase
-     * @param $periodStart
-     * @return array
-     */
-    protected function getRulesForResultPeriodEnd($formFields, $formBase, $periodStart): array
-    {
-        $rules = [];
-
-        foreach ($formFields as $periodEndKey => $periodEndVal) {
-            $periodStartLocation = $formBase . '.period_start.' . $periodEndKey . '.date';
-            if ($periodStart[$periodEndKey]['date'] !== '') {
-                $rules[$formBase . '.period_end.' . $periodEndKey . '.date'] = sprintf(
-                    'required_with:%s|date|after:%s',
-                    $periodStartLocation,
-                    $formBase . '.period_start.' . $periodEndKey . '.date'
-                );
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * @param $formFields
-     * @param $formBase
-     * @param $periodStart
-     * @return array
-     */
-    protected function getMessagesForResultPeriodEnd($formFields, $formBase, $periodStart): array
-    {
-        $messages = [];
-
-        foreach ($formFields as $periodEndKey => $periodEndVal) {
-            if ($periodStart[$periodEndKey]['date'] !== '') {
-                $messages[$formBase . '.period_end.' . $periodEndKey . '.date.required_with'] = trans(
-                    'validation.required_with',
-                    ['attribute' => trans('elementForm.period_end'), 'values' => trans('elementForm.period_start')]
-                );
-            }
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = trans(
-                'validation.date',
-                ['attribute' => trans('elementForm.period_end')]
-            );
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = trans(
-                'validation.after',
-                ['attribute' => trans('elementForm.period_end'), 'date' => trans('elementForm.period_start')]
-            );
-        }
-
-        return $messages;
-    }
-
-    /**
-     * returns the message for indicator title.
-     * @param $formFields
-     * @param $formBase
-     * @return array
-     */
-    protected function getMessagesForResultNarrative($formFields, $formBase): array
-    {
-        $messages = [];
-        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = trans(
-            'validation.unique',
-            ['attribute' => trans('elementForm.languages')]
-        );
-
-        foreach ($formFields as $narrativeIndex => $narrative) {
-            $messages[sprintf(
-                '%s.narrative.%s.narrative.required',
-                $formBase,
-                $narrativeIndex
-            )] = trans('validation.required', ['attribute' => trans('elementForm.indicator_vocabulary')]);
         }
 
         return $messages;
@@ -4113,38 +1247,7 @@ class XmlValidator
      */
     public function rulesForTag(array $activity): array
     {
-        $rules = [];
-        $tags = Arr::get($activity, 'tag', []);
-
-        foreach ($tags as $tagIndex => $tag) {
-            $tagForm = sprintf('tag.%s', $tagIndex);
-
-            $rules[sprintf('%s.tag_vocabulary', $tagForm)] = 'required';
-            $rules[sprintf('%s.vocabulary_uri', $tagForm)] = 'nullable|url';
-
-            $tagVocabulary = Arr::get($tag, 'tag_vocabulary');
-
-            if ($tagVocabulary === '1') {
-                $rules[sprintf('%s.tag_text', $tagForm)] = 'required';
-            }
-            if ($tagVocabulary === '2') {
-                $rules[sprintf('%s.goals_tag_code', $tagForm)] = 'required';
-            }
-            if ($tagVocabulary === '3') {
-                $rules[sprintf('%s.targets_tag_code', $tagForm)] = 'required';
-            }
-            if ($tagVocabulary === '99') {
-                $rules[sprintf('%s.tag_text', $tagForm)] = 'required';
-                $rules[sprintf('%s.vocabulary_uri', $tagForm)] = 'url|required_with:' . $tagForm . '.tag_vocabulary';
-            }
-            $tempRules = $this->factory->getRulesForNarrative(Arr::get($tag, 'narrative'), $tagForm);
-
-            foreach ($tempRules as $idx => $tempRule) {
-                $rules[$idx] = $tempRule;
-            }
-        }
-
-        return $rules;
+        return (new TagRequest())->getRulesForTag(Arr::get($activity, 'tag', []));
     }
 
     /**
@@ -4155,43 +1258,7 @@ class XmlValidator
      */
     public function messagesForTag(array $activity): array
     {
-        $messages = [];
-        $tags = Arr::get($activity, 'tag', []);
-
-        foreach ($tags as $tagIndex => $tag) {
-            $tagForm = sprintf('tag.%s', $tagIndex);
-            $messages[sprintf('%s.tag_vocabulary.required', $tagForm)] = trans('validation.required', ['attribute' => trans('elementForm.tag_vocabulary')]);
-
-            $tagVocabulary = Arr::get($tag, 'tag_vocabulary');
-
-            if ($tagVocabulary === '1') {
-                $messages[sprintf('%s.tag_text.required', $tagForm)] = trans('validation.required', ['attribute' => trans('elementForm.tag_code')]);
-            }
-            if ($tagVocabulary === '2') {
-                $messages[sprintf('%s.goals_tag_code.required', $tagForm)] = trans('validation.required', ['attribute' => trans('elementForm.tag_code')]);
-            }
-            if ($tagVocabulary === '3') {
-                $messages[sprintf('%s.targets_tag_code.required', $tagForm)] = trans('validation.required', ['attribute' => trans('elementForm.tag_code')]);
-            }
-
-            if ($tagVocabulary === '99') {
-                $messages[sprintf('%s.tag_text.required', $tagForm)] = trans('validation.required', ['attribute' => trans('elementForm.tag_code')]);
-                $messages[sprintf('%s.vocabulary_uri.%s', $tagForm, 'required_with')] = trans(
-                    'validation.required_with',
-                    [
-                        'attribute' => trans('elementForm.vocabulary_uri'),
-                        'values'    => trans('elementForm.tag_vocabulary'),
-                    ]
-                );
-            }
-            $tempMessages = $this->factory->getMessagesForNarrative($tag['narrative'], $tagForm);
-
-            foreach ($tempMessages as $idx => $tempMessage) {
-                $messages[$idx] = $tempMessage;
-            }
-        }
-
-        return $messages;
+        return (new TagRequest())->getMessagesForTag(Arr::get($activity, 'tag', []));
     }
 
     /**
@@ -4202,29 +1269,7 @@ class XmlValidator
      */
     protected function rulesForDefaultAidType(array $activity): array
     {
-        $defaultAidType = (array) Arr::get($activity, 'default_aid_type', []);
-        $rules = [];
-
-        foreach ($defaultAidType as $index => $aidtype) {
-            $aidtypeForm = sprintf('default_aid_type.%s', $index);
-            $rules[sprintf('%s.default_aid_type_vocabulary', $aidtypeForm)] = 'required|in:1,2,3,4';
-            $vocabulary = Arr::get($aidtype, 'default_aid_type_vocabulary');
-
-            if ($vocabulary === '1') {
-                $rules[sprintf('%s.default_aid_type', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.default_aid_type_vocabulary', $this->validCodeList('AidType'));
-            }
-            if ($vocabulary === '2') {
-                $rules[sprintf('%s.earmarking_category', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.default_aid_type_vocabulary', $this->validCodeList('EarmarkingCategory'));
-            }
-            if ($vocabulary === '3') {
-                $rules[sprintf('%s.default_aid_type_text', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.default_aid_type_vocabulary', $this->validCodeList('EarmarkingModality'));
-            }
-            if ($vocabulary === '4') {
-                $rules[sprintf('%s.cash_and_voucher_modalities', $aidtypeForm)] = sprintf('required_with:%s|in:%s', $aidtypeForm . '.default_aid_type_vocabulary', $this->validCodeList('CashandVoucherModalities'));
-            }
-        }
-
-        return $rules;
+        return (new DefaultAidTypeRequest())->getRulesForDefaultAidType(Arr::get($activity, 'default_aid_type', []));
     }
 
     /**
@@ -4235,55 +1280,7 @@ class XmlValidator
      */
     protected function messagesForDefaultAidType(array $activity): array
     {
-        $defaultAidType = Arr::get($activity, 'default_aid_type', []);
-        $messages = [];
-
-        foreach ((array) $defaultAidType as $index => $aidtype) {
-            $aidtypeForm = sprintf('default_aid_type.%s', $index);
-            $messages[sprintf('%s.default_aid_type_vocabulary.required', $aidtypeForm)] = trans('validation.required', ['attribute' => trans('elementForm.default_aid_type_vocabulary')]);
-            $messages[sprintf('%s.default_aid_type_vocabulary.in', $aidtypeForm)] = trans('validation.code_list', ['attribute' => trans('elementForm.default_aid_type_vocabulary')]);
-            $vocabulary = Arr::get($aidtype, 'default_aid_type_vocabulary');
-
-            if ($vocabulary === '1') {
-                $messages[sprintf('%s.default_aid_type.%s', $aidtypeForm, 'required_with')] = trans(
-                    'validation.required_with',
-                    ['attribute' => trans('elementForm.default_aid_type'), 'values' => trans('elementForm.default_aid_type_vocabulary')]
-                );
-                $messages[sprintf('%s.default_aid_type.in', $aidtypeForm)] = trans('validation.code_list', ['attribute' => trans('element.default_aid_type')]);
-            }
-            if ($vocabulary === '2') {
-                $messages[sprintf('%s.earmarking_category.%s', $aidtypeForm, 'required_with')] = trans(
-                    'validation.required_with',
-                    ['attribute' => trans('elementForm.default_aid_type'), 'values' => trans('elementForm.default_aid_type_vocabulary')]
-                );
-                $messages[sprintf('%s.earmarking_category.in', $aidtypeForm)] = trans(
-                    'validation.code_list',
-                    ['attribute' => trans('elementForm.default_aid_type')]
-                );
-            }
-            if ($vocabulary === '3') {
-                $messages[sprintf('%s.default_aid_type_text.%s', $aidtypeForm, 'required_with')] = trans(
-                    'validation.required_with',
-                    ['attribute' => trans('elementForm.default_aid_type'), 'values' => trans('elementForm.default_aid_type_vocabulary')]
-                );
-                $messages[sprintf('%s.default_aid_type_text.in', $aidtypeForm)] = trans(
-                    'validation.code_list',
-                    ['attribute' => trans('elementForm.default_aid_type')]
-                );
-            }
-            if ($vocabulary === '4') {
-                $messages[sprintf('%s.cash_and_voucher_modalities.%s', $aidtypeForm, 'required_with')] = trans(
-                    'validation.required_with',
-                    ['attribute' => trans('elementForm.default_aid_type'), 'values' => trans('elementForm.default_aid_type_vocabulary')]
-                );
-                $messages[sprintf('%s.cash_and_voucher_modalities.in', $aidtypeForm)] = trans(
-                    'validation.code_list',
-                    ['attribute' => trans('elementForm.default_aid_type')]
-                );
-            }
-        }
-
-        return $messages;
+        return (new DefaultAidTypeRequest())->getMessagesForDefaultAidType(Arr::get($activity, 'default_aid_type', []));
     }
 
     /**
@@ -4293,21 +1290,7 @@ class XmlValidator
      */
     protected function rulesForReportingOrganization(array $activity): array
     {
-        $reportingOrganizations = Arr::get($activity, 'reporting_org', []);
-        $validReportingOrganizationType = $this->validCodeList('OrganizationType', 'Organization');
-        $rules = [];
-
-        foreach ($reportingOrganizations as $key => $reportingOrganization) {
-            $reportingOrgForm = sprintf('reporting_org.%s', $key);
-            $rules[sprintf('%s.type', $reportingOrgForm)] = sprintf(
-                'in:%s|required',
-                $validReportingOrganizationType,
-            );
-            $rules[sprintf('%s.secondary_reporter', $reportingOrgForm)] = 'nullable|in:0,1';
-            $rules[sprintf('%s.narrative.0.narrative', $reportingOrgForm)] = 'required';
-        }
-
-        return $rules;
+        return (new ReportingOrgRequest())->getRulesForReportingOrganization(Arr::get($activity, 'reporting_org', []));
     }
 
     /**
@@ -4317,33 +1300,6 @@ class XmlValidator
      */
     public function messagesForReportingOrganization(array $activity): array
     {
-        $reportingOrganizations = Arr::get($activity, 'reporting_org', []);
-        $messages = [];
-
-        foreach ($reportingOrganizations as $key => $reportingOrganization) {
-            $reportingOrgForm = sprintf('reporting_org.%s', $key);
-            $messages[sprintf('%s.type.%s', $reportingOrgForm, 'in')] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.reporting_org_type')]
-            );
-            $messages[sprintf('%s.type.%s', $reportingOrgForm, 'required')] = trans(
-                'validation.required',
-                [
-                    'attribute' => trans('elementForm.reporting_org_type'),
-                ]
-            );
-            $messages[sprintf('%s.secondary_reporter.%s', $reportingOrgForm, 'in')] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.reporting_org_secondary_reporter')]
-            );
-            $messages[sprintf('%s.narrative.0.narrative.%s', $reportingOrgForm, 'required')] = trans(
-                'validation.required',
-                [
-                    'attribute' => trans('elementForm.reporting_org_narrative'),
-                ]
-            );
-        }
-
-        return $messages;
+        return (new ReportingOrgRequest())->getMessagesForReportingOrganization(Arr::get($activity, 'reporting_org', []));
     }
 }

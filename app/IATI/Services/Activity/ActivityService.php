@@ -300,6 +300,27 @@ class ActivityService
     }
 
     /**
+     * Returns allocated recipient region percent for file upload.
+     *
+     * @param $recipientCountries
+     *
+     * @return float
+     */
+    public function getAllottedRecipientRegionPercentFileUpload($recipientCountries): float
+    {
+        $data = $recipientCountries;
+        $total = 0;
+
+        if (!empty($data)) {
+            foreach ($data as $datum) {
+                $total += (float) $datum['percentage'];
+            }
+        }
+
+        return 100 - $total;
+    }
+
+    /**
      * Returns allocated recipient region percent.
      *
      * @param $activityId

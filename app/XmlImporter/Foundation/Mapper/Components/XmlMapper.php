@@ -124,24 +124,49 @@ class XmlMapper
      * @return $this
      * @throws BindingResolutionException
      */
-    public function map(array $activities, $template, $userId, $orgId, $dbIatiIdentifiers): static
+    public function map(array $activities, $template, $userId, $orgId, $orgRef, $dbIatiIdentifiers): static
     {
-        $xmlQueueWriter = app()->makeWith(XmlQueueWriter::class, ['userId' => $userId, 'orgId' => $orgId, 'dbIatiIdentifiers' => $dbIatiIdentifiers]);
+        $xmlActivityIdentifiers = $this->xmlActivityIdentifiers($activities);
+        $xmlQueueWriter = app()->makeWith(XmlQueueWriter::class, ['userId' => $userId, 'orgId' => $orgId, 'orgRef' => $orgRef, 'dbIatiIdentifiers' => $dbIatiIdentifiers, 'xmlActivityIdentifiers' => $xmlActivityIdentifiers]);
 
         $totalActivities = count($activities);
         $mappedData = [];
 
         foreach ($activities as $index => $activity) {
             $this->initComponents();
-            $mappedData[$index] = $this->activity->map($this->filter($activity, 'iatiActivity'), $template);
+            $mappedData[$index] = $this->activity->map($this->filter($activity, 'iatiActivity'), $template, $orgRef);
             $mappedData[$index]['default_field_values'] = $this->defaultFieldValues($activity, $template);
             $mappedData[$index]['transactions'] = $this->transactionElement->map($this->filter($activity, 'transaction'), $template);
+            $mappedData[$index]['transaction_references'] = $this->transactionElement->getReferences();
             $mappedData[$index]['result'] = $this->resultElement->map($this->filter($activity, 'result'), $template);
 
             $xmlQueueWriter->save($mappedData[$index], $totalActivities, $index);
         }
 
         return $this;
+    }
+
+    /**
+     * Collects all activityIdentifiers present in xml file.
+     *
+     * @param $activities
+     *
+     * @return array
+     */
+    public function xmlActivityIdentifiers($activities): array
+    {
+        $xmlActivityIdentifiers = [];
+
+        foreach ($activities as $activity) {
+            foreach (Arr::get($activity, 'value', []) as $element => $value) {
+                if ($this->name(Arr::get($value, 'name')) === 'iatiIdentifier') {
+                    $xmlActivityIdentifiers[] = $this->value($value);
+                    break;
+                }
+            }
+        }
+
+        return array_count_values($xmlActivityIdentifiers);
     }
 
     /**

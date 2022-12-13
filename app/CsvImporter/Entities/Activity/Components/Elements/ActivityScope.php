@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\Scope\ScopeRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -28,6 +29,11 @@ class ActivityScope extends Element
     protected string $index = 'activity_scope';
 
     /**
+     * @var ScopeRequest
+     */
+    private ScopeRequest $request;
+
+    /**
      * ActivityScope constructor.
      *
      * @param            $fields
@@ -37,6 +43,7 @@ class ActivityScope extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new ScopeRequest();
     }
 
     /**
@@ -50,9 +57,14 @@ class ActivityScope extends Element
     {
         foreach ($fields as $key => $values) {
             if (!is_null($values) && array_key_exists($key, array_flip($this->_csvHeader))) {
+                $this->data[$this->csvHeader()] = [];
+
                 foreach ($values as $value) {
                     $this->map($value, $values);
-                    break;
+                }
+
+                if (empty($this->data[$this->csvHeader()])) {
+                    $this->data[$this->csvHeader()] = '';
                 }
             }
         }
@@ -81,8 +93,6 @@ class ActivityScope extends Element
             }
 
             (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
-        } else {
-            $this->data[$this->csvHeader()] = '';
         }
     }
 
@@ -95,8 +105,8 @@ class ActivityScope extends Element
     public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
-                                         ->with($this->rules(), $this->messages())
-                                         ->getValidatorInstance();
+            ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
 
         $this->setValidity();
 
@@ -111,9 +121,7 @@ class ActivityScope extends Element
      */
     public function rules(): array
     {
-        $rules[$this->csvHeader()] = (is_array(Arr::get($this->data, $this->csvHeader()))) ? 'size:1' : sprintf('in:%s', $this->validActivityScope());
-
-        return $rules;
+        return $this->request->rules(Arr::get($this->data(), $this->csvHeader()));
     }
 
     /**
@@ -123,10 +131,7 @@ class ActivityScope extends Element
      */
     public function messages(): array
     {
-        return [
-            $this->csvHeader() . '.size' => trans('validation.multiple_values', ['attribute' => trans('element.activity_scope')]),
-            $this->csvHeader() . '.in'   => trans('validation.code_list', ['attribute' => trans('element.activity_scope')]),
-        ];
+        return $this->request->messages();
     }
 
     /**

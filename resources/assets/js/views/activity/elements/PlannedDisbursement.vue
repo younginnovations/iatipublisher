@@ -75,7 +75,11 @@
           <tr>
             <td>Type</td>
             <td>
-              {{ post.provider_org[0].type ?? "Missing" }}
+              {{
+                post.provider_org[0].type
+                  ? types.organizationType[post.provider_org[0].type]
+                  : "Missing"
+              }}
             </td>
           </tr>
           <tr>
@@ -125,7 +129,11 @@
           <tr>
             <td>Type</td>
             <td>
-              {{ post.receiver_org[0].type ?? "Missing" }}
+              {{
+                post.receiver_org[0].type
+                  ? types.organizationType[post.receiver_org[0].type]
+                  : "Missing"
+              }}
             </td>
           </tr>
           <tr>
@@ -184,6 +192,7 @@ interface Types {
   budgetType: [];
   languages: [];
   currency: [];
+  organizationType: [];
 }
 
 function formatDate(date: Date) {

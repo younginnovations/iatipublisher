@@ -7,11 +7,11 @@
     }}
 
     <span
-      v-if="activity['errors'].length > 0"
+      v-if="Object.keys(activity['errors']).length > 0"
       class="inline-flex cursor-pointer items-center text-crimson-50"
       @click="toggleError"
     >
-      Show {{ Object.keys(activity["errors"]).length }} errors
+      Show {{ countErrors() }} errors
       <svg-vue
         icon="dropdown-arrow"
         class="ml-1 text-[4px]"
@@ -20,11 +20,17 @@
     </span>
 
     <div class="upload-error-content" :class="{ open: active }">
-      <ul>
-        <li v-for="(err, i) in activity['errors']" :key="i">
-          <p>{{ err }}</p>
-        </li>
-      </ul>
+      <div v-for="(ele_err, i) in activity['errors']" :key="i">
+        <ul>
+          <li v-for="(err, key, j) in ele_err" :key="j">
+            <p>
+              {{ key.toString().replace(/_/g, " ").replace(/\./g, " > ") }}
+            </p>
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <p v-html="err"></p>
+          </li>
+        </ul>
+      </div>
     </div>
   </td>
 
@@ -36,7 +42,7 @@
 
   <td class="check-column" @click="(event: Event) => event.stopPropagation()">
     <label class="sr-only" for=""> Select </label>
-    <label v-if="activity['errors'].length === 0" class="checkbox">
+    <label v-if="countErrors() === 0" class="checkbox">
       <input
         v-model="activities"
         type="checkbox"
@@ -82,6 +88,16 @@ const selectElement = (index) => {
   emit("selectElement", index);
 };
 
+const countErrors = () => {
+  let count = 0;
+
+  for (const index in props.activity["errors"]) {
+    console.log(Object.keys(props.activity["errors"][index]).length);
+    count += Object.keys(props.activity["errors"][index]).length;
+  }
+
+  return count;
+};
 watch(
   () => props.selectedActivities,
   () => {

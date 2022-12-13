@@ -47,18 +47,24 @@ class IndicatorRequest extends ActivityBaseRequest
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    protected function getRulesForIndicator(array $formFields): array
+    public function getRulesForIndicator(array $formFields, bool $fileUpload = false, array $result = []): array
     {
         $rules = [];
+        $tempRules = [
+            $this->getRulesForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
+            $this->getRulesForNarrative(Arr::get($formFields, 'description', []), 'description.0'),
+            $this->getRulesForDocumentLink(Arr::get($formFields, 'document_link', [])),
+            $this->getRulesForReference(Arr::get($formFields, 'reference', []), $fileUpload, $result),
+            $this->getRulesForBaseline(Arr::get($formFields, 'baseline', [])),
+        ];
 
-        return array_merge(
-            $rules,
-            $this->getRulesForNarrative($formFields['title'], 'title.0'),
-            $this->getRulesForNarrative($formFields['description'], 'description.0'),
-            $this->getRulesForDocumentLink($formFields['document_link']),
-            $this->getRulesForReference($formFields['reference']),
-            $this->getRulesForBaseline($formFields['baseline']),
-        );
+        foreach ($tempRules as $index => $tempRule) {
+            foreach ($tempRule as $idx => $rule) {
+                $rules[$idx] = $rule;
+            }
+        }
+
+        return $rules;
     }
 
     /**
@@ -68,18 +74,25 @@ class IndicatorRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForIndicator(array $formFields): array
+    public function getMessagesForIndicator(array $formFields): array
     {
         $messages = [];
 
-        return array_merge(
-            $messages,
-            $this->getMessagesForNarrative($formFields['title'], 'title.0'),
-            $this->getMessagesForNarrative($formFields['description'], 'description.0'),
-            $this->getMessagesForDocumentLink($formFields['document_link']),
-            $this->getMessagesForReference($formFields['reference']),
-            $this->getMessagesForBaseline($formFields['baseline']),
-        );
+        $tempMessages = [
+            $this->getMessagesForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
+            $this->getMessagesForNarrative(Arr::get($formFields, 'description', []), 'description.0'),
+            $this->getMessagesForDocumentLink(Arr::get($formFields, 'document_link', [])),
+            $this->getMessagesForReference(Arr::get($formFields, 'reference', [])),
+            $this->getMessagesForBaseline(Arr::get($formFields, 'baseline', [])),
+        ];
+
+        foreach ($tempMessages as $index => $tempMessage) {
+            foreach ($tempMessage as $idx => $message) {
+                $messages[$idx] = $message;
+            }
+        }
+
+        return $messages;
     }
 
     /**
@@ -89,16 +102,30 @@ class IndicatorRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForReference($formFields): array
+    protected function getRulesForReference($formFields, bool $fileUpload, array $result): array
     {
         $rules = [];
 
         Validator::extendImplicit(
             'result_ref_code_present',
-            function () {
-                $params = $this->route()->parameters();
+            function ($fileUpload, $result) {
+                if ($fileUpload) {
+                    if (!empty(Arr::get($result, 'reference', []))) {
+                        $refs = Arr::get($result, 'reference', []);
 
-                return !app()->make(ResultService::class)->resultHasRefCode((int) $params['id']);
+                        foreach ($refs as $ref) {
+                            if (array_key_exists('code', $ref) && $ref['code'] && !empty($ref['code'])) {
+                                return false;
+                            }
+                        }
+                    }
+
+                    return true;
+                } else {
+                    $params = $this->route()->parameters();
+
+                    return !app()->make(ResultService::class)->resultHasRefCode((int) $params['id']);
+                }
             }
         );
 
@@ -130,7 +157,7 @@ class IndicatorRequest extends ActivityBaseRequest
             $messages[sprintf('%s.indicator_uri.url', $referenceForm)] = 'The @indicator-uri field must be a valid url.';
 
             if (!empty($reference['code'])) {
-                $messages[sprintf('%s.code.result_ref_code_present', $referenceForm)] = 'The @code is already defined in its result';
+                $messages[sprintf('%s.code.result_ref_code_present', $referenceForm)] = 'The code is already defined in its result';
             }
         }
 

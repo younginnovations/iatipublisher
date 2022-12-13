@@ -38,11 +38,9 @@ class LegacyDataRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForActivityLegacyData(array $formFields): array
+    public function getRulesForActivityLegacyData(array $formFields): array
     {
-        $rules = [];
-
-        return $rules;
+        return [];
     }
 
     /**
@@ -52,10 +50,8 @@ class LegacyDataRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForActivityLegacyData(array $formFields): array
+    public function getMessagesForActivityLegacyData(array $formFields): array
     {
-        $messages = [];
-
-        return $messages;
+        return [];
     }
 }

@@ -54,6 +54,11 @@ class XmlQueueWriter
     /**
      * @var
      */
+    protected $xmlActivityIdentifiers;
+
+    /**
+     * @var
+     */
     protected $jsonData;
 
     /**
@@ -81,6 +86,7 @@ class XmlQueueWriter
      * @param                        $userId
      * @param                        $orgId
      * @param                        $dbIatiIdentifiers
+     * @param                        $xmlActivityIdentifiers
      * @param ActivityRepository     $activityRepo
      * @param TransactionRepository  $transactionRepo
      * @param ResultRepository       $resultRepo
@@ -90,6 +96,7 @@ class XmlQueueWriter
         $userId,
         $orgId,
         $dbIatiIdentifiers,
+        $xmlActivityIdentifiers,
         ActivityRepository $activityRepo,
         TransactionRepository $transactionRepo,
         ResultRepository $resultRepo,
@@ -102,6 +109,7 @@ class XmlQueueWriter
         $this->userId = $userId;
         $this->orgId = $orgId;
         $this->dbIatiIdentifiers = $dbIatiIdentifiers;
+        $this->xmlActivityIdentifiers = $xmlActivityIdentifiers;
         $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH ', 'XmlImporter/tmp');
     }
 
@@ -115,18 +123,20 @@ class XmlQueueWriter
      */
     public function save($mappedActivity): bool
     {
-        $activity_identifier = Arr::get($mappedActivity, 'identifier.activity_identifier');
+        $activity_identifier = Arr::get($mappedActivity, 'iati_identifier.activity_identifier');
         $xmlValidator = app(XmlValidator::class);
         $existing = $this->activityAlreadyExists($activity_identifier);
+        $duplicate = $this->activityIsDuplicate(Arr::get($mappedActivity, 'iati_identifier.iati_identifier_text'));
+        $duplicate_transaction = $this->transactionIsDuplicate(Arr::get($mappedActivity, 'transaction_references'));
 
         $errors = $xmlValidator
             ->init($mappedActivity)
-            ->validateActivity(true);
+            ->validateActivity($duplicate, $duplicate_transaction);
 
         $mappedActivity['org_id'] = $this->orgId;
         $this->success++;
 
-        $this->appendDataIntoFile($mappedActivity, Arr::flatten($errors), $existing);
+        $this->appendDataIntoFile($mappedActivity, $errors, $existing);
 
         return true;
     }
@@ -142,6 +152,26 @@ class XmlQueueWriter
     }
 
     /**
+     * @param $identifier
+     *
+     * @return bool
+     */
+    public function activityIsDuplicate($identifier): bool
+    {
+        return Arr::get($this->xmlActivityIdentifiers, $identifier, 0) > 1 ? true : false;
+    }
+
+    /**
+     * @param $identifier
+     *
+     * @return bool
+     */
+    public function transactionIsDuplicate($references): bool
+    {
+        return !(count(array_unique($references)) === count($references));
+    }
+
+    /**iI
      * Append data into the file containing previous data.
      *
      * @param $data

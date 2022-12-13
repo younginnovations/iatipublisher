@@ -105,7 +105,7 @@ class DefaultFieldValues extends Element
             if ($value) {
                 foreach ($validReportingOrgType as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -138,7 +138,7 @@ class DefaultFieldValues extends Element
             if ($value) {
                 foreach ($validReportingOrgType as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -182,9 +182,9 @@ class DefaultFieldValues extends Element
         }
 
         if ($key === $this->_csvHeaders[2]) {
-            if ((strtolower($value) === 'yes') || (strtolower($value) === 'true')) {
+            if ((strtolower($value) === 'yes') || (strtolower($value) === 'true') || $value) {
                 $value = '1';
-            } elseif ((strtolower($value) === 'no') || (strtolower($value) === 'false')) {
+            } elseif ((strtolower($value) === 'no') || (strtolower($value) === 'false') || !$value) {
                 $value = '0';
             }
 
@@ -201,8 +201,8 @@ class DefaultFieldValues extends Element
     public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
-                                         ->with($this->rules(), $this->messages())
-                                         ->getValidatorInstance();
+            ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
 
         $this->setValidity();
 
@@ -233,10 +233,10 @@ class DefaultFieldValues extends Element
     public function messages(): array
     {
         return [
-            'default_field_values.size'                  => trans('validation.multiple_values', ['attribute' => trans('elementForm.default_field_values')]),
-            'default_field_values.*.default_currency.in' => trans('validation.code_list', ['attribute' => trans('elementForm.default_currency')]),
-            'default_field_values.*.default_language.in' => trans('validation.code_list', ['attribute' => trans('elementForm.default_language')]),
-            'default_field_values.*.humanitarian.in'     => trans('validation.code_list', ['attribute' => trans('elementForm.humanitarian')]),
+            'default_field_values.size'                  => trans('validation.multiple_values', ['attribute' => trans('default_field_values')]),
+            'default_field_values.*.default_currency.in' => trans('validation.code_list', ['attribute' => trans('default_currency')]),
+            'default_field_values.*.default_language.in' => trans('validation.code_list', ['attribute' => trans('default_language')]),
+            'default_field_values.*.humanitarian.in'     => trans('validation.code_list', ['attribute' => trans('humanitarian')]),
         ];
     }
 

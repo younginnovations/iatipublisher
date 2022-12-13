@@ -69,11 +69,6 @@ class DateController extends Controller
     {
         try {
             $activityDate = $request->all();
-            $messages = $this->validateData(array_values($request->get('activity_date')));
-
-            if ($messages) {
-                return redirect()->route('admin.activity.date.edit', $id)->with('error', array_unique($messages))->withInput();
-            }
 
             if (!$this->dateService->update($id, $activityDate)) {
                 return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity-date.');
@@ -85,68 +80,5 @@ class DateController extends Controller
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity-date.');
         }
-    }
-
-    /**
-     * Validate activity date data based on Activity Date and Activity Date Type.
-     * @param array $activityDates
-     * @return array
-     */
-    private function validateData(array $activityDates): array
-    {
-        $messages = [];
-
-        foreach ($activityDates as $activityDateIndex => $activityDate) {
-            $blockIndex = $activityDateIndex + 1;
-            $date = $activityDate['date'];
-            $type = $activityDate['type'];
-
-            if (isset($date) && isset($type)) {
-                if (($type === '2' || $type === '4')) {
-                    (strtotime($date) <= strtotime(date('Y-m-d'))) ?: $messages[] = sprintf(
-                        'Actual start and end dates may not be in the future.(block %s)',
-                        $blockIndex
-                    );
-                }
-
-                if ($type === '4') {
-                    $actualStartDate = array_column(
-                        array_filter($activityDates, function ($date) {
-                            return $date['type'] === '2';
-                        }),
-                        'date'
-                    );
-
-                    if (count($actualStartDate)) {
-                        foreach ($actualStartDate as $startDate) {
-                            strtotime($date) > strtotime($startDate) ?: $messages[] = sprintf(
-                                'End date must be later than the start date. (Block %s)',
-                                $blockIndex
-                            );
-                        }
-                    }
-                }
-
-                if ($type === '3') {
-                    $plannedStartDate = array_column(
-                        array_filter($activityDates, function ($date) {
-                            return $date['type'] === '1';
-                        }),
-                        'date'
-                    );
-
-                    if (count($plannedStartDate)) {
-                        foreach ($plannedStartDate as $startDate) {
-                            strtotime($date) > strtotime($startDate) ?: $messages[] = sprintf(
-                                'End date must be later than the start date. (Block %s)',
-                                $blockIndex
-                            );
-                        }
-                    }
-                }
-            }
-        }
-
-        return $messages;
     }
 }

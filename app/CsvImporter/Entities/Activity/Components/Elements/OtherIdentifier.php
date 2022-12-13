@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\OtherIdentifier\OtherIdentifierRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -32,6 +33,11 @@ class OtherIdentifier extends Element
     protected string $index = 'other_identifier';
 
     /**
+     * @var OtherIdentifierRequest
+     */
+    private OtherIdentifierRequest $request;
+
+    /**
      * OtherIdentifier constructor.
      *
      * @param            $fields
@@ -41,6 +47,7 @@ class OtherIdentifier extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new OtherIdentifierRequest();
     }
 
     /**
@@ -123,7 +130,7 @@ class OtherIdentifier extends Element
             if ($value) {
                 foreach ($validOtherIdentifierType as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -164,6 +171,13 @@ class OtherIdentifier extends Element
      */
     protected function setOwnerOrgNarrative($key, $value, $index): void
     {
+        if (!isset($this->data['other_identifier'][$index]['owner_org'][0]['narrative'][0]['narrative'])) {
+            $this->data['other_identifier'][$index]['owner_org'][0]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
+        }
+
         if ($key === $this->_csvHeaders[3]) {
             $value = $value ?: '';
             $narrative = [
@@ -171,7 +185,7 @@ class OtherIdentifier extends Element
                 'language'  => '',
             ];
 
-            $this->data['other_identifier'][$index]['owner_org'][0]['narrative'][] = $narrative;
+            $this->data['other_identifier'][$index]['owner_org'][0]['narrative'][0] = $narrative;
         }
     }
 
@@ -183,41 +197,7 @@ class OtherIdentifier extends Element
      */
     public function rules(): array
     {
-        $otherIdentifierTypeList = implode(',', $this->validOtherIdentifierCodeList('OtherIdentifierType'));
-        $rules = [];
-
-        foreach (Arr::get($this->data(), 'other_identifier', []) as $key => $value) {
-            $rules['other_identifier.' . $key . '.reference'][] = sprintf(
-                'required_with: %s,%s,%s',
-                'other_identifier.' . $key . '.reference_type',
-                'other_identifier.' . $key . '.owner_org.0.ref',
-                'other_identifier.' . $key . '.owner_org.0.narrative.0.narrative'
-            );
-            $rules['other_identifier.' . $key . '.reference'][] = 'not_regex:/(&|!|\/|\||\?)/';
-            $rules['other_identifier.' . $key . '.reference_type'] = sprintf(
-                'in:%s|required_with: %s,%s,%s',
-                $otherIdentifierTypeList,
-                'other_identifier.' . $key . '.reference',
-                'other_identifier.' . $key . '.owner_org.0.ref',
-                'other_identifier.' . $key . '.owner_org.0.narrative.0.narrative'
-            );
-            $rules['other_identifier.' . $key . '.owner_org.0.ref'] = 'not_regex:/(&|!|\/|\||\?)/';
-        }
-
-        return $rules;
-    }
-
-    /**
-     * Return Valid OtherIdentifier Type.
-     *
-     * @param $name
-     *
-     * @return array
-     * @throws \JsonException
-     */
-    protected function validOtherIdentifierCodeList($name): array
-    {
-        return array_keys($this->loadCodeList($name));
+        return $this->request->getRulesForOtherIdentifier(Arr::get($this->data(), 'other_identifier', []));
     }
 
     /**
@@ -227,17 +207,7 @@ class OtherIdentifier extends Element
      */
     public function messages(): array
     {
-        $messages = [];
-
-        foreach (Arr::get($this->data(), 'other_identifier', []) as $key => $value) {
-            $messages['other_identifier.' . $key . '.reference_type.in'] = trans('validation.code_list', ['attribute' => trans('element.other_identifier_type')]);
-            $messages['other_identifier.' . $key . '.reference_type.required_with'] = trans('validation.required_with', ['attribute' => 'Other Identifier Reference Type', 'values' => 'Reference, narrative']);
-            $messages['other_identifier.' . $key . '.reference.not_regex'] = trans('validation.not_regex', ['attribute' => trans('element.other_identifier_reference')]);
-            $messages['other_identifier.' . $key . '.reference.required_with'] = trans('validation.required_with', ['attribute' => 'Other Identifier Reference', 'values' => 'Reference type, reference, narrative']);
-            $messages['other_identifier.' . $key . '.owner_org.0.ref.not_regex'] = trans('validation.not_regex', ['attribute' => trans('element.owner_org_ref')]);
-        }
-
-        return $messages;
+        return $this->request->getMessagesForOtherIdentifier(Arr::get($this->data(), 'other_identifier', []));
     }
 
     /**

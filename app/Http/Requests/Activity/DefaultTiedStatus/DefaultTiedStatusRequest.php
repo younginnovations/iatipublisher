@@ -14,12 +14,20 @@ class DefaultTiedStatusRequest extends ActivityBaseRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param $tied_status
+     *
      * @return array
      */
-    public function rules(): array
+    public function rules($tied_status = null): array
     {
+        if ($tied_status && is_array($tied_status)) {
+            return [
+                'default_tied_status' => 'nullable|size:1',
+            ];
+        }
+
         return [
-            'default_tied_status' => ['nullable', 'in:3,4,5'],
+            'default_tied_status' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('TiedStatus', 'Activity', false)))),
         ];
     }
 
@@ -31,7 +39,8 @@ class DefaultTiedStatusRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => 'The selected code does not exist.',
+            'in'        => 'The default tied status does not exist.',
+            'size'      => 'The default tied status cannot have more than one value.',
         ];
     }
 }

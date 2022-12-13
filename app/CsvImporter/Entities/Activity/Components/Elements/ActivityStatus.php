@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\Status\StatusRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -31,6 +32,11 @@ class ActivityStatus extends Element
     protected array $data;
 
     /**
+     * @var StatusRequest
+     */
+    private StatusRequest $request;
+
+    /**
      * Description constructor.
      *
      * @param            $fields
@@ -42,6 +48,7 @@ class ActivityStatus extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new StatusRequest();
     }
 
     /**
@@ -56,9 +63,14 @@ class ActivityStatus extends Element
     {
         foreach ($fields as $key => $values) {
             if (!is_null($values) && array_key_exists($key, array_flip($this->_csvHeader))) {
+                $this->data[$this->csvHeader()] = [];
+
                 foreach ($values as $value) {
                     $this->map($value, $values);
-                    break;
+                }
+
+                if (empty($this->data[$this->csvHeader()])) {
+                    $this->data[$this->csvHeader()] = '';
                 }
             }
         }
@@ -88,8 +100,6 @@ class ActivityStatus extends Element
             }
 
             (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
-        } else {
-            $this->data[$this->csvHeader()] = '';
         }
     }
 
@@ -118,13 +128,7 @@ class ActivityStatus extends Element
      */
     public function rules(): array
     {
-        $rules = [
-            $this->csvHeader() => sprintf('nullable|in:%s', $this->validActivityStatus()),
-        ];
-
-        (!is_array(Arr::get($this->data, 'activity_status'))) ?: $rules[$this->csvHeader()] .= 'nullable|size:1';
-
-        return $rules;
+        return $this->request->rules(Arr::get($this->data(), $this->csvHeader()));
     }
 
     /**
@@ -134,13 +138,7 @@ class ActivityStatus extends Element
      */
     public function messages(): array
     {
-        $key = $this->csvHeader();
-
-        return [
-            sprintf('%s.required', $key) => trans('validation.required', ['attribute' => trans('element.activity_status')]),
-            sprintf('%s.size', $key)     => trans('validation.multiple_values', ['attribute' => trans('element.activity_status')]),
-            sprintf('%s.in', $key)       => trans('validation.code_list', ['attribute' => trans('element.activity_status')]),
-        ];
+        return $this->request->messages();
     }
 
     /**
@@ -151,16 +149,5 @@ class ActivityStatus extends Element
     protected function csvHeader(): mixed
     {
         return end($this->_csvHeader);
-    }
-
-    /**
-     * Get the valid ActivityStatus from the ActivityStatus codelist as a string.
-     *
-     * @return string
-     * @throws \JsonException
-     */
-    protected function validActivityStatus(): string
-    {
-        return implode(',', array_keys(array_flip(array_keys($this->loadCodeList('ActivityStatus')))));
     }
 }

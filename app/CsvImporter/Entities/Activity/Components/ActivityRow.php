@@ -84,6 +84,7 @@ class ActivityRow extends Row
         'transaction_sector_narrative',
         'transaction_recipient_country_code',
         'transaction_recipient_region_code',
+        'transaction_recipient_region_vocabulary_uri',
     ];
 
     /**
@@ -188,10 +189,10 @@ class ActivityRow extends Row
             'default_flow_type',
             'default_finance_type',
             'default_tied_status',
-            'capital_spend',
             'collaboration_type',
             'default_flow_type',
             'default_finance_type',
+            'capital_spend',
         ];
 
         foreach ($this->fields as $key => $dataDatum) {
@@ -414,13 +415,13 @@ class ActivityRow extends Row
             if ($element === 'transaction') {
                 foreach ($this->$element as $transaction) {
                     $transaction->validate()->withErrors();
-                    $this->recordErrors($transaction);
+                    $this->recordErrors($element, $transaction);
 
                     $this->validElements[] = $transaction->isElementValid();
                 }
             } else {
                 $this->$element->validate()->withErrors();
-                $this->recordErrors($this->$element);
+                $this->recordErrors($element, $this->$element);
 
                 $this->validElements[] = $this->$element->isElementValid();
             }
@@ -571,10 +572,10 @@ class ActivityRow extends Row
      *
      * @param $element
      */
-    protected function recordErrors($element): void
+    protected function recordErrors($name, $element): void
     {
-        foreach ($element->errors() as $errors) {
-            $this->errors[] = $errors;
+        if (!empty($element->errors())) {
+            $this->errors[$name] = $element->errors();
         }
     }
 
@@ -606,7 +607,7 @@ class ActivityRow extends Row
      */
     public function checkExistence($row): static
     {
-        if (array_intersect($this->activityIdentifiers, Arr::get($row, 'activity_identifier', []))) {
+        if (in_array(Arr::get($row, 'activity_identifier.0', null), $this->activityIdentifiers)) {
             $this->existence = true;
         }
 
@@ -671,8 +672,8 @@ class ActivityRow extends Row
      */
     protected function containsDuplicateTransactions($references): bool
     {
-        if ((!empty($references)) && (count(array_unique($references)) !== count($this->getTransactions()))) {
-            $this->errors[] = 'There are duplicate Transactions for this Activity in the uploaded Csv File.';
+        if ((!empty($references)) && (count(array_unique($references)) !== count($references))) {
+            $this->errors['transactions']['transactions.reference'] = 'There are duplicate Transactions for this Activity in the uploaded Csv File.';
 
             return true;
         }
@@ -690,7 +691,7 @@ class ActivityRow extends Row
     protected function containsDuplicateActivities($commonIdentifierCount): bool
     {
         if ($commonIdentifierCount > 1) {
-            $this->errors[] = 'This Activity has been duplicated in the uploaded Csv File.';
+            $this->errors['activity_identifier']['activity_identifier'] = 'This Activity has been duplicated in the uploaded Csv File.';
 
             return true;
         }

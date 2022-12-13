@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\PolicyMarker\PolicyMarkerRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -26,6 +27,11 @@ class PolicyMarker extends Element
     protected string $index = 'policy_marker';
 
     /**
+     * @var PolicyMarkerRequest
+     */
+    private PolicyMarkerRequest $request;
+
+    /**
      * PolicyMarker constructor.
      * @param            $fields
      * @param Validation $factory
@@ -34,6 +40,7 @@ class PolicyMarker extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new PolicyMarkerRequest();
     }
 
     /**
@@ -88,6 +95,7 @@ class PolicyMarker extends Element
         if (!isset($this->data['policy_marker'][$index]['policy_marker_vocabulary'])) {
             $this->data['policy_marker'][$index]['policy_marker_vocabulary'] = '';
         }
+
         if ($key === $this->_csvHeaders[0]) {
             $validVocabulary = $this->loadCodeList('PolicyMarkerVocabulary');
             $value = $value ? trim($value) : '';
@@ -95,7 +103,7 @@ class PolicyMarker extends Element
             if ($value) {
                 foreach ($validVocabulary as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -115,12 +123,7 @@ class PolicyMarker extends Element
      */
     protected function setVocabularyUri($key, $value, $index): void
     {
-        if (!isset($this->data['policy_marker'][$index]['vocabulary_uri'])) {
-            $this->data['policy_marker'][$index]['vocabulary_uri'] = '';
-        }
-
-        if ($key === $this->_csvHeaders[3]) {
-            $value = (!$value) ? '' : $value;
+        if ($key === $this->_csvHeaders[3] && Arr::get($this->data(), 'policy_marker.' . $index . '.policy_marker_vocabulary') === '99') {
             $this->data['policy_marker'][$index]['vocabulary_uri'] = $value;
         }
     }
@@ -139,6 +142,7 @@ class PolicyMarker extends Element
         if (!isset($this->data['policy_marker'][$index]['significance'])) {
             $this->data['policy_marker'][$index]['significance'] = '';
         }
+
         if ($key === $this->_csvHeaders[2]) {
             $validSignificance = $this->loadCodeList('PolicySignificance');
             $value = $value ? trim($value) : '';
@@ -146,7 +150,7 @@ class PolicyMarker extends Element
             if ($value) {
                 foreach ($validSignificance as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -185,7 +189,7 @@ class PolicyMarker extends Element
                     if ($value) {
                         foreach ($validMarker as $code => $name) {
                             if (strcasecmp($value, $name) === 0) {
-                                $value = strval($code);
+                                $value = (string) $code;
                                 break;
                             }
                         }
@@ -258,30 +262,7 @@ class PolicyMarker extends Element
      */
     public function rules(): array
     {
-        $rules = [
-            'policy_marker.*.vocabulary'   => sprintf('in:%s', $this->policyMarkerCodeList('PolicyMarkerVocabulary')),
-            'policy_marker.*.significance' => sprintf('in:%s', $this->policyMarkerCodeList('PolicySignificance')),
-        ];
-
-        foreach (Arr::get($this->data, 'policy_marker', []) as $key => $value) {
-            $rules['policy_marker.' . $key . '.vocabulary_uri'] = 'nullable|url';
-
-            switch (Arr::get($value, 'policy_marker_vocabulary')) {
-                case '1':
-                    $rules['policy_marker.' . $key . '.policy_marker'] = sprintf('nullable|in:%s', $this->policyMarkerCodeList('PolicyMarker'));
-                    break;
-                case '99':
-                    $rules['policy_marker.' . $key . '.policy_marker_text'] = 'required';
-                    $rules['policy_marker.' . $key . '.vocabulary_uri'] = 'required|url';
-                    $rules['policy_marker.' . $key . '.narrative.0.narrative'] = 'required';
-                    break;
-                default:
-                    $rules['policy_marker.' . $key . '.policy_marker'] = 'required';
-                    break;
-            }
-        }
-
-        return $rules;
+        return $this->request->getRulesForPolicyMarker(Arr::get($this->data, 'policy_marker', []));
     }
 
     /**
@@ -291,30 +272,7 @@ class PolicyMarker extends Element
      */
     public function messages(): array
     {
-        $messages = [
-            'policy_marker.*.vocabulary.in'   => trans('validation.code_list', ['attribute' => trans('elementForm.policy_marker_vocabulary')]),
-            'policy_marker.*.significance.in' => trans('validation.code_list', ['attribute' => trans('elementForm.significance_code')]),
-        ];
-
-        foreach (Arr::get($this->data, 'policy_marker', []) as $key => $value) {
-            $messages['policy_marker.' . $key . '.vocabulary_uri.url'] = trans('validation.url', ['attribute' => trans('elementForm.policy_marker_vocabulary_uri')]);
-
-            switch (Arr::get($value, 'policy_marker_vocabulary')) {
-                case '1':
-                    $messages['policy_marker.' . $key . '.policy_marker.required'] = trans('validation.required', ['attribute' => trans('elementForm.policy_marker')]);
-                    $messages['policy_marker.' . $key . '.policy_marker.in'] = trans('validation.code_list', ['attribute' => trans('elementForm.policy_marker_code')]);
-                    break;
-                case '99':
-                    $messages['policy_marker.' . $key . '.policy_marker_text.required'] = trans('validation.required', ['attribute' => trans('elementForm.policy_marker')]);
-                    $messages['policy_marker.' . $key . '.vocabulary_uri.required'] = trans('validation.required_if', ['attribute' => trans('elementForm.policy_marker_vocabulary_uri'), 'other' => trans('elementForm.policy_marker_vocabulary'), 'value' => '99']);
-                    $messages['policy_marker.' . $key . '.narrative.0.narrative.required'] = trans('validation.required_if', ['attribute' => trans('elementForm.policy_marker_narrative'), 'other' => trans('elementForm.policy_marker_vocabulary'), 'value' => '99']);
-                    break;
-                default:
-                    $messages['policy_marker.' . $key . '.policy_marker.required'] = trans('validation.required', ['attribute' => trans('elementForm.policy_marker')]);
-            }
-        }
-
-        return $messages;
+        return $this->request->getMessagesForPolicyMarker(Arr::get($this->data, 'policy_marker', []));
     }
 
     /**

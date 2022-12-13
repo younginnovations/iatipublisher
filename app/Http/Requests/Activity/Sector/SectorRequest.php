@@ -62,25 +62,28 @@ class SectorRequest extends ActivityBaseRequest
      * returns rules for sector.
      *
      * @param $formFields
+     * @param bool $fileUpload
      *
      * @return array
      * @throws BindingResolutionException
      */
-    public function getSectorsRules($formFields): array
+    public function getSectorsRules($formFields, bool $fileUpload = false): array
     {
         if (empty($formFields)) {
             return [];
         }
 
-        $params = $this->route()->parameters();
-        $activityService = app()->make(ActivityService::class);
+        if (!$fileUpload) {
+            $params = $this->route()->parameters();
+            $activityService = app()->make(ActivityService::class);
 
-        if ($activityService->hasSectorDefinedInTransactions($params['id'])) {
-            Validator::extend('already_in_transactions', function () {
-                return false;
-            });
+            if ($activityService->hasSectorDefinedInTransactions($params['id'])) {
+                Validator::extend('already_in_transactions', function () {
+                    return false;
+                });
 
-            return ['sector' => 'already_in_transactions'];
+                return ['sector' => 'already_in_transactions'];
+            }
         }
 
         Validator::extend('sector_total_percent', function () {
@@ -95,6 +98,11 @@ class SectorRequest extends ActivityBaseRequest
 
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
+            $rules[sprintf('%s.sector_vocabulary', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorVocabulary', 'Activity', false)));
+            $rules[sprintf('%s.code', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorCode', 'Activity', false)));
+            $rules[sprintf('%s.category_code', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorCategory', 'Activity', false)));
+            $rules[sprintf('%s.sdg_goal', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Goals', 'Activity', false)));
+            $rules[sprintf('%s.sdg_target', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Targets', 'Activity', false)));
 
             if (isset($sector['sector_vocabulary']) && ($sector['sector_vocabulary'] === '99' || $sector['sector_vocabulary'] === '98')) {
                 $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
@@ -144,9 +152,14 @@ class SectorRequest extends ActivityBaseRequest
 
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
-            $messages[sprintf('%s.vocabulary_uri.url', $sectorForm)] = 'The @vocabulary-uri field must be a valid url.';
-            $messages[sprintf('%s.percentage.numeric', $sectorForm)] = 'The @percentage field must be a number.';
-            $messages[sprintf('%s.percentage.in', $sectorForm)] = 'The @percentage for single sector must be either omitted or be 100.';
+            $messages[sprintf('%s.sector_vocabulary.in', $sectorForm)] = 'The sector vocabulary is invalid.';
+            $messages[sprintf('%s.code.in', $sectorForm)] = 'The sector code is invalid.';
+            $messages[sprintf('%s.category_code.in', $sectorForm)] = 'The sector code is invalid.';
+            $messages[sprintf('%s.sdg_goal.in', $sectorForm)] = 'The sector code is invalid.';
+            $messages[sprintf('%s.sdg_target.in', $sectorForm)] = 'The sector code is invalid.';
+            $messages[sprintf('%s.vocabulary_uri.url', $sectorForm)] = 'The sector vocabulary-uri field must be a valid url.';
+            $messages[sprintf('%s.percentage.numeric', $sectorForm)] = 'The sector percentage field must be a number.';
+            $messages[sprintf('%s.percentage.in', $sectorForm)] = 'The sector percentage for single sector must be either omitted or be 100.';
             $messages[sprintf('%s.percentage.sector_total_percent', $sectorForm)] = 'The total percentage within a vocabulary must be 100.';
             $messages[sprintf('%s.sector_vocabulary.sector_has_five_digit_oced_vocab', $sectorForm)] = 'The sector vocabulary must have 5 digit OCED';
 

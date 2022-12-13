@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\ParticipatingOrganization\ParticipatingOrganizationRequest;
 
 /**
  * Class ParticipatingOrganization.
@@ -21,7 +22,7 @@ class ParticipatingOrganization extends Element
      * Index under which the data is stored within the object.
      * @var string
      */
-    protected string $index = 'participating_organization';
+    protected string $index = 'participating_org';
 
     /**
      * @var array
@@ -44,6 +45,11 @@ class ParticipatingOrganization extends Element
     protected array $orgRoles = [];
 
     /**
+     * @var ParticipatingOrganizationRequest
+     */
+    private ParticipatingOrganizationRequest $request;
+
+    /**
      * ParticipatingOrganisation constructor.
      *
      * @param            $fields
@@ -55,6 +61,7 @@ class ParticipatingOrganization extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new ParticipatingOrganizationRequest();
     }
 
     /**
@@ -110,8 +117,8 @@ class ParticipatingOrganization extends Element
      */
     protected function setOrganisationRole($key, $value, $index): void
     {
-        if (!isset($this->data['participating_organization'][$index]['organization_role'])) {
-            $this->data['participating_organization'][$index]['organization_role'] = '';
+        if (!isset($this->data['participating_org'][$index]['organization_role'])) {
+            $this->data['participating_org'][$index]['organization_role'] = '';
         }
 
         if ($key === $this->_csvHeaders[0] && (!is_null($value))) {
@@ -121,7 +128,7 @@ class ParticipatingOrganization extends Element
             if ($value) {
                 foreach ($validOrganizationRoles as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -130,7 +137,7 @@ class ParticipatingOrganization extends Element
             $this->orgRoles[] = $value;
             $this->orgRoles = array_unique($this->orgRoles);
 
-            $this->data['participating_organization'][$index]['organization_role'] = $value;
+            $this->data['participating_org'][$index]['organization_role'] = $value;
         }
     }
 
@@ -145,12 +152,12 @@ class ParticipatingOrganization extends Element
      */
     protected function setOrganisationReference($key, $value, $index): void
     {
-        if (!isset($this->data['participating_organization'][$index]['ref'])) {
-            $this->data['participating_organization'][$index]['ref'] = '';
+        if (!isset($this->data['participating_org'][$index]['ref'])) {
+            $this->data['participating_org'][$index]['ref'] = '';
         }
 
         if ($key === $this->_csvHeaders[1] && (!is_null($value))) {
-            $this->data['participating_organization'][$index]['ref'] = $value;
+            $this->data['participating_org'][$index]['ref'] = $value;
         }
     }
 
@@ -165,12 +172,12 @@ class ParticipatingOrganization extends Element
      */
     protected function setIdentifier($key, $value, $index): void
     {
-        if (!isset($this->data['participating_organization'][$index]['identifier'])) {
-            $this->data['participating_organization'][$index]['identifier'] = '';
+        if (!isset($this->data['participating_org'][$index]['identifier'])) {
+            $this->data['participating_org'][$index]['identifier'] = '';
         }
 
         if ($key === $this->_csvHeaders[4] && (!is_null($value))) {
-            $this->data['participating_organization'][$index]['identifier'] = $value;
+            $this->data['participating_org'][$index]['identifier'] = $value;
         }
     }
 
@@ -186,8 +193,8 @@ class ParticipatingOrganization extends Element
      */
     protected function setOrganisationType($key, $value, $index): void
     {
-        if (!isset($this->data['participating_organization'][$index]['type'])) {
-            $this->data['participating_organization'][$index]['type'] = '';
+        if (!isset($this->data['participating_org'][$index]['type'])) {
+            $this->data['participating_org'][$index]['type'] = '';
         }
 
         if ($key === $this->_csvHeaders[2] && (!is_null($value))) {
@@ -197,7 +204,7 @@ class ParticipatingOrganization extends Element
             if ($value) {
                 foreach ($validOrganizationType as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -206,7 +213,7 @@ class ParticipatingOrganization extends Element
             $this->types[] = $value;
             $this->types = array_unique($this->types);
 
-            $this->data['participating_organization'][$index]['type'] = $value;
+            $this->data['participating_org'][$index]['type'] = $value;
         }
     }
 
@@ -221,18 +228,18 @@ class ParticipatingOrganization extends Element
      */
     protected function setNarrative($key, $value, $index): void
     {
-        if (!isset($this->data['participating_organization'][$index]['narrative'])) {
-            $this->data['participating_organization'][$index]['narrative'][] = ['narrative' => '', 'language' => ''];
+        if (!isset($this->data['participating_org'][$index]['narrative'])) {
+            $this->data['participating_org'][$index]['narrative'][] = ['narrative' => '', 'language' => ''];
         } else {
             if ($key === $this->_csvHeaders[3]) {
-                foreach ($this->data['participating_organization'][$index]['narrative'] as $d) {
-                    $this->data['participating_organization'][$index]['narrative'] = array_filter($d);
+                foreach ($this->data['participating_org'][$index]['narrative'] as $d) {
+                    $this->data['participating_org'][$index]['narrative'] = array_filter($d);
                 }
 
                 $narrative = ['narrative' => $value, 'language' => ''];
                 $this->narratives[] = $narrative;
 
-                $this->data['participating_organization'][$index]['narrative'][] = $narrative;
+                $this->data['participating_org'][$index]['narrative'][] = $narrative;
             }
         }
     }
@@ -249,8 +256,8 @@ class ParticipatingOrganization extends Element
      */
     protected function setOrganisationCrsChannelCode($key, $value, $index): void
     {
-        if (!isset($this->data['participating_organization'][$index]['crs_channel_code'])) {
-            $this->data['participating_organization'][$index]['crs_channel_code'] = '';
+        if (!isset($this->data['participating_org'][$index]['crs_channel_code'])) {
+            $this->data['participating_org'][$index]['crs_channel_code'] = '';
         }
 
         if ($key === $this->_csvHeaders[5] && (!is_null($value))) {
@@ -265,7 +272,7 @@ class ParticipatingOrganization extends Element
                 }
             }
 
-            $this->data['participating_organization'][$index]['crs_channel_code'] = $value;
+            $this->data['participating_org'][$index]['crs_channel_code'] = $value;
         }
     }
 
@@ -277,12 +284,7 @@ class ParticipatingOrganization extends Element
      */
     public function rules(): array
     {
-        return [
-            'participating_organization'                     => 'required|required_only_one_among:identifier,narrative',
-            'participating_organization.*.organization_role' => sprintf('required|in:%s', $this->validOrganizationRoles()),
-            'participating_organization.*.type' => sprintf('in:%s', $this->validOrganizationTypes()),
-            'participating_organization.*.crs_channel_code' => sprintf('in:%s', $this->validOrganizationCrsChannelCodes()),
-        ];
+        return $this->request->getRulesForParticipatingOrg($this->data('participating_org'));
     }
 
     /**
@@ -292,20 +294,7 @@ class ParticipatingOrganization extends Element
      */
     public function messages(): array
     {
-        return [
-            'participating_organization.required'                      => trans('validation.required', ['attribute' => trans('elementForm.participating_organisation')]),
-            'participating_organization.*.organization_role.required'  => trans('validation.required', ['attribute' => trans('elementForm.participating_organisation_role')]),
-            'participating_organization.required_only_one_among'       => trans(
-                'validation.required_only_one_among',
-                [
-                    'attribute' => trans('elementForm.participating_organisation_identifier'),
-                    'values'    => trans('elementForm.participating_organisation_name'),
-                ]
-            ),
-            'participating_organization.*.organization_role.in'        => trans('validation.code_list', ['attribute' => trans('elementForm.participating_organisation_role')]),
-            'participating_organization.*.type.in'        => trans('validation.code_list', ['attribute' => trans('elementForm.participating_organisation_type')]),
-            'participating_organization.*.crs_channel_code.in'        => trans('validation.code_list', ['attribute' => trans('elementForm.participating_organisation_crs_channel_code')]),
-        ];
+        return $this->request->getMessagesForParticipatingOrg($this->data('participating_org'));
     }
 
     /**
@@ -317,8 +306,8 @@ class ParticipatingOrganization extends Element
     public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
-            ->with($this->rules(), $this->messages())
-            ->getValidatorInstance();
+                                         ->with($this->rules(), $this->messages())
+                                         ->getValidatorInstance();
 
         $this->setValidity();
 

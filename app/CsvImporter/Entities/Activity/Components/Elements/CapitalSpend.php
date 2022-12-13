@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\CapitalSpend\CapitalSpendRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -29,6 +30,7 @@ class CapitalSpend extends Element
      * @var array
      */
     protected array $data;
+    private CapitalSpendRequest $request;
 
     /**
      * Description constructor.
@@ -42,6 +44,7 @@ class CapitalSpend extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new CapitalSpendRequest();
     }
 
     /**
@@ -56,9 +59,14 @@ class CapitalSpend extends Element
     {
         foreach ($fields as $key => $values) {
             if (!is_null($values) && array_key_exists($key, array_flip($this->_csvHeader))) {
+                $this->data[$this->csvHeader()] = [];
+
                 foreach ($values as $value) {
                     $this->map($value, $values);
-                    break;
+                }
+
+                if (empty($this->data[$this->csvHeader()])) {
+                    $this->data[$this->csvHeader()] = '';
                 }
             }
         }
@@ -77,8 +85,6 @@ class CapitalSpend extends Element
     {
         if (!(is_null($value) || $value === '')) {
             (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
-        } else {
-            $this->data[$this->csvHeader()] = '';
         }
     }
 
@@ -91,8 +97,8 @@ class CapitalSpend extends Element
     public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data)
-                                         ->with($this->rules(), $this->messages())
-                                         ->getValidatorInstance();
+            ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
 
         $this->setValidity();
 
@@ -107,13 +113,7 @@ class CapitalSpend extends Element
      */
     public function rules(): array
     {
-        $rules = [
-            $this->csvHeader() => 'nullable|numeric|between:0, 100',
-        ];
-
-        (!is_array(Arr::get($this->data, 'capital_spend'))) ?: $rules[$this->csvHeader()] .= 'nullable|size:1';
-
-        return $rules;
+        return $this->request->rules(Arr::get($this->data, $this->csvHeader()));
     }
 
     /**
@@ -123,13 +123,7 @@ class CapitalSpend extends Element
      */
     public function messages(): array
     {
-        $key = $this->csvHeader();
-
-        return [
-            sprintf('%s.numeric', $key)  => trans('validation.numeric', ['attribute' => trans('element.capital_spend')]),
-            sprintf('%s.between', $key)  => trans('validation.between.numeric', ['attribute' => trans('element.capital_spend'), 'min' => '0', 'max' => '100']),
-            sprintf('%s.size', $key)     => trans('validation.multiple_values', ['attribute' => trans('element.capital_spend')]),
-        ];
+        return $this->request->messages();
     }
 
     /**

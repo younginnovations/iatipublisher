@@ -817,7 +817,7 @@ function trimInput($input): string
  */
 function dateFormat($format, $date): bool|string
 {
-    if (is_array($date)) {
+    if (is_array($date) || is_bool($date)) {
         return false;
     }
 
@@ -828,7 +828,7 @@ function dateFormat($format, $date): bool|string
 
         $dateArray = date_parse_from_format('Y-m-d', $date);
 
-        if (checkdate((int) $dateArray['month'], (int) $dateArray['day'], (int) $dateArray['year'])) {
+        if (checkdate((int) $dateArray['month'], (int) $dateArray['day'], (int) $dateArray['year']) && (bool) strtotime($date)) {
             return date($format, strtotime($date));
         }
 
@@ -858,7 +858,7 @@ function dateStrToTime($date): int|bool
 
         $dateArray = date_parse_from_format('Y-m-d', $date);
 
-        if (checkdate((int) $dateArray['month'], (int) $dateArray['day'], (int) $dateArray['year'])) {
+        if (checkdate((int) $dateArray['month'], (int) $dateArray['day'], (int) $dateArray['year']) && (bool) strtotime($date)) {
             return strtotime($date);
         }
 

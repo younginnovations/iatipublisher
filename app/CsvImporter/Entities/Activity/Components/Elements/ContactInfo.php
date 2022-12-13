@@ -6,6 +6,8 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\ContactInfo\ContactInfoRequest;
+use Illuminate\Support\Arr;
 
 /**
  * Class ContactInfo.
@@ -36,6 +38,11 @@ class ContactInfo extends Element
     protected string $index = 'contact_info';
 
     /**
+     * @var ContactInfoRequest
+     */
+    private ContactInfoRequest $request;
+
+    /**
      * ContactInfo constructor.
      *
      * @param            $fields
@@ -45,6 +52,7 @@ class ContactInfo extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new ContactInfoRequest();
     }
 
     /**
@@ -110,7 +118,7 @@ class ContactInfo extends Element
             if ($value) {
                 foreach ($relatedActivityType as $code => $name) {
                     if (strcasecmp(trim($value), (string) $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -132,13 +140,20 @@ class ContactInfo extends Element
     protected function setContactOrganization($key, $value, $index): void
     {
         if (!isset($this->data['contact_info'][$index]['organisation'][0]['narrative'][0]['narrative'])) {
-            $this->data['contact_info'][$index]['organisation'][0]['narrative'][0]['narrative'] = '';
+            $this->data['contact_info'][$index]['organisation'][0]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
         }
 
-        $this->data['contact_info'][$index]['organisation'][0]['narrative'][0]['language'] = '';
-
         if ($key === $this->_csvHeaders[1]) {
-            $this->data['contact_info'][$index]['organisation'][0]['narrative'][0]['narrative'] = $value;
+            $value = $value ?: '';
+            $narrative = [
+                'narrative' => $value,
+                'language'  => '',
+            ];
+
+            $this->data['contact_info'][$index]['organisation'][0]['narrative'][0] = $narrative;
         }
     }
 
@@ -154,13 +169,20 @@ class ContactInfo extends Element
     protected function setContactDepartment($key, $value, $index): void
     {
         if (!isset($this->data['contact_info'][$index]['department'][0]['narrative'][0]['narrative'])) {
-            $this->data['contact_info'][$index]['department'][0]['narrative'][0]['narrative'] = '';
+            $this->data['contact_info'][$index]['department'][0]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
         }
 
-        $this->data['contact_info'][$index]['department'][0]['narrative'][0]['language'] = '';
-
         if ($key === $this->_csvHeaders[2]) {
-            $this->data['contact_info'][$index]['department'][0]['narrative'][0]['narrative'] = $value;
+            $value = $value ?: '';
+            $narrative = [
+                'narrative' => $value,
+                'language'  => '',
+            ];
+
+            $this->data['contact_info'][$index]['department'][0]['narrative'][0] = $narrative;
         }
     }
 
@@ -176,13 +198,20 @@ class ContactInfo extends Element
     protected function setContactPersonName($key, $value, $index): void
     {
         if (!isset($this->data['contact_info'][$index]['person_name'][0]['narrative'][0]['narrative'])) {
-            $this->data['contact_info'][$index]['person_name'][0]['narrative'][0]['narrative'] = '';
+            $this->data['contact_info'][$index]['person_name'][0]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
         }
 
-        $this->data['contact_info'][$index]['person_name'][0]['narrative'][0]['language'] = '';
-
         if ($key === $this->_csvHeaders[3]) {
-            $this->data['contact_info'][$index]['person_name'][0]['narrative'][0]['narrative'] = $value;
+            $value = $value ?: '';
+            $narrative = [
+                'narrative' => $value,
+                'language'  => '',
+            ];
+
+            $this->data['contact_info'][$index]['person_name'][0]['narrative'][0] = $narrative;
         }
     }
 
@@ -198,13 +227,20 @@ class ContactInfo extends Element
     protected function setContactJobTitle($key, $value, $index): void
     {
         if (!isset($this->data['contact_info'][$index]['job_title'][0]['narrative'][0]['narrative'])) {
-            $this->data['contact_info'][$index]['job_title'][0]['narrative'][0]['narrative'] = '';
+            $this->data['contact_info'][$index]['job_title'][0]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
         }
 
-        $this->data['contact_info'][$index]['job_title'][0]['narrative'][0]['language'] = '';
-
         if ($key === $this->_csvHeaders[4]) {
-            $this->data['contact_info'][$index]['job_title'][0]['narrative'][0]['narrative'] = $value;
+            $value = $value ?: '';
+            $narrative = [
+                'narrative' => $value,
+                'language'  => '',
+            ];
+
+            $this->data['contact_info'][$index]['job_title'][0]['narrative'][0] = $narrative;
         }
     }
 
@@ -280,25 +316,21 @@ class ContactInfo extends Element
     protected function setContactMailingAddress($key, $value, $index): void
     {
         if (!isset($this->data['contact_info'][$index]['mailing_address'][0]['narrative'][0]['narrative'])) {
-            $this->data['contact_info'][$index]['mailing_address'][0]['narrative'][0]['narrative'] = '';
+            $this->data['contact_info'][$index]['mailing_address'][0]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
         }
-
-        $this->data['contact_info'][$index]['mailing_address'][0]['narrative'][0]['language'] = '';
 
         if ($key === $this->_csvHeaders[8]) {
-            $this->data['contact_info'][$index]['mailing_address'][0]['narrative'][0]['narrative'] = $value;
-        }
-    }
+            $value = $value ?: '';
+            $narrative = [
+                'narrative' => $value,
+                'language'  => '',
+            ];
 
-    /**
-     * Provides ContactType Code.
-     *
-     * @return string
-     * @throws \JsonException
-     */
-    protected function contactTypeCode(): string
-    {
-        return implode(',', array_keys($this->loadCodeList('ContactType')));
+            $this->data['contact_info'][$index]['mailing_address'][0]['narrative'][0] = $narrative;
+        }
     }
 
     /**
@@ -309,13 +341,7 @@ class ContactInfo extends Element
      */
     public function rules(): array
     {
-        $rules = [];
-
-        $rules['contact_info.*.type'] = sprintf('in:%s', $this->contactTypeCode());
-        $rules['contact_info.*.email.0.email'] = 'email';
-        $rules['contact_info.*.website.0.website'] = 'nullable|url';
-
-        return $rules;
+        return $this->request->getRulesForContactInfo(Arr::get($this->data(), 'contact_info', []));
     }
 
     /**
@@ -325,13 +351,7 @@ class ContactInfo extends Element
      */
     public function messages(): array
     {
-        $messages = [];
-
-        $messages['contact_info.*.type.in'] = trans('validation.code_list', ['attribute' => trans('contact info element contact_type')]);
-        $messages['contact_info.*.email.0.email.email'] = trans('validation.email', ['attribute' => trans('contact info element email')]);
-        $messages['contact_info.*.website.0.website.url'] = trans('validation.url', ['attribute' => trans('contact info element website')]);
-
-        return $messages;
+        return $this->request->getMessagesForContactInfo(Arr::get($this->data(), 'contact_info', []));
     }
 
     /**

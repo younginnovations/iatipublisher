@@ -14,14 +14,20 @@ class DefaultFinanceTypeRequest extends ActivityBaseRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param $finance_type
+     *
      * @return array
      */
-    public function rules(): array
+    public function rules($finance_type = null): array
     {
-        $financeTypeKeys = implode(',', array_keys(getCodeList('FinanceType', 'Activity')));
+        if ($finance_type && is_array($finance_type)) {
+            return [
+                'default_finance_type' => 'nullable|size:1',
+            ];
+        }
 
         return [
-            'default_finance_type' => ['nullable', 'in:' . $financeTypeKeys],
+            'default_finance_type' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('FinanceType', 'Activity', false)))),
         ];
     }
 
@@ -33,7 +39,8 @@ class DefaultFinanceTypeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => 'The selected code does not exist.',
+            'in'        => 'The default finance type does not exist.',
+            'size'      => 'The default finance type cannot have more than one value.',
         ];
     }
 }

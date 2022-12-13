@@ -7,6 +7,7 @@ namespace App\Http\Requests\Activity\Period;
 use App\Http\Requests\Activity\ActivityBaseRequest;
 use App\IATI\Services\Activity\IndicatorService;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -44,17 +45,23 @@ class PeriodRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    protected function getRulesForPeriod(array $formFields): array
+    public function getRulesForPeriod(array $formFields, bool $fileUpload = false, array $indicator = []): array
     {
         $rules = [];
-
-        return array_merge(
-            $rules,
+        $tempRules = [
             $this->getRulesForResultPeriodStart($formFields['period_start'], 'period_start'),
             $this->getRulesForResultPeriodEnd($formFields['period_end'], 'period_end'),
-            $this->getRulesForTarget($formFields['target'], 'target'),
-            $this->getRulesForTarget($formFields['actual'], 'actual')
-        );
+            $this->getRulesForTarget($formFields['target'], 'target', $fileUpload, $indicator),
+            $this->getRulesForTarget($formFields['actual'], 'actual', $fileUpload, $indicator),
+        ];
+
+        foreach ($tempRules as $index => $tempRule) {
+            foreach ($tempRule as $idx => $rule) {
+                $rules[$idx] = $rule;
+            }
+        }
+
+        return $rules;
     }
 
     /**
@@ -65,17 +72,23 @@ class PeriodRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    protected function getMessagesForPeriod(array $formFields): array
+    public function getMessagesForPeriod(array $formFields, bool $fileUpload = false, array $indicator = []): array
     {
         $messages = [];
-
-        return array_merge(
-            $messages,
+        $tempMessages = [
             $this->getMessagesForResultPeriod($formFields['period_start'], 'period_start'),
             $this->getMessagesForResultPeriod($formFields['period_end'], 'period_end'),
-            $this->getMessagesForTarget($formFields['target'], 'target'),
-            $this->getMessagesForTarget($formFields['actual'], 'actual')
-        );
+            $this->getMessagesForTarget($formFields['target'], 'target', $fileUpload, $indicator),
+            $this->getMessagesForTarget($formFields['actual'], 'actual', $fileUpload, $indicator),
+        ];
+
+        foreach ($tempMessages as $index => $tempMessage) {
+            foreach ($tempMessage as $idx => $message) {
+                $messages[$idx] = $message;
+            }
+        }
+
+        return $messages;
     }
 
     /**
@@ -163,26 +176,36 @@ class PeriodRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    protected function getRulesForTarget($formFields, $valueType): array
+    protected function getRulesForTarget($formFields, $valueType, $fileUpload, $indicator): array
     {
         $rules = [];
-        $params = $this->route()->parameters();
-        $indicatorService = app()->make(IndicatorService::class);
-        $indicatorMeasureType = $indicatorService->getIndicatorMeasureType($params['id']);
+
+        if ($fileUpload) {
+            $measure = Arr::get($indicator, 'measure');
+            $indicatorMeasureType = [
+                'qualitative' => $measure === '5',
+                'non_qualitative' => in_array($measure, ['1', '2', '3', '4']),
+            ];
+        } else {
+            $params = $this->route()->parameters();
+            $indicatorService = app()->make(IndicatorService::class);
+            $indicatorMeasureType = $indicatorService->getIndicatorMeasureType($params['id']);
+        }
 
         Validator::extend('qualitative_empty', function () {
             return false;
         });
+
         foreach ($formFields as $targetIndex => $target) {
             $targetForm = sprintf('%s.%s', $valueType, $targetIndex);
             $narrativeRules = $this->getRulesForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm));
             $docLinkRules = $this->getRulesForDocumentLink($target['document_link'], $targetForm);
 
-            foreach ($narrativeRules as $key=> $narrativeRule) {
+            foreach ($narrativeRules as $key => $narrativeRule) {
                 $rules[$key] = $narrativeRule;
             }
 
-            foreach ($docLinkRules as $key=>$docLinkRule) {
+            foreach ($docLinkRules as $key => $docLinkRule) {
                 $rules[$key] = $docLinkRule;
             }
 
@@ -205,12 +228,21 @@ class PeriodRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    protected function getMessagesForTarget($formFields, $valueType): array
+    protected function getMessagesForTarget($formFields, $valueType, $fileUpload, $indicator): array
     {
         $messages = [];
-        $params = $this->route()->parameters();
-        $indicatorService = app()->make(IndicatorService::class);
-        $indicatorMeasureType = $indicatorService->getIndicatorMeasureType($params['id']);
+
+        if ($fileUpload) {
+            $measure = Arr::get($indicator, 'measure');
+            $indicatorMeasureType = [
+                'qualitative' => $measure === '5',
+                'non_qualitative' => in_array($measure, ['1', '2', '3', '4']),
+            ];
+        } else {
+            $params = $this->route()->parameters();
+            $indicatorService = app()->make(IndicatorService::class);
+            $indicatorMeasureType = $indicatorService->getIndicatorMeasureType($params['id']);
+        }
 
         foreach ($formFields as $targetIndex => $target) {
             $targetForm = sprintf('%s.%s', $valueType, $targetIndex);

@@ -12,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
  */
 class XmlWasUploaded extends Event
 {
-//    use SerializesModels;
+    //    use SerializesModels;
 
     /**
      * @var
@@ -28,6 +28,12 @@ class XmlWasUploaded extends Event
      * @var
      */
     public $organizationId;
+
+    /**
+     * @var
+     */
+    public $orgRef;
+
     /**
      * @var
      */
@@ -38,13 +44,15 @@ class XmlWasUploaded extends Event
      * @param $filename
      * @param $userId
      * @param $organizationId
+     * @param $orgRef
      * @param $iatiIdentifiers
      */
-    public function __construct($filename, $userId, $organizationId, $iatiIdentifiers)
+    public function __construct($filename, $userId, $organizationId, $orgRef, $iatiIdentifiers)
     {
         $this->filename = $filename;
         $this->userId = $userId;
         $this->organizationId = $organizationId;
+        $this->orgRef = $orgRef;
         $this->iatiIdentifiers = $iatiIdentifiers;
     }
 }

@@ -18,7 +18,6 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -185,7 +184,7 @@ class ImportXmlService
             $activity = $contents[$value];
 
             if ($activity->existence === true) {
-                $oldActivity = $this->activityRepository->getActivityWithIdentifier(Auth::user()->organization->id, (array) $activity->data->identifier);
+                $oldActivity = $this->activityRepository->getActivityWithIdentifier(Auth::user()->organization->id, (array) $activity->data->iati_identifier);
 
                 $this->activityRepository->importXmlActivities($oldActivity->id, (array) $activity->data);
                 $this->transactionRepository->deleteTransaction($oldActivity->id);
@@ -238,7 +237,7 @@ class ImportXmlService
         if ($results) {
             foreach ($results as $result) {
                 $result = (array) $result;
-                $indicators = $result['indicator'];
+                $indicators = Arr::get($result, 'indicator', []);
                 unset($result['indicator']);
 
                 $savedResult = $this->resultRepository->store([
@@ -248,7 +247,10 @@ class ImportXmlService
 
                 foreach ($indicators as $indicator) {
                     $indicator = (array) $indicator;
-                    $periods = $indicator['period'];
+                    $periods = Arr::get($indicator, 'period', []);
+                    unset($indicator['period']);
+                    logger()->error($indicator);
+
                     $savedIndicator = $this->indicatorRepository->store([
                         'result_id' => $savedResult['id'],
                         'indicator' => $indicator,
@@ -307,8 +309,9 @@ class ImportXmlService
     protected function fireXmlUploadEvent($filename, $userId, $organizationId): void
     {
         $iatiIdentifiers = $this->dbIatiIdentifiers($organizationId);
+        $orgRef = Auth::user()->organization->identifier;
 
-        Event::dispatch(new XmlWasUploaded($filename, $userId, $organizationId, $iatiIdentifiers));
+        Event::dispatch(new XmlWasUploaded($filename, $userId, $organizationId, $orgRef, $iatiIdentifiers));
     }
 
     /**
@@ -340,23 +343,6 @@ class ImportXmlService
 
             return null;
         }
-    }
-
-    /**
-     * Returns errors from the xml.
-     *
-     * @param $filename
-     *
-     * @return void
-     */
-    public function parseXmlErrors($filename): void
-    {
-        $filePath = $this->getXmlDataStoragePath($filename);
-        $xml = $this->loadXml($filePath);
-        $xmlLines = $this->xmlService->formatUploadedXml($xml);
-        $messages = $this->xmlService->getSchemaErrors($xml);
-        Session::put('xmlLines', $xmlLines);
-        Session::put('messages', $messages);
     }
 
     /**

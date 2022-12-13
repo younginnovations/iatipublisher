@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\ReportingOrg\ReportingOrgRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -18,12 +19,12 @@ class ReportingOrganization extends Element
      * @var array
      */
     private array $_csvHeaders
-        = [
-            'reporting_org_reference',
-            'reporting_org_type',
-            'reporting_org_secondary_reporter',
-            'reporting_org_narrative',
-        ];
+    = [
+        'reporting_org_reference',
+        'reporting_org_type',
+        'reporting_org_secondary_reporter',
+        'reporting_org_narrative',
+    ];
 
     /**
      * Index under which the data is stored within the object.
@@ -31,6 +32,7 @@ class ReportingOrganization extends Element
      * @var string
      */
     protected string $index = 'reporting_org';
+    private ReportingOrgRequest $request;
 
     /**
      * ReportingOrganization constructor.
@@ -42,6 +44,7 @@ class ReportingOrganization extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new ReportingOrgRequest();
     }
 
     /**
@@ -74,10 +77,10 @@ class ReportingOrganization extends Element
     public function map($key, $index, $value): void
     {
         if (!(is_null($value) || $value === '')) {
-            $this->setReportingOrganizationReference($key, $value);
-            $this->setReportingOrganizationType($key, $value);
-            $this->setSecondaryReporter($key, $value);
-            $this->setReportingOrganizationNarrative($key, $value);
+            $this->setReportingOrganizationReference($key, $index, $value);
+            $this->setReportingOrganizationType($key, $index, $value);
+            $this->setSecondaryReporter($key, $index, $value);
+            $this->setReportingOrganizationNarrative($key, $index, $value);
         }
     }
 
@@ -89,15 +92,15 @@ class ReportingOrganization extends Element
      *
      * @return void
      */
-    protected function setReportingOrganizationReference($key, $value): void
+    protected function setReportingOrganizationReference($key, $index, $value): void
     {
-        if (!isset($this->data['reporting_org'][0]['ref'])) {
-            $this->data['reporting_org'][0]['ref'] = '';
+        if (!isset($this->data['reporting_org'][$index]['ref'])) {
+            $this->data['reporting_org'][$index]['ref'] = '';
         }
 
         if ($key === $this->_csvHeaders[0]) {
             $value = (!$value) ? '' : trim($value);
-            $this->data['reporting_org'][0]['ref'] = $value;
+            $this->data['reporting_org'][$index]['ref'] = $value;
         }
     }
 
@@ -109,10 +112,10 @@ class ReportingOrganization extends Element
      *
      * @return void
      */
-    protected function setReportingOrganizationType($key, $value): void
+    protected function setReportingOrganizationType($key, $index, $value): void
     {
-        if (!isset($this->data['reporting_org'][0]['type'])) {
-            $this->data['reporting_org'][0]['type'] = '';
+        if (!isset($this->data['reporting_org'][$index]['type'])) {
+            $this->data['reporting_org'][$index]['type'] = '';
         }
 
         if ($key === $this->_csvHeaders[1]) {
@@ -122,13 +125,13 @@ class ReportingOrganization extends Element
             if ($value) {
                 foreach ($validReportingOrgType as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
             }
 
-            $this->data['reporting_org'][0]['type'] = $value;
+            $this->data['reporting_org'][$index]['type'] = $value;
         }
     }
 
@@ -140,10 +143,10 @@ class ReportingOrganization extends Element
      *
      * @return void
      */
-    protected function setSecondaryReporter($key, $value): void
+    protected function setSecondaryReporter($key, $index, $value): void
     {
-        if (!isset($this->data['reporting_org'][0]['secondary_reporter'])) {
-            $this->data['reporting_org'][0]['secondary_reporter'] = '';
+        if (!isset($this->data['reporting_org'][$index]['secondary_reporter'])) {
+            $this->data['reporting_org'][$index]['secondary_reporter'] = '';
         }
 
         if ($key === $this->_csvHeaders[2]) {
@@ -153,7 +156,7 @@ class ReportingOrganization extends Element
                 $value = '0';
             }
 
-            $this->data['reporting_org'][0]['secondary_reporter'] = $value;
+            $this->data['reporting_org'][$index]['secondary_reporter'] = $value;
         }
     }
 
@@ -165,10 +168,10 @@ class ReportingOrganization extends Element
      *
      * @return void
      */
-    protected function setReportingOrganizationNarrative($key, $value): void
+    protected function setReportingOrganizationNarrative($key, $index, $value): void
     {
-        if (!isset($this->data['reporting_org'][0]['narrative'][0]['narrative'])) {
-            $this->data['reporting_org'][0]['narrative'][0] = [
+        if (!isset($this->data['reporting_org'][$index]['narrative'][0]['narrative'])) {
+            $this->data['reporting_org'][$index]['narrative'][0] = [
                 'narrative' => '',
                 'language'  => '',
             ];
@@ -181,7 +184,7 @@ class ReportingOrganization extends Element
                 'language'  => '',
             ];
 
-            $this->data['reporting_org'][0]['narrative'][0] = $narrative;
+            $this->data['reporting_org'][$index]['narrative'][0] = $narrative;
         }
     }
 
@@ -193,38 +196,7 @@ class ReportingOrganization extends Element
      */
     public function rules(): array
     {
-        $validReportingOrganizationType = implode(
-            ',',
-            $this->validReportingOrganizationCodeList('OrganizationType', 'Organization')
-        );
-
-        $rules = [];
-
-        foreach (Arr::get($this->data, 'reporting_org', []) as $key => $reportingOrganization) {
-            $reportingOrgForm = sprintf('reporting_org.%s', $key);
-            $rules[sprintf('%s.type', $reportingOrgForm)] = sprintf(
-                'in:%s|required',
-                $validReportingOrganizationType,
-            );
-            $rules[sprintf('%s.secondary_reporter', $reportingOrgForm)] = 'nullable|in:0,1';
-            $rules[sprintf('%s.narrative.0.narrative', $reportingOrgForm)] = 'required';
-        }
-
-        return $rules;
-    }
-
-    /**
-     * Return Valid ReportingOrganization Type.
-     *
-     * @param $name
-     * @param string $type
-     *
-     * @return array
-     * @throws \JsonException
-     */
-    protected function validReportingOrganizationCodeList($name, string $type = 'Activity'): array
-    {
-        return array_keys($this->loadCodeList($name, $type));
+        return $this->request->getRulesForReportingOrganization(Arr::get($this->data, 'reporting_org', []));
     }
 
     /**
@@ -234,33 +206,7 @@ class ReportingOrganization extends Element
      */
     public function messages(): array
     {
-        $messages = [];
-
-        foreach (Arr::get($this->data, 'reporting_org', []) as $key => $reportingOrganization) {
-            $reportingOrgForm = sprintf('reporting_org.%s', $key);
-            $messages[sprintf('%s.type.%s', $reportingOrgForm, 'in')] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.reporting_org_type')]
-            );
-            $messages[sprintf('%s.type.%s', $reportingOrgForm, 'required')] = trans(
-                'validation.required',
-                [
-                    'attribute' => trans('elementForm.reporting_org_type'),
-                ]
-            );
-            $messages[sprintf('%s.secondary_reporter.%s', $reportingOrgForm, 'in')] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.reporting_org_secondary_reporter')]
-            );
-            $messages[sprintf('%s.narrative.0.narrative.%s', $reportingOrgForm, 'required')] = trans(
-                'validation.required',
-                [
-                    'attribute' => trans('elementForm.reporting_org_narrative'),
-                ]
-            );
-        }
-
-        return $messages;
+        return $this->request->getMessagesForReportingOrganization(Arr::get($this->data, 'reporting_org', []));
     }
 
     /**
@@ -272,8 +218,8 @@ class ReportingOrganization extends Element
     public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
-                                         ->with($this->rules(), $this->messages())
-                                         ->getValidatorInstance();
+            ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
         $this->setValidity();
 
         return $this;

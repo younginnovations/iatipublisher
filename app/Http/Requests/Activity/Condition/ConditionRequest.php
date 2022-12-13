@@ -38,16 +38,17 @@ class ConditionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForCondition(array $formFields): array
+    public function getRulesForCondition(array $formFields): array
     {
         $rules = [];
 
         foreach ($formFields as $conditionIndex => $condition) {
             $conditionForm = sprintf('condition.%s', $conditionIndex);
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForNarrative($condition['narrative'], $conditionForm)
-            );
+            $rules[sprintf('%s.condition_type', $conditionForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('ConditionType', 'Activity', false)));
+
+            foreach ($this->getRulesForNarrative($condition['narrative'], $conditionForm) as $conditionNarrativeIndex => $conditionNarrativeRules) {
+                $rules[$conditionNarrativeIndex] = $conditionNarrativeRules;
+            }
         }
 
         return $rules;
@@ -60,20 +61,16 @@ class ConditionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForCondition(array $formFields): array
+    public function getMessagesForCondition(array $formFields): array
     {
         $messages = [];
 
         foreach ($formFields as $conditionIndex => $condition) {
             $conditionForm = sprintf('condition.%s', $conditionIndex);
-            $messages[sprintf('%s.condition_type.required_if', $conditionForm)] = 'The @type field is required when @attached field is true.';
-            $messages = array_merge(
-                $messages,
-                $this->getMessagesForNarrative($condition['narrative'], $conditionForm)
-            );
+            $messages[sprintf('%s.condition_type.in', $conditionForm)] = 'The condition type is invalid.';
 
-            foreach ($condition['narrative'] as $narrativeIndex => $narrative) {
-                $messages[sprintf('%s.narrative.%s.narrative.required_if', $conditionForm, $narrativeIndex)] = 'Narrative is required if @attached is true.';
+            foreach ($this->getMessagesForNarrative($condition['narrative'], $conditionForm) as $conditionNarrativeIndex => $conditionNarrativeMessages) {
+                $messages[$conditionNarrativeIndex] = $conditionNarrativeMessages;
             }
         }
 

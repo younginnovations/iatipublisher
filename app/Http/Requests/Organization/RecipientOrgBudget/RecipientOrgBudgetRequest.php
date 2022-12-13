@@ -26,7 +26,7 @@ class RecipientOrgBudgetRequest extends OrganizationBaseRequest
             $end = $recipientOrganizationBudget['period_end'][0]['date'];
 
             if ($start && $end) {
-                $diff = (strtotime($end) - strtotime($start)) / 86400;
+                $diff = (dateStrToTime($end) - dateStrToTime($start)) / 86400;
             }
             $recipientOrganizationBudgetForm = sprintf('recipient_org_budget.%s', $recipientOrganizationBudgetIndex);
             $periodStartRules = $this->getRulesForPeriodStart($recipientOrganizationBudget['period_start'], $recipientOrganizationBudgetForm, $diff, 365);

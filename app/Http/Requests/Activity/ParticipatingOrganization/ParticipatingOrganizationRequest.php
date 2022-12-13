@@ -16,18 +16,18 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function rules(): array
+    public function rules($participating_org = []): array
     {
-        return $this->getRulesForParticipatingOrg($this->get('participating_org'));
+        return $this->getRulesForParticipatingOrg($this->get('participating_org') ?? $participating_org);
     }
 
     /**
      * prepare the error message.
      * @return array
      */
-    public function messages(): array
+    public function messages($participating_org = []): array
     {
-        return $this->getMessagesForParticipatingOrg($this->get('participating_org'));
+        return $this->getMessagesForParticipatingOrg($this->get('participating_org') ?? $participating_org);
     }
 
     /**
@@ -45,13 +45,13 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
             $participatingOrgForm = 'participating_org.' . $participatingOrgIndex;
             $identifier = $participatingOrgForm . '.identifier';
             $narrative = sprintf('%s.narrative.0.narrative', $participatingOrgForm);
-            $rules[$identifier] = 'exclude|required_without:' . $narrative;
-            $rules[$participatingOrgForm . '.organization_id'] = 'nullable|organization_exists';
-            $rules[$identifier] = 'exclude|required_without:' . $narrative;
-            $rules = array_merge_recursive(
-                $rules,
-                $this->getRulesForNarrative($participatingOrg['narrative'], $participatingOrgForm)
-            );
+            $rules[$identifier] = 'nullable|exclude_operators';
+            $rules[sprintf('%s.organization_role', $participatingOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganisationRole', 'Organization', false)));
+            $rules[sprintf('%s.type', $participatingOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
+
+            foreach ($this->getRulesForNarrative($participatingOrg['narrative'], $participatingOrgForm) as $participatingNarrativeIndex => $narrativeRules) {
+                $rules[$participatingNarrativeIndex] = $narrativeRules;
+            }
         }
 
         return $rules;
@@ -73,22 +73,17 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
             $messages[$participatingOrgForm . '.organization_role.required'] = trans('validation.required', ['attribute' => trans('elementForm.organisation_role')]);
             $identifier = $participatingOrgForm . '.identifier';
             $narrative = sprintf('%s.narrative.0.narrative', $participatingOrgForm);
-            $messages[$identifier . '.required_without'] = trans(
-                'validation.required_without',
-                ['attribute' => trans('elementForm.identifier'), 'values' => trans('elementForm.narrative')]
-            );
-            $messages[$narrative . '.required_without'] = trans(
-                'validation.required_without',
-                ['attribute' => trans('elementForm.narrative'), 'values' => trans('elementForm.identifier')]
-            );
             $messages[$identifier . '.exclude_operators'] = trans(
                 'validation.exclude_operators',
                 ['attribute' => trans('elementForm.identifier'), 'values' => trans('elementForm.identifier')]
             );
-            $messages = array_merge(
-                $messages,
-                $this->getMessagesForNarrative($participatingOrg['narrative'], $participatingOrgForm)
-            );
+
+            $messages[sprintf('%s.organization_role.in', $participatingOrgForm)] = 'The participating organisation role is invalid.';
+            $messages[sprintf('%s.type.in', $participatingOrgForm)] = 'The participating organisation type is invalid.';
+
+            foreach ($this->getMessagesForNarrative($participatingOrg['narrative'], $participatingOrgForm) as $participatingNarrativeIndex => $narrativeMessages) {
+                $messages[$participatingNarrativeIndex] = $narrativeMessages;
+            }
         }
 
         return $messages;

@@ -171,10 +171,11 @@ class ImportActivityController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Imported successfully', 'type' => $filetype]);
         } catch (\Exception $e) {
+            logger()->error($e);
             logger()->error($e->getMessage());
-            Session::put('error', 'Error occured while importing activity');
+            Session::put('error', 'Error occurred while importing activity');
 
-            return redirect()->back()->withResponse(['success' => false, 'message' => 'Error has occured while importing activity.']);
+            return redirect()->back()->withResponse(['success' => false, 'message' => 'Error has occurred while importing activity.']);
         }
     }
 

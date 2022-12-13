@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\CsvImporter\Entities\Activity\Components\Elements\Transaction;
 
+use Illuminate\Support\Arr;
+
 /**
  * Class PreparesTransactionData.
  */
@@ -19,6 +21,10 @@ trait PreparesTransactionData
      */
     protected function setInternalReference($key, $value): void
     {
+        if (!isset($this->data['transaction']['reference'])) {
+            $this->data['transaction']['reference'] = '';
+        }
+
         if ($key === $this->_csvHeaders[0]) {
             $this->data['transaction']['reference'] = $value;
         }
@@ -31,7 +37,7 @@ trait PreparesTransactionData
      */
     protected function setHumanitarian(): void
     {
-        if (array_key_exists('reference', $this->data['transaction'])) {
+        if (!isset($this->data['transaction']['humanitarian'])) {
             $this->data['transaction']['humanitarian'] = '';
         }
     }
@@ -46,6 +52,10 @@ trait PreparesTransactionData
      */
     protected function setTransactionType($key, $value): void
     {
+        if (!isset($this->data['transaction']['transaction_type'][0]['transaction_type_code'])) {
+            $this->data['transaction']['transaction_type'][0]['transaction_type_code'] = '';
+        }
+
         if ($key === $this->_csvHeaders[1]) {
             $validTransactionType = $this->loadCodeList('TransactionType', 'Activity');
             $value = $value ? trim($value) : '';
@@ -53,13 +63,13 @@ trait PreparesTransactionData
             if ($value) {
                 foreach ($validTransactionType as $code => $name) {
                     if (strcasecmp($value, (string) $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
             }
 
-            $this->data['transaction']['transaction_type'][] = ['transaction_type_code' => $value];
+            $this->data['transaction']['transaction_type'][0] = ['transaction_type_code' => $value];
         }
     }
 
@@ -73,8 +83,12 @@ trait PreparesTransactionData
      */
     protected function setTransactionDate($key, $value): void
     {
+        if (!isset($this->data['transaction']['transaction_date'][0]['date'])) {
+            $this->data['transaction']['transaction_date'][0]['date'] = '';
+        }
+
         if ($key === $this->_csvHeaders[2]) {
-            $this->data['transaction']['transaction_date'][] = ['date' => dateFormat('Y-m-d', $value)];
+            $this->data['transaction']['transaction_date'][0] = ['date' => dateFormat('Y-m-d', $value)];
         }
     }
 
@@ -88,6 +102,10 @@ trait PreparesTransactionData
      */
     protected function setTransactionValue($key, $value): void
     {
+        if (!isset($this->data['transaction']['value'][0]['amount'])) {
+            $this->data['transaction']['value'][0]['amount'] = '';
+        }
+
         if ($key === $this->_csvHeaders[3]) {
             $this->data['transaction']['value'][0]['amount'] = str_replace(',', '', (string) $value);
         }
@@ -103,6 +121,14 @@ trait PreparesTransactionData
      */
     protected function setTransactionValueDate($key, $value): void
     {
+        if (!isset($this->data['transaction']['value'][0]['date'])) {
+            $this->data['transaction']['value'][0]['date'] = '';
+        }
+
+        if (!isset($this->data['transaction']['value'][0]['currency'])) {
+            $this->data['transaction']['value'][0]['currency'] = '';
+        }
+
         if ($key === $this->_csvHeaders[4]) {
             $this->data['transaction']['value'][0]['date'] = dateFormat('Y-m-d', $value);
             $this->data['transaction']['value'][0]['currency'] = '';
@@ -119,6 +145,13 @@ trait PreparesTransactionData
      */
     protected function setTransactionDescription($key, $value): void
     {
+        if (!isset($this->data['transaction']['description'][0]['narrative'][0]['narrative'])) {
+            $this->data['transaction']['description'][0]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
+        }
+
         if ($key === $this->_csvHeaders[5]) {
             $this->data['transaction']['description'][0]['narrative'][0] = ['narrative' => $value, 'language' => ''];
         }
@@ -134,15 +167,37 @@ trait PreparesTransactionData
      */
     protected function setProviderOrganization($key, $value): void
     {
+        if (!isset($this->data['transaction']['provider_organization'][0]['organization_identifier_code'])) {
+            $this->data['transaction']['provider_organization'][0]['organization_identifier_code'] = '';
+        }
+
+        if (!isset($this->data['transaction']['provider_organization'][0]['provider_activity_id'])) {
+            $this->data['transaction']['provider_organization'][0]['provider_activity_id'] = '';
+        }
+
+        if (!isset($this->data['transaction']['provider_organization'][0]['type'])) {
+            $this->data['transaction']['provider_organization'][0]['type'] = '';
+        }
+
+        if (!isset($this->data['transaction']['provider_organization'][0]['narrative'][0]['narrative'])) {
+            $this->data['transaction']['provider_organization'][0]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
+        }
+
         if ($key === $this->_csvHeaders[6]) {
             $this->data['transaction']['provider_organization'][0]['organization_identifier_code'] = $value;
         }
+
         if ($key === $this->_csvHeaders[7]) {
             $this->data['transaction']['provider_organization'][0]['provider_activity_id'] = $value;
         }
+
         if ($key === $this->_csvHeaders[8]) {
             $this->data['transaction']['provider_organization'][0]['type'] = $this->setOrganizationTypeNameToCode($value);
         }
+
         if ($key === $this->_csvHeaders[9]) {
             $this->data['transaction']['provider_organization'][0]['narrative'][0] = ['narrative' => $value, 'language' => ''];
         }
@@ -159,15 +214,37 @@ trait PreparesTransactionData
      */
     protected function setReceiverOrganization($key, $value): void
     {
+        if (!isset($this->data['transaction']['receiver_organization'][0]['organization_identifier_code'])) {
+            $this->data['transaction']['receiver_organization'][0]['organization_identifier_code'] = '';
+        }
+
+        if (!isset($this->data['transaction']['receiver_organization'][0]['receiver_activity_id'])) {
+            $this->data['transaction']['receiver_organization'][0]['receiver_activity_id'] = '';
+        }
+
+        if (!isset($this->data['transaction']['receiver_organization'][0]['type'])) {
+            $this->data['transaction']['receiver_organization'][0]['type'] = '';
+        }
+
+        if (!isset($this->data['transaction']['receiver_organization'][0]['narrative'][0]['narrative'])) {
+            $this->data['transaction']['receiver_organization'][0]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
+        }
+
         if ($key === $this->_csvHeaders[10]) {
             $this->data['transaction']['receiver_organization'][0]['organization_identifier_code'] = $value;
         }
+
         if ($key === $this->_csvHeaders[11]) {
             $this->data['transaction']['receiver_organization'][0]['receiver_activity_id'] = $value;
         }
+
         if ($key === $this->_csvHeaders[12]) {
             $this->data['transaction']['receiver_organization'][0]['type'] = $this->setOrganizationTypeNameToCode($value);
         }
+
         if ($key === $this->_csvHeaders[13]) {
             $this->data['transaction']['receiver_organization'][0]['narrative'][0] = ['narrative' => $value, 'language' => ''];
         }
@@ -180,8 +257,8 @@ trait PreparesTransactionData
      */
     protected function setDisbursementChannel(): void
     {
-        if (array_key_exists('receiver_organization', $this->data['transaction'])) {
-            $this->data['transaction']['disbursement_channel'][0] = ['disbursement_channel_code' => ''];
+        if (!isset($this->data['transaction']['disbursement_channel'][0]['disbursement_channel_code'])) {
+            $this->data['transaction']['disbursement_channel'][0]['disbursement_channel_code'] = '';
         }
     }
 
@@ -195,6 +272,15 @@ trait PreparesTransactionData
      */
     protected function setSector($key, $value): void
     {
+        if (!isset($this->data['transaction']['sector'])) {
+            $this->data['transaction']['sector'][0]['sector_vocabulary'] = '';
+            $this->data['transaction']['sector'][0]['code'] = '';
+            $this->data['transaction']['sector'][0]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
+        }
+
         if ($key === $this->_csvHeaders[14]) {
             $validSectorVocabulary = $this->loadCodeList('SectorVocabulary');
             $value = $value ? trim($value) : '';
@@ -202,7 +288,7 @@ trait PreparesTransactionData
             if ($value) {
                 foreach ($validSectorVocabulary as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -211,7 +297,11 @@ trait PreparesTransactionData
             $this->data['transaction']['sector'][0]['sector_vocabulary'] = $value;
         }
 
-        if ($key === $this->_csvHeaders[15]) {
+        if (
+            $key === $this->_csvHeaders[15] &&
+            ($this->data['transaction']['sector'][0]['sector_vocabulary'] == '99' ||
+                $this->data['transaction']['sector'][0]['sector_vocabulary'] === '98')
+        ) {
             $this->data['transaction']['sector'][0]['vocabulary_uri'] = $value;
         }
 
@@ -250,7 +340,7 @@ trait PreparesTransactionData
             if ($value) {
                 foreach ($validSectorCode as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -267,7 +357,7 @@ trait PreparesTransactionData
             if ($value) {
                 foreach ($validCategoryCode as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -284,7 +374,7 @@ trait PreparesTransactionData
             if ($value) {
                 foreach ($validSdgGoals as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -301,7 +391,7 @@ trait PreparesTransactionData
             if ($value) {
                 foreach ($validSdgTarget as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -329,6 +419,17 @@ trait PreparesTransactionData
      */
     protected function setRecipientCountry($key, $value): void
     {
+        if (!isset($this->data['transaction']['recipient_country'][0]['country_code'])) {
+            $this->data['transaction']['recipient_country'][0]['country_code'] = '';
+        }
+
+        if (!isset($this->data['transaction']['recipient_country'][0]['narrative'][0]['narrative'])) {
+            $this->data['transaction']['recipient_country'][0]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
+        }
+
         if ($key === $this->_csvHeaders[18]) {
             $validCountry = $this->loadCodeList('Country');
             $value = $value ? trim($value) : '';
@@ -336,7 +437,7 @@ trait PreparesTransactionData
             if ($value) {
                 foreach ($validCountry as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -357,6 +458,15 @@ trait PreparesTransactionData
      */
     protected function setRecipientRegion($key, $value): void
     {
+        if (!isset($this->data['transaction']['recipient_region'])) {
+            $this->data['transaction']['recipient_region'][0]['region_code'] = '';
+            $this->data['transaction']['recipient_region'][0]['region_vocabulary'] = '';
+            $this->data['transaction']['recipient_region'][0]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
+        }
+
         if ($key === $this->_csvHeaders[19]) {
             $validRegion = $this->loadCodeList('Region');
             $value = $value ? trim($value) : '';
@@ -364,16 +474,26 @@ trait PreparesTransactionData
             if ($value) {
                 foreach ($validRegion as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
             }
 
-            $this->data['transaction']['recipient_region'][0]['region_code'] = $value;
-            $this->data['transaction']['recipient_region'][0]['region_vocabulary'] = '';
-            $this->data['transaction']['recipient_region'][0]['vocabulary_uri'] = '';
+            if (isset($validRegion[$value])) {
+                $this->data['transaction']['recipient_region'][0]['region_vocabulary'] = '1';
+                $this->data['transaction']['recipient_region'][0]['region_code'] = $value;
+            } elseif (!empty($value)) {
+                $this->data['transaction']['recipient_region'][0]['region_vocabulary'] = '2';
+                $this->data['transaction']['recipient_region'][0]['custom_code'] = $value;
+            }
+
             $this->data['transaction']['recipient_region'][0]['narrative'][0] = ['narrative' => '', 'language' => ''];
+        }
+
+        if ($key === $this->_csvHeaders[20] && $value !== '' && Arr::get($this->data(), 'transaction.recipient_region.0.region_vocabulary') === '1') {
+            $this->data['transaction']['recipient_region'][0]['vocabulary_uri'] = $value;
+            $this->data['transaction']['recipient_region'][0]['region_vocabulary'] = '99';
         }
     }
 
@@ -384,8 +504,8 @@ trait PreparesTransactionData
      */
     protected function setFlowType(): void
     {
-        if (array_key_exists('recipient_region', $this->data['transaction'])) {
-            $this->data['transaction']['flow_type'][0] = ['flow_type' => ''];
+        if (!isset($this->data['transaction']['flow_type'][0]['flow_type'])) {
+            $this->data['transaction']['flow_type'][0]['flow_type'] = '';
         }
     }
 
@@ -396,8 +516,8 @@ trait PreparesTransactionData
      */
     protected function setFinanceType(): void
     {
-        if (array_key_exists('flow_type', $this->data['transaction'])) {
-            $this->data['transaction']['finance_type'][0] = ['finance_type' => ''];
+        if (!isset($this->data['transaction']['finance_type'][0]['finance_type'])) {
+            $this->data['transaction']['finance_type'][0]['finance_type'] = '';
         }
     }
 
@@ -408,7 +528,7 @@ trait PreparesTransactionData
      */
     protected function setAidType(): void
     {
-        if (array_key_exists('finance_type', $this->data['transaction'])) {
+        if (!isset($this->data['transaction']['finance_type'][0]['aid_type_vocabulary'])) {
             $this->data['transaction']['aid_type'][0] = ['aid_type_vocabulary' => '', 'aid_type_code' => ''];
         }
     }
@@ -420,8 +540,8 @@ trait PreparesTransactionData
      */
     protected function setTiedStatus(): void
     {
-        if (array_key_exists('aid_type', $this->data['transaction'])) {
-            $this->data['transaction']['tied_status'][0] = ['tied_status_code' => ''];
+        if (!isset($this->data['transaction']['tied_status'][0]['tied_status_code'])) {
+            $this->data['transaction']['tied_status'][0]['tied_status_code'] = '';
         }
     }
 
@@ -453,7 +573,7 @@ trait PreparesTransactionData
         if ($value) {
             foreach ($validOrganizationType as $code => $name) {
                 if (strcasecmp($value, $name) === 0) {
-                    $value = strval($code);
+                    $value = (string) $code;
                     break;
                 }
             }

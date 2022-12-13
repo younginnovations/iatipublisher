@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\Tag\TagRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -32,6 +33,11 @@ class Tag extends Element
     protected string $index = 'tag';
 
     /**
+     * @var TagRequest
+     */
+    private TagRequest $request;
+
+    /**
      * Tag constructor.
      *
      * @param            $fields
@@ -41,6 +47,7 @@ class Tag extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new TagRequest();
     }
 
     /**
@@ -91,6 +98,10 @@ class Tag extends Element
      */
     protected function setTagVocabulary($key, $value, $index): void
     {
+        if (!isset($this->data['tag'][$index]['tag_vocabulary'])) {
+            $this->data['tag'][$index]['tag_vocabulary'] = '';
+        }
+
         if ($key === $this->_csvHeaders[0]) {
             $value = (!$value) ? '' : trim($value);
 
@@ -99,13 +110,13 @@ class Tag extends Element
             if ($value) {
                 foreach ($validTagVocab as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
             }
 
-            $this->data['tag'][$index]['tag_vocabulary'] = strval($value);
+            $this->data['tag'][$index]['tag_vocabulary'] = (string) $value;
         }
     }
 
@@ -120,9 +131,13 @@ class Tag extends Element
      */
     protected function setTagCode($key, $value, $index): void
     {
+        if (!isset($this->data['tag'][$index]['tag_text'])) {
+            $this->data['tag'][$index]['tag_text'] = '';
+        }
+
         if ($key === $this->_csvHeaders[1]) {
-            $tagVocabulary = Arr::get($this->data(), 'tag.' . $index . '.tag_vocabulary', '');
-            $value = (!$value) ? '' : trim($value);
+            $tagVocabulary = $this->data['tag'][$index]['tag_vocabulary'] ?? '';
+            $value = (!$value) ? '' : trim((string) $value);
 
             if ($tagVocabulary === '2') {
                 $validTagCode = $this->loadCodeList('UNSDG-Goals');
@@ -130,7 +145,7 @@ class Tag extends Element
                 if ($value) {
                     foreach ($validTagCode as $code => $name) {
                         if (strcasecmp($value, $name) === 0) {
-                            $value = strval($code);
+                            $value = (string) $code;
                             break;
                         }
                     }
@@ -168,7 +183,7 @@ class Tag extends Element
      */
     protected function setVocabularyUri($key, $value, $index): void
     {
-        if ($key === $this->_csvHeaders[2]) {
+        if ($key === $this->_csvHeaders[2] && Arr::get($this->data, 'tag.' . $index . '.vocabulary') === '99') {
             $this->data['tag'][$index]['vocabulary_uri'] = $value;
         }
     }
@@ -184,6 +199,13 @@ class Tag extends Element
      */
     protected function setTagNarrative($key, $value, $index): void
     {
+        if (!isset($this->data['tag'][$index]['narrative'][0]['narrative'])) {
+            $this->data['tag'][$index]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
+        }
+
         if ($key === $this->_csvHeaders[3]) {
             $value = $value ?: '';
             $narrative = [
@@ -191,7 +213,7 @@ class Tag extends Element
                 'language'  => '',
             ];
 
-            $this->data['tag'][$index]['narrative'][] = $narrative;
+            $this->data['tag'][$index]['narrative'][0] = $narrative;
         }
     }
 
@@ -203,87 +225,7 @@ class Tag extends Element
      */
     public function rules(): array
     {
-        $validGoalsTagCode = implode(',', $this->validTagCodeList('UNSDG-Goals'));
-        $validTargetsTagCode = implode(',', $this->validTagCodeList('UNSDG-Targets'));
-
-        $rules = [];
-
-        foreach (Arr::get($this->data(), 'tag', []) as $key => $value) {
-            $tagForm = sprintf('tag.%s', $key);
-            $rules[sprintf('%s.tag_vocabulary', $tagForm)] = sprintf(
-                'in:1,2,3,99|required_with: %s,%s,%s,%s,%s',
-                sprintf('%s.tag_text', $tagForm),
-                sprintf('%s.goals_tag_code', $tagForm),
-                sprintf('%s.targets_tag_code', $tagForm),
-                sprintf('%s.vocabulary_uri', $tagForm),
-                sprintf('%s.narrative.0.narrative', $tagForm),
-            );
-            $vocabulary = Arr::get($value, 'tag_vocabulary');
-
-            if ($vocabulary) {
-                $rules[sprintf('%s.vocabulary_uri', $tagForm)] = 'nullable|url';
-
-                switch ($vocabulary) {
-                    case '1':
-                        $rules[sprintf('%s.tag_text', $tagForm)] = sprintf(
-                            'required_with: %s,%s',
-                            sprintf('%s.tag_vocabulary', $tagForm),
-                            sprintf('%s.narrative.0.narrative', $tagForm),
-                        );
-                        break;
-                    case '2':
-                        $rules[sprintf('%s.goals_tag_code', $tagForm)] = sprintf(
-                            'sometimes|in:%s|required_with: %s,%s,%s',
-                            $validGoalsTagCode,
-                            sprintf('%s.tag_vocabulary', $tagForm),
-                            sprintf('%s.vocabulary_uri', $tagForm),
-                            sprintf('%s.narrative.0.narrative', $tagForm),
-                        );
-                        break;
-                    case '3':
-                        $rules[sprintf('%s.targets_tag_code', $tagForm)] = sprintf(
-                            'in:%s|required_with: %s,%s,%s',
-                            $validTargetsTagCode,
-                            sprintf('%s.tag_vocabulary', $tagForm),
-                            sprintf('%s.vocabulary_uri', $tagForm),
-                            sprintf('%s.narrative.0.narrative', $tagForm),
-                        );
-                        break;
-                    case '99':
-                        $rules[sprintf('%s.tag_text', $tagForm)] = sprintf(
-                            'required_with: %s,%s,%s',
-                            sprintf('%s.tag_vocabulary', $tagForm),
-                            sprintf('%s.vocabulary_uri', $tagForm),
-                            sprintf('%s.narrative.0.narrative', $tagForm),
-                        );
-                        $rules[sprintf('%s.vocabulary_uri', $tagForm)] = sprintf(
-                            'required_with: %s,%s,%s',
-                            sprintf('%s.tag_vocabulary', $tagForm),
-                            sprintf('%s.tag_text', $tagForm),
-                            sprintf('%s.narrative.0.narrative', $tagForm),
-                        );
-                        break;
-                    default:
-                        $rules[sprintf('%s.tag_text', $tagForm)] = 'required';
-                        break;
-                }
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * Return Valid Tag Type.
-     *
-     * @param $name
-     *
-     * @return array
-     * @throws \JsonException
-     */
-    protected function validTagCodeList($name): array
-    {
-        return array_keys($this->loadCodeList($name));
+        return $this->request->getRulesForTag(Arr::get($this->data(), 'tag', []));
     }
 
     /**
@@ -293,77 +235,7 @@ class Tag extends Element
      */
     public function messages(): array
     {
-        $messages = [];
-
-        foreach (Arr::get($this->data(), 'tag', []) as $key => $value) {
-            $tagForm = sprintf('tag.%s', $key);
-            $messages[sprintf('%s.tag_vocabulary.%s', $tagForm, 'in')] = trans('validation.code_list', ['attribute' => trans('elementForm.tag_vocabulary')]);
-            $messages[sprintf('%s.tag_vocabulary.%s', $tagForm, 'required_with')] = trans('validation.required_with', ['attribute' => trans('elementForm.tag_vocabulary'), 'values' => 'code, uri or narrative']);
-            $vocabulary = Arr::get($value, 'tag_vocabulary');
-
-            if ($vocabulary) {
-                $messages[sprintf('%s.vocabulary_uri.%s', $tagForm, 'url')] = trans(
-                    'validation.active_url',
-                    ['attribute' => trans('elementForm.tag_vocabulary_url')]
-                );
-
-                switch ($vocabulary) {
-                    case '1':
-                        $messages[sprintf('%s.tag_text.%s', $tagForm, 'required_with')] = trans(
-                            'validation.required_with',
-                            [
-                                'attribute' => trans('elementForm.tag_code'),
-                                'values' => 'Vocabulary, url or narrative',
-                            ]
-                        );
-                        break;
-                    case '2':
-                        $messages[sprintf('%s.goals_tag_code.%s', $tagForm, 'required_with')] = trans(
-                            'validation.required_with',
-                            [
-                                'attribute' => trans('elementForm.tag_code'),
-                                'values' => 'Vocabulary, url or narrative',
-                            ]
-                        );
-                        break;
-                    case '3':
-                        $messages[sprintf('%s.targets_tag_code.%s', $tagForm, 'required_with')] = trans(
-                            'validation.required_with',
-                            [
-                                'attribute' => trans('elementForm.tag_code'),
-                                'values' => 'Vocabulary, url or narrative',
-                            ]
-                        );
-                        break;
-                    case '99':
-                        $messages[sprintf('%s.tag_text.%s', $tagForm, 'required_with')] = trans(
-                            'validation.required_with',
-                            [
-                                'attribute' => trans('elementForm.tag_code'),
-                                'values' => 'Vocabulary, url or narrative',
-                            ]
-                        );
-                        $messages[sprintf('%s.vocabulary_uri.%s', $tagForm, 'required_with')] = trans(
-                            'validation.required_with',
-                            [
-                                'attribute' => trans('elementForm.vocabulary_uri'),
-                                'values' => 'Vocabulary, code or narrative',
-                            ]
-                        );
-                        break;
-                    default:
-                        $messages[sprintf('%s.tag_text.%s', $tagForm, 'required_with')] = trans(
-                            'validation.required_with',
-                            [
-                                'attribute' => trans('elementForm.tag_code'),
-                                'values' => 'Vocabulary, url or narrative',
-                            ]
-                        );
-                }
-            }
-        }
-
-        return $messages;
+        return $this->request->getMessagesForTag(Arr::get($this->data(), 'tag', []));
     }
 
     /**

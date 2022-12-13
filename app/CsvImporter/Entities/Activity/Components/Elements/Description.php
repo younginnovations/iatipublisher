@@ -6,7 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
-use Illuminate\Support\Arr;
+use App\Http\Requests\Activity\Description\DescriptionRequest;
 
 /**
  * Class Description.
@@ -43,6 +43,7 @@ class Description extends Element
      * @var array
      */
     protected array $template = [['type' => '', 'narrative' => ['narrative' => '', 'language' => '']]];
+    private DescriptionRequest $request;
 
     /**
      * Description constructor.
@@ -53,6 +54,7 @@ class Description extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new DescriptionRequest();
     }
 
     /**
@@ -85,7 +87,7 @@ class Description extends Element
     {
         if (!(is_null($value) || $value === '')) {
             $type = $this->setType($key);
-            $this->data['description'][$type]['type'] = strval($type);
+            $this->data['description'][$type]['type'] = (string) $type;
             $this->data['description'][$type]['narrative'][] = $this->setNarrative($value);
         }
     }
@@ -127,15 +129,7 @@ class Description extends Element
      */
     public function rules(): array
     {
-        $rules = [
-            'description' => 'nullable|min:1',
-        ];
-
-        foreach (Arr::get($this->data(), 'description', []) as $key => $value) {
-            $rules['description.' . $key . '.narrative'] = 'size:1';
-        }
-
-        return $rules;
+        return $this->request->getRulesForDescription($this->data('description'));
     }
 
     /**
@@ -145,15 +139,7 @@ class Description extends Element
      */
     public function messages(): array
     {
-        $messages = [
-            'description.size' => trans('validation.csv_size', ['attribute' => trans('element.description')]),
-        ];
-
-        foreach (Arr::get($this->data(), 'description', []) as $key => $value) {
-            $messages['description.' . $key . '.narrative.size'] = trans('validation.multiple_narratives', ['attribute' => trans('element.description')]);
-        }
-
-        return $messages;
+        return $this->request->getMessagesForDescription($this->data('description'));
     }
 
     /**

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Date;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Class DateRequest.
@@ -38,7 +39,7 @@ class DateRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForDate(array $formFields): array
+    public function getRulesForDate(array $formFields): array
     {
         $rules = [];
 
@@ -49,7 +50,7 @@ class DateRequest extends ActivityBaseRequest
             $rules[sprintf('%s.narrative', $activityDateForm)] = $this->getRulesForNarrative($activityDate['narrative'], $activityDateForm)[sprintf('%s.narrative', $activityDateForm)];
         }
 
-        return $rules;
+        return $this->validateDataRules($formFields, $rules);
     }
 
     /**
@@ -59,16 +60,77 @@ class DateRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForDate(array $formFields): array
+    public function getMessagesForDate(array $formFields): array
     {
         $messages = [];
 
         foreach ($formFields as $activityDateIndex => $activityDate) {
             $activityDateForm = sprintf('activity_date.%s', $activityDateIndex);
             $messages[sprintf('%s.date.date', $activityDateForm)] = 'Date is invalid.';
-            $messages = $messages + $this->getMessagesForNarrative($activityDate['narrative'], $activityDateForm);
+            $messages[sprintf('%s.date.before', $activityDateForm)] = 'Actual start and end dates may not be in the future.';
+            $messages[sprintf('%s.date.end_later_than_start', $activityDateForm)] = 'End date must be later than the start date.';
+            $messages += $this->getMessagesForNarrative($activityDate['narrative'], $activityDateForm);
         }
 
         return $messages;
+    }
+
+    /**
+     * Validate activity date data based on Activity Date and Activity Date Type.
+     *
+     * @param array $activityDates
+     * @param array $rules
+     *
+     * @return array
+     */
+    private function validateDataRules(array $activityDates, array $rules): array
+    {
+        Validator::extend('end_later_than_start', function () {
+            return false;
+        });
+
+        foreach ($activityDates as $activityDateIndex => $activityDate) {
+            $activityDateForm = sprintf('activity_date.%s', $activityDateIndex);
+            $date = $activityDate['date'];
+            $type = $activityDate['type'];
+
+            if (isset($date, $type)) {
+                if (($type === '2' || $type === '4')) {
+                    (strtotime($date) <= strtotime(date('Y-m-d'))) ?: $rules[sprintf('%s.date', $activityDateForm)] .= '|before:' . now();
+                }
+
+                if ($type === '4') {
+                    $actualStartDate = array_column(
+                        array_filter($activityDates, function ($date) {
+                            return $date['type'] === '2';
+                        }),
+                        'date'
+                    );
+
+                    if (count($actualStartDate)) {
+                        foreach ($actualStartDate as $startDate) {
+                            strtotime($date) > strtotime($startDate) ?: $rules[sprintf('%s.date', $activityDateForm)] .= '|end_later_than_start';
+                        }
+                    }
+                }
+
+                if ($type === '3') {
+                    $plannedStartDate = array_column(
+                        array_filter($activityDates, function ($date) {
+                            return $date['type'] === '1';
+                        }),
+                        'date'
+                    );
+
+                    if (count($plannedStartDate)) {
+                        foreach ($plannedStartDate as $startDate) {
+                            strtotime($date) > strtotime($startDate) ?: $rules[sprintf('%s.date', $activityDateForm)] .= '|end_later_than_start';
+                        }
+                    }
+                }
+            }
+        }
+
+        return $rules;
     }
 }

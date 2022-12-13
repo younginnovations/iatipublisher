@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati;
 
+use Illuminate\Support\Arr;
+
 /**
  * Class Element.
  */
@@ -81,9 +83,9 @@ abstract class Element
     /**
      * @param null $popIndex
      *
-     * @return array|int|string
+     * @return array|int|string|float
      */
-    public function data($popIndex = null): array|int|string
+    public function data($popIndex = null): array|int|string|float
     {
         if (!$this->data) {
             $this->data = [];
@@ -152,12 +154,8 @@ abstract class Element
     public function withErrors(): void
     {
         foreach ($this->validator->errors()->getMessages() as $element => $errors) {
-            foreach ($errors as $error) {
-                $this->errors[] = $error;
-            }
+            $this->errors[$element] = implode('<br>', $errors);
         }
-
-        $this->errors = array_unique($this->errors);
     }
 
     /**
@@ -168,5 +166,55 @@ abstract class Element
     public function errors(): array
     {
         return $this->errors;
+    }
+
+    /**
+     * Returns updated base rules.
+     *
+     * @param $baseRules
+     * @param bool $hasIdx
+     *
+     * @return array
+     */
+    public function getBaseRules($baseRules, bool $hasIdx = true): array
+    {
+        $rules = [];
+
+        foreach (Arr::get($this->data(), $this->index, []) as $idx => $value) {
+            foreach ($baseRules as $elementName => $baseRule) {
+                if ($hasIdx) {
+                    $rules[$this->index . '.' . $idx . '.' . $elementName] = $baseRule;
+                } else {
+                    $rules[$this->index . '.' . $elementName] = $baseRule;
+                }
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns updated base messages.
+     *
+     * @param $baseMessages
+     * @param bool $hasIdx
+     *
+     * @return array
+     */
+    public function getBaseMessages($baseMessages, bool $hasIdx = true): array
+    {
+        $messages = [];
+
+        foreach (Arr::get($this->data(), $this->index, []) as $idx => $value) {
+            foreach ($baseMessages as $elementName => $baseMessage) {
+                if ($hasIdx) {
+                    $messages[$this->index . '.' . $idx . '.' . $elementName] = $baseMessage;
+                } else {
+                    $messages[$this->index . '.' . $elementName] = $baseMessage;
+                }
+            }
+        }
+
+        return $messages;
     }
 }

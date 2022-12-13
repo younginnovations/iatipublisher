@@ -41,36 +41,57 @@ class TransactionRequest extends ActivityBaseRequest
      * Returns rules for transaction.
      *
      * @param array $formFields
+     * @param bool $fileUpload
+     * @param array $activityData
      *
      * @return array
      * @throws BindingResolutionException
      */
-    protected function getRulesForTransaction(array $formFields): array
+    public function getRulesForTransaction(array $formFields, bool $fileUpload = false, array $activityData = []): array
     {
         $rules = [];
-        $transactionId = $this->segment(4);
-        $activityId = $this->segment(2);
-        $references = ($transactionId) ? app()->make(TransactionService::class)->getTransactionReferencesExcept($activityId, $transactionId) : app()
-            ->make(TransactionService::class)
-            ->getTransactionReferences($activityId);
 
-        $transactionReference = implode(',', array_filter(array_keys($references)));
+        if (!$fileUpload) {
+            $transactionId = $this->segment(4);
+            $activityId = $this->segment(2);
+            $references = ($transactionId) ? app()->make(TransactionService::class)->getTransactionReferencesExcept($activityId, $transactionId) : app()
+                ->make(TransactionService::class)
+                ->getTransactionReferences($activityId);
 
-        if ($transactionReference !== '') {
-            $rules['reference'] = 'not_in:' . $transactionReference;
+            $transactionReference = implode(',', array_filter(array_keys($references)));
+
+            if ($transactionReference !== '') {
+                $rules['reference'] = 'not_in:' . $transactionReference;
+            }
         }
 
-        return array_merge(
-            $rules,
+        $rules['transaction_type.0.transaction_type_code'] = 'nullable|in:' . implode(',', array_keys(getCodeList('TransactionType', 'Activity', false)));
+        $rules['flow_type.0.flow_type'] = 'nullable|in:' . implode(',', array_keys(getCodeList('FlowType', 'Activity', false)));
+        $rules['aid_type.0.aid_type_vocabulary'] = 'nullable|in:' . implode(',', array_keys(getCodeList('AidTypeVocabulary', 'Activity', false)));
+        $rules['aid_type.0.aid_type_code'] = 'nullable|in:' . implode(',', array_keys(getCodeList('AidType', 'Activity', false)));
+        $rules['aid_type.0.earmarking_category'] = 'nullable|in:' . implode(',', array_keys(getCodeList('EarmarkingCategory', 'Activity', false)));
+        $rules['aid_type.0.earmarking_modality'] = 'nullable|in:' . implode(',', array_keys(getCodeList('EarmarkingModality', 'Activity', false)));
+        $rules['aid_type.0.cash_and_voucher_modalities'] = 'nullable|in:' . implode(',', array_keys(getCodeList('CashandVoucherModalities', 'Activity', false)));
+        $rules['tied_status.0.tied_status_code'] = 'nullable|in:' . implode(',', array_keys(getCodeList('TiedStatus', 'Activity', false)));
+
+        $tempRules = [
             $this->getTransactionDateRules($formFields['transaction_date']),
             $this->getValueRules($formFields['value']),
             $this->getDescriptionRules($formFields['description']),
-            $this->getSectorsRules($formFields['sector']),
+            $this->getSectorsRules($formFields['sector'], $fileUpload, Arr::get($activityData, 'sector', [])),
             $this->getRulesForProviderOrg($formFields['provider_organization']),
             $this->getRulesForReceiverOrg($formFields['receiver_organization']),
-            $this->getRulesForRecipientRegion($formFields['recipient_region']),
-            $this->getRulesForRecipientCountry($formFields['recipient_country'])
-        );
+            $this->getRulesForRecipientRegion($formFields['recipient_region'], $fileUpload, Arr::get($activityData, 'recipient_region', [])),
+            $this->getRulesForRecipientCountry($formFields['recipient_country'], $fileUpload, Arr::get($activityData, 'recipient_country', [])),
+        ];
+
+        foreach ($tempRules as $tempRule) {
+            foreach ($tempRule as $idx => $rule) {
+                $rules[$idx] = $rule;
+            }
+        }
+
+        return $rules;
     }
 
     /**
@@ -80,15 +101,22 @@ class TransactionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForTransaction(array $formFields): array
+    public function getMessagesForTransaction(array $formFields): array
     {
         $messages = [];
 
         $messages['reference.not_in']
-            = 'The @ref field must be unique for an activity.';
+            = 'The transaction reference field must be unique for an activity.';
 
-        return array_merge(
-            $messages,
+        $messages['transaction_type.0.transaction_type_code.in'] = 'The transaction type is invalid.';
+        $messages['flow_type.0.flow_type.in'] = 'The transaction flow type code is invalid.';
+        $messages['aid_type.0.aid_type_vocabulary.in'] = 'The transaction aid type vocabulary is invalid.';
+        $messages['aid_type.0.aid_type_code.in'] = 'The transaction aid type code is invalid.';
+        $messages['aid_type.0.earmarking_category.in'] = 'The transaction aid type code is invalid.';
+        $messages['aid_type.0.earmarking_modality.in'] = 'The transaction aid type code is invalid.';
+        $messages['aid_type.0.cash_and_voucher_modalities.in'] = 'The transaction aid type code is invalid.';
+        $messages['tied_status.0.tied_status_code.in'] = 'The transaction tied status code is invalid.';
+        $tempMessages = [
             $this->getTransactionDateMessages($formFields['transaction_date']),
             $this->getValueMessages($formFields['value']),
             $this->getDescriptionMessages($formFields['description']),
@@ -96,8 +124,16 @@ class TransactionRequest extends ActivityBaseRequest
             $this->getMessagesForProviderOrg($formFields['provider_organization']),
             $this->getMessagesForReceiverOrg($formFields['receiver_organization']),
             $this->getMessagesForRecipientRegion($formFields['recipient_region']),
-            $this->getMessagesForRecipientCountry($formFields['recipient_country'])
-        );
+            $this->getMessagesForRecipientCountry($formFields['recipient_country']),
+        ];
+
+        foreach ($tempMessages as $tempMessage) {
+            foreach ($tempMessage as $idx => $message) {
+                $messages[$idx] = $message;
+            }
+        }
+
+        return $messages;
     }
 
     /**
@@ -107,7 +143,7 @@ class TransactionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getTransactionDateRules(array $formFields): array
+    public function getTransactionDateRules(array $formFields): array
     {
         $rules = [];
 
@@ -126,7 +162,7 @@ class TransactionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getTransactionDateMessages(array $formFields): array
+    public function getTransactionDateMessages(array $formFields): array
     {
         $messages = [];
 
@@ -146,7 +182,7 @@ class TransactionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getValueRules(array $formFields): array
+    public function getValueRules(array $formFields): array
     {
         $rules = [];
 
@@ -166,7 +202,7 @@ class TransactionRequest extends ActivityBaseRequest
      *
      * @return array$transactionForm
      */
-    protected function getValueMessages(array $formFields): array
+    public function getValueMessages(array $formFields): array
     {
         $messages = [];
 
@@ -188,7 +224,7 @@ class TransactionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getDescriptionRules(array $formFields): array
+    public function getDescriptionRules(array $formFields): array
     {
         $rules = [];
 
@@ -211,7 +247,7 @@ class TransactionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getDescriptionMessages(array $formFields): array
+    public function getDescriptionMessages(array $formFields): array
     {
         $messages = [];
 
@@ -231,30 +267,42 @@ class TransactionRequest extends ActivityBaseRequest
      * returns rules for sector.
      *
      * @param array $formFields
+     * @param bool $fileUpload
+     * @param array $activitySectors
      *
      * @return array
      * @throws BindingResolutionException
      */
-    public function getSectorsRules(array $formFields): array
+    public function getSectorsRules(array $formFields, bool $fileUpload, array $activitySectors): array
     {
         if (empty($formFields)) {
             return [];
         }
 
         $rules = [];
-        $params = $this->route()->parameters();
         $activityService = app()->make(ActivityService::class);
 
-        if (!$activityService->isElementEmpty($formFields, 'sectorFields') && $activityService->hasSectorDefinedInActivity($params['id'])) {
-            Validator::extend('already_in_activity', function () {
-                return false;
-            });
+        if (!$fileUpload) {
+            $params = $this->route()->parameters();
 
+            if (!$activityService->isElementEmpty($formFields, 'sectorFields') && $activityService->hasSectorDefinedInActivity($params['id'])) {
+                Validator::extend('already_in_activity', function () {
+                    return false;
+                });
+
+                return ['sector' => 'already_in_activity'];
+            }
+        } elseif (!$activityService->isElementEmpty($formFields, 'sectorFields') && !$activityService->isElementEmpty($activitySectors, 'sectorFields')) {
             return ['sector' => 'already_in_activity'];
         }
 
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
+            $rules[sprintf('%s.sector_vocabulary', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorVocabulary', 'Activity', false)));
+            $rules[sprintf('%s.code', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorCode', 'Activity', false)));
+            $rules[sprintf('%s.category_code', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorCategory', 'Activity', false)));
+            $rules[sprintf('%s.sdg_goal', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Goals', 'Activity', false)));
+            $rules[sprintf('%s.sdg_target', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Targets', 'Activity', false)));
 
             if (isset($sector['sector_vocabulary']) && $sector['sector_vocabulary'] === '99') {
                 $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
@@ -279,7 +327,7 @@ class TransactionRequest extends ActivityBaseRequest
      */
     public function getSectorsMessages(array $formFields): array
     {
-        $messages = ['sector.already_in_activity' => 'Sector already defined in Activity'];
+        $messages = ['sector.already_in_activity' => 'Sector already defined in Activity so cannot be mentioned in transaction.'];
 
         if (empty($formFields)) {
             return $messages;
@@ -287,10 +335,15 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
+            $messages[sprintf('%s.sector_vocabulary.in', $sectorForm)] = 'The transaction sector vocabulary is invalid.';
+            $messages[sprintf('%s.code.in', $sectorForm)] = 'The transaction sector code is invalid.';
+            $messages[sprintf('%s.category_code.in', $sectorForm)] = 'The transaction sector code is invalid.';
+            $messages[sprintf('%s.sdg_goal.in', $sectorForm)] = 'The transaction sector code is invalid.';
+            $messages[sprintf('%s.sdg_target.in', $sectorForm)] = 'The transaction sector code is invalid.';
 
             if (isset($sector['sector_vocabulary']) && $sector['sector_vocabulary'] === '99') {
                 $messages[sprintf('%s.vocabulary_uri.url', $sectorForm)]
-                    = 'The @vocabulary-uri field must be a valid url.';
+                    = 'The transaction sector vocabulary-uri field must be a valid url.';
             }
 
             $narrativeMessages = $this->getMessagesForNarrative($sector['narrative'], $sectorForm);
@@ -310,13 +363,14 @@ class TransactionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForProviderOrg(array $formFields): array
+    public function getRulesForProviderOrg(array $formFields): array
     {
         $rules = [];
 
         foreach ($formFields as $providerOrgIndex => $providerOrg) {
             $providerOrgForm = sprintf('provider_organization.%s', $providerOrgIndex);
             $rules[sprintf('%s.%s', $providerOrgForm, 'provider_activity_id')] = 'exclude_operators';
+            $rules[sprintf('%s.%s', $providerOrgForm, 'type')] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
             $narrativeRules = $this->getRulesForNarrative($providerOrg['narrative'], $providerOrgForm);
 
             foreach ($narrativeRules as $key => $item) {
@@ -334,13 +388,14 @@ class TransactionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForProviderOrg(array $formFields): array
+    public function getMessagesForProviderOrg(array $formFields): array
     {
         $messages = [];
 
         foreach ($formFields as $providerOrgIndex => $providerOrg) {
             $providerOrgForm = sprintf('provider_organization.%s', $providerOrgIndex);
-            $message[sprintf('%s.%s.exclude_operators', $providerOrgForm, 'provider_activity_id')] = 'The @provider-activity-id field is not valid.';
+            $message[sprintf('%s.%s.exclude_operators', $providerOrgForm, 'provider_activity_id')] = 'The transaction provider-activity-id field is not valid.';
+            $messages[sprintf('%s.%s.in', $providerOrgForm, 'type')] = 'The transaction provider org type is invalid.';
             $narrativeMessages = $this->getMessagesForNarrative($providerOrg['narrative'], $providerOrgForm);
 
             foreach ($narrativeMessages as $key => $item) {
@@ -358,13 +413,14 @@ class TransactionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForReceiverOrg(array $formFields): array
+    public function getRulesForReceiverOrg(array $formFields): array
     {
         $rules = [];
 
         foreach ($formFields as $receiverOrgIndex => $receiverOrg) {
             $receiverOrgForm = sprintf('receiver_organization.%s', $receiverOrgIndex);
             $rules[sprintf('%s.%s', $receiverOrgForm, 'receiver_activity_id')] = 'exclude_operators';
+            $rules[sprintf('%s.%s', $receiverOrgForm, 'type')] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
             $narrativeRules = $this->getRulesForNarrative($receiverOrg['narrative'], $receiverOrgForm);
 
             foreach ($narrativeRules as $key => $item) {
@@ -382,13 +438,14 @@ class TransactionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForReceiverOrg(array $formFields): array
+    public function getMessagesForReceiverOrg(array $formFields): array
     {
         $messages = [];
 
         foreach ($formFields as $receiverOrgIndex => $receiverOrg) {
             $receiverOrgForm = sprintf('receiver_organization.%s', $receiverOrgIndex);
-            $message[sprintf('%s.%s.exclude_operators', $receiverOrgForm, 'receiver_activity_id')] = 'The @receiver-activity-id field is not valid.';
+            $message[sprintf('%s.%s.exclude_operators', $receiverOrgForm, 'receiver_activity_id')] = 'The transaction receiver-activity-id field is not valid.';
+            $messages[sprintf('%s.%s.in', $receiverOrgForm, 'type')] = 'The transaction receiver org type is invalid.';
             $narrativeMessages = $this->getMessagesForNarrative($receiverOrg['narrative'], $receiverOrgForm);
 
             foreach ($narrativeMessages as $key => $item) {
@@ -403,30 +460,40 @@ class TransactionRequest extends ActivityBaseRequest
      * returns rules for recipient region.
      *
      * @param array $formFields
+     * @param bool $fileUpload
+     * @param array $activityRecipientRegions
      *
      * @return array
      * @throws BindingResolutionException
      */
-    public function getRulesForRecipientRegion(array $formFields): array
+    public function getRulesForRecipientRegion(array $formFields, bool $fileUpload, array $activityRecipientRegions): array
     {
         if (empty($formFields)) {
             return [];
         }
 
         $rules = [];
-        $params = $this->route()->parameters();
         $activityService = app()->make(ActivityService::class);
 
-        if (!$activityService->isElementEmpty($formFields, 'recipientRegionFields') && $activityService->hasRecipientRegionDefinedInActivity($params['id'])) {
-            Validator::extend('already_in_activity', function () {
-                return false;
-            });
+        if (!$fileUpload) {
+            $params = $this->route()->parameters();
 
+            if (!$activityService->isElementEmpty($formFields, 'recipientRegionFields') && $activityService->hasRecipientRegionDefinedInActivity($params['id'])) {
+                Validator::extend('already_in_activity', function () {
+                    return false;
+                });
+
+                return ['recipient_region' => 'already_in_activity'];
+            }
+        } elseif (!$activityService->isElementEmpty($formFields, 'recipientRegionFields') && !$activityService->isElementEmpty($activityRecipientRegions, 'recipientRegionFields')) {
             return ['recipient_region' => 'already_in_activity'];
         }
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = sprintf('recipient_region.%s', $recipientRegionIndex);
+            $rules[sprintf('%s.region_vocabulary', $recipientRegionForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('RegionVocabulary', 'Activity', false)));
+            $rules[sprintf('%s.region_code', $recipientRegionForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Region', 'Activity', false)));
+            $rules[sprintf('%s.vocabulary_uri', $recipientRegionForm)] = 'nullable|url';
 
             if (Arr::get($recipientRegion, 'region_vocabulary', 1) === '99') {
                 $rules[sprintf('%s.vocabulary_uri', $recipientRegionForm)] = 'nullable|url';
@@ -450,7 +517,7 @@ class TransactionRequest extends ActivityBaseRequest
      */
     public function getMessagesForRecipientRegion(array $formFields): array
     {
-        $messages = ['recipient_region.already_in_activity' => 'Recipient Region already defined in Activity'];
+        $messages = ['recipient_region.already_in_activity' => 'Recipient Region already defined in Activity so cannot be mentioned in transaction.'];
 
         if (!$formFields) {
             return $messages;
@@ -458,6 +525,9 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = sprintf('recipient_region.%s', $recipientRegionIndex);
+            $messages[sprintf('%s.region_vocabulary.in', $recipientRegionForm)] = 'The transaction recipient region vocabulary is invalid.';
+            $messages[sprintf('%s.region_code.in', $recipientRegionForm)] = 'The transaction recipient region code is invalid.';
+            $messages[sprintf('%s.vocabulary_uri.url', $recipientRegionForm)] = 'The transaction recipient region vocabulary uri must be a valid url.';
 
             if (Arr::get($recipientRegion, 'region_vocabulary', 1) === '99') {
                 $messages[sprintf('%s.vocabulary_uri.url', $recipientRegionForm)]
@@ -478,30 +548,38 @@ class TransactionRequest extends ActivityBaseRequest
      * returns rules for recipient country.
      *
      * @param array $formFields
+     * @param bool $fileUpload
+     * @param array $activityRecipientCountries
      *
      * @return array
      * @throws BindingResolutionException
      */
-    public function getRulesForRecipientCountry(array $formFields): array
+    public function getRulesForRecipientCountry(array $formFields, bool $fileUpload, array $activityRecipientCountries): array
     {
         if (empty($formFields)) {
             return [];
         }
 
         $rules = [];
-        $params = $this->route()->parameters();
         $activityService = app()->make(ActivityService::class);
 
-        if (!$activityService->isElementEmpty($formFields, 'recipientCountryFields') && $activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
-            Validator::extend('already_in_activity', function () {
-                return false;
-            });
+        if (!$fileUpload) {
+            $params = $this->route()->parameters();
 
+            if (!$activityService->isElementEmpty($formFields, 'recipientCountryFields') && $activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
+                Validator::extend('already_in_activity', function () {
+                    return false;
+                });
+
+                return ['recipient_country' => 'already_in_activity'];
+            }
+        } elseif (!$activityService->isElementEmpty($formFields, 'recipientCountryFields') && !$activityService->isElementEmpty($activityRecipientCountries, 'recipientCountryFields')) {
             return ['recipient_country' => 'already_in_activity'];
         }
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('recipient_country.%s', $recipientCountryIndex);
+            $rules[sprintf('%s.country_code', $recipientCountryForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Country', 'Activity', false)));
             $narrativeRules = $this->getRulesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
 
             foreach ($narrativeRules as $key => $item) {
@@ -521,7 +599,7 @@ class TransactionRequest extends ActivityBaseRequest
      */
     public function getMessagesForRecipientCountry(array $formFields): array
     {
-        $messages = ['recipient_country.already_in_activity' => 'Recipient Country already defined in Activity'];
+        $messages = ['recipient_country.already_in_activity' => 'Recipient Country already defined in Activity so cannot be mentioned in transaction.'];
 
         if (!$formFields) {
             return $messages;
@@ -529,6 +607,7 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('recipient_country.%s', $recipientCountryIndex);
+            $messages[sprintf('%s.country_code.in', $recipientCountryForm)] = 'The transaction recipient country code is invalid.';
             $narrativeMessages = $this->getMessagesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
 
             foreach ($narrativeMessages as $key => $item) {

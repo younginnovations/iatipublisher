@@ -39,14 +39,10 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForCountryBudgetItem(array $formFields): array
+    public function getRulesForCountryBudgetItem(array $formFields): array
     {
-        $rules = [];
-
-        $rules = array_merge(
-            $rules,
-            $this->getBudgetItemRules($formFields['budget_item'], 'code')
-        );
+        $rules = $this->getBudgetItemRules(Arr::get($formFields, 'budget_item', []), $formFields);
+        $rules['country_budget_vocabulary'] = 'nullable|in:' . implode(',', array_keys(getCodeList('BudgetIdentifierVocabulary', 'Activity', false)));
 
         return $rules;
     }
@@ -58,14 +54,10 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForCountryBudgetItem(array $formFields): array
+    public function getMessagesForCountryBudgetItem(array $formFields): array
     {
-        $messages = [];
-        $code = $formFields['country_budget_vocabulary'] === '1' ? 'code' : 'code_text';
-        $messages = array_merge(
-            $messages,
-            $this->getBudgetItemMessages($formFields['budget_item'], $code)
-        );
+        $messages = $this->getBudgetItemMessages(Arr::get($formFields, 'budget_item', []));
+        $messages['country_budget_vocabulary.in'] = 'The country budget item vocabulary is invalid.';
 
         return $messages;
     }
@@ -74,24 +66,26 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
      * returns budget item validation rules.
      *
      * @param array $formFields
+     * @param array $allFields
      *
      * @return array
      */
-    public function getBudgetItemRules(array $formFields): array
+    public function getBudgetItemRules(array $formFields, array $allFields): array
     {
         $rules = [];
 
         foreach ($formFields as $budgetItemIndex => $budgetItem) {
             $budgetItemForm = sprintf('budget_item.%s', $budgetItemIndex);
+            $rules[sprintf('%s.code', $budgetItemForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('BudgetIdentifier', 'Activity', false)));
             $rules[sprintf('%s.percentage', $budgetItemForm)] = 'nullable|numeric|max:100';
-            $rules = array_merge(
-                $rules,
-                $this->getBudgetItemDescriptionRules($budgetItem['description'], $budgetItemForm)
-            );
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForPercentage(request()->except(['_token', '_method']))
-            );
+
+            foreach ($this->getBudgetItemDescriptionRules($budgetItem['description'], $budgetItemForm) as $budgetItemDescriptionIndex => $budgetItemDescriptionNarrativeRules) {
+                $rules[$budgetItemDescriptionIndex] = $budgetItemDescriptionNarrativeRules;
+            }
+
+            foreach ($this->getRulesForPercentage($allFields) as $budgetItemPercentageIndex => $budgetItemPercentageRules) {
+                $rules[$budgetItemPercentageIndex] = $budgetItemPercentageRules;
+            }
         }
 
         return $rules;
@@ -101,24 +95,24 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
      * return budget item error message.
      *
      * @param $formFields
-     * @param $code
      *
      * @return array
      */
-    public function getBudgetItemMessages(array $formFields, $code): array
+    public function getBudgetItemMessages(array $formFields): array
     {
         $messages = [];
 
         foreach ($formFields as $budgetItemIndex => $budgetItem) {
             $budgetItemForm = sprintf('budget_item.%s', $budgetItemIndex);
-            $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'numeric')] = 'The @percentage field must be a number.';
-            $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'max')] = 'The @percentage field cannot be greater than 100.';
-            $messages[sprintf('%s.percentage.sum', $budgetItemForm)] = 'The sum of @percentage must add up to 100.';
-            $messages[sprintf('%s.percentage.total', $budgetItemForm)] = 'The @percentage field should be 100 when there is only one budget item.';
-            $messages = array_merge(
-                $messages,
-                $this->getBudgetItemDescriptionMessages($budgetItem['description'], $budgetItemForm)
-            );
+            $messages[sprintf('%s.code.in', $budgetItemForm)] = 'The budget item code in invalid.';
+            $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'numeric')] = 'The budget item percentage field must be a number.';
+            $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'max')] = 'The budget item percentage field cannot be greater than 100.';
+            $messages[sprintf('%s.percentage.sum', $budgetItemForm)] = 'The sum of percentage with budget items must add up to 100.';
+            $messages[sprintf('%s.percentage.total', $budgetItemForm)] = 'The budget item percentage field should be 100 when there is only one budget item.';
+
+            foreach ($this->getBudgetItemDescriptionMessages($budgetItem['description'], $budgetItemForm) as $budgetItemDescriptionIndex => $budgetItemDescriptionNarrativeMessages) {
+                $messages[$budgetItemDescriptionIndex] = $budgetItemDescriptionNarrativeMessages;
+            }
         }
 
         return $messages;
@@ -171,7 +165,7 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForPercentage($countryBudget): array
+    public function getRulesForPercentage($countryBudget): array
     {
         $countryBudgetItems = Arr::get($countryBudget, 'budget_item', []);
         $totalPercentage = 0;

@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\CollaborationType\CollaborationTypeRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -31,6 +32,11 @@ class CollaborationType extends Element
     protected array $data;
 
     /**
+     * @var CollaborationTypeRequest
+     */
+    private CollaborationTypeRequest $request;
+
+    /**
      * Description constructor.
      *
      * @param            $fields
@@ -42,6 +48,7 @@ class CollaborationType extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new CollaborationTypeRequest();
     }
 
     /**
@@ -56,9 +63,14 @@ class CollaborationType extends Element
     {
         foreach ($fields as $key => $values) {
             if (!is_null($values) && array_key_exists($key, array_flip($this->_csvHeader))) {
+                $this->data[$this->csvHeader()] = [];
+
                 foreach ($values as $value) {
                     $this->map($value, $values);
-                    break;
+                }
+
+                if (empty($this->data[$this->csvHeader()])) {
+                    $this->data[$this->csvHeader()] = '';
                 }
             }
         }
@@ -88,8 +100,6 @@ class CollaborationType extends Element
             }
 
             (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
-        } else {
-            $this->data[$this->csvHeader()] = '';
         }
     }
 
@@ -118,13 +128,7 @@ class CollaborationType extends Element
      */
     public function rules(): array
     {
-        $rules = [
-            $this->csvHeader() => sprintf('nullable|in:%s', $this->validCollaborationType()),
-        ];
-
-        (!is_array(Arr::get($this->data, 'collaboration_type'))) ?: $rules[$this->csvHeader()] .= 'nullable|size:1';
-
-        return $rules;
+        return $this->request->rules(Arr::get($this->data(), $this->csvHeader()));
     }
 
     /**
@@ -134,12 +138,7 @@ class CollaborationType extends Element
      */
     public function messages(): array
     {
-        $key = $this->csvHeader();
-
-        return [
-            sprintf('%s.size', $key)     => trans('validation.multiple_values', ['attribute' => trans('element.collaboration_type')]),
-            sprintf('%s.in', $key)       => trans('validation.code_list', ['attribute' => trans('element.collaboration_type')]),
-        ];
+        return $this->request->messages();
     }
 
     /**
@@ -150,16 +149,5 @@ class CollaborationType extends Element
     protected function csvHeader(): mixed
     {
         return end($this->_csvHeader);
-    }
-
-    /**
-     * Get the valid CollaborationType from the CollaborationType codelist as a string.
-     *
-     * @return string
-     * @throws \JsonException
-     */
-    protected function validCollaborationType(): string
-    {
-        return implode(',', array_keys(array_flip(array_keys($this->loadCodeList('CollaborationType')))));
     }
 }

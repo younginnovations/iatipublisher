@@ -27,7 +27,7 @@ class Activity
         'activityDate'        => 'activity_date',
         'contactInfo'         => 'contact_info',
         'activityScope'       => 'activity_scope',
-        'participatingOrg'    => 'participating_organization',
+        'participatingOrg'    => 'participating_org',
         'tag'                 => 'tag',
         'recipientCountry'    => 'recipient_country',
         'recipientRegion'     => 'recipient_region',
@@ -248,7 +248,6 @@ class Activity
             $this->orgRef = $this->attributes($element, 'ref');
         } else {
             $this->identifier['activity_identifier'] = substr($this->identifier['iati_identifier_text'], strlen($this->attributes($element, 'ref')) + 1);
-            unset($this->identifier['iati_identifier_text']);
         }
 
         $this->activity['reporting_org'][0] = $template['reporting_org'];
@@ -292,7 +291,7 @@ class Activity
      */
     public function participatingOrg($element, $template): array
     {
-        $this->participatingOrg[$this->index] = $template['participating_organization'];
+        $this->participatingOrg[$this->index] = $template['participating_org'];
         $this->participatingOrg[$this->index]['organization_role'] = $this->attributes($element, 'role');
         $this->participatingOrg[$this->index]['ref'] = $this->attributes($element, 'ref');
         $this->participatingOrg[$this->index]['type'] = $this->attributes($element, 'type');
@@ -312,18 +311,7 @@ class Activity
      */
     public function activityStatus($element): mixed
     {
-        $activityStatusCodes = array_flip(getCodeList('ActivityStatus', 'Activity'));
-        $code = $this->attributes($element, 'code');
-
-        if (array_key_exists($code, $activityStatusCodes)) {
-            return $activityStatusCodes;
-        }
-
-        if (in_array($code, $activityStatusCodes, true)) {
-            return $code;
-        }
-
-        return $code;
+        return $this->attributes($element, 'code') && $this->attributes($element, 'code') != '' ? (int) $this->attributes($element, 'code') : null;
     }
 
     /**
@@ -345,11 +333,11 @@ class Activity
     /**
      * @param $element
      *
-     * @return int
+     * @return int|null
      */
-    public function activityScope($element): int
+    public function activityScope($element): ?int
     {
-        return (int) $this->attributes($element, 'code');
+        return $this->attributes($element, 'code') && $this->attributes($element, 'code') != '' ? (int) $this->attributes($element, 'code') : null;
     }
 
     /**
@@ -362,16 +350,17 @@ class Activity
      */
     public function contactInfo($element, $template): array
     {
+        $value = Arr::get($element, 'value', []) ?? [];
         $this->contactInfo[$this->index] = $template['contact_info'];
         $this->contactInfo[$this->index]['type'] = $this->attributes($element, 'type');
-        $this->contactInfo[$this->index]['organisation'][0]['narrative'] = $this->value(Arr::get($element, 'value', []), 'organisation');
-        $this->contactInfo[$this->index]['department'][0]['narrative'] = $this->value(Arr::get($element, 'value', []), 'department');
-        $this->contactInfo[$this->index]['person_name'][0]['narrative'] = $this->value(Arr::get($element, 'value', []), 'personName');
-        $this->contactInfo[$this->index]['job_title'][0]['narrative'] = $this->value(Arr::get($element, 'value', []), 'jobTitle');
-        $this->contactInfo[$this->index]['telephone'] = $this->filterValues(Arr::get($element, 'value', []), 'telephone');
-        $this->contactInfo[$this->index]['email'] = $this->filterValues(Arr::get($element, 'value', []), 'email');
-        $this->contactInfo[$this->index]['website'] = $this->filterValues(Arr::get($element, 'value', []), 'website');
-        $this->contactInfo[$this->index]['mailing_address'] = $this->getMailingAddress($element) ?? [];
+        $this->contactInfo[$this->index]['organisation'][0]['narrative'] = $this->value($value, 'organisation');
+        $this->contactInfo[$this->index]['department'][0]['narrative'] = $this->value($value, 'department');
+        $this->contactInfo[$this->index]['person_name'][0]['narrative'] = $this->value($value, 'personName');
+        $this->contactInfo[$this->index]['job_title'][0]['narrative'] = $this->value($value, 'jobTitle');
+        $this->contactInfo[$this->index]['telephone'] = $this->filterValues($value, 'telephone');
+        $this->contactInfo[$this->index]['email'] = $this->filterValues($value, 'email');
+        $this->contactInfo[$this->index]['website'] = $this->filterValues($value, 'website');
+        $this->contactInfo[$this->index]['mailing_address'] = $this->getMailingAddress($value) ?? [];
         $this->index++;
 
         return $this->contactInfo;
@@ -388,7 +377,7 @@ class Activity
     {
         $array = [];
 
-        foreach (Arr::get($component, 'value', []) as $key => $value) {
+        foreach ($component as $key => $value) {
             if (($this->name($value) === 'mailingAddress') && is_array($value)) {
                 $array[]['narrative'] = $this->value(Arr::get($component, 'value', []), 'mailingAddress');
                 unset($component['value'][$key]);
@@ -428,7 +417,7 @@ class Activity
      */
     public function defaultFlowType($element): ?int
     {
-        return $this->attributes($element, 'code') ? (int) $this->attributes($element, 'code') : null;
+        return $this->attributes($element, 'code') && $this->attributes($element, 'code') != '' ? (int) $this->attributes($element, 'code') : null;
     }
 
     /**
@@ -438,7 +427,7 @@ class Activity
      */
     public function defaultFinanceType($element): ?int
     {
-        return $this->attributes($element, 'code') ? (int) $this->attributes($element, 'code') : null;
+        return $this->attributes($element, 'code') && $this->attributes($element, 'code') != '' ? (int) $this->attributes($element, 'code') : null;
     }
 
     /**
@@ -448,7 +437,7 @@ class Activity
      */
     public function defaultTiedStatus($element): ?int
     {
-        return $this->attributes($element, 'code') ? (int) $this->attributes($element, 'code') : null;
+        return $this->attributes($element, 'code') && $this->attributes($element, 'code') != '' ? (int) $this->attributes($element, 'code') : null;
     }
 
     /**
@@ -481,12 +470,13 @@ class Activity
     public function recipientRegion($element, $template): array
     {
         $this->recipientRegion[$this->index] = $template['recipient_region'];
-        $this->recipientRegion[$this->index]['region_code'] = $this->attributes($element, 'code');
-        $this->recipientRegion[$this->index]['custom_code'] = $this->attributes($element, 'code');
         $this->recipientRegion[$this->index]['region_vocabulary'] = $this->attributes($element, 'vocabulary');
         $this->recipientRegion[$this->index]['vocabulary_uri'] = $this->attributes($element, 'vocabulary-uri');
         $this->recipientRegion[$this->index]['percentage'] = $this->attributes($element, 'percentage');
         $this->recipientRegion[$this->index]['narrative'] = $this->narrative($element);
+        $code_field = $this->attributes($element, 'vocabulary') === '1' ? 'region_code' : 'custom_code';
+        $this->recipientRegion[$this->index][$code_field] = $this->attributes($element, 'code');
+        unset($this->recipientRegion[$this->index][$code_field === 'region_code' ? 'custom_code' : 'region_code']);
         $this->index++;
 
         return $this->recipientRegion;
@@ -517,24 +507,25 @@ class Activity
      */
     public function location($element, $template): array
     {
+        $value = Arr::get($element, 'value', []) ?? [];
         $this->location[$this->index] = $template['location'];
         $this->location[$this->index]['ref'] = $this->attributes($element, 'ref');
         $this->location[$this->index]['location_reach'][0]['code'] = $this->attributes($element, 'code', 'locationReach');
         $this->location[$this->index]['location_id'] = $this->getLocationIdData($element);
         $this->location[$this->index]['location_id'][0]['vocabulary'] = $this->attributes($element, 'vocabulary', 'locationId');
         $this->location[$this->index]['location_id'][0]['code'] = $this->attributes($element, 'code', 'locationId');
-        $this->location[$this->index]['name'][0]['narrative'] = (($name = $this->value(Arr::get($element, 'value', []), 'name')) === '') ? $this->emptyNarrative : $name;
+        $this->location[$this->index]['name'][0]['narrative'] = (($name = $this->value($value, 'name')) === '') ? $this->emptyNarrative : $name;
         $this->location[$this->index]['description'][0]['narrative'] = (($locationDesc = $this->value(
-            Arr::get($element, 'value', []),
+            $value,
             'description'
         )) === '') ? $this->emptyNarrative : $locationDesc;
         $this->location[$this->index]['activity_description'][0]['narrative'] = (($elementDesc = $this->value(
-            Arr::get($element, 'value', []),
+            $value,
             'activityDescription'
         )) === '') ? $this->emptyNarrative : $elementDesc;
-        $this->location[$this->index]['administrative'] = $this->filterAttributes(Arr::get($element, 'value', []), 'administrative', ['code', 'vocabulary', 'level']);
+        $this->location[$this->index]['administrative'] = $this->filterAttributes($value, 'administrative', ['code', 'vocabulary', 'level']);
         $this->location[$this->index]['point'][0]['srs_name'] = $this->attributes($element, 'srsName', 'point');
-        $this->location[$this->index]['point'][0]['pos'][0] = $this->latAndLong(Arr::get($element, 'value', []));
+        $this->location[$this->index]['point'][0]['pos'][0] = $this->latAndLong($value);
         $this->location[$this->index]['exactness'][0]['code'] = $this->attributes($element, 'code', 'exactness');
         $this->location[$this->index]['location_class'][0]['code'] = $this->attributes($element, 'code', 'locationClass');
         $this->location[$this->index]['feature_designation'][0]['code'] = $this->attributes($element, 'code', 'featureDesignation');
@@ -711,7 +702,7 @@ class Activity
      */
     public function collaborationType($element): ?int
     {
-        return $this->attributes($element, 'code') ? (int) $this->attributes($element, 'code') : null;
+        return $this->attributes($element, 'code') && $this->attributes($element, 'code') != '' ? (int) $this->attributes($element, 'code') : null;
     }
 
     /**
@@ -721,7 +712,7 @@ class Activity
      */
     private function capitalSpend($element): ?float
     {
-        return $this->attributes($element, 'percentage') ? (float) $this->attributes($element, 'percentage') : null;
+        return $this->attributes($element, 'percentage') && $this->attributes($element, 'percentage') != '' ? (float) $this->attributes($element, 'percentage') : null;
     }
 
     /**
@@ -746,8 +737,10 @@ class Activity
      *
      * @return array
      */
-    public function map(array $elementData, $template): array
+    public function map(array $elementData, $template, $orgRef): array
     {
+        $this->orgRef = $orgRef;
+
         foreach ($elementData as $element) {
             $elementName = $this->name($element);
 
@@ -848,9 +841,11 @@ class Activity
     {
         $array = [];
 
-        foreach (Arr::get($element, 'value', []) as $value) {
-            if ($this->name($value) === 'locationId') {
-                $array[] = $this->attributes($value);
+        if (Arr::get($element, 'value', [])) {
+            foreach (Arr::get($element, 'value', []) as $value) {
+                if ($this->name($value) === 'locationId') {
+                    $array[] = $this->attributes($value);
+                }
             }
         }
 

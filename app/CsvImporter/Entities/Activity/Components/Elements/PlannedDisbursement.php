@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\PlannedDisbursement\PlannedDisbursementRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -43,6 +44,11 @@ class PlannedDisbursement extends Element
     protected string $index = 'planned_disbursement';
 
     /**
+     * @var PlannedDisbursementRequest
+     */
+    private PlannedDisbursementRequest $request;
+
+    /**
      * PlannedDisbursement constructor.
      *
      * @param            $fields
@@ -51,7 +57,9 @@ class PlannedDisbursement extends Element
     public function __construct($fields, Validation $factory)
     {
         $this->prepare($fields);
+        $this->checkAndEmptyData();
         $this->factory = $factory;
+        $this->request = new PlannedDisbursementRequest();
     }
 
     /**
@@ -73,6 +81,29 @@ class PlannedDisbursement extends Element
     }
 
     /**
+     * Check and empty planned disbursement data.
+     *
+     * @return void
+     */
+    public function checkAndEmptyData()
+    {
+        $planned_disbursements = Arr::get($this->data(), 'planned_disbursement', []);
+
+        foreach ($planned_disbursements as $index => $disbursement) {
+            $has_data = false;
+            array_walk_recursive($disbursement, function ($item, $key) use (&$disbursement, &$has_data) {
+                if ($item !== null && $item != '') {
+                    $has_data = true;
+                }
+            });
+
+            if (!$has_data) {
+                unset($this->data['planned_disbursement'][$index]);
+            }
+        }
+    }
+
+    /**
      * Map data from CSV file into PlannedDisbursement data format.
      *
      * @param $key
@@ -83,14 +114,12 @@ class PlannedDisbursement extends Element
      */
     public function map($key, $index, $value): void
     {
-        // if (!(is_null($value) || $value === '')) {
         $this->setPlannedDisbursementType($key, $value, $index);
         $this->setPlannedDisbursementPeriodStart($key, $value, $index);
         $this->setPlannedDisbursementPeriodEnd($key, $value, $index);
         $this->setPlannedDisbursementValue($key, $value, $index);
         $this->setPlannedDisbursementProviderOrg($key, $value, $index);
         $this->setPlannedDisbursementReceiverOrg($key, $value, $index);
-        // }
     }
 
     /**
@@ -104,6 +133,10 @@ class PlannedDisbursement extends Element
      */
     protected function setPlannedDisbursementType($key, $value, $index): void
     {
+        if (!isset($this->data['planned_disbursement'][$index]['planned_disbursement_type'])) {
+            $this->data['planned_disbursement'][$index]['planned_disbursement_type'] = '';
+        }
+
         if ($key === $this->_csvHeaders[0]) {
             $value = (!$value) ? '' : trim($value);
 
@@ -112,7 +145,7 @@ class PlannedDisbursement extends Element
             if ($value) {
                 foreach ($validType as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -133,6 +166,10 @@ class PlannedDisbursement extends Element
      */
     protected function setPlannedDisbursementPeriodStart($key, $value, $index): void
     {
+        if (!isset($this->data['planned_disbursement'][$index]['period_start'][0]['date'])) {
+            $this->data['planned_disbursement'][$index]['period_start'][0]['date'] = '';
+        }
+
         if ($key === $this->_csvHeaders[1]) {
             $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['period_start'][0]['date'] = dateFormat('Y-m-d', $value);
@@ -150,6 +187,10 @@ class PlannedDisbursement extends Element
      */
     protected function setPlannedDisbursementPeriodEnd($key, $value, $index): void
     {
+        if (!isset($this->data['planned_disbursement'][$index]['period_end'][0]['date'])) {
+            $this->data['planned_disbursement'][$index]['period_end'][0]['date'] = '';
+        }
+
         if ($key === $this->_csvHeaders[2]) {
             $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['period_end'][0]['date'] = dateFormat('Y-m-d', $value);
@@ -167,6 +208,18 @@ class PlannedDisbursement extends Element
      */
     protected function setPlannedDisbursementValue($key, $value, $index): void
     {
+        if (!isset($this->data['planned_disbursement'][$index]['value'][0]['amount'])) {
+            $this->data['planned_disbursement'][$index]['value'][0]['amount'] = '';
+        }
+
+        if (!isset($this->data['planned_disbursement'][$index]['value'][0]['currency'])) {
+            $this->data['planned_disbursement'][$index]['value'][0]['currency'] = '';
+        }
+
+        if (!isset($this->data['planned_disbursement'][$index]['value'][0]['value_date'])) {
+            $this->data['planned_disbursement'][$index]['value'][0]['value_date'] = '';
+        }
+
         if ($key === $this->_csvHeaders[3]) {
             $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['value'][0]['amount'] = $value;
@@ -178,7 +231,7 @@ class PlannedDisbursement extends Element
             if ($value) {
                 foreach ($validCurrency as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -202,6 +255,16 @@ class PlannedDisbursement extends Element
      */
     protected function setPlannedDisbursementProviderOrg($key, $value, $index): void
     {
+        if (!isset($this->data['planned_disbursement'][$index]['provider_org'])) {
+            $this->data['planned_disbursement'][$index]['provider_org'][0]['ref'] = '';
+            $this->data['planned_disbursement'][$index]['provider_org'][0]['provider_activity_id'] = '';
+            $this->data['planned_disbursement'][$index]['provider_org'][0]['type'] = '';
+            $this->data['planned_disbursement'][$index]['provider_org'][0]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
+        }
+
         if ($key === $this->_csvHeaders[6]) {
             $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['provider_org'][0]['ref'] = $value;
@@ -215,7 +278,7 @@ class PlannedDisbursement extends Element
             if ($value) {
                 foreach ($validProviderOrgType as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -229,7 +292,7 @@ class PlannedDisbursement extends Element
                 'language'  => '',
             ];
 
-            $this->data['planned_disbursement'][$index]['provider_org'][0]['narrative'][] = $narrative;
+            $this->data['planned_disbursement'][$index]['provider_org'][0]['narrative'][0] = $narrative;
         }
     }
 
@@ -244,6 +307,16 @@ class PlannedDisbursement extends Element
      */
     protected function setPlannedDisbursementReceiverOrg($key, $value, $index): void
     {
+        if (!isset($this->data['planned_disbursement'][$index]['receiver_org'])) {
+            $this->data['planned_disbursement'][$index]['receiver_org'][0]['ref'] = '';
+            $this->data['planned_disbursement'][$index]['receiver_org'][0]['provider_activity_id'] = '';
+            $this->data['planned_disbursement'][$index]['receiver_org'][0]['type'] = '';
+            $this->data['planned_disbursement'][$index]['receiver_org'][0]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
+        }
+
         if ($key === $this->_csvHeaders[10]) {
             $value = (!$value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['receiver_org'][0]['ref'] = $value;
@@ -257,7 +330,7 @@ class PlannedDisbursement extends Element
             if ($value) {
                 foreach ($validReceiverOrgType as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -271,7 +344,7 @@ class PlannedDisbursement extends Element
                 'language'  => '',
             ];
 
-            $this->data['planned_disbursement'][$index]['receiver_org'][0]['narrative'][] = $narrative;
+            $this->data['planned_disbursement'][$index]['receiver_org'][0]['narrative'][0] = $narrative;
         }
     }
 
@@ -283,122 +356,7 @@ class PlannedDisbursement extends Element
      */
     public function rules(): array
     {
-        $validPlannedDisbursementType = implode(',', $this->validPlannedDisbursementCodeList('BudgetType'));
-        $validCurrency = implode(',', $this->validPlannedDisbursementCodeList('Currency'));
-        $validOrganizationType = implode(',', $this->validPlannedDisbursementCodeList('OrganizationType', 'Organization'));
-        $rules = [];
-
-        foreach (Arr::get($this->data(), 'planned_disbursement', []) as $key => $value) {
-            $plannedDisbursementForm = sprintf('planned_disbursement.%s', $key);
-            $diff = 0;
-            $start = Arr::get($value, 'period_start.0.date', null);
-            $end = Arr::get($value, 'period_end.0.date', null);
-
-            if ($start && $end) {
-                $diff = (dateStrToTime($end) - dateStrToTime($start)) / 86400;
-            }
-
-            $rules[sprintf('%s.planned_disbursement_type', $plannedDisbursementForm)] = sprintf(
-                'nullable|in:%s',
-                $validPlannedDisbursementType,
-            );
-            $rules[sprintf('%s.period_start.0.date', $plannedDisbursementForm)] = sprintf(
-                'date|date_greater_than:1900|period_start_end:%s,90|required_with: %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s',
-                $diff,
-                sprintf('%s.planned_disbursement_type', $plannedDisbursementForm),
-                sprintf('%s.period_end.0.date', $plannedDisbursementForm),
-                sprintf('%s.value.0.amount', $plannedDisbursementForm),
-                sprintf('%s.value.0.currency', $plannedDisbursementForm),
-                sprintf('%s.value.0.value_date', $plannedDisbursementForm),
-                sprintf('%s.provider_org.0.ref', $plannedDisbursementForm),
-                sprintf('%s.provider_org.0.provider_org_id', $plannedDisbursementForm),
-                sprintf('%s.provider_org.0.type', $plannedDisbursementForm),
-                sprintf('%s.provider_org.0.narrative.0.narrative', $plannedDisbursementForm),
-                sprintf('%s.receiver_org.0.ref', $plannedDisbursementForm),
-                sprintf('%s.receiver_org.0.receiver_org_id', $plannedDisbursementForm),
-                sprintf('%s.receiver_org.0.type', $plannedDisbursementForm),
-                sprintf('%s.receiver_org.0.narrative.0.narrative', $plannedDisbursementForm),
-            );
-
-            $rules[sprintf('%s.period_end.0.date', $plannedDisbursementForm)] = sprintf(
-                'date|date_greater_than:1900|period_start_end:%s,90|after:%s.period_start.0.date|required_with: %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s',
-                $diff,
-                $plannedDisbursementForm,
-                sprintf('%s.planned_disbursement_type', $plannedDisbursementForm),
-                sprintf('%s.period_start.0.date', $plannedDisbursementForm),
-                sprintf('%s.value.0.amount', $plannedDisbursementForm),
-                sprintf('%s.value.0.currency', $plannedDisbursementForm),
-                sprintf('%s.value.0.value_date', $plannedDisbursementForm),
-                sprintf('%s.provider_org.0.ref', $plannedDisbursementForm),
-                sprintf('%s.provider_org.0.provider_org_id', $plannedDisbursementForm),
-                sprintf('%s.provider_org.0.type', $plannedDisbursementForm),
-                sprintf('%s.provider_org.0.narrative.0.narrative', $plannedDisbursementForm),
-                sprintf('%s.receiver_org.0.ref', $plannedDisbursementForm),
-                sprintf('%s.receiver_org.0.receiver_org_id', $plannedDisbursementForm),
-                sprintf('%s.receiver_org.0.type', $plannedDisbursementForm),
-                sprintf('%s.receiver_org.0.narrative.0.narrative', $plannedDisbursementForm),
-            );
-            $rules[sprintf('%s.value.0.amount', $plannedDisbursementForm)] = sprintf(
-                'nullable|numeric|required_with: %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s',
-                sprintf('%s.planned_disbursement_type', $plannedDisbursementForm),
-                sprintf('%s.period_start.0.date', $plannedDisbursementForm),
-                sprintf('%s.period_end.0.date', $plannedDisbursementForm),
-                sprintf('%s.value.0.currency', $plannedDisbursementForm),
-                sprintf('%s.value.0.value_date', $plannedDisbursementForm),
-                sprintf('%s.provider_org.0.ref', $plannedDisbursementForm),
-                sprintf('%s.provider_org.0.provider_org_id', $plannedDisbursementForm),
-                sprintf('%s.provider_org.0.type', $plannedDisbursementForm),
-                sprintf('%s.provider_org.0.narrative.0.narrative', $plannedDisbursementForm),
-                sprintf('%s.receiver_org.0.ref', $plannedDisbursementForm),
-                sprintf('%s.receiver_org.0.receiver_org_id', $plannedDisbursementForm),
-                sprintf('%s.receiver_org.0.type', $plannedDisbursementForm),
-                sprintf('%s.receiver_org.0.narrative.0.narrative', $plannedDisbursementForm),
-            );
-            $rules[sprintf('%s.value.0.currency', $plannedDisbursementForm)] = sprintf(
-                'sometimes|in:%s',
-                $validCurrency
-            );
-            $rules[sprintf('%s.value.0.value_date', $plannedDisbursementForm)] = sprintf(
-                'nullable|date|date_greater_than:1900|required_with: %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s',
-                sprintf('%s.planned_disbursement_type', $plannedDisbursementForm),
-                sprintf('%s.period_start.0.date', $plannedDisbursementForm),
-                sprintf('%s.period_end.0.date', $plannedDisbursementForm),
-                sprintf('%s.value.0.currency', $plannedDisbursementForm),
-                sprintf('%s.value.0.amount', $plannedDisbursementForm),
-                sprintf('%s.provider_org.0.ref', $plannedDisbursementForm),
-                sprintf('%s.provider_org.0.provider_org_id', $plannedDisbursementForm),
-                sprintf('%s.provider_org.0.type', $plannedDisbursementForm),
-                sprintf('%s.provider_org.0.narrative.0.narrative', $plannedDisbursementForm),
-                sprintf('%s.receiver_org.0.ref', $plannedDisbursementForm),
-                sprintf('%s.receiver_org.0.receiver_org_id', $plannedDisbursementForm),
-                sprintf('%s.receiver_org.0.type', $plannedDisbursementForm),
-                sprintf('%s.receiver_org.0.narrative.0.narrative', $plannedDisbursementForm),
-            );
-            $rules[sprintf('%s.provider_org.0.type', $plannedDisbursementForm)] = sprintf(
-                'nullable|in:%s',
-                $validOrganizationType
-            );
-            $rules[sprintf('%s.receiver_org.0.type', $plannedDisbursementForm)] = sprintf(
-                'nullable|in:%s',
-                $validOrganizationType
-            );
-        }
-
-        return $rules;
-    }
-
-    /**
-     * Return Valid PlannedDisbursement Type.
-     *
-     * @param $name
-     * @param string $directory
-     *
-     * @return array
-     * @throws \JsonException
-     */
-    protected function validPlannedDisbursementCodeList($name, string $directory = 'Activity'): array
-    {
-        return array_keys($this->loadCodeList($name, $directory));
+        return $this->request->getRulesForPlannedDisbursement(Arr::get($this->data, 'planned_disbursement', []));
     }
 
     /**
@@ -408,74 +366,7 @@ class PlannedDisbursement extends Element
      */
     public function messages(): array
     {
-        $messages = [];
-
-        foreach (Arr::get($this->data(), 'planned_disbursement', []) as $key => $value) {
-            $plannedDisbursementForm = sprintf('planned_disbursement.%s', $key);
-            $messages[sprintf('%s.planned_disbursement_type.%s', $plannedDisbursementForm, 'in')] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.planned_disbursement_type')]
-            );
-            $messages[sprintf('%s.period_start.0.date.%s', $plannedDisbursementForm, 'date')] = trans(
-                'validation.date',
-                ['attribute' => trans('elementForm.planned_disbursement_period_start_date')]
-            );
-            $messages[sprintf('%s.period_start.0.date.%s', $plannedDisbursementForm, 'date_greater_than')] = 'Planned disbursement period start date must be greater than 1900';
-            $messages[sprintf('%s.period_start.0.date.%s', $plannedDisbursementForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.planned_disbursement_period_start_date'), 'values' => 'any planned disbursement element values']
-            );
-            $messages[sprintf('%s.period_start.0.date.%s', $plannedDisbursementForm, 'period_start_end')] = 'The Planned Disbursement Period must not be longer than three months';
-            $messages[sprintf('%s.period_end.0.date.%s', $plannedDisbursementForm, 'date')] = trans(
-                'validation.date',
-                ['attribute' => trans('elementForm.planned_disbursement_period_end_date')]
-            );
-            $messages[sprintf('%s.period_end.0.date.%s', $plannedDisbursementForm, 'date_greater_than')] = 'Planned disbursement period end date must be greater than 1900';
-            $messages[sprintf('%s.period_end.0.date.%s', $plannedDisbursementForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.planned_disbursement_period_end_date'), 'values' => 'any planned disbursement element values']
-            );
-            $messages[sprintf('%s.period_end.0.date.%s', $plannedDisbursementForm, 'period_start_end')] = 'The Planned Disbursement Period must not be longer than three months';
-            $messages[sprintf('%s.period_end.0.date.%s', $plannedDisbursementForm, 'after')] = trans(
-                'validation.after',
-                ['attribute' => trans('elementForm.planned_disbursement_period_end_date'), 'date' => trans('elementForm.planned_disbursement_period_start_date')]
-            );
-            $messages[sprintf('%s.value.0.amount.%s', $plannedDisbursementForm, 'numeric')] = trans(
-                'validation.numeric',
-                ['attribute' => trans('elementForm.planned_disbursement_value')]
-            );
-            $messages[sprintf('%s.value.0.amount.%s', $plannedDisbursementForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.planned_disbursement_value'), 'values' => 'any planned disbursement element values']
-            );
-            $messages[sprintf('%s.value.0.currency.%s', $plannedDisbursementForm, 'in')] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.planned_disbursement_value_currency')]
-            );
-            $messages[sprintf('%s.value.0.currency.%s', $plannedDisbursementForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.planned_disbursement_value_currency'), 'values' => 'any planned disbursement element values']
-            );
-            $messages[sprintf('%s.value.0.value_date.%s', $plannedDisbursementForm, 'date')] = trans(
-                'validation.date',
-                ['attribute' => trans('elementForm.planned_disbursement_value_date')]
-            );
-            $messages[sprintf('%s.value.0.value_date.%s', $plannedDisbursementForm, 'date_greater_than')] = 'Planned disbursement value date must be greater than 1900';
-            $messages[sprintf('%s.value.0.value_date.%s', $plannedDisbursementForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.planned_disbursement_value_date'), 'values' => 'any planned disbursement element values']
-            );
-            $messages[sprintf('%s.provider_org.0.type.%s', $plannedDisbursementForm, 'in')] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.planned_disbursement_provider_org_type')]
-            );
-            $messages[sprintf('%s.receiver_org.0.type.%s', $plannedDisbursementForm, 'in')] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.planned_disbursement_receiver_org_type')]
-            );
-        }
-
-        return $messages;
+        return $this->request->getMessagesForPlannedDisbursement(Arr::get($this->data, 'planned_disbursement', []));
     }
 
     /**

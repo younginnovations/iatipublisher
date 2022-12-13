@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\Identifier\IdentifierRequest;
 
 /**
  * Class Identifier.
@@ -33,6 +34,11 @@ class Identifier extends Element
     protected array $template = [['activity_identifier' => '']];
 
     /**
+     * @var IdentifierRequest
+     */
+    private IdentifierRequest $request;
+
+    /**
      * Description constructor.
      * @param                   $fields
      * @param Validation        $factory
@@ -41,6 +47,7 @@ class Identifier extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new IdentifierRequest();
     }
 
     /**
@@ -56,6 +63,7 @@ class Identifier extends Element
             if (!is_null($values) && array_key_exists($key, array_flip($this->_csvHeader))) {
                 foreach ($values as $value) {
                     $this->map($value);
+                    break;
                 }
             }
         }
@@ -70,9 +78,7 @@ class Identifier extends Element
      */
     public function map($value): void
     {
-        if (!is_null($value)) {
-            $this->data[end($this->_csvHeader)] = $value;
-        }
+        $this->data[end($this->_csvHeader)] = $value;
     }
 
     /**
@@ -98,10 +104,7 @@ class Identifier extends Element
      */
     public function rules(): array
     {
-        return [
-            'activity_identifier' => 'required',
-            'activity_identifier' => sprintf('nullable|not_in:%s', implode(',', $this->activityIdentifiers ?? [])),
-        ];
+        return $this->request->rules(true);
     }
 
     /**
@@ -111,10 +114,7 @@ class Identifier extends Element
      */
     public function messages(): array
     {
-        return [
-            'activity_identifier.required' => trans('validation.required', ['attribute' => trans('elementForm.activity_identifier')]),
-            'activity_identifier.not_in'   => trans('validation.unique', ['attribute' => trans('elementForm.activity_identifier')]),
-        ];
+        return $this->request->messages();
     }
 
     /**

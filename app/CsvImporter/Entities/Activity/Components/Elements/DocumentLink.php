@@ -6,6 +6,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\Http\Requests\Activity\DocumentLink\DocumentLinkRequest;
 use Illuminate\Support\Arr;
 
 /**
@@ -36,6 +37,11 @@ class DocumentLink extends Element
     protected string $index = 'document_link';
 
     /**
+     * @var DocumentLinkRequest
+     */
+    private DocumentLinkRequest $request;
+
+    /**
      * DocumentLink constructor.
      *
      * @param            $fields
@@ -45,6 +51,7 @@ class DocumentLink extends Element
     {
         $this->prepare($fields);
         $this->factory = $factory;
+        $this->request = new DocumentLinkRequest();
     }
 
     /**
@@ -98,6 +105,10 @@ class DocumentLink extends Element
      */
     protected function setDocumentLinkUrl($key, $value, $index): void
     {
+        if (!isset($this->data['document_link'][$index]['url'])) {
+            $this->data['document_link'][$index]['url'] = '';
+        }
+
         if ($key === $this->_csvHeaders[0]) {
             $this->data['document_link'][$index]['url'] = $value;
         }
@@ -114,6 +125,10 @@ class DocumentLink extends Element
      */
     protected function setDocumentLinkFormat($key, $value, $index): void
     {
+        if (!isset($this->data['document_link'][$index]['format'])) {
+            $this->data['document_link'][$index]['format'] = '';
+        }
+
         if ($key === $this->_csvHeaders[1]) {
             $value = (!$value) ? '' : trim($value);
 
@@ -132,6 +147,13 @@ class DocumentLink extends Element
      */
     protected function setTitleNarrative($key, $value, $index): void
     {
+        if (!isset($this->data['document_link'][$index]['title'][0]['narrative'][0]['narrative'])) {
+            $this->data['document_link'][$index]['title'][0]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
+        }
+
         if ($key === $this->_csvHeaders[2]) {
             $value = $value ?: '';
             $narrative = [
@@ -139,7 +161,7 @@ class DocumentLink extends Element
                 'language'  => '',
             ];
 
-            $this->data['document_link'][$index]['title'][0]['narrative'][] = $narrative;
+            $this->data['document_link'][$index]['title'][0]['narrative'][0] = $narrative;
         }
     }
 
@@ -154,6 +176,13 @@ class DocumentLink extends Element
      */
     protected function setDescriptionNarrative($key, $value, $index): void
     {
+        if (!isset($this->data['document_link'][$index]['description'][0]['narrative'][0]['narrative'])) {
+            $this->data['document_link'][$index]['description'][0]['narrative'][0] = [
+                'narrative' => '',
+                'language'  => '',
+            ];
+        }
+
         if ($key === $this->_csvHeaders[3]) {
             $value = $value ?: '';
             $narrative = [
@@ -161,7 +190,7 @@ class DocumentLink extends Element
                 'language'  => '',
             ];
 
-            $this->data['document_link'][$index]['description'][0]['narrative'][] = $narrative;
+            $this->data['document_link'][$index]['description'][0]['narrative'][0] = $narrative;
         }
     }
 
@@ -176,6 +205,10 @@ class DocumentLink extends Element
      */
     protected function setDocumentLinkCategory($key, $value, $index): void
     {
+        if (!isset($this->data['document_link'][$index]['category'][0]['code'])) {
+            $this->data['document_link'][$index]['category'][0]['code'] = '';
+        }
+
         if ($key === $this->_csvHeaders[4]) {
             $value = (!$value) ? '' : trim($value);
 
@@ -184,7 +217,7 @@ class DocumentLink extends Element
             if ($value) {
                 foreach ($validDocumentCategory as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -205,6 +238,10 @@ class DocumentLink extends Element
      */
     protected function setDocumentLinkLanguage($key, $value, $index): void
     {
+        if (!isset($this->data['document_link'][$index]['language'][0]['code'])) {
+            $this->data['document_link'][$index]['language'][0]['code'] = '';
+        }
+
         if ($key === $this->_csvHeaders[5]) {
             $value = (!$value) ? '' : trim($value);
 
@@ -213,7 +250,7 @@ class DocumentLink extends Element
             if ($value) {
                 foreach ($validLanguage as $code => $name) {
                     if (strcasecmp($value, $name) === 0) {
-                        $value = strval($code);
+                        $value = (string) $code;
                         break;
                     }
                 }
@@ -234,6 +271,10 @@ class DocumentLink extends Element
      */
     protected function setDocumentLinkDate($key, $value, $index): void
     {
+        if (!isset($this->data['document_link'][$index]['document_date'][0]['date'])) {
+            $this->data['document_link'][$index]['document_date'][0]['date'] = '';
+        }
+
         if ($key === $this->_csvHeaders[6]) {
             $value = (!$value) ? '' : trim($value);
             $this->data['document_link'][$index]['document_date'][0]['date'] = dateFormat('Y-m-d', $value);
@@ -248,87 +289,7 @@ class DocumentLink extends Element
      */
     public function rules(): array
     {
-        $validDocumentFormat = implode(',', $this->validDocumentLinkCodeList('FileFormat'));
-        $validDocumentCategory = implode(',', $this->validDocumentLinkCodeList('DocumentCategory'));
-        $validDocumentLanguage = implode(',', $this->validDocumentLinkCodeList('Language'));
-
-        $rules = [];
-
-        foreach (Arr::get($this->data(), 'document_link', []) as $key => $value) {
-            $documentLinkForm = sprintf('document_link.%s', $key);
-            $rules[sprintf('%s.url', $documentLinkForm)] = sprintf(
-                'url|required_with: %s,%s,%s,%s,%s,%s',
-                sprintf('%s.format', $documentLinkForm),
-                sprintf('%s.title.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.description.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.category.0.code', $documentLinkForm),
-                sprintf('%s.language.0.code', $documentLinkForm),
-                sprintf('%s.document_date.0.date', $documentLinkForm),
-            );
-            $rules[sprintf('%s.format', $documentLinkForm)] = sprintf(
-                'in:%s|required_with: %s,%s,%s,%s,%s,%s',
-                $validDocumentFormat,
-                sprintf('%s.url', $documentLinkForm),
-                sprintf('%s.title.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.description.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.category.0.code', $documentLinkForm),
-                sprintf('%s.language.0.code', $documentLinkForm),
-                sprintf('%s.document_date.0.date', $documentLinkForm),
-            );
-            $rules[sprintf('%s.title.0.narrative.0.narrative', $documentLinkForm)] = sprintf(
-                'required_with: %s,%s,%s,%s,%s,%s',
-                sprintf('%s.url', $documentLinkForm),
-                sprintf('%s.format', $documentLinkForm),
-                sprintf('%s.description.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.category.0.code', $documentLinkForm),
-                sprintf('%s.language.0.code', $documentLinkForm),
-                sprintf('%s.document_date.0.date', $documentLinkForm),
-            );
-            $rules[sprintf('%s.category.0.code', $documentLinkForm)] = sprintf(
-                'in:%s|required_with: %s,%s,%s,%s,%s,%s',
-                $validDocumentCategory,
-                sprintf('%s.url', $documentLinkForm),
-                sprintf('%s.format', $documentLinkForm),
-                sprintf('%s.description.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.title.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.language.0.code', $documentLinkForm),
-                sprintf('%s.document_date.0.date', $documentLinkForm),
-            );
-            $rules[sprintf('%s.language.0.code', $documentLinkForm)] = sprintf(
-                'in:%s|required_with: %s,%s,%s,%s,%s,%s',
-                $validDocumentLanguage,
-                sprintf('%s.url', $documentLinkForm),
-                sprintf('%s.format', $documentLinkForm),
-                sprintf('%s.title.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.description.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.category.0.code', $documentLinkForm),
-                sprintf('%s.document_date.0.date', $documentLinkForm),
-            );
-            $rules[sprintf('%s.document_date.0.date', $documentLinkForm)] = sprintf(
-                'date|date_greater_than:1900|required_with: %s,%s,%s,%s,%s,%s',
-                sprintf('%s.url', $documentLinkForm),
-                sprintf('%s.format', $documentLinkForm),
-                sprintf('%s.title.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.description.0.narrative.0.narrative', $documentLinkForm),
-                sprintf('%s.category.0.code', $documentLinkForm),
-                sprintf('%s.language.0.code', $documentLinkForm),
-            );
-        }
-
-        return $rules;
-    }
-
-    /**
-     * Return Valid DocumentLink Type.
-     *
-     * @param $name
-     *
-     * @return array
-     * @throws \JsonException
-     */
-    protected function validDocumentLinkCodeList($name): array
-    {
-        return array_keys($this->loadCodeList($name));
+        return $this->request->getRulesForDocumentLink(Arr::get($this->data(), 'document_link', []));
     }
 
     /**
@@ -338,61 +299,7 @@ class DocumentLink extends Element
      */
     public function messages(): array
     {
-        $messages = [];
-
-        foreach (Arr::get($this->data(), 'document_link', []) as $key => $value) {
-            $documentLinkForm = sprintf('document_link.%s', $key);
-            $messages[sprintf('%s.url.%s', $documentLinkForm, 'url')] = trans(
-                'validation.url',
-                ['attribute' => trans('elementForm.document_link_url')]
-            );
-            $messages[sprintf('%s.url.%s', $documentLinkForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.document_link_url'), 'values' => 'format, title, description, category, language or date']
-            );
-            $messages[sprintf('%s.format.%s', $documentLinkForm, 'in')] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.document_link_format')]
-            );
-            $messages[sprintf('%s.format.%s', $documentLinkForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.document_link_format'), 'values' => 'url, title, description, category, language or date']
-            );
-            $messages[sprintf('%s.title.0.narrative.0.narrative.%s', $documentLinkForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.document_link_format'), 'values' => 'url, format, description, category, language or date']
-            );
-            $messages[sprintf('%s.category.0.code.%s', $documentLinkForm, 'in')] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.document_link_category')]
-            );
-            $messages[sprintf('%s.category.0.code.%s', $documentLinkForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.document_link_category'), 'values' => 'url, format, title, description, language or date']
-            );
-            $messages[sprintf('%s.language.0.code.%s', $documentLinkForm, 'in')] = trans(
-                'validation.code_list',
-                ['attribute' => trans('elementForm.document_link_language')]
-            );
-            $messages[sprintf('%s.language.0.code.%s', $documentLinkForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.document_link_language'), 'values' => 'url, format, title, description, category or date']
-            );
-            $messages[sprintf('%s.document_date.0.date.%s', $documentLinkForm, 'date')] = trans(
-                'validation.date',
-                ['attribute' => trans('elementForm.document_link_date')]
-            );
-            $messages[sprintf('%s.document_date.0.date.%s', $documentLinkForm, 'date_greater_than')] = trans(
-                'validation.date_greater_than',
-                ['value' => '1900']
-            );
-            $messages[sprintf('%s.document_date.0.date.%s', $documentLinkForm, 'required_with')] = trans(
-                'validation.required_with',
-                ['attribute' => trans('elementForm.document_link_date'), 'values' => 'url, format, title, description, category or language']
-            );
-        }
-
-        return $messages;
+        return $this->request->getMessagesForDocumentLink(Arr::get($this->data(), 'document_link', []));
     }
 
     /**

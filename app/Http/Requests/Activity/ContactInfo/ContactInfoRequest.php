@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\ContactInfo;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use Illuminate\Support\Arr;
 
 /**
  * Class ContactInfoRequest.
@@ -38,23 +39,29 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForContactInfo(array $formFields): array
+    public function getRulesForContactInfo(array $formFields): array
     {
         $rules = [];
 
         foreach ($formFields as $contactInfoIndex => $contactInfo) {
             $contactInfoForm = sprintf('contact_info.%s', $contactInfoIndex);
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForDepartment($contactInfo['department'], $contactInfoForm),
-                $this->getRulesForOrganisation($contactInfo['organisation'], $contactInfoForm),
-                $this->getRulesForPersonName($contactInfo['person_name'], $contactInfoForm),
-                $this->getRulesForJobTitle($contactInfo['job_title'], $contactInfoForm),
-                $this->getRulesForMailingAddress($contactInfo['mailing_address'], $contactInfoForm),
-                $this->getRulesForTelephone($contactInfo['telephone'], $contactInfoForm),
-                $this->getRulesForEmail($contactInfo['email'], $contactInfoForm),
-                $this->getRulesForWebsite($contactInfo['website'], $contactInfoForm)
-            );
+            $rules[sprintf('%s.type', $contactInfoForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('ContactType', 'Activity', false)));
+            $tempRules = [
+                $this->getRulesForDepartment(Arr::get($contactInfo, 'department', []), $contactInfoForm),
+                $this->getRulesForOrganisation(Arr::get($contactInfo, 'organisation', []), $contactInfoForm),
+                $this->getRulesForPersonName(Arr::get($contactInfo, 'person_name', []), $contactInfoForm),
+                $this->getRulesForJobTitle(Arr::get($contactInfo, 'job_title', []), $contactInfoForm),
+                $this->getRulesForMailingAddress(Arr::get($contactInfo, 'mailing_address', []), $contactInfoForm),
+                $this->getRulesForTelephone(Arr::get($contactInfo, 'telephone', []), $contactInfoForm),
+                $this->getRulesForEmail(Arr::get($contactInfo, 'email', []), $contactInfoForm),
+                $this->getRulesForWebsite(Arr::get($contactInfo, 'website', []), $contactInfoForm),
+            ];
+
+            foreach ($tempRules as $tempRule) {
+                foreach ($tempRule as $idx => $rule) {
+                    $rules[$idx] = $rule;
+                }
+            }
         }
 
         return $rules;
@@ -67,23 +74,29 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForContactInfo(array $formFields): array
+    public function getMessagesForContactInfo(array $formFields): array
     {
         $messages = [];
 
         foreach ($formFields as $contactInfoIndex => $contactInfo) {
             $contactInfoForm = sprintf('contact_info.%s', $contactInfoIndex);
-            $messages = array_merge(
-                $messages,
-                $this->getMessagesForDepartment($contactInfo['department'], $contactInfoForm),
-                $this->getMessagesForOrganisation($contactInfo['organisation'], $contactInfoForm),
-                $this->getMessagesForPersonName($contactInfo['person_name'], $contactInfoForm),
-                $this->getMessagesForJobTitle($contactInfo['job_title'], $contactInfoForm),
-                $this->getMessagesForMailingAddress($contactInfo['mailing_address'], $contactInfoForm),
-                $this->getMessagesForTelephone($contactInfo['telephone'], $contactInfoForm),
-                $this->getMessagesForEmail($contactInfo['email'], $contactInfoForm),
-                $this->getMessagesForWebsite($contactInfo['website'], $contactInfoForm)
-            );
+            $messages[sprintf('%s.type.in', $contactInfoForm)] = 'The contact info type is invalid.';
+            $tempMessages = [
+                $this->getMessagesForDepartment(Arr::get($contactInfo, 'department', []), $contactInfoForm),
+                $this->getMessagesForOrganisation(Arr::get($contactInfo, 'organisation', []), $contactInfoForm),
+                $this->getMessagesForPersonName(Arr::get($contactInfo, 'person_name', []), $contactInfoForm),
+                $this->getMessagesForJobTitle(Arr::get($contactInfo, 'job_title', []), $contactInfoForm),
+                $this->getMessagesForMailingAddress(Arr::get($contactInfo, 'mailing_address', []), $contactInfoForm),
+                $this->getMessagesForTelephone(Arr::get($contactInfo, 'telephone', []), $contactInfoForm),
+                $this->getMessagesForEmail(Arr::get($contactInfo, 'email', []), $contactInfoForm),
+                $this->getMessagesForWebsite(Arr::get($contactInfo, 'website', []), $contactInfoForm),
+            ];
+
+            foreach ($tempMessages as $tempMessage) {
+                foreach ($tempMessage as $idx => $message) {
+                    $messages[$idx] = $message;
+                }
+            }
         }
 
         return $messages;
@@ -103,7 +116,10 @@ class ContactInfoRequest extends ActivityBaseRequest
 
         foreach ($formFields as $organisationIndex => $organisation) {
             $organisationForm = sprintf('%s.organisation.%s', $formBase, $organisationIndex);
-            $rules = array_merge($rules, $this->getRulesForNarrative($organisation['narrative'], $organisationForm));
+
+            foreach ($this->getRulesForNarrative($organisation['narrative'], $organisationForm) as $organisationNarrativeIndex => $organisationNarrativeRules) {
+                $rules[$organisationNarrativeIndex] = $organisationNarrativeRules;
+            }
         }
 
         return $rules;
@@ -123,7 +139,10 @@ class ContactInfoRequest extends ActivityBaseRequest
 
         foreach ($formFields as $organisationIndex => $organisation) {
             $organisationForm = sprintf('%s.organisation.%s', $formBase, $organisationIndex);
-            $messages = array_merge($messages, $this->getMessagesForNarrative($organisation['narrative'], $organisationForm));
+
+            foreach ($this->getMessagesForNarrative($organisation['narrative'], $organisationForm) as $organisationNarrativeIndex => $organisationNarrativeMessages) {
+                $messages[$organisationNarrativeIndex] = $organisationNarrativeMessages;
+            }
         }
 
         return $messages;
@@ -143,7 +162,10 @@ class ContactInfoRequest extends ActivityBaseRequest
 
         foreach ($formFields as $departmentIndex => $department) {
             $departmentForm = sprintf('%s.department.%s', $formBase, $departmentIndex);
-            $rules = array_merge($rules, $this->getRulesForNarrative($department['narrative'], $departmentForm));
+
+            foreach ($this->getRulesForNarrative($department['narrative'], $departmentForm) as $departmentNarrativeIndex => $departmentNarrativeRules) {
+                $rules[$departmentNarrativeIndex] = $departmentNarrativeRules;
+            }
         }
 
         return $rules;
@@ -163,7 +185,10 @@ class ContactInfoRequest extends ActivityBaseRequest
 
         foreach ($formFields as $departmentIndex => $department) {
             $departmentForm = sprintf('%s.department.%s', $formBase, $departmentIndex);
-            $messages = array_merge($messages, $this->getMessagesForNarrative($department['narrative'], $departmentForm));
+
+            foreach ($this->getMessagesForNarrative($department['narrative'], $departmentForm) as $departmentNarrativeIndex => $departmentNarrativeMessages) {
+                $messages[$departmentNarrativeIndex] = $departmentNarrativeMessages;
+            }
         }
 
         return $messages;
@@ -183,7 +208,10 @@ class ContactInfoRequest extends ActivityBaseRequest
 
         foreach ($formFields as $personNameIndex => $personName) {
             $personNameForm = sprintf('%s.person_name.%s', $formBase, $personNameIndex);
-            $rules = array_merge($rules, $this->getRulesForNarrative($personName['narrative'], $personNameForm));
+
+            foreach ($this->getRulesForNarrative($personName['narrative'], $personNameForm) as $personNameNarrativeIndex => $personNameNarrativeRules) {
+                $rules[$personNameNarrativeIndex] = $personNameNarrativeRules;
+            }
         }
 
         return $rules;
@@ -203,7 +231,10 @@ class ContactInfoRequest extends ActivityBaseRequest
 
         foreach ($formFields as $personNameIndex => $personName) {
             $personNameForm = sprintf('%s.person_name.%s', $formBase, $personNameIndex);
-            $messages = array_merge($messages, $this->getMessagesForNarrative($personName['narrative'], $personNameForm));
+
+            foreach ($this->getMessagesForNarrative($personName['narrative'], $personNameForm) as $personNameNarrativeIndex => $personNameNarrativeMessages) {
+                $messages[$personNameNarrativeIndex] = $personNameNarrativeMessages;
+            }
         }
 
         return $messages;
@@ -223,7 +254,10 @@ class ContactInfoRequest extends ActivityBaseRequest
 
         foreach ($formFields as $jobTitleIndex => $jobTitle) {
             $jobTitleForm = sprintf('%s.job_title.%s', $formBase, $jobTitleIndex);
-            $rules = array_merge($rules, $this->getRulesForNarrative($jobTitle['narrative'], $jobTitleForm));
+
+            foreach ($this->getRulesForNarrative($jobTitle['narrative'], $jobTitleForm) as $jobTitleNarrativeIndex => $jobTitleNarrativeRules) {
+                $rules[$jobTitleNarrativeIndex] = $jobTitleNarrativeRules;
+            }
         }
 
         return $rules;
@@ -243,7 +277,10 @@ class ContactInfoRequest extends ActivityBaseRequest
 
         foreach ($formFields as $jobTitleIndex => $jobTitle) {
             $jobTitleForm = sprintf('%s.job_title.%s', $formBase, $jobTitleIndex);
-            $messages = array_merge($messages, $this->getMessagesForNarrative($jobTitle['narrative'], $jobTitleForm));
+
+            foreach ($this->getMessagesForNarrative($jobTitle['narrative'], $jobTitleForm) as $jobTitleNarrativeIndex => $jobTitleNarrativeMessages) {
+                $messages[$jobTitleNarrativeIndex] = $jobTitleNarrativeMessages;
+            }
         }
 
         return $messages;
@@ -263,7 +300,10 @@ class ContactInfoRequest extends ActivityBaseRequest
 
         foreach ($formFields as $mailingAddressIndex => $mailingAddress) {
             $mailingAddressForm = sprintf('%s.mailing_address.%s', $formBase, $mailingAddressIndex);
-            $rules = array_merge($rules, $this->getRulesForNarrative($mailingAddress['narrative'], $mailingAddressForm));
+
+            foreach ($this->getRulesForNarrative($mailingAddress['narrative'], $mailingAddressForm) as $mailingAddressNarrativeIndex => $mailingAddressNarrativeRules) {
+                $rules[$mailingAddressNarrativeIndex] = $mailingAddressNarrativeRules;
+            }
         }
 
         return $rules;
@@ -283,7 +323,10 @@ class ContactInfoRequest extends ActivityBaseRequest
 
         foreach ($formFields as $mailingAddressIndex => $mailingAddress) {
             $mailingAddressForm = sprintf('%s.mailing_address.%s', $formBase, $mailingAddressIndex);
-            $messages = array_merge($messages, $this->getMessagesForNarrative($mailingAddress['narrative'], $mailingAddressForm));
+
+            foreach ($this->getMessagesForNarrative($mailingAddress['narrative'], $mailingAddressForm) as $mailingAddressNarrativeIndex => $mailingAddressNarrativeMessages) {
+                $messages[$mailingAddressNarrativeIndex] = $mailingAddressNarrativeMessages;
+            }
         }
 
         return $messages;
@@ -321,10 +364,10 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $telephoneIndex => $telephone) {
-            $messages[sprintf('%s.telephone.%s.telephone.numeric', $formBase, $telephoneIndex)] = 'Telephone number must be valid numeric value';
-            $messages[sprintf('%s.telephone.%s.telephone.regex', $formBase, $telephoneIndex)] = 'Telephone number is invalid';
-            $messages[sprintf('%s.telephone.%s.telephone.min', $formBase, $telephoneIndex)] = 'Telephone number must have atleast 7 digits.';
-            $messages[sprintf('%s.telephone.%s.telephone.max', $formBase, $telephoneIndex)] = 'Telephone number must not have more than 20 digits.';
+            $messages[sprintf('%s.telephone.%s.telephone.numeric', $formBase, $telephoneIndex)] = 'The contact info telephone number must be valid numeric value';
+            $messages[sprintf('%s.telephone.%s.telephone.regex', $formBase, $telephoneIndex)] = 'The contact info telephone number is invalid';
+            $messages[sprintf('%s.telephone.%s.telephone.min', $formBase, $telephoneIndex)] = 'The contact info telephone number must have atleast 7 digits.';
+            $messages[sprintf('%s.telephone.%s.telephone.max', $formBase, $telephoneIndex)] = 'The contact info telephone number must not have more than 20 digits.';
         }
 
         return $messages;
@@ -362,8 +405,8 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $emailIndex => $email) {
-            $messages[sprintf('%s.email.%s.email.email', $formBase, $emailIndex)] = 'Email must be valid';
-            $messages[sprintf('%s.email.%s.email.regex', $formBase, $emailIndex)] = 'The email format is invalid';
+            $messages[sprintf('%s.email.%s.email.email', $formBase, $emailIndex)] = 'The contact info email must be valid';
+            $messages[sprintf('%s.email.%s.email.regex', $formBase, $emailIndex)] = 'The contact info email format is invalid';
         }
 
         return $messages;
@@ -401,7 +444,7 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $websiteIndex => $website) {
-            $messages[sprintf('%s.website.%s.website.url', $formBase, $websiteIndex)] = 'The website url must be valid url.';
+            $messages[sprintf('%s.website.%s.website.url', $formBase, $websiteIndex)] = 'The contact info website url must be valid url.';
         }
 
         return $messages;

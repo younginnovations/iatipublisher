@@ -41,10 +41,14 @@ class ReportingOrgRequest extends ActivityBaseRequest
     public function getRulesForReportingOrganization(array $formFields): array
     {
         $rules = [];
+        $reportingOrganizationTypes = implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
+
+        $rules['reporting_org'] = 'size:1';
 
         foreach ($formFields as $reportingOrganizationIndex => $reportingOrganization) {
             $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
             $rules[$reportingOrganizationForm . '.ref'] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
+            $rules[$reportingOrganizationForm . '.type'] = sprintf('nullable|in:%s', $reportingOrganizationTypes);
 
             $narrativeRules = $this->getRulesForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
 
@@ -67,10 +71,13 @@ class ReportingOrgRequest extends ActivityBaseRequest
     {
         $messages = [];
 
+        $messages['reporting_org.size'] = 'The reporting org should have only one value.';
+
         foreach ($formFields as $reportingOrganizationIndex => $reportingOrganization) {
             $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
 
-            $messages[$reportingOrganizationForm . '.ref.not_regex'] = 'The @ref format is invalid.';
+            $messages[$reportingOrganizationForm . '.ref.not_regex'] = 'The reference format for reporting organisation is invalid.';
+            $messages[$reportingOrganizationForm . '.type.in'] = 'The type for reporting organisation is invalid.';
 
             $narrativeMessages = $this->getMessagesForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
 
