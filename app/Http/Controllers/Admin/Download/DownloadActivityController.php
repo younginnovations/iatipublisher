@@ -106,6 +106,7 @@ class DownloadActivityController extends Controller
                 }
 
                 $mergedContent = $this->downloadActivityService->getCombinedXmlFile($activities);
+                $filename = $this->downloadActivityService->getDownloadFilename($this->downloadActivityService->getOrganizationPublisherId());
 
                 if (!$download && !$this->xmlServiceProvider->isValidAgainstSchema($mergedContent)) {
                     return response()->json(['success' => false, 'message' => json_encode(libxml_get_errors(), JSON_THROW_ON_ERROR)]);
@@ -116,7 +117,7 @@ class DownloadActivityController extends Controller
                         'Content-Type' => 'text/xml',
                         'Cache-Control' => 'public',
                         'Content-Description' => 'File Transfer',
-                        'Content-Disposition' => 'attachment; filename=' . 'success' . '.xml',
+                        'Content-Disposition' => 'attachment; filename=' . $filename . '.xml',
                         'Content-Transfer-Encoding' => 'binary',
                     ]);
             }
