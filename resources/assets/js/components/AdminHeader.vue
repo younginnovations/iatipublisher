@@ -66,7 +66,7 @@
             >
               <ul class="flex-col">
                 <li>
-                  <a href="#" :class="liClass" @click="modalValue = true"
+                  <a :class="liClass" @click="modalValue = true"
                     >Add activity manually</a
                   >
                 </li>
@@ -361,7 +361,8 @@ onUnmounted(() => {
     }
   }
 }
-.dropdown-btn:hover {
+.dropdown-btn:hover,
+.dropdown-btn:active {
   .profile__dropdown {
     @apply visible opacity-100;
     transform: translateY(10px);
