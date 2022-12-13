@@ -39,15 +39,15 @@ class Result
         $this->documentLinkTemplate = $template['result']['document_link'];
 
         foreach ($results as $index => $result) {
-            $value =
+            $value = Arr::get($result, 'value', []) ?? [];
             $this->result[$index] = $template['result'];
             $this->result[$index]['type'] = $this->attributes($result, 'type');
             $this->result[$index]['aggregation_status'] = $this->attributes($result, 'aggregation-status');
-            $this->result[$index]['title'][0]['narrative'] = $this->value(Arr::get($result, 'value', []), 'title');
-            $this->result[$index]['description'][0]['narrative'] = $this->value(Arr::get($result, 'value', []), 'description');
+            $this->result[$index]['title'][0]['narrative'] = $this->value($value, 'title');
+            $this->result[$index]['description'][0]['narrative'] = $this->value($value, 'description');
             $this->result[$index]['document_link'] = $this->documentLink($result, $index);
             $this->result[$index]['indicator'] = $this->indicator($result, $index);
-            $this->result[$index]['reference'] = $this->resultReference($result['value'], [0 => $template['result']]);
+            $this->result[$index]['reference'] = $this->resultReference($value, [0 => $template['result']]);
         }
 
         return $this->result;
@@ -112,9 +112,12 @@ class Result
         $referenceData = Arr::get($resultTemplate, '0.reference');
 
         foreach ($references as $referenceIndex => $reference) {
-            $referenceData[$referenceIndex]['vocabulary'] = Arr::get($reference, 'vocabulary', null);
-            $referenceData[$referenceIndex]['code'] = Arr::get($reference, 'code', null);
-            $referenceData[$referenceIndex]['vocabulary_uri'] = Arr::get($reference, 'vocabulary-uri', null);
+            $vocabulary = Arr::get($reference, 'vocabulary');
+            $code = Arr::get($reference, 'code');
+            $vocabulary_uri = Arr::get($reference, 'vocabulary_uri');
+            $referenceData[$referenceIndex]['vocabulary'] = $vocabulary && !empty($vocabulary) ? $vocabulary : null;
+            $referenceData[$referenceIndex]['code'] = $code && !empty($code) ? $code : null;
+            $referenceData[$referenceIndex]['vocabulary_uri'] = $vocabulary_uri && !empty($vocabulary_uri) ? $vocabulary_uri : null;
         }
 
         return $referenceData;

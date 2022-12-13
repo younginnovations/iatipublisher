@@ -237,7 +237,7 @@ class ImportXmlService
         if ($results) {
             foreach ($results as $result) {
                 $result = (array) $result;
-                $indicators = $result['indicator'];
+                $indicators = Arr::get($result, 'indicator', []);
                 unset($result['indicator']);
 
                 $savedResult = $this->resultRepository->store([
@@ -247,7 +247,9 @@ class ImportXmlService
 
                 foreach ($indicators as $indicator) {
                     $indicator = (array) $indicator;
-                    $periods = $indicator['period'];
+                    $periods = Arr::get($indicator, 'period', []);
+                    unset($indicator['period']);
+
                     $savedIndicator = $this->indicatorRepository->store([
                         'result_id' => $savedResult['id'],
                         'indicator' => $indicator,
