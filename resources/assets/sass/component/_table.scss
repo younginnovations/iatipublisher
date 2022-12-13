@@ -1,7 +1,8 @@
 .iati-list-table {
   @apply rounded-lg border  border-n-20 text-left;
   max-width: calc(100vw - 45px);
-  overflow-x: scroll;
+  overflow-x: auto;
+  height: 675px;
 
   table {
     @apply table w-full  bg-white;
