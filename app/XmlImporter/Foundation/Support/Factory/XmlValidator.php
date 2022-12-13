@@ -170,15 +170,16 @@ class XmlValidator
     }
 
     /**
-     * @param bool $shouldBeUnique
+     * @param bool $isDuplicate
+     * @param bool $duplicateTransaction
      *
      * @return array
      */
-    public function validateActivity(bool $isDuplicate): array
+    public function validateActivity(bool $isDuplicate, bool $duplicateTransaction): array
     {
         return $this->factory->initialize($this->activity, $this->rules(), $this->messages())
             ->passes()
-            ->withErrors($isDuplicate);
+            ->withErrors($isDuplicate, $duplicateTransaction);
     }
 
     public function getBaseRules($baseRules, $element, $data, $indexRequired = true): array

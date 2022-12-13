@@ -28,28 +28,6 @@ class XmlService
     }
 
     /**
-     * Get messages for schema errors.
-     *
-     * @param $tempXmlContent
-     *
-     * @return array
-     */
-    public function getSchemaErrors($tempXmlContent): array
-    {
-        libxml_use_internal_errors(true);
-        $xml = new \DOMDocument();
-        $xml->loadXML($tempXmlContent);
-        $schemaPath = app_path('/XmlImporter/Template/iati-activities-schema.xsd');
-        $messages = [];
-
-        if (!$xml->schemaValidate($schemaPath)) {
-            $messages = $this->libxml_display_errors();
-        }
-
-        return $messages;
-    }
-
-    /**
      * formats uploaded xml.
      *
      * @param $tempXmlContent
