@@ -35,15 +35,23 @@
             <?php if ($options['help_block']['text']) : ?>
                 <?php if ($options['help_block']['text']) : ?>
                     <div class="flex">
-                        <p class="help-button text-xs text-n-40 hover:text-spring-50 mb-1 cursor-pointer inline-block">Help</p>
-                        <div class="help-button-content hidden">
-                            <p class="font-bold text-bluecoral">
-                                <?= $options['help_block']['title'] ?>
+                        <?php if ($options['help_block']['title'] === 'language' || $options['help_block']['title'] === "currency" ) : ?>
+                            <p class="text-xs text-n-40 hover:text-spring-50 mb-1 cursor-pointer inline-block">
+                                <?php echo $options['help_block']['text']; ?>
                             </p>
-                            <div class="space-y-1.5">
-                                <?= $options['help_block']['text'] ?>
+                        <?php else : ?>
+                            <p class="help-button text-xs text-n-40 hover:text-spring-50 mb-1 cursor-pointer inline-block">
+                                Help
+                            </p>
+                            <div class="help-button-content hidden">
+                                <p class="font-bold text-bluecoral">
+                                    <?= $options['help_block']['title'] ?>
+                                </p>
+                                <div class="space-y-1.5">
+                                    <?= $options['help_block']['text'] ?>
+                                </div>
                             </div>
-                        </div>
+                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
             <?php endif; ?>
