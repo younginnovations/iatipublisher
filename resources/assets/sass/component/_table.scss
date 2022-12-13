@@ -1,12 +1,11 @@
 .iati-list-table {
-  @apply rounded-lg border  border-n-20 text-left;
+  @apply rounded-lg border border-n-20 text-left;
   max-width: calc(100vw - 45px);
   overflow-x: auto;
   height: 675px;
 
   table {
-    overflow-x: hidden !important;
-    @apply table  bg-white;
+    @apply table w-full  bg-white;
 
     // min-width: 800px !important ;
   }
@@ -160,6 +159,8 @@
 }
 .iati-list-table {
   td:nth-child(1) {
-    max-width: 130px !important;
+    @media (max-width: 700px) {
+      max-width: 130px !important;
+    }
   }
 }
