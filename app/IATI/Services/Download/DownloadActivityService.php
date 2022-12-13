@@ -7,6 +7,7 @@ namespace App\IATI\Services\Download;
 use App\CsvImporter\Traits\ChecksCsvHeaders;
 use App\IATI\Elements\Xml\XmlGenerator;
 use App\IATI\Repositories\Activity\ActivityRepository;
+use Illuminate\Support\Arr;
 
 /**
  * Class DownloadActivityService.
@@ -80,5 +81,40 @@ class DownloadActivityService
     public function getCombinedXmlFile($activities): string
     {
         return $this->xmlGenerator->getCombinedXmlFile($activities);
+    }
+
+    /**
+     * Get organization publisher id.
+     *
+     * @return null|string
+     */
+    public function getOrganizationPublisherId(): ?string
+    {
+        $publisherId = null;
+        $organization = auth()->user()->organization;
+
+        if ($organization && $organization->settings) {
+            $publisherInfo = $organization->settings->publishing_info;
+
+            if ($publisherInfo) {
+                $publisherId = Arr::get($publisherInfo, 'publisher_id', 'Not Available');
+            }
+        }
+
+        return $publisherId;
+    }
+
+    /**
+     * Returns name for the file to be downloaded.
+     *
+     * @param $publisherId
+     *
+     * @return string
+     */
+    public function getDownloadFilename($publisherId): string
+    {
+        $filename = $publisherId ? $publisherId . '_' : '';
+
+        return $filename . (now()->toDateString());
     }
 }
