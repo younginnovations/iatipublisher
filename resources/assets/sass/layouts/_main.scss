@@ -110,3 +110,9 @@ main {
   grid-template-rows: auto 1fr auto; // Line 2
   min-height: calc(100vh - 465px); // Line 3
 }
+.activities__sidebar {
+  flex-shrink: 0;
+  @media (max-width: 700px) {
+    width: 220px !important;
+  }
+}

@@ -92,6 +92,7 @@
               @click="deleteActivityElement"
             />
           </div>
+
           <svg-vue
             v-if="activityCoreElements().includes(title)"
             class="mr-1.5"
