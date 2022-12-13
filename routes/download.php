@@ -15,5 +15,5 @@ use Illuminate\Support\Facades\Route;
 */
 Route::group([], static function () {
     Route::get('activities/download-csv', [DownloadActivityController::class, 'downloadActivityCsv'])->name('activities.download-csv');
-    Route::get('activities/download-xml', [DownloadActivityController::class, 'downloadActivityXml'])->name('activities.download-xml');
+    Route::get('activities/download-xml/{download?}', [DownloadActivityController::class, 'downloadActivityXml'])->name('activities.download-xml');
 });

@@ -402,6 +402,6 @@ class ActivityRepository extends Repository
      */
     public function getActivitiesToDownload($activityIds): object
     {
-        return $this->model->whereIn('id', $activityIds)->where('org_id', auth()->user()->organization->id)->get();
+        return $this->model->whereIn('id', $activityIds)->where('org_id', auth()->user()->organization->id)->with(['transactions', 'results', 'organization.settings'])->get();
     }
 }
