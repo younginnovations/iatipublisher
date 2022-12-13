@@ -46,8 +46,14 @@ class Result
             $this->result[$index]['title'][0]['narrative'] = $this->value($value, 'title');
             $this->result[$index]['description'][0]['narrative'] = $this->value($value, 'description');
             $this->result[$index]['document_link'] = $this->documentLink($result, $index);
-            $this->result[$index]['indicator'] = $this->indicator($result, $index);
             $this->result[$index]['reference'] = $this->resultReference($value, [0 => $template['result']]);
+            $indicators = $this->filterValues(Arr::get($result, 'value', []), 'indicator');
+
+            if (implode('', Arr::flatten($indicators))) {
+                $this->result[$index]['indicator'] = $this->indicator($result, $index);
+            } else {
+                unset($this->result[$index]['indicator']);
+            }
         }
 
         return $this->result;
@@ -68,7 +74,7 @@ class Result
         foreach ($indicators as $key => $indicator) {
             $indicator = $indicator['indicator'];
 
-            if (!empty($indicator)) {
+            if (!empty($indicator) && $indicator !== '') {
                 $indicatorData[$key]['measure'] = $indicatorAttributes[$key]['measure'];
                 $indicatorData[$key]['ascending'] = $indicatorAttributes[$key]['ascending'];
                 $indicatorData[$key]['aggregation_status'] = Arr::get($indicatorAttributes[$key], 'aggregation-status', '');
@@ -76,8 +82,14 @@ class Result
                 $indicatorData[$key]['description'][0]['narrative'] = $this->value($indicator, 'description');
                 $indicatorData[$key]['reference'] = $this->reference($indicator, $indicatorTemplate);
                 $indicatorData[$key]['baseline'] = $this->baseline($indicator, $indicatorTemplate, $index);
-                $indicatorData[$key]['period'] = $this->period($indicator, $indicatorTemplate, $index);
                 $indicatorData[$index]['document_link'] = $this->documentLink(['value' => $indicator], $index);
+                $periods = $this->filterValues(Arr::get($indicator, 'value', []), 'period');
+
+                if (implode('', Arr::flatten($periods))) {
+                    $indicatorData[$key]['period'] = $this->period($indicator, $indicatorTemplate, $index);
+                } else {
+                    unset($indicatorData[$key]['period']);
+                }
             }
         }
 

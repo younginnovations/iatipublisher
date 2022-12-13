@@ -737,8 +737,10 @@ class Activity
      *
      * @return array
      */
-    public function map(array $elementData, $template): array
+    public function map(array $elementData, $template, $orgRef): array
     {
+        $this->orgRef = $orgRef;
+
         foreach ($elementData as $element) {
             $elementName = $this->name($element);
 

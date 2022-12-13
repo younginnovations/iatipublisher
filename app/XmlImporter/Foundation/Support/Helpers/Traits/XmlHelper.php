@@ -110,7 +110,7 @@ trait XmlHelper
 
         foreach ($data as $index => $values) {
             foreach ($values as $key => $value) {
-                $data[$index][$key] = '';
+                $data[$index][$key] = null;
             }
         }
 

@@ -123,14 +123,14 @@ class XmlQueueWriter
      */
     public function save($mappedActivity): bool
     {
-        $activity_identifier = Arr::get($mappedActivity, 'identifier.activity_identifier');
+        $activity_identifier = Arr::get($mappedActivity, 'iati_identifier.activity_identifier');
         $xmlValidator = app(XmlValidator::class);
         $existing = $this->activityAlreadyExists($activity_identifier);
-        $duplicate = $this->activityIsDuplicate(Arr::get($mappedActivity, 'identifier.iati_identifier_text'));
+        $duplicate = $this->activityIsDuplicate(Arr::get($mappedActivity, 'iati_identifier.iati_identifier_text'));
 
         $errors = $xmlValidator
             ->init($mappedActivity)
-            ->validateActivity($activity_identifier, $duplicate);
+            ->validateActivity($duplicate);
 
         $mappedActivity['org_id'] = $this->orgId;
         $this->success++;

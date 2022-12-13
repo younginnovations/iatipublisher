@@ -96,10 +96,11 @@ class XmlQueueProcessor
      * @throws ParseException
      * @throws \Throwable
      */
-    public function import($filename, $orgId, $userId, $dbIatiIdentifiers): bool
+    public function import($filename, $orgId, $orgRef, $userId, $dbIatiIdentifiers): bool
     {
         try {
             $this->orgId = $orgId;
+            $this->orgRef = $orgRef;
             $this->userId = $userId;
             $this->filename = $filename;
             $contents = awsGetFile(sprintf('%s/%s/%s', $this->xml_file_storage_path, $this->orgId, $filename));
@@ -108,7 +109,7 @@ class XmlQueueProcessor
 
             if ($this->xmlServiceProvider->isValidAgainstSchema($contents)) {
                 $xmlData = $this->xmlServiceProvider->load($contents);
-                $this->xmlProcessor->process($xmlData, $userId, $orgId, $dbIatiIdentifiers);
+                $this->xmlProcessor->process($xmlData, $userId, $orgId, $orgRef, $dbIatiIdentifiers);
 
                 awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $this->orgId, 'status.json'), json_encode(
                     ['success' => true, 'message' => 'Complete'],

@@ -184,7 +184,7 @@ class ImportXmlService
             $activity = $contents[$value];
 
             if ($activity->existence === true) {
-                $oldActivity = $this->activityRepository->getActivityWithIdentifier(Auth::user()->organization->id, (array) $activity->data->identifier);
+                $oldActivity = $this->activityRepository->getActivityWithIdentifier(Auth::user()->organization->id, (array) $activity->data->iati_identifier);
 
                 $this->activityRepository->importXmlActivities($oldActivity->id, (array) $activity->data);
                 $this->transactionRepository->deleteTransaction($oldActivity->id);
@@ -249,6 +249,7 @@ class ImportXmlService
                     $indicator = (array) $indicator;
                     $periods = Arr::get($indicator, 'period', []);
                     unset($indicator['period']);
+                    logger()->error($indicator);
 
                     $savedIndicator = $this->indicatorRepository->store([
                         'result_id' => $savedResult['id'],
@@ -308,8 +309,9 @@ class ImportXmlService
     protected function fireXmlUploadEvent($filename, $userId, $organizationId): void
     {
         $iatiIdentifiers = $this->dbIatiIdentifiers($organizationId);
+        $orgRef = Auth::user()->organization->identifier;
 
-        Event::dispatch(new XmlWasUploaded($filename, $userId, $organizationId, $iatiIdentifiers));
+        Event::dispatch(new XmlWasUploaded($filename, $userId, $organizationId, $orgRef, $iatiIdentifiers));
     }
 
     /**

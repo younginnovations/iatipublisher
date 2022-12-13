@@ -176,7 +176,7 @@ class ActivityRepository extends Repository
         $mappedActivity = json_decode(json_encode($mappedActivity, JSON_THROW_ON_ERROR | 512), true, 512, JSON_THROW_ON_ERROR);
 
         $data = [
-            'iati_identifier'      => $mappedActivity['identifier'],
+            'iati_identifier'      => $mappedActivity['iati_identifier'],
             'title'                => $this->getActivityElement($mappedActivity, 'title'),
             'description'          => $this->getActivityElement($mappedActivity, 'description'),
             'activity_status'      => $mappedActivity['activity_status'] ?? null,
@@ -388,6 +388,8 @@ class ActivityRepository extends Repository
      */
     public function getActivityWithIdentifier($org_id, $identifier): mixed
     {
+        logger()->error(json_encode($this->model->where('org_id', $org_id)));
+
         return $this->model->where('org_id', $org_id)->whereJsonContains('iati_identifier->activity_identifier', $identifier['activity_identifier'])->first();
     }
 }

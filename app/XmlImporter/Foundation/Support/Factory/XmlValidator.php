@@ -174,7 +174,7 @@ class XmlValidator
      *
      * @return array
      */
-    public function validateActivity($activityId, bool $isDuplicate = false): array
+    public function validateActivity(bool $isDuplicate): array
     {
         return $this->factory->initialize($this->activity, $this->rules(), $this->messages())
             ->passes()
@@ -1120,7 +1120,7 @@ class XmlValidator
 
         foreach ($indicators as $indicatorIndex => $indicator) {
             $indicatorBase = sprintf('indicator.%s', $indicatorIndex);
-            $rules[sprintf('%s.ascending', $indicatorBase)] = 'in:1,0';
+            $rules[sprintf('%s.ascending', $indicatorBase)] = 'nullable|in:1,0';
 
             $tempRules = [
                 (new IndicatorRequest())->getRulesForIndicator($indicator, true, $result),
@@ -1151,11 +1151,6 @@ class XmlValidator
             $indicatorBase = sprintf(
                 'indicator.%s',
                 $indicatorIndex
-            );
-
-            $messages[sprintf('%s.measure.required', $indicatorBase)] = trans(
-                'validation.required',
-                ['attribute' => trans('elementForm.measure')]
             );
 
             $tempMessages = [

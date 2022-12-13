@@ -46,7 +46,7 @@ class XmlUpload
      */
     public function handle(XmlWasUploaded $event): bool
     {
-        $this->dispatch(new ImportXml($event->organizationId, $event->userId, $event->filename, $event->iatiIdentifiers));
+        $this->dispatch(new ImportXml($event->organizationId, $event->orgRef, $event->userId, $event->filename, $event->iatiIdentifiers));
 
         return true;
     }
