@@ -1,8 +1,6 @@
-body {
-  width: 100vw !important;
-  overflow-x: hidden !important;
-}
-
+// * {
+//   outline: 1px solid rgba(205, 15, 15);
+// }
 .main {
   &__container {
     max-width: 1166px;
@@ -108,7 +106,6 @@ body {
   @apply rounded-lg bg-n-20 hover:bg-n-30;
 }
 main {
-  overflow-x: hidden;
   display: grid; // Line 1
   grid-template-rows: auto 1fr auto; // Line 2
   min-height: calc(100vh - 465px); // Line 3

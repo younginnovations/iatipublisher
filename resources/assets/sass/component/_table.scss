@@ -5,8 +5,10 @@
   height: 675px;
 
   table {
-    @apply table w-full  bg-white;
-    min-width: 850px !important ;
+    overflow-x: hidden !important;
+    @apply table  bg-white;
+
+    // min-width: 800px !important ;
   }
   tbody {
     tr {
@@ -22,7 +24,7 @@
       th {
         @apply relative;
         &:after {
-          content: '';
+          content: ' ';
           @apply absolute left-0 bottom-0 h-px w-full max-w-full bg-n-20;
         }
       }
@@ -155,4 +157,9 @@
 
 #date {
   width: 173px;
+}
+.iati-list-table {
+  td:nth-child(1) {
+    max-width: 130px !important;
+  }
 }
