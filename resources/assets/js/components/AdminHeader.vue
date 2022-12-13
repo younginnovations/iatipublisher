@@ -52,6 +52,7 @@
             :class="data.menuNavLiClasses"
           >
             <a
+              v-if="menu.name !== 'Add / Import Activity'"
               :class="[
                 { nav__pointer: menu.active },
                 data.menuNavAnchorClasses,
@@ -60,6 +61,15 @@
             >
               <span class="">{{ menu.name }}</span>
             </a>
+            <span
+              v-if="menu.name === 'Add / Import Activity'"
+              :class="[
+                { nav__pointer: menu.active },
+                data.menuNavAnchorClasses,
+              ]"
+            >
+              <span class="add-import">{{ menu.name }}</span>
+            </span>
             <div
               v-if="menu.name === 'Add / Import Activity'"
               class="button__dropdown invisible absolute left-4 top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left opacity-0 shadow-dropdown transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
@@ -214,7 +224,7 @@ const data = reactive({
     },
     {
       name: 'Add / Import Activity',
-      permalink: '#',
+      permalink: '',
       active: false,
     },
   ],
