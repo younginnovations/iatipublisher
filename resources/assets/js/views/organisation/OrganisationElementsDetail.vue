@@ -48,7 +48,7 @@
             :href="'/organisation/' + title"
           >
             <svg-vue class="mr-0.5 text-xs" icon="edit"></svg-vue>
-            <span>Edit</span>
+            <span class="hidden text-[10px] lg:block">Edit</span>
           </a>
 
           <HoverText
