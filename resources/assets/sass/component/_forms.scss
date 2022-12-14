@@ -253,3 +253,10 @@ span.select2-container--default {
     width: 350px !important;
   }
 }
+.registry__info,
+.register {
+  .help__text {
+    transform: translateX(0) !important;
+    width: 250px !important;
+  }
+}
