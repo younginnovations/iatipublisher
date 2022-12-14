@@ -97,19 +97,21 @@ class ResultRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForReferences($formFields, $fileUpload, $indicators): array
+    protected function getRulesForReferences($formFields, $fileUpload = false, array $indicators = []): array
     {
         Validator::extendImplicit(
             'indicator_ref_code_present',
-            function ($fileUpload, $indicators) {
+            function () use ($fileUpload, $indicators) {
                 if ($fileUpload) {
-                    foreach ($indicators as $indicator) {
-                        $refs = $indicator['reference'];
+                    if ($fileUpload && !empty($fileUpload)) {
+                        foreach ($indicators as $indicator) {
+                            $refs = $indicator['reference'];
 
-                        if (!empty($refs)) {
-                            foreach ($refs as $ref) {
-                                if (array_key_exists('code', $ref) && $ref['code'] && !empty($ref['code'])) {
-                                    return false;
+                            if (!empty($refs)) {
+                                foreach ($refs as $ref) {
+                                    if (array_key_exists('code', $ref) && $ref['code'] && !empty($ref['code'])) {
+                                        return false;
+                                    }
                                 }
                             }
                         }
@@ -152,7 +154,7 @@ class ResultRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForReferences($formFields, $fileUpload): array
+    protected function getMessagesForReferences($formFields, $fileUpload = false): array
     {
         $messages = [];
 

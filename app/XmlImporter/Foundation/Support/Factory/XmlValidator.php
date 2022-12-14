@@ -595,34 +595,17 @@ class XmlValidator
         $tempRules = (new CountryBudgetItemRequest())->getRulesForCountryBudgetItem(Arr::get($countryBudgetItems, key($countryBudgetItems), []));
 
         foreach ($tempRules as $idx => $rule) {
-            $rules['country_budget_item.0.' . $idx] = $rule;
+            $rules['country_budget_items.0.' . $idx] = $rule;
         }
 
         return $rules;
-
-        // $rules = [];
-
-        // foreach ($countryBudgetItems as $countryBudgetItemIndex => $countryBudgetItem) {
-        //     $countryBudgetItemBase = sprintf('country_budget_items.%s', $countryBudgetItemIndex);
-        //     $rules[sprintf('%s.budget_item.0.%s', $countryBudgetItemBase, 'code')] = 'required';
-        //     $rules[sprintf('%s.country_budget_vocabulary', $countryBudgetItemBase)] = sprintf(
-        //         'required|in:%s',
-        //         $this->validCodeList('BudgetIdentifierVocabulary')
-        //     );
-
-        //     $tempRules = $this->getBudgetItemRules($countryBudgetItem['budget_item'], $countryBudgetItemBase, 'code', $countryBudgetItem);
-
-        //     foreach ($tempRules as $idx => $tempRule) {
-        //         $rules[$idx] = $tempRule;
-        //     }
-        // }
-
-        // return $rules;
     }
 
     /**
      * returns messages for country budget error messages.
+     *
      * @param array $activity
+     *
      * @return array
      */
     public function messagesForCountryBudgetItems(array $activity): array
@@ -632,228 +615,17 @@ class XmlValidator
         $messages = [];
 
         foreach ($tempMessages as $idx => $message) {
-            $messages['country_budget_item.0.' . $idx] = $message;
+            $messages['country_budget_items.0.' . $idx] = $message;
         }
 
         return $messages;
-
-        // return (new CountryBudgetItemRequest())->getMessagesForCountryBudgetItem(Arr::get($activity, 'country_budget_items', []));
-
-        // $messages = [];
-        // $countryBudgetItems = Arr::get($activity, 'country_budget_items', []);
-
-        // foreach ($countryBudgetItems as $countryBudgetItemIndex => $countryBudgetItem) {
-        //     $countryBudgetItemBase = sprintf('country_budget_items.%s', $countryBudgetItemIndex);
-        //     $code = 'code';
-        //     $messages[sprintf(
-        //         '%s.budget_item.0.%s.required',
-        //         $countryBudgetItemBase,
-        //         $code
-        //     )] = trans('validation.required', ['attribute' => trans('elementForm.code')]);
-        //     $messages[sprintf('%s.country_budget_vocabulary.required', $countryBudgetItemBase)] = trans(
-        //         'validation.required',
-        //         ['attribute' => trans('elementForm.country_budget_item_vocabulary')]
-        //     );
-        //     $messages[sprintf('%s.country_budget_vocabulary.in', $countryBudgetItemBase)] = trans(
-        //         'validation.code_list',
-        //         ['attribute' => trans('elementForm.country_budget_item_vocabulary')]
-        //     );
-        //     $tempMessages = $this->getBudgetItemMessages(Arr::get($countryBudgetItem, 'budget_item', []), $countryBudgetItemBase, $code, $countryBudgetItem);
-
-        //     foreach ($tempMessages as $idx => $tempMessage) {
-        //         $messages[$idx] = $tempMessage;
-        //     }
-        // }
-
-        // return $messages;
     }
-
-    // /**
-    //  * returns budget item validation rules.
-    //  * @param $budgetItems
-    //  * @param $countryBudgetItemBase
-    //  * @param $code
-    //  * @param $countryBudgetItem
-    //  * @return array
-    //  */
-    // public function getBudgetItemRules($budgetItems, $countryBudgetItemBase, $code, $countryBudgetItem): array
-    // {
-    //     $rules = [];
-    //     foreach ($budgetItems as $budgetItemIndex => $budgetItem) {
-    //         $budgetItemBase = sprintf('%s.budget_item.%s', $countryBudgetItemBase, $budgetItemIndex);
-    //         $rules[sprintf('%s.percentage', $budgetItemBase)] = 'nullable|numeric|max:100';
-    //         $rules[sprintf('%s.%s', $budgetItemBase, $code)] = 'required';
-    //         ($code !== 'code') ?: $rules[sprintf('%s.%s', $budgetItemBase, $code)] = sprintf(
-    //             'in:%s',
-    //             $this->validCodeList('BudgetIdentifier')
-    //         );
-    //         $tempRules = [
-    //             $this->getBudgetItemDescriptionRules(Arr::get($budgetItem, 'description', []), $budgetItemBase),
-    //             $this->getRulesForBudgetPercentage($countryBudgetItemBase, $countryBudgetItem),
-    //         ];
-
-    //         foreach ($tempRules as $tempRule) {
-    //             foreach ($tempRule as $idx => $rule) {
-    //                 $rules[$idx] = $rule;
-    //             }
-    //         }
-    //     }
-
-    //     return $rules;
-    // }
-
-    // /**
-    //  * return budget item error message.
-    //  * @param       $budgetItems
-    //  * @param       $countryBudgetItemBase
-    //  * @param       $code
-    //  * @param       $countryBudgetItem
-    //  * @return array
-    //  */
-    // public function getBudgetItemMessages($budgetItems, $countryBudgetItemBase, $code, $countryBudgetItem): array
-    // {
-    //     $messages = [];
-
-    //     foreach ($budgetItems as $budgetItemIndex => $budgetItem) {
-    //         $budgetItemBase = sprintf('%s.budget_item.%s', $countryBudgetItemBase, $budgetItemIndex);
-    //         $messages[sprintf('%s.%s.required', $budgetItemBase, $code)] = trans(
-    //             'validation.required',
-    //             ['attribute' => trans('elementForm.budget_item_code')]
-    //         );
-    //         $messages[sprintf('%s.%s.in', $budgetItemBase, $code)] = trans(
-    //             'validation.code_list',
-    //             ['attribute' => trans('elementForm.budget_item_code')]
-    //         );
-    //         $messages[sprintf('%s.percentage.%s', $budgetItemBase, 'numeric')] = trans(
-    //             'validation.numeric',
-    //             ['attribute' => trans('elementForm.percentage')]
-    //         );
-    //         $messages[sprintf('%s.percentage.%s', $budgetItemBase, 'max')] = trans(
-    //             'validation.numeric.max',
-    //             ['attribute' => trans('elementForm.percentage'), 'max' => 100]
-    //         );
-    //         $messages[sprintf('%s.percentage.sum', $budgetItemBase)] = trans(
-    //             'validation.sum',
-    //             ['attribute' => trans('elementForm.budget_items)')]
-    //         );
-    //         $messages[sprintf('%s.percentage.required', $budgetItemBase)] = trans(
-    //             'validation.required_with',
-    //             ['attribute' => trans('elementForm.percentage'), 'values' => trans('global.multiple_codes')]
-    //         );
-    //         $messages[sprintf('%s.percentage.total', $budgetItemBase)] = trans(
-    //             'validation.total',
-    //             ['attribute' => trans('elementForm.percentage'), 'values' => trans('elementForm.budget_item)')]
-    //         );
-    //         $tempMessages = [
-    //             $this->getBudgetItemDescriptionMessages(Arr::get($budgetItem, 'description', []), $budgetItemBase),
-    //             $this->getMessagesForBudgetPercentage($countryBudgetItemBase, $countryBudgetItem),
-    //         ];
-
-    //         foreach ($tempMessages as $idx => $tempMessage) {
-    //             $messages[$idx] = $tempMessage;
-    //         }
-    //     }
-
-    //     return $messages;
-    // }
-
-    // /**
-    //  * return budget item description rule.
-    //  * @param $descriptions
-    //  * @param $budgetItemBase
-    //  * @return array
-    //  */
-    // public function getBudgetItemDescriptionRules($descriptions, $budgetItemBase): array
-    // {
-    //     $rules = [];
-    //     foreach ($descriptions as $descriptionIndex => $description) {
-    //         $descriptionBase = sprintf('%s.description.%s', $budgetItemBase, $descriptionIndex);
-    //         $rules = $this->factory->getRulesForNarrative($description['narrative'], $descriptionBase);
-    //     }
-
-    //     return $rules;
-    // }
-
-    // /**
-    //  * return budget item description error message.
-    //  * @param $descriptions
-    //  * @param $budgetItemBase
-    //  * @return array
-    //  */
-    // public function getBudgetItemDescriptionMessages($descriptions, $budgetItemBase): array
-    // {
-    //     $messages = [];
-
-    //     foreach ($descriptions as $descriptionIndex => $description) {
-    //         $descriptionBase = sprintf('%s.description.%s', $budgetItemBase, $descriptionIndex);
-    //         $messages = $this->factory->getMessagesForNarrative($description['narrative'], $descriptionBase);
-    //     }
-
-    //     return $messages;
-    // }
-
-    // /** Returns rules for percentage.
-    //  *
-    //  * @param $countryBudgetItemBase
-    //  * @param $countryBudget
-    //  *
-    //  * @return array
-    //  */
-    // protected function getRulesForBudgetPercentage($countryBudgetItemBase, $countryBudget): array
-    // {
-    //     $countryBudgetItems = Arr::get($countryBudget, 'budget_item', []);
-    //     $totalPercentage = 0;
-    //     $isEmpty = false;
-    //     $countryBudgetPercentage = 0;
-    //     $rules = [];
-
-    //     if (count($countryBudgetItems) > 1) {
-    //         foreach ($countryBudgetItems as $key => $countryBudgetItem) {
-    //             ($countryBudgetItem['percentage'] !== '') ? $countryBudgetPercentage = $countryBudgetItem['percentage'] : $isEmpty = true;
-    //             $totalPercentage = $totalPercentage + $countryBudgetPercentage;
-    //         }
-
-    //         foreach ($countryBudgetItems as $key => $countryBudgetItem) {
-    //             if ($isEmpty) {
-    //                 $rules[sprintf('%s.budget_item.%s.percentage', $countryBudgetItemBase, $key)] = 'required';
-    //             } elseif ($totalPercentage !== 100) {
-    //                 $rules[sprintf('%s.budget_item.%s.percentage', $countryBudgetItemBase, $key)] = 'sum';
-    //             }
-    //         }
-    //     } else {
-    //         $rules[sprintf('%s.budget_item.0.percentage', $countryBudgetItemBase)] = 'total';
-    //     }
-
-    //     return $rules;
-    // }
-
-    // /** Returns messages for percentage.
-    //  *
-    //  * @param $countryBudgetItemBase
-    //  * @param $countryBudget
-    //  *
-    //  * @return array
-    //  */
-    // protected function getMessagesForBudgetPercentage($countryBudgetItemBase, $countryBudget): array
-    // {
-    //     $countryBudgetItems = Arr::get($countryBudget, 'budget_item', []);
-    //     $messages = [];
-
-    //     if (count($countryBudgetItems) > 1) {
-    //         foreach ($countryBudgetItems as $key => $countryBudgetItem) {
-    //             $messages[sprintf('%s.budget_item.%s.percentage.required', $countryBudgetItemBase, $key)] = trans('validation.required', ['attribute' => 'budget_item_percentage']);
-    //             $messages[sprintf('%s.budget_item.%s.percentage.sum', $countryBudgetItemBase, $key)] = 'The sum of percentages must be 100.';
-    //         }
-    //     } else {
-    //         $messages[sprintf('%s.budget_item.0.percentage.total', $countryBudgetItemBase)] = trans('validation.total', ['attribute' => 'budget_item_percentage', 'values' => 'budget_item']);
-    //     }
-
-    //     return $messages;
-    // }
 
     /**
      * returns rules for HumanitarianScope.
+     *
      * @param array $activity
+     *
      * @return array
      */
     public function rulesForHumanitarianScope(array $activity): array
