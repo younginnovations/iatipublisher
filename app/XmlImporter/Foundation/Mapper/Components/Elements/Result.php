@@ -77,7 +77,7 @@ class Result
                     $indicatorData[$key]['description'][0]['narrative'] = $this->value($indicator, 'description');
                     $indicatorData[$key]['reference'] = $this->reference($indicator, $indicatorTemplate);
                     $indicatorData[$key]['baseline'] = $this->baseline($indicator, $indicatorTemplate, $index);
-                    $indicatorData[$index]['document_link'] = $this->documentLink(['value' => $indicator], $index);
+                    $indicatorData[$key]['document_link'] = $this->documentLink(['value' => $indicator], $index);
                     $indicatorData[$key]['period'] = $this->period($indicator, $indicatorTemplate, $index);
                 } else {
                     unset($indicatorData[$key]['period']);

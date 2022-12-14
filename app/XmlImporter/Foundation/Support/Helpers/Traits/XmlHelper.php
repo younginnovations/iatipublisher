@@ -136,8 +136,8 @@ trait XmlHelper
 
         if (!empty($fields)) {
             foreach ($fields as $field) {
-                if ($this->name($field['name']) === $key) {
-                    if (is_array($field['value'])) {
+                if ($this->name(Arr::get($field, 'name')) === $key) {
+                    if (is_array(Arr::get($field, 'value'))) {
                         return $this->narrative($field);
                     }
 

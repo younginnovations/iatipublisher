@@ -50,6 +50,11 @@ class IndicatorRequest extends ActivityBaseRequest
     public function getRulesForIndicator(array $formFields, bool $fileUpload = false, array $result = []): array
     {
         $rules = [];
+
+        $rules['measure'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('IndicatorMeasure', 'Activity', false))));
+        $rules['ascending'] = sprintf('nullable|in:0,1');
+        $rules['aggregation_status'] = sprintf('nullable|in:0,1');
+
         $tempRules = [
             $this->getRulesForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
             $this->getRulesForNarrative(Arr::get($formFields, 'description', []), 'description.0'),
@@ -77,6 +82,9 @@ class IndicatorRequest extends ActivityBaseRequest
     public function getMessagesForIndicator(array $formFields): array
     {
         $messages = [];
+        $messages['measure.in'] = 'The indicator measure is invalid.';
+        $messages['aggregation_status.in'] = 'The indicator aggregation status is invalid.';
+        $messages['ascending.in'] = 'The indicator ascending is invalid.';
 
         $tempMessages = [
             $this->getMessagesForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
@@ -108,7 +116,7 @@ class IndicatorRequest extends ActivityBaseRequest
 
         Validator::extendImplicit(
             'result_ref_code_present',
-            function ($fileUpload, $result) {
+            function () use ($fileUpload, $result) {
                 if ($fileUpload) {
                     if (!empty(Arr::get($result, 'reference', []))) {
                         $refs = Arr::get($result, 'reference', []);
@@ -132,6 +140,7 @@ class IndicatorRequest extends ActivityBaseRequest
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
             $rules[sprintf('%s.indicator_uri', $referenceForm)] = 'nullable|url';
+            $rules[sprintf('%s.vocabulary', $referenceForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('IndicatorVocabulary', 'Activity', false))));
 
             if (!empty($reference['code'])) {
                 $rules[sprintf('%s.code', $referenceForm)] = 'result_ref_code_present';
