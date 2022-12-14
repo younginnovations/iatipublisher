@@ -333,6 +333,8 @@ class Transaction
             case '4':
                 $this->transaction[$index]['aid_type'][$sub_index]['cash_and_voucher_modalities'] = $code;
                 break;
+            default:
+                $this->transaction[$index]['aid_type'][$sub_index]['aid_type_code'] = $code;
         }
 
         $this->transaction[$index]['aid_type'][$sub_index]['aid_type_vocabulary'] = $vocabulary;
