@@ -116,3 +116,7 @@ main {
     width: 220px !important;
   }
 }
+body.disable-scroll {
+  overflow: hidden;
+  height: 10px;
+}

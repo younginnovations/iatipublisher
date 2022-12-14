@@ -1,16 +1,8 @@
 {
-<<<<<<< HEAD
-    "/js/app.js": "/js/app.js?id=8d8ddbf68ef603440b6c4c9084498415",
+    "/js/app.js": "/js/app.js?id=16166bc0d3bce92b26b8db8ea6c2e00f",
     "/js/script.js": "/js/script.js?id=67f974d705cdb041f9d42e8c11e824d1",
     "/js/formbuilder.js": "/js/formbuilder.js?id=cbe134dcc78008b2eba1e26f4b666c8e",
     "/manifest.js": "/manifest.js?id=6ec4db78dd752c29bd9956118b1e0467",
-    "/css/app.css": "/css/app.css?id=eb83e08b7499753b98b99ec1e8571d80",
-=======
-    "/js/app.js": "/js/app.js?id=f373a5bc46895117e802b7d29f246ecd",
-    "/js/script.js": "/js/script.js?id=67f974d705cdb041f9d42e8c11e824d1",
-    "/js/formbuilder.js": "/js/formbuilder.js?id=cbe134dcc78008b2eba1e26f4b666c8e",
-    "/manifest.js": "/manifest.js?id=6ec4db78dd752c29bd9956118b1e0467",
-    "/css/app.css": "/css/app.css?id=f85d2d68ba461c6b966067264e927fd8",
->>>>>>> 66ec434a (wip)
+    "/css/app.css": "/css/app.css?id=b38d00c4f86d05f03e65309efe9e91d1",
     "/js/vendor.js": "/js/vendor.js?id=a0cc4df2bfc2b358079e5e0680f2e290"
 }
