@@ -174,10 +174,11 @@ class TransactionController extends Controller
         try {
             $activity = $this->activityService->getActivity($activityId);
             $transaction = $this->transactionService->getTransaction($transactionId);
+            $element = getElementSchema('transactions');
             $types = getTransactionTypes();
             $toast = generateToastData();
 
-            return view('admin.activity.transaction.detail', compact('transaction', 'activity', 'types', 'toast'));
+            return view('admin.activity.transaction.detail', compact('transaction', 'activity', 'types', 'toast', 'element'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

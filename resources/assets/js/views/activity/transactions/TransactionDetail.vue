@@ -5,19 +5,19 @@
       :title="`${transactionData.reference ?? 'Untitled'} - Transaction detail`"
       :back-link="`${activityLink}/transaction`"
     >
-    <div class="flex space-x-3 items-center">
-      <Toast
-        v-if="toastData.visibility"
-        :message="toastData.message"
-        :type="toastData.type"
-        class="mr-3"
-      />
-      <Btn
-        text="Edit Transaction"
-        :link="`${activityLink}/transaction/${transaction.id}/edit`"
-        icon="edit"
-      />
-    </div>
+      <div class="flex space-x-3 items-center">
+        <Toast
+          v-if="toastData.visibility"
+          :message="toastData.message"
+          :type="toastData.type"
+          class="mr-3"
+        />
+        <Btn
+          text="Edit Transaction"
+          :link="`${activityLink}/transaction/${transaction.id}/edit`"
+          icon="edit"
+        />
+      </div>
     </PageTitle>
 
     <div class="activities">
@@ -50,6 +50,11 @@
                 key.toString() === 'humanitarian'
                   ? ''
                   : 'full'
+              "
+              :hover-text="
+                element['attributes'][key]
+                  ? element['attributes'][key]['hover_text'] ?? ''
+                  : element['sub_elements'][key]['hover_text'] ?? ''
               "
               :types="types"
             />
@@ -93,6 +98,10 @@ export default defineComponent({
       required: true,
     },
     toast: {
+      type: Object,
+      required: true,
+    },
+    element: {
       type: Object,
       required: true,
     },

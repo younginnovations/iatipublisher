@@ -11,12 +11,12 @@
       <div class="flex mb-4">
         <div class="flex title grow">
           <div class="text-sm font-bold title">
-            {{ elementName.toString().replace(/_/g, '-') }}
+            {{ elementName.toString().replace(/_/g, "-") }}
           </div>
         </div>
         <div class="flex items-center icons">
           <!-- <svg-vue class="mr-1.5" icon="core"></svg-vue> -->
-          <HoverText hover-text="example text" class="text-n-40"></HoverText>
+          <HoverText :hover-text="hoverText" class="text-n-40"></HoverText>
         </div>
       </div>
       <div class="w-full h-px mb-4 divider bg-n-20"></div>
@@ -42,7 +42,7 @@
         </template>
 
         <template v-else-if="elementName === 'humanitarian'">
-          <div class="text-sm">{{ data != '0' }}</div>
+          <div class="text-sm">{{ data != "0" }}</div>
         </template>
 
         <template v-else-if="elementName === 'provider_organization'">
@@ -81,7 +81,7 @@
           <TiedStatus :data="elementData" />
         </template>
         <template v-else>
-          <div class="text-sm">{{ data ?? 'Missing' }}</div>
+          <div class="text-sm">{{ data ?? "Missing" }}</div>
         </template>
       </div>
     </div>
@@ -89,9 +89,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, provide } from 'vue';
-import HoverText from './../../../components/HoverText.vue';
-import dateFormat from './../../../composable/dateFormat';
+import { defineComponent, toRefs, provide } from "vue";
+import HoverText from "./../../../components/HoverText.vue";
+import dateFormat from "./../../../composable/dateFormat";
 import {
   Description,
   AidType,
@@ -107,10 +107,10 @@ import {
   FlowType,
   FinanceType,
   TiedStatus,
-} from './elements/Index';
+} from "./elements/Index";
 
 export default defineComponent({
-  name: 'ActivityElement',
+  name: "ActivityElement",
   components: {
     HoverText,
     Description,
@@ -144,7 +144,7 @@ export default defineComponent({
     width: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
     types: {
       type: Object,
@@ -153,14 +153,14 @@ export default defineComponent({
     hoverText: {
       type: String,
       required: false,
-      default: '',
+      default: "",
     },
   },
   setup(props) {
     let { data, types } = toRefs(props),
       elementData = data.value;
 
-    provide('types', types);
+    provide("types", types);
 
     /**
      * Joins data from array with a comma
@@ -172,7 +172,7 @@ export default defineComponent({
     }
 
     function getLanguages(language: Entry[]) {
-      return language.map((entry) => entry.language).join(', ');
+      return language.map((entry) => entry.language).join(", ");
     }
     return {
       elementData,

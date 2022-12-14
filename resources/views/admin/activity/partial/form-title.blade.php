@@ -43,7 +43,7 @@
                 <svg-vue icon="core" class="ml-2"></svg-vue>
             @endif
             @if (isMandatoryElement($data['name']))
-                <svg-vue icon="core" class="ml-2"></svg-vue>
+                <!-- <svg-vue icon="core" class="ml-2"></svg-vucorecoree>     -->
             @endif
 
             @if (Arr::get(getElementSchema($data['name']), 'show_info_in_title', false))

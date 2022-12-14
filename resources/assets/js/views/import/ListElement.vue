@@ -92,7 +92,6 @@ const countErrors = () => {
   let count = 0;
 
   for (const index in props.activity["errors"]) {
-    console.log(Object.keys(props.activity["errors"][index]).length);
     count += Object.keys(props.activity["errors"][index]).length;
   }
 

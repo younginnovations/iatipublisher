@@ -23,13 +23,13 @@
           <ul class="text-sm font-bold leading-relaxed">
             <li v-for="(rData, r, ri) in resultsData" :key="ri">
               <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
-                <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
+                <!-- <svg-vue icon="moon" class="mr-2 text-base"></svg-vue> -->
                 {{ r }}
               </a>
             </li>
             <li v-if="hasIndicators">
               <a v-smooth-scroll href="#indicator" :class="linkClasses">
-                <svg-vue icon="core" class="mr-2 text-base"></svg-vue>
+                <!-- <svg-vue icon="moon" class="mr-2 text-base"></svg-vue> -->
                 indicator
               </a>
             </li>
@@ -64,6 +64,11 @@
                   : ''
               "
               :types="types"
+              :hover-text="
+                element['attributes'][key]
+                  ? element['attributes'][key]['hover_text'] ?? ''
+                  : element['sub_elements'][key]['hover_text'] ?? ''
+              "
             />
           </template>
 
@@ -127,6 +132,10 @@ export default defineComponent({
       required: true,
     },
     toast: {
+      type: Object,
+      required: true,
+    },
+    element: {
       type: Object,
       required: true,
     },
