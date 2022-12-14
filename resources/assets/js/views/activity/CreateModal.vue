@@ -91,7 +91,7 @@
           </div>
         </div>
         <div>
-          <div class="form-group-title-container outline">
+          <div class="form-group-title-container">
             <HoverText
               :name="'iati-identifier'"
               position="right"
