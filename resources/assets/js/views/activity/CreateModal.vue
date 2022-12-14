@@ -91,7 +91,7 @@
           </div>
         </div>
         <div>
-          <div class="form-group-title-container">
+          <div class="form-group-title-container outline">
             <HoverText
               :name="'iati-identifier'"
               position="right"
@@ -105,7 +105,7 @@
               <div>
                 <div class="label-field">
                   <label class="label" for=""
-                    >activity identifier
+                    >activity identifierss
                     <span class="required-icon"> *</span>
                   </label>
                 </div>
