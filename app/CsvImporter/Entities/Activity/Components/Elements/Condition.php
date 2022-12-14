@@ -111,7 +111,11 @@ class Condition extends Element
                 $value = $value ? '1' : '0';
             }
 
-            $this->data['conditions']['condition_attached'] = Arr::get($this->data(), 'conditions.condition_attached', $value);
+            $condition_attached = Arr::get($this->data(), 'conditions.condition_attached');
+
+            if ($condition_attached === '') {
+                $this->data['conditions']['condition_attached'] = $value;
+            }
         }
     }
 

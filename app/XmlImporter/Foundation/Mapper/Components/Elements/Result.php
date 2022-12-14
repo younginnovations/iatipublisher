@@ -47,13 +47,7 @@ class Result
             $this->result[$index]['description'][0]['narrative'] = $this->value($value, 'description');
             $this->result[$index]['document_link'] = $this->documentLink($result, $index);
             $this->result[$index]['reference'] = $this->resultReference($value, [0 => $template['result']]);
-            $indicators = $this->filterValues(Arr::get($result, 'value', []), 'indicator');
-
-            if (implode('', Arr::flatten($indicators))) {
-                $this->result[$index]['indicator'] = $this->indicator($result, $index);
-            } else {
-                unset($this->result[$index]['indicator']);
-            }
+            $this->result[$index]['indicator'] = $this->indicator($result, $index);
         }
 
         return $this->result;
@@ -71,29 +65,29 @@ class Result
         $indicatorTemplate = Arr::get($this->result[$index], 'indicator', []);
         $indicatorData = [Arr::get($indicatorTemplate, 0, [])];
 
-        foreach ($indicators as $key => $indicator) {
-            $indicator = $indicator['indicator'];
-
-            if (!empty($indicator) && $indicator !== '') {
+        if (($indicators && empty($indicators)) || implode('', Arr::flatten($indicatorAttributes)) !== '') {
+            foreach ($indicators as $key => $indicator) {
+                $indicator = $indicator['indicator'];
                 $indicatorData[$key]['measure'] = $indicatorAttributes[$key]['measure'];
                 $indicatorData[$key]['ascending'] = $indicatorAttributes[$key]['ascending'];
                 $indicatorData[$key]['aggregation_status'] = Arr::get($indicatorAttributes[$key], 'aggregation-status', '');
-                $indicatorData[$key]['title'][0]['narrative'] = $this->value($indicator, 'title');
-                $indicatorData[$key]['description'][0]['narrative'] = $this->value($indicator, 'description');
-                $indicatorData[$key]['reference'] = $this->reference($indicator, $indicatorTemplate);
-                $indicatorData[$key]['baseline'] = $this->baseline($indicator, $indicatorTemplate, $index);
-                $indicatorData[$index]['document_link'] = $this->documentLink(['value' => $indicator], $index);
-                $periods = $this->filterValues(Arr::get($indicator, 'value', []), 'period');
 
-                if (implode('', Arr::flatten($periods))) {
+                if (!empty($indicator) && $indicator !== '') {
+                    $indicatorData[$key]['title'][0]['narrative'] = $this->value($indicator, 'title');
+                    $indicatorData[$key]['description'][0]['narrative'] = $this->value($indicator, 'description');
+                    $indicatorData[$key]['reference'] = $this->reference($indicator, $indicatorTemplate);
+                    $indicatorData[$key]['baseline'] = $this->baseline($indicator, $indicatorTemplate, $index);
+                    $indicatorData[$index]['document_link'] = $this->documentLink(['value' => $indicator], $index);
                     $indicatorData[$key]['period'] = $this->period($indicator, $indicatorTemplate, $index);
                 } else {
                     unset($indicatorData[$key]['period']);
                 }
             }
+
+            return $indicatorData;
         }
 
-        return $indicatorData;
+        return [];
     }
 
     /**
@@ -183,18 +177,22 @@ class Result
         $periods = $this->filterValues($indicator, 'period');
         $periodsData = $periodsTemplate = Arr::get($indicatorTemplate, '0.period');
 
-        foreach ($periods as $key => $period) {
-            $period = Arr::get($period, 'period', []);
+        if ($periods && !empty($periods)) {
+            foreach ($periods as $key => $period) {
+                $period = Arr::get($period, 'period', []);
 
-            if (!empty($period)) {
-                $periodsData[$key]['period_start'][0]['date'] = Arr::get($this->filterAttributes($period, 'periodStart', ['iso-date']), '0.iso-date', '');
-                $periodsData[$key]['period_end'][0]['date'] = Arr::get($this->filterAttributes($period, 'periodEnd', ['iso-date']), '0.iso-date', '');
-                $periodsData[$key]['target'] = $this->target($period, $periodsTemplate, $index);
-                $periodsData[$key]['actual'] = $this->actual($period, $periodsTemplate, $index);
+                if (!empty($period)) {
+                    $periodsData[$key]['period_start'][0]['date'] = Arr::get($this->filterAttributes($period, 'periodStart', ['iso-date']), '0.iso-date', '');
+                    $periodsData[$key]['period_end'][0]['date'] = Arr::get($this->filterAttributes($period, 'periodEnd', ['iso-date']), '0.iso-date', '');
+                    $periodsData[$key]['target'] = $this->target($period, $periodsTemplate, $index);
+                    $periodsData[$key]['actual'] = $this->actual($period, $periodsTemplate, $index);
+                }
             }
+
+            return $periodsData;
         }
 
-        return $periodsData;
+        return [];
     }
 
     /**

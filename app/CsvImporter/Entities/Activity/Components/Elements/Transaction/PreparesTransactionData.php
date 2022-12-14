@@ -443,7 +443,7 @@ trait PreparesTransactionData
                 }
             }
 
-            $this->data['transaction']['recipient_country'][0]['country_code'] = $value;
+            $this->data['transaction']['recipient_country'][0]['country_code'] = strtoupper($value);
             $this->data['transaction']['recipient_country'][0]['narrative'][0] = ['narrative' => '', 'language' => ''];
         }
     }
