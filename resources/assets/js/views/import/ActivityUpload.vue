@@ -1,9 +1,9 @@
 <template>
   <div class="listing__page bg-paper pt-4 pb-[71px]">
-    <div class="page-title mb-4 px-10">
+    <div class="page-title mb-4 w-screen px-10">
       <div class="flex items-end gap-4">
         <div class="title basis-6/12">
-          <div class="inline-flex w-[600px] items-center">
+          <div class="inline-flex w-[500px] items-center md:w-[600px]">
             <div class="mr-3">
               <a href="/activities">
                 <svg-vue icon="arrow-short-left" />
@@ -86,8 +86,11 @@
               />
             </div>
             <span v-if="error" class="error">{{ error }}</span>
-            <div class="flex items-end justify-between">
+            <div
+              class="flex w-[280px] flex-col items-start gap-4 overflow-hidden md:w-[400px] md:flex-row md:items-end lg:w-auto lg:justify-between"
+            >
               <BtnComponent
+                class="!border-red !border"
                 type="primary"
                 text="Upload file"
                 icon="upload-file"
