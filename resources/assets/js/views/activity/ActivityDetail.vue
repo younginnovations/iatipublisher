@@ -9,7 +9,10 @@
         }
       "
     />
-    <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
+    <div
+      :class="showSidebar ? 'overflow-hidden' : ''"
+      class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10"
+    >
       <!-- title section -->
       <div class="page-title mb-6">
         <div class="pb-4 text-caption-c1 text-n-40">
@@ -478,6 +481,14 @@ export default defineComponent({
         toastData.message = props.toast.message;
       }
     });
+    watch(
+      () => showSidebar.value,
+      (sidebar) => {
+        if (sidebar) {
+          document.documentElement.style.overflow = 'hidden';
+        } else document.documentElement.style.overflow = 'auto';
+      }
+    );
     watch(
       () => toastData.visibility,
       () => {

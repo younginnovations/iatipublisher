@@ -72,7 +72,7 @@
             </span>
             <div
               v-if="menu.name === 'Add / Import Activity'"
-              class="button__dropdown invisible absolute left-4 top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left opacity-0 shadow-dropdown transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
+              class="button__dropdown invisible absolute left-4 top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left opacity-0 shadow-dropdown outline transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
             >
               <ul class="flex-col">
                 <li>
@@ -116,10 +116,50 @@
           <svg-vue icon="search" />
           <span v-if="spinner" class="spinner" />
         </div>
-        <button class="button secondary-btn dropdown-btn">
+        <button
+          :class="
+            isTouchDevice
+              ? 'button secondary-btn--touch'
+              : 'button secondary-btn dropdown-btn'
+          "
+          @click="showUserDropdown = !showUserDropdown"
+        >
           <svg-vue icon="user-profile" />
           <svg-vue class="dropdown__arrow" icon="dropdown-arrow" />
-          <div class="profile__dropdown">
+          <div v-if="!isTouchDevice" class="profile__dropdown">
+            <ul>
+              <li class="border-b border-b-n-20">
+                <div>
+                  <svg-vue class="user-profile" icon="user-profile" />
+                </div>
+                <div class="flex flex-col break-all capitalize leading-4">
+                  <span class="text-n-50">
+                    {{ user.full_name }}
+                  </span>
+                  <span class="text-tiny text-n-40">
+                    {{ organization?.publisher_name }}
+                  </span>
+                </div>
+              </li>
+              <li class="dropdown__list border-b border-b-n-20">
+                <svg-vue icon="user" />
+                <a href="#">Your Profile</a>
+              </li>
+              <li class="dropdown__list" @click="logout">
+                <svg-vue icon="logout"></svg-vue>
+                <button class="text-sm">Logout</button>
+              </li>
+            </ul>
+          </div>
+          <div
+            v-else
+            :class="
+              !showUserDropdown
+                ? 'invisible -translate-y-2 opacity-0'
+                : 'opacity-1 visible translate-y-0'
+            "
+            class="profile__dropdown--touch"
+          >
             <ul>
               <li class="border-b border-b-n-20">
                 <div>
@@ -159,7 +199,15 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, reactive, onMounted, onUnmounted, Ref } from 'vue';
+import {
+  defineProps,
+  ref,
+  reactive,
+  onMounted,
+  computed,
+  onUnmounted,
+  Ref,
+} from 'vue';
 import axios from 'axios';
 import { useToggle, useStorage } from '@vueuse/core';
 import CreateModal from '../views/activity/CreateModal.vue';
@@ -179,6 +227,7 @@ defineProps({
   superAdmin: { type: Boolean, required: true },
 });
 
+const showUserDropdown = ref(false);
 const toastVisibility = ref(false);
 const toastMessage = ref('');
 const toastType = ref(false);
@@ -238,6 +287,9 @@ function toast(message: string, type: boolean) {
   toastMessage.value = message;
   toastType.value = type;
 }
+const isTouchDevice = computed(() => {
+  return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+});
 function ToggleModel() {
   modalToggle();
   window.localStorage.removeItem('openAddModel');
@@ -347,6 +399,32 @@ onUnmounted(() => {
 }
 .profile__dropdown {
   @apply invisible absolute right-3 z-20 bg-white text-left text-sm text-bluecoral opacity-0 shadow-dropdown duration-300 sm:right-10;
+  top: 50px;
+  width: 265px;
+  box-shadow: 4px 4px 40px rgba(0, 50, 76, 0.2);
+
+  @media screen and (max-width: 640px) {
+    width: 220px;
+  }
+
+  li {
+    @apply flex items-center space-x-3 p-3 sm:p-4;
+    a:hover {
+      @apply text-bluecoral;
+    }
+    .user-profile {
+      font-size: 26px;
+    }
+  }
+  .dropdown__list {
+    @apply bg-n-10 hover:bg-n-20 hover:text-bluecoral;
+    a {
+      @apply capitalize;
+    }
+  }
+}
+.profile__dropdown--touch {
+  @apply absolute  right-5 z-20 bg-white text-left text-sm text-bluecoral shadow-dropdown  duration-300;
   top: 50px;
   width: 265px;
   box-shadow: 4px 4px 40px rgba(0, 50, 76, 0.2);

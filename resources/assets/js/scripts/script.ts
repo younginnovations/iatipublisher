@@ -13,14 +13,7 @@ jQuery(function () {
 
   // close the navMenu by clicking outside
   $('body').on('click', (e) => {
-    if (
-      !(
-        e.target.classList.contains('activity-nav') ||
-        e.target.classList.contains('activity-nav-list') ||
-        e.target.classList[0]
-      ) &&
-      e.target.id !== 'hamburger'
-    ) {
+    if (e.target.classList[0] == 'menu-overlay') {
       $('#nav-list').removeClass('nav-active');
       $('#hamburger').removeClass('active');
       $('body').removeClass('overflow-hidden');

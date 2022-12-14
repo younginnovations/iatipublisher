@@ -151,8 +151,18 @@ button {
 // secondary button
 .secondary-btn {
   @apply gap-1 gap-x-1 rounded bg-white p-3 uppercase text-bluecoral;
-  box-shadow: 0px 2px 10px 10px rgba(0, 0, 0, 0.05);
 
+  &--touch {
+    @apply gap-1 gap-x-1 rounded bg-white p-3 uppercase text-bluecoral;
+    box-shadow: 0px 2px 10px 10px rgba(0, 0, 0, 0.05);
+    .dropdown__arrow {
+      font-size: 6px;
+      transition: 0.2s;
+    }
+    svg {
+      @apply text-base;
+    }
+  }
   &:hover {
     @apply bg-bluecoral text-white;
   }
