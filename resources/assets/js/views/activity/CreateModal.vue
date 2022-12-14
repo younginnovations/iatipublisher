@@ -8,7 +8,7 @@
     <h5 class="title mb-5 flex text-xl font-bold text-bluecoral sm:text-2xl">
       Add a title and identifier for the activity
     </h5>
-    <div class="overflow-hidden">
+    <div class="manual-import overflow-hidden">
       <div class="input__field">
         <div class="mb-5">
           <div class="form-group-title-container">

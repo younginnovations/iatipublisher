@@ -472,6 +472,14 @@ export default defineComponent({
       flush: 'sync',
     });
     watch(
+      () => showSidebar.value,
+      (sidebar) => {
+        if (sidebar) {
+          document.documentElement.style.overflow = 'hidden';
+        } else document.documentElement.style.overflow = 'auto';
+      }
+    );
+    watch(
       () => toastData.visibility,
       () => {
         setTimeout(() => {
