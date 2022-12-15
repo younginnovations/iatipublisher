@@ -116,24 +116,10 @@ class IndicatorRequest extends ActivityBaseRequest
 
         Validator::extendImplicit(
             'result_ref_code_present',
-            function () use ($fileUpload, $result) {
-                if ($fileUpload) {
-                    if (!empty(Arr::get($result, 'reference', []))) {
-                        $refs = Arr::get($result, 'reference', []);
+            function () {
+                $params = $this->route()->parameters();
 
-                        foreach ($refs as $ref) {
-                            if (array_key_exists('code', $ref) && $ref['code'] && !empty($ref['code'])) {
-                                return false;
-                            }
-                        }
-                    }
-
-                    return true;
-                } else {
-                    $params = $this->route()->parameters();
-
-                    return !app()->make(ResultService::class)->resultHasRefCode((int) $params['id']);
-                }
+                return !app()->make(ResultService::class)->resultHasRefCode((int) $params['id']);
             }
         );
 
@@ -142,8 +128,21 @@ class IndicatorRequest extends ActivityBaseRequest
             $rules[sprintf('%s.indicator_uri', $referenceForm)] = 'nullable|url';
             $rules[sprintf('%s.vocabulary', $referenceForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('IndicatorVocabulary', 'Activity', false))));
 
-            if (!empty($reference['code'])) {
-                $rules[sprintf('%s.code', $referenceForm)] = 'result_ref_code_present';
+            if (!empty($reference['code']) && $reference['code'] && $reference['code'] !== '') {
+                if ($fileUpload) {
+                    $hasCode = false;
+
+                    foreach ((Arr::get($result, 'reference', [])) as $ref) {
+                        if (Arr::get($ref, 'code') && !empty($ref['code'])) {
+                            $hasCode = true;
+                            break;
+                        }
+                    }
+
+                    $rules[sprintf('%s.code', $referenceForm)] = "result_ref_code_present:$hasCode";
+                } else {
+                    $rules[sprintf('%s.code', $referenceForm)] = 'result_ref_code_present';
+                }
             }
         }
 

@@ -635,12 +635,12 @@ trait RegistersValidationRules
      */
     public function indicatorValidation(): void
     {
-        $this->extend('result_ref_code_present', function () {
-            return false;
+        $this->extend('result_ref_code_present', function ($attributes, $values, $parameters) {
+            return empty($parameters[0]) ? true : false;
         });
 
-        $this->extend('indicator_ref_code_present', function () {
-            return false;
+        $this->extend('indicator_ref_code_present', function ($attributes, $values, $parameters) {
+            return empty($parameters[0]) ? true : false;
         });
 
         $this->extend('qualitative_empty', function () {
