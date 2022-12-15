@@ -72,8 +72,9 @@ class DownloadActivityController extends Controller
 
                 $csvData = $this->downloadActivityService->getCsvData($activities);
                 $headers = $this->downloadActivityService->getCsvHeaderArray('Activity', 'other_fields_transaction');
+                $filename = $this->downloadActivityService->getDownloadFilename($this->downloadActivityService->getOrganizationPublisherId());
 
-                return $this->csvGenerator->generateWithHeaders('activities', $csvData, $headers);
+                return $this->csvGenerator->generateWithHeaders($filename, $csvData, $headers);
             }
 
             return response()->json(['success' => false, 'message' => 'No activities selected.']);
