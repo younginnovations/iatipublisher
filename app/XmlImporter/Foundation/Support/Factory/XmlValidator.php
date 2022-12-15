@@ -35,6 +35,7 @@ use App\Http\Requests\Activity\Scope\ScopeRequest;
 use App\Http\Requests\Activity\Sector\SectorRequest;
 use App\Http\Requests\Activity\Status\StatusRequest;
 use App\Http\Requests\Activity\Tag\TagRequest;
+use App\Http\Requests\Activity\Title\TitleRequest;
 use App\Http\Requests\Activity\Transaction\TransactionRequest;
 use Illuminate\Support\Arr;
 
@@ -365,10 +366,16 @@ class XmlValidator
      */
     protected function rulesForTitle(array $activity): array
     {
+        $tempRules = (new TitleRequest())->rules();
         $title = Arr::get($activity, 'title', []);
-        $rules['title'] = 'nullable|unique_lang';
 
-        return $rules;
+        if ($title) {
+            foreach ($title as $key => $narrative) {
+                $rules['title'] = Arr::get($tempRules, 'narrative') . '|required';
+            }
+        }
+
+        return [];
     }
 
     /**
@@ -378,17 +385,12 @@ class XmlValidator
      */
     protected function messagesForTitle(array $activity): array
     {
-        $title = Arr::get($activity, 'title', []);
-        $messages['title.unique_lang'] = trans('validation.unique', ['attribute' => trans('element.language')]);
+        // $messages = $this->getBaseMessages((new TitleRequest())->messages(), 'title', Arr::get($activity, 'title'));
 
-        foreach ($title as $narrativeIndex => $narrative) {
-            $messages[sprintf('title.%s.narrative.required_with', $narrativeIndex)] = trans(
-                'validation.required_with',
-                ['attribute' => trans('element.title'), 'values' => trans('elementForm.narrative')]
-            );
-        }
+        // $messages['title.0.narrative'] = 'required';
 
-        return $messages;
+        // return $messages;
+        return [];
     }
 
     /**
@@ -424,6 +426,8 @@ class XmlValidator
      */
     public function rulesForOtherIdentifier(array $activity): array
     {
+        dump(Arr::get($activity, 'other_identifier', []), (new OtherIdentifierRequest())->getRulesForOtherIdentifier(Arr::get($activity, 'other_identifier', [])));
+
         return (new OtherIdentifierRequest())->getRulesForOtherIdentifier(Arr::get($activity, 'other_identifier', []));
     }
 
@@ -685,7 +689,7 @@ class XmlValidator
      */
     protected function messagesForBudget(array $activity): array
     {
-        return (new BudgetRequest())->getMessagesForBudget(Arr::get($activity, 'budget', []));
+        return (new BudgetRequest())->getMessagesForBudget(Arr::get($activity, 'budget', []), true);
     }
 
     /**
@@ -897,7 +901,7 @@ class XmlValidator
 
             $tempRules = [
                 (new IndicatorRequest())->getRulesForIndicator($indicator, true, $result),
-                $this->getRulesForPeriod(Arr::get($indicator, 'period', []) ?? [], $indicatorBase, $indicator),
+                $this->getRulesForPeriod(Arr::get($indicator, 'period', []) ?? [], $resultBase . '.' . $indicatorBase, $indicator),
             ];
 
             foreach ($tempRules as $index => $tempRule) {
@@ -953,7 +957,7 @@ class XmlValidator
 
         foreach ($formFields as $periodIndex => $period) {
             $periodBase = sprintf('period.%s', $periodIndex);
-            $tempRules = (new PeriodRequest())->getRulesForPeriod($period, true, $indicator);
+            $tempRules = (new PeriodRequest())->getRulesForPeriod($period, true, $indicator, $formBase . '.' . $periodBase);
 
             foreach ($tempRules as $idx => $rule) {
                 $rules[$periodBase . '.' . $idx] = $rule;

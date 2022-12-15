@@ -45,12 +45,12 @@ class PeriodRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    public function getRulesForPeriod(array $formFields, bool $fileUpload = false, array $indicator = []): array
+    public function getRulesForPeriod(array $formFields, bool $fileUpload = false, array $indicator = [], $periodBase = []): array
     {
         $rules = [];
         $tempRules = [
             $this->getRulesForResultPeriodStart($formFields['period_start'], 'period_start'),
-            $this->getRulesForResultPeriodEnd($formFields['period_end'], 'period_end'),
+            $this->getRulesForResultPeriodEnd($formFields['period_end'], 'period_end', $periodBase),
             $this->getRulesForTarget($formFields['target'], 'target', $fileUpload, $indicator),
             $this->getRulesForTarget($formFields['actual'], 'actual', $fileUpload, $indicator),
         ];
@@ -118,12 +118,16 @@ class PeriodRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForResultPeriodEnd($formFields, $periodType): array
+    protected function getRulesForResultPeriodEnd($formFields, $periodType, $periodBase): array
     {
         $rules = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
-            $rules[sprintf('%s.%s.date', $periodType, $periodEndKey)] = sprintf('nullable|date|after:%s', 'period_start.' . $periodEndKey . '.date');
+            if ($periodBase) {
+                $rules[sprintf('%s.%s.date', $periodType, $periodEndKey)] = sprintf('nullable|date|date_greater_than:1900|after:%s', $periodBase . '.period_start.' . $periodEndKey . '.date');
+            } else {
+                $rules[sprintf('%s.%s.date', $periodType, $periodEndKey)] = sprintf('nullable|date|after:%s', '.period_start.' . $periodEndKey . '.date');
+            }
         }
 
         return $rules;

@@ -202,7 +202,7 @@ class BudgetRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getMessagesForBudget(array $formFields): array
+    public function getMessagesForBudget(array $formFields, bool $fileUpload = false): array
     {
         $messages = [];
         $activityService = app()->make(ActivityService::class);
@@ -213,7 +213,7 @@ class BudgetRequest extends ActivityBaseRequest
         if (count($this->identicalIds)) {
             foreach ($this->identicalIds as $ids) {
                 foreach ($ids as $id) {
-                    $messages['budget.' . $id . '.budget_status.budgets_identical'] = 'Budget elements at position ' . $this->getIdenticalIds($ids) . ' have same status, type, period start and period end.';
+                    $messages['budget.' . $id . '.budget_status.budgets_identical'] = $fileUpload ? 'Budget elements are duplicated.' : 'Budget elements at position ' . $this->getIdenticalIds($ids) . ' have same status, type, period start and period end.';
                 }
             }
         }
