@@ -7,6 +7,9 @@ namespace App\IATI\Services\Download;
 use App\CsvImporter\Traits\ChecksCsvHeaders;
 use App\IATI\Elements\Xml\XmlGenerator;
 use App\IATI\Repositories\Activity\ActivityRepository;
+use App\IATI\Traits\DownloadActivityComplexElementTrait;
+use App\IATI\Traits\DownloadActivitySimpleElementTrait;
+use App\IATI\Traits\DownloadTransactionTrait;
 use Illuminate\Support\Arr;
 
 /**
@@ -14,7 +17,7 @@ use Illuminate\Support\Arr;
  */
 class DownloadActivityService
 {
-    use ChecksCsvHeaders;
+    use ChecksCsvHeaders, DownloadActivitySimpleElementTrait, DownloadActivityComplexElementTrait, DownloadTransactionTrait;
 
     /**
      * @var ActivityRepository
@@ -159,158 +162,14 @@ class DownloadActivityService
     public function getActivityArrayData($activityArray)
     {
         $data = [];
-        $defaultLanguage = Arr::get($activityArray, 'default_field_values.default_language', '');
         $count = $this->getElementCount($activityArray);
+        $headers = $this->getCsvHeaderArray('Activity', 'other_fields_transaction');
 
         for ($i = 0; $i < $count; $i++) {
-            $data[$i]['Activity Identifier'] = ($i === 0) ? Arr::get($activityArray, 'iati_identifier.activity_identifier', 'Not Available') : '';
-            $data[$i]['Activity Default Currency'] = ($i === 0) ? $defaultLanguage : '';
-            $data[$i]['Activity Default Language'] = ($i === 0) ? Arr::get($activityArray, 'default_field_values.default_language', '') : '';
-            $data[$i]['Humanitarian'] = ($i === 0) ? Arr::get($activityArray, 'default_field_values.humanitarian', '') : '';
-            $data[$i]['Reporting Org Reference'] = Arr::get($activityArray, 'reporting_org.' . $i . '.ref', '');
-            $data[$i]['Reporting Org Type'] = Arr::get($activityArray, 'reporting_org.' . $i . '.type', '');
-            $data[$i]['Reporting Org Secondary Reporter'] = Arr::get($activityArray, 'reporting_org.' . $i . '.secondary_reporter', '');
-            $data[$i]['Reporting Org Narrative'] = $this->getNarrativeText(Arr::get($activityArray, 'reporting_org.' . $i . '.narrative', []), $defaultLanguage);
-            $data[$i]['Activity Title'] = ($i === 0) ? $this->getNarrativeText(Arr::get($activityArray, 'title', []), $defaultLanguage) : '';
-            $data[$i]['Activity Description (General)'] = ($i === 0) ? $this->getDescriptionText(Arr::get($activityArray, 'description', []), $defaultLanguage, '1') : '';
-            $data[$i]['Activity Description (Objectives)'] = ($i === 0) ? $this->getDescriptionText(Arr::get($activityArray, 'description', []), $defaultLanguage, '2') : '';
-            $data[$i]['Activity Description (Target Groups)'] = ($i === 0) ? $this->getDescriptionText(Arr::get($activityArray, 'description', []), $defaultLanguage, '3') : '';
-            $data[$i]['Activity Description (Others)'] = ($i === 0) ? $this->getDescriptionText(Arr::get($activityArray, 'description', []), $defaultLanguage, '4') : '';
-            $data[$i]['Activity Status'] = ($i === 0) ? Arr::get($activityArray, 'activity_status', '') : '';
-            $data[$i]['Actual Start Date'] = $this->getActivityDate(Arr::get($activityArray, 'activity_date', []), '2');
-            $data[$i]['Actual End Date'] = $this->getActivityDate(Arr::get($activityArray, 'activity_date', []), '4');
-            $data[$i]['Planned Start Date'] = $this->getActivityDate(Arr::get($activityArray, 'activity_date', []), '1');
-            $data[$i]['Planned End Date'] = $this->getActivityDate(Arr::get($activityArray, 'activity_date', []), '3');
-            $data[$i]['Participating Organisation Role'] = Arr::get($activityArray, 'participating_org.' . $i . '.organization_role', '');
-            $data[$i]['Participating Organisation Reference'] = Arr::get($activityArray, 'participating_org.' . $i . '.ref', '');
-            $data[$i]['Participating Organisation Type'] = Arr::get($activityArray, 'participating_org.' . $i . '.type', '');
-            $data[$i]['Participating Organisation Name'] = $this->getNarrativeText(Arr::get($activityArray, 'participating_org.' . $i . '.narrative', []), $defaultLanguage);
-            $data[$i]['Participating Organisation Identifier'] = Arr::get($activityArray, 'participating_org.' . $i . '.identifier', '');
-            $data[$i]['Participating Organisation Crs Channel Code'] = Arr::get($activityArray, 'participating_org.' . $i . '.crs_channel_code', '');
-            $data[$i]['Recipient Country Code'] = Arr::get($activityArray, 'recipient_country.' . $i . '.country_code', '');
-            $data[$i]['Recipient Country Percentage'] = Arr::get($activityArray, 'recipient_country.' . $i . '.percentage', '');
-            $data[$i]['Recipient Country Narrative'] = $this->getNarrativeText(Arr::get($activityArray, 'recipient_country.' . $i . '.narrative', []), $defaultLanguage);
-            $data[$i]['Recipient Region Code'] = $this->getRecipientRegionCode(Arr::get($activityArray, 'recipient_region.' . $i . '.region_vocabulary', ''), Arr::get($activityArray, 'recipient_region.' . $i, []));
-            $data[$i]['Recipient Region Percentage'] = Arr::get($activityArray, 'recipient_region.' . $i . '.percentage', '');
-            $data[$i]['Recipient Region Vocabulary Uri'] = Arr::get($activityArray, 'recipient_region.' . $i . '.vocabulary_uri', '');
-            $data[$i]['Recipient Region Narrative'] = $this->getNarrativeText(Arr::get($activityArray, 'recipient_region.' . $i . '.narrative', []), $defaultLanguage);
-            $data[$i]['Sector Vocabulary'] = Arr::get($activityArray, 'sector.' . $i . '.sector_vocabulary', '');
-            $data[$i]['Sector Vocabulary URI'] = Arr::get($activityArray, 'sector.' . $i . '.vocabulary_uri', '');
-            $data[$i]['Sector Code'] = $this->getSectorCode(Arr::get($activityArray, 'sector.' . $i . '.sector_vocabulary', ''), Arr::get($activityArray, 'sector.' . $i, []));
-            $data[$i]['Sector Percentage'] = Arr::get($activityArray, 'sector.' . $i . '.percentage', '');
-            $data[$i]['Sector Narrative'] = $this->getNarrativeText(Arr::get($activityArray, 'sector.' . $i . '.narrative', []), $defaultLanguage);
-            $data[$i]['Transaction Internal Reference'] = Arr::get($activityArray, 'transactions.' . $i . '.transaction.reference', '');
-            $data[$i]['Transaction Type'] = Arr::get($activityArray, 'transactions.' . $i . '.transaction.transaction_type.0.transaction_type_code', '');
-            $data[$i]['Transaction Date'] = Arr::get($activityArray, 'transactions.' . $i . '.transaction.transaction_date.0.date', '');
-            $data[$i]['Transaction Value'] = Arr::get($activityArray, 'transactions.' . $i . '.transaction.value.0.amount', '');
-            $data[$i]['Transaction Value Date'] = Arr::get($activityArray, 'transactions.' . $i . '.transaction.value.0.date', '');
-            $data[$i]['Transaction Description'] = $this->getNarrativeText(Arr::get($activityArray, 'transactions.' . $i . '.transaction.description.0.narrative', []), $defaultLanguage);
-            $data[$i]['Transaction Provider Organisation Identifier'] = Arr::get($activityArray, 'transactions.' . $i . '.transaction.provider_organization.0.organization_identifier_code', '');
-            $data[$i]['Transaction Provider Organisation Type'] = Arr::get($activityArray, 'transactions.' . $i . '.transaction.provider_organization.0.type', '');
-            $data[$i]['Transaction Provider Organisation Activity Identifier'] = Arr::get($activityArray, 'transactions.' . $i . '.transaction.provider_organization.0.provider_activity_id', '');
-            $data[$i]['Transaction Provider Organisation Description'] = $this->getNarrativeText(Arr::get($activityArray, 'transactions.' . $i . '.transaction.provider_organization.0.narrative', []), $defaultLanguage);
-            $data[$i]['Transaction Receiver Organisation Identifier'] = Arr::get($activityArray, 'transactions.' . $i . '.transaction.receiver_organization.0.organization_identifier_code', '');
-            $data[$i]['Transaction Receiver Organisation Type'] = Arr::get($activityArray, 'transactions.' . $i . '.transaction.receiver_organization.0.type', '');
-            $data[$i]['Transaction Receiver Organisation Activity Identifier'] = Arr::get($activityArray, 'transactions.' . $i . '.transaction.receiver_organization.0.receiver_activity_id', '');
-            $data[$i]['Transaction Receiver Organisation Description'] = $this->getNarrativeText(Arr::get($activityArray, 'transactions.' . $i . '.transaction.receiver_organization.0.narrative', []), $defaultLanguage);
-            $data[$i]['Transaction Sector Vocabulary'] = Arr::get($activityArray, 'transactions.' . $i . '.transaction.sector.0.sector_vocabulary', '');
-            $data[$i]['Transaction Sector Vocabulary URI'] = Arr::get($activityArray, 'transactions.' . $i . '.transaction.sector.0.vocabulary_uri', '');
-            $data[$i]['Transaction Sector Code'] = $this->getSectorCode(Arr::get($activityArray, 'transactions.' . $i . '.transaction.sector.0.sector_vocabulary', ''), Arr::get($activityArray, 'transactions.' . $i . '.transaction.sector.0', []));
-            $data[$i]['Transaction Sector Narrative'] = $this->getNarrativeText(Arr::get($activityArray, 'transactions.' . $i . '.transaction.sector.0.narrative', []), $defaultLanguage);
-            $data[$i]['Transaction Recipient Country Code'] = Arr::get($activityArray, 'transactions.' . $i . '.transaction.recipient_country.0.country_code', '');
-            $data[$i]['Transaction Recipient Region Code'] = $this->getRecipientRegionCode(Arr::get($activityArray, 'transactions.' . $i . '.transaction.recipient_region.0.region_vocabulary', ''), Arr::get($activityArray, 'transactions.' . $i . '.transaction.recipient_region.0', []));
-            $data[$i]['Transaction Recipient Region Vocabulary Uri'] = Arr::get($activityArray, 'transactions.' . $i . '.transaction.recipient_region.0.vocabulary_uri', '');
-            $data[$i]['Policy Marker Vocabulary'] = Arr::get($activityArray, 'policy_marker.' . $i . '.policy_marker_vocabulary', '');
-            $data[$i]['Policy Marker Code'] = $this->getPolicyMarkerCode(Arr::get($activityArray, 'policy_marker.' . $i . '.policy_marker_vocabulary', ''), Arr::get($activityArray, 'policy_marker.' . $i, []));
-            $data[$i]['Policy Marker Significance'] = Arr::get($activityArray, 'policy_marker.' . $i . '.significance', '');
-            $data[$i]['Policy Marker Vocabulary Uri'] = Arr::get($activityArray, 'policy_marker.' . $i . '.vocabulary_uri', '');
-            $data[$i]['Policy Marker Narrative'] = $this->getNarrativeText(Arr::get($activityArray, 'policy_marker.' . $i . '.narrative', []), $defaultLanguage);
-            $data[$i]['Activity Scope'] = ($i === 0) ? Arr::get($activityArray, 'activity_scope', '') : '';
-            $data[$i]['Budget Type'] = Arr::get($activityArray, 'budget.' . $i . '.budget_type', '');
-            $data[$i]['Budget Status'] = Arr::get($activityArray, 'budget.' . $i . '.budget_status', '');
-            $data[$i]['Budget Period Start'] = Arr::get($activityArray, 'budget.' . $i . '.period_start.0.date', '');
-            $data[$i]['Budget Period End'] = Arr::get($activityArray, 'budget.' . $i . '.period_end.0.date', '');
-            $data[$i]['Budget Value'] = Arr::get($activityArray, 'budget.' . $i . '.budget_value.0.amount', '');
-            $data[$i]['Budget Value Date'] = Arr::get($activityArray, 'budget.' . $i . '.budget_value.0.value_date', '');
-            $data[$i]['Budget Currency'] = Arr::get($activityArray, 'budget.' . $i . '.budget_value.0.currency', '');
-            $data[$i]['Related Activity Identifier'] = Arr::get($activityArray, 'related_activity.' . $i . '.activity_identifier', '');
-            $data[$i]['Related Activity Type'] = Arr::get($activityArray, 'related_activity.' . $i . '.relationship_type', '');
-            $data[$i]['Contact Type'] = Arr::get($activityArray, 'contact_info.' . $i . '.type', '');
-            $data[$i]['Contact Organization'] = $this->getNarrativeText(Arr::get($activityArray, 'contact_info.' . $i . '.organisation.0.narrative', []), $defaultLanguage);
-            $data[$i]['Contact Department'] = $this->getNarrativeText(Arr::get($activityArray, 'contact_info.' . $i . '.department.0.narrative', []), $defaultLanguage);
-            $data[$i]['Contact Person Name'] = $this->getNarrativeText(Arr::get($activityArray, 'contact_info.' . $i . '.person_name.0.narrative', []), $defaultLanguage);
-            $data[$i]['Contact Job Title'] = $this->getNarrativeText(Arr::get($activityArray, 'contact_info.' . $i . '.job_title.0.narrative', []), $defaultLanguage);
-            $data[$i]['Contact Telephone'] = Arr::get($activityArray, 'contact_info.' . $i . '.telephone.0.telephone', '');
-            $data[$i]['Contact Email'] = Arr::get($activityArray, 'contact_info.' . $i . '.email.0.email', '');
-            $data[$i]['Contact Website'] = Arr::get($activityArray, 'contact_info.' . $i . '.website.0.website', '');
-            $data[$i]['Contact Mailing Address'] = $this->getMailingAddressText(Arr::get($activityArray, 'contact_info.' . $i . '.mailing_address', []), $defaultLanguage);
-            $data[$i]['Other Identifier Reference'] = Arr::get($activityArray, 'other_identifier.' . $i . '.reference', '');
-            $data[$i]['Other Identifier Type'] = Arr::get($activityArray, 'other_identifier.' . $i . '.reference_type', '');
-            $data[$i]['Owner Org Reference'] = Arr::get($activityArray, 'other_identifier.' . $i . '.owner_org.0.ref', '');
-            $data[$i]['Owner Org Narrative'] = $this->getNarrativeText(Arr::get($activityArray, 'other_identifier.' . $i . '.owner_org.0.narrative', []), $defaultLanguage);
-            $data[$i]['Tag Vocabulary'] = Arr::get($activityArray, 'tag.' . $i . '.tag_vocabulary', '');
-            $data[$i]['Tag Code'] = $this->getTagCode(Arr::get($activityArray, 'tag.' . $i . '.tag_vocabulary', ''), Arr::get($activityArray, 'tag.' . $i, []));
-            $data[$i]['Tag Vocabulary Uri'] = Arr::get($activityArray, 'tag.' . $i . '.vocabulary_uri', '');
-            $data[$i]['Tag Narrative'] = $this->getNarrativeText(Arr::get($activityArray, 'tag.' . $i . '.narrative', []), $defaultLanguage);
-            $data[$i]['Collaboration Type'] = ($i === 0) ? Arr::get($activityArray, 'collaboration_type', '') : '';
-            $data[$i]['Default Flow Type'] = ($i === 0) ? Arr::get($activityArray, 'default_flow_type', '') : '';
-            $data[$i]['Default Finance Type'] = ($i === 0) ? Arr::get($activityArray, 'default_finance_type', '') : '';
-            $data[$i]['Default Aid Type Vocabulary'] = Arr::get($activityArray, 'default_aid_type.' . $i . '.default_aid_type_vocabulary', '');
-            $data[$i]['Default Aid Type Code'] = $this->getDefaultAidTypeCode(Arr::get($activityArray, 'default_aid_type.' . $i . '.default_aid_type_vocabulary', ''), Arr::get($activityArray, 'default_aid_type.' . $i, []));
-            $data[$i]['Default Tied Status'] = ($i === 0) ? Arr::get($activityArray, 'default_tied_status', '') : '';
-            $data[$i]['Country Budget Item Vocabulary'] = ($i === 0) ? Arr::get($activityArray, 'country_budget_items.country_budget_vocabulary', '') : '';
-            $data[$i]['Budget Item Code'] = Arr::get($activityArray, 'country_budget_items.budget_item.' . $i . '.code', '');
-            $data[$i]['Budget Item Percentage'] = Arr::get($activityArray, 'country_budget_items.budget_item.' . $i . '.percentage', '');
-            $data[$i]['Budget Item Description'] = $this->getNarrativeText(Arr::get($activityArray, 'country_budget_items.budget_item.' . $i . '.description.0.narrative', []), $defaultLanguage);
-            $data[$i]['Humanitarian Scope Type'] = Arr::get($activityArray, 'humanitarian_scope.' . $i . '.type', '');
-            $data[$i]['Humanitarian Scope Vocabulary'] = Arr::get($activityArray, 'humanitarian_scope.' . $i . '.vocabulary', '');
-            $data[$i]['Humanitarian Scope Vocabulary Uri'] = Arr::get($activityArray, 'humanitarian_scope.' . $i . '.vocabulary_uri', '');
-            $data[$i]['Humanitarian Scope Code'] = Arr::get($activityArray, 'humanitarian_scope.' . $i . '.code', '');
-            $data[$i]['Humanitarian Scope Narrative'] = $this->getNarrativeText(Arr::get($activityArray, 'humanitarian_scope.' . $i . '.narrative', []), $defaultLanguage);
-            $data[$i]['Capital Spend'] = ($i === 0) ? Arr::get($activityArray, 'capital_spend', '') : '';
-            $data[$i]['Conditions Attached'] = ($i === 0) ? Arr::get($activityArray, 'conditions.condition_attached', '') : '';
-            $data[$i]['Condition Type'] = Arr::get($activityArray, 'conditions.condition.' . $i . '.condition_type', '');
-            $data[$i]['Condition Narrative'] = $this->getNarrativeText(Arr::get($activityArray, 'conditions.condition.' . $i . '.narrative', []), $defaultLanguage);
-            $data[$i]['Legacy Data Name'] = Arr::get($activityArray, 'legacy_data.' . $i . '.legacy_name', '');
-            $data[$i]['Legacy Data Value'] = Arr::get($activityArray, 'legacy_data.' . $i . '.value', '');
-            $data[$i]['Legacy Data IATI Equivalent'] = Arr::get($activityArray, 'legacy_data.' . $i . '.iati_equivalent', '');
-            $data[$i]['Document Link Url'] = Arr::get($activityArray, 'document_link.' . $i . '.url', '');
-            $data[$i]['Document Link Format'] = Arr::get($activityArray, 'document_link.' . $i . '.format', '');
-            $data[$i]['Document Link Title'] = $this->getNarrativeText(Arr::get($activityArray, 'document_link.' . $i . '.title.0.narrative', []), $defaultLanguage);
-            $data[$i]['Document Link Description'] = $this->getNarrativeText(Arr::get($activityArray, 'document_link.' . $i . '.description.0.narrative', []), $defaultLanguage);
-            $data[$i]['Document Link Category'] = Arr::get($activityArray, 'document_link.' . $i . '.category.0.code', '');
-            $data[$i]['Document Link Language'] = Arr::get($activityArray, 'document_link.' . $i . '.language.0.code', '');
-            $data[$i]['Document Date'] = Arr::get($activityArray, 'document_link.' . $i . '.document_date.0.date', '');
-            $data[$i]['Location Reference'] = Arr::get($activityArray, 'location.' . $i . '.ref', '');
-            $data[$i]['Location Reach Code'] = Arr::get($activityArray, 'location.' . $i . '.location_reach.0.code', '');
-            $data[$i]['Location Id Vocabulary'] = Arr::get($activityArray, 'location.' . $i . '.location_reach.0.vocabulary', '');
-            $data[$i]['Location Id Code'] = Arr::get($activityArray, 'location.' . $i . '.location_reach.0.code', '');
-            $data[$i]['Location Name'] = $this->getNarrativeText(Arr::get($activityArray, 'location.' . $i . '.name.0.narrative', []), $defaultLanguage);
-            $data[$i]['Location Description'] = $this->getNarrativeText(Arr::get($activityArray, 'location.' . $i . '.description.0.narrative', []), $defaultLanguage);
-            $data[$i]['Location Activity Description'] = $this->getNarrativeText(Arr::get($activityArray, 'location.' . $i . '.activity_description.0.narrative', []), $defaultLanguage);
-            $data[$i]['Location Administrative Vocabulary'] = Arr::get($activityArray, 'location.' . $i . '.administrative.0.vocabulary', '');
-            $data[$i]['Location Administrative Code'] = Arr::get($activityArray, 'location.' . $i . '.administrative.0.code', '');
-            $data[$i]['Location Administrative Level'] = Arr::get($activityArray, 'location.' . $i . '.administrative.0.level', '');
-            $data[$i]['Location Point srsName'] = Arr::get($activityArray, 'location.' . $i . '.point.0.srs_name', '');
-            $data[$i]['Pos Latitude'] = Arr::get($activityArray, 'location.' . $i . '.point.0.pos.0.latitude', '');
-            $data[$i]['Pos Longitude'] = Arr::get($activityArray, 'location.' . $i . '.point.0.pos.0.longitude', '');
-            $data[$i]['Location Exactness'] = Arr::get($activityArray, 'location.' . $i . '.exactness.0.code', '');
-            $data[$i]['Location Class'] = Arr::get($activityArray, 'location.' . $i . '.location_class.0.code', '');
-            $data[$i]['Feature Designation'] = Arr::get($activityArray, 'location.' . $i . '.feature_designation.0.code', '');
-            $data[$i]['Planned Disbursement Type'] = Arr::get($activityArray, 'planned_disbursement.' . $i . '.planned_disbursement_type', '');
-            $data[$i]['Planned Disbursement Period Start'] = Arr::get($activityArray, 'planned_disbursement.' . $i . '.period_start.0.date', '');
-            $data[$i]['Planned Disbursement Period End'] = Arr::get($activityArray, 'planned_disbursement.' . $i . '.period_end.0.date', '');
-            $data[$i]['Planned Disbursement Value'] = Arr::get($activityArray, 'planned_disbursement.' . $i . '.value.0.amount', '');
-            $data[$i]['Planned Disbursement Value Currency'] = Arr::get($activityArray, 'planned_disbursement.' . $i . '.value.0.currency', '');
-            $data[$i]['Planned Disbursement Value Date'] = Arr::get($activityArray, 'planned_disbursement.' . $i . '.value.0.value_date', '');
-            $data[$i]['Planned Disbursement Provider Org Reference'] = Arr::get($activityArray, 'planned_disbursement.' . $i . '.provider_org.0.ref', '');
-            $data[$i]['Planned Disbursement Provider Org Activity Id'] = Arr::get($activityArray, 'planned_disbursement.' . $i . '.provider_org.0.provider_activity_id', '');
-            $data[$i]['Planned Disbursement Provider Org Type'] = Arr::get($activityArray, 'planned_disbursement.' . $i . '.provider_org.0.type', '');
-            $data[$i]['Planned Disbursement Provider Org Narrative'] = $this->getNarrativeText(Arr::get($activityArray, 'planned_disbursement.' . $i . '.provider_org.0.narrative', []), $defaultLanguage);
-            $data[$i]['Planned Disbursement Receiver Org Reference'] = Arr::get($activityArray, 'planned_disbursement.' . $i . '.receiver_org.0.ref', '');
-            $data[$i]['Planned Disbursement Receiver Org Activity Id'] = Arr::get($activityArray, 'planned_disbursement.' . $i . '.receiver_org.0.receiver_activity_id', '');
-            $data[$i]['Planned Disbursement Receiver Org Type'] = Arr::get($activityArray, 'planned_disbursement.' . $i . '.receiver_org.0.type', '');
-            $data[$i]['Planned Disbursement Receiver Org Narrative'] = $this->getNarrativeText(Arr::get($activityArray, 'planned_disbursement.' . $i . '.receiver_org.0.narrative', []), $defaultLanguage);
+            foreach ($headers as $header) {
+                $function = 'get' . str_replace([' ', '(', ')'], '', $header);
+                $data[$i][$header] = $this->$function($activityArray, $i);
+            }
         }
 
         return $this->removeEmptyData($data);
@@ -390,7 +249,7 @@ class DownloadActivityService
      *
      * @return string|null
      */
-    public function getRecipientRegionCode($regionVocabulary, $recipientRegion): ?string
+    public function getRecipientRegionCodeFromVocabulary($regionVocabulary, $recipientRegion): ?string
     {
         if (!empty($regionVocabulary) && $regionVocabulary !== '1') {
             return Arr::get($recipientRegion, 'custom_code', '');
@@ -407,7 +266,7 @@ class DownloadActivityService
      *
      * @return string|null
      */
-    public function getSectorCode($sectorVocabulary, $sector): ?string
+    public function getSectorCodeFromVocabulary($sectorVocabulary, $sector): ?string
     {
         if (!empty($sectorVocabulary)) {
             return match ($sectorVocabulary) {
@@ -430,7 +289,7 @@ class DownloadActivityService
      *
      * @return null|string
      */
-    public function getPolicyMarkerCode($policyMarkerVocabulary, $policyMarker): ?string
+    public function getPolicyMarkerCodeFromVocabulary($policyMarkerVocabulary, $policyMarker): ?string
     {
         if (!empty($policyMarkerVocabulary) && $policyMarkerVocabulary !== '1') {
             return Arr::get($policyMarker, 'policy_marker_text', '');
@@ -470,7 +329,7 @@ class DownloadActivityService
      *
      * @return null|string
      */
-    public function getTagCode($tagVocabulary, $tag): ?string
+    public function getTagCodeFromVocabulary($tagVocabulary, $tag): ?string
     {
         if (!empty($tagVocabulary)) {
             return match ($tagVocabulary) {
@@ -491,7 +350,7 @@ class DownloadActivityService
      *
      * @return null|string
      */
-    public function getDefaultAidTypeCode($aidTypeVocabulary, $aidType): ?string
+    public function getDefaultAidTypeCodeFromVocabulary($aidTypeVocabulary, $aidType): ?string
     {
         if (!empty($aidTypeVocabulary)) {
             return match ($aidTypeVocabulary) {
@@ -546,7 +405,7 @@ class DownloadActivityService
     }
 
     /**
-     * Returns count of highest no of repeated element.
+     * Returns count of the highest no of repeated element.
      *
      * @param $activityArray
      *
