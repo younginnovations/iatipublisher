@@ -219,6 +219,7 @@ class Activity
         $this->otherIdentifier[$this->index]['reference_type'] = $this->attributes($element, 'type');
         $this->otherIdentifier[$this->index]['owner_org'][0]['ref'] = $this->attributes($element, 'ref', 'ownerOrg');
         $this->otherIdentifier[$this->index]['owner_org'][0]['narrative'] = $this->narrative(Arr::get($element, 'value.0', []));
+        dump('identifier data', $this->otherIdentifier[$this->index]);
         $this->index++;
 
         return $this->otherIdentifier;

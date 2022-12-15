@@ -98,6 +98,7 @@ class OtherIdentifierRequest extends ActivityBaseRequest
             foreach ($this->getRulesForNarrative($ownerOrg['narrative'], $ownerOrgForm) as $ownerOrgNarrativeIndex => $ownerOrgNarrativeRules) {
                 $rules[$ownerOrgNarrativeIndex] = $ownerOrgNarrativeRules;
             }
+            dump($rules);
         }
 
         return $rules;

@@ -6,7 +6,6 @@ namespace App\Xml\Validator\Traits;
 
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Request;
 
 /**
  * Class RegistersValidationRules.
@@ -57,7 +56,6 @@ trait RegistersValidationRules
             'unique_default_lang',
             function ($attribute, $value) {
                 $languages = [];
-                // $defaultLanguage = getDefaultLanguage();
                 $defaultLanguage = 'en';
 
                 $check = true;
@@ -77,10 +75,8 @@ trait RegistersValidationRules
 
         $this->extendImplicit(
             'required_with_language',
-            function ($attribute) {
-                $language = preg_replace('/([^~]+).narrative/', '$1.language', (string) $attribute);
-
-                return !(Request::get($language) && !Request::get($attribute));
+            function ($attribute, $value) {
+                return !empty($value);
             }
         );
     }
@@ -279,8 +275,6 @@ trait RegistersValidationRules
 
                 $periodStart = Arr::get($values[array_key_first($values)], 'period_start.0.date');
                 $periodEnd = Arr::get($values[array_key_first($values)], 'period_end.0.date');
-                // $isPeriodStartDate = strtotime($periodStart);
-                // $isPeriodEndDate = strtotime($periodEnd);
                 $isPeriodStartDate = dateStrToTime($periodStart);
                 $isPeriodEndDate = dateStrToTime($periodEnd);
 

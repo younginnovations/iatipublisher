@@ -1,11 +1,11 @@
 <template>
-  <div class="bg-paper px-5 xl:px-10 pt-4 pb-[71px]">
+  <div class="bg-paper px-5 pt-4 pb-[71px] xl:px-10">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       :title="`${transactionData.reference ?? 'Untitled'} - Transaction detail`"
       :back-link="`${activityLink}/transaction`"
     >
-      <div class="flex space-x-3 items-center">
+      <div class="flex items-center space-x-3">
         <Toast
           v-if="toastData.visibility"
           :message="toastData.message"
@@ -35,7 +35,7 @@
       </aside>
       <div class="activities__content">
         <div></div>
-        <div class="activities__content--elements -mx-3 -mt-3 xl:flex flex-wrap">
+        <div class="activities__content--elements -mx-3 -mt-3 flex-wrap xl:flex">
           <template v-for="(post, key) in transactionData" :key="key">
             <TransactionElement
               :data="post"
