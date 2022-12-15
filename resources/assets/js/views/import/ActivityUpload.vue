@@ -87,7 +87,7 @@
             </div>
             <span v-if="error" class="error">{{ error }}</span>
             <div
-              class="flex w-[280px] flex-col items-start gap-4 overflow-hidden md:w-[400px] md:flex-row md:items-end lg:w-auto lg:justify-between"
+              class="flex w-[280px] flex-col items-start gap-4 md:w-[400px] md:flex-row md:items-end lg:w-auto lg:justify-between"
             >
               <BtnComponent
                 class="!border-red !border"
@@ -106,8 +106,9 @@
                 <HoverText
                   hover-text="This template contains all the elements that you have to fill as per the IATI Standard before uploading in IATI Publisher. Please make sure that you follow the structure and format of the template."
                   name=""
-                  class="hover-text"
+                  class="hover-text import-activity"
                   position="right"
+                  :show-iati-reference="true"
                 />
               </div>
             </div>
