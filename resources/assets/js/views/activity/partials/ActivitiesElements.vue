@@ -235,7 +235,6 @@ function getLink(has_data: number, index: string) {
   .button__dropdown {
     @apply absolute right-0 top-full z-10 text-left shadow-dropdown;
     width: 118px;
-    outline: 1px solid red;
 
     li {
       @apply flex py-1.5 px-3.5 hover:bg-white;
