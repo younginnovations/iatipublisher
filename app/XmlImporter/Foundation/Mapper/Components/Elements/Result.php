@@ -65,7 +65,7 @@ class Result
         $indicatorTemplate = Arr::get($this->result[$index], 'indicator', []);
         $indicatorData = [Arr::get($indicatorTemplate, 0, [])];
 
-        if (($indicators && empty($indicators)) || implode('', Arr::flatten($indicatorAttributes)) !== '') {
+        if (($indicators && !empty($indicators)) || implode('', Arr::flatten($indicatorAttributes)) !== '') {
             foreach ($indicators as $key => $indicator) {
                 $indicator = $indicator['indicator'];
                 $indicatorData[$key]['measure'] = $indicatorAttributes[$key]['measure'];

@@ -6,6 +6,7 @@ namespace App\Http\Requests\Activity\Result;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 use App\IATI\Services\Activity\ResultService;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -101,28 +102,10 @@ class ResultRequest extends ActivityBaseRequest
     {
         Validator::extendImplicit(
             'indicator_ref_code_present',
-            function () use ($fileUpload, $indicators) {
-                if ($fileUpload) {
-                    if ($fileUpload && !empty($fileUpload)) {
-                        foreach ($indicators as $indicator) {
-                            $refs = $indicator['reference'];
+            function () {
+                $params = $this->route()->parameters();
 
-                            if (!empty($refs)) {
-                                foreach ($refs as $ref) {
-                                    if (array_key_exists('code', $ref) && $ref['code'] && !empty($ref['code'])) {
-                                        return false;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    return true;
-                } else {
-                    $params = $this->route()->parameters();
-
-                    return !app()->make(ResultService::class)->indicatorHasRefCode($params['resultId']);
-                }
+                return !app()->make(ResultService::class)->indicatorHasRefCode($params['resultId']);
             }
         );
 
@@ -139,8 +122,21 @@ class ResultRequest extends ActivityBaseRequest
             $referenceForm = sprintf('reference.%s', $referenceIndex);
             $rules[sprintf('%s.vocabulary_uri', $referenceForm)] = 'nullable|url';
 
-            if (!empty($reference['code']) && $hasResultId) {
-                $rules[sprintf('%s.code', $referenceForm)] = 'indicator_ref_code_present';
+            if (!empty($reference['code']) && $reference['code'] !== '' && $hasResultId) {
+                if ($fileUpload) {
+                    $hasCode = false;
+
+                    foreach ((Arr::get($indicators, 'reference', [])) as $ref) {
+                        if (Arr::get($ref, 'code') && !empty($ref['code'])) {
+                            $hasCode = true;
+                            break;
+                        }
+                    }
+
+                    $rules[sprintf('%s.code', $referenceForm)] = 'indicator_ref_code_present:' . !$hasCode;
+                } else {
+                    $rules[sprintf('%s.code', $referenceForm)] = 'indicator_ref_code_present';
+                }
             }
         }
 
