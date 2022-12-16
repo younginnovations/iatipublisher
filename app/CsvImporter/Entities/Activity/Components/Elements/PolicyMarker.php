@@ -145,7 +145,7 @@ class PolicyMarker extends Element
 
         if ($key === $this->_csvHeaders[2]) {
             $validSignificance = $this->loadCodeList('PolicySignificance');
-            $value = $value ? trim($value) : '';
+            $value = is_string($value) ? trim($value) : '';
 
             if ($value) {
                 foreach ($validSignificance as $code => $name) {

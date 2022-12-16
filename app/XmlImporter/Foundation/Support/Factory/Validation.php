@@ -198,13 +198,7 @@ class Validation extends Factory
                 '%s.narrative.%s.narrative.required_with_language',
                 $elementName,
                 $narrativeIndex
-            )] = trans(
-                'validation.required_with',
-                [
-                    'attribute' => trans('elementForm.narrative'),
-                    'values'    => trans('elementForm.language'),
-                ]
-            );
+            )] = 'The narrative field is required with language.';
         }
 
         return $messages;
