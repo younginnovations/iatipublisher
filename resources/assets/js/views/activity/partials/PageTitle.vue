@@ -73,6 +73,7 @@
               :message="refreshToastMsg.refreshMessage"
               :type="refreshToastMsg.refreshMessageType"
             />
+            <DownloadActivityButton />
             <PublishSelected />
             <DeleteButton v-if="store.state.selectedActivities.length === 1" />
             <AddActivityButton />
@@ -85,6 +86,7 @@
 
 <script setup lang="ts">
 import { inject } from 'vue';
+import DownloadActivityButton from './DownloadActivityButton.vue';
 import AddActivityButton from './AddActivityButton.vue';
 import Toast from 'Components/ToastMessage.vue';
 import RefreshToastMessage from 'Activity/bulk-publish/RefreshToast.vue';
