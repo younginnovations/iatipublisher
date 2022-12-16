@@ -16,9 +16,24 @@ class TitleRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function rules(): array
+    public function rules($name = 'narrative', $data = []): array
     {
-        $rules['narrative'] = 'unique_lang|unique_default_lang';
+        if ($name === 'title') {
+            $titles = $data;
+        } else {
+            $titles = request()->get('narrative');
+        }
+
+        $rules[$name] = 'unique_lang|unique_default_lang';
+        $rules[sprintf('%s.0.narrative', $name)] = 'required';
+
+        if (is_array($titles) && count($titles)) {
+            foreach ($titles as $key => $title) {
+                if ($key !== 0) {
+                    $rules[sprintf('%s.%s.narrative', $name, $key)] = 'required_with_language';
+                }
+            }
+        }
 
         return $rules;
     }
@@ -28,10 +43,25 @@ class TitleRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function messages(): array
+    public function messages($name = 'narrative', $data = []): array
     {
-        $messages['narrative.unique_lang'] = 'The title language field must be unique.';
-        $messages['narrative.unique_default_lang'] = 'The title language field must be unique.';
+        if ($name === 'title') {
+            $titles = $data;
+        } else {
+            $titles = request()->get('narrative');
+        }
+
+        $messages[sprintf('%s.unique_lang', $name)] = 'The title language field must be unique.';
+        $messages[sprintf('%s.unique_default_lang', $name)] = 'The title language field must be unique.';
+        $messages[sprintf('%s.0.narrative.required', $name)] = 'The first title is required.';
+
+        if (is_array($titles) && count($titles)) {
+            foreach ($titles as $key => $title) {
+                if ($key !== 0) {
+                    $messages[sprintf('%s.%s.narrative.required_with_language', $name, $key)] = 'The narrative is required when language is specified.';
+                }
+            }
+        }
 
         return $messages;
     }

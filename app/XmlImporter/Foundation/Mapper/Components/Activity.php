@@ -198,10 +198,10 @@ class Activity
     public function iatiIdentifier($element, $template): array
     {
         $this->identifier = $template['identifier'];
-        $this->identifier['iati_identifier_text'] = $this->value($element);
+        $this->identifier['iati_identifier_text'] = trim((string) $this->value($element));
 
         if ($this->orgRef) {
-            $this->identifier['activity_identifier'] = substr($this->value($element), strlen($this->orgRef) + 1);
+            $this->identifier['activity_identifier'] = substr((string) $this->value($element), strlen($this->orgRef) + 1);
         }
 
         return $this->identifier;
@@ -379,8 +379,8 @@ class Activity
 
         foreach ($component as $key => $value) {
             if (($this->name($value) === 'mailingAddress') && is_array($value)) {
-                $array[]['narrative'] = $this->value(Arr::get($component, 'value', []), 'mailingAddress');
-                unset($component['value'][$key]);
+                $array[]['narrative'] = $this->value($component, 'mailingAddress');
+                unset($component[$key]);
             }
         }
 
@@ -582,10 +582,8 @@ class Activity
         foreach (Arr::get($element, 'value', []) as $index => $budgetItem) {
             $this->countryBudgetItems[$this->index]['budget_item'][$index]['code'] = $this->attributes($budgetItem, 'code');
             $this->countryBudgetItems[$this->index]['budget_item'][$index]['percentage'] = $this->attributes($budgetItem, 'percentage');
-            $this->countryBudgetItems[$this->index]['budget_item'][$index]['description'][0]['narrative'] = (($desc = $this->value(
-                Arr::get($budgetItem, 'value', []),
-                'description'
-            )) === '') ? $this->emptyNarrative : $desc;
+            $desc = $this->value(Arr::get($budgetItem, 'value', []), 'description');
+            $this->countryBudgetItems[$this->index]['budget_item'][$index]['description'][0]['narrative'] = ($desc === '') ? $this->emptyNarrative : $desc;
         }
         $this->index++;
 
@@ -779,7 +777,7 @@ class Activity
                 $this->defaultAidType[$this->index]['earmarking_category'] = $code;
                 break;
             case '3':
-                $this->defaultAidType[$this->index]['default_aid_type_text'] = $code;
+                $this->defaultAidType[$this->index]['earmarking_modality'] = $code;
                 break;
             case '4':
                 $this->defaultAidType[$this->index]['cash_and_voucher_modalities'] = $code;

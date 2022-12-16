@@ -155,6 +155,7 @@ form {
   }
 
   .multi-form+.collection_error,
+  .form-field-group+.collection_error,
   .wrapped-child-body+.collection_error{
     display: block;
   }

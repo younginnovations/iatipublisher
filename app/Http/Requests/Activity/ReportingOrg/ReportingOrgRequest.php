@@ -71,7 +71,7 @@ class ReportingOrgRequest extends ActivityBaseRequest
     {
         $messages = [];
 
-        $messages['reporting_org.size'] = 'The reporting org should have only one value.';
+        $messages['reporting_org.size'] = 'The reporting organisation should not have multiple values or narratives.';
 
         foreach ($formFields as $reportingOrganizationIndex => $reportingOrganization) {
             $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);

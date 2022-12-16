@@ -102,9 +102,13 @@ class Validation extends Factory
     /**
      * Get the unique validation errors.
      *
+     * @param $isDuplicate
+     * @param $duplicateTransaction
+     * @param $isIdentifierValid
+     *
      * @return array
      */
-    public function withErrors($isDuplicate, $duplicateTransaction): array
+    public function withErrors($isDuplicate, $duplicateTransaction, $isIdentifierValid): array
     {
         $errors = [];
 
@@ -114,11 +118,15 @@ class Validation extends Factory
         }
 
         if ($isDuplicate) {
-            $errors['activity_identifier']['activity_identifier'] = 'The activity has been duplicated.';
+            $errors['activity_identifier']['activity_identifier.identifier'] = 'The activity has been duplicated.';
         }
 
         if ($duplicateTransaction) {
             $errors['transactions']['transaction.reference'] = 'The activity contains duplicate transactions.';
+        }
+
+        if (!$isIdentifierValid) {
+            $errors['activity_identifier']['activity_identifier.activity_identifier'] = 'The activity is invalid. Please ensure that the activity identifier matches with organization identifier.';
         }
 
         return $errors;
@@ -190,13 +198,7 @@ class Validation extends Factory
                 '%s.narrative.%s.narrative.required_with_language',
                 $elementName,
                 $narrativeIndex
-            )] = trans(
-                'validation.required_with',
-                [
-                    'attribute' => trans('elementForm.narrative'),
-                    'values'    => trans('elementForm.language'),
-                ]
-            );
+            )] = 'The narrative field is required with language.';
         }
 
         return $messages;

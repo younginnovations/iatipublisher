@@ -46,6 +46,7 @@ class Condition extends Element
     public function __construct($fields, Validation $factory)
     {
         $this->prepare($fields);
+        $this->removeEmptyCondition();
         $this->factory = $factory;
         $this->request = new ConditionRequest();
     }
@@ -63,6 +64,32 @@ class Condition extends Element
             if (!is_null($values) && array_key_exists($key, array_flip($this->_csvHeaders))) {
                 foreach ($values as $index => $value) {
                     $this->map($key, $index, $value);
+                }
+            }
+        }
+    }
+
+    /**
+     * Remove empty budget items.
+     *
+     * @return void
+     */
+    public function removeEmptyCondition(): void
+    {
+        $conditions = Arr::get($this->data, 'conditions.condition', []);
+
+        if (!empty($conditions)) {
+            foreach ($conditions as $key => $condition) {
+                $has_data = false;
+
+                array_walk_recursive($condition, function ($item) use (&$condition, &$has_data) {
+                    if ($item !== null && $item != '') {
+                        $has_data = true;
+                    }
+                });
+
+                if (!$has_data) {
+                    unset($this->data['conditions']['condition'][$key]);
                 }
             }
         }
@@ -111,7 +138,11 @@ class Condition extends Element
                 $value = $value ? '1' : '0';
             }
 
-            $this->data['conditions']['condition_attached'] = Arr::get($this->data(), 'conditions.condition_attached', $value);
+            $condition_attached = Arr::get($this->data(), 'conditions.condition_attached');
+
+            if ($condition_attached === '') {
+                $this->data['conditions']['condition_attached'] = $value;
+            }
         }
     }
 

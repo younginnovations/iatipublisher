@@ -54,6 +54,11 @@ class XmlQueueWriter
     /**
      * @var
      */
+    protected $orgRef;
+
+    /**
+     * @var
+     */
     protected $xmlActivityIdentifiers;
 
     /**
@@ -85,6 +90,7 @@ class XmlQueueWriter
      *
      * @param                        $userId
      * @param                        $orgId
+     * @param                        $orgRef
      * @param                        $dbIatiIdentifiers
      * @param                        $xmlActivityIdentifiers
      * @param ActivityRepository     $activityRepo
@@ -95,6 +101,7 @@ class XmlQueueWriter
     public function __construct(
         $userId,
         $orgId,
+        $orgRef,
         $dbIatiIdentifiers,
         $xmlActivityIdentifiers,
         ActivityRepository $activityRepo,
@@ -108,6 +115,7 @@ class XmlQueueWriter
         $this->documentLinkRepo = $documentLinkRepo;
         $this->userId = $userId;
         $this->orgId = $orgId;
+        $this->orgRef = $orgRef;
         $this->dbIatiIdentifiers = $dbIatiIdentifiers;
         $this->xmlActivityIdentifiers = $xmlActivityIdentifiers;
         $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH ', 'XmlImporter/tmp');
@@ -128,10 +136,11 @@ class XmlQueueWriter
         $existing = $this->activityAlreadyExists($activity_identifier);
         $duplicate = $this->activityIsDuplicate(Arr::get($mappedActivity, 'iati_identifier.iati_identifier_text'));
         $duplicate_transaction = $this->transactionIsDuplicate(Arr::get($mappedActivity, 'transaction_references', []));
+        $isIdentifierValid = $this->isIdentifierValid(Arr::get($mappedActivity, 'iati_identifier.iati_identifier_text'));
 
         $errors = $xmlValidator
             ->init($mappedActivity)
-            ->validateActivity($duplicate, $duplicate_transaction);
+            ->validateActivity($duplicate, $duplicate_transaction, $isIdentifierValid);
 
         $mappedActivity['org_id'] = $this->orgId;
         $this->success++;
@@ -161,6 +170,18 @@ class XmlQueueWriter
     public function activityIsDuplicate($identifier): bool
     {
         return Arr::get($this->xmlActivityIdentifiers, $identifier, 0) > 1 ? true : false;
+    }
+
+    /**
+     * Checks if activity identifier is valid for the organization.
+     *
+     * @param $identifier
+     *
+     * @return bool
+     */
+    public function isIdentifierValid($identifier): bool
+    {
+        return str_starts_with($identifier, $this->orgRef);
     }
 
     /**

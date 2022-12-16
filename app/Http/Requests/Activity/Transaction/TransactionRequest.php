@@ -67,6 +67,7 @@ class TransactionRequest extends ActivityBaseRequest
 
         $rules['transaction_type.0.transaction_type_code'] = 'nullable|in:' . implode(',', array_keys(getCodeList('TransactionType', 'Activity', false)));
         $rules['flow_type.0.flow_type'] = 'nullable|in:' . implode(',', array_keys(getCodeList('FlowType', 'Activity', false)));
+        $rules['finance_type.0.finance_type'] = 'nullable|in:' . implode(',', array_keys(getCodeList('FinanceType', 'Activity', false)));
         $rules['aid_type.0.aid_type_vocabulary'] = 'nullable|in:' . implode(',', array_keys(getCodeList('AidTypeVocabulary', 'Activity', false)));
         $rules['aid_type.0.aid_type_code'] = 'nullable|in:' . implode(',', array_keys(getCodeList('AidType', 'Activity', false)));
         $rules['aid_type.0.earmarking_category'] = 'nullable|in:' . implode(',', array_keys(getCodeList('EarmarkingCategory', 'Activity', false)));
@@ -110,6 +111,7 @@ class TransactionRequest extends ActivityBaseRequest
 
         $messages['transaction_type.0.transaction_type_code.in'] = 'The transaction type is invalid.';
         $messages['flow_type.0.flow_type.in'] = 'The transaction flow type code is invalid.';
+        $messages['finance_type.0.finance_type.in'] = 'The transaction finance type code is invalid.';
         $messages['aid_type.0.aid_type_vocabulary.in'] = 'The transaction aid type vocabulary is invalid.';
         $messages['aid_type.0.aid_type_code.in'] = 'The transaction aid type code is invalid.';
         $messages['aid_type.0.earmarking_category.in'] = 'The transaction aid type code is invalid.';

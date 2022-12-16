@@ -55,7 +55,11 @@
           <tr v-for="(trans, t, index) in transactionsData.data" :key="index">
             <td>
               <a :href="`${activityLink}/transaction/${trans.id}`">
-                <span>{{ trans.transaction.reference ?? "- - -" }}</span>
+                <span>{{
+                  trans.transaction.reference && trans.transaction.reference !== ""
+                    ? trans.transaction.reference
+                    : "- - -"
+                }}</span>
               </a>
             </td>
             <td>
