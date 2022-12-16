@@ -173,16 +173,27 @@ class XmlValidator
     /**
      * @param bool $isDuplicate
      * @param bool $duplicateTransaction
+     * @param bool $isIdentifierValid
      *
      * @return array
      */
-    public function validateActivity(bool $isDuplicate, bool $duplicateTransaction): array
+    public function validateActivity(bool $isDuplicate, bool $duplicateTransaction, bool $isIdentifierValid): array
     {
         return $this->factory->initialize($this->activity, $this->rules(), $this->messages())
             ->passes()
-            ->withErrors($isDuplicate, $duplicateTransaction);
+            ->withErrors($isDuplicate, $duplicateTransaction, $isIdentifierValid);
     }
 
+    /**
+     * Create base rule for multilevel elements.
+     *
+     * @param $baseRules
+     * @param $element
+     * @param $data
+     * @param $indexRequired
+     *
+     * @return array
+     */
     public function getBaseRules($baseRules, $element, $data, $indexRequired = true): array
     {
         $rules = [];
@@ -199,6 +210,16 @@ class XmlValidator
         return $rules;
     }
 
+    /**
+     * Create base messages for multilevel elements.
+     *
+     * @param $baseRules
+     * @param $element
+     * @param $data
+     * @param $indexRequired
+     *
+     * @return array
+     */
     public function getBaseMessages($baseMessages, $element, $data, $indexRequired = true): array
     {
         $messages = [];
@@ -426,8 +447,6 @@ class XmlValidator
      */
     public function rulesForOtherIdentifier(array $activity): array
     {
-        dump(Arr::get($activity, 'other_identifier', []), (new OtherIdentifierRequest())->getRulesForOtherIdentifier(Arr::get($activity, 'other_identifier', [])));
-
         return (new OtherIdentifierRequest())->getRulesForOtherIdentifier(Arr::get($activity, 'other_identifier', []));
     }
 

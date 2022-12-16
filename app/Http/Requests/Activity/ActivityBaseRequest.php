@@ -314,9 +314,12 @@ class ActivityBaseRequest extends FormRequest
         $validLanguages = implode(',', array_keys(getCodeList('Language', 'Activity', false)));
 
         foreach ($formFields as $narrativeIndex => $narrative) {
-            $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with_language';
             $rules[sprintf('%s.narrative.%s.language', $formBase, $narrativeIndex)][] = 'nullable';
             $rules[sprintf('%s.narrative.%s.language', $formBase, $narrativeIndex)][] = sprintf('in:%s', $validLanguages);
+
+            if (!empty(Arr::get($narrative, 'language', ''))) {
+                $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with_language:';
+            }
         }
 
         return $rules;
