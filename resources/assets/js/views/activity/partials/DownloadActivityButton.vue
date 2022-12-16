@@ -30,20 +30,21 @@
         }
       "
     >
-      <p class="font-bold">
+      <p class="text-sm font-bold">
         The XML file is in wrong format. Would you like to download it anyway?
       </p>
 
-      <p
-        class="relative h-40 overflow-y-auto rounded-lg bg-rose p-4 pt-8 text-sm"
-      >
-        <a
-          class="absolute top-1 right-3 cursor-pointer text-xs font-bold"
-          @click="downloadError('error', message)"
-          >Download error message</a
-        >
-        Error message : {{ message }}
-      </p>
+      <div class="mb-4 h-40 overflow-y-auto rounded-lg bg-rose p-4 text-sm">
+        <div class="mb-2 flex justify-between">
+          <div>Error message</div>
+          <a
+            class="top-1 right-3 cursor-pointer text-xs font-bold"
+            @click="downloadError('error', message)"
+            >Download error message</a
+          >
+        </div>
+        {{ message }}
+      </div>
 
       <div class="flex justify-end space-x-4">
         <button
