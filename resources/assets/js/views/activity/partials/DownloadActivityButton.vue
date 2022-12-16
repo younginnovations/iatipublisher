@@ -1,26 +1,26 @@
 <template>
-  <div class="flex flex-row-reverse gap-2">
+  <div class="relative flex flex-row-reverse gap-2">
     <button
       v-if="store.state.selectedActivities.length > 0"
       ref="dropdownBtn"
-      class="button secondary-btn mr-3.5 font-bold"
+      class="button secondary-btn font-bold"
       @click="toggle"
     >
       <svg-vue icon="download-file" />
-      <div
-        v-if="state.isVisible"
-        class="button__dropdown absolute right-0 top-full z-10 w-56 bg-white p-2 text-left shadow-dropdown"
-      >
-        <ul>
-          <li>
-            <a href="#" :class="liClass" @click="downloadCsv">Download CSV</a>
-          </li>
-          <li>
-            <a href="#" @click="downloadXml" :class="liClass">Download XML</a>
-          </li>
-        </ul>
-      </div>
     </button>
+    <div
+      v-if="state.isVisible"
+      class="button__dropdown absolute left-0 top-[calc(100%_+_8px)] z-10 w-56 bg-white p-2 text-left shadow-dropdown"
+    >
+      <ul>
+        <li>
+          <a href="#" :class="liClass" @click="downloadCsv">Download CSV</a>
+        </li>
+        <li>
+          <a href="#" @click="downloadXml" :class="liClass">Download XML</a>
+        </li>
+      </ul>
+    </div>
     <Modal
       :modal-active="showErrorpopup"
       width="583"
@@ -36,7 +36,7 @@
       </p>
       <div class="flex justify-end space-x-4">
         <button
-          class="text-teal text-xs font-bold capitalize"
+          class="text-xs font-bold capitalize text-bluecoral"
           @click="
             () => {
               showErrorpopup = false;
@@ -45,7 +45,12 @@
         >
           Go back
         </button>
-        <button @click="downloadErrorxml">Download Anyway</button>
+        <button
+          class="rounded bg-bluecoral px-4 py-3 font-bold text-white"
+          @click="downloadErrorxml"
+        >
+          Download Anyway
+        </button>
       </div>
     </Modal>
     <Toast
