@@ -379,8 +379,8 @@ class Activity
 
         foreach ($component as $key => $value) {
             if (($this->name($value) === 'mailingAddress') && is_array($value)) {
-                $array[]['narrative'] = $this->value(Arr::get($component, 'value', []), 'mailingAddress');
-                unset($component['value'][$key]);
+                $array[]['narrative'] = $this->value($component, 'mailingAddress');
+                unset($component[$key]);
             }
         }
 
@@ -777,7 +777,7 @@ class Activity
                 $this->defaultAidType[$this->index]['earmarking_category'] = $code;
                 break;
             case '3':
-                $this->defaultAidType[$this->index]['default_aid_type_text'] = $code;
+                $this->defaultAidType[$this->index]['earmarking_modality'] = $code;
                 break;
             case '4':
                 $this->defaultAidType[$this->index]['cash_and_voucher_modalities'] = $code;

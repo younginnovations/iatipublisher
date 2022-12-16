@@ -387,12 +387,12 @@ class ResultService
                         'iso-date' => Arr::get($baseline, 'date', null),
                         'value'    => $baselineValue,
                     ],
+                    'location'      => $this->buildLocation(Arr::get($baseline, 'location', [])),
+                    'dimension'     => $this->buildDimension(Arr::get($baseline, 'dimension', []), $measure),
+                    'document-link' => $this->buildDocumentLink(Arr::get($baseline, 'document_link', [])),
                     'comment'       => [
                         'narrative' => $this->buildNarrative(Arr::get($baseline, 'comment.0.narrative')),
                     ],
-                    'dimension'     => $this->buildDimension(Arr::get($baseline, 'dimension', []), $measure),
-                    'document-link' => $this->buildDocumentLink(Arr::get($baseline, 'document_link', [])),
-                    'location'      => $this->buildLocation(Arr::get($baseline, 'location', [])),
                 ];
             }
         }
@@ -454,12 +454,12 @@ class ResultService
                     '@attributes'   => [
                         'value' => Arr::get($period, 'value', null),
                     ],
+                    'location'      => $this->buildLocation(Arr::get($period, 'location', [])),
+                    'dimension'     => $this->buildDimension(Arr::get($period, 'dimension', []), $measure),
                     'comment'       => [
                         'narrative' => $this->buildNarrative(Arr::get($period, 'comment.0.narrative', [])),
                     ],
-                    'dimension'     => $this->buildDimension(Arr::get($period, 'dimension', []), $measure),
                     'document-link' => $this->buildDocumentLink(Arr::get($period, 'document_link', [])),
-                    'location'      => $this->buildLocation(Arr::get($period, 'location', [])),
                 ];
             }
         }

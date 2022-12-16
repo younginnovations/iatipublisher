@@ -126,7 +126,6 @@ class Title extends Element
      */
     public function rules(): array
     {
-        $rules = $this->getBaseRules($this->request->rules());
         $rules['activity_title.0.narrative'] = 'required';
 
         return $rules;
@@ -139,7 +138,6 @@ class Title extends Element
      */
     public function messages(): array
     {
-        $messages = $this->getBaseMessages($this->request->messages());
         $messages['activity_title.0.narrative.required'] = 'The activity title is required.';
 
         return $messages;
