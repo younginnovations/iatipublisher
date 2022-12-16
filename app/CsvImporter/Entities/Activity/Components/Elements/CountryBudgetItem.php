@@ -47,6 +47,7 @@ class CountryBudgetItem extends Element
     public function __construct($fields, Validation $factory)
     {
         $this->prepare($fields);
+        $this->removeEmptyBudgetItems();
         $this->factory = $factory;
         $this->request = new CountryBudgetItemRequest();
     }
@@ -64,6 +65,32 @@ class CountryBudgetItem extends Element
             if (!is_null($values) && array_key_exists($key, array_flip($this->_csvHeaders))) {
                 foreach ($values as $index => $value) {
                     $this->map($key, $index, $value);
+                }
+            }
+        }
+    }
+
+    /**
+     * Remove empty budget items.
+     *
+     * @return void
+     */
+    public function removeEmptyBudgetItems(): void
+    {
+        $countryBudgetItems = Arr::get($this->data, 'country_budget_items.budget_item', []);
+
+        if (!empty($countryBudgetItems)) {
+            foreach ($countryBudgetItems as $key => $budgetItem) {
+                $has_data = false;
+
+                array_walk_recursive($budgetItem, function ($item) use (&$budgetItem, &$has_data) {
+                    if ($item !== null && $item != '') {
+                        $has_data = true;
+                    }
+                });
+
+                if (!$has_data) {
+                    unset($this->data['country_budget_items']['budget_item'][$key]);
                 }
             }
         }

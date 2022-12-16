@@ -198,10 +198,10 @@ class Activity
     public function iatiIdentifier($element, $template): array
     {
         $this->identifier = $template['identifier'];
-        $this->identifier['iati_identifier_text'] = $this->value($element);
+        $this->identifier['iati_identifier_text'] = trim((string) $this->value($element));
 
         if ($this->orgRef) {
-            $this->identifier['activity_identifier'] = substr($this->value($element), strlen($this->orgRef) + 1);
+            $this->identifier['activity_identifier'] = substr((string) $this->value($element), strlen($this->orgRef) + 1);
         }
 
         return $this->identifier;
@@ -582,10 +582,8 @@ class Activity
         foreach (Arr::get($element, 'value', []) as $index => $budgetItem) {
             $this->countryBudgetItems[$this->index]['budget_item'][$index]['code'] = $this->attributes($budgetItem, 'code');
             $this->countryBudgetItems[$this->index]['budget_item'][$index]['percentage'] = $this->attributes($budgetItem, 'percentage');
-            $this->countryBudgetItems[$this->index]['budget_item'][$index]['description'][0]['narrative'] = (($desc = $this->value(
-                Arr::get($budgetItem, 'value', []),
-                'description'
-            )) === '') ? $this->emptyNarrative : $desc;
+            $desc = $this->value(Arr::get($budgetItem, 'value', []), 'description');
+            $this->countryBudgetItems[$this->index]['budget_item'][$index]['description'][0]['narrative'] = ($desc === '') ? $this->emptyNarrative : $desc;
         }
         $this->index++;
 

@@ -68,7 +68,7 @@ class DescriptionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $descriptionIndex => $description) {
             $descriptionForm = sprintf('description.%s', $descriptionIndex);
-            $narrativeMessages = $this->getMessagesForRequiredNarrative($description['narrative'], $descriptionForm);
+            $narrativeMessages = $this->getMessagesForNarrative($description['narrative'], $descriptionForm);
 
             foreach ($narrativeMessages as $key => $item) {
                 $messages[$key] = $item;

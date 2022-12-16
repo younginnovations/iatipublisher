@@ -75,8 +75,8 @@ trait RegistersValidationRules
 
         $this->extendImplicit(
             'required_with_language',
-            function ($attribute, $value) {
-                return !empty($value);
+            function ($attribute, $value, $parameters) {
+                return !empty($parameters[0]);
             }
         );
     }
