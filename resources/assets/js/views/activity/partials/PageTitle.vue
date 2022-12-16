@@ -77,6 +77,7 @@
             />
             <AddActivityButton />
             <div class="flex flex-row space-x-2">
+              <DownloadActivityButton />
               <PublishSelected />
               <DeleteButton
                 v-if="store.state.selectedActivities.length === 1"
@@ -91,6 +92,7 @@
 
 <script setup lang="ts">
 import { inject } from 'vue';
+import DownloadActivityButton from './DownloadActivityButton.vue';
 import AddActivityButton from './AddActivityButton.vue';
 import Toast from 'Components/ToastMessage.vue';
 import RefreshToastMessage from 'Activity/bulk-publish/RefreshToast.vue';
