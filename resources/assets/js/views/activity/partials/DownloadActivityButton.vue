@@ -30,10 +30,21 @@
         }
       "
     >
-      <p class="font-bold">Download anyway</p>
-      <p class="rounded-lg bg-rose p-4 text-sm">
-        This XML is wrong format. Do you want to download anyway?
+      <p class="font-bold">
+        The XML file is in wrong format. Would you like to download it anyway?
       </p>
+
+      <p
+        class="relative h-40 overflow-y-auto rounded-lg bg-rose p-4 pt-8 text-sm"
+      >
+        <a
+          class="absolute top-1 right-3 cursor-pointer text-xs font-bold"
+          @click="downloadError('error', message)"
+          >Download error message</a
+        >
+        Error message : {{ message }}
+      </p>
+
       <div class="flex justify-end space-x-4">
         <button
           class="text-xs font-bold capitalize text-bluecoral"
@@ -76,6 +87,7 @@ import Toast from '../../../components/ToastMessage.vue';
 import Modal from 'Components/PopupModal.vue';
 
 import axios from 'axios';
+import ErrorMessage from 'Components/ErrorMessage.vue';
 
 /**
  *  Global State
@@ -101,6 +113,7 @@ export default defineComponent({
     const toastMessage = ref('');
     const toastmessageType = ref(false);
     const showErrorpopup = ref(false);
+    const message = ref('');
 
     const toggleModel = (value: boolean) => {
       modelVisible.value = value;
@@ -108,7 +121,6 @@ export default defineComponent({
 
     const liClass =
       'block p-2.5 text-n-40 text-tiny leading-[1.5] font-bold hover:text-n-50 hover:bg-n-10';
-
     const dropdownBtn = ref();
     onMounted(() => {
       window.addEventListener('click', (e) => {
@@ -117,13 +129,27 @@ export default defineComponent({
         }
       });
     });
+    function downloadError(filename, text) {
+      var element = document.createElement('a');
+      element.setAttribute(
+        'href',
+        'data:text/plain;charset=utf-8,' + encodeURIComponent(text)
+      );
+      element.setAttribute('download', filename);
+
+      element.style.display = 'none';
+      document.body.appendChild(element);
+
+      element.click();
+
+      document.body.removeChild(element);
+    }
 
     const toggle = () => {
       state.isVisible = !state.isVisible;
     };
     const downloadErrorxml = () => {
       const activities = store.state.selectedActivities.join(',');
-
       axios
         .get(`/activities/download-xml/true?activities=[${activities}]`)
         .then((res) => {
@@ -146,18 +172,14 @@ export default defineComponent({
     };
     const downloadXml = () => {
       const activities = store.state.selectedActivities.join(',');
-
-      // axios({
-      //   url: `activities/download-csv?activities=[${activities}]`,
-      //   method: 'GET',
-      //   responseType: 'arraybuffer', http://127.0.0.1:8001/activities/download-xml?activities=[43
       axios
         .get(`/activities/download-xml?activities=[${activities}]`)
         .then((res) => {
+          console.log(res);
           if (res.data.success == false) {
             if (res.data.xml_error === true) {
               showErrorpopup.value = true;
-              console.log('heres');
+              message.value = res.data.message;
             } else {
               toastVisibility.value = true;
               toastMessage.value = res.data.message;
@@ -174,17 +196,11 @@ export default defineComponent({
             link.download = res.headers['content-disposition'].split('=')[1];
             link.click();
           }
-          console.log(res);
         });
     };
 
     const downloadCsv = () => {
       const activities = store.state.selectedActivities.join(',');
-
-      // axios({
-      //   url: `activities/download-csv?activities=[${activities}]`,
-      //   method: 'GET',
-      //   responseType: 'arraybuffer',
       axios
         .get(`/activities/download-csv?activities=[${activities}]`)
         .then((res) => {
@@ -224,6 +240,8 @@ export default defineComponent({
       Modal,
       showErrorpopup,
       downloadErrorxml,
+      message,
+      downloadError,
     };
   },
 });
