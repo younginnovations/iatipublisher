@@ -110,7 +110,7 @@ class DownloadActivityController extends Controller
                 $filename = $this->downloadActivityService->getDownloadFilename($this->downloadActivityService->getOrganizationPublisherId());
 
                 if (!$download && !$this->xmlServiceProvider->isValidAgainstSchema($mergedContent)) {
-                    return response()->json(['success' => false, 'message' => json_encode(libxml_get_errors(), JSON_THROW_ON_ERROR)]);
+                    return response()->json(['success' => false, 'xml_error' => true, 'message' => json_encode(libxml_get_errors(), JSON_THROW_ON_ERROR)]);
                 }
 
                 return response($mergedContent)
