@@ -17,7 +17,7 @@
           <a href="#" :class="liClass" @click="downloadCsv">Download CSV</a>
         </li>
         <li>
-          <a href="#" @click="downloadXml" :class="liClass">Download XML</a>
+          <a href="#" :class="liClass" @click="downloadXml">Download XML</a>
         </li>
       </ul>
     </div>
@@ -36,7 +36,7 @@
 
       <div class="mb-4 h-40 overflow-y-auto rounded-lg bg-rose p-4 text-sm">
         <div class="mb-2 flex justify-between">
-          <div>Error message</div>
+          <div class="text-xs font-bold">Error message</div>
           <a
             class="top-1 right-3 cursor-pointer text-xs font-bold"
             @click="downloadError('error', message)"
@@ -66,8 +66,8 @@
       </div>
     </Modal>
     <Toast
-      :type="toastmessageType"
       v-if="toastVisibility"
+      :type="toastmessageType"
       class="toast"
       :message="toastMessage"
     />
@@ -88,7 +88,6 @@ import Toast from '../../../components/ToastMessage.vue';
 import Modal from 'Components/PopupModal.vue';
 
 import axios from 'axios';
-import ErrorMessage from 'Components/ErrorMessage.vue';
 
 /**
  *  Global State
