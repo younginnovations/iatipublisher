@@ -17,9 +17,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getActivityIdentifier($activityArray, $i): ?string
+    public function getActivityIdentifier($activityArray, $i): string|int|null
     {
         return ($i === 0) ? Arr::get($activityArray, 'iati_identifier.activity_identifier', 'Not Available') : '';
     }
@@ -30,9 +30,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getActivityDefaultCurrency($activityArray, $i): ?string
+    public function getActivityDefaultCurrency($activityArray, $i): string|int|null
     {
         return ($i === 0) ? Arr::get($activityArray, 'default_field_values.default_language', '') : '';
     }
@@ -43,9 +43,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getActivityDefaultLanguage($activityArray, $i): ?string
+    public function getActivityDefaultLanguage($activityArray, $i): string|int|null
     {
         return ($i === 0) ? Arr::get($activityArray, 'default_field_values.default_language', '') : '';
     }
@@ -56,9 +56,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getHumanitarian($activityArray, $i): ?string
+    public function getHumanitarian($activityArray, $i): string|int|null
     {
         return ($i === 0) ? Arr::get($activityArray, 'default_field_values.humanitarian', '') : '';
     }
@@ -69,9 +69,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getReportingOrgReference($activityArray, $i): ?string
+    public function getReportingOrgReference($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'reporting_org.' . $i . '.ref', '');
     }
@@ -82,9 +82,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getReportingOrgType($activityArray, $i): ?string
+    public function getReportingOrgType($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'reporting_org.' . $i . '.type', '');
     }
@@ -95,9 +95,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getReportingOrgSecondaryReporter($activityArray, $i): ?string
+    public function getReportingOrgSecondaryReporter($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'reporting_org.' . $i . '.secondary_reporter', '');
     }
@@ -108,9 +108,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getReportingOrgNarrative($activityArray, $i): ?string
+    public function getReportingOrgNarrative($activityArray, $i): string|int|null
     {
         return $this->getNarrativeText(Arr::get($activityArray, 'reporting_org.' . $i . '.narrative', []), Arr::get($activityArray, 'default_field_values.default_language', ''));
     }
@@ -121,9 +121,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getActivityTitle($activityArray, $i): ?string
+    public function getActivityTitle($activityArray, $i): string|int|null
     {
         return ($i === 0) ? $this->getNarrativeText(Arr::get($activityArray, 'title', []), Arr::get($activityArray, 'default_field_values.default_language', '')) : '';
     }
@@ -134,9 +134,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getActivityDescriptionGeneral($activityArray, $i): ?string
+    public function getActivityDescriptionGeneral($activityArray, $i): string|int|null
     {
         return ($i === 0) ? $this->getDescriptionText(Arr::get($activityArray, 'description', []), Arr::get($activityArray, 'default_field_values.default_language', ''), '1') : '';
     }
@@ -147,9 +147,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getActivityDescriptionObjectives($activityArray, $i): ?string
+    public function getActivityDescriptionObjectives($activityArray, $i): string|int|null
     {
         return ($i === 0) ? $this->getDescriptionText(Arr::get($activityArray, 'description', []), Arr::get($activityArray, 'default_field_values.default_language', ''), '2') : '';
     }
@@ -160,9 +160,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getActivityDescriptionTargetGroups($activityArray, $i): ?string
+    public function getActivityDescriptionTargetGroups($activityArray, $i): string|int|null
     {
         return ($i === 0) ? $this->getDescriptionText(Arr::get($activityArray, 'description', []), Arr::get($activityArray, 'default_field_values.default_language', ''), '3') : '';
     }
@@ -173,9 +173,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getActivityDescriptionOthers($activityArray, $i): ?string
+    public function getActivityDescriptionOthers($activityArray, $i): string|int|null
     {
         return ($i === 0) ? $this->getDescriptionText(Arr::get($activityArray, 'description', []), Arr::get($activityArray, 'default_field_values.default_language', ''), '4') : '';
     }
@@ -199,9 +199,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getActualStartDate($activityArray, $i): ?string
+    public function getActualStartDate($activityArray, $i): string|int|null
     {
         return $this->getActivityDate(Arr::get($activityArray, 'activity_date', []), '2');
     }
@@ -212,9 +212,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getActualEndDate($activityArray, $i): ?string
+    public function getActualEndDate($activityArray, $i): string|int|null
     {
         return $this->getActivityDate(Arr::get($activityArray, 'activity_date', []), '4');
     }
@@ -225,9 +225,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getPlannedStartDate($activityArray, $i): ?string
+    public function getPlannedStartDate($activityArray, $i): string|int|null
     {
         return $this->getActivityDate(Arr::get($activityArray, 'activity_date', []), '1');
     }
@@ -238,9 +238,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getPlannedEndDate($activityArray, $i): ?string
+    public function getPlannedEndDate($activityArray, $i): string|int|null
     {
         return $this->getActivityDate(Arr::get($activityArray, 'activity_date', []), '3');
     }
@@ -251,9 +251,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getParticipatingOrganisationRole($activityArray, $i): ?string
+    public function getParticipatingOrganisationRole($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'participating_org.' . $i . '.organization_role', '');
     }
@@ -264,9 +264,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getParticipatingOrganisationReference($activityArray, $i): ?string
+    public function getParticipatingOrganisationReference($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'participating_org.' . $i . '.ref', '');
     }
@@ -277,9 +277,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getParticipatingOrganisationType($activityArray, $i): ?string
+    public function getParticipatingOrganisationType($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'participating_org.' . $i . '.type', '');
     }
@@ -290,9 +290,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getParticipatingOrganisationName($activityArray, $i): ?string
+    public function getParticipatingOrganisationName($activityArray, $i): string|int|null
     {
         return $this->getNarrativeText(Arr::get($activityArray, 'participating_org.' . $i . '.narrative', []), Arr::get($activityArray, 'default_field_values.default_language', ''));
     }
@@ -303,9 +303,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getParticipatingOrganisationIdentifier($activityArray, $i): ?string
+    public function getParticipatingOrganisationIdentifier($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'participating_org.' . $i . '.identifier', '');
     }
@@ -316,9 +316,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getParticipatingOrganisationCrsChannelCode($activityArray, $i): ?string
+    public function getParticipatingOrganisationCrsChannelCode($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'participating_org.' . $i . '.crs_channel_code', '');
     }
@@ -329,9 +329,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getRecipientCountryCode($activityArray, $i): ?string
+    public function getRecipientCountryCode($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'recipient_country.' . $i . '.country_code', '');
     }
@@ -342,9 +342,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getRecipientCountryPercentage($activityArray, $i): ?string
+    public function getRecipientCountryPercentage($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'recipient_country.' . $i . '.percentage', '');
     }
@@ -355,9 +355,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getRecipientCountryNarrative($activityArray, $i): ?string
+    public function getRecipientCountryNarrative($activityArray, $i): string|int|null
     {
         return $this->getNarrativeText(Arr::get($activityArray, 'recipient_country.' . $i . '.narrative', []), Arr::get($activityArray, 'default_field_values.default_language', ''));
     }
@@ -368,9 +368,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getRecipientRegionCode($activityArray, $i): ?string
+    public function getRecipientRegionCode($activityArray, $i): string|int|null
     {
         return $this->getRecipientRegionCodeFromVocabulary(Arr::get($activityArray, 'recipient_region.' . $i . '.region_vocabulary', ''), Arr::get($activityArray, 'recipient_region.' . $i, []));
     }
@@ -381,9 +381,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getRecipientRegionPercentage($activityArray, $i): ?string
+    public function getRecipientRegionPercentage($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'recipient_region.' . $i . '.percentage', '');
     }
@@ -394,9 +394,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getRecipientRegionVocabularyUri($activityArray, $i): ?string
+    public function getRecipientRegionVocabularyUri($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'recipient_region.' . $i . '.vocabulary_uri', '');
     }
@@ -407,9 +407,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getRecipientRegionNarrative($activityArray, $i): ?string
+    public function getRecipientRegionNarrative($activityArray, $i): string|int|null
     {
         return $this->getNarrativeText(Arr::get($activityArray, 'recipient_region.' . $i . '.narrative', []), Arr::get($activityArray, 'default_field_values.default_language', ''));
     }
@@ -420,9 +420,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getSectorVocabulary($activityArray, $i): ?string
+    public function getSectorVocabulary($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'sector.' . $i . '.sector_vocabulary', '');
     }
@@ -433,9 +433,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getSectorVocabularyURI($activityArray, $i): ?string
+    public function getSectorVocabularyURI($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'sector.' . $i . '.vocabulary_uri', '');
     }
@@ -446,9 +446,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getSectorCode($activityArray, $i): ?string
+    public function getSectorCode($activityArray, $i): string|int|null
     {
         return $this->getSectorCodeFromVocabulary(Arr::get($activityArray, 'sector.' . $i . '.sector_vocabulary', ''), Arr::get($activityArray, 'sector.' . $i, []));
     }
@@ -459,9 +459,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getSectorPercentage($activityArray, $i): ?string
+    public function getSectorPercentage($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'sector.' . $i . '.percentage', '');
     }
@@ -472,9 +472,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getSectorNarrative($activityArray, $i): ?string
+    public function getSectorNarrative($activityArray, $i): string|int|null
     {
         return $this->getNarrativeText(Arr::get($activityArray, 'sector.' . $i . '.narrative', []), Arr::get($activityArray, 'default_field_values.default_language', ''));
     }
@@ -485,9 +485,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getPolicyMarkerVocabulary($activityArray, $i): ?string
+    public function getPolicyMarkerVocabulary($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'policy_marker.' . $i . '.policy_marker_vocabulary', '');
     }
@@ -498,9 +498,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getPolicyMarkerCode($activityArray, $i): ?string
+    public function getPolicyMarkerCode($activityArray, $i): string|int|null
     {
         return $this->getPolicyMarkerCodeFromVocabulary(Arr::get($activityArray, 'policy_marker.' . $i . '.policy_marker_vocabulary', ''), Arr::get($activityArray, 'policy_marker.' . $i, []));
     }
@@ -511,9 +511,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getPolicyMarkerSignificance($activityArray, $i): ?string
+    public function getPolicyMarkerSignificance($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'policy_marker.' . $i . '.significance', '');
     }
@@ -524,9 +524,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getPolicyMarkerVocabularyUri($activityArray, $i): ?string
+    public function getPolicyMarkerVocabularyUri($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'policy_marker.' . $i . '.vocabulary_uri', '');
     }
@@ -537,9 +537,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getPolicyMarkerNarrative($activityArray, $i): ?string
+    public function getPolicyMarkerNarrative($activityArray, $i): string|int|null
     {
         return $this->getNarrativeText(Arr::get($activityArray, 'policy_marker.' . $i . '.narrative', []), Arr::get($activityArray, 'default_field_values.default_language', ''));
     }
@@ -563,9 +563,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getBudgetType($activityArray, $i): ?string
+    public function getBudgetType($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'budget.' . $i . '.budget_type', '');
     }
@@ -576,9 +576,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getBudgetStatus($activityArray, $i): ?string
+    public function getBudgetStatus($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'budget.' . $i . '.budget_status', '');
     }
@@ -589,9 +589,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getBudgetPeriodStart($activityArray, $i): ?string
+    public function getBudgetPeriodStart($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'budget.' . $i . '.period_start.0.date', '');
     }
@@ -602,9 +602,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getBudgetPeriodEnd($activityArray, $i): ?string
+    public function getBudgetPeriodEnd($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'budget.' . $i . '.period_end.0.date', '');
     }
@@ -615,9 +615,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getBudgetValue($activityArray, $i): ?string
+    public function getBudgetValue($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'budget.' . $i . '.budget_value.0.amount', '');
     }
@@ -628,9 +628,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getBudgetValueDate($activityArray, $i): ?string
+    public function getBudgetValueDate($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'budget.' . $i . '.budget_value.0.value_date', '');
     }
@@ -641,9 +641,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getBudgetCurrency($activityArray, $i): ?string
+    public function getBudgetCurrency($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'budget.' . $i . '.budget_value.0.currency', '');
     }
@@ -654,9 +654,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getRelatedActivityIdentifier($activityArray, $i): ?string
+    public function getRelatedActivityIdentifier($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'related_activity.' . $i . '.activity_identifier', '');
     }
@@ -667,9 +667,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getRelatedActivityType($activityArray, $i): ?string
+    public function getRelatedActivityType($activityArray, $i): string|int|null
     {
         return Arr::get($activityArray, 'related_activity.' . $i . '.relationship_type', '');
     }
@@ -719,9 +719,9 @@ trait DownloadActivitySimpleElementTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null
+     * @return string|null|int
      */
-    public function getDefaultAidTypeCode($activityArray, $i): ?string
+    public function getDefaultAidTypeCode($activityArray, $i): string|int|null
     {
         return $this->getDefaultAidTypeCodeFromVocabulary(Arr::get($activityArray, 'default_aid_type.' . $i . '.default_aid_type_vocabulary', ''), Arr::get($activityArray, 'default_aid_type.' . $i, []));
     }
