@@ -163,13 +163,11 @@ trait XmlHelper
         if (is_array(Arr::get($subElement, 'value', []))) {
             foreach (Arr::get($subElement, 'value', []) as $index => $value) {
                 $narrative = empty(Arr::get($value, 'value', '')) ? '' : Arr::get($value, 'value', '');
-                dump('narrative', $narrative);
                 $field[$index] = [
                     'narrative' => trim($narrative),
                     'language'  => $this->attributes($value, 'lang'),
                 ];
             }
-            // dump('field',$field);
 
             return $field;
         }
@@ -180,8 +178,6 @@ trait XmlHelper
             'narrative' => trim($narrative),
             'language'  => $this->attributes((array) $subElement, 'lang'),
         ];
-
-        dump('field', $field);
 
         return $field;
     }
