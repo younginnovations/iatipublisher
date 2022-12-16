@@ -185,7 +185,7 @@ class DownloadActivityService
      */
     public function getNarrativeText($narratives, $language): ?string
     {
-        if (count($narratives)) {
+        if (!empty($narratives) && is_array($narratives) && count($narratives)) {
             foreach ($narratives as $narrative) {
                 if (Arr::get($narrative, 'language', '') === $language || Arr::get($narrative, 'language', '') === '') {
                     return Arr::get($narrative, 'narrative', '');
@@ -207,7 +207,7 @@ class DownloadActivityService
      */
     public function getDescriptionText($descriptions, $language, $type): ?string
     {
-        if (count($descriptions)) {
+        if (!empty($descriptions) && is_array($descriptions) && count($descriptions)) {
             foreach ($descriptions as $description) {
                 if (Arr::get($description, 'type', $type) === $type) {
                     return $this->getNarrativeText(Arr::get($description, 'narrative', []), $language);
@@ -228,7 +228,7 @@ class DownloadActivityService
      */
     public function getActivityDate($activityDates, $type): ?string
     {
-        if (count($activityDates)) {
+        if (!empty($activityDates) && is_array($activityDates) && count($activityDates)) {
             foreach ($activityDates as $key => $activityDate) {
                 if (Arr::get($activityDate, 'type', '') === $type && !in_array($key, $this->insertedDates, true)) {
                     $this->insertedDates[] = $key;
@@ -308,7 +308,7 @@ class DownloadActivityService
      */
     public function getMailingAddressText($mailingAddresses, $language): ?string
     {
-        if (count($mailingAddresses)) {
+        if (!empty($mailingAddresses) && is_array($mailingAddresses) && count($mailingAddresses)) {
             foreach ($mailingAddresses as $mailingAddress) {
                 $narrative = $this->getNarrativeText(Arr::get($mailingAddress, 'narrative', []), $language);
 
