@@ -159,7 +159,14 @@ class DownloadActivityService
         return $filename . (now()->toDateString());
     }
 
-    public function getActivityArrayData($activityArray)
+    /**
+     * Returns required data in array format.
+     *
+     * @param $activityArray
+     *
+     * @return array
+     */
+    public function getActivityArrayData($activityArray): array
     {
         $data = [];
         $count = $this->getElementCount($activityArray);
