@@ -376,7 +376,20 @@ class XmlGenerator
         ];
 
         $xmlData['iati-activity'] = $this->getXmlData($activity, $transaction, $result, $organization);
-        $xmlData['iati-activity']['@attributes'] = [
+        $xmlData['iati-activity']['@attributes'] = $this->getXmlAttributes($defaultValues);
+
+        return $this->arrayToXml->createXml('iati-activities', $xmlData);
+    }
+
+    /**
+     * Returns non empty xml attributes.
+     *
+     * @param $defaultValues
+     * @return array
+     */
+    public function getXmlAttributes($defaultValues): array
+    {
+        $data = [
             'last-updated-datetime' => gmdate('c', time()),
             'xml:lang'              => Arr::get($defaultValues, 'default_language', null),
             'default-currency'      => Arr::get($defaultValues, 'default_currency', null),
@@ -385,7 +398,13 @@ class XmlGenerator
             'budget-not-provided'   => Arr::get($defaultValues, 'budget_not_provided', ''),
         ];
 
-        return $this->arrayToXml->createXml('iati-activities', $xmlData);
+        foreach ($data as $key => $datum) {
+            if (empty($datum)) {
+                unset($data[$key]);
+            }
+        }
+
+        return $data;
     }
 
     /**

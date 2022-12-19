@@ -294,7 +294,7 @@ class TransactionRequest extends ActivityBaseRequest
 
                 return ['sector' => 'already_in_activity'];
             }
-        } elseif (!$activityService->isElementEmpty($formFields, 'sectorFields') && !$activityService->isElementEmpty($activitySectors, 'sectorFields')) {
+        } elseif (!$activityService->isElementEmpty($formFields, 'sectorFields') && !empty($activitySectors)) {
             return ['sector' => 'already_in_activity'];
         }
 

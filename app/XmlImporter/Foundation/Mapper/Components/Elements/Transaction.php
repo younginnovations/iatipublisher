@@ -227,10 +227,15 @@ class Transaction
      */
     protected function recipientRegion($subElement, $index): void
     {
-        $this->transaction[$index]['recipient_region'][0]['region_code'] = $this->attributes($subElement, 'code');
         $this->transaction[$index]['recipient_region'][0]['region_vocabulary'] = $this->attributes($subElement, 'vocabulary');
         $this->transaction[$index]['recipient_region'][0]['vocabulary_uri'] = $this->attributes($subElement, 'vocabulary-uri');
         $this->transaction[$index]['recipient_region'][0]['narrative'] = $this->narrative($subElement);
+
+        if ($this->attributes($subElement, 'vocabulary') === '1') {
+            $this->transaction[$index]['recipient_region'][0]['region_code'] = $this->attributes($subElement, 'code');
+        } else {
+            $this->transaction[$index]['recipient_region'][0]['custom_code'] = $this->attributes($subElement, 'code');
+        }
     }
 
     /**

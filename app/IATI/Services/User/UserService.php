@@ -77,6 +77,7 @@ class UserService
             'registration_number' => $data['registration_number'],
             'identifier'          => $data['registration_agency'] . '-' . $data['registration_number'],
             'iati_status'         => 'pending',
+            'name'                => [['narrative' => $data['publisher_name'], 'language' => null]],
         ]);
 
         $user = $this->userRepo->store([
@@ -110,6 +111,7 @@ class UserService
             'publisher_type'      => $data['publisher_type'],
             'identifier'          => $data['registration_agency'] . '-' . $data['registration_number'],
             'iati_status'         => 'pending',
+            'name'                => [['narrative' => $data['publisher_name'], 'language' => null]],
             'reporting_org'       => $data['source'] ? [[
                 'type' => null,
                 'ref' => null,

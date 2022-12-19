@@ -39,8 +39,6 @@ class TransactionCompleteTest extends ElementCompleteTest
             'transaction_type' => ['transaction_type_code'],
             'transaction_date' => ['date'],
             'value'            => ['amount', 'date', 'currency'],
-            'recipient_region' => ['region_code', 'custom_code'],
-            'aid_type'         => ['aid_type_code', 'earmarking_category', 'earmarking_modality', 'cash_and_voucher_modalities'],
         ]);
     }
 
