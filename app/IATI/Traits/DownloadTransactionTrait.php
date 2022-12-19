@@ -17,11 +17,11 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionInternalReference($activityArray, $i): string|int|null
+    public function getTransactionInternalReference($activityArray, $i): ?string
     {
-        return Arr::get($activityArray, 'transactions.' . $i . '.transaction.reference', '');
+        return (string) (Arr::get($activityArray, 'transactions.' . $i . '.transaction.reference', ''));
     }
 
     /**
@@ -30,11 +30,11 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionType($activityArray, $i): string|int|null
+    public function getTransactionType($activityArray, $i): ?string
     {
-        return Arr::get($activityArray, 'transactions.' . $i . '.transaction.transaction_type.0.transaction_type_code', '');
+        return (string) (Arr::get($activityArray, 'transactions.' . $i . '.transaction.transaction_type.0.transaction_type_code', ''));
     }
 
     /**
@@ -43,9 +43,9 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionDate($activityArray, $i): string|int|null
+    public function getTransactionDate($activityArray, $i): ?string
     {
         return Arr::get($activityArray, 'transactions.' . $i . '.transaction.transaction_date.0.date', '');
     }
@@ -56,11 +56,11 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionValue($activityArray, $i): string|int|null
+    public function getTransactionValue($activityArray, $i): ?string
     {
-        return Arr::get($activityArray, 'transactions.' . $i . '.transaction.value.0.amount', '');
+        return (string) (Arr::get($activityArray, 'transactions.' . $i . '.transaction.value.0.amount', ''));
     }
 
     /**
@@ -69,9 +69,9 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionValueDate($activityArray, $i): string|int|null
+    public function getTransactionValueDate($activityArray, $i): ?string
     {
         return Arr::get($activityArray, 'transactions.' . $i . '.transaction.value.0.date', '');
     }
@@ -82,9 +82,9 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionDescription($activityArray, $i): string|int|null
+    public function getTransactionDescription($activityArray, $i): ?string
     {
         return $this->getNarrativeText(Arr::get($activityArray, 'transactions.' . $i . '.transaction.description.0.narrative', []), Arr::get($activityArray, 'default_field_values.default_language', ''));
     }
@@ -95,11 +95,11 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionProviderOrganisationIdentifier($activityArray, $i): string|int|null
+    public function getTransactionProviderOrganisationIdentifier($activityArray, $i): ?string
     {
-        return Arr::get($activityArray, 'transactions.' . $i . '.transaction.provider_organization.0.organization_identifier_code', '');
+        return (string) (Arr::get($activityArray, 'transactions.' . $i . '.transaction.provider_organization.0.organization_identifier_code', ''));
     }
 
     /**
@@ -108,11 +108,11 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionProviderOrganisationType($activityArray, $i): string|int|null
+    public function getTransactionProviderOrganisationType($activityArray, $i): ?string
     {
-        return Arr::get($activityArray, 'transactions.' . $i . '.transaction.provider_organization.0.type', '');
+        return (string) (Arr::get($activityArray, 'transactions.' . $i . '.transaction.provider_organization.0.type', ''));
     }
 
     /**
@@ -121,11 +121,11 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionProviderOrganisationActivityIdentifier($activityArray, $i): string|int|null
+    public function getTransactionProviderOrganisationActivityIdentifier($activityArray, $i): ?string
     {
-        return Arr::get($activityArray, 'transactions.' . $i . '.transaction.provider_organization.0.provider_activity_id', '');
+        return (string) (Arr::get($activityArray, 'transactions.' . $i . '.transaction.provider_organization.0.provider_activity_id', ''));
     }
 
     /**
@@ -134,9 +134,9 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionProviderOrganisationDescription($activityArray, $i): string|int|null
+    public function getTransactionProviderOrganisationDescription($activityArray, $i): ?string
     {
         return $this->getNarrativeText(Arr::get($activityArray, 'transactions.' . $i . '.transaction.provider_organization.0.narrative', []), Arr::get($activityArray, 'default_field_values.default_language', ''));
     }
@@ -147,11 +147,11 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionReceiverOrganisationIdentifier($activityArray, $i): string|int|null
+    public function getTransactionReceiverOrganisationIdentifier($activityArray, $i): ?string
     {
-        return Arr::get($activityArray, 'transactions.' . $i . '.transaction.receiver_organization.0.organization_identifier_code', '');
+        return (string) (Arr::get($activityArray, 'transactions.' . $i . '.transaction.receiver_organization.0.organization_identifier_code', ''));
     }
 
     /**
@@ -160,11 +160,11 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionReceiverOrganisationType($activityArray, $i): string|int|null
+    public function getTransactionReceiverOrganisationType($activityArray, $i): ?string
     {
-        return Arr::get($activityArray, 'transactions.' . $i . '.transaction.receiver_organization.0.type', '');
+        return (string) (Arr::get($activityArray, 'transactions.' . $i . '.transaction.receiver_organization.0.type', ''));
     }
 
     /**
@@ -173,11 +173,11 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionReceiverOrganisationActivityIdentifier($activityArray, $i): string|int|null
+    public function getTransactionReceiverOrganisationActivityIdentifier($activityArray, $i): ?string
     {
-        return Arr::get($activityArray, 'transactions.' . $i . '.transaction.receiver_organization.0.receiver_activity_id', '');
+        return (string) (Arr::get($activityArray, 'transactions.' . $i . '.transaction.receiver_organization.0.receiver_activity_id', ''));
     }
 
     /**
@@ -186,9 +186,9 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionReceiverOrganisationDescription($activityArray, $i): string|int|null
+    public function getTransactionReceiverOrganisationDescription($activityArray, $i): ?string
     {
         return $this->getNarrativeText(Arr::get($activityArray, 'transactions.' . $i . '.transaction.receiver_organization.0.narrative', []), Arr::get($activityArray, 'default_field_values.default_language', ''));
     }
@@ -199,11 +199,11 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionSectorVocabulary($activityArray, $i): string|int|null
+    public function getTransactionSectorVocabulary($activityArray, $i): ?string
     {
-        return Arr::get($activityArray, 'transactions.' . $i . '.transaction.sector.0.sector_vocabulary', '');
+        return (string) (Arr::get($activityArray, 'transactions.' . $i . '.transaction.sector.0.sector_vocabulary', ''));
     }
 
     /**
@@ -212,9 +212,9 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionSectorVocabularyURI($activityArray, $i): string|int|null
+    public function getTransactionSectorVocabularyURI($activityArray, $i): ?string
     {
         return Arr::get($activityArray, 'transactions.' . $i . '.transaction.sector.0.vocabulary_uri', '');
     }
@@ -225,11 +225,11 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionSectorCode($activityArray, $i): string|int|null
+    public function getTransactionSectorCode($activityArray, $i): ?string
     {
-        return $this->getSectorCodeFromVocabulary(Arr::get($activityArray, 'transactions.' . $i . '.transaction.sector.0.sector_vocabulary', ''), Arr::get($activityArray, 'transactions.' . $i . '.transaction.sector.0', []));
+        return (string) ($this->getSectorCodeFromVocabulary(Arr::get($activityArray, 'transactions.' . $i . '.transaction.sector.0.sector_vocabulary', ''), Arr::get($activityArray, 'transactions.' . $i . '.transaction.sector.0', [])));
     }
 
     /**
@@ -238,9 +238,9 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionSectorNarrative($activityArray, $i): string|int|null
+    public function getTransactionSectorNarrative($activityArray, $i): ?string
     {
         return $this->getNarrativeText(Arr::get($activityArray, 'transactions.' . $i . '.transaction.sector.0.narrative', []), Arr::get($activityArray, 'default_field_values.default_language', ''));
     }
@@ -251,11 +251,11 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionRecipientCountryCode($activityArray, $i): string|int|null
+    public function getTransactionRecipientCountryCode($activityArray, $i): ?string
     {
-        return Arr::get($activityArray, 'transactions.' . $i . '.transaction.recipient_country.0.country_code', '');
+        return (string) (Arr::get($activityArray, 'transactions.' . $i . '.transaction.recipient_country.0.country_code', ''));
     }
 
     /**
@@ -264,11 +264,11 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionRecipientRegionCode($activityArray, $i): string|int|null
+    public function getTransactionRecipientRegionCode($activityArray, $i): ?string
     {
-        return $this->getRecipientRegionCodeFromVocabulary(Arr::get($activityArray, 'transactions.' . $i . '.transaction.recipient_region.0.region_vocabulary', ''), Arr::get($activityArray, 'transactions.' . $i . '.transaction.recipient_region.0', []));
+        return (string) ($this->getRecipientRegionCodeFromVocabulary(Arr::get($activityArray, 'transactions.' . $i . '.transaction.recipient_region.0.region_vocabulary', ''), Arr::get($activityArray, 'transactions.' . $i . '.transaction.recipient_region.0', [])));
     }
 
     /**
@@ -277,9 +277,9 @@ trait DownloadTransactionTrait
      * @param $activityArray
      * @param $i
      *
-     * @return string|null|int
+     * @return string|null
      */
-    public function getTransactionRecipientRegionVocabularyUri($activityArray, $i): string|int|null
+    public function getTransactionRecipientRegionVocabularyUri($activityArray, $i): ?string
     {
         return Arr::get($activityArray, 'transactions.' . $i . '.transaction.recipient_region.0.vocabulary_uri', '');
     }
