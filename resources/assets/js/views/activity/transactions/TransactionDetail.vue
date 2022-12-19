@@ -31,7 +31,6 @@
             <li v-for="(rData, r, ri) in transactionData" :key="ri">
               <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
                 <svg-vue v-if="isMandatoryIcon(r)" icon="core" class="mr-2 text-base"></svg-vue>
-                <!-- v-if="r.toString()==='value'|| r.toString()==='transaction_date'|| r.toString()==='transaction_type'"  -->
                 <span :class="isMandatoryIcon(r)? '':'pl-6'">{{ r }}</span>
               </a>
             </li>
@@ -80,7 +79,6 @@ import Toast from "Components/ToastMessage.vue";
 import dateFormat from "Composable/dateFormat";
 import getActivityTitle from "Composable/title";
 import TransactionElement from "./TransactionElement.vue";
-import { Value } from "./elements/Index";
 
 export default defineComponent({
   name: "TransactionDetail",
