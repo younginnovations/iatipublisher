@@ -34,7 +34,7 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getActivityDefaultCurrency($activityArray, $i): ?string
     {
-        return ($i === 0) ? Arr::get($activityArray, 'default_field_values.default_language', '') : '';
+        return ($i === 0) ? Arr::get($activityArray, 'default_field_values.default_currency', '') : '';
     }
 
     /**
