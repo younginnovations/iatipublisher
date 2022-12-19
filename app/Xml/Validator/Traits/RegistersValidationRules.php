@@ -57,6 +57,7 @@ trait RegistersValidationRules
             function ($attribute, $value) {
                 $languages = [];
                 $defaultLanguage = 'en';
+                dump('unique default lang');
 
                 $check = true;
                 foreach ((array) $value as $narrative) {
@@ -549,7 +550,7 @@ trait RegistersValidationRules
             return false;
         });
 
-        $this->extend('sector_has_five_digit_oced_vocab', function () {
+        $this->extendImplicit('sector_has_five_digit_oced_vocab', function () {
             return false;
         });
     }

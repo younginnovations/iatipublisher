@@ -9,11 +9,7 @@
         ><span class="font-bold">{{ props.title }}</span>
       </h3>
       <ul class="list-disc rounded-md bg-salmon-10 p-3 font-medium">
-        <li
-          v-for="(item, index) in props.message"
-          :key="index"
-          class="my-3 ml-6"
-        >
+        <li v-for="(item, index) in props.message" :key="index" class="my-3 ml-6">
           {{ item }}
         </li>
       </ul>
@@ -29,26 +25,20 @@
   </div>
 </template>
 <script setup lang="ts">
-import {
-  defineProps,
-  PropType,
-  defineEmits,
-  onMounted,
-  onUnmounted,
-} from 'vue';
+import { defineProps, PropType, defineEmits, onMounted, onUnmounted } from "vue";
 
-const emit = defineEmits(['close-popup']);
+const emit = defineEmits(["close-popup"]);
 const props = defineProps({
   message: { required: true, type: Array as PropType<Array<string>> },
   title: { type: String, required: true },
 });
 const close = () => {
-  emit('close-popup', 'closed');
+  emit("close-popup", "closed");
 };
 onMounted(() => {
-  document.documentElement.style.overflow = 'hidden';
+  document.documentElement.style.overflow = "hidden";
 });
 onUnmounted(() => {
-  document.documentElement.style.overflow = 'auto';
+  document.documentElement.style.overflow = "auto";
 });
 </script>

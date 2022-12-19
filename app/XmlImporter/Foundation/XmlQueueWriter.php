@@ -181,7 +181,7 @@ class XmlQueueWriter
      */
     public function isIdentifierValid($identifier): bool
     {
-        return str_starts_with($identifier, $this->orgRef);
+        return str_starts_with($identifier, $this->orgRef . '-');
     }
 
     /**
