@@ -42,21 +42,15 @@
           </template>
 
           <template v-else-if="title === 'iati_identifier'">
-            <svg-vue
-              class="elements-svg"
-              icon="activity-elements/iati_identifier"
-            />
+            <svg-vue class="elements-svg" icon="activity-elements/iati_identifier" />
           </template>
 
           <template v-else>
-            <svg-vue
-              :icon="'activity-elements/' + title"
-              class="elements-svg"
-            ></svg-vue>
+            <svg-vue :icon="'activity-elements/' + title" class="elements-svg"></svg-vue>
           </template>
 
           <div class="title text-sm font-bold">
-            {{ title.toString().replace(/_/g, '-') }}
+            {{ title.toString().replace(/_/g, "-") }}
           </div>
 
           <Status :data="completed" />
@@ -188,20 +182,14 @@
               <span v-else class="italic">Code Missing</span>
             </div>
 
-            <div
-              v-else-if="post.default_aid_type_vocabulary == '3'"
-              class="text-sm"
-            >
+            <div v-else-if="post.default_aid_type_vocabulary == '3'" class="text-sm">
               <span v-if="post.earmarking_modality">{{
                 types.earmarkingModality[post.earmarking_modality]
               }}</span>
               <span v-else class="italic">Code Missing</span>
             </div>
 
-            <div
-              v-else-if="post.default_aid_type_vocabulary == '4'"
-              class="text-sm"
-            >
+            <div v-else-if="post.default_aid_type_vocabulary == '4'" class="text-sm">
               <span v-if="post.cash_and_voucher_modalities">{{
                 types.cashandVoucherModalities[post.cash_and_voucher_modalities]
               }}</span>
@@ -237,10 +225,7 @@
           class="elements-detail"
           :class="{ 'mb-4': key !== data.content.budget_item.length - 1 }"
         >
-          <div
-            v-if="data.content.country_budget_vocabulary === '1'"
-            class="text-sm"
-          >
+          <div v-if="data.content.country_budget_vocabulary === '1'" class="text-sm">
             <div v-if="post.code" class="flex space-x-1">
               <span>
                 {{ types.budgetIdentifier[post.code] }}
@@ -250,13 +235,9 @@
             <span v-else class="italic">Missing</span>
           </div>
           <div v-else class="text-sm">
-            <span v-if="post.code">{{
-              types.budgetIdentifier[post.code]
-            }}</span>
+            <span v-if="post.code">{{ types.budgetIdentifier[post.code] }}</span>
             <span v-else class="italic">Missing</span>
-            <span v-if="post.percentage">
-              ({{ roundFloat(post.percentage) }} %)</span
-            >
+            <span v-if="post.percentage"> ({{ roundFloat(post.percentage) }} %)</span>
             <span v-else class="italic">(Percentage Missing)</span>
           </div>
           <template v-for="(item, i) in post.description" :key="i">
@@ -268,23 +249,11 @@
             >
               <table>
                 <tr class="multiline">
-                  <td>Vocabulary</td>
-                  <td>
-                    <span v-if="data.content.country_budget_vocabulary">{{
-                      props.types.budgetIdentifierVocabulary[
-                        data.content.country_budget_vocabulary
-                      ]
-                    }}</span>
-                    <span v-else class="italic">Missing</span>
-                  </td>
-                </tr>
-                <tr class="multiline">
                   <td>Description</td>
                   <td>
                     <div v-if="narrative.narrative" class="flex flex-col">
                       <span v-if="narrative.language" class="language top"
-                        >(Language:
-                        {{ types.languages[narrative.language] }})</span
+                        >(Language: {{ types.languages[narrative.language] }})</span
                       >
                       <span class="description">{{ narrative.narrative }}</span>
                     </div>
@@ -311,9 +280,7 @@
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
           <div class="category">
-            <span v-if="post.budget_type">{{
-              types.budgetType[post.budget_type]
-            }}</span>
+            <span v-if="post.budget_type">{{ types.budgetType[post.budget_type] }}</span>
             <span v-else class="italic">Type Missing</span>
           </div>
 
@@ -476,8 +443,7 @@
                     <td>
                       <div v-if="narrative.narrative" class="flex flex-col">
                         <span v-if="narrative.language" class="language"
-                          >(Language:
-                          {{ types.languages[narrative.language] }})</span
+                          >(Language: {{ types.languages[narrative.language] }})</span
                         >
                         <span>{{ narrative.narrative }}</span>
                       </div>
@@ -519,9 +485,7 @@
 
           <!-- Activity Scope -->
           <template v-else-if="title === 'activity_scope'">
-            <span v-if="data.content">{{
-              props.types.activityScope[data.content]
-            }}</span>
+            <span v-if="data.content">{{ props.types.activityScope[data.content] }}</span>
             <span v-else class="italic">Missing</span>
           </template>
 
@@ -535,33 +499,25 @@
 
           <!-- Default Flow Type -->
           <template v-else-if="title === 'default_flow_type'">
-            <span v-if="data.content">{{
-              props.types.flowType[data.content]
-            }}</span>
+            <span v-if="data.content">{{ props.types.flowType[data.content] }}</span>
             <span v-else class="italic">Missing</span>
           </template>
 
           <!-- Default Tied Status -->
           <template v-else-if="title === 'default_tied_status'">
-            <span v-if="data.content">{{
-              props.types.tiedStatus[data.content]
-            }}</span>
+            <span v-if="data.content">{{ props.types.tiedStatus[data.content] }}</span>
             <span v-else class="italic">Missing</span>
           </template>
 
           <!-- Capital Spend -->
           <template v-else-if="title === 'capital_spend'">
-            <span v-if="data.content.toString()"
-              >{{ data.content.toString() }}%</span
-            >
+            <span v-if="data.content.toString()">{{ data.content.toString() }}%</span>
             <span v-else class="italic">Missing</span>
           </template>
 
           <!-- Default Finance Type -->
           <template v-else-if="title === 'default_finance_type'">
-            <span v-if="data.content">
-              {{ props.types.financeType[data.content] }}</span
-            >
+            <span v-if="data.content"> {{ props.types.financeType[data.content] }}</span>
             <span v-else class="italic">Missing</span>
           </template>
 
@@ -575,12 +531,12 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject } from 'vue';
-import { useToggle } from '@vueuse/core';
-import moment from 'moment';
-import axios from 'axios';
+import { defineProps, inject } from "vue";
+import { useToggle } from "@vueuse/core";
+import moment from "moment";
+import axios from "axios";
 
-import { activityCoreElements } from 'Composable/coreElements';
+import { activityCoreElements } from "Composable/coreElements";
 
 //components
 import {
@@ -604,13 +560,13 @@ import {
   Tag,
   TitleElement,
   Transactions,
-} from 'Activity/elements/Index';
+} from "Activity/elements/Index";
 
-import Btn from 'Components/buttons/Link.vue';
-import Status from 'Components/status/ElementStatus.vue';
-import HoverText from 'Components/HoverText.vue';
-import Modal from 'Components/PopupModal.vue';
-import BtnComponent from 'Components/ButtonComponent.vue';
+import Btn from "Components/buttons/Link.vue";
+import Status from "Components/status/ElementStatus.vue";
+import HoverText from "Components/HoverText.vue";
+import Modal from "Components/PopupModal.vue";
+import BtnComponent from "Components/ButtonComponent.vue";
 
 // toggle state for modal popup
 let [deleteValue, deleteToggle] = useToggle();
@@ -631,12 +587,12 @@ const props = defineProps({
   tooltip: {
     type: String,
     required: false,
-    default: '',
+    default: "",
   },
   width: {
     type: String,
     required: false,
-    default: '',
+    default: "",
   },
   types: {
     type: Object,
@@ -654,15 +610,15 @@ interface ToastDataTypeface {
   type: boolean;
   visibility: boolean;
 }
-const toastData = inject('toastData') as ToastDataTypeface;
+const toastData = inject("toastData") as ToastDataTypeface;
 
-let layout = 'basis-6/12';
-if (props.width === 'full') {
-  layout = 'basis-full';
+let layout = "basis-6/12";
+if (props.width === "full") {
+  layout = "basis-full";
 }
 
 function formatDate(date: Date) {
-  return moment(date).format('LL');
+  return moment(date).format("LL");
 }
 
 function roundFloat(num: string) {
@@ -692,8 +648,7 @@ function deleteElement(id, element) {
       }
     })
     .catch(() => {
-      toastData.message =
-        "Couldn't delete the activity title due to system error.";
+      toastData.message = "Couldn't delete the activity title due to system error.";
       toastData.type = false;
       toastData.visibility = true;
     });

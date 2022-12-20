@@ -11,12 +11,11 @@
               </a>
               <span class="separator mx-4"> / </span>
               <div class="breadcrumb__title">
-                <span
-                  class="breadcrumb__title last max-w-lg overflow-hidden text-n-30"
-                  >{{ pageTitle ?? 'Untitled' }}</span
-                >
+                <span class="breadcrumb__title last max-w-lg overflow-hidden text-n-30">{{
+                  pageTitle ?? "Untitled"
+                }}</span>
                 <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
-                  pageTitle ? pageTitle : 'Untitled'
+                  pageTitle ? pageTitle : "Untitled"
                 }}</span>
               </div>
             </div>
@@ -35,10 +34,10 @@
             <div class="inline-flex min-h-[48px] grow flex-wrap items-center">
               <h4 class="ellipsis__title relative text-2xl font-bold">
                 <span class="ellipsis__title overflow-hidden">
-                  {{ pageTitle ? pageTitle : 'Untitled' }}
+                  {{ pageTitle ? pageTitle : "Untitled" }}
                 </span>
                 <span class="ellipsis__title--hover">
-                  {{ pageTitle ? pageTitle : 'Untitled' }}
+                  {{ pageTitle ? pageTitle : "Untitled" }}
                 </span>
               </h4>
             </div>
@@ -69,10 +68,7 @@
               <DeleteButton />
 
               <!-- Unpublish Activity -->
-              <UnPublish
-                v-if="store.state.unPublished"
-                :activity-id="activityProps.id"
-              />
+              <UnPublish v-if="store.state.unPublished" :activity-id="activityProps.id" />
 
               <!-- Publish Activity -->
               <Publish
@@ -97,9 +93,7 @@
     <div class="activities">
       <aside class="activities__sidebar">
         <div
-          v-if="
-            publishStatus.linked_to_iati && publishStatus.status === 'draft'
-          "
+          v-if="publishStatus.linked_to_iati && publishStatus.status === 'draft'"
           class="mb-2"
         >
           <PreviouslyPublished />
@@ -162,9 +156,7 @@
             class="mb-4 flex items-center text-xs font-bold uppercase leading-normal text-n-50"
           >
             <svg-vue class="mr-0.5 text-base" icon="setting"></svg-vue>
-            <span class="whitespace-nowrap"
-              >Override this activity's default values</span
-            >
+            <span class="whitespace-nowrap">Override this activity's default values</span>
           </a>
         </div>
         <div class="mb-3 inline-flex flex-wrap gap-2">
@@ -190,6 +182,7 @@
         <div class="activities__content--elements -mx-3 flex flex-wrap">
           <template v-for="(post, key, index) in groupedData" :key="index">
             <div
+              :id="key"
               class="elements-title relative mx-3 mt-3 mb-1 flex w-full items-center text-sm uppercase text-n-40"
             >
               <div class="mr-4 shrink-0">{{ formatTitle(key) }}</div>
@@ -249,35 +242,28 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  onMounted,
-  reactive,
-  toRefs,
-  provide,
-  watch,
-} from 'vue';
-import { useToggle, watchIgnorable } from '@vueuse/core';
+import { defineComponent, onMounted, reactive, toRefs, provide, watch } from "vue";
+import { useToggle, watchIgnorable } from "@vueuse/core";
 
 // components
-import { Result } from './elements/Index';
-import HoverText from 'Components/HoverText.vue';
-import ProgressBar from 'Components/RadialProgressBar.vue';
-import Publish from 'Components/buttons/PublishButton.vue';
-import UnPublish from 'Components/buttons/UnPublishButton.vue';
-import DeleteButton from 'Components/buttons/DeleteButton.vue';
-import Errors from 'Components/sections/StickyErrors.vue';
-import Toast from 'Components/ToastMessage.vue';
-import ErrorPopUp from 'Components/ErrorPopUp.vue';
+import { Result } from "./elements/Index";
+import HoverText from "Components/HoverText.vue";
+import ProgressBar from "Components/RadialProgressBar.vue";
+import Publish from "Components/buttons/PublishButton.vue";
+import UnPublish from "Components/buttons/UnPublishButton.vue";
+import DeleteButton from "Components/buttons/DeleteButton.vue";
+import Errors from "Components/sections/StickyErrors.vue";
+import Toast from "Components/ToastMessage.vue";
+import ErrorPopUp from "Components/ErrorPopUp.vue";
 
 // Activity Components
-import Elements from 'Activity/partials/ActivitiesElements.vue';
-import ActivityElement from 'Activity/partials/ActivityElement.vue';
-import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
+import Elements from "Activity/partials/ActivitiesElements.vue";
+import ActivityElement from "Activity/partials/ActivityElement.vue";
+import PreviouslyPublished from "Components/status/PreviouslyPublished.vue";
 
 // Vuex Store
-import { detailStore } from 'Store/activities/show';
-import { useStore } from 'Store/activities/index';
+import { detailStore } from "Store/activities/show";
+import { useStore } from "Store/activities/index";
 
 export default defineComponent({
   components: {
@@ -348,12 +334,12 @@ export default defineComponent({
 
     const toastData = reactive({
       visibility: false,
-      message: '',
+      message: "",
       type: true,
     });
     const errorData = reactive({
       visibility: false,
-      message: '',
+      message: "",
       type: true,
     });
 
@@ -364,7 +350,7 @@ export default defineComponent({
     const [downloadValue, downloadToggle] = useToggle();
 
     onMounted(() => {
-      if (props.toast.message !== '') {
+      if (props.toast.message !== "") {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;
@@ -402,16 +388,16 @@ export default defineComponent({
     Object.keys(activities).map((key) => {
       let flag = false;
 
-      Object.keys(activities[key]['elements']).map((k) => {
+      Object.keys(activities[key]["elements"]).map((k) => {
         if (
-          typeof activityProps[k] === 'number' ||
-          (typeof activityProps[k] === 'object' &&
+          typeof activityProps[k] === "number" ||
+          (typeof activityProps[k] === "object" &&
             activityProps[k] &&
             Object.keys(activityProps[k]).length)
         ) {
-          activities[key]['elements'][k]['content'] = activityProps[k];
-          activities[key]['elements'][k]['hover_text'] =
-            elementProps[k]['hover_text'] ?? '';
+          activities[key]["elements"][k]["content"] = activityProps[k];
+          activities[key]["elements"][k]["hover_text"] =
+            elementProps[k]["hover_text"] ?? "";
           flag = true;
         } else {
           delete activities[key][k];
@@ -426,9 +412,9 @@ export default defineComponent({
     // generating available categories of elements
     Object.keys(groupedData).map((key) => {
       if (Object.prototype.hasOwnProperty.call(activities, key)) {
-        groupedData[key]['status'] = 'enabled';
+        groupedData[key]["status"] = "enabled";
       } else {
-        groupedData[key]['status'] = 'disabled';
+        groupedData[key]["status"] = "disabled";
       }
     });
 
@@ -440,20 +426,21 @@ export default defineComponent({
      * @returns object
      */
     Object.keys(elementProps).map((key) => {
-      elementProps[key]['completed'] = statusProps[key] ?? false;
-      elementProps[key]['has_data'] = 0;
+      elementProps[key]["completed"] = statusProps[key] ?? false;
+      elementProps[key]["not_completed"] = !(statusProps[key] ?? false);
+      elementProps[key]["has_data"] = 0;
 
       if (key in activityProps) {
         if (
-          (typeof activityProps[key] === 'object' ||
-            typeof activityProps[key] === 'number') &&
+          (typeof activityProps[key] === "object" ||
+            typeof activityProps[key] === "number") &&
           activityProps[key]
         ) {
           if (
             Object.keys(activityProps[key]).length > 0 ||
             activityProps[key].toString.length > 0
           ) {
-            elementProps[key]['has_data'] = 1;
+            elementProps[key]["has_data"] = 1;
           }
         }
       }
@@ -462,9 +449,9 @@ export default defineComponent({
     /**
      * Finding current language - activity title
      */
-    let pageTitle = '';
+    let pageTitle = "";
     const found = activityProps.title.find((e: { language: string }) => {
-      const currentLanguage = 'en';
+      const currentLanguage = "en";
       return e.language === currentLanguage;
     });
 
@@ -476,21 +463,21 @@ export default defineComponent({
     }
 
     function formatTitle(title: string) {
-      return title.replace(/_/gi, ' ');
+      return title.replace(/_/gi, " ");
     }
 
     const toastMessage = reactive({
-      message: '',
+      message: "",
       type: false,
     });
 
     const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {
-      flush: 'sync',
+      flush: "sync",
     });
 
     const ignoreToastUpdate = () => {
       ignoreUpdates(() => {
-        toastData.message = '';
+        toastData.message = "";
       });
     };
 
@@ -505,25 +492,25 @@ export default defineComponent({
     });
 
     // vue provides
-    provide('types', types.value);
-    provide('coreCompleted', coreCompleted.value);
-    provide('toastMessage', toastMessage);
-    provide('toastData', toastData);
-    provide('errorData', errorData);
+    provide("types", types.value);
+    provide("coreCompleted", coreCompleted.value);
+    provide("toastMessage", toastMessage);
+    provide("toastData", toastData);
+    provide("errorData", errorData);
 
-    indexStore.dispatch('updateSelectedActivities', [activity.value.id]);
+    indexStore.dispatch("updateSelectedActivities", [activity.value.id]);
 
     /**
      * Breadcrumb data
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
-        link: '/activities',
+        title: "Your Activities",
+        link: "/activities",
       },
       {
         title: pageTitle,
-        link: '',
+        link: "",
       },
     ];
 
@@ -534,21 +521,19 @@ export default defineComponent({
     const validationResult = iatiValidatorResponse.value;
 
     if (validationResult && validationResult.errors.length > 0) {
-      store.dispatch('updatePublishErrors', validationResult.errors);
+      store.dispatch("updatePublishErrors", validationResult.errors);
     }
 
     if (publishStatus.linked_to_iati) {
-      store.dispatch('updateUnPublished', true);
+      store.dispatch("updateUnPublished", true);
     } else {
-      store.dispatch('updateUnPublished', false);
+      store.dispatch("updateUnPublished", false);
     }
 
-    if (
-      !(publishStatus.linked_to_iati && publishStatus.status === 'published')
-    ) {
-      store.dispatch('updateShowPublished', true);
+    if (!(publishStatus.linked_to_iati && publishStatus.status === "published")) {
+      store.dispatch("updateShowPublished", true);
     } else {
-      store.dispatch('updateShowPublished', false);
+      store.dispatch("updateShowPublished", false);
     }
 
     return {

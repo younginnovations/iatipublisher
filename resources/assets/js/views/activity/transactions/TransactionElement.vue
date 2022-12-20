@@ -1,25 +1,25 @@
 <template>
   <div
     :id="elementName"
-    class="px-3 py-3 activities__content--element text-n-50"
+    class="activities__content--element px-3 py-3 text-n-50"
     :class="{
       'basis-full': width === 'full',
       'basis-6/12': width === '',
     }"
   >
-    <div class="p-4 bg-white rounded-lg">
-      <div class="flex mb-4">
-        <div class="flex title grow">
-          <div class="text-sm font-bold title">
+    <div class="rounded-lg bg-white p-4">
+      <div class="mb-4 flex">
+        <div class="title flex grow">
+          <div class="title text-sm font-bold">
             {{ elementName.toString().replace(/_/g, "-") }}
           </div>
         </div>
-        <div class="flex items-center icons">
+        <div class="icons flex items-center">
           <!-- <svg-vue class="mr-1.5" icon="core"></svg-vue> -->
           <HoverText :hover-text="hoverText" class="text-n-40"></HoverText>
         </div>
       </div>
-      <div class="w-full h-px mb-4 divider bg-n-20"></div>
+      <div class="divider mb-4 h-px w-full bg-n-20"></div>
       <div>
         <template v-if="elementName === 'description'">
           <Description :data="elementData" />
@@ -42,7 +42,9 @@
         </template>
 
         <template v-else-if="elementName === 'humanitarian'">
-          <div class="text-sm">{{ data != "0" }}</div>
+          <div class="text-sm">
+            {{ data === "0" ? "False" : data === "1" ? "True" : "Missing" }}
+          </div>
         </template>
 
         <template v-else-if="elementName === 'provider_organization'">

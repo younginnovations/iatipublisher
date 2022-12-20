@@ -302,6 +302,7 @@ export default defineComponent({
           k === "organisation_identifier"
             ? organizationProps["element_status"]["identifier"]
             : organizationProps["element_status"][k];
+        elementProps[k]["not_completed"] = !elementProps[k]["completed"];
       });
 
       if (flag === false) {

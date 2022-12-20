@@ -56,6 +56,13 @@
               <svg-vue class="mr-1 text-lg" icon="double-tick"></svg-vue>
               <span>Completed</span>
             </li>
+            <li
+              class="flex py-1.5 px-3.5 hover:bg-white"
+              @click="dropdownFilter('not_completed')"
+            >
+              <svg-vue class="mr-1 text-lg" icon="red-cross"></svg-vue>
+              <span>Not Completed</span>
+            </li>
           </ul>
         </div>
       </div>
