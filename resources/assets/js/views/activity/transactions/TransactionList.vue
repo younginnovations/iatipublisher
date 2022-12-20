@@ -53,10 +53,10 @@
         </thead>
         <tbody>
           <tr
-            class="cursor-pointer"
-            @click="handleNavigate(`${activityLink}/transaction/${trans.id}`)"
             v-for="(trans, t, index) in transactionsData.data"
             :key="index"
+            class="cursor-pointer"
+            @click="handleNavigate(`${activityLink}/transaction/${trans.id}`)"
           >
             <td>
               <a :href="`${activityLink}/transaction/${trans.id}`">
@@ -217,8 +217,6 @@ export default defineComponent({
     });
     function handleNavigate(path) {
       window.location.href = window.location.origin + path;
-
-      console.log(window.location.origin + path);
     }
 
     function fetchListings(active_page: number) {
