@@ -279,6 +279,7 @@ export default defineComponent({
         r.toString() === 'transaction_date'
       );
     };
+    // const language = global_lang as Translation;
 
     return {
       activityTitle,
