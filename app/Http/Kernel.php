@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\AccessibleRoute;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\EncryptCookies;
+use App\Http\Middleware\LocalizationMiddleware;
 use App\Http\Middleware\OrganizationUserMiddleware;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
 use App\Http\Middleware\RedirectActivity;
@@ -61,6 +62,7 @@ class Kernel extends HttpKernel
             ShareErrorsFromSession::class,
             VerifyCsrfToken::class,
             SubstituteBindings::class,
+            LocalizationMiddleware::class,
         ],
 
         'admin' => [
@@ -70,6 +72,7 @@ class Kernel extends HttpKernel
             ShareErrorsFromSession::class,
             SubstituteBindings::class,
             OrganizationUserMiddleware::class,
+            LocalizationMiddleware::class,
         ],
 
         'activity' => [
@@ -79,6 +82,7 @@ class Kernel extends HttpKernel
 
         'superadmin' => [
             SuperAdminMiddleware::class,
+            LocalizationMiddleware::class,
         ],
 
         'api' => [

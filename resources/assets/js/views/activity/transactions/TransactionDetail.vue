@@ -75,6 +75,7 @@ import Toast from "Components/ToastMessage.vue";
 import dateFormat from "Composable/dateFormat";
 import getActivityTitle from "Composable/title";
 import TransactionElement from "./TransactionElement.vue";
+import Translation from "Interfaces/lang";
 
 export default defineComponent({
   name: "TransactionDetail",
@@ -154,6 +155,8 @@ export default defineComponent({
         toastData.visibility = false;
       }, 5000);
     });
+
+    // const language = global_lang as Translation;
 
     return {
       activityTitle,
