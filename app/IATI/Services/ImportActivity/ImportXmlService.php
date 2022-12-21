@@ -249,7 +249,6 @@ class ImportXmlService
                     $indicator = (array) $indicator;
                     $periods = Arr::get($indicator, 'period', []);
                     unset($indicator['period']);
-                    logger()->error($indicator);
 
                     $savedIndicator = $this->indicatorRepository->store([
                         'result_id' => $savedResult['id'],

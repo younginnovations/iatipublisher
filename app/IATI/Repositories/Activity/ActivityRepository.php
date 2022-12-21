@@ -388,8 +388,6 @@ class ActivityRepository extends Repository
      */
     public function getActivityWithIdentifier($org_id, $identifier): mixed
     {
-        logger()->error(json_encode($this->model->where('org_id', $org_id)));
-
         return $this->model->where('org_id', $org_id)->whereJsonContains('iati_identifier->activity_identifier', $identifier['activity_identifier'])->first();
     }
 }

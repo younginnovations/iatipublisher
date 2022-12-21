@@ -329,7 +329,6 @@ if (!function_exists('isMandatoryElementCompleted')) {
     function isMandatoryElementCompleted($elementStatus): bool
     {
         return Arr::get($elementStatus, 'name', false) && Arr::get($elementStatus, 'reporting_org', false);
-        // return empty(array_diff_assoc(getMandatoryElementsWithTrueValue(), $elementStatus));
     }
 }
 
