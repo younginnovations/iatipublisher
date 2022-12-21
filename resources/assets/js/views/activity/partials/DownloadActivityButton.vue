@@ -1,6 +1,14 @@
 <template>
   <div class="relative flex flex-row-reverse gap-2">
     <button
+        v-if="store.state.selectedActivities.length === 0"
+        ref="dropdownBtn"
+        class="button secondary-btn font-bold"
+        @click="toggle"
+    >
+      <svg-vue icon="download-file" /> Download All
+    </button>
+    <button
       v-if="store.state.selectedActivities.length > 0"
       ref="dropdownBtn"
       class="button secondary-btn font-bold"
@@ -9,15 +17,15 @@
       <svg-vue icon="download-file" />
     </button>
     <div
-      v-if="state.isVisible && store.state.selectedActivities.length > 0"
+      v-if="state.isVisible"
       class="button__dropdown absolute left-0 top-[calc(100%_+_8px)] z-10 w-56 bg-white p-2 text-left shadow-dropdown"
     >
       <ul>
         <li>
-          <a href="#" :class="liClass" @click="downloadCsv">Download CSV</a>
+          <a href="#" :class="liClass" @click="downloadCsv(store.state.selectedActivities.length)">Download CSV</a>
         </li>
         <li>
-          <a href="#" :class="liClass" @click="downloadXml">Download XML</a>
+          <a href="#" :class="liClass" @click="downloadXml(store.state.selectedActivities.length)">Download XML</a>
         </li>
       </ul>
     </div>
@@ -59,7 +67,7 @@
         </button>
         <button
           class="rounded bg-bluecoral px-4 py-3 font-bold text-white"
-          @click="downloadErrorxml"
+          @click="downloadErrorxml(store.state.selectedActivities.length)"
         >
           Download Anyway
         </button>
@@ -148,10 +156,16 @@ export default defineComponent({
     const toggle = () => {
       state.isVisible = !state.isVisible;
     };
-    const downloadErrorxml = () => {
-      const activities = store.state.selectedActivities.join(',');
+    const downloadErrorxml = (countActivities) => {
+      let apiUrl = '/activities/download-xml/true?activities=all';
+
+      if (countActivities > 0) {
+        const activities = store.state.selectedActivities.join(',');
+        apiUrl = `/activities/download-xml/true?activities=[${activities}]`;
+      }
+
       axios
-        .get(`/activities/download-xml/true?activities=[${activities}]`)
+        .get(apiUrl)
         .then((res) => {
           if (res.data.success == false) {
             toastVisibility.value = true;
@@ -170,10 +184,16 @@ export default defineComponent({
           }
         });
     };
-    const downloadXml = () => {
-      const activities = store.state.selectedActivities.join(',');
+    const downloadXml = (countActivities) => {
+      let apiUrl = '/activities/download-xml?activities=all';
+
+      if (countActivities > 0) {
+        const activities = store.state.selectedActivities.join(',');
+        apiUrl = `/activities/download-xml?activities=[${activities}]`;
+      }
+
       axios
-        .get(`/activities/download-xml?activities=[${activities}]`)
+        .get(apiUrl)
         .then((res) => {
           console.log(res);
           if (res.data.success == false) {
@@ -199,10 +219,16 @@ export default defineComponent({
         });
     };
 
-    const downloadCsv = () => {
-      const activities = store.state.selectedActivities.join(',');
+    const downloadCsv = (countActivities) => {
+      let apiUrl = '/activities/download-csv?activities=all';
+
+      if (countActivities > 0) {
+        const activities = store.state.selectedActivities.join(',');
+        apiUrl = `/activities/download-csv?activities=[${activities}]`;
+      }
+
       axios
-        .get(`/activities/download-csv?activities=[${activities}]`)
+        .get(apiUrl)
         .then((res) => {
           if (res.data.success == false) {
             toastVisibility.value = true;
