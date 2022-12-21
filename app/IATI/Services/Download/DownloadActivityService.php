@@ -259,10 +259,10 @@ class DownloadActivityService
     public function getRecipientRegionCodeFromVocabulary($regionVocabulary, $recipientRegion): ?string
     {
         if (!empty($regionVocabulary) && $regionVocabulary !== '1') {
-            return Arr::get($recipientRegion, 'custom_code', '');
+            return (string) (Arr::get($recipientRegion, 'custom_code', ''));
         }
 
-        return Arr::get($recipientRegion, 'region_code', '');
+        return (string) (Arr::get($recipientRegion, 'region_code', ''));
     }
 
     /**
@@ -277,15 +277,15 @@ class DownloadActivityService
     {
         if (!empty($sectorVocabulary)) {
             return match ($sectorVocabulary) {
-                '1' => Arr::get($sector, 'code', ''),
-                '2' => Arr::get($sector, 'category_code', ''),
-                '7' => Arr::get($sector, 'sdg_goal', ''),
-                '8' => Arr::get($sector, 'sdg_target', ''),
-                default => Arr::get($sector, 'text', ''),
+                '1' => (string) Arr::get($sector, 'code', ''),
+                '2' => (string) Arr::get($sector, 'category_code', ''),
+                '7' => (string) Arr::get($sector, 'sdg_goal', ''),
+                '8' => (string) Arr::get($sector, 'sdg_target', ''),
+                default => (string) Arr::get($sector, 'text', ''),
             };
         }
 
-        return Arr::get($sector, 'text', '');
+        return (string) Arr::get($sector, 'text', '');
     }
 
     /**
@@ -299,10 +299,10 @@ class DownloadActivityService
     public function getPolicyMarkerCodeFromVocabulary($policyMarkerVocabulary, $policyMarker): ?string
     {
         if (!empty($policyMarkerVocabulary) && $policyMarkerVocabulary !== '1') {
-            return Arr::get($policyMarker, 'policy_marker_text', '');
+            return (string) Arr::get($policyMarker, 'policy_marker_text', '');
         }
 
-        return Arr::get($policyMarker, 'policy_marker', '');
+        return (string) Arr::get($policyMarker, 'policy_marker', '');
     }
 
     /**
@@ -340,13 +340,13 @@ class DownloadActivityService
     {
         if (!empty($tagVocabulary)) {
             return match ($tagVocabulary) {
-                '2' => Arr::get($tag, 'goals_tag_code', ''),
-                '3' => Arr::get($tag, 'targets_tag_code', ''),
-                default => Arr::get($tag, 'tag_text', ''),
+                '2' => (string) Arr::get($tag, 'goals_tag_code', ''),
+                '3' => (string) Arr::get($tag, 'targets_tag_code', ''),
+                default => (string) Arr::get($tag, 'tag_text', ''),
             };
         }
 
-        return Arr::get($tag, 'tag_text', '');
+        return (string) Arr::get($tag, 'tag_text', '');
     }
 
     /**
@@ -361,14 +361,14 @@ class DownloadActivityService
     {
         if (!empty($aidTypeVocabulary)) {
             return match ($aidTypeVocabulary) {
-                '2' => Arr::get($aidType, 'earmarking_category', ''),
-                '3' => Arr::get($aidType, 'earmarking_modality', ''),
-                '4' => Arr::get($aidType, 'cash_and_voucher_modalities', ''),
-                default => Arr::get($aidType, 'default_aid_type', ''),
+                '2' => (string) Arr::get($aidType, 'earmarking_category', ''),
+                '3' => (string) Arr::get($aidType, 'earmarking_modality', ''),
+                '4' => (string) Arr::get($aidType, 'cash_and_voucher_modalities', ''),
+                default => (string) Arr::get($aidType, 'default_aid_type', ''),
             };
         }
 
-        return Arr::get($aidType, 'default_aid_type', '');
+        return (string) Arr::get($aidType, 'default_aid_type', '');
     }
 
     /**
@@ -431,5 +431,17 @@ class DownloadActivityService
         }
 
         return $count;
+    }
+
+    /**
+     * Returns all activities of an organization.
+     *
+     * @param $queryParams
+     *
+     * @return object
+     */
+    public function getAllActivitiesToDownload($queryParams): object
+    {
+        return $this->activityRepository->getAllActivitiesToDownload(auth()->user()->organization_id, $queryParams);
     }
 }
