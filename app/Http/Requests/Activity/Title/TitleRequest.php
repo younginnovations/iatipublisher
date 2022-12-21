@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Title;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use Illuminate\Support\Arr;
 
 /**
  * Class TitleRequest.
@@ -29,8 +30,8 @@ class TitleRequest extends ActivityBaseRequest
 
         if (is_array($titles) && count($titles)) {
             foreach ($titles as $key => $title) {
-                if ($key !== 0) {
-                    $rules[sprintf('%s.%s.narrative', $name, $key)] = 'required_with_language';
+                if ($key !== 0 && !empty(Arr::get($title, 'language', ''))) {
+                    $rules[sprintf('%s.%s.narrative', $name, $key)] = 'required_with_language:' . Arr::get($title, 'narrative', '');
                 }
             }
         }

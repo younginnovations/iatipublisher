@@ -387,27 +387,6 @@ class XmlValidator
      */
     protected function rulesForTitle(array $activity): array
     {
-//        $tempRules = (new TitleRequest())->rules();
-        $titles = Arr::get($activity, 'title', []);
-
-//        if ($titles) {
-//            foreach ($titles as $key => $narrative) {
-//                $rules['title'] = Arr::get($tempRules, 'narrative') . '|required';
-//            }
-//        }
-
-//        $rules['title'] = 'unique_lang|unique_default_lang';
-//        $rules['title.0.narrative'] = 'required';
-//
-//        if (count($titles)) {
-//            foreach ($titles as $key => $title) {
-//                if ($key !== 0) {
-//                    $rules['title.' . $key . '.narrative'] = 'required_with_language';
-//                }
-//            }
-//
-//        }
-
         return (new TitleRequest())->rules('title', Arr::get($activity, 'title', []));
     }
 
@@ -418,11 +397,6 @@ class XmlValidator
      */
     protected function messagesForTitle(array $activity): array
     {
-        // $messages = $this->getBaseMessages((new TitleRequest())->messages(), 'title', Arr::get($activity, 'title'));
-
-        // $messages['title.0.narrative'] = 'required';
-
-        // return $messages;
         return (new TitleRequest())->messages('title', Arr::get($activity, 'title', []));
     }
 
