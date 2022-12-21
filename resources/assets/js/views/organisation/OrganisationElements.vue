@@ -19,16 +19,7 @@
           class="button panel-btn dropdown-btn"
           @click="searchBtnToggle()"
         >
-          <svg-vue
-            :icon="
-              elements.status
-                ? elements.status === 'completed'
-                  ? 'double-tick'
-                  : elements.status
-                : 'box'
-            "
-            class="text-lg"
-          ></svg-vue>
+          <svg-vue :icon="elementIcons[elements.status] ?? 'box'" class="text-lg" />
           <svg-vue
             class="w-2.5 text-xs transition duration-200 ease-linear"
             :class="{ 'rotate-180': searchBtnValue }"
@@ -60,7 +51,7 @@
               class="flex py-1.5 px-3.5 hover:bg-white"
               @click="dropdownFilter('not_completed')"
             >
-              <svg-vue class="mr-1 text-lg" icon="red-cross"></svg-vue>
+              <svg-vue class="ml-1 !mr-1.5" icon="red-cross"></svg-vue>
               <span>Not Completed</span>
             </li>
           </ul>
@@ -139,6 +130,12 @@ const elements = reactive({
   search: "",
   status: "",
 });
+
+const elementIcons = {
+  completed: "double-tick",
+  not_completed: "red-cross",
+  core: "core",
+};
 
 const asArrayData = Object.entries(props.data);
 const filteredElements = computed(() => {

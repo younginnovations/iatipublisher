@@ -75,11 +75,13 @@
       </div>
     </div>
     <!-- Table layout: show after upload complete -->
-    <div class="mb-2">
-      <span class="overflow-hidden text-xs font-normal text-n-40">
-        Activities with error message cannot be imported. In order to import them, please
-        solve the errors.</span
-      >
+    <div class="border-l-2 border-l-salmon-50 bg-paper mb-2">
+      <div class="alert__content mb-2.5 rounded bg-camel-10 m-2 p-2">
+        <span class="overflow-hidden text-sm font-normal">
+          Activities with errors cannot be imported. Please solve the errors to import
+          your activities.</span
+        >
+      </div>
     </div>
     <div class="iati-list-table upload-list-table">
       <table>

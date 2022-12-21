@@ -109,12 +109,8 @@ class OrganizationWorkflowController extends Controller
      */
     public function checksForOrganizationPublish(): JsonResponse
     {
-        if ($this->activityWorkflowService->hasNoPublisherInfo(auth()->user()->organization->settings) || !$this->activityWorkflowService->isUserVerified()) {
-            $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization, 'organization');
+        $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization, 'organization');
 
-            return response()->json(['success' => false, 'message' => $message]);
-        }
-
-        return response()->json(['success' => true, 'message' => 'Organization is ready to be published.']);
+        return !empty($message) ? response()->json(['success' => false, 'message' => $message]) : response()->json(['success' => true, 'message' => 'Organization is ready to be published.']);
     }
 }

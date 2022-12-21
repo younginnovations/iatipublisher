@@ -57,7 +57,6 @@ trait RegistersValidationRules
             function ($attribute, $value) {
                 $languages = [];
                 $defaultLanguage = 'en';
-                dump('unique default lang');
 
                 $check = true;
                 foreach ((array) $value as $narrative) {
