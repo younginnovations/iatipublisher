@@ -24,8 +24,8 @@
         </div>
     </div>
 </div>
-<div class="form-title">
-    <div class="flex  flex-wrap  mb-4">
+<div class="form-title ">
+    <div class="flex flex-wrap  mb-4">
         <div class="flex  items-center  title grow">
             <span class="text-bluecoral  text-xl mr-1.5">
                 @if ($data['name'] === 'reporting_org' ||
