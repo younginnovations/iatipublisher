@@ -9,7 +9,7 @@
       <svg-vue icon="download-file" />
     </button>
     <div
-      v-if="state.isVisible"
+      v-if="state.isVisible && store.state.selectedActivities.length > 0"
       class="button__dropdown absolute left-0 top-[calc(100%_+_8px)] z-10 w-56 bg-white p-2 text-left shadow-dropdown"
     >
       <ul>
