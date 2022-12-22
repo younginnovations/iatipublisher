@@ -195,7 +195,7 @@ class DownloadActivityService
         if (!empty($narratives) && is_array($narratives) && count($narratives)) {
             foreach ($narratives as $narrative) {
                 if (Arr::get($narrative, 'language', '') === $language || Arr::get($narrative, 'language', '') === '') {
-                    return Arr::get($narrative, 'narrative', '');
+                    return (string) Arr::get($narrative, 'narrative', '');
                 }
             }
         }
@@ -217,7 +217,7 @@ class DownloadActivityService
         if (!empty($descriptions) && is_array($descriptions) && count($descriptions)) {
             foreach ($descriptions as $description) {
                 if (Arr::get($description, 'type', $type) === $type) {
-                    return $this->getNarrativeText(Arr::get($description, 'narrative', []), $language);
+                    return (string) $this->getNarrativeText(Arr::get($description, 'narrative', []), $language);
                 }
             }
         }
@@ -240,7 +240,7 @@ class DownloadActivityService
                 if (Arr::get($activityDate, 'type', '') === $type && !in_array($key, $this->insertedDates, true)) {
                     $this->insertedDates[] = $key;
 
-                    return Arr::get($activityDate, 'date', '');
+                    return (string) Arr::get($activityDate, 'date', '');
                 }
             }
         }
