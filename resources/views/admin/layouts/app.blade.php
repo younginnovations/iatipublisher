@@ -39,7 +39,7 @@
 
 <body class="overflow-x-hidden">
 <script>
-    let global_lang = {
+    window.global_lang = {
         'validation_lang': {!! json_encode(trans('validation'), JSON_THROW_ON_ERROR) !!},
     };
 </script>

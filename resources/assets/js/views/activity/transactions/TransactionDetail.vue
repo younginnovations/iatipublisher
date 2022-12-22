@@ -156,7 +156,7 @@ export default defineComponent({
       }, 5000);
     });
 
-    // const language = global_lang as Translation;
+    const language = window["global_lang"] as Translation;
 
     return {
       activityTitle,
@@ -167,6 +167,7 @@ export default defineComponent({
       activityLink,
       transactionLink,
       toastData,
+      language,
     };
   },
 });
