@@ -280,6 +280,7 @@ export default defineComponent({
       );
     };
     // const language = global_lang as Translation;
+    const language = window["global_lang"] as Translation;
 
     return {
       activityTitle,
@@ -293,6 +294,7 @@ export default defineComponent({
       isMandatoryIcon,
       showSidebar,
       istopVisible,
+      language,
     };
   },
 });
