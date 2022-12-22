@@ -157,7 +157,14 @@ export default defineComponent({
       state.isVisible = !state.isVisible;
     };
     const downloadErrorxml = (countActivities) => {
-      let apiUrl = '/activities/download-xml/true?activities=all';
+      let queryParameters = window.location.href.split('?');
+      let addQueryParams = '';
+
+      if (queryParameters.length === 2) {
+        addQueryParams = '&' + queryParameters[1];
+      }
+
+      let apiUrl = '/activities/download-xml/true?activities=all' + addQueryParams;
 
       if (countActivities > 0) {
         const activities = store.state.selectedActivities.join(',');
@@ -185,7 +192,14 @@ export default defineComponent({
         });
     };
     const downloadXml = (countActivities) => {
-      let apiUrl = '/activities/download-xml?activities=all';
+      let queryParameters = window.location.href.split('?');
+      let addQueryParams = '';
+
+      if (queryParameters.length === 2) {
+        addQueryParams = '&' + queryParameters[1];
+      }
+
+      let apiUrl = '/activities/download-xml?activities=all' + addQueryParams;
 
       if (countActivities > 0) {
         const activities = store.state.selectedActivities.join(',');
@@ -220,7 +234,14 @@ export default defineComponent({
     };
 
     const downloadCsv = (countActivities) => {
-      let apiUrl = '/activities/download-csv?activities=all';
+      let queryParameters = window.location.href.split('?');
+      let addQueryParams = '';
+
+      if (queryParameters.length === 2) {
+        addQueryParams = '&' + queryParameters[1];
+      }
+
+      let apiUrl = '/activities/download-csv?activities=all' + addQueryParams;
 
       if (countActivities > 0) {
         const activities = store.state.selectedActivities.join(',');
