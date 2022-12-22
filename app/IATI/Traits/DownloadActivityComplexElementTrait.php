@@ -86,7 +86,7 @@ trait DownloadActivityComplexElementTrait
      */
     public function getContactTelephone($activityArray, $i): ?string
     {
-        return Arr::get($activityArray, 'contact_info.' . $i . '.telephone.0.telephone', '');
+        return (string) (Arr::get($activityArray, 'contact_info.' . $i . '.telephone.0.telephone', ''));
     }
 
     /**
@@ -502,7 +502,7 @@ trait DownloadActivityComplexElementTrait
      */
     public function getDocumentLinkCategory($activityArray, $i): ?string
     {
-        return Arr::get($activityArray, 'document_link.' . $i . '.category.0.code', '');
+        return (string) (Arr::get($activityArray, 'document_link.' . $i . '.category.0.code', ''));
     }
 
     /**
@@ -515,7 +515,7 @@ trait DownloadActivityComplexElementTrait
      */
     public function getDocumentLinkLanguage($activityArray, $i): ?string
     {
-        return Arr::get($activityArray, 'document_link.' . $i . '.language.0.code', '');
+        return (string) (Arr::get($activityArray, 'document_link.' . $i . '.language.0.code', ''));
     }
 
     /**
@@ -801,7 +801,7 @@ trait DownloadActivityComplexElementTrait
      */
     public function getPlannedDisbursementValueCurrency($activityArray, $i): ?string
     {
-        return Arr::get($activityArray, 'planned_disbursement.' . $i . '.value.0.currency', '');
+        return (string) (Arr::get($activityArray, 'planned_disbursement.' . $i . '.value.0.currency', ''));
     }
 
     /**
