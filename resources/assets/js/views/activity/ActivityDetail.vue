@@ -3,11 +3,7 @@
     <div
       v-if="showSidebar"
       class="fixed z-10 h-screen w-screen bg-black/10"
-      @click="
-        () => {
-          toggleSidebar();
-        }
-      "
+      @click="toggleSidebar"
     />
     <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
       <!-- title section -->
@@ -165,14 +161,7 @@
             <Elements :activity-id="activity.id" :data="elementProps" />
           </div>
         </aside>
-        <div
-          class="absolute cursor-pointer lg:hidden"
-          @click="
-            () => {
-              toggleSidebar();
-            }
-          "
-        >
+        <div class="absolute cursor-pointer lg:hidden" @click="toggleSidebar">
           <svg-vue icon="chevron" class="pb-2 text-3xl text-bluecoral" />
         </div>
 
@@ -182,11 +171,7 @@
         >
           <div
             class="absolute right-4 cursor-pointer lg:hidden"
-            @click="
-              () => {
-                toggleSidebar();
-              }
-            "
+            @click="toggleSidebar"
           >
             <svg-vue
               icon="chevron"
@@ -254,7 +239,7 @@
             </div>
           </aside>
         </div>
-        <div class="">
+        <div>
           <div class="flex justify-end">
             <a
               :href="`/activity/${activityProps.id}/default_values`"
@@ -469,7 +454,6 @@ export default defineComponent({
 
     const toggleSidebar = () => {
       showSidebar.value = !showSidebar.value;
-      console.log(showSidebar.value);
     };
     onMounted(() => {
       if (props.toast.message !== '') {
