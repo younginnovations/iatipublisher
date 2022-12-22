@@ -158,7 +158,7 @@
 }
 
 .menu-overlay {
-  position: fixed;
+  position: fixed !important;
   z-index: 100;
   background-color: rgba(0, 0, 0, 0.5);
   left: 0;
@@ -196,6 +196,7 @@
 }
 
 .nav {
+  outline: 1px solid red !important;
   &__pointer,
   &__pointer-hover {
     @apply relative;

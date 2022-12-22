@@ -24,7 +24,7 @@
         </div>
     </div>
 </div>
-<div class="form-title">
+<div class="form-title ">
     <div class="flex mb-4">
         <div class="flex items-center title grow">
             <span class="text-bluecoral text-xl mr-1.5">

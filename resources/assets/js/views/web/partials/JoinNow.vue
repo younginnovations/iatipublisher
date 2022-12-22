@@ -5,8 +5,8 @@
     <div class="right__container flex flex-col">
       <h2 class="mb-2 hidden sm:block">Join Now.</h2>
       <span class="mb-8 text-n-40 xl:pr-6">
-        To begin, your organisation needs to be registered as an IATI publisher. Select an
-        option and we’ll guide you through this process.
+        To begin, your organisation needs to be registered as an IATI publisher.
+        Select an option and we’ll guide you through this process.
       </span>
       <a href="/iati/register" class="right__content mb-6">
         <div class="right__icon">
@@ -15,8 +15,8 @@
         <div class="details mx-4 xl:px-1">
           <span class="text-sm font-bold text-bluecoral">I am new to IATI</span>
           <p class="text-xs leading-5 text-n-40">
-            Use this option if your organization <u>has not</u> registered an account with
-            IATI on the IATI Registry
+            Use this option if your organization <u>has not</u> registered an
+            account with IATI on the IATI Registry
           </p>
         </div>
         <div>
@@ -32,9 +32,11 @@
             >My organisation has registered with IATI</span
           >
           <p class="text-xs leading-5 text-n-40">
-            Use this option if your organisation is already registered as an IATI
-            Publisher on the
-            <a href="https://www.iatiregistry.org/" target="_blank">IATI Registry</a>
+            Use this option if your organisation is already registered as an
+            IATI Publisher on the
+            <a href="https://www.iatiregistry.org/" target="_blank"
+              >IATI Registry</a
+            >
           </p>
         </div>
         <div>

@@ -33,12 +33,29 @@
 }
 
 // activity detail
-.activities__content--element > div {
+.activities__content--element {
+  @media (max-width: 768px) {
+    max-width: calc(100vw - 30px);
+  }
+  @media (max-width: 768px) {
+    .add_indicator {
+      max-width: 400px;
+    }
+  }
+}
+
+.activities__content--element div {
   .edit-button,
   .delete-button {
     visibility: hidden;
     opacity: 0;
     transition: all 0.4s ease;
+
+    @media (max-width: 1024px) {
+      visibility: visible;
+      // outline: 1px solid red !important;
+      opacity: 1;
+    }
   }
 
   .edit-button {
@@ -109,7 +126,10 @@
   @apply mb-2 text-sm font-bold text-n-50;
 }
 .language {
-  @apply text-xs italic text-n-30;
+  @apply w-[300px] text-xs italic text-n-30  sm:w-auto;
+}
+.description-content {
+  @apply w-[300px] sm:w-auto;
 }
 .title-border::after {
   width: 950px;

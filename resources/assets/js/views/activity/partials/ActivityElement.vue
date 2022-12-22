@@ -92,6 +92,7 @@
               @click="deleteActivityElement"
             />
           </div>
+
           <svg-vue
             v-if="activityCoreElements().includes(title)"
             class="mr-1.5"
@@ -656,7 +657,7 @@ interface ToastDataTypeface {
 }
 const toastData = inject('toastData') as ToastDataTypeface;
 
-let layout = 'basis-6/12';
+let layout = 'basis-full  md:basis-6/12';
 if (props.width === 'full') {
   layout = 'basis-full';
 }

@@ -1,16 +1,19 @@
 <template>
-  <div id="indicator" class="px-3 py-3 activities__content--element basis-full text-n-50">
-    <div class="p-4 bg-white rounded-lg">
-      <div class="flex mb-4">
-        <div class="flex items-center title grow">
-          <!-- <svg-vue class="mr-1.5 text-xl text-bluecoral" icon="bill"></svg-vue> -->
-          <div class="text-sm font-bold title">Indicator</div>
+  <div
+    id="indicator"
+    class="activities__content--element !bg-red w-full basis-full px-3 py-3 text-n-50"
+  >
+    <div class="rounded-lg bg-white p-4">
+      <div class="mb-4 flex">
+        <div class="title flex grow items-center">
+          <svg-vue class="mr-1.5 text-xl text-bluecoral" icon="bill"></svg-vue>
+          <div class="title text-sm font-bold">Indicator</div>
           <!--          <div class="status ml-2.5 flex text-xs leading-5 text-crimson-50">-->
           <!--            <b class="mr-2 text-base leading-3">.</b>-->
           <!--            <span>not completed</span>-->
           <!--          </div>-->
         </div>
-        <div class="flex items-center icons">
+        <div class="icons flex items-center">
           <Btn
             text="Add Indicator"
             icon="add"
@@ -29,28 +32,30 @@
             <button>
               <svg-vue icon="help"></svg-vue>
             </button>
-            <div class="right-0 help__text w-60">
+            <div class="help__text right-0 w-60">
               <span class="font-bold text-bluecoral"></span>
               <p :v-html="toolTip"></p>
             </div>
           </div>
         </div>
       </div>
-      <div class="w-full h-px mb-4 border-b divider border-n-20"></div>
+      <div class="divider mb-4 h-px w-full border-b border-n-20"></div>
       <div class="indicator">
         <template v-for="(post, ri) in indicatorData" :key="ri">
           <div class="item">
             <div class="elements-detail wider">
-              <div class="flex category">
+              <div class="category flex">
                 <div class="mr-4">
                   <a
                     class="text-n-50"
                     :href="`/result/${result.id}/indicator/${post.id}`"
                   >
-                    {{ getActivityTitle(post.indicator.title[0].narrative, "en") }}
+                    {{
+                      getActivityTitle(post.indicator.title[0].narrative, 'en')
+                    }}
                   </a>
                 </div>
-                <div class="flex justify-between shrink-0 grow">
+                <div class="flex shrink-0 grow justify-between">
                   <span class="flex">
                     <Btn
                       text="View Indicator"
@@ -80,20 +85,22 @@
                         <td>Indicator Title</td>
                         <td>
                           <template
-                            v-for="(title, t) in post.indicator.title[0].narrative"
+                            v-for="(title, t) in post.indicator.title[0]
+                              .narrative"
                             :key="t"
                           >
                             <div
                               class="title-content"
                               :class="{
                                 'mb-1.5':
-                                  t !== post.indicator.title[0].narrative.length - 1,
+                                  t !==
+                                  post.indicator.title[0].narrative.length - 1,
                               }"
                             >
-                              <div class="mb-1 language">
+                              <div class="language mb-1">
                                 (Language: {{ type.language[title.language] }})
                               </div>
-                              <div class="text-xs description">
+                              <div class="description text-xs">
                                 {{ title.narrative }}
                               </div>
                             </div>
@@ -117,8 +124,8 @@
                         <td>Description</td>
                         <td>
                           <template
-                            v-for="(description, d) in post.indicator.description[0]
-                              .narrative"
+                            v-for="(description, d) in post.indicator
+                              .description[0].narrative"
                             :key="d"
                           >
                             <div
@@ -126,14 +133,16 @@
                               :class="{
                                 'mb-1.5':
                                   d !==
-                                  post.indicator.description[0].narrative.length - 1,
+                                  post.indicator.description[0].narrative
+                                    .length -
+                                    1,
                               }"
                             >
-                              <div class="mb-1 language">
+                              <div class="language mb-1">
                                 (Language:
                                 {{ type.language[description.language] }})
                               </div>
-                              <div class="text-xs description">
+                              <div class="description text-xs">
                                 {{ description.narrative }}
                               </div>
                             </div>
@@ -148,7 +157,8 @@
                             v-for="(ref, r) in post.indicator.reference"
                             :key="r"
                             :class="{
-                              'mb-1.5': r !== post.indicator.reference.length - 1,
+                              'mb-1.5':
+                                r !== post.indicator.reference.length - 1,
                             }"
                           >
                             <span v-if="ref.vocabulary">
@@ -164,7 +174,9 @@
 
                       <tr>
                         <td>Document Link</td>
-                        <td>{{ post.indicator.document_link.length }} documents</td>
+                        <td>
+                          {{ post.indicator.document_link.length }} documents
+                        </td>
                       </tr>
 
                       <tr>
@@ -174,7 +186,8 @@
                             v-for="(base, b) in post.indicator.baseline"
                             :key="b"
                             :class="{
-                              'mb-1.5': b !== post.indicator.baseline.length - 1,
+                              'mb-1.5':
+                                b !== post.indicator.baseline.length - 1,
                             }"
                           >
                             <div>
@@ -258,7 +271,9 @@
                                   :key="c"
                                   class="item"
                                   :class="{
-                                    'mb-1.5': c !== base.comment[0].narrative.length - 1,
+                                    'mb-1.5':
+                                      c !==
+                                      base.comment[0].narrative.length - 1,
                                   }"
                                 >
                                   <div>
@@ -283,7 +298,9 @@
 
                             <div class="flex">
                               <div>Document Link:&nbsp;</div>
-                              <div>{{ base.document_link.length }} document</div>
+                              <div>
+                                {{ base.document_link.length }} document
+                              </div>
                             </div>
                           </div>
                         </td>
@@ -311,10 +328,12 @@
                     <tbody>
                       <tr>
                         <td>
-                          <div class="category">Period {{ Number(key) + 1 }}</div>
+                          <div class="category">
+                            Period {{ Number(key) + 1 }}
+                          </div>
                         </td>
                         <td>
-                          <div class="flex category">
+                          <div class="category flex">
                             <div class="mr-10">
                               <a
                                 class="text-n-50"
@@ -323,19 +342,19 @@
                                 {{
                                   dateFormat(
                                     item.period.period_start[0].date,
-                                    "MMMM DD, YYYY"
+                                    'MMMM DD, YYYY'
                                   )
                                 }}
                                 -
                                 {{
                                   dateFormat(
                                     item.period.period_end[0].date,
-                                    "MMMM DD, YYYY"
+                                    'MMMM DD, YYYY'
                                   )
                                 }}
                               </a>
                             </div>
-                            <div class="flex justify-between shrink-0 grow">
+                            <div class="flex shrink-0 grow justify-between">
                               <Btn
                                 text="View Period"
                                 icon="eye"
@@ -354,18 +373,21 @@
                       <tr>
                         <td>Target Value</td>
                         <td>
-                          <template v-for="(tar, t) in item.period.target" :key="t">
+                          <template
+                            v-for="(tar, t) in item.period.target"
+                            :key="t"
+                          >
                             <div
                               class="item"
                               :class="{
                                 'mb-1.5': t !== item.period.target.length - 1,
                               }"
                             >
-                              <div class="mb-1 language target_value">
+                              <div class="language target_value mb-1">
                                 {{ tar.value }}
                               </div>
 
-                              <div class="flex location_reference">
+                              <div class="location_reference flex">
                                 <div>Location Reference:&nbsp;</div>
                                 <div>
                                   <div
@@ -388,7 +410,7 @@
                                 </div>
                               </div>
 
-                              <div class="flex dimension">
+                              <div class="dimension flex">
                                 <div>Dimension:&nbsp;</div>
                                 <div>
                                   <div
@@ -453,18 +475,21 @@
                       <tr>
                         <td>Actual Value</td>
                         <td>
-                          <template v-for="(tar, t) in item.period.actual" :key="t">
+                          <template
+                            v-for="(tar, t) in item.period.actual"
+                            :key="t"
+                          >
                             <div
                               class="item"
                               :class="{
                                 'mb-1.5': t !== item.period.actual.length - 1,
                               }"
                             >
-                              <div class="mb-1 language target_value">
+                              <div class="language target_value mb-1">
                                 {{ tar.value }}
                               </div>
 
-                              <div class="flex location_reference">
+                              <div class="location_reference flex">
                                 <div>Location Reference:&nbsp;</div>
                                 <div>
                                   <div
@@ -487,7 +512,7 @@
                                 </div>
                               </div>
 
-                              <div class="flex dimension">
+                              <div class="dimension flex">
                                 <div>Dimension:&nbsp;</div>
                                 <div>
                                   <div
@@ -556,7 +581,7 @@
           </div>
           <div
             v-if="ri != indicatorData.length - 1"
-            class="w-full h-px my-8 border-b divider border-n-20"
+            class="divider my-8 h-px w-full border-b border-n-20"
           ></div>
         </template>
       </div>
@@ -565,18 +590,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from "vue";
+import { defineComponent, toRefs } from 'vue';
 
 //composable
-import dateFormat from "Composable/dateFormat";
-import getActivityTitle from "Composable/title";
+import dateFormat from 'Composable/dateFormat';
+import getActivityTitle from 'Composable/title';
 
 //components
-import NotYet from "Components/sections/HaveNotAddedYet.vue";
-import Btn from "Components/buttons/Link.vue";
+import NotYet from 'Components/sections/HaveNotAddedYet.vue';
+import Btn from 'Components/buttons/Link.vue';
 
 export default defineComponent({
-  name: "ResultIndicator",
+  name: 'ResultIndicator',
   components: {
     NotYet,
     Btn,
@@ -593,7 +618,7 @@ export default defineComponent({
     toolTip: {
       type: String,
       required: false,
-      default: "",
+      default: '',
     },
   },
   setup(props) {

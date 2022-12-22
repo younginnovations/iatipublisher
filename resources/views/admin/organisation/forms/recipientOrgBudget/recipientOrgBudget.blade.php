@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
 @section('content')
-  <section class="section min-h-[calc(100vh_-_60px)]">
+  <section class="section  min-h-[calc(100vh_-_60px)]">
     @include('web.components.loader')
     <div class="px-5 xl:px-10 pt-4 pb-[71px]">
       @include('admin.layouts.organizationTitle')
@@ -9,8 +9,8 @@
         <aside class="activities__sidebar activities__sidebar-inner">
           @include('admin.organisation.partial.form-sidebar')
         </aside>
-        <div class="activities__content">
-          <div class="py-[6.06%] px-[6%] xl:px-[12%] bg-white">
+        <div class="activities__content ">
+          <div class="py-[6.06%] min-w-[300px] lg:min-w-[300px] px-[6%] xl:px-[12%] bg-white">
 
             @include('admin.organisation.partial.form-title')
 

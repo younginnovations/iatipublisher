@@ -1,7 +1,13 @@
 .iati-list-table {
   @apply rounded-lg border border-n-20 text-left;
+  max-width: calc(100vw - 45px);
+  overflow-x: auto;
+  height: 675px;
+
   table {
-    @apply table w-full table-fixed bg-white;
+    @apply table w-full  bg-white;
+
+    // min-width: 800px !important ;
   }
   tbody {
     tr {
@@ -17,7 +23,7 @@
       th {
         @apply relative;
         &:after {
-          content: '';
+          content: ' ';
           @apply absolute left-0 bottom-0 h-px w-full max-w-full bg-n-20;
         }
       }
@@ -150,4 +156,11 @@
 
 #date {
   width: 173px;
+}
+.iati-list-table {
+  td:nth-child(1) {
+    @media (max-width: 700px) {
+      max-width: 130px !important;
+    }
+  }
 }

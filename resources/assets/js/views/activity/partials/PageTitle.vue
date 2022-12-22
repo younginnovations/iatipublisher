@@ -1,6 +1,6 @@
 <template>
   <div class="page-title mb-4">
-    <div class="flex items-end gap-4">
+    <div class="flex items-start gap-4">
       <div class="title shrink-0 grow-0">
         <div class="mb-2 text-caption-c1 text-n-40 xl:mb-4">
           <nav aria-label="breadcrumbs" class="breadcrumb">
@@ -67,15 +67,21 @@
               }
             "
           />
-          <div class="inline-flex shrink-0 items-center justify-end gap-3">
+          <div
+            class="inline-flex shrink-0 flex-col items-end justify-end gap-3 md:flex-row"
+          >
             <RefreshToastMessage
               v-if="refreshToastMsg.visibility"
               :message="refreshToastMsg.refreshMessage"
               :type="refreshToastMsg.refreshMessageType"
             />
-            <PublishSelected />
-            <DeleteButton v-if="store.state.selectedActivities.length === 1" />
             <AddActivityButton />
+            <div class="flex flex-row space-x-2">
+              <PublishSelected />
+              <DeleteButton
+                v-if="store.state.selectedActivities.length === 1"
+              />
+            </div>
           </div>
         </div>
       </div>

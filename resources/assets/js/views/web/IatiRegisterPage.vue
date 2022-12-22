@@ -3,7 +3,7 @@
     <Loader v-if="isLoaderVisible" />
     <div class="section__container">
       <div class="section__title">
-        <h2>Create IATI Publisher Account and IATI Registry Account</h2>
+        <h2 class="md:text-4xl text-2xl " >Create IATI Publisher Account and IATI Registry Account</h2>
         <p>
           Register your organisation to start your IATI publishing journey by creating
           accounts in IATI publisher and IATI Registry at once.

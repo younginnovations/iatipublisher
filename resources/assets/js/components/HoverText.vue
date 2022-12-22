@@ -17,7 +17,9 @@
           : 'help__text right-0 ' + width,
       ]"
     >
-      <div v-if="showIatiReference" class="text-bluecoral mb-2 italic">IATI standard reference</div>
+      <div v-if="showIatiReference" class="mb-2 italic text-bluecoral">
+        IATI standard reference
+      </div>
       <span class="font-bold text-bluecoral">{{ name }}</span>
       <!-- eslint-disable vue/no-v-html -->
       <p v-html="hoverText" />
@@ -66,8 +68,8 @@ export default defineComponent({
     showIatiReference: {
       type: Boolean,
       required: false,
-      default: false
-    }
+      default: false,
+    },
   },
 });
 </script>
@@ -89,9 +91,12 @@ export default defineComponent({
 
 .help:hover {
   .help__text {
-    transform: translateY(5px);
+    transform: translate(50%, 5px);
     visibility: visible;
     opacity: 1;
+    @media (max-width: 1024px) {
+      width: 200px;
+    }
   }
 }
 </style>

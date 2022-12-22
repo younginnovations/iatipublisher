@@ -1,25 +1,57 @@
 <template>
-  <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
-    <!-- title section -->
-    <div class="page-title mb-4 xl:mb-6">
-      <div class="flex items-end gap-4">
-        <div class="title grow-0">
-          <div class="max-w-sm pb-4 text-caption-c1 text-n-40">
-            <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
-              <div class="flex">
-                <a class="whitespace-nowrap font-bold" href="/activities"
-                  >Your Organisation</a
-                >
-                <span class="separator mx-4"> / </span>
-                <div class="breadcrumb__title">
-                  <span
-                    class="breadcrumb__title last overflow-hidden text-n-30"
-                    >{{
+  <div>
+    <div
+      v-if="showSidebar"
+      class="fixed z-10 h-screen w-screen bg-black/10"
+      @click="toggleSidebar"
+    />
+    <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
+      <!-- title section -->
+      <div class="page-title mb-4 xl:mb-6">
+        <div class="flex items-end gap-4">
+          <div class="title grow-0">
+            <div class="max-w-sm pb-4 text-caption-c1 text-n-40">
+              <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
+                <div class="flex">
+                  <a class="whitespace-nowrap font-bold" href="/activities"
+                    >Your Organisation</a
+                  >
+                  <span class="separator mx-4"> / </span>
+                  <div class="breadcrumb__title">
+                    <span
+                      class="breadcrumb__title last overflow-hidden text-n-30"
+                      >{{
+                        organization.name
+                          ? organization.name['0'].narrative ?? 'Untitled'
+                          : 'Untitled'
+                      }}</span
+                    >
+                    <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
+                      {{
+                        organization.name
+                          ? organization.name['0'].narrative ?? 'Untitled'
+                          : 'Untitled'
+                      }}
+                    </span>
+                  </div>
+                </div>
+              </nav>
+            </div>
+            <div class="inline-flex max-w-3xl items-center">
+              <div class="mr-3">
+                <a href="/activities">
+                  <svg-vue icon="arrow-short-left" />
+                </a>
+              </div>
+              <div>
+                <h4 class="ellipsis__title relative mr-4 text-2xl font-bold">
+                  <span class="ellipsis__title overflow-hidden">
+                    {{
                       organization.name
                         ? organization.name['0'].narrative ?? 'Untitled'
                         : 'Untitled'
-                    }}</span
-                  >
+                    }}
+                  </span>
                   <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
                     {{
                       organization.name
@@ -27,237 +59,298 @@
                         : 'Untitled'
                     }}
                   </span>
-                </div>
+                </h4>
               </div>
-            </nav>
-          </div>
-          <div class="inline-flex max-w-3xl items-center">
-            <div class="mr-3">
-              <a href="/activities">
-                <svg-vue icon="arrow-short-left" />
-              </a>
-            </div>
-            <div>
-              <h4 class="ellipsis__title relative mr-4 text-2xl font-bold">
-                <span class="ellipsis__title overflow-hidden">
-                  {{
-                    organization.name
-                      ? organization.name['0'].narrative ?? 'Untitled'
-                      : 'Untitled'
-                  }}
-                </span>
-                <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
-                  {{
-                    organization.name
-                      ? organization.name['0'].narrative ?? 'Untitled'
-                      : 'Untitled'
-                  }}
-                </span>
-              </h4>
             </div>
           </div>
-        </div>
-        <div
-          class="actions relative flex grow items-end justify-end gap-3 md:shrink-0"
-        >
-          <Toast
-            v-if="toastData.visibility"
-            :message="toastData.message"
-            :type="toastData.type"
-            class="mr-4"
-          />
-          <ErrorPopUp
-            v-if="errorData.visibility"
-            :message="errorData.message"
-            title="Organisation couldn’t be published because"
-            @close-popup="
-              () => {
-                errorData.visibility = false;
-              }
-            "
-          />
-          <div class="inline-flex justify-end">
-            <!-- Download File -->
-            <!-- <button
+          <div
+            class="actions relative flex grow items-end justify-end gap-3 md:shrink-0"
+          >
+            <Toast
+              v-if="toastData.visibility"
+              :message="toastData.message"
+              :type="toastData.type"
+              class="mr-4"
+            />
+            <ErrorPopUp
+              v-if="errorData.visibility"
+              :message="errorData.message"
+              title="Organisation couldn’t be published because"
+              @close-popup="
+                () => {
+                  errorData.visibility = false;
+                }
+              "
+            />
+            <div class="inline-flex justify-end">
+              <!-- Download File -->
+              <!-- <button
               class="button secondary-btn mr-3.5 font-bold"
               @click="downloadValue = true"
             >
               <svg-vue icon="download-file" />
             </button> -->
-            <Modal
-              :modal-active="downloadValue"
-              width="583"
-              @close="downloadToggle"
-            >
-              <div class="mb-4">
-                <div class="title mb-6 flex">
-                  <svg-vue
-                    class="mr-1 mt-0.5 text-lg text-spring-50"
-                    icon="download-file"
-                  />
-                  <b>Download file.</b>
+              <Modal
+                :modal-active="downloadValue"
+                width="583"
+                @close="downloadToggle"
+              >
+                <div class="mb-4">
+                  <div class="title mb-6 flex">
+                    <svg-vue
+                      class="mr-1 mt-0.5 text-lg text-spring-50"
+                      icon="download-file"
+                    />
+                    <b>Download file.</b>
+                  </div>
+                  <div class="rounded-lg bg-mint p-4">
+                    Click the download button to save the file.
+                  </div>
                 </div>
-                <div class="rounded-lg bg-mint p-4">
-                  Click the download button to save the file.
+                <div class="flex justify-end">
+                  <div class="inline-flex">
+                    <BtnComponent
+                      class="bg-white px-6 uppercase"
+                      text="Go Back"
+                      type=""
+                      @click="downloadValue = false"
+                    />
+                    <BtnComponent
+                      class="space"
+                      text="Download"
+                      type="primary"
+                      @click="downloadValue = false"
+                    />
+                  </div>
                 </div>
-              </div>
-              <div class="flex justify-end">
-                <div class="inline-flex">
-                  <BtnComponent
-                    class="bg-white px-6 uppercase"
-                    text="Go Back"
-                    type=""
-                    @click="downloadValue = false"
-                  />
-                  <BtnComponent
-                    class="space"
-                    text="Download"
-                    type="primary"
-                    @click="downloadValue = false"
-                  />
-                </div>
-              </div>
-            </Modal>
+              </Modal>
 
-            <!-- Delete Activity -->
-            <!-- <button
+              <!-- Delete Activity -->
+              <!-- <button
               class="button secondary-btn mr-3.5 font-bold"
               @click="deleteValue = true"
             >
               <svg-vue icon="delete" />
             </button> -->
-            <Modal
-              :modal-active="deleteValue"
-              width="583"
-              @close="deleteToggle"
-            >
-              <div class="mb-4">
-                <div class="title mb-6 flex">
-                  <svg-vue
-                    class="mr-1 mt-0.5 text-lg text-crimson-40"
-                    icon="delete"
-                  />
-                  <b>Delete organisation</b>
+              <Modal
+                :modal-active="deleteValue"
+                width="583"
+                @close="deleteToggle"
+              >
+                <div class="mb-4">
+                  <div class="title mb-6 flex">
+                    <svg-vue
+                      class="mr-1 mt-0.5 text-lg text-crimson-40"
+                      icon="delete"
+                    />
+                    <b>Delete organisation</b>
+                  </div>
+                  <div class="rounded-lg bg-rose p-4">
+                    Are you sure you want to delete this organisation?
+                  </div>
                 </div>
-                <div class="rounded-lg bg-rose p-4">
-                  Are you sure you want to delete this organisation?
+                <div class="flex justify-end">
+                  <div class="inline-flex">
+                    <BtnComponent
+                      class="bg-white px-6 uppercase"
+                      text="Go Back"
+                      type=""
+                      @click="deleteValue = false"
+                    />
+                    <BtnComponent
+                      class="space"
+                      text="Delete"
+                      type="primary"
+                      @click="deleteValue = false"
+                    />
+                  </div>
                 </div>
-              </div>
-              <div class="flex justify-end">
-                <div class="inline-flex">
-                  <BtnComponent
-                    class="bg-white px-6 uppercase"
-                    text="Go Back"
-                    type=""
-                    @click="deleteValue = false"
-                  />
-                  <BtnComponent
-                    class="space"
-                    text="Delete"
-                    type="primary"
-                    @click="deleteValue = false"
-                  />
-                </div>
-              </div>
-            </Modal>
+              </Modal>
 
-            <!-- Unpublish /Publish Activity -->
-            <PublishUnpublish />
+              <!-- Unpublish /Publish Activity -->
+              <PublishUnpublish />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- title section ends -->
-    <div class="activities">
-      <aside class="activities__sidebar">
-        <div class="mb-1 flex">
-          <div class="activities__card progress mr-1">
-            <div class="mb-2 flex items-center justify-between">
-              <span class="mr-2">Publishing Progress</span>
-              <HoverText
-                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
-                name=""
-                class="hover-text"
-                position="right"
-              />
-            </div>
-            <RadialProgressBar
-              class="mb-3 h-20 text-8xl"
-              :is-percent="true"
-              :percent="progress"
-            ></RadialProgressBar>
-            <span>Fill mandatory fields of all elements to get 100% score</span>
-          </div>
-          <div class="activities__card elements">
-            <div class="mb-7 flex items-center justify-between">
-              <span>Elements</span>
-              <HoverText
-                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
-                name=""
-                class="hover-text"
-              />
-            </div>
-            <div class="mb-3 flex justify-between">
-              <div class="flex items-center space-x-1">
-                <svg-vue icon="core" />
-                <span>Core</span>
+      <!-- title section ends -->
+      <div class="activities">
+        <aside class="activities__sidebar hidden lg:block">
+          <div class="mb-1 flex">
+            <div class="activities__card progress mr-1">
+              <div class="mb-2 flex items-center justify-between">
+                <span class="mr-2">Publishing Progress</span>
+                <HoverText
+                  hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                  name=""
+                  class="hover-text"
+                  position="right"
+                />
               </div>
-              <HoverText
-                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
-                name=""
-                class="hover-text"
-              />
+              <RadialProgressBar
+                class="mb-3 h-20 text-8xl"
+                :is-percent="true"
+                :percent="progress"
+              ></RadialProgressBar>
+              <span
+                >Fill mandatory fields of all elements to get 100% score</span
+              >
             </div>
-            <div class="flex justify-between">
-              <div class="flex items-center space-x-1">
-                <svg-vue icon="double-tick" class="text-spring-50"></svg-vue>
-                <span>Completed</span>
+            <div class="activities__card elements">
+              <div class="mb-7 flex items-center justify-between">
+                <span>Elements</span>
+                <HoverText
+                  hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                  name=""
+                  class="hover-text"
+                />
               </div>
-              <HoverText
-                hover-text="You cannot publish an activity until all the mandatory fields have been filled."
-                name=""
-                class="hover-text"
-              />
+              <div class="mb-3 flex justify-between">
+                <div class="flex items-center space-x-1">
+                  <svg-vue icon="core" />
+                  <span>Core</span>
+                </div>
+                <HoverText
+                  hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                  name=""
+                  class="hover-text"
+                />
+              </div>
+              <div class="flex justify-between">
+                <div class="flex items-center space-x-1">
+                  <svg-vue icon="double-tick" class="text-spring-50"></svg-vue>
+                  <span>Completed</span>
+                </div>
+                <HoverText
+                  hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                  name=""
+                  class="hover-text"
+                />
+              </div>
             </div>
           </div>
+          <OrganisationElements
+            :activity-id="organization.id"
+            :data="elementProps"
+            :status="status"
+          />
+        </aside>
+        <div
+          class="absolute -top-4 cursor-pointer lg:hidden"
+          @click="toggleSidebar"
+        >
+          <svg-vue icon="chevron" class="pb-2 text-3xl text-bluecoral" />
         </div>
-        <OrganisationElements
-          :activity-id="organization.id"
-          :data="elementProps"
-          :status="status"
-        />
-      </aside>
-      <div class="activities__content">
-        <div class="activities__content--elements -mx-3 grid grid-cols-2">
-          <template v-for="(post, key, index) in groupedData" :key="index">
-            <template v-for="(element, name, i) in post.elements" :key="i">
-              <OrganisationElementsDetail
-                v-if="
-                  (typeof element.content === 'object'
-                    ? Object.keys(element.content).length > 0
-                    : element.content) || typeof element.content === 'number'
-                "
-                :id="key"
-                :data="element"
-                :title="name.toString()"
-                :activity-id="organization.id"
-                :content="element.content"
-                :types="types"
-                :tooltip="elements[name]['hover_text']"
-                :status="
-                  String(name) === 'organisation_identifier'
-                    ? status['identifier']
-                    : status[name]
-                "
-                class="elements-card col-span-2"
-                :class="
-                  String(name) === 'organisation_identifier'
-                    ? 'xl:col-span-1'
-                    : ''
-                "
-              />
+
+        <div
+          :class="showSidebar ? '-translate-x-[20px]' : '-translate-x-[110%]'"
+          class="opacity-1 fixed top-[60px] z-[100] block h-[calc(100vh_-_60px)] overflow-y-auto overflow-x-hidden bg-white duration-200 lg:hidden"
+        >
+          <div
+            class="absolute right-4 cursor-pointer lg:hidden"
+            @click="toggleSidebar()"
+          >
+            <svg-vue
+              icon="chevron"
+              class="rotate-180 pb-2 text-3xl text-bluecoral"
+            />
+          </div>
+          <aside class="!z-[200] w-[280px] bg-white pt-8">
+            <div class="mb-1 flex">
+              <div class="activities__card progress mr-1">
+                <div class="mb-2 flex items-center justify-between">
+                  <span class="mr-2">Publishing Progress</span>
+                  <HoverText
+                    hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                    name=""
+                    class="hover-text"
+                    position="right"
+                  />
+                </div>
+                <RadialProgressBar
+                  class="mb-3 h-20 text-8xl"
+                  :is-percent="true"
+                  :percent="progress"
+                ></RadialProgressBar>
+                <span
+                  >Fill mandatory fields of all elements to get 100% score</span
+                >
+              </div>
+              <div class="activities__card elements">
+                <div class="mb-7 flex items-center justify-between">
+                  <span>Elements</span>
+                  <HoverText
+                    hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                    name=""
+                    class="hover-text"
+                  />
+                </div>
+                <div class="mb-3 flex justify-between">
+                  <div class="flex items-center space-x-1">
+                    <svg-vue icon="core" />
+                    <span>Core</span>
+                  </div>
+                  <HoverText
+                    hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                    name=""
+                    class="hover-text"
+                  />
+                </div>
+                <div class="flex justify-between">
+                  <div class="flex items-center space-x-1">
+                    <svg-vue
+                      icon="double-tick"
+                      class="text-spring-50"
+                    ></svg-vue>
+                    <span>Completed</span>
+                  </div>
+                  <HoverText
+                    hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                    name=""
+                    class="hover-text"
+                  />
+                </div>
+              </div>
+            </div>
+            <OrganisationElements
+              :activity-id="organization.id"
+              :data="elementProps"
+              :status="status"
+            />
+          </aside>
+        </div>
+        <div class="activities__content">
+          <div class="activities__content--elements -mx-3 grid grid-cols-2">
+            <template v-for="(post, key, index) in groupedData" :key="index">
+              <template v-for="(element, name, i) in post.elements" :key="i">
+                <OrganisationElementsDetail
+                  v-if="
+                    (typeof element.content === 'object'
+                      ? Object.keys(element.content).length > 0
+                      : element.content) || typeof element.content === 'number'
+                  "
+                  :id="key"
+                  :data="element"
+                  :title="name.toString()"
+                  :activity-id="organization.id"
+                  :content="element.content"
+                  :types="types"
+                  :tooltip="elements[name]['hover_text']"
+                  :status="
+                    String(name) === 'organisation_identifier'
+                      ? status['identifier']
+                      : status[name]
+                  "
+                  class="elements-card col-span-2"
+                  :class="
+                    String(name) === 'organisation_identifier'
+                      ? 'xl:col-span-1'
+                      : ''
+                  "
+                />
+              </template>
             </template>
-          </template>
+          </div>
         </div>
       </div>
     </div>
@@ -272,6 +365,7 @@ import {
   toRefs,
   provide,
   watch,
+  ref,
 } from 'vue';
 import HoverText from '../../components/HoverText.vue';
 import RadialProgressBar from '../../components/RadialProgressBar.vue';
@@ -343,12 +437,16 @@ export default defineComponent({
       message: '',
       type: true,
     });
+    const showSidebar = ref(false);
 
     const [publishValue, publishToggle] = useToggle();
     const [unpublishValue, unpublishToggle] = useToggle();
     const [deleteValue, deleteToggle] = useToggle();
     const [downloadValue, downloadToggle] = useToggle();
 
+    const toggleSidebar = () => {
+      showSidebar.value = !showSidebar.value;
+    };
     onMounted(() => {
       if (props.toast.message !== '') {
         toastData.type = props.toast.type === 'success' ? true : false;
@@ -360,6 +458,14 @@ export default defineComponent({
     const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {
       flush: 'sync',
     });
+    watch(
+      () => showSidebar.value,
+      (sidebar) => {
+        if (sidebar) {
+          document.documentElement.style.overflow = 'hidden';
+        } else document.documentElement.style.overflow = 'auto';
+      }
+    );
     watch(
       () => toastData.visibility,
       () => {
@@ -468,6 +574,8 @@ export default defineComponent({
       toastData,
       publishStatus,
       errorData,
+      toggleSidebar,
+      showSidebar,
     };
   },
 });
