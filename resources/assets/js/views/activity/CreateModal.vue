@@ -105,7 +105,7 @@
               <div>
                 <div class="label-field">
                   <label class="label" for=""
-                    >activity identifierss
+                    >activity identifiers
                     <span class="required-icon"> *</span>
                   </label>
                 </div>
