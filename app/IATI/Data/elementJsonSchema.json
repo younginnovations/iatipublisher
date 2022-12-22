@@ -1,6 +1,6 @@
 {
   "title": {
-    "name":"title",
+    "name": "title",
     "label": "title",
     "multiple": false,
     "add_more": false,
@@ -1357,7 +1357,7 @@
         "name": "condition",
         "label": "Condition",
         "add_more": true,
-        "hover_text":"The text of a specific condition attached to the activity. Organisation-wide terms and conditions that apply to all activities should not be reported here, but in either iati-organisation/document-link or iati-activity-document-link. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/conditions/condition/'> For more information</a>",
+        "hover_text": "The text of a specific condition attached to the activity. Organisation-wide terms and conditions that apply to all activities should not be reported here, but in either iati-organisation/document-link or iati-activity-document-link. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/conditions/condition/'> For more information</a>",
         "attributes": {
           "condition_type": {
             "name": "condition_type",
@@ -1950,7 +1950,7 @@
             "name": "code",
             "label": "code",
             "type": "text",
-            "placeholder": "Select code",
+            "placeholder": "Enter a code",
             "required": true,
             "criteria": "mandatory",
             "hover_text": "A code from the gazetteer or administrative boundary repository specified by the vocabulary</br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-id/'>For more information</a>",
@@ -1963,7 +1963,7 @@
         "name": "name",
         "label": "name",
         "add_more": false,
-        "hover_text": "The human readable name for the location.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/name/'>For more information</a>",
+        "hover_text": "The human readable name for the location.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/name/'>For more information</a>",
         "attributes": {},
         "sub_elements": {
           "narrative": {
@@ -1977,7 +1977,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/name/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/name/narrative/'>For more information</a>",
             "help_text": "Provide the free text name of the location of the activity.",
             "attributes": {
               "language": {
@@ -1988,7 +1988,7 @@
                 "choices": "Activity/Language.json",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/name/narrative/'>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/name/narrative/'>For more information</a>",
                 "help_text": "Select the language of the text you provided in the narrative. If no language is selected, then your default language is assumed."
               }
             },
@@ -1999,7 +1999,7 @@
       "description": {
         "name": "description",
         "label": "description",
-        "hover_text": "A description that qualifies the location, not the activity.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/description/'>For more information</a>",
+        "hover_text": "A description that qualifies the location, not the activity.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/description/'>For more information</a>",
         "attributes": {},
         "sub_elements": {
           "narrative": {
@@ -2013,7 +2013,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/description/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/description/narrative/'>For more information</a>",
             "help_text": "Provide a description of the location of the activity.",
             "attributes": {
               "language": {
@@ -2024,7 +2024,7 @@
                 "choices": "Activity/Language.json",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/description/narrative/'>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/description/narrative/'>For more information</a>",
                 "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
               }
             },
@@ -2036,7 +2036,7 @@
         "name": "activity_description",
         "label": "activity description",
         "add_more": false,
-        "hover_text": "A description that qualifies the activity taking place at the location. This should not duplicate information provided in the main activity description, and should typically be used to distinguish between activities at multiple locations within a single iati-activity record.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/activity-description/'>For more information</a>",
+        "hover_text": "A description that qualifies the activity taking place at the location. This should not duplicate information provided in the main activity description, and should typically be used to distinguish between activities at multiple locations within a single iati-activity record.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/activity-description/'>For more information</a>",
         "attributes": {},
         "sub_elements": {
           "narrative": {
@@ -2050,7 +2050,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/activity-description/narrative/'>For more information</a>",
+            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/activity-description/narrative/'>For more information</a>",
             "help_text": "",
             "attributes": {
               "language": {
@@ -2061,7 +2061,7 @@
                 "choices": "Activity/Language.json",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/activity-description/narrative/'>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/activity-description/narrative/'>For more information</a>",
                 "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
               }
             },
@@ -2073,7 +2073,7 @@
         "name": "administrative",
         "label": "administrative",
         "add_more": false,
-        "hover_text": "Coded identification of national and sub-national divisions according to recognised administrative boundary repositories. Multiple levels may be reported.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
+        "hover_text": "Coded identification of national and sub-national divisions according to recognised administrative boundary repositories. Multiple levels may be reported.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
         "help_text": "You can provide a unique code to describe the activity location according to an administrative boundary repository.",
         "attributes": {
           "vocabulary": {
@@ -2084,7 +2084,7 @@
             "choices": "Activity/GeographicVocabulary.json",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "An IATI code for a recognised administrative boundary repository.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
+            "hover_text": "An IATI code for a recognised administrative boundary repository.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
             "help_text": "Select an <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/GeographicVocabulary/'>administrative boundary list</a> that includes a code to represent your activity location."
           },
           "code": {
@@ -2095,7 +2095,7 @@
             "choices": "Activity/Country.json",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "The code for the administrative area being reported from the vocabulary specified.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
+            "hover_text": "The code for the administrative area being reported from the vocabulary specified.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
             "help_text": "Provide a code to represent your activity location (from your chosen <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/GeographicVocabulary/'>administrative boundary list</a>)."
           },
           "level": {
@@ -2105,7 +2105,7 @@
             "placeholder": "Type level",
             "required": false,
             "criteria": "Type level",
-            "hover_text": "A number defining a subdivision within a hierarchical system of administrative areas. The precise system for defining the particular meaning of each @level value is determined by the @vocabulary being used.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
+            "hover_text": "A number defining a subdivision within a hierarchical system of administrative areas. The precise system for defining the particular meaning of each @level value is determined by the @vocabulary being used.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
             "help_text": "Within your chosen <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/GeographicVocabulary/'>administrative boundary list</a>, you can provide a number to define a subdivision within a hierarchical system of administrative areas."
           }
         },
@@ -2115,7 +2115,7 @@
         "name": "point",
         "label": "point",
         "add_more": false,
-        "hover_text": "The point element is based on a subset of the GML 3.3 Point element.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/point/'>For more information</a>",
+        "hover_text": "The point element is based on a subset of the GML 3.3 Point element.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/point/'>For more information</a>",
         "help_text": "You can provide geo-coordinates for the location, in the format of latitude and longitude coordinates<br></br>Coordinates are published using the point and pos elements. The point element is always: <point srsName=”http://www.opengis.net/def/crs/EPSG/0/4326”><br></br>The pos element then contains the latitude coordinate (the first number), followed by the longitude coordinate (the second number) e.g. -46.7733 167.6321.<br></br>Please note that coordinates can refer to an ‘exact’ or an ‘approximate’ location. This should be specified using the location exactness element.<a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/sub-national-locations/'>More information.</a>",
         "attributes": {
           "srs_name": {
@@ -2125,7 +2125,7 @@
             "placeholder": "Type srs name",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "The name of the spatial reference system used by the coordinates.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/point/'>For more information</a>",
+            "hover_text": "The name of the spatial reference system used by the coordinates.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/point/'>For more information</a>",
             "help_text": "This value never changes."
           }
         },
@@ -2133,7 +2133,7 @@
           "pos": {
             "name": "pos",
             "element_criteria": "mandatory",
-            "hover_text": "The latitude and longitude coordinates in the format “lat lng”.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/point/pos/'>For more information</a>",
+            "hover_text": "The latitude and longitude coordinates in the format “lat lng”.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/point/pos/'>For more information</a>",
             "help_text": "Add latitude and longitude separated by a space e.g. 31.616944 65.716944<br></br>If you don’t already have a way to find the coordinates for an activity, there are some online platforms to help, e.g. <a target='_blank' href='https://www.google.com/maps/'>Google Maps</a> and <a target='_blank' href='https://www.latlong.net/'>Latlong.net</a>. To find the coordinates for an activity on Google Maps, right-click over the location of the activity and select ‘what’s here?’. The coordinates will then be presented. Alternatively, type in the coordinates and the location of the activity that will be pinpointed on the map.<a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/sub-national-locations/'>More information.</a>",
             "attributes": {
               "latitude": {
@@ -2165,7 +2165,7 @@
         "name": "exactness",
         "label": "exactness",
         "add_more": false,
-        "hover_text": "Defines whether the location represents the most distinct point reasonably possible for this type of activity or is an approximation due to lack of more detailed information.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/exactness/'>For more information</a>",
+        "hover_text": "Defines whether the location represents the most distinct point reasonably possible for this type of activity or is an approximation due to lack of more detailed information.<a  target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/exactness/'>For more information</a>",
         "attributes": {
           "code": {
             "name": "code",
@@ -2175,7 +2175,7 @@
             "choices": "Activity/GeographicExactness.json",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "A code from the Geographic Exactness Codelist. This attribute is required.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/exactness/'>For more information</a>",
+            "hover_text": "A code from the Geographic Exactness Codelist. This attribute is required.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/exactness/'>For more information</a>",
             "help_text": "If you have provided the geo-coordinates for the activity location, then select an option from the <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/geographicexactness/'>Geographic Exactness list</a> to specify whether the location is exact or approximate."
           }
         },
@@ -2185,7 +2185,7 @@
         "name": "location_class",
         "label": "location class",
         "add_more": false,
-        "hover_text": "Whether the location refers to a structure, a populated place (e.g. city or village), an administrative division, or another topological feature (e.g. river, nature reserve).<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-class/'>For more information</a>",
+        "hover_text": "Whether the location refers to a structure, a populated place (e.g. city or village), an administrative division, or another topological feature (e.g. river, nature reserve).<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-class/'>For more information</a>",
         "attributes": {
           "code": {
             "name": "code",
@@ -2195,7 +2195,7 @@
             "choices": "Activity/GeographicLocationClass.json",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "A code from the Location Class codelist. This attribute is required.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-class/'>For more information</a>",
+            "hover_text": "A code from the Location Class codelist. This attribute is required.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-class/'>For more information</a>",
             "help_text": "Please specify the form of the activity location from the <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/GeographicLocationClass/'>Geographic Location Class list</a>. For example a populated place (town, farm), or topographical feature (mountain, river)."
           }
         },
@@ -2205,7 +2205,7 @@
         "name": "feature_designation",
         "label": "feature designation",
         "add_more": false,
-        "hover_text": "A more refined coded classification of the type of feature referred to by this location.<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/feature-designation/'>For more information</a>",
+        "hover_text": "A more refined coded classification of the type of feature referred to by this location.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/feature-designation/'>For more information</a>",
         "attributes": {
           "code": {
             "name": "code",
@@ -2215,7 +2215,7 @@
             "choices": "Activity/LocationType.json",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "A feature designation code form the authorised list (maintained by the US National Geospatial-Intelligence Agency).<a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/feature-designation/'>For more information</a>",
+            "hover_text": "A feature designation code form the authorised list (maintained by the US National Geospatial-Intelligence Agency).<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/feature-designation/'>For more information</a>",
             "help_text": "You can provide more detail on the type of your activity’s location (e.g. beach, well or college).Please make a selection from the <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/LocationType/'>Location Type list.</a>"
           }
         },
