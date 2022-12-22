@@ -39,7 +39,7 @@ class RecipientCountry extends Element
     /**
      * @var int
      */
-    protected int $totalPercentage = 0;
+    protected float $totalPercentage = 0;
 
     /**
      * @var
@@ -279,6 +279,6 @@ class RecipientCountry extends Element
             }
         }
 
-        return $this->totalPercentage;
+        return (int) $this->totalPercentage;
     }
 }
