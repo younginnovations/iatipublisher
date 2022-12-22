@@ -21,7 +21,7 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getActivityIdentifier($activityArray, $i): ?string
     {
-        return ($i === 0) ? Arr::get($activityArray, 'iati_identifier.activity_identifier', 'Not Available') : '';
+        return (string) (($i === 0) ? Arr::get($activityArray, 'iati_identifier.activity_identifier', 'Not Available') : '');
     }
 
     /**
@@ -34,7 +34,7 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getActivityDefaultCurrency($activityArray, $i): ?string
     {
-        return ($i === 0) ? Arr::get($activityArray, 'default_field_values.default_currency', '') : '';
+        return (string) (($i === 0) ? Arr::get($activityArray, 'default_field_values.default_currency', '') : '');
     }
 
     /**
@@ -47,7 +47,7 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getActivityDefaultLanguage($activityArray, $i): ?string
     {
-        return ($i === 0) ? Arr::get($activityArray, 'default_field_values.default_language', '') : '';
+        return (string) (($i === 0) ? Arr::get($activityArray, 'default_field_values.default_language', '') : '');
     }
 
     /**
@@ -645,7 +645,7 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getBudgetCurrency($activityArray, $i): ?string
     {
-        return Arr::get($activityArray, 'budget.' . $i . '.budget_value.0.currency', '');
+        return (string) (Arr::get($activityArray, 'budget.' . $i . '.budget_value.0.currency', ''));
     }
 
     /**
