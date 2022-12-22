@@ -439,7 +439,8 @@ class ActivityRepository extends Repository
             }
         }
 
-        return $this->model->whereRaw($whereSql, $bindParams)
+        return $this->model->with(['transactions', 'results', 'organization.settings'])
+                           ->whereRaw($whereSql, $bindParams)
                            ->orderBy($orderBy, $direction)
                            ->orderBy('id', $direction)
                            ->get();
