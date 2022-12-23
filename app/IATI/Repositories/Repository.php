@@ -182,7 +182,7 @@ abstract class Repository implements RepositoryInterface
      *
      * @return array
      */
-    public function insertGetId($data)
+    public function insertGetId($data): array
     {
         return $this->model->insertGetId($data, 'id');
     }
