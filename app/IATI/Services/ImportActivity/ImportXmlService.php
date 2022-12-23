@@ -212,13 +212,16 @@ class ImportXmlService
      */
     protected function saveTransactions($transactions, $activityId): static
     {
+        $transactionList = [];
+
         if ($transactions) {
             foreach ($transactions as $transaction) {
-                $this->transactionRepository->store([
+                $transactionList[] = [
                     'activity_id' => $activityId,
-                    'transaction' => $transaction,
-                ]);
+                    'transaction' => json_encode($transaction),
+                ];
             }
+            $this->transactionRepository->upsert($transactionList, 'id');
         }
 
         return $this;
