@@ -153,7 +153,8 @@ let timer;
 
 onMounted(() => {
   loader.value = true;
-  loaderText.value = 'Uploading .csv file';
+  loaderText.value = "Uploading .csv file";
+  let count = 0;
   timer = setInterval(() => {
     axios
       .get('/import/check_status')
@@ -165,10 +166,9 @@ onMounted(() => {
           clearInterval(timer);
         }
 
-        if (res.data.status === 'error' || !res.data.data) {
-          clearInterval(timer);
-          window.location.href = '/activities';
+        if (res.data.status === "error" || (!res.data.data && count >= 5)) {
         }
+        count ++;
       })
       .catch(() => {
         loader.value = false;

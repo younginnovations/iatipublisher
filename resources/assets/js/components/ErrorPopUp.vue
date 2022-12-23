@@ -8,7 +8,8 @@
         <svg-vue icon="alert" class="mr-2 inline text-crimson-40"></svg-vue
         ><span class="font-bold">{{ props.title }}</span>
       </h3>
-      <ul class="list-disc rounded-md bg-salmon-10 p-3 font-medium">
+      <p v-if="typeof(props.message) === 'string'" class="list-disc rounded-md bg-salmon-10 p-3 font-medium">{{ props.message }}</p>
+      <ul v-else class="list-disc rounded-md bg-salmon-10 p-3 font-medium">
         <li
           v-for="(item, index) in props.message"
           :key="index"
