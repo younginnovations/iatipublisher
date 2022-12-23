@@ -169,7 +169,7 @@ onMounted(() => {
           loader.value = false;
         }
 
-        if (res.data.status === 'error' || (!res.data.data && count >= 5)) {
+        if (res.data.status === "error" || (!res.data.data && count >= 5)) {
           clearInterval(timer);
           window.location.href = '/activities';
         }
