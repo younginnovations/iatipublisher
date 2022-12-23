@@ -97,10 +97,11 @@ trait XmlBaseElement
      *
      * @param $references
      * @param $uriType
+     * @param string $vocabularyUri
      *
      * @return array
      */
-    protected function buildReference($references, $uriType): array
+    protected function buildReference($references, $uriType, string $vocabularyUri = 'vocabulary_uri'): array
     {
         $referenceData = [];
 
@@ -110,7 +111,7 @@ trait XmlBaseElement
                     '@attributes' => [
                         'vocabulary' => Arr::get($reference, 'vocabulary', null),
                         'code' => Arr::get($reference, 'code', null),
-                        $uriType => Arr::get($reference, 'vocabulary_uri', null),
+                        $uriType => Arr::get($reference, $vocabularyUri, null),
                     ],
                 ];
             }
