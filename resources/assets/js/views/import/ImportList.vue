@@ -17,7 +17,9 @@
           <div class="inline-flex w-full items-center">
             <div class="inline-flex min-h-[48px] grow flex-wrap items-center">
               <h4 class="ellipsis__title relative mr-4 font-bold">
-                <span class="ellipsis__title overflow-hidden"> Import Activity </span>
+                <span class="ellipsis__title overflow-hidden">
+                  Import Activity
+                </span>
               </h4>
               <div class="tooltip-btn">
                 <button class="">
@@ -26,21 +28,24 @@
                 </button>
                 <div class="tooltip-btn__content z-[1]">
                   <div class="content">
-                    <div class="mb-1.5 text-caption-c1 font-bold text-bluecoral">
+                    <div
+                      class="mb-1.5 text-caption-c1 font-bold text-bluecoral"
+                    >
                       What is an activity?
                     </div>
                     <p>
-                      You need to provide data about your organisation's development and
-                      humanitarian 'activities'. The unit of work described by an
-                      'activity' is determined by the organisation that is publishing the
-                      data. For example, an activity could be a donor government providing
-                      US$ 50 million to a recipient country's government to implement
-                      basic education over 5 years. Or an activity could be an NGO
-                      spending US$ 500,000 to deliver clean drinking water to 1000
-                      households over 6 months.
+                      You need to provide data about your organisation's
+                      development and humanitarian 'activities'. The unit of
+                      work described by an 'activity' is determined by the
+                      organisation that is publishing the data. For example, an
+                      activity could be a donor government providing US$ 50
+                      million to a recipient country's government to implement
+                      basic education over 5 years. Or an activity could be an
+                      NGO spending US$ 500,000 to deliver clean drinking water
+                      to 1000 households over 6 months.
                       <br />
-                      Therefore your organisation will need to determine how it will
-                      divide its work internally into activities. Read the
+                      Therefore your organisation will need to determine how it
+                      will divide its work internally into activities. Read the
                       <a
                         target="_blank"
                         rel="noopener noreferrer"
@@ -78,8 +83,8 @@
     <div class="mb-2 border-l-2 border-l-salmon-50 bg-paper">
       <div class="alert__content m-2 mb-2.5 rounded bg-camel-10 p-2">
         <span class="overflow-hidden text-sm font-normal">
-          Activities with errors cannot be imported. Please solve the errors to import
-          your activities.</span
+          Activities with errors cannot be imported. Please solve the errors to
+          import your activities.</span
         >
       </div>
     </div>
@@ -132,12 +137,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive } from "vue";
-import BtnComponent from "Components/ButtonComponent.vue";
-import Loader from "Components/sections/ProgressLoader.vue";
-import Placeholder from "./ImportPlaceholder.vue";
-import ListElement from "./ListElement.vue";
-import axios from "axios";
+import { ref, onMounted, reactive } from 'vue';
+import BtnComponent from 'Components/ButtonComponent.vue';
+import Loader from 'Components/sections/ProgressLoader.vue';
+import Placeholder from './ImportPlaceholder.vue';
+import ListElement from './ListElement.vue';
+import axios from 'axios';
 
 let activities = reactive({});
 const selectedActivities: Array<string> = reactive([]);
@@ -145,15 +150,16 @@ const selectedCount = ref(0);
 const activitiesLength = ref(0);
 const loader = ref(false);
 const selectAll = ref(false);
-const loaderText = ref("Please Wait");
+const loaderText = ref('Please Wait');
 let timer;
 
 onMounted(() => {
   loader.value = true;
-  loaderText.value = "Please Wait";
+  loaderText.value = 'Please Wait';
+  let count = 0;
   timer = setInterval(() => {
     axios
-      .get("/import/check_status")
+      .get('/import/check_status')
       .then((res) => {
         Object.assign(activities, res.data.data);
         activitiesLength.value = res.data.data.length;
@@ -163,14 +169,15 @@ onMounted(() => {
           loader.value = false;
         }
 
-        if (res.data.status === "error" || !res.data.data) {
+        if (res.data.status === 'error' || (!res.data.data && count >= 5)) {
           clearInterval(timer);
-          window.location.href = "/activities";
+          window.location.href = '/activities';
         }
+        count++;
       })
       .catch(() => {
         loader.value = false;
-        window.location.href = "/activities";
+        window.location.href = '/activities';
       });
   }, 3000);
 });
@@ -178,7 +185,7 @@ onMounted(() => {
 function updateSelectedActivities(activity_id) {
   let index = selectedActivities.indexOf(activity_id);
 
-  if (activities[activity_id]["errors"].length === 0) {
+  if (activities[activity_id]['errors'].length === 0) {
     if (index >= 0) {
       selectedActivities.splice(index, 1);
       selectedCount.value = selectedCount.value - 1;
@@ -196,7 +203,7 @@ function selectAllActivities() {
 
   Object.keys(activities).forEach((activity_id) => {
     let index = selectedActivities.indexOf(activity_id);
-    if (activities[activity_id]["errors"].length === 0) {
+    if (activities[activity_id]['errors'].length === 0) {
       if (selectAll.value) {
         selectedActivities.push(activity_id);
         selectedCount.value = selectedCount.value + 1;
@@ -213,19 +220,19 @@ function selectAllActivities() {
 
 function importActivities() {
   loader.value = true;
-  loaderText.value = "Importing .csv/.xml file";
+  loaderText.value = 'Importing .csv/.xml file';
   clearInterval(timer);
 
   axios
-    .post("/import/activity", {
+    .post('/import/activity', {
       activities: selectedActivities,
-      filetype: "csv",
+      filetype: 'csv',
     })
     .then(() => {
-      window.location.href = "/activities";
+      window.location.href = '/activities';
     })
     .catch(() => {
-      window.location.href = "/activities";
+      window.location.href = '/activities';
     });
 }
 </script>
