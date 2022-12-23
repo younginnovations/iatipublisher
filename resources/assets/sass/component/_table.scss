@@ -2,7 +2,11 @@
   @apply rounded-lg border border-n-20 text-left;
   max-width: calc(100vw - 45px);
   overflow-x: auto;
-  height: 675px;
+  overflow-y: hidden;
+  height: 635px;
+  @media (max-width: 850px) {
+    height: 650px;
+  }
 
   table {
     @apply table w-full  bg-white;
