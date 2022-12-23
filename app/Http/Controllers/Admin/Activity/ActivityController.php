@@ -18,6 +18,7 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -160,8 +161,8 @@ class ActivityController extends Controller
             $hasIndicatorPeriod = $this->resultService->checkResultIndicatorPeriod($results);
             $transactions = $this->transactionService->getActivityTransactions($activity->id);
             $status = $activity->element_status;
-            $status['transactions'] = $transactions->count() === 0 ? false : $status['transactions'];
-            $status['result'] = $results->count() === 0 ? false : $status['result'];
+            $status['transactions'] = $transactions->count() === 0 ? false : Arr::get($status, 'transactions', false);
+            $status['result'] = $results->count() === 0 ? false : Arr::get($status, 'result', false);
             $progress = $this->activityService->activityPublishingProgress($activity);
             $coreCompleted = isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_element_completed], $activity->element_status));
             $validatorResponse = $this->activityValidatorResponseService->getValidatorResponse($id);

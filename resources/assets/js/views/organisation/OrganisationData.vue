@@ -256,8 +256,6 @@ import HoverText from "../../components/HoverText.vue";
 import RadialProgressBar from "../../components/RadialProgressBar.vue";
 import OrganisationElements from "./OrganisationElements.vue";
 import OrganisationElementsDetail from "./OrganisationElementsDetail.vue";
-import Modal from "../../components/PopupModal.vue";
-import BtnComponent from "../../components/ButtonComponent.vue";
 import Toast from "Components/ToastMessage.vue";
 import PublishUnpublish from "Components/sections/OrganizationPublishUnpublishButton.vue";
 import { useToggle } from "@vueuse/core";
