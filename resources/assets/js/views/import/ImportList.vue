@@ -167,6 +167,8 @@ onMounted(() => {
         }
 
         if (res.data.status === "error" || (!res.data.data && count >= 5)) {
+          clearInterval(timer);
+          window.location.href = '/activities';
         }
         count ++;
       })

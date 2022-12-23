@@ -73,6 +73,18 @@ abstract class Repository implements RepositoryInterface
     }
 
     /**
+     * Store multiple data.
+     *
+     * @param array $data
+     *
+     * @return int
+     */
+    public function upsert($data, $uniqueBy): int
+    {
+        return $this->model->upsert($data, $uniqueBy);
+    }
+
+    /**
      * Update specific resource.
      *
      * @param array $data
@@ -161,5 +173,17 @@ abstract class Repository implements RepositoryInterface
     public function exists($attribute, array $value): bool
     {
         return $this->model->where($attribute, '=', $value)->exists();
+    }
+
+    /**
+     * Insert one or multiple data and returns their id.
+     *
+     * @param       $data
+     *
+     * @return array
+     */
+    public function insertGetId($data)
+    {
+        return $this->model->insertGetId($data, 'id');
     }
 }
