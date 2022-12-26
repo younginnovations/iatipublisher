@@ -111,7 +111,7 @@ class IatiRegisterController extends Controller
                 ]);
             }
 
-            return response()->json(['success' => true, 'message' => 'Publisher verified successfully', 'data' => $publisherCheck]);
+            return response()->json(['success' => true, 'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.publisher'), 'event'=>trans('events.deleted')])), 'data' => $publisherCheck]);
         } catch (ClientException $e) {
             logger()->error($e->getMessage());
 
@@ -123,7 +123,7 @@ class IatiRegisterController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'errors' => 'Error has occurred while verifying the publisher.']);
+            return response()->json(['success' => false, 'errors' => trans('responses.error_has_occurred', ['event'=>trans('events.verifying'), 'suffix'=>trans('elements_common.publisher')])]);
         }
     }
 
@@ -139,11 +139,11 @@ class IatiRegisterController extends Controller
     public function verifyContactInfo(IatiRegisterFormRequest $request): JsonResponse|RedirectResponse
     {
         try {
-            return response()->json(['success' => true, 'message' => 'Contact info successfully verified']);
+            return response()->json(['success' => true, 'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.contact_info'), 'event'=>trans('events.verified')]))]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => true, 'message' => 'Error occurred while verifying contact info']);
+            return response()->json(['success' => true, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.verifying'), 'suffix'=>trans('elements_common.contact_info')])]);
         }
     }
 
@@ -159,11 +159,11 @@ class IatiRegisterController extends Controller
     public function verifyAdditionalInfo(IatiRegisterFormRequest $request): JsonResponse|RedirectResponse
     {
         try {
-            return response()->json(['success' => true, 'message' => 'Additional Information successfully verified.']);
+            return response()->json(['success' => true, 'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.additional_info'), 'event'=>trans('events.verified')]))]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => true, 'message' => 'Error occurred while verifying additional info.']);
+            return response()->json(['success' => true, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.verifying'), 'suffix'=>trans('responses.additional_info')])]);
         }
     }
 
@@ -227,11 +227,11 @@ class IatiRegisterController extends Controller
             event(new Registered($createUser['user']));
             Session::put('role_id', app(Role::class)->getOrganizationAdminId());
 
-            return response()->json(['success' => true, 'message' => 'User registered successfully']);
+            return response()->json(['success' => true, 'message' => trans('responses.event_successfully', ['prefix'=>trans('responses.user'), 'event'=>trans('events.registered')])]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error has occured while trying to register user. Please try again later.']);
+            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.trying_to'), 'suffix'=>trans('responses.register_user')]) . ' ' . trans('responses.try_again')]);
         }
     }
 

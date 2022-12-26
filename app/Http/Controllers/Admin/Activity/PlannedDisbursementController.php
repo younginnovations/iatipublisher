@@ -51,7 +51,7 @@ class PlannedDisbursementController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering planned-disbursement form.');
+            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.rendering'), 'suffix'=>trans('elements_common.planned_disbursement')]));
         }
     }
 
@@ -67,14 +67,14 @@ class PlannedDisbursementController extends Controller
     {
         try {
             if (!$this->plannedDisbursementService->update($id, $request->except(['_token', '_method']))) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating planned-disbursement.');
+                return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.planned_disbursement')]));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Planned-disbursement updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.planned_disbursement'), 'event'=>trans('events.updated')])));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating planned-disbursement.');
+            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.planned_disbursement')]));
         }
     }
 }

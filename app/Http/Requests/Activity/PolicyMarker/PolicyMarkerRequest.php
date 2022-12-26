@@ -106,11 +106,10 @@ class PolicyMarkerRequest extends ActivityBaseRequest
 
         foreach ($formFields as $policyMarkerIndex => $policyMarker) {
             $policyMarkerForm = sprintf('policy_marker.%s', $policyMarkerIndex);
-            $messages[sprintf('%s.policy_marker_vocabulary.in', $policyMarkerForm)] = 'The policy marker vocabulary is invalid.';
-            $messages[sprintf('%s.significance.in', $policyMarkerForm)] = 'The policy marker significance is invalid.';
-            $messages[sprintf('%s.policy_marker.in', $policyMarkerForm)] = 'The policy marker code is invalid.';
-            $messages[sprintf('%s.vocabulary_uri.url', $policyMarkerForm)]
-                = 'The @vocabulary-uri field must be a valid url.';
+            $messages[sprintf('%s.policy_marker_vocabulary.in', $policyMarkerForm)] = translateRequestMessage('policy_marker', 'vocabulary_is_invalid');
+            $messages[sprintf('%s.significance.in', $policyMarkerForm)] = translateRequestMessage('policy_marker', 'significance_is_invalid');
+            $messages[sprintf('%s.policy_marker.in', $policyMarkerForm)] = translateRequestMessage('policy_marker', 'code_is_invalid');
+            $messages[sprintf('%s.vocabulary_uri.url', $policyMarkerForm)] = translateRequestMessage('vocab_url_field_symbol', 'must_be_valid_url');
 
             foreach ($this->getMessagesForNarrative($policyMarker['narrative'], $policyMarkerForm) as $policyMarkerNarrativeIndex => $narrativeMessages) {
                 $messages[$policyMarkerNarrativeIndex] = $narrativeMessages;
@@ -118,7 +117,7 @@ class PolicyMarkerRequest extends ActivityBaseRequest
 
             if (Arr::get($policyMarker, 'policy_marker_vocabulary') === '99') {
                 foreach (array_keys($policyMarker['narrative']) as $narrativeIndex) {
-                    $messages[sprintf('%s.narrative.%s.narrative.required', $policyMarkerForm, $narrativeIndex)] = 'The narrative field is required when vocabulary is reporting organisation.';
+                    $messages[sprintf('%s.narrative.%s.narrative.required', $policyMarkerForm, $narrativeIndex)] = translateRequestMessage('narrative_field', 'required_when_vocabulary');
                 }
             }
         }

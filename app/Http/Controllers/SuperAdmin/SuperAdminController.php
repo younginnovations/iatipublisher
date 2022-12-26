@@ -62,9 +62,7 @@ class SuperAdminController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(
-                ['success' => false, 'error' => 'Error has occurred while fetching organisations.']
-            );
+            return response()->json(['success' => false, 'error' => trans('responses.error_has_occurred', ['event'=>trans('events.fetching'), 'suffix'=>trans('elements_common.organisations')])]);
         }
     }
 
@@ -86,13 +84,13 @@ class SuperAdminController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Organizations fetched successfully',
-                'data' => $organizations,
+                'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.organisations'), 'event'=>trans('events.fetched')])),
+                'data'    => $organizations,
             ]);
-        } catch (Exception $e) {
-            logger()->error($e);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.fetching'), 'suffix'=>trans('responses.the_data')])]);
         }
     }
 
@@ -163,15 +161,15 @@ class SuperAdminController extends Controller
                 if ($user) {
                     auth()->loginUsingId($userId);
 
-                    return response()->json(['success' => true, 'message' => 'Proxy successful.']);
+                    return response()->json(['success' => true, 'message' => trans('responses.proxy_successful')]);
                 }
             }
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while trying to proxy']);
-        } catch (Exception $e) {
+            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.trying_to'), 'suffix'=>trans('buttons.proxy')])]);
+        } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while trying to proxy']);
+            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.trying_to'), 'suffix'=>trans('buttons.proxy')])]);
         }
     }
 
@@ -204,7 +202,7 @@ class SuperAdminController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect('listOrganizations')->with('error', 'Failed opening System Version page.');
+            return  redirect('listOrganizations')->with('error', trans('requests.failed_opening_system_version_page'));
         }
     }
 }

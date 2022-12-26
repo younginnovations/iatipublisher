@@ -138,7 +138,7 @@ class RegisterController extends Controller
                     'success'         => false,
                     'publisher_error' => true,
                     'errors'          => [
-                        'publisher_id' => ['Publisher ID doesn\'t exist in IATI Registry.'],
+                        'publisher_id' => [trans('common.error.element_doesnt_exist_in_iati_registry', ['element'=>trans('register.publisher_id.label')])],
                     ],
                 ]);
             }
@@ -147,11 +147,11 @@ class RegisterController extends Controller
             $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
 
             if ($postData['publisher_name'] !== $response->title) {
-                $errors['publisher_name'] = ['Publisher Name doesn\'t match your IATI Registry information'];
+                $errors['publisher_name'] = [trans('common.error.elements_doesnt_match_iati_registry', ['element'=>trans('register.publisher_name.label')])];
             }
 
             if ($postData['registration_agency'] . '-' . $postData['registration_number'] !== $response->publisher_iati_id) {
-                $errors['identifier'] = ['Publisher IATI ID doesn\'t match your IATI Registry information'];
+                $errors['identifier'] = [trans('common.error.elements_doesnt_match_iati_registry', ['element'=>trans('web.iati_publisher') . ' ID '])];
             }
 
             if (!empty($errors)) {
@@ -162,7 +162,7 @@ class RegisterController extends Controller
                 ]);
             }
 
-            return response()->json(['success' => true, 'message' => 'Publisher verified successfully', 'data' => $response]);
+            return response()->json(['success' => true, 'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.publisher'), 'event'=>trans('events.deleted')])), 'data' => $response]);
         } catch (ClientException $e) {
             logger()->error($e->getMessage());
 
@@ -170,15 +170,15 @@ class RegisterController extends Controller
                 [
                     'success' => false,
                     'errors'  => [
-                        'publisher_name' => ['Publisher Name doesn\'t match your IATI Registry information'],
-                        'publisher_id'   => ['Publisher ID doesn\'t match with your IATI Registry information'],
+                        'publisher_name' => [trans('responses.publisher_name_doesnt_match')],
+                        'publisher_id'   => [trans('responses.publisher_id_doesnt_match')],
                     ],
                 ]
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while verifying the publisher.']);
+            return response()->json(['success' => false, 'error' => trans('responses.error_has_occurred', ['event'=>trans('events.verifying'), 'suffix'=>trans('elements_common.publisher')])]);
         }
     }
 
@@ -234,7 +234,7 @@ class RegisterController extends Controller
         event(new Registered($user));
         Session::put('role_id', app(Role::class)->getOrganizationAdminId());
 
-        return response()->json(['success' => true, 'message' => 'User registered successfully']);
+        return response()->json(['success' => true, 'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.user'), 'event'=>trans('events.deleted')]))]);
     }
 
     /**

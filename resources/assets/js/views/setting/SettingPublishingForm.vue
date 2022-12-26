@@ -1,12 +1,14 @@
 <template>
   <div>
     <div class="registry__info">
-      <div class="mb-4 text-sm font-bold text-n-50">Registry Information</div>
+      <div class="mb-4 text-sm font-bold text-n-50">
+        {{ language.settings_lang.registry_information.label }}
+      </div>
       <div class="mb-4 flex items-center text-xs text-n-50">
         <button>
           <HoverText
-            name="IATI Registry Information"
-            hover-text="IATI Publisher needs to add your organisation's data to the IATI Registry (iatiregistry.org). To do this, we need to access your organisation's IATI Registry Publisher Account. Please provide your organisation's credentials from the IATI Registry."
+            :name="language.settings_lang.registry_information.label"
+            :hover-text="language.settings_lang.registry_information.hover_text"
           />
         </button>
       </div>
@@ -16,12 +18,14 @@
         <div>
           <div class="relative">
             <div class="flex justify-between">
-              <label for="publisher-id">Publisher ID </label>
+              <label for="publisher-id">{{
+                language.settings_lang.publisher_id.label
+              }}</label>
               <button>
                 <HoverText
                   width="w-72"
-                  name="Publisher ID"
-                  hover-text="This is the unique ID for your organisation that you created when you set up your IATI Registry Publisher Account. It is a shortened version of your organisation's name, which will include lowercase letters and may include numbers and also - (dash) and _ (underscore). For example nef_mali' for Near East Foundation Mali."
+                  :name="language.settings_lang.publisher_id.label"
+                  :hover-text="language.settings_lang.publisher_id.hover_text"
                   :show-iati-reference="true"
                 />
               </button>
@@ -33,7 +37,7 @@
                 error__input: publishingError.publisher_id,
               }"
               type="text"
-              placeholder="Type Publisher ID here"
+              :placeholder="language.settings_lang.publisher_id.placeholder"
               :value="organization.publisher_id"
               disabled="true"
               @input="updateStore('publisher_id')"
@@ -46,11 +50,13 @@
         <div>
           <div class="relative">
             <div class="flex justify-between">
-              <label for="api-token">API Token </label>
+              <label for="api-token"
+                >{{ language.settings_lang.api_token.label }}
+              </label>
               <button>
                 <HoverText
-                  name="API Token"
-                  hover-text="The API token is a unique key that is generated from your organisation's IATI Registry Publisher Account. It is required to give IATI Publisher permission to add data to the IATI Registry on your behalf. Generate a Token in the 'My Account' tab by <a href='https://www.iatiregistry.org/user/login' target='_blank' target='_blank'>logging</a> into to the IATI Registry."
+                  :name="language.settings_lang.api_token.label"
+                  :hover-text="language.settings_lang.api_token.hover_text"
                   :show-iati-reference="true"
                 />
               </button>
@@ -65,7 +71,7 @@
               }"
               :disabled="userRole !== 'admin' ? true : false"
               type="text"
-              placeholder="Type API Token here"
+              :placeholder="language.settings_lang.api_token.placeholder"
               @input="updateStore('api_token')"
             />
             <span
@@ -75,7 +81,11 @@
                 tag__incorrect: !publishingInfo.token_verification,
               }"
             >
-              {{ publishingInfo.token_verification ? 'Correct' : 'Incorrect' }}
+              {{
+                publishingInfo.token_verification
+                  ? language.settings_lang.correct_label
+                  : language.settings_lang.incorrect_label
+              }}
             </span>
           </div>
           <span v-if="publishingError.api_token" class="error" role="alert">
@@ -88,7 +98,7 @@
         class="primary-btn verify-btn"
         @click="submitPublishing"
       >
-        Verify
+        {{ language.button_lang.verify }}
       </button>
     </div>
   </div>
@@ -112,6 +122,7 @@ export default defineComponent({
   emits: ['submitPublishing'],
 
   setup(props, { emit }) {
+    const language = window['globalLang'];
     const tab = ref('publish');
     const store = useStore();
     const userRole = inject('userRole');
@@ -161,6 +172,7 @@ export default defineComponent({
       toggleTab,
       updateStore,
       autoVerify,
+      language,
     };
   },
 });

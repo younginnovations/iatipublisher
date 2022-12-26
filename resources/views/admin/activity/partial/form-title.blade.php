@@ -7,17 +7,17 @@
             <div class="mb-4">
                 <div class="flex mb-6 title">
                     <svg-vue icon="alert" class="mr-2 mt-0.5 text-lg text-crimson-40"></svg-vue>
-                    <b>Delete Alert</b>
+                    <b>{{ucwords(trans('buttons.delete_element', ["element"=>trans('common.alert')]))}}</b>
                 </div>
-                <div class="p-4 rounded-lg bg-rose">Are you sure you want to delete this item?</div>
+                <div class="p-4 rounded-lg bg-rose">{{trans('buttons.delete_confirmation', ['element'=>trans('common.item')])}}</div>
             </div>
             <div class="flex justify-end">
                 <div class="inline-flex">
                     <button class="relative px-6 font-bold uppercase bg-white cancel-popup button text-n-40">
-                        <span>Go Back</span>
+                        <span>{{trans('buttons.go_back')}}</span>
                     </button>
                     <button class="relative font-bold delete-confirm button text-n-40 primary-btn space">
-                        <span>Delete</span>
+                        <span>{{trans('buttons.delete')}}</span>
                     </button>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                     <svg-vue icon="activity-elements/{{ $data['name'] }}"></svg-vue>
                 @endif
             </span>
-            <div class="text-sm font-bold title"> {{ str_replace(' ', '-', strtolower($data['title'])) }}
+            <div class="text-sm font-bold title"> {{trans($data['title'])}}
             </div>
             @if (isCoreElement($data['name']))
                 <svg-vue icon="core" class="ml-2"></svg-vue>
@@ -51,13 +51,13 @@
                     <div>
                         <p
                             class="help-button text-xs text-n-40 hover:text-spring-50 font-normal ml-1.5 cursor-pointer inline-block">
-                            Help</p>
+                            {{trans('common.help')}}</p>
                         <div class="help-button-content hidden">
                             <p class="font-bold text-bluecoral">
                                 {{ $data['name'] }}
                             </p>
                             <div class="space-y-1.5">
-                                {!! Arr::get(getElementSchema($data['name']), 'help_text', false) !!}
+                                {!! trans(Arr::get(getElementSchema($data['name']), 'help_text', false)) !!}
                             </div>
                         </div>
                     </div>
@@ -70,16 +70,16 @@
                                 fill="#68797E" stroke="#68797E" stroke-width=".667"></path>
                         </svg>
                         <div class="left-0 help__text w-72">
-                            <p class="text-bluecoral mb-2 italic">IATI standard reference</p>
-                            <span class="font-bold text-bluecoral">{{ $data['name'] }}</span>
-                            <p>{!! Arr::get(getElementSchema($data['name']), 'hover_text', false) !!} </p>
+                            <p class="text-bluecoral mb-2 italic">{{ trans('common.iati_standard_reference') }}</p>
+                            <span class="font-bold text-bluecoral">{{ trans('elements_common.'.$data['name']) }}</span>
+                            <p> {!! trans(Arr::get(getElementSchema($data['name']), 'hover_text', false)) !!} </p>
                         </div>
                     </div>
                 @endif
             @endif
         </div>
         <div class="flex icons">
-            <span class="text-xs"><span class="required-icon">*</span> Mandatory fields</span>
+            <span class="text-xs"><span class="required-icon">*</span> {{ trans('common.mandatory_fields') }}</span>
         </div>
     </div>
     <div class="w-full h-px mb-4 divider bg-n-20"></div>

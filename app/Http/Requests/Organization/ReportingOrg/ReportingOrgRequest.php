@@ -84,8 +84,8 @@ class ReportingOrgRequest extends OrganizationBaseRequest
 
         foreach ($formFields as $reportingOrganizationIndex => $reportingOrganization) {
             $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
-            $messages[$reportingOrganizationForm . '.ref.not_regex'] = 'The @ref format is invalid.';
-            $messages[$reportingOrganizationForm . '.ref.must_match'] = 'The @ref of reporting-org must match the organisation-identifier.';
+            $messages[$reportingOrganizationForm . '.ref.not_regex'] = translateRequestMessage('ref_format_symbol', 'is_invalid');
+            $messages[$reportingOrganizationForm . '.ref.must_match'] = trans('requests.reference_must_match_org_identifier');
             $narrativeMessages = $this->getMessagesForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
 
             foreach ($narrativeMessages as $key => $item) {

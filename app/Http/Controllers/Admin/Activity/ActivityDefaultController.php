@@ -56,7 +56,7 @@ class ActivityDefaultController extends Controller
 
             return redirect()->route('admin.activity.show', $activityId)->with(
                 'error',
-                'Error has occurred while rendering default values form.'
+                trans('responses.error_has_occurred_form', ['event'=>trans('events.rendering'), 'suffix'=>trans('elements_common.default_values')])
             );
         }
     }
@@ -73,11 +73,11 @@ class ActivityDefaultController extends Controller
         try {
             $setting = $this->activityDefaultService->getActivityDefaultValues($activityId);
 
-            return response()->json(['success' => true, 'message' => 'Default values fetched successfully', 'data' => $setting]);
+            return response()->json(['success' => true, 'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.default_values'), 'event'=>trans('events.fetched')])), 'data' => $setting]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.fetching'), 'suffix'=>trans('responses.the_data')])]);
         }
     }
 
@@ -98,12 +98,12 @@ class ActivityDefaultController extends Controller
 
             DB::commit();
 
-            return response()->json(['success' => true, 'message' => 'Activity default values updated successfully']);
+            return response()->json(['success' => true, 'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.activity_default_values'), 'event'=>trans('events.updated')]))]);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while updating data']);
+            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('responses.the_data')])]);
         }
     }
 }

@@ -136,6 +136,8 @@ export default defineComponent({
       showEmptyTemplate = true;
     }
 
+    const language = window['globalLang'];
+
     //for session message
     const toastData = reactive({
       visibility: false,
@@ -359,7 +361,7 @@ export default defineComponent({
       visibility: false,
       refreshMessageType: true,
       refreshMessage:
-        'Activity has been published successfully, refresh to see changes',
+        language.common_lang.activity_has_been_published_successfully,
     });
 
     /**
@@ -391,6 +393,7 @@ export default defineComponent({
       refreshToastMsg,
       errorData,
       tableLoader,
+      language,
       xlsData,
       activityName,
       processedCount,

@@ -4,13 +4,13 @@
       <div class="activity__title mb-4 text-caption-c1 text-n-40">
         <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
           <div class="flex max-w-md">
-            <a class="whitespace-nowrap font-bold" href="/organisation">Your Organisation</a>
+            <a class="whitespace-nowrap font-bold" href="/organisation">{{ trans('organisation.your_organisation') }}</a>
             <span class="separator mx-4"> / </span>
             <div class="breadcrumb__title">
               <span class="breadcrumb__title overflow-hidden last text-n-30"><a
-                  href="/organisation">{{ $organization['name'][0]['narrative'] ?? 'Untitled' }}</a></span>
+                  href="/organisation">{{ $organization['name'][0]['narrative'] ?? trans('common.untitled') }}</a></span>
               <span
-                class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{ $organization['name'][0]['narrative'] ?? 'Untitled' }}</span>
+                class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{ $organization['name'][0]['narrative'] ?? trans('common.untitled') }}</span>
             </div>
           </div>
         </nav>
@@ -24,8 +24,8 @@
         <div>
           <h4 class="ellipsis__title relative mr-4 text-2xl font-bold">
             <span
-              class="ellipsis__title overflow-hidden">{{ $organization['name'][0]['narrative'] ?? 'Untitled' }}</span>
-            <span class="ellipsis__title--hover">{{ $organization['name'][0]['narrative'] ?? 'Untitled' }}</span>
+              class="ellipsis__title overflow-hidden">{{ $organization['name'][0]['narrative'] ?? trans('common.untitled') }}</span>
+            <span class="ellipsis__title--hover">{{ $organization['name'][0]['narrative'] ?? trans('common.untitled') }}</span>
           </h4>
         </div>
       </div>

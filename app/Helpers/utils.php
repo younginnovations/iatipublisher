@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Arr;
+
 if (!function_exists('trimInput')) {
     /**
      * trim an input.
@@ -53,7 +55,6 @@ if (!function_exists('isDate')) {
     /**
      * Returns formatted date.
      *
-     * @param $format
      * @param $date
      *
      * @return false
@@ -195,7 +196,7 @@ if (!function_exists('group_by')) {
      * @param {String} $key Property to sort by.
      * @param {Array} $data Array that stores multiple associative arrays.
      */
-    function group_by($key, $data)
+    function group_by($key, $data): array
     {
         $result = [];
 

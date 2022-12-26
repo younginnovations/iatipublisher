@@ -57,7 +57,7 @@ class Processor
         }
 
         $this->dispatch(
-            new ImportActivity(new CsvProcessor($csv), $filename, $activityIdentifiers, $organizationReportingOrg)
+            new ImportActivity(new CsvProcessor($csv, app()->getLocale()), $filename, $activityIdentifiers, $organizationReportingOrg)
         );
     }
 

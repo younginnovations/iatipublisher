@@ -1,5 +1,7 @@
 <template>
-  <div class="text-sm">{{ type[typeData] ?? 'Missing' }}</div>
+  <div class="text-sm">
+    {{ type[typeData] ?? language.common_lang.missing.default }}
+  </div>
 </template>
 
 <script lang="ts">
@@ -18,9 +20,10 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     let { data } = toRefs(props);
     const typeData = data.value;
-    return { typeData };
+    return { typeData, language };
   },
 });
 </script>

@@ -25,10 +25,10 @@ class PolicyMakerCsvTest extends CsvBaseTest
         $flattenErrors = Arr::flatten($errors);
 
         $this->assertContains('The policy marker vocabulary is invalid.', $flattenErrors);
-        $this->assertContains('The policy marker significance is invalid.', $flattenErrors);
+        $this->assertContains('The policy marker significance is invalid', $flattenErrors);
         $this->assertContains('The policy marker code is invalid.', $flattenErrors);
         $this->assertContains('The @vocabulary-uri field must be a valid url.', $flattenErrors);
-        $this->assertContains('The narrative field is required when vocabulary is reporting organisation.', $flattenErrors);
+        $this->assertContains('The Narrative field is required when vocabulary is reporting organisation.', $flattenErrors);
     }
 
     /**

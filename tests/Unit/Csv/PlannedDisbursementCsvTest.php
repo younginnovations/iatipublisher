@@ -147,16 +147,18 @@ class PlannedDisbursementCsvTest extends CsvBaseTest
 
         $this->assertContains('Period Start must be a date.', $flattenErrors);
         $this->assertContains('The Planned Disbursement Period must not be longer than three months', $flattenErrors);
-        $this->assertContains('Period end must be a date field', $flattenErrors);
-        $this->assertContains('Period end must be a date after period', $flattenErrors);
+        $this->assertContains('Period end must be a date field.', $flattenErrors);
+        $this->assertContains('Period end must be a date after period.', $flattenErrors);
         $this->assertContains('The Planned Disbursement Period must not be longer than three months', $flattenErrors);
-        $this->assertContains('Amount field must be a number', $flattenErrors);
+        $this->assertContains('Amount field must be a number.', $flattenErrors);
         $this->assertContains('Amount field must not be in negative.', $flattenErrors);
         $this->assertContains('The value currency is invalid.', $flattenErrors);
         $this->assertContains('The Value Date must be a valid Date', $flattenErrors);
-        $this->assertContains('The planned disbursement provider org type is invalid.', $flattenErrors);
-        $this->assertContains('The planned disbursement provider org ref shouldn\'t contain the symbols /, &, | or ?.', $flattenErrors);
-        $this->assertContains('The planned disbursement receiver org type is invalid.', $flattenErrors);
-        $this->assertContains('The planned disbursement receiver org ref shouldn\'t contain the symbols /, &, | or ?.', $flattenErrors);
+        $this->assertContains('The value-date field must be between period start and period end', $flattenErrors);
+        $this->assertContains('The value-date field must be between period start and period end', $flattenErrors);
+        $this->assertContains('The Planned Disbursement provider org type is invalid.', $flattenErrors);
+        $this->assertContains('The Planned Disbursement provider org ref shouldn\'t contain the symbols /, &, | or ?.', $flattenErrors);
+        $this->assertContains('The Planned Disbursement receiver org type is invalid.', $flattenErrors);
+        $this->assertContains('The Planned Disbursement receiver org ref shouldn\'t contain the symbols /, &, | or ?.', $flattenErrors);
     }
 }

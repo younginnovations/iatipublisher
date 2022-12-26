@@ -26,7 +26,11 @@
 
         <template v-else-if="elementName === 'aggregation_status'">
           <span class="text-sm capitalize">{{
-            parseInt(data as string) ? 'True' : data ? 'False' : 'Missing'
+            parseInt(data)
+              ? translation.common_lang.true
+              : data
+              ? translation.common_lang.false
+              : translation.common_lang.missing.default
           }}</span>
         </template>
 
@@ -103,8 +107,15 @@ export default defineComponent({
       resultType = types.value.resultType,
       resultVocabulary = types.value.resultVocabulary,
       language = types.value.language;
+    const translation = window['globalLang'];
 
-    return { elementData, resultType, resultVocabulary, language };
+    return {
+      elementData,
+      resultType,
+      resultVocabulary,
+      language,
+      translation,
+    };
   },
 });
 </script>

@@ -3,7 +3,10 @@
     {{
       flowData[0].flow_type
         ? type.flowType[flowData[0].flow_type]
-        : 'Flow Type Missing'
+        : language.common_lang.missing.element.replace(
+            ':element',
+            language.common_lang.flow_type
+          )
     }}
   </div>
 </template>
@@ -21,6 +24,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     const { data } = toRefs(props);
 
     interface ArrayObject {
@@ -28,7 +32,7 @@ export default defineComponent({
     }
     const flowData = data.value as ArrayObject;
     const type = inject('types');
-    return { flowData, type };
+    return { flowData, type, language };
   },
 });
 </script>

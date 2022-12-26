@@ -176,19 +176,19 @@ class SectorRequest extends ActivityBaseRequest
      */
     public function getSectorsMessages($formFields): array
     {
-        $messages = ['sector.already_in_transactions' => 'Sector has already been declared at transaction level. You can’t declare a sector at the activity level.'];
+        $messages = ['sector.already_in_transactions' => trans('requests.sector_defined_in_transactions')];
 
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
-            $messages[sprintf('%s.sector_vocabulary.in', $sectorForm)] = 'The sector vocabulary is invalid.';
-            $messages[sprintf('%s.code.in', $sectorForm)] = 'The sector code is invalid.';
-            $messages[sprintf('%s.category_code.in', $sectorForm)] = 'The sector code is invalid.';
-            $messages[sprintf('%s.sdg_goal.in', $sectorForm)] = 'The sector code is invalid.';
-            $messages[sprintf('%s.sdg_target.in', $sectorForm)] = 'The sector code is invalid.';
-            $messages[sprintf('%s.vocabulary_uri.url', $sectorForm)] = 'The sector vocabulary-uri field must be a valid url.';
-            $messages[sprintf('%s.percentage.numeric', $sectorForm)] = 'The sector percentage field must be a number.';
-            $messages[sprintf('%s.percentage.in', $sectorForm)] = 'The percentage must be 100% or left empty, which is assumed as 100%.';
-            $messages[sprintf('%s.percentage.sector_total_percent', $sectorForm)] = 'The sum of percentages of same vocabulary must be equal to 100%';
+            $messages[sprintf('%s.sector_vocabulary.in', $sectorForm)] = trans('requests.sector', ['suffix'=>trans('requests.suffix.vocabulary_is_invalid')]);
+            $messages[sprintf('%s.code.in', $sectorForm)] = trans('requests.sector', ['suffix'=>trans('requests.suffix.code_is_invalid')]);
+            $messages[sprintf('%s.category_code.in', $sectorForm)] = trans('requests.sector', ['suffix'=>trans('requests.suffix.code_is_invalid')]);
+            $messages[sprintf('%s.sdg_goal.in', $sectorForm)] = trans('requests.sector', ['suffix'=>trans('requests.suffix.code_is_invalid')]);
+            $messages[sprintf('%s.sdg_target.in', $sectorForm)] = trans('requests.sector', ['suffix'=>trans('requests.suffix.code_is_invalid')]);
+            $messages[sprintf('%s.vocabulary_uri.url', $sectorForm)] = trans('requests.sector', ['suffix'=>trans('requests.suffix.must_be_valid_vocal_url')]);
+            $messages[sprintf('%s.percentage.numeric', $sectorForm)] = trans('requests.sector', ['suffix'=>trans('requests.suffix.percent_field_must_be_a_number')]);
+            $messages[sprintf('%s.percentage.in', $sectorForm)] = trans('requests.percentage_must_be_100_or_empty');
+            $messages[sprintf('%s.percentage.sector_total_percent', $sectorForm)] = trans('requests.the_total_percent_100');
 
             $messageNarratives = $this->getMessagesForNarrative($sector['narrative'], $sectorForm);
 

@@ -9,7 +9,7 @@
       @click="previousPage"
     >
       <svg-vue icon="arrow-left"></svg-vue>
-      <span class="">Prev</span>
+      <span class="">{{ language.button_lang.prev }}</span>
     </a>
 
     <span v-if="data.last_page < 6" class="flex"
@@ -75,7 +75,7 @@
       }"
       @click="nextPage"
     >
-      <span class="">Next</span>
+      <span class="">{{ language.button_lang.next }}</span>
       <svg-vue icon="arrow-right" />
     </a>
   </nav>
@@ -100,6 +100,7 @@ export default defineComponent({
   },
   emits: ['fetchActivities'],
   setup(props, { emit }) {
+    const language = window['globalLang'];
     const active_page = ref(1);
     const last_pagelist = ref();
     const mid_pagelist = ref();
@@ -175,6 +176,7 @@ export default defineComponent({
       changePage,
       lastpages,
       midpages,
+      language,
     };
   },
 });

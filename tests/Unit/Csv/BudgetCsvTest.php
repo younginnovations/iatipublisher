@@ -51,8 +51,9 @@ class BudgetCsvTest extends CsvBaseTest
 
         $this->assertContains('The periods of multiple budgets with the same type should not be the same', $flattenErrors);
         $this->assertContains('The Period End iso-date must be a date after Period Start iso-date', $flattenErrors);
-        $this->assertContains('The Budget Period must not be longer than one year', $flattenErrors);
-        $this->assertContains('The iso-date field must be date after year 1900.', $flattenErrors);
+        $this->assertContains('The value-date field must be between period start and period end', $flattenErrors);
+        $this->assertContains('The Budget Period must not be longer than one year.', $flattenErrors);
+        $this->assertContains('The iso-date field date must be date greater than year 1900.', $flattenErrors);
     }
 
     /**

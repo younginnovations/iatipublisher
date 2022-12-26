@@ -1,8 +1,14 @@
 <template>
   <tr>
-    <td>Ascending</td>
+    <td>{{ language.common_lang.ascending }}</td>
     <td>
-      {{ parseInt(data) ? 'True' : data ? 'False' : 'Missing' }}
+      {{
+        parseInt(data)
+          ? language.common_lang.true
+          : data
+          ? language.common_lang.false
+          : language.common_lang.missing.default
+      }}
     </td>
   </tr>
 </template>
@@ -18,6 +24,10 @@ export default defineComponent({
       type: String,
       required: true,
     },
+  },
+  setup() {
+    const language = window['globalLang'];
+    return { language };
   },
 });
 </script>

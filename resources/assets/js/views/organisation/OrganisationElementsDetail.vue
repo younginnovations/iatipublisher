@@ -56,7 +56,10 @@
             ></svg-vue>
           </template>
           <div class="title text-sm font-bold">
-            {{ replaceUnderscore(title) }}
+            {{
+              translation.elements_common_lang[title] ??
+              replaceUnderscore(title)
+            }}
           </div>
           <div
             class="status ml-2.5 flex text-xs leading-5"
@@ -66,8 +69,8 @@
             }"
           >
             <b class="mr-2 text-base leading-3">.</b>
-            <span v-if="status">completed</span>
-            <span v-else>not completed</span>
+            <span v-if="status">{{ translation.common_lang.completed }}</span>
+            <span v-else>{{ translation.common_lang.not_completed }}</span>
           </div>
         </div>
         <div class="icons flex flex-row-reverse items-center">
@@ -76,8 +79,10 @@
             class="edit-button mx-2.5 flex items-center text-xs font-bold uppercase"
             :href="'/organisation/' + title"
           >
-            <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
-            <span class="hidden text-[10px] lg:block">Edit</span>
+            <svg-vue class="mr-0.5 text-xs" icon="edit"></svg-vue>
+            <span class="hidden text-[10px] lg:block">{{
+              translation.button_lang.edit
+            }}</span>
           </a>
 
           <HoverText
@@ -115,13 +120,16 @@
           <div v-for="(post, i) in data.content" :key="i" class="title-content">
             <div v-if="post.narrative" class="flex flex-col">
               <span v-if="post.language" class="language mb-1.5">
-                (Language: {{ types?.languages[post.language] }})
+                ({{ translation.common_lang.language }}:
+                {{ types?.languages[post.language] }})
               </span>
               <span v-if="post.narrative" class="max-w-[887px] text-sm">
                 {{ post.narrative }}
               </span>
             </div>
-            <span v-else class="text-sm italic">Title Missing</span>
+            <span v-else class="text-sm italic">{{
+              translation.common_lang.missing.title
+            }}</span>
             <div v-if="i !== data.content.length - 1" class="mb-4"></div>
           </div>
         </div>
@@ -180,6 +188,7 @@ import Modal from 'Components/PopupModal.vue';
 import { useToggle } from '@vueuse/core';
 import axios from 'axios';
 
+const translation = window['globalLang'];
 const props = defineProps({
   data: {
     type: Object,

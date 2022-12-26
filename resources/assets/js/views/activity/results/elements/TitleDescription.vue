@@ -8,9 +8,9 @@
     }"
   >
     <div class="language mb-1.5">
-      (Language: {{ type[post.language] ? type[post.language] : 'Missing' }})
+      ({{ translation.web_lang.language }}: {{ type[post.language] }})
     </div>
-    <div class="w-[800px] max-w-[80%] overflow-x-hidden text-ellipsis text-sm">
+    <div class="max-w-[887px] text-sm">
       {{ post.narrative }}
     </div>
   </div>
@@ -48,7 +48,8 @@ export default defineComponent({
 
     let { data } = toRefs(props);
     const tdData = data.value as Narratives;
-    return { tdData };
+    const translation = window['globalLang'];
+    return { tdData, translation };
   },
 });
 </script>

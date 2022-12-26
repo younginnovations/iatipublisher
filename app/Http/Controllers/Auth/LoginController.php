@@ -113,7 +113,7 @@ class LoginController extends Controller
         }
 
         return $request->wantsJson()
-            ? new JsonResponse(['status' => true, 'message' => 'Successfully logged out.'], 204)
+            ? new JsonResponse(['status' => true, 'message' => trans('user.successfully_logged_out')], 204)
             : redirect('/');
     }
 
@@ -166,6 +166,9 @@ class LoginController extends Controller
 
                 $this->auditService->auditEvent(Auth::user(), 'signin', '');
                 $this->userService->update(Auth::user()->id, ['last_logged_in' => now()]);
+
+                session()->put('locale', Auth::user()->language_preference);
+                app()->setLocale(Auth::user()->language_preference);
 
                 return $this->sendLoginResponse($request);
             }

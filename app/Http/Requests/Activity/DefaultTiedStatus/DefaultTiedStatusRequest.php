@@ -65,8 +65,8 @@ class DefaultTiedStatusRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => 'The default tied status does not exist.',
-            'size'      => 'The default tied status cannot have more than one value.',
+            'in'        => trans('requests.default_tied_status', ['suffix'=>trans('requests.suffix.doesnt_exist')]),
+            'size'      => trans('requests.default_tied_status', ['suffix'=>trans('requests.suffix.cannot_have_more_than_one')]),
         ];
     }
 }

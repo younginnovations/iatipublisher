@@ -9,11 +9,19 @@ use SimpleXMLIterator;
 
 class XmlSchemaErrorParser
 {
-    protected array $mappings = [
-        '1868'    => 'The required :element Code is missing from the ‘:element’ element.',
-        '1871'    => 'The required :sub-element is missing from the ‘:element’ element.',
-        'default' => 'The required :element is missing from the ‘:element’ element',
-    ];
+    protected array $mappings = [];
+
+    /**
+     * Initialize $mappings.
+     */
+    public function __construct()
+    {
+        $this->mappings = [
+            '1868'    => trans('requests.xml_parser_1868'),
+            '1871'    => trans('requests.xml_parser_1871'),
+            'default' => trans('requests.xml_parser_default'),
+        ];
+    }
 
     /**
      * get modified message send as per the schema.

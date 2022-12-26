@@ -12,17 +12,27 @@
           {{
             total_expenditure.value['0'].amount
               ? Number(total_expenditure.value[0].amount).toLocaleString()
-              : 'Budget Missing'
+              : language.common_lang.missing.element.replace(
+                  ':element',
+                  language.common_lang.budget
+                )
           }}
           {{ total_expenditure.value['0'].currency }}
         </span>
-        <span v-else> Expenditure Amount Missing</span>
+        <span v-else>
+          {{
+            language.common_lang.missing.element.replace(
+              ':element',
+              language.common_lang.expenditure_amount
+            )
+          }}</span
+        >
       </div>
       <div class="ml-4">
         <table>
           <tbody>
             <tr>
-              <td>Period</td>
+              <td>{{ language.common_lang.period }}</td>
               <td>
                 {{ formatDate(total_expenditure.period_start['0'].date) }}
                 -
@@ -30,7 +40,7 @@
               </td>
             </tr>
             <tr>
-              <td>Value date</td>
+              <td>{{ language.common_lang.value_date }}</td>
               <td>
                 {{ formatDate(total_expenditure.value['0'].value_date) }}
               </td>
@@ -42,7 +52,9 @@
 
     <div class="indicator overflow-hidden rounded-t-lg border border-n-20">
       <div class="head flex items-center border-b border-n-20 px-6 py-2">
-        <span class="text-xs font-bold text-n-50">Expense line</span>
+        <span class="text-xs font-bold text-n-50">{{
+          language.common_lang.expense_line
+        }}</span>
       </div>
       <div
         v-for="(expense_line, j) in total_expenditure.expense_line"
@@ -60,25 +72,31 @@
                 {{ Number(expense_line.value['0'].amount).toLocaleString() }}
                 {{ expense_line.value['0'].currency }}
               </span>
-              <span v-else> Expense Line Missing </span>
+              <span v-else>
+                {{ language.common_lang.expense_line }}
+                {{ language.common_lang.missing.default }}
+              </span>
             </div>
             <div class="ml-4">
               <table>
                 <tbody>
                   <tr>
-                    <td>Reference</td>
+                    <td>{{ language.common_lang.reference_label }}</td>
                     <td>
-                      {{ expense_line.ref ?? 'Reference Missing' }}
+                      {{
+                        expense_line.ref ??
+                        language.common_lang.missing.reference
+                      }}
                     </td>
                   </tr>
                   <tr>
-                    <td>Value Date</td>
+                    <td>{{ language.common_lang.value_date }}</td>
                     <td>
                       {{ formatDate(expense_line.value['0'].value_date) }}
                     </td>
                   </tr>
                   <tr>
-                    <td>Narrative</td>
+                    <td>{{ language.common_lang.narrative }}</td>
                     <td>
                       <div
                         v-for="(narrative, k) in expense_line.narrative"
@@ -91,14 +109,17 @@
                         <div class="language mb-1.5">
                           ({{
                             narrative.language
-                              ? `Language: ${
+                              ? `${language.common_lang.language}: ${
                                   types?.languages[narrative.language]
                                 }`
-                              : 'Language : Missing'
+                              : `${language.common_lang.language} : ${language.missing_lang}`
                           }})
                         </div>
                         <div class="w-[500px] max-w-full">
-                          {{ narrative.narrative ?? 'Narrative Missing' }}
+                          {{
+                            narrative.narrative ??
+                            language.common_lang.missing.narrative
+                          }}
                         </div>
                       </div>
                     </td>
@@ -128,9 +149,10 @@ interface TypesInterface {
   country: [];
 }
 
+const language = window['globalLang'];
 const types = inject('orgTypes') as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format('LL') : 'Date Missing';
+  return date ? moment(date).format('LL') : language.common_lang.missing.date;
 }
 </script>

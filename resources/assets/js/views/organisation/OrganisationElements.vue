@@ -9,7 +9,7 @@
         <input
           v-model="elements.search"
           class="panel__input"
-          placeholder="Search elements to add/edit"
+          :placeholder="language.activity_lang.search_elements_placeholder"
           type="text"
         />
       </div>
@@ -40,28 +40,28 @@
               @click="dropdownFilter('')"
             >
               <svg-vue class="mr-1 text-lg" icon="box"></svg-vue>
-              <span>All Elements</span>
+              <span>{{ language.common_lang.all_elements }}</span>
             </li>
             <li
               class="flex py-1.5 px-3.5 hover:bg-white"
               @click="dropdownFilter('core')"
             >
               <svg-vue class="mr-1 text-lg" icon="core"></svg-vue>
-              <span>Core</span>
+              <span>{{ language.common_lang.core }}</span>
             </li>
             <li
               class="flex py-1.5 px-3.5 hover:bg-white"
               @click="dropdownFilter('completed')"
             >
               <svg-vue class="mr-1 text-lg" icon="double-tick"></svg-vue>
-              <span>Completed</span>
+              <span>{{ language.common_lang.completed }}</span>
             </li>
             <li
               class="flex py-1.5 px-3.5 hover:bg-white"
               @click="dropdownFilter('not_completed')"
             >
               <svg-vue class="ml-1 !mr-1.5" icon="red-cross"></svg-vue>
-              <span>Not Completed</span>
+              <span>{{ language.common_lang.completed }}</span>
             </li>
           </ul>
         </div>
@@ -108,7 +108,10 @@
           ></svg-vue>
         </template>
         <div class="title mt-1 break-all text-xs">
-          {{ index.toString().replace(/_/g, '-') }}
+          {{
+            language.elements_common_lang[index.toString()] ??
+            index.toString().replace(/_/g, '-')
+          }}
         </div>
       </a>
     </div>
@@ -120,6 +123,7 @@ import { computed, defineProps, reactive, onMounted, ref, inject } from 'vue';
 import { useToggle } from '@vueuse/core';
 import { orgMandatoryElements } from 'Composable/coreElements';
 
+const language = window['globalLang'];
 const props = defineProps({
   data: {
     type: Object,

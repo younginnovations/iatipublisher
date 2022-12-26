@@ -2,7 +2,7 @@
   <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      title="Result List"
+      :text="language.common_lang.result_list"
       :back-link="activityLink"
     >
       <div class="flex items-center space-x-3">
@@ -13,7 +13,16 @@
           class="mr-3"
         />
         <a :href="`${activityLink}/result/create`">
-          <Btn text="Add Result" icon="plus" type="primary" />
+          <Btn
+            :text="
+              language.button_lang.add_element.replace(
+                ':element',
+                language.common_lang.result
+              )
+            "
+            icon="plus"
+            type="primary"
+          />
         </a>
       </div>
     </PageTitle>
@@ -24,19 +33,19 @@
         <thead>
           <tr class="bg-n-10 text-left">
             <th id="transaction_type" scope="col">
-              <span>Title</span>
+              <span>{{ language.common_lang.title }}</span>
             </th>
             <th id="transaction_type" scope="col">
               <span>Result Number</span>
             </th>
             <th id="transaction_value" scope="col" width="190px">
-              <span>RESULT TYPE</span>
+              <span>{{ language.common_lang.result_type }}</span>
             </th>
             <th id="transaction_date" scope="col" width="208px">
-              <span>AGGREGATION STATUS</span>
+              <span>{{ language.common_lang.aggregation_status }}</span>
             </th>
             <th id="action" scope="col" width="177px">
-              <span>Action</span>
+              <span>{{ language.common_lang.action }}</span>
             </th>
           </tr>
         </thead>
@@ -65,7 +74,10 @@
               class="cursor-pointer"
               @click="handleNavigate(`${activityLink}/result/${result.id}`)"
             >
-              {{ types.resultType[result.result.type] ?? 'Missing' }}
+              {{
+                types.resultType[result.result.type] ??
+                language.common_lang.missing.default
+              }}
             </td>
             <td
               class="cursor-pointer capitalize"
@@ -75,8 +87,8 @@
                 parseInt(result.result.aggregation_status)
                   ? 'True'
                   : result.result.aggregation_status
-                  ? 'False'
-                  : 'Missing'
+                  ? language.common_lang.false
+                  : language.common_lang.missing.default
               }}
             </td>
             <td>
@@ -93,7 +105,10 @@
           </tr>
         </tbody>
         <tbody v-else>
-          <td colspan="5" class="text-center">Results not found</td>
+          <td colspan="5" class="text-center">
+            {{ language.elements_common_lang.results }}
+            {{ language.common_lang.missing.not_found }}
+          </td>
         </tbody>
       </table>
     </div>
@@ -158,6 +173,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     const { activity } = toRefs(props);
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
@@ -193,7 +209,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
+        title: language.activities_lang.your_activities,
         link: '/activities',
       },
       {
@@ -201,7 +217,7 @@ export default defineComponent({
         link: activityLink,
       },
       {
-        title: 'Result List',
+        title: language.common_lang.result_list,
         link: '',
       },
     ];
@@ -249,6 +265,7 @@ export default defineComponent({
       getActivityTitle,
       fetchListings,
       handleNavigate,
+      language,
     };
   },
 });

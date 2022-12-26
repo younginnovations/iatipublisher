@@ -49,7 +49,7 @@ class RecipientCountryBudgetController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while opening organization recipient-country-budget form.');
+            return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.opening'), 'suffix'=>trans('elements_common.org_recipient_country_budget')]));
         }
     }
 
@@ -64,14 +64,14 @@ class RecipientCountryBudgetController extends Controller
     {
         try {
             if (!$this->recipientCountryBudgetService->update(Auth::user()->organization_id, $request->all())) {
-                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization recipient-country-budget.');
+                return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.org_recipient_country_budget')]));
             }
 
-            return redirect()->route('admin.organisation.index')->with('success', 'Organization recipient-country-budget updated successfully.');
+            return redirect()->route('admin.organisation.index')->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.org_recipient_country_budget'), 'event'=>trans('events.updated')])));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization recipient-country-budget.');
+            return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.org_recipient_country_budget')]));
         }
     }
 }

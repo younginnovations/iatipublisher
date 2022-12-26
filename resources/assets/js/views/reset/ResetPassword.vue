@@ -2,8 +2,8 @@
   <div class="mt-14">
     <Loader v-if="loaderVisibility" />
     <div class="reset reset__password" @keyup.enter="reset">
-      <h2>Reset Password</h2>
-      <p class="mb-4">Please enter your new password</p>
+      <h2>{{ language.common_lang.reset_password }}</h2>
+      <p class="mb-4">{{ language.common_lang.enter_new_password }}</p>
       <div class="text-center">
         <span v-if="errorData.email !== ''" class="error" role="alert">
           {{ errorData.email }}
@@ -15,9 +15,9 @@
           'reset__content mt-3': errorData.email,
         }"
       >
-        <label class="text-sm font-bold text-bluecoral" for="password"
-          >New Password</label
-        >
+        <label class="text-sm font-bold text-bluecoral" for="password">{{
+          language.common_lang.new_password
+        }}</label>
         <input
           id="new_password"
           v-model="formData.password"
@@ -26,7 +26,7 @@
             error__input: errorData.password !== '',
           }"
           type="password"
-          placeholder="Enter a new password"
+          :placeholder="language.common_lang.enter_new_password_placeholder"
         />
         <svg-vue class="lock-icon text-xl" icon="pw-lock" />
         <span v-if="errorData.password !== ''" class="error" role="alert">
@@ -37,7 +37,7 @@
         <label
           class="text-sm font-bold text-bluecoral"
           for="password_confirmation"
-          >Repeat Password</label
+          >{{ language.common_lang.repeat_password }}</label
         >
         <input
           id="repeat_password"
@@ -49,7 +49,7 @@
               (errorData.password && formData.password !== '') !== '',
           }"
           type="password"
-          placeholder="Re-enter your password"
+          :placeholder="language.common_lang.reenter_password_placeholder"
         />
         <svg-vue class="lock-icon text-xl" icon="pw-lock" />
         <span
@@ -61,7 +61,7 @@
         </span>
       </div>
       <button type="submit" class="btn reset-btn" @click="reset()">
-        Reset Password
+        {{ language.common_lang.reset_password }}
       </button>
     </div>
   </div>
@@ -86,6 +86,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     const loaderVisibility = ref(false);
     const formData = reactive({
       email: props.email,
@@ -155,6 +156,7 @@ export default defineComponent({
       formData,
       errorData,
       reset,
+      language,
     };
   },
 });

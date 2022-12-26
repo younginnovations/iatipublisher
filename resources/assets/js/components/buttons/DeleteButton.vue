@@ -10,23 +10,37 @@
     <div class="mb-4">
       <div class="title mb-6 flex">
         <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
-        <b>Delete activity</b>
+        <b>{{
+          capitalize(
+            language.button_lang.delete_element.replace(
+              ':element',
+              language.common_lang.activity.toLowerCase()
+            )
+          )
+        }}</b>
       </div>
       <div class="rounded-lg bg-rose p-4">
-        Are you sure you want to delete this activity?
+        {{
+          capitalize(
+            language.button_lang.delete_confirmation.replace(
+              ':element',
+              language.common_lang.activity.toLowerCase()
+            )
+          )
+        }}?
       </div>
     </div>
     <div class="flex justify-end">
       <div class="inline-flex">
         <BtnComponent
           class="bg-white px-6 uppercase"
-          text="Go Back"
+          :text="language.button_lang.go_back"
           type=""
           @click="deleteValue = false"
         />
         <BtnComponent
           class="space"
-          text="Delete"
+          :text="language.button_lang.delete"
           type="primary"
           @click="deleteFunction"
         />
@@ -41,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, inject } from 'vue';
+import { reactive, inject, capitalize } from 'vue';
 import { useToggle } from '@vueuse/core';
 import axios from 'axios';
 
@@ -53,6 +67,7 @@ import Loader from 'Components/sections/ProgressLoader.vue';
 // Vuex Store
 import { useStore } from 'Store/activities/index';
 
+const language = window['globalLang'];
 const store = useStore();
 
 // toggle state for modal popup
@@ -66,7 +81,7 @@ interface LoaderTypeface {
 
 const loader: LoaderTypeface = reactive({
   value: false,
-  text: 'Please Wait',
+  text: language.common_lang.please_wait,
 });
 
 // call api for unpublishing
@@ -79,7 +94,9 @@ const toastMessage = inject('toastMessage') as ToastMessageTypeface;
 
 const deleteFunction = () => {
   loader.value = true;
-  loader.text = 'Deleting';
+  loader.text =
+    language.events_lang.deleting.charAt(0).toUpperCase() +
+    language.events_lang.deleting.slice(1);
   deleteValue.value = false;
   const deleteEndPoint = `/activity/${store.state.selectedActivities}`;
 

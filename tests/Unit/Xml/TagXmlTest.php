@@ -18,7 +18,7 @@ class TagXmlTest extends XmlBaseTest
         $rows = $this->invalid_data();
         $flattenErrors = $this->getErrors($rows);
         $this->assertContains('The tag vocabulary is invalid.', $flattenErrors);
-        $this->assertContains('The tag SDG code is invalid', $flattenErrors);
+        $this->assertContains('The tag SDG code is invalid.', $flattenErrors);
         $this->assertContains('The tag SDG targets code is invalid.', $flattenErrors);
         $this->assertContains('The @vocabulary-uri field must be a valid url.', $flattenErrors);
     }

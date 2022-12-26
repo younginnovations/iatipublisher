@@ -1,5 +1,7 @@
 <template>
-  {{ date[0].date ? dateFormat(date[0].date) : 'Date Missing' }}
+  {{
+    date[0].date ? dateFormat(date[0].date) : language.common_lang.missing.date
+  }}
 </template>
 
 <script lang="ts">
@@ -16,13 +18,14 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     const { data } = toRefs(props);
 
     interface ArrayObject {
       [index: number]: { date: Date };
     }
     const date = data.value as ArrayObject;
-    return { date, dateFormat };
+    return { date, dateFormat, language };
   },
 });
 </script>

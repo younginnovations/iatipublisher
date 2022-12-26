@@ -107,7 +107,7 @@ class SectorCsvTest extends CsvBaseTest
         $rows = $this->vocabulary_same_empty_percentage_data();
         $errors = $this->getErrors($rows);
         $flattenErrors = Arr::flatten($errors);
-        $this->assertContains('The sum of percentages of same vocabulary must be equal to 100%', $flattenErrors);
+        $this->assertContains('The total percentage within a vocabulary must be 100%.', $flattenErrors);
     }
 
     /**
@@ -202,8 +202,9 @@ class SectorCsvTest extends CsvBaseTest
         $errors = $this->getErrors($rows);
         $flattenErrors = Arr::flatten($errors);
 
+//        dd($flattenErrors);
         $this->assertContains('The sector code is invalid.', $flattenErrors);
-        $this->assertContains('The sector vocabulary-uri field must be a valid url.', $flattenErrors);
+        $this->assertContains('The sector vocabulary uri must be a valid url.', $flattenErrors);
         $this->assertContains('The sector vocabulary is invalid.', $flattenErrors);
     }
 

@@ -11,7 +11,9 @@
           >({{ roundFloat(participating_org.percentage) }}%)</span
         >
       </div>
-      <span v-else class="italic">Missing</span>
+      <span v-else class="italic">{{
+        language.common_lang.missing.default
+      }}</span>
     </div>
 
     <div
@@ -22,11 +24,17 @@
     >
       <div v-if="item.narrative" class="flex max-w-[887px] flex-col">
         <span v-if="item.language" class="language mb-1.5">
-          (Language: {{ types.languages[item.language] }})
+          ({{ language.common_lang.language }}:
+          {{ types.languages[item.language] }})
         </span>
         <span>{{ item.narrative }}</span>
       </div>
-      <span v-else class="italic">Narrative Missing</span>
+      <span v-else class="italic">{{
+        language.common_lang.missing.element.replace(
+          ':element',
+          language.common_lang.narrative
+        )
+      }}</span>
     </div>
   </div>
 </template>
@@ -48,13 +56,14 @@ export default defineComponent({
       languages: [];
     }
 
+    const language = window['globalLang'];
     const types = inject('types') as Types;
 
     function roundFloat(num: string) {
       return parseFloat(num).toFixed(2);
     }
 
-    return { types, roundFloat };
+    return { types, roundFloat, language };
   },
 });
 </script>

@@ -94,7 +94,7 @@ class DownloadActivityController extends Controller
             }
 
             if (!isset($activities) || !count($activities)) {
-                return response()->json(['success' => false, 'message' => 'No activities selected.']);
+                return response()->json(['success' => false, 'message' => trans('responses.no_activities_selected')]);
             }
 
             $csvData = $this->downloadActivityService->getCsvData($activities);
@@ -111,7 +111,7 @@ class DownloadActivityController extends Controller
             logger()->error($e->getMessage());
             $this->auditService->auditEvent(null, 'download', 'csv');
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity csv.']);
+            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.downloading'), 'suffix'=>trans('responses.activity_csv')])]);
         }
     }
 
@@ -274,7 +274,7 @@ class DownloadActivityController extends Controller
             }
 
             if (!isset($activities) || !count($activities)) {
-                return response()->json(['success' => false, 'message' => 'No activities selected.']);
+                return response()->json(['success' => false, 'message' => trans('responses.no_activities_selected')]);
             }
 
             $mergedContent = $this->downloadActivityService->getCombinedXmlFile($activities);
@@ -297,7 +297,7 @@ class DownloadActivityController extends Controller
             logger()->error($e->getMessage());
             $this->auditService->auditEvent(null, 'download', 'xml');
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity csv.']);
+            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.downloading'), 'suffix'=>trans('responses.activity_csv')])]);
         }
     }
 

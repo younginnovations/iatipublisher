@@ -50,7 +50,7 @@ class DefaultTiedStatusController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering default-tied-status form.');
+            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.rendering'), 'suffix'=>trans('elements_common.default_tied_status')]));
         }
     }
 
@@ -68,14 +68,14 @@ class DefaultTiedStatusController extends Controller
             $activityDefaultTiedStatus = $request->get('default_tied_status') !== null ? (int) $request->get('default_tied_status') : null;
 
             if (!$this->defaultTiedStatusService->update($id, $activityDefaultTiedStatus)) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default-tied-status.');
+                return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.default_tied_status')]));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Default-tied-status updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.default_tied_status'), 'event'=>trans('events.updated')])));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default-tied-status.');
+            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.default_tied_status')]));
         }
     }
 }
