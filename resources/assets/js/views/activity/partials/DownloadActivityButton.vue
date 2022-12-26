@@ -1,10 +1,10 @@
 <template>
   <div class="relative flex flex-row-reverse gap-2">
     <button
-        v-if="store.state.selectedActivities.length === 0"
-        ref="dropdownBtn"
-        class="button secondary-btn font-bold"
-        @click="toggle"
+      v-if="store.state.selectedActivities.length === 0"
+      ref="dropdownBtn"
+      class="button secondary-btn font-bold"
+      @click="toggle"
     >
       <svg-vue icon="download-file" /> Download All
     </button>
@@ -22,10 +22,20 @@
     >
       <ul>
         <li>
-          <a href="#" :class="liClass" @click="downloadCsv(store.state.selectedActivities.length)">Download CSV</a>
+          <a
+            href="#"
+            :class="liClass"
+            @click="downloadCsv(store.state.selectedActivities.length)"
+            >Download CSV</a
+          >
         </li>
         <li>
-          <a href="#" :class="liClass" @click="downloadXml(store.state.selectedActivities.length)">Download XML</a>
+          <a
+            href="#"
+            :class="liClass"
+            @click="downloadXml(store.state.selectedActivities.length)"
+            >Download XML</a
+          >
         </li>
       </ul>
     </div>
@@ -157,6 +167,7 @@ export default defineComponent({
       state.isVisible = !state.isVisible;
     };
     const downloadErrorxml = (countActivities) => {
+      showErrorpopup.value = false;
       let queryParameters = window.location.href.split('?');
       let addQueryParams = '';
 
@@ -164,32 +175,31 @@ export default defineComponent({
         addQueryParams = '&' + queryParameters[1];
       }
 
-      let apiUrl = '/activities/download-xml/true?activities=all' + addQueryParams;
+      let apiUrl =
+        '/activities/download-xml/true?activities=all' + addQueryParams;
 
       if (countActivities > 0) {
         const activities = store.state.selectedActivities.join(',');
         apiUrl = `/activities/download-xml/true?activities=[${activities}]`;
       }
 
-      axios
-        .get(apiUrl)
-        .then((res) => {
-          if (res.data.success == false) {
-            toastVisibility.value = true;
-            toastMessage.value = res.data.message;
-            toastmessageType.value = res.data.success;
-            setTimeout(() => (toastVisibility.value = false), 15000);
-          } else {
-            const response = res.data;
-            let blob = new Blob([response], {
-              type: 'application/xml',
-            });
-            let link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = res.headers['content-disposition'].split('=')[1];
-            link.click();
-          }
-        });
+      axios.get(apiUrl).then((res) => {
+        if (res.data.success == false) {
+          toastVisibility.value = true;
+          toastMessage.value = res.data.message;
+          toastmessageType.value = res.data.success;
+          setTimeout(() => (toastVisibility.value = false), 15000);
+        } else {
+          const response = res.data;
+          let blob = new Blob([response], {
+            type: 'application/xml',
+          });
+          let link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = res.headers['content-disposition'].split('=')[1];
+          link.click();
+        }
+      });
     };
     const downloadXml = (countActivities) => {
       let queryParameters = window.location.href.split('?');
@@ -206,31 +216,29 @@ export default defineComponent({
         apiUrl = `/activities/download-xml?activities=[${activities}]`;
       }
 
-      axios
-        .get(apiUrl)
-        .then((res) => {
-          console.log(res);
-          if (res.data.success == false) {
-            if (res.data.xml_error === true) {
-              showErrorpopup.value = true;
-              message.value = res.data.message;
-            } else {
-              toastVisibility.value = true;
-              toastMessage.value = res.data.message;
-              toastmessageType.value = res.data.success;
-              setTimeout(() => (toastVisibility.value = false), 15000);
-            }
+      axios.get(apiUrl).then((res) => {
+        console.log(res);
+        if (res.data.success == false) {
+          if (res.data.xml_error === true) {
+            showErrorpopup.value = true;
+            message.value = res.data.message;
           } else {
-            const response = res.data;
-            let blob = new Blob([response], {
-              type: 'application/xml',
-            });
-            let link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = res.headers['content-disposition'].split('=')[1];
-            link.click();
+            toastVisibility.value = true;
+            toastMessage.value = res.data.message;
+            toastmessageType.value = res.data.success;
+            setTimeout(() => (toastVisibility.value = false), 15000);
           }
-        });
+        } else {
+          const response = res.data;
+          let blob = new Blob([response], {
+            type: 'application/xml',
+          });
+          let link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = res.headers['content-disposition'].split('=')[1];
+          link.click();
+        }
+      });
     };
 
     const downloadCsv = (countActivities) => {
@@ -248,25 +256,23 @@ export default defineComponent({
         apiUrl = `/activities/download-csv?activities=[${activities}]`;
       }
 
-      axios
-        .get(apiUrl)
-        .then((res) => {
-          if (res.data.success == false) {
-            toastVisibility.value = true;
-            toastMessage.value = res.data.message;
-            toastmessageType.value = res.data.success;
-            setTimeout(() => (toastVisibility.value = false), 15000);
-          } else {
-            const response = res.data;
-            let blob = new Blob([response], {
-              type: 'application/csv',
-            });
-            let link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = res.headers['content-disposition'].split('=')[1];
-            link.click();
-          }
-        });
+      axios.get(apiUrl).then((res) => {
+        if (res.data.success == false) {
+          toastVisibility.value = true;
+          toastMessage.value = res.data.message;
+          toastmessageType.value = res.data.success;
+          setTimeout(() => (toastVisibility.value = false), 15000);
+        } else {
+          const response = res.data;
+          let blob = new Blob([response], {
+            type: 'application/csv',
+          });
+          let link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = res.headers['content-disposition'].split('=')[1];
+          link.click();
+        }
+      });
     };
 
     return {
