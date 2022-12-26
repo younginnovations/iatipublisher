@@ -286,3 +286,11 @@ aside {
 .activities__content {
   width: 100%;
 }
+.tab-btn {
+  .help__text {
+    transform: translateX(0) !important;
+    @media (max-width: 1024px) {
+      left: 0;
+    }
+  }
+}
