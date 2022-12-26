@@ -1,6 +1,6 @@
 <template>
   <div class="page-title mb-4">
-    <div class="flex items-start gap-4">
+    <div class="flex gap-4 md:items-end">
       <div class="title shrink-0 grow-0">
         <div class="mb-2 text-caption-c1 text-n-40 xl:mb-4">
           <nav aria-label="breadcrumbs" class="breadcrumb">
@@ -9,7 +9,7 @@
             </p>
           </nav>
         </div>
-        <div class="inline-flex items-center">
+        <div class="inline-flex flex-col space-y-2 md:flex-row md:items-center">
           <h4 class="mr-4 text-3xl font-bold xl:text-heading-4">
             Your Activities
           </h4>
@@ -49,24 +49,26 @@
           </div>
         </div>
       </div>
-      <div class="actions relative flex grow flex-col items-end justify-end">
+      <div
+        class="actions relative inline-flex grow flex-col items-end justify-end space-y-2 lg:flex-row"
+      >
+        <Toast
+          v-if="toastMessage.visibility"
+          class="whitespace-nowrap lg:mr-3.5"
+          :message="toastMessage.message"
+          :type="toastMessage.type"
+        />
+        <ErrorPopUp
+          v-if="errorData.visibility"
+          :message="errorData.message"
+          title="Activity couldn’t be published because"
+          @close-popup="
+            () => {
+              errorData.visibility = false;
+            }
+          "
+        />
         <div class="inline-flex justify-end">
-          <Toast
-            v-if="toastMessage.visibility"
-            class="mr-3.5"
-            :message="toastMessage.message"
-            :type="toastMessage.type"
-          />
-          <ErrorPopUp
-            v-if="errorData.visibility"
-            :message="errorData.message"
-            title="Activity couldn’t be published because"
-            @close-popup="
-              () => {
-                errorData.visibility = false;
-              }
-            "
-          />
           <div
             class="inline-flex shrink-0 flex-col items-end justify-end gap-3 md:flex-row"
           >
@@ -75,13 +77,16 @@
               :message="refreshToastMsg.refreshMessage"
               :type="refreshToastMsg.refreshMessageType"
             />
-            <div class="flex flex-row space-x-2">
-              <DownloadActivityButton />
-              <PublishSelected />
-              <DeleteButton
-                v-if="store.state.selectedActivities.length === 1"
-              />
-              <AddActivityButton />
+            <div class="flex flex-col gap-2 md:flex-row">
+              <div class="flex gap-2">
+                <DownloadActivityButton /> <PublishSelected />
+              </div>
+              <div class="flex gap-2">
+                <DeleteButton
+                  v-if="store.state.selectedActivities.length === 1"
+                />
+                <AddActivityButton />
+              </div>
             </div>
           </div>
         </div>

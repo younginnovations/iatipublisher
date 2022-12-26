@@ -1,5 +1,25 @@
 <template>
-  <div class="bg-paper px-5 pt-4 pb-[71px] xl:px-10">
+  <div class="bg-paper px-4 pt-4 pb-[71px] xl:px-10">
+    <div
+      v-if="showSidebar"
+      class="fixed top-0 left-0 z-[50] h-screen w-screen bg-black/10 lg:hidden"
+      @click="
+        () => {
+          showSidebar = !showSidebar;
+        }
+      "
+    />
+    <div
+      v-if="showSidebar"
+      class="sidebar-close-icon lg:hidden"
+      @click="
+        () => {
+          showSidebar = !showSidebar;
+        }
+      "
+    >
+      <svg-vue icon="chevron" class="rotate-180 pb-2 text-3xl text-white" />
+    </div>
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       :title="`${transactionData.reference ?? 'Untitled'} - Transaction detail`"
@@ -19,9 +39,40 @@
         />
       </div>
     </PageTitle>
+    <div
+      class="sidebar-open-icon"
+      @click="
+        () => {
+          showSidebar = !showSidebar;
+        }
+      "
+    >
+      <svg-vue icon="chevron" class="pb-2 text-3xl text-white" />
+    </div>
+    <aside
+      :class="showSidebar ? 'translate-x-[0px]' : ' -translate-x-[150%]'"
+      class="activities__sidebar fixed top-[60px] left-0 z-[100] block h-[calc(100vh_-_60px)] overflow-y-auto bg-eggshell duration-200 lg:hidden"
+    >
+      <div class="indicator rounded-lg bg-eggshell px-6 py-4 text-n-50">
+        <ul class="text-sm font-bold leading-relaxed">
+          <li v-for="(rData, r, ri) in transactionData" :key="ri">
+            <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
+              <svg-vue
+                v-if="isMandatoryIcon(r)"
+                icon="core"
+                class="mr-2 text-base"
+              ></svg-vue>
+              <span :class="isMandatoryIcon(r) ? '' : 'pl-6'">{{ r }}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
     <div class="activities">
-      <aside class="activities__sidebar">
-        <div class="indicator sticky top-0 rounded-lg bg-eggshell px-6 py-4 text-n-50">
+      <aside class="activities__sidebar hidden lg:block">
+        <div
+          class="indicator sticky top-0 rounded-lg bg-eggshell px-6 py-4 text-n-50"
+        >
           <ul class="text-sm font-bold leading-relaxed">
             <li v-for="(rData, r, ri) in transactionData" :key="ri">
               <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
@@ -36,9 +87,12 @@
           </ul>
         </div>
       </aside>
+
       <div class="activities__content">
         <div></div>
-        <div class="activities__content--elements -mx-3 -mt-3 flex-wrap xl:flex">
+        <div
+          class="activities__content--elements -mx-3 -mt-3 flex-wrap xl:flex"
+        >
           <template v-for="(post, key) in transactionData" :key="key">
             <TransactionElement
               :data="post"
@@ -69,18 +123,27 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, onMounted, reactive } from "vue";
+import {
+  defineComponent,
+  toRefs,
+  onMounted,
+  onUnmounted,
+  watch,
+  computed,
+  ref,
+  reactive,
+} from 'vue';
 //components
-import Btn from "Components/buttons/Link.vue";
-import PageTitle from "Components/sections/PageTitle.vue";
-import Toast from "Components/ToastMessage.vue";
+import Btn from 'Components/buttons/Link.vue';
+import PageTitle from 'Components/sections/PageTitle.vue';
+import Toast from 'Components/ToastMessage.vue';
 //composable
-import dateFormat from "Composable/dateFormat";
-import getActivityTitle from "Composable/title";
-import TransactionElement from "./TransactionElement.vue";
+import dateFormat from 'Composable/dateFormat';
+import getActivityTitle from 'Composable/title';
+import TransactionElement from './TransactionElement.vue';
 
 export default defineComponent({
-  name: "TransactionDetail",
+  name: 'TransactionDetail',
   components: {
     TransactionElement,
     Btn,
@@ -112,42 +175,75 @@ export default defineComponent({
   setup(props) {
     const { activity, transaction } = toRefs(props);
     const linkClasses =
-      "flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-relaxed mb-2 shadow-default";
+      'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-relaxed mb-2 shadow-default';
+    const showSidebar = ref(false);
+    const positionY = ref(0);
+    const screenWidth = ref(0);
 
     const toastData = reactive({
       visibility: false,
-      message: "",
+      message: '',
       type: true,
+    });
+    const handleScroll = () => {
+      positionY.value = window.scrollY;
+    };
+    const istopVisible = computed(() => {
+      return positionY.value === 0;
     });
 
     // titles
     const transactionData = transaction.value.transaction;
+    const calcWidth = (event) => {
+      screenWidth.value = event.target.innerWidth;
+      if (screenWidth.value > 1024) {
+        document.documentElement.style.overflow = 'auto';
+      } else {
+        showSidebar.value &&
+          (document.documentElement.style.overflow = 'hidden');
+      }
+    };
 
     const activityId = activity.value.id,
-      activityTitle = getActivityTitle(activity.value.title, "en"),
+      activityTitle = getActivityTitle(activity.value.title, 'en'),
       activityLink = `/activity/${activityId}`,
       transactionLink = `${activityLink}/transaction/${transaction.value.id}`;
 
+    onUnmounted(() => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', calcWidth);
+    });
+    watch(
+      () => showSidebar.value,
+      (sidebar) => {
+        if (sidebar) {
+          document.documentElement.style.overflow = 'hidden';
+        } else document.documentElement.style.overflow = 'auto';
+      }
+    );
     /**
      * Breadcrumb data
      */
     const breadcrumbData = [
       {
-        title: "Your Activities",
-        link: "/activity",
+        title: 'Your Activities',
+        link: '/activity',
       },
       {
         title: activityTitle,
         link: activityLink,
       },
       {
-        title: "Transaction",
-        link: "",
+        title: 'Transaction',
+        link: '',
       },
     ];
 
     onMounted(() => {
-      if (props.toast.message !== "") {
+      window.addEventListener('scroll', handleScroll);
+      window.addEventListener('resize', calcWidth);
+
+      if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;
@@ -160,9 +256,9 @@ export default defineComponent({
 
     const isMandatoryIcon = (r) => {
       return (
-        r.toString() === "value" ||
-        r.toString() === "transaction_type" ||
-        r.toString() === "transaction_date"
+        r.toString() === 'value' ||
+        r.toString() === 'transaction_type' ||
+        r.toString() === 'transaction_date'
       );
     };
 
@@ -176,6 +272,8 @@ export default defineComponent({
       transactionLink,
       toastData,
       isMandatoryIcon,
+      showSidebar,
+      istopVisible,
     };
   },
 });

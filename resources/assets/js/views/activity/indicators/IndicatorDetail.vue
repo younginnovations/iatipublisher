@@ -1,5 +1,25 @@
 <template>
   <div class="bg-paper px-5 pt-4 pb-[71px] xl:px-10">
+    <div
+      v-if="showSidebar"
+      class="fixed top-0 left-0 z-[50] h-screen w-screen bg-black/10 lg:hidden"
+      @click="
+        () => {
+          showSidebar = !showSidebar;
+        }
+      "
+    />
+    <div
+      v-if="showSidebar"
+      class="sidebar-close-icon lg:hidden"
+      @click="
+        () => {
+          showSidebar = !showSidebar;
+        }
+      "
+    >
+      <svg-vue icon="chevron" class="rotate-180 pb-2 text-3xl text-white" />
+    </div>
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       title="Indicator Detail"
@@ -25,13 +45,72 @@
           :link="`/indicator/${indicator.id}/period/create`"
           class="mr-2.5"
         />
-        <Btn text="Edit Indicator" :link="`${indicatorLink}/${indicator.id}/edit`" />
+        <Btn
+          text="Edit Indicator"
+          :link="`${indicatorLink}/${indicator.id}/edit`"
+        />
       </div>
     </PageTitle>
+    <div
+      class="sidebar-open-icon"
+      @click="
+        () => {
+          showSidebar = !showSidebar;
+        }
+      "
+    >
+      <svg-vue icon="chevron" class="pb-2 text-3xl text-white" />
+    </div>
+
+    <aside
+      :class="
+        showSidebar
+          ? ` ${
+              istopVisible
+                ? 'top-[60px] h-[calc(100vh_-_50px)]'
+                : 'top-0 h-screen'
+            }  translate-x-[0px]`
+          : `  ${
+              istopVisible
+                ? 'top-[60px] h-[calc(100vh_-_50px)]'
+                : 'top-0 h-screen'
+            } -translate-x-[150%]`
+      "
+      class="activities__sidebar fixed left-0 z-[100] block h-screen overflow-y-auto duration-200 lg:hidden"
+    >
+      <div
+        class="indicator sticky top-0 h-full rounded-lg bg-eggshell bg-eggshell px-6 py-4 text-n-50"
+      >
+        <ul class="text-sm font-bold leading-relaxed">
+          <li v-for="(rData, r, ri) in indicatorData" :key="ri">
+            <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
+              <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
+              {{ r }}
+            </a>
+          </li>
+
+          <li v-if="periodData.length === 0">
+            <a
+              :href="`/indicator/${indicator.id}/period/create`"
+              :class="linkClasses"
+              class="border border-dashed border-n-40"
+            >
+              <svg-vue icon="add" class="mr-2 text-n-40"></svg-vue>
+              add period
+            </a>
+          </li>
+          <li v-else>
+            <a v-smooth-scroll href="#period" :class="linkClasses"> period </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
 
     <div class="activities">
-      <aside class="activities__sidebar">
-        <div class="indicator sticky top-0 rounded-lg bg-eggshell px-6 py-4 text-n-50">
+      <aside class="activities__sidebar hidden lg:block">
+        <div
+          class="indicator sticky top-0 rounded-lg bg-eggshell px-6 py-4 text-n-50"
+        >
           <ul class="text-sm font-bold leading-relaxed">
             <li v-for="(rData, r, ri) in indicatorData" :key="ri">
               <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
@@ -52,7 +131,6 @@
             </li>
             <li v-else>
               <a v-smooth-scroll href="#period" :class="linkClasses">
-                <svg-vue icon="core" class="mr-2 text-base"></svg-vue>
                 period
               </a>
             </li>
@@ -74,7 +152,9 @@
               <div class="indicators elements-detail">
                 <table>
                   <tbody>
-                    <template v-if="indicatorData.title[0].narrative.length > 0">
+                    <template
+                      v-if="indicatorData.title[0].narrative.length > 0"
+                    >
                       <TitleElement
                         id="title"
                         :data="indicatorData.title[0]"
@@ -94,7 +174,9 @@
                       :data="indicatorData.aggregation_status"
                     />
 
-                    <template v-if="indicatorData.description[0].narrative.length > 0">
+                    <template
+                      v-if="indicatorData.description[0].narrative.length > 0"
+                    >
                       <Description
                         id="description"
                         :data="indicatorData.description[0]"
@@ -123,7 +205,10 @@
                 </table>
               </div>
             </div>
-            <div v-if="indicatorData.document_link.length > 0" id="document_link">
+            <div
+              v-if="indicatorData.document_link.length > 0"
+              id="document_link"
+            >
               <div class="title mb-4">
                 <div class="item elements-detail wider">
                   <table class="mb-5">
@@ -133,10 +218,15 @@
                     </tr>
                   </table>
                 </div>
-                <div class="divider mb-4 h-px w-full border-b border-n-20"></div>
+                <div
+                  class="divider mb-4 h-px w-full border-b border-n-20"
+                ></div>
               </div>
               <div class="ml-4">
-                <DocumentLink :data="indicatorData.document_link" :type="types" />
+                <DocumentLink
+                  :data="indicatorData.document_link"
+                  :type="types"
+                />
               </div>
             </div>
           </div>
@@ -147,12 +237,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, onMounted, reactive, provide } from "vue";
+import {
+  defineComponent,
+  toRefs,
+  onMounted,
+  reactive,
+  provide,
+  ref,
+  watch,
+  computed,
+  onUnmounted,
+} from 'vue';
 
 //component
-import Btn from "Components/buttons/Link.vue";
-import PageTitle from "Components/sections/PageTitle.vue";
-import Toast from "Components/ToastMessage.vue";
+import Btn from 'Components/buttons/Link.vue';
+import PageTitle from 'Components/sections/PageTitle.vue';
+import Toast from 'Components/ToastMessage.vue';
 
 import {
   TitleElement,
@@ -164,13 +264,13 @@ import {
   Baseline,
   DocumentLink,
   Period,
-} from "./elements/Index";
+} from './elements/Index';
 
 //composable
-import getActivityTitle from "Composable/title";
+import getActivityTitle from 'Composable/title';
 
 export default defineComponent({
-  name: "IndicatorDetail",
+  name: 'IndicatorDetail',
   components: {
     TitleElement,
     Measure,
@@ -217,14 +317,17 @@ export default defineComponent({
   },
   setup(props) {
     const linkClasses =
-      "flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default";
+      'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
 
     const toastData = reactive({
       visibility: false,
-      message: "",
+      message: '',
       type: true,
     });
     let { indicator, activity, period, resultTitle } = toRefs(props);
+    const showSidebar = ref(false);
+    const positionY = ref(0);
+    const screenWidth = ref(0);
 
     //indicator
     const indicatorData = indicator.value.indicator;
@@ -237,27 +340,37 @@ export default defineComponent({
       indicator: indicator.value.id,
     };
 
-    provide("parentData", parentData);
+    provide('parentData', parentData);
 
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
       activityLink = `/activity/${activityId}`,
       resultId = indicator.value.result_id,
-      resultTitled = getActivityTitle(resultTitle.value[0].narrative, "en"),
+      resultTitled = getActivityTitle(resultTitle.value[0].narrative, 'en'),
       resultLink = `${activityLink}/result/${resultId}`,
       indicatorLink = `/result/${resultId}/indicator`,
-      indicatorTitle = getActivityTitle(indicatorData.title[0].narrative, "en");
+      indicatorTitle = getActivityTitle(indicatorData.title[0].narrative, 'en');
+
+    const calcWidth = (event) => {
+      screenWidth.value = event.target.innerWidth;
+      if (screenWidth.value > 1024) {
+        document.documentElement.style.overflow = 'auto';
+      } else {
+        showSidebar.value &&
+          (document.documentElement.style.overflow = 'hidden');
+      }
+    };
 
     /**
      * Breadcrumb data
      */
     const breadcrumbData = [
       {
-        title: "Your Activities",
-        link: "/activities",
+        title: 'Your Activities',
+        link: '/activities',
       },
       {
-        title: getActivityTitle(activityTitle, "en"),
+        title: getActivityTitle(activityTitle, 'en'),
         link: activityLink,
       },
       {
@@ -266,12 +379,18 @@ export default defineComponent({
       },
       {
         title: indicatorTitle,
-        link: "",
+        link: '',
       },
     ];
+    const handleScroll = () => {
+      positionY.value = window.scrollY;
+    };
 
     onMounted(() => {
-      if (props.toast.message !== "") {
+      window.addEventListener('resize', calcWidth);
+      window.addEventListener('scroll', handleScroll);
+
+      if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;
@@ -281,6 +400,24 @@ export default defineComponent({
         toastData.visibility = false;
       }, 5000);
     });
+
+    const istopVisible = computed(() => {
+      console.log(positionY.value === 0);
+      return positionY.value === 0;
+    });
+
+    onUnmounted(() => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', calcWidth);
+    });
+    watch(
+      () => showSidebar.value,
+      (sidebar) => {
+        if (sidebar) {
+          document.documentElement.style.overflow = 'hidden';
+        } else document.documentElement.style.overflow = 'auto';
+      }
+    );
 
     return {
       linkClasses,
@@ -292,6 +429,8 @@ export default defineComponent({
       breadcrumbData,
       toastData,
       periodData,
+      showSidebar,
+      istopVisible,
     };
   },
 });

@@ -28,7 +28,7 @@
         class="text-sm"
         :class="{ 'mb-4': j !== item.narrative.length - 1 }"
       >
-        <div v-if="narrative.narrative" class="flex space-x-1 flex-col-reverse w-[887px]">
+        <div v-if="narrative.narrative" class="flex flex-col-reverse space-x-1">
           <span>{{ narrative.narrative }}</span>
           <span v-if="narrative.language" class="italic text-n-30"
             >(Language: {{ types.languages[narrative.language] }})</span

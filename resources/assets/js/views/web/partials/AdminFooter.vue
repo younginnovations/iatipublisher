@@ -1,5 +1,9 @@
 <template>
-  <footer class="mt-7 bg-bluecoral text-sm leading-6 text-n-20 sm:mt-10 md:mt-20">
+
+  <footer
+    id="footer"
+    class="mt-7 bg-bluecoral text-sm leading-6 text-n-20 sm:mt-10 md:mt-20"
+  >
     <div class="border-b border-white border-opacity-20">
       <div class="mx-3 py-10 sm:mx-10 xl:mx-24 xl:px-1">
         <div

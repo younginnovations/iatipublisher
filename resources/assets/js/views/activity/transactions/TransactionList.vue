@@ -57,14 +57,24 @@
               class="cursor-pointer"
               @click="handleNavigate(`${activityLink}/transaction/${trans.id}`)"
             >
-              <a :href="`${activityLink}/transaction/${trans.id}`">
-                <span>{{
-                  trans.transaction.reference &&
-                  trans.transaction.reference !== ''
-                    ? trans.transaction.reference
-                    : '- - -'
-                }}</span>
-              </a>
+              <div class="ellipsis relative">
+                <a :href="`${activityLink}/transaction/${trans.id}`">
+                  <span>{{
+                    trans.transaction.reference &&
+                    trans.transaction.reference !== ''
+                      ? trans.transaction.reference
+                      : '- - -'
+                  }}</span>
+                </a>
+                <div class="w-52">
+                  <span class="ellipsis__title--hover">{{
+                    trans.transaction.reference &&
+                    trans.transaction.reference !== ''
+                      ? trans.transaction.reference
+                      : '- - -'
+                  }}</span>
+                </div>
+              </div>
             </td>
             <td
               class="cursor-pointer"

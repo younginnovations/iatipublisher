@@ -119,7 +119,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted, onUnmounted } from 'vue';
 import NavDropdown from '../../../components/NavDropdown.vue';
 
 export default defineComponent({
@@ -129,6 +129,14 @@ export default defineComponent({
   props: {
     title: { type: String, required: true },
     auth: { type: String, required: true },
+  },
+  setup(props) {
+    onMounted(() => {
+      document.body.classList.add('no-nav');
+    });
+    onUnmounted(() => {
+      document.body.classList.remove('no-nav');
+    });
   },
 });
 </script>
