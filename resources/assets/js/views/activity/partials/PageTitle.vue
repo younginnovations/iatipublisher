@@ -1,6 +1,6 @@
 <template>
   <div class="page-title mb-4">
-    <div class="flex items-start gap-4">
+    <div class="flex gap-4 md:items-end">
       <div class="title shrink-0 grow-0">
         <div class="mb-2 text-caption-c1 text-n-40 xl:mb-4">
           <nav aria-label="breadcrumbs" class="breadcrumb">
@@ -49,7 +49,9 @@
           </div>
         </div>
       </div>
-      <div class="actions relative flex grow flex-col items-end justify-end">
+      <div
+        class="actions relative flex grow flex-col flex-wrap items-end justify-end"
+      >
         <div class="inline-flex justify-end">
           <Toast
             v-if="toastMessage.visibility"
@@ -75,12 +77,14 @@
               :message="refreshToastMsg.refreshMessage"
               :type="refreshToastMsg.refreshMessageType"
             />
-            <div class="flex flex-row space-x-2">
+            <div class="flex flex-col gap-2 md:flex-row">
               <PublishSelected />
-              <DeleteButton
-                v-if="store.state.selectedActivities.length === 1"
-              />
-              <AddActivityButton />
+              <div class="flex gap-2">
+                <DeleteButton
+                  v-if="store.state.selectedActivities.length === 1"
+                />
+                <AddActivityButton />
+              </div>
             </div>
           </div>
         </div>
