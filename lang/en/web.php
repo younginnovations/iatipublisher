@@ -306,7 +306,7 @@ return [
 
     /*----------------------------------------------------------------password recovery page--------------------------------------------------------------------------------------------------*/
     'password_recovery_page'    => [
-        'password_recvery_header'       => "Password Recovery",
+        'password_recovery_header'       => "Password Recovery",
         'password_recovery_description' => "Please enter your email, we will send you a link to reset your password",
         'email_label'                   => 'Email',
         'email_placeholder'             => 'Enter your email address',

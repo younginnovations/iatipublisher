@@ -5,19 +5,16 @@
         class="left flex flex-col items-center justify-center bg-bluecoral px-3 pt-5 pb-72 text-white sm:rounded-r-lg sm:rounded-l-lg sm:px-5 sm:pt-10 md:basis-2/4 md:rounded-r-none md:pb-16 lg:pt-44 lg:pb-44 xl:px-24"
       >
         <div class="left__container rounded-lg p-5 sm:p-10">
-          <span class="left__title font-bold">IATI Publishing Tool</span>
+          <span class="left__title font-bold">{{ language.web_lang.home_page.iati_publishing_tool_header }}</span>
           <p class="pt-2 sm:pt-6 sm:pb-8">
-            Welcome to IATI Publisher. Publish IATI data on your organisation’s
-            development and humanitarian financing and activities. Enter your
-            login information if you’re already a user or create a new account
-            if you’re new here.
+            {{ language.web_lang.home_page.iati_publishing_tool_section.welcome_text }}
           </p>
           <div class="hidden sm:block">
             <span class="flex flex-wrap">
               {{
-                pageContent === 'Join Now'
-                  ? "Haven't registered yet?"
-                  : 'Already have an account?'
+                pageContent === "Join Now"
+                  ? language.web_lang.home_page.iati_publishing_tool_section.havent_registered_label
+                  : language.web_lang.home_page.iati_publishing_tool_section.already_have_account_label
               }}
               <button
                 class="ml-1 border-b-2 border-b-transparent text-base text-turquoise hover:border-b-2 hover:border-b-turquoise"
@@ -58,6 +55,8 @@ export default defineComponent({
   },
   setup(props) {
     const pageContent = ref(props.page === 'signin' ? 'Join Now' : 'Sign In');
+    const language = window["global_lang"];
+    console.log(language);
 
     function togglePage() {
       pageContent.value =
@@ -67,6 +66,7 @@ export default defineComponent({
     return {
       pageContent,
       togglePage,
+      language
     };
   },
 });

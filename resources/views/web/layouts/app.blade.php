@@ -35,7 +35,7 @@
 
 <body class="font-sans bg-n-10 antialiased overflow-x-hidden">
   <div id="app">
-    <web-header title='@yield('title', 'IATI PUBLISHER')' auth='{{(bool) Auth::user()}}'></web-header>    
+    <web-header title='@yield('title', 'IATI PUBLISHER')' auth='{{(bool) Auth::user()}}'></web-header>
     @yield('content')
     @if (Auth::user())
         <admin-footer></admin-footer>
@@ -48,7 +48,11 @@
   <script defer src="{{ mix('/js/vendor.js') }}"></script>
   <script defer src="{{ mix('/js/app.js') }}"></script>
   <script defer src="{{ mix('js/script.js') }}"></script>
-
+  <script>
+      window.global_lang = {
+          'web_lang': {!! json_encode(trans('web'), JSON_THROW_ON_ERROR) !!},
+      };
+  </script>
 </body>
 
 </html>

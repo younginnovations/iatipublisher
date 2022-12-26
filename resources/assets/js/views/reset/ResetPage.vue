@@ -3,22 +3,21 @@
     <Loader v-if="loaderVisibility" />
     <div class="reset" @keyup.enter="reset">
       <div class="mb-4 flex flex-col sm:mb-8">
-        <h2>Password Recovery</h2>
+        <h2>{{ language.web_lang.password_recovery_page.password_recovery_header }}</h2>
         <p>
-          Please enter your email, we will send you a link to reset your
-          password
+          {{ language.web_lang.password_recovery_page.password_recovery_description }}
         </p>
       </div>
 
       <div class="reset__content">
         <label class="text-sm font-bold text-bluecoral" for="email"
-          >Email</label
+          >          {{ language.web_lang.password_recovery_page.email_label }}</label
         >
         <input
           id="email"
           v-model="formData.email"
           type="email"
-          placeholder="Enter your email address"
+          :placeholder="language.web_lang.password_recovery_page.email_placeholder"
           class="input"
           :class="{
             error__input: emailError != '',
@@ -30,7 +29,7 @@
         </span>
       </div>
       <button type="submit" class="btn reset-btn" @click="reset()">
-        Send password reset link
+        {{ language.web_lang.password_recovery_page.send_password_reset_label }}
       </button>
     </div>
   </div>
@@ -46,6 +45,7 @@ export default defineComponent({
     Loader,
   },
   setup() {
+    const language = window["global_lang"];
     const formData = reactive({
       email: '',
     });
@@ -87,6 +87,7 @@ export default defineComponent({
       loaderVisibility,
       emailError,
       reset,
+      language
     };
   },
 });
