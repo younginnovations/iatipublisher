@@ -2,7 +2,7 @@
   <div>
     <div
       v-if="showSidebar"
-      class="fixed z-10 h-screen w-screen bg-black/10"
+      class="fixed z-10 h-screen w-screen bg-black/10 lg:hidden"
       @click="toggleSidebar"
     />
     <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
