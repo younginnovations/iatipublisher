@@ -390,4 +390,57 @@ class ActivityRepository extends Repository
     {
         return $this->model->where('org_id', $org_id)->whereJsonContains('iati_identifier->activity_identifier', $identifier['activity_identifier'])->first();
     }
+
+    /**
+     * Returns activities having given ids for downloading.
+     *
+     * @param $activityIds
+     *
+     * @return object
+     */
+    public function getActivitiesToDownload($activityIds): object
+    {
+        return $this->model->whereIn('id', $activityIds)->where('org_id', auth()->user()->organization->id)->with(['transactions', 'results', 'organization.settings'])->get();
+    }
+
+    /**
+     * Returns all activities of organization.
+     *
+     * @param $organizationId
+     * @param $queryParams
+     *
+     * @return object
+     */
+    public function getAllActivitiesToDownload($organizationId, $queryParams): object
+    {
+        $whereSql = '1=1';
+        $bindParams = [];
+        $whereSql .= " AND org_id=$organizationId";
+
+        if (array_key_exists('query', $queryParams) && (!empty($queryParams['query']) || $queryParams['query'] === '0')) {
+            $query = $queryParams['query'];
+            $innerSql = 'select id, json_array_elements(title) title_array from activities';
+            $innerSql . " org_id=$organizationId";
+            $whereSql .= " AND ((iati_identifier->>'activity_identifier')::text ilike ? or id in (select x1.id from ($innerSql)x1 where (x1.title_array->>'narrative')::text ilike ?))";
+            $bindParams[] = "%$query%";
+            $bindParams[] = "%$query%";
+        }
+
+        $orderBy = 'updated_at';
+        $direction = 'desc';
+
+        if (array_key_exists('orderBy', $queryParams) && !empty($queryParams['orderBy'])) {
+            $orderBy = $queryParams['orderBy'];
+
+            if (array_key_exists('direction', $queryParams) && !empty($queryParams['direction'])) {
+                $direction = $queryParams['direction'];
+            }
+        }
+
+        return $this->model->with(['transactions', 'results', 'organization.settings'])
+                           ->whereRaw($whereSql, $bindParams)
+                           ->orderBy($orderBy, $direction)
+                           ->orderBy('id', $direction)
+                           ->get();
+    }
 }

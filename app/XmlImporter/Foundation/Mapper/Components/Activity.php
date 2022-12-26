@@ -253,10 +253,32 @@ class Activity
         $this->activity['reporting_org'][0] = $template['reporting_org'];
         $this->activity['reporting_org'][0]['ref'] = $this->attributes($element, 'ref');
         $this->activity['reporting_org'][0]['type'] = $this->attributes($element, 'type');
-        $this->activity['reporting_org'][0]['secondary_reporter'] = $this->attributes($element, 'secondary-reporter');
+        $this->activity['reporting_org'][0]['secondary_reporter'] = $this->getSecondaryReporter($element);
         $this->activity['reporting_org'][0]['narrative'] = $this->narrative($element);
 
         return $this->identifier;
+    }
+
+    /**
+     * Returns secondary reporter.
+     *
+     * @param $element
+     *
+     * @return string
+     */
+    public function getSecondaryReporter($element): string
+    {
+        $secondaryReporter = $this->attributes($element, 'secondary-reporter');
+
+        if ((is_string($secondaryReporter) && strtolower($secondaryReporter) === 'true')) {
+            return '1';
+        }
+
+        if ((is_string($secondaryReporter) && strtolower($secondaryReporter) === 'false')) {
+            return '0';
+        }
+
+        return '';
     }
 
     /**

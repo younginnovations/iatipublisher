@@ -351,7 +351,7 @@ class ResultService
                         'narrative' => $this->buildNarrative(Arr::get($indicator, 'description.0.narrative', null)),
                     ],
                     'document-link' => $this->buildDocumentLink(Arr::get($indicator, 'document_link', [])),
-                    'reference'     => $this->buildReference(Arr::get($indicator, 'reference', []), 'indicator-uri'),
+                    'reference'     => $this->buildReference(Arr::get($indicator, 'reference', []), 'indicator-uri', 'indicator_uri'),
                     'baseline'      => $this->buildBaseline(Arr::get($indicator, 'baseline', []), Arr::get($indicator, 'measure', null)),
                     'period'        => $this->buildPeriod($totalIndicator->periods, Arr::get($indicator, 'measure', null)),
                 ];

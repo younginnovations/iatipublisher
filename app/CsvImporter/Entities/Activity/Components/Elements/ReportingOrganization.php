@@ -32,6 +32,10 @@ class ReportingOrganization extends Element
      * @var string
      */
     protected string $index = 'reporting_org';
+
+    /**
+     * @var ReportingOrgRequest
+     */
     private ReportingOrgRequest $request;
 
     /**
@@ -150,9 +154,9 @@ class ReportingOrganization extends Element
         }
 
         if ($key === $this->_csvHeaders[2]) {
-            if (is_string($value) && ((strtolower($value) === 'yes') || (strtolower($value) === 'true'))) {
+            if ((is_string($value) && (strtolower($value) === 'yes' || strtolower($value) === 'true')) || $value) {
                 $value = '1';
-            } elseif (is_string($value) && ((strtolower($value) === 'no') || (strtolower($value) === 'false'))) {
+            } elseif ((is_string($value) && (strtolower($value) === 'no' || strtolower($value) === 'false')) || !$value) {
                 $value = '0';
             }
 
