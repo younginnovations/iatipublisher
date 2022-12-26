@@ -75,12 +75,12 @@
               :message="refreshToastMsg.refreshMessage"
               :type="refreshToastMsg.refreshMessageType"
             />
-            <AddActivityButton />
             <div class="flex flex-row space-x-2">
               <PublishSelected />
               <DeleteButton
                 v-if="store.state.selectedActivities.length === 1"
               />
+              <AddActivityButton />
             </div>
           </div>
         </div>
