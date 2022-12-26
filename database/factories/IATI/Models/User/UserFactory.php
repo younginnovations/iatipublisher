@@ -7,6 +7,7 @@ use App\IATI\Models\User\User;
 use App\Model;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Model>
@@ -29,13 +30,23 @@ class UserFactory extends Factory
         Role::firstOrCreate($superAdminRole, $superAdminRole);
 
         return [
-            'username'  => 'yipl_user',
-            'email'     => 'yipl_user@gmail.com',
+            'username'  => Str::random(6),
+            'email'     => 'yipl_user' . Str::random(2) . '@gmail.com',
             'password'  => Hash::make('password'),
-            'full_name' => 'Young Innovations',
+            'full_name' => 'Young Innovations' . Str::random(2),
             'address'   => 'Mahalaxmisthan, Lalitpur',
             'is_active' => true,
             'role_id'   => app(Role::class)->getOrganizationAdminId(),
         ];
+
+        // return [
+        //     'username'  => 'yipl_user',
+        //     'email'     => 'yipl_user@gmail.com',
+        //     'password'  => Hash::make('password'),
+        //     'full_name' => 'Young Innovations',
+        //     'address'   => 'Mahalaxmisthan, Lalitpur',
+        //     'is_active' => true,
+        //     'role_id'   => app(Role::class)->getOrganizationAdminId(),
+        // ];
     }
 }

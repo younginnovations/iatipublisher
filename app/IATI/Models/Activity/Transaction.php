@@ -37,6 +37,8 @@ class Transaction extends Model
         'transaction' => 'json',
     ];
 
+    protected $touches = ['activity'];
+
     /**
      * Transaction belongs to an activity.
      *

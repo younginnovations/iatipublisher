@@ -64,6 +64,12 @@ import OrganisationList from './views/superadmin/OrganisationList.vue';
 import AdminBar from './views/superadmin/components/AdminBar.vue';
 
 /**
+ * User Module components
+ */
+import UserProfile from './views/user/UserProfile.vue';
+import UserListing from './views/user/UserListing.vue';
+
+/**
  * Additional Components
  */
 import HoverText from './components/HoverText.vue';
@@ -136,6 +142,12 @@ app
   .component('ResetPassword', ResetPassword);
 
 /**
+ * Registering user module related vue components
+ */
+app.component('UserProfile', UserProfile)
+  .component('UserListing', UserListing);
+
+/**
  * Registering Additional Components
  */
 app.component('HoverText', HoverText);
@@ -170,7 +182,7 @@ const stickySidebar = (
     offsetWidth: number;
     getBoundingClientRect: () => {
       (): object;
-      new (): object;
+      new(): object;
       left: number;
       top: number;
       bottom: number;
@@ -212,9 +224,8 @@ const stickySidebar = (
   function handleScrollDown() {
     switch (affixType) {
       case 'sticky-top':
-        stickyElement.style.cssText = `position: relative; transform: translate3d(0, ${
-          stickyCurrentTop - elScrollTop
-        }px, 0);`;
+        stickyElement.style.cssText = `position: relative; transform: translate3d(0, ${stickyCurrentTop - elScrollTop
+          }px, 0);`;
         affixType = 'sticky-translate';
 
         break;

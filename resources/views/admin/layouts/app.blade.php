@@ -42,9 +42,10 @@
 
 <body class="overflow-x-hidden">
 <div id="app">
+    {{-- {{Auth::user()->organization}} --}}
     @if (isSuperAdmin() && !isSuperAdminRoute())
         <admin-bar :name="{{ json_encode(Auth::user()->full_name, JSON_THROW_ON_ERROR) }}"
-                   :organization-name="{{ json_encode(Auth::user()->organization->publisher_name, JSON_THROW_ON_ERROR) }}">
+                   :organization-name="{{ json_encode(Auth::user()->organization?->publisher_name, JSON_THROW_ON_ERROR) }}">
         </admin-bar>
     @endif
     @if (isSuperAdmin())
@@ -52,7 +53,7 @@
                          :languages="{{ json_encode(getCodeListArray('Languages', 'ActivityArray'), JSON_THROW_ON_ERROR) }}"
                          v-bind:super-admin="{{ json_encode(!isSuperAdminRoute(), JSON_THROW_ON_ERROR) }}"></loggedin-header>
     @else
-        <loggedin-header :user="{{ Auth::user() }}" :organization="{{ Auth::user()->organization }}"
+        <loggedin-header :user="{{ Auth::user() }}" :organization="{{ Auth::user()->oprganization }}"
                          :languages="{{ json_encode(getCodeListArray('Languages', 'ActivityArray'), JSON_THROW_ON_ERROR) }}"
                          v-bind:super-admin="{{ json_encode(!isSuperAdminRoute(), JSON_THROW_ON_ERROR) }}"></loggedin-header>
     @endif

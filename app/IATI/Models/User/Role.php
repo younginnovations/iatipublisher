@@ -41,6 +41,16 @@ class Role extends Model
     }
 
     /**
+     * Returns id of iati superadmin from roles table.
+     *
+     * @return int
+     */
+    public function getIatiSuperAdminId(): int
+    {
+        return $this->where('role', 'iati_superadmin')->first()->id;
+    }
+
+    /**
      * Returns id of organization admin from roles table.
      *
      * @return int
@@ -48,5 +58,15 @@ class Role extends Model
     public function getOrganizationAdminId(): int
     {
         return $this->where('role', 'admin')->first()->id;
+    }
+
+    /**
+     * Returns id of organization general user from roles table.
+     *
+     * @return int
+     */
+    public function getGeneralUserId(): int
+    {
+        return $this->where('role', 'general_user')->first()->id;
     }
 }

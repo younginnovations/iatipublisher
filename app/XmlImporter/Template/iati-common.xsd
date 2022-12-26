@@ -194,7 +194,7 @@
           </xsd:documentation>
         </xsd:annotation>
       </xsd:element>
-      <xsd:element name="category" minOccurs="1" maxOccurs="unbounded">
+      <xsd:element name="category" minOccurs="0" maxOccurs="unbounded">
         <xsd:annotation>
           <xsd:documentation xml:lang="en">
             IATI Document Category Code

@@ -9,6 +9,8 @@ use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Repositories\Setting\SettingRepository;
 use App\IATI\Repositories\User\UserRepository;
 use GuzzleHttp\Client;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -556,5 +558,87 @@ class UserService
     public function getUser($id): object
     {
         return $this->userRepo->getUser($id);
+    }
+
+    /**
+     * Update user password.
+     *
+     * @param $data
+     *
+     * @return $bool
+     */
+    public function updatePassword($data): bool
+    {
+        $user_id = Auth::id();
+
+        return $this->userRepo->update($user_id, [
+            'password'        => Hash::make($data['password']),
+        ]);
+    }
+
+    /**
+     * Update user profile.
+     *
+     * @param $data
+     *
+     * @return bool
+     */
+    public function updateProfile($data): bool
+    {
+        $user_id = Auth::id();
+
+        return $this->userRepo->update($user_id, [
+            'username'        => $data['username'],
+            'full_name'       => $data['full_name'],
+            'email'           => $data['email'],
+        ]);
+    }
+
+    public function store($data)
+    {
+        //3 needs to be dynamic
+        $data['role'] = isset($data['role']) ? $data['role'] : '3';
+
+        return $this->userRepo->store($data);
+    }
+
+    public function update($id, $data)
+    {
+        return $this->userRepo->update($id, $data);
+    }
+
+    public function delete($id)
+    {
+        return $this->userRepo->delete($id);
+    }
+
+    /**
+     * Returns all activities present in database.
+     *
+     * @param int $page
+     * @param array $queryParams
+     *
+     * @return Collection|LengthAwarePaginator
+     */
+    public function getPaginatedUsers($page, $queryParams): Collection|LengthAwarePaginator
+    {
+        $users = $this->userRepo->getPaginatedUsers($page, $queryParams);
+
+        return $users;
+    }
+
+    public function toggleUserStatus($id)
+    {
+        $user = $this->userRepo->findBy('id', $id);
+        $status = $user['status'] ? false : true;
+
+        return $this->userRepo->update($id, ['status' => $status]);
+    }
+
+    public function getUserDownloadData()
+    {
+        $users = $this->userRepo->getUserDownloadData();
+
+        return $users;
     }
 }
