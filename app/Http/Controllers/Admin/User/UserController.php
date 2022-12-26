@@ -5,10 +5,15 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\UserProfileRequest;
 use App\IATI\Models\User\User;
 use App\IATI\Services\User\UserService;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -38,6 +43,19 @@ class UserController extends Controller
         $this->userService = $userService;
         $this->db = $db;
         $this->logger = $logger;
+    }
+
+    public function index()
+    {
+        try {
+            $users = $this->userService->getAllUser();
+
+            return view('admin.user.index', compact('users'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while rendering user listing page');
+        }
     }
 
     /**
@@ -89,6 +107,84 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Show user profile.
+     *
+     * @return View|RedirectResponse
+     */
+    public function showUserProfile(): View|RedirectResponse
+    {
+        try {
+            $user = Auth::user();
+
+            return view('admin.user.profile', compact('user'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.index')->with('error', 'Error while rendering setting page');
+        }
+    }
+
+    /**
+     * Update user password.
+     *
+     * @param request
+     *
+     * @return JsonResponse
+     */
+    public function updatePassword(UserProfileRequest $request): JsonResponse
+    {
+        try {
+            $formData = $request->only(['current_password', 'password']);
+
+            if (Hash::check($formData['current_password'], Auth::user()->getAuthPassword())) {
+                return response()->json(['success' => false, 'message' => 'Please enter correct current password']);
+            }
+
+            $this->userService->updatePassword($formData);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Password updated successfully.',
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error occurred while updating password.',
+            ]);
+        }
+    }
+
+    /**
+     * Update user profile.
+     *
+     * @param request
+     *
+     * @return JsonResponse
+     */
+    public function updateProfile(UserProfileRequest $request): JsonResponse
+    {
+        try {
+            $formData = $request->only(['username', 'full_name', 'email']);
+
+            $this->userService->updateProfile($formData);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'User profile updated successfully.',
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error occurred while updating user profile.',
             ]);
         }
     }

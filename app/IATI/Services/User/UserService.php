@@ -557,4 +557,43 @@ class UserService
     {
         return $this->userRepo->getUser($id);
     }
+
+    /**
+     * Update user password.
+     *
+     * @param $data
+     *
+     * @return $bool
+     */
+    public function updatePassword($data): bool
+    {
+        $user_id = Auth::id();
+
+        return $this->userRepo->update($user_id, [
+            'password'        => Hash::make($data['password']),
+        ]);
+    }
+
+    /**
+     * Update user profile.
+     *
+     * @param $data
+     *
+     * @return bool
+     */
+    public function updateProfile($data): bool
+    {
+        $user_id = Auth::id();
+
+        return $this->userRepo->update($user_id, [
+            'username'        => $data['username'],
+            'full_name'       => $data['full_name'],
+            'email'           => $data['email'],
+        ]);
+    }
+
+    public function getAllUser()
+    {
+        $this->userRepo->all();
+    }
 }

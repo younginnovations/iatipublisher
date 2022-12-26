@@ -29,4 +29,20 @@ abstract class Enums
             'completed',
             'failed',
         ];
+
+    const STATUS = [
+        'active',
+        'inactive',
+    ];
+
+    const ORGANIZATION_SYSTEM_STATUS = [
+        'active',
+        'disabled',
+    ];
+
+    const REGISTRATION_METHOD = [
+        'new_org',
+        'existing_org',
+        'user_create',
+    ];
 }

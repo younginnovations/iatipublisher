@@ -1961,7 +1961,7 @@
           <xsd:complexType>
             <xsd:sequence>
               <xsd:element ref="narrative" minOccurs="1" maxOccurs="unbounded" />
-              <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />
+              <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded" />document-link
             </xsd:sequence>
             <xsd:attribute name="type" use="required" type="xsd:string">
               <xsd:annotation>

@@ -15,4 +15,9 @@ use Illuminate\Support\Facades\Route;
 Route::group([], static function () {
     Route::get('/user/verification/status', [App\Http\Controllers\Admin\User\UserController::class, 'getUserVerificationStatus'])->name('user.verification.status');
     Route::post('/user/verification/email', [App\Http\Controllers\Admin\User\UserController::class, 'resendVerificationEmail'])->name('user.verification.email');
+    Route::post('/user', [App\Http\Controllers\Admin\User\UserController::class, 'resendVerificationEmail'])->name('user.verification.email');
+    Route::get('/users', [App\Http\Controllers\Admin\User\UserController::class, 'index'])->name('user.index');
+    Route::get('/profile', [App\Http\Controllers\Admin\User\UserController::class, 'showUserProfile'])->name('user.profile');
+    Route::post('/update/password', [App\Http\Controllers\Admin\User\UserController::class, 'updatePassword'])->name('user.edit.password');
+    Route::post('/update/profile', [App\Http\Controllers\Admin\User\UserController::class, 'updateProfile'])->name('user.edit.profile');
 });

@@ -17,14 +17,19 @@ class RoleTableSeeder extends Seeder
      */
     public function run(): void
     {
+        /**Create or update general_user */
+        /** @var array $generalUserRole */
+        $generalUserRole = Role::factory()->make(['role' => 'general_user'])->toArray();
+        Role::updateOrCreate($generalUserRole, $generalUserRole);
+
         /** Create or update admin role */
         /** @var array $adminRole */
         $adminRole = Role::factory()->make(['role' => 'admin'])->toArray();
-        Role::firstOrCreate($adminRole, $adminRole);
+        Role::updateOrCreate($adminRole, $adminRole);
 
         /** Create or update superadmin role */
         /** @var array $superAdminRole */
         $superAdminRole = Role::factory()->make(['role' => 'superadmin'])->toArray();
-        Role::firstOrCreate($superAdminRole, $superAdminRole);
+        Role::updateOrCreate($superAdminRole, $superAdminRole);
     }
 }
