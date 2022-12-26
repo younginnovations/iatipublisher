@@ -45,7 +45,7 @@ class RecipientCountryXmlTest extends XmlBaseTest
         $this->assertContains('The Country Code cannot be redundant.', $flattenErrors);
         $this->assertContains('The recipient country percentage must be a number.', $flattenErrors);
         $this->assertContains('The sum of recipient country percentage cannot be greater than 100', $flattenErrors);
-        $this->assertContains('The recipient country percentage must be at least 0.', $flattenErrors);
+        $this->assertContains('The recipient country percentage must be atleast 0.', $flattenErrors);
     }
 
     /**
@@ -166,7 +166,7 @@ class RecipientCountryXmlTest extends XmlBaseTest
     {
         $rows = $this->invalid_percentage_data();
         $flattenErrors = $this->getErrors($rows);
-        $this->assertContains('The recipient country percentage must be at least 0.', $flattenErrors);
+        $this->assertContains('The recipient country percentage must be atleast 0.', $flattenErrors);
         $this->assertContains('The Country Code cannot be redundant.', $flattenErrors);
         $this->assertContains('The recipient country code is invalid.', $flattenErrors);
         $this->assertContains('The sum of recipient country percentage cannot be greater than 100', $flattenErrors);
@@ -242,7 +242,7 @@ class RecipientCountryXmlTest extends XmlBaseTest
     {
         $rows = $this->country_region_100_data();
         $flattenErrors = $this->getErrors($rows);
-        $this->assertContains('Recipient Country’s percentage is already 100%. The sum of the percentages of Recipient Country and Recipient Region must be 100%', $flattenErrors);
+        $this->assertContains('Recipient Country’s percentage is already 100%. The sum of the percentages of Recipient Country and Recipient Region must be 100%.', $flattenErrors);
     }
 
     /**

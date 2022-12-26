@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Elements\Forms;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -20,6 +21,7 @@ class BaseForm extends Form
     public function buildCollection($field): void
     {
         $element = $this->getData();
+
         if (!Arr::get($field, 'type', null) && array_key_exists('sub_elements', $field) && Arr::get(
             $field,
             'wrapper_collection',
@@ -40,8 +42,8 @@ class BaseForm extends Form
                         'data'            => $field,
                         'label'           => false,
                         'element_criteria' => Arr::get($field, 'element_criteria', ''),
-                        'hover_text' => Arr::get($field, 'hover_text', ''),
-                        'help_text' => Arr::get($field, 'help_text', ''),
+                        'hover_text' => trans(Arr::get($field, 'hover_text', '')),
+                        'help_text' => trans(Arr::get($field, 'help_text', '')),
                         'wrapper'         => [
                             'class' => 'wrapped-child-body',
                         ],
@@ -62,7 +64,7 @@ class BaseForm extends Form
 
             if ((isset($field['add_more']) && $field['add_more']) || (isset($element['add_more_attributes']) && $element['add_more_attributes'])) {
                 $this->add('add_to_collection_' . $field['name'], 'button', [
-                    'label' => sprintf('Add additional %s', str_replace('_', ' ', $field['name'])),
+                    'label' => sprintf(trans('buttons.add_additional') . ' %s', str_replace('_', ' ', $field['name'])),
                     'attr'  => [
                         'class'     => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral ',
                         'form_type' => $field['parent'] . '_' . $field['name'],
@@ -85,8 +87,8 @@ class BaseForm extends Form
                         'data'            => $field,
                         'label'           => false,
                         'element_criteria' => $field['element_criteria'] ?? '',
-                        'hover_text'    => isset($field['name']) ? Arr::get($field, 'hover_text', '') : Arr::get($element, 'hover_text', ''),
-                        'help_text' => isset($field['name']) ? Arr::get($field, 'help_text', '') : Arr::get($element, 'help_text', ''),
+                        'hover_text'    => isset($field['name']) ? trans(Arr::get($field, 'hover_text', '')) : trans(Arr::get($element, 'hover_text', '')),
+                        'help_text' => isset($field['name']) ? trans(Arr::get($field, 'help_text', '')) : trans(Arr::get($element, 'help_text', '')),
                         'wrapper'         => [
                             'class' => ((Arr::get($element, 'attributes', null) && isset($field['name']) && strtolower(
                                 $field['name']
@@ -111,7 +113,14 @@ class BaseForm extends Form
 
             if ((isset($field['add_more']) && $field['add_more']) || Arr::get($element, 'add_more_attributes', false)) {
                 $this->add('add_to_collection_' . $name, 'button', [
-                    'label' => sprintf('add additional %s', str_replace('_', ' ', Arr::get($element, 'attributes', null) ? ($field['name'] ?? $name) : $element['name'])),
+                    'label' => sprintf(
+                        trans('buttons.add_additional') . ' %s',
+                        str_replace(
+                            '_',
+                            ' ',
+                            Arr::get($element, 'attributes', null) ? ($field['name'] ?? $name) : $element['name']
+                        )
+                    ),
                     'attr'  => [
                         'class'     => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral ',
                         'form_type' => !empty(Arr::get($this->getData(), 'name', null)) ? sprintf(
@@ -187,7 +196,9 @@ class BaseForm extends Form
      */
     public function getCodeList(string $filePath, bool $code = true): array
     {
-        $filePath = app_path("Data/$filePath");
+        $currentLang = App::currentLocale();
+        $filePath = app_path("Data/$currentLang/$filePath");
+
         $codeListFromFile = file_get_contents($filePath);
         $codeLists = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
         $codeList = last($codeLists);
@@ -229,7 +240,7 @@ class BaseForm extends Form
                     'read_only',
                     $field
                 ) && $field['read_only'] == true) ? 'readonly' : false,
-                'placeholder' => Arr::get($field, 'placeholder', ''),
+                'placeholder' => trans(Arr::get($field, 'placeholder', '')),
 
             ],
             'wrapper'     => [
@@ -243,8 +254,7 @@ class BaseForm extends Form
 
         if ($field['type'] === 'select') {
             $options['attr']['class'] = 'select2';
-            $options['attr']['data-placeholder'] = Arr::get($field, 'placeholder', '');
-            $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
+            $options['attr']['data-placeholder'] = trans(Arr::get($field, 'placeholder', ''));
             $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList($field['choices'])) : $field['choices']) : false;
             $options['default_value'] = $field['default'] ?? '';
             $options['attr']['disabled'] = (array_key_exists(

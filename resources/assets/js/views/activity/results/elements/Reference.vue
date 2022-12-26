@@ -10,11 +10,11 @@
       <table class="mb-3">
         <tbody>
           <tr>
-            <td>Code</td>
-            <td>{{ ref.code ? ref.code : 'Missing' }}</td>
+            <td>{{ language.common_lang.code }}</td>
+            <td>{{ ref.code }}</td>
           </tr>
           <tr>
-            <td>Vocabulary URI</td>
+            <td>{{ language.common_lang.vocabulary_uri }}</td>
             <td>
               <a
                 v-if="ref.vocabulary_uri"
@@ -22,7 +22,7 @@
                 :href="ref.vocabulary_uri"
                 >{{ ref.vocabulary_uri }}</a
               >
-              <span v-else>Missing</span>
+              <span v-else>{{ language.common_lang.missing.default }}</span>
             </td>
           </tr>
         </tbody>
@@ -59,9 +59,10 @@ export default defineComponent({
       };
     }
 
+    const language = window['globalLang'];
     let { data } = toRefs(props);
     const referenceData = data.value as ReferenceArray;
-    return { referenceData };
+    return { referenceData, language };
   },
 });
 </script>

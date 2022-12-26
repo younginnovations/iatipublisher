@@ -1,10 +1,45 @@
 <?php
-
-return [
-    'user_roles' => [
-        'superadmin' => 'SuperAdmin',
-        'iati_admin' => 'IATI Admin',
-        'admin' => 'Admin',
-        'general_user' => 'General User',
-    ]
-];
+return array (
+  'user_roles' => 
+  array (
+    'superadmin' => 'SuperAdmin',
+    'iati_admin' => 'IATI Admin',
+    'admin' => 'Admin',
+    'general_user' => 'General User',
+  ),
+  'user' => 'User',
+  'users' => 'Users',
+  'user_name' => 'Username',
+  'user_with_this_name' => 'User with this name',
+  'user_manual' => 'User Manual',
+  'user_listing' => 'user listing',
+  'new_user' => 'New user',
+  'email' => 'Email',
+  'user_role' => 'User role',
+  'user_profile' => 'User profile',
+  'status' => 'Status',
+  'joined_on' => 'Joined on',
+  'action' => 'Action',
+  'role' => 'Role',
+  'roles' => 'Roles',
+  'active' => 'Active',
+  'inactive' => 'Inactive',
+  'search_for_users' => 'Search for users',
+  'filtered_by' => 'filtered by',
+  'user_not_found' => 'User not found',
+  'clear_filter' => 'Clear filter',
+  'language_preference' => 'Language Preference',
+  'your_information' => 'Your Information',
+  'change_password' => 'Change password',
+  'change_your_password' => 'Change your password',
+  'you_havent_verified_email_yet' => 'You haven\'t verified your email address yet',
+  'if_you_havent_received' => 'if you haven\'t received such and email',
+  'cannot_be_deleted' => 'The user cannot be deleted.',
+  'paginated_users_fetched' => 'Paginated users fetch successfully.',
+  'error_occurred_while' => 'Error occurred while trying to get paginated user.',
+  'status_cannot_be_changed' => 'The status of this user cannot be changed.',
+  'successfully_logged_out' => 'Successfully logged out.',
+  'username_is_invalid' => 'The username is invalid. Username must be purely lowercase alphabets followed by alphanumeric(ascii) characters and these symbols:-_',
+  'publisher_id_is_invalid' => 'The publisher id is invalid. The publisher id must be at least two characters long and lower case. It can include letters, numbers and also - (dash) and _ (underscore).',
+  'delete_confirmation' => 'Are you sure you want to delete :element ?',
+);

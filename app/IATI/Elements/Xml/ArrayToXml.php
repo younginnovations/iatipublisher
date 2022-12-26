@@ -67,7 +67,7 @@ class ArrayToXml
             if (isset($arr['@attributes'])) {
                 foreach ($arr['@attributes'] as $key => $value) {
                     if (!self::isValidTagName($key)) {
-                        throw new \Exception('[Array2XML] Illegal character in attribute name. attribute: ' . $key . ' in node: ' . $node_name);
+                        throw new \Exception('[Array2XML]' . trans('common.error.illegal_character_in_attribute_name') . ': ' . $key . ' ' . trans('common.in_node') . ': ' . $node_name);
                     }
 
                     $node->setAttribute($key, self::bool2str($value));
@@ -98,7 +98,7 @@ class ArrayToXml
             // recurse to get the node for that key
             foreach ($arr as $key => $value) {
                 if (!self::isValidTagName($key)) {
-                    throw new \Exception('[Array2XML] Illegal character in tag name. tag: ' . $key . ' in node: ' . $node_name);
+                    throw new \Exception('[Array2XML] ' . trans('common.error.illegal_character_in_tag_name') . ': ' . $key . ' ' . trans('common.in_node') . ': ' . $node_name);
                 }
 
                 if (is_array($value) && is_numeric(key($value))) {

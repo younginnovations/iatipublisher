@@ -694,7 +694,7 @@ class TransactionXmlTest extends XmlBaseTest
          $this->assertContains('The transaction sector vocabulary is invalid.', $flattenErrors);
          $this->assertContains('The transaction recipient country code is invalid.', $flattenErrors);
          $this->assertContains('The transaction sector code is invalid.', $flattenErrors);
-         $this->assertContains('The transaction sector vocabulary-uri field must be a valid url.', $flattenErrors);
+         $this->assertContains('The transaction sector vocabulary uri must be a valid url.', $flattenErrors);
      }
 
      /**

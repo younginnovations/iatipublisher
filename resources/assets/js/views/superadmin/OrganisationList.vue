@@ -1,7 +1,9 @@
 <template>
   <div class="bg-paper px-10 pt-4 pb-[71px]">
     <div class="my-4 flex justify-between">
-      <h4 class="mr-4 text-3xl font-bold xl:text-heading-4">Organisations</h4>
+      <h4 class="mr-4 text-3xl font-bold xl:text-heading-4">
+        {{ language.common_lang.organisations }}
+      </h4>
       <div class="inline-flex items-center">
         <Toast
           v-if="toastMessage.visibility"
@@ -31,10 +33,11 @@ import Toast from 'Components/ToastMessage.vue';
 
 import TableList from './components/TableList.vue';
 
+const language = window['globalLang'];
 // ref
 const loader = reactive({
   status: false,
-  text: 'Please Wait',
+  text: language.common_lang.please_wait,
 });
 
 const toastMessage = reactive({

@@ -1,8 +1,12 @@
 <template>
   <tr>
-    <td>Measure</td>
+    <td>{{ language.common_lang.measure }}</td>
     <td>
-      {{ measureData ? measureType[measureData] : 'Missing' }}
+      {{
+        measureData
+          ? measureType[measureData]
+          : language.common_lang.missing.default
+      }}
     </td>
   </tr>
 </template>
@@ -24,9 +28,10 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     let { data } = toRefs(props);
     const measureData = data.value;
-    return { measureData };
+    return { measureData, language };
   },
 });
 </script>

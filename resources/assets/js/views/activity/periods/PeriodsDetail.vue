@@ -22,7 +22,7 @@
     </div>
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      title="Period Detail"
+      :title="language.common_lang.period_detail"
       :back-link="`${periodLink}`"
     >
       <div class="flex justify-end">
@@ -34,12 +34,25 @@
         />
         <!-- <Status class="mr-2.5" :data="false" /> -->
         <Btn
-          text="Add Period"
+          :text="
+            language.button_lang.add_element.replace(
+              ':element',
+              language.common_lang.period
+            )
+          "
           icon="add"
           :link="`${periodLink}/create`"
           class="mr-2.5"
         />
-        <Btn text="Edit Period" :link="`${periodLink}/${period.id}/edit`" />
+        <Btn
+          :text="
+            language.button_lang.edit_element.replace(
+              ':element',
+              language.common_lang.period
+            )
+          "
+          :link="`${periodLink}/${period.id}/edit`"
+        />
       </div>
     </PageTitle>
     <div class="-mt-6 mb-8 ml-[26px] text-n-40">
@@ -77,13 +90,13 @@
             <li>
               <a v-smooth-scroll href="#target" :class="linkClasses">
                 <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
-                target
+                {{ language.common_lang.target }}
               </a>
             </li>
             <li>
               <a v-smooth-scroll href="#actual" :class="linkClasses">
                 <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
-                actual
+                {{ language.common_lang.actual }}
               </a>
             </li>
           </ul>
@@ -99,13 +112,13 @@
               <li>
                 <a v-smooth-scroll href="#target" :class="linkClasses">
                   <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
-                  target
+                  {{ language.common_lang.target }}
                 </a>
               </li>
               <li>
                 <a v-smooth-scroll href="#actual" :class="linkClasses">
                   <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
-                  actual
+                  {{ language.common_lang.target }}
                 </a>
               </li>
             </ul>
@@ -193,6 +206,7 @@ export default defineComponent({
     const positionY = ref(0);
     const screenWidth = ref(0);
 
+    const language = window['globalLang'];
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
     let { period, activity, parentData, types } = toRefs(props);
@@ -240,7 +254,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
+        title: language.activities_lang.your_activities,
         link: '/activities',
       },
       {
@@ -256,7 +270,7 @@ export default defineComponent({
         link: indicatorLink,
       },
       {
-        title: 'Period',
+        title: language.common_lang.period,
         link: '',
       },
     ];
@@ -308,6 +322,7 @@ export default defineComponent({
       periodLink,
       toastData,
       showSidebar,
+      language,
       istopVisible,
     };
   },

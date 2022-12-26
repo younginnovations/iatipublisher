@@ -42,7 +42,7 @@ class WebController extends Controller
         $intent = '';
 
         if (Str::contains(Redirect::intended()->getTargetUrl(), '/email/verify/')) {
-            $message = 'User must be logged in to verify email.';
+            $message = trans('responses.web.user_must_be_logged_in');
             $intent = 'verify';
         }
 

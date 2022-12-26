@@ -9,7 +9,7 @@
       <div
         class="progress_bar__state"
         :data-start="text"
-        data-end="Almost there!"
+        :data-end="language.common_lang.almost_there"
       ></div>
     </div>
   </div>
@@ -17,6 +17,8 @@
 
 <script setup lang="ts">
 import { defineProps, onMounted, onUnmounted } from 'vue';
+
+const language = window['globalLang'];
 
 defineProps({
   text: {

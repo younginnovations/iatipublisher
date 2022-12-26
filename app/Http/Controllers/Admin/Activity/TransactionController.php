@@ -74,7 +74,7 @@ class TransactionController extends Controller
 
             return redirect()->route('admin.activity.show', $activityId)->with(
                 'error',
-                'Error has occurred while rendering activity transactions listing.'
+                trans('responses.error_has_occurred', ['event'=>trans('events.rendering'), 'suffix'=>trans('responses.activity_transactions_listing')])
             );
         }
     }
@@ -94,13 +94,13 @@ class TransactionController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Transactions fetched successfully',
+                'message' =>  ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.transactions'), 'event'=>trans('events.fetched')])),
                 'data'    => $transaction,
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.fetching'), 'suffix'=>trans('responses.the_data')])]);
         }
     }
 
@@ -125,7 +125,7 @@ class TransactionController extends Controller
 
             return redirect()->route('admin.activity.show', $activityId)->with(
                 'error',
-                'Error has occurred while rendering activity transaction form.'
+                trans('responses.error_has_occurred_form', ['event'=>trans('events.rendering'), 'suffix'=>trans('responses.activity_transaction')])
             );
         }
     }
@@ -149,14 +149,14 @@ class TransactionController extends Controller
 
             return redirect()->route('admin.activity.transaction.show', [$activityId, $transaction['id']])->with(
                 'success',
-                'Activity transaction created successfully.'
+                ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.activity_transaction'), 'event'=>trans('events.created')]))
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.transaction.index', $activityId)->with(
                 'error',
-                'Error has occurred while creating activity transaction.'
+                trans('responses.error_has_occurred', ['event'=>trans('events.creating'), 'suffix'=>trans('responses.activity_transaction')])
             );
         }
     }
@@ -174,7 +174,7 @@ class TransactionController extends Controller
         try {
             $activity = $this->activityService->getActivity($activityId);
             $transaction = $this->transactionService->getTransaction($transactionId);
-            $element = getElementSchema('transactions');
+            $element = translateJsonValues(getElementSchema('transactions'));
             $types = getTransactionTypes();
             $toast = generateToastData();
 
@@ -184,7 +184,7 @@ class TransactionController extends Controller
 
             return redirect()->route('admin.activity.transaction.index', $activityId)->with(
                 'error',
-                'Error has occurred while rending transaction detail page.'
+                trans('responses.error_has_occurred_page', ['event'=>trans('events.rendering'), 'suffix'=>trans('responses.transaction_detail')])
             );
         }
     }
@@ -212,7 +212,7 @@ class TransactionController extends Controller
 
             return redirect()->route('admin.activity.transaction.index', $activityId)->with(
                 'error',
-                'Error has occurred while rendering activity transaction form.'
+                trans('responses.error_has_occurred_form', ['event'=>trans('events.rendering'), 'suffix'=>trans('responses.activity_transaction')])
             );
         }
     }
@@ -232,20 +232,20 @@ class TransactionController extends Controller
             if (!$this->transactionService->update($transactionId, $request->except(['_method', '_token']))) {
                 return redirect()->route('admin.activity.transaction.index', $activityId)->with(
                     'error',
-                    'Error has occurred while updating activity transaction.'
+                    trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('responses.activity_transaction')])
                 );
             }
 
             return redirect()->route('admin.activity.transaction.show', [$activityId, $transactionId])->with(
                 'success',
-                'Activity transaction updated successfully.'
+                trans('responses.event_successfully', ['event'=>trans('events.updating'), 'prefix'=>trans('responses.activity_transaction')])
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.transaction.index', $activityId)->with(
                 'error',
-                'Error has occurred while updating activity transaction.'
+                trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('responses.activity_transaction')])
             );
         }
     }
@@ -263,20 +263,20 @@ class TransactionController extends Controller
         try {
             $this->transactionService->deleteTransaction($transactionId);
 
-            Session::flash('success', 'Transaction Deleted Successfully');
+            Session::flash('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.transaction'), 'event'=>trans('events.deleted')])));
 
             return response()->json([
                 'status'      => true,
-                'msg'         => 'Transaction Deleted Successfully',
+                'msg'         =>  ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.transaction'), 'event'=>trans('events.deleted')])),
                 'activity_id' => $id,
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            Session::flash('error', 'Transaction Delete Error');
+            Session::flash('error', ucwords(trans('delete_error', ['prefix'=>trans('elements_common.transaction')])));
 
             return response()->json([
                 'status'      => false,
-                'msg'         => 'Transaction Delete Error',
+                'msg'         => ucwords(trans('delete_error', ['prefix'=>trans('elements_common.transaction')])),
                 'activity_id' => $id,
             ], 400);
         }

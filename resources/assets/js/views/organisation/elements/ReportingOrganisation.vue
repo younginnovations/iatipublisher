@@ -12,31 +12,33 @@
         <span>{{
           reporting_org.type
             ? types?.organizationType[reporting_org.type]
-            : 'Type Missing'
+            : translation.common_lang.missing.type
         }}</span>
       </div>
       <table>
         <tbody>
           <tr>
-            <td>Reference</td>
-            <td>
-              {{ reporting_org.ref ?? 'Reference Missing' }}
-            </td>
-          </tr>
-          <tr>
-            <td>Secondary Reporter</td>
+            <td>{{ translation.common_lang.reference_label }}</td>
             <td>
               {{
-                parseInt(reporting_org.secondary_reporter)
-                  ? 'True'
-                  : reporting_org.secondary_reporter === '0'
-                  ? 'False'
-                  : 'Missing'
+                reporting_org.ref ?? translation.common_lang.missing.reference
               }}
             </td>
           </tr>
           <tr>
-            <td>Narrative</td>
+            <td>{{ translation.common_lang.secondary_reporter }}</td>
+            <td>
+              {{
+                parseInt(reporting_org.secondary_reporter)
+                  ? translation.common_lang.true
+                  : reporting_org.secondary_reporter === '0'
+                  ? translation.common_lang.false
+                  : translation.common_lang.missing.default
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td>{{ translation.common_lang.narrative }}</td>
             <td>
               <div
                 v-for="(narrative, j) in reporting_org.narrative"
@@ -49,12 +51,17 @@
                 <div class="language mb-1.5">
                   ({{
                     narrative.language
-                      ? `Language: ${types?.languages[narrative.language]}`
-                      : 'Language : Missing'
+                      ? `${translation.common_lang.language}: ${
+                          types?.languages[narrative.language]
+                        }`
+                      : `${translation.common_lang.language} : ${translation.common_lang.missing.default}`
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Narrative Missing' }}
+                  {{
+                    narrative.narrative ??
+                    translation.common_lang.missing.narrative
+                  }}
                 </div>
               </div>
             </td>
@@ -77,5 +84,6 @@ interface TypesInterface {
   organizationType: [];
 }
 
+const translation = window['globalLang'];
 const types = inject('orgTypes') as TypesInterface;
 </script>

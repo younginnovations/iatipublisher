@@ -79,11 +79,11 @@ class DefaultAidTypeRequest extends ActivityBaseRequest
 
         foreach ($formFields as $index => $formField) {
             $baseForm = sprintf('default_aid_type.%s', $index);
-            $messages[sprintf('%s.default_aid_type_vocabulary.in', $baseForm)] = 'The default aid type vocabulary is invalid.';
-            $messages[sprintf('%s.default_aid_type.in', $baseForm)] = 'The default aid type is invalid.';
-            $messages[sprintf('%s.earmarking_category.in', $baseForm)] = 'The default aid type earmarking category is invalid.';
-            $messages[sprintf('%s.earmarking_modality.in', $baseForm)] = 'The default aid type earmarking modality is invalid.';
-            $messages[sprintf('%s.cash_and_voucher_modalities.in', $baseForm)] = 'The default aid type cash and voucher modalities is invalid.';
+            $messages[sprintf('%s.default_aid_type_vocabulary.in', $baseForm)] = translateRequestMessage('default_aid_type', 'vocabulary_is_invalid');
+            $messages[sprintf('%s.default_aid_type.in', $baseForm)] = translateRequestMessage('default_aid_type', 'is_invalid');
+            $messages[sprintf('%s.earmarking_category.in', $baseForm)] = translateRequestMessage('default_aid_type', 'earmarking_category_is_invalid');
+            $messages[sprintf('%s.earmarking_modality.in', $baseForm)] = translateRequestMessage('default_aid_type', 'earmarking_modality_is_invalid');
+            $messages[sprintf('%s.cash_and_voucher_modalities.in', $baseForm)] = translateRequestMessage('default_aid_type', 'cash_and_voucher_is_invalid');
         }
 
         return $messages;

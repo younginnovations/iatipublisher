@@ -1,6 +1,6 @@
 <template>
   <tr>
-    <td>Description</td>
+    <td>{{ language.common_lang.description }}</td>
     <td>
       <template v-for="(description, t) in descriptionData.narrative" :key="t">
         <div
@@ -10,7 +10,7 @@
           }"
         >
           <div class="text-n-30">
-            (Language:
+            ({{ language.common_lang.language }}:
             {{
               description.language ? descType[description.language] : 'Missing'
             }})
@@ -41,9 +41,10 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     let { data } = toRefs(props);
     const descriptionData = data.value;
-    return { descriptionData };
+    return { descriptionData, language };
   },
 });
 </script>

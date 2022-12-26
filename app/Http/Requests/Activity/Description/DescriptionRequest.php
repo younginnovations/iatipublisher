@@ -95,7 +95,7 @@ class DescriptionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $descriptionIndex => $description) {
             $descriptionForm = sprintf('description.%s', $descriptionIndex);
-            $messages[$descriptionForm . '.type'] = 'The selected description type is invalid.';
+            $messages[$descriptionForm . '.type'] = trans('requests.selected_description_type_is_invalid');
 
             $narrativeMessages = $this->getMessagesForNarrative(Arr::get($description, 'narrative', []), $descriptionForm);
 

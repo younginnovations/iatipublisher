@@ -6,7 +6,7 @@
       @click="toggle"
     >
       <svg-vue icon="plus" />
-      <span>Add Activity</span>
+      <span>{{ language.button_lang.add_activity }}</span>
       <div
         v-if="state.isVisible"
         class="button__dropdown absolute right-0 top-full z-10 w-56 bg-white p-2 text-left shadow-dropdown"
@@ -18,13 +18,13 @@
               href="#"
               :class="liClass"
               @click="modalValue = true"
-              >Add activity manually</a
+              >{{ language.common_lang.add_activity_manually }}</a
             >
           </li>
           <li>
-            <a id="import-activity" href="/import" :class="liClass"
-              >Import activities from .csv/.xml</a
-            >
+            <a id="import-activity" href="/import" :class="liClass">{{
+              language.common_lang.import_activities
+            }}</a>
           </li>
           <li>
             <a id="import-xls" href="/import/xls" :class="liClass"
@@ -53,6 +53,7 @@ export default defineComponent({
     CreateModal,
   },
   setup() {
+    const language = window['globalLang'];
     const state = reactive({
       isVisible: false,
     });
@@ -90,6 +91,7 @@ export default defineComponent({
       modalToggle,
       toggleModel,
       dropdownBtn,
+      language,
     };
   },
 });

@@ -1,4 +1,5 @@
-<?php if ($showLabel && $showField && !(isset($options['title']) && $options['title'])): ?>
+<?php
+if ($showLabel && $showField && !(isset($options['title']) && $options['title'])): ?>
     <?php if ($options['wrapper'] !== false): ?>
     <div <?= $options['wrapperAttrs'] ?> >
     <?php endif; ?>

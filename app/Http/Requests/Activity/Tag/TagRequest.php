@@ -95,10 +95,10 @@ class TagRequest extends ActivityBaseRequest
 
         foreach ($formFields as $tagIndex => $tag) {
             $tagForm = sprintf('tag.%s', $tagIndex);
-            $messages[sprintf('%s.tag_vocabulary.in', $tagForm)] = 'The tag vocabulary is invalid.';
-            $messages[sprintf('%s.goals_tag_code.in', $tagForm)] = 'The tag SDG code is invalid';
-            $messages[sprintf('%s.targets_tag_code.in', $tagForm)] = 'The tag SDG targets code is invalid.';
-            $messages[sprintf('%s.vocabulary_uri.url', $tagForm)] = 'The @vocabulary-uri field must be a valid url.';
+            $messages[sprintf('%s.tag_vocabulary.in', $tagForm)] = trans('requests.tag', ['suffix'=>trans('requests.suffix.vocabulary_is_invalid')]);
+            $messages[sprintf('%s.goals_tag_code.in', $tagForm)] = trans('requests.sdg', ['suffix'=>trans('requests.suffix.code_is_invalid')]);
+            $messages[sprintf('%s.targets_tag_code.in', $tagForm)] = trans('requests.sdg_targets', ['suffix'=>trans('requests.suffix.code_is_invalid')]);
+            $messages[sprintf('%s.vocabulary_uri.url', $tagForm)] = trans('requests.vocab_url_field_symbol', ['suffix'=>trans('requests.suffix.must_be_valid_url')]);
 
             foreach ($this->getMessagesForNarrative($tag['narrative'], $tagForm) as $tagNarrativeIndex => $narrativeMessages) {
                 $messages[$tagNarrativeIndex] = $narrativeMessages;

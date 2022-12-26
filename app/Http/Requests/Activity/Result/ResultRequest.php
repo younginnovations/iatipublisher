@@ -229,10 +229,10 @@ class ResultRequest extends ActivityBaseRequest
 
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
-            $messages[sprintf('%s.vocabulary_uri.url', $referenceForm)] = 'The @vocabulary-uri field must be a valid url.';
+            $messages[sprintf('%s.vocabulary_uri.url', $referenceForm)] = trans('requests.vocab_url_field_symbol', ['suffix'=>trans('requests.suffix.must_be_valid_url')]);
 
             if (!empty($reference['code']) && $hasResultId) {
-                $messages[sprintf('%s.code.indicator_ref_code_present', $referenceForm)] = 'The code is already defined in its indicators';
+                $messages[sprintf('%s.code.indicator_ref_code_present', $referenceForm)] = trans('requests.code', ['suffix'=>trans('requests.suffix.defined_in_indicators')]);
             }
         }
 

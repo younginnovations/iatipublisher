@@ -9,20 +9,30 @@
       <span v-if="participating_org.organization_role">{{
         types.organisationRole[participating_org.organization_role]
       }}</span>
-      <span v-else class="italic">Organization Role Missing</span>
+      <span v-else class="italic">{{
+        language.common_lang.missing.element.replace(
+          ':element',
+          language.common_lang.organisation_role
+        )
+      }}</span>
     </div>
 
     <div class="mb-4 text-sm">
       <span v-if="participating_org.narrative['0'].narrative">{{
         participating_org.narrative['0'].narrative
       }}</span>
-      <span v-else class="italic">Narrative Missing</span>
+      <span v-else class="italic">{{
+        language.common_lang.missing.element.replace(
+          ':element',
+          language.common_lang.narrative
+        )
+      }}</span>
     </div>
 
     <div class="ml-5">
       <table class="w-full">
         <tr class="multiline">
-          <td>Organisation Name</td>
+          <td>{{ language.common_lang.organisation_name }}</td>
           <td>
             <div
               v-for="(narrative, i) in participating_org.narrative"
@@ -31,50 +41,61 @@
             >
               <div v-if="narrative.narrative" class="flex flex-col">
                 <span v-if="narrative.language" class="language top"
-                  >(Language: {{ types.languages[narrative.language] }})</span
+                  >({{ language.common_lang.language }}
+                  {{ types.languages[narrative.language] }})</span
                 >
                 <span v-if="narrative.narrative" class="description">{{
                   narrative.narrative
                 }}</span>
               </div>
-              <span v-else class="italic">Missing</span>
+              <span v-else class="italic">{{
+                language.common_lang.missing.default
+              }}</span>
             </div>
           </td>
         </tr>
         <tr>
-          <td>Organisation Type</td>
+          <td>{{ language.common_lang.organisation_type }}</td>
           <td v-if="participating_org.type">
             {{ types.organizationType[participating_org.type] }}
           </td>
-          <td v-else class="italic">Missing</td>
+          <td v-else class="italic">
+            {{ language.common_lang.missing.default }}
+          </td>
         </tr>
         <tr>
-          <td>Organisation Role</td>
+          <td>{{ language.common_lang.organisation_role }}</td>
           <td v-if="participating_org.organization_role">
             {{ types.organisationRole[participating_org.organization_role] }}
           </td>
-          <td v-else class="italic">Missing</td>
+          <td v-else class="italic">
+            {{ language.common_lang.missing.default }}
+          </td>
         </tr>
         <tr>
-          <td>Ref</td>
+          <td>{{ language.common_lang.ref }}</td>
           <td v-if="participating_org.ref">
             {{ participating_org.ref }}
           </td>
-          <td v-else class="italic">Missing</td>
+          <td v-else class="italic">
+            {{ language.common_lang.missing.default }}
+          </td>
         </tr>
         <tr>
-          <td>Activity Id</td>
+          <td>{{ language.common_lang.activity_id }}</td>
           <td>
             <div>
               <span v-if="participating_org.identifier">{{
                 participating_org.identifier
               }}</span>
-              <span v-else class="italic">Missing</span>
+              <span v-else class="italic">{{
+                language.common_lang.missing.default
+              }}</span>
             </div>
           </td>
         </tr>
         <tr v-if="participating_org.crs_channel_code">
-          <td>CRS Channel Code</td>
+          <td>{{ language.common_lang.crs_channel_code }}</td>
           <td>
             {{ types.crsChannelCode[participating_org.crs_channel_code] }}
           </td>
@@ -102,9 +123,10 @@ export default defineComponent({
       crsChannelCode: [];
       languages: [];
     }
+    const language = window['globalLang'];
     const types = inject('types') as Types;
 
-    return { types };
+    return { types, language };
   },
 });
 </script>

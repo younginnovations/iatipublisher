@@ -143,14 +143,14 @@ class DocumentLinkRequest extends OrganizationBaseRequest
         $messages[sprintf(
             '%s.category.unique_category',
             $formIndex
-        )] = 'The category @code field must be unique.';
+        )] = translateRequestMessage('category_code_field_symbol', 'must_be_unique');
 
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
             $messages[sprintf(
                 '%s.category.%s.code.required',
                 $formIndex,
                 $documentCategoryIndex
-            )] = 'The @code field is required.';
+            )] = translateRequestMessage('code_field_symbol', 'is_required');
         }
 
         return $messages;
@@ -190,14 +190,14 @@ class DocumentLinkRequest extends OrganizationBaseRequest
         $messages[sprintf(
             '%s.language.unique_language',
             $formIndex
-        )] = 'The language @code field must be unique.';
+        )] = translateRequestMessage('language_code_symbol', 'must_be_unique');
 
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
             $messages[sprintf(
                 '%s.language.%s.code.required',
                 $formIndex,
                 $documentCategoryIndex
-            )] = 'The @code field is required.';
+            )] = translateRequestMessage('code_field_symbol', 'is_required');
         }
 
         return $messages;

@@ -94,7 +94,7 @@ class BulkPublishingController extends Controller
 
                 return response()->json([
                     'success' => false,
-                    'message' => 'Another bulk publishing is already in progress.',
+                    'message' => trans('common.another_bulk_publishing_in_progress'),
                     'data' => $pubishingStatus['publishingData'],
                     'in_progress' => $pubishingStatus['inProgress'],
                 ]);
@@ -103,14 +103,14 @@ class BulkPublishingController extends Controller
             $activityIds = json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR);
 
             if (!empty($activityIds)) {
-                return response()->json(['success' => true, 'message' => 'Retrieved data successfully.', 'data' => $this->bulkPublishingService->getCoreElementsCompletedArray($activityIds)]);
+                return response()->json(['success' => true, 'message' => ucfirst(trans('responses.has_been_event_successfully', ['prefix'=>trans('responses.the_data'), 'event'=>trans('events.retrieved')])), 'data' => $this->bulkPublishingService->getCoreElementsCompletedArray($activityIds)]);
             }
 
-            return response()->json(['success' => false, 'message' => 'No activities selected.']);
+            return response()->json(['success' => false, 'message' => trans('responses.no_activities_selected')]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while checking core elements completed.']);
+            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.checking'), 'suffix'=>trans('common.core_completed_title')])]);
         }
     }
 
@@ -143,18 +143,18 @@ class BulkPublishingController extends Controller
                 DB::commit();
 
                 if (!Arr::get($validationResponse, 'success', true)) {
-                    return response()->json(['success' => false, 'message' => 'Activities validation failed.']);
+                    return response()->json(['success' => false, 'message' => trans('responses.event_failed', ['prefix' => trans('elements_common.activities'), 'event' => trans('responses.validation')])]);
                 }
 
-                return response()->json(['success' => true, 'message' => 'Activities validated successfully.', 'data' => $validationResponse]);
+                return response()->json(['success' => true, 'message' => trans('responses.event_successfully', ['prefix' => trans('elements_common.activities'), 'event' => trans('responses.validated')]), 'data' => $validationResponse]);
             }
 
-            return response()->json(['success' => false, 'message' => 'No activities selected.']);
+            return response()->json(['success' => false, 'message' => trans('responses.no_activities_selected')]);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while validating activities.']);
+            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.validating'), 'suffix'=>trans('elements_common.activities')])]);
         }
     }
 
@@ -185,7 +185,7 @@ class BulkPublishingController extends Controller
 
                 return response()->json([
                     'success' => false,
-                    'message' => 'Another bulk publishing is already in progress.',
+                    'message' => trans('common.another_bulk_publishing_in_progress'),
                     'data' => $pubishingStatus['publishingData'],
                     'in_progress' => $pubishingStatus['inProgress'],
                 ]);
@@ -197,7 +197,7 @@ class BulkPublishingController extends Controller
                 $activities = $this->activityService->getActivitiesHavingIds($activityIds);
 
                 if (!count($activities)) {
-                    return response()->json(['success' => false, 'message' => 'No activities selected.']);
+                    return response()->json(['success' => false, 'message' => trans('responses.no_activities_selected')]);
                 }
 
                 $response = $this->bulkPublishingService->generateInitialBulkPublishingResponse($activities);
@@ -205,15 +205,15 @@ class BulkPublishingController extends Controller
                 dispatch(new BulkPublishActivities($activities, $response['organization_id'], $response['job_batch_uuid']));
                 DB::commit();
 
-                return response()->json(['success' => true, 'message' => 'Bulk publishing started', 'data' => $response]);
+                return response()->json(['success' => true, 'message' => trans('responses.bulk_publishing', ['suffix'=>trans('responses.started')]), 'data' => $response]);
             }
 
-            return response()->json(['success' => false, 'message' => 'No activities selected.']);
+            return response()->json(['success' => false, 'message' => trans('responses.no_activities_selected')]);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Bulk publishing failed.']);
+            return response()->json(['success' => false, 'message' => trans('responses.bulk_publishing', ['suffix'=>trans('responses.failed')])]);
         }
     }
 
@@ -240,15 +240,15 @@ class BulkPublishingController extends Controller
                 }
             }
 
-            return response()->json(['success' => false, 'message' => 'No bulk publishing in progress', 'publishing' => false]);
+            return response()->json(['success' => true, 'message' => trans('responses.no_publishing_in_process'), 'publishing'=>false]);
         } catch (\Exception $e) {
             logger()->error($e);
 
-            return response()->json(['success' => false, 'message' => 'Status generation failed.']);
+            return response()->json(['success' => false, 'message' => trans('responses.status_generation_failed')]);
         } catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
             logger()->error($e);
 
-            return response()->json(['success' => false, 'message' => 'Request error']);
+            return response()->json(['success' => false, 'message' => trans('responses.request_error')]);
         }
     }
 
@@ -270,18 +270,18 @@ class BulkPublishingController extends Controller
                 return response()->json(
                     [
                         'success' => true,
-                        'message' => "Bulk publish of {$numberOfDeletedRows} activities canceled.",
+                        'message' => trans('responses.bulk_publish_of_activities_cancelled', ['size'=>$numberOfDeletedRows]),
                         'data' => $deletedIds,
                     ]
                 );
             }
 
-            return response()->json(['success' => true, 'message' => 'No bulk publish were cancelled.']);
+            return response()->json(['success' => true, 'message' => trans('responses.no_bulk_publish_were_cancelled')]);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Failed to stop bulk publishing']);
+            return response()->json(['success' => false, 'message' => trans('responses.no_bulk_publish_were_cancelled')]);
         }
     }
 
@@ -304,25 +304,23 @@ class BulkPublishingController extends Controller
 
                 return response()->json([
                     'success' => false,
-                    'message' => 'Another bulk publishing is already in progress.',
+                    'message' => trans('common.another_bulk_publishing_in_progress'),
                     'data' => $pubishingStatus['publishingData'],
                     'in_progress' => $pubishingStatus['inProgress'],
                 ]);
             }
 
-            return response()->json(['success' => true, 'message' => 'Activity is ready to be published.', 'status' => 'completed']);
+            return response()->json(['success' => true, 'message' => trans('responses.activity_ready_to_publish'), 'status' => 'completed']);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while checking activity.']);
+            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.checking'), 'suffix'=>trans('common.activity')])]);
         }
     }
 
     /**
      * Checks if activity with publishing in bulk publish status is published or draft in activities table
      * Updates it and returns msg.
-     *
-     * @param Request $request
      *
      * @return JsonResponse
      */

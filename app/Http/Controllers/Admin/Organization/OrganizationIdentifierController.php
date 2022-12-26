@@ -58,7 +58,7 @@ class OrganizationIdentifierController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.show', $id)->with('error', 'Error has occurred while opening organization identifier form.');
+            return redirect()->route('admin.activities.show', $id)->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.opening'), 'suffix'=>trans('elements_common.organisation_identifier')]));
         }
     }
 
@@ -77,18 +77,18 @@ class OrganizationIdentifierController extends Controller
             $organizationIdentifier = $request->all();
 
             if (!$this->verifyPublisher($organizationIdentifier)) {
-                return redirect()->route('admin.organisation.identifier.edit')->with('error', 'Please enter correct identifier as present in IATI Registry.')->withInput();
+                return redirect()->route('admin.organisation.identifier.edit')->with('error', trans('responses.enter_correct_identifier'))->withInput();
             }
 
             if (!$this->organizationIdentifierService->update($id, $organizationIdentifier)) {
-                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization identifier.');
+                return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.organisation_identifier')]));
             }
 
-            return redirect()->route('admin.organisation.index')->with('success', 'Organization identifier updated successfully.');
+            return redirect()->route('admin.organisation.index')->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.organisation_identifier'), 'event'=>trans('events.updated')])));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization identifier.');
+            return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.organisation_identifier')]));
         }
     }
 

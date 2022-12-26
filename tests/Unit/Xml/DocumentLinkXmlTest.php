@@ -17,16 +17,16 @@ class DocumentLinkXmlTest extends XmlBaseTest
     {
         $rows = $this->invalid_data();
         $flattenErrors = $this->getErrors($rows);
-        $this->assertContains('The document link format is invalid', $flattenErrors);
+        $this->assertContains('The Document Link format is invalid.', $flattenErrors);
         $this->assertContains('The @url field must be a valid url.', $flattenErrors);
         $this->assertContains('The @iso-date field must be a proper date.', $flattenErrors);
-        $this->assertContains('The @iso-date field must be a greater than 1900.', $flattenErrors);
-        $this->assertContains('The document link category code field must be a unique.', $flattenErrors);
+        $this->assertContains('The @iso-date field date must be date greater than year 1900.', $flattenErrors);
+        $this->assertContains('The document link category code field must be unique.', $flattenErrors);
         $this->assertContains('The document link category code is invalid.', $flattenErrors);
-        $this->assertContains('The document link language code field must be a unique.', $flattenErrors);
+        $this->assertContains('The document link language code field must be unique.', $flattenErrors);
         $this->assertContains('The document link language code is invalid.', $flattenErrors);
         $this->assertContains('The @xml:lang field is invalid.', $flattenErrors);
-        $this->assertContains('The narrative field is required with @xml:lang field.', $flattenErrors);
+        $this->assertContains('The Narrative field is required with @xml:lang field.', $flattenErrors);
     }
 
     /**

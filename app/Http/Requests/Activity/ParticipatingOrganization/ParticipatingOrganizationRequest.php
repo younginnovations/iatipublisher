@@ -98,11 +98,11 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
             $participatingOrgForm = 'participating_org.' . $participatingOrgIndex;
             $messages[$participatingOrgForm . '.organization_role.required'] = trans('validation.required', ['attribute' => trans('elementForm.organisation_role')]);
             $identifier = $participatingOrgForm . '.identifier';
-            $messages[$identifier . '.exclude_operators'] = 'The identifier must not contain symbols or blank space';
+            $messages[$identifier . '.exclude_operators'] = trans('common.error.identifier_must_not_contain_symbols_or_blank_spaces');
 
-            $messages[sprintf('%s.organization_role.in', $participatingOrgForm)] = 'The participating organisation role is invalid.';
-            $messages[sprintf('%s.type.in', $participatingOrgForm)] = 'The participating organisation type is invalid.';
-            $messages[sprintf('%s.crs_channel_code.in', $participatingOrgForm)] = 'The Crs Channel Code is invalid.';
+            $messages[sprintf('%s.organization_role.in', $participatingOrgForm)] = translateRequestMessage('participating_org', 'role_is_invalid');
+            $messages[sprintf('%s.type.in', $participatingOrgForm)] = translateRequestMessage('participating_org', 'type_is_invalid');
+            $messages[sprintf('%s.crs_channel_code.in', $participatingOrgForm)] = trans('requests.the_midfix_suffix', ['midfix'=>trans('common.crs_channel_code'), 'suffix'=>trans('requests.suffix.is_invalid')]);
 
             foreach ($this->getMessagesForNarrative($participatingOrg['narrative'], $participatingOrgForm) as $participatingNarrativeIndex => $narrativeMessages) {
                 $messages[$participatingNarrativeIndex] = $narrativeMessages;

@@ -77,13 +77,13 @@ class PeriodController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Period fetched successfully',
+                'message' =>  ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.period'), 'event'=>trans('events.fetched')])),
                 'data'    => $period,
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.fetching'), 'suffix'=>trans('responses.the_data')])]);
         }
     }
 
@@ -119,7 +119,7 @@ class PeriodController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.indicator.period.index', $indicatorId)->with('error', 'Error has occurred while rendering activity transactions listing.');
+            return redirect()->route('admin.indicator.period.index', $indicatorId)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.rendering'), 'suffix'=>trans('responses.activity_transactions_listing')]));
         }
     }
 
@@ -143,7 +143,7 @@ class PeriodController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.indicator.period.index', $indicatorId)->with('error', 'Error has occurred while rendering indicator period form.');
+            return redirect()->route('admin.indicator.period.index', $indicatorId)->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.rendering'), 'suffix'=>trans('responses.indicator_period')]));
         }
     }
 
@@ -167,14 +167,14 @@ class PeriodController extends Controller
 
             return redirect()->route('admin.indicator.period.show', [$indicatorId, $period['id']])->with(
                 'success',
-                'Indicator period created successfully.'
+                ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.indicator_period'), 'event'=>trans('elements_common.created')]))
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.indicator.period.index', $indicatorId)->with(
                 'error',
-                'Error has occurred while creating indicator period.'
+                trans('responses.error_has_occurred', ['event'=>trans('events.creating'), 'suffix'=>trans('responses.indicator_period')])
             );
         }
     }
@@ -205,7 +205,7 @@ class PeriodController extends Controller
                 ],
             ];
             $period = $this->periodService->getPeriod($periodId);
-            $element = getElementSchema('period');
+            $element = translateJsonValues(getElementSchema('period'));
             $types = getPeriodTypes();
             $toast = generateToastData();
 
@@ -215,7 +215,7 @@ class PeriodController extends Controller
 
             return redirect()->route('admin.indicator.period.index', [$indicatorId])->with(
                 'error',
-                'Error has occurred while rending result detail page.'
+                trans('responses.error_has_occurred_page', ['event'=>trans('events.rendering'), 'suffix'=>trans('responses.result_detail')])
             );
         }
     }
@@ -241,7 +241,7 @@ class PeriodController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.indicator.period.index', $indicatorId)->with('error', 'Error has occurred while rendering period form.');
+            return redirect()->route('admin.indicator.period.index', $indicatorId)->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.rendering'), 'suffix'=>trans('elements_common.period')]));
         }
     }
 
@@ -263,20 +263,20 @@ class PeriodController extends Controller
             if (!$this->periodService->update($periodId, ['indicator_id' => $indicatorId, 'period' => $periodData])) {
                 return redirect()->route('admin.indicator.period.index', [$indicatorId])->with(
                     'error',
-                    'Error has occurred while updating indicator period.'
+                    trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.indicator_period')])
                 );
             }
 
             return redirect()->route('admin.indicator.period.show', [$indicatorId, $period['id']])->with(
                 'success',
-                'Indicator period updated successfully.'
+                ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.indicator_period'), 'event'=>trans('elements_common.updated')]))
             );
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.indicator.period.show', [$indicatorId, $periodId])->with(
                 'error',
-                'Error has occurred while updating indicator period.'
+                trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.indicator_period')])
             );
         }
     }
@@ -293,20 +293,20 @@ class PeriodController extends Controller
     {
         try {
             $this->periodService->deletePeriod($periodId);
-            Session::flash('success', 'Period Deleted Successfully');
+            Session::flash('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.period'), 'event'=>trans('events.deleted')])));
 
             return response()->json([
                 'status'       => true,
-                'msg'          => 'Period Deleted Successfully',
+                'msg'          =>  ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.period'), 'event'=>trans('events.deleted')])),
                 'indicator_id' => $id,
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            Session::flash('error', 'Period Delete Error');
+            Session::flash('error', ucwords(trans('responses.delete_error', ['prefix'=>trans('elements_common.period')])));
 
             return response()->json([
                 'status'       => true,
-                'msg'          => 'Period Delete Error',
+                'msg'          => ucwords(trans('responses.delete_error', ['prefix'=>trans('elements_common.period')])),
                 'indicator_id' => $id,
             ], 400);
         }

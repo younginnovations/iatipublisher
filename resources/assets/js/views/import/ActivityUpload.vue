@@ -12,42 +12,28 @@
             <div class="inline-flex min-h-[48px] grow items-center">
               <h4 class="ellipsis__title relative mr-4 font-bold">
                 <span class="ellipsis__title overflow-hidden">
-                  Import Activity
+                  {{ language.common_lang.import_activity }}
                 </span>
               </h4>
               <div class="tooltip-btn">
                 <button class="">
                   <svg-vue icon="question-mark" />
-                  <span>What is an activity?</span>
+                  <span>{{
+                    language.activities_lang.what_is_activity.label
+                  }}</span>
                 </button>
                 <div class="tooltip-btn__content z-[1]">
                   <div class="content">
                     <div
                       class="mb-1.5 text-caption-c1 font-bold text-bluecoral"
                     >
-                      What is an activity?
+                      {{ language.activities_lang.what_is_activity.label }}
                     </div>
                     <p>
-                      You need to provide data about your organisation's
-                      development and humanitarian 'activities'. The unit of
-                      work described by an 'activity' is determined by the
-                      organisation that is publishing the data. For example, an
-                      activity could be a donor government providing US$ 50
-                      million to a recipient country's government to implement
-                      basic education over 5 years. Or an activity could be an
-                      NGO spending US$ 500,000 to deliver clean drinking water
-                      to 1000 households over 6 months.
-                      <br />
-                      Therefore your organisation will need to determine how it
-                      will divide its work internally into activities. Read the
-                      <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href="/publishing-checklist"
-                        class="text-bluecoral"
-                        ><b>Publishing Checklist</b></a
-                      >
-                      for more information.
+                      {{
+                        language.activities_lang.what_is_activity.description
+                          .one
+                      }}
                     </p>
                   </div>
                 </div>
@@ -75,7 +61,7 @@
           <p
             class="border-b border-n-30 p-4 text-sm font-bold uppercase text-n-50"
           >
-            Import .CSV/.XML file
+            {{ language.common_lang.import_activities }}
           </p>
           <div class="p-6">
             <div class="mb-4 rounded border border-n-30 px-4 py-3">
@@ -92,19 +78,21 @@
               <BtnComponent
                 class="!border-red !border"
                 type="primary"
-                text="Upload file"
+                :text="language.button_lang.upload_file"
                 icon="upload-file"
                 @click="uploadFile"
               />
               <div class="flex items-center space-x-2.5">
                 <button class="relative text-sm text-bluecoral">
                   <svg-vue :icon="'download'" class="mr-1" />
-                  <span @click="downloadExcel"
-                    >Download .CSV activity Template</span
-                  >
+                  <span @click="downloadExcel">{{
+                    language.common_lang.download_csv_template
+                  }}</span>
                 </button>
                 <HoverText
-                  hover-text="This template contains all the elements that you have to fill as per the IATI Standard before uploading in IATI Publisher. Please make sure that you follow the structure and format of the template."
+                  :hover-text="
+                    language.common_lang.download_csv_template_description
+                  "
                   name=""
                   class="hover-text import-activity"
                   position="right"
@@ -131,14 +119,15 @@ import HoverText from 'Components/HoverText.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 import axios from 'axios';
 
+const language = window['globalLang'];
 const file = ref(),
   error = ref(''),
   loader = ref(false),
-  loaderText = ref('Please Wait');
+  loaderText = ref(language.common_lang.please_wait);
 
 function uploadFile() {
   loader.value = true;
-  loaderText.value = 'Uploading .csv/.xml file';
+  loaderText.value = language.common_lang.uploading_csv_xml_file;
   let activity = file.value.files.length ? file.value.files[0] : '';
   const config = {
     headers: {
@@ -162,7 +151,8 @@ function uploadFile() {
       }
     })
     .catch(() => {
-      error.value = 'Error has occured while uploading file.';
+      error.value =
+        language.common_lang.error_has_occurred_while_uploading_file;
       loader.value = false;
     });
 }

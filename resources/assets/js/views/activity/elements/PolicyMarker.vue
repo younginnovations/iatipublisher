@@ -9,26 +9,35 @@
       <span v-if="post.policy_marker_vocabulary">{{
         types.policyMarkerVocabulary[post.policy_marker_vocabulary]
       }}</span>
-      <span v-else class="italic">Vocabulary Missing</span>
+      <span v-else class="italic">{{
+        language.common_lang.missing.element.replace(
+          ':element',
+          language.common_lang.vocabulary
+        )
+      }}</span>
     </div>
     <div class="text-sm">
       <div v-if="post.policy_marker_vocabulary == '1'">
         <span v-if="post.policy_marker">
           {{ types.policyMarker[post.policy_marker] }}
         </span>
-        <span v-else class="italic">Missing</span>
+        <span v-else class="italic">{{
+          language.common_lang.missing.default
+        }}</span>
       </div>
       <div v-else>
         <span v-if="post.policy_marker_text">{{
           post.policy_marker_text
         }}</span>
-        <span v-else class="italic">Missing</span>
+        <span v-else class="italic">{{
+          language.common_lang.missing.default
+        }}</span>
       </div>
     </div>
     <table class="ml-5">
       <tbody>
         <tr v-if="post.policy_marker_vocabulary == '99'">
-          <td>Vocabulary URI</td>
+          <td>{{ language.common_lang.vocabulary_uri }}</td>
           <td>
             <a
               v-if="post.vocabulary_uri"
@@ -36,32 +45,39 @@
               :href="post.vocabulary_uri"
               >{{ post.vocabulary_uri }}</a
             >
-            <span v-else class="italic">Missing</span>
+            <span v-else class="italic">{{
+              language.common_lang.missing.default
+            }}</span>
           </td>
         </tr>
         <tr>
-          <td>Significance</td>
+          <td>{{ language.common_lang.significance }}</td>
           <td>
             <span v-if="post.significance">{{
               types.policySignificance[post.significance]
             }}</span>
-            <span v-else class="italic">Missing</span>
+            <span v-else class="italic">{{
+              language.common_lang.missing.default
+            }}</span>
           </td>
         </tr>
         <tr
           class="multiline"
           :class="{ 'mb-4': k !== post.narrative.length - 1 }"
         >
-          <td>Narrative</td>
+          <td>{{ language.common_lang.narrative }}</td>
           <td>
             <div v-for="(narrative, k) in post.narrative" :key="k">
               <div v-if="narrative.narrative" class="flex flex-col">
                 <span v-if="narrative.language" class="language top"
-                  >(Language: {{ types.languages[narrative.language] }})</span
+                  >({{ language.common_lang.language }}:
+                  {{ types.languages[narrative.language] }})</span
                 >
                 <span class="description">{{ narrative.narrative }}</span>
               </div>
-              <span v-else class="italic">Missing</span>
+              <span v-else class="italic">{{
+                language.common_lang.missing.default
+              }}</span>
             </div>
           </td>
         </tr>
@@ -90,9 +106,10 @@ export default defineComponent({
       languages: [];
     }
 
+    const language = window['globalLang'];
     const types = inject('types') as Types;
 
-    return { types, dateFormat };
+    return { types, dateFormat, language };
   },
 });
 </script>

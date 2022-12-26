@@ -12,39 +12,45 @@
         <span>{{
           sec.sector_vocabulary
             ? type.sectorVocabulary[sec.sector_vocabulary]
-            : 'Vocabulary Missing'
+            : language.common_lang.missing.vocabulary
         }}</span>
       </div>
       <div class="ml-4">
         <table class="mb-3">
           <tbody>
             <tr>
-              <td>Code</td>
+              <td>{{ language.common_lang.code }}</td>
               <td>
                 <div class="text-sm">
                   <span v-if="sec.text">
-                    {{ sec.text ?? 'Missing' }}
+                    {{ sec.text ?? language.common_lang.missing.default }}
                   </span>
                   <span v-else-if="sec.code">
-                    {{ sec.code ? type.sectorCode[sec.code] : 'Missing' }}
+                    {{
+                      sec.code
+                        ? type.sectorCode[sec.code]
+                        : language.common_lang.missing.default
+                    }}
                   </span>
                   <span v-else-if="sec.category_code">
                     {{
                       sec.category_code
                         ? type.sectorCategory[sec.category_code]
-                        : 'Missing'
+                        : language.common_lang.missing.default
                     }}
                   </span>
                   <span v-else-if="sec.sdg_goal">
                     {{
-                      sec.sdg_goal ? type.unsdgGoals[sec.sdg_goal] : 'Missing'
+                      sec.sdg_goal
+                        ? type.unsdgGoals[sec.sdg_goal]
+                        : language.common_lang.missing.default
                     }}
                   </span>
                   <span v-else-if="sec.sdg_target">
                     {{
                       sec.sdg_target
                         ? type.unsdgTargets[sec.sdg_target]
-                        : 'Missing'
+                        : language.common_lang.missing.default
                     }}
                   </span>
                 </div>
@@ -55,7 +61,7 @@
                 sec.sector_vocabulary === '98' || sec.sector_vocabulary === '99'
               "
             >
-              <td>Vocabulary URI</td>
+              <td>{{ language.common_lang.vocabulary_uri }}</td>
               <td>
                 <div class="text-sm">
                   <span v-if="sec.vocabulary_uri">
@@ -63,12 +69,12 @@
                       {{ sec.vocabulary_uri }}
                     </a>
                   </span>
-                  <span v-else> Missing</span>
+                  <span v-else>{{ language.common_lang.missing.default }}</span>
                 </div>
               </td>
             </tr>
             <tr>
-              <td>Description</td>
+              <td>{{ language.common_lang.description }}</td>
               <td>
                 <div
                   v-for="(sd, i) in sec.narrative"
@@ -82,12 +88,17 @@
                     (
                     {{
                       sd.language
-                        ? `Language: ${type.languages[sd.language]}`
-                        : 'Language Missing'
+                        ? `${language.common_lang.language}: ${
+                            type.languages[sd.language]
+                          }`
+                        : language.common_lang.missing.element.replace(
+                            ':element',
+                            language.common_lang.language
+                          )
                     }})
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? 'Narrative Missing' }}
+                    {{ sd.narrative ?? language.common_lang.missing.narrative }}
                   </div>
                 </div>
               </td>
@@ -112,6 +123,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     const { data } = toRefs(props);
 
     interface Sector {
@@ -141,6 +153,7 @@ export default defineComponent({
     return {
       sector,
       type,
+      language,
     };
   },
 });

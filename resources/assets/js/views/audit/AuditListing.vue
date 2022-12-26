@@ -4,7 +4,7 @@
     <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
       <div class="flex">
         <a class="whitespace-nowrap font-bold text-n-40" href="/audits">
-          Audits
+          {{ language.common_lang.audits }}
         </a>
       </div>
     </nav>
@@ -24,6 +24,7 @@ import axios from 'axios';
 import Loader from '../../components/Loader.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
 
+const language = window['globalLang'];
 const auditData = reactive({});
 const isEmpty = ref(false);
 

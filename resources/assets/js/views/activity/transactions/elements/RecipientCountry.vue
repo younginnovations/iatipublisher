@@ -15,7 +15,7 @@
         <table class="mb-3">
           <tbody>
             <tr>
-              <td>Description</td>
+              <td>{{ language.common_lang.description }}</td>
               <td>
                 <div
                   v-for="(sd, i) in cou.narrative"
@@ -29,12 +29,17 @@
                     (
                     {{
                       sd.language
-                        ? `Language: ${type.languages[sd.language]}`
-                        : 'Language Missing'
+                        ? `${language.common_lang.language}: ${
+                            type.languages[sd.language]
+                          }`
+                        : language.common_lang.missing.element.replace(
+                            ':element',
+                            language.common_lang.language
+                          )
                     }})
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? 'Narrative Missing' }}
+                    {{ sd.narrative ?? language.common_lang.missing.narrative }}
                   </div>
                 </div>
               </td>
@@ -59,6 +64,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     const { data } = toRefs(props);
 
     interface ArrayObject {
@@ -75,7 +81,7 @@ export default defineComponent({
     }
 
     const type = inject('types') as TypesInterface;
-    return { country, type };
+    return { country, type, language };
   },
 });
 </script>

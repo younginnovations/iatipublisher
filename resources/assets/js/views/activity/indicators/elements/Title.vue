@@ -1,6 +1,6 @@
 <template>
   <tr>
-    <td>Title</td>
+    <td>{{ language.common_lang.title }}</td>
     <td>
       <template v-for="(title, t) in titleData.narrative" :key="t">
         <div
@@ -10,10 +10,13 @@
           }"
         >
           <div class="language mb-1 text-n-30">
-            (Language: {{ titleType[title.language] ?? 'Missing' }})
+            ({{ language.common_lang.language }}:
+            {{
+              titleType[title.language] ?? language.common_lang.missing.default
+            }})
           </div>
           <div class="description text-xs">
-            {{ title.narrative ?? 'Missing' }}
+            {{ title.narrative ?? language.common_lang.missing.default }}
           </div>
         </div>
       </template>
@@ -38,9 +41,10 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     let { data } = toRefs(props);
     const titleData = data.value;
-    return { titleData };
+    return { titleData, language };
   },
 });
 </script>

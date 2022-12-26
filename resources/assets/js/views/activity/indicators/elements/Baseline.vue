@@ -1,6 +1,6 @@
 <template>
   <tr>
-    <td>Baseline</td>
+    <td>{{ language.common_lang.baseline }}</td>
     <td>
       <div
         v-for="(base, b) in baseline"
@@ -11,46 +11,56 @@
       >
         <div :class="elementSpacing">
           <span>
-            Year:
+            {{ language.common_lang.year }}:
             <template v-if="base.year">
               {{ base.year }}
             </template>
-            <template v-else>Missing</template>
+            <template v-else>{{
+              language.common_lang.missing.default
+            }}</template>
             ,
           </span>
           <span>
-            Date:
+            {{ language.common_lang.date }}:
             <template v-if="base.date">
               {{ base.date }}
             </template>
-            <template v-else>Missing</template>
+            <template v-else>{{
+              language.common_lang.missing.default
+            }}</template>
             ,
           </span>
           <span>
-            Value:
+            {{ language.common_lang.value }}:
             <template v-if="base.value">
               {{ base.value }}
             </template>
-            <template v-else>Missing</template>
+            <template v-else>{{
+              language.common_lang.missing.default
+            }}</template>
           </span>
         </div>
 
         <div class="flex" :class="elementSpacing">
-          <div>Location:&nbsp;</div>
+          <div>{{ language.common_lang.location }}:&nbsp;</div>
           <div>
-            {{ location(base.location) ? location(base.location) : 'Missing' }}
+            {{
+              location(base.location)
+                ? location(base.location)
+                : language.common_lang.baseline.default
+            }}
           </div>
         </div>
 
         <div class="flex" :class="elementSpacing">
-          <div>Dimension:&nbsp;</div>
+          <div>{{ language.common_lang.dimension }}:&nbsp;</div>
           <div class="description">
             {{ dimensions(base.dimension) }}
           </div>
         </div>
 
         <div class="flex" :class="elementSpacing">
-          <div>Comment:&nbsp;</div>
+          <div>{{ language.common_lang.comment }}:&nbsp;</div>
           <div>
             <div
               v-for="(com, c) in base.comment[0].narrative"
@@ -62,13 +72,17 @@
             >
               <div>
                 <div class="description">
-                  {{ com.narrative ? com.narrative : 'Missing' }}
+                  {{
+                    com.narrative
+                      ? com.narrative
+                      : language.common_lang.missing.default
+                  }}
                   <span class="text-n-30">
                     (Language:
                     {{
                       com.language
                         ? baseType.language[com.language]
-                        : 'Missing'
+                        : language.common_lang.missing.default
                     }})</span
                   >
                 </div>
@@ -79,7 +93,7 @@
 
         <div>
           <div class="mb-2.5 flex">
-            <div>Document Link:&nbsp;</div>
+            <div>{{ language.common_lang.document_link }}:&nbsp;</div>
             <div></div>
           </div>
           <div class="divider mb-4 h-px w-full border-b border-n-20"></div>
@@ -145,6 +159,7 @@ export default defineComponent({
       year: number;
     }
 
+    const language = window['globalLang'];
     const baseline = data.value as BaselineElements[];
 
     /**
@@ -167,7 +182,13 @@ export default defineComponent({
       locations = locations.slice(0, -1);
 
       if (locations.length > 0) {
-        return locations.join(', ') + ' ' + 'and' + ' ' + lastLocation;
+        return (
+          locations.join(', ') +
+          ' ' +
+          language.common_lang.sticky.common.and +
+          ' ' +
+          lastLocation
+        );
       } else {
         return lastLocation;
       }
@@ -181,9 +202,9 @@ export default defineComponent({
       let dimensions: string[] = [];
 
       dimensions = data.map((item) => {
-        const name = item.name ?? 'Missing',
-          value = item.value ?? 'Missing';
-        return `code - ${name}, value - ${value}`;
+        const name = item.name ?? language.common_lang.missing.default,
+          value = item.value ?? language.common_lang.missing.default;
+        return `${language.common_lang.code} - ${name}, ${language.common_lang.value} - (${value})`;
       });
 
       return dimensions.join('; ');
@@ -194,6 +215,7 @@ export default defineComponent({
       dimensions,
       elementSpacing,
       countDocumentLink,
+      language,
     };
   },
 });

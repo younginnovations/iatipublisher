@@ -54,7 +54,7 @@ class ApiLogController extends Controller
 
             return response()->json([
                'success' => false,
-               'message' => 'Error has occurred while fetching iati api log',
+               'message' => trans('requests.error_has_occured_while_trying_to_fetch_iati_api_log'),
             ]);
         }
     }

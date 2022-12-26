@@ -108,14 +108,14 @@ class TitleRequest extends ActivityBaseRequest
             $titles = request()->get('narrative');
         }
 
-        $messages[sprintf('%s.unique_lang', $name)] = 'The title language field must be unique.';
-        $messages[sprintf('%s.unique_default_lang', $name)] = 'The title language field must be unique.';
-        $messages[sprintf('%s.0.narrative.required', $name)] = 'The first title is required.';
+        $messages[sprintf('%s.unique_lang', $name)] = trans('requests.title_language_field', ['suffix'=>trans('requests.suffix.must_be_unique')]);
+        $messages[sprintf('%s.unique_default_lang', $name)] = trans('requests.title_language_field', ['suffix'=>trans('requests.suffix.must_be_unique')]);
+        $messages[sprintf('%s.0.narrative.required', $name)] = trans('requests.first_title', ['suffix'=>trans('requests.suffix.is_required')]);
 
         if (is_array($titles) && count($titles)) {
             foreach ($titles as $key => $title) {
                 if ($key !== 0) {
-                    $messages[sprintf('%s.%s.narrative.required_with_language', $name, $key)] = 'The narrative is required when language is specified.';
+                    $messages[sprintf('%s.%s.narrative.required_with_language', $name, $key)] = trans('requests.narrative', ['suffix'=>trans('requests.suffix.required_when_language')]);
                 }
             }
         }

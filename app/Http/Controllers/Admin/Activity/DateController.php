@@ -53,7 +53,7 @@ class DateController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering activity-date form.');
+            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.rendering'), 'suffix'=>trans('elements_common.activity_date')]));
         }
     }
 
@@ -71,14 +71,14 @@ class DateController extends Controller
             $activityDate = $request->all();
 
             if (!$this->dateService->update($id, $activityDate)) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity-date.');
+                return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.activity_date')]));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Activity-date updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.activity_date'), 'event'=>trans('events.updated')])));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity-date.');
+            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.activity_date')]));
         }
     }
 }

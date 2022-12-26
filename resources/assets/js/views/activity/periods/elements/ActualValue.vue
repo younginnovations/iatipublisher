@@ -4,38 +4,50 @@
       <table class="mb-3 w-full">
         <tbody>
           <tr>
-            <td><span class="category flex">Actual Value</span></td>
+            <td>
+              <span class="category flex">{{
+                language.common_lang.actual_value.upper_case
+              }}</span>
+            </td>
             <td>
               <div :class="elementSpacing">
-                {{ tValue.value ?? 'Missing' }}
+                {{ tValue.value ?? language.common_lang.missing.default }}
               </div>
 
               <div class="flex" :class="elementSpacing">
-                <div>Location Reference:&nbsp;</div>
+                <div>
+                  {{
+                    language.common_lang.location_reference.upper_case
+                  }}:&nbsp;
+                </div>
                 <div>
                   {{
                     getLocation(tValue.location)
                       ? getLocation(tValue.location)
-                      : 'Missing'
+                      : language.common_lang.missing.default
                   }}
                 </div>
               </div>
 
               <div class="flex" :class="elementSpacing">
-                <div>Dimension:&nbsp;</div>
+                <div>
+                  {{ language.common_lang.dimension.upper_case }}:&nbsp;
+                </div>
                 <div>
                   <div
                     v-for="(dim, d) in tValue.dimension"
                     :key="d"
                     class="dimension"
                   >
-                    {{ dim.name ?? 'Missing' }} ({{ dim.value ?? 'Missing' }})
+                    {{ dim.name ?? language.common_lang.missing.default }} ({{
+                      dim.value ?? language.common_lang.missing.default
+                    }})
                   </div>
                 </div>
               </div>
 
               <div class="flex" :class="elementSpacing">
-                <div>Comment:&nbsp;</div>
+                <div>{{ language.common_lang.comment.upper_case }}:&nbsp;</div>
                 <div>
                   <div
                     v-for="(com, c) in tValue.comment[0].narrative"
@@ -47,15 +59,19 @@
                   >
                     <div>
                       <span>
-                        {{ com.narrative ? com.narrative : 'Missing' }}
+                        {{
+                          com.narrative
+                            ? com.narrative
+                            : language.common_lang.missing.default
+                        }}
                         &nbsp;
                       </span>
                       <span>
-                        (Language:
+                        ({{ language.common_lang.language }}:
                         {{
                           com.language
                             ? dlType.language[com.language]
-                            : 'Missing'
+                            : language.common_lang.missing.default
                         }})
                       </span>
                     </div>
@@ -70,7 +86,9 @@
         <tbody>
           <tr>
             <td colspan="2">
-              <div class="category flex">Document Link</div>
+              <div class="category flex">
+                {{ language.common_lang.document_link.upper_case }}
+              </div>
               <div class="divider my-4 h-px w-full border-b border-n-20"></div>
             </td>
           </tr>
@@ -100,6 +118,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     let { data } = toRefs(props);
 
     // vue inject
@@ -115,6 +134,7 @@ export default defineComponent({
       location,
       getLocation,
       dlType,
+      language,
     };
   },
 });

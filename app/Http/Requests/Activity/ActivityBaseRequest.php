@@ -300,7 +300,7 @@ class ActivityBaseRequest extends FormRequest
     public function getMessagesForRequiredNarrative($formFields, $formBase): array
     {
         $messages = [];
-        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The @xml:lang field must be unique.';
+        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = translateRequestMessage('xml_lang_field_symbol', 'must_be_unique');
 
         return $messages;
     }
@@ -360,25 +360,25 @@ class ActivityBaseRequest extends FormRequest
     public function getMessagesForNarrative($formFields, $formBase): array
     {
         $messages = [];
-        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The narrative language field must be unique.';
-        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = 'The narrative language field must be unique.';
+        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = translateRequestMessage('narrative_lang', 'must_be_unique');
+        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = translateRequestMessage('narrative_lang', 'must_be_unique');
 
         foreach ($formFields as $narrativeIndex => $narrative) {
             $messages[sprintf(
                 '%s.narrative.%s.narrative.required_with_language',
                 $formBase,
                 $narrativeIndex
-            )] = 'The narrative field is required with @xml:lang field.';
+            )] = trans('requests.narrative_field', ['suffix'=>trans('requests.suffix.is_required_with_xml')]);
             $messages[sprintf(
                 '%s.narrative.%s.language.in',
                 $formBase,
                 $narrativeIndex
-            )] = 'The @xml:lang field is invalid.';
+            )] = trans('requests.xml_lang_field_symbol', ['suffix'=>trans('requests.suffix.is_invalid')]);
             $messages[sprintf(
                 '%s.narrative.%s.narrative.required',
                 $formBase,
                 $narrativeIndex
-            )] = 'The Narrative field is required.';
+            )] = translateRequestMessage('narrative_field', 'is_required');
         }
 
         return $messages;
@@ -416,8 +416,8 @@ class ActivityBaseRequest extends FormRequest
         $messages = [];
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = 'Period end must be a date.';
-            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date_greater_than'] = 'Period end date must be date greater than year 1900.';
+            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = translateRequestMessage('alt_period_end', 'must_be_a_date');
+            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date_greater_than'] = translateRequestMessage('alt_period_end', 'date_must_be_greater');
         }
 
         return $messages;
@@ -459,10 +459,10 @@ class ActivityBaseRequest extends FormRequest
         $messages = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.required'] = 'Period end is a required field';
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = 'Period end must be a date field';
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = 'Period end must be a date after period';
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date_greater_than'] = 'Period end date must be date greater than year 1900.';
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.required'] = translateRequestMessage('alt_period_end', 'is_a_required_field');
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = translateRequestMessage('alt_period_end', 'must_be_a_date_field');
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = translateRequestMessage('alt_period_end', 'date_must_be_greater');
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date_greater_than'] = translateRequestMessage('alt_period_end', 'date_must_be_greater');
         }
 
         return $messages;
@@ -623,10 +623,10 @@ class ActivityBaseRequest extends FormRequest
                 $documentLinkForm = sprintf('document_link.%s', $documentLinkIndex);
             }
 
-            $messages[sprintf('%s.format', $documentLinkForm)] = 'The document link format is invalid';
+            $messages[sprintf('%s.format', $documentLinkForm)] = trans('requests.the_midfix_suffix', ['midfix'=>trans('common.document_link'), 'suffix'=>trans('requests.suffix.format_is_invalid')]);
 
             if (Arr::get($documentLink, 'url', null) !== '') {
-                $messages[sprintf('%s.url.url', $documentLinkForm)] = 'The @url field must be a valid url.';
+                $messages[sprintf('%s.url.url', $documentLinkForm)] = trans('requests.url_field_symbol', ['suffix'=>trans('requests.suffix.must_be_valid_url')]);
             }
 
             if (Arr::get($documentLink, 'document_date', null) !== '') {
@@ -636,11 +636,10 @@ class ActivityBaseRequest extends FormRequest
                     $messages[$key] = $item;
                 }
             }
-
-            $messages[sprintf('%s.category.unique_category', $documentLinkForm)] = 'The document link category code field must be a unique.';
-            $messages[sprintf('%s.category.0.code.in', $documentLinkForm)] = 'The document link category code is invalid.';
-            $messages[sprintf('%s.language.unique_language', $documentLinkForm)] = 'The document link language code field must be a unique.';
-            $messages[sprintf('%s.language.0.code.in', $documentLinkForm)] = 'The document link language code is invalid.';
+            $messages[sprintf('%s.category.unique_category', $documentLinkForm)] = translateRequestMessage('document_link_category_field', 'must_be_unique');
+            $messages[sprintf('%s.category.0.code.in', $documentLinkForm)] = translateRequestMessage('document_link_category', 'code_is_invalid');
+            $messages[sprintf('%s.language.unique_language', $documentLinkForm)] = translateRequestMessage('document_link_language_field', 'must_be_unique');
+            $messages[sprintf('%s.language.0.code.in', $documentLinkForm)] = translateRequestMessage('document_link_language', 'code_is_invalid');
             $narrativeTitleMessages = $this->getMessagesForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm));
 
             foreach ($narrativeTitleMessages as $key => $item) {
@@ -671,9 +670,9 @@ class ActivityBaseRequest extends FormRequest
 
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
             $messages[sprintf('%s.document_date.%s.date.date', $formIndex, $documentCategoryIndex)]
-                = 'The @iso-date field must be a proper date.';
+                = trans('requests.iso_field_symbol', ['suffix'=>trans('requests.suffix.must_be_a_proper_date')]);
             $messages[sprintf('%s.document_date.%s.date.date_greater_than', $formIndex, $documentCategoryIndex)]
-                = 'The @iso-date field must be a greater than 1900.';
+                = trans('requests.iso_field_symbol', ['suffix'=>trans('requests.suffix.date_must_be_greater')]);
         }
 
         return $messages;

@@ -6,7 +6,7 @@
           <nav aria-label="breadcrumbs" class="breadcrumb">
             <div class="flex">
               <a class="whitespace-nowrap font-bold" href="/activities">
-                Your Activities
+                {{ language.activities_lang.your_activities }}
               </a>
             </div>
           </nav>
@@ -18,42 +18,28 @@
             <div class="inline-flex min-h-[48px] grow flex-wrap items-center">
               <h4 class="ellipsis__title relative mr-4 font-bold">
                 <span class="ellipsis__title overflow-hidden">
-                  Import Activity
+                  {{ language.common_lang.import_activiy }}
                 </span>
               </h4>
               <div class="tooltip-btn">
                 <button class="">
                   <svg-vue icon="question-mark" />
-                  <span>What is an activity?</span>
+                  <span>{{
+                    language.activities_lang.what_is_activity.label
+                  }}</span>
                 </button>
-                <div class="tooltip-btn__content z-[50]">
+                <div class="tooltip-btn__content z-[1]">
                   <div class="content">
                     <div
                       class="mb-1.5 text-caption-c1 font-bold text-bluecoral"
                     >
-                      What is an activity?
+                      {{ language.activities_lang.what_is_activity.label }}
                     </div>
                     <p>
-                      You need to provide data about your organisation's
-                      development and humanitarian 'activities'. The unit of
-                      work described by an 'activity' is determined by the
-                      organisation that is publishing the data. For example, an
-                      activity could be a donor government providing US$ 50
-                      million to a recipient country's government to implement
-                      basic education over 5 years. Or an activity could be an
-                      NGO spending US$ 500,000 to deliver clean drinking water
-                      to 1000 households over 6 months.
-                      <br />
-                      Therefore your organisation will need to determine how it
-                      will divide its work internally into activities. Read the
-                      <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href="/publishing-checklist"
-                        class="text-bluecoral"
-                        ><b>Publishing Checklist</b></a
-                      >
-                      for more information.
+                      {{
+                        language.activities_lang.what_is_activity.description
+                          .one
+                      }}
                     </p>
                   </div>
                 </div>
@@ -69,7 +55,7 @@
                   v-if="selectedActivities.length > 0"
                   class="mr-3.5"
                   type="primary"
-                  :text="`Import (${selectedCount}/${activitiesLength})`"
+                  :text="`${language.button_lang.import} (${selectedCount}/${activitiesLength})`"
                   icon="download-file"
                   @click="importActivities"
                 />
@@ -86,10 +72,15 @@
         <thead>
           <tr class="bg-n-10">
             <th id="title" scope="col">
-              <span>Activity Title</span>
+              <span
+                >{{ language.common_lang.activities }}
+                {{ language.common_lang.title }}</span
+              >
             </th>
             <th id="status" scope="col">
-              <span class="block text-left">Status</span>
+              <span class="block text-left">{{
+                language.common_lang.status
+              }}</span>
             </th>
             <th id="cb" scope="col">
               <span class="cursor-pointer">
@@ -139,13 +130,14 @@ import Placeholder from './ImportPlaceholder.vue';
 import ListElement from './ListElement.vue';
 import axios from 'axios';
 
+const language = window['globalLang'];
 let activities = reactive({});
 const selectedActivities: Array<string> = reactive([]);
 const selectedCount = ref(0);
 const activitiesLength = ref(0);
 const loader = ref(false);
 const selectAll = ref(false);
-const loaderText = ref('Please Wait');
+const loaderText = ref(language.common_lang.please_wait);
 const tableRow = ref({});
 const tableWidth = ref({});
 
@@ -161,7 +153,7 @@ onUnmounted(() => {
 onMounted(() => {
   window.addEventListener('resize', getDimensions);
   loader.value = true;
-  loaderText.value = 'Please Wait';
+  loaderText.value = language.common_lang.please_wait;
   let count = 0;
   timer = setInterval(() => {
     axios
@@ -231,7 +223,7 @@ function selectAllActivities() {
 }
 
 function importActivities() {
-  loaderText.value = 'Importing .csv/.xml file';
+  loaderText.value = language.common_lang.importing_csv_xml_file;
   loader.value = true;
 
   axios

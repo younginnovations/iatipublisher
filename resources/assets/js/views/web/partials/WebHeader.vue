@@ -14,83 +14,93 @@
               class="nav__list flex pt-10 leading-5 xl:space-x-3"
             >
               <li class="nav__links active dropdown">
-                <a href="/about">ABOUT</a>
+                <a href="/about">{{ language.web_lang.about }}</a>
                 <NavDropdown
-                  name="About"
-                  text="IATI Publisher helps small and medium-sized organisations publish IATI data on development and humanitarian financing and activities"
-                  btn-text="Learn more"
+                  :name="language.web_lang.about"
+                  :text="language.web_lang.header.about_hover_text"
+                  :btn-text="language.button_lang.learn_more"
                   btn-link="/about"
                 />
               </li>
               <li class="nav__links active dropdown">
-                <a href="/publishing-checklist">PUBLISHING CHECKLIST</a>
+                <a href="/publishing-checklist">{{
+                  language.web_lang.publishing_checklist
+                }}</a>
                 <NavDropdown
-                  name="Publishing checklist"
-                  text="New to IATI? Use our checklist to track each step required for your organisation to successfully publish IATI data"
-                  btn-text="Read more"
+                  :name="language.web_lang.publishing_checklist"
+                  :text="
+                    language.web_lang.header.publishing_checklist_hover_text
+                  "
+                  :btn-text="language.button_lang.read_more"
                   btn-link="/publishing-checklist"
                 />
               </li>
               <li class="nav__links active dropdown relative">
-                <a href="/iati-standard">IATI STANDARD</a>
+                <a href="/iati-standard">{{
+                  language.web_lang.iati_standard
+                }}</a>
                 <NavDropdown
-                  name="IATI Standard"
-                  text="The IATI Standard provides information and guidance on all the data fields that
-                        your organisation can publish IATI data on"
-                  btn-text="See all data fields"
+                  :name="language.web_lang.iati_standard"
+                  :text="language.web_lang.header.iati_standard_hover_text"
+                  :btn-text="language.button_lang.see_all_data_fields"
                   btn-link="/iati-standard"
                 />
               </li>
               <li class="nav__links active dropdown">
-                <a href="/support">SUPPORT</a>
+                <a href="/support">{{ language.web_lang.support }}</a>
                 <NavDropdown
-                  name="Support"
-                  text=" Any questions? Get help to publish your organisation’s data"
-                  btn-text="Read more"
+                  :name="language.web_lang.support"
+                  :text="language.web_lang.header.support_hover_text"
+                  :btn-text="language.button_lang.read_more"
                   btn-link="/support"
                 />
               </li>
-
-              <!-- commented to temporarily hide language buttons -->
-
-              <!-- <li class="absolute bottom-4 left-0 right-0  xl:hidden">
-                <div class="flex items-center justify-center">
-                  <span class="mr-2 pt-5 pb-5 uppercase text-white xl:pt-0"
-                    >Language:</span
-                  >
-                  <ul class="languages flex items-center justify-center">
-                    <li class="nav__links">
-                      <a class="nav__active links__active" href="/">EN</a>
-                    </li>
-                    <li class="nav__links">
-                      <a href="/">FR</a>
-                    </li>
-                    <li class="nav__links">
-                      <a href="/">ES</a>
-                    </li>
-                  </ul>
-                </div>
-              </li> -->
             </ul>
           </div>
           <!-- remove width later -->
           <div class="languages hidden w-[170px] pt-11 xl:block">
             <!-- commented to temporarily hide language buttons -->
 
-            <!-- <div class="flex">
-              <span class="mr-2 pt-5 pb-5 uppercase xl:pt-0">Language:</span>
+            <div class="flex">
+              <span class="mr-2 pt-5 pb-5 uppercase xl:pt-0"
+                >{{ language.web_lang.language }}:</span
+              >
               <ul class="flex items-center justify-center">
                 <li class="nav__links">
-                  <a class="nav__active links__active" href="/">EN</a>
+                  <a
+                    :class="
+                      language.web_lang.active === 'en'
+                        ? 'nav__active links__active'
+                        : ''
+                    "
+                    href="/lang/en"
+                    >EN</a
+                  >
                 </li>
                 <li class="nav__links">
-                  <a href="/">FR</a>
+                  <a
+                    :class="
+                      language.web_lang.active === 'fr'
+                        ? 'nav__active links__active'
+                        : ''
+                    "
+                    href="/lang/fr"
+                    >FR</a
+                  >
                 </li>
                 <li class="nav__links">
-                  <a href="/">ES</a>
+                  <a
+                    :class="
+                      language.web_lang.active === 'es'
+                        ? 'nav__active links__active'
+                        : ''
+                    "
+                    href="/lang/es"
+                    >ES</a
+                  >
                 </li>
               </ul>
-            </div> -->
+            </div>
           </div>
           <div id="menu-overlay"></div>
           <div
@@ -116,7 +126,9 @@
             class="button secondary-btn"
           >
             {{
-              superAdmin ? 'Go to Organisation List' : 'Go to Your Activities'
+              superAdmin
+                ? `${language.common_lang.go_to} ${language.common_lang.org_list}`
+                : `${language.common_lang.go_to} ${language.activity_lang.your_activities_label}`
             }}
             <svg-vue class="text-2xl" icon="right-arrow" />
           </a>
@@ -146,6 +158,8 @@ export default defineComponent({
     onUnmounted(() => {
       document.body.classList.remove('no-nav');
     });
+    const language = window['globalLang'];
+    return { language };
   },
 });
 </script>

@@ -248,7 +248,7 @@ class Condition extends Element
     public function messages(): array
     {
         $messages = $this->getBaseMessages($this->request->getMessagesForCondition(Arr::get($this->data, 'conditions.condition', [])), false);
-        $messages['conditions.condition_attached.in'] = 'The condition attached value is invalid.';
+        $messages['conditions.condition_attached.in'] = trans('common.error.condition_attached_value_is_invalid');
 
         return $messages;
     }

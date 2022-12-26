@@ -9,38 +9,43 @@
       <span v-if="post.region_vocabulary">{{
         types.regionVocabulary[post.region_vocabulary]
       }}</span>
-      <span v-else>Vocabulary Missing</span>
+      <span v-else>{{
+        language.common_lang.missing.element.replace(
+          ':element',
+          language.common_lang.vocabulary
+        )
+      }}</span>
     </div>
     <div class="ml-5">
       <table>
         <tbody>
           <tr v-if="post.region_vocabulary == '1'">
-            <td>Region Code</td>
+            <td>{{ language.common_lang.region_code }}</td>
             <td>
               <span v-if="post.region_code">{{
                 types.region[post.region_code]
               }}</span>
-              <span v-else>Missing</span>
+              <span v-else>{{ language.common_lang.missing.default }}</span>
             </td>
           </tr>
           <tr v-else>
-            <td>Custom Code</td>
+            <td>{{ language.common_lang.custom_code }}</td>
             <td>
               <span v-if="post.custom_code">{{ post.custom_code }}</span>
-              <span v-else>Missing</span>
+              <span v-else>{{ language.common_lang.missing.default }}</span>
             </td>
           </tr>
           <tr>
-            <td>Percentage</td>
+            <td>{{ language.common_lang.percentage }}</td>
             <td>
               <span v-if="post.percentage">
                 ({{ roundFloat(post.percentage) }}%)
               </span>
-              <span v-else>Missing</span>
+              <span v-else>{{ language.common_lang.missing.default }}</span>
             </td>
           </tr>
           <tr v-if="post.region_vocabulary == '99'">
-            <td>Vocabulary-uri</td>
+            <td>{{ language.common_lang.vocabulary_uri }}</td>
             <td>
               <a
                 v-if="post.vocabulary_uri"
@@ -49,11 +54,11 @@
               >
                 {{ post.vocabulary_uri }}
               </a>
-              <span v-else>Missing</span>
+              <span v-else>{{ language.common_lang.missing.default }}</span>
             </td>
           </tr>
           <tr>
-            <td>Narrative</td>
+            <td>{{ language.common_lang.narrative }}</td>
             <td>
               <div
                 v-for="(narrative, k) in post.narrative"
@@ -62,15 +67,17 @@
                 :class="{ 'mb-4': k !== post.narrative.length - 1 }"
               >
                 <div class="language mb-1.5">
-                  (Language:
+                  ({{ language.common_lang.language }}:
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : 'Missing'
+                      : language.common_lang.missing.default
                   }})
                 </div>
                 <div class="w-[500px] max-w-full text-xs">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  {{
+                    narrative.narrative ?? language.common_lang.missing.default
+                  }}
                 </div>
               </div>
             </td>
@@ -97,6 +104,7 @@ interface Types {
   languages: [];
 }
 
+const language = window['globalLang'];
 const types = inject('types') as Types;
 
 function roundFloat(num: string) {

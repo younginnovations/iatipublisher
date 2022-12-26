@@ -1,9 +1,9 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <h2>Activity Detail Page</h2>
+    <h2>{{trans('common.activity_detail_page')}}</h2>
     <div>
-        Saved data:
+        {{trans('buttons.save_data')}}:
         <div>
             {{json_encode($activity)}}
         </div>

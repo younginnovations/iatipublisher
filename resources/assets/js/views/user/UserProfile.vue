@@ -30,7 +30,12 @@
             "
           >
             <svg-vue icon="edit" class="mr-1 text-base"></svg-vue
-            ><span class="text-xs uppercase">Edit your profile</span>
+            ><span class="text-xs uppercase">{{
+              language.button_lang.edit_element.replace(
+                ':element',
+                language.admin.header.your_profile
+              )
+            }}</span>
           </button>
         </div>
       </div>
@@ -47,12 +52,13 @@
       >
         <div class="popup-model h-auto" @keyup.enter="updatePassword">
           <div class="mb-4 text-2xl font-bold text-bluecoral">
-            Change Password
+            {{ language.user_lang.change_password }}
           </div>
           <div>
             <div class="mb-5 flex flex-col gap-2">
               <label class="text-sm text-n-50"
-                >Current Password <span class="text-[red]"> * </span>
+                >{{ language.register_lang.password.confirm }}
+                <span class="text-[red]"> * </span>
               </label>
               <span class="relative max-w-[calc(50%_-_12px)]">
                 <svg-vue
@@ -87,7 +93,8 @@
           <div class="mb-5 flex space-x-6">
             <div class="flex w-full flex-col gap-2">
               <label class="text-sm text-n-50"
-                >New Password <span class="text-[red]"> * </span>
+                >{{ language.register_lang.password.new }}
+                <span class="text-[red]"> * </span>
               </label>
               <span class="relative">
                 <svg-vue
@@ -119,7 +126,8 @@
             </div>
             <div class="flex w-full flex-col gap-2">
               <label class="text-sm text-n-50"
-                >Confirm Password <span class="text-[red]"> * </span>
+                >{{ language.register_lang.password.confirm }}
+                <span class="text-[red]"> * </span>
               </label>
               <span class="relative">
                 <svg-vue
@@ -159,10 +167,10 @@
                 }
               "
             >
-              Cancel
+              {{ language.button_lang.cancel }}
             </button>
             <button class="primary-btn !px-10" @click="updatePassword">
-              Save
+              {{ language.button_lang.save }}
             </button>
           </div>
         </div>
@@ -178,12 +186,20 @@
       >
         <div class="popup-model" @keyup.enter="updateProfile">
           <div class="mb-4 text-2xl font-bold text-bluecoral">
-            Edit your profile
+            {{
+              capitalize(
+                language.button_lang.edit_element.replace(
+                  ':element',
+                  language.admin.header.your_profile
+                )
+              )
+            }}
           </div>
           <div class="grid grid-cols-2 gap-6">
             <div class="col-span-2 flex flex-col items-start gap-2">
               <label class="text-sm text-n-50"
-                >Full Name<span class="text-[red]"> * </span></label
+                >{{ language.register_lang.fullname.label
+                }}<span class="text-[red]"> * </span></label
               >
               <input
                 v-model="formData.full_name"
@@ -205,7 +221,8 @@
             </div>
             <div class="flex flex-col items-start gap-2">
               <label class="text-sm text-n-50"
-                >Username<span class="text-[red]"> * </span></label
+                >{{ language.register_lang.username.label
+                }}<span class="text-[red]"> * </span></label
               >
               <input
                 v-model="formData.username"
@@ -228,7 +245,8 @@
 
             <div class="flex flex-col items-start gap-2">
               <label class="text-sm text-n-50"
-                >Email<span class="text-[red]"> * </span></label
+                >{{ language.user_lang.email
+                }}<span class="text-[red]"> * </span></label
               >
               <input
                 v-model="formData.email"
@@ -255,7 +273,8 @@
               class="flex flex-col items-start gap-2"
             >
               <label class="text-sm text-n-50"
-                >Language Preference<span class="text-[red]">*</span></label
+                >{{ language.user_lang.language_preference
+                }}<span class="text-[red]">*</span></label
               >
               <Multiselect
                 v-model="formData.language_preference"
@@ -281,10 +300,10 @@
                 }
               "
             >
-              Cancel
+              {{ language.button_lang.cancel }}
             </button>
             <button class="primary-btn !px-10" @click="updateProfile">
-              Save
+              {{ language.button_lang.save }}
             </button>
           </div>
         </div>
@@ -292,7 +311,9 @@
       <div class="flex justify-between border-b border-n-30 py-6">
         <span class="inline-flex items-center space-x-2">
           <span><svg-vue icon="user-profile" class="text-base"></svg-vue></span>
-          <h6 class="text-sm font-bold">Your Information</h6></span
+          <h6 class="text-sm font-bold">
+            {{ language.user_lang.your_information }}
+          </h6></span
         >
         <div class="inline-flex">
           <div class="inline-flex cursor-pointer space-x-1">
@@ -307,44 +328,52 @@
             >
               <!-- <svg-vue icon=""></svg-vue> -->
 
-              Change your password
+              {{ language.user_lang.change_your_password }}
             </a>
           </div>
         </div>
       </div>
 
       <div class="flex space-x-2 border-b border-n-20 py-6">
-        <div class="text-base font-bold text-n-40">Name</div>
+        <div class="text-base font-bold text-n-40">
+          {{ language.common_lang.name }}
+        </div>
         <div class="max-w-[60vw] overflow-x-hidden text-ellipsis text-base">
           {{ userData['full_name'] }}
         </div>
       </div>
       <div class="flex space-x-2 border-b border-n-20 py-6">
-        <div class="text-base font-bold text-n-40">Username</div>
+        <div class="text-base font-bold text-n-40">
+          {{ language.user_lang.user_name }}
+        </div>
         <div class="text-base">{{ userData['username'] }}</div>
       </div>
       <div class="flex space-x-2 border-b border-n-20 py-6">
-        <div class="text-base font-bold text-n-40">Language Preference</div>
+        <div class="text-base font-bold text-n-40">
+          {{ language.user_lang.language_preference }}
+        </div>
         <div class="text-base">
           {{ languagePreference[userData['language_preference']] }}
         </div>
       </div>
       <div class="flex space-x-2 py-6">
-        <div class="text-base font-bold text-n-40">Email</div>
+        <div class="text-base font-bold text-n-40">
+          {{ language.user_lang.email }}
+        </div>
         <div>
           <a>{{ userData['email'] }}</a>
           <div
             v-if="!userData['email_verified_at']"
             class="mt-1 max-w-[550px] text-n-40"
           >
-            You haven't verified your email address yet. Please check for
-            verification email sent to you and verify your account,
+            {{ language.user_lang.you_havent_verified_email_yet }}.
+            {{ language.common_lang.account_not_verified_desc_p1 }},
             <a
               class="cursor-pointer font-bold underline"
               @click="resendVerificationEmail()"
-              >resend verification email</a
+              >{{ language.common_lang.account_not_verified_desc_p2 }}</a
             >
-            if you haven't received such and email.
+            {{ language.user_lang.if_you_havent_received }}.
           </div>
         </div>
       </div>
@@ -352,7 +381,9 @@
         v-if="userData['organization']"
         class="flex space-x-2 border-b border-n-20 py-6"
       >
-        <div class="text-base font-bold text-n-40">Organisation</div>
+        <div class="text-base font-bold text-n-40">
+          {{ language.common_lang.organisation }}
+        </div>
         <div class="text-base">
           {{ userData['organization_name'] }}
         </div>
@@ -361,7 +392,9 @@
         v-if="userData['organization']"
         class="flex space-x-2 border-b border-n-20 py-6"
       >
-        <div class="text-base font-bold text-n-40">Role</div>
+        <div class="text-base font-bold text-n-40">
+          {{ language.user_lang.role }}
+        </div>
         <div class="text-base">
           {{ userData['user_role'] }}
         </div>
@@ -370,7 +403,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, reactive, ref, watch, onMounted } from 'vue';
+import { defineProps, reactive, ref, watch, onMounted, capitalize } from 'vue';
 import Loader from '../../components/Loader.vue';
 import Toast from 'Components/ToastMessage.vue';
 import axios from 'axios';
@@ -378,6 +411,8 @@ import PopupModal from 'Components/PopupModal.vue';
 import encrypt from 'Composable/encryption';
 import Multiselect from '@vueform/multiselect';
 import { watchIgnorable } from '@vueuse/core';
+
+const language = window['globalLang'];
 
 const props = defineProps({
   user: { type: Object, required: true },

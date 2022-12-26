@@ -156,15 +156,17 @@ class TransactionRequest extends ActivityBaseRequest
     public function getMessagesForTransaction(array $formFields): array
     {
         $messages = [];
-        $messages['transaction_type.0.transaction_type_code.in'] = 'The transaction type is invalid.';
-        $messages['flow_type.0.flow_type.in'] = 'The transaction flow type code is invalid.';
-        $messages['finance_type.0.finance_type.in'] = 'The transaction finance type code is invalid.';
-        $messages['aid_type.0.aid_type_vocabulary.in'] = 'The transaction aid type vocabulary is invalid.';
-        $messages['aid_type.0.aid_type_code.in'] = 'The transaction aid type code is invalid.';
-        $messages['aid_type.0.earmarking_category.in'] = 'The transaction aid type code is invalid.';
-        $messages['aid_type.0.earmarking_modality.in'] = 'The transaction aid type code is invalid.';
-        $messages['aid_type.0.cash_and_voucher_modalities.in'] = 'The transaction aid type code is invalid.';
-        $messages['tied_status.0.tied_status_code.in'] = 'The transaction tied status code is invalid.';
+        $messages['reference.not_in'] = translateRequestMessage('transaction_ref_field', 'must_be_unique_for_activity');
+        $messages['transaction_type.0.transaction_type_code.in'] = translateRequestMessage('transaction', 'type_is_invalid');
+        $messages['flow_type.0.flow_type.in'] = translateRequestMessage('transaction_flow', 'code_in_invalid');
+        $messages['finance_type.0.finance_type.in'] = translateRequestMessage('transaction_finance', 'code_in_invalid');
+        $messages['aid_type.0.aid_type_vocabulary.in'] = translateRequestMessage('transaction_aid', 'vocabulary_is_invalid');
+        $messages['aid_type.0.aid_type_code.in'] = translateRequestMessage('transaction_aid', 'code_in_invalid');
+        $messages['aid_type.0.earmarking_category.in'] = translateRequestMessage('transaction_aid', 'code_is_invalid');
+        $messages['aid_type.0.earmarking_modality.in'] = translateRequestMessage('transaction_aid', 'code_is_invalid');
+        $messages['aid_type.0.cash_and_voucher_modalities.in'] = translateRequestMessage('transaction_aid', 'code_in_invalid');
+        $messages['tied_status.0.tied_status_code.in'] = translateRequestMessage('transaction_tied', 'code_in_invalid');
+
         $tempMessages = [
             $this->getTransactionDateMessages($formFields['transaction_date']),
             $this->getValueMessages($formFields['value']),
@@ -236,8 +238,8 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $dateIndex => $date) {
             $dateForm = sprintf('transaction_date.%s', $dateIndex);
-            $messages[sprintf('%s.date.before', $dateForm)] = 'The @iso-date must not be in future.';
-            $messages[sprintf('%s.date.date', $dateForm)] = 'The @iso-date field must be a valid date.';
+            $messages[sprintf('%s.date.before', $dateForm)] = translateRequestMessage('iso_date_symbol', 'must_not_be_future');
+            $messages[sprintf('%s.date.date', $dateForm)] = translateRequestMessage('iso_field_symbol', 'must_be_a_valid_date');
         }
 
         return $messages;
@@ -297,9 +299,9 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('value.%s', $valueIndex);
-            $messages[sprintf('%s.amount.numeric', $valueForm)] = 'The @amount field must be a number.';
-            $messages[sprintf('%s.date.before', $valueForm)] = 'The @value-date must not be in future.';
-            $messages[sprintf('%s.date.date', $valueForm)] = 'The @value-date field must be a valid date.';
+            $messages[sprintf('%s.amount.numeric', $valueForm)] = translateRequestMessage('amount_field_symbol', 'must_be_a_number');
+            $messages[sprintf('%s.date.before', $valueForm)] = translateRequestMessage('value_date_symbol', 'must_not_be_future');
+            $messages[sprintf('%s.date.date', $valueForm)] = translateRequestMessage('value_date_field_symbol', 'must_be_a_valid_date');
         }
 
         return $messages;
@@ -505,8 +507,8 @@ class TransactionRequest extends ActivityBaseRequest
     public function getSectorsMessages(array $formFields): array
     {
         $messages = [
-            'sector.already_in_activity' => 'Sector has already been declared at activity level. You can’t declare a sector at the transaction level. To declare at transaction level, you need to remove sector at activity level.',
-            'sector.sector_required' => 'You have declared sector at transaction level so you must declare sector for all the transactions.',
+            'sector.already_in_activity' => trans('requests.sector_has_already_been_declared'),
+            'sector.sector_required' => trans('requests.you_have_declared_sector'),
         ];
 
         if (empty($formFields)) {
@@ -515,15 +517,15 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
-            $messages[sprintf('%s.sector_vocabulary.in', $sectorForm)] = 'The transaction sector vocabulary is invalid.';
-            $messages[sprintf('%s.code.in', $sectorForm)] = 'The transaction sector code is invalid.';
-            $messages[sprintf('%s.category_code.in', $sectorForm)] = 'The transaction sector code is invalid.';
-            $messages[sprintf('%s.sdg_goal.in', $sectorForm)] = 'The transaction sector code is invalid.';
-            $messages[sprintf('%s.sdg_target.in', $sectorForm)] = 'The transaction sector code is invalid.';
+            $messages[sprintf('%s.sector_vocabulary.in', $sectorForm)] = translateRequestMessage('transaction_sector', 'vocabulary_is_invalid');
+            $messages[sprintf('%s.code.in', $sectorForm)] = translateRequestMessage('transaction_sector', 'code_is_invalid');
+            $messages[sprintf('%s.category_code.in', $sectorForm)] = translateRequestMessage('transaction_sector', 'code_is_invalid');
+            $messages[sprintf('%s.sdg_goal.in', $sectorForm)] = translateRequestMessage('transaction_sector', 'code_is_invalid');
+            $messages[sprintf('%s.sdg_target.in', $sectorForm)] = translateRequestMessage('transaction_sector', 'code_is_invalid');
 
             if (isset($sector['sector_vocabulary']) && $sector['sector_vocabulary'] === '99') {
                 $messages[sprintf('%s.vocabulary_uri.url', $sectorForm)]
-                    = 'The transaction sector vocabulary-uri field must be a valid url.';
+                    = translateRequestMessage('transaction_sector', 'must_be_valid_vocal_url');
             }
 
             $narrativeMessages = $this->getMessagesForNarrative($sector['narrative'], $sectorForm);
@@ -597,8 +599,8 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $providerOrgIndex => $providerOrg) {
             $providerOrgForm = sprintf('provider_organization.%s', $providerOrgIndex);
-            $message[sprintf('%s.%s.exclude_operators', $providerOrgForm, 'provider_activity_id')] = 'The transaction provider-activity-id field is not valid.';
-            $messages[sprintf('%s.%s.in', $providerOrgForm, 'type')] = 'The transaction provider org type is invalid.';
+            $message[sprintf('%s.%s.exclude_operators', $providerOrgForm, 'provider_activity_id')] = translateRequestMessage('transaction_pro_activity', 'is_not_valid');
+            $messages[sprintf('%s.%s.in', $providerOrgForm, 'type')] = translateRequestMessage('transaction_pro_org', 'type_is_invalid');
             $narrativeMessages = $this->getMessagesForNarrative($providerOrg['narrative'], $providerOrgForm);
 
             foreach ($narrativeMessages as $key => $item) {
@@ -670,8 +672,8 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $receiverOrgIndex => $receiverOrg) {
             $receiverOrgForm = sprintf('receiver_organization.%s', $receiverOrgIndex);
-            $message[sprintf('%s.%s.exclude_operators', $receiverOrgForm, 'receiver_activity_id')] = 'The transaction receiver-activity-id field is not valid.';
-            $messages[sprintf('%s.%s.in', $receiverOrgForm, 'type')] = 'The transaction receiver org type is invalid.';
+            $message[sprintf('%s.%s.exclude_operators', $receiverOrgForm, 'receiver_activity_id')] = translateRequestMessage('transaction_rec_activity', 'is_not_valid');
+            $messages[sprintf('%s.%s.in', $receiverOrgForm, 'type')] = translateRequestMessage('transaction_rec_org', 'type_is_invalid');
             $narrativeMessages = $this->getMessagesForNarrative($receiverOrg['narrative'], $receiverOrgForm);
 
             foreach ($narrativeMessages as $key => $item) {
@@ -787,8 +789,8 @@ class TransactionRequest extends ActivityBaseRequest
     public function getMessagesForRecipientRegion(array $formFields): array
     {
         $messages = [
-            'recipient_region.already_in_activity' => 'Recipient Region or Recipient Country is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.',
-            'recipient_region.country_or_region' => 'You must add either recipient country or recipient region.',
+            'recipient_region.already_in_activity' => trans('requests.recipient_region_or_recipient_country_already_added'),
+            'recipient_region.country_or_region' => trans('requests.you_must_add_either_or'),
         ];
 
         if (!$formFields) {
@@ -797,13 +799,13 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = sprintf('recipient_region.%s', $recipientRegionIndex);
-            $messages[sprintf('%s.region_vocabulary.in', $recipientRegionForm)] = 'The transaction recipient region vocabulary is invalid.';
-            $messages[sprintf('%s.region_code.in', $recipientRegionForm)] = 'The transaction recipient region code is invalid.';
-            $messages[sprintf('%s.vocabulary_uri.url', $recipientRegionForm)] = 'The transaction recipient region vocabulary uri must be a valid url.';
+            $messages[sprintf('%s.region_vocabulary.in', $recipientRegionForm)] = translateRequestMessage('transaction_recipient_region', 'vocabulary_is_invalid');
+            $messages[sprintf('%s.region_code.in', $recipientRegionForm)] = translateRequestMessage('transaction_recipient_region', 'code_is_invalid');
+            $messages[sprintf('%s.vocabulary_uri.url', $recipientRegionForm)] = translateRequestMessage('transaction_recipient_region', 'must_be_valid_vocal_url');
 
             if (Arr::get($recipientRegion, 'region_vocabulary', 1) === '99') {
                 $messages[sprintf('%s.vocabulary_uri.url', $recipientRegionForm)]
-                    = 'The @vocabulary-uri field must be a valid url.';
+                    = translateRequestMessage('vocab_url_field_symbol', 'must_be_valid_url');
             }
 
             $narrativeMessages = $this->getMessagesForNarrative($recipientRegion['narrative'], $recipientRegionForm);
@@ -911,8 +913,8 @@ class TransactionRequest extends ActivityBaseRequest
     public function getMessagesForRecipientCountry(array $formFields): array
     {
         $messages = [
-            'recipient_country.already_in_activity' => 'Recipient Region or Recipient Country is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.',
-            'recipient_country.country_or_region' => 'You must add either recipient country or recipient region.',
+            'recipient_country.already_in_activity' => trans('requests.recipient_region_or_recipient_country_already_added'),
+            'recipient_country.country_or_region' => trans('requests.you_must_add_either_or'),
         ];
 
         if (!$formFields) {
@@ -921,7 +923,7 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('recipient_country.%s', $recipientCountryIndex);
-            $messages[sprintf('%s.country_code.in', $recipientCountryForm)] = 'The transaction recipient country code is invalid.';
+            $messages[sprintf('%s.country_code.in', $recipientCountryForm)] = translateRequestMessage('transaction_recipient_country', 'code_is_invalid');
             $narrativeMessages = $this->getMessagesForNarrative(Arr::get($recipientCountry, 'narrative', []), $recipientCountryForm);
 
             foreach ($narrativeMessages as $key => $item) {

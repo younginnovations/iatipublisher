@@ -149,10 +149,6 @@ class RecipientRegionRequest extends ActivityBaseRequest
             return false;
         });
 
-        Validator::extend('single_allocated_region_total_mismatch', function () {
-            return false;
-        });
-
         Validator::extend('sum_greater_than', function () {
             return false;
         });
@@ -198,28 +194,28 @@ class RecipientRegionRequest extends ActivityBaseRequest
     public function getMessagesForRecipientRegion(array $formFields): array
     {
         $messages = [
-            'recipient_region.already_in_transactions' => 'Recipient Region is already added at transaction level. You can add a Recipient Region either at activity level or at transaction level but not at both.',
+            'recipient_region.already_in_transactions' => translateRequestMessage('alt_recipient_region', 'already_defined_in_transaction'),
         ];
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
-            $messages[sprintf('%s.region_vocabulary.in', $recipientRegionForm)] = 'The recipient region vocabulary is invalid.';
-            $messages[sprintf('%s.region_code.in', $recipientRegionForm)] = 'The recipient region code is invalid.';
-            $messages[$recipientRegionForm . '.percentage.numeric'] = 'The recipient region percentage field must be a number.';
-            $messages[sprintf('%s.vocabulary_uri.url', $recipientRegionForm)] = 'The recipient region vocabulary uri must be a valid url.';
-            $messages[sprintf('%s.percentage.country_percentage_complete', $recipientRegionForm)] = 'Recipient Country’s percentage is already 100%. The sum of the percentages of Recipient Country and Recipient Region must be 100%';
+            $messages[sprintf('%s.region_vocabulary.in', $recipientRegionForm)] = translateRequestMessage('recipient_region', 'vocabulary_is_invalid');
+            $messages[sprintf('%s.region_code.in', $recipientRegionForm)] = translateRequestMessage('recipient_region', 'code_is_invalid');
+            $messages[$recipientRegionForm . '.percentage.numeric'] = translateRequestMessage('recipient_region_percentage_field', 'must_be_a_number');
+            $messages[sprintf('%s.vocabulary_uri.url', $recipientRegionForm)] = translateRequestMessage('recipient_region', 'must_be_valid_vocal_url');
+            $messages[sprintf('%s.percentage.country_percentage_complete', $recipientRegionForm)] = trans('requests.recipient_country_percentage_already_100') . ' ' . trans('requests.the_sum_of_recipient_country_and_recipient_region');
             $narrativeMessages = $this->getMessagesForNarrative($recipientRegion['narrative'], $recipientRegionForm);
 
             foreach ($narrativeMessages as $key => $item) {
                 $messages[$key] = $item;
             }
 
-            $messages[$recipientRegionForm . '.percentage.in'] = 'The sum of the percentages of Recipient Country(ies) and Recipient Region(s) must always be 100%';
-            $messages[$recipientRegionForm . '.percentage.allocated_region_total_mismatch'] = 'The sum of recipient country and recipient region of a specific vocabulary must be 100%';
-            $messages[$recipientRegionForm . '.percentage.sum_greater_than'] = 'Sum of percentage within vocabulary cannot be greater than 100';
-            $messages[$recipientRegionForm . '.percentage.percentage_within_vocabulary'] = 'The sum of percentage of Recipient Country and Recipient Regions (within the same Region Vocabulary) must be equal to 100%';
-            $messages[$recipientRegionForm . '.percentage.min'] = 'The recipient country percentage must be at least 0. ';
-            $messages[$recipientRegionForm . '.percentage.single_allocated_region_total_mismatch'] = 'The sum of the percentages of Recipient Country(ies) and Recipient Region(s) must always be 100%';
+            $messages[$recipientRegionForm . '.percentage.in'] = trans('requests.sum_must_always_be_100');
+            $messages[$recipientRegionForm . '.percentage.allocated_region_total_mismatch'] = trans('requests.the_sum_recipient_country_and_recipient_region_of_a_specific');
+            $messages[$recipientRegionForm . '.percentage.sum_greater_than'] = trans('requests.sum_of_percent');
+            $messages[$recipientRegionForm . '.percentage.percentage_within_vocabulary'] = trans('requests.sum_within_region_must_be_equal_to_100');
+            $messages[$recipientRegionForm . '.percentage.min'] = translateRequestMessage('recipient_country_percentage', 'must_be_atleast_0');
+            $messages[$recipientRegionForm . '.percentage.single_allocated_region_total_mismatch'] = trans('requests.the_sum_of_percentages_of_countries_and_regions');
         }
 
         return $messages;

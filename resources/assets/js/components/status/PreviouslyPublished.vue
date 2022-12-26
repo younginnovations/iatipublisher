@@ -11,7 +11,10 @@
 import { defineProps } from 'vue';
 
 defineProps({
-  text: { type: String, default: 'Previously Published on IATI' },
+  text: {
+    type: String,
+    default: window['globalLang'].common_lang.previously_published_on_iati,
+  },
   icon: { type: String, default: 'approved-cloud' },
 });
 </script>

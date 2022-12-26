@@ -165,6 +165,11 @@ class ActivityRow extends Row
     protected array $organizationReportingOrg;
 
     /**
+     * @var string
+     */
+    public string $locale;
+
+    /**
      * ActivityRow constructor.
      *
      * @param $fields
@@ -172,8 +177,9 @@ class ActivityRow extends Row
      * @param $userId
      * @param $activityIdentifiers
      * @param $organizationReportingOrg
+     * @param $locale
      */
-    public function __construct($fields, $organizationId, $userId, $activityIdentifiers, $organizationReportingOrg)
+    public function __construct($fields, $organizationId, $userId, $activityIdentifiers, $organizationReportingOrg, $locale)
     {
         $this->fields = $fields;
         $this->stringifyFields();
@@ -183,6 +189,7 @@ class ActivityRow extends Row
         $this->userId = $userId;
         $this->init();
         $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH ', 'CsvImporter/tmp');
+        $this->locale = $locale;
     }
 
     /**
@@ -426,6 +433,7 @@ class ActivityRow extends Row
      */
     protected function validateElements(): static
     {
+        app()->setLocale($this->locale);
         foreach ($this->elements() as $element) {
             if ($element === 'transaction') {
                 foreach ($this->$element as $index => $transaction) {
@@ -728,7 +736,7 @@ class ActivityRow extends Row
     protected function containsDuplicateActivities($commonIdentifierCount): bool
     {
         if ($commonIdentifierCount > 1) {
-            $this->errors['critical']['activity_identifier']['activity_identifier'] = 'This Activity has been duplicated in the uploaded Csv File.';
+            $this->errors['activity_identifier']['activity_identifier'] = trans('common.error.this_activity_has_been_duplicated');
 
             return true;
         }

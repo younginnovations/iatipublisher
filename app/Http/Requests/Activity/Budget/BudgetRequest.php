@@ -317,7 +317,7 @@ class BudgetRequest extends ActivityBaseRequest
         if (count($this->identicalIds)) {
             foreach ($this->identicalIds as $ids) {
                 foreach ($ids as $id) {
-                    $messages['budget.' . $id . '.budget_type.budgets_identical'] = 'The periods of multiple budgets with the same type should not be the same';
+                    $messages['budget.' . $id . '.budget_type.budgets_identical'] = trans('requests.multiple_budget_periods_should_not_be_same');
                 }
             }
         }
@@ -325,7 +325,7 @@ class BudgetRequest extends ActivityBaseRequest
         if (count($this->revisedIds)) {
             foreach ($this->revisedIds as $ids) {
                 foreach ($ids as $id) {
-                    $messages['budget.' . $id . '.budget_type.budget_revised_invalid'] = 'Budget with type revised must have period start and end same to that of one of the budgets having same type original for budgets elements at position ' . $this->getIdenticalIds($ids);
+                    $messages['budget.' . $id . '.budget_type.budget_revised_invalid'] = trans('requests.budget_with_type_revised_must_have_same_type') . $this->getIdenticalIds($ids);
                 }
             }
         }
@@ -350,10 +350,10 @@ class BudgetRequest extends ActivityBaseRequest
                 $messages[$key] = $valueMessage;
             }
 
-            $messages[$budgetForm . '.budget_type.in'] = 'The budget type is invalid.';
-            $messages[$budgetForm . '.budget_status.in'] = 'The budget status is invalid.';
-            $messages[$budgetForm . '.period_end.0.date.before'] = 'The Period End iso-date must be within a year after Period Start iso-date.';
-            $messages[$budgetForm . '.period_end.0.date.period_start_end'] = 'The Budget Period must not be longer than one year';
+            $messages[$budgetForm . '.budget_type.in'] = translateRequestMessage('budget', 'type_is_invalid');
+            $messages[$budgetForm . '.budget_status.in'] = translateRequestMessage('budget', 'status_is_invalid');
+            $messages[$budgetForm . '.period_end.0.date.before'] = translateRequestMessage('period_end_iso', 'must_be_within_a_year');
+            $messages[$budgetForm . '.period_end.0.date.period_start_end'] = translateRequestMessage('budget_period', 'must_not_be_longer_than_1_year');
         }
 
         return $messages;
@@ -372,9 +372,9 @@ class BudgetRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date'] = 'The iso-date field must be a valid date.';
-            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date_greater_than'] = 'The iso-date field must date after year 1900.';
-            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.period_start_end'] = 'The Budget Period must not be longer than one year';
+            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date'] = translateRequestMessage('iso_field', 'must_be_a_valid_date');
+            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date_greater_than'] = translateRequestMessage('iso_field', 'date_must_be_greater');
+            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.period_start_end'] = translateRequestMessage('budget_period', 'must_not_be_longer_than_1_year');
         }
 
         return $messages;
@@ -393,9 +393,9 @@ class BudgetRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = 'The iso-date field must be a valid date.';
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date_greater_than'] = 'The iso-date field must be date after year 1900.';
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = 'The Period End iso-date must be a date after Period Start iso-date';
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = translateRequestMessage('iso_field', 'must_be_a_valid_date');
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date_greater_than'] = translateRequestMessage('iso_field', 'date_must_be_greater');
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = translateRequestMessage('period_end_iso', 'must_be_a_date_after_period_start');
         }
 
         return $messages;
@@ -415,11 +415,11 @@ class BudgetRequest extends ActivityBaseRequest
 
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('%s.budget_value.%s', $formBase, $valueIndex);
-            $messages[sprintf('%s.amount.numeric', $valueForm)] = 'The amount field must be a number.';
-            $messages[sprintf('%s.amount.min', $valueForm)] = 'The amount field must not be in negative.';
-            $messages[sprintf('%s.value_date.date', $valueForm)] = 'The value-date field must be a valid date.';
-            $messages[sprintf('%s.value_date.after_or_equal', $valueForm)] = 'The value-date field must be between period start and period end.';
-            $messages[sprintf('%s.value_date.before_or_equal', $valueForm)] = 'The value-date field must be between period start and period end.';
+            $messages[sprintf('%s.amount.numeric', $valueForm)] = translateRequestMessage('amount_field', 'must_be_a_number');
+            $messages[sprintf('%s.amount.min', $valueForm)] = translateRequestMessage('amount_field', 'must_not_be_negative');
+            $messages[sprintf('%s.value_date.date', $valueForm)] = translateRequestMessage('value_date_field', 'must_be_a_valid_date');
+            $messages[sprintf('%s.value_date.after_or_equal', $valueForm)] = translateRequestMessage('value_date_field', 'must_be_between');
+            $messages[sprintf('%s.value_date.before_or_equal', $valueForm)] = translateRequestMessage('value_date_field', 'must_be_between');
         }
 
         return $messages;

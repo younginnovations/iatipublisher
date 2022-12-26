@@ -82,7 +82,7 @@ class CountryBudgetItemsCsvTest extends CsvBaseTest
         $flattenErrors = Arr::flatten($errors);
 
         $this->assertContains('The country budget item vocabulary is invalid.', $flattenErrors);
-        $this->assertContains('The budget item code in invalid.', $flattenErrors);
+        $this->assertContains('The budget item code is invalid.', $flattenErrors);
         $this->assertContains('The budget item percentage field must be a number.', $flattenErrors);
         $this->assertContains('The sum of percentage with budget items must add up to 100.', $flattenErrors);
         $this->assertContains('The budget item percentage field should be 100 when there is only one budget item.', $flattenErrors);

@@ -4,13 +4,13 @@
       <div class="mb-4 activity__title text-caption-c1 text-n-40">
         <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
           <div class="flex max-w-md">
-            <a class="font-bold whitespace-nowrap" href="/activities">Your Activities</a>
+            <a class="font-bold whitespace-nowrap" href="/activities">{{ trans('activities.your_activities') }}</a>
             <span class="mx-4 separator"> / </span>
             <div class="breadcrumb__title">
               <span class="overflow-hidden breadcrumb__title last text-n-30"><a
-                  href="/activity/{{ $activity['id'] }}">{{ $activity->default_title_narrative ?? 'Untitled' }}</a></span>
+                  href="/activity/{{ $activity['id'] }}">{{ $activity->default_title_narrative ?? trans('common.untitled') }}</a></span>
               <span
-                class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{ $activity->default_title_narrative ?? 'Untitled' }}</span>
+                class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{ $activity->default_title_narrative ?? trans('common.untitled') }}</span>
             </div>
           </div>
         </nav>
@@ -23,8 +23,8 @@
         </div>
         <div>
           <h4 class="relative mr-4 text-2xl font-bold ellipsis__title">
-            <span class="overflow-hidden ellipsis__title">{{ $activity->default_title_narrative ?? 'Untitled' }}</span>
-            <span class="ellipsis__title--hover">{{ $activity->default_title_narrative ?? 'Untitled' }}</span>
+            <span class="overflow-hidden ellipsis__title">{{ $activity->default_title_narrative ?? trans('common.untitled') }}</span>
+            <span class="ellipsis__title--hover">{{ $activity->default_title_narrative ?? trans('common.untitled') }}</span>
           </h4>
         </div>
       </div>

@@ -91,7 +91,7 @@ class ConditionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $conditionIndex => $condition) {
             $conditionForm = sprintf('condition.%s', $conditionIndex);
-            $messages[sprintf('%s.condition_type.in', $conditionForm)] = 'The condition type is invalid.';
+            $messages[sprintf('%s.condition_type.in', $conditionForm)] = trans('requests.condition', ['suffix'=>trans('requests.suffix.type_is_invalid')]);
 
             foreach ($this->getMessagesForNarrative($condition['narrative'], $conditionForm) as $conditionNarrativeIndex => $conditionNarrativeMessages) {
                 $messages[$conditionNarrativeIndex] = $conditionNarrativeMessages;
