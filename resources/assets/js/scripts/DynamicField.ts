@@ -715,7 +715,6 @@ export class DynamicField {
 
     switch (value) {
       case '1':
-        console.log(case1_show);
         index
           .closest('.form-field-group')
           .find(case1_show)

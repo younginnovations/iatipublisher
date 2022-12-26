@@ -75,8 +75,9 @@ class BulkPublishingController extends Controller
     public function checkCoreElementsCompleted(Request $request): JsonResponse
     {
         try {
-            if ($this->activityWorkflowService->checkActivityCannotBePublished(auth()->user()->organization)) {
-                $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization);
+            $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization);
+
+            if (!empty($message)) {
                 Session::put('error', $message);
 
                 return response()->json(['success' => false, 'message' => $message]);
@@ -114,8 +115,9 @@ class BulkPublishingController extends Controller
         try {
             DB::beginTransaction();
 
-            if ($this->activityWorkflowService->checkActivityCannotBePublished(auth()->user()->organization)) {
-                $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization);
+            $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization);
+
+            if (!empty($message)) {
                 Session::put('error', $message);
 
                 return response()->json(['success' => false, 'message' => $message]);
@@ -157,8 +159,9 @@ class BulkPublishingController extends Controller
         try {
             DB::beginTransaction();
 
-            if ($this->activityWorkflowService->checkActivityCannotBePublished(auth()->user()->organization)) {
-                $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization);
+            $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization);
+
+            if (!empty($message)) {
                 Session::put('error', $message);
 
                 return response()->json(['success' => false, 'message' => $message]);
@@ -224,7 +227,7 @@ class BulkPublishingController extends Controller
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Status generation failed.']);
-        } catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
+        } catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Request error']);

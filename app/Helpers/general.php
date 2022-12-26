@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\IATI\Models\User\Role;
 use Illuminate\Encryption\Encrypter;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -327,7 +328,7 @@ if (!function_exists('isMandatoryElementCompleted')) {
      */
     function isMandatoryElementCompleted($elementStatus): bool
     {
-        return empty(array_diff_assoc(getMandatoryElementsWithTrueValue(), $elementStatus));
+        return Arr::get($elementStatus, 'name', false) && Arr::get($elementStatus, 'reporting_org', false);
     }
 }
 

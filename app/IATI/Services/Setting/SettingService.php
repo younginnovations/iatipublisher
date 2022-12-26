@@ -78,7 +78,7 @@ class SettingService
             ],
             'activity_default_values' => [
                 'hierarchy' => isset($data['hierarchy']) ? $data['hierarchy'] : 1,
-                'humanitarian' => isset($data['humanitarian']) ? $data['humanitarian'] : 'yes',
+                'humanitarian' => isset($data['humanitarian']) ? $data['humanitarian'] : '1',
                 'budget_not_provided' => isset($data['budget_not_provided']) ? $data['budget_not_provided'] : '',
             ],
         ]);

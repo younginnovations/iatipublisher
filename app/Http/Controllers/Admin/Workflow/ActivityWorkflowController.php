@@ -51,9 +51,9 @@ class ActivityWorkflowController extends Controller
     {
         try {
             $activity = $this->activityWorkflowService->findActivity($id);
+            $message = $this->activityWorkflowService->getPublishErrorMessage($activity->organization);
 
-            if ($this->activityWorkflowService->checkActivityCannotBePublished($activity->organization)) {
-                $message = $this->activityWorkflowService->getPublishErrorMessage($activity->organization);
+            if (!empty($message)) {
                 Session::put('error', $message);
 
                 return response()->json(['success' => false, 'message' => $message]);
@@ -125,9 +125,9 @@ class ActivityWorkflowController extends Controller
     {
         try {
             $activity = $this->activityWorkflowService->findActivity($id);
+            $message = $this->activityWorkflowService->getPublishErrorMessage($activity->organization);
 
-            if ($this->activityWorkflowService->checkActivityCannotBePublished($activity->organization)) {
-                $message = $this->activityWorkflowService->getPublishErrorMessage($activity->organization);
+            if (!empty($message)) {
                 Session::put('error', $message);
 
                 return response()->json(['success' => false, 'message' => $message]);
@@ -165,9 +165,9 @@ class ActivityWorkflowController extends Controller
     public function checksForActivityPublish(): JsonResponse
     {
         try {
-            if ($this->activityWorkflowService->checkActivityCannotBePublished(auth()->user()->organization)) {
-                $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization);
+            $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization);
 
+            if (!empty($message)) {
                 return response()->json(['success' => false, 'message' => $message]);
             }
 

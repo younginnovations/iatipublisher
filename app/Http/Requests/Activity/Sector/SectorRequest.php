@@ -161,7 +161,7 @@ class SectorRequest extends ActivityBaseRequest
             $messages[sprintf('%s.percentage.numeric', $sectorForm)] = 'The sector percentage field must be a number.';
             $messages[sprintf('%s.percentage.in', $sectorForm)] = 'The sector percentage for single sector must be either omitted or be 100.';
             $messages[sprintf('%s.percentage.sector_total_percent', $sectorForm)] = 'The total percentage within a vocabulary must be 100.';
-            $messages[sprintf('%s.sector_vocabulary.sector_has_five_digit_oced_vocab', $sectorForm)] = 'The sector vocabulary must have 5 digit OCED';
+            $messages[sprintf('%s.sector_vocabulary.sector_has_five_digit_oced_vocab', $sectorForm)] = 'The sector vocabulary must have 5 digit OECD';
 
             $messageNarratives = $this->getMessagesForNarrative($sector['narrative'], $sectorForm);
 

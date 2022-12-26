@@ -231,7 +231,8 @@ class ActivityWorkflowService
             return true;
         }
 
-        if (empty(Arr::get($registryInfo, 'publisher_id', null)) ||
+        if (
+            empty(Arr::get($registryInfo, 'publisher_id', null)) ||
             empty(Arr::get($registryInfo, 'api_token', null)) ||
             !Arr::get($registryInfo, 'publisher_verification', false) ||
             !Arr::get($registryInfo, 'token_verification', false)
@@ -273,6 +274,9 @@ class ActivityWorkflowService
         if ($type === 'activity' && !$this->isOrganizationPublished($organization)) {
             $messages[] = 'Your Organisation data is not published.';
         }
+        if (!$this->organizationService->isPublisherStateActive($organization['publisher_id'])) {
+            $messages[] = 'The Publisher ID is not verified in IATI Registry.';
+        }
 
         return $messages;
     }
@@ -287,19 +291,5 @@ class ActivityWorkflowService
     public function isOrganizationPublished($organization): bool
     {
         return $organization->is_published;
-    }
-
-    /**
-     * Checks if all conditions for publishing activities have been fulfilled.
-     *
-     * @param $organization
-     *
-     * @return bool
-     */
-    public function checkActivityCannotBePublished($organization): bool
-    {
-        return $this->hasNoPublisherInfo($organization->settings) ||
-            !$this->isUserVerified() ||
-            !$this->isOrganizationPublished($organization);
     }
 }
