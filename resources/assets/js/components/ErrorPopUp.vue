@@ -45,7 +45,10 @@ import {
 
 const emit = defineEmits(['close-popup']);
 const props = defineProps({
-  message: { required: true, type: Array as PropType<Array<string>> },
+  message: {
+    required: true,
+    type: (Array as PropType<Array<string>>) || String,
+  },
   title: { type: String, required: true },
 });
 const close = () => {
