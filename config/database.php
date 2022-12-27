@@ -75,7 +75,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'search_path' => 'public',
-            'sslmode' => env('DB_PASSWORD', 'require'),
+            'sslmode' => env('DB_SSLMODE', 'require'),
             'sslrootcert' => env('DB_SSLROOTCERT', 'ca-certificate.crt'),
         ],
 
