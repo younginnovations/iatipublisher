@@ -216,7 +216,7 @@ export default defineComponent({
       }, 5000);
     });
     function handleNavigate(path) {
-      window.location.href = window.location.origin + path;
+      window.location.href = path;
     }
 
     function fetchListings(active_page: number) {

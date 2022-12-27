@@ -219,7 +219,7 @@ export default defineComponent({
         });
     }
     function handleNavigate(path) {
-      window.location.href = window.location.origin + path;
+      window.location.href = path;
     }
 
     // provide

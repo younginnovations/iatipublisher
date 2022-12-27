@@ -1,5 +1,13 @@
 <template>
-  <button class="text-n-40 hover:text-spring-50" @click="deleteValue = true">
+  <button
+    class="text-n-40 hover:text-spring-50"
+    @click="
+      (event) => {
+        deleteValue = true;
+        event.stopPropagation();
+      }
+    "
+  >
     <svg-vue icon="delete" class="text-xl"></svg-vue>
   </button>
   <Modal :modal-active="deleteValue" width="583" @close="deleteToggle">
@@ -13,6 +21,7 @@
         <b v-else>Delete</b>
       </div>
       <div class="rounded-lg bg-rose p-4">
+<<<<<<< HEAD
         <p v-if="props.itemType === 'result'">
           Are you sure you want to delete this Result? Related Indicators and
           Periods will also be deleted
@@ -28,6 +37,23 @@
           Are you sure you want to delete this Transaction?
         </p>
         <p v-else>Are you sure you want to delete this module?</p>
+=======
+        <b v-if="props.itemType === 'result'"
+          >Are you sure you want to delete this Result? Related Indicators and
+          Periods will also be deleted</b
+        >
+        <b v-else-if="props.itemType === 'indicator'"
+          >Are you sure you want to delete this Indicator? Related Periods will
+          also be deleted</b
+        >
+        <b v-else-if="props.itemType === 'period'"
+          >Are you sure you want to delete this Period?</b
+        >
+        <b v-else-if="props.itemType === 'transaction'"
+          >Are you sure you want to delete this Transaction?</b
+        >
+        <b v-else>Are you sure you want to delete this module?</b>
+>>>>>>> 58ff179c (row click issue fix)
       </div>
     </div>
     <div class="flex justify-end">
