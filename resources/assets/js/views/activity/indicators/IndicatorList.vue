@@ -1,11 +1,11 @@
 <template>
-  <div class="relative bg-paper px-5 xl:px-10 pt-4 pb-[71px]">
+  <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       title="Indicator List"
       :back-link="`${resultLink}`"
     >
-      <div class="flex space-x-3 items-center">
+      <div class="flex items-center space-x-3">
         <Toast
           v-if="toastData.visibility"
           :message="toastData.message"
@@ -37,18 +37,35 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(indicator, t, index) in indicatorsData.data" :key="index">
+          <tr
+            v-for="(indicator, t, index) in indicatorsData.data"
+            :key="index"
+            class="cursor-pointer"
+            @click="
+              handleNavigate(
+                `/result/${indicator.result_id}/indicator/${indicator.id}`
+              )
+            "
+          >
             <td>
               <div class="ellipsis relative">
                 <a
                   :href="`/result/${indicator.result_id}/indicator/${indicator.id}`"
                   class="ellipsis overflow-hidden text-n-50"
                 >
-                  {{ getActivityTitle(indicator.indicator.title[0].narrative, "en") }}
+                  {{
+                    getActivityTitle(
+                      indicator.indicator.title[0].narrative,
+                      'en'
+                    )
+                  }}
                 </a>
                 <div class="w-52">
                   <span class="ellipsis__title--hover">{{
-                    getActivityTitle(indicator.indicator.title[0].narrative, "en")
+                    getActivityTitle(
+                      indicator.indicator.title[0].narrative,
+                      'en'
+                    )
                   }}</span>
                 </div>
               </div>
@@ -57,10 +74,10 @@
             <td class="capitalize">
               {{
                 parseInt(indicator.indicator.aggregation_status)
-                  ? "True"
+                  ? 'True'
                   : indicator.indicator.aggregation_status
-                  ? "False"
-                  : "Missing"
+                  ? 'False'
+                  : 'Missing'
               }}
             </td>
             <td>
@@ -90,22 +107,29 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, reactive, ref, onMounted, provide } from "vue";
-import axios from "axios";
+import {
+  defineComponent,
+  toRefs,
+  reactive,
+  ref,
+  onMounted,
+  provide,
+} from 'vue';
+import axios from 'axios';
 
 // components
-import Btn from "Components/ButtonComponent.vue";
-import Pagination from "Components/TablePagination.vue";
-import PageTitle from "Components/sections/PageTitle.vue";
-import Toast from "Components/ToastMessage.vue";
-import DeleteAction from "Components/sections/DeleteAction.vue";
+import Btn from 'Components/ButtonComponent.vue';
+import Pagination from 'Components/TablePagination.vue';
+import PageTitle from 'Components/sections/PageTitle.vue';
+import Toast from 'Components/ToastMessage.vue';
+import DeleteAction from 'Components/sections/DeleteAction.vue';
 
 // composable
-import dateFormat from "Composable/dateFormat";
-import getActivityTitle from "Composable/title";
+import dateFormat from 'Composable/dateFormat';
+import getActivityTitle from 'Composable/title';
 
 export default defineComponent({
-  name: "IndicatorList",
+  name: 'IndicatorList',
   components: {
     Btn,
     Pagination,
@@ -142,7 +166,7 @@ export default defineComponent({
       activityTitle = activity.value.title,
       activityLink = `/activity/${activityId}`,
       resultId = parentData.value.result.id,
-      resultTitle = getActivityTitle(parentData.value.result.title, "en"),
+      resultTitle = getActivityTitle(parentData.value.result.title, 'en'),
       resultLink = `${activityLink}/result/${resultId}`,
       indicatorLink = `/result/${resultId}/indicator`;
 
@@ -165,7 +189,7 @@ export default defineComponent({
     const isEmpty = ref(false);
     const toastData = reactive({
       visibility: false,
-      message: "",
+      message: '',
       type: true,
     });
 
@@ -174,11 +198,11 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: "Your Activities",
-        link: "/activities",
+        title: 'Your Activities',
+        link: '/activities',
       },
       {
-        title: getActivityTitle(activityTitle, "en"),
+        title: getActivityTitle(activityTitle, 'en'),
         link: `/activity/${activityId}`,
       },
       {
@@ -186,8 +210,8 @@ export default defineComponent({
         link: `/activity/${activityId}/result/${resultId}`,
       },
       {
-        title: "Indicator List",
-        link: "",
+        title: 'Indicator List',
+        link: '',
       },
     ];
 
@@ -198,7 +222,7 @@ export default defineComponent({
         isEmpty.value = response.data.data.length ? false : true;
       });
 
-      if (props.toast.message !== "") {
+      if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;
@@ -209,16 +233,22 @@ export default defineComponent({
       }, 5000);
     });
 
+    function handleNavigate(path) {
+      window.location.href = window.location.origin + path;
+    }
+
     function fetchListings(active_page: number) {
-      axios.get(`/result/${resultId}/indicators/page/` + active_page).then((res) => {
-        const response = res.data;
-        Object.assign(indicatorsData, response.data);
-        isEmpty.value = response.data ? false : true;
-      });
+      axios
+        .get(`/result/${resultId}/indicators/page/` + active_page)
+        .then((res) => {
+          const response = res.data;
+          Object.assign(indicatorsData, response.data);
+          isEmpty.value = response.data ? false : true;
+        });
     }
 
     // provide
-    provide("parentItemId", resultId);
+    provide('parentItemId', resultId);
 
     return {
       activityId,
@@ -231,6 +261,7 @@ export default defineComponent({
       breadcrumbData,
       toastData,
       resultId,
+      handleNavigate,
     };
   },
 });
