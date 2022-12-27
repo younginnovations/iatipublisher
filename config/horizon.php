@@ -167,6 +167,8 @@ return [
     'defaults' => [
         'supervisor-1' => [
             'connection' => 'redis',
+            'sslmode' => env('DB_SSLMODE', 'prefer'),
+            'sslrootcert' => env('DB_SSLROOTCERT'),
             'queue' => ['default'],
             'balance' => 'auto',
             'maxProcesses' => 1,
