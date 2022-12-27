@@ -167,6 +167,7 @@ return [
     'defaults' => [
         'supervisor-1' => [
             'connection' => 'redis',
+            'sslmode' => 'require',
             'queue' => ['default'],
             'balance' => 'auto',
             'maxProcesses' => 1,
