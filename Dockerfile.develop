@@ -124,6 +124,7 @@ WORKDIR /opt/apps/laravel-in-kubernetes
 
 RUN apk add --no-cache supervisor
 
+COPY ./ca-certificate.crt .
 COPY docker/supervisord.conf /etc/supervisord.conf
 
 ENTRYPOINT ["/usr/bin/supervisord", "-n", "-c",  "/etc/supervisord.conf"]
