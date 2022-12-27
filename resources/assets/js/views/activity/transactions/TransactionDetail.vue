@@ -19,15 +19,18 @@
         />
       </div>
     </PageTitle>
-
     <div class="activities">
       <aside class="activities__sidebar">
         <div class="indicator sticky top-0 rounded-lg bg-eggshell px-6 py-4 text-n-50">
           <ul class="text-sm font-bold leading-relaxed">
             <li v-for="(rData, r, ri) in transactionData" :key="ri">
               <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
-                <svg-vue icon="core" class="mr-2 text-base"></svg-vue>
-                {{ r }}
+                <svg-vue
+                  v-if="isMandatoryIcon(r)"
+                  icon="core"
+                  class="mr-2 text-base"
+                ></svg-vue>
+                <span :class="isMandatoryIcon(r) ? '' : 'pl-6'">{{ r }}</span>
               </a>
             </li>
           </ul>
@@ -155,6 +158,14 @@ export default defineComponent({
       }, 5000);
     });
 
+    const isMandatoryIcon = (r) => {
+      return (
+        r.toString() === "value" ||
+        r.toString() === "transaction_type" ||
+        r.toString() === "transaction_date"
+      );
+    };
+
     return {
       activityTitle,
       dateFormat,
@@ -164,6 +175,7 @@ export default defineComponent({
       activityLink,
       transactionLink,
       toastData,
+      isMandatoryIcon,
     };
   },
 });
