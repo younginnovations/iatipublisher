@@ -193,7 +193,8 @@ export default defineComponent({
       },
     ];
     function handleNavigate(path) {
-      window.location.href = '/' + path;
+      window.location.href = path;
+      console.log(path);
     }
 
     onMounted(async () => {
