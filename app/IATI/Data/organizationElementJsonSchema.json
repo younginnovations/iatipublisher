@@ -1441,7 +1441,7 @@
         "add_more": true,
         "element_criteria": "mandatory",
         "wrapper_collection": false,
-        "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/category/'>For more information",
+        "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/category/'>For more information</a>",
         "help_text": "",
         "attributes": {
           "code": {
