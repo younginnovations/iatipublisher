@@ -43,7 +43,6 @@ class DownloadActivityService
         'recipient_region',
         'location',
         'sector',
-        'country_budget_items',
         'humanitarian_scope',
         'policy_marker',
         'default_aid_type',
@@ -52,7 +51,6 @@ class DownloadActivityService
         'document_link',
         'related_activity',
         'legacy_data',
-        'conditions',
         'tag',
         'transactions',
     ];
@@ -426,6 +424,10 @@ class DownloadActivityService
             foreach ($activityArray as $key => $arrayItem) {
                 if (is_array($arrayItem) && in_array($key, $this->multipleElements, true) && count($arrayItem) > $count) {
                     $count = count($arrayItem);
+                } elseif ($key === 'conditions' && count(Arr::get($activityArray, 'conditions.condition', [])) > $count) {
+                    $count = count(Arr::get($activityArray, 'conditions.condition', []));
+                } elseif ($key === 'country_budget_items' && count(Arr::get($activityArray, 'country_budget_items.budget_item', [])) > $count) {
+                    $count = count(Arr::get($activityArray, 'country_budget_items.budget_item', []));
                 }
             }
         }

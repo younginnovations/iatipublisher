@@ -567,7 +567,7 @@ trait DownloadActivityComplexElementTrait
      */
     public function getLocationIdVocabulary($activityArray, $rowIndex): ?string
     {
-        return (string) (Arr::get($activityArray, 'location.' . $rowIndex . '.location_reach.0.vocabulary', ''));
+        return (string) (Arr::get($activityArray, 'location.' . $rowIndex . '.location_id.0.vocabulary', ''));
     }
 
     /**
@@ -580,7 +580,7 @@ trait DownloadActivityComplexElementTrait
      */
     public function getLocationIdCode($activityArray, $rowIndex): ?string
     {
-        return (string) (Arr::get($activityArray, 'location.' . $rowIndex . '.location_reach.0.code', ''));
+        return (string) (Arr::get($activityArray, 'location.' . $rowIndex . '.location_id.0.code', ''));
     }
 
     /**
