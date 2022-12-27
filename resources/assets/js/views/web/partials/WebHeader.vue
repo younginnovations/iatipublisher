@@ -14,39 +14,38 @@
               class="nav__list flex pt-10 leading-5 xl:space-x-3"
             >
               <li class="nav__links active dropdown">
-                <a href="/about">ABOUT</a>
+                <a href="/about">{{ language.web_lang.header.about.uppercase }}</a>
                 <NavDropdown
-                  name="About"
-                  text="IATI Publisher helps small and medium-sized organisations publish IATI data on development and humanitarian financing and activities"
-                  btn-text="Learn more"
+                  :name=language.web_lang.header.about.label
+                  :text=language.web_lang.header.about.hover_text
+                  :btn-text=language.web_lang.header.about.button
                   btn-link="/about"
                 />
               </li>
               <li class="nav__links active dropdown">
-                <a href="/publishing-checklist">PUBLISHING CHECKLIST</a>
+                <a href="/publishing-checklist">{{language.web_lang.header.publishing_checklist.uppercase}}</a>
                 <NavDropdown
-                  name="Publishing checklist"
-                  text="New to IATI? Use our checklist to track each step required for your organisation to successfully publish IATI data"
-                  btn-text="Read more"
+                  :name=language.web_lang.header.publishing_checklist.label
+                  :text=language.web_lang.header.publishing_checklist.hover_text
+                  :btn-text=language.web_lang.header.publishing_checklist.button
                   btn-link="/publishing-checklist"
                 />
               </li>
               <li class="nav__links active dropdown relative">
-                <a href="/iati-standard">IATI STANDARD</a>
+                <a href="/iati-standard">{{ language.web_lang.header.iati_standard.uppercase }}</a>
                 <NavDropdown
-                  name="IATI Standard"
-                  text="The IATI Standard provides information and guidance on all the data fields that
-                        your organisation can publish IATI data on"
-                  btn-text="See all data fields"
+                  :name=language.web_lang.header.iati_standard.label
+                  :text=language.web_lang.header.iati_standard.hover_text
+                  :btn-text=language.web_lang.header.iati_standard.button
                   btn-link="/iati-standard"
                 />
               </li>
               <li class="nav__links active dropdown">
-                <a href="/support">SUPPORT</a>
+                <a href="/support">{{ language.web_lang.header.support.uppercase }}</a>
                 <NavDropdown
-                  name="Support"
-                  text=" Any questions? Get help to publish your organisation’s data"
-                  btn-text="Read more"
+                  :name=language.web_lang.header.support.label
+                  :text=language.web_lang.header.support.hover_text
+                  :btn-text=language.web_lang.header.support.button
                   btn-link="/support"
                 />
               </li>
@@ -72,16 +71,16 @@
           </div>
           <div class="languages hidden pt-11 xl:block">
             <div class="flex">
-              <span class="mr-2 pt-5 pb-5 uppercase xl:pt-0">Language:</span>
+              <span class="mr-2 pt-5 pb-5 uppercase xl:pt-0">{{ language.web_lang.header.language.uppercase }}:</span>
               <ul class="flex items-center justify-center">
                 <li class="nav__links">
-                  <a class="nav__active links__active" href="/">EN</a>
+                  <a class="nav__active links__active" href="/lang/en">EN</a>
                 </li>
                 <li class="nav__links">
-                  <a href="/">FR</a>
+                  <a href="/lang/fr">FR</a>
                 </li>
                 <li class="nav__links">
-                  <a href="/">ES</a>
+                  <a href="/lang/es">ES</a>
                 </li>
               </ul>
             </div>
@@ -130,5 +129,9 @@ export default defineComponent({
     title: { type: String, required: true },
     auth: { type: String, required: true },
   },
+  setup(){
+    const language = window["global_lang"];
+    return  {language};
+  }
 });
 </script>

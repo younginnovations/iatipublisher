@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'settings_label'            => "Settings",
     'publishing_settings_label' => "Publishing Settings",
     'default_values_label'      => "Default Values",
     'registry_information'      => [
@@ -8,15 +9,18 @@ return [
         'hover_text' => "IATI Publisher needs to add your organisation's data to the IATI Registry (iatiregistry.org). To do this, we need to access your organisation's IATI Registry Publisher Account. Please provide your organisation's credentials from the IATI Registry."
     ],
     'publisher_id'              => [
-        'label'      => "Publisher ID",
-        'hover_text' => "This is the unique ID for your organisation that you created when you set up your IATI Registry Publisher Account. It is a shortened version of your organisation's name, which will include lowercase letters and may include numbers and also - (dash) and _ (underscore). For example nef_mali' for Near East Foundation Mali.",
+        'label'       => "Publisher ID",
+        'hover_text'  => "This is the unique ID for your organisation that you created when you set up your IATI Registry Publisher Account. It is a shortened version of your organisation's name, which will include lowercase letters and may include numbers and also - (dash) and _ (underscore). For example nef_mali' for Near East Foundation Mali.",
+        'placeholder' => "Type Publisher ID here"
     ],
     'api_token'                 => [
-        'label'      => "API Token",
-        'hover_text' => "The API token is a unique key that is generated from your organisation's IATI Registry Publisher Account. It is required to give IATI Publisher permission to add data to the IATI Registry on your behalf. Generate a Token in the 'My Account' tab by <a href='https://www.iatiregistry.org/user/login' target='_blank' target='_blank'>logging</a> into to the IATI Registry."
+        'label'       => "API Token",
+        'hover_text'  => "The API token is a unique key that is generated from your organisation's IATI Registry Publisher Account. It is required to give IATI Publisher permission to add data to the IATI Registry on your behalf. Generate a Token in the 'My Account' tab by <a href='https://www.iatiregistry.org/user/login' target='_blank' target='_blank'>logging</a> into to the IATI Registry.",
+        'placeholder' => "Type API Token here"
     ],
 
     'correct_label'      => "Correct",
+    'incorrect_label'      => "Incorrect",
     'uc_verify'          => "VERIFY",
     'uc_cancel'          => "CANCEL",
     'uc_save_publishing' => "SAVE PUBLISHING SETTING",
@@ -44,19 +48,19 @@ return [
         'help'        => "If hierarchy is not reported then 1 is assumed. If multiple levels are reported then, to avoid double counting, financial transactions should only be reported at the lowest hierarchical level. "
     ],
     'budget_not_provided' => [
-        'label'       => 'Budget Not Provided',
-        'hover_text'  => "",
+        'label'       => "Budget Not Provided",
+        'hover_text'  => "Add a 'Humanitarian Flag' to every activity that your organisation publishes data on. This means that your organisation identifies all their activities as wholly or partially addressing a humanitarian crisis or multiple crises. You can later manually add or remove a Humanitarian Flag on individual activities if required.",
         'placeholder' => "Select budget not provided type here",
-        'help'        => ""
+        'help'        => "If not selected, it will be set to 'Yes' in all the activities."
     ],
     'humanitarian'        => [
-        'label'       => 'Humanitarian',
+        'label'       => "Humanitarian",
         'hover_text'  => "Add a 'Humanitarian Flag' to every activity that your organisation publishes data on. This means that your organisation identifies all their activities as wholly or partially addressing a humanitarian crisis or multiple crises. You can later manually add or remove a Humanitarian Flag on individual activities if required.",
         'placeholder' => "Select Humanitarian here",
         'help'        => "If not selected, it will be set to 'Yes' in all the activities."
     ],
 
-    'default_for_all_data_label'   => 'Default for all data',
-    'default_for_activity_label'   => 'Default for activity data',
-    'uc_save_default_values_label' => 'SAVE DEFAULT VAlUES'
+    'default_for_all_data_label'   => "Default for all data",
+    'default_for_activity_label'   => "Default for activity data",
+    'uc_save_default_values_label' => "SAVE DEFAULT VAlUES"
 ];

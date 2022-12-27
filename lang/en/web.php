@@ -163,19 +163,17 @@ return [
         ],
         'development_of_iati_header'         => 'Development of IATI Publisher',
         'development_of_iati_description'    => [
-            'one' => 'IATI Publisher was first launched in December 2022 by the IATI Secretariat and has been developed by <a target=""_blank"" rel=""noopener noreferrer"" href=""https://younginnovations.com.np/"">Young Innovations </a>, a software development firm based in Nepal. IATI Publisher is fully aligned with the IATI Standard XML <a href=""https://iatistandard.org/en/iati-standard/203/schema/"">schema</a> and <a target=""_blank"" rel=""noopener noreferrer"" href=""https://iatistandard.org/en/iati-standard/203/rulesets/"">rulesets </a>.'
+            'one' => 'IATI Publisher was first launched in December 2022 by the IATI Secretariat and has been developed by <a target=""_blank"" rel=""noopener noreferrer"" href="https://younginnovations.com.np/">Young Innovations </a>, a software development firm based in Nepal. IATI Publisher is fully aligned with the IATI Standard XML <a href="https://iatistandard.org/en/iati-standard/203/schema/">schema</a> and <a target=""_blank"" rel=""noopener noreferrer"" href="https://iatistandard.org/en/iati-standard/203/rulesets/">rulesets </a>.'
         ],
-
-
     ],
 
     /*----------------------------------------------------------------publishing-checklist page--------------------------------------------------------------------------------------------------*/
     'publishing_checklist_page' => [
-        'publishing_checklist'           => 'Publishing Checklist',
-        'organisations_using_iati_lable' => 'Organisations using IATI Publisher need to take the following steps to publish your data: ',
+        'publishing_checklist'           =>     'Publishing Checklist',
+        'organisations_using_iati_label' => 'Organisations using IATI Publisher need to take the following steps to publish your data: ',
 
-        'register_a_publisher_header'       => 'Register a Publisher Account',
-        'register_a_puiblisher_description' => [
+        'register_a_publisher_header'      => 'Register a Publisher Account',
+        'register_a_publisher_description' => [
             'one'   => 'Organisations who publish data to IATI are referred to as \'Publishers\'. Before publishing data, organisations need their own \'Publisher Account\' on the IATI Registry (iatiregistry.org). If your organisation does not yet have a Publisher Account on the IATI Registry, IATI Publisher will ask you for additional details and create one for you (so you don’t have to visit IATI Registry to do this).',
             'two'   => 'Create your IATI Registry Publisher Account',
             'three' => 'If your organisation has already registered a Publisher Account on the IATI Registry, IATI Publisher will ask you to provide your organisation’s account details.',
@@ -293,6 +291,13 @@ return [
             'three' => 'Organisation Standard'
         ],
 
+        'iati_standard_reference_header'      => 'IATI Standard reference',
+        'iati_standard_reference_description' => [
+            'one'   => "You can look up detailed and technical information about each element of the IATI Standard on the IATI Reference section of IATI’s main website: ",
+            'two'   => "Activity Standard",
+            'three' => "organisation Standard"
+        ]
+
     ],
 
     /*----------------------------------------------------------------support page--------------------------------------------------------------------------------------------------*/
@@ -306,12 +311,15 @@ return [
 
     /*----------------------------------------------------------------password recovery page--------------------------------------------------------------------------------------------------*/
     'password_recovery_page'    => [
-        'password_recovery_header'       => "Password Recovery",
-        'password_recovery_description' => "Please enter your email, we will send you a link to reset your password",
-        'email_label'                   => 'Email',
-        'email_placeholder'             => 'Enter your email address',
-        'uc_send_password_reset_label'  => "SEND PASSWORD RESET LINK"
+        'password_recovery_header'            => "Password Recovery",
+        'password_recovery_description'       => "Please enter your email, we will send you a link to reset your password",
+        'email_label'                         => "Email",
+        'email_placeholder'                   => "Enter your email address",
+        'uc_send_password_reset_label'        => "SEND PASSWORD RESET LINK",
+        'your_email_has_been_sent_with_label' => "An email has been sent with further instructions, please check it out when you get it."
     ]
+
+    /*----------------------------------------------------------------password recovery page--------------------------------------------------------------------------------------------------*/
 ];
 
 

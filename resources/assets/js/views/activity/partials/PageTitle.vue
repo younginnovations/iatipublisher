@@ -5,44 +5,26 @@
         <div class="mb-2 text-caption-c1 text-n-40 xl:mb-4">
           <nav aria-label="breadcrumbs" class="breadcrumb">
             <p>
-              <span class="last font-bold">Your Activities</span>
+              <span class="last font-bold">{{ language.activities_lang.your_activities }}</span>
             </p>
           </nav>
         </div>
         <div class="inline-flex items-center">
           <h4 class="mr-4 text-3xl font-bold xl:text-heading-4">
-            Your Activities
+            {{ language.activities_lang.your_activities }}
           </h4>
           <div class="tooltip-btn">
             <button class="">
               <svg-vue icon="question-mark" />
-              <span>What is an activity?</span>
+              <span>{{ language.activities_lang.what_is_activity.label }}</span>
             </button>
             <div class="tooltip-btn__content z-[1]">
               <div class="content">
                 <div class="mb-1.5 text-caption-c1 font-bold text-bluecoral">
-                  What is an activity?
+                  {{ language.activities_lang.what_is_activity.label }}
                 </div>
                 <p>
-                  You need to provide data about your organisation's development
-                  and humanitarian 'activities'. The unit of work described by
-                  an 'activity' is determined by the organisation that is
-                  publishing the data. For example, an activity could be a donor
-                  government providing US$ 50 million to a recipient country's
-                  government to implement basic education over 5 years. Or an
-                  activity could be an NGO spending US$ 500,000 to deliver clean
-                  drinking water to 1000 households over 6 months.
-                  <br />
-                  Therefore your organisation will need to determine how it will
-                  divide its work internally into activities. Read the
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="/publishing-checklist"
-                    class="text-bluecoral"
-                    ><b>Publishing Checklist</b></a
-                  >
-                  for more information.
+                  <span v-html="language.activities_lang.what_is_activity.description.one"></span>
                 </p>
               </div>
             </div>
@@ -100,7 +82,7 @@ interface RefreshToastMsgTypeface {
   refreshMessageType: boolean;
   refreshMessage: string;
 }
-
+const language = window["global_lang"];
 const store = useStore();
 
 interface ToastInterface {
@@ -112,5 +94,7 @@ interface ToastInterface {
 const toastMessage = inject('toastData') as ToastInterface;
 const errorData = inject('errorData') as ToastInterface;
 
+
 const refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
 </script>
+

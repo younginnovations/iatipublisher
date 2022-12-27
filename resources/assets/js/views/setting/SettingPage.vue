@@ -7,7 +7,7 @@
         <div class="my-2 flex items-center sm:mt-4 sm:mb-6">
           <a href="/activities"><svg-vue icon="left-arrow" /></a>
           <h2 class="ml-3 text-heading-5 font-bold text-n-50 sm:text-heading-4">
-            Settings
+            {{ language.settings_lang.settings_label }}
           </h2>
         </div>
         <div>
@@ -30,7 +30,7 @@
             }"
             @click="toggleTab('publish')"
           >
-            Publishing Settings
+            {{ language.settings_lang.publishing_settings_label }}
           </button>
           <button
             class="tab-btn"
@@ -39,7 +39,7 @@
             }"
             @click="toggleTab('default')"
           >
-            Default Values
+            {{ language.settings_lang.default_values_label }}
           </button>
         </div>
         <SettingPublishingForm
@@ -62,15 +62,15 @@
       class="fixed bottom-0 left-0 w-full bg-eggshell py-5 px-6 shadow-dropdown sm:pr-40"
     >
       <div class="flex items-center justify-end">
-        <a class="ghost-btn mr-4 sm:mr-8" href="/activities">Cancel</a>
+        <a class="ghost-btn mr-4 sm:mr-8" href="/activities">{{ language.settings_lang.uc_cancel }}</a>
         <button
           class="primary-btn save-btn"
           @click="submitForm('setting/store/publisher')"
         >
           {{
             tab === 'publish'
-              ? 'Save publishing setting'
-              : 'Save default values'
+              ? language.settings_lang.uc_save_publishing
+              : language.settings_lang.uc_save_default_values_label
           }}
         </button>
       </div>
@@ -120,6 +120,7 @@ export default defineComponent({
   },
 
   setup(props) {
+    const language = window["global_lang"];
     const tab = ref('publish');
     const store = useStore();
     const loaderVisibility = ref(false);
@@ -304,6 +305,7 @@ export default defineComponent({
       toastType,
       toggleTab,
       submitForm,
+      language
     };
   },
 });

@@ -41,6 +41,10 @@
 <script>
     window.global_lang = {
         'validation_lang': {!! json_encode(trans('validation'), JSON_THROW_ON_ERROR) !!},
+        'web_lang': {!! json_encode(trans('web'), JSON_THROW_ON_ERROR) !!},
+        'activities_lang': {!! json_encode(trans('activities'), JSON_THROW_ON_ERROR) !!},
+        'activity_lang': {!! json_encode(trans('activity'), JSON_THROW_ON_ERROR) !!},
+        'settings_lang': {!! json_encode(trans('settings'), JSON_THROW_ON_ERROR) !!},
     };
 </script>
 

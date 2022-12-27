@@ -10,10 +10,10 @@
       <svg-vue icon="folder" class="text-[94px]" />
     </div>
     <h5 class="mb-[5px] text-heading-5 font-bold leading-9">
-      No activity has been added yet.
+      {{ language.activity.no_activity_has_been_added_label }}
     </h5>
     <div class="mb-[17px] text-caption-c1 leading-5 text-n-50">
-      Click on the button below to add a new activity
+      {{ language.activity.click_on_button_to_add_new_label }}
     </div>
     <ActivityButton />
   </div>
@@ -29,11 +29,12 @@ export default defineComponent({
     ActivityButton,
   },
   setup() {
+    const language = window['global_lang'];
     const state = reactive({
       dismiss: true,
     });
 
-    return { state };
+    return { state, language };
   },
 });
 </script>

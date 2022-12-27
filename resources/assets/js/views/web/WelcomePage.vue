@@ -56,7 +56,6 @@ export default defineComponent({
   setup(props) {
     const pageContent = ref(props.page === 'signin' ? 'Join Now' : 'Sign In');
     const language = window["global_lang"];
-    console.log(language);
 
     function togglePage() {
       pageContent.value =

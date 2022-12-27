@@ -4,7 +4,7 @@
       <thead>
         <tr class="bg-n-10">
           <th id="title" scope="col">
-            <span>Activity Title</span>
+            <span>{{ language.activities_lang.uc_activity_title }}</span>
           </th>
           <th id="date" scope="col">
             <a
@@ -14,14 +14,14 @@
               <span class="sorting-indicator" :class="sortingDirection()">
                 <svg-vue :icon="`${sortingDirection()}-arrow`" />
               </span>
-              <span>Updated On</span>
+              <span>{{ language.activities_lang.uc_updated_on }}</span>
             </a>
           </th>
           <th id="status" scope="col">
-            <span class="hidden">Status</span>
+            <span class="hidden">{{ language.activities_lang.uc_status }}</span>
           </th>
           <th id="publish" scope="col">
-            <span class="hidden">Publish</span>
+            <span class="hidden">{{ language.activities_lang.uc_publish }}</span>
           </th>
           <th id="cb" scope="col">
             <span
@@ -90,7 +90,7 @@
                   :icon="datum['status'] === 'draft' ? 'document-write' : 'tick'"
                 />
               </span>
-              <span class="text-sm leading-relaxed">{{ datum["status"] }}</span>
+              <span class="text-sm leading-relaxed">{{ language.activities_lang.status_labels[datum['status']] }}</span>
             </button>
           </td>
 
@@ -129,7 +129,7 @@
         </tr>
       </tbody>
       <tbody v-else>
-        <td colspan="5" class="text-center">Activities not found</td>
+        <td colspan="5" class="text-center">{{ language.activities_lang.activities_not_found }}</td>
       </tbody>
     </table>
   </div>
@@ -147,7 +147,7 @@ import PreviouslyPublished from "Components/status/PreviouslyPublished.vue";
 import Publish from "Components/buttons/PublishButton.vue";
 import UnPublish from "Components/buttons/UnPublishButton.vue";
 // import Shimmer from "Components/ShimmerLoading.vue";
-
+const language = window["global_lang"];
 const [selectAllValue, selectAllToggle] = useToggle();
 
 defineProps({

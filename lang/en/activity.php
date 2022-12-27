@@ -42,9 +42,11 @@ return [
         'hover_text' => 'You cannot publish an activity until all the mandatory fields have been filled.',
     ],
 
-    'complete_all_core_label'         => 'Complete all core elements to get 100% score',
-    'search_elements_placeholder'     => 'Search elements to add/edit',
-    'all_elements_label'              => 'All Elements',
-    'uc_publish_label'                => 'PUBLISH',
-    'uc_override_this_activity_label' => 'OVERRIDE THIS ACTIVITY\'S DEFAULT VALUES',
+    'complete_all_core_label'          => 'Complete all core elements to get 100% score',
+    'search_elements_placeholder'      => 'Search elements to add/edit',
+    'all_elements_label'               => 'All Elements',
+    'uc_publish_label'                 => 'PUBLISH',
+    'uc_override_this_activity_label'  => 'OVERRIDE THIS ACTIVITY\'S DEFAULT VALUES',
+    'no_activity_has_been_added_label' => "No activity has been added yet.",
+    'click_on_button_to_add_new_label' => "Click on the button below to add a new activity"
 ];

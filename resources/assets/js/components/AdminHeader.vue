@@ -61,19 +61,19 @@
               <span class="">{{ menu.name }}</span>
             </a>
             <div
-              v-if="menu.name === 'Add / Import Activity'"
+              v-if="menu.name === language.web_lang.header.uc_add_import_activity"
               class="button__dropdown invisible absolute left-4 top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left opacity-0 shadow-dropdown transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
             >
               <ul class="flex-col">
                 <li>
-                  <a href="#" :class="liClass" @click="modalValue = true"
-                    >Add activity manually</a
-                  >
+                  <a href="#" :class="liClass" @click="modalValue = true">
+                    {{ language.web_lang.header.uc_add_activity_manually }}
+                  </a>
                 </li>
                 <li>
-                  <a href="/import" :class="liClass"
-                    >Import activities from .csv/.xml</a
-                  >
+                  <a href="/import" :class="liClass">
+                    {{ language.web_lang.header.uc_import_activities }}
+                  </a>
                 </li>
               </ul>
             </div>
@@ -92,7 +92,7 @@
             v-model="searchValue"
             class="search__input mr-3.5"
             type="text"
-            placeholder="Search activity..."
+            :placeholder=language.web_lang.header.search_activity
             @keyup.enter="searchFunction('/activities')"
           />
           <input
@@ -100,7 +100,7 @@
             v-model="searchValue"
             class="search__input mr-3.5"
             type="text"
-            placeholder="Search organisation..."
+            :placeholder=language.web_lang.header.search_organisation
             @keyup.enter="searchFunction('/list-organisations')"
           />
           <svg-vue icon="search" />
@@ -126,11 +126,11 @@
               </li>
               <li class="dropdown__list border-b border-b-n-20">
                 <svg-vue icon="user" />
-                <a href="#">Your Profile</a>
+                <a href="#">{{ language.web_lang.header.your_profile }}</a>
               </li>
               <li class="dropdown__list" @click="logout">
                 <svg-vue icon="logout"></svg-vue>
-                <button class="text-sm">Logout</button>
+                <button class="text-sm">{{ language.web_lang.header.logout }}</button>
               </li>
             </ul>
           </div>
@@ -169,6 +169,7 @@ defineProps({
   superAdmin: { type: Boolean, required: true },
 });
 
+const language =  window['global_lang'];
 const toastVisibility = ref(false);
 const toastMessage = ref('');
 const toastType = ref(false);
@@ -198,22 +199,22 @@ const data = reactive({
   ],
   menus: [
     {
-      name: 'Activity DATA',
+      name: language.web_lang.header.uc_activity_data,
       permalink: '/activities',
       active: true,
     },
     {
-      name: 'Organisation DATA',
+      name: language.web_lang.header.uc_organisation_data,
       permalink: '/organisation',
       active: false,
     },
     {
-      name: 'Settings',
+      name: language.web_lang.header.uc_settings,
       permalink: '/setting',
       active: false,
     },
     {
-      name: 'Add / Import Activity',
+      name: language.web_lang.header.uc_add_import_activity,
       permalink: '#',
       active: false,
     },

@@ -7,7 +7,7 @@
   <link rel="icon" type="image"
     href="https://prod-iati-website.azureedge.net/prod-iati-website/favicons/favicon-32x32.png">
 
-  <title>{{ config('app.name', 'IATI Publisher') }}</title>
+  <title>{{ config('app.name', trans('web.home_page.iati_publisher')) }}</title>
 
   <link href="{{ mix('css/app.css') }}" rel="stylesheet">
   <!-- Fonts -->
@@ -35,7 +35,7 @@
 
 <body class="font-sans bg-n-10 antialiased overflow-x-hidden">
   <div id="app">
-    <web-header title='@yield('title', 'IATI PUBLISHER')' auth='{{(bool) Auth::user()}}'></web-header>
+        <web-header title='@yield('title', 'IATI PUBLISHER')' auth='{{(bool) Auth::user()}}'></web-header>
     @yield('content')
     @if (Auth::user())
         <admin-footer></admin-footer>
