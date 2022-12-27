@@ -62,8 +62,8 @@ RUN apk add --virtual build-dependencies --no-cache ${PHPIZE_DEPS} openssl ca-ce
     docker-php-ext-enable ${PHP_PECL_EXTS} && \
     apk del build-dependencies
 
-COPY --from=composer_base /opt/apps/laravel-in-kubernetes /opt/apps/laravel-in-kubernetes
-COPY --from=frontend /opt/apps/laravel-in-kubernetes/public /opt/apps/laravel-in-kubernetes/public
+COPY --from=composer_base --chown=www-data /opt/apps/laravel-in-kubernetes /opt/apps/laravel-in-kubernetes
+COPY --from=frontend --chown=www-data /opt/apps/laravel-in-kubernetes/public /opt/apps/laravel-in-kubernetes/public
 
 FROM php:8.1-fpm-alpine as fpm_server
 
@@ -124,7 +124,8 @@ WORKDIR /opt/apps/laravel-in-kubernetes
 
 RUN apk add --no-cache supervisor
 
-COPY ./ca-certificate.crt .
 COPY docker/supervisord.conf /etc/supervisord.conf
 
 ENTRYPOINT ["/usr/bin/supervisord", "-n", "-c",  "/etc/supervisord.conf"]
+
+USER www-data
