@@ -38,13 +38,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="(result, t, index) in resultsData.data"
-            :key="index"
-            class="cursor-pointer"
-            @click="handleNavigate(`${activityLink}/result/${result.id}`)"
-          >
-            <td>
+          <tr v-for="(result, t, index) in resultsData.data" :key="index">
+            <td
+              class="cursor-pointer"
+              @click="handleNavigate(`${activityLink}/result/${result.id}`)"
+            >
               <div class="ellipsis relative">
                 <a
                   :href="`${activityLink}/result/${result.id}`"
@@ -59,10 +57,16 @@
                 </div>
               </div>
             </td>
-            <td>
+            <td
+              class="cursor-pointer"
+              @click="handleNavigate(`${activityLink}/result/${result.id}`)"
+            >
               {{ types.resultType[result.result.type] ?? 'Missing' }}
             </td>
-            <td class="capitalize">
+            <td
+              class="cursor-pointer capitalize"
+              @click="handleNavigate(`${activityLink}/result/${result.id}`)"
+            >
               {{
                 parseInt(result.result.aggregation_status)
                   ? 'True'

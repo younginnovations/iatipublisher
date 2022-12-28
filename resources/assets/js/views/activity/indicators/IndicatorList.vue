@@ -37,17 +37,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="(indicator, t, index) in indicatorsData.data"
-            :key="index"
-            class="cursor-pointer"
-            @click="
-              handleNavigate(
-                `/result/${indicator.result_id}/indicator/${indicator.id}`
-              )
-            "
-          >
-            <td>
+          <tr v-for="(indicator, t, index) in indicatorsData.data" :key="index">
+            <td
+              class="cursor-pointer"
+              @click="
+                handleNavigate(
+                  `/result/${indicator.result_id}/indicator/${indicator.id}`
+                )
+              "
+            >
               <div class="ellipsis relative">
                 <a
                   :href="`/result/${indicator.result_id}/indicator/${indicator.id}`"
@@ -70,8 +68,24 @@
                 </div>
               </div>
             </td>
-            <td>{{ types.indicatorMeasure[indicator.indicator.measure] }}</td>
-            <td class="capitalize">
+            <td
+              class="cursor-pointer"
+              @click="
+                handleNavigate(
+                  `/result/${indicator.result_id}/indicator/${indicator.id}`
+                )
+              "
+            >
+              {{ types.indicatorMeasure[indicator.indicator.measure] }}
+            </td>
+            <td
+              class="cursor-pointer capitalize"
+              @click="
+                handleNavigate(
+                  `/result/${indicator.result_id}/indicator/${indicator.id}`
+                )
+              "
+            >
               {{
                 parseInt(indicator.indicator.aggregation_status)
                   ? 'True'

@@ -52,13 +52,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="(trans, t, index) in transactionsData.data"
-            :key="index"
-            class="cursor-pointer"
-            @click="handleNavigate(`${activityLink}/transaction/${trans.id}`)"
-          >
-            <td>
+          <tr v-for="(trans, t, index) in transactionsData.data" :key="index">
+            <td
+              class="cursor-pointer"
+              @click="handleNavigate(`${activityLink}/transaction/${trans.id}`)"
+            >
               <a :href="`${activityLink}/transaction/${trans.id}`">
                 <span>{{
                   trans.transaction.reference &&
@@ -68,21 +66,30 @@
                 }}</span>
               </a>
             </td>
-            <td>
+            <td
+              class="cursor-pointer"
+              @click="handleNavigate(`${activityLink}/transaction/${trans.id}`)"
+            >
               {{
                 types.transactionType[
                   trans.transaction.transaction_type[0].transaction_type_code
                 ] ?? '- - -'
               }}
             </td>
-            <td class="truncate">
+            <td
+              class="cursor-pointer truncate"
+              @click="handleNavigate(`${activityLink}/transaction/${trans.id}`)"
+            >
               {{
                 trans.transaction.value[0].amount
                   ? Number(trans.transaction.value[0].amount).toLocaleString()
                   : '- - -'
               }}
             </td>
-            <td>
+            <td
+              class="cursor-pointer"
+              @click="handleNavigate(`${activityLink}/transaction/${trans.id}`)"
+            >
               <span>
                 {{
                   trans.transaction.transaction_date[0].date
