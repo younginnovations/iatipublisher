@@ -671,6 +671,7 @@ if (!function_exists('getTableConfig')) {
         $tableConfig = [
             'activity'     => ['orderBy' => ['updated_at'], 'direction' => ['asc', 'desc']],
             'organisation' => ['orderBy' => ['updated_at', 'all_activities_count', 'name'], 'direction' => ['asc', 'desc']],
+            'user' => ['orderBy' => ['full_name', 'organisation_name', 'created_on'], 'direction' => ['asc', 'desc']],
         ];
 
         return $tableConfig[$module];

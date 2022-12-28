@@ -8,6 +8,7 @@ use App\IATI\Models\Organization\Organization;
 use App\IATI\Repositories\Repository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 /**
  * Class OrganizationRepository.
@@ -117,5 +118,15 @@ class OrganizationRepository extends Repository
 
         return $organizations->orderBy($orderBy, $direction)
                              ->paginate(10, ['*'], 'organization', $page);
+    }
+
+    /**
+     * Returns list of organization name with their id.
+     *
+     * @return Collection
+     */
+    public function pluckAllOrganizations()
+    {
+        return $this->model->pluck('publisher_name', 'id');
     }
 }

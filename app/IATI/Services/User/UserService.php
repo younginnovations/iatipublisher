@@ -9,6 +9,8 @@ use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Repositories\Setting\SettingRepository;
 use App\IATI\Repositories\User\UserRepository;
 use GuzzleHttp\Client;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -592,8 +594,44 @@ class UserService
         ]);
     }
 
-    public function getAllUser()
+    public function store($data)
     {
-        $this->userRepo->all();
+        //3 needs to be dynamic
+        $data['role'] = isset($data['role']) ? $data['role'] : '3';
+
+        return $this->userRepo->store($data);
+    }
+
+    public function update($id, $data)
+    {
+        return $this->userRepo->update($id, $data);
+    }
+
+    public function delete($id)
+    {
+        return $this->userRepo->delete($id);
+    }
+
+    /**
+     * Returns all activities present in database.
+     *
+     * @param int $page
+     * @param array $queryParams
+     *
+     * @return Collection|LengthAwarePaginator
+     */
+    public function getPaginatedUsers($page, $queryParams): Collection|LengthAwarePaginator
+    {
+        $users = $this->userRepo->getPaginatedUsers($page, $queryParams);
+
+        return $users;
+    }
+
+    public function toggleUserStatus($id)
+    {
+        $user = $this->userRepo->findBy('id', $id);
+        $status = $user['status'] ? false : true;
+
+        return $this->userRepo->update($id, ['status' => $status]);
     }
 }

@@ -1,7 +1,7 @@
 <template>
   <div>
     <Loader v-if="isLoaderVisible" />
-    <PageTitle breadCrumb-data="{}" :title="user.full_name" back-link="">
+    <PageTitle bread-crumb-data="{}" :title="user.full_name" back-link="">
       <div class="flex justify-end">
         <a
           @click="

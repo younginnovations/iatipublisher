@@ -1,5 +1,6 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <user-listing :users='{{ json_encode($users) }}'></user-listing>
+    <user-listing :organizations='{{ json_encode($organizations) }}' :status='{{ json_encode($status) }}'
+        :roles='{{ json_encode($roles) }}'></user-listing>
 @endsection

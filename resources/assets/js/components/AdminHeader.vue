@@ -40,7 +40,7 @@
           </li>
         </ul>
       </nav>
-      <nav v-if="superAdmin" class="activity-nav">
+      <nav class="activity-nav">
         <ul class="activity-nav-list -mx-4">
           <li
             v-for="(menu, index) in data.menus"
@@ -48,31 +48,37 @@
             class="group"
             :class="data.menuNavLiClasses"
           >
-            <a
-              v-if="menu.name !== 'Add / Import Activity'"
-              :class="[{ nav__pointer: menu.active }, data.menuNavAnchorClasses]"
-              :href="menu.permalink"
-            >
-              <span class="">{{ menu.name }}</span>
-            </a>
-            <span
-              v-if="menu.name === 'Add / Import Activity'"
-              :class="[{ nav__pointer: menu.active }, data.menuNavAnchorClasses]"
-            >
-              <span class="add-import">{{ menu.name }}</span>
-            </span>
-            <div
-              v-if="menu.name === 'Add / Import Activity'"
-              class="button__dropdown invisible absolute left-4 top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left opacity-0 shadow-dropdown outline transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
-            >
-              <ul class="flex-col">
-                <li>
-                  <a :class="liClass" @click="modalValue = true">Add activity manually</a>
-                </li>
-                <li>
-                  <a href="/import" :class="liClass">Import activities from .csv/.xml</a>
-                </li>
-              </ul>
+            <div v-if="superAdmin || menu.superadmin_access">
+              <a
+                v-if="menu.name !== 'Add / Import Activity'"
+                :class="[{ nav__pointer: menu.active }, data.menuNavAnchorClasses]"
+                :href="menu.permalink"
+              >
+                <span class="">{{ menu.name }}</span>
+              </a>
+              <span
+                v-if="menu.name === 'Add / Import Activity'"
+                :class="[{ nav__pointer: menu.active }, data.menuNavAnchorClasses]"
+              >
+                <span class="add-import">{{ menu.name }}</span>
+              </span>
+              <div
+                v-if="menu.name === 'Add / Import Activity'"
+                class="button__dropdown invisible absolute left-4 top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left opacity-0 shadow-dropdown outline transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
+              >
+                <ul class="flex-col">
+                  <li>
+                    <a :class="liClass" @click="modalValue = true"
+                      >Add activity manually</a
+                    >
+                  </li>
+                  <li>
+                    <a href="/import" :class="liClass"
+                      >Import activities from .csv/.xml</a
+                    >
+                  </li>
+                </ul>
+              </div>
             </div>
           </li>
         </ul>
@@ -130,7 +136,7 @@
               </li>
               <li class="dropdown__list border-b border-b-n-20">
                 <svg-vue icon="user" />
-                <a href="#">Your Profile</a>
+                <a href="/profile">Your Profile</a>
               </li>
               <li class="dropdown__list" @click="logout">
                 <svg-vue icon="logout"></svg-vue>
@@ -238,26 +244,31 @@ const data = reactive({
       name: "Activity DATA",
       permalink: "/activities",
       active: true,
+      superadmin_access: false,
     },
     {
       name: "Organisation DATA",
       permalink: "/organisation",
       active: false,
+      superadmin_access: false,
     },
     {
       name: "Settings",
       permalink: "/setting",
       active: false,
+      superadmin_access: false,
     },
     {
       name: "Add / Import Activity",
       permalink: "#",
       active: false,
+      superadmin_access: false,
     },
     {
       name: "Users",
       permalink: "/users",
       active: false,
+      superadmin_access: true,
     },
   ],
 });

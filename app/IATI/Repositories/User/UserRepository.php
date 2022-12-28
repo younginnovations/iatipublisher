@@ -51,4 +51,11 @@ class UserRepository extends Repository
     {
         return $this->model->findOrFail($id);
     }
+
+    public function getPaginatedusers($page, $queryParams)
+    {
+        $users = $this->model->paginate(10, ['*'], 'users', $page);
+
+        return $users;
+    }
 }

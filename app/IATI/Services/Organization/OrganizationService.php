@@ -170,6 +170,16 @@ class OrganizationService
     }
 
     /**
+     * Returns list of organization name with their id.
+     *
+     * @return array
+     */
+    public function pluckAllOrganizations()
+    {
+        return $this->organizationRepo->pluckAllOrganizations();
+    }
+
+    /**
      * Check if publisher id is active in iati registry.
      *
      * @param string $publisher_id

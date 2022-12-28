@@ -15,7 +15,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::table(DBTables::USERS, function (Blueprint $table) {
-            $table->enum('status', Enums::STATUS)->default('active');
+            $table->boolean('status')->default(true);
             $table->enum('registration_method', Enums::REGISTRATION_METHOD)->default('existing_org');
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
