@@ -1,5 +1,13 @@
 <template>
-  <button class="text-n-40 hover:text-spring-50" @click="deleteValue = true">
+  <button
+    class="text-n-40 hover:text-spring-50"
+    @click="
+      (event) => {
+        deleteValue = true;
+        event.stopPropagation();
+      }
+    "
+  >
     <svg-vue icon="delete" class="text-xl"></svg-vue>
   </button>
   <Modal :modal-active="deleteValue" width="583" @close="deleteToggle">
@@ -13,6 +21,7 @@
         <b v-else>Delete</b>
       </div>
       <div class="rounded-lg bg-rose p-4">
+
         <p v-if="props.itemType === 'result'">
           Are you sure you want to delete this Result? Related Indicators and
           Periods will also be deleted

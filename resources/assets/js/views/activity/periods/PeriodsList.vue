@@ -1,11 +1,11 @@
 <template>
-  <div class="relative bg-paper px-5 xl:px-10 pt-4 pb-[71px]">
+  <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       title="Periods List"
       :back-link="indicatorLink"
     >
-      <div class="flex space-x-3 items-center">
+      <div class="flex items-center space-x-3">
         <Toast
           v-if="toastData.visibility"
           :message="toastData.message"
@@ -21,7 +21,7 @@
     <div class="iati-list-table text-n-40">
       <table>
         <thead>
-          <tr class="text-left bg-n-10">
+          <tr class="bg-n-10 text-left">
             <th id="transaction_type" scope="col">
               <span>Start Date - End Date</span>
             </th>
@@ -31,7 +31,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(pe, p) in periodsData.data" :key="p">
+          <tr
+            v-for="(pe, p) in periodsData.data"
+            :key="p"
+            class="cursor-pointer"
+            @click="handleNavigate(`${periodLink}/${pe.id}`)"
+          >
             <td>
               <a
                 class="text-sm font-bold leading-relaxed text-n-50"
@@ -40,13 +45,13 @@
                 {{
                   pe.period.period_start[0].date
                     ? dateFormat(pe.period.period_start[0].date)
-                    : "Missing"
+                    : 'Missing'
                 }}
                 -
                 {{
                   pe.period.period_end[0].date
                     ? dateFormat(pe.period.period_end[0].date)
-                    : "Missing"
+                    : 'Missing'
                 }}
               </a>
             </td>
@@ -74,21 +79,28 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, onMounted, ref, reactive, provide } from "vue";
-import axios from "axios";
+import {
+  defineComponent,
+  toRefs,
+  onMounted,
+  ref,
+  reactive,
+  provide,
+} from 'vue';
+import axios from 'axios';
 // components
-import Btn from "Components/ButtonComponent.vue";
-import Pagination from "Components/TablePagination.vue";
-import PageTitle from "Components/sections/PageTitle.vue";
-import Toast from "Components/ToastMessage.vue";
-import DeleteAction from "Components/sections/DeleteAction.vue";
+import Btn from 'Components/ButtonComponent.vue';
+import Pagination from 'Components/TablePagination.vue';
+import PageTitle from 'Components/sections/PageTitle.vue';
+import Toast from 'Components/ToastMessage.vue';
+import DeleteAction from 'Components/sections/DeleteAction.vue';
 
 // composable
-import dateFormat from "Composable/dateFormat";
-import getActivityTitle from "Composable/title";
+import dateFormat from 'Composable/dateFormat';
+import getActivityTitle from 'Composable/title';
 
 export default defineComponent({
-  name: "PeriodList",
+  name: 'PeriodList',
   components: {
     Btn,
     Pagination,
@@ -149,7 +161,7 @@ export default defineComponent({
 
     const toastData = reactive({
       visibility: false,
-      message: "",
+      message: '',
       type: true,
     });
 
@@ -158,24 +170,24 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: "Your Activities",
-        link: "/activity",
+        title: 'Your Activities',
+        link: '/activity',
       },
       {
-        title: getActivityTitle(activityTitle, "en"),
+        title: getActivityTitle(activityTitle, 'en'),
         link: activityLink,
       },
       {
-        title: getActivityTitle(resultTitle, "en"),
+        title: getActivityTitle(resultTitle, 'en'),
         link: resultLink,
       },
       {
-        title: getActivityTitle(indicatorTitle, "en"),
+        title: getActivityTitle(indicatorTitle, 'en'),
         link: indicatorLink,
       },
       {
-        title: "Periods List",
-        link: "",
+        title: 'Periods List',
+        link: '',
       },
     ];
 
@@ -186,7 +198,7 @@ export default defineComponent({
         isEmpty.value = response.data.data.length ? false : true;
       });
 
-      if (props.toast.message !== "") {
+      if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;
@@ -198,15 +210,20 @@ export default defineComponent({
     });
 
     function fetchListings(active_page: number) {
-      axios.get(`/indicator/${indicatorId}/periods/page/` + active_page).then((res) => {
-        const response = res.data;
-        Object.assign(periodsData, response.data);
-        isEmpty.value = response.data ? false : true;
-      });
+      axios
+        .get(`/indicator/${indicatorId}/periods/page/` + active_page)
+        .then((res) => {
+          const response = res.data;
+          Object.assign(periodsData, response.data);
+          isEmpty.value = response.data ? false : true;
+        });
+    }
+    function handleNavigate(path) {
+      window.location.href = path;
     }
 
     // provide
-    provide("parentItemId", indicatorId);
+    provide('parentItemId', indicatorId);
 
     return {
       breadcrumbData,
@@ -218,6 +235,7 @@ export default defineComponent({
       fetchListings,
       indicatorId,
       toastData,
+      handleNavigate,
     };
   },
 });

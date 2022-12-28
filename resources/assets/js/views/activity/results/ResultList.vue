@@ -1,11 +1,11 @@
 <template>
-  <div class="relative bg-paper px-5 xl:px-10 pt-4 pb-[71px]">
+  <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       title="Result List"
       :back-link="activityLink"
     >
-      <div class="flex space-x-3 items-center">
+      <div class="flex items-center space-x-3">
         <Toast
           v-if="toastData.visibility"
           :message="toastData.message"
@@ -22,7 +22,7 @@
     <div class="iati-list-table text-n-40">
       <table>
         <thead>
-          <tr class="text-left bg-n-10">
+          <tr class="bg-n-10 text-left">
             <th id="transaction_type" scope="col">
               <span>Title</span>
             </th>
@@ -39,31 +39,40 @@
         </thead>
         <tbody>
           <tr v-for="(result, t, index) in resultsData.data" :key="index">
-            <td>
-              <div class="relative ellipsis">
+            <td
+              class="cursor-pointer"
+              @click="handleNavigate(`${activityLink}/result/${result.id}`)"
+            >
+              <div class="ellipsis relative">
                 <a
                   :href="`${activityLink}/result/${result.id}`"
-                  class="overflow-hidden ellipsis text-n-50"
+                  class="ellipsis overflow-hidden text-n-50"
                 >
-                  {{ getActivityTitle(result.result.title[0].narrative, "en") }}
+                  {{ getActivityTitle(result.result.title[0].narrative, 'en') }}
                 </a>
                 <div class="w-52">
                   <span class="ellipsis__title--hover">{{
-                    getActivityTitle(result.result.title[0].narrative, "en")
+                    getActivityTitle(result.result.title[0].narrative, 'en')
                   }}</span>
                 </div>
               </div>
             </td>
-            <td>
-              {{ types.resultType[result.result.type] ?? "Missing" }}
+            <td
+              class="cursor-pointer"
+              @click="handleNavigate(`${activityLink}/result/${result.id}`)"
+            >
+              {{ types.resultType[result.result.type] ?? 'Missing' }}
             </td>
-            <td class="capitalize">
+            <td
+              class="cursor-pointer capitalize"
+              @click="handleNavigate(`${activityLink}/result/${result.id}`)"
+            >
               {{
                 parseInt(result.result.aggregation_status)
-                  ? "True"
+                  ? 'True'
                   : result.result.aggregation_status
-                  ? "False"
-                  : "Missing"
+                  ? 'False'
+                  : 'Missing'
               }}
             </td>
             <td>
@@ -93,22 +102,29 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, toRefs, onMounted, reactive, provide } from "vue";
-import axios from "axios";
+import {
+  defineComponent,
+  ref,
+  toRefs,
+  onMounted,
+  reactive,
+  provide,
+} from 'vue';
+import axios from 'axios';
 
 // components
-import Btn from "Components/ButtonComponent.vue";
-import Pagination from "Components/TablePagination.vue";
-import PageTitle from "Components/sections/PageTitle.vue";
-import Toast from "Components/ToastMessage.vue";
-import DeleteAction from "Components/sections/DeleteAction.vue";
+import Btn from 'Components/ButtonComponent.vue';
+import Pagination from 'Components/TablePagination.vue';
+import PageTitle from 'Components/sections/PageTitle.vue';
+import Toast from 'Components/ToastMessage.vue';
+import DeleteAction from 'Components/sections/DeleteAction.vue';
 
 // composable
-import dateFormat from "Composable/dateFormat";
-import getActivityTitle from "Composable/title";
+import dateFormat from 'Composable/dateFormat';
+import getActivityTitle from 'Composable/title';
 
 export default defineComponent({
-  name: "ResultsList",
+  name: 'ResultsList',
   components: {
     Btn,
     Pagination,
@@ -141,7 +157,7 @@ export default defineComponent({
       activityLink = `/activity/${activityId}`;
     const toastData = reactive({
       visibility: false,
-      message: "",
+      message: '',
       type: true,
     });
 
@@ -168,18 +184,21 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: "Your Activities",
-        link: "/activities",
+        title: 'Your Activities',
+        link: '/activities',
       },
       {
-        title: getActivityTitle(activityTitle, "en"),
+        title: getActivityTitle(activityTitle, 'en'),
         link: activityLink,
       },
       {
-        title: "Result List",
-        link: "",
+        title: 'Result List',
+        link: '',
       },
     ];
+    function handleNavigate(path) {
+      window.location.href = path;
+    }
 
     onMounted(async () => {
       axios.get(`/activity/${activityId}/results/page/1`).then((res) => {
@@ -188,7 +207,7 @@ export default defineComponent({
         isEmpty.value = response.data.data.length ? false : true;
       });
 
-      if (props.toast.message !== "") {
+      if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;
@@ -200,15 +219,17 @@ export default defineComponent({
     });
 
     function fetchListings(active_page: number) {
-      axios.get(`/activity/${activityId}/results/page/` + active_page).then((res) => {
-        const response = res.data;
-        Object.assign(resultsData, response.data);
-        isEmpty.value = response.data ? false : true;
-      });
+      axios
+        .get(`/activity/${activityId}/results/page/` + active_page)
+        .then((res) => {
+          const response = res.data;
+          Object.assign(resultsData, response.data);
+          isEmpty.value = response.data ? false : true;
+        });
     }
 
     // Provide
-    provide("parentItemId", activityId);
+    provide('parentItemId', activityId);
 
     return {
       breadcrumbData,
@@ -218,6 +239,7 @@ export default defineComponent({
       resultsData,
       getActivityTitle,
       fetchListings,
+      handleNavigate,
     };
   },
 });
