@@ -222,6 +222,7 @@ export default defineComponent({
         toastData.visibility = false;
       }, 5000);
     });
+
     function handleNavigate(path) {
       window.location.href = path;
     }
