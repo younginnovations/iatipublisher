@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UserProfileRequest;
 use App\Http\Requests\User\UserRequest;
+use App\IATI\Services\Download\CsvGenerator;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
 use Illuminate\Contracts\View\View;
@@ -34,6 +35,11 @@ class UserController extends Controller
     protected OrganizationService $organizationService;
 
     /**
+     * @var CsvGenerator
+     */
+    protected CsvGenerator $csvGenerator;
+
+    /**
      * @var DatabaseManager
      */
     protected DatabaseManager $db;
@@ -46,12 +52,12 @@ class UserController extends Controller
      * @param Log                 $logger
      * @param DatabaseManager     $db
      */
-    public function __construct(UserService $userService, OrganizationService $organizationService, Log $logger, DatabaseManager $db)
+    public function __construct(UserService $userService, OrganizationService $organizationService, CSVGenerator $csvGenerator, DatabaseManager $db)
     {
         $this->userService = $userService;
         $this->organizationService = $organizationService;
+        $this->csvGenerator = $csvGenerator;
         $this->db = $db;
-        $this->logger = $logger;
     }
 
     /**
@@ -315,19 +321,33 @@ class UserController extends Controller
         }
     }
 
-    public function toggleUserStatus($id) : JsonResponse
+    public function toggleUserStatus($id): JsonResponse
     {
         try {
             $this->userService->toggleUserStatus($id);
 
-            return response()->json(['success'=>true, 'message'=> 'User status has been successfully changed.']);
-        } catch(\Exception $e) {
+            return response()->json(['success' => true, 'message' => 'User status has been successfully changed.']);
+        } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json([
-                'success' =>false,
+                'success' => false,
                 'message' => 'Error has occurred while trying to toggle user status',
             ]);
+        }
+    }
+
+    public function downloadUsers(Request $request)
+    {
+        try {
+            $headers = ['username' => 'User Name', 'full_name' => 'Full Name', 'organization_id' => 'Organization', 'email' => 'Email', 'role_id' => 'Role'];
+            $users = $this->userService->getUserDownloadData();
+
+            return $this->csvGenerator->generateWithHeaders('test', $users, $headers);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
 }

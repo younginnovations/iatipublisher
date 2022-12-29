@@ -24,4 +24,5 @@ Route::group([], static function () {
     Route::get('/profile', [App\Http\Controllers\Admin\User\UserController::class, 'showUserProfile'])->name('user.profile');
     Route::post('/update/password', [App\Http\Controllers\Admin\User\UserController::class, 'updatePassword'])->name('user.edit.password');
     Route::post('/update/profile', [App\Http\Controllers\Admin\User\UserController::class, 'updateProfile'])->name('user.edit.profile');
+    Route::get('/users/download', [App\Http\Controllers\Admin\User\UserController::class, 'downloadUsers'])->name('user.download');
 });

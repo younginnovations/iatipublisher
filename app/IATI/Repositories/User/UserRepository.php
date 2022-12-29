@@ -58,4 +58,21 @@ class UserRepository extends Repository
 
         return $users;
     }
+
+    public function getUserDownloadData()
+    {
+        $users = $this->model->select('username', 'full_name', 'organization_id', 'email', 'role_id')->join()->get()->toArray();
+
+        dd($users);
+        // return $this->model->select('username', 'full_name', 'organization_id', 'email', 'role_id')->get()->toArray();
+    }
+
+    public function filterUsers()
+    {
+        $whereSql = '1=1';
+
+        // foreach($filter as $key=>$value){
+
+        // }
+    }
 }

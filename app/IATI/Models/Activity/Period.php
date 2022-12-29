@@ -35,6 +35,22 @@ class Period extends Model
     ];
 
     /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::created(function ($period) {
+            $period->indicator->result->activity->touch();
+        });
+
+        static::updated(function ($period) {
+            $period->indicator->result->activity->touch();
+        });
+    }
+
+    /**
      * Period belongs to indicator.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

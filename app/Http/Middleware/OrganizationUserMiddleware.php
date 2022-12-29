@@ -25,9 +25,9 @@ class OrganizationUserMiddleware
      */
     public function handle(Request $request, Closure $next): mixed
     {
-        // if (!isSuperAdminRoute() && auth()->user()->role_id === app(Role::class)->getSuperAdminId()) {
-        //     return redirect()->route('superadmin.listOrganizations');
-        // }
+        if (!isSuperAdminRoute() && auth()->user()->role_id === app(Role::class)->getSuperAdminId()) {
+            return redirect()->route('superadmin.listOrganizations');
+        }
 
         return $next($request);
     }

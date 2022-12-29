@@ -634,4 +634,11 @@ class UserService
 
         return $this->userRepo->update($id, ['status' => $status]);
     }
+
+    public function getUserDownloadData()
+    {
+        $users = $this->userRepo->getUserDownloadData();
+
+        return $users;
+    }
 }

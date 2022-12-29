@@ -22,7 +22,7 @@
     />
 
     <div>
-      <PopupModal :modal-active="addUserForm">
+      <PopupModal :modal-active="addUserForm || editUserForm">
         <div>
           <div class="mb-4 font-bold">Add a user</div>
           <div>
@@ -74,12 +74,13 @@
               @click="
                 () => {
                   addUserForm = false;
+                  editUserForm = false;
                 }
               "
             >
               Cancel
             </button>
-            <button @click="createUser">Save</button>
+            <button @click="addUserForm ? createUser : updateUser">Save</button>
           </div>
         </div>
       </PopupModal>
@@ -90,7 +91,7 @@
             :options="organizations"
             placeholder="Select organization"
             :searchable="true"
-            :multiple="true"
+            mode="multiple"
             :close-on-select="false"
             :clear-on-select="false"
           />
@@ -165,7 +166,7 @@
               <td>{{ user.status }}</td>
               <td>{{ formatDate(user.created_at) }}</td>
               <td>
-                <p>Edit</p>
+                <p @click="editUser(user)">Edit</p>
                 <p @click="deleteUser(user.id)">Delete</p>
                 <p @click="toggleUserStatus(user.id)">Toggle</p>
               </td>
@@ -212,6 +213,7 @@ const filter = reactive({ organization: [], roles: [], status: [] });
 
 const isLoaderVisible = ref(false);
 const addUserForm = ref(false);
+const editUserForm = ref(false);
 // const downloadUsers = ref(false);
 const usersData = reactive({});
 const isEmpty = ref(true);
@@ -265,32 +267,42 @@ const createUser = () => {
   addUserForm.value = false;
 };
 
-// const updateUser = (id: number) => {
-//   let passwordData = {
-//     password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
-//     password_confirmation: encrypt(
-//       formData.password_confirmation,
-//       process.env.MIX_ENCRYPTION_KEY ?? ""
-//     ),
-//   };
+const editUser = (user) => {
+  formData.username = user.username;
+  formData.full_name = user.full_name;
+  formData.email = user.email;
+  formData.role = user.role;
+  formData.password = user.password;
+  formData.password_confirmation = user.password;
+  editUserForm.value = true;
+};
 
-//   axios
-//     .put(`/user/${id}`, { ...formData, ...passwordData })
-//     .then((res) => {
-//       toastData.visibility = true;
-//       toastData.message = res.data.message;
-//       toastData.type = res.data.success;
-//       isLoaderVisible.value = false;
-//     })
-//     .catch((error) => {
-//       toastData.visibility = true;
-//       toastData.message = error.data.message;
-//       toastData.type = false;
-//       isLoaderVisible.value = false;
-//     });
+const updateUser = (id: number) => {
+  let passwordData = {
+    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
+    password_confirmation: encrypt(
+      formData.password_confirmation,
+      process.env.MIX_ENCRYPTION_KEY ?? ""
+    ),
+  };
 
-//   addUserForm.value = false;
-// };
+  axios
+    .put(`/user/${id}`, { ...formData, ...passwordData })
+    .then((res) => {
+      toastData.visibility = true;
+      toastData.message = res.data.message;
+      toastData.type = res.data.success;
+      isLoaderVisible.value = false;
+    })
+    .catch((error) => {
+      toastData.visibility = true;
+      toastData.message = error.data.message;
+      toastData.type = false;
+      isLoaderVisible.value = false;
+    });
+
+  addUserForm.value = false;
+};
 
 function fetchUsersList(active_page: number) {
   console.log("test");

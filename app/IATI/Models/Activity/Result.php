@@ -27,18 +27,20 @@ class Result extends Model
      * @var array
      */
     protected $fillable
-        = [
-            'activity_id',
-            'result',
-        ];
+    = [
+        'activity_id',
+        'result',
+    ];
 
     /**
      * @var array
      */
     protected $casts
-        = [
-            'result' => 'json',
-        ];
+    = [
+        'result' => 'json',
+    ];
+
+    protected $touches = ['activity'];
 
     /**
      * Result belongs to activity.
