@@ -36,5 +36,7 @@ spec:
             exec:
               command: ["supervisorctl", "stop", "all"]
         imagePullPolicy: IfNotPresent
+        command: [ "/bin/sh","-c" ]
+        args: ["php artisan optimize:clear"]
         ports:
         - containerPort: 9000
