@@ -66,22 +66,39 @@
 
     <div class="my-4 rounded-lg bg-white p-8">
       <PopupModal :modal-active="editPasswordForm">
-        <div>
-          <div class="mb-4 font-bold">Change Password</div>
+        <div class="h-auto">
+          <div class="mb-4 text-2xl font-bold text-bluecoral">
+            Change Password
+          </div>
           <div>
-            <div class="flex">
-              <label>Current Password</label>
-              <input v-model="passwordData.current_password" type="password" />
+            <div class="mb-5 flex flex-col gap-2">
+              <label class="text-sm"
+                >Current Password <span class="text-[red]">*</span>
+              </label>
+              <input
+                class="max-w-[calc(50%_-_12px)] rounded border border-[red] p-3"
+                v-model="passwordData.current_password"
+                type="password"
+              />
             </div>
           </div>
-          <div class="flex">
-            <div class="flex">
-              <label>New Password</label>
-              <input v-model="passwordData.password" type="password" />
-            </div>
-            <div class="flex">
-              <label>Confirm Password</label>
+          <div class="mb-5 flex space-x-6">
+            <div class="flex w-full flex-col gap-2">
+              <label class="text-sm"
+                >New Password <span class="text-[red]">*</span>
+              </label>
               <input
+                class="rounded p-3 outline"
+                v-model="passwordData.password"
+                type="password"
+              />
+            </div>
+            <div class="flex w-full flex-col gap-2">
+              <label class="text-sm"
+                >Confirm Password <span class="text-[red]">*</span>
+              </label>
+              <input
+                class="rounded p-3 outline"
                 v-model="passwordData.password_confirmation"
                 type="password"
               />
