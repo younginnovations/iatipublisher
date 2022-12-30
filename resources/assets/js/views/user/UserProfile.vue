@@ -134,13 +134,13 @@
         </div>
       </PopupModal>
       <div class="flex justify-between border-b border-n-30 py-6">
-        <span class="inline-flex space-x-2">
-          <span>i</span>
+        <span class="inline-flex items-center space-x-2">
+          <span><svg-vue icon="user-profile" class="text-base"></svg-vue></span>
           <h6 class="text-sm font-bold">Your Information</h6></span
         >
         <div class="inline-flex">
           <div class="inline-flex cursor-pointer space-x-1">
-            <span>i</span>
+            <span><svg-vue icon="key" class="text-base"></svg-vue></span>
             <a
               class="text-sm font-bold text-bluecoral"
               @click="
@@ -155,30 +155,36 @@
           </div>
         </div>
       </div>
-      <table>
-        <tr class="py-6">
-          <td>Name</td>
-          <td>{{ user.full_name }}</td>
-        </tr>
-        <tr>
-          <td>Username</td>
-          <td>{{ user.username }}</td>
-        </tr>
-        <tr>
-          <td>Email</td>
-          <td>
-            {{ user.email
-            }}<span v-if="!user.email_verified_at"
-              >You haven't verified your email address yet. Please check for
-              verification email sent to you and verify your account,
-              <a @click="resendVerificationEmail()"
-                >resend verification email</a
-              >
-              if you haven't received such and email.</span
+
+      <div class="flex space-x-2 border-b border-n-20 py-6">
+        <div class="text-base font-bold text-n-40">Name</div>
+        <div class="text-base">{{ user.full_name }}</div>
+      </div>
+      <div class="flex space-x-2 border-b border-n-20 py-6">
+        <div class="text-base font-bold text-n-40">Username</div>
+        <div class="text-base">{{ user.username }}</div>
+      </div>
+      <div class="flex space-x-2 border-b border-n-20 py-6">
+        <div class="text-base font-bold text-n-40">Language Preference</div>
+        <div class="text-base">English</div>
+      </div>
+      <div class="flex space-x-2 py-6">
+        <div class="text-base font-bold text-n-40">Email</div>
+        <div>
+          <a>{{ user.email }}</a>
+          <div
+            v-if="!user.email_verified_at"
+            class="mt-1 max-w-[550px] text-n-40"
+          >
+            You haven't verified your email address yet. Please check for
+            verification email sent to you and verify your account,
+            <a class="font-bold underline" @click="resendVerificationEmail()"
+              >resend verification email</a
             >
-          </td>
-        </tr>
-      </table>
+            if you haven't received such and email.
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
