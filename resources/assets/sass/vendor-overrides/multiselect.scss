@@ -1,0 +1,19 @@
+.multiselect {
+  min-width: 160px !important;
+  cursor: pointer !important;
+}
+.multiselect-placeholder {
+  font-size: 12px !important;
+  font-weight: bold !important;
+  color: rgb(var(--bluecoral)) !important;
+}
+.multiselect-search {
+  cursor: pointer !important;
+}
+.multiselect-multiple-label {
+  white-space: nowrap !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  color: rgb(var(--bluecoral)) !important;
+  text-transform: uppercase;
+}
