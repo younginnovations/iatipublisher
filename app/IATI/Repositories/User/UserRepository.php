@@ -58,7 +58,7 @@ class UserRepository extends Repository
         $query = $this->model
             ->join('organizations', 'organizations.id', 'users.organization_id')
             ->join('roles', 'roles.id', 'users.role_id')
-            ->select('username', 'full_name', 'organizations.publisher_name', 'email', 'roles.role');
+            ->select('users.id', 'username', 'full_name', 'organizations.publisher_name', 'email', 'users.status', 'roles.role');
 
         if (!empty($queryParams)) {
             $query = $this->filterUsers($query, $queryParams);

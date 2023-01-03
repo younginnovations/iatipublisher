@@ -44,36 +44,38 @@
         </div>
         <div class="text-[30px] font-bold">{{ user.full_name }}</div>
       </div>
-      <div>
-        <button
-          class="primary-btn"
-          @click="
-            () => {
-              editProfileForm = true;
-            }
-          "
-        >
-          <svg-vue icon="edit" class="mr-1 text-base"></svg-vue
-          ><span class="text-xs uppercase">Edit your profile</span>
-        </button>
+      <div class="flex space-x-2">
+        <Toast
+          v-if="toastData.visibility"
+          :message="toastData.message"
+          :type="toastData.type"
+        />
+        <div>
+          <button
+            class="primary-btn"
+            @click="
+              () => {
+                editProfileForm = true;
+              }
+            "
+          >
+            <svg-vue icon="edit" class="mr-1 text-base"></svg-vue
+            ><span class="text-xs uppercase">Edit your profile</span>
+          </button>
+        </div>
       </div>
     </div>
-    <Toast
-      v-if="toastData.visibility"
-      :message="toastData.message"
-      :type="toastData.type"
-    />
 
     <div class="my-4 rounded-lg bg-white p-8">
       <PopupModal :modal-active="editPasswordForm">
-        <div class="h-auto">
+        <div class="popup-model h-auto">
           <div class="mb-4 text-2xl font-bold text-bluecoral">
             Change Password
           </div>
           <div>
             <div class="mb-5 flex flex-col gap-2">
               <label class="text-sm text-n-50"
-                >Current Password <span class="text-[red]">*</span>
+                >Current Password <span class="text-[red]"> * </span>
               </label>
               <span class="relative max-w-[calc(50%_-_12px)]">
                 <svg-vue
@@ -96,7 +98,7 @@
           <div class="mb-5 flex space-x-6">
             <div class="flex w-full flex-col gap-2">
               <label class="text-sm text-n-50"
-                >New Password <span class="text-[red]">*</span>
+                >New Password <span class="text-[red]"> * </span>
               </label>
               <span class="relative">
                 <svg-vue
@@ -116,7 +118,7 @@
             </div>
             <div class="flex w-full flex-col gap-2">
               <label class="text-sm text-n-50"
-                >Confirm Password <span class="text-[red]">*</span>
+                >Confirm Password <span class="text-[red]"> * </span>
               </label>
               <span class="relative">
                 <svg-vue
@@ -137,7 +139,7 @@
           </div>
           <div class="mt-6 flex justify-end space-x-2">
             <button
-              class="secondary-btn"
+              class="secondary-btn font-bold"
               @click="
                 () => {
                   editPasswordForm = false;
@@ -146,20 +148,22 @@
             >
               Cancel
             </button>
-            <button class="primary-btn" @click="updatePassword">Save</button>
+            <button class="primary-btn !px-10" @click="updatePassword">
+              Save
+            </button>
           </div>
         </div>
       </PopupModal>
       <!-- profile edit popup form -->
       <PopupModal :modal-active="editProfileForm">
-        <div>
+        <div class="popup-model">
           <div class="mb-4 text-2xl font-bold text-bluecoral">
             Edit your profile
           </div>
           <div class="grid grid-cols-2 gap-6">
             <div class="col-span-2 flex flex-col items-start gap-2">
               <label class="text-sm text-n-50"
-                >Full Name<span class="text-[red]">*</span></label
+                >Full Name<span class="text-[red]"> * </span></label
               >
               <input
                 class="w-full rounded border border-n-30 p-3"
@@ -169,7 +173,7 @@
             </div>
             <div class="flex flex-col items-start gap-2">
               <label class="text-sm text-n-50"
-                >Username<span class="text-[red]">*</span></label
+                >Username<span class="text-[red]"> * </span></label
               >
               <input
                 class="w-full rounded border border-n-30 p-3"
@@ -180,7 +184,7 @@
 
             <div class="flex flex-col items-start gap-2">
               <label class="text-sm text-n-50"
-                >Email<span class="text-[red]">*</span></label
+                >Email<span class="text-[red]"> * </span></label
               >
               <input
                 class="w-full rounded border border-n-30 p-3"
@@ -191,7 +195,7 @@
           </div>
           <div class="mt-6 flex justify-end space-x-2">
             <button
-              class="secondary-btn"
+              class="secondary-btn font-bold"
               @click="
                 () => {
                   editProfileForm = false;
@@ -200,7 +204,9 @@
             >
               Cancel
             </button>
-            <button class="primary-btn" @click="updateProfile">Save</button>
+            <button class="primary-btn !px-10" @click="updateProfile">
+              Save
+            </button>
           </div>
         </div>
       </PopupModal>
@@ -249,7 +255,9 @@
           >
             You haven't verified your email address yet. Please check for
             verification email sent to you and verify your account,
-            <a class="font-bold underline" @click="resendVerificationEmail()"
+            <a
+              class="cursor-pointer font-bold underline"
+              @click="resendVerificationEmail()"
               >resend verification email</a
             >
             if you haven't received such and email.

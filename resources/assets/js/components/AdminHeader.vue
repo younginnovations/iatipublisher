@@ -47,7 +47,10 @@
             :class="data.languageNavLiClasses"
           >
             <a
-              :class="[{ nav__pointer: language.active }, data.languageNavAnchorClasses]"
+              :class="[
+                { nav__pointer: language.active },
+                data.languageNavAnchorClasses,
+              ]"
               :href="language.permalink"
             >
               <span>{{ language.language }}</span>
@@ -183,10 +186,13 @@
                   </span>
                 </div>
               </li>
-              <li class="dropdown__list border-b border-b-n-20">
-                <svg-vue icon="user" />
-                <a href="/profile">Your Profile</a>
-              </li>
+              <a href="/profile">
+                <li class="dropdown__list border-b border-b-n-20">
+                  <svg-vue icon="user" /><span class="ml-4 capitalize">
+                    Your Profile</span
+                  >
+                </li></a
+              >
               <li class="dropdown__list" @click="logout">
                 <svg-vue icon="logout"></svg-vue>
                 <button class="text-sm">Logout</button>

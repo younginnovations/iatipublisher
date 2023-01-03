@@ -10,7 +10,16 @@
     </nav>
     <PageTitle title="Users" back-link="">
       <div class="flex justify-end space-x-2">
-        <button ref="dropdownBtn" class="button secondary-btn font-bold">
+        <Toast
+          v-if="toastData.visibility"
+          :message="toastData.message"
+          :type="toastData.type"
+        />
+        <button
+          ref="dropdownBtn"
+          @click="downloadAll"
+          class="button secondary-btn font-bold"
+        >
           <svg-vue icon="download-file" /> Download All
         </button>
         <button
@@ -26,66 +35,116 @@
         </button>
       </div>
     </PageTitle>
-    <Toast
-      v-if="toastData.visibility"
-      :message="toastData.message"
-      :type="toastData.type"
-    />
 
     <div>
       <PopupModal :modal-active="addUserForm || editUserForm">
-        <div>
-          <div class="mb-4 font-bold">Add a user</div>
-          <div>
-            <div class="flex">
-              <label>Full Name</label>
-              <input v-model="formData.full_name" type="text" />
+        <div class="popup-model">
+          <div class="mb-5 text-2xl font-bold text-bluecoral">
+            {{ addUserForm ? 'Add a new superadmin' : 'Edit super admin' }}
+          </div>
+          <div class="grid grid-cols-2 gap-6">
+            <div class="col-span-2 flex flex-col items-start gap-2">
+              <label class="text-sm text-n-50"
+                >Full Name<span class="text-[red]"> * </span></label
+              >
+              <input
+                class="w-full rounded border border-n-30 p-3"
+                v-model="formData.full_name"
+                type="text"
+              />
+              <span v-if="formError['full_name']" class="error">{{
+                formError['full_name'][0]
+              }}</span>
             </div>
-            <div class="flex justify-between">
-              <div class="flex">
-                <label>Username</label>
-                <input v-model="formData.username" type="text" />
-              </div>
-              <div class="flex">
-                <label>Email</label>
-                <input v-model="formData.email" type="email" />
-              </div>
+
+            <div class="flex flex-col items-start gap-2">
+              <label class="text-sm text-n-50"
+                >Username<span class="text-[red]"> *</span></label
+              >
+              <input
+                class="w-full rounded border border-n-30 p-3"
+                v-model="formData.username"
+                type="text"
+              />
+              <span v-if="formError['username']" class="error">{{
+                formError['username'][0]
+              }}</span>
             </div>
-            <div class="flex">
-              <label>Status</label>
+            <div class="flex flex-col items-start gap-2">
+              <label class="text-sm text-n-50"
+                >Email<span class="text-[red]"> * </span></label
+              >
+              <input
+                class="w-full rounded border border-n-30 p-3"
+                v-model="formData.email"
+                type="email"
+              />
+              <span v-if="formError['email']" class="error">{{
+                formError['email'][0]
+              }}</span>
+            </div>
+
+            <div class="flex flex-col items-start gap-2">
+              <label class="text-sm text-n-50"
+                >Status<span class="text-[red]"> * </span></label
+              >
               <Multiselect
                 v-model="formData.status"
                 :options="status"
                 placeholder="Select status"
                 :searchable="true"
               />
+              <span v-if="formError['status']" class="error">{{
+                formError['status'][0]
+              }}</span>
             </div>
-            <div class="flex">
-              <label>Role</label>
+            <div class="flex flex-col items-start gap-2">
+              <label class="text-sm text-n-50"
+                >Role<span class="text-[red]"> * </span></label
+              >
               <Multiselect
                 v-model="formData.role"
                 :options="roles"
                 placeholder="Select user role"
                 :searchable="true"
               />
+              <span v-if="formError['role']" class="error">{{
+                formError['role'][0]
+              }}</span>
             </div>
 
-            <div class="flex">
-              <div class="flex">
-                <label>New Password</label>
-                <input v-model="formData.password" type="password" />
-              </div>
-              <div class="flex">
-                <label>Confirm Password</label>
-                <input
-                  v-model="formData.password_confirmation"
-                  type="password"
-                />
-              </div>
+            <div class="flex flex-col items-start gap-2">
+              <label class="text-sm text-n-50"
+                >New password<span class="text-[red]"> * </span></label
+              >
+              <input
+                class="w-full rounded border border-n-30 p-3"
+                v-model="formData.password"
+                type="password"
+              />
+              <span v-if="formError['password']" class="error">{{
+                formError['password'][0]
+              }}</span>
+            </div>
+            <div class="flex flex-col items-start gap-2">
+              <label class="text-sm text-n-50"
+                >Confirm Password<span class="text-[red]"> * </span></label
+              >
+
+              <input
+                class="w-full rounded border border-n-30 p-3"
+                v-model="formData.password_confirmation"
+                type="password"
+              />
+              <span v-if="formError['password_confirmation']" class="error">{{
+                formError['password_confirmation'][0]
+              }}</span>
             </div>
           </div>
-          <div class="flex justify-end">
+
+          <div class="mt-6 flex justify-end space-x-2">
             <button
+              class="secondary-btn font-bold"
               @click="
                 () => {
                   addUserForm = false;
@@ -95,61 +154,108 @@
             >
               Cancel
             </button>
-            <button @click="addUserForm ? createUser() : updateUser()">
+            <button
+              class="primary-btn !px-10"
+              @click="addUserForm ? createUser() : updateUser()"
+            >
               Save
             </button>
           </div>
         </div>
       </PopupModal>
+      <PopupModal :modal-active="deleteModal">
+        <div class="title mb-6 flex">
+          <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
+          <b>Delete Superadmin</b>
+        </div>
+        <p class="rounded-lg bg-rose p-4">
+          Are you sure you want to delete this superadmin?
+        </p>
+        <div class="mt-6 flex justify-end space-x-2">
+          <button
+            class="secondary-btn font-bold"
+            @click="
+              () => {
+                deleteModal = false;
+              }
+            "
+          >
+            Cancel
+          </button>
+          <button class="primary-btn !px-10" @click="deleteUser(deleteId)">
+            Delete
+          </button>
+        </div>
+      </PopupModal>
+
       <div class="filters mb-4 flex justify-between">
         <div class="select filters inline-flex items-center space-x-2">
-          <svg-vue class="w-[130px] cursor-pointer text-lg" icon="funnel" />
-          <Multiselect
-            v-model="filter.organization"
-            :options="Object.values(organizations)"
-            placeholder="ORGANISATION"
-            :searchable="true"
-            mode="multiple"
-            :close-on-select="false"
-            :clear-on-select="false"
-          />
+          <svg-vue class="w-10 text-lg" icon="funnel" />
+          <span class="organization"
+            ><Multiselect
+              v-model="filter.organization"
+              :options="organizations"
+              placeholder="ORGANISATION"
+              :searchable="true"
+              mode="multiple"
+              :taggable="true"
+              :close-on-select="false"
+              :clear-on-select="false"
+              label="name"
+            />
 
-          <Multiselect
-            v-model="filter.roles"
-            :options="Object.values(props.roles)"
-            placeholder="ROLE"
-            :searchable="true"
-            mode="multiple"
-            :close-on-select="false"
-            :clear-on-select="false"
-          />
-          <Multiselect
-            v-model="filter.status"
-            :options="Object.values(status)"
-            mode="multiple"
-            placeholder="STATUS"
-            :searchable="true"
-          />
+            <!-- <span
+              v-if="filter.organization.length > 0"
+              class="selected-placeholder absolute top-1/2 left-[14px] -translate-y-1/2 text-xs font-bold uppercase text-bluecoral"
+            >
+              organization
+            </span> -->
+          </span>
+
+          <span class="role">
+            <Multiselect
+              v-model="filter.roles"
+              :options="roles"
+              placeholder="ROLE"
+              :searchable="true"
+              mode="multiple"
+              :close-on-select="false"
+              :clear-on-select="false"
+            />
+          </span>
+          <span class="status"
+            ><Multiselect
+              v-model="filter.status"
+              :options="status"
+              mode="multiple"
+              placeholder="STATUS"
+              :searchable="true"
+          /></span>
         </div>
         <div class="open-text">
           <svg-vue
             class="absolute top-1/2 left-2 -translate-y-1/2 text-base"
             icon="magnifying-glass"
           />
-          <input type="text" placeholder="Search for users" />
+          <input
+            type="text"
+            v-model="filter.q"
+            placeholder="Search for users"
+          />
         </div>
       </div>
 
       <div class="mb-4 flex items-center gap-2" v-if="isFilterApplied">
-        <span class="text-sm font-bold uppercase text-n-40">filtered by:</span>
+        <span class="text-sm font-bold uppercase text-n-40">filtered by: </span>
 
-        <span class="flex gap-2" v-if="filter.organization.length">
+        <span class="flex gap-2" v-if="filter.organization">
           <span
             v-for="(item, index) in filter.organization"
             :key="index"
             class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
           >
-            <span class="text-n-40">Org:</span><span>{{ item }}</span>
+            <span class="text-n-40">Org:</span
+            ><span>{{ textBubbledata(item, 'org') }}</span>
             <svg-vue
               @click="filter.organization.splice(index, 1)"
               class="mx-2 mt-1 cursor-pointer text-xs"
@@ -157,27 +263,29 @@
             />
           </span>
         </span>
-        <span class="flex gap-2" v-if="filter.role.length">
+        <span class="flex gap-2" v-if="filter.roles">
           <span
-            v-for="(item, index) in filter.role"
+            v-for="(item, index) in filter.roles"
             :key="index"
             class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
           >
-            <span class="text-n-40">Roles:</span><span>{{ item }}</span>
+            <span class="text-n-40">Roles:</span
+            ><span>{{ textBubbledata(item, 'roles') }}</span>
             <svg-vue
               class="mx-2 mt-1 cursor-pointer text-xs"
               icon="cross"
-              @click="filter.role.splice(index, 1)"
+              @click="filter.roles.splice(index, 1)"
             />
           </span>
         </span>
-        <span class="flex gap-2" v-if="filter.status.length">
+        <span class="flex gap-2" v-if="filter.status">
           <span
             v-for="(item, index) in filter.status"
             :key="index"
             class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
           >
-            <span class="text-n-40">Status:</span><span>{{ item }}</span>
+            <span class="text-n-40">Status:</span
+            ><span>{{ textBubbledata(item, 'status') }}</span>
             <svg-vue
               class="mx-2 mt-1 cursor-pointer text-xs"
               icon="cross"
@@ -185,8 +293,6 @@
             />
           </span>
         </span>
-        <div class="open-text"><input type="text" placeholder="Search" /></div>
-        <div @click="fetchUsersList(usersData['current_page'])">Search</div>
       </div>
 
       <div class="iati-list-table text-n-40">
@@ -195,13 +301,21 @@
             <tr class="bg-n-10">
               <th id="title" scope="col">
                 <span class="inline-flex items-center">
-                  <span>
+                  <span v-if="filter.orderBy.user === 'desc'">
                     <svg-vue
                       @click="sort('user')"
                       class="mx-2 h-3 w-2 cursor-pointer"
                       icon="sort-descending"
                     />
                   </span>
+                  <span v-else>
+                    <svg-vue
+                      @click="sort('user')"
+                      class="mx-2 h-3 w-2 cursor-pointer"
+                      icon="sort-ascending"
+                    />
+                  </span>
+
                   <span>Users</span>
                 </span>
               </th>
@@ -210,11 +324,18 @@
               </th>
               <th id="aggregation_status" scope="col" width="208px">
                 <span class="inline-flex items-center">
-                  <span>
+                  <span v-if="filter.orderBy.org === 'desc'">
                     <svg-vue
                       @click="sort('org')"
                       class="mx-2 h-3 w-2 cursor-pointer"
                       icon="sort-descending"
+                    />
+                  </span>
+                  <span v-else>
+                    <svg-vue
+                      @click="sort('org')"
+                      class="mx-2 h-3 w-2 cursor-pointer"
+                      icon="sort-ascending"
                     />
                   </span>
                   <span class="whitespace-nowrap">Organisation Name</span>
@@ -228,11 +349,18 @@
               </th>
               <th id="aggregation_status" scope="col" width="208px">
                 <span class="inline-flex items-center">
-                  <span>
+                  <span v-if="filter.orderBy.join === 'desc'">
                     <svg-vue
                       @click="sort('join')"
                       class="mx-2 h-3 w-2 cursor-pointer"
                       icon="sort-descending"
+                    />
+                  </span>
+                  <span v-else>
+                    <svg-vue
+                      @click="sort('join')"
+                      class="mx-2 h-3 w-2 cursor-pointer"
+                      icon="sort-ascending"
                     />
                   </span>
                   <span class="whitespace-nowrap">Joined On</span>
@@ -241,6 +369,11 @@
               <th id="action" scope="col" width="190px">
                 <span>Action</span>
               </th>
+              <th id="cb" scope="col">
+                <span class="cursor-pointer">
+                  <svg-vue @click="toggleSelectall" icon="checkbox" />
+                </span>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -248,28 +381,62 @@
               <td>
                 <div class="ellipsis relative">
                   <p>
-                    {{ user.full_name }}
+                    {{ user['full_name'] }}
                   </p>
                   <span>
-                    {{ user.username }}
+                    {{ user['username'] }}
                   </span>
                 </div>
               </td>
               <td class="capitalize">
-                {{ user.email }}
+                {{ user['email'] }}
               </td>
               <td>
-                {{ organizations[user.organization_id] }}
+                {{ user['publisher_name'] }}
+              </td>
+              <td class="capitalize">
+                {{ user['role'] }}
+              </td>
+              <td :class="user['status'] ? 'text-spring-50' : 'text-n-40'">
+                {{ user['status'] ? 'Active' : 'Inactive' }}
+              </td>
+              <td>{{ formatDate(user['created_at']) }}</td>
+              <td class="flex h-full items-center space-x-6">
+                <p @click="editUser(user)">
+                  <svg-vue
+                    class="cursor-pointer text-base"
+                    icon="edit-action"
+                  />
+                </p>
+                <!-- <p @click="deleteUser(user['id'])"> -->
+                <p @click="openDeletemodel(user['id'])">
+                  <svg-vue class="cursor-pointer text-base" icon="delete" />
+                </p>
+                <p @click="toggleUserStatus(user['id'])">
+                  <span
+                    :class="user['status'] ? 'bg-spring-50' : 'bg-n-40'"
+                    class="relative block h-4 w-7 cursor-pointer rounded-full"
+                  >
+                    <span
+                      :class="
+                        user['status'] ? 'translate-x-0' : 'translate-x-full'
+                      "
+                      class="absolute top-1/2 left-[2px] block h-3 w-3 -translate-y-1/2 rounded-full bg-white duration-200"
+                    />
+                  </span>
+                </p>
               </td>
               <td>
-                {{ roles[user.role_id] }}
-              </td>
-              <td>{{ user.status }}</td>
-              <td>{{ formatDate(user.created_at) }}</td>
-              <td>
-                <p @click="editUser(user)">Edit</p>
-                <p @click="deleteUser(user.id)">Delete</p>
-                <p @click="toggleUserStatus(user.id)">Toggle</p>
+                <span class="relative h-5 w-5"
+                  ><input
+                    class="user-checklist"
+                    :value="user"
+                    v-model="checklist"
+                    type="checkbox"
+                  />
+                  <span class="pseudo-checkbox" />
+                  <svg-vue class="ticked-svg text-spring-50" icon="ticked" />
+                </span>
               </td>
             </tr>
           </tbody>
@@ -293,6 +460,7 @@ import {
   ref,
   onUpdated,
   computed,
+  watch,
   onMounted,
 } from 'vue';
 import Loader from '../../components/Loader.vue';
@@ -332,10 +500,20 @@ const sortUser = ref('');
 const sortJoin = ref('');
 
 const editUserForm = ref(false);
-// const downloadUsers = ref(false);
-const usersData = reactive({});
+const usersData = reactive({ data: [] });
 const isEmpty = ref(true);
+const allSelected = ref(false);
+const organisationFocus = ref(false);
+const deleteModal = ref(false);
+const deleteId = ref();
+
+const formError = ref({});
+
+const checkedId = ref([]);
+const selectedIds = ref([]);
+
 const editUserId = ref('');
+const checklist = ref([]);
 
 const formData = reactive({
   username: '',
@@ -354,6 +532,9 @@ const isFilterApplied = computed(() => {
     !!filter.status.length
   );
 });
+onUpdated(() => {
+  console.log(organisationFocus.value);
+});
 
 onMounted(async () => {
   axios.get(`/users/page/1`).then((res) => {
@@ -366,6 +547,17 @@ onMounted(async () => {
     toastData.visibility = false;
   }, 5000);
 });
+
+const textBubbledata = (id, field) => {
+  switch (field) {
+    case 'org':
+      return props.organizations[+id];
+    case 'roles':
+      return props.roles[+id];
+    case 'status':
+      return props.status[+id];
+  }
+};
 
 const createUser = () => {
   let passwordData = {
@@ -383,6 +575,8 @@ const createUser = () => {
       toastData.message = res.data.message;
       toastData.type = res.data.success;
       isLoaderVisible.value = false;
+      formError.value = res.data.errors;
+      console.log(res.data, 'here');
     })
     .catch((error) => {
       toastData.visibility = true;
@@ -421,6 +615,7 @@ const updateUser = () => {
       toastData.message = res.data.message;
       toastData.type = res.data.success;
       isLoaderVisible.value = false;
+      formError.value = res.data.errors;
     })
     .catch((error) => {
       toastData.visibility = true;
@@ -432,9 +627,18 @@ const updateUser = () => {
   addUserForm.value = false;
   editUserId.value = '';
 };
+watch(
+  () => [checklist.value, allSelected.value],
 
+  (checklist, selectall) => {
+    checkedId.value = checklist[0].map((value) => {
+      return value.id;
+    });
+  }
+);
 function fetchUsersList(active_page: number) {
   let route = `/users/page/${active_page}`;
+
   let params = new URLSearchParams();
 
   for (const filter_key in filter) {
@@ -449,8 +653,13 @@ function fetchUsersList(active_page: number) {
     isEmpty.value = response.data ? false : true;
   });
 }
-
+const openDeletemodel = (id) => {
+  deleteModal.value = true;
+  deleteId.value = id;
+};
 function deleteUser(id: number) {
+  deleteModal.value = false;
+
   axios
     .delete(`/user/${id}`)
     .then((res) => {
@@ -464,6 +673,7 @@ function deleteUser(id: number) {
       console.log(err);
     });
 }
+
 const sort = (param) => {
   filter.orderBy.user = '';
   filter.orderBy.org = '';
@@ -496,8 +706,7 @@ const sort = (param) => {
 
       break;
   }
-
-  console.log(filter.orderBy);
+  fetchUsersList(usersData['current_page']);
 };
 
 function toggleUserStatus(id: number) {
@@ -520,5 +729,71 @@ function toggleUserStatus(id: number) {
 function formatDate(date: Date) {
   return moment(date).format('LL');
 }
+const toggleSelectall = () => {
+  if (!allSelected.value) {
+    for (let i = 0; i < usersData.data.length; i++) {
+      checklist.value.push(usersData.data[i]);
+    }
+  } else {
+    checklist.value = [];
+  }
+  allSelected.value = !allSelected.value;
+};
+const updateValueAction = (event) => {
+  console.log(event);
+};
+const downloadAll = () => {
+  checkedId.value = checkedId.value.filter(function (element) {
+    return element !== undefined;
+  });
+
+  checkedId.value.forEach((element) => {
+    if (!selectedIds.value.includes(element)) {
+      selectedIds.value.push(element);
+    }
+  });
+  if (selectedIds.value.length == 0) {
+    let route = `/users/download/`;
+
+    let params = new URLSearchParams();
+
+    for (const filter_key in filter) {
+      if (filter[filter_key].length > 0) {
+        params.append(filter_key, filter[filter_key]);
+      }
+    }
+
+    axios.get(route, { params: params }).then((res) => {
+      const response = res.data;
+      console.group(res);
+      let blob = new Blob([response], {
+        type: 'application/xml',
+      });
+      let link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = res.headers['content-disposition'];
+      link.click();
+    });
+  } else {
+    let route = `/users/download/`;
+
+    let params = new URLSearchParams();
+
+    params.append('users', selectedIds.value.toString());
+
+    axios.get(route, { params: params }).then((res) => {
+      const response = res.data;
+      console.group(res);
+
+      let blob = new Blob([response], {
+        type: 'application/xml',
+      });
+      let link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = res.headers['content-disposition'];
+      link.click();
+    });
+  }
+};
 </script>
-<style src="@vueform/multiselect/themes/default.css"></style>
+<style scoped src="@vueform/multiselect/themes/default.css"></style>

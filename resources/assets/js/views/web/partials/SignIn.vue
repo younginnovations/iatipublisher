@@ -15,6 +15,17 @@
       >
         {{ message }}
       </div>
+      <div class="w-full border-l-2 border-spring-50 bg-[#EEF9F5] px-4 py-3">
+        <div class="flex space-x-2">
+          <svg-vue class="text-spring-50" icon="tick" />
+          <span class="flex flex-col space-y-2">
+            <span class="text-sm font-bold text-n-50">Password Updated!</span>
+            <span class="text-sm text-n-50"
+              >Please use your new password to login again.</span
+            >
+          </span>
+        </div>
+      </div>
       <div class="relative mt-6 mb-4 flex flex-col text-sm text-bluecoral">
         <label for="Username">Username</label>
         <input
