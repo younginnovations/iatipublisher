@@ -10,7 +10,11 @@
     </nav>
     <PageTitle title="Users" back-link="">
       <div class="flex justify-end space-x-2">
-        <button ref="dropdownBtn" class="button secondary-btn font-bold">
+        <button
+          ref="dropdownBtn"
+          @click="downloadAll"
+          class="button secondary-btn font-bold"
+        >
           <svg-vue icon="download-file" /> Download All
         </button>
         <button
@@ -143,7 +147,7 @@
       <div class="mb-4 flex items-center gap-2" v-if="isFilterApplied">
         <span class="text-sm font-bold uppercase text-n-40">filtered by:</span>
 
-        <span class="flex gap-2" v-if="filter.organization.length">
+        <span class="flex gap-2" v-if="filter.organization">
           <span
             v-for="(item, index) in filter.organization"
             :key="index"
@@ -157,9 +161,9 @@
             />
           </span>
         </span>
-        <span class="flex gap-2" v-if="filter.role.length">
+        <span class="flex gap-2" v-if="filter.roles">
           <span
-            v-for="(item, index) in filter.role"
+            v-for="(item, index) in filter.roles"
             :key="index"
             class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
           >
@@ -171,7 +175,7 @@
             />
           </span>
         </span>
-        <span class="flex gap-2" v-if="filter.status.length">
+        <span class="flex gap-2" v-if="filter.status">
           <span
             v-for="(item, index) in filter.status"
             :key="index"
@@ -185,8 +189,6 @@
             />
           </span>
         </span>
-        <div class="open-text"><input type="text" placeholder="Search" /></div>
-        <div @click="fetchUsersList(usersData['current_page'])">Search</div>
       </div>
 
       <div class="iati-list-table text-n-40">
@@ -241,6 +243,11 @@
               <th id="action" scope="col" width="190px">
                 <span>Action</span>
               </th>
+              <th id="cb" scope="col">
+                <span class="cursor-pointer">
+                  <svg-vue @click="toggleSelectall" icon="checkbox" />
+                </span>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -259,10 +266,10 @@
                 {{ user.email }}
               </td>
               <td>
-                {{ organizations[user.organization_id] }}
+                {{ user.publisher_name }}
               </td>
-              <td>
-                {{ roles[user.role_id] }}
+              <td class="capitalize">
+                {{ user.role }}
               </td>
               <td>{{ user.status }}</td>
               <td>{{ formatDate(user.created_at) }}</td>
@@ -270,6 +277,9 @@
                 <p @click="editUser(user)">Edit</p>
                 <p @click="deleteUser(user.id)">Delete</p>
                 <p @click="toggleUserStatus(user.id)">Toggle</p>
+              </td>
+              <td>
+                <input :value="user" v-model="checklist" type="checkbox" />
               </td>
             </tr>
           </tbody>
@@ -293,6 +303,7 @@ import {
   ref,
   onUpdated,
   computed,
+  watch,
   onMounted,
 } from 'vue';
 import Loader from '../../components/Loader.vue';
@@ -333,9 +344,14 @@ const sortJoin = ref('');
 
 const editUserForm = ref(false);
 // const downloadUsers = ref(false);
-const usersData = reactive({});
+const usersData = reactive({ data: [] });
 const isEmpty = ref(true);
+const allSelected = ref(false);
+const checkedId = ref([]);
+const selectedIds = ref([]);
+
 const editUserId = ref('');
+const checklist = ref([]);
 
 const formData = reactive({
   username: '',
@@ -348,11 +364,7 @@ const formData = reactive({
 });
 
 const isFilterApplied = computed(() => {
-  return (
-    !!filter.organization.length ||
-    !!filter.roles.length ||
-    !!filter.status.length
-  );
+  return !!filter.organization || !!filter.roles || !!filter.status;
 });
 
 onMounted(async () => {
@@ -432,9 +444,18 @@ const updateUser = () => {
   addUserForm.value = false;
   editUserId.value = '';
 };
+watch(
+  () => [checklist.value, allSelected.value],
 
+  (checklist, selectall) => {
+    checkedId.value = checklist[0].map((value) => {
+      return value.id;
+    });
+  }
+);
 function fetchUsersList(active_page: number) {
   let route = `/users/page/${active_page}`;
+
   let params = new URLSearchParams();
 
   for (const filter_key in filter) {
@@ -464,6 +485,7 @@ function deleteUser(id: number) {
       console.log(err);
     });
 }
+
 const sort = (param) => {
   filter.orderBy.user = '';
   filter.orderBy.org = '';
@@ -496,8 +518,7 @@ const sort = (param) => {
 
       break;
   }
-
-  console.log(filter.orderBy);
+  fetchUsersList(usersData['current_page']);
 };
 
 function toggleUserStatus(id: number) {
@@ -520,5 +541,68 @@ function toggleUserStatus(id: number) {
 function formatDate(date: Date) {
   return moment(date).format('LL');
 }
+const toggleSelectall = () => {
+  if (!allSelected.value) {
+    for (let i = 0; i < usersData.data.length; i++) {
+      checklist.value.push(usersData.data[i]);
+    }
+  } else {
+    checklist.value = [];
+  }
+  allSelected.value = !allSelected.value;
+};
+const downloadAll = () => {
+  checkedId.value = checkedId.value.filter(function (element) {
+    return element !== undefined;
+  });
+
+  checkedId.value.forEach((element) => {
+    if (!selectedIds.value.includes(element)) {
+      selectedIds.value.push(element);
+    }
+  });
+  if (selectedIds.value.length == 0) {
+    let route = `/users/download/`;
+
+    let params = new URLSearchParams();
+
+    for (const filter_key in filter) {
+      if (filter[filter_key].length > 0) {
+        params.append(filter_key, filter[filter_key]);
+      }
+    }
+
+    axios.get(route, { params: params }).then((res) => {
+      const response = res.data;
+      console.group(res);
+      let blob = new Blob([response], {
+        type: 'application/xml',
+      });
+      let link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = res.headers['content-disposition'];
+      link.click();
+    });
+  } else {
+    let route = `/users/download/`;
+
+    let params = new URLSearchParams();
+
+    params.append('users', selectedIds.value);
+
+    axios.get(route, { params: params }).then((res) => {
+      const response = res.data;
+      console.group(res);
+
+      let blob = new Blob([response], {
+        type: 'application/xml',
+      });
+      let link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = res.headers['content-disposition'];
+      link.click();
+    });
+  }
+};
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>

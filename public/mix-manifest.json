@@ -1,12 +1,8 @@
 {
-<<<<<<< Updated upstream
-    "/js/app.js": "/js/app.js?id=3952186d7483cdb8f6df486c644f1beb",
-=======
-    "/js/app.js": "/js/app.js?id=4da36ec846effa8fc7772de782bede8d",
->>>>>>> Stashed changes
+    "/js/app.js": "/js/app.js?id=413e1092632a4306508345763d66baf7",
     "/js/script.js": "/js/script.js?id=67f974d705cdb041f9d42e8c11e824d1",
     "/js/formbuilder.js": "/js/formbuilder.js?id=23e0052da87288dd57b8df6421880767",
     "/manifest.js": "/manifest.js?id=6ec4db78dd752c29bd9956118b1e0467",
-    "/css/app.css": "/css/app.css?id=0079fed6508e14cd38b5067e12552ea6",
+    "/css/app.css": "/css/app.css?id=3d46efec57a5cc4e71fece53b5d79e0a",
     "/js/vendor.js": "/js/vendor.js?id=a0cc4df2bfc2b358079e5e0680f2e290"
 }
