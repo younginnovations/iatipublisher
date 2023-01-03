@@ -277,18 +277,24 @@
               </td>
               <td>{{ user['status'] }}</td>
               <td>{{ formatDate(user['created_at']) }}</td>
-              <td>
-                <p @click="editUser(user)">Edit</p>
+              <td class="flex h-[77.5px] items-center space-x-6">
+                <p @click="editUser(user)">
+                  <svg-vue icon="edit-action" />
+                </p>
                 <p @click="deleteUser(user['id'])">Delete</p>
                 <p @click="toggleUserStatus(user['id'])">Toggle</p>
               </td>
               <td>
-                <input
-                  class="user-checklist"
-                  :value="user"
-                  v-model="checklist"
-                  type="checkbox"
-                />
+                <span class="relative h-5 w-5"
+                  ><input
+                    class="user-checklist"
+                    :value="user"
+                    v-model="checklist"
+                    type="checkbox"
+                  />
+                  <span class="pseudo-checkbox" />
+                  <svg-vue class="ticked-svg text-spring-50" icon="ticked" />
+                </span>
               </td>
             </tr>
           </tbody>
