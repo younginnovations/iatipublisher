@@ -51,7 +51,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::group([], static function () {
     // Route::get('activity/{id}', [\App\Http\Controllers\Admin\Activity\ActivityController::class, 'show'])->name('activity.show');
-    Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
+    Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index')->middleware('can:view_activity');
     Route::get('/activities/page/{page?}', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getPaginatedActivities'])->name('activities.paginate');
     Route::get('/activities/codelists', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getLanguagesOrganization'])->name('activities.codelist');
     Route::resource('/activity', ActivityController::class)->except('index')->parameters(['activity' => 'id']);

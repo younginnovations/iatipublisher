@@ -635,9 +635,9 @@ class UserService
         return $this->userRepo->update($id, ['status' => $status]);
     }
 
-    public function getUserDownloadData()
+    public function getUserDownloadData($queryParams)
     {
-        $users = $this->userRepo->getUserDownloadData();
+        $users = $this->userRepo->getUserDownloadData($queryParams);
 
         return $users;
     }

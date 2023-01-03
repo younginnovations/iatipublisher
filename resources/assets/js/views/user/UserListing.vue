@@ -95,7 +95,9 @@
             >
               Cancel
             </button>
-            <button @click="addUserForm ? createUser : updateUser">Save</button>
+            <button @click="addUserForm ? createUser() : updateUser()">
+              Save
+            </button>
           </div>
         </div>
       </PopupModal>
@@ -155,9 +157,9 @@
             />
           </span>
         </span>
-        <span class="flex gap-2" v-if="filter.roles.length">
+        <span class="flex gap-2" v-if="filter.role.length">
           <span
-            v-for="(item, index) in filter.roles"
+            v-for="(item, index) in filter.role"
             :key="index"
             class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
           >
@@ -165,7 +167,7 @@
             <svg-vue
               class="mx-2 mt-1 cursor-pointer text-xs"
               icon="cross"
-              @click="filter.roles.splice(index, 1)"
+              @click="filter.role.splice(index, 1)"
             />
           </span>
         </span>
@@ -183,6 +185,8 @@
             />
           </span>
         </span>
+        <div class="open-text"><input type="text" placeholder="Search" /></div>
+        <div @click="fetchUsersList(usersData['current_page'])">Search</div>
       </div>
 
       <div class="iati-list-table text-n-40">
@@ -190,13 +194,31 @@
           <thead>
             <tr class="bg-n-10">
               <th id="title" scope="col">
-                <span>Users</span>
+                <span class="inline-flex items-center">
+                  <span>
+                    <svg-vue
+                      @click="sort('user')"
+                      class="mx-2 h-3 w-2 cursor-pointer"
+                      icon="sort-descending"
+                    />
+                  </span>
+                  <span>Users</span>
+                </span>
               </th>
               <th id="measure" scope="col" width="190px">
                 <span>Email</span>
               </th>
               <th id="aggregation_status" scope="col" width="208px">
-                <span>Organisation Name</span>
+                <span class="inline-flex items-center">
+                  <span>
+                    <svg-vue
+                      @click="sort('org')"
+                      class="mx-2 h-3 w-2 cursor-pointer"
+                      icon="sort-descending"
+                    />
+                  </span>
+                  <span class="whitespace-nowrap">Organisation Name</span>
+                </span>
               </th>
               <th id="title" scope="col">
                 <span>User Role</span>
@@ -205,7 +227,16 @@
                 <span>Status</span>
               </th>
               <th id="aggregation_status" scope="col" width="208px">
-                <span>Joined on</span>
+                <span class="inline-flex items-center">
+                  <span>
+                    <svg-vue
+                      @click="sort('join')"
+                      class="mx-2 h-3 w-2 cursor-pointer"
+                      icon="sort-descending"
+                    />
+                  </span>
+                  <span class="whitespace-nowrap">Joined On</span>
+                </span>
               </th>
               <th id="action" scope="col" width="190px">
                 <span>Action</span>
@@ -286,14 +317,25 @@ const toastData = reactive({
   type: false,
 });
 
-const filter = ref({ organization: [], roles: [], status: [] });
+const filter = reactive({
+  organization: [],
+  roles: [],
+  status: [],
+  orderBy: { user: '', org: '', join: '' },
+  q: '',
+});
 
 const isLoaderVisible = ref(false);
 const addUserForm = ref(false);
+const sortOrg = ref('');
+const sortUser = ref('');
+const sortJoin = ref('');
+
 const editUserForm = ref(false);
 // const downloadUsers = ref(false);
 const usersData = reactive({});
 const isEmpty = ref(true);
+const editUserId = ref('');
 
 const formData = reactive({
   username: '',
@@ -307,14 +349,12 @@ const formData = reactive({
 
 const isFilterApplied = computed(() => {
   return (
-    !!filter.value.organization.length ||
-    !!filter.value.roles.length ||
-    !!filter.value.status.length
+    !!filter.organization.length ||
+    !!filter.roles.length ||
+    !!filter.status.length
   );
 });
-onMounted(() => {
-  console.log(Object.values(props.status));
-});
+
 onMounted(async () => {
   axios.get(`/users/page/1`).then((res) => {
     const response = res.data;
@@ -361,10 +401,11 @@ const editUser = (user) => {
   formData.role = user.role;
   formData.password = user.password;
   formData.password_confirmation = user.password;
+  editUserId.value = user.id;
   editUserForm.value = true;
 };
 
-const updateUser = (id: number) => {
+const updateUser = () => {
   let passwordData = {
     password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ''),
     password_confirmation: encrypt(
@@ -374,7 +415,7 @@ const updateUser = (id: number) => {
   };
 
   axios
-    .put(`/user/${id}`, { ...formData, ...passwordData })
+    .patch(`/user/${editUserId.value}}`, { ...formData, ...passwordData })
     .then((res) => {
       toastData.visibility = true;
       toastData.message = res.data.message;
@@ -389,11 +430,20 @@ const updateUser = (id: number) => {
     });
 
   addUserForm.value = false;
+  editUserId.value = '';
 };
 
 function fetchUsersList(active_page: number) {
-  console.log('test');
-  axios.get(`/users/page/` + active_page).then((res) => {
+  let route = `/users/page/${active_page}`;
+  let params = new URLSearchParams();
+
+  for (const filter_key in filter) {
+    if (filter[filter_key].length > 0) {
+      params.append(filter_key, filter[filter_key]);
+    }
+  }
+
+  axios.get(route, { params: params }).then((res) => {
     const response = res.data;
     Object.assign(usersData, response.data);
     isEmpty.value = response.data ? false : true;
@@ -414,6 +464,41 @@ function deleteUser(id: number) {
       console.log(err);
     });
 }
+const sort = (param) => {
+  filter.orderBy.user = '';
+  filter.orderBy.org = '';
+  filter.orderBy.join = '';
+
+  switch (param) {
+    case 'user':
+      if (sortUser.value === 'asc') {
+        sortUser.value = 'desc';
+      } else {
+        sortUser.value = 'asc';
+      }
+      filter.orderBy.user = sortUser.value;
+      break;
+    case 'org':
+      if (sortOrg.value === 'asc') {
+        sortOrg.value = 'desc';
+      } else {
+        sortOrg.value = 'asc';
+      }
+      filter.orderBy.org = sortOrg.value;
+      break;
+    case 'join':
+      if (sortJoin.value === 'asc') {
+        sortJoin.value = 'desc';
+      } else {
+        sortJoin.value = 'asc';
+      }
+      filter.orderBy.join = sortJoin.value;
+
+      break;
+  }
+
+  console.log(filter.orderBy);
+};
 
 function toggleUserStatus(id: number) {
   axios
