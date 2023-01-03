@@ -173,3 +173,33 @@ textarea.form__input {
     }
   }
 }
+.user-checklist {
+  height: 16px;
+  width: 16px;
+  position: relative;
+  opacity: 1;
+
+  &::after {
+    content: ' ';
+    height: 18px;
+    width: 18px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 2px solid #d5dcde;
+    opacity: 1;
+    background-color: white;
+    border-radius: 4px;
+  }
+}
+.user-checklist:checked {
+  &::after {
+    content: ' ';
+    height: 16px;
+    width: 16px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: white;
+  }
+}

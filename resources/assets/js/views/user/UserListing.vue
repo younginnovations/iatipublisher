@@ -140,7 +140,11 @@
             class="absolute top-1/2 left-2 -translate-y-1/2 text-base"
             icon="magnifying-glass"
           />
-          <input type="text" placeholder="Search for users" />
+          <input
+            type="text"
+            v-model="filter.q"
+            placeholder="Search for users"
+          />
         </div>
       </div>
 
@@ -255,31 +259,36 @@
               <td>
                 <div class="ellipsis relative">
                   <p>
-                    {{ user.full_name }}
+                    {{ user['full_name'] }}
                   </p>
                   <span>
-                    {{ user.username }}
+                    {{ user['username'] }}
                   </span>
                 </div>
               </td>
               <td class="capitalize">
-                {{ user.email }}
+                {{ user['email'] }}
               </td>
               <td>
-                {{ user.publisher_name }}
+                {{ user['publisher_name'] }}
               </td>
               <td class="capitalize">
-                {{ user.role }}
+                {{ user['role'] }}
               </td>
-              <td>{{ user.status }}</td>
-              <td>{{ formatDate(user.created_at) }}</td>
+              <td>{{ user['status'] }}</td>
+              <td>{{ formatDate(user['created_at']) }}</td>
               <td>
                 <p @click="editUser(user)">Edit</p>
-                <p @click="deleteUser(user.id)">Delete</p>
-                <p @click="toggleUserStatus(user.id)">Toggle</p>
+                <p @click="deleteUser(user['id'])">Delete</p>
+                <p @click="toggleUserStatus(user['id'])">Toggle</p>
               </td>
               <td>
-                <input :value="user" v-model="checklist" type="checkbox" />
+                <input
+                  class="user-checklist"
+                  :value="user"
+                  v-model="checklist"
+                  type="checkbox"
+                />
               </td>
             </tr>
           </tbody>
@@ -343,7 +352,6 @@ const sortUser = ref('');
 const sortJoin = ref('');
 
 const editUserForm = ref(false);
-// const downloadUsers = ref(false);
 const usersData = reactive({ data: [] });
 const isEmpty = ref(true);
 const allSelected = ref(false);
@@ -351,7 +359,7 @@ const checkedId = ref([]);
 const selectedIds = ref([]);
 
 const editUserId = ref('');
-const checklist = ref([]);
+const checklist = ref();
 
 const formData = reactive({
   username: '',
@@ -588,7 +596,7 @@ const downloadAll = () => {
 
     let params = new URLSearchParams();
 
-    params.append('users', selectedIds.value);
+    params.append('users', selectedIds.value.toString());
 
     axios.get(route, { params: params }).then((res) => {
       const response = res.data;
@@ -605,4 +613,4 @@ const downloadAll = () => {
   }
 };
 </script>
-<style src="@vueform/multiselect/themes/default.css"></style>
+<style scoped src="@vueform/multiselect/themes/default.css"></style>
