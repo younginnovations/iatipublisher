@@ -114,4 +114,12 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $user->sendEmailVerificationNotification();
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function role()
+    {
+        return $this->belongsTo('App\IATI\Models\User\Role', 'role_id');
+    }
 }

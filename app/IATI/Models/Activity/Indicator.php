@@ -39,6 +39,22 @@ class Indicator extends Model
     ];
 
     /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::created(function ($indicator) {
+            $indicator->result->activity->touch();
+        });
+
+        static::updated(function ($indicator) {
+            $indicator->result->activity->touch();
+        });
+    }
+
+    /**
      * Indicator hasmany periods.
      *
      * @return HasMany

@@ -216,8 +216,11 @@ class UserController extends Controller
     public function getPaginatedUsers(Request $request, int $page = 1): JsonResponse
     {
         try {
+            logger()->error($request);
             $queryParams = $this->getQueryParams($request);
-            $users = $this->userService->getPaginatedUsers($page, []);
+            $users = $this->userService->getPaginatedUsers($page, $queryParams);
+            logger()->error(json_encode($queryParams));
+            // logger()->error(json_encode($request->));
 
             return response()->json([
                 'success' => true,
@@ -248,6 +251,18 @@ class UserController extends Controller
 
         if (!empty($request->get('q')) || $request->get('q') === '0') {
             $queryParams['query'] = $request->get('q');
+        }
+
+        if (!empty($request->get('organization')) || $request->get('organization') === '0') {
+            $queryParams['organization_id'] = $request->get('organization');
+        }
+
+        if (!empty($request->get('status')) || $request->get('status') === '0') {
+            $queryParams['status'] = $request->get('status');
+        }
+
+        if (!empty($request->get('role')) || $request->get('role') === '0') {
+            $queryParams['role'] = $request->get('role');
         }
 
         if (in_array($request->get('orderBy'), $tableConfig['orderBy'], true)) {
@@ -341,7 +356,8 @@ class UserController extends Controller
     {
         try {
             $headers = ['username' => 'User Name', 'full_name' => 'Full Name', 'organization_id' => 'Organization', 'email' => 'Email', 'role_id' => 'Role'];
-            $users = $this->userService->getUserDownloadData();
+            $queryParams = $this->getQueryParams($request);
+            $users = $this->userService->getUserDownloadData($queryParams);
 
             return $this->csvGenerator->generateWithHeaders('test', $users, $headers);
         } catch (\Exception $e) {

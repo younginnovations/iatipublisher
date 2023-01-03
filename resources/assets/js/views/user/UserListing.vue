@@ -3,9 +3,7 @@
     <Loader v-if="isLoaderVisible" />
     <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
       <div class="flex">
-        <a class="whitespace-nowrap font-bold text-n-40" href="/users">
-          users
-        </a>
+        <a class="whitespace-nowrap font-bold text-n-40" href="/users"> users </a>
       </div>
     </nav>
     <PageTitle title="Users" back-link="">
@@ -21,8 +19,7 @@
             }
           "
         >
-          <svg-vue class="text-base" icon="plus-outlined" /> Add a new
-          superadmin
+          <svg-vue class="text-base" icon="plus-outlined" /> Add a new superadmin
         </button>
       </div>
     </PageTitle>
@@ -77,10 +74,7 @@
               </div>
               <div class="flex">
                 <label>Confirm Password</label>
-                <input
-                  v-model="formData.password_confirmation"
-                  type="password"
-                />
+                <input v-model="formData.password_confirmation" type="password" />
               </div>
             </div>
           </div>
@@ -95,7 +89,7 @@
             >
               Cancel
             </button>
-            <button @click="addUserForm ? createUser : updateUser">Save</button>
+            <button @click="addUserForm ? createUser() : updateUser()">Save</button>
           </div>
         </div>
       </PopupModal>
@@ -155,9 +149,9 @@
             />
           </span>
         </span>
-        <span class="flex gap-2" v-if="filter.roles.length">
+        <span class="flex gap-2" v-if="filter.role.length">
           <span
-            v-for="(item, index) in filter.roles"
+            v-for="(item, index) in filter.role"
             :key="index"
             class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
           >
@@ -165,7 +159,7 @@
             <svg-vue
               class="mx-2 mt-1 cursor-pointer text-xs"
               icon="cross"
-              @click="filter.roles.splice(index, 1)"
+              @click="filter.role.splice(index, 1)"
             />
           </span>
         </span>
@@ -183,6 +177,8 @@
             />
           </span>
         </span>
+        <div class="open-text"><input type="text" placeholder="Search" /></div>
+        <div @click="fetchUsersList(usersData['current_page'])">Search</div>
       </div>
 
       <div class="iati-list-table text-n-40">
@@ -256,23 +252,16 @@
   </div>
 </template>
 <script setup lang="ts">
-import {
-  defineProps,
-  reactive,
-  ref,
-  onUpdated,
-  computed,
-  onMounted,
-} from 'vue';
-import Loader from '../../components/Loader.vue';
-import PageTitle from 'Components/sections/PageTitle.vue';
-import Toast from 'Components/ToastMessage.vue';
-import axios from 'axios';
-import PopupModal from 'Components/PopupModal.vue';
-import encrypt from 'Composable/encryption';
-import Multiselect from '@vueform/multiselect';
-import moment from 'moment';
-import Pagination from 'Components/TablePagination.vue';
+import { defineProps, reactive, ref, onUpdated, computed, onMounted } from "vue";
+import Loader from "../../components/Loader.vue";
+import PageTitle from "Components/sections/PageTitle.vue";
+import Toast from "Components/ToastMessage.vue";
+import axios from "axios";
+import PopupModal from "Components/PopupModal.vue";
+import encrypt from "Composable/encryption";
+import Multiselect from "@vueform/multiselect";
+import moment from "moment";
+import Pagination from "Components/TablePagination.vue";
 
 const props = defineProps({
   organizations: { type: Object, required: true },
@@ -282,11 +271,11 @@ const props = defineProps({
 
 const toastData = reactive({
   visibility: false,
-  message: '',
+  message: "",
   type: false,
 });
 
-const filter = ref({ organization: [], roles: [], status: [] });
+const filter = reactive({ organization: [], role: [], status: [] });
 
 const isLoaderVisible = ref(false);
 const addUserForm = ref(false);
@@ -294,27 +283,22 @@ const editUserForm = ref(false);
 // const downloadUsers = ref(false);
 const usersData = reactive({});
 const isEmpty = ref(true);
+const editUserId = ref("");
 
 const formData = reactive({
-  username: '',
-  full_name: '',
-  email: '',
-  status: '',
-  role: '',
-  password: '',
-  password_confirmation: '',
+  username: "",
+  full_name: "",
+  email: "",
+  status: "",
+  role: "",
+  password: "",
+  password_confirmation: "",
 });
 
 const isFilterApplied = computed(() => {
-  return (
-    !!filter.value.organization.length ||
-    !!filter.value.roles.length ||
-    !!filter.value.status.length
-  );
+  return !!filter.organization.length || !!filter.role.length || !!filter.status.length;
 });
-onMounted(() => {
-  console.log(Object.values(props.status));
-});
+
 onMounted(async () => {
   axios.get(`/users/page/1`).then((res) => {
     const response = res.data;
@@ -329,15 +313,15 @@ onMounted(async () => {
 
 const createUser = () => {
   let passwordData = {
-    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ''),
+    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
     password_confirmation: encrypt(
       formData.password_confirmation,
-      process.env.MIX_ENCRYPTION_KEY ?? ''
+      process.env.MIX_ENCRYPTION_KEY ?? ""
     ),
   };
 
   axios
-    .post('/user', { ...formData, ...passwordData })
+    .post("/user", { ...formData, ...passwordData })
     .then((res) => {
       toastData.visibility = true;
       toastData.message = res.data.message;
@@ -361,20 +345,21 @@ const editUser = (user) => {
   formData.role = user.role;
   formData.password = user.password;
   formData.password_confirmation = user.password;
+  editUserId.value = user.id;
   editUserForm.value = true;
 };
 
-const updateUser = (id: number) => {
+const updateUser = () => {
   let passwordData = {
-    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ''),
+    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
     password_confirmation: encrypt(
       formData.password_confirmation,
-      process.env.MIX_ENCRYPTION_KEY ?? ''
+      process.env.MIX_ENCRYPTION_KEY ?? ""
     ),
   };
 
   axios
-    .put(`/user/${id}`, { ...formData, ...passwordData })
+    .patch(`/user/${editUserId.value}}`, { ...formData, ...passwordData })
     .then((res) => {
       toastData.visibility = true;
       toastData.message = res.data.message;
@@ -389,11 +374,20 @@ const updateUser = (id: number) => {
     });
 
   addUserForm.value = false;
+  editUserId.value = "";
 };
 
 function fetchUsersList(active_page: number) {
-  console.log('test');
-  axios.get(`/users/page/` + active_page).then((res) => {
+  let route = `/users/page/${active_page}`;
+  let params = new URLSearchParams();
+
+  for (const filter_key in filter) {
+    if (filter[filter_key].length > 0) {
+      params.append(filter_key, filter[filter_key]);
+    }
+  }
+
+  axios.get(route, { params: params }).then((res) => {
     const response = res.data;
     Object.assign(usersData, response.data);
     isEmpty.value = response.data ? false : true;
@@ -424,7 +418,7 @@ function toggleUserStatus(id: number) {
         toastData.message = res.data.message;
         toastData.type = res.data.success;
 
-        fetchUsersList(usersData['current_page']);
+        fetchUsersList(usersData["current_page"]);
       }
     })
     .catch((err) => {
@@ -433,7 +427,7 @@ function toggleUserStatus(id: number) {
 }
 
 function formatDate(date: Date) {
-  return moment(date).format('LL');
+  return moment(date).format("LL");
 }
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>
