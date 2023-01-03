@@ -1,17 +1,28 @@
 <template>
-  <div>
+  <div class="px-10 py-4">
     <Loader v-if="isLoaderVisible" />
-    <PageTitle bread-crumb-data="{}" title="Users" back-link="">
-      <div class="flex justify-end">
-        <button>Download all</button>
+    <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
+      <div class="flex">
+        <a class="whitespace-nowrap font-bold text-n-40" href="/users">
+          users
+        </a>
+      </div>
+    </nav>
+    <PageTitle title="Users" back-link="">
+      <div class="flex justify-end space-x-2">
+        <button ref="dropdownBtn" class="button secondary-btn font-bold">
+          <svg-vue icon="download-file" /> Download All
+        </button>
         <button
+          class="primary-btn"
           @click="
             () => {
               addUserForm = true;
             }
           "
         >
-          Add a new superadmin
+          <svg-vue class="text-base" icon="plus-outlined" /> Add a new
+          superadmin
         </button>
       </div>
     </PageTitle>
@@ -58,6 +69,7 @@
                 :searchable="true"
               />
             </div>
+
             <div class="flex">
               <div class="flex">
                 <label>New Password</label>
@@ -65,7 +77,10 @@
               </div>
               <div class="flex">
                 <label>Confirm Password</label>
-                <input v-model="formData.password_confirmation" type="password" />
+                <input
+                  v-model="formData.password_confirmation"
+                  type="password"
+                />
               </div>
             </div>
           </div>
@@ -84,21 +99,23 @@
           </div>
         </div>
       </PopupModal>
-      <div class="filters flex-between">
-        <div class="select filters flex">
+      <div class="filters mb-4 flex justify-between">
+        <div class="select filters inline-flex items-center space-x-2">
+          <svg-vue class="w-[130px] cursor-pointer text-lg" icon="funnel" />
           <Multiselect
             v-model="filter.organization"
-            :options="organizations"
-            placeholder="Select organization"
+            :options="Object.values(organizations)"
+            placeholder="ORGANISATION"
             :searchable="true"
             mode="multiple"
             :close-on-select="false"
             :clear-on-select="false"
           />
+
           <Multiselect
             v-model="filter.roles"
-            :options="roles"
-            placeholder="Select roles"
+            :options="Object.values(props.roles)"
+            placeholder="ROLE"
             :searchable="true"
             mode="multiple"
             :close-on-select="false"
@@ -106,13 +123,66 @@
           />
           <Multiselect
             v-model="filter.status"
-            :options="status"
+            :options="Object.values(status)"
             mode="multiple"
-            placeholder="Select status"
+            placeholder="STATUS"
             :searchable="true"
           />
         </div>
-        <div class="open-text"><input type="text" placeholder="Search" /></div>
+        <div class="open-text">
+          <svg-vue
+            class="absolute top-1/2 left-2 -translate-y-1/2 text-base"
+            icon="magnifying-glass"
+          />
+          <input type="text" placeholder="Search for users" />
+        </div>
+      </div>
+
+      <div class="mb-4 flex items-center gap-2" v-if="isFilterApplied">
+        <span class="text-sm font-bold uppercase text-n-40">filtered by:</span>
+
+        <span class="flex gap-2" v-if="filter.organization.length">
+          <span
+            v-for="(item, index) in filter.organization"
+            :key="index"
+            class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+          >
+            <span class="text-n-40">Org:</span><span>{{ item }}</span>
+            <svg-vue
+              @click="filter.organization.splice(index, 1)"
+              class="mx-2 mt-1 cursor-pointer text-xs"
+              icon="cross"
+            />
+          </span>
+        </span>
+        <span class="flex gap-2" v-if="filter.roles.length">
+          <span
+            v-for="(item, index) in filter.roles"
+            :key="index"
+            class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
+          >
+            <span class="text-n-40">Roles:</span><span>{{ item }}</span>
+            <svg-vue
+              class="mx-2 mt-1 cursor-pointer text-xs"
+              icon="cross"
+              @click="filter.roles.splice(index, 1)"
+            />
+          </span>
+        </span>
+        <span class="flex gap-2" v-if="filter.status.length">
+          <span
+            v-for="(item, index) in filter.status"
+            :key="index"
+            class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+          >
+            <span class="text-n-40">Status:</span><span>{{ item }}</span>
+            <svg-vue
+              class="mx-2 mt-1 cursor-pointer text-xs"
+              icon="cross"
+              @click="filter.status.splice(index, 1)"
+            />
+          </span>
+        </span>
       </div>
 
       <div class="iati-list-table text-n-40">
@@ -186,18 +256,25 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, reactive, ref, onMounted } from "vue";
-import Loader from "../../components/Loader.vue";
-import PageTitle from "Components/sections/PageTitle.vue";
-import Toast from "Components/ToastMessage.vue";
-import axios from "axios";
-import PopupModal from "Components/PopupModal.vue";
-import encrypt from "Composable/encryption";
-import Multiselect from "@vueform/multiselect";
-import moment from "moment";
-import Pagination from "Components/TablePagination.vue";
+import {
+  defineProps,
+  reactive,
+  ref,
+  onUpdated,
+  computed,
+  onMounted,
+} from 'vue';
+import Loader from '../../components/Loader.vue';
+import PageTitle from 'Components/sections/PageTitle.vue';
+import Toast from 'Components/ToastMessage.vue';
+import axios from 'axios';
+import PopupModal from 'Components/PopupModal.vue';
+import encrypt from 'Composable/encryption';
+import Multiselect from '@vueform/multiselect';
+import moment from 'moment';
+import Pagination from 'Components/TablePagination.vue';
 
-defineProps({
+const props = defineProps({
   organizations: { type: Object, required: true },
   status: { type: Object, required: true },
   roles: { type: Object, required: true },
@@ -205,11 +282,11 @@ defineProps({
 
 const toastData = reactive({
   visibility: false,
-  message: "",
+  message: '',
   type: false,
 });
 
-const filter = reactive({ organization: [], roles: [], status: [] });
+const filter = ref({ organization: [], roles: [], status: [] });
 
 const isLoaderVisible = ref(false);
 const addUserForm = ref(false);
@@ -219,15 +296,25 @@ const usersData = reactive({});
 const isEmpty = ref(true);
 
 const formData = reactive({
-  username: "",
-  full_name: "",
-  email: "",
-  status: "",
-  role: "",
-  password: "",
-  password_confirmation: "",
+  username: '',
+  full_name: '',
+  email: '',
+  status: '',
+  role: '',
+  password: '',
+  password_confirmation: '',
 });
 
+const isFilterApplied = computed(() => {
+  return (
+    !!filter.value.organization.length ||
+    !!filter.value.roles.length ||
+    !!filter.value.status.length
+  );
+});
+onMounted(() => {
+  console.log(Object.values(props.status));
+});
 onMounted(async () => {
   axios.get(`/users/page/1`).then((res) => {
     const response = res.data;
@@ -242,15 +329,15 @@ onMounted(async () => {
 
 const createUser = () => {
   let passwordData = {
-    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
+    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ''),
     password_confirmation: encrypt(
       formData.password_confirmation,
-      process.env.MIX_ENCRYPTION_KEY ?? ""
+      process.env.MIX_ENCRYPTION_KEY ?? ''
     ),
   };
 
   axios
-    .post("/user", { ...formData, ...passwordData })
+    .post('/user', { ...formData, ...passwordData })
     .then((res) => {
       toastData.visibility = true;
       toastData.message = res.data.message;
@@ -279,10 +366,10 @@ const editUser = (user) => {
 
 const updateUser = (id: number) => {
   let passwordData = {
-    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
+    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ''),
     password_confirmation: encrypt(
       formData.password_confirmation,
-      process.env.MIX_ENCRYPTION_KEY ?? ""
+      process.env.MIX_ENCRYPTION_KEY ?? ''
     ),
   };
 
@@ -305,7 +392,7 @@ const updateUser = (id: number) => {
 };
 
 function fetchUsersList(active_page: number) {
-  console.log("test");
+  console.log('test');
   axios.get(`/users/page/` + active_page).then((res) => {
     const response = res.data;
     Object.assign(usersData, response.data);
@@ -337,7 +424,7 @@ function toggleUserStatus(id: number) {
         toastData.message = res.data.message;
         toastData.type = res.data.success;
 
-        fetchUsersList(usersData["current_page"]);
+        fetchUsersList(usersData['current_page']);
       }
     })
     .catch((err) => {
@@ -346,7 +433,7 @@ function toggleUserStatus(id: number) {
 }
 
 function formatDate(date: Date) {
-  return moment(date).format("LL");
+  return moment(date).format('LL');
 }
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>

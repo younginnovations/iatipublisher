@@ -156,3 +156,20 @@ textarea.form__input {
 .required-icon {
   @apply relative top-0.5 text-base leading-none text-crimson-50;
 }
+.open-text {
+  border-radius: 4px;
+  border: 1px solid #a6b5ba;
+  position: relative;
+  input {
+    overflow: hidden;
+    padding-top: 4px;
+    height: 100%;
+    width: 100%;
+    border-radius: 4px;
+    background-color: transparent;
+    padding-left: 30px;
+    &:focus {
+      outline: none !important;
+    }
+  }
+}

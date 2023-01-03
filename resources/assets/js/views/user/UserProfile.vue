@@ -46,7 +46,7 @@
       </div>
       <div>
         <button
-          class="rounded bg-bluecoral p-3 text-white"
+          class="primary-btn"
           @click="
             () => {
               editProfileForm = true;
@@ -72,40 +72,72 @@
           </div>
           <div>
             <div class="mb-5 flex flex-col gap-2">
-              <label class="text-sm"
+              <label class="text-sm text-n-50"
                 >Current Password <span class="text-[red]">*</span>
               </label>
-              <input
-                class="max-w-[calc(50%_-_12px)] rounded border border-[red] p-3"
-                v-model="passwordData.current_password"
-                type="password"
-              />
+              <span class="relative max-w-[calc(50%_-_12px)]">
+                <svg-vue
+                  @click="
+                    () => {
+                      showCurrentPassword = !showCurrentPassword;
+                    }
+                  "
+                  icon="hide-password"
+                  class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-lg"
+                ></svg-vue>
+                <input
+                  class="w-full rounded border border-n-30 p-3"
+                  v-model="passwordData.current_password"
+                  :type="showCurrentPassword ? 'text' : 'password'"
+                />
+              </span>
             </div>
           </div>
           <div class="mb-5 flex space-x-6">
             <div class="flex w-full flex-col gap-2">
-              <label class="text-sm"
+              <label class="text-sm text-n-50"
                 >New Password <span class="text-[red]">*</span>
               </label>
-              <input
-                class="rounded p-3 outline"
-                v-model="passwordData.password"
-                type="password"
-              />
+              <span class="relative">
+                <svg-vue
+                  @click="
+                    () => {
+                      showNewPassword = !showNewPassword;
+                    }
+                  "
+                  icon="hide-password"
+                  class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-lg"
+                ></svg-vue>
+                <input
+                  class="w-full rounded border border-n-30 p-3"
+                  v-model="passwordData.password"
+                  :type="showNewPassword ? 'text' : 'password'"
+              /></span>
             </div>
             <div class="flex w-full flex-col gap-2">
-              <label class="text-sm"
+              <label class="text-sm text-n-50"
                 >Confirm Password <span class="text-[red]">*</span>
               </label>
-              <input
-                class="rounded p-3 outline"
-                v-model="passwordData.password_confirmation"
-                type="password"
-              />
+              <span class="relative">
+                <svg-vue
+                  @click="
+                    () => {
+                      showConfirmPassword = !showConfirmPassword;
+                    }
+                  "
+                  icon="hide-password"
+                  class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-lg"
+                ></svg-vue
+                ><input
+                  class="w-full rounded border border-n-30 p-3"
+                  v-model="passwordData.password_confirmation"
+                  :type="showConfirmPassword ? 'text' : 'password'"
+              /></span>
             </div>
           </div>
-          <div class="flex justify-end">
+          <div class="mt-6 flex justify-end space-x-2">
             <button
+              class="secondary-btn"
               @click="
                 () => {
                   editPasswordForm = false;
@@ -114,30 +146,52 @@
             >
               Cancel
             </button>
-            <button @click="updatePassword">Save</button>
+            <button class="primary-btn" @click="updatePassword">Save</button>
           </div>
         </div>
       </PopupModal>
       <!-- profile edit popup form -->
       <PopupModal :modal-active="editProfileForm">
         <div>
-          <div class="mb-4 font-bold">Edit Profile</div>
-          <div>
-            <div class="flex">
-              <label>Username</label>
-              <input v-model="formData.username" type="text" />
+          <div class="mb-4 text-2xl font-bold text-bluecoral">
+            Edit your profile
+          </div>
+          <div class="grid grid-cols-2 gap-6">
+            <div class="col-span-2 flex flex-col items-start gap-2">
+              <label class="text-sm text-n-50"
+                >Full Name<span class="text-[red]">*</span></label
+              >
+              <input
+                class="w-full rounded border border-n-30 p-3"
+                v-model="formData.full_name"
+                type="text"
+              />
             </div>
-            <div class="flex">
-              <label>Full Name</label>
-              <input v-model="formData.full_name" type="text" />
+            <div class="flex flex-col items-start gap-2">
+              <label class="text-sm text-n-50"
+                >Username<span class="text-[red]">*</span></label
+              >
+              <input
+                class="w-full rounded border border-n-30 p-3"
+                v-model="formData.username"
+                type="text"
+              />
             </div>
-            <div class="flex">
-              <label>Email</label>
-              <input v-model="formData.email" type="email" />
+
+            <div class="flex flex-col items-start gap-2">
+              <label class="text-sm text-n-50"
+                >Email<span class="text-[red]">*</span></label
+              >
+              <input
+                class="w-full rounded border border-n-30 p-3"
+                v-model="formData.email"
+                type="email"
+              />
             </div>
           </div>
-          <div class="flex justify-end">
+          <div class="mt-6 flex justify-end space-x-2">
             <button
+              class="secondary-btn"
               @click="
                 () => {
                   editProfileForm = false;
@@ -146,7 +200,7 @@
             >
               Cancel
             </button>
-            <button @click="updateProfile">Save</button>
+            <button class="primary-btn" @click="updateProfile">Save</button>
           </div>
         </div>
       </PopupModal>
@@ -224,6 +278,9 @@ const toastData = reactive({
 const isLoaderVisible = ref(false);
 const editProfileForm = ref(false);
 const editPasswordForm = ref(false);
+const showCurrentPassword = ref(false);
+const showNewPassword = ref(false);
+const showConfirmPassword = ref(false);
 
 const formData = reactive({
   username: props.user.username,
