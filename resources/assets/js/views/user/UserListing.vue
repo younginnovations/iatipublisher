@@ -3,7 +3,9 @@
     <Loader v-if="isLoaderVisible" />
     <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
       <div class="flex">
-        <a class="whitespace-nowrap font-bold text-n-40" href="/users"> users </a>
+        <a class="whitespace-nowrap font-bold text-n-40" href="/users">
+          users
+        </a>
       </div>
     </nav>
     <PageTitle title="Users" back-link="">
@@ -19,7 +21,8 @@
             }
           "
         >
-          <svg-vue class="text-base" icon="plus-outlined" /> Add a new superadmin
+          <svg-vue class="text-base" icon="plus-outlined" /> Add a new
+          superadmin
         </button>
       </div>
     </PageTitle>
@@ -74,7 +77,10 @@
               </div>
               <div class="flex">
                 <label>Confirm Password</label>
-                <input v-model="formData.password_confirmation" type="password" />
+                <input
+                  v-model="formData.password_confirmation"
+                  type="password"
+                />
               </div>
             </div>
           </div>
@@ -89,7 +95,9 @@
             >
               Cancel
             </button>
-            <button @click="addUserForm ? createUser() : updateUser()">Save</button>
+            <button @click="addUserForm ? createUser() : updateUser()">
+              Save
+            </button>
           </div>
         </div>
       </PopupModal>
@@ -186,13 +194,31 @@
           <thead>
             <tr class="bg-n-10">
               <th id="title" scope="col">
-                <span>Users</span>
+                <span class="inline-flex items-center">
+                  <span>
+                    <svg-vue
+                      @click="sort('user')"
+                      class="mx-2 h-3 w-2 cursor-pointer"
+                      icon="sort-descending"
+                    />
+                  </span>
+                  <span>Users</span>
+                </span>
               </th>
               <th id="measure" scope="col" width="190px">
                 <span>Email</span>
               </th>
               <th id="aggregation_status" scope="col" width="208px">
-                <span>Organisation Name</span>
+                <span class="inline-flex items-center">
+                  <span>
+                    <svg-vue
+                      @click="sort('org')"
+                      class="mx-2 h-3 w-2 cursor-pointer"
+                      icon="sort-descending"
+                    />
+                  </span>
+                  <span class="whitespace-nowrap">Organisation Name</span>
+                </span>
               </th>
               <th id="title" scope="col">
                 <span>User Role</span>
@@ -201,7 +227,16 @@
                 <span>Status</span>
               </th>
               <th id="aggregation_status" scope="col" width="208px">
-                <span>Joined on</span>
+                <span class="inline-flex items-center">
+                  <span>
+                    <svg-vue
+                      @click="sort('join')"
+                      class="mx-2 h-3 w-2 cursor-pointer"
+                      icon="sort-descending"
+                    />
+                  </span>
+                  <span class="whitespace-nowrap">Joined On</span>
+                </span>
               </th>
               <th id="action" scope="col" width="190px">
                 <span>Action</span>
@@ -252,16 +287,23 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, reactive, ref, onUpdated, computed, onMounted } from "vue";
-import Loader from "../../components/Loader.vue";
-import PageTitle from "Components/sections/PageTitle.vue";
-import Toast from "Components/ToastMessage.vue";
-import axios from "axios";
-import PopupModal from "Components/PopupModal.vue";
-import encrypt from "Composable/encryption";
-import Multiselect from "@vueform/multiselect";
-import moment from "moment";
-import Pagination from "Components/TablePagination.vue";
+import {
+  defineProps,
+  reactive,
+  ref,
+  onUpdated,
+  computed,
+  onMounted,
+} from 'vue';
+import Loader from '../../components/Loader.vue';
+import PageTitle from 'Components/sections/PageTitle.vue';
+import Toast from 'Components/ToastMessage.vue';
+import axios from 'axios';
+import PopupModal from 'Components/PopupModal.vue';
+import encrypt from 'Composable/encryption';
+import Multiselect from '@vueform/multiselect';
+import moment from 'moment';
+import Pagination from 'Components/TablePagination.vue';
 
 const props = defineProps({
   organizations: { type: Object, required: true },
@@ -271,32 +313,46 @@ const props = defineProps({
 
 const toastData = reactive({
   visibility: false,
-  message: "",
+  message: '',
   type: false,
 });
 
-const filter = reactive({ organization: [], role: [], status: [] });
+const filter = reactive({
+  organization: [],
+  roles: [],
+  status: [],
+  orderBy: { user: '', org: '', join: '' },
+  q: '',
+});
 
 const isLoaderVisible = ref(false);
 const addUserForm = ref(false);
+const sortOrg = ref('');
+const sortUser = ref('');
+const sortJoin = ref('');
+
 const editUserForm = ref(false);
 // const downloadUsers = ref(false);
 const usersData = reactive({});
 const isEmpty = ref(true);
-const editUserId = ref("");
+const editUserId = ref('');
 
 const formData = reactive({
-  username: "",
-  full_name: "",
-  email: "",
-  status: "",
-  role: "",
-  password: "",
-  password_confirmation: "",
+  username: '',
+  full_name: '',
+  email: '',
+  status: '',
+  role: '',
+  password: '',
+  password_confirmation: '',
 });
 
 const isFilterApplied = computed(() => {
-  return !!filter.organization.length || !!filter.role.length || !!filter.status.length;
+  return (
+    !!filter.organization.length ||
+    !!filter.roles.length ||
+    !!filter.status.length
+  );
 });
 
 onMounted(async () => {
@@ -313,15 +369,15 @@ onMounted(async () => {
 
 const createUser = () => {
   let passwordData = {
-    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
+    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ''),
     password_confirmation: encrypt(
       formData.password_confirmation,
-      process.env.MIX_ENCRYPTION_KEY ?? ""
+      process.env.MIX_ENCRYPTION_KEY ?? ''
     ),
   };
 
   axios
-    .post("/user", { ...formData, ...passwordData })
+    .post('/user', { ...formData, ...passwordData })
     .then((res) => {
       toastData.visibility = true;
       toastData.message = res.data.message;
@@ -351,10 +407,10 @@ const editUser = (user) => {
 
 const updateUser = () => {
   let passwordData = {
-    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
+    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ''),
     password_confirmation: encrypt(
       formData.password_confirmation,
-      process.env.MIX_ENCRYPTION_KEY ?? ""
+      process.env.MIX_ENCRYPTION_KEY ?? ''
     ),
   };
 
@@ -374,7 +430,7 @@ const updateUser = () => {
     });
 
   addUserForm.value = false;
-  editUserId.value = "";
+  editUserId.value = '';
 };
 
 function fetchUsersList(active_page: number) {
@@ -408,6 +464,41 @@ function deleteUser(id: number) {
       console.log(err);
     });
 }
+const sort = (param) => {
+  filter.orderBy.user = '';
+  filter.orderBy.org = '';
+  filter.orderBy.join = '';
+
+  switch (param) {
+    case 'user':
+      if (sortUser.value === 'asc') {
+        sortUser.value = 'desc';
+      } else {
+        sortUser.value = 'asc';
+      }
+      filter.orderBy.user = sortUser.value;
+      break;
+    case 'org':
+      if (sortOrg.value === 'asc') {
+        sortOrg.value = 'desc';
+      } else {
+        sortOrg.value = 'asc';
+      }
+      filter.orderBy.org = sortOrg.value;
+      break;
+    case 'join':
+      if (sortJoin.value === 'asc') {
+        sortJoin.value = 'desc';
+      } else {
+        sortJoin.value = 'asc';
+      }
+      filter.orderBy.join = sortJoin.value;
+
+      break;
+  }
+
+  console.log(filter.orderBy);
+};
 
 function toggleUserStatus(id: number) {
   axios
@@ -418,7 +509,7 @@ function toggleUserStatus(id: number) {
         toastData.message = res.data.message;
         toastData.type = res.data.success;
 
-        fetchUsersList(usersData["current_page"]);
+        fetchUsersList(usersData['current_page']);
       }
     })
     .catch((err) => {
@@ -427,7 +518,7 @@ function toggleUserStatus(id: number) {
 }
 
 function formatDate(date: Date) {
-  return moment(date).format("LL");
+  return moment(date).format('LL');
 }
 </script>
 <style src="@vueform/multiselect/themes/default.css"></style>
