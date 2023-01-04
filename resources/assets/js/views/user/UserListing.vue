@@ -10,6 +10,11 @@
     </nav>
     <PageTitle title="Users" back-link="">
       <div class="flex justify-end space-x-2">
+        <Toast
+          v-if="toastData.visibility"
+          :message="toastData.message"
+          :type="toastData.type"
+        />
         <button
           ref="dropdownBtn"
           @click="downloadAll"
@@ -30,11 +35,6 @@
         </button>
       </div>
     </PageTitle>
-    <Toast
-      v-if="toastData.visibility"
-      :message="toastData.message"
-      :type="toastData.type"
-    />
 
     <div>
       <PopupModal :modal-active="addUserForm || editUserForm">
@@ -107,33 +107,59 @@
       </PopupModal>
       <div class="filters mb-4 flex justify-between">
         <div class="select filters inline-flex items-center space-x-2">
-          <svg-vue class="w-[130px] cursor-pointer text-lg" icon="funnel" />
-          <Multiselect
-            v-model="filter.organization"
-            :options="Object.values(organizations)"
-            placeholder="ORGANISATION"
-            :searchable="true"
-            mode="multiple"
-            :close-on-select="false"
-            :clear-on-select="false"
-          />
+          <svg-vue class="w-10 cursor-pointer text-lg" icon="funnel" />
+          <span class="relative"
+            ><Multiselect
+              v-model="filter.organization"
+              :options="Object.values(organizations)"
+              placeholder="ORGANISATION"
+              :searchable="true"
+              mode="multiple"
+              :close-on-select="false"
+              :clear-on-select="false"
+            />
+            <span
+              v-if="filter.organization.length > 0"
+              class="absolute top-1/2 left-[14px] -translate-y-1/2 text-xs font-bold uppercase text-bluecoral"
+            >
+              <!-- plaeeholder -->
+              organization
+            </span>
+          </span>
 
-          <Multiselect
-            v-model="filter.roles"
-            :options="Object.values(props.roles)"
-            placeholder="ROLE"
-            :searchable="true"
-            mode="multiple"
-            :close-on-select="false"
-            :clear-on-select="false"
-          />
-          <Multiselect
-            v-model="filter.status"
-            :options="Object.values(status)"
-            mode="multiple"
-            placeholder="STATUS"
-            :searchable="true"
-          />
+          <span class="relative">
+            <Multiselect
+              v-model="filter.roles"
+              :options="Object.values(props.roles)"
+              placeholder="ROLE"
+              :searchable="true"
+              mode="multiple"
+              :close-on-select="false"
+              :clear-on-select="false"
+            />
+            <span
+              v-if="filter.roles.length > 0"
+              class="absolute top-1/2 left-[14px] -translate-y-1/2 text-xs font-bold uppercase text-bluecoral"
+            >
+              <!-- plaveholder -->
+              role
+            </span></span
+          >
+          <span class="relative"
+            ><Multiselect
+              v-model="filter.status"
+              :options="Object.values(status)"
+              mode="multiple"
+              placeholder="STATUS"
+              :searchable="true"
+            /><span
+              v-if="filter.status.length > 0"
+              class="absolute top-1/2 left-[14px] -translate-y-1/2 text-xs font-bold uppercase text-bluecoral"
+            >
+              <!-- plaveholder -->
+              status
+            </span></span
+          >
         </div>
         <div class="open-text">
           <svg-vue
@@ -149,7 +175,7 @@
       </div>
 
       <div class="mb-4 flex items-center gap-2" v-if="isFilterApplied">
-        <span class="text-sm font-bold uppercase text-n-40">filtered by:</span>
+        <span class="text-sm font-bold uppercase text-n-40">filtered by: </span>
 
         <span class="flex gap-2" v-if="filter.organization">
           <span
@@ -201,13 +227,21 @@
             <tr class="bg-n-10">
               <th id="title" scope="col">
                 <span class="inline-flex items-center">
-                  <span>
+                  <span v-if="filter.orderBy.user === 'desc'">
                     <svg-vue
                       @click="sort('user')"
                       class="mx-2 h-3 w-2 cursor-pointer"
                       icon="sort-descending"
                     />
                   </span>
+                  <span v-else>
+                    <svg-vue
+                      @click="sort('user')"
+                      class="mx-2 h-3 w-2 cursor-pointer"
+                      icon="sort-ascending"
+                    />
+                  </span>
+
                   <span>Users</span>
                 </span>
               </th>
@@ -216,11 +250,18 @@
               </th>
               <th id="aggregation_status" scope="col" width="208px">
                 <span class="inline-flex items-center">
-                  <span>
+                  <span v-if="filter.orderBy.org === 'desc'">
                     <svg-vue
                       @click="sort('org')"
                       class="mx-2 h-3 w-2 cursor-pointer"
                       icon="sort-descending"
+                    />
+                  </span>
+                  <span v-else>
+                    <svg-vue
+                      @click="sort('org')"
+                      class="mx-2 h-3 w-2 cursor-pointer"
+                      icon="sort-ascending"
                     />
                   </span>
                   <span class="whitespace-nowrap">Organisation Name</span>
@@ -234,11 +275,18 @@
               </th>
               <th id="aggregation_status" scope="col" width="208px">
                 <span class="inline-flex items-center">
-                  <span>
+                  <span v-if="filter.orderBy.join === 'desc'">
                     <svg-vue
                       @click="sort('join')"
                       class="mx-2 h-3 w-2 cursor-pointer"
                       icon="sort-descending"
+                    />
+                  </span>
+                  <span v-else>
+                    <svg-vue
+                      @click="sort('join')"
+                      class="mx-2 h-3 w-2 cursor-pointer"
+                      icon="sort-ascending"
                     />
                   </span>
                   <span class="whitespace-nowrap">Joined On</span>
@@ -275,14 +323,19 @@
               <td class="capitalize">
                 {{ user['role'] }}
               </td>
-              <td>{{ user['status'] }}</td>
+              <td :class="user['status'] ? 'text-spring-50' : 'text-n-40'">
+                {{ user['status'] ? 'Active' : 'Inactive' }}
+              </td>
               <td>{{ formatDate(user['created_at']) }}</td>
               <td class="flex h-full items-center space-x-6">
                 <p @click="editUser(user)">
-                  <svg-vue icon="edit-action" />
+                  <svg-vue
+                    class="cursor-pointer text-base"
+                    icon="edit-action"
+                  />
                 </p>
                 <p @click="deleteUser(user['id'])">
-                  <svg-vue icon="delete" />
+                  <svg-vue class="cursor-pointer text-base" icon="delete" />
                 </p>
                 <p @click="toggleUserStatus(user['id'])">
                   <span
@@ -392,7 +445,14 @@ const formData = reactive({
 });
 
 const isFilterApplied = computed(() => {
-  return !!filter.organization || !!filter.roles || !!filter.status;
+  return (
+    !!filter.organization.length ||
+    !!filter.roles.length ||
+    !!filter.status.length
+  );
+});
+onUpdated(() => {
+  console.log(filter.orderBy);
 });
 
 onMounted(async () => {

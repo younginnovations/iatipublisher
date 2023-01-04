@@ -16,4 +16,22 @@
   font-weight: bold !important;
   color: rgb(var(--bluecoral)) !important;
   text-transform: uppercase;
+  opacity: 0;
+}
+.multiselect-caret {
+  background-color: rgb(var(--bluecoral)) !important ;
+  &::after {
+    content: ' ';
+    position: absolute;
+    height: 4px;
+    width: 4px;
+    background-color: white;
+    left: 50%;
+    transform: translateX(-40%) rotate(45deg);
+    z-index: 10;
+    top: 30%;
+  }
+}
+.multiselect-clear-icon {
+  transform: translateX(100%);
 }
