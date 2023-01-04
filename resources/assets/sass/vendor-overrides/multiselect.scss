@@ -1,6 +1,13 @@
 .multiselect {
-  width: 160px !important;
+  min-width: 160px !important;
   cursor: pointer !important;
+}
+.organization,
+.role,
+.status {
+  .multiselect {
+    width: 160px !important;
+  }
 }
 .multiselect-placeholder {
   font-size: 12px !important;
