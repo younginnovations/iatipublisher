@@ -277,12 +277,26 @@
               </td>
               <td>{{ user['status'] }}</td>
               <td>{{ formatDate(user['created_at']) }}</td>
-              <td class="flex h-[77.5px] items-center space-x-6">
+              <td class="flex h-full items-center space-x-6">
                 <p @click="editUser(user)">
                   <svg-vue icon="edit-action" />
                 </p>
-                <p @click="deleteUser(user['id'])">Delete</p>
-                <p @click="toggleUserStatus(user['id'])">Toggle</p>
+                <p @click="deleteUser(user['id'])">
+                  <svg-vue icon="delete" />
+                </p>
+                <p @click="toggleUserStatus(user['id'])">
+                  <span
+                    :class="user['status'] ? 'bg-spring-50' : 'bg-n-40'"
+                    class="relative block h-4 w-7 cursor-pointer rounded-full"
+                  >
+                    <span
+                      :class="
+                        user['status'] ? 'translate-x-0' : 'translate-x-full'
+                      "
+                      class="absolute top-1/2 left-[2px] block h-3 w-3 -translate-y-1/2 rounded-full bg-white duration-200"
+                    />
+                  </span>
+                </p>
               </td>
               <td>
                 <span class="relative h-5 w-5"
@@ -365,7 +379,7 @@ const checkedId = ref([]);
 const selectedIds = ref([]);
 
 const editUserId = ref('');
-const checklist = ref();
+const checklist = ref([]);
 
 const formData = reactive({
   username: '',
@@ -563,6 +577,7 @@ const toggleSelectall = () => {
   } else {
     checklist.value = [];
   }
+  console.log(checklist.value);
   allSelected.value = !allSelected.value;
 };
 const downloadAll = () => {

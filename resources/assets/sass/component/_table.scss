@@ -18,14 +18,13 @@
       }
     }
     tr:not(:last-child) {
-      td,
-      th {
-        @apply relative;
-        &:after {
-          content: ' ';
-          @apply absolute left-0 bottom-0 h-px w-full max-w-full bg-n-20;
-        }
-      }
+      @apply relative;
+      border-bottom: 1px solid rgba(var(--n-20));
+      // &:after {
+      //   content: ' ';
+      //   @apply absolute left-0 bottom-0 h-px w-full max-w-full bg-n-20;
+      // }
+
       td:first-child:after {
         @apply ml-6;
       }
@@ -162,4 +161,7 @@
       max-width: 130px !important;
     }
   }
+}
+td {
+  border: none !important;
 }
