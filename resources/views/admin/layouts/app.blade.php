@@ -39,8 +39,7 @@
 
 <body class="overflow-x-hidden">
 <div id="app">
-    {{-- {{Auth::user()->organization}} --}}
-    @if (isSuperAdmin() && !isSuperAdminRoute())
+    @if (isSuperAdmin() && Auth::user()->organization)
         <admin-bar :name="{{ json_encode(Auth::user()->full_name, JSON_THROW_ON_ERROR) }}"
                    :organization-name="{{ json_encode(Auth::user()->organization?->publisher_name, JSON_THROW_ON_ERROR) }}">
         </admin-bar>
@@ -48,11 +47,11 @@
     @if (isSuperAdmin())
         <loggedin-header :user="{{ Auth::user() }}"
                          :languages="{{ json_encode(getCodeListArray('Languages', 'ActivityArray'), JSON_THROW_ON_ERROR) }}"
-                         v-bind:super-admin="{{ json_encode(!isSuperAdminRoute(), JSON_THROW_ON_ERROR) }}"></loggedin-header>
+                        v-bind:super-admin="{{ isSuperAdminRoute()?1:0 }}"> </loggedin-header>
     @else
         <loggedin-header :user="{{ Auth::user() }}" :organization="{{ Auth::user()->oprganization }}"
                          :languages="{{ json_encode(getCodeListArray('Languages', 'ActivityArray'), JSON_THROW_ON_ERROR) }}"
-                         v-bind:super-admin="{{ json_encode(!isSuperAdminRoute(), JSON_THROW_ON_ERROR) }}"></loggedin-header>
+                        v-bind:super-admin="{{ isSuperAdminRoute()?1:0 }}"></loggedin-header>
     @endif
     <main>
         @yield('content')

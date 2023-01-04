@@ -3,9 +3,7 @@
     <Loader v-if="isLoaderVisible" />
     <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
       <div class="flex">
-        <a class="whitespace-nowrap font-bold text-n-40" href="/users">
-          users
-        </a>
+        <a class="whitespace-nowrap font-bold text-n-40" href="/users"> users </a>
       </div>
     </nav>
     <PageTitle title="Users" back-link="">
@@ -23,6 +21,7 @@
           <svg-vue icon="download-file" /> Download All
         </button>
         <button
+          v-if="userRole !== 'general_user'"
           class="primary-btn"
           @click="
             () => {
@@ -31,7 +30,7 @@
           "
         >
           <svg-vue class="text-base" icon="plus-outlined" /> Add a new
-          superadmin
+          {{ userRole === "admin" ? "user" : "iati_admin" }}
         </button>
       </div>
     </PageTitle>
@@ -40,7 +39,7 @@
       <PopupModal :modal-active="addUserForm || editUserForm">
         <div class="popup-model">
           <div class="mb-5 text-2xl font-bold text-bluecoral">
-            {{ addUserForm ? 'Add a new superadmin' : 'Edit super admin' }}
+            {{ addUserForm ? "Add a new superadmin" : "Edit super admin" }}
           </div>
           <div class="grid grid-cols-2 gap-6">
             <div class="col-span-2 flex flex-col items-start gap-2">
@@ -53,7 +52,7 @@
                 type="text"
               />
               <span v-if="formError['full_name']" class="error">{{
-                formError['full_name'][0]
+                formError["full_name"][0]
               }}</span>
             </div>
 
@@ -67,7 +66,7 @@
                 type="text"
               />
               <span v-if="formError['username']" class="error">{{
-                formError['username'][0]
+                formError["username"][0]
               }}</span>
             </div>
             <div class="flex flex-col items-start gap-2">
@@ -80,11 +79,11 @@
                 type="email"
               />
               <span v-if="formError['email']" class="error">{{
-                formError['email'][0]
+                formError["email"][0]
               }}</span>
             </div>
 
-            <div class="flex flex-col items-start gap-2">
+            <div class="flex flex-col items-start gap-2" v-if="addUserForm">
               <label class="text-sm text-n-50"
                 >Status<span class="text-[red]"> * </span></label
               >
@@ -95,21 +94,21 @@
                 :searchable="true"
               />
               <span v-if="formError['status']" class="error">{{
-                formError['status'][0]
+                formError["status"][0]
               }}</span>
             </div>
-            <div class="flex flex-col items-start gap-2">
+            <div class="flex flex-col items-start gap-2" v-if="userRole === 'admin'">
               <label class="text-sm text-n-50"
                 >Role<span class="text-[red]"> * </span></label
               >
               <Multiselect
-                v-model="formData.role"
+                v-model="formData.role_id"
                 :options="roles"
                 placeholder="Select user role"
                 :searchable="true"
               />
-              <span v-if="formError['role']" class="error">{{
-                formError['role'][0]
+              <span v-if="formError['role_id']" class="error">{{
+                formError["role_id"][0]
               }}</span>
             </div>
 
@@ -123,7 +122,7 @@
                 type="password"
               />
               <span v-if="formError['password']" class="error">{{
-                formError['password'][0]
+                formError["password"][0]
               }}</span>
             </div>
             <div class="flex flex-col items-start gap-2">
@@ -137,7 +136,7 @@
                 type="password"
               />
               <span v-if="formError['password_confirmation']" class="error">{{
-                formError['password_confirmation'][0]
+                formError["password_confirmation"][0]
               }}</span>
             </div>
           </div>
@@ -182,16 +181,16 @@
           >
             Cancel
           </button>
-          <button class="primary-btn !px-10" @click="deleteUser(deleteId)">
-            Delete
-          </button>
+          <button class="primary-btn !px-10" @click="deleteUser(deleteId)">Delete</button>
         </div>
       </PopupModal>
 
       <div class="filters mb-4 flex justify-between">
         <div class="select filters inline-flex items-center space-x-2">
           <svg-vue class="w-10 text-lg" icon="funnel" />
-          <span class="organization"
+          <span
+            v-if="userRole === 'superadmin' || userRole === 'iati_admin'"
+            class="organization"
             ><Multiselect
               v-model="filter.organization"
               :options="organizations"
@@ -222,26 +221,33 @@
               :close-on-select="false"
               :clear-on-select="false"
             />
-          </span>
-          <span class="status"
+            <span v-if="filter.roles.length > 0" class="status">
+              <!-- placeholder -->
+              <!-- role -->
+            </span></span
+          >
+          <span class="relative"
             ><Multiselect
               v-model="filter.status"
               :options="status"
               mode="multiple"
               placeholder="STATUS"
               :searchable="true"
-          /></span>
+            /><span
+              v-if="filter.status.length > 0"
+              class="selected-placeholder absolute top-1/2 left-[14px] -translate-y-1/2 text-xs font-bold uppercase text-bluecoral"
+            >
+              <!-- placeholder -->
+              <!-- status -->
+            </span></span
+          >
         </div>
         <div class="open-text">
           <svg-vue
             class="absolute top-1/2 left-2 -translate-y-1/2 text-base"
             icon="magnifying-glass"
           />
-          <input
-            type="text"
-            v-model="filter.q"
-            placeholder="Search for users"
-          />
+          <input type="text" v-model="filter.q" placeholder="Search for users" />
         </div>
       </div>
 
@@ -255,7 +261,7 @@
             class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
           >
             <span class="text-n-40">Org:</span
-            ><span>{{ textBubbledata(item, 'org') }}</span>
+            ><span>{{ textBubbledata(item, "org") }}</span>
             <svg-vue
               @click="filter.organization.splice(index, 1)"
               class="mx-2 mt-1 cursor-pointer text-xs"
@@ -270,7 +276,7 @@
             class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
           >
             <span class="text-n-40">Roles:</span
-            ><span>{{ textBubbledata(item, 'roles') }}</span>
+            ><span>{{ textBubbledata(item, "roles") }}</span>
             <svg-vue
               class="mx-2 mt-1 cursor-pointer text-xs"
               icon="cross"
@@ -285,7 +291,7 @@
             class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
           >
             <span class="text-n-40">Status:</span
-            ><span>{{ textBubbledata(item, 'status') }}</span>
+            ><span>{{ textBubbledata(item, "status") }}</span>
             <svg-vue
               class="mx-2 mt-1 cursor-pointer text-xs"
               icon="cross"
@@ -366,7 +372,12 @@
                   <span class="whitespace-nowrap">Joined On</span>
                 </span>
               </th>
-              <th id="action" scope="col" width="190px">
+              <th
+                v-if="userRole !== 'general_user'"
+                id="action"
+                scope="col"
+                width="190px"
+              >
                 <span>Action</span>
               </th>
               <th id="cb" scope="col">
@@ -381,32 +392,32 @@
               <td>
                 <div class="ellipsis relative">
                   <p>
-                    {{ user['full_name'] }}
+                    {{ user["full_name"] }}
                   </p>
                   <span>
-                    {{ user['username'] }}
+                    {{ user["username"] }}
                   </span>
                 </div>
               </td>
               <td class="capitalize">
-                {{ user['email'] }}
+                {{ user["email"] }}
               </td>
               <td>
-                {{ user['publisher_name'] }}
+                {{ user["publisher_name"] }}
               </td>
               <td class="capitalize">
-                {{ user['role'] }}
+                {{ user["role"] }}
               </td>
               <td :class="user['status'] ? 'text-spring-50' : 'text-n-40'">
-                {{ user['status'] ? 'Active' : 'Inactive' }}
+                {{ user["status"] ? "Active" : "Inactive" }}
               </td>
-              <td>{{ formatDate(user['created_at']) }}</td>
-              <td class="flex h-full items-center space-x-6">
+              <td>{{ formatDate(user["created_at"]) }}</td>
+              <td
+                v-if="userRole !== 'general_user'"
+                class="flex h-full items-center space-x-6"
+              >
                 <p @click="editUser(user)">
-                  <svg-vue
-                    class="cursor-pointer text-base"
-                    icon="edit-action"
-                  />
+                  <svg-vue class="cursor-pointer text-base" icon="edit-action" />
                 </p>
                 <!-- <p @click="deleteUser(user['id'])"> -->
                 <p @click="openDeletemodel(user['id'])">
@@ -418,9 +429,7 @@
                     class="relative block h-4 w-7 cursor-pointer rounded-full"
                   >
                     <span
-                      :class="
-                        user['status'] ? 'translate-x-0' : 'translate-x-full'
-                      "
+                      :class="user['status'] ? 'translate-x-0' : 'translate-x-full'"
                       class="absolute top-1/2 left-[2px] block h-3 w-3 -translate-y-1/2 rounded-full bg-white duration-200"
                     />
                   </span>
@@ -430,7 +439,7 @@
                 <span class="relative h-5 w-5"
                   ><input
                     class="user-checklist"
-                    :value="user"
+                    :value="user['id']"
                     v-model="checklist"
                     type="checkbox"
                   />
@@ -454,34 +463,27 @@
   </div>
 </template>
 <script setup lang="ts">
-import {
-  defineProps,
-  reactive,
-  ref,
-  onUpdated,
-  computed,
-  watch,
-  onMounted,
-} from 'vue';
-import Loader from '../../components/Loader.vue';
-import PageTitle from 'Components/sections/PageTitle.vue';
-import Toast from 'Components/ToastMessage.vue';
-import axios from 'axios';
-import PopupModal from 'Components/PopupModal.vue';
-import encrypt from 'Composable/encryption';
-import Multiselect from '@vueform/multiselect';
-import moment from 'moment';
-import Pagination from 'Components/TablePagination.vue';
+import { defineProps, reactive, ref, onUpdated, computed, watch, onMounted } from "vue";
+import Loader from "../../components/Loader.vue";
+import PageTitle from "Components/sections/PageTitle.vue";
+import Toast from "Components/ToastMessage.vue";
+import axios from "axios";
+import PopupModal from "Components/PopupModal.vue";
+import encrypt from "Composable/encryption";
+import Multiselect from "@vueform/multiselect";
+import moment from "moment";
+import Pagination from "Components/TablePagination.vue";
 
 const props = defineProps({
   organizations: { type: Object, required: true },
   status: { type: Object, required: true },
   roles: { type: Object, required: true },
+  userRole: { type: String, required: true },
 });
 
 const toastData = reactive({
   visibility: false,
-  message: '',
+  message: "",
   type: false,
 });
 
@@ -489,16 +491,16 @@ const filter = reactive({
   organization: [],
   roles: [],
   status: [],
-  orderBy: { user: '', org: '', join: '' },
-  q: '',
+  orderBy: { user: "", org: "", join: "" },
+  q: "",
 });
 
 const isLoaderVisible = ref(false);
-const addUserForm = ref(false);
-const sortOrg = ref('');
-const sortUser = ref('');
-const sortJoin = ref('');
+const sortOrg = ref("");
+const sortUser = ref("");
+const sortJoin = ref("");
 
+const addUserForm = ref(false);
 const editUserForm = ref(false);
 const usersData = reactive({ data: [] });
 const isEmpty = ref(true);
@@ -507,33 +509,34 @@ const organisationFocus = ref(false);
 const deleteModal = ref(false);
 const deleteId = ref();
 
-const formError = ref({});
-
 const checkedId = ref([]);
 const selectedIds = ref([]);
-
-const editUserId = ref('');
 const checklist = ref([]);
 
+const editUserId = ref("");
+
 const formData = reactive({
-  username: '',
-  full_name: '',
-  email: '',
-  status: '',
-  role: '',
-  password: '',
-  password_confirmation: '',
+  username: "",
+  full_name: "",
+  email: "",
+  status: "",
+  role_id: "",
+  password: "",
+  password_confirmation: "",
+});
+
+const formError = reactive({
+  username: "",
+  full_name: "",
+  email: "",
+  status: "",
+  role_id: "",
+  password: "",
+  password_confirmation: "",
 });
 
 const isFilterApplied = computed(() => {
-  return (
-    !!filter.organization.length ||
-    !!filter.roles.length ||
-    !!filter.status.length
-  );
-});
-onUpdated(() => {
-  console.log(organisationFocus.value);
+  return !!filter.organization.length || !!filter.roles.length || !!filter.status.length;
 });
 
 onMounted(async () => {
@@ -550,92 +553,131 @@ onMounted(async () => {
 
 const textBubbledata = (id, field) => {
   switch (field) {
-    case 'org':
+    case "org":
       return props.organizations[+id];
-    case 'roles':
+    case "roles":
       return props.roles[+id];
-    case 'status':
+    case "status":
       return props.status[+id];
   }
 };
 
 const createUser = () => {
   let passwordData = {
-    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ''),
+    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
     password_confirmation: encrypt(
       formData.password_confirmation,
-      process.env.MIX_ENCRYPTION_KEY ?? ''
+      process.env.MIX_ENCRYPTION_KEY ?? ""
     ),
   };
 
   axios
-    .post('/user', { ...formData, ...passwordData })
+    .post("/user", { ...formData, ...passwordData })
     .then((res) => {
       toastData.visibility = true;
       toastData.message = res.data.message;
       toastData.type = res.data.success;
       isLoaderVisible.value = false;
-      formError.value = res.data.errors;
-      console.log(res.data, 'here');
+      setFormError(res.data.errors);
+
+      if (res.data.success) {
+        fetchUsersList(usersData["current_page"]);
+        addUserForm.value = false;
+        emptyFormData();
+        setFormError();
+      }
     })
     .catch((error) => {
       toastData.visibility = true;
       toastData.message = error.data.message;
       toastData.type = false;
       isLoaderVisible.value = false;
+      addUserForm.value = false;
     });
-
-  addUserForm.value = false;
 };
 
 const editUser = (user) => {
   formData.username = user.username;
   formData.full_name = user.full_name;
   formData.email = user.email;
-  formData.role = user.role;
+  formData.role_id = user.role_id;
   formData.password = user.password;
   formData.password_confirmation = user.password;
   editUserId.value = user.id;
   editUserForm.value = true;
 };
 
+const emptyFormData = () => {
+  for (const key in formData) {
+    formData[key] = "";
+  }
+};
+const setFormError = (errors = {}) => {
+  if (Object.keys(errors).length) {
+    for (const key in errors) {
+      formError[key] = errors[key];
+    }
+  } else {
+    for (const key in formError) {
+      formError[key] = "";
+    }
+  }
+};
+
 const updateUser = () => {
   let passwordData = {
-    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ''),
+    password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
     password_confirmation: encrypt(
       formData.password_confirmation,
-      process.env.MIX_ENCRYPTION_KEY ?? ''
+      process.env.MIX_ENCRYPTION_KEY ?? ""
     ),
   };
 
   axios
-    .patch(`/user/${editUserId.value}}`, { ...formData, ...passwordData })
+    .patch(`/user/${editUserId.value}`, { ...formData, ...passwordData })
     .then((res) => {
       toastData.visibility = true;
       toastData.message = res.data.message;
       toastData.type = res.data.success;
       isLoaderVisible.value = false;
-      formError.value = res.data.errors;
+      setFormError();
+      setFormError(res.data.errors);
+
+      if (res.data.success) {
+        editUserForm.value = false;
+        fetchUsersList(usersData["current_page"]);
+        editUserId.value = "";
+        emptyFormData();
+        setFormError();
+      }
     })
     .catch((error) => {
+      editUserId.value = "";
       toastData.visibility = true;
       toastData.message = error.data.message;
       toastData.type = false;
       isLoaderVisible.value = false;
     });
-
-  addUserForm.value = false;
-  editUserId.value = '';
 };
+
 watch(
   () => [checklist.value, allSelected.value],
 
   (checklist, selectall) => {
-    checkedId.value = checklist[0].map((value) => {
-      return value.id;
-    });
+    // console.log(checklist, checklist.value);
+    // checkedId.value = checklist[0].map((value) => {
+    //   return value.id;
+    // });
   }
 );
+
+watch(
+  () => [filter.organization, filter.roles, filter.q, filter.status],
+  () => {
+    fetchUsersList(usersData["current_page"]);
+  }
+);
+
 function fetchUsersList(active_page: number) {
   let route = `/users/page/${active_page}`;
 
@@ -653,10 +695,12 @@ function fetchUsersList(active_page: number) {
     isEmpty.value = response.data ? false : true;
   });
 }
+
 const openDeletemodel = (id) => {
   deleteModal.value = true;
   deleteId.value = id;
 };
+
 function deleteUser(id: number) {
   deleteModal.value = false;
 
@@ -675,38 +719,38 @@ function deleteUser(id: number) {
 }
 
 const sort = (param) => {
-  filter.orderBy.user = '';
-  filter.orderBy.org = '';
-  filter.orderBy.join = '';
+  filter.orderBy.user = "";
+  filter.orderBy.org = "";
+  filter.orderBy.join = "";
 
   switch (param) {
-    case 'user':
-      if (sortUser.value === 'asc') {
-        sortUser.value = 'desc';
+    case "user":
+      if (sortUser.value === "asc") {
+        sortUser.value = "desc";
       } else {
-        sortUser.value = 'asc';
+        sortUser.value = "asc";
       }
       filter.orderBy.user = sortUser.value;
       break;
-    case 'org':
-      if (sortOrg.value === 'asc') {
-        sortOrg.value = 'desc';
+    case "org":
+      if (sortOrg.value === "asc") {
+        sortOrg.value = "desc";
       } else {
-        sortOrg.value = 'asc';
+        sortOrg.value = "asc";
       }
       filter.orderBy.org = sortOrg.value;
       break;
-    case 'join':
-      if (sortJoin.value === 'asc') {
-        sortJoin.value = 'desc';
+    case "join":
+      if (sortJoin.value === "asc") {
+        sortJoin.value = "desc";
       } else {
-        sortJoin.value = 'asc';
+        sortJoin.value = "asc";
       }
       filter.orderBy.join = sortJoin.value;
 
       break;
   }
-  fetchUsersList(usersData['current_page']);
+  fetchUsersList(usersData["current_page"]);
 };
 
 function toggleUserStatus(id: number) {
@@ -718,7 +762,7 @@ function toggleUserStatus(id: number) {
         toastData.message = res.data.message;
         toastData.type = res.data.success;
 
-        fetchUsersList(usersData['current_page']);
+        fetchUsersList(usersData["current_page"]);
       }
     })
     .catch((err) => {
@@ -727,8 +771,9 @@ function toggleUserStatus(id: number) {
 }
 
 function formatDate(date: Date) {
-  return moment(date).format('LL');
+  return moment(date).format("LL");
 }
+
 const toggleSelectall = () => {
   if (!allSelected.value) {
     for (let i = 0; i < usersData.data.length; i++) {
@@ -739,61 +784,35 @@ const toggleSelectall = () => {
   }
   allSelected.value = !allSelected.value;
 };
+
 const updateValueAction = (event) => {
   console.log(event);
 };
 const downloadAll = () => {
-  checkedId.value = checkedId.value.filter(function (element) {
-    return element !== undefined;
-  });
+  let route = `/users/download/`;
+  let params = new URLSearchParams();
 
-  checkedId.value.forEach((element) => {
-    if (!selectedIds.value.includes(element)) {
-      selectedIds.value.push(element);
-    }
-  });
-  if (selectedIds.value.length == 0) {
-    let route = `/users/download/`;
-
-    let params = new URLSearchParams();
-
+  if (checklist.value.length == 0) {
     for (const filter_key in filter) {
       if (filter[filter_key].length > 0) {
         params.append(filter_key, filter[filter_key]);
       }
     }
-
-    axios.get(route, { params: params }).then((res) => {
-      const response = res.data;
-      console.group(res);
-      let blob = new Blob([response], {
-        type: 'application/xml',
-      });
-      let link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = res.headers['content-disposition'];
-      link.click();
-    });
   } else {
-    let route = `/users/download/`;
-
-    let params = new URLSearchParams();
-
-    params.append('users', selectedIds.value.toString());
-
-    axios.get(route, { params: params }).then((res) => {
-      const response = res.data;
-      console.group(res);
-
-      let blob = new Blob([response], {
-        type: 'application/xml',
-      });
-      let link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = res.headers['content-disposition'];
-      link.click();
-    });
+    params.append("users", checklist.value.toString());
   }
+
+  axios.get(route, { params: params }).then((res) => {
+    const response = res.data;
+    console.group(res);
+    let blob = new Blob([response], {
+      type: "application/csv",
+    });
+    let link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = res.headers["content-disposition"];
+    link.click();
+  });
 };
 </script>
 <style scoped src="@vueform/multiselect/themes/default.css"></style>

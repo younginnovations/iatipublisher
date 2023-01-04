@@ -151,4 +151,28 @@ class LoginController extends Controller
 
         return $this->sendFailedLoginResponse($request);
     }
+
+    /**
+     * Send the response after the user was authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    protected function sendLoginResponse(Request $request)
+    {
+        $request->session()->regenerate();
+
+        $this->clearLoginAttempts($request);
+
+        if ($response = $this->authenticated($request, $this->guard()->user())) {
+            return $response;
+        }
+
+        $userRole = $this->guard()->user()->role->role;
+        $route = in_array($userRole, ['iati_admin', 'superadmin']) ? '/list-organisations' : '/activities';
+
+        return $request->wantsJson()
+                    ? new JsonResponse(['route'=>$route], 200)
+                    : redirect()->intended($this->redirectPath());
+    }
 }

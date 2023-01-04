@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UserProfileRequest;
 use App\Http\Requests\User\UserRequest;
+use App\Http\Requests\User\UserUpdateRequest;
 use App\IATI\Services\Download\CsvGenerator;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
@@ -15,6 +16,7 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -70,13 +72,10 @@ class UserController extends Controller
         try {
             $organizations = $this->organizationService->pluckAllOrganizations();
             $status = [1 => 'Active', 0 => 'Inactive'];
-            $roles = [
-                '1' => 'general_user',
-                '2' => 'admin',
-                '3' => 'superadmin',
-            ];
+            $roles = $this->userService->getRoles();
+            $userRole = Auth::user()->role->role;
 
-            return view('admin.user.index', compact('status', 'organizations', 'roles'));
+            return view('admin.user.index', compact('status', 'organizations', 'roles', 'userRole'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -94,8 +93,7 @@ class UserController extends Controller
     public function store(UserRequest $request): JsonResponse
     {
         try {
-            $formData = $request->only(['full_name', 'username', 'email', 'status', 'role', 'password', 'password_confirmation']);
-            $formData['organization_id'] = Auth::user()->organization_id;
+            $formData = $request->only(['full_name', 'username', 'email', 'status', 'role_id', 'password', 'password_confirmation']);
 
             $this->userService->store($formData);
 
@@ -114,10 +112,10 @@ class UserController extends Controller
      *
      * @return JsonResponse
      */
-    public function update(UserRequest $request, $id): JsonResponse
+    public function update(UserUpdateRequest $request, $id): JsonResponse
     {
         try {
-            $formData = $request->only(['full_name', 'username', 'email', 'status', 'role', 'password', 'password_confirmation']);
+            $formData = $request->only(['full_name', 'username', 'email', 'role_id', 'password', 'password_confirmation']);
 
             $this->userService->update($id, $formData);
 
@@ -129,6 +127,13 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Delete user.
+     *
+     * @param  mixed $id
+     *
+     * @return JsonResponse
+     */
     public function delete($id): JsonResponse
     {
         try {
@@ -204,8 +209,13 @@ class UserController extends Controller
     {
         try {
             $user = Auth::user();
+            $languagePreference = [
+                'en' => 'English',
+                'fr' => 'French',
+                'es' => 'Spanish',
+            ];
 
-            return view('admin.user.profile', compact('user'));
+            return view('admin.user.profile', compact('user', 'languagePreference'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -213,14 +223,19 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Return paginated users.
+     *
+     * @param $request
+     * @param int
+     *
+     * @return JsonResponse
+     */
     public function getPaginatedUsers(Request $request, int $page = 1): JsonResponse
     {
         try {
-            logger()->error($request);
             $queryParams = $this->getQueryParams($request);
             $users = $this->userService->getPaginatedUsers($page, $queryParams);
-            logger()->error(json_encode($queryParams));
-            // logger()->error(json_encode($request->));
 
             return response()->json([
                 'success' => true,
@@ -247,22 +262,34 @@ class UserController extends Controller
     public function getQueryParams($request): array
     {
         $tableConfig = getTableConfig('activity');
+        $accessibleRoles = array_keys($this->userService->getRoles());
+        $accessibleOrg = Auth::user()->organization_id;
+        $requestData = $request->all();
+        $organization_id = Arr::get($requestData, 'organization', null) ? explode(',', Arr::get($requestData, 'organization')) : [];
+        $roles = Arr::get($request, 'roles', null) ? explode(',', Arr::get($request, 'roles')) : [];
         $queryParams = [];
 
-        if (!empty($request->get('q')) || $request->get('q') === '0') {
-            $queryParams['query'] = $request->get('q');
+        if ($accessibleOrg) {
+            $organization_id[] = $accessibleOrg;
         }
 
-        if (!empty($request->get('organization')) || $request->get('organization') === '0') {
-            $queryParams['organization_id'] = $request->get('organization');
+        if ($accessibleRoles) {
+            $roles = empty($roles) ? $accessibleRoles : $roles;
+        }
+
+        $queryParams['organization_id'] = $organization_id;
+        $queryParams['role'] = $roles;
+
+        if (!empty($request->get('q')) || $request->get('q') === '0') {
+            $queryParams['q'] = $request->get('q');
         }
 
         if (!empty($request->get('status')) || $request->get('status') === '0') {
-            $queryParams['status'] = $request->get('status');
+            $queryParams['status'] = explode(',', $request->get('status'));
         }
 
-        if (!empty($request->get('role')) || $request->get('role') === '0') {
-            $queryParams['role'] = $request->get('role');
+        if (!empty($request->get('users')) || $request->get('users') === '0') {
+            $queryParams['users'] = explode(',', $request->get('users'));
         }
 
         if (in_array($request->get('orderBy'), $tableConfig['orderBy'], true)) {
@@ -272,6 +299,7 @@ class UserController extends Controller
                 $queryParams['direction'] = $request->get('direction');
             }
         }
+        // dd($queryParams);
 
         return $queryParams;
     }
@@ -292,7 +320,7 @@ class UserController extends Controller
                 return response()->json(['success' => false, 'message' => 'Please enter correct current password']);
             }
 
-            $this->userService->update(Auth::user()->id, $formData);
+            $this->userService->updatePassword(Auth::user()->id, $formData);
 
             return response()->json([
                 'success' => true,
@@ -318,9 +346,9 @@ class UserController extends Controller
     public function updateProfile(UserProfileRequest $request): JsonResponse
     {
         try {
-            $formData = $request->only(['username', 'full_name', 'email']);
+            $formData = $request->only(['username', 'full_name', 'email', 'language_preference']);
 
-            $this->userService->updateProfile($formData);
+            $this->userService->update(Auth::user()->id, $formData);
 
             return response()->json([
                 'success' => true,
@@ -336,6 +364,13 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Toggle user status.
+     *
+     * @param $id
+     *
+     * @return JsonResponse
+     */
     public function toggleUserStatus($id): JsonResponse
     {
         try {
@@ -352,6 +387,12 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Download users in csv format.
+     *
+     * @param  mixed $request
+     * @return void
+     */
     public function downloadUsers(Request $request)
     {
         try {

@@ -44,6 +44,7 @@
         </div>
         <div class="icons flex flex-row-reverse items-center">
           <a
+            v-if="userRole === 'admin'"
             class="edit-button mx-2.5 flex items-center text-xs font-bold uppercase"
             :href="'/organisation/' + title"
           >
@@ -124,9 +125,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, provide } from 'vue';
-import HoverText from 'Components/HoverText.vue';
-import { orgMandatoryElements } from 'Composable/coreElements';
+import { defineProps, provide, inject } from "vue";
+import HoverText from "Components/HoverText.vue";
+import { orgMandatoryElements } from "Composable/coreElements";
 
 import {
   ReportingOrganisation,
@@ -136,7 +137,7 @@ import {
   RecipientCountryBudget,
   TotalExpenditure,
   DocumentLink,
-} from 'Organisation/elements/Index';
+} from "Organisation/elements/Index";
 
 const props = defineProps({
   data: {
@@ -158,12 +159,12 @@ const props = defineProps({
   language: {
     type: String,
     required: false,
-    default: 'en',
+    default: "en",
   },
   width: {
     type: String,
     required: false,
-    default: '',
+    default: "",
   },
   types: {
     type: Object,
@@ -175,18 +176,18 @@ const props = defineProps({
   },
 });
 
-// const status = '';
+const userRole = inject("userRole");
 
-let layout = 'basis-6/12';
-if (props.width === 'full') {
-  layout = 'basis-full';
+let layout = "basis-6/12";
+if (props.width === "full") {
+  layout = "basis-full";
 }
 
-provide('orgTypes', props.types);
+provide("orgTypes", props.types);
 
 const replaceUnderscore = (string) => {
   let regex = /_/g;
-  let result = string.replace(regex, '-');
+  let result = string.replace(regex, "-");
   return result;
 };
 </script>

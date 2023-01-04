@@ -7,6 +7,7 @@ namespace App\Http\Requests\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -37,10 +38,13 @@ class UserProfileRequest extends FormRequest
                 'password_confirmation' => ['required', 'string', 'min:6', 'max:255'],
             ];
         } else {
+            $id = Auth::user()->id;
+
             $rules = [
-                'username'              => ['required', 'max:255', 'string', 'regex:/^[a-z]([0-9a-z-_])*$/', 'unique:users,username'],
+                'username'              => ['required', 'max:255', sprintf('unique:users,username,%d', $id)],
                 'full_name'             => ['required', 'string', 'max:255'],
-                'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'max:255', 'unique:users,email'],
+                'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'max:255', sprintf('unique:users,email,%d', $id)],
+                'language_preference'   => 'required',
             ];
         }
 

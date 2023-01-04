@@ -45,9 +45,9 @@ class Role extends Model
      *
      * @return int
      */
-    public function getIatiSuperAdminId(): int
+    public function getIatiAdminId(): int
     {
-        return $this->where('role', 'iati_superadmin')->first()->id;
+        return $this->where('role', 'iati_admin')->first()->id;
     }
 
     /**

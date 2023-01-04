@@ -45,4 +45,10 @@ abstract class Enums
         'existing_org',
         'user_create',
     ];
+
+    const LANGUAGE_PREFERENCE = [
+        'en',
+        'fr',
+        'es',
+    ];
 }

@@ -79,7 +79,7 @@
             />
             <div class="inline-flex justify-end">
               <!-- Unpublish /Publish Activity -->
-              <PublishUnpublish />
+              <PublishUnpublish v-if="userRole === 'admin'" />
             </div>
           </div>
         </div>
@@ -306,6 +306,10 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    userRole: {
+      type: String,
+      required: true,
+    },
   },
   setup(props) {
     const toastData = reactive({
@@ -438,6 +442,7 @@ export default defineComponent({
     provide("toastData", toastData);
     provide("publishStatus", publishStatus);
     provide("errorData", errorData);
+    provide("userRole", props.userRole);
 
     return {
       groupedData,
