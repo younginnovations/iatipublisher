@@ -163,6 +163,30 @@
           </div>
         </div>
       </PopupModal>
+      <PopupModal :modal-active="deleteModal">
+<div class="flex mb-6 title">
+        <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
+        <b>Delete Superadmin</b>
+      </div>        <p class="rounded-lg bg-rose p-4">
+          Are you sure you want to delete this superadmin?
+        </p>
+        <div class="mt-6 flex justify-end space-x-2">
+          <button
+            class="secondary-btn font-bold"
+            @click="
+              () => {
+                deleteModal = false;
+              }
+            "
+          >
+            Cancel
+          </button>
+          <button class="primary-btn !px-10" @click="deleteUser(deleteId)">
+            Delete
+          </button>
+        </div>
+      </PopupModal>
+
       <div class="filters mb-4 flex justify-between">
         <div class="select filters inline-flex items-center space-x-2">
           <svg-vue class="w-10 text-lg" icon="funnel" />
@@ -394,7 +418,8 @@
                     icon="edit-action"
                   />
                 </p>
-                <p @click="deleteUser(user['id'])">
+                <!-- <p @click="deleteUser(user['id'])"> -->
+                <p @click="openDeletemodel(user['id'])">
                   <svg-vue class="cursor-pointer text-base" icon="delete" />
                 </p>
                 <p @click="toggleUserStatus(user['id'])">
@@ -489,8 +514,9 @@ const usersData = reactive({ data: [] });
 const isEmpty = ref(true);
 const allSelected = ref(false);
 const organisationFocus = ref(false);
-const roleFocus = ref(false);
-const statusFocus = ref(false);
+const deleteModal = ref(false);
+const deleteId = ref();
+
 const formError = ref({});
 
 const checkedId = ref([]);
@@ -626,8 +652,13 @@ function fetchUsersList(active_page: number) {
     isEmpty.value = response.data ? false : true;
   });
 }
-
+const openDeletemodel = (id) => {
+  deleteModal.value = true;
+  deleteId.value = id;
+};
 function deleteUser(id: number) {
+  deleteModal.value = false;
+
   axios
     .delete(`/user/${id}`)
     .then((res) => {
