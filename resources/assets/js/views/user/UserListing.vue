@@ -164,10 +164,11 @@
         </div>
       </PopupModal>
       <PopupModal :modal-active="deleteModal">
-<div class="flex mb-6 title">
-        <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
-        <b>Delete Superadmin</b>
-      </div>        <p class="rounded-lg bg-rose p-4">
+        <div class="title mb-6 flex">
+          <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
+          <b>Delete Superadmin</b>
+        </div>
+        <p class="rounded-lg bg-rose p-4">
           Are you sure you want to delete this superadmin?
         </p>
         <div class="mt-6 flex justify-end space-x-2">
@@ -214,7 +215,7 @@
           <span class="relative">
             <Multiselect
               v-model="filter.roles"
-              :options="Object.values(props.roles)"
+              :options="roles"
               placeholder="ROLE"
               :searchable="true"
               mode="multiple"
@@ -232,7 +233,7 @@
           <span class="relative"
             ><Multiselect
               v-model="filter.status"
-              :options="Object.values(status)"
+              :options="status"
               mode="multiple"
               placeholder="STATUS"
               :searchable="true"
@@ -267,7 +268,8 @@
             :key="index"
             class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
           >
-            <span class="text-n-40">Org:</span><span>{{ item }}</span>
+            <span class="text-n-40">Org:</span
+            ><span>{{ textBubbledata(item, 'org') }}</span>
             <svg-vue
               @click="filter.organization.splice(index, 1)"
               class="mx-2 mt-1 cursor-pointer text-xs"
@@ -281,11 +283,12 @@
             :key="index"
             class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
           >
-            <span class="text-n-40">Roles:</span><span>{{ item }}</span>
+            <span class="text-n-40">Roles:</span
+            ><span>{{ textBubbledata(item, 'roles') }}</span>
             <svg-vue
               class="mx-2 mt-1 cursor-pointer text-xs"
               icon="cross"
-              @click="filter.role.splice(index, 1)"
+              @click="filter.roles.splice(index, 1)"
             />
           </span>
         </span>
@@ -295,7 +298,8 @@
             :key="index"
             class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
           >
-            <span class="text-n-40">Status:</span><span>{{ item }}</span>
+            <span class="text-n-40">Status:</span
+            ><span>{{ textBubbledata(item, 'status') }}</span>
             <svg-vue
               class="mx-2 mt-1 cursor-pointer text-xs"
               icon="cross"
@@ -557,6 +561,17 @@ onMounted(async () => {
     toastData.visibility = false;
   }, 5000);
 });
+
+const textBubbledata = (id, field) => {
+  switch (field) {
+    case 'org':
+      return props.organizations[+id];
+    case 'roles':
+      return props.roles[+id];
+    case 'status':
+      return props.status[+id];
+  }
+};
 
 const createUser = () => {
   let passwordData = {
