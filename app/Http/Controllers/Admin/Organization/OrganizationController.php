@@ -81,8 +81,9 @@ class OrganizationController extends Controller
             $mandatoryCompleted = isMandatoryElementCompleted($organization->element_status);
             $status = $organization->element_status;
             $organization['organisation_identifier'] = $organization['identifier'];
+            $userRole = Auth::user()->role->role;
 
-            return view('admin.organisation.index', compact('elements', 'elementGroups', 'progress', 'organization', 'toast', 'types', 'mandatoryCompleted', 'status', ));
+            return view('admin.organisation.index', compact('elements', 'elementGroups', 'progress', 'organization', 'toast', 'types', 'mandatoryCompleted', 'status', 'userRole'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

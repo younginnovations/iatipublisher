@@ -61,7 +61,7 @@
       <nav>
         <ul class="activity-nav-list -mx-4">
           <li
-            v-for="(menu, index) in data.menus"
+            v-for="(menu, index) in data[superAdmin ? 'superadmin_menus' : 'org_menus']"
             :key="index"
             :class="data.menuNavLiClasses"
           >
@@ -138,12 +138,12 @@
     </div>
     <div
       class="user-nav"
-      :class="{ 'grow-0': superAdmin, 'grow justify-end': !superAdmin }"
+      :class="{ 'grow-0': !superAdmin, 'grow justify-end': superAdmin }"
     >
       <div class="user-nav">
         <div class="search">
           <input
-            v-if="superAdmin"
+            v-if="!superAdmin"
             v-model="searchValue"
             class="search__input mr-3.5"
             type="text"
@@ -186,15 +186,14 @@
                   </span>
                 </div>
               </li>
-              <a href="/profile">
-                <li class="dropdown__list border-b border-b-n-20">
-                  <svg-vue icon="user" /><span class="ml-4 capitalize">
-                    Your Profile</span
-                  >
-                </li></a
-              >
-              <li class="dropdown__list" @click="logout">
-                <svg-vue icon="logout"></svg-vue>
+              <li class="dropdown__list border-b border-b-n-20">
+                <a class="flex w-full space-x-4" href="/profile"
+                  ><svg-vue class="mx-1 text-base" icon="user" />
+                  <span>Your Profile</span></a
+                >
+              </li>
+              <li class="dropdown__list flex" @click="logout">
+                <svg-vue class="mr-3 ml-1" icon="logout"></svg-vue>
                 <button class="text-sm">Logout</button>
               </li>
             </ul>
@@ -223,8 +222,7 @@
                 </div>
               </li>
               <li class="dropdown__list border-b border-b-n-20">
-                <svg-vue icon="user" />
-                <a href="/profile">Your Profile</a>
+                <a href="/profile"><svg-vue icon="user" /> Your Profile</a>
               </li>
               <li class="dropdown__list" @click="logout">
                 <svg-vue icon="logout"></svg-vue>
@@ -237,7 +235,7 @@
     </div>
 
     <CreateModal
-      v-if="superAdmin"
+      v-if="!superAdmin"
       :modal-active="modalValue"
       @close="ToggleModel"
       @close-modal="ToggleModel"
@@ -262,7 +260,7 @@ import { useToggle, useStorage } from "@vueuse/core";
 import CreateModal from "../views/activity/CreateModal.vue";
 import Toast from "./ToastMessage.vue";
 
-defineProps({
+const props = defineProps({
   user: { type: Object, required: true },
   organization: {
     type: Object,
@@ -304,36 +302,43 @@ const data = reactive({
       active: false,
     },
   ],
-  menus: [
+  org_menus: [
     {
       name: "Activity DATA",
       permalink: "/activities",
       active: true,
-      superadmin_access: false,
     },
     {
       name: "Organisation DATA",
       permalink: "/organisation",
       active: false,
-      superadmin_access: false,
     },
     {
       name: "Settings",
       permalink: "/setting",
       active: false,
-      superadmin_access: false,
     },
     {
       name: "Add / Import Activity",
       permalink: "#",
       active: false,
-      superadmin_access: false,
     },
     {
       name: "Users",
       permalink: "/users",
       active: false,
-      superadmin_access: true,
+    },
+  ],
+  superadmin_menus: [
+    {
+      name: "Organisation List",
+      permalink: "/list-organisations",
+      active: false,
+    },
+    {
+      name: "Users",
+      permalink: "/users",
+      active: false,
     },
   ],
 });
@@ -364,21 +369,28 @@ watch(
 );
 function changeActiveMenu() {
   const path = window.location.pathname;
-  data.menus.forEach((menu, key) => {
-    data.menus[key]["active"] = menu.permalink === path ? true : false;
+  data.org_menus.forEach((menu, key) => {
+    data.org_menus[key]["active"] = menu.permalink === path ? true : false;
   });
   if (
     path.includes("activity") ||
     path.includes("result") ||
     path.includes("indicator")
   ) {
-    data.menus[0]["active"] = true;
+    data.org_menus[0]["active"] = true;
   }
   if (path.includes("organisation")) {
-    data.menus[1]["active"] = true;
+    data.org_menus[1]["active"] = true;
   }
   if (path.includes("import")) {
-    data.menus[3]["active"] = true;
+    data.org_menus[3]["active"] = true;
+  }
+  if (path.includes("users")) {
+    data.org_menus[4]["active"] = true;
+    data.superadmin_menus[1]["active"] = true;
+  }
+  if (path.includes("list-organisations")) {
+    data.superadmin_menus[0]["active"] = true;
   }
 }
 
@@ -401,13 +413,16 @@ async function logout() {
  */
 const searchValue: Ref<string | null> = ref("");
 const currentURL = window.location.href;
+
 if (currentURL.includes("?")) {
   const queryString = window.location.search,
     urlParams = new URLSearchParams(queryString),
     search = urlParams.get("q");
   searchValue.value = search;
 }
+
 const spinner = ref(false);
+
 const searchFunction = (url: string) => {
   spinner.value = true;
   const param = searchValue.value?.replace("#", "");
@@ -417,13 +432,16 @@ const searchFunction = (url: string) => {
     let queryStringArr = queryString.split("&") as [];
     sortingParam = "&" + queryStringArr.slice(1).join("&");
   }
-  let href = param ? `${url}?q=${param}${sortingParam}` : "/activities/";
+  let href = param
+    ? `${url}?q=${param}${sortingParam}`
+    : props.superAdmin
+    ? "/list-organisations"
+    : "/activities/";
   window.location.href = href;
 };
-onMounted(async () => {
-  changeActiveMenu();
-});
+
 onMounted(() => {
+  changeActiveMenu();
   if (
     localStorage.getItem("openAddModel") === "true" &&
     window.location.pathname === "/activities"
@@ -431,6 +449,7 @@ onMounted(() => {
     modalValue.value = true;
   }
 });
+
 onUnmounted(() => {
   localStorage.removeItem("openAddModel");
 });

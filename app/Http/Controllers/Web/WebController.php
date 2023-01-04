@@ -20,9 +20,20 @@ class WebController extends Controller
      */
     public function index($page = 'signin'): \Illuminate\Contracts\Support\Renderable
     {
-        $message = Str::contains(Redirect::intended()->getTargetUrl(), '/email/verify/') ? 'User must be logged in to verify email.' : '';
+        try {
+            $message = Str::contains(Redirect::intended()->getTargetUrl(), '/email/verify/') ? 'User must be logged in to verify email.' : '';
+            $intent = !empty($message) ? 'verify' : '';
 
-        return view('web.welcome', compact('page', 'message'));
+            if (request()->cookie('password_changed')) {
+                $message = request()->cookie('password_changed');
+                $intent = !empty($message) ? 'password_changed' : '';
+                cookie()->queue(cookie()->forget('password_changed'));
+            }
+
+            return view('web.welcome', compact('page', 'intent', 'message'));
+        } catch(\Exception $e) {
+            logger()->error($e->getMessage());
+        }
     }
 
     /**

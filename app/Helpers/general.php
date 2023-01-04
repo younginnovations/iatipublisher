@@ -739,9 +739,9 @@ if (!function_exists('isSuperAdmin')) {
      */
     function isSuperAdmin(): bool
     {
-        $superAdminId = app(Role::class)->getSuperAdminId();
+        $superAdminId = [app(Role::class)->getSuperAdminId(), app(Role::class)->getIatiAdminId()];
 
-        return auth()->user()->role_id === $superAdminId || session()->get('role_id') === $superAdminId;
+        return in_array(auth()->user()->role_id, $superAdminId) || in_array(session()->get('role_id'), $superAdminId);
     }
 }
 
@@ -754,9 +754,9 @@ if (!function_exists('isSuperAdminRoute')) {
     function isSuperAdminRoute(): bool
     {
         if (request()->route()) {
-            $routeAction = request()->route()->getAction();
+            $superAdminId = [app(Role::class)->getSuperAdminId(), app(Role::class)->getIatiAdminId()];
 
-            return $routeAction['namespace'] === 'SuperAdmin';
+            return in_array(auth()->user()->role_id, $superAdminId);
         }
 
         return false;

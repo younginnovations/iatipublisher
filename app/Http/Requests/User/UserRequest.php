@@ -7,6 +7,7 @@ namespace App\Http\Requests\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -27,17 +28,20 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
-        // , 'regex:/^[a-z]([0-9a-z-_])*$/'
+        $role = Auth::user()->role->role;
+
         $rules = [
             'username'              => ['required', 'max:255', 'string', 'unique:users,username'],
             'full_name'             => ['required', 'string', 'max:255'],
             'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'max:255', 'unique:users,email'],
             'status'                => ['required'],
-            'role'                  => ['sometimes'],
-            'status'                => ['required'],
             'password'              => ['required', 'string', 'min:6', 'max:255', 'confirmed'],
             'password_confirmation' => ['required', 'string', 'min:6', 'max:255'],
         ];
+
+        if ($role === 'admin') {
+            $rules['role_id'] = 'required';
+        }
 
         return $rules;
     }

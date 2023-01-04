@@ -7,6 +7,7 @@ namespace App\IATI\Services\User;
 use App\IATI\Models\User\User;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Repositories\Setting\SettingRepository;
+use App\IATI\Repositories\User\RoleRepository;
 use App\IATI\Repositories\User\UserRepository;
 use GuzzleHttp\Client;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -27,6 +28,11 @@ class UserService
     private UserRepository $userRepo;
 
     /**
+     * @var RoleRepository
+     */
+    private RoleRepository $roleRepo;
+
+    /**
      * @var OrganizationRepository
      */
     private OrganizationRepository $organizationRepo;
@@ -40,12 +46,14 @@ class UserService
      * UserService constructor.
      *
      * @param UserRepository         $userRepo
+     * @param RoleRepository         $roleRepo
      * @param OrganizationRepository $organizationRepo
      * @param SettingRepository $settingRepo
      */
-    public function __construct(UserRepository $userRepo, OrganizationRepository $organizationRepo, SettingRepository $settingRepo)
+    public function __construct(UserRepository $userRepo, RoleRepository $roleRepo, OrganizationRepository $organizationRepo, SettingRepository $settingRepo)
     {
         $this->userRepo = $userRepo;
+        $this->roleRepo = $roleRepo;
         $this->organizationRepo = $organizationRepo;
         $this->settingRepo = $settingRepo;
     }
@@ -88,6 +96,7 @@ class UserService
             'email'           => $data['email'],
             'organization_id' => $organization['id'],
             'password'        => Hash::make($data['password']),
+            'role_id'         => $this->roleRepo->getOrganizationAdminId(),
         ]);
 
         User::sendEmail();
@@ -138,6 +147,7 @@ class UserService
             'email'           => $data['email'],
             'organization_id' => $organization['id'],
             'password'        => Hash::make($data['password']),
+            'role_id'         => $this->roleRepo->getOrganizationAdminId(),
         ]);
     }
 
@@ -567,44 +577,43 @@ class UserService
      *
      * @return $bool
      */
-    public function updatePassword($data): bool
+    public function updatePassword($userId, $data): bool
     {
-        $user_id = Auth::id();
-
-        return $this->userRepo->update($user_id, [
+        return $this->userRepo->update($userId, [
             'password'        => Hash::make($data['password']),
-        ]);
-    }
-
-    /**
-     * Update user profile.
-     *
-     * @param $data
-     *
-     * @return bool
-     */
-    public function updateProfile($data): bool
-    {
-        $user_id = Auth::id();
-
-        return $this->userRepo->update($user_id, [
-            'username'        => $data['username'],
-            'full_name'       => $data['full_name'],
-            'email'           => $data['email'],
         ]);
     }
 
     public function store($data)
     {
-        //3 needs to be dynamic
-        $data['role'] = isset($data['role']) ? $data['role'] : '3';
+        $data['organization_id'] = Auth::user()->organization_id;
+        $data['password'] = Hash::make($data['password']);
+        $data['role_id'] = isset($data['role_id']) ? $data['role_id'] : $this->roleRepo->getIatiAdminId();
+        $user = $this->userRepo->store($data);
+        $user->sendEmail();
 
-        return $this->userRepo->store($data);
+        return $user;
     }
 
     public function update($id, $data)
     {
-        return $this->userRepo->update($id, $data);
+        $user = $this->userRepo->find($id);
+
+        if (Arr::get($data, 'password')) {
+            $data['password'] = Hash::make($data['password']);
+        }
+
+        $user->fill($data);
+        $emailChanged = $user->isDirty('email');
+        $user->email_verified_at = $emailChanged ? null : $user->email_verified_at;
+
+        $updated = $user->save();
+
+        if ($emailChanged) {
+            $user->sendEmailVerificationNotification();
+        }
+
+        return $updated;
     }
 
     public function delete($id)
@@ -640,5 +649,21 @@ class UserService
         $users = $this->userRepo->getUserDownloadData($queryParams);
 
         return $users;
+    }
+
+    public function getRoles()
+    {
+        $roles = $this->roleRepo->pluckRoles()->toArray();
+
+        if (Auth::user()->role->role === 'iati_admin' || Auth::user()->role->role === 'superadmin') {
+            unset($roles[array_flip($roles)['superadmin']]);
+        }
+
+        if (Auth::user()->role->role === 'admin' || Auth::user()->role->role === 'general_user') {
+            unset($roles[array_flip($roles)['iati_admin']]);
+            unset($roles[array_flip($roles)['superadmin']]);
+        }
+
+        return $roles;
     }
 }

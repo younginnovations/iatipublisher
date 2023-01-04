@@ -178,3 +178,9 @@
 td {
   border: none !important;
 }
+.user-list-table.iati-list-table {
+  max-width: calc(100vw - 70px);
+  @media (max-width: 640px) {
+    max-width: calc(100vw - 50px);
+  }
+}

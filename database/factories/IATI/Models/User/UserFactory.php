@@ -24,10 +24,10 @@ class UserFactory extends Factory
     public function definition(): array
     {
         $adminRole = Role::factory()->make(['role' => 'admin'])->toArray();
-        Role::firstOrCreate($adminRole, $adminRole);
+        Role::firstOrCreate(['role' => 'admin'], $adminRole);
 
         $superAdminRole = Role::factory()->make(['role' => 'superadmin'])->toArray();
-        Role::firstOrCreate($superAdminRole, $superAdminRole);
+        Role::firstOrCreate(['role' => 'superadmin'], $superAdminRole);
 
         return [
             'username'  => Str::random(6),

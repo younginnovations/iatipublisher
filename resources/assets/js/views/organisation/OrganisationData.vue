@@ -29,19 +29,16 @@
                   >
                   <span class="separator mx-4"> / </span>
                   <div class="breadcrumb__title">
-                    <span
-                      class="breadcrumb__title last overflow-hidden text-n-30"
-                      >{{
-                        organization.name
-                          ? organization.name['0'].narrative ?? 'Untitled'
-                          : 'Untitled'
-                      }}</span
-                    >
+                    <span class="breadcrumb__title last overflow-hidden text-n-30">{{
+                      organization.name
+                        ? organization.name["0"].narrative ?? "Untitled"
+                        : "Untitled"
+                    }}</span>
                     <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
                       {{
                         organization.name
-                          ? organization.name['0'].narrative ?? 'Untitled'
-                          : 'Untitled'
+                          ? organization.name["0"].narrative ?? "Untitled"
+                          : "Untitled"
                       }}
                     </span>
                   </div>
@@ -59,15 +56,15 @@
                   <span class="ellipsis__title overflow-hidden">
                     {{
                       organization.name
-                        ? organization.name['0'].narrative ?? 'Untitled'
-                        : 'Untitled'
+                        ? organization.name["0"].narrative ?? "Untitled"
+                        : "Untitled"
                     }}
                   </span>
                   <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
                     {{
                       organization.name
-                        ? organization.name['0'].narrative ?? 'Untitled'
-                        : 'Untitled'
+                        ? organization.name["0"].narrative ?? "Untitled"
+                        : "Untitled"
                     }}
                   </span>
                 </h4>
@@ -95,7 +92,7 @@
             />
             <div class="inline-flex justify-end">
               <!-- Unpublish /Publish Activity -->
-              <PublishUnpublish />
+              <PublishUnpublish v-if="userRole === 'admin'" />
             </div>
           </div>
         </div>
@@ -122,9 +119,7 @@
                 :is-percent="true"
                 :percent="progress"
               ></RadialProgressBar>
-              <span
-                >Fill mandatory fields of all elements to get 100% score</span
-              >
+              <span>Fill mandatory fields of all elements to get 100% score</span>
             </div>
             <div class="activities__card elements">
               <div class="mb-7 flex items-center justify-between">
@@ -187,9 +182,7 @@
                   :is-percent="true"
                   :percent="progress"
                 ></RadialProgressBar>
-                <span
-                  >Fill mandatory fields of all elements to get 100% score</span
-                >
+                <span>Fill mandatory fields of all elements to get 100% score</span>
               </div>
               <div class="activities__card elements">
                 <div class="mb-7 flex items-center justify-between">
@@ -213,10 +206,7 @@
                 </div>
                 <div class="flex justify-between">
                   <div class="flex items-center space-x-1">
-                    <svg-vue
-                      icon="double-tick"
-                      class="text-spring-50"
-                    ></svg-vue>
+                    <svg-vue icon="double-tick" class="text-spring-50"></svg-vue>
                     <span>Completed</span>
                   </div>
                   <HoverText
@@ -258,9 +248,7 @@
                   "
                   class="elements-card col-span-2"
                   :class="
-                    String(name) === 'organisation_identifier'
-                      ? 'xl:col-span-1'
-                      : ''
+                    String(name) === 'organisation_identifier' ? 'xl:col-span-1' : ''
                   "
                 />
               </template>
@@ -283,19 +271,19 @@ import {
   provide,
   watch,
   ref,
-} from 'vue';
-import HoverText from '../../components/HoverText.vue';
-import RadialProgressBar from '../../components/RadialProgressBar.vue';
-import OrganisationElements from './OrganisationElements.vue';
-import OrganisationElementsDetail from './OrganisationElementsDetail.vue';
-import Toast from 'Components/ToastMessage.vue';
-import PublishUnpublish from 'Components/sections/OrganizationPublishUnpublishButton.vue';
-import { useToggle } from '@vueuse/core';
-import { watchIgnorable } from '@vueuse/core';
-import ErrorPopUp from 'Components/ErrorPopUp.vue';
+} from "vue";
+import HoverText from "../../components/HoverText.vue";
+import RadialProgressBar from "../../components/RadialProgressBar.vue";
+import OrganisationElements from "./OrganisationElements.vue";
+import OrganisationElementsDetail from "./OrganisationElementsDetail.vue";
+import Toast from "Components/ToastMessage.vue";
+import PublishUnpublish from "Components/sections/OrganizationPublishUnpublishButton.vue";
+import { useToggle } from "@vueuse/core";
+import { watchIgnorable } from "@vueuse/core";
+import ErrorPopUp from "Components/ErrorPopUp.vue";
 
 export default defineComponent({
-  name: 'OrganisationData',
+  name: "OrganisationData",
   components: {
     HoverText,
     RadialProgressBar,
@@ -339,16 +327,20 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    userRole: {
+      type: String,
+      required: true,
+    },
   },
   setup(props) {
     const toastData = reactive({
       visibility: false,
-      message: '',
+      message: "",
       type: true,
     });
     const errorData = reactive({
       visibility: false,
-      message: '',
+      message: "",
       type: true,
     });
     const showSidebar = ref(false);
@@ -365,17 +357,17 @@ export default defineComponent({
     };
 
     onUnmounted(() => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', calcWidth);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", calcWidth);
     });
 
     onMounted(() => {
-      window.addEventListener('resize', calcWidth);
+      window.addEventListener("resize", calcWidth);
 
-      window.addEventListener('scroll', handleScroll);
+      window.addEventListener("scroll", handleScroll);
 
-      if (props.toast.message !== '') {
-        toastData.type = props.toast.type === 'success' ? true : false;
+      if (props.toast.message !== "") {
+        toastData.type = props.toast.type === "success" ? true : false;
         toastData.visibility = true;
         toastData.message = props.toast.message;
       }
@@ -385,10 +377,9 @@ export default defineComponent({
       screenWidth.value = event.target.innerWidth;
 
       if (screenWidth.value > 1024) {
-        document.documentElement.style.overflow = 'auto';
+        document.documentElement.style.overflow = "auto";
       } else {
-        showSidebar.value &&
-          (document.documentElement.style.overflow = 'hidden');
+        showSidebar.value && (document.documentElement.style.overflow = "hidden");
       }
     };
 
@@ -400,14 +391,14 @@ export default defineComponent({
       return positionY.value === 0;
     });
     const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {
-      flush: 'sync',
+      flush: "sync",
     });
     watch(
       () => showSidebar.value,
       (sidebar) => {
         if (sidebar) {
-          document.documentElement.style.overflow = 'hidden';
-        } else document.documentElement.style.overflow = 'auto';
+          document.documentElement.style.overflow = "hidden";
+        } else document.documentElement.style.overflow = "auto";
       }
     );
     watch(
@@ -422,7 +413,7 @@ export default defineComponent({
 
     const ignoreToastUpdate = () => {
       ignoreUpdates(() => {
-        toastData.message = '';
+        toastData.message = "";
       });
     };
 
@@ -441,24 +432,22 @@ export default defineComponent({
     Object.keys(organizationData).map((key) => {
       let flag = false;
 
-      Object.keys(organizationData[key]['elements']).map((k) => {
-        if (organizationProps[k] || typeof organizationProps[k] === 'number') {
-          organizationData[key]['elements'][k]['content'] =
-            organizationProps[k];
+      Object.keys(organizationData[key]["elements"]).map((k) => {
+        if (organizationProps[k] || typeof organizationProps[k] === "number") {
+          organizationData[key]["elements"][k]["content"] = organizationProps[k];
           flag = true;
-          elementProps[k]['has_data'] = true;
+          elementProps[k]["has_data"] = true;
         } else {
           delete organizationData[key][k];
-          elementProps[k]['has_data'] = false;
+          elementProps[k]["has_data"] = false;
         }
 
-        elementProps[k]['core'] =
-          organizationData[key]['elements'][k]['mandatory'];
-        elementProps[k]['completed'] =
-          k === 'organisation_identifier'
-            ? organizationProps['element_status']['identifier']
-            : organizationProps['element_status'][k];
-        elementProps[k]['not_completed'] = !elementProps[k]['completed'];
+        elementProps[k]["core"] = organizationData[key]["elements"][k]["mandatory"];
+        elementProps[k]["completed"] =
+          k === "organisation_identifier"
+            ? organizationProps["element_status"]["identifier"]
+            : organizationProps["element_status"][k];
+        elementProps[k]["not_completed"] = !elementProps[k]["completed"];
       });
 
       if (flag === false) {
@@ -469,9 +458,9 @@ export default defineComponent({
     // generating available categories of elements
     Object.keys(groupedData).map((key) => {
       if (Object.prototype.hasOwnProperty.call(organizationData, key)) {
-        groupedData[key]['status'] = 'enabled';
+        groupedData[key]["status"] = "enabled";
       } else {
-        groupedData[key]['status'] = 'disabled';
+        groupedData[key]["status"] = "disabled";
       }
     });
 
@@ -484,7 +473,7 @@ export default defineComponent({
     }
 
     const publishMessage: PublishMessage = reactive({
-      message: '',
+      message: "",
       type: false,
     });
 
@@ -498,11 +487,12 @@ export default defineComponent({
       status: organizationProps.status,
     });
 
-    provide('publishMessage', publishMessage);
-    provide('mandatoryCompleted', props.mandatoryCompleted);
-    provide('toastData', toastData);
-    provide('publishStatus', publishStatus);
-    provide('errorData', errorData);
+    provide("publishMessage", publishMessage);
+    provide("mandatoryCompleted", props.mandatoryCompleted);
+    provide("toastData", toastData);
+    provide("publishStatus", publishStatus);
+    provide("errorData", errorData);
+    provide("userRole", props.userRole);
 
     return {
       groupedData,
@@ -529,7 +519,7 @@ export default defineComponent({
 
 <style lang="scss">
 .mandatory::after {
-  content: '';
+  content: "";
   width: 0.5px;
   height: 140px;
   @apply absolute top-1 -right-6 bg-n-20;
@@ -564,12 +554,12 @@ export default defineComponent({
   @apply relative cursor-pointer px-2 pb-6;
 
   &::after {
-    content: '';
+    content: "";
     @apply absolute bottom-0 left-0 h-1 w-full scale-0 bg-bluecoral duration-300;
   }
 
   &:hover::after {
-    content: '';
+    content: "";
     @apply visible scale-100;
   }
 
@@ -579,7 +569,7 @@ export default defineComponent({
 }
 
 .tab__links--active::after {
-  content: '';
+  content: "";
   @apply absolute bottom-0 left-0 h-1 w-full bg-bluecoral duration-300;
 }
 

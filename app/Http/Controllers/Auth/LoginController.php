@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -84,6 +85,7 @@ class LoginController extends Controller
      */
     public function logout(Request $request): JsonResponse|RedirectResponse
     {
+        $hasPasswordChanged = Session::has('password_changed') ? true : false;
         $this->guard()->logout();
 
         $request->session()->invalidate();
@@ -97,7 +99,7 @@ class LoginController extends Controller
         }
 
         return $request->wantsJson()
-            ? new JsonResponse(['status' => true, 'message' => 'Successfully logged out.'], 204)
+            ? new JsonResponse(['status' => true, 'message' => 'Successfully logged out.'], 200)
             : redirect('/');
     }
 
@@ -136,7 +138,7 @@ class LoginController extends Controller
                 $request->session()->put('auth.password_confirmed_at', time());
                 $request->session()->put('role_id', auth()->user()->role_id);
 
-                if (auth()->user()->role_id === app(Role::class)->getSuperAdminId()) {
+                if (in_array(auth()->user()->role_id, [app(Role::class)->getSuperAdminId(), app(Role::class)->getIatiAdminId()])) {
                     $request->session()->put('superadmin_user_id', auth()->user()->id);
                 }
             }
@@ -150,5 +152,29 @@ class LoginController extends Controller
         $this->incrementLoginAttempts($request);
 
         return $this->sendFailedLoginResponse($request);
+    }
+
+    /**
+     * Send the response after the user was authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    protected function sendLoginResponse(Request $request)
+    {
+        $request->session()->regenerate();
+
+        $this->clearLoginAttempts($request);
+
+        if ($response = $this->authenticated($request, $this->guard()->user())) {
+            return $response;
+        }
+
+        $userRole = $this->guard()->user()->role->role;
+        $route = in_array($userRole, ['iati_admin', 'superadmin']) ? '/list-organisations' : '/activities';
+
+        return $request->wantsJson()
+                    ? new JsonResponse(['route'=>$route], 200)
+                    : redirect()->intended($this->redirectPath());
     }
 }
