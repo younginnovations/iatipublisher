@@ -35,3 +35,15 @@
 .multiselect-clear-icon {
   transform: translateX(100%);
 }
+.multiselect-search:focus-within > .selected-placeholder {
+  opacity: 0;
+}
+.popup-model {
+  .multiselect {
+    height: 50px;
+  }
+  .multiselect-placeholder {
+    color: rgb(var(--n-40)) !important ;
+    font-weight: 400 !important;
+  }
+}

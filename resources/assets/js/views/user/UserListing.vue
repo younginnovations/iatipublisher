@@ -38,58 +38,113 @@
 
     <div>
       <PopupModal :modal-active="addUserForm || editUserForm">
-        <div>
-          <div class="mb-4 font-bold">Add a user</div>
-          <div>
-            <div class="flex">
-              <label>Full Name</label>
-              <input v-model="formData.full_name" type="text" />
+        <div class="popup-model">
+          <div class="mb-5 text-2xl font-bold text-bluecoral">
+            {{ addUserForm ? 'Add a new superadmin' : 'Edit super admin' }}
+          </div>
+          <div class="grid grid-cols-2 gap-6">
+            <div class="col-span-2 flex flex-col items-start gap-2">
+              <label class="text-sm text-n-50"
+                >Full Name<span class="text-[red]"> * </span></label
+              >
+              <input
+                class="w-full rounded border border-n-30 p-3"
+                v-model="formData.full_name"
+                type="text"
+              />
+              <span v-if="formError['full_name']" class="error">{{
+                formError['full_name'][0]
+              }}</span>
             </div>
-            <div class="flex justify-between">
-              <div class="flex">
-                <label>Username</label>
-                <input v-model="formData.username" type="text" />
-              </div>
-              <div class="flex">
-                <label>Email</label>
-                <input v-model="formData.email" type="email" />
-              </div>
+
+            <div class="flex flex-col items-start gap-2">
+              <label class="text-sm text-n-50"
+                >Username<span class="text-[red]"> *</span></label
+              >
+              <input
+                class="w-full rounded border border-n-30 p-3"
+                v-model="formData.username"
+                type="text"
+              />
+              <span v-if="formError['username']" class="error">{{
+                formError['username'][0]
+              }}</span>
             </div>
-            <div class="flex">
-              <label>Status</label>
+            <div class="flex flex-col items-start gap-2">
+              <label class="text-sm text-n-50"
+                >Email<span class="text-[red]"> * </span></label
+              >
+              <input
+                class="w-full rounded border border-n-30 p-3"
+                v-model="formData.email"
+                type="email"
+              />
+              <span v-if="formError['email']" class="error">{{
+                formError['email'][0]
+              }}</span>
+            </div>
+
+            <div class="flex flex-col items-start gap-2">
+              <label class="text-sm text-n-50"
+                >Status<span class="text-[red]"> * </span></label
+              >
               <Multiselect
                 v-model="formData.status"
                 :options="status"
                 placeholder="Select status"
                 :searchable="true"
               />
+              <span v-if="formError['status']" class="error">{{
+                formError['status'][0]
+              }}</span>
             </div>
-            <div class="flex">
-              <label>Role</label>
+            <div class="flex flex-col items-start gap-2">
+              <label class="text-sm text-n-50"
+                >Role<span class="text-[red]"> * </span></label
+              >
               <Multiselect
                 v-model="formData.role"
                 :options="roles"
                 placeholder="Select user role"
                 :searchable="true"
               />
+              <span v-if="formError['role']" class="error">{{
+                formError['role'][0]
+              }}</span>
             </div>
 
-            <div class="flex">
-              <div class="flex">
-                <label>New Password</label>
-                <input v-model="formData.password" type="password" />
-              </div>
-              <div class="flex">
-                <label>Confirm Password</label>
-                <input
-                  v-model="formData.password_confirmation"
-                  type="password"
-                />
-              </div>
+            <div class="flex flex-col items-start gap-2">
+              <label class="text-sm text-n-50"
+                >New password<span class="text-[red]"> * </span></label
+              >
+              <input
+                class="w-full rounded border border-n-30 p-3"
+                v-model="formData.password"
+                type="password"
+              />
+              <span v-if="formError['password']" class="error">{{
+                formError['password'][0]
+              }}</span>
+            </div>
+            <div class="flex flex-col items-start gap-2">
+              <label class="text-sm text-n-50"
+                >Confirm Password<span class="text-[red]"> * </span></label
+              >
+
+              <input
+                class="w-full rounded border border-n-30 p-3"
+                v-model="formData.password_confirmation"
+                type="password"
+              />
+              <span v-if="formError['password_confirmation']" class="error">{{
+                formError['password_confirmation'][0]
+              }}</span>
             </div>
           </div>
-          <div class="flex justify-end">
+
+          <div class="mt-6 flex justify-end space-x-2">
             <button
+              class="secondary-btn font-bold"
               @click="
                 () => {
                   addUserForm = false;
@@ -99,7 +154,10 @@
             >
               Cancel
             </button>
-            <button @click="addUserForm ? createUser() : updateUser()">
+            <button
+              class="primary-btn !px-10"
+              @click="addUserForm ? createUser() : updateUser()"
+            >
               Save
             </button>
           </div>
@@ -107,20 +165,22 @@
       </PopupModal>
       <div class="filters mb-4 flex justify-between">
         <div class="select filters inline-flex items-center space-x-2">
-          <svg-vue class="w-10 cursor-pointer text-lg" icon="funnel" />
+          <svg-vue class="w-10 text-lg" icon="funnel" />
           <span class="relative"
             ><Multiselect
               v-model="filter.organization"
-              :options="Object.values(organizations)"
+              :options="organizations"
               placeholder="ORGANISATION"
               :searchable="true"
               mode="multiple"
+              :taggable="true"
               :close-on-select="false"
               :clear-on-select="false"
+              @input="updateValueAction"
             />
             <span
               v-if="filter.organization.length > 0"
-              class="absolute top-1/2 left-[14px] -translate-y-1/2 text-xs font-bold uppercase text-bluecoral"
+              class="selected-placeholder absolute top-1/2 left-[14px] -translate-y-1/2 text-xs font-bold uppercase text-bluecoral"
             >
               <!-- plaeeholder -->
               organization
@@ -139,7 +199,7 @@
             />
             <span
               v-if="filter.roles.length > 0"
-              class="absolute top-1/2 left-[14px] -translate-y-1/2 text-xs font-bold uppercase text-bluecoral"
+              class="selected-placeholder absolute top-1/2 left-[14px] -translate-y-1/2 text-xs font-bold uppercase text-bluecoral"
             >
               <!-- plaveholder -->
               role
@@ -154,7 +214,7 @@
               :searchable="true"
             /><span
               v-if="filter.status.length > 0"
-              class="absolute top-1/2 left-[14px] -translate-y-1/2 text-xs font-bold uppercase text-bluecoral"
+              class="selected-placeholder absolute top-1/2 left-[14px] -translate-y-1/2 text-xs font-bold uppercase text-bluecoral"
             >
               <!-- plaveholder -->
               status
@@ -428,6 +488,11 @@ const editUserForm = ref(false);
 const usersData = reactive({ data: [] });
 const isEmpty = ref(true);
 const allSelected = ref(false);
+const organisationFocus = ref(false);
+const roleFocus = ref(false);
+const statusFocus = ref(false);
+const formError = ref({});
+
 const checkedId = ref([]);
 const selectedIds = ref([]);
 
@@ -452,7 +517,7 @@ const isFilterApplied = computed(() => {
   );
 });
 onUpdated(() => {
-  console.log(filter.orderBy);
+  console.log(organisationFocus.value);
 });
 
 onMounted(async () => {
@@ -483,6 +548,8 @@ const createUser = () => {
       toastData.message = res.data.message;
       toastData.type = res.data.success;
       isLoaderVisible.value = false;
+      formError.value = res.data.errors;
+      console.log(res.data, 'here');
     })
     .catch((error) => {
       toastData.visibility = true;
@@ -521,6 +588,7 @@ const updateUser = () => {
       toastData.message = res.data.message;
       toastData.type = res.data.success;
       isLoaderVisible.value = false;
+      formError.value = res.data.errors;
     })
     .catch((error) => {
       toastData.visibility = true;
@@ -637,8 +705,10 @@ const toggleSelectall = () => {
   } else {
     checklist.value = [];
   }
-  console.log(checklist.value);
   allSelected.value = !allSelected.value;
+};
+const updateValueAction = (event) => {
+  console.log(event);
 };
 const downloadAll = () => {
   checkedId.value = checkedId.value.filter(function (element) {
