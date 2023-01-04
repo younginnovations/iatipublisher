@@ -1,5 +1,5 @@
 .multiselect {
-  min-width: 160px !important;
+  width: 160px !important;
   cursor: pointer !important;
 }
 .multiselect-placeholder {
@@ -11,12 +11,81 @@
   cursor: pointer !important;
 }
 .multiselect-multiple-label {
+  position: relative;
   white-space: nowrap !important;
   font-size: 12px !important;
   font-weight: bold !important;
-  color: rgb(var(--bluecoral)) !important;
+  color: rgba(var(--bluecoral), 0) !important;
   text-transform: uppercase;
-  opacity: 0;
+}
+.organization {
+  .multiselect-multiple-label {
+    position: relative;
+    white-space: nowrap !important;
+    font-size: 12px !important;
+    width: 100px;
+    font-weight: bold !important;
+    color: rgba(var(--bluecoral), 0) !important;
+    text-transform: uppercase;
+    &::after {
+      content: 'organization';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 4px;
+      white-space: nowrap !important;
+      font-size: 12px !important;
+      font-weight: bold !important;
+      color: rgba(var(--bluecoral)) !important;
+      text-transform: uppercase;
+    }
+  }
+}
+.role {
+  .multiselect-multiple-label {
+    position: relative;
+    white-space: nowrap !important;
+    width: 100px;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    color: rgba(var(--bluecoral), 0) !important;
+    text-transform: uppercase;
+    &::after {
+      content: 'role';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 4px;
+      white-space: nowrap !important;
+      font-size: 12px !important;
+      font-weight: bold !important;
+      color: rgba(var(--bluecoral)) !important;
+      text-transform: uppercase;
+    }
+  }
+}
+.status {
+  .multiselect-multiple-label {
+    position: relative;
+    white-space: nowrap !important;
+    width: 100px;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    color: rgba(var(--bluecoral), 0) !important;
+    text-transform: uppercase;
+    &::after {
+      content: 'status';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 4px;
+      white-space: nowrap !important;
+      font-size: 12px !important;
+      font-weight: bold !important;
+      color: rgba(var(--bluecoral)) !important;
+      text-transform: uppercase;
+    }
+  }
 }
 .multiselect-caret {
   background-color: rgb(var(--bluecoral)) !important ;

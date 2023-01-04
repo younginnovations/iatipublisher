@@ -191,7 +191,7 @@
       <div class="filters mb-4 flex justify-between">
         <div class="select filters inline-flex items-center space-x-2">
           <svg-vue class="w-10 text-lg" icon="funnel" />
-          <span class="relative"
+          <span class="organization"
             ><Multiselect
               v-model="filter.organization"
               :options="organizations"
@@ -201,18 +201,18 @@
               :taggable="true"
               :close-on-select="false"
               :clear-on-select="false"
-              @input="updateValueAction"
+              label="name"
             />
-            <span
+
+            <!-- <span
               v-if="filter.organization.length > 0"
               class="selected-placeholder absolute top-1/2 left-[14px] -translate-y-1/2 text-xs font-bold uppercase text-bluecoral"
             >
-              <!-- plaeeholder -->
               organization
-            </span>
+            </span> -->
           </span>
 
-          <span class="relative">
+          <span class="role">
             <Multiselect
               v-model="filter.roles"
               :options="roles"
@@ -222,29 +222,15 @@
               :close-on-select="false"
               :clear-on-select="false"
             />
-            <span
-              v-if="filter.roles.length > 0"
-              class="selected-placeholder absolute top-1/2 left-[14px] -translate-y-1/2 text-xs font-bold uppercase text-bluecoral"
-            >
-              <!-- plaveholder -->
-              role
-            </span></span
-          >
-          <span class="relative"
+          </span>
+          <span class="status"
             ><Multiselect
               v-model="filter.status"
               :options="status"
               mode="multiple"
               placeholder="STATUS"
               :searchable="true"
-            /><span
-              v-if="filter.status.length > 0"
-              class="selected-placeholder absolute top-1/2 left-[14px] -translate-y-1/2 text-xs font-bold uppercase text-bluecoral"
-            >
-              <!-- plaveholder -->
-              status
-            </span></span
-          >
+          /></span>
         </div>
         <div class="open-text">
           <svg-vue
