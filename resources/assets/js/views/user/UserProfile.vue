@@ -44,25 +44,27 @@
         </div>
         <div class="text-[30px] font-bold">{{ user.full_name }}</div>
       </div>
-      <div>
-        <button
-          class="primary-btn"
-          @click="
-            () => {
-              editProfileForm = true;
-            }
-          "
-        >
-          <svg-vue icon="edit" class="mr-1 text-base"></svg-vue
-          ><span class="text-xs uppercase">Edit your profile</span>
-        </button>
+      <div class="flex space-x-2">
+        <Toast
+          v-if="toastData.visibility"
+          :message="toastData.message"
+          :type="toastData.type"
+        />
+        <div>
+          <button
+            class="primary-btn"
+            @click="
+              () => {
+                editProfileForm = true;
+              }
+            "
+          >
+            <svg-vue icon="edit" class="mr-1 text-base"></svg-vue
+            ><span class="text-xs uppercase">Edit your profile</span>
+          </button>
+        </div>
       </div>
     </div>
-    <Toast
-      v-if="toastData.visibility"
-      :message="toastData.message"
-      :type="toastData.type"
-    />
 
     <div class="my-4 rounded-lg bg-white p-8">
       <PopupModal :modal-active="editPasswordForm">
