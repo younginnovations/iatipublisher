@@ -5,14 +5,13 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: 25m
     nginx.ingress.kubernetes.io/client-max-body-size: 25m
-    nginx.ingress.kubernetes.io/enable-modsecurity: "false"
 spec:
   tls:
     - hosts:
-        - iatipublisher.yipl.com.np
-      secretName: wildcard-yipl-com-np-tls-secret
+        - publisher.iatistandard.org
+      secretName: iati-secret
   rules:
-    - host: iatipublisher.yipl.com.np
+    - host: publisher.iatistandard.org
       http:
         paths:
           - path: /
