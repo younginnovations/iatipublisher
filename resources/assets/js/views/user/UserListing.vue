@@ -15,8 +15,8 @@
         />
         <button
           ref="dropdownBtn"
-          @click="downloadAll"
           class="button secondary-btn font-bold"
+          @click="downloadAll"
         >
           <svg-vue icon="download-file" /> Download All
         </button>
@@ -47,8 +47,8 @@
                 >Full Name<span class="text-[red]"> * </span></label
               >
               <input
-                class="w-full rounded border border-n-30 p-3"
                 v-model="formData.full_name"
+                class="w-full rounded border border-n-30 p-3"
                 type="text"
               />
               <span v-if="formError['full_name']" class="error">{{
@@ -61,8 +61,8 @@
                 >Username<span class="text-[red]"> *</span></label
               >
               <input
-                class="w-full rounded border border-n-30 p-3"
                 v-model="formData.username"
+                class="w-full rounded border border-n-30 p-3"
                 type="text"
               />
               <span v-if="formError['username']" class="error">{{
@@ -74,8 +74,8 @@
                 >Email<span class="text-[red]"> * </span></label
               >
               <input
-                class="w-full rounded border border-n-30 p-3"
                 v-model="formData.email"
+                class="w-full rounded border border-n-30 p-3"
                 type="email"
               />
               <span v-if="formError['email']" class="error">{{
@@ -83,7 +83,7 @@
               }}</span>
             </div>
 
-            <div class="flex flex-col items-start gap-2" v-if="addUserForm">
+            <div v-if="addUserForm" class="flex flex-col items-start gap-2">
               <label class="text-sm text-n-50"
                 >Status<span class="text-[red]"> * </span></label
               >
@@ -97,7 +97,7 @@
                 formError["status"][0]
               }}</span>
             </div>
-            <div class="flex flex-col items-start gap-2" v-if="userRole === 'admin'">
+            <div v-if="userRole === 'admin'" class="flex flex-col items-start gap-2">
               <label class="text-sm text-n-50"
                 >Role<span class="text-[red]"> * </span></label
               >
@@ -117,8 +117,8 @@
                 >New password<span class="text-[red]"> * </span></label
               >
               <input
-                class="w-full rounded border border-n-30 p-3"
                 v-model="formData.password"
+                class="w-full rounded border border-n-30 p-3"
                 type="password"
               />
               <span v-if="formError['password']" class="error">{{
@@ -131,8 +131,8 @@
               >
 
               <input
-                class="w-full rounded border border-n-30 p-3"
                 v-model="formData.password_confirmation"
+                class="w-full rounded border border-n-30 p-3"
                 type="password"
               />
               <span v-if="formError['password_confirmation']" class="error">{{
@@ -247,14 +247,14 @@
             class="absolute top-1/2 left-2 -translate-y-1/2 text-base"
             icon="magnifying-glass"
           />
-          <input type="text" v-model="filter.q" placeholder="Search for users" />
+          <input v-model="filter.q" type="text" placeholder="Search for users" />
         </div>
       </div>
 
-      <div class="mb-4 flex items-center gap-2" v-if="isFilterApplied">
+      <div v-if="isFilterApplied" class="mb-4 flex items-center gap-2">
         <span class="text-sm font-bold uppercase text-n-40">filtered by: </span>
 
-        <span class="flex gap-2" v-if="filter.organization">
+        <span v-if="filter.organization" class="flex gap-2">
           <span
             v-for="(item, index) in filter.organization"
             :key="index"
@@ -263,13 +263,13 @@
             <span class="text-n-40">Org:</span
             ><span>{{ textBubbledata(item, "org") }}</span>
             <svg-vue
-              @click="filter.organization.splice(index, 1)"
               class="mx-2 mt-1 cursor-pointer text-xs"
               icon="cross"
+              @click="filter.organization.splice(index, 1)"
             />
           </span>
         </span>
-        <span class="flex gap-2" v-if="filter.roles">
+        <span v-if="filter.roles" class="flex gap-2">
           <span
             v-for="(item, index) in filter.roles"
             :key="index"
@@ -284,7 +284,7 @@
             />
           </span>
         </span>
-        <span class="flex gap-2" v-if="filter.status">
+        <span v-if="filter.status" class="flex gap-2">
           <span
             v-for="(item, index) in filter.status"
             :key="index"
@@ -309,16 +309,16 @@
                 <span class="inline-flex items-center">
                   <span v-if="filter.orderBy.user === 'desc'">
                     <svg-vue
-                      @click="sort('user')"
                       class="mx-2 h-3 w-2 cursor-pointer"
                       icon="sort-descending"
+                      @click="sort('user')"
                     />
                   </span>
                   <span v-else>
                     <svg-vue
-                      @click="sort('user')"
                       class="mx-2 h-3 w-2 cursor-pointer"
                       icon="sort-ascending"
+                      @click="sort('user')"
                     />
                   </span>
 
@@ -332,16 +332,16 @@
                 <span class="inline-flex items-center">
                   <span v-if="filter.orderBy.org === 'desc'">
                     <svg-vue
-                      @click="sort('org')"
                       class="mx-2 h-3 w-2 cursor-pointer"
                       icon="sort-descending"
+                      @click="sort('org')"
                     />
                   </span>
                   <span v-else>
                     <svg-vue
-                      @click="sort('org')"
                       class="mx-2 h-3 w-2 cursor-pointer"
                       icon="sort-ascending"
+                      @click="sort('org')"
                     />
                   </span>
                   <span class="whitespace-nowrap">Organisation Name</span>
@@ -357,16 +357,16 @@
                 <span class="inline-flex items-center">
                   <span v-if="filter.orderBy.join === 'desc'">
                     <svg-vue
-                      @click="sort('join')"
                       class="mx-2 h-3 w-2 cursor-pointer"
                       icon="sort-descending"
+                      @click="sort('join')"
                     />
                   </span>
                   <span v-else>
                     <svg-vue
-                      @click="sort('join')"
                       class="mx-2 h-3 w-2 cursor-pointer"
                       icon="sort-ascending"
+                      @click="sort('join')"
                     />
                   </span>
                   <span class="whitespace-nowrap">Joined On</span>
@@ -382,7 +382,7 @@
               </th>
               <th id="cb" scope="col">
                 <span class="cursor-pointer">
-                  <svg-vue @click="toggleSelectall" icon="checkbox" />
+                  <svg-vue icon="checkbox" @click="toggleSelectall" />
                 </span>
               </th>
             </tr>
@@ -438,9 +438,9 @@
               <td>
                 <span class="relative h-5 w-5"
                   ><input
+                    v-model="checklist"
                     class="user-checklist"
                     :value="user['id']"
-                    v-model="checklist"
                     type="checkbox"
                   />
                   <span class="pseudo-checkbox" />
@@ -454,7 +454,7 @@
 
       <div class="mt-6">
         <Pagination
-          v-if="usersData && usersData?.last_page > 1"
+          v-if="usersData && usersData['last_page'] > 1"
           :data="usersData"
           @fetch-activities="fetchUsersList"
         />

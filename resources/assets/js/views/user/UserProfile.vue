@@ -58,17 +58,17 @@
               </label>
               <span class="relative max-w-[calc(50%_-_12px)]">
                 <svg-vue
+                  icon="hide-password"
+                  class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-lg"
                   @click="
                     () => {
                       showCurrentPassword = !showCurrentPassword;
                     }
                   "
-                  icon="hide-password"
-                  class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-lg"
                 ></svg-vue>
                 <input
-                  class="w-full rounded border border-n-30 p-3"
                   v-model="passwordData.current_password"
+                  class="w-full rounded border border-n-30 p-3"
                   :type="showCurrentPassword ? 'text' : 'password'"
                 />
                 <span
@@ -88,17 +88,17 @@
               </label>
               <span class="relative">
                 <svg-vue
+                  icon="hide-password"
+                  class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-lg"
                   @click="
                     () => {
                       showNewPassword = !showNewPassword;
                     }
                   "
-                  icon="hide-password"
-                  class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-lg"
                 ></svg-vue>
                 <input
-                  class="w-full rounded border border-n-30 p-3"
                   v-model="passwordData.password"
+                  class="w-full rounded border border-n-30 p-3"
                   :type="showNewPassword ? 'text' : 'password'"
                 />
                 <span v-if="errorPasswordData.password !== ''" class="error" role="alert">
@@ -112,17 +112,17 @@
               </label>
               <span class="relative">
                 <svg-vue
+                  icon="hide-password"
+                  class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-lg"
                   @click="
                     () => {
                       showConfirmPassword = !showConfirmPassword;
                     }
                   "
-                  icon="hide-password"
-                  class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-lg"
                 ></svg-vue
                 ><input
-                  class="w-full rounded border border-n-30 p-3"
                   v-model="passwordData.password_confirmation"
+                  class="w-full rounded border border-n-30 p-3"
                   :type="showConfirmPassword ? 'text' : 'password'"
                 />
                 <span
@@ -160,8 +160,8 @@
                 >Full Name<span class="text-[red]"> * </span></label
               >
               <input
-                class="w-full rounded border border-n-30 p-3"
                 v-model="formData.full_name"
+                class="w-full rounded border border-n-30 p-3"
                 type="text"
               />
               <span v-if="errorFormData.full_name !== ''" class="error" role="alert">
@@ -173,8 +173,8 @@
                 >Username<span class="text-[red]"> * </span></label
               >
               <input
-                class="w-full rounded border border-n-30 p-3"
                 v-model="formData.username"
+                class="w-full rounded border border-n-30 p-3"
                 type="text"
               />
               <span v-if="errorFormData.username !== ''" class="error" role="alert">
@@ -187,8 +187,8 @@
                 >Email<span class="text-[red]"> * </span></label
               >
               <input
-                class="w-full rounded border border-n-30 p-3"
                 v-model="formData.email"
+                class="w-full rounded border border-n-30 p-3"
                 type="email"
               />
               <span v-if="errorFormData.email !== ''" class="error" role="alert">

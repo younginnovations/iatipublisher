@@ -20,8 +20,8 @@
         {{ message }}
       </div>
       <div
-        class="w-full border-l-2 border-spring-50 bg-[#EEF9F5] px-4 py-3"
         v-if="intent === 'password_changed'"
+        class="w-full border-l-2 border-spring-50 bg-[#EEF9F5] px-4 py-3"
       >
         <div class="flex space-x-2">
           <svg-vue class="text-spring-50" icon="tick" />
