@@ -382,6 +382,7 @@ const updatePassword = () => {
         for (const key in errorPasswordData) {
           errorPasswordData[key] = "";
         }
+        logout();
       } else {
         for (const key in res.data.errors) {
           errorPasswordData[key] = res.data.errors[key][0];
@@ -423,4 +424,12 @@ const updateProfile = () => {
       isLoaderVisible.value = false;
     });
 };
+
+async function logout() {
+  await axios.post("/logout").then((res) => {
+    if (res.status) {
+      window.location.href = "/";
+    }
+  });
+}
 </script>

@@ -9,13 +9,20 @@
       <h2 class="mb-2 hidden sm:block">Sign In.</h2>
       <span class="text-n-40">Welcome back! Please enter your details.</span>
       <div
-        v-if="message != '' && !(errorData.username || errorData.password)"
+        v-if="
+          message != '' &&
+          !(errorData.username || errorData.password) &&
+          intent == 'verify'
+        "
         class="error mt-2 text-xs"
         role="alert"
       >
         {{ message }}
       </div>
-      <div class="w-full border-l-2 border-spring-50 bg-[#EEF9F5] px-4 py-3">
+      <div
+        class="w-full border-l-2 border-spring-50 bg-[#EEF9F5] px-4 py-3"
+        v-if="intent === 'password_changed'"
+      >
         <div class="flex space-x-2">
           <svg-vue class="text-spring-50" icon="tick" />
           <span class="flex flex-col space-y-2">
@@ -90,6 +97,11 @@ export default defineComponent({
   },
   props: {
     message: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    intent: {
       type: String,
       required: false,
       default: "",

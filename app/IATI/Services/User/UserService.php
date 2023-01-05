@@ -577,11 +577,9 @@ class UserService
      *
      * @return $bool
      */
-    public function updatePassword($data): bool
+    public function updatePassword($userId, $data): bool
     {
-        $user_id = Auth::id();
-
-        return $this->userRepo->update($user_id, [
+        return $this->userRepo->update($userId, [
             'password'        => Hash::make($data['password']),
         ]);
     }
