@@ -106,6 +106,7 @@ textarea.form__input {
 
   .multiselect-search {
     @apply cursor-pointer border border-n-30 py-2.5;
+    outline: 1px solid red !important;
   }
 
   .multiselect-search:focus {
@@ -128,7 +129,11 @@ textarea.form__input {
 .error_input {
   border: 1px solid #d1001e;
 }
-
+.error {
+  input {
+    border: 1px solid #d1001e;
+  }
+}
 .panel__input {
   @apply box-border h-10 w-full rounded border border-n-30 bg-paper py-2.5 pl-7 pr-3 outline-none duration-300;
 
