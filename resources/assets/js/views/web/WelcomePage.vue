@@ -51,7 +51,8 @@ export default defineComponent({
   props: {
     page: {
       type: String,
-      required: true,
+      required: false,
+      default: "signin",
     },
     message: {
       type: String,

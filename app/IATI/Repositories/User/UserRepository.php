@@ -66,7 +66,7 @@ class UserRepository extends Repository
     public function getPaginatedusers($page, $queryParams): LengthAwarePaginator
     {
         $query = $this->model
-            ->join('organizations', 'organizations.id', 'users.organization_id')
+            ->leftJoin('organizations', 'organizations.id', 'users.organization_id')
             ->join('roles', 'roles.id', 'users.role_id')
             ->select('users.id', 'username', 'full_name', 'organizations.publisher_name', 'email', 'users.status', 'roles.role', 'role_id', 'users.created_at')
             ->where('users.id', '!=', Auth::user()->id);
@@ -88,7 +88,7 @@ class UserRepository extends Repository
     public function getUserDownloadData($queryParams): array
     {
         $query = $this->model
-            ->join('organizations', 'organizations.id', 'users.organization_id')
+            ->leftJoin('organizations', 'organizations.id', 'users.organization_id')
             ->join('roles', 'roles.id', 'users.role_id');
 
         if (!empty($queryParams)) {

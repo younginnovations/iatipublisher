@@ -20,7 +20,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
 
 /**
  * Class UserController.
@@ -317,17 +316,16 @@ class UserController extends Controller
         try {
             $formData = $request->only(['current_password', 'password']);
 
-            if (Hash::check($formData['current_password'], Auth::user()->getAuthPassword())) {
+            if (!Hash::check($formData['current_password'], Auth::user()->getAuthPassword())) {
                 return response()->json(['success' => false, 'errors' => ['current_password' => ['Please enter correct current password']]]);
             }
 
             $this->userService->updatePassword(Auth::user()->id, $formData);
-            Session::put('password_updated', 'password updated');
 
             return response()->json([
                 'success' => true,
                 'message' => 'Password updated successfully.',
-            ]);
+            ])->withCookie('password_changed', 'Password changed successfully.');
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

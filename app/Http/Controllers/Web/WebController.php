@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 /**
@@ -25,14 +24,14 @@ class WebController extends Controller
             $message = Str::contains(Redirect::intended()->getTargetUrl(), '/email/verify/') ? 'User must be logged in to verify email.' : '';
             $intent = !empty($message) ? 'verify' : '';
 
-            if (Session::has('password_changed')) {
-                $message = Session::get('password_changed');
+            if (request()->cookie('password_changed')) {
+                $message = request()->cookie('password_changed');
                 $intent = !empty($message) ? 'password_changed' : '';
+                cookie()->queue(cookie()->forget('password_changed'));
             }
 
             return view('web.welcome', compact('page', 'intent', 'message'));
         } catch(\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
         }
     }
