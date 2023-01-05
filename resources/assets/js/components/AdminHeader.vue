@@ -186,7 +186,10 @@
                   </span>
                 </div>
               </li>
-              <li class="dropdown__list border-b border-b-n-20">
+              <li
+                @click="redirectProfile"
+                class="dropdown__list border-b border-b-n-20"
+              >
                 <a class="flex w-full space-x-4" href="/profile"
                   ><svg-vue class="mx-1 text-base" icon="user" />
                   <span>Your Profile</span></a
@@ -221,8 +224,14 @@
                   </span>
                 </div>
               </li>
-              <li class="dropdown__list border-b border-b-n-20">
-                <a href="/profile"><svg-vue icon="user" /> Your Profile</a>
+              <li
+                @click="redirectProfile"
+                class="dropdown__list border-b border-b-n-20"
+              >
+                <a class="flex w-full space-x-4" href="/profile"
+                  ><svg-vue class="mx-1 text-base" icon="user" />
+                  <span>Your Profile</span></a
+                >
               </li>
               <li class="dropdown__list" @click="logout">
                 <svg-vue icon="logout"></svg-vue>
@@ -449,6 +458,9 @@ onMounted(() => {
     modalValue.value = true;
   }
 });
+const redirectProfile = () => {
+  window.location.href = '/profile';
+};
 
 onUnmounted(() => {
   localStorage.removeItem("openAddModel");
