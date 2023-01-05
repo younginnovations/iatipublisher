@@ -3,7 +3,7 @@
     <div class="pb-4 text-caption-c1 text-n-40">
       <Breadcrumb :data="breadcrumbData" />
     </div>
-    <div class="flex items-end gap-4">
+    <div class="flex gap-4 md:items-end">
       <div class="title max-w-[50%] xl:basis-6/12">
         <div class="inline-flex items-center">
           <div v-if="backLink" class="mr-3">
@@ -19,7 +19,7 @@
           </div>
         </div>
       </div>
-      <div class="flex flex-col items-end justify-end actions grow">
+      <div class="actions flex grow flex-col items-end justify-end">
         <slot />
       </div>
     </div>
@@ -27,13 +27,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue';
 
 // components
-import Breadcrumb from "Components/BreadCrumb.vue";
+import Breadcrumb from 'Components/BreadCrumb.vue';
 
 export default defineComponent({
-  name: "PageTitle",
+  name: 'PageTitle',
   components: { Breadcrumb },
   props: {
     breadcrumbData: {
