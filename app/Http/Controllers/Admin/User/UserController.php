@@ -329,7 +329,6 @@ class UserController extends Controller
                 'message' => 'Password updated successfully.',
             ]);
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return response()->json([
