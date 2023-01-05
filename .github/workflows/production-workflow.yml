@@ -276,7 +276,7 @@ jobs:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
       - name: Save DigitalOcean kubeconfig with short-lived credentials
-        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 de2f7af9-3d20-4f8d-a661-7f69092d4520
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 bac71d66-3ef4-4e8f-919f-f6dedfccff40
 
       - name: Deploy to DigitalOcean Kubernetes
         run:  kubectl apply -k packages/production
