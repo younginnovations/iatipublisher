@@ -440,7 +440,7 @@
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody v-if="usersData?.data.length > 0">
             <tr v-for="(user, index) in usersData?.data" :key="index">
               <td>
                 <div class="ellipsis relative">
@@ -449,18 +449,30 @@
                   >
                     {{ user['full_name'] }}
                   </p>
+                  <div class="w-52">
+                    <span class="ellipsis__title--hover">{{
+                      user['full_name']
+                    }}</span>
+                  </div>
+                </div>
+                <div class="ellipsis relative">
                   <p
                     class="w-32 overflow-x-hidden overflow-ellipsis whitespace-nowrap"
                   >
                     {{ user['username'] }}
                   </p>
+                  <div class="w-52">
+                    <span class="ellipsis__title--hover">{{
+                      user['username']
+                    }}</span>
+                  </div>
                 </div>
               </td>
               <td class="capitalize">
                 {{ user['email'] }}
               </td>
               <td>
-                {{ user['publisher_name'] }}
+                {{ user['publisher_name'] ? user['publisher_name'] : '- -' }}
               </td>
               <td class="capitalize">
                 {{ user['role'] }}
@@ -510,6 +522,9 @@
                 </span>
               </td>
             </tr>
+          </tbody>
+          <tbody v-else>
+            <td colspan="8" class="text-center">Users not found</td>
           </tbody>
         </table>
       </div>

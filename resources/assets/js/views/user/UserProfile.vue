@@ -9,7 +9,7 @@
         <span class="separator mx-4"> / </span>
         <div class="breadcrumb__title">
           <span
-            class="breadcrumb__title last max-w-lg overflow-hidden text-n-30"
+            class="breadcrumb__title last max-w-[25vw] overflow-hidden text-ellipsis text-n-30 md:max-w-[50vw]"
             >{{ user.full_name ?? 'Untitled' }}</span
           >
           <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
@@ -26,7 +26,11 @@
             <svg-vue icon="arrow-short-left"></svg-vue>
           </a>
         </div>
-        <div class="text-[30px] font-bold">{{ user.full_name }}</div>
+        <div
+          class="max-w-[40vw] overflow-hidden text-ellipsis text-[30px] font-bold md:max-w-[60vw]"
+        >
+          {{ user.full_name }}
+        </div>
       </div>
       <div class="flex flex-wrap-reverse items-end justify-end gap-2">
         <Toast
@@ -314,7 +318,9 @@
 
       <div class="flex space-x-2 border-b border-n-20 py-6">
         <div class="text-base font-bold text-n-40">Name</div>
-        <div class="text-base">{{ user.full_name }}</div>
+        <div class="max-w-[60vw] overflow-x-hidden text-ellipsis text-base">
+          {{ user.full_name }}
+        </div>
       </div>
       <div class="flex space-x-2 border-b border-n-20 py-6">
         <div class="text-base font-bold text-n-40">Username</div>
