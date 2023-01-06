@@ -571,14 +571,15 @@ const addUserForm = ref(false);
 const editUserForm = ref(false);
 const usersData = reactive({ data: [] });
 const isEmpty = ref(true);
-const allSelected = ref(false);
+const allSelected = ref<boolean[]>([]);
 const organisationFocus = ref(false);
 const deleteModal = ref(false);
 const deleteId = ref();
 
 const checkedId = ref([]);
-const selectedIds = ref([]);
+const selectedIds = ref({});
 const checklist = ref([]);
+const currentpageData = ref([]);
 
 const editUserId = ref('');
 
@@ -610,7 +611,7 @@ const isFilterApplied = computed(() => {
   );
 });
 onUpdated(() => {
-  console.log(filter);
+  console.log('selectedid', selectedIds.value);
 });
 
 onMounted(async () => {
@@ -736,18 +737,11 @@ const updateUser = () => {
 };
 
 watch(
-  () => [
-    filter.organization,
-    filter.organization.length,
-    filter.roles,
-    filter.roles.length,
-    filter.q,
-    filter.status,
-    filter.status.length,
-  ],
+  () => [filter.organization, filter.roles, filter.q, filter.status],
   () => {
     fetchUsersList(usersData['current_page']);
-  }
+  },
+  { deep: true }
 );
 
 function fetchUsersList(active_page: number) {
@@ -847,29 +841,51 @@ function formatDate(date: Date) {
 }
 
 const toggleSelectall = () => {
-  checklist.value = [];
-
+  currentpageData.value = usersData.data.map((value) => {
+    return value['id'];
+  });
   for (let i = 0; i < usersData.data.length; i++) {
-    checklist.value[i] = usersData.data[i]['id'];
+    if (!checklist.value.includes(usersData.data[i]['id']))
+      checklist.value[checklist.value.length + i] = usersData.data[i]['id'];
   }
-  if (allSelected.value) {
-    checklist.value = [];
+  selectedIds.value[usersData['current_page']] = checklist.value;
+  if (allSelected.value[usersData['current_page']]) {
+    checklist.value = checklist.value.filter(
+      (n) => !Object.values(currentpageData.value).includes(n)
+    );
   }
+  checklist.value = checklist.value.filter(function (el) {
+    return el != null;
+  });
+  allSelected.value[usersData['current_page']] =
+    !allSelected.value[usersData['current_page']];
 };
 watch(
   () => checklist.value,
   (value) => {
-    if (value.length === usersData.data.length) {
-      allSelected.value = true;
-    } else {
-      allSelected.value = false;
+    selectedIds.value[usersData['current_page']] = [];
+
+    currentpageData.value = usersData.data.map((value) => {
+      return value['id'];
+    });
+    for (let i = 0; i < checklist.value.length; i++) {
+      if (currentpageData.value.includes(checklist.value[i])) {
+        selectedIds.value[usersData['current_page']][i] = checklist.value[i];
+      }
     }
+    selectedIds.value[usersData['current_page']] = selectedIds.value[
+      usersData['current_page']
+    ].filter(function (el) {
+      return el != null;
+    });
   }
 );
 
 const downloadAll = () => {
   let route = `/users/download/`;
   let params = new URLSearchParams();
+  let allPageSelected;
+  allPageSelected = Object.values(selectedIds.value).flat();
 
   if (checklist.value.length == 0) {
     for (const filter_key in filter) {
@@ -878,7 +894,7 @@ const downloadAll = () => {
       }
     }
   } else {
-    params.append('users', checklist.value.toString());
+    params.append('users', allPageSelected);
   }
 
   axios.get(route, { params: params }).then((res) => {
