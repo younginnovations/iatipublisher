@@ -249,7 +249,9 @@
               </span>
             </div>
             <div
-              :class="errorFormData.language_preference !== '' && 'error'"
+              :class="
+                errorFormData.language_preference !== '' && 'error__multiselect'
+              "
               class="flex flex-col items-start gap-2"
             >
               <label class="text-sm text-n-50"

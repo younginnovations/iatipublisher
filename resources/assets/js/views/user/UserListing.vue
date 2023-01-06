@@ -97,7 +97,7 @@
 
             <div
               v-if="addUserForm"
-              :class="formError['status'] && 'error'"
+              :class="formError['status'] && 'error__multiselect'"
               class="flex flex-col items-start gap-2"
             >
               <label class="text-sm text-n-50"
@@ -114,7 +114,7 @@
               }}</span>
             </div>
             <div
-              :class="formError['role_id'] && 'error'"
+              :class="formError['role_id'] && 'error__multiselect'"
               v-if="userRole === 'admin'"
               class="flex flex-col items-start gap-2"
             >
@@ -256,11 +256,10 @@
               <!-- role -->
             </span></span
           >
-          <span class="relative"
+          <span class="status"
             ><Multiselect
               v-model="filter.status"
               :options="status"
-              mode="multiple"
               placeholder="STATUS"
               :searchable="true"
             /><span
