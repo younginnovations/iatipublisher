@@ -19,7 +19,8 @@ const props = defineProps({
 });
 
 const className = ref("");
-className.value = props.type
-  ? "rounded-lg bg-mint border border-spring-10 py-3 px-5 inline-flex items-center space-x-1 text-sm leading-normal text-n-50"
-  : "rounded-lg bg-crimson-10 border border-crimson-20 py-3 px-5 inline-flex items-center space-x-1 text-sm leading-normal text-n-50";
+className.value =
+  props.type === true
+    ? "rounded-lg bg-mint border border-spring-10 py-3 px-5 inline-flex items-center space-x-1 text-sm leading-normal text-n-50"
+    : "rounded-lg bg-crimson-10 border border-crimson-20 py-3 px-5 inline-flex items-center space-x-1 text-sm leading-normal text-n-50";
 </script>
