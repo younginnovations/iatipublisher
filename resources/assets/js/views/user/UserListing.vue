@@ -332,7 +332,11 @@
             <svg-vue
               class="mx-2 mt-1 cursor-pointer text-xs"
               icon="cross"
-              @click="filter.status.splice(index, 1)"
+              @click="
+                () => {
+                  filter.status = [];
+                }
+              "
             />
           </span>
         </span>
