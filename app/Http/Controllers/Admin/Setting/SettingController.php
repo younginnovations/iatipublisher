@@ -54,8 +54,9 @@ class SettingController extends Controller
             $languages = getCodeList('Language', 'Organization');
             $humanitarian = trans('setting.humanitarian_types');
             $budgetNotProvided = getCodeList('BudgetNotProvided', 'Activity');
+            $userRole = Auth::user()->role->role;
 
-            return view('admin.settings.index', compact('currencies', 'languages', 'humanitarian', 'budgetNotProvided'));
+            return view('admin.settings.index', compact('currencies', 'languages', 'humanitarian', 'budgetNotProvided', 'userRole'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

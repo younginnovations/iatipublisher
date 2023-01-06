@@ -128,7 +128,7 @@ class UserRepository extends Repository
         }
 
         if (array_key_exists('q', $queryParams)) {
-            $query = $query->where('username', 'like', '%' . Arr::get($queryParams, 'q') . '%');
+            $query = $query->where('username', 'ilike', '%' . Arr::get($queryParams, 'q') . '%');
         }
 
         if (array_key_exists('orderBy', $queryParams) && !empty($queryParams['orderBy'])) {

@@ -12,7 +12,6 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -85,7 +84,6 @@ class LoginController extends Controller
      */
     public function logout(Request $request): JsonResponse|RedirectResponse
     {
-        $hasPasswordChanged = Session::has('password_changed') ? true : false;
         $this->guard()->logout();
 
         $request->session()->invalidate();

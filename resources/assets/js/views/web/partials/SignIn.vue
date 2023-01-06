@@ -163,8 +163,7 @@ export default defineComponent({
           errorData.password = "";
 
           if (response.status === 200) {
-            let route = response.data.route;
-            window.location.href = route;
+            window.location.reload();
           }
         })
         .catch((error) => {

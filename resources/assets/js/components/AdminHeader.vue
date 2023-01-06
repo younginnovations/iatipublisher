@@ -187,8 +187,8 @@
                 </div>
               </li>
               <li
-                @click="redirectProfile"
                 class="dropdown__list border-b border-b-n-20"
+                @click="redirectProfile"
               >
                 <a class="flex w-full space-x-4" href="/profile"
                   ><svg-vue class="mx-1 text-base" icon="user" />
@@ -225,8 +225,8 @@
                 </div>
               </li>
               <li
-                @click="redirectProfile"
                 class="dropdown__list border-b border-b-n-20"
+                @click="redirectProfile"
               >
                 <a class="flex w-full space-x-4" href="/profile"
                   ><svg-vue class="mx-1 text-base" icon="user" />

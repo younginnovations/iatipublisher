@@ -73,7 +73,7 @@
                 tag__incorrect: !publishingInfo.token_verification,
               }"
             >
-              {{ publishingInfo.token_verification ? 'Correct' : 'Incorrect' }}
+              {{ publishingInfo.token_verification ? "Correct" : "Incorrect" }}
             </span>
           </div>
           <span v-if="publishingError.api_token" class="error" role="alert">
@@ -81,17 +81,15 @@
           </span>
         </div>
       </div>
-      <button class="primary-btn verify-btn" @click="submitPublishing">
-        Verify
-      </button>
+      <button class="primary-btn verify-btn" @click="submitPublishing">Verify</button>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
-import { useStore } from '../../store';
-import { ActionTypes } from '../../store/setting/actions';
-import HoverText from './../../components/HoverText.vue';
+import { defineComponent, ref, computed, inject } from "vue";
+import { useStore } from "../../store";
+import { ActionTypes } from "../../store/setting/actions";
+import HoverText from "./../../components/HoverText.vue";
 
 export default defineComponent({
   components: {
@@ -103,11 +101,12 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['submitPublishing'],
+  emits: ["submitPublishing"],
 
   setup(props, { emit }) {
-    const tab = ref('publish');
+    const tab = ref("publish");
     const store = useStore();
+    const userRole = inject("userRole");
 
     interface ObjectType {
       [key: string]: string;
@@ -117,16 +116,14 @@ export default defineComponent({
 
     const publishingInfo = computed(() => store.state.publishingInfo);
 
-    const publishingError = computed(
-      () => store.state.publishingError as ObjectType
-    );
+    const publishingError = computed(() => store.state.publishingError as ObjectType);
 
     function submitPublishing() {
-      emit('submitPublishing');
+      emit("submitPublishing");
     }
 
     function autoVerify() {
-      emit('submitPublishing');
+      emit("submitPublishing");
     }
 
     function updateStore(key: keyof typeof publishingForm.value) {
@@ -137,7 +134,7 @@ export default defineComponent({
     }
 
     function toggleTab() {
-      tab.value = tab.value === 'publish' ? 'default' : 'publish';
+      tab.value = tab.value === "publish" ? "default" : "publish";
     }
 
     return {
@@ -147,6 +144,7 @@ export default defineComponent({
       publishingError,
       store,
       props,
+      userRole,
       submitPublishing,
       toggleTab,
       updateStore,
