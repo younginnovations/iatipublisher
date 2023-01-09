@@ -75,8 +75,8 @@
                 >
                 match your IATI Registry Information. Contact
                 <span
-                  ><a class="text-bluecoral" href="mailto:PubToolTest@iatistandard.org"
-                    >PubToolTest@iatistandard.org</a
+                  ><a class="text-bluecoral" href="mailto:support@iatistandard.org"
+                    >support@iatistandard.org</a
                   ></span
                 >
                 for more details.
@@ -378,7 +378,7 @@ export default defineComponent({
             id: "registration-agency",
             required: true,
             hover_text:
-              "Provide the name of the agency in your country where you organisation is registered. If you do not know this information please email PubToolTest@iatistandard.org.",
+              "Provide the name of the agency in your country where you organisation is registered. If you do not know this information please email support@iatistandard.org.",
             type: "select",
             options: registration_agency,
             class: "mb-4 lg:mb-2 relative",

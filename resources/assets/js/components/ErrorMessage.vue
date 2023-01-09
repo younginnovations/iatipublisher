@@ -93,8 +93,8 @@
                 >
                 if you haven’t received your verification email. Contact
                 <span
-                  ><a target="_blank" href="mailto:PubToolTest@iatistandard.org"
-                    >PubToolTest@iatistandard.org</a
+                  ><a target="_blank" href="mailto:support@iatistandard.org"
+                    >support@iatistandard.org</a
                   ></span
                 >
                 for further assistance.
