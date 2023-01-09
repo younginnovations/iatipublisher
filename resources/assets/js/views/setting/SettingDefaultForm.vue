@@ -2,7 +2,7 @@
   <div>
     <div class="registry__info">
       <div class="mb-4 text-sm font-bold text-n-50">Default Values</div>
-      <div class="flex items-center mb-4 text-xs text-n-50">
+      <div class="mb-4 flex items-center text-xs text-n-50">
         <button>
           <HoverText
             name="Default Values"
@@ -12,8 +12,8 @@
       </div>
     </div>
     <span class="text-sm font-bold text-n-50">Default for all data</span>
-    <div class="mt-4 mb-6 register">
-      <div class="mb-0 register__container">
+    <div class="register mt-4 mb-6">
+      <div class="register__container mb-0">
         <div>
           <div class="flex justify-between">
             <label for="default-currency">Default Currency</label>
@@ -27,6 +27,7 @@
           </div>
           <Multiselect
             id="default-currency"
+            :disabled="userRole !== 'admin' ? true : false"
             v-model="defaultForm.default_currency"
             class="vue__select"
             placeholder="Select from dropdown"
@@ -39,8 +40,8 @@
           </span>
 
           <p v-if="!defaultError.default_currency">
-            If you do not set your default currency, you have to choose and select
-            currency manually for all the financial transactions.
+            If you do not set your default currency, you have to choose and
+            select currency manually for all the financial transactions.
           </p>
         </div>
         <div>
@@ -61,6 +62,7 @@
             :class="{
               error__input: defaultError.default_language,
             }"
+            :disabled="userRole !== 'admin' ? true : false"
             placeholder="Select language from dropdown"
             :searchable="true"
             :options="props.languages"
@@ -71,14 +73,15 @@
           </span>
 
           <p v-if="!defaultError.default_language">
-            If you do not set your default language, you have to choose and select
-            language for all the narrative text in activity and organisation.
+            If you do not set your default language, you have to choose and
+            select language for all the narrative text in activity and
+            organisation.
           </p>
         </div>
       </div>
     </div>
     <span class="text-sm font-bold text-n-50">Default for activity data</span>
-    <div class="mt-4 register">
+    <div class="register mt-4">
       <div class="register__container">
         <div>
           <div class="flex justify-between">
@@ -95,9 +98,10 @@
             </button>
           </div>
           <input
+            :disabled="userRole !== 'admin' ? true : false"
             id="default-hierarchy"
             v-model="defaultForm.hierarchy"
-            class="mb-2 register__input"
+            class="register__input mb-2"
             type="text"
             placeholder="Type default hierarchy here"
             @input="updateStore('hierarchy')"
@@ -106,9 +110,9 @@
             {{ defaultError.hierarchy }}
           </span>
           <p v-if="!defaultError.hierarchy">
-            If hierarchy is not reported then 1 is assumed. If multiple levels are
-            reported then, to avoid double counting, financial transactions should only be
-            reported at the lowest hierarchical level.
+            If hierarchy is not reported then 1 is assumed. If multiple levels
+            are reported then, to avoid double counting, financial transactions
+            should only be reported at the lowest hierarchical level.
           </p>
         </div>
         <div>
@@ -124,6 +128,7 @@
             </button>
           </div>
           <Multiselect
+            :disabled="userRole !== 'admin' ? true : false"
             id="budget_not_provided"
             v-model="defaultForm.budget_not_provided"
             class="vue__select"
@@ -135,7 +140,11 @@
             :searchable="true"
             @click="updateStore('budget_not_provided')"
           />
-          <span v-if="defaultError.budget_not_provided" class="error" role="alert">
+          <span
+            v-if="defaultError.budget_not_provided"
+            class="error"
+            role="alert"
+          >
             {{ defaultError.budget_not_provided }}
           </span>
         </div>
@@ -153,6 +162,7 @@
             </button>
           </div>
           <Multiselect
+            :disabled="userRole !== 'admin' ? true : false"
             id="humanitarian"
             v-model="defaultForm.humanitarian"
             class="vue__select"
@@ -177,11 +187,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, inject } from "vue";
-import Multiselect from "@vueform/multiselect";
-import { useStore } from "../../store";
-import { ActionTypes } from "../../store/setting/actions";
-import HoverText from "./../../components/HoverText.vue";
+import { defineComponent, computed, inject } from 'vue';
+import Multiselect from '@vueform/multiselect';
+import { useStore } from '../../store';
+import { ActionTypes } from '../../store/setting/actions';
+import HoverText from './../../components/HoverText.vue';
 
 export default defineComponent({
   components: {
@@ -209,7 +219,7 @@ export default defineComponent({
   },
 
   setup(props) {
-    const userRole = inject("userRole");
+    const userRole = inject('userRole');
     const store = useStore();
 
     const defaultForm = computed(() => {

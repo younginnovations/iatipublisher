@@ -9,10 +9,12 @@
     width: 160px !important;
   }
 }
-.multiselect-placeholder {
-  font-size: 12px !important;
-  font-weight: bold !important;
-  color: rgb(var(--bluecoral)) !important;
+.filters {
+  .multiselect-placeholder {
+    font-size: 12px !important;
+    font-weight: bold !important;
+    color: rgb(var(--bluecoral)) !important;
+  }
 }
 .multiselect-search {
   cursor: pointer !important;
