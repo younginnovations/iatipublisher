@@ -313,12 +313,21 @@
         </div>
       </div>
       <div
-        v-if="userData['organisation_id']"
+        v-if="userData['organization']"
         class="flex space-x-2 border-b border-n-20 py-6"
       >
         <div class="text-base font-bold text-n-40">Organisation</div>
         <div class="text-base">
-          {{ userData["organisation_id"] }}
+          {{ userData["organization_name"] }}
+        </div>
+      </div>
+      <div
+        v-if="userData['organization']"
+        class="flex space-x-2 border-b border-n-20 py-6"
+      >
+        <div class="text-base font-bold text-n-40">Role</div>
+        <div class="text-base">
+          {{ userData["user_role"] }}
         </div>
       </div>
     </div>

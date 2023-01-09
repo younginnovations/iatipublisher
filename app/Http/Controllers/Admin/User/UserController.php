@@ -209,6 +209,8 @@ class UserController extends Controller
     {
         try {
             $user = Auth::user();
+            $user['user_role'] = $user->role->role;
+            $user['organization_name'] = $user->organization_id ? $user->organization->publisher_name : null;
             $languagePreference = [
                 'en' => 'English',
                 'fr' => 'French',
@@ -299,7 +301,8 @@ class UserController extends Controller
                 $queryParams['direction'] = $request->get('direction');
             }
         }
-        // dd($queryParams);
+
+        dd($queryParams);
 
         return $queryParams;
     }
