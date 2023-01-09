@@ -2,7 +2,11 @@
   <div :class="className">
     <svg-vue :icon="props.type ? 'check-circle' : 'times-circle'" />
     <!-- eslint-disable vue/no-v-html -->
-    <span v-if="typeof message === 'string'" v-html="message"></span>
+    <span
+      class="whitespace-nowrap"
+      v-if="typeof message === 'string'"
+      v-html="message"
+    ></span>
     <div v-if="typeof message === 'object'">
       <!-- eslint-disable vue/no-v-html -->
       <p v-for="(m, k) in message" :key="k" v-html="m"></p>

@@ -60,7 +60,7 @@
 
     <div class="my-4 rounded-lg bg-white p-8">
       <PopupModal :modal-active="editPasswordForm">
-        <div class="popup-model h-auto">
+        <div @keyup.enter="updatePassword" class="popup-model h-auto">
           <div class="mb-4 text-2xl font-bold text-bluecoral">
             Change Password
           </div>
@@ -184,7 +184,7 @@
       </PopupModal>
       <!-- profile edit popup form -->
       <PopupModal :modal-active="editProfileForm">
-        <div class="popup-model">
+        <div @keyup.enter="updateProfile" class="popup-model">
           <div class="mb-4 text-2xl font-bold text-bluecoral">
             Edit your profile
           </div>
