@@ -302,8 +302,6 @@ class UserController extends Controller
             }
         }
 
-        dd($queryParams);
-
         return $queryParams;
     }
 
