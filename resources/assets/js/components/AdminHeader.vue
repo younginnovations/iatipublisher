@@ -47,10 +47,7 @@
             :class="data.languageNavLiClasses"
           >
             <a
-              :class="[
-                { nav__pointer: language.active },
-                data.languageNavAnchorClasses,
-              ]"
+              :class="[{ nav__pointer: language.active }, data.languageNavAnchorClasses]"
               :href="language.permalink"
             >
               <span>{{ language.language }}</span>
@@ -142,9 +139,10 @@
     >
       <div class="user-nav">
         <div class="search">
+          {{ searchValueTest }}
           <input
             v-if="!superAdmin"
-            v-model="searchValue"
+            v-model="searchValueTest"
             class="search__input mr-3.5"
             type="text"
             placeholder="Search activity..."
@@ -152,7 +150,7 @@
           />
           <input
             v-else
-            v-model="searchValue"
+            v-model="searchValueTest"
             class="search__input mr-3.5"
             type="text"
             placeholder="Search organisation..."
@@ -186,10 +184,7 @@
                   </span>
                 </div>
               </li>
-              <li
-                class="dropdown__list border-b border-b-n-20"
-                @click="redirectProfile"
-              >
+              <li class="dropdown__list border-b border-b-n-20" @click="redirectProfile">
                 <a class="flex w-full space-x-4" href="/profile"
                   ><svg-vue class="mx-1 text-base" icon="user" />
                   <span>Your Profile</span></a
@@ -224,10 +219,7 @@
                   </span>
                 </div>
               </li>
-              <li
-                class="dropdown__list border-b border-b-n-20"
-                @click="redirectProfile"
-              >
+              <li class="dropdown__list border-b border-b-n-20" @click="redirectProfile">
                 <a class="flex w-full space-x-4" href="/profile"
                   ><svg-vue class="mx-1 text-base" icon="user" />
                   <span>Your Profile</span></a
@@ -257,12 +249,12 @@
 import {
   defineProps,
   ref,
+  watch,
   reactive,
   onMounted,
   computed,
   onUnmounted,
   Ref,
-  watch,
 } from "vue";
 import axios from "axios";
 import { useToggle, useStorage } from "@vueuse/core";
@@ -364,10 +356,12 @@ function toast(message: string, type: boolean) {
 const isTouchDevice = computed(() => {
   return "ontouchstart" in window || navigator.maxTouchPoints > 0;
 });
+
 function ToggleModel() {
   modalToggle();
   window.localStorage.removeItem("openAddModel");
 }
+
 watch(
   () => showSidebar.value,
   (sidebar) => {
@@ -376,6 +370,7 @@ watch(
     } else document.documentElement.style.overflow = "auto";
   }
 );
+
 function changeActiveMenu() {
   const path = window.location.pathname;
   data.org_menus.forEach((menu, key) => {
@@ -433,6 +428,7 @@ if (currentURL.includes("?")) {
 const spinner = ref(false);
 
 const searchFunction = (url: string) => {
+  console.log("header", url);
   spinner.value = true;
   const param = searchValue.value?.replace("#", "");
   let sortingParam = "";
@@ -459,7 +455,7 @@ onMounted(() => {
   }
 });
 const redirectProfile = () => {
-  window.location.href = '/profile';
+  window.location.href = "/profile";
 };
 
 onUnmounted(() => {

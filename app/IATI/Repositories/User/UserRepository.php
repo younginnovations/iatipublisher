@@ -68,7 +68,7 @@ class UserRepository extends Repository
         $query = $this->model
             ->leftJoin('organizations', 'organizations.id', 'users.organization_id')
             ->join('roles', 'roles.id', 'users.role_id')
-            ->select('users.id', 'username', 'full_name', 'organizations.publisher_name', 'email', 'users.status', 'roles.role', 'role_id', 'users.created_at')
+            ->select('users.id', 'username', 'full_name', 'organizations.publisher_name as publisher_name', 'email', 'users.status', 'roles.role', 'role_id', 'users.created_at')
             ->where('users.id', '!=', Auth::user()->id);
 
         if (!empty($queryParams)) {

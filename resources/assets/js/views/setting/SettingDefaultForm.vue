@@ -27,8 +27,8 @@
           </div>
           <Multiselect
             id="default-currency"
-            :disabled="userRole !== 'admin' ? true : false"
             v-model="defaultForm.default_currency"
+            :disabled="userRole !== 'admin' ? true : false"
             class="vue__select"
             placeholder="Select from dropdown"
             :options="props.currencies"
@@ -98,9 +98,9 @@
             </button>
           </div>
           <input
-            :disabled="userRole !== 'admin' ? true : false"
             id="default-hierarchy"
             v-model="defaultForm.hierarchy"
+            :disabled="userRole !== 'admin' ? true : false"
             class="register__input mb-2"
             type="text"
             placeholder="Type default hierarchy here"
@@ -128,9 +128,9 @@
             </button>
           </div>
           <Multiselect
-            :disabled="userRole !== 'admin' ? true : false"
             id="budget_not_provided"
             v-model="defaultForm.budget_not_provided"
+            :disabled="userRole !== 'admin' ? true : false"
             class="vue__select"
             :class="{
               error__input: defaultError.budget_not_provided,
@@ -162,9 +162,9 @@
             </button>
           </div>
           <Multiselect
-            :disabled="userRole !== 'admin' ? true : false"
             id="humanitarian"
             v-model="defaultForm.humanitarian"
+            :disabled="userRole !== 'admin' ? true : false"
             class="vue__select"
             :class="{
               error__input: defaultError.humanitarian,
