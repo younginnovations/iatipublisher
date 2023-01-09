@@ -9,7 +9,7 @@
     <PageTitle title="Users" back-link="">
       <div class="flex flex-col justify-end gap-2 md:flex-row">
         <Toast
-          v-if="toastData.visibility && toastData.message !== ''"
+          v-if="toastData.visibility && toastData.message && toastData.message !== ''"
           :message="toastData.message"
           :type="toastData.type"
         />
@@ -79,8 +79,8 @@
                 >Email<span class="text-crimson-50"> * </span></label
               >
               <input
-                :class="formError['email'] ? 'border-crimson-50' : 'border-n-30'"
                 v-model="formData.email"
+                :class="formError['email'] ? 'border-crimson-50' : 'border-n-30'"
                 class="w-full rounded border p-3"
                 type="email"
               />
@@ -108,8 +108,8 @@
               }}</span>
             </div>
             <div
-              :class="formError['role_id'] && 'error__multiselect'"
               v-if="userRole === 'admin'"
+              :class="formError['role_id'] && 'error__multiselect'"
               class="flex flex-col items-start gap-2"
             >
               <label class="text-sm text-n-50"
@@ -131,8 +131,8 @@
                 >New password<span class="text-crimson-50"> * </span></label
               >
               <input
-                :class="formError['password'] ? 'border-crimson-50' : 'border-n-30'"
                 v-model="formData.password"
+                :class="formError['password'] ? 'border-crimson-50' : 'border-n-30'"
                 class="w-full rounded border border-n-30 p-3"
                 type="password"
               />
@@ -146,10 +146,10 @@
               >
 
               <input
+                v-model="formData.password_confirmation"
                 :class="
                   formError['password_confirmation'] ? 'border-crimson-50' : 'border-n-30'
                 "
-                v-model="formData.password_confirmation"
                 class="w-full rounded border border-n-30 p-3"
                 type="password"
               />
@@ -310,6 +310,7 @@
           </span>
         </span>
         <button
+          class="font-bold uppercase text-bluecoral"
           @click="
             () => {
               filter.organization = [];
@@ -317,7 +318,6 @@
               filter.status = [];
             }
           "
-          class="font-bold uppercase text-bluecoral"
         >
           Clear Filter
         </button>

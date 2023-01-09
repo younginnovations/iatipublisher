@@ -8,10 +8,10 @@
         <div class="breadcrumb__title">
           <span
             class="breadcrumb__title last max-w-[25vw] overflow-hidden text-ellipsis text-n-30 md:max-w-[50vw]"
-            >{{ user.full_name ?? "Untitled" }}</span
+            >{{ user["full_name"] ?? "Untitled" }}</span
           >
           <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{
-            userData.full_name ? userData.full_name : "Untitled"
+            userData["full_name"] ? userData["full_name"] : "Untitled"
           }}</span>
         </div>
       </div>
@@ -72,12 +72,12 @@
                   "
                 ></svg-vue>
                 <input
+                  v-model="passwordData.current_password"
                   :class="
                     errorPasswordData.current_password !== ''
                       ? 'border-crimson-50'
                       : 'border-n-30'
                   "
-                  v-model="passwordData.current_password"
                   class="w-full rounded border border-n-30 p-3"
                   :type="showCurrentPassword ? 'text' : 'password'"
                 />
@@ -107,12 +107,12 @@
                   "
                 ></svg-vue>
                 <input
+                  v-model="passwordData.password"
                   :class="
                     errorPasswordData.password !== ''
                       ? 'border-crimson-50'
                       : 'border-n-30'
                   "
-                  v-model="passwordData.password"
                   class="w-full rounded border border-n-30 p-3"
                   :type="showNewPassword ? 'text' : 'password'"
                 /> </span
@@ -135,12 +135,12 @@
                   "
                 ></svg-vue
                 ><input
+                  v-model="passwordData.password_confirmation"
                   :class="
                     errorPasswordData.password_confirmation !== ''
                       ? 'border-crimson-50'
                       : 'border-n-30'
                   "
-                  v-model="passwordData.password_confirmation"
                   class="w-full rounded border p-3"
                   :type="showConfirmPassword ? 'text' : 'password'"
                 /> </span
