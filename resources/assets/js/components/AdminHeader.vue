@@ -190,8 +190,8 @@
                   <span>Your Profile</span></a
                 >
               </li>
-              <li class="dropdown__list" @click="logout">
-                <svg-vue icon="logout"></svg-vue>
+              <li class="dropdown__list flex" @click="logout">
+                <svg-vue class="mr-3 ml-1" icon="logout"></svg-vue>
                 <button class="text-sm">Logout</button>
               </li>
             </ul>
@@ -471,7 +471,7 @@ onUnmounted(() => {
   }
 }
 .profile__dropdown--touch {
-  @apply absolute  right-5 z-20 bg-white text-left text-sm text-bluecoral shadow-dropdown  duration-300;
+  @apply absolute  right-10 z-20 bg-white text-left text-sm text-bluecoral shadow-dropdown  duration-300;
   top: 50px;
   width: 265px;
   box-shadow: 4px 4px 40px rgba(0, 50, 76, 0.2);
