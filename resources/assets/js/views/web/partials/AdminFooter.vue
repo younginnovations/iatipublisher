@@ -1,7 +1,5 @@
 <template>
-  <footer
-    class="mt-7 bg-bluecoral text-sm leading-6 text-n-20 sm:mt-10 md:mt-20"
-  >
+  <footer class="mt-7 bg-bluecoral text-sm leading-6 text-n-20 sm:mt-10 md:mt-20">
     <div class="border-b border-white border-opacity-20">
       <div class="mx-3 py-10 sm:mx-10 xl:mx-24 xl:px-1">
         <div
@@ -9,10 +7,7 @@
         >
           <div>
             <a href="/">
-              <svg-vue
-                class="h-auto w-60 text-6xl sm:w-64"
-                icon="footer-logo"
-              />
+              <svg-vue class="h-auto w-60 text-6xl sm:w-64" icon="footer-logo" />
             </a>
           </div>
 
@@ -45,9 +40,7 @@
             </div>
             <ul>
               <li>
-                <a
-                  class="text-sm text-n-10"
-                  href="mailto:support@iatistandard.org"
+                <a class="text-sm text-n-10" href="mailto:support@iatistandard.org"
                   >support@iatistandard.org</a
                 >
               </li>
@@ -63,10 +56,13 @@
           Copyright IATI 2022. All rights reserved.</span
         >
         <div class="flex sm:justify-end">
-          <a href="/">
+          <a
+            href="https://www.youtube.com/channel/UCAVH1gcgJXElsj8ENC-bDQQ"
+            target="_blank"
+          >
             <svg-vue class="mt-1 mr-1 text-4xl" icon="youtube" />
           </a>
-          <a class="ml-4" href="/">
+          <a class="ml-4" href="https://twitter.com/IATI_aid" target="_blank">
             <svg-vue class="mt-1 mr-1 text-4xl" icon="twitter" />
           </a>
         </div>
