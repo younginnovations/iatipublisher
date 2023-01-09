@@ -48,8 +48,8 @@
               <li>
                 <a
                   class="text-sm text-n-10"
-                  href="mailto:PubToolTest@iatistandard.org"
-                  >PubToolTest@iatistandard.org</a
+                  href="mailto:support@iatistandard.org"
+                  >support@iatistandard.org</a
                 >
               </li>
             </ul>
