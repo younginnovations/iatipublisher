@@ -263,7 +263,7 @@ class UserController extends Controller
      */
     public function getQueryParams($request): array
     {
-        $tableConfig = getTableConfig('activity');
+        $tableConfig = getTableConfig('user');
         $accessibleRoles = array_keys($this->userService->getRoles());
         $accessibleOrg = Auth::user()->organization_id;
         $requestData = $request->all();
