@@ -1,11 +1,31 @@
 <template>
   <div class="bg-paper px-5 pt-4 pb-[71px] xl:px-10">
+    <div
+      v-if="showSidebar"
+      class="fixed top-0 left-0 z-[50] h-screen w-screen bg-black/10 lg:hidden"
+      @click="
+        () => {
+          showSidebar = !showSidebar;
+        }
+      "
+    />
+    <div
+      v-if="showSidebar"
+      class="sidebar-close-icon lg:hidden"
+      @click="
+        () => {
+          showSidebar = !showSidebar;
+        }
+      "
+    >
+      <svg-vue icon="chevron" class="rotate-180 pb-2 text-3xl text-white" />
+    </div>
     <PageTitle
       :breadcrumb-data="breadcrumbData"
       title="Result Detail"
       :back-link="`${activityLink}/result`"
     >
-      <div class="flex space-x-3 items-center">
+      <div class="flex items-center space-x-3">
         <Toast
           v-if="toastData.visibility"
           :message="toastData.message"
@@ -17,9 +37,54 @@
         </a>
       </div>
     </PageTitle>
+    <div
+      class="sidebar-open-icon"
+      @click="
+        () => {
+          showSidebar = !showSidebar;
+        }
+      "
+    >
+      <svg-vue icon="chevron" class="pb-2 text-3xl text-white" />
+    </div>
+    <aside
+      :class="showSidebar ? 'translate-x-[0px]' : '-translate-x-[150%]'"
+      class="activities__sidebar fixed top-[60px] left-0 z-[100] block h-[calc(100vh_-_50px)] overflow-y-auto bg-eggshell duration-200 lg:hidden"
+    >
+      <div
+        class="indicator sticky top-0 h-full rounded-lg bg-eggshell px-6 py-4 text-n-50"
+      >
+        <ul class="text-sm font-bold leading-relaxed">
+          <li v-for="(rData, r, ri) in resultsData" :key="ri">
+            <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
+              <!-- <svg-vue icon="moon" class="mr-2 text-base"></svg-vue> -->
+              {{ r }}
+            </a>
+          </li>
+          <li v-if="hasIndicators">
+            <a v-smooth-scroll href="#indicator" :class="linkClasses">
+              <!-- <svg-vue icon="moon" class="mr-2 text-base"></svg-vue> -->
+              indicator
+            </a>
+          </li>
+          <li v-if="!hasIndicators">
+            <a
+              :href="`/result/${result.id}/indicator/create`"
+              :class="linkClasses"
+              class="border border-dashed border-n-40"
+            >
+              <svg-vue icon="add" class="mr-2 text-n-40"></svg-vue>
+              add indicator
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
     <div class="activities">
-      <aside class="activities__sidebar">
-        <div class="indicator sticky top-0 rounded-lg bg-eggshell px-6 py-4 text-n-50">
+      <aside class="activities__sidebar hidden lg:block">
+        <div
+          class="indicator sticky top-0 rounded-lg bg-eggshell px-6 py-4 text-n-50"
+        >
           <ul class="text-sm font-bold leading-relaxed">
             <li v-for="(rData, r, ri) in resultsData" :key="ri">
               <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
@@ -49,7 +114,9 @@
       <div class="activities__content">
         <div></div>
 
-        <div class="activities__content--elements -mx-3 -mt-3 flex-wrap xl:flex">
+        <div
+          class="activities__content--elements -mx-3 -mt-3 flex-wrap xl:flex"
+        >
           <template v-for="(post, key) in result.result" :key="key">
             <ResultElement
               :data="post"
@@ -84,8 +151,12 @@
           :href="`/result/${result.id}/indicator/create`"
           class="add_indicator flex w-full rounded border border-dashed border-n-40 bg-white px-4 py-3 text-xs leading-normal"
         >
-          <div class="grow text-left italic">You haven't added any indicator yet.</div>
-          <div class="flex shrink-0 items-center font-bold uppercase text-bluecoral">
+          <div class="grow text-left italic">
+            You haven't added any indicator yet.
+          </div>
+          <div
+            class="flex shrink-0 items-center font-bold uppercase text-bluecoral"
+          >
             <svg-vue icon="add" class="mr-1 shrink-0 text-base"></svg-vue>
             <span class="grow text-[10px]">Add new indicator</span>
           </div>
@@ -96,26 +167,36 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, onMounted, reactive } from "vue";
+import {
+  defineComponent,
+  toRefs,
+  onMounted,
+  ref,
+  computed,
+  watch,
+  onUnmounted,
+  reactive,
+} from 'vue';
 
 //component
-import ResultElement from "./ResultElement.vue";
-import Indicator from "Activity/results/elements/Indicator.vue";
-import Btn from "Components/buttons/Link.vue";
-import PageTitle from "Components/sections/PageTitle.vue";
-import Toast from "Components/ToastMessage.vue";
+import ResultElement from './ResultElement.vue';
+import Indicator from 'Activity/results/elements/Indicator.vue';
+import Btn from 'Components/buttons/Link.vue';
+import PageTitle from 'Components/sections/PageTitle.vue';
+import Toast from 'Components/ToastMessage.vue';
 
 //composable
-import dateFormat from "Composable/dateFormat";
-import getActivityTitle from "Composable/title";
+import dateFormat from 'Composable/dateFormat';
+import getActivityTitle from 'Composable/title';
 
 export default defineComponent({
-  name: "ResultDetail",
+  name: 'ResultDetail',
   components: {
     ResultElement,
     Indicator,
     Btn,
     PageTitle,
+
     Toast,
   },
   props: {
@@ -142,7 +223,10 @@ export default defineComponent({
   },
   setup(props) {
     const linkClasses =
-      "flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default";
+      'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
+    const positionY = ref(0);
+    const showSidebar = ref(false);
+    const screenWidth = ref(0);
 
     let { result, activity } = toRefs(props);
     const hasIndicators = result.value.indicators.length > 0 ? true : false;
@@ -151,12 +235,14 @@ export default defineComponent({
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
       activityLink = `/activity/${activityId}`,
-      resultTitle = getActivityTitle(resultsData.title[0].narrative, "en"),
+      resultTitle = getActivityTitle(resultsData.title[0].narrative, 'en'),
       resultLink = `${activityLink}/result/${result.value.id}`;
-
+    const handleScroll = () => {
+      positionY.value = window.scrollY;
+    };
     const toastData = reactive({
       visibility: false,
-      message: "",
+      message: '',
       type: true,
     });
 
@@ -165,21 +251,27 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: "Your Activities",
-        link: "/activities",
+        title: 'Your Activities',
+        link: '/activities',
       },
       {
-        title: getActivityTitle(activityTitle, "en"),
+        title: getActivityTitle(activityTitle, 'en'),
         link: activityLink,
       },
       {
         title: resultTitle,
-        link: "",
+        link: '',
       },
     ];
+    const istopVisible = computed(() => {
+      return positionY.value === 0;
+    });
 
     onMounted(() => {
-      if (props.toast.message !== "") {
+      window.addEventListener('scroll', handleScroll);
+      window.addEventListener('resize', calcWidth);
+
+      if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;
@@ -189,6 +281,30 @@ export default defineComponent({
         toastData.visibility = false;
       }, 5000);
     });
+
+    onUnmounted(() => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', calcWidth);
+    });
+
+    const calcWidth = (event) => {
+      screenWidth.value = event.target.innerWidth;
+      if (screenWidth.value > 1024) {
+        document.documentElement.style.overflow = 'auto';
+      } else {
+        showSidebar.value &&
+          (document.documentElement.style.overflow = 'hidden');
+      }
+    };
+
+    watch(
+      () => showSidebar.value,
+      (sidebar) => {
+        if (sidebar) {
+          document.documentElement.style.overflow = 'hidden';
+        } else document.documentElement.style.overflow = 'auto';
+      }
+    );
 
     return {
       activityLink,
@@ -200,6 +316,8 @@ export default defineComponent({
       resultsData,
       breadcrumbData,
       toastData,
+      showSidebar,
+      istopVisible,
     };
   },
 });

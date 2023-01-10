@@ -255,10 +255,12 @@ span.select2-container--default {
     }
   }
 }
+
 .registry__info,
 .register,
 aside {
   .help__text {
+    transform: translateX(100%) !important;
     @media (max-width: 1024px) {
       transform: translateX(0) !important;
       width: 250px !important;
@@ -268,14 +270,14 @@ aside {
 .import-activity,
 .activities__content--element {
   .help__text {
-    @media (max-width: 1024px) {
-      transform: translateX(0) !important;
-    }
+    transform: translateX(0) !important;
   }
 }
 aside {
   .progress {
     .help__text {
+      transform: translateX(0) !important;
+
       @media (max-width: 1024px) {
         transform: translateX(-45%) !important;
       }
@@ -284,4 +286,17 @@ aside {
 }
 .activities__content {
   width: 100%;
+}
+.tab-btn {
+  .help__text {
+    transform: translateX(0) !important;
+    @media (max-width: 1024px) {
+      left: 0;
+    }
+  }
+}
+.activity-default-value {
+  .help__text {
+    transform: translateX(0%) !important;
+  }
 }

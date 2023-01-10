@@ -1,6 +1,6 @@
 <template>
   <div
-    class="sidebar-help-block sticky top-5 hidden rounded-lg bg-eggshell p-4 text-xs text-n-50"
+    class="sidebar-help-block sticky top-20 hidden rounded-lg bg-eggshell p-4 text-xs text-n-50"
     style="box-shadow: 0px 4px 40px rgb(0 0 0 / 10%)"
   >
     <div class="sidebar-help-close absolute right-2 top-2.5 cursor-pointer">

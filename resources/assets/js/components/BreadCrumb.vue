@@ -4,13 +4,13 @@
       <div class="flex">
         <template v-for="(bc, d) in breadcrumbData" :key="d">
           <template v-if="Number(d) === 0">
-            <a class="font-bold whitespace-nowrap" href="/activities">
+            <a class="whitespace-nowrap font-bold" href="/activities">
               {{ bc.title }}
             </a>
           </template>
           <template v-else>
             <div class="breadcrumb__title max-w-[200px]">
-              <span class="overflow-hidden breadcrumb__title text-n-30">
+              <span class="breadcrumb__title overflow-hidden text-n-30">
                 <a v-if="bc.link" :href="bc.link">
                   {{ bc.title }}
                 </a>
@@ -23,7 +23,7 @@
           </template>
           <span
             v-if="Number(d) !== breadcrumbData.length - 1"
-            class="mx-4 separator"
+            class="separator mx-4"
           >
             /
           </span>

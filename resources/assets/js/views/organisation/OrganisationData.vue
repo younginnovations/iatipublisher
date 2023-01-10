@@ -2,9 +2,20 @@
   <div>
     <div
       v-if="showSidebar"
-      class="fixed z-10 h-screen w-screen bg-black/10"
+      class="fixed top-0 z-[50] h-screen w-screen bg-black/10 lg:hidden"
       @click="toggleSidebar"
     />
+    <div
+      v-if="showSidebar"
+      class="details-sidebar-close-icon lg:hidden"
+      @click="
+        () => {
+          showSidebar = !showSidebar;
+        }
+      "
+    >
+      <svg-vue icon="chevron" class="rotate-180 pb-2 text-3xl text-white" />
+    </div>
     <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
       <!-- title section -->
       <div class="page-title mb-4 xl:mb-6">
@@ -18,16 +29,19 @@
                   >
                   <span class="separator mx-4"> / </span>
                   <div class="breadcrumb__title">
-                    <span class="breadcrumb__title last overflow-hidden text-n-30">{{
-                      organization.name
-                        ? organization.name["0"].narrative ?? "Untitled"
-                        : "Untitled"
-                    }}</span>
+                    <span
+                      class="breadcrumb__title last overflow-hidden text-n-30"
+                      >{{
+                        organization.name
+                          ? organization.name['0'].narrative ?? 'Untitled'
+                          : 'Untitled'
+                      }}</span
+                    >
                     <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
                       {{
                         organization.name
-                          ? organization.name["0"].narrative ?? "Untitled"
-                          : "Untitled"
+                          ? organization.name['0'].narrative ?? 'Untitled'
+                          : 'Untitled'
                       }}
                     </span>
                   </div>
@@ -45,22 +59,24 @@
                   <span class="ellipsis__title overflow-hidden">
                     {{
                       organization.name
-                        ? organization.name["0"].narrative ?? "Untitled"
-                        : "Untitled"
+                        ? organization.name['0'].narrative ?? 'Untitled'
+                        : 'Untitled'
                     }}
                   </span>
                   <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
                     {{
                       organization.name
-                        ? organization.name["0"].narrative ?? "Untitled"
-                        : "Untitled"
+                        ? organization.name['0'].narrative ?? 'Untitled'
+                        : 'Untitled'
                     }}
                   </span>
                 </h4>
               </div>
             </div>
           </div>
-          <div class="actions relative flex grow items-end justify-end gap-3 md:shrink-0">
+          <div
+            class="actions relative flex grow flex-col items-end justify-end gap-3 md:shrink-0 md:flex-row"
+          >
             <Toast
               v-if="toastData.visibility"
               :message="toastData.message"
@@ -85,6 +101,9 @@
         </div>
       </div>
       <!-- title section ends -->
+      <div class="sidebar-open-icon" @click="toggleSidebar">
+        <svg-vue icon="chevron" class="pb-2 text-3xl text-white" />
+      </div>
       <div class="activities">
         <aside class="activities__sidebar hidden lg:block">
           <div class="mb-1 flex">
@@ -103,7 +122,9 @@
                 :is-percent="true"
                 :percent="progress"
               ></RadialProgressBar>
-              <span>Fill mandatory fields of all elements to get 100% score</span>
+              <span
+                >Fill mandatory fields of all elements to get 100% score</span
+              >
             </div>
             <div class="activities__card elements">
               <div class="mb-7 flex items-center justify-between">
@@ -144,18 +165,12 @@
             :status="status"
           />
         </aside>
-        <div class="absolute -top-4 cursor-pointer lg:hidden" @click="toggleSidebar">
-          <svg-vue icon="chevron" class="pb-2 text-3xl text-bluecoral" />
-        </div>
 
         <div
-          :class="showSidebar ? '-translate-x-[20px]' : '-translate-x-[110%]'"
-          class="opacity-1 fixed top-[60px] z-[100] block h-[calc(100vh_-_60px)] overflow-y-auto overflow-x-hidden bg-white duration-200 lg:hidden"
+          :class="showSidebar ? '-translate-x-[20px] ' : ' -translate-x-[110%]'"
+          class="opacity-1 fixed top-[60px] z-[100] block h-[calc(100vh_-_50px)] overflow-y-auto duration-200 lg:hidden"
         >
-          <div class="absolute right-4 cursor-pointer lg:hidden" @click="toggleSidebar()">
-            <svg-vue icon="chevron" class="rotate-180 pb-2 text-3xl text-bluecoral" />
-          </div>
-          <aside class="!z-[200] w-[280px] bg-white pt-8">
+          <aside class="!z-[200] h-full w-[280px] bg-white pt-8">
             <div class="mb-1 flex">
               <div class="activities__card progress mr-1">
                 <div class="mb-2 flex items-center justify-between">
@@ -172,7 +187,9 @@
                   :is-percent="true"
                   :percent="progress"
                 ></RadialProgressBar>
-                <span>Fill mandatory fields of all elements to get 100% score</span>
+                <span
+                  >Fill mandatory fields of all elements to get 100% score</span
+                >
               </div>
               <div class="activities__card elements">
                 <div class="mb-7 flex items-center justify-between">
@@ -196,7 +213,10 @@
                 </div>
                 <div class="flex justify-between">
                   <div class="flex items-center space-x-1">
-                    <svg-vue icon="double-tick" class="text-spring-50"></svg-vue>
+                    <svg-vue
+                      icon="double-tick"
+                      class="text-spring-50"
+                    ></svg-vue>
                     <span>Completed</span>
                   </div>
                   <HoverText
@@ -238,7 +258,9 @@
                   "
                   class="elements-card col-span-2"
                   :class="
-                    String(name) === 'organisation_identifier' ? 'xl:col-span-1' : ''
+                    String(name) === 'organisation_identifier'
+                      ? 'xl:col-span-1'
+                      : ''
                   "
                 />
               </template>
@@ -251,19 +273,29 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted, toRefs, provide, watch, ref } from "vue";
-import HoverText from "../../components/HoverText.vue";
-import RadialProgressBar from "../../components/RadialProgressBar.vue";
-import OrganisationElements from "./OrganisationElements.vue";
-import OrganisationElementsDetail from "./OrganisationElementsDetail.vue";
-import Toast from "Components/ToastMessage.vue";
-import PublishUnpublish from "Components/sections/OrganizationPublishUnpublishButton.vue";
-import { useToggle } from "@vueuse/core";
-import { watchIgnorable } from "@vueuse/core";
-import ErrorPopUp from "Components/ErrorPopUp.vue";
+import {
+  defineComponent,
+  reactive,
+  onMounted,
+  toRefs,
+  computed,
+  onUnmounted,
+  provide,
+  watch,
+  ref,
+} from 'vue';
+import HoverText from '../../components/HoverText.vue';
+import RadialProgressBar from '../../components/RadialProgressBar.vue';
+import OrganisationElements from './OrganisationElements.vue';
+import OrganisationElementsDetail from './OrganisationElementsDetail.vue';
+import Toast from 'Components/ToastMessage.vue';
+import PublishUnpublish from 'Components/sections/OrganizationPublishUnpublishButton.vue';
+import { useToggle } from '@vueuse/core';
+import { watchIgnorable } from '@vueuse/core';
+import ErrorPopUp from 'Components/ErrorPopUp.vue';
 
 export default defineComponent({
-  name: "OrganisationData",
+  name: 'OrganisationData',
   components: {
     HoverText,
     RadialProgressBar,
@@ -271,6 +303,7 @@ export default defineComponent({
     OrganisationElementsDetail,
     Toast,
     PublishUnpublish,
+
     ErrorPopUp,
   },
   props: {
@@ -310,41 +343,71 @@ export default defineComponent({
   setup(props) {
     const toastData = reactive({
       visibility: false,
-      message: "",
+      message: '',
       type: true,
     });
     const errorData = reactive({
       visibility: false,
-      message: "",
+      message: '',
       type: true,
     });
     const showSidebar = ref(false);
+    const screenWidth = ref(0);
 
     const [publishValue, publishToggle] = useToggle();
     const [unpublishValue, unpublishToggle] = useToggle();
     const [deleteValue, deleteToggle] = useToggle();
     const [downloadValue, downloadToggle] = useToggle();
+    const positionY = ref(0);
 
     const toggleSidebar = () => {
       showSidebar.value = !showSidebar.value;
     };
+
+    onUnmounted(() => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', calcWidth);
+    });
+
     onMounted(() => {
-      if (props.toast.message !== "") {
-        toastData.type = props.toast.type === "success" ? true : false;
+      window.addEventListener('resize', calcWidth);
+
+      window.addEventListener('scroll', handleScroll);
+
+      if (props.toast.message !== '') {
+        toastData.type = props.toast.type === 'success' ? true : false;
         toastData.visibility = true;
         toastData.message = props.toast.message;
       }
     });
 
+    const calcWidth = (event) => {
+      screenWidth.value = event.target.innerWidth;
+
+      if (screenWidth.value > 1024) {
+        document.documentElement.style.overflow = 'auto';
+      } else {
+        showSidebar.value &&
+          (document.documentElement.style.overflow = 'hidden');
+      }
+    };
+
+    const handleScroll = () => {
+      positionY.value = window.scrollY;
+    };
+    const istopVisible = computed(() => {
+      console.log(positionY.value === 0);
+      return positionY.value === 0;
+    });
     const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {
-      flush: "sync",
+      flush: 'sync',
     });
     watch(
       () => showSidebar.value,
       (sidebar) => {
         if (sidebar) {
-          document.documentElement.style.overflow = "hidden";
-        } else document.documentElement.style.overflow = "auto";
+          document.documentElement.style.overflow = 'hidden';
+        } else document.documentElement.style.overflow = 'auto';
       }
     );
     watch(
@@ -359,7 +422,7 @@ export default defineComponent({
 
     const ignoreToastUpdate = () => {
       ignoreUpdates(() => {
-        toastData.message = "";
+        toastData.message = '';
       });
     };
 
@@ -378,22 +441,24 @@ export default defineComponent({
     Object.keys(organizationData).map((key) => {
       let flag = false;
 
-      Object.keys(organizationData[key]["elements"]).map((k) => {
-        if (organizationProps[k] || typeof organizationProps[k] === "number") {
-          organizationData[key]["elements"][k]["content"] = organizationProps[k];
+      Object.keys(organizationData[key]['elements']).map((k) => {
+        if (organizationProps[k] || typeof organizationProps[k] === 'number') {
+          organizationData[key]['elements'][k]['content'] =
+            organizationProps[k];
           flag = true;
-          elementProps[k]["has_data"] = true;
+          elementProps[k]['has_data'] = true;
         } else {
           delete organizationData[key][k];
-          elementProps[k]["has_data"] = false;
+          elementProps[k]['has_data'] = false;
         }
 
-        elementProps[k]["core"] = organizationData[key]["elements"][k]["mandatory"];
-        elementProps[k]["completed"] =
-          k === "organisation_identifier"
-            ? organizationProps["element_status"]["identifier"]
-            : organizationProps["element_status"][k];
-        elementProps[k]["not_completed"] = !elementProps[k]["completed"];
+        elementProps[k]['core'] =
+          organizationData[key]['elements'][k]['mandatory'];
+        elementProps[k]['completed'] =
+          k === 'organisation_identifier'
+            ? organizationProps['element_status']['identifier']
+            : organizationProps['element_status'][k];
+        elementProps[k]['not_completed'] = !elementProps[k]['completed'];
       });
 
       if (flag === false) {
@@ -404,9 +469,9 @@ export default defineComponent({
     // generating available categories of elements
     Object.keys(groupedData).map((key) => {
       if (Object.prototype.hasOwnProperty.call(organizationData, key)) {
-        groupedData[key]["status"] = "enabled";
+        groupedData[key]['status'] = 'enabled';
       } else {
-        groupedData[key]["status"] = "disabled";
+        groupedData[key]['status'] = 'disabled';
       }
     });
 
@@ -419,7 +484,7 @@ export default defineComponent({
     }
 
     const publishMessage: PublishMessage = reactive({
-      message: "",
+      message: '',
       type: false,
     });
 
@@ -433,11 +498,11 @@ export default defineComponent({
       status: organizationProps.status,
     });
 
-    provide("publishMessage", publishMessage);
-    provide("mandatoryCompleted", props.mandatoryCompleted);
-    provide("toastData", toastData);
-    provide("publishStatus", publishStatus);
-    provide("errorData", errorData);
+    provide('publishMessage', publishMessage);
+    provide('mandatoryCompleted', props.mandatoryCompleted);
+    provide('toastData', toastData);
+    provide('publishStatus', publishStatus);
+    provide('errorData', errorData);
 
     return {
       groupedData,
@@ -456,6 +521,7 @@ export default defineComponent({
       errorData,
       toggleSidebar,
       showSidebar,
+      istopVisible,
     };
   },
 });
@@ -463,7 +529,7 @@ export default defineComponent({
 
 <style lang="scss">
 .mandatory::after {
-  content: "";
+  content: '';
   width: 0.5px;
   height: 140px;
   @apply absolute top-1 -right-6 bg-n-20;
@@ -498,12 +564,12 @@ export default defineComponent({
   @apply relative cursor-pointer px-2 pb-6;
 
   &::after {
-    content: "";
+    content: '';
     @apply absolute bottom-0 left-0 h-1 w-full scale-0 bg-bluecoral duration-300;
   }
 
   &:hover::after {
-    content: "";
+    content: '';
     @apply visible scale-100;
   }
 
@@ -513,7 +579,7 @@ export default defineComponent({
 }
 
 .tab__links--active::after {
-  content: "";
+  content: '';
   @apply absolute bottom-0 left-0 h-1 w-full bg-bluecoral duration-300;
 }
 

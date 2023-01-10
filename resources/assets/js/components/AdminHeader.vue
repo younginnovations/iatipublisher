@@ -9,7 +9,14 @@
       :type="toastType"
     />
     <div class="flex items-center gap-5">
-      <div class="hamburger-menu">
+      <div
+        class="hamburger-menu"
+        @click="
+          () => {
+            showSidebar = !showSidebar;
+          }
+        "
+      >
         <div id="hamburger" class="hamburger scale-75">
           <span class="bg-n-20" />
           <span class="bg-n-20" />
@@ -21,7 +28,14 @@
           <svg-vue icon="logo" class="text-4xl" />
         </a>
       </figure>
-      <div id="activity-menu-overlay"></div>
+      <div
+        id="activity-menu-overlay"
+        @click="
+          () => {
+            showSidebar = !showSidebar;
+          }
+        "
+      ></div>
     </div>
     <div id="nav-list" class="activity-nav-menu flex w-full justify-between">
       <nav class="justify-end">
@@ -48,7 +62,6 @@
           <li
             v-for="(menu, index) in data.menus"
             :key="index"
-            class="group"
             :class="data.menuNavLiClasses"
           >
             <a
@@ -68,25 +81,30 @@
                 data.menuNavAnchorClasses,
               ]"
             >
-              <span class="add-import">{{ menu.name }}</span>
+              <span class="add-import"
+                >{{ menu.name }}
+                <div
+                  v-if="menu.name === 'Add / Import Activity'"
+                  class="button__dropdown add-import-dropdown absolute top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left shadow-dropdown transition-all duration-300"
+                >
+                  <ul class="flex-col">
+                    <li>
+                      <a
+                        class="cursor-pointer"
+                        :class="liClass"
+                        @click="modalValue = true"
+                        >Add activity manually</a
+                      >
+                    </li>
+                    <li>
+                      <a href="/import" :class="liClass"
+                        >Import activities from .csv/.xml</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </span>
             </span>
-            <div
-              v-if="menu.name === 'Add / Import Activity'"
-              class="button__dropdown invisible absolute left-4 top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left opacity-0 shadow-dropdown outline transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
-            >
-              <ul class="flex-col">
-                <li>
-                  <a :class="liClass" @click="modalValue = true"
-                    >Add activity manually</a
-                  >
-                </li>
-                <li>
-                  <a href="/import" :class="liClass"
-                    >Import activities from .csv/.xml</a
-                  >
-                </li>
-              </ul>
-            </div>
           </li>
         </ul>
       </nav>
@@ -206,6 +224,7 @@ import {
   onMounted,
   computed,
   onUnmounted,
+  watch,
   Ref,
 } from 'vue';
 import axios from 'axios';
@@ -229,6 +248,7 @@ defineProps({
 
 const showUserDropdown = ref(false);
 const toastVisibility = ref(false);
+const showSidebar = ref(false);
 const toastMessage = ref('');
 const toastType = ref(false);
 const data = reactive({
@@ -294,6 +314,14 @@ function ToggleModel() {
   modalToggle();
   window.localStorage.removeItem('openAddModel');
 }
+watch(
+  () => showSidebar.value,
+  (sidebar) => {
+    if (sidebar) {
+      document.documentElement.style.overflow = 'hidden';
+    } else document.documentElement.style.overflow = 'auto';
+  }
+);
 function changeActiveMenu() {
   const path = window.location.pathname;
   data.menus.forEach((menu, key) => {
@@ -372,7 +400,10 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .activity__header {
-  @apply relative;
+  position: fixed;
+  width: 100vw;
+  top: 0px;
+  z-index: 100;
 
   nav {
     display: flex;
@@ -459,6 +490,19 @@ onUnmounted(() => {
     transform: rotate(180deg);
   }
 }
+.add-import {
+  cursor: pointer;
+}
+.add-import-dropdown {
+  visibility: hidden;
+  opacity: 0;
+}
+.add-import:hover .add-import-dropdown {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .spinner {
   @apply absolute top-3 right-7 inline-block animate-spin rounded-full border-2 border-n-10 border-opacity-5;
   width: 15px;

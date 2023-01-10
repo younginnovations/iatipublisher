@@ -1,10 +1,10 @@
 <template>
-  <section class="section-wrapper">
+  <section class="section-wrapper activity-default-value">
     <Loader v-if="loaderVisibility" />
     <div class="setting input__field">
       <span class="text-xs font-bold text-n-40">Override default values</span>
-      <div class="flex items-center justify-between">
-        <div class="mt-4 mb-6 flex items-center">
+      <div class="mb-6 flex flex-wrap items-center justify-between gap-2">
+        <div class="mt-4 flex items-center">
           <a :href="`/activity/${activityId}`"><svg-vue icon="left-arrow" /></a>
           <h2 class="ml-3 text-heading-4 font-bold text-n-50">
             Override default values
@@ -210,7 +210,9 @@
         </div>
       </div>
     </div>
-    <div class="fixed bottom-0 w-full bg-eggshell py-5 pr-40 shadow-dropdown">
+    <div
+      class="fixed bottom-0 left-0 w-full bg-eggshell py-5 pr-40 shadow-dropdown"
+    >
       <div class="flex items-center justify-end">
         <a class="ghost-btn mr-8" :href="`/activity/${activityId}`">Cancel</a>
         <button class="primary-btn save-btn" @click="submitForm()">

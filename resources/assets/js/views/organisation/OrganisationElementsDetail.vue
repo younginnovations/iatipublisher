@@ -47,7 +47,7 @@
             class="edit-button mx-2.5 flex items-center text-xs font-bold uppercase"
             :href="'/organisation/' + title"
           >
-            <svg-vue class="mr-0.5 text-xs" icon="edit"></svg-vue>
+            <svg-vue class="mr-0.5 text-base" icon="edit"></svg-vue>
             <span class="hidden text-[10px] lg:block">Edit</span>
           </a>
 
