@@ -363,14 +363,17 @@ export default defineComponent({
     const toggleSidebar = () => {
       showSidebar.value = !showSidebar.value;
     };
+
     onUnmounted(() => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', calcWidth);
     });
+
     onMounted(() => {
       window.addEventListener('resize', calcWidth);
 
       window.addEventListener('scroll', handleScroll);
+
       if (props.toast.message !== '') {
         toastData.type = props.toast.type === 'success' ? true : false;
         toastData.visibility = true;
