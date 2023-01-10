@@ -38,7 +38,8 @@
       ></div>
     </div>
     <div id="nav-list" class="activity-nav-menu flex w-full justify-between">
-      <nav class="justify-end">
+      <!-- commented to temporarily hide language buttons -->
+      <!-- <nav class="justify-end">
         <ul class="flex">
           <li
             v-for="(language, index) in data.languages"
@@ -56,7 +57,7 @@
             </a>
           </li>
         </ul>
-      </nav>
+      </nav> -->
       <nav v-if="superAdmin" class="activity-nav">
         <ul class="activity-nav-list -mx-4">
           <li
