@@ -50,7 +50,10 @@
                   btn-link="/support"
                 />
               </li>
-              <li class="absolute bottom-4 left-0 right-0 xl:hidden">
+
+              <!-- commented to temporarily hide language buttons -->
+
+              <!-- <li class="absolute bottom-4 left-0 right-0  xl:hidden">
                 <div class="flex items-center justify-center">
                   <span class="mr-2 pt-5 pb-5 uppercase text-white xl:pt-0"
                     >Language:</span
@@ -67,11 +70,14 @@
                     </li>
                   </ul>
                 </div>
-              </li>
+              </li> -->
             </ul>
           </div>
-          <div class="languages hidden pt-11 xl:block">
-            <div class="flex">
+          <!-- remove width later -->
+          <div class="languages hidden w-[170px] pt-11 xl:block">
+            <!-- commented to temporarily hide language buttons -->
+
+            <!-- <div class="flex">
               <span class="mr-2 pt-5 pb-5 uppercase xl:pt-0">Language:</span>
               <ul class="flex items-center justify-center">
                 <li class="nav__links">
@@ -84,7 +90,7 @@
                   <a href="/">ES</a>
                 </li>
               </ul>
-            </div>
+            </div> -->
           </div>
           <div id="menu-overlay"></div>
           <div
