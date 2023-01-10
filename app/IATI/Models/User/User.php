@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Models\User;
 
 use App\IATI\Models\Organization\Organization;
+use App\Mail\NewUserEmail;
 use Database\Factories\IATI\Models\User\UserFactory;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -14,6 +15,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -43,6 +46,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'role_id',
         'status',
         'language_preference',
+        'registration',
     ];
 
     /**
@@ -63,6 +67,31 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Before inbuilt function.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(
+            function ($model) {
+                if (Auth::check()) {
+                    $model->created_by = auth()->user()->id;
+                    $model->updated_by = auth()->user()->id;
+                }
+            }
+        );
+
+        static::updating(
+            function ($model) {
+                if (Auth::check()) {
+                    $model->updated_by = auth()->user()->id;
+                }
+            }
+        );
+    }
 
     /**
      * Checks if email is verified.
@@ -105,6 +134,24 @@ class User extends Authenticatable implements MustVerifyEmail
                 Please click the button below to verify that you have created the account in it.')
                 ->action('Verify Email Address', $url);
         });
+    }
+
+    /**
+     * Sends password reset email to new user.
+     *
+     * @param $user
+     */
+    public static function sendNewUserEmail($user): void
+    {
+        $mailDetails = [
+            'greeting' => 'Hello ' . $user->username,
+            'message' => 'Welcome to IATI Publisher. Your email has been used to create a new account here.
+            Please click the button below to update the password of your account.',
+            'password_update' => true,
+            'token' => app('auth.password.broker')->createToken($user),
+        ];
+
+        Mail::to($user->email)->send(new NewUserEmail($user, $mailDetails));
     }
 
     /**

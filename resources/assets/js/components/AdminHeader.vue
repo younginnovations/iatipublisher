@@ -24,7 +24,7 @@
         </div>
       </div>
       <figure class="flex grow-0 items-center">
-        <a href="/activities">
+        <a :href="superAdmin ? '/list-organisations' : '/activities'">
           <svg-vue icon="logo" class="text-4xl" />
         </a>
       </figure>
@@ -139,10 +139,9 @@
     >
       <div class="user-nav">
         <div class="search">
-          {{ searchValueTest }}
           <input
             v-if="!superAdmin"
-            v-model="searchValueTest"
+            v-model="searchValue"
             class="search__input mr-3.5"
             type="text"
             placeholder="Search activity..."
@@ -150,7 +149,7 @@
           />
           <input
             v-else
-            v-model="searchValueTest"
+            v-model="searchValue"
             class="search__input mr-3.5"
             type="text"
             placeholder="Search organisation..."
@@ -428,7 +427,6 @@ if (currentURL.includes("?")) {
 const spinner = ref(false);
 
 const searchFunction = (url: string) => {
-  console.log("header", url);
   spinner.value = true;
   const param = searchValue.value?.replace("#", "");
   let sortingParam = "";

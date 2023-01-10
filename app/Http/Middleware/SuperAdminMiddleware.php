@@ -28,7 +28,6 @@ class SuperAdminMiddleware
      */
     public function handle(Request $request, Closure $next): mixed
     {
-        // dd(isSuperAdmin(), session()->get('superadmin_user_id'), auth()->user()->id);
         if (isSuperAdmin()) {
             if (session()->get('superadmin_user_id') !== auth()->user()->id) {
                 auth()->loginUsingId(session()->get('superadmin_user_id'));

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Repositories\Organization;
 
 use App\IATI\Models\Organization\Organization;
+use App\IATI\Models\User\Role;
 use App\IATI\Repositories\Repository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
@@ -78,6 +79,7 @@ class OrganizationRepository extends Repository
     {
         $whereSql = '1=1';
         $bindParams = [];
+        $adminRoleId = app(Role::class)->getOrganizationAdminId();
 
         if (array_key_exists(
             'q',
@@ -102,7 +104,9 @@ class OrganizationRepository extends Repository
         }
 
         $organizations = $this->model->withCount('allActivities')
-                                     ->with('user');
+                                     ->with(['user' => function ($user) use ($adminRoleId) {
+                                         return $user->where('role_id', $adminRoleId)->where('status', 1)->whereNull('deleted_at');
+                                     }]);
 
         if (array_key_exists('q', $queryParams) && !empty($queryParams['q'])) {
             $organizations->whereRaw($whereSql, $bindParams)

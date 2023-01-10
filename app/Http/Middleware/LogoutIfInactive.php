@@ -17,7 +17,7 @@ class LogoutIfInactive
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!Auth::user()->status) {
+        if (!Auth::user()->status || Auth::user()->deleted_at) {
             Auth::logout();
         }
 

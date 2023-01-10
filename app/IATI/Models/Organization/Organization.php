@@ -157,6 +157,6 @@ class Organization extends Model
      */
     public function getSuperAdminOrgId(): int
     {
-        return $this->where(['publisher_id'=>'YIPL-Super'])->first()->id;
+        return $this->where(['publisher_id' => 'YIPL-Super'])->first()->id;
     }
 }

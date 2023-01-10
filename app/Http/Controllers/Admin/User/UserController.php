@@ -95,10 +95,13 @@ class UserController extends Controller
         try {
             $formData = $request->only(['full_name', 'username', 'email', 'status', 'role_id', 'password', 'password_confirmation']);
 
+            $this->db->beginTransaction();
             $this->userService->store($formData);
+            $this->db->commit();
 
             return response()->json(['success' => true, 'message' => 'New user successfully created.']);
         } catch (\Exception $e) {
+            $this->db->rollback();
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while creating user.']);
@@ -117,10 +120,18 @@ class UserController extends Controller
         try {
             $formData = $request->only(['full_name', 'username', 'email', 'role_id', 'password', 'password_confirmation']);
 
+            if (empty($formData['password'])) {
+                unset($formData['password']);
+                unset($formData['password_confirmation']);
+            }
+
+            $this->db->beginTransaction();
             $this->userService->update($id, $formData);
+            $this->db->commit();
 
             return response()->json(['success' => true, 'message' => 'User has been updated successfully.']);
         } catch (\Exception $e) {
+            $this->db->rollback();
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while updating user.']);
@@ -137,9 +148,11 @@ class UserController extends Controller
     public function delete($id): JsonResponse
     {
         try {
-            $this->userService->delete($id);
+            if ($this->userService->delete($id)) {
+                return response()->json(['success' => true, 'message' => 'User has been deleted successfully.']);
+            }
 
-            return response()->json(['success' => true, 'message' => 'User has been deleted successfully.']);
+            return response()->json(['success' => false, 'message' => 'The user cannot be deleted.']);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -349,13 +362,16 @@ class UserController extends Controller
         try {
             $formData = $request->only(['username', 'full_name', 'email', 'language_preference']);
 
+            $this->db->beginTransaction();
             $this->userService->update(Auth::user()->id, $formData);
+            $this->db->commit();
 
             return response()->json([
                 'success' => true,
                 'message' => 'User profile updated successfully.',
             ]);
         } catch (\Exception $e) {
+            $this->db->rollback();
             logger()->error($e->getMessage());
 
             return response()->json([
@@ -375,9 +391,11 @@ class UserController extends Controller
     public function toggleUserStatus($id): JsonResponse
     {
         try {
-            $this->userService->toggleUserStatus($id);
+            if ($this->userService->toggleUserStatus($id)) {
+                return response()->json(['success' => true, 'message' => 'User status has been successfully changed.']);
+            }
 
-            return response()->json(['success' => true, 'message' => 'User status has been successfully changed.']);
+            return response()->json(['success' => false, 'message' => 'The status of this user cannot be changed.']);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -397,7 +415,7 @@ class UserController extends Controller
     public function downloadUsers(Request $request)
     {
         try {
-            $headers = ['username' => 'User Name', 'full_name' => 'Full Name', 'organization_id' => 'Organization', 'email' => 'Email', 'role_id' => 'Role'];
+            $headers = ['username' => 'User Name', 'full_name' => 'Full Name', 'organization_id' => 'Organization', 'email' => 'Email', 'role_id' => 'Role', 'created_at'=>'Joined On'];
             $queryParams = $this->getQueryParams($request);
             $users = $this->userService->getUserDownloadData($queryParams);
 

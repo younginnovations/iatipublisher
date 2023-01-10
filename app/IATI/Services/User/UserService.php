@@ -97,6 +97,7 @@ class UserService
             'organization_id' => $organization['id'],
             'password'        => Hash::make($data['password']),
             'role_id'         => $this->roleRepo->getOrganizationAdminId(),
+            'registration_method' => 'existing_org',
         ]);
 
         User::sendEmail();
@@ -141,14 +142,19 @@ class UserService
             ],
         ]);
 
-        return $this->userRepo->store([
+        $user = $this->userRepo->store([
             'username'        => $data['username'],
             'full_name'       => $data['full_name'],
             'email'           => $data['email'],
             'organization_id' => $organization['id'],
             'password'        => Hash::make($data['password']),
             'role_id'         => $this->roleRepo->getOrganizationAdminId(),
+            'registration_method' => 'new_org',
         ]);
+
+        User::sendEmail();
+
+        return $user;
     }
 
     /**
@@ -589,8 +595,9 @@ class UserService
         $data['organization_id'] = Auth::user()->organization_id;
         $data['password'] = Hash::make($data['password']);
         $data['role_id'] = isset($data['role_id']) ? $data['role_id'] : $this->roleRepo->getIatiAdminId();
+        $data['registration_method'] = 'user_create';
         $user = $this->userRepo->store($data);
-        $user->sendEmail();
+        User::sendNewUserEmail($user);
 
         return $user;
     }
@@ -618,7 +625,14 @@ class UserService
 
     public function delete($id)
     {
-        return $this->userRepo->delete($id);
+        $user = $this->userRepo->find($id);
+        $users = $this->userRepo->getUserDownloadData(['organization_id' => [$user->organization_id], 'roles' => ['admin']]);
+
+        if (count($users) > 1 || $user->organization_id === null) {
+            return $this->userRepo->delete($id);
+        }
+
+        return false;
     }
 
     /**
@@ -638,8 +652,18 @@ class UserService
 
     public function toggleUserStatus($id)
     {
-        $user = $this->userRepo->findBy('id', $id);
+        $user = $this->userRepo->find($id);
         $status = $user['status'] ? false : true;
+
+        if (!$status) {
+            $users = $this->userRepo->getUserDownloadData(['organization_id' => [$user->organization_id], 'roles' => ['admin'], 'status' => [1]]);
+
+            if (count($users) > 1 || $user->organization_id === null) {
+                return $this->userRepo->update($id, ['status' => $status]);
+            }
+
+            return false;
+        }
 
         return $this->userRepo->update($id, ['status' => $status]);
     }

@@ -68,7 +68,7 @@ class UserRepository extends Repository
         $query = $this->model
             ->leftJoin('organizations', 'organizations.id', 'users.organization_id')
             ->join('roles', 'roles.id', 'users.role_id')
-            ->select('users.id', 'username', 'full_name', 'organizations.publisher_name as publisher_name', 'email', 'users.status', 'roles.role', 'role_id', 'users.created_at')
+            ->select('users.id', 'username', 'full_name', 'name->0->narrative as publisher_name', 'email', 'users.status', 'roles.role', 'role_id', 'users.created_at')
             ->where('users.id', '!=', Auth::user()->id);
 
         if (!empty($queryParams)) {
@@ -89,13 +89,13 @@ class UserRepository extends Repository
     {
         $query = $this->model
             ->leftJoin('organizations', 'organizations.id', 'users.organization_id')
-            ->join('roles', 'roles.id', 'users.role_id');
+            ->join('roles', 'roles.id', 'users.role_id')->where('users.status', 1);
 
         if (!empty($queryParams)) {
             $query = $this->filterUsers($query, $queryParams);
         }
 
-        return $query->get(['username', 'full_name', 'organizations.publisher_name', 'email', 'roles.role'])->toArray();
+        return $query->get(['username', 'full_name', 'name->0->narrative as publisher_name', 'email', 'roles.role', 'users.created_at'])->toArray();
     }
 
     /**
