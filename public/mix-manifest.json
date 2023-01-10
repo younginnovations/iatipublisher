@@ -1,16 +1,8 @@
 {
-<<<<<<< HEAD
-    "/js/app.js": "/js/app.js?id=bd91445427c42c330ca26e3bf3844260",
+    "/js/app.js": "/js/app.js?id=e6261ae76a9c3af89946fde267a7aad1",
     "/js/script.js": "/js/script.js?id=67f974d705cdb041f9d42e8c11e824d1",
     "/js/formbuilder.js": "/js/formbuilder.js?id=23e0052da87288dd57b8df6421880767",
     "/manifest.js": "/manifest.js?id=6ec4db78dd752c29bd9956118b1e0467",
-    "/css/app.css": "/css/app.css?id=72fa70a44e926e2cb43dcddf8d21ea10",
-=======
-    "/js/app.js": "/js/app.js?id=679991a650f1f3c8c1486c3d6c7c256b",
-    "/js/script.js": "/js/script.js?id=67f974d705cdb041f9d42e8c11e824d1",
-    "/js/formbuilder.js": "/js/formbuilder.js?id=23e0052da87288dd57b8df6421880767",
-    "/manifest.js": "/manifest.js?id=6ec4db78dd752c29bd9956118b1e0467",
-    "/css/app.css": "/css/app.css?id=c913852085e4f827f5860c641340714e",
->>>>>>> c5c8888a (899-ui-fixes)
+    "/css/app.css": "/css/app.css?id=1ead87fc81e2540c279d2d4119dc7b15",
     "/js/vendor.js": "/js/vendor.js?id=a0cc4df2bfc2b358079e5e0680f2e290"
 }

@@ -10,12 +10,12 @@
     />
     <div class="flex items-center gap-5">
       <div
+        class="hamburger-menu"
         @click="
           () => {
             showSidebar = !showSidebar;
           }
         "
-        class="hamburger-menu"
       >
         <div id="hamburger" class="hamburger scale-75">
           <span class="bg-n-20" />

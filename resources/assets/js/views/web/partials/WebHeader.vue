@@ -130,7 +130,7 @@ export default defineComponent({
     title: { type: String, required: true },
     auth: { type: String, required: true },
   },
-  setup(props) {
+  setup() {
     onMounted(() => {
       document.body.classList.add('no-nav');
     });
