@@ -264,7 +264,6 @@ export default defineComponent({
       },
     ];
     const istopVisible = computed(() => {
-      console.log(positionY.value === 0);
       return positionY.value === 0;
     });
 
@@ -282,10 +281,12 @@ export default defineComponent({
         toastData.visibility = false;
       }, 5000);
     });
+
     onUnmounted(() => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', calcWidth);
     });
+
     const calcWidth = (event) => {
       screenWidth.value = event.target.innerWidth;
       if (screenWidth.value > 1024) {
@@ -295,6 +296,7 @@ export default defineComponent({
           (document.documentElement.style.overflow = 'hidden');
       }
     };
+
     watch(
       () => showSidebar.value,
       (sidebar) => {

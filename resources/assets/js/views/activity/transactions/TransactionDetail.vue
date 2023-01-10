@@ -218,7 +218,9 @@ export default defineComponent({
       (sidebar) => {
         if (sidebar) {
           document.documentElement.style.overflow = 'hidden';
-        } else document.documentElement.style.overflow = 'auto';
+        } else {
+          document.documentElement.style.overflow = 'auto';
+        }
       }
     );
     /**

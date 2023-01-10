@@ -179,8 +179,6 @@ const stickySidebar = (
   },
   parentWrapper: string
 ) => {
-  // console.log('-----------' + affixType + '---------');
-
   //sticky element/child data
   const stickyElement = el.firstChild,
     elHeight = stickyElement.offsetHeight,
@@ -319,6 +317,7 @@ const stickySidebar = (
     }
   }
 };
+
 const fixSidebar = (el) => {
   const footer = document.getElementById('footer');
   const rect = footer && footer.getBoundingClientRect();
@@ -333,8 +332,6 @@ const fixSidebar = (el) => {
       el.style.cssText = `position: absolute; top:190px`;
     } else {
       el.style.cssText = `position: fixed; top:60px`;
-      //
-
       affixType = 'fixed-top';
     }
   }

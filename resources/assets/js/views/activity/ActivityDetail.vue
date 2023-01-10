@@ -303,18 +303,7 @@
                     :types="types"
                     :title="String(name)"
                     :activity-id="activity.id"
-                    :width="//(String(name) === 'iati_identifier' ||
-                    //String(name) === 'activity_status' ||
-                    //String(name) === 'activity_scope' ||
-                    //String(name) === 'collaboration_type' ||
-                    //String(name) === 'default_flow_type' ||
-                    //String(name) === 'default_tied_status' ||
-                    //String(name) === 'default_finance_type' ||
-                    //String(name) === 'capital_spend') &&
-                    //width > 1200
-                    //? 'basis-6/12'
-                    //:
-                    'full'"
+                    :width="'full'"
                     :completed="status[name] ?? false"
                     :tooltip="element.hover_text"
                     class="elements-card"

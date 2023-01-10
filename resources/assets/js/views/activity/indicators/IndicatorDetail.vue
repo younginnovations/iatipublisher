@@ -402,7 +402,6 @@ export default defineComponent({
     });
 
     const istopVisible = computed(() => {
-      console.log(positionY.value === 0);
       return positionY.value === 0;
     });
 

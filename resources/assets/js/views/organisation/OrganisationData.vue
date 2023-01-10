@@ -380,6 +380,7 @@ export default defineComponent({
 
     const calcWidth = (event) => {
       screenWidth.value = event.target.innerWidth;
+
       if (screenWidth.value > 1024) {
         document.documentElement.style.overflow = 'auto';
       } else {
