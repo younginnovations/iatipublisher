@@ -720,8 +720,6 @@ const editUser = (user) => {
   formData.full_name = user.full_name;
   formData.email = user.email;
   formData.role_id = user.role_id;
-  formData.password = user.password;
-  formData.password_confirmation = user.password;
   editUserId.value = user.id;
   editUserForm.value = true;
 };
