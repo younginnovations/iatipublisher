@@ -144,7 +144,7 @@ class LoginController extends Controller
                     $request->session()->put('auth.password_confirmed_at', time());
                     $request->session()->put('role_id', auth()->user()->role_id);
 
-                    if (auth()->user()->role_id === app(Role::class)->getSuperAdminId()) {
+                    if (in_array(auth()->user()->role_id, [app(Role::class)->getSuperAdminId(), app(Role::class)->getIatiAdminId()])) {
                         $request->session()->put('superadmin_user_id', auth()->user()->id);
                     }
                 }
