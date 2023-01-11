@@ -4,7 +4,7 @@
       <div class="flex">
         <template v-for="(bc, d) in breadcrumbData" :key="d">
           <template v-if="Number(d) === 0">
-            <a class="whitespace-nowrap font-bold" href="/activities">
+            <a class="whitespace-nowrap font-bold" href="/">
               {{ bc.title }}
             </a>
           </template>
@@ -21,10 +21,7 @@
               </span>
             </div>
           </template>
-          <span
-            v-if="Number(d) !== breadcrumbData.length - 1"
-            class="separator mx-4"
-          >
+          <span v-if="Number(d) !== breadcrumbData.length - 1" class="separator mx-4">
             /
           </span>
         </template>
@@ -34,11 +31,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
-import getActivityTitle from 'Composable/title';
+import { defineComponent, toRefs } from "vue";
+import getActivityTitle from "Composable/title";
 
 export default defineComponent({
-  name: 'BreadCrumb',
+  name: "BreadCrumb",
   components: {},
   props: {
     data: {
