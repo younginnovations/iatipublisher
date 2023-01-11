@@ -647,13 +647,14 @@ class UserService
     public function delete($id): bool
     {
         $user = $this->userRepo->find($id);
-        $users = $this->userRepo->getUserDownloadData(['organization_id' => [$user->organization_id], 'roles' => ['admin']]);
+        $adminRole = $this->roleRepo->getOrganizationAdminId();
+        $users = $this->userRepo->getUserDownloadData(['organization_id' => [$user->organization_id], 'role' => [$adminRole]]);
 
-        if (count($users) > 1 || $user->organization_id === null) {
-            return $this->userRepo->delete($id);
+        if (($user->role_id === $adminRole && count($users) == 1)) {
+            return false;
         }
 
-        return false;
+        return $this->userRepo->delete($id);
     }
 
     /**
@@ -682,15 +683,16 @@ class UserService
     {
         $user = $this->userRepo->find($id);
         $status = $user['status'] ? false : true;
+        $adminRole = $this->roleRepo->getOrganizationAdminId();
 
         if (!$status) {
-            $users = $this->userRepo->getUserDownloadData(['organization_id' => [$user->organization_id], 'roles' => ['admin'], 'status' => [1]]);
+            $users = $this->userRepo->getUserDownloadData(['organization_id' => [$user->organization_id], 'role' => [$adminRole], 'status' => [1]]);
 
-            if (count($users) > 1 || $user->organization_id === null) {
-                return $this->userRepo->update($id, ['status' => $status]);
+            if (($user->role_id === $adminRole && count($users) == 1)) {
+                return false;
             }
 
-            return false;
+            return $this->userRepo->update($id, ['status' => $status]);
         }
 
         return $this->userRepo->update($id, ['status' => $status]);
