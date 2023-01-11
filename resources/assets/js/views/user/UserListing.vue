@@ -586,7 +586,6 @@ import Multiselect from '@vueform/multiselect';
 import moment from 'moment';
 import Pagination from 'Components/TablePagination.vue';
 import { watchIgnorable } from '@vueuse/core';
-import { response } from 'express';
 
 const props = defineProps({
   organizations: { type: Object, required: true },
@@ -930,7 +929,7 @@ const toggleSelectall = () => {
 };
 watch(
   () => checklist.value,
-  (value) => {
+  () => {
     selectedIds.value[usersData['current_page']] = [];
 
     currentpageData.value = usersData.data.map((value) => {
