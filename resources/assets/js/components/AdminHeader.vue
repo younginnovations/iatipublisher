@@ -38,23 +38,26 @@
       ></div>
     </div>
     <div id="nav-list" class="activity-nav-menu flex w-full justify-between">
-      <!-- commented to temporarily hide language buttons -->
-      <!-- <nav class="justify-end">
-        <ul class="flex">
+      <!-- commented to temporarily hide language buttons , remove width later -->
+      <nav class="w-[85px] justify-end">
+        <!-- <ul class="flex">
           <li
             v-for="(language, index) in data.languages"
             :key="index"
             :class="data.languageNavLiClasses"
           >
             <a
-              :class="[{ nav__pointer: language.active }, data.languageNavAnchorClasses]"
+              :class="[
+                { nav__pointer: language.active },
+                data.languageNavAnchorClasses,
+              ]"
               :href="language.permalink"
             >
               <span>{{ language.language }}</span>
             </a>
           </li>
-        </ul>
-      </nav> -->
+        </ul> -->
+      </nav>
       <nav>
         <ul class="activity-nav-list -mx-4">
           <li

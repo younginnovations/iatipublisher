@@ -646,10 +646,12 @@ const formError = reactive({
 
 const isFilterApplied = computed(() => {
   return (
-    !!filter.organization.length ||
-    !!filter.roles.length ||
-    filter.status ||
-    filter.status != null
+    +(
+      filter.organization.length +
+      filter.roles.length +
+      filter.status +
+      filter.status
+    ) != 0
   );
 });
 
