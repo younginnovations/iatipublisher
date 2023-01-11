@@ -33,7 +33,7 @@ class UserUpdateRequest extends FormRequest
         $role = Auth::user()->role->role;
 
         $rules = [
-            'username'              => ['required', 'max:255', 'string', sprintf('unique:users,username,%d', $id)],
+            'username'              => ['required', 'max:255', 'string', 'regex:/^[a-z]([0-9a-z-_])*$/', 'unique:users,username'],
             'full_name'             => ['required', 'string', 'max:255'],
             'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'max:255', sprintf('unique:users,email,%d', $id)],
         ];
@@ -47,6 +47,18 @@ class UserUpdateRequest extends FormRequest
         }
 
         return $rules;
+    }
+
+    /**
+     * Get validation messages.
+     *
+     * @return array
+     */
+    public function messages(): array
+    {
+        $messages['username.regex'] = 'The username is invalid. Username must be purely lowercase alphabets followed by alphanumeric(ascii) characters and these symbols:-_';
+
+        return $messages;
     }
 
     /**

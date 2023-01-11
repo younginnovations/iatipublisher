@@ -33,6 +33,8 @@
           class="primary-btn whitespace-nowrap"
           @click="
             () => {
+              emptyFormData();
+              setFormError();
               addUserForm = true;
             }
           "
@@ -46,8 +48,8 @@
     <div>
       <PopupModal :modal-active="addUserForm || editUserForm">
         <div
-          @keyup.enter="addUserForm ? createUser() : updateUser()"
           class="popup-model"
+          @keyup.enter="addUserForm ? createUser() : updateUser()"
         >
           <div class="mb-5 text-2xl font-bold text-bluecoral">
             {{ addUserForm ? 'Add a new ' : 'Edit ' }}
@@ -162,7 +164,7 @@
             </div>
             <div class="flex flex-col items-start gap-2">
               <label class="text-sm text-n-50"
-                >Confirm Password<span class="text-crimson-50" v-if="!editUserForm">
+                >Confirm Password<span v-if="!editUserForm" class="text-crimson-50">
                   *
                 </span></label
               >
@@ -412,8 +414,8 @@
                 <span>Status</span>
               </th>
               <th
-                class="flex items-center"
                 id="aggregation_status"
+                class="flex items-center"
                 scope="col"
                 width="208px"
               >

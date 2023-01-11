@@ -149,14 +149,4 @@ class Organization extends Model
     {
         return $this->hasMany(Activity::class, 'org_id', 'id');
     }
-
-    /**
-     * Returns id of SuperAdminOrgId from organization table.
-     *
-     * @return int
-     */
-    public function getSuperAdminOrgId(): int
-    {
-        return $this->where(['publisher_id' => 'YIPL-Super'])->first()->id;
-    }
 }

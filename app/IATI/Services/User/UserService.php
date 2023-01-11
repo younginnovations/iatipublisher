@@ -590,7 +590,14 @@ class UserService
         ]);
     }
 
-    public function store($data)
+    /**
+     * Store user created by logged in user.
+     *
+     * @param data
+     *
+     * @return Model
+     */
+    public function store($data): Model
     {
         $data['organization_id'] = Auth::user()->organization_id;
         $data['password'] = Hash::make($data['password']);
@@ -602,7 +609,14 @@ class UserService
         return $user;
     }
 
-    public function update($id, $data)
+    /**
+     * Update user data.
+     *
+     * @param data
+     *
+     * @return bool
+     */
+    public function update($id, $data): bool
     {
         $user = $this->userRepo->find($id);
 
@@ -623,7 +637,14 @@ class UserService
         return $updated;
     }
 
-    public function delete($id)
+    /**
+     * Deletes user with id.
+     *
+     * @param id
+     *
+     * @return bool
+     */
+    public function delete($id): bool
     {
         $user = $this->userRepo->find($id);
         $users = $this->userRepo->getUserDownloadData(['organization_id' => [$user->organization_id], 'roles' => ['admin']]);
@@ -650,7 +671,14 @@ class UserService
         return $users;
     }
 
-    public function toggleUserStatus($id)
+    /**
+     * Toggle status of user with id.
+     *
+     * @param id
+     *
+     * @return bool
+     */
+    public function toggleUserStatus($id): bool
     {
         $user = $this->userRepo->find($id);
         $status = $user['status'] ? false : true;
@@ -668,16 +696,29 @@ class UserService
         return $this->userRepo->update($id, ['status' => $status]);
     }
 
-    public function getUserDownloadData($queryParams)
+    /**
+     * Returns user data to be downloaded.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     */
+    public function getUserDownloadData($queryParams): array
     {
         $users = $this->userRepo->getUserDownloadData($queryParams);
 
         return $users;
     }
 
-    public function getRoles()
+    /**
+     * Returns roles based on user type.
+     *
+     * @return array
+     */
+    public function getRoles(): array
     {
         $roles = $this->roleRepo->pluckRoles()->toArray();
+        $translatedRoles = trans('user.user_roles');
 
         if (Auth::user()->role->role === 'iati_admin' || Auth::user()->role->role === 'superadmin') {
             unset($roles[array_flip($roles)['superadmin']]);
@@ -686,6 +727,12 @@ class UserService
         if (Auth::user()->role->role === 'admin' || Auth::user()->role->role === 'general_user') {
             unset($roles[array_flip($roles)['iati_admin']]);
             unset($roles[array_flip($roles)['superadmin']]);
+        }
+
+        foreach ($roles as $key => $role) {
+            if (isset($translatedRoles[$role])) {
+                $roles[$key] = $translatedRoles[$role];
+            }
         }
 
         return $roles;

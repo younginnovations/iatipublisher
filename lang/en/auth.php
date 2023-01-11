@@ -14,7 +14,7 @@ return [
     */
 
     'failed'   => 'These credentials do not match our records.',
-    'inactive_user' => 'Your account is inactive. Please contact your admin for further information.',
+    'inactive_user' => 'Your account is inactive. Please contact your admin or superadmin for further information.',
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
 ];

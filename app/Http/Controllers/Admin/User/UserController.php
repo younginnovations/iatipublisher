@@ -19,7 +19,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class UserController.
@@ -51,7 +50,7 @@ class UserController extends Controller
      *
      * @param UserService      $userService
      * @param OrganizationService      $organizationService
-     * @param Log                 $logger
+     * @param CsvGenerator         $csvGenerator
      * @param DatabaseManager     $db
      */
     public function __construct(UserService $userService, OrganizationService $organizationService, CSVGenerator $csvGenerator, DatabaseManager $db)
@@ -410,6 +409,7 @@ class UserController extends Controller
      * Download users in csv format.
      *
      * @param  mixed $request
+     *
      * @return void
      */
     public function downloadUsers(Request $request)

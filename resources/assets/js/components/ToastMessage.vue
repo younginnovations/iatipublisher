@@ -3,8 +3,8 @@
     <svg-vue :icon="props.type ? 'check-circle' : 'times-circle'" />
     <!-- eslint-disable vue/no-v-html -->
     <span
-      class="whitespace-nowrap"
       v-if="typeof message === 'string'"
+      class="whitespace-nowrap"
       v-html="message"
     ></span>
     <div v-if="typeof message === 'object'">

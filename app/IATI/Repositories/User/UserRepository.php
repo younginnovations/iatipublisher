@@ -6,6 +6,7 @@ namespace App\IATI\Repositories\User;
 
 use App\IATI\Models\User\User;
 use App\IATI\Repositories\Repository;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -104,9 +105,9 @@ class UserRepository extends Repository
      * @param $query
      * @param $queryParams
      *
-     * @return
+     * @return Builder
      */
-    public function filterUsers($query, $queryParams)
+    public function filterUsers($query, $queryParams): Builder
     {
         $orderBy = 'users.created_at';
         $direction = 'desc';

@@ -12,6 +12,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 /**
  * Class OrganizationService.
@@ -172,9 +173,9 @@ class OrganizationService
     /**
      * Returns list of organization name with their id.
      *
-     * @return array
+     * @return Collection
      */
-    public function pluckAllOrganizations()
+    public function pluckAllOrganizations(): Collection
     {
         return $this->organizationRepo->pluckAllOrganizations();
     }

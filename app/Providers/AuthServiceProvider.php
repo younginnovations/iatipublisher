@@ -108,6 +108,13 @@ class AuthServiceProvider extends ServiceProvider
         }
     }
 
+    /**
+     * Returns user role.
+     *
+     * @param $user
+     *
+     * @return string
+     */
     protected function getUserRole($user): string
     {
         return $user->role->role;

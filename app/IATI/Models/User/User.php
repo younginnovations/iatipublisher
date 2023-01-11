@@ -70,8 +70,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Before inbuilt function.
+     *
+     * @return void
      */
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 

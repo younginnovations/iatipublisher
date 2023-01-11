@@ -22,8 +22,8 @@ class RoleTableSeeder extends Seeder
         $superAdminRole = Role::factory()->make(['role' => 'superadmin'])->toArray();
         Role::updateOrCreate(['role' => 'superadmin'], $superAdminRole);
 
-        /** Create or update superadmin role */
-        /** @var array $superAdminRole */
+        /** Create or update iati_admin role */
+        /** @var array $iati_admin */
         $iatiAdminRole = Role::factory()->make(['role' => 'iati_admin'])->toArray();
         Role::updateOrCreate(['role' => 'iati_admin'], $iatiAdminRole);
 

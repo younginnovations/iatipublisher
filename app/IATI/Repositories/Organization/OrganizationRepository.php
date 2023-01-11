@@ -104,24 +104,26 @@ class OrganizationRepository extends Repository
         }
 
         $organizations = $this->model->withCount('allActivities')
-                                     ->with(['user' => function ($user) use ($adminRoleId) {
-                                         return $user->where('role_id', $adminRoleId)->where('status', 1)->whereNull('deleted_at');
-                                     }]);
+            ->with(['user' => function ($user) use ($adminRoleId) {
+                return $user->where('role_id', $adminRoleId)
+                    ->where('status', 1)
+                    ->whereNull('deleted_at');
+            }]);
 
         if (array_key_exists('q', $queryParams) && !empty($queryParams['q'])) {
             $organizations->whereRaw($whereSql, $bindParams)
-                          ->orWhereHas('user', function ($q) use ($bindParams) {
-                              $q->where('email', 'ilike', $bindParams);
-                          });
+                ->orWhereHas('user', function ($q) use ($bindParams) {
+                    $q->where('email', 'ilike', $bindParams);
+                });
         }
 
         if ($orderBy === 'name') {
             return $organizations->orderByRaw("name->0->>'narrative'" . $direction)
-                                 ->paginate(10, ['*'], 'organization', $page);
+                ->paginate(10, ['*'], 'organization', $page);
         }
 
         return $organizations->orderBy($orderBy, $direction)
-                             ->paginate(10, ['*'], 'organization', $page);
+            ->paginate(10, ['*'], 'organization', $page);
     }
 
     /**
@@ -129,7 +131,7 @@ class OrganizationRepository extends Repository
      *
      * @return Collection
      */
-    public function pluckAllOrganizations()
+    public function pluckAllOrganizations(): Collection
     {
         return $this->model->pluck('publisher_name', 'id');
     }

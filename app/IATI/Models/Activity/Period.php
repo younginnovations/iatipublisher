@@ -39,7 +39,7 @@ class Period extends Model
      *
      * @return void
      */
-    protected static function booted()
+    protected static function booted(): void
     {
         static::created(function ($period) {
             $period->indicator->result->activity->touch();

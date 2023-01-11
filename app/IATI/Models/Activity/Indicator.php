@@ -43,7 +43,7 @@ class Indicator extends Model
      *
      * @return void
      */
-    protected static function booted()
+    protected static function booted(): void
     {
         static::created(function ($indicator) {
             $indicator->result->activity->touch();
