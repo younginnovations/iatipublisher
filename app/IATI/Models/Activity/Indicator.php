@@ -24,8 +24,7 @@ class Indicator extends Model
     /**
      * @var array
      */
-    protected $fillable
-    = [
+    protected $fillable = [
         'result_id',
         'indicator',
     ];

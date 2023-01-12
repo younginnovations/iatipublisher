@@ -167,9 +167,9 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function role()
+    public function role(): BelongsTo
     {
         return $this->belongsTo('App\IATI\Models\User\Role', 'role_id');
     }

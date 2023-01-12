@@ -10,6 +10,7 @@ use App\IATI\Repositories\Setting\SettingRepository;
 use App\IATI\Repositories\User\RoleRepository;
 use App\IATI\Repositories\User\UserRepository;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -205,9 +206,9 @@ class UserService
     /**
      * Check if iatiIdentifier already exists at registry.
      *
-     * @param string $data
-     *
+     * @param string $identifier
      * @return array
+     * @throws GuzzleException
      */
     public function checkIATIIdentifier(string $identifier): array
     {
@@ -256,6 +257,7 @@ class UserService
      * @param bool $exists
      *
      * @return array
+     * @throws GuzzleException
      */
     public function checkUser(array $data, bool $exists = true): array
     {
@@ -284,8 +286,6 @@ class UserService
 
         $response = json_decode($res->getBody()->getContents())->result;
 
-        $errors = [];
-
         if ($exists) {
             if ($data['username'] !== $response->name) {
                 $errors['username'] = ['User with this name does not exists in IATI Registry.'];
@@ -310,9 +310,10 @@ class UserService
     /**
      * Create if user email already exists In Iati Registry.
      *
-     * @param array $email
+     * @param string $email
      *
      * @return array
+     * @throws GuzzleException
      */
     public function checkUserEmail(string $email): array
     {
@@ -338,7 +339,6 @@ class UserService
         }
 
         $response = json_decode($res->getBody()->getContents())->result;
-        $errors = [];
 
         if (!empty($response)) {
             $errors['email'] = ['User with this email already exist in IATI Registry.'];
@@ -353,6 +353,7 @@ class UserService
      * @param array $data
      *
      * @return array
+     * @throws GuzzleException
      */
     public function createUserInRegistry(array $data): array
     {
@@ -391,9 +392,10 @@ class UserService
     /**
      * Creates API token.
      *
-     * @param string $data
-     *
+     * @param string $username
      * @return array
+     * @throws GuzzleException
+     * @throws \JsonException
      */
     public function createAPItoken(string $username): array
     {
@@ -413,7 +415,7 @@ class UserService
         $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
         $client = new Client($clientConfig);
         $res = $client->request('POST', env('IATI_API_ENDPOINT') . '/action/api_token_create', $requestConfig);
-        $response = json_decode($res->getBody()->getContents());
+        $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
 
         if ($response->success) {
             return [
@@ -434,6 +436,8 @@ class UserService
      * @param array $data
      *
      * @return array
+     * @throws GuzzleException
+     * @throws \JsonException
      */
     public function createPublisherInRegistry(array $data, $token): array
     {
@@ -450,7 +454,7 @@ class UserService
         $clientConfig['headers']['X-CKAN-API-Key'] = $token;
         $client = new Client($clientConfig);
         $res = $client->request('POST', env('IATI_API_ENDPOINT') . '/action/organization_create', $requestConfig);
-        $response = json_decode($res->getBody()->getContents());
+        $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
 
         if ($response->success) {
             return [
@@ -498,12 +502,12 @@ class UserService
     /**
      * Map IATI errors to system error.
      *
-     * @param string type
+     * @param string $type type
      * @param array $errors
      *
      * @return array
      */
-    public function mapError($type, $errors): array
+    public function mapError(string $type, array $errors): array
     {
         $mapper = [
             'user' => [
@@ -534,7 +538,7 @@ class UserService
         unset($errors['__type']);
 
         foreach ($errors as $field => $error) {
-            if (in_array($field, array_keys($mapper[$type]))) {
+            if (array_key_exists($field, $mapper[$type])) {
                 $errors[$mapper[$type][$field]] = $error;
                 unset($errors[$field]);
             }
@@ -579,9 +583,10 @@ class UserService
     /**
      * Update user password.
      *
+     * @param $userId
      * @param $data
      *
-     * @return $bool
+     * @return bool $bool
      */
     public function updatePassword($userId, $data): bool
     {
@@ -593,15 +598,14 @@ class UserService
     /**
      * Store user created by logged in user.
      *
-     * @param data
-     *
+     * @param $data
      * @return Model
      */
     public function store($data): Model
     {
         $data['organization_id'] = Auth::user()->organization_id;
         $data['password'] = Hash::make($data['password']);
-        $data['role_id'] = isset($data['role_id']) ? $data['role_id'] : $this->roleRepo->getIatiAdminId();
+        $data['role_id'] = $data['role_id'] ?? $this->roleRepo->getIatiAdminId();
         $data['registration_method'] = 'user_create';
         $user = $this->userRepo->store($data);
         User::sendNewUserEmail($user);
@@ -612,7 +616,8 @@ class UserService
     /**
      * Update user data.
      *
-     * @param data
+     * @param $id
+     * @param $data
      *
      * @return bool
      */
@@ -640,7 +645,7 @@ class UserService
     /**
      * Deletes user with id.
      *
-     * @param id
+     * @param $id
      *
      * @return bool
      */
@@ -650,7 +655,7 @@ class UserService
         $adminRole = $this->roleRepo->getOrganizationAdminId();
         $users = $this->userRepo->getUserDownloadData(['organization_id' => [$user->organization_id], 'role' => [$adminRole]]);
 
-        if (($user->role_id === $adminRole && count($users) == 1)) {
+        if (($user->role_id === $adminRole && count($users) === 1)) {
             return false;
         }
 
@@ -665,37 +670,35 @@ class UserService
      *
      * @return Collection|LengthAwarePaginator
      */
-    public function getPaginatedUsers($page, $queryParams): Collection|LengthAwarePaginator
+    public function getPaginatedUsers(int $page, array $queryParams): Collection|LengthAwarePaginator
     {
-        $users = $this->userRepo->getPaginatedUsers($page, $queryParams);
-
-        return $users;
+        return $this->userRepo->getPaginatedUsers($page, $queryParams);
     }
 
     /**
      * Toggle status of user with id.
      *
-     * @param id
+     * @param $id
      *
      * @return bool
      */
     public function toggleUserStatus($id): bool
     {
         $user = $this->userRepo->find($id);
-        $status = $user['status'] ? false : true;
+        $status = !$user['status'];
         $adminRole = $this->roleRepo->getOrganizationAdminId();
 
         if (!$status) {
             $users = $this->userRepo->getUserDownloadData(['organization_id' => [$user->organization_id], 'role' => [$adminRole], 'status' => [1]]);
 
-            if (($user->role_id === $adminRole && count($users) == 1)) {
+            if (($user->role_id === $adminRole && count($users) === 1)) {
                 return false;
             }
 
-            return $this->userRepo->update($id, ['status' => $status]);
+            return $this->userRepo->update($id, ['status' => false]);
         }
 
-        return $this->userRepo->update($id, ['status' => $status]);
+        return $this->userRepo->update($id, ['status' => true]);
     }
 
     /**
@@ -707,9 +710,7 @@ class UserService
      */
     public function getUserDownloadData($queryParams): array
     {
-        $users = $this->userRepo->getUserDownloadData($queryParams);
-
-        return $users;
+        return $this->userRepo->getUserDownloadData($queryParams);
     }
 
     /**
@@ -727,8 +728,7 @@ class UserService
         }
 
         if (Auth::user()->role->role === 'admin' || Auth::user()->role->role === 'general_user') {
-            unset($roles[array_flip($roles)['iati_admin']]);
-            unset($roles[array_flip($roles)['superadmin']]);
+            unset($roles[array_flip($roles)['iati_admin']], $roles[array_flip($roles)['superadmin']]);
         }
 
         foreach ($roles as $key => $role) {

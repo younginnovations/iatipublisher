@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Class UserController.
@@ -120,8 +121,7 @@ class UserController extends Controller
             $formData = $request->only(['full_name', 'username', 'email', 'role_id', 'password', 'password_confirmation']);
 
             if (empty($formData['password'])) {
-                unset($formData['password']);
-                unset($formData['password_confirmation']);
+                unset($formData['password'], $formData['password_confirmation']);
             }
 
             $this->db->beginTransaction();
@@ -140,11 +140,10 @@ class UserController extends Controller
     /**
      * Delete user.
      *
-     * @param  mixed $id
-     *
+     * @param int $id
      * @return JsonResponse
      */
-    public function delete($id): JsonResponse
+    public function delete(int $id): JsonResponse
     {
         try {
             if ($this->userService->delete($id)) {
@@ -161,8 +160,6 @@ class UserController extends Controller
 
     /**
      * Get User status.
-     *
-     * @param array $data
      *
      * @return JsonResponse
      */
@@ -188,8 +185,6 @@ class UserController extends Controller
 
     /**
      * Get User status.
-     *
-     * @param array $data
      *
      * @return JsonResponse
      */
@@ -240,8 +235,8 @@ class UserController extends Controller
     /**
      * Return paginated users.
      *
-     * @param $request
-     * @param int
+     * @param Request $request
+     * @param int $page
      *
      * @return JsonResponse
      */
@@ -320,7 +315,7 @@ class UserController extends Controller
     /**
      * Update user password.
      *
-     * @param request
+     * @param UserProfileRequest $request $request
      *
      * @return JsonResponse
      */
@@ -352,9 +347,10 @@ class UserController extends Controller
     /**
      * Update user profile.
      *
-     * @param request
+     * @param UserProfileRequest $request $request
      *
      * @return JsonResponse
+     * @throws \Throwable
      */
     public function updateProfile(UserProfileRequest $request): JsonResponse
     {
@@ -408,11 +404,11 @@ class UserController extends Controller
     /**
      * Download users in csv format.
      *
-     * @param  mixed $request
+     * @param Request $request
      *
-     * @return void
+     * @return BinaryFileResponse|JsonResponse
      */
-    public function downloadUsers(Request $request)
+    public function downloadUsers(Request $request): BinaryFileResponse|JsonResponse
     {
         try {
             $headers = ['username' => 'User Name', 'full_name' => 'Full Name', 'organization_id' => 'Organization', 'email' => 'Email', 'role_id' => 'Role', 'created_at'=>'Joined On'];

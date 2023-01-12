@@ -39,7 +39,7 @@ class NewUserEmail extends Mailable
      *
      * @return $this
      */
-    public function build()
+    public function build(): static
     {
         return $this->view('mail.new-user')->subject('Welcome to IATI Publisher');
     }

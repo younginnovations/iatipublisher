@@ -11,13 +11,13 @@ class AuthServiceProvider extends ServiceProvider
      * Activity permissions.
      * @var array
      */
-    protected $superadmin_permissions = ['list_organizations', 'proxy_user'];
+    protected array $superadmin_permissions = ['list_organizations', 'proxy_user'];
 
     /**
      * Activity admin_permissions.
      * @var array
      */
-    protected $admin_permissions = ['crud_organization', 'publish_organization', 'edit_setting'];
+    protected array $admin_permissions = ['crud_organization', 'publish_organization', 'edit_setting'];
 
     /**
      * The policy mappings for the application.
@@ -33,7 +33,7 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->registerPolicies();
 
@@ -98,11 +98,7 @@ class AuthServiceProvider extends ServiceProvider
             Gate::define(
                 $permission,
                 function ($user) {
-                    if ($this->getUserRole($user) === 'superadmin' || $this->getUserRole($user) === 'iati_admin') {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return $this->getUserRole($user) === 'superadmin' || $this->getUserRole($user) === 'iati_admin';
                 }
             );
         }

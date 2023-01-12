@@ -8,7 +8,6 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 /**
@@ -50,6 +49,7 @@ class UserRequest extends FormRequest
      * Prepares data before validation.
      *
      * @return void
+     * @throws \JsonException
      */
     public function prepareForValidation(): void
     {
@@ -60,6 +60,7 @@ class UserRequest extends FormRequest
      * Decrypt and update password and password field of form request.
      *
      * @return void
+     * @throws \JsonException
      */
     public function decryptPassword(): void
     {
@@ -88,9 +89,10 @@ class UserRequest extends FormRequest
     /**
      * Overwritten failedValidation method for JSON response.
      *
-     * @param Validator $validator
+     * @param \Illuminate\Contracts\Validation\Validator $validator
      *
      * @return ValidationException
+     * @throws ValidationException
      */
     protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator): ValidationException
     {
