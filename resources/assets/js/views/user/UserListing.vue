@@ -442,7 +442,7 @@
                   </div>
                 </div>
               </td>
-              <td class="capitalize">
+              <td>
                 {{ user["email"] }}
               </td>
               <td v-if="userRole === 'superadmin' || userRole === 'iati_admin'">
