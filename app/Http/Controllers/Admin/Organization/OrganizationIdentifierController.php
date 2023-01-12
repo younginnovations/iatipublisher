@@ -6,9 +6,11 @@ namespace App\Http\Controllers\Admin\Organization;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organization\OrganizationIdentifier\OrganizationIdentifierRequest;
+use App\IATI\Services\IatiApiLog\IatiApiLogService;
 use App\IATI\Services\Organization\OrganizationIdentifierService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -24,13 +26,19 @@ class OrganizationIdentifierController extends Controller
     protected OrganizationIdentifierService $organizationIdentifierService;
 
     /**
+     * @var IatiApiLogService
+     */
+    protected IatiApiLogService $iatiApiLogService;
+
+    /**
      * OrganizationIdentifierController Constructor.
      *
      * @param OrganizationIdentifierService    $organizationIdentifierService
      */
-    public function __construct(OrganizationIdentifierService $organizationIdentifierService)
+    public function __construct(OrganizationIdentifierService $organizationIdentifierService, IatiApiLogService $iatiApiLogService)
     {
         $this->organizationIdentifierService = $organizationIdentifierService;
+        $this->iatiApiLogService = $iatiApiLogService;
     }
 
     /**
@@ -95,6 +103,8 @@ class OrganizationIdentifierController extends Controller
      */
     public function verifyPublisher(array $data): bool
     {
+        $apiInfo = [];
+
         try {
             $organization = Auth::user()->organization;
             $identifier = $data['organization_registration_agency'] . '-' . $data['registration_number'];
@@ -107,18 +117,25 @@ class OrganizationIdentifierController extends Controller
                     ],
                 ]
             );
-
-            $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', [
+            $requestOptions = [
                 'auth'            => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
                 'query'           => ['id' => $organization['publisher_id']],
                 'connect_timeout' => 500,
-            ]);
+            ];
+
+            $apiInfo = generateApiInfo(new Request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOptions));
+
+            $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOptions);
+            $apiInfo['response'] = json_decode((string) $res->getBody(), true);
+            $this->iatiApiLogService->store($apiInfo);
 
             $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
 
             return $response->publisher_iati_id === $identifier;
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
+            $apiInfo['response'] = $e->getMessage();
+            $this->iatiApiLogService->store($apiInfo);
 
             return false;
         }

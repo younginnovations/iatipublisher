@@ -1122,3 +1122,24 @@ if (!function_exists('get_time_stamped_text')) {
         return sprintf('%s_%s', $filename, date('Y_m_d_His'));
     }
 }
+
+if (!function_exists('generateApiInfo')) {
+    /**
+     * Generates api log info for API logging.
+     *
+     * @param $request
+     *
+     * @return array
+     */
+    function generateApiInfo($request, $response = null):array
+    {
+        $requestInfo = [
+            'method'       => $request->getMethod(),
+            'url'          => $request->getUri(),
+            'request'      => $request->getMethod() === 'GET' ? $request->getHeaders('query') : json_decode((string) $request->getBody()),
+            'response'     => $response ? json_decode((string) $response->getBody(), true) : null,
+        ];
+
+        return $requestInfo;
+    }
+}

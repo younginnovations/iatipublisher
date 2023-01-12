@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\IATI\Services\Organization;
 
 use App\IATI\Models\Organization\Organization;
+use App\IATI\Repositories\IatiApiLog\IatiApiLogRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Traits\OrganizationXmlBaseElements;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
@@ -27,13 +29,20 @@ class OrganizationService
     private OrganizationRepository $organizationRepo;
 
     /**
+     * @var IatiApiLogRepository
+     */
+    private IatiApiLogRepository $iatiApiLogRepo;
+
+    /**
      * UserService constructor.
      *
      * @param OrganizationRepository $organizationRepo
+     * @param IatiApiLogRepository $iatiApiLogRepo
      */
-    public function __construct(OrganizationRepository $organizationRepo)
+    public function __construct(OrganizationRepository $organizationRepo, IatiApiLogRepository $iatiApiLogRepo)
     {
         $this->organizationRepo = $organizationRepo;
+        $this->iatiApiLogRepo = $iatiApiLogRepo;
     }
 
     /**
@@ -202,6 +211,7 @@ class OrganizationService
 
         $client = new Client($clientConfig);
         $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig);
+        $this->iatiApiLogRepo->store(generateApiInfo(new Request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig), $res));
 
         if ($res->getStatusCode() === 404) {
             return false;

@@ -6,11 +6,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\IATI\Models\User\Role;
+use App\IATI\Services\IatiApiLog\IatiApiLogService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
 use App\Providers\RouteServiceProvider;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Psr7\Request as Psr7Request;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +20,6 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -49,7 +50,7 @@ class RegisterController extends Controller
 
     protected OrganizationService $organizationService;
     protected UserService $userService;
-    protected Log $logger;
+    protected IatiApiLogService $iatiApiLogService;
     protected DatabaseManager $db;
 
     /**
@@ -57,14 +58,14 @@ class RegisterController extends Controller
      *
      * @param OrganizationService $organizationService
      * @param UserService         $userService
-     * @param Log                 $logger
+     * @param IatiApiLogService   $iatiApiLogService
      * @param DatabaseManager     $db
      */
-    public function __construct(OrganizationService $organizationService, UserService $userService, Log $logger, DatabaseManager $db)
+    public function __construct(OrganizationService $organizationService, UserService $userService, IatiApiLogService $iatiApiLogService, DatabaseManager $db)
     {
         $this->organizationService = $organizationService;
         $this->userService = $userService;
-        $this->logger = $logger;
+        $this->iatiApiLogService = $iatiApiLogService;
         $this->db = $db;
 
         $this->middleware('guest');
@@ -130,6 +131,7 @@ class RegisterController extends Controller
 
             $client = new Client($clientConfig);
             $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig);
+            $this->iatiApiLogService->store(generateApiInfo(new Psr7Request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig), $res));
 
             if ($res->getStatusCode() === 404) {
                 return response()->json([
