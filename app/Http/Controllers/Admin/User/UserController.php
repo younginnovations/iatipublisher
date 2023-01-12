@@ -77,9 +77,10 @@ class UserController extends Controller
 
             return view('admin.user.index', compact('status', 'organizations', 'roles', 'userRole'));
         } catch (\Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while rendering user listing page');
+            return redirect()->back()->with('error', 'Error has occurred while rendering user listing page');
         }
     }
 

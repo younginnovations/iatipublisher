@@ -4406,7 +4406,7 @@
         "label": "provider organisation",
         "element_criteria": "",
         "add_more": false,
-        "hover_text": "For incoming funds this is the organisation from which the transaction originated. If omitted on outgoing funds the reporting-org is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/provider-org/'>For more information</a>",
+        "hover_text": "For incoming funds this is the organisation from which the transaction originated. If omitted on outgoing funds the reporting-org is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/provider-org'>For more information</a>",
         "help_text": "For each transaction it is strongly recommended that you publish information on both the provider and receiver organisations of the funds. This includes instances where your organisation is either the provider or the receiver.<br></br>If you do not provide information on the provider organisation for incoming transactions, then it is presumed that your organisation is the provider of the funds.",
         "attributes": {
           "organization_identifer_code": {
@@ -4453,7 +4453,7 @@
             "attr": {
               "row": 4
             },
-            "hover_text": "The name of the organisation. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/provider-org/'>For more information</a>",
+            "hover_text": "The name of the organisation. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/provider-org/narrative'>For more information</a>",
             "help_text": "If the provider organisation does not have an IATI Organisation Identifier, you must provide the text name of the organisation.<br></br><b>Please do not type a code here for the provider organisation.</b>",
             "attributes": {
               "language": {
@@ -4464,7 +4464,7 @@
                 "choices": "Activity/Language.json",
                 "required": false,
                 "criteria": "recommended",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <br></br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/provider-org/'>For more information</a>",
+                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <br></br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/provider-org/narrative'>For more information</a>",
                 "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
               }
             },
