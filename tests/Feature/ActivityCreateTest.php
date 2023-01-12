@@ -22,10 +22,14 @@ class ActivityCreateTest extends TestCase
     public function test_user_must_enter_all_fields_for_creating_activity(): void
     {
         $role = Role::factory()->create();
-        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
-        Activity::factory()->create(['org_id'=>$org->id]);
+        $org = Organization::factory()->has(User::factory(['role_id' => $role->id]))->create();
+        Activity::factory()->create([
+            'org_id' => $org->id,
+            'created_by' => $org->user->id,
+            'updated_by' => $org->user->id,
+        ]);
         $this->actingAs($org->user)->post('/activity', [])
-             ->assertSessionHasErrors(['narrative', 'activity_identifier']);
+            ->assertSessionHasErrors(['narrative', 'activity_identifier']);
     }
 
     /**
@@ -36,12 +40,22 @@ class ActivityCreateTest extends TestCase
     public function test_activity_identifier_must_be_unique_for_organization(): void
     {
         $role = Role::factory()->create();
-        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
-        Activity::factory()->create(['org_id'=>$org->id]);
+        $org = Organization::factory()->has(User::factory(['role_id' => $role->id]))->create();
+        Activity::factory()->create([
+            'org_id' => $org->id,
+            'created_by' => $org->user->id,
+            'updated_by' => $org->user->id,
+        ]);
 
-        $this->actingAs($org->user)->post('/activity', ['narrative' => 'Test text', 'language' => 'en', 'activity_identifier' => 'SYRZ000041', 'iati_identifier_text' => 'CR-NP-SYRZ000041'])
-             ->assertStatus(302)
-             ->assertSessionHasErrors('activity_identifier');
+        $this->actingAs($org->user)->post('/activity', [
+            'narrative' => 'Test text',
+            'language' => 'en',
+            'activity_identifier' => 'SYRZ000041',
+            'iati_identifier_text' => 'CR-NP-SYRZ000042',
+
+        ])
+            ->assertStatus(302)
+            ->assertSessionHasErrors('activity_identifier');
     }
 
     /**
@@ -52,7 +66,7 @@ class ActivityCreateTest extends TestCase
     public function test_successful_activity_creation(): void
     {
         $role = Role::factory()->create();
-        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
+        $org = Organization::factory()->has(User::factory(['role_id' => $role->id]))->create();
 
         $this->actingAs($org->user)->post('/activity', [
             'narrative'            => Str::random(5),
@@ -60,8 +74,10 @@ class ActivityCreateTest extends TestCase
             'activity_identifier'  => '11111',
             'iati_identifier_text' => 'CR-NP-11111',
             'org_id'               => $org['id'],
+            'created_by'           => $org->user->id,
+            'updated_by'           => $org->user->id,
         ])
-             ->assertStatus(200)
-             ->assertJsonStructure(['success', 'message', 'data']);
+            ->assertStatus(200)
+            ->assertJsonStructure(['success', 'message', 'data']);
     }
 }

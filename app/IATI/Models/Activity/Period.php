@@ -34,21 +34,7 @@ class Period extends Model
         'period' => 'json',
     ];
 
-    /**
-     * The "booted" method of the model.
-     *
-     * @return void
-     */
-    protected static function booted(): void
-    {
-        static::created(function ($period) {
-            $period->indicator->result->activity->touch();
-        });
-
-        static::updated(function ($period) {
-            $period->indicator->result->activity->touch();
-        });
-    }
+    protected $touches = ['indicator'];
 
     /**
      * Period belongs to indicator.

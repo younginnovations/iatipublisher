@@ -37,21 +37,7 @@ class Indicator extends Model
         'indicator' => 'json',
     ];
 
-    /**
-     * The "booted" method of the model.
-     *
-     * @return void
-     */
-    protected static function booted(): void
-    {
-        static::created(function ($indicator) {
-            $indicator->result->activity->touch();
-        });
-
-        static::updated(function ($indicator) {
-            $indicator->result->activity->touch();
-        });
-    }
+    protected $touches = ['result'];
 
     /**
      * Indicator hasmany periods.

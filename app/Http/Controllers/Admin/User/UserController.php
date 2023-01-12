@@ -71,13 +71,12 @@ class UserController extends Controller
     {
         try {
             $organizations = $this->organizationService->pluckAllOrganizations();
-            $status = getUserStatusTypes();
+            $status = getUserStatus();
             $roles = $this->userService->getRoles();
             $userRole = Auth::user()->role->role;
 
             return view('admin.user.index', compact('status', 'organizations', 'roles', 'userRole'));
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->back()->with('error', 'Error has occurred while rendering user listing page');
@@ -219,7 +218,7 @@ class UserController extends Controller
             $user = Auth::user();
             $user['user_role'] = $user->role->role;
             $user['organization_name'] = $user->organization_id ? $user->organization->publisher_name : null;
-            $languagePreference = getLanguagePreferenceTypes();
+            $languagePreference = getLanguagePreference();
 
             return view('admin.user.profile', compact('user', 'languagePreference'));
         } catch (\Exception $e) {

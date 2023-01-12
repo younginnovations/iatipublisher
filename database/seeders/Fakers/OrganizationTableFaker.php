@@ -22,6 +22,6 @@ class OrganizationTableFaker extends Seeder
     {
         Organization::factory()
                     ->has(Setting::factory())
-                    ->has(User::factory(['role_id' => app(Role::class)->getOrganizationAdminId()]))->count(12)->create();
+                    ->has(User::factory(['role_id' => app(Role::class)->getOrganizationAdminId()]))->create();
     }
 }

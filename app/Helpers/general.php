@@ -1068,25 +1068,25 @@ if (!function_exists('is_variable_null')) {
     }
 }
 
-if (!function_exists('get_user_status_types')) {
+if (!function_exists('get_user_status')) {
     /**
      * Returns user status types.
      *
      * @return array
      */
-    function getUserStatusTypes(): array
+    function getUserStatus(): array
     {
         return [0 => 'False', 1 => 'True'];
     }
 }
 
-if (!function_exists('getLanguagePreferenceTypes')) {
+if (!function_exists('get_language_preference')) {
     /**
      * Returns language preference types.
      *
      * @return array
      */
-    function getLanguagePreferenceTypes(): array
+    function getLanguagePreference(): array
     {
         return [
             'en' => 'English',

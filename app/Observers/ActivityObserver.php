@@ -81,8 +81,12 @@ class ActivityObserver
         $this->setDefaultValues($activity->getDirty(), $activity);
         $this->setElementStatus($activity, true);
         $this->resetActivityStatus($activity);
-        $activity->created_by = Auth::user()->id;
-        $activity->updated_by = Auth::user()->id;
+
+        if (Auth::check()) {
+            $activity->created_by = Auth::user()->id;
+            $activity->updated_by = Auth::user()->id;
+        }
+
         $activity->saveQuietly();
     }
 
@@ -148,6 +152,8 @@ class ActivityObserver
         $ignorableElements = [
             'updated_at',
             'status',
+            'updated_by',
+            'created_by',
         ];
 
         foreach (array_keys($activityElements) as $key) {

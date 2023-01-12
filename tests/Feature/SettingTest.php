@@ -71,7 +71,7 @@ class SettingTest extends TestCase
     public function test_validation_setting_default_form_filled_data(): void
     {
         $role = Role::factory()->create();
-        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
+        $org = Organization::factory()->has(User::factory(['role_id' => $role->id]))->create();
 
         $this->actingAs($org->user)
              ->post('setting/store/default', [
