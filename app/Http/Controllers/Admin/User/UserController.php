@@ -382,8 +382,10 @@ class UserController extends Controller
     public function toggleUserStatus($id): JsonResponse
     {
         try {
+            $user = $this->userService->getUser($id);
+
             if ($this->userService->toggleUserStatus($id)) {
-                return response()->json(['success' => true, 'message' => 'User status has been successfully changed.']);
+                return response()->json(['success' => true, 'message' => $user->status ? 'User has been deactivated successfully.' : 'User has been activated successfully.']);
             }
 
             return response()->json(['success' => false, 'message' => 'The status of this user cannot be changed.']);

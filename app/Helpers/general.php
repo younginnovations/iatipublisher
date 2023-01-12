@@ -1119,6 +1119,6 @@ if (!function_exists('get_time_stamped_text')) {
      */
     function getTimeStampedText(string $filename): string
     {
-        return sprintf('%s%s', $filename, date('Y_m_d_His'));
+        return sprintf('%s_%s', $filename, date('Y_m_d_His'));
     }
 }

@@ -899,13 +899,12 @@ const downloadAll = () => {
 
   axios.get(route, { params: params }).then((res) => {
     const response = res.data;
-    console.group(res);
     let blob = new Blob([response], {
       type: "application/csv",
     });
     let link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
-    link.download = res.headers["content-disposition"];
+    link.download = res.headers["content-disposition"].split("=")[1];
     link.click();
   });
 };
