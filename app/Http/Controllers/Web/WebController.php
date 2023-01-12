@@ -21,19 +21,36 @@ class WebController extends Controller
     public function index($page = 'signin'): \Illuminate\Contracts\Support\Renderable
     {
         try {
-            $message = Str::contains(Redirect::intended()->getTargetUrl(), '/email/verify/') ? 'User must be logged in to verify email.' : '';
-            $intent = !empty($message) ? 'verify' : '';
-
-            if (request()->cookie('password_changed')) {
-                $message = request()->cookie('password_changed');
-                $intent = !empty($message) ? 'password_changed' : '';
-                cookie()->queue(cookie()->forget('password_changed'));
-            }
+            list($message, $intent) = $this->updateMessageIntent();
 
             return view('web.welcome', compact('page', 'intent', 'message'));
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             logger()->error($e->getMessage());
         }
+    }
+
+    /**
+     * Check and update message for user redirection to login page.
+     *
+     * @return array
+     */
+    private function updateMessageIntent(): array
+    {
+        $message = '';
+        $intent = '';
+
+        if (Str::contains(Redirect::intended()->getTargetUrl(), '/email/verify/')) {
+            $message = 'User must be logged in to verify email.';
+            $intent = 'verify';
+        }
+
+        if (request()->cookie('password_changed')) {
+            $message = request()->cookie('password_changed');
+            $intent = !empty($message) ? 'password_changed' : '';
+            cookie()->queue(cookie()->forget('password_changed'));
+        }
+
+        return [$message, $intent];
     }
 
     /**
