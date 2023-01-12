@@ -1096,25 +1096,25 @@ if (!function_exists('get_language_preference')) {
     }
 }
 
-if (!function_exists('get_user_download_csv_header')) {
+if (!function_exists('get_user_csv_header')) {
     /**
      * Returns user download csv header.
      *
      * @return array
      */
-    function getUserDownloadCsvHeader(): array
+    function getUserCsvHeader(): array
     {
         return ['username' => 'User Name', 'full_name' => 'Full Name', 'organization_id' => 'Organization', 'email' => 'Email', 'role_id' => 'Role', 'created_at'=>'Joined On'];
     }
 }
 
-if (!function_exists('generate_file_name')) {
+if (!function_exists('get_time_stamped_text')) {
     /**
      * Returns filename with ymdhis.
      *
      * @return array
      */
-    function generateFileName(string $filename): string
+    function getTimeStampedText(string $filename): string
     {
         return sprintf('%s%s', $filename, date('Y_m_d_His'));
     }

@@ -77,7 +77,7 @@ class DownloadActivityController extends Controller
 
             $csvData = $this->downloadActivityService->getCsvData($activities);
 
-            return $this->csvGenerator->generateWithHeaders(generateFileName($filename), $csvData, $headers);
+            return $this->csvGenerator->generateWithHeaders(getTimeStampedText($filename), $csvData, $headers);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -121,7 +121,7 @@ class DownloadActivityController extends Controller
                     'Content-Type' => 'text/xml',
                     'Cache-Control' => 'public',
                     'Content-Description' => 'File Transfer',
-                    'Content-Disposition' => 'attachment; filename=' . generateFileName($filename) . '.xml',
+                    'Content-Disposition' => 'attachment; filename=' . getTimeStampedText($filename) . '.xml',
                     'Content-Transfer-Encoding' => 'binary',
                 ]);
         } catch (\Exception $e) {

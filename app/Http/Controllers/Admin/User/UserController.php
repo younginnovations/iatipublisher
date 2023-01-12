@@ -407,11 +407,11 @@ class UserController extends Controller
     public function downloadUsers(Request $request): BinaryFileResponse|JsonResponse
     {
         try {
-            $headers = getUserDownloadCsvHeader();
+            $headers = getUserCsvHeader();
             $queryParams = $this->getQueryParams($request);
             $users = $this->userService->getUserDownloadData($queryParams);
 
-            return $this->csvGenerator->generateWithHeaders(generateFileName('users'), $users, $headers);
+            return $this->csvGenerator->generateWithHeaders(getTimeStampedText('users'), $users, $headers);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
