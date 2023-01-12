@@ -14,8 +14,8 @@ return new class extends Migration {
     public function up()
     {
         Schema::table(DBTables::ACTIVITY, function (Blueprint $table) {
-            $table->integer('created_by')->default(1);
-            $table->integer('updated_by')->default(1);
+            $table->integer('created_by');
+            $table->integer('updated_by');
             $table->foreign('created_by')->references('id')->on(DBTables::USERS)->onDelete('cascade');
             $table->foreign('updated_by')->references('id')->on(DBTables::USERS)->onDelete('cascade');
         });

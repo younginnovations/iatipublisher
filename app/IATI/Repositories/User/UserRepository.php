@@ -64,7 +64,7 @@ class UserRepository extends Repository
      *
      * @return LengthAwarePaginator
      */
-    public function getPaginatedusers($page, $queryParams): LengthAwarePaginator
+    public function getPaginatedUsers($page, $queryParams): LengthAwarePaginator
     {
         $query = $this->model
             ->leftJoin('organizations', 'organizations.id', 'users.organization_id')

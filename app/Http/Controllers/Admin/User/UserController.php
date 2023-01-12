@@ -71,7 +71,7 @@ class UserController extends Controller
     {
         try {
             $organizations = $this->organizationService->pluckAllOrganizations();
-            $status = [1 => 'Active', 0 => 'Inactive'];
+            $status = getUserStatusTypes();
             $roles = $this->userService->getRoles();
             $userRole = Auth::user()->role->role;
 
@@ -219,11 +219,7 @@ class UserController extends Controller
             $user = Auth::user();
             $user['user_role'] = $user->role->role;
             $user['organization_name'] = $user->organization_id ? $user->organization->publisher_name : null;
-            $languagePreference = [
-                'en' => 'English',
-                'fr' => 'French',
-                'es' => 'Spanish',
-            ];
+            $languagePreference = getLanguagePreferenceTypes();
 
             return view('admin.user.profile', compact('user', 'languagePreference'));
         } catch (\Exception $e) {
@@ -412,11 +408,11 @@ class UserController extends Controller
     public function downloadUsers(Request $request): BinaryFileResponse|JsonResponse
     {
         try {
-            $headers = ['username' => 'User Name', 'full_name' => 'Full Name', 'organization_id' => 'Organization', 'email' => 'Email', 'role_id' => 'Role', 'created_at'=>'Joined On'];
+            $headers = getUserDownloadCsvHeader();
             $queryParams = $this->getQueryParams($request);
             $users = $this->userService->getUserDownloadData($queryParams);
 
-            return $this->csvGenerator->generateWithHeaders('test', $users, $headers);
+            return $this->csvGenerator->generateWithHeaders(generateFileName('users'), $users, $headers);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

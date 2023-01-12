@@ -27,23 +27,21 @@ class UserProfileRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [];
         $form_type = $this->get('form_type');
+        $id = Auth::user()->id;
+
+        $rules = [
+            'username'              => ['required', 'max:255', sprintf('unique:users,username,%d', $id)],
+            'full_name'             => ['required', 'string', 'max:255'],
+            'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'max:255', sprintf('unique:users,email,%d', $id)],
+            'language_preference'   => 'required',
+        ];
 
         if ($form_type === 'password') {
             $rules = [
                 'current_password'      => ['required', 'string', 'min:6', 'max:255'],
                 'password'              => ['required', 'string', 'min:6', 'max:255', 'confirmed'],
                 'password_confirmation' => ['required', 'string', 'min:6', 'max:255'],
-            ];
-        } else {
-            $id = Auth::user()->id;
-
-            $rules = [
-                'username'              => ['required', 'max:255', sprintf('unique:users,username,%d', $id)],
-                'full_name'             => ['required', 'string', 'max:255'],
-                'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'max:255', sprintf('unique:users,email,%d', $id)],
-                'language_preference'   => 'required',
             ];
         }
 

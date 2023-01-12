@@ -1067,3 +1067,55 @@ if (!function_exists('is_variable_null')) {
         return is_array($var) ? is_array_values_null($var) : is_null($var);
     }
 }
+
+if (!function_exists('get_user_status_types')) {
+    /**
+     * Returns user status types.
+     *
+     * @return array
+     */
+    function getUserStatusTypes(): array
+    {
+        return [0 => 'False', 1 => 'True'];
+    }
+}
+
+if (!function_exists('getLanguagePreferenceTypes')) {
+    /**
+     * Returns language preference types.
+     *
+     * @return array
+     */
+    function getLanguagePreferenceTypes(): array
+    {
+        return [
+            'en' => 'English',
+            'fr' => 'French',
+            'es' => 'Spanish',
+        ];
+    }
+}
+
+if (!function_exists('get_user_download_csv_header')) {
+    /**
+     * Returns user download csv header.
+     *
+     * @return array
+     */
+    function getUserDownloadCsvHeader(): array
+    {
+        return ['username' => 'User Name', 'full_name' => 'Full Name', 'organization_id' => 'Organization', 'email' => 'Email', 'role_id' => 'Role', 'created_at'=>'Joined On'];
+    }
+}
+
+if (!function_exists('generate_file_name')) {
+    /**
+     * Returns filename with ymdhis.
+     *
+     * @return array
+     */
+    function generateFileName(string $filename): string
+    {
+        return sprintf('%s%s', $filename, date('Y_m_d_His'));
+    }
+}

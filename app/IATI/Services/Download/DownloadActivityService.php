@@ -144,20 +144,6 @@ class DownloadActivityService
     }
 
     /**
-     * Returns name for the file to be downloaded.
-     *
-     * @param $publisherId
-     *
-     * @return string
-     */
-    public function getDownloadFilename($publisherId): string
-    {
-        $filename = $publisherId ? $publisherId . '_' : '';
-
-        return $filename . (now()->toDateString());
-    }
-
-    /**
      * Returns required data in array format.
      *
      * @param $activityArray
