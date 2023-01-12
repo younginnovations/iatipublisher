@@ -329,7 +329,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Password updated successfully.',
-            ])->withCookie('password_changed', 'Password changed successfully.');
+            ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

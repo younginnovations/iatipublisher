@@ -1076,7 +1076,10 @@ if (!function_exists('get_user_status')) {
      */
     function getUserStatus(): array
     {
-        return [0 => 'False', 1 => 'True'];
+        return [
+            1 => 'Active',
+            0 => 'Inactive',
+        ];
     }
 }
 
@@ -1104,7 +1107,7 @@ if (!function_exists('get_user_csv_header')) {
      */
     function getUserCsvHeader(): array
     {
-        return ['username' => 'User Name', 'full_name' => 'Full Name', 'organization_id' => 'Organization', 'email' => 'Email', 'role_id' => 'Role', 'created_at'=>'Joined On'];
+        return ['username' => 'User Name', 'full_name' => 'Full Name', 'organization_id' => 'Organization', 'email' => 'Email', 'role_id' => 'Role', 'created_at' => 'Joined On'];
     }
 }
 

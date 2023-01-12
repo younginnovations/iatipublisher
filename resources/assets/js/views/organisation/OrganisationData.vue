@@ -387,7 +387,6 @@ export default defineComponent({
       positionY.value = window.scrollY;
     };
     const istopVisible = computed(() => {
-      console.log(positionY.value === 0);
       return positionY.value === 0;
     });
     const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {

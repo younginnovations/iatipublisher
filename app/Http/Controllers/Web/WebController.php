@@ -44,12 +44,6 @@ class WebController extends Controller
             $intent = 'verify';
         }
 
-        if (request()->cookie('password_changed')) {
-            $message = request()->cookie('password_changed');
-            $intent = !empty($message) ? 'password_changed' : '';
-            cookie()->queue(cookie()->forget('password_changed'));
-        }
-
         return [$message, $intent];
     }
 
