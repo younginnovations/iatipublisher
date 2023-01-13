@@ -19,22 +19,22 @@ class RoleTableSeeder extends Seeder
     {
         /** Create or update superadmin role */
         /** @var array $superAdminRole */
-        $superAdminRole = Role::factory()->make(['role' => 'superadmin'])->toArray();
-        Role::updateOrCreate(['role' => 'superadmin'], $superAdminRole);
+        $superAdminRole = ['role' => 'superadmin'];
+        Role::updateOrCreate($superAdminRole, $superAdminRole);
 
         /** Create or update iati_admin role */
         /** @var array $iati_admin */
-        $iatiAdminRole = Role::factory()->make(['role' => 'iati_admin'])->toArray();
-        Role::updateOrCreate(['role' => 'iati_admin'], $iatiAdminRole);
+        $iatiAdminRole = ['role' => 'iati_admin'];
+        Role::updateOrCreate($iatiAdminRole, $iatiAdminRole);
 
         /** Create or update admin role */
         /** @var array $adminRole */
-        $adminRole = Role::factory()->make(['role' => 'admin'])->toArray();
-        Role::updateOrCreate(['role' => 'admin'], $adminRole);
+        $adminRole = ['role' => 'admin'];
+        Role::updateOrCreate($adminRole, $adminRole);
 
         /**Create or update general_user */
         /** @var array $generalUserRole */
-        $generalUserRole = Role::factory()->make(['role' => 'general_user'])->toArray();
-        Role::updateOrCreate(['role' => 'general_user'], $generalUserRole);
+        $generalUserRole = ['role' => 'general_user'];
+        Role::updateOrCreate($generalUserRole, $generalUserRole);
     }
 }
