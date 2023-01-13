@@ -336,7 +336,10 @@
             class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
           >
             <span class="text-n-40">Org:</span
-            ><span>{{ textBubbledata(item, 'org') }}</span>
+            ><span
+              class="max-w-[500px] overflow-x-hidden text-ellipsis whitespace-nowrap"
+              >{{ textBubbledata(item, 'org') }}</span
+            >
             <svg-vue
               class="mx-2 mt-1 cursor-pointer text-xs"
               icon="cross"
@@ -366,7 +369,10 @@
             class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
           >
             <span class="text-n-40">Status:</span
-            ><span>{{ textBubbledata(item, 'status') }}</span>
+            ><span
+              class="max-w-[500px] overflow-x-hidden text-ellipsis whitespace-nowrap"
+              >{{ textBubbledata(item, 'status') }}</span
+            >
             <svg-vue
               class="mx-2 mt-1 cursor-pointer text-xs"
               icon="cross"
