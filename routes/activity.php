@@ -49,8 +49,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::group([], static function () {
-    // Route::get('activity/{id}', [\App\Http\Controllers\Admin\Activity\ActivityController::class, 'show'])->name('activity.show');
+
+Route::group(['middleware' => ['can:crud_activity']], static function () {
     Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
     Route::get('/activities/page/{page?}', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getPaginatedActivities'])->name('activities.paginate');
     Route::get('/activities/codelists', [App\Http\Controllers\Admin\Activity\ActivityController::class, 'getLanguagesOrganization'])->name('activities.codelist');
@@ -130,13 +130,13 @@ Route::group([], static function () {
     //Validate Activity
     Route::post('activity/{id}/validateActivity', [ActivityWorkflowController::class, 'validateActivity'])->name('activity.validateActivity');
 
-    Route::resource('activity.result', ResultController::class)->parameters(['activity' => 'id', 'result'=>'resultId']);
+    Route::resource('activity.result', ResultController::class)->parameters(['activity' => 'id', 'result' => 'resultId']);
     Route::get('/activity/{id}/results/page/{page?}', [ResultController::class, 'getPaginatedResults'])->name('activity.results.paginate');
 
-    Route::resource('result.indicator', IndicatorController::class)->parameters(['result' => 'id', 'indicator'=>'indicatorId']);
+    Route::resource('result.indicator', IndicatorController::class)->parameters(['result' => 'id', 'indicator' => 'indicatorId']);
     Route::get('/result/{id}/indicators/page/{page?}', [IndicatorController::class, 'getPaginatedIndicators'])->name('result.indicators.paginate');
 
-    Route::resource('indicator.period', PeriodController::class)->parameters(['indicator' => 'id', 'period'=>'periodId']);
+    Route::resource('indicator.period', PeriodController::class)->parameters(['indicator' => 'id', 'period' => 'periodId']);
     Route::get('/indicator/{id}/periods/page/{page?}', [PeriodController::class, 'getPaginatedPeriods'])->name('indicator.periods.paginate');
 
     Route::get('activity/{id}/default_values', [ActivityDefaultController::class, 'edit'])->name('activity.default_values.edit');

@@ -128,7 +128,11 @@ textarea.form__input {
 .error_input {
   border: 1px solid #d1001e;
 }
-
+.error__multiselect {
+  input {
+    border: 1px solid #d1001e;
+  }
+}
 .panel__input {
   @apply box-border h-10 w-full rounded border border-n-30 bg-paper py-2.5 pl-7 pr-3 outline-none duration-300;
 
@@ -155,4 +159,56 @@ textarea.form__input {
 }
 .required-icon {
   @apply relative top-0.5 text-base leading-none text-crimson-50;
+}
+.open-text {
+  border-radius: 4px;
+  border: 1px solid #a6b5ba;
+  position: relative;
+  input {
+    overflow: hidden;
+    padding-top: 4px;
+    height: 100%;
+    width: 100%;
+    border-radius: 4px;
+    background-color: transparent;
+    padding-left: 30px;
+    &:focus {
+      outline: none !important;
+    }
+  }
+}
+.user-checklist {
+  opacity: 0;
+  position: absolute;
+  z-index: 2;
+  width: 18px;
+  height: 18px;
+  top: 0;
+  left: 0;
+}
+.pseudo-checkbox {
+  height: 18px;
+  width: 18px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 2px solid #d5dcde;
+  opacity: 1;
+  background-color: white;
+  border-radius: 4px;
+}
+.user-checklist:checked ~ .pseudo-checkbox {
+  border-color: rgb(var(--spring-50));
+}
+.ticked-svg {
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  opacity: 0;
+  height: 16px;
+  width: 16px;
+  transform: scale(0.7);
+}
+.user-checklist:checked ~ .ticked-svg {
+  opacity: 1;
 }

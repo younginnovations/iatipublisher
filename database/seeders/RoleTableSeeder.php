@@ -17,14 +17,24 @@ class RoleTableSeeder extends Seeder
      */
     public function run(): void
     {
-        /** Create or update admin role */
-        /** @var array $adminRole */
-        $adminRole = Role::factory()->make(['role' => 'admin'])->toArray();
-        Role::firstOrCreate($adminRole, $adminRole);
-
         /** Create or update superadmin role */
         /** @var array $superAdminRole */
         $superAdminRole = Role::factory()->make(['role' => 'superadmin'])->toArray();
-        Role::firstOrCreate($superAdminRole, $superAdminRole);
+        Role::updateOrCreate(['role' => 'superadmin'], $superAdminRole);
+
+        /** Create or update iati_admin role */
+        /** @var array $iati_admin */
+        $iatiAdminRole = Role::factory()->make(['role' => 'iati_admin'])->toArray();
+        Role::updateOrCreate(['role' => 'iati_admin'], $iatiAdminRole);
+
+        /** Create or update admin role */
+        /** @var array $adminRole */
+        $adminRole = Role::factory()->make(['role' => 'admin'])->toArray();
+        Role::updateOrCreate(['role' => 'admin'], $adminRole);
+
+        /**Create or update general_user */
+        /** @var array $generalUserRole */
+        $generalUserRole = Role::factory()->make(['role' => 'general_user'])->toArray();
+        Role::updateOrCreate(['role' => 'general_user'], $generalUserRole);
     }
 }

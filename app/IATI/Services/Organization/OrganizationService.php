@@ -12,6 +12,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 /**
  * Class OrganizationService.
@@ -167,6 +168,16 @@ class OrganizationService
     public function getPaginatedOrganizations($page, $request): ?LengthAwarePaginator
     {
         return $this->organizationRepo->getPaginatedOrganizations($page, $request);
+    }
+
+    /**
+     * Returns list of organization name with their id.
+     *
+     * @return Collection
+     */
+    public function pluckAllOrganizations(): Collection
+    {
+        return $this->organizationRepo->pluckAllOrganizations();
     }
 
     /**

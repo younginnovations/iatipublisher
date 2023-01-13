@@ -24,7 +24,7 @@
         </div>
       </div>
       <figure class="flex grow-0 items-center">
-        <a href="/activities">
+        <a :href="superAdmin ? '/list-organisations' : '/activities'">
           <svg-vue icon="logo" class="text-4xl" />
         </a>
       </figure>
@@ -38,9 +38,9 @@
       ></div>
     </div>
     <div id="nav-list" class="activity-nav-menu flex w-full justify-between">
-      <!-- commented to temporarily hide language buttons -->
-      <!-- <nav class="justify-end">
-        <ul class="flex">
+      <!-- commented to temporarily hide language buttons , remove width later -->
+      <nav class="w-[85px] justify-end">
+        <!-- <ul class="flex">
           <li
             v-for="(language, index) in data.languages"
             :key="index"
@@ -56,12 +56,14 @@
               <span>{{ language.language }}</span>
             </a>
           </li>
-        </ul>
-      </nav> -->
-      <nav v-if="superAdmin" class="activity-nav">
+        </ul> -->
+      </nav>
+      <nav>
         <ul class="activity-nav-list -mx-4">
           <li
-            v-for="(menu, index) in data.menus"
+            v-for="(menu, index) in data[
+              superAdmin ? 'superadmin_menus' : 'org_menus'
+            ]"
             :key="index"
             :class="data.menuNavLiClasses"
           >
@@ -106,18 +108,36 @@
                 </div>
               </span>
             </span>
+
+            <div
+              v-if="menu.name === 'Add / Import Activity'"
+              class="button__dropdown invisible absolute left-4 top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left opacity-0 shadow-dropdown outline transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
+            >
+              <ul class="flex-col">
+                <li>
+                  <a :class="liClass" @click="modalValue = true"
+                    >Add activity manually</a
+                  >
+                </li>
+                <li>
+                  <a href="/import" :class="liClass"
+                    >Import activities from .csv/.xml</a
+                  >
+                </li>
+              </ul>
+            </div>
           </li>
         </ul>
       </nav>
     </div>
     <div
       class="user-nav"
-      :class="{ 'grow-0': superAdmin, 'grow justify-end': !superAdmin }"
+      :class="{ 'grow-0': !superAdmin, 'grow justify-end': superAdmin }"
     >
       <div class="user-nav">
         <div class="search">
           <input
-            v-if="superAdmin"
+            v-if="!superAdmin"
             v-model="searchValue"
             class="search__input mr-3.5"
             type="text"
@@ -155,17 +175,22 @@
                   <span class="text-n-50">
                     {{ user.full_name }}
                   </span>
-                  <span class="text-tiny text-n-40">
+                  <span class="outine text-tiny text-n-40">
                     {{ organization?.publisher_name }}
                   </span>
                 </div>
               </li>
-              <li class="dropdown__list border-b border-b-n-20">
-                <svg-vue icon="user" />
-                <a href="#">Your Profile</a>
+              <li
+                class="dropdown__list border-b border-b-n-20"
+                @click="redirectProfile"
+              >
+                <a class="flex w-full space-x-4" href="/profile"
+                  ><svg-vue class="mx-1 text-base" icon="user" />
+                  <span>Your Profile</span></a
+                >
               </li>
-              <li class="dropdown__list" @click="logout">
-                <svg-vue icon="logout"></svg-vue>
+              <li class="dropdown__list flex" @click="logout">
+                <svg-vue class="mr-3 ml-1" icon="logout"></svg-vue>
                 <button class="text-sm">Logout</button>
               </li>
             </ul>
@@ -193,12 +218,17 @@
                   </span>
                 </div>
               </li>
-              <li class="dropdown__list border-b border-b-n-20">
-                <svg-vue icon="user" />
-                <a href="#">Your Profile</a>
+              <li
+                class="dropdown__list border-b border-b-n-20"
+                @click="redirectProfile"
+              >
+                <a class="flex w-full space-x-4" href="/profile"
+                  ><svg-vue class="mx-1 text-base" icon="user" />
+                  <span>Your Profile</span></a
+                >
               </li>
-              <li class="dropdown__list" @click="logout">
-                <svg-vue icon="logout"></svg-vue>
+              <li class="dropdown__list flex" @click="logout">
+                <svg-vue class="mr-3 ml-1" icon="logout"></svg-vue>
                 <button class="text-sm">Logout</button>
               </li>
             </ul>
@@ -208,7 +238,7 @@
     </div>
 
     <CreateModal
-      v-if="superAdmin"
+      v-if="!superAdmin"
       :modal-active="modalValue"
       @close="ToggleModel"
       @close-modal="ToggleModel"
@@ -221,11 +251,11 @@
 import {
   defineProps,
   ref,
+  watch,
   reactive,
   onMounted,
   computed,
   onUnmounted,
-  watch,
   Ref,
 } from 'vue';
 import axios from 'axios';
@@ -233,7 +263,7 @@ import { useToggle, useStorage } from '@vueuse/core';
 import CreateModal from '../views/activity/CreateModal.vue';
 import Toast from './ToastMessage.vue';
 
-defineProps({
+const props = defineProps({
   user: { type: Object, required: true },
   organization: {
     type: Object,
@@ -276,7 +306,7 @@ const data = reactive({
       active: false,
     },
   ],
-  menus: [
+  org_menus: [
     {
       name: 'Activity DATA',
       permalink: '/activities',
@@ -294,11 +324,29 @@ const data = reactive({
     },
     {
       name: 'Add / Import Activity',
-      permalink: '',
+      permalink: '#',
+      active: false,
+    },
+    {
+      name: 'Users',
+      permalink: '/users',
+      active: false,
+    },
+  ],
+  superadmin_menus: [
+    {
+      name: 'Organisation List',
+      permalink: '/list-organisations',
+      active: false,
+    },
+    {
+      name: 'Users',
+      permalink: '/users',
       active: false,
     },
   ],
 });
+
 const liClass =
   'block p-2.5 text-n-40 text-tiny uppercase leading-[1.5] font-bold hover:!text-n-50 hover:bg-n-10';
 const [modalValue, modalToggle] = useToggle();
@@ -311,10 +359,12 @@ function toast(message: string, type: boolean) {
 const isTouchDevice = computed(() => {
   return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 });
+
 function ToggleModel() {
   modalToggle();
   window.localStorage.removeItem('openAddModel');
 }
+
 watch(
   () => showSidebar.value,
   (sidebar) => {
@@ -323,23 +373,31 @@ watch(
     } else document.documentElement.style.overflow = 'auto';
   }
 );
+
 function changeActiveMenu() {
   const path = window.location.pathname;
-  data.menus.forEach((menu, key) => {
-    data.menus[key]['active'] = menu.permalink === path ? true : false;
+  data.org_menus.forEach((menu, key) => {
+    data.org_menus[key]['active'] = menu.permalink === path ? true : false;
   });
   if (
     path.includes('activity') ||
     path.includes('result') ||
     path.includes('indicator')
   ) {
-    data.menus[0]['active'] = true;
+    data.org_menus[0]['active'] = true;
   }
   if (path.includes('organisation')) {
-    data.menus[1]['active'] = true;
+    data.org_menus[1]['active'] = true;
   }
   if (path.includes('import')) {
-    data.menus[3]['active'] = true;
+    data.org_menus[3]['active'] = true;
+  }
+  if (path.includes('users')) {
+    data.org_menus[4]['active'] = true;
+    data.superadmin_menus[1]['active'] = true;
+  }
+  if (path.includes('list-organisations')) {
+    data.superadmin_menus[0]['active'] = true;
   }
 }
 
@@ -362,13 +420,16 @@ async function logout() {
  */
 const searchValue: Ref<string | null> = ref('');
 const currentURL = window.location.href;
+
 if (currentURL.includes('?')) {
   const queryString = window.location.search,
     urlParams = new URLSearchParams(queryString),
     search = urlParams.get('q');
   searchValue.value = search;
 }
+
 const spinner = ref(false);
+
 const searchFunction = (url: string) => {
   spinner.value = true;
   const param = searchValue.value?.replace('#', '');
@@ -378,13 +439,16 @@ const searchFunction = (url: string) => {
     let queryStringArr = queryString.split('&') as [];
     sortingParam = '&' + queryStringArr.slice(1).join('&');
   }
-  let href = param ? `${url}?q=${param}${sortingParam}` : '/activities/';
+  let href = param
+    ? `${url}?q=${param}${sortingParam}`
+    : props.superAdmin
+    ? '/list-organisations'
+    : '/activities/';
   window.location.href = href;
 };
-onMounted(async () => {
-  changeActiveMenu();
-});
+
 onMounted(() => {
+  changeActiveMenu();
   if (
     localStorage.getItem('openAddModel') === 'true' &&
     window.location.pathname === '/activities'
@@ -392,6 +456,10 @@ onMounted(() => {
     modalValue.value = true;
   }
 });
+const redirectProfile = () => {
+  window.location.href = '/profile';
+};
+
 onUnmounted(() => {
   localStorage.removeItem('openAddModel');
 });
@@ -456,7 +524,7 @@ onUnmounted(() => {
   }
 }
 .profile__dropdown--touch {
-  @apply absolute  right-5 z-20 bg-white text-left text-sm text-bluecoral shadow-dropdown  duration-300;
+  @apply absolute  right-10 z-20 bg-white text-left text-sm text-bluecoral shadow-dropdown  duration-300;
   top: 50px;
   width: 265px;
   box-shadow: 4px 4px 40px rgba(0, 50, 76, 0.2);

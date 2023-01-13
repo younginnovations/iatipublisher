@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\IATI\Repositories\Organization;
 
 use App\IATI\Models\Organization\Organization;
+use App\IATI\Models\User\Role;
 use App\IATI\Repositories\Repository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 /**
  * Class OrganizationRepository.
@@ -77,6 +79,7 @@ class OrganizationRepository extends Repository
     {
         $whereSql = '1=1';
         $bindParams = [];
+        $adminRoleId = app(Role::class)->getOrganizationAdminId();
 
         if (array_key_exists(
             'q',
@@ -101,21 +104,35 @@ class OrganizationRepository extends Repository
         }
 
         $organizations = $this->model->withCount('allActivities')
-                                     ->with('user');
+            ->with(['user' => function ($user) use ($adminRoleId) {
+                return $user->where('role_id', $adminRoleId)
+                    ->where('status', 1)
+                    ->whereNull('deleted_at');
+            }]);
 
         if (array_key_exists('q', $queryParams) && !empty($queryParams['q'])) {
             $organizations->whereRaw($whereSql, $bindParams)
-                          ->orWhereHas('user', function ($q) use ($bindParams) {
-                              $q->where('email', 'ilike', $bindParams);
-                          });
+                ->orWhereHas('user', function ($q) use ($bindParams) {
+                    $q->where('email', 'ilike', $bindParams);
+                });
         }
 
         if ($orderBy === 'name') {
             return $organizations->orderByRaw("name->0->>'narrative'" . $direction)
-                                 ->paginate(10, ['*'], 'organization', $page);
+                ->paginate(10, ['*'], 'organization', $page);
         }
 
         return $organizations->orderBy($orderBy, $direction)
-                             ->paginate(10, ['*'], 'organization', $page);
+            ->paginate(10, ['*'], 'organization', $page);
+    }
+
+    /**
+     * Returns list of organization name with their id.
+     *
+     * @return Collection
+     */
+    public function pluckAllOrganizations(): Collection
+    {
+        return $this->model->get()->where('name', '!=', null)->pluck('name.0.narrative', 'id');
     }
 }

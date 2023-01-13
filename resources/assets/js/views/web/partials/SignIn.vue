@@ -9,11 +9,29 @@
       <h2 class="mb-2 hidden sm:block">Sign In.</h2>
       <span class="text-n-40">Welcome back! Please enter your details.</span>
       <div
-        v-if="message != '' && !(errorData.username || errorData.password)"
+        v-if="
+          message != '' &&
+          !(errorData.username || errorData.password) &&
+          intent == 'verify'
+        "
         class="error mt-2 text-xs"
         role="alert"
       >
         {{ message }}
+      </div>
+      <div
+        v-if="intent === 'password_changed'"
+        class="w-full border-l-2 border-spring-50 bg-[#EEF9F5] px-4 py-3"
+      >
+        <div class="flex space-x-2">
+          <svg-vue class="text-spring-50" icon="tick" />
+          <span class="flex flex-col space-y-2">
+            <span class="text-sm font-bold text-n-50">Password Updated!</span>
+            <span class="text-sm text-n-50"
+              >Please use your new password to login again.</span
+            >
+          </span>
+        </div>
       </div>
       <div class="relative mt-6 mb-4 flex flex-col text-sm text-bluecoral">
         <label for="Username">Username</label>
@@ -28,11 +46,7 @@
           placeholder="Enter a registered username"
         />
         <svg-vue class="absolute top-12 left-5 text-xl sm:left-6" icon="user" />
-        <span
-          v-if="errorData.username != ''"
-          class="error text-xs"
-          role="alert"
-        >
+        <span v-if="errorData.username != ''" class="error text-xs" role="alert">
           {{ errorData.username }}
         </span>
       </div>
@@ -48,10 +62,7 @@
           type="password"
           placeholder="Enter a correct password"
         />
-        <svg-vue
-          class="absolute top-12 left-5 text-xl sm:left-6"
-          icon="pw-lock"
-        />
+        <svg-vue class="absolute top-12 left-5 text-xl sm:left-6" icon="pw-lock" />
         <span v-if="errorData.password" class="error" role="alert">{{
           errorData.password
         }}</span>
@@ -75,10 +86,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
-import axios from 'axios';
-import CryptoJS from 'crypto-js';
-import Loader from '../../../components/Loader.vue';
+import { defineComponent, reactive, ref } from "vue";
+import axios from "axios";
+import CryptoJS from "crypto-js";
+import Loader from "../../../components/Loader.vue";
 
 export default defineComponent({
   components: {
@@ -88,17 +99,22 @@ export default defineComponent({
     message: {
       type: String,
       required: false,
-      default: '',
+      default: "",
+    },
+    intent: {
+      type: String,
+      required: false,
+      default: "",
     },
   },
   setup() {
     const formData = reactive({
-      username: '',
-      password: '',
+      username: "",
+      password: "",
     });
     const errorData = reactive({
-      username: '',
-      password: '',
+      username: "",
+      password: "",
     });
     const isLoaderVisible = ref(false);
 
@@ -137,23 +153,23 @@ export default defineComponent({
 
       let form = {
         username: formData.username,
-        password: encrypt(
-          formData.password,
-          process.env.MIX_ENCRYPTION_KEY ?? ''
-        ),
+        password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
       };
 
       axios
-        .post('/login', form)
+        .post("/login", form)
         .then((response) => {
-          errorData.username = '';
-          errorData.password = '';
-          if (response.status) window.location.href = 'activities';
+          errorData.username = "";
+          errorData.password = "";
+
+          if (response.status === 204) {
+            window.location.reload();
+          }
         })
         .catch((error) => {
           const { errors } = error.response.data;
-          errorData.username = errors.username ? errors.username[0] : '';
-          errorData.password = errors.password ? errors.password[0] : '';
+          errorData.username = errors.username ? errors.username[0] : "";
+          errorData.password = errors.password ? errors.password[0] : "";
           isLoaderVisible.value = false;
         });
     }

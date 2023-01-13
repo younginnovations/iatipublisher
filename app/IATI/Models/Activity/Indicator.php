@@ -24,8 +24,7 @@ class Indicator extends Model
     /**
      * @var array
      */
-    protected $fillable
-    = [
+    protected $fillable = [
         'result_id',
         'indicator',
     ];
@@ -37,6 +36,8 @@ class Indicator extends Model
     = [
         'indicator' => 'json',
     ];
+
+    protected $touches = ['result'];
 
     /**
      * Indicator hasmany periods.

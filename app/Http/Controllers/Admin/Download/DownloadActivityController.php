@@ -63,7 +63,7 @@ class DownloadActivityController extends Controller
             $activityIds = ($request->get('activities') && $request->get('activities') !== 'all') ?
                 json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR) : [];
             $headers = $this->downloadActivityService->getCsvHeaderArray('Activity', 'other_fields_transaction');
-            $filename = $this->downloadActivityService->getDownloadFilename($this->downloadActivityService->getOrganizationPublisherId());
+            $filename = $this->downloadActivityService->getOrganizationPublisherId();
 
             if (request()->get('activities') === 'all') {
                 $activities = $this->downloadActivityService->getAllActivitiesToDownload($this->sanitizeRequest($request));
@@ -77,7 +77,7 @@ class DownloadActivityController extends Controller
 
             $csvData = $this->downloadActivityService->getCsvData($activities);
 
-            return $this->csvGenerator->generateWithHeaders($filename, $csvData, $headers);
+            return $this->csvGenerator->generateWithHeaders(getTimeStampedText($filename), $csvData, $headers);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -98,7 +98,7 @@ class DownloadActivityController extends Controller
         try {
             $activityIds = ($request->get('activities') && $request->get('activities') !== 'all') ?
                 json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR) : [];
-            $filename = $this->downloadActivityService->getDownloadFilename($this->downloadActivityService->getOrganizationPublisherId());
+            $filename = $this->downloadActivityService->getOrganizationPublisherId();
 
             if (request()->get('activities') === 'all') {
                 $activities = $this->downloadActivityService->getAllActivitiesToDownload($this->sanitizeRequest($request));
@@ -121,7 +121,7 @@ class DownloadActivityController extends Controller
                     'Content-Type' => 'text/xml',
                     'Cache-Control' => 'public',
                     'Content-Description' => 'File Transfer',
-                    'Content-Disposition' => 'attachment; filename=' . $filename . '.xml',
+                    'Content-Disposition' => 'attachment; filename=' . getTimeStampedText($filename) . '.xml',
                     'Content-Transfer-Encoding' => 'binary',
                 ]);
         } catch (\Exception $e) {

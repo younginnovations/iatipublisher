@@ -2,7 +2,7 @@
   <div>
     <div class="registry__info">
       <div class="mb-4 text-sm font-bold text-n-50">Registry Information</div>
-      <div class="flex items-center mb-4 text-xs text-n-50">
+      <div class="mb-4 flex items-center text-xs text-n-50">
         <button>
           <HoverText
             name="IATI Registry Information"
@@ -11,7 +11,7 @@
         </button>
       </div>
     </div>
-    <div class="mt-6 register" @keyup.enter="autoVerify">
+    <div class="register mt-6" @keyup.enter="autoVerify">
       <div class="register__container">
         <div>
           <div class="relative">
@@ -28,7 +28,7 @@
             </div>
             <input
               id="publisher-id"
-              class="mb-2 register__input"
+              class="register__input mb-2"
               :class="{
                 error__input: publishingError.publisher_id,
               }"
@@ -55,13 +55,15 @@
                 />
               </button>
             </div>
+
             <input
               id="api-token"
               v-model="publishingForm.api_token"
-              class="mb-2 register__input"
+              class="register__input mb-2"
               :class="{
                 error__input: publishingError.api_token,
               }"
+              :disabled="userRole !== 'admin' ? true : false"
               type="text"
               placeholder="Type API Token here"
               @input="updateStore('api_token')"
@@ -81,14 +83,18 @@
           </span>
         </div>
       </div>
-      <button class="primary-btn verify-btn" @click="submitPublishing">
+      <button
+        :class="userRole !== 'admin' && 'cursor-not-allowed'"
+        class="primary-btn verify-btn"
+        @click="submitPublishing"
+      >
         Verify
       </button>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, ref, computed, inject } from 'vue';
 import { useStore } from '../../store';
 import { ActionTypes } from '../../store/setting/actions';
 import HoverText from './../../components/HoverText.vue';
@@ -108,6 +114,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const tab = ref('publish');
     const store = useStore();
+    const userRole = inject('userRole');
 
     interface ObjectType {
       [key: string]: string;
@@ -122,7 +129,9 @@ export default defineComponent({
     );
 
     function submitPublishing() {
-      emit('submitPublishing');
+      if (userRole === 'admin') {
+        emit('submitPublishing');
+      }
     }
 
     function autoVerify() {
@@ -147,6 +156,7 @@ export default defineComponent({
       publishingError,
       store,
       props,
+      userRole,
       submitPublishing,
       toggleTab,
       updateStore,

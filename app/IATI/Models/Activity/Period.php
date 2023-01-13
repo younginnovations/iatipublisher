@@ -34,6 +34,8 @@ class Period extends Model
         'period' => 'json',
     ];
 
+    protected $touches = ['indicator'];
+
     /**
      * Period belongs to indicator.
      *

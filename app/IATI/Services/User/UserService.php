@@ -7,8 +7,12 @@ namespace App\IATI\Services\User;
 use App\IATI\Models\User\User;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Repositories\Setting\SettingRepository;
+use App\IATI\Repositories\User\RoleRepository;
 use App\IATI\Repositories\User\UserRepository;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -25,6 +29,11 @@ class UserService
     private UserRepository $userRepo;
 
     /**
+     * @var RoleRepository
+     */
+    private RoleRepository $roleRepo;
+
+    /**
      * @var OrganizationRepository
      */
     private OrganizationRepository $organizationRepo;
@@ -38,12 +47,14 @@ class UserService
      * UserService constructor.
      *
      * @param UserRepository         $userRepo
+     * @param RoleRepository         $roleRepo
      * @param OrganizationRepository $organizationRepo
      * @param SettingRepository $settingRepo
      */
-    public function __construct(UserRepository $userRepo, OrganizationRepository $organizationRepo, SettingRepository $settingRepo)
+    public function __construct(UserRepository $userRepo, RoleRepository $roleRepo, OrganizationRepository $organizationRepo, SettingRepository $settingRepo)
     {
         $this->userRepo = $userRepo;
+        $this->roleRepo = $roleRepo;
         $this->organizationRepo = $organizationRepo;
         $this->settingRepo = $settingRepo;
     }
@@ -86,6 +97,8 @@ class UserService
             'email'           => $data['email'],
             'organization_id' => $organization['id'],
             'password'        => Hash::make($data['password']),
+            'role_id'         => $this->roleRepo->getOrganizationAdminId(),
+            'registration_method' => 'existing_org',
         ]);
 
         User::sendEmail();
@@ -130,13 +143,19 @@ class UserService
             ],
         ]);
 
-        return $this->userRepo->store([
+        $user = $this->userRepo->store([
             'username'        => $data['username'],
             'full_name'       => $data['full_name'],
             'email'           => $data['email'],
             'organization_id' => $organization['id'],
             'password'        => Hash::make($data['password']),
+            'role_id'         => $this->roleRepo->getOrganizationAdminId(),
+            'registration_method' => 'new_org',
         ]);
+
+        User::sendEmail();
+
+        return $user;
     }
 
     /**
@@ -187,9 +206,9 @@ class UserService
     /**
      * Check if iatiIdentifier already exists at registry.
      *
-     * @param string $data
-     *
+     * @param string $identifier
      * @return array
+     * @throws GuzzleException
      */
     public function checkIATIIdentifier(string $identifier): array
     {
@@ -238,6 +257,7 @@ class UserService
      * @param bool $exists
      *
      * @return array
+     * @throws GuzzleException
      */
     public function checkUser(array $data, bool $exists = true): array
     {
@@ -266,8 +286,6 @@ class UserService
 
         $response = json_decode($res->getBody()->getContents())->result;
 
-        $errors = [];
-
         if ($exists) {
             if ($data['username'] !== $response->name) {
                 $errors['username'] = ['User with this name does not exists in IATI Registry.'];
@@ -292,9 +310,10 @@ class UserService
     /**
      * Create if user email already exists In Iati Registry.
      *
-     * @param array $email
+     * @param string $email
      *
      * @return array
+     * @throws GuzzleException
      */
     public function checkUserEmail(string $email): array
     {
@@ -320,7 +339,6 @@ class UserService
         }
 
         $response = json_decode($res->getBody()->getContents())->result;
-        $errors = [];
 
         if (!empty($response)) {
             $errors['email'] = ['User with this email already exist in IATI Registry.'];
@@ -335,6 +353,7 @@ class UserService
      * @param array $data
      *
      * @return array
+     * @throws GuzzleException
      */
     public function createUserInRegistry(array $data): array
     {
@@ -373,9 +392,10 @@ class UserService
     /**
      * Creates API token.
      *
-     * @param string $data
-     *
+     * @param string $username
      * @return array
+     * @throws GuzzleException
+     * @throws \JsonException
      */
     public function createAPItoken(string $username): array
     {
@@ -395,7 +415,7 @@ class UserService
         $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
         $client = new Client($clientConfig);
         $res = $client->request('POST', env('IATI_API_ENDPOINT') . '/action/api_token_create', $requestConfig);
-        $response = json_decode($res->getBody()->getContents());
+        $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
 
         if ($response->success) {
             return [
@@ -416,6 +436,8 @@ class UserService
      * @param array $data
      *
      * @return array
+     * @throws GuzzleException
+     * @throws \JsonException
      */
     public function createPublisherInRegistry(array $data, $token): array
     {
@@ -432,7 +454,7 @@ class UserService
         $clientConfig['headers']['X-CKAN-API-Key'] = $token;
         $client = new Client($clientConfig);
         $res = $client->request('POST', env('IATI_API_ENDPOINT') . '/action/organization_create', $requestConfig);
-        $response = json_decode($res->getBody()->getContents());
+        $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
 
         if ($response->success) {
             return [
@@ -480,12 +502,12 @@ class UserService
     /**
      * Map IATI errors to system error.
      *
-     * @param string type
+     * @param string $type type
      * @param array $errors
      *
      * @return array
      */
-    public function mapError($type, $errors): array
+    public function mapError(string $type, array $errors): array
     {
         $mapper = [
             'user' => [
@@ -516,7 +538,7 @@ class UserService
         unset($errors['__type']);
 
         foreach ($errors as $field => $error) {
-            if (in_array($field, array_keys($mapper[$type]))) {
+            if (array_key_exists($field, $mapper[$type])) {
                 $errors[$mapper[$type][$field]] = $error;
                 unset($errors[$field]);
             }
@@ -556,5 +578,165 @@ class UserService
     public function getUser($id): object
     {
         return $this->userRepo->getUser($id);
+    }
+
+    /**
+     * Update user password.
+     *
+     * @param $userId
+     * @param $data
+     *
+     * @return bool $bool
+     */
+    public function updatePassword($userId, $data): bool
+    {
+        return $this->userRepo->update($userId, [
+            'password'        => Hash::make($data['password']),
+        ]);
+    }
+
+    /**
+     * Store user created by logged in user.
+     *
+     * @param $data
+     * @return Model
+     */
+    public function store($data): Model
+    {
+        $data['organization_id'] = Auth::user()->organization_id;
+        $data['password'] = Hash::make($data['password']);
+        $data['role_id'] = $data['role_id'] ?? $this->roleRepo->getIatiAdminId();
+        $data['registration_method'] = 'user_create';
+        $user = $this->userRepo->store($data);
+        User::sendNewUserEmail($user);
+
+        return $user;
+    }
+
+    /**
+     * Update user data.
+     *
+     * @param $id
+     * @param $data
+     *
+     * @return bool
+     */
+    public function update($id, $data): bool
+    {
+        $user = $this->userRepo->find($id);
+
+        if (Arr::get($data, 'password')) {
+            $data['password'] = Hash::make($data['password']);
+        }
+
+        $user->fill($data);
+        $emailChanged = $user->isDirty('email');
+        $user->email_verified_at = $emailChanged ? null : $user->email_verified_at;
+
+        $updated = $user->save();
+
+        if ($emailChanged) {
+            $user->sendEmailVerificationNotification();
+        }
+
+        return $updated;
+    }
+
+    /**
+     * Deletes user with id.
+     *
+     * @param $id
+     *
+     * @return bool
+     */
+    public function delete($id): bool
+    {
+        $user = $this->userRepo->find($id);
+        $adminRole = $this->roleRepo->getOrganizationAdminId();
+        $users = $this->userRepo->getUserDownloadData(['organization_id' => [$user->organization_id], 'role' => [$adminRole]]);
+
+        if (($user->role_id === $adminRole && count($users) === 1)) {
+            return false;
+        }
+
+        return $this->userRepo->delete($id);
+    }
+
+    /**
+     * Returns all activities present in database.
+     *
+     * @param int $page
+     * @param array $queryParams
+     *
+     * @return Collection|LengthAwarePaginator
+     */
+    public function getPaginatedUsers(int $page, array $queryParams): Collection|LengthAwarePaginator
+    {
+        return $this->userRepo->getPaginatedUsers($page, $queryParams);
+    }
+
+    /**
+     * Toggle status of user with id.
+     *
+     * @param $id
+     *
+     * @return bool
+     */
+    public function toggleUserStatus($id): bool
+    {
+        $user = $this->userRepo->find($id);
+        $status = !$user['status'];
+        $adminRole = $this->roleRepo->getOrganizationAdminId();
+
+        if (!$status) {
+            $users = $this->userRepo->getUserDownloadData(['organization_id' => [$user->organization_id], 'role' => [$adminRole], 'status' => [1]]);
+
+            if (($user->role_id === $adminRole && count($users) === 1)) {
+                return false;
+            }
+
+            return $this->userRepo->update($id, ['status' => false]);
+        }
+
+        return $this->userRepo->update($id, ['status' => true]);
+    }
+
+    /**
+     * Returns user data to be downloaded.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     */
+    public function getUserDownloadData($queryParams): array
+    {
+        return $this->userRepo->getUserDownloadData($queryParams);
+    }
+
+    /**
+     * Returns roles based on user type.
+     *
+     * @return array
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roleRepo->pluckRoles()->toArray();
+        $translatedRoles = trans('user.user_roles');
+
+        if (Auth::user()->role->role === 'iati_admin' || Auth::user()->role->role === 'superadmin') {
+            unset($roles[array_flip($roles)['superadmin']]);
+        }
+
+        if (Auth::user()->role->role === 'admin' || Auth::user()->role->role === 'general_user') {
+            unset($roles[array_flip($roles)['iati_admin']], $roles[array_flip($roles)['superadmin']]);
+        }
+
+        foreach ($roles as $key => $role) {
+            if (isset($translatedRoles[$role])) {
+                $roles[$key] = $translatedRoles[$role];
+            }
+        }
+
+        return $roles;
     }
 }

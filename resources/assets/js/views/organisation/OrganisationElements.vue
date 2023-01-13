@@ -63,7 +63,9 @@
         v-for="(post, index) in filteredElements"
         :key="String(index)"
         class="elements__item relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 px-[3px] py-2.5 text-n-30"
-        :href="post.has_data ? '#' + index : '/organisation/' + index"
+        :href="
+          post.has_data || userRole !== 'admin' ? '#' + index : '/organisation/' + index
+        "
       >
         <div class="absolute top-0 right-0 inline-flex mt-1 mr-1 status_icons">
           <svg-vue
@@ -96,7 +98,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, reactive, onMounted, ref } from "vue";
+import { computed, defineProps, reactive, onMounted, ref, inject } from "vue";
 import { useToggle } from "@vueuse/core";
 import { orgMandatoryElements } from "Composable/coreElements";
 
@@ -122,6 +124,7 @@ const props = defineProps({
 const [searchBtnValue, searchBtnToggle] = useToggle();
 const dropdown = ref();
 const dropdownBtn = ref();
+const userRole = inject("userRole");
 
 /**
  * Search functionality

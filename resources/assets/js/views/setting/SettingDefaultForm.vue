@@ -2,7 +2,7 @@
   <div>
     <div class="registry__info">
       <div class="mb-4 text-sm font-bold text-n-50">Default Values</div>
-      <div class="flex items-center mb-4 text-xs text-n-50">
+      <div class="mb-4 flex items-center text-xs text-n-50">
         <button>
           <HoverText
             name="Default Values"
@@ -12,8 +12,8 @@
       </div>
     </div>
     <span class="text-sm font-bold text-n-50">Default for all data</span>
-    <div class="mt-4 mb-6 register">
-      <div class="mb-0 register__container">
+    <div class="register mt-4 mb-6">
+      <div class="register__container mb-0">
         <div>
           <div class="flex justify-between">
             <label for="default-currency">Default Currency</label>
@@ -28,6 +28,7 @@
           <Multiselect
             id="default-currency"
             v-model="defaultForm.default_currency"
+            :disabled="userRole !== 'admin' ? true : false"
             class="vue__select"
             placeholder="Select from dropdown"
             :options="props.currencies"
@@ -61,6 +62,7 @@
             :class="{
               error__input: defaultError.default_language,
             }"
+            :disabled="userRole !== 'admin' ? true : false"
             placeholder="Select language from dropdown"
             :searchable="true"
             :options="props.languages"
@@ -79,7 +81,7 @@
       </div>
     </div>
     <span class="text-sm font-bold text-n-50">Default for activity data</span>
-    <div class="mt-4 register">
+    <div class="register mt-4">
       <div class="register__container">
         <div>
           <div class="flex justify-between">
@@ -98,7 +100,8 @@
           <input
             id="default-hierarchy"
             v-model="defaultForm.hierarchy"
-            class="mb-2 register__input"
+            :disabled="userRole !== 'admin' ? true : false"
+            class="register__input mb-2"
             type="text"
             placeholder="Type default hierarchy here"
             @input="updateStore('hierarchy')"
@@ -127,6 +130,7 @@
           <Multiselect
             id="budget_not_provided"
             v-model="defaultForm.budget_not_provided"
+            :disabled="userRole !== 'admin' ? true : false"
             class="vue__select"
             :class="{
               error__input: defaultError.budget_not_provided,
@@ -160,6 +164,7 @@
           <Multiselect
             id="humanitarian"
             v-model="defaultForm.humanitarian"
+            :disabled="userRole !== 'admin' ? true : false"
             class="vue__select"
             :class="{
               error__input: defaultError.humanitarian,
@@ -182,7 +187,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, inject } from 'vue';
 import Multiselect from '@vueform/multiselect';
 import { useStore } from '../../store';
 import { ActionTypes } from '../../store/setting/actions';
@@ -214,6 +219,7 @@ export default defineComponent({
   },
 
   setup(props) {
+    const userRole = inject('userRole');
     const store = useStore();
 
     const defaultForm = computed(() => {
@@ -233,6 +239,7 @@ export default defineComponent({
 
     return {
       props,
+      userRole,
       defaultForm,
       defaultError,
       updateStore,

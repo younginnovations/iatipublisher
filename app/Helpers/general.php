@@ -671,6 +671,7 @@ if (!function_exists('getTableConfig')) {
         $tableConfig = [
             'activity'     => ['orderBy' => ['updated_at'], 'direction' => ['asc', 'desc']],
             'organisation' => ['orderBy' => ['updated_at', 'all_activities_count', 'name'], 'direction' => ['asc', 'desc']],
+            'user' => ['orderBy' => ['username', 'publisher_name', 'created_at'], 'direction' => ['asc', 'desc']],
         ];
 
         return $tableConfig[$module];
@@ -738,9 +739,9 @@ if (!function_exists('isSuperAdmin')) {
      */
     function isSuperAdmin(): bool
     {
-        $superAdminId = app(Role::class)->getSuperAdminId();
+        $superAdminId = [app(Role::class)->getSuperAdminId(), app(Role::class)->getIatiAdminId()];
 
-        return auth()->user()->role_id === $superAdminId || session()->get('role_id') === $superAdminId;
+        return in_array(auth()->user()->role_id, $superAdminId) || in_array(session()->get('role_id'), $superAdminId);
     }
 }
 
@@ -753,9 +754,9 @@ if (!function_exists('isSuperAdminRoute')) {
     function isSuperAdminRoute(): bool
     {
         if (request()->route()) {
-            $routeAction = request()->route()->getAction();
+            $superAdminId = [app(Role::class)->getSuperAdminId(), app(Role::class)->getIatiAdminId()];
 
-            return $routeAction['namespace'] === 'SuperAdmin';
+            return in_array(auth()->user()->role_id, $superAdminId);
         }
 
         return false;
@@ -1064,5 +1065,60 @@ if (!function_exists('is_variable_null')) {
     function is_variable_null($var): bool
     {
         return is_array($var) ? is_array_values_null($var) : is_null($var);
+    }
+}
+
+if (!function_exists('get_user_status')) {
+    /**
+     * Returns user status types.
+     *
+     * @return array
+     */
+    function getUserStatus(): array
+    {
+        return [
+            1 => 'Active',
+            0 => 'Inactive',
+        ];
+    }
+}
+
+if (!function_exists('get_language_preference')) {
+    /**
+     * Returns language preference types.
+     *
+     * @return array
+     */
+    function getLanguagePreference(): array
+    {
+        return [
+            'en' => 'English',
+            'fr' => 'French',
+            'es' => 'Spanish',
+        ];
+    }
+}
+
+if (!function_exists('get_user_csv_header')) {
+    /**
+     * Returns user download csv header.
+     *
+     * @return array
+     */
+    function getUserCsvHeader(): array
+    {
+        return ['username' => 'User Name', 'full_name' => 'Full Name', 'organization_id' => 'Organization', 'email' => 'Email', 'role_id' => 'Role', 'created_at' => 'Joined On'];
+    }
+}
+
+if (!function_exists('get_time_stamped_text')) {
+    /**
+     * Returns filename with ymdhis.
+     *
+     * @return array
+     */
+    function getTimeStampedText(string $filename): string
+    {
+        return sprintf('%s_%s', $filename, date('Y_m_d_His'));
     }
 }

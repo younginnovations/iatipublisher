@@ -5,14 +5,18 @@ declare(strict_types=1);
 namespace App\IATI\Models\User;
 
 use App\IATI\Models\Organization\Organization;
+use App\Mail\NewUserEmail;
 use Database\Factories\IATI\Models\User\UserFactory;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -20,7 +24,7 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -40,6 +44,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_email_verified',
         'password',
         'role_id',
+        'status',
+        'language_preference',
+        'registration',
     ];
 
     /**
@@ -60,6 +67,33 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Before inbuilt function.
+     *
+     * @return void
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::saving(
+            function ($model) {
+                if (Auth::check()) {
+                    $model->created_by = auth()->user()->id;
+                    $model->updated_by = auth()->user()->id;
+                }
+            }
+        );
+
+        static::updating(
+            function ($model) {
+                if (Auth::check()) {
+                    $model->updated_by = auth()->user()->id;
+                }
+            }
+        );
+    }
 
     /**
      * Checks if email is verified.
@@ -105,6 +139,24 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Sends password reset email to new user.
+     *
+     * @param $user
+     */
+    public static function sendNewUserEmail($user): void
+    {
+        $mailDetails = [
+            'greeting' => 'Hello ' . $user->username,
+            'message' => 'Welcome to IATI Publisher. Your email has been used to create a new account here.
+            Please click the button below to update the password of your account.',
+            'password_update' => true,
+            'token' => app('auth.password.broker')->createToken($user),
+        ];
+
+        Mail::to($user->email)->send(new NewUserEmail($user, $mailDetails));
+    }
+
+    /**
      * Sends verification email to new user.
      *
      * @param $user
@@ -112,5 +164,13 @@ class User extends Authenticatable implements MustVerifyEmail
     public static function resendEmail($user): void
     {
         $user->sendEmailVerificationNotification();
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo('App\IATI\Models\User\Role', 'role_id');
     }
 }

@@ -10,23 +10,45 @@ namespace App\Constants;
 abstract class Enums
 {
     const IATI_ORGANIZATION_STATUS
-        = [
-            'pending',
-            'verified',
-        ];
+    = [
+        'pending',
+        'verified',
+    ];
 
     const ORGANIZATION_STATUS
-        = [
-            'draft',
-            'ready_to_publish',
-            'published',
-        ];
+    = [
+        'draft',
+        'ready_to_publish',
+        'published',
+    ];
 
     const BULK_PUBLISHING_STATUS
-        = [
-            'created',
-            'processing',
-            'completed',
-            'failed',
-        ];
+    = [
+        'created',
+        'processing',
+        'completed',
+        'failed',
+    ];
+
+    const STATUS = [
+        'active',
+        'inactive',
+    ];
+
+    const ORGANIZATION_SYSTEM_STATUS = [
+        'active',
+        'disabled',
+    ];
+
+    const REGISTRATION_METHOD = [
+        'new_org',
+        'existing_org',
+        'user_create',
+    ];
+
+    const LANGUAGE_PREFERENCE = [
+        'en',
+        'fr',
+        'es',
+    ];
 }

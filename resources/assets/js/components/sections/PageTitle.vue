@@ -3,7 +3,7 @@
     <div class="pb-4 text-caption-c1 text-n-40">
       <Breadcrumb :data="breadcrumbData" />
     </div>
-    <div class="flex items-end gap-4">
+    <div class="flex gap-4 md:items-end">
       <div class="title max-w-[50%] xl:basis-6/12">
         <div class="inline-flex items-center">
           <div v-if="backLink" class="mr-3">

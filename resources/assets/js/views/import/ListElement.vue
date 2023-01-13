@@ -52,7 +52,6 @@
       <span class="checkmark" />
     </label>
     <label v-else class="checkbox">
-      <!-- <input type="checkbox" :value="index" /> -->
       <span class="checkmark" />
     </label>
   </td>

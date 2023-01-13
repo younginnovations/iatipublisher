@@ -22,11 +22,17 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $iatiAdmin = Role::factory()->make(['role' => 'iati_admin'])->toArray();
+        Role::firstOrCreate(['role' => 'iati_admin'], $iatiAdmin);
+
+        $generalUserRold = Role::factory()->make(['role' => 'general_user'])->toArray();
+        Role::firstOrCreate(['role' => 'general_user'], $generalUserRold);
+
         $adminRole = Role::factory()->make(['role' => 'admin'])->toArray();
-        Role::firstOrCreate($adminRole, $adminRole);
+        Role::firstOrCreate(['role' => 'admin'], $adminRole);
 
         $superAdminRole = Role::factory()->make(['role' => 'superadmin'])->toArray();
-        Role::firstOrCreate($superAdminRole, $superAdminRole);
+        Role::firstOrCreate(['role' => 'superadmin'], $superAdminRole);
 
         return [
             'username'  => 'yipl_user',
@@ -34,7 +40,7 @@ class UserFactory extends Factory
             'password'  => Hash::make('password'),
             'full_name' => 'Young Innovations',
             'address'   => 'Mahalaxmisthan, Lalitpur',
-            'is_active' => true,
+            'status'    => true,
             'role_id'   => app(Role::class)->getOrganizationAdminId(),
         ];
     }

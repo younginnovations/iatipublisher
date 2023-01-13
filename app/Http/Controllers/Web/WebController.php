@@ -20,9 +20,31 @@ class WebController extends Controller
      */
     public function index($page = 'signin'): \Illuminate\Contracts\Support\Renderable
     {
-        $message = Str::contains(Redirect::intended()->getTargetUrl(), '/email/verify/') ? 'User must be logged in to verify email.' : '';
+        try {
+            list($message, $intent) = $this->updateMessageIntent();
 
-        return view('web.welcome', compact('page', 'message'));
+            return view('web.welcome', compact('page', 'intent', 'message'));
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+        }
+    }
+
+    /**
+     * Check and update message for user redirection to login page.
+     *
+     * @return array
+     */
+    private function updateMessageIntent(): array
+    {
+        $message = '';
+        $intent = '';
+
+        if (Str::contains(Redirect::intended()->getTargetUrl(), '/email/verify/')) {
+            $message = 'User must be logged in to verify email.';
+            $intent = 'verify';
+        }
+
+        return [$message, $intent];
     }
 
     /**

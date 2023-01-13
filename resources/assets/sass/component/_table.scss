@@ -22,14 +22,13 @@
       }
     }
     tr:not(:last-child) {
-      td,
-      th {
-        @apply relative;
-        &:after {
-          content: ' ';
-          @apply absolute left-0 bottom-0 h-px w-full max-w-full bg-n-20;
-        }
-      }
+      @apply relative;
+      border-bottom: 1px solid rgba(var(--n-20));
+      // &:after {
+      //   content: ' ';
+      //   @apply absolute left-0 bottom-0 h-px w-full max-w-full bg-n-20;
+      // }
+
       td:first-child:after {
         @apply ml-6;
       }
@@ -174,5 +173,16 @@
       text-overflow: ellipsis;
       display: inline-block;
     }
+  }
+}
+td {
+  border: none !important;
+}
+.user-list-table.iati-list-table {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: calc(100vw - 70px);
+  @media (max-width: 640px) {
+    max-width: calc(100vw - 50px);
   }
 }

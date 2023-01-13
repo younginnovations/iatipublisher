@@ -20,6 +20,7 @@ class ActivityTableFaker extends Seeder
     public function run(): void
     {
         $org = Organization::first();
+        $user_id = $org->user->id;
 
         $activity_attr = [
             'org_id'               => $org->id,
@@ -108,6 +109,8 @@ class ActivityTableFaker extends Seeder
                 'default_tied_status'        => '',
                 'humanitarian'               => '1',
             ],
+            'created_by' => $user_id,
+            'updated_by' => $user_id,
         ];
         Activity::factory()->count(25)->has(Transaction::factory())->create($activity_attr);
     }

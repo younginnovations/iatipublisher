@@ -1,5 +1,6 @@
 <?php
 
+use App\Constants\DBTables;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -49,7 +50,11 @@ return new class extends Migration {
             $table->json('tag')->nullable();
             $table->json('element_status')->nullable()->default('{"iati_identifier":false, "title":false, "description":false, "activity_status":false, "activity_date":false, "activity_scope":false, "recipient_country":false, "recipient_region":false, "collaboration_type":false, "default_flow_type":false, "default_finance_type":false, "default_aid_type":false, "default_tied_status":false, "capital_spend":false, "related_activity":false, "conditions":false, "sector":false, "humanitarian_scope":false, "legacy_data":false, "tag":false, "policy_marker":false, "other_identifier":false, "country_budget_items":false, "budget":false, "participating_org":false, "document_link":false, "contact_info":false, "location":false, "planned_disbursement":false, "transactions":false, "result":false}');
             $table->timestamps();
+            $table->integer('created_by');
+            $table->integer('updated_by');
 
+            $table->foreign('created_by')->references('id')->on(DBTables::USERS)->onDelete('cascade');
+            $table->foreign('updated_by')->references('id')->on(DBTables::USERS)->onDelete('cascade');
             $table->foreign('org_id')->references('id')->on('organizations')->onDelete('cascade');
         });
     }

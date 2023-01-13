@@ -7,6 +7,7 @@ namespace App\Observers;
 use App\IATI\Models\Organization\Organization;
 use App\IATI\Services\OrganizationElementCompleteService;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class OrganizationObserver.
@@ -105,6 +106,7 @@ class OrganizationObserver
 
         $this->setElementStatus($organization);
         $this->resetOrganizationStatus($organization);
+        $organization->updated_by = Auth::user()->id;
         $organization->saveQuietly();
     }
 
