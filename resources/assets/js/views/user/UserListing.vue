@@ -233,6 +233,7 @@
           </button>
         </div>
       </PopupModal>
+<<<<<<< HEAD
       <PopupModal :modal-active="statusModal">
         <div class="title mb-6 flex">
           <b>Make user {{ statusValue ? 'Inactive' : 'Active' }}</b>
@@ -260,6 +261,8 @@
           </button>
         </div>
       </PopupModal>
+=======
+>>>>>>> 754e12ac (text fix)
 
       <div class="filters mb-4 flex flex-wrap justify-between gap-2">
         <div class="select filters inline-flex items-center space-x-2">
@@ -552,7 +555,11 @@
                 <p @click="openDeletemodel(user['id'])">
                   <svg-vue class="cursor-pointer text-base" icon="delete" />
                 </p>
+<<<<<<< HEAD
                 <p @click="openStatusModel(user['id'], user['status'])">
+=======
+                <p @click="toggleUserStatus(user['id'])">
+>>>>>>> 754e12ac (text fix)
                   <span
                     :class="user['status'] ? 'bg-spring-50' : 'bg-n-40'"
                     class="relative block h-4 w-7 cursor-pointer rounded-full"
@@ -639,9 +646,13 @@ const isEmpty = ref(true);
 const allSelected = ref<boolean[]>([]);
 const deleteModal = ref(false);
 const deleteId = ref();
+<<<<<<< HEAD
 const statusId = ref();
 const statusModal = ref(false);
 const statusValue = ref();
+=======
+
+>>>>>>> 754e12ac (text fix)
 const selectedIds = ref({});
 const checklist = ref([]);
 const currentpageData = ref([]);
@@ -796,11 +807,14 @@ const setFormError = (errors = {}) => {
     }
   }
 };
+<<<<<<< HEAD
 const openStatusModel = (id, status) => {
   statusId.value = id;
   statusValue.value = status;
   statusModal.value = true;
 };
+=======
+>>>>>>> 754e12ac (text fix)
 
 const updateUser = () => {
   isLoaderVisible.value = true;
