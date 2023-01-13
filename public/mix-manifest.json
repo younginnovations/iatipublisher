@@ -1,8 +1,12 @@
 {
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=d4e2fa6574773ba2a183d634ab257513",
+=======
+    "/js/app.js": "/js/app.js?id=2d52b783c580d38c85e59d15b9601eac",
+>>>>>>> 172acc1c (- [x] hover texts removed)
     "/js/script.js": "/js/script.js?id=67f974d705cdb041f9d42e8c11e824d1",
     "/js/formbuilder.js": "/js/formbuilder.js?id=23e0052da87288dd57b8df6421880767",
     "/manifest.js": "/manifest.js?id=6ec4db78dd752c29bd9956118b1e0467",
-    "/css/app.css": "/css/app.css?id=6eb6231a771e6a50b6555366e80ea4c1",
-    "/js/vendor.js": "/js/vendor.js?id=a0cc4df2bfc2b358079e5e0680f2e290"
+    "/css/app.css": "/css/app.css?id=a193ab85f8f746c0fb757f4b06101701",
+    "/js/vendor.js": "/js/vendor.js?id=0ed1e92a439a374301238d51633e5dc5"
 }

@@ -185,4 +185,14 @@ td {
   @media (max-width: 640px) {
     max-width: calc(100vw - 50px);
   }
+  tbody {
+    tr {
+      &:hover {
+        z-index: 1;
+        box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
+        transition: all 0.4s ease;
+        @apply bg-transparent;
+      }
+    }
+  }
 }

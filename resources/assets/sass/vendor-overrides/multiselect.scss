@@ -2,6 +2,9 @@
   min-width: 160px !important;
   cursor: pointer !important;
 }
+.multiselect.is-active {
+  box-shadow: none !important;
+}
 .organization,
 .role,
 .status {
@@ -124,4 +127,20 @@
     color: rgb(var(--n-40)) !important ;
     font-weight: 400 !important;
   }
+}
+.multiselect-option.is-pointed {
+  background-color: white !important;
+}
+.multiselect-dropdown {
+  overflow: overlay !important;
+}
+
+.multiselect-option {
+  &:hover {
+    background-color: rgb(var(--n-10)) !important;
+  }
+}
+.multiselect-option.is-selected {
+  background-color: rgb(var(--n-20)) !important;
+  color: black !important;
 }
