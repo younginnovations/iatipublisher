@@ -53,8 +53,12 @@
       <svg-vue icon="chevron" class="pb-2 text-3xl text-white" />
     </div>
     <aside
-      :class="showSidebar ? 'translate-x-[0px]' : '-translate-x-[150%]'"
-      class="activities__sidebar fixed top-[60px] left-0 z-[100] block h-[calc(100vh_-_50px)] overflow-y-auto bg-eggshell duration-200 lg:hidden"
+      :class="
+        showSidebar
+          ? `  ${istopVisible ? 'top-[60px]' : 'top-[0px]'} translate-x-[0px]`
+          : `${istopVisible ? 'top-[60px]' : 'top-[0px]'} -translate-x-[150%]`
+      "
+      class="activities__sidebar fixed left-0 z-[100] block h-[calc(100vh_-_60px)] overflow-y-auto bg-eggshell duration-200 lg:hidden"
     >
       <div v-sticky-component>
         <div class="indicator rounded-lg bg-eggshell px-6 py-4 text-n-50">
@@ -118,6 +122,7 @@
 <script lang="ts">
 import {
   defineComponent,
+  computed,
   toRefs,
   ref,
   provide,
@@ -172,10 +177,15 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const positionY = ref(0);
+
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
     let { period, activity, parentData, types } = toRefs(props);
 
+    const istopVisible = computed(() => {
+      return positionY.value === 0;
+    });
     const toastData = reactive({
       visibility: false,
       message: '',
@@ -250,6 +260,7 @@ export default defineComponent({
       periodLink,
       toastData,
       showSidebar,
+      istopVisible,
     };
   },
 });

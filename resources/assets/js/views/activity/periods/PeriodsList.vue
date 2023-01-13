@@ -30,7 +30,7 @@
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="periodsData.data && periodsData.data.length > 0">
           <tr
             v-for="(pe, p) in periodsData.data"
             :key="p"
@@ -64,6 +64,9 @@
               </div>
             </td>
           </tr>
+        </tbody>
+        <tbody v-else>
+          <td colspan="5" class="text-center">Periods not found</td>
         </tbody>
       </table>
     </div>

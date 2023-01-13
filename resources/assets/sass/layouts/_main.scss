@@ -117,13 +117,13 @@ body.disable-scroll {
   overflow: hidden;
   height: 10px;
 }
-body {
-  padding-top: 60px;
-}
+// body {
+//   padding-top: 60px;
+// }
 
-body.no-nav {
-  padding-top: 0px !important;
-}
+// body.no-nav {
+//   padding-top: 0px !important;
+// }
 html {
-  scroll-padding-top: 60px; /* height of sticky header */
+  scroll-padding-top: 20px; /* height of sticky header */
 }

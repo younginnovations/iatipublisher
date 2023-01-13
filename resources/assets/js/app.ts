@@ -144,8 +144,7 @@ app
 /**
  * Registering user module related vue components
  */
-app.component('UserProfile', UserProfile)
-  .component('UserListing', UserListing);
+app.component('UserProfile', UserProfile).component('UserListing', UserListing);
 
 /**
  * Registering Additional Components
@@ -182,7 +181,7 @@ const stickySidebar = (
     offsetWidth: number;
     getBoundingClientRect: () => {
       (): object;
-      new(): object;
+      new (): object;
       left: number;
       top: number;
       bottom: number;
@@ -224,8 +223,9 @@ const stickySidebar = (
   function handleScrollDown() {
     switch (affixType) {
       case 'sticky-top':
-        stickyElement.style.cssText = `position: relative; transform: translate3d(0, ${stickyCurrentTop - elScrollTop
-          }px, 0);`;
+        stickyElement.style.cssText = `position: relative; transform: translate3d(0, ${
+          stickyCurrentTop - elScrollTop
+        }px, 0);`;
         affixType = 'sticky-translate';
 
         break;
@@ -330,22 +330,21 @@ const stickySidebar = (
 };
 
 const fixSidebar = (el) => {
-  const footer = document.getElementById('footer');
-  const rect = footer && footer.getBoundingClientRect();
-  const progress = document.getElementById('progress');
-  const top = progress && progress.getBoundingClientRect();
-
-  if (document.body.clientWidth > 1024) {
-    if (rect && rect.top <= 800) {
-      el.style.cssText = `position: absolute; top: auto;  bottom: 60px;width:280px `;
-      affixType = 'sticky-bottom';
-    } else if (top && top.bottom > 0) {
-      el.style.cssText = `position: absolute; top:190px`;
-    } else {
-      el.style.cssText = `position: fixed; top:60px`;
-      affixType = 'fixed-top';
-    }
-  }
+  // const footer = document.getElementById('footer');
+  // const rect = footer && footer.getBoundingClientRect();
+  // const progress = document.getElementById('progress');
+  // const top = progress && progress.getBoundingClientRect();
+  // if (document.body.clientWidth > 1024) {
+  //   if (rect && rect.top <= 800) {
+  //     el.style.cssText = `position: absolute; top: auto;  bottom: 0px;width:280px `;
+  //     affixType = 'sticky-bottom';
+  //   } else if (top && top.bottom > 0) {
+  //     el.style.cssText = `position: absolute; top:190px`;
+  //   } else {
+  //     el.style.cssText = `position: fixed; top:60px`;
+  //     affixType = 'fixed-top';
+  //   }
+  // }
 };
 
 // custom directive

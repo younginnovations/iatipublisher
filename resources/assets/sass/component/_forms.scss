@@ -255,6 +255,9 @@ span.select2-container--default {
     }
   }
 }
+.register-page .help__text {
+  transform: translateX(0%) !important;
+}
 
 .registry__info,
 .register,

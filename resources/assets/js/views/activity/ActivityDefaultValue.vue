@@ -10,7 +10,7 @@
             Override default values
           </h2>
         </div>
-        <div>
+        <div class="flex w-full justify-end lg:w-[auto]">
           <Toast
             v-if="toastVisibility"
             :message="toastMessage"

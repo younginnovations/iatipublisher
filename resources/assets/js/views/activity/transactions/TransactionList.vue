@@ -51,7 +51,7 @@
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="transactionsData.data && transactionsData.data.length > 0">
           <tr v-for="(trans, t, index) in transactionsData.data" :key="index">
             <td
               class="cursor-pointer"
@@ -124,6 +124,9 @@
               </div>
             </td>
           </tr>
+        </tbody>
+        <tbody v-else>
+          <td colspan="5" class="text-center">Transanctions not found</td>
         </tbody>
       </table>
     </div>

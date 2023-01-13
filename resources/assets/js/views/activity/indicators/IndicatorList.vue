@@ -36,7 +36,7 @@
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="indicatorsData.data && indicatorsData.data.length > 0">
           <tr v-for="(indicator, t, index) in indicatorsData.data" :key="index">
             <td
               class="cursor-pointer"
@@ -106,6 +106,9 @@
               </div>
             </td>
           </tr>
+        </tbody>
+        <tbody v-else>
+          <td colspan="5" class="text-center">Indicators not found</td>
         </tbody>
       </table>
     </div>

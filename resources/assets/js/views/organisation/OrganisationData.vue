@@ -56,7 +56,9 @@
               </div>
               <div>
                 <h4 class="ellipsis__title relative mr-4 text-2xl font-bold">
-                  <span class="ellipsis__title overflow-hidden">
+                  <span
+                    class="ellipsis__title max-w-[400px] overflow-hidden text-ellipsis whitespace-nowrap"
+                  >
                     {{
                       organization.name
                         ? organization.name['0'].narrative ?? 'Untitled'
@@ -167,8 +169,20 @@
         </aside>
 
         <div
-          :class="showSidebar ? '-translate-x-[20px] ' : ' -translate-x-[110%]'"
-          class="opacity-1 fixed top-[60px] z-[100] block h-[calc(100vh_-_50px)] overflow-y-auto duration-200 lg:hidden"
+          :class="
+            showSidebar
+              ? `-translate-x-[20px]  ${
+                  istopVisible
+                    ? 'top-[60px] h-[calc(100vh_-_60px)]'
+                    : 'top-[0px] h-[100vh]'
+                }`
+              : ` -translate-x-[110%] ${
+                  istopVisible
+                    ? 'top-[60px] h-[calc(100vh_-_60px)]'
+                    : 'top-[0px] h-[100vh]'
+                } `
+          "
+          class="opacity-1 fixed z-[100] block duration-200 lg:hidden"
         >
           <aside class="!z-[200] h-full w-[280px] bg-white pt-8">
             <div class="mb-1 flex">

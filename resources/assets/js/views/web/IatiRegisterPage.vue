@@ -1,5 +1,5 @@
 <template>
-  <section class="section mx-3 mb-7 sm:mx-10 sm:mb-10 md:mb-14 xl:mx-24 xl:px-1">
+  <section class="section mx-3 register-page mb-7 sm:mx-10 sm:mb-10 md:mb-14 xl:mx-24 xl:px-1">
     <Loader v-if="isLoaderVisible" />
     <div class="section__container">
       <div class="section__title">
