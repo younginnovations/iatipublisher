@@ -3,8 +3,6 @@
     <Loader v-if="isLoaderVisible" />
     <nav aria-label="breadcrumbs" class="rank-math-breadcrumb my-4">
       <div class="flex">
-        <a class="whitespace-nowrap font-bold" href="/activities"> Your Activities </a>
-        <span class="separator mx-4"> / </span>
         <div class="breadcrumb__title">
           <span
             class="breadcrumb__title last max-w-[25vw] overflow-hidden text-ellipsis text-n-30 md:max-w-[50vw]"

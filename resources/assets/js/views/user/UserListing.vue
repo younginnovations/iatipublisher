@@ -56,6 +56,7 @@
                 :class="formError['full_name'] ? 'border-crimson-50' : 'border-n-30'"
                 class="w-full rounded border p-3"
                 type="text"
+                id="full_name"
               />
               <span v-if="formError['full_name']" class="error">{{
                 formError["full_name"][0]
@@ -71,6 +72,7 @@
                 :class="formError['username'] ? 'border-crimson-50' : 'border-n-30'"
                 class="w-full rounded border p-3"
                 type="text"
+                id="username"
               />
               <span v-if="formError['username']" class="error">{{
                 formError["username"][0]
@@ -85,6 +87,7 @@
                 :class="formError['email'] ? 'border-crimson-50' : 'border-n-30'"
                 class="w-full rounded border p-3"
                 type="email"
+                id="email"
               />
               <span v-if="formError['email']" class="error">{{
                 formError["email"][0]
@@ -104,6 +107,7 @@
                 :options="status"
                 placeholder="Select status"
                 :searchable="true"
+                id="status"
               />
               <span v-if="formError['status']" class="error">{{
                 formError["status"][0]
@@ -122,6 +126,7 @@
                 :options="roles"
                 placeholder="Select user role"
                 :searchable="true"
+                id="role"
               />
               <span v-if="formError['role_id']" class="error">{{
                 formError["role_id"][0]
@@ -139,8 +144,8 @@
                 :class="formError['password'] ? 'border-crimson-50' : 'border-n-30'"
                 class="w-full rounded border border-n-30 p-3"
                 type="password"
+                id="password"
               />
-
               <span v-if="formError['password']" class="error">{{
                 formError["password"][0]
               }}</span>
@@ -159,6 +164,7 @@
                 "
                 class="w-full rounded border border-n-30 p-3"
                 type="password"
+                id="password-confirmation"
               />
               <span v-if="formError['password_confirmation']" class="error">{{
                 formError["password_confirmation"][0]
@@ -223,7 +229,9 @@
               :taggable="true"
               :close-on-select="false"
               :clear-on-select="false"
+              :hide-selected="false"
               label="name"
+              id="organization-filter"
             />
           </span>
 
@@ -236,6 +244,8 @@
               mode="multiple"
               :close-on-select="false"
               :clear-on-select="false"
+              :hide-selected="false"
+              id="role-filter"
             />
             <span v-if="filter.roles.length > 0" class="status">
               <!-- placeholder -->
@@ -248,6 +258,7 @@
               :options="status"
               placeholder="STATUS"
               :searchable="true"
+              id="status-filter"
             />
           </span>
           <span></span>
@@ -459,7 +470,7 @@
                 </div>
               </td>
               <td class="capitalize">
-                {{ user["role"] }}
+                {{ user["role"]?.replace(/_/g, " ") }}
               </td>
               <td :class="user['status'] ? 'text-spring-50' : 'text-n-40'">
                 {{ user["status"] ? "Active" : "Inactive" }}
@@ -589,10 +600,7 @@ const formError = reactive({
 });
 
 const isFilterApplied = computed(() => {
-  return (
-    +(filter.organization.length + filter.roles.length + filter.status + filter.status) !=
-    0
-  );
+  return filter.organization.length + filter.roles.length != 0 || filter.status != "";
 });
 
 const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {
@@ -909,4 +917,3 @@ const downloadAll = () => {
   });
 };
 </script>
-<style scoped src="@vueform/multiselect/themes/default.css"></style>

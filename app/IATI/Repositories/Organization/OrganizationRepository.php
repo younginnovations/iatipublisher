@@ -133,6 +133,6 @@ class OrganizationRepository extends Repository
      */
     public function pluckAllOrganizations(): Collection
     {
-        return $this->model->get()->pluck('name.0.narrative', 'id');
+        return $this->model->get()->where('name', '!=', null)->pluck('name.0.narrative', 'id');
     }
 }
