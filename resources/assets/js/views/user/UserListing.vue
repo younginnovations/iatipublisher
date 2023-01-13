@@ -52,11 +52,11 @@
                 >Full Name<span class="text-crimson-50"> * </span></label
               >
               <input
+                id="full_name"
                 v-model="formData.full_name"
                 :class="formError['full_name'] ? 'border-crimson-50' : 'border-n-30'"
                 class="w-full rounded border p-3"
                 type="text"
-                id="full_name"
               />
               <span v-if="formError['full_name']" class="error">{{
                 formError["full_name"][0]
@@ -68,11 +68,11 @@
                 >Username<span class="text-crimson-50"> *</span></label
               >
               <input
+                id="username"
                 v-model="formData.username"
                 :class="formError['username'] ? 'border-crimson-50' : 'border-n-30'"
                 class="w-full rounded border p-3"
                 type="text"
-                id="username"
               />
               <span v-if="formError['username']" class="error">{{
                 formError["username"][0]
@@ -83,11 +83,11 @@
                 >Email<span class="text-crimson-50"> * </span></label
               >
               <input
+                id="email"
                 v-model="formData.email"
                 :class="formError['email'] ? 'border-crimson-50' : 'border-n-30'"
                 class="w-full rounded border p-3"
                 type="email"
-                id="email"
               />
               <span v-if="formError['email']" class="error">{{
                 formError["email"][0]
@@ -103,11 +103,11 @@
                 >Status<span class="text-crimson-50"> * </span></label
               >
               <Multiselect
+                id="status"
                 v-model="formData.status"
                 :options="status"
                 placeholder="Select status"
                 :searchable="true"
-                id="status"
               />
               <span v-if="formError['status']" class="error">{{
                 formError["status"][0]
@@ -122,11 +122,11 @@
                 >Role<span class="text-crimson-50"> * </span></label
               >
               <Multiselect
+                id="role"
                 v-model="formData.role_id"
                 :options="roles"
                 placeholder="Select user role"
                 :searchable="true"
-                id="role"
               />
               <span v-if="formError['role_id']" class="error">{{
                 formError["role_id"][0]
@@ -140,11 +140,11 @@
                 </span></label
               >
               <input
+                id="password"
                 v-model="formData.password"
                 :class="formError['password'] ? 'border-crimson-50' : 'border-n-30'"
                 class="w-full rounded border border-n-30 p-3"
                 type="password"
-                id="password"
               />
               <span v-if="formError['password']" class="error">{{
                 formError["password"][0]
@@ -158,13 +158,13 @@
               >
 
               <input
+                id="password-confirmation"
                 v-model="formData.password_confirmation"
                 :class="
                   formError['password_confirmation'] ? 'border-crimson-50' : 'border-n-30'
                 "
                 class="w-full rounded border border-n-30 p-3"
                 type="password"
-                id="password-confirmation"
               />
               <span v-if="formError['password_confirmation']" class="error">{{
                 formError["password_confirmation"][0]
@@ -221,6 +221,7 @@
             v-if="userRole === 'superadmin' || userRole === 'iati_admin'"
             class="organization"
             ><Multiselect
+              id="organization-filter"
               v-model="filter.organization"
               :options="organizations"
               placeholder="ORGANISATION"
@@ -231,12 +232,12 @@
               :clear-on-select="false"
               :hide-selected="false"
               label="name"
-              id="organization-filter"
             />
           </span>
 
           <span class="role">
             <Multiselect
+              id="role-filter"
               v-model="filter.roles"
               :options="roles"
               placeholder="ROLE"
@@ -245,7 +246,6 @@
               :close-on-select="false"
               :clear-on-select="false"
               :hide-selected="false"
-              id="role-filter"
             />
             <span v-if="filter.roles.length > 0" class="status">
               <!-- placeholder -->
@@ -254,11 +254,11 @@
           >
           <span class="status"
             ><Multiselect
+              id="status-filter"
               v-model="filter.status"
               :options="status"
               placeholder="STATUS"
               :searchable="true"
-              id="status-filter"
             />
           </span>
           <span></span>
