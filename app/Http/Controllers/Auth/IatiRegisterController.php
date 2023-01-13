@@ -206,12 +206,11 @@ class IatiRegisterController extends Controller
             $publisherCheck = $this->userService->checkPublisher($postData['publisher_id'], false);
             $identifierCheck = $this->userService->checkIATIIdentifier($postData['identifier'], false);
             $userCheck = $this->userService->checkUser($postData, false);
-            $emailCheck = $this->userService->checkUserEmail($postData['email'], false);
 
-            if (!empty($publisherCheck) || !empty($userCheck) || !empty($identifierCheck) || !empty($emailCheck)) {
+            if (!empty($publisherCheck) || !empty($userCheck) || !empty($identifierCheck)) {
                 return response()->json([
                     'success'         => false,
-                    'errors'          => array_merge($publisherCheck, $userCheck, $identifierCheck, $emailCheck),
+                    'errors'          => array_merge($publisherCheck, $userCheck, $identifierCheck),
                 ]);
             }
 

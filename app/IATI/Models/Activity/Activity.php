@@ -103,6 +103,25 @@ class Activity extends Model
     ];
 
     /**
+     * Before inbuilt function.
+     *
+     * @return void
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::saving(
+            function ($model) {
+                if (Auth::check()) {
+                    $model->created_by = auth()->user()->id;
+                    $model->updated_by = auth()->user()->id;
+                }
+            }
+        );
+    }
+
+    /**
      * Factory for creating activity.
      *
      * @return ActivityFactory
