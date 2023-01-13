@@ -212,10 +212,10 @@
       <PopupModal :modal-active="deleteModal">
         <div class="title mb-6 flex">
           <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
-          <b>Delete {{ deleteUsername }}</b>
+          <b>Delete user</b>
         </div>
         <p class="rounded-lg bg-rose p-4">
-          Are you sure you want to delete {{ deleteUsername }}?
+          Are you sure you want to delete this user?
         </p>
         <div class="mt-6 flex justify-end space-x-2">
           <button
@@ -233,17 +233,12 @@
           </button>
         </div>
       </PopupModal>
-<<<<<<< HEAD
-=======
       <PopupModal :modal-active="statusModal">
         <div class="title mb-6 flex">
-          <b
-            >Make {{ statusUsername }}
-            {{ statusValue ? 'Inactive' : 'Active' }}</b
-          >
+          <b>Make user {{ statusValue ? 'Inactive' : 'Active' }}</b>
         </div>
         <p class="rounded-lg bg-rose p-4">
-          Are you sure you want to make <b> {{ statusUsername }}</b>
+          Are you sure you want to make this user
           {{ statusValue ? 'Inactive' : 'Active' }} ?
         </p>
         <div class="mt-6 flex justify-end space-x-2">
@@ -265,7 +260,6 @@
           </button>
         </div>
       </PopupModal>
->>>>>>> 1fe7b717 (usernmae added in popup)
 
       <div class="filters mb-4 flex flex-wrap justify-between gap-2">
         <div class="select filters inline-flex items-center space-x-2">
@@ -538,17 +532,7 @@
                 </div>
               </td>
               <td class="capitalize">
-<<<<<<< HEAD
-<<<<<<< HEAD
                 {{ roles[user['role_id']] }}
-=======
-
-                {{ roles[user["role_id"]] }}
-
->>>>>>> 1463ed94 (status model implemented)
-=======
-                {{ roles[user['role_id']] }}
->>>>>>> 86cf5a82 (drop down ui issue fix)
               </td>
               <td :class="user['status'] ? 'text-spring-50' : 'text-n-40'">
                 {{ user['status'] ? 'Active' : 'Inactive' }}
@@ -565,14 +549,10 @@
                   />
                 </p>
                 <!-- <p @click="deleteUser(user['id'])"> -->
-                <p @click="openDeletemodel(user['id'], user['username'])">
+                <p @click="openDeletemodel(user['id'])">
                   <svg-vue class="cursor-pointer text-base" icon="delete" />
                 </p>
-<<<<<<< HEAD
-                <p @click="toggleUserStatus(user['id'])">
-=======
-                <p @click="openStatusModel(user)">
->>>>>>> 1fe7b717 (usernmae added in popup)
+                <p @click="openStatusModel(user['id'], user['status'])">
                   <span
                     :class="user['status'] ? 'bg-spring-50' : 'bg-n-40'"
                     class="relative block h-4 w-7 cursor-pointer rounded-full"
@@ -659,15 +639,9 @@ const isEmpty = ref(true);
 const allSelected = ref<boolean[]>([]);
 const deleteModal = ref(false);
 const deleteId = ref();
-<<<<<<< HEAD
-
-=======
 const statusId = ref();
 const statusModal = ref(false);
 const statusValue = ref();
-const statusUsername = ref();
-const deleteUsername = ref();
->>>>>>> 1fe7b717 (usernmae added in popup)
 const selectedIds = ref({});
 const checklist = ref([]);
 const currentpageData = ref([]);
@@ -822,15 +796,11 @@ const setFormError = (errors = {}) => {
     }
   }
 };
-<<<<<<< HEAD
-=======
-const openStatusModel = (user) => {
-  statusId.value = user.id;
-  statusValue.value = user.status;
+const openStatusModel = (id, status) => {
+  statusId.value = id;
+  statusValue.value = status;
   statusModal.value = true;
-  statusUsername.value = user.username;
 };
->>>>>>> 1fe7b717 (usernmae added in popup)
 
 const updateUser = () => {
   isLoaderVisible.value = true;
@@ -901,9 +871,8 @@ function fetchUsersList(active_page: number, filtered = false) {
   });
 }
 
-const openDeletemodel = (id, username) => {
+const openDeletemodel = (id) => {
   deleteModal.value = true;
-  deleteUsername.value = username;
   deleteId.value = id;
 };
 
@@ -935,6 +904,7 @@ const sort = (param) => {
 function toggleUserStatus(id: number) {
   window.scrollTo(0, 0);
   isLoaderVisible.value = true;
+  statusModal.value = false;
 
   axios
     .patch(`/user/status/${id}`)
