@@ -212,10 +212,10 @@
       <PopupModal :modal-active="deleteModal">
         <div class="title mb-6 flex">
           <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
-          <b>Delete user</b>
+          <b>Delete {{ deleteUsername }}</b>
         </div>
         <p class="rounded-lg bg-rose p-4">
-          Are you sure you want to delete this user?
+          Are you sure you want to delete {{ deleteUsername }}?
         </p>
         <div class="mt-6 flex justify-end space-x-2">
           <button
@@ -233,6 +233,39 @@
           </button>
         </div>
       </PopupModal>
+<<<<<<< HEAD
+=======
+      <PopupModal :modal-active="statusModal">
+        <div class="title mb-6 flex">
+          <b
+            >Make {{ statusUsername }}
+            {{ statusValue ? 'Inactive' : 'Active' }}</b
+          >
+        </div>
+        <p class="rounded-lg bg-rose p-4">
+          Are you sure you want to make <b> {{ statusUsername }}</b>
+          {{ statusValue ? 'Inactive' : 'Active' }} ?
+        </p>
+        <div class="mt-6 flex justify-end space-x-2">
+          <button
+            class="secondary-btn font-bold"
+            @click="
+              () => {
+                statusModal = false;
+              }
+            "
+          >
+            Cancel
+          </button>
+          <button
+            class="primary-btn !px-10"
+            @click="toggleUserStatus(statusId)"
+          >
+            Yes
+          </button>
+        </div>
+      </PopupModal>
+>>>>>>> 1fe7b717 (usernmae added in popup)
 
       <div class="filters mb-4 flex flex-wrap justify-between gap-2">
         <div class="select filters inline-flex items-center space-x-2">
@@ -532,10 +565,14 @@
                   />
                 </p>
                 <!-- <p @click="deleteUser(user['id'])"> -->
-                <p @click="openDeletemodel(user['id'])">
+                <p @click="openDeletemodel(user['id'], user['username'])">
                   <svg-vue class="cursor-pointer text-base" icon="delete" />
                 </p>
+<<<<<<< HEAD
                 <p @click="toggleUserStatus(user['id'])">
+=======
+                <p @click="openStatusModel(user)">
+>>>>>>> 1fe7b717 (usernmae added in popup)
                   <span
                     :class="user['status'] ? 'bg-spring-50' : 'bg-n-40'"
                     class="relative block h-4 w-7 cursor-pointer rounded-full"
@@ -622,7 +659,15 @@ const isEmpty = ref(true);
 const allSelected = ref<boolean[]>([]);
 const deleteModal = ref(false);
 const deleteId = ref();
+<<<<<<< HEAD
 
+=======
+const statusId = ref();
+const statusModal = ref(false);
+const statusValue = ref();
+const statusUsername = ref();
+const deleteUsername = ref();
+>>>>>>> 1fe7b717 (usernmae added in popup)
 const selectedIds = ref({});
 const checklist = ref([]);
 const currentpageData = ref([]);
@@ -777,6 +822,15 @@ const setFormError = (errors = {}) => {
     }
   }
 };
+<<<<<<< HEAD
+=======
+const openStatusModel = (user) => {
+  statusId.value = user.id;
+  statusValue.value = user.status;
+  statusModal.value = true;
+  statusUsername.value = user.username;
+};
+>>>>>>> 1fe7b717 (usernmae added in popup)
 
 const updateUser = () => {
   isLoaderVisible.value = true;
@@ -847,8 +901,9 @@ function fetchUsersList(active_page: number, filtered = false) {
   });
 }
 
-const openDeletemodel = (id) => {
+const openDeletemodel = (id, username) => {
   deleteModal.value = true;
+  deleteUsername.value = username;
   deleteId.value = id;
 };
 
