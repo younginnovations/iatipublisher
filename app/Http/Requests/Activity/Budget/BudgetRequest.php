@@ -86,6 +86,7 @@ class BudgetRequest extends ActivityBaseRequest
         foreach ($formFields as $budgetIndex => $budget) {
             $budgetForm = sprintf('budget.%s', $budgetIndex);
             $rules[sprintf('%s.budget_type', $budgetForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('BudgetType', 'Activity', false))));
+            $rules[sprintf('%s.budget_status', $budgetForm)][] = 'nullable';
             $rules[sprintf('%s.budget_status', $budgetForm)][] = sprintf('in:%s', implode(',', array_keys(getCodeList('BudgetStatus', 'Activity', false))));
             $diff = 0;
             $start = $budget['period_start'][0]['date'];
@@ -314,8 +315,8 @@ class BudgetRequest extends ActivityBaseRequest
             $messages[sprintf('%s.amount.numeric', $valueForm)] = 'The amount field must be a number.';
             $messages[sprintf('%s.amount.min', $valueForm)] = 'The amount field must not be in negative.';
             $messages[sprintf('%s.value_date.date', $valueForm)] = 'The value-date field must be a valid date.';
-            $messages[sprintf('%s.value_date.after', $valueForm)] = 'The value-date field must be a between period start and period end';
-            $messages[sprintf('%s.value_date.before', $valueForm)] = 'The value-date field must be a between period start and period end';
+            $messages[sprintf('%s.value_date.after', $valueForm)] = 'The value-date field must be between period start and period end.';
+            $messages[sprintf('%s.value_date.before', $valueForm)] = 'The value-date field must be between period start and period end.';
         }
 
         return $messages;

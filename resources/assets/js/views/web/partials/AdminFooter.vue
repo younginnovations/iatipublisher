@@ -1,5 +1,4 @@
 <template>
-
   <footer
     id="footer"
     class="mt-7 bg-bluecoral text-sm leading-6 text-n-20 sm:mt-10 md:mt-20"
@@ -18,7 +17,11 @@
           <div class="footer__links">
             <span class="font-bold text-n-10">IATI Publisher</span>
             <ul class="mt-2 flex flex-col">
-              <li><a href="/activities">Dashboard</a></li>
+              <li>
+                <a :href="superAdmin ? '/list-organisations' : '/activities'">{{
+                  superAdmin ? "Organisation List" : "Your Activities"
+                }}</a>
+              </li>
               <li><a href="/about">About</a></li>
             </ul>
           </div>
@@ -74,3 +77,11 @@
     </div>
   </footer>
 </template>
+
+<script setup lang="ts">
+import { defineProps } from "vue";
+
+defineProps({
+  superAdmin: { type: Boolean, required: false, default: false },
+});
+</script>

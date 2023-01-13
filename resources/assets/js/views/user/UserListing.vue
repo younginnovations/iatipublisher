@@ -470,7 +470,7 @@
                 </div>
               </td>
               <td class="capitalize">
-                {{ user["role"]?.replace(/_/g, " ") }}
+                {{ roles[user["role_id"]] }}
               </td>
               <td :class="user['status'] ? 'text-spring-50' : 'text-n-40'">
                 {{ user["status"] ? "Active" : "Inactive" }}

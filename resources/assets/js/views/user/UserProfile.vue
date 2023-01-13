@@ -25,7 +25,7 @@
         <div
           class="max-w-[40vw] overflow-hidden text-ellipsis text-[30px] font-bold md:max-w-[60vw]"
         >
-          {{ user.full_name }}
+          {{ userData["full_name"] }}
         </div>
       </div>
       <div class="flex flex-wrap-reverse items-end justify-end gap-2">
