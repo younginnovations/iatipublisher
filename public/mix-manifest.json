@@ -1,9 +1,13 @@
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=d4e2fa6574773ba2a183d634ab257513",
 =======
     "/js/app.js": "/js/app.js?id=2d52b783c580d38c85e59d15b9601eac",
 >>>>>>> 172acc1c (- [x] hover texts removed)
+=======
+    "/js/app.js": "/js/app.js?id=7df069661d2e3ff8559ff100198deff3",
+>>>>>>> 1463ed94 (status model implemented)
     "/js/script.js": "/js/script.js?id=67f974d705cdb041f9d42e8c11e824d1",
     "/js/formbuilder.js": "/js/formbuilder.js?id=23e0052da87288dd57b8df6421880767",
     "/manifest.js": "/manifest.js?id=6ec4db78dd752c29bd9956118b1e0467",
