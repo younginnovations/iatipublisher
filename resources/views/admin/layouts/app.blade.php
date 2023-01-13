@@ -60,7 +60,7 @@
         @yield('content')
         @stack('scripts')
     </main>
-    <admin-footer></admin-footer>
+    <admin-footer v-bind:super-admin={{(int)isSuperAdmin()}}></admin-footer>
   </div>
 
   <script defer src="{{ mix('/manifest.js') }}"></script>
