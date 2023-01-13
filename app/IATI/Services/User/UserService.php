@@ -290,58 +290,10 @@ class UserService
             if ($data['username'] !== $response->name) {
                 $errors['username'] = ['User with this name does not exists in IATI Registry.'];
             }
-
-            if ($data['email'] !== $response->email) {
-                $errors['email'] = ['User with this email does not exist in IATI Registry.'];
-            }
         } else {
             if ($data['username'] === $response->name) {
                 $errors['username'] = ['Username already exists in IATI Registry.'];
             }
-
-            if ($data['email'] === $response->email) {
-                $errors['email'] = ['User with this email already exists in IATI Registry.'];
-            }
-        }
-
-        return $errors;
-    }
-
-    /**
-     * Create if user email already exists In Iati Registry.
-     *
-     * @param string $email
-     *
-     * @return array
-     * @throws GuzzleException
-     */
-    public function checkUserEmail(string $email): array
-    {
-        $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
-        $requestConfig = [
-            'http_errors' => false,
-            'query'       => ['email' => $email ?? ''],
-        ];
-
-        if (env('APP_ENV') !== 'production') {
-            $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
-            $requestConfig['auth'] = [env('IATI_USERNAME'), env('IATI_PASSWORD')];
-        }
-
-        $client = new Client($clientConfig);
-        $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/user_list', $requestConfig);
-        $errors = [];
-
-        if ($res->getStatusCode() === 404) {
-            $errors['error'] = ['Error occurred while trying to check user email.'];
-
-            return $errors;
-        }
-
-        $response = json_decode($res->getBody()->getContents())->result;
-
-        if (!empty($response)) {
-            $errors['email'] = ['User with this email already exist in IATI Registry.'];
         }
 
         return $errors;
@@ -655,7 +607,7 @@ class UserService
         $adminRole = $this->roleRepo->getOrganizationAdminId();
         $users = $this->userRepo->getUserDownloadData(['organization_id' => [$user->organization_id], 'role' => [$adminRole]]);
 
-        if (($user->role_id === $adminRole && count($users) === 1)) {
+        if ($user->role_id === $adminRole && count($users) === 1 && $user->status) {
             return false;
         }
 

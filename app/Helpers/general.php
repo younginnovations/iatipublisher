@@ -618,7 +618,7 @@ if (!function_exists('generateToastData')) {
     function generateToastData(): array
     {
         $toast['message'] = Session::exists('error') ? Session::get('error') : (Session::exists('success') ? Session::get('success') : '');
-        $toast['type'] = Session::exists('error') ? false : 'success';
+        $toast['type'] = Session::exists('error') ? false : true;
         Session::forget('success');
         Session::forget('error');
 
