@@ -178,7 +178,8 @@
 td {
   border: none !important;
 }
-.user-list-table.iati-list-table {
+.user-list-table.iati-list-table,
+.organization-list {
   overflow-x: auto;
   overflow-y: hidden;
   max-width: calc(100vw - 70px);

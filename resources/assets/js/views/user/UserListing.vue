@@ -233,33 +233,6 @@
           </button>
         </div>
       </PopupModal>
-      <PopupModal :modal-active="statusModal">
-        <div class="title mb-6 flex">
-          <b>Make user {{ statusValue ? 'Inactive' : 'Active' }}</b>
-        </div>
-        <p class="rounded-lg bg-rose p-4">
-          Are you sure you want to make this user
-          {{ statusValue ? 'Inactive' : 'Active' }} ?
-        </p>
-        <div class="mt-6 flex justify-end space-x-2">
-          <button
-            class="secondary-btn font-bold"
-            @click="
-              () => {
-                statusModal = false;
-              }
-            "
-          >
-            Cancel
-          </button>
-          <button
-            class="primary-btn !px-10"
-            @click="toggleUserStatus(statusId)"
-          >
-            Yes
-          </button>
-        </div>
-      </PopupModal>
 
       <div class="filters mb-4 flex flex-wrap justify-between gap-2">
         <div class="select filters inline-flex items-center space-x-2">
@@ -336,10 +309,7 @@
             class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
           >
             <span class="text-n-40">Org:</span
-            ><span
-              class="max-w-[500px] overflow-x-hidden text-ellipsis whitespace-nowrap"
-              >{{ textBubbledata(item, 'org') }}</span
-            >
+            ><span>{{ textBubbledata(item, 'org') }}</span>
             <svg-vue
               class="mx-2 mt-1 cursor-pointer text-xs"
               icon="cross"
@@ -369,10 +339,7 @@
             class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
           >
             <span class="text-n-40">Status:</span
-            ><span
-              class="max-w-[500px] overflow-x-hidden text-ellipsis whitespace-nowrap"
-              >{{ textBubbledata(item, 'status') }}</span
-            >
+            ><span>{{ textBubbledata(item, 'status') }}</span>
             <svg-vue
               class="mx-2 mt-1 cursor-pointer text-xs"
               icon="cross"
@@ -539,12 +506,16 @@
               </td>
               <td class="capitalize">
 <<<<<<< HEAD
+<<<<<<< HEAD
                 {{ roles[user['role_id']] }}
 =======
 
                 {{ roles[user["role_id"]] }}
 
 >>>>>>> 1463ed94 (status model implemented)
+=======
+                {{ roles[user['role_id']] }}
+>>>>>>> 86cf5a82 (drop down ui issue fix)
               </td>
               <td :class="user['status'] ? 'text-spring-50' : 'text-n-40'">
                 {{ user['status'] ? 'Active' : 'Inactive' }}
@@ -564,7 +535,7 @@
                 <p @click="openDeletemodel(user['id'])">
                   <svg-vue class="cursor-pointer text-base" icon="delete" />
                 </p>
-                <p @click="openStatusModel(user['id'], user['status'])">
+                <p @click="toggleUserStatus(user['id'])">
                   <span
                     :class="user['status'] ? 'bg-spring-50' : 'bg-n-40'"
                     class="relative block h-4 w-7 cursor-pointer rounded-full"
@@ -651,9 +622,7 @@ const isEmpty = ref(true);
 const allSelected = ref<boolean[]>([]);
 const deleteModal = ref(false);
 const deleteId = ref();
-const statusId = ref();
-const statusModal = ref(false);
-const statusValue = ref();
+
 const selectedIds = ref({});
 const checklist = ref([]);
 const currentpageData = ref([]);
@@ -808,11 +777,6 @@ const setFormError = (errors = {}) => {
     }
   }
 };
-const openStatusModel = (id, status) => {
-  statusId.value = id;
-  statusValue.value = status;
-  statusModal.value = true;
-};
 
 const updateUser = () => {
   isLoaderVisible.value = true;
@@ -916,7 +880,6 @@ const sort = (param) => {
 function toggleUserStatus(id: number) {
   window.scrollTo(0, 0);
   isLoaderVisible.value = true;
-  statusModal.value = false;
 
   axios
     .patch(`/user/status/${id}`)

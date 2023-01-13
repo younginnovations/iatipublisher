@@ -133,6 +133,7 @@
 }
 .multiselect-dropdown {
   overflow: overlay !important;
+  z-index: 50 !important;
 }
 
 .multiselect-option {

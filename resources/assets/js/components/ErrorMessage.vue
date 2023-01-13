@@ -4,7 +4,7 @@
     class="relative h-full bg-white duration-300"
     :class="{
       'mb-5': !isEmpty || !show,
-      'mb-10': show,
+      'mb-10 pb-4': show,
     }"
   >
     <Loader v-if="isLoaderVisible" />
@@ -24,7 +24,7 @@
               class="mr-2 grow-0 text-base text-salmon-50"
             ></svg-vue>
             <span class="text-sm font-bold text-n-50">
-              {{ errorCount + " Alerts" }}
+              {{ errorCount + ' Alerts' }}
             </span>
           </div>
           <div
@@ -32,36 +32,48 @@
             :class="show ? 'text-show' : 'text-hide'"
           >
             <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
-            <span class="text-sm font-bold text-n-50">Account not verified</span>
+            <span class="text-sm font-bold text-n-50"
+              >Account not verified</span
+            >
           </div>
           <div
             v-if="!errorData.publisher_setting || !errorData.default_setting"
             :class="
-              show && (!errorData.publisher_setting || !errorData.default_setting)
+              show &&
+              (!errorData.publisher_setting || !errorData.default_setting)
                 ? 'text-show'
                 : 'text-hide'
             "
           >
             <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
-            <span class="text-sm font-bold text-bluecoral">Complete your setup</span>
+            <span class="text-sm font-bold text-bluecoral"
+              >Complete your setup</span
+            >
           </div>
           <div
             v-if="!errorData.publisher_active"
             :class="show ? 'text-show' : 'text-hide'"
           >
             <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
-            <span class="text-sm font-bold text-n-50">Publisher is Inactive</span>
+            <span class="text-sm font-bold text-n-50"
+              >Publisher is Inactive</span
+            >
           </div>
         </div>
         <div>
-          <button class="text-sm leading-relaxed text-bluecoral" @click="show = !show">
-            Show {{ show ? "less" : "more" }}
+          <button
+            class="text-sm leading-relaxed text-bluecoral"
+            @click="show = !show"
+          >
+            Show {{ show ? 'less' : 'more' }}
           </button>
         </div>
       </div>
     </div>
 
-    <div :class="show ? 'border-show duration-300' : 'border-hide duration-300'"></div>
+    <div
+      :class="show ? 'border-show duration-300' : 'border-hide duration-300'"
+    ></div>
 
     <div v-if="!errorData.account_verified" class="ml-4 mr-6">
       <TransitionRoot
@@ -83,7 +95,8 @@
 
             <div class="ml-5 text-left">
               <p>
-                Please check for verification email sent to you and verify your account,
+                Please check for verification email sent to you and verify your
+                account,
                 <span
                   ><a
                     class="cursor-pointer border-b-2 border-b-bluecoral font-bold text-bluecoral hover:border-b-spring-50"
@@ -128,7 +141,11 @@
             <div class="ml-5">
               <p>
                 Please
-                <span><a href="/setting" target="_blank">complete your setup</a></span>
+                <span
+                  ><a href="/setting" target="_blank"
+                    >complete your setup</a
+                  ></span
+                >
                 in order to enable complete features of IATI publisher tool.
               </p>
               <div v-if="!errorData.publisher_setting" class="alert__message">
@@ -178,10 +195,10 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, reactive, onMounted, inject } from "vue";
-import { TransitionRoot } from "@headlessui/vue";
-import Loader from "../components/Loader.vue";
-import axios from "axios";
+import { defineProps, ref, reactive, onMounted, inject } from 'vue';
+import { TransitionRoot } from '@headlessui/vue';
+import Loader from '../components/Loader.vue';
+import axios from 'axios';
 
 defineProps({
   isEmpty: {
@@ -200,7 +217,7 @@ interface ToastInterface {
   message: string;
   type: boolean;
 }
-const toastData = inject("toastData") as ToastInterface;
+const toastData = inject('toastData') as ToastInterface;
 const errorData = reactive({
   account_verified: false,
   publisher_active: false,
@@ -214,7 +231,7 @@ function resendVerificationEmail() {
   isLoaderVisible.value = true;
 
   axios
-    .post("/user/verification/email")
+    .post('/user/verification/email')
     .then((res) => {
       toastData.visibility = true;
       toastData.message = res.data.message;
@@ -232,9 +249,9 @@ function resendVerificationEmail() {
 onMounted(async () => {
   axios
     .all([
-      axios.get("/setting/status"),
-      axios.get("/user/verification/status"),
-      axios.get("/organisation/status"),
+      axios.get('/setting/status'),
+      axios.get('/user/verification/status'),
+      axios.get('/organisation/status'),
     ])
     .then(
       axios.spread(function (setting_res, user_res, org_res) {
@@ -247,7 +264,11 @@ onMounted(async () => {
         errorData.token_status = response?.data?.token_status;
         errorData.account_verified = user_response.data.account_verified;
         errorData.publisher_active = org_response.data.publisher_active;
-        let groupedError = ["default_setting", "publisher_setting", "token_status"];
+        let groupedError = [
+          'default_setting',
+          'publisher_setting',
+          'token_status',
+        ];
 
         for (const error in errorData) {
           if (!errorData[error] && groupedError.indexOf(error) === -1) {
@@ -302,14 +323,14 @@ onMounted(async () => {
   @apply absolute left-0 top-0 rounded bg-salmon-50 duration-300 ease-out;
   width: 2px;
   height: 100%;
-  content: "";
+  content: '';
   transform: translateY(-100%);
 }
 .border-show::before {
   @apply absolute left-0 top-0 rounded bg-salmon-50 duration-300 ease-out;
   width: 2px;
   height: 100%;
-  content: "";
+  content: '';
   transform: translateY(0%);
 }
 </style>
