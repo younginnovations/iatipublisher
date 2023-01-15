@@ -103,7 +103,7 @@ class ReportingOrganization extends Element
         }
 
         if ($key === $this->_csvHeaders[0]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
             $this->data['reporting_org'][$index]['ref'] = $value;
         }
     }
@@ -123,7 +123,7 @@ class ReportingOrganization extends Element
         }
 
         if ($key === $this->_csvHeaders[1]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
             $validReportingOrgType = $this->loadCodeList('OrganizationType', 'Organization');
 
             if ($value) {

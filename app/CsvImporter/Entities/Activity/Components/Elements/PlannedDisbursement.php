@@ -138,7 +138,7 @@ class PlannedDisbursement extends Element
         }
 
         if ($key === $this->_csvHeaders[0]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
 
             $validType = $this->loadCodeList('BudgetType');
 
@@ -171,7 +171,7 @@ class PlannedDisbursement extends Element
         }
 
         if ($key === $this->_csvHeaders[1]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['period_start'][0]['date'] = dateFormat('Y-m-d', $value);
         }
     }
@@ -192,7 +192,7 @@ class PlannedDisbursement extends Element
         }
 
         if ($key === $this->_csvHeaders[2]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['period_end'][0]['date'] = dateFormat('Y-m-d', $value);
         }
     }
@@ -221,11 +221,11 @@ class PlannedDisbursement extends Element
         }
 
         if ($key === $this->_csvHeaders[3]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['value'][0]['amount'] = $value;
             $this->data['planned_disbursement'][$index]['value'][0]['currency'] = Arr::get($this->data(), 'planned_disbursement.' . $index . '.value.0.currency', null) ?? '';
         } elseif ($key === $this->_csvHeaders[4]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
             $validCurrency = $this->loadCodeList('Currency');
 
             if ($value) {
@@ -239,7 +239,7 @@ class PlannedDisbursement extends Element
 
             $this->data['planned_disbursement'][$index]['value'][0]['currency'] = strtoupper($value);
         } elseif ($key === $this->_csvHeaders[5]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['value'][0]['value_date'] = dateFormat('Y-m-d', $value);
         }
     }
@@ -266,13 +266,13 @@ class PlannedDisbursement extends Element
         }
 
         if ($key === $this->_csvHeaders[6]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['provider_org'][0]['ref'] = $value;
         } elseif ($key === $this->_csvHeaders[7]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['provider_org'][0]['provider_activity_id'] = $value;
         } elseif ($key === $this->_csvHeaders[8]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
             $validProviderOrgType = $this->loadCodeList('OrganizationType', 'Organization');
 
             if ($value) {
@@ -318,13 +318,13 @@ class PlannedDisbursement extends Element
         }
 
         if ($key === $this->_csvHeaders[10]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['receiver_org'][0]['ref'] = $value;
         } elseif ($key === $this->_csvHeaders[11]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
             $this->data['planned_disbursement'][$index]['receiver_org'][0]['receiver_activity_id'] = $value;
         } elseif ($key === $this->_csvHeaders[12]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
             $validReceiverOrgType = $this->loadCodeList('OrganizationType', 'Organization');
 
             if ($value) {

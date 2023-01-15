@@ -103,7 +103,7 @@ class Tag extends Element
         }
 
         if ($key === $this->_csvHeaders[0]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
 
             $validTagVocab = $this->loadCodeList('TagVocabulary');
 

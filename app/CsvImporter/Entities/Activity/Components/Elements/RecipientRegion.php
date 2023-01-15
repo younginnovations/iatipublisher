@@ -224,7 +224,7 @@ class RecipientRegion extends Element
     protected function setVocabularyUri($key, $value, $index): void
     {
         if ($key === $this->_csvHeaders[2] && $this->data['recipient_region'][$index]['region_vocabulary'] !== '1') {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
             $this->data['recipient_region'][$index]['vocabulary_uri'] = $value;
             $this->data['recipient_region'][$index]['region_vocabulary'] = '99';
         }
