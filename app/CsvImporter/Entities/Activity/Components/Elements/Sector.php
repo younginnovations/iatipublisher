@@ -135,7 +135,7 @@ class Sector extends Element
         }
 
         if ($key === $this->_csvHeaders[0]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
             $this->vocabularies[] = $value;
 
             $validSectorVocab = $this->loadCodeList('SectorVocabulary');

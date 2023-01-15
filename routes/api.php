@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::middleware('can:crud_activity')->group([], static function () {
+Route::group(['middleware' => 'can:crud_activity'], static function () {
     Route::delete('activity/{id}/{element}', [ActivityController::class, 'deleteElement'])->name('activity.element.delete');
 });

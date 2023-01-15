@@ -98,7 +98,7 @@ class DefaultFieldValues extends Element
         }
 
         if ($key === $this->_csvHeaders[1]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
 
             $validReportingOrgType = $this->loadCodeList('Language');
 
@@ -131,7 +131,7 @@ class DefaultFieldValues extends Element
         }
 
         if ($key === $this->_csvHeaders[0]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
 
             $validReportingOrgType = $this->loadCodeList('Currency');
 

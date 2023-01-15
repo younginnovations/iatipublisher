@@ -143,7 +143,7 @@ class Location extends Element
         }
 
         if ($key === $this->_csvHeaders[1]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
 
             $validLocationReachCode = $this->loadCodeList('GeographicLocationReach');
 
@@ -180,7 +180,7 @@ class Location extends Element
         }
 
         if ($key === $this->_csvHeaders[2]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
 
             $validLocationIdVocabulary = $this->loadCodeList('GeographicVocabulary');
 
@@ -195,7 +195,7 @@ class Location extends Element
 
             $this->data['location'][$index]['location_id'][0]['vocabulary'] = strtoupper($value);
         } elseif ($key === $this->_csvHeaders[3]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
 
             $this->data['location'][$index]['location_id'][0]['code'] = $value;
         }
@@ -306,7 +306,7 @@ class Location extends Element
         }
 
         if ($key === $this->_csvHeaders[7]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
 
             $validAdministrativeVocabulary = $this->loadCodeList('GeographicVocabulary');
 
@@ -321,7 +321,7 @@ class Location extends Element
 
             $this->data['location'][$index]['administrative'][0]['vocabulary'] = strtoupper($value);
         } elseif ($key === $this->_csvHeaders[8]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
 
             $validAdministrativeCode = $this->loadCodeList('Country');
 
@@ -336,7 +336,7 @@ class Location extends Element
 
             $this->data['location'][$index]['administrative'][0]['code'] = strtoupper($value);
         } elseif ($key === $this->_csvHeaders[9]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
 
             $this->data['location'][$index]['administrative'][0]['level'] = $value;
         }
@@ -366,7 +366,7 @@ class Location extends Element
         }
 
         if ($key === $this->_csvHeaders[10]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
 
             $this->data['location'][$index]['point'][0]['srs_name'] = $value;
         } elseif ($key === $this->_csvHeaders[11]) {
@@ -396,7 +396,7 @@ class Location extends Element
         }
 
         if ($key === $this->_csvHeaders[13]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
 
             $validLocationExactness = $this->loadCodeList('GeographicExactness');
 
@@ -429,7 +429,7 @@ class Location extends Element
         }
 
         if ($key === $this->_csvHeaders[14]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
 
             $validLocationClass = $this->loadCodeList('GeographicLocationClass');
 
@@ -462,7 +462,7 @@ class Location extends Element
         }
 
         if ($key === $this->_csvHeaders[15]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
 
             $validFeatureDesignation = $this->loadCodeList('LocationType');
 

@@ -139,11 +139,21 @@
             able to view this information as you work your way through completing the
             forms for each element on IATI Publisher.
           </p>
-          <a target="_blank" rel="noopener noreferrer" class="my-2">
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            class="my-2"
+            @click="downloadManual('organization')"
+          >
             [IATI Organisation Standard data PDF]
           </a>
           <br />
-          <a target="_blank" rel="noopener noreferrer" class="my-2">
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            class="my-2"
+            @click="downloadManual('activity')"
+          >
             [IATI Activity Standard data PDF]
           </a>
         </article>
@@ -174,4 +184,22 @@
     </div>
   </div>
 </template>
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import axios from "axios";
+
+function downloadManual(type: string) {
+  axios({
+    url: `/iati-standard/manual/${type}`,
+    method: "GET",
+    responseType: "arraybuffer",
+  }).then((response) => {
+    let blob = new Blob([response.data], {
+      type: "application/pdf",
+    });
+    let link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.target = "_blank";
+    link.click();
+  });
+}
+</script>

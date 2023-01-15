@@ -38,6 +38,7 @@ Route::middleware(RedirectIfAuthenticated::class)->get('password/reset/{token}',
 Route::get('/email/verify/{id}/{hash}', [App\Http\Controllers\Auth\VerificationController::class, 'verify'])->name('verification.verify');
 Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 Route::get('/about', [App\Http\Controllers\Web\WebController::class, 'about'])->name('about');
-Route::get('/publishing-checklist', [App\Http\Controllers\Web\WebController::class, 'publishing_checklist'])->name('publishingchecklist');
-Route::get('/iati-standard', [App\Http\Controllers\Web\WebController::class, 'iati_standard'])->name('iatistandard');
+Route::get('/publishing-checklist', [App\Http\Controllers\Web\WebController::class, 'publishingChecklist'])->name('publishingchecklist');
+Route::get('/iati-standard', [App\Http\Controllers\Web\WebController::class, 'iatiStandard'])->name('iatistandard');
+Route::get('/iati-standard/manual/{type}', [App\Http\Controllers\Web\WebController::class, 'downloadIatiStandardManual'])->name('iatistandard');
 Route::get('/support', [App\Http\Controllers\Web\WebController::class, 'support'])->name('support');

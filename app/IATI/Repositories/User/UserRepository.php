@@ -90,7 +90,7 @@ class UserRepository extends Repository
     {
         $query = $this->model
             ->leftJoin('organizations', 'organizations.id', 'users.organization_id')
-            ->join('roles', 'roles.id', 'users.role_id')->where('users.status', 1);
+            ->join('roles', 'roles.id', 'users.role_id');
 
         if (!empty($queryParams)) {
             $query = $this->filterUsers($query, $queryParams);
@@ -129,8 +129,10 @@ class UserRepository extends Repository
         }
 
         if (array_key_exists('q', $queryParams)) {
-            $query = $query->where('username', 'ilike', '%' . Arr::get($queryParams, 'q') . '%')
+            $query = $query->where(function ($query) use ($queryParams) {
+                $query->where('username', 'ilike', '%' . Arr::get($queryParams, 'q') . '%')
                 ->orWhere('full_name', 'ilike', '%' . Arr::get($queryParams, 'q') . '%');
+            });
         }
 
         if (array_key_exists('orderBy', $queryParams) && !empty($queryParams['orderBy'])) {

@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Class WebController.
@@ -72,7 +74,7 @@ class WebController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function publishing_checklist(): \Illuminate\Contracts\Support\Renderable
+    public function publishingChecklist(): \Illuminate\Contracts\Support\Renderable
     {
         return view('web.publishing_checklist');
     }
@@ -82,7 +84,7 @@ class WebController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function iati_standard(): \Illuminate\Contracts\Support\Renderable
+    public function iatiStandard(): \Illuminate\Contracts\Support\Renderable
     {
         return view('web.iati_standard');
     }
@@ -95,5 +97,29 @@ class WebController extends Controller
     public function support(): \Illuminate\Contracts\Support\Renderable
     {
         return view('web.support');
+    }
+
+    /**
+     * Returns csv file import template.
+     *
+     * @return BinaryFileResponse|JsonResponse
+     */
+    public function downloadIatiStandardManual(string $type): BinaryFileResponse|JsonResponse
+    {
+        try {
+            if ($type === 'organization') {
+                return response()->file(app_path('Data/Manuals/IATI_Publisher_Organisation_Standard.pdf'));
+            }
+
+            if ($type === 'activity') {
+                return response()->file(app_path('Data/Manuals/IATI_Publisher_Activity_Standard.pdf'));
+            }
+
+            return response()->json(['success' => false, 'message' =>'File couldn\'t be found.']);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
     }
 }

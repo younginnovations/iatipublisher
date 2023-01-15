@@ -106,7 +106,7 @@ class HumanitarianScope extends Element
         }
 
         if ($key === $this->_csvHeaders[0]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
 
             $validHumanitarianScopeVocab = $this->loadCodeList('HumanitarianScopeType');
 
@@ -139,7 +139,7 @@ class HumanitarianScope extends Element
         }
 
         if ($key === $this->_csvHeaders[1]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
 
             $validHumanitarianScopeVocab = $this->loadCodeList('HumanitarianScopeVocabulary');
 
@@ -188,7 +188,7 @@ class HumanitarianScope extends Element
         }
 
         if ($key === $this->_csvHeaders[3]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
             $this->data['humanitarian_scope'][$index]['code'] = $value;
         }
     }

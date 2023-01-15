@@ -130,7 +130,7 @@ class DocumentLink extends Element
         }
 
         if ($key === $this->_csvHeaders[1]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
 
             $this->data['document_link'][$index]['format'] = $value;
         }
@@ -210,7 +210,7 @@ class DocumentLink extends Element
         }
 
         if ($key === $this->_csvHeaders[4]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
 
             $validDocumentCategory = $this->loadCodeList('DocumentCategory');
 
@@ -243,7 +243,7 @@ class DocumentLink extends Element
         }
 
         if ($key === $this->_csvHeaders[5]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
 
             $validLanguage = $this->loadCodeList('Language');
 
@@ -276,7 +276,7 @@ class DocumentLink extends Element
         }
 
         if ($key === $this->_csvHeaders[6]) {
-            $value = (!$value) ? '' : trim($value);
+            $value = is_null($value) ? '' : trim($value);
             $this->data['document_link'][$index]['document_date'][0]['date'] = dateFormat('Y-m-d', $value);
         }
     }
