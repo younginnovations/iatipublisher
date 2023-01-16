@@ -8,40 +8,45 @@ export enum ActionTypes {
   UPDATE_PUBLISHING_ERROR = 'UPDATE_PUBLISHING_ERROR',
   UPDATE_DEFAULT_VALUES = 'UPDATE_DEFAULT_VALUES',
   UPDATE_DEFAULT_ERROR = 'UPDATE_DEFAULT_ERROR',
+  UPDATE_IS_LOADING = 'UPDATE_IS_LOADING',
 }
 
 type AugmentedActionContext = {
   commit<K extends keyof Mutations>(
     key: K,
     payload: Parameters<Mutations[K]>[1]
-  ): ReturnType<Mutations[K]>
+  ): ReturnType<Mutations[K]>;
 } & Omit<ActionContext<State, State>, 'commit'>;
 
 export interface Actions {
   [ActionTypes.UPDATE_PUBLISHING_FORM](
     { commit }: AugmentedActionContext,
     payload: object
-  ): void
+  ): void;
 
   [ActionTypes.UPDATE_PUBLISHER_INFO](
     { commit }: AugmentedActionContext,
     payload: object
-  ): void
+  ): void;
 
   [ActionTypes.UPDATE_PUBLISHING_ERROR](
     { commit }: AugmentedActionContext,
     payload: object
-  ): void
+  ): void;
 
   [ActionTypes.UPDATE_DEFAULT_VALUES](
     { commit }: AugmentedActionContext,
     payload: object
-  ): void
+  ): void;
 
   [ActionTypes.UPDATE_DEFAULT_ERROR](
     { commit }: AugmentedActionContext,
     payload: object
-  ): void
+  ): void;
+  [ActionTypes.UPDATE_IS_LOADING](
+    { commit }: AugmentedActionContext,
+    payload: object
+  ): void;
 }
 
 export const actions: ActionTree<State, State> = {
@@ -63,5 +68,8 @@ export const actions: ActionTree<State, State> = {
 
   [ActionTypes.UPDATE_DEFAULT_ERROR]({ commit }, payload) {
     commit(MutationTypes.UPDATE_DEFAULT_ERROR, payload);
+  },
+  [ActionTypes.UPDATE_IS_LOADING]({ commit }, payload) {
+    commit(MutationTypes.IS_LOADING, payload);
   },
 };

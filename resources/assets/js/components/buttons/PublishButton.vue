@@ -157,6 +157,11 @@ const props = defineProps({
 const { linkedToIati, status, coreCompleted, activityId } = toRefs(props);
 onUpdated(() => {
   if (loader.value) {
+    store.dispatch('updateIsLoading', true);
+  } else {
+    store.dispatch('updateIsLoading', false);
+  }
+  if (loader.value) {
     publishValue.value = false;
   }
   if (publishValue.value) {
