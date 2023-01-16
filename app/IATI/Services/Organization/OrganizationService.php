@@ -194,9 +194,9 @@ class OrganizationService
             'http_errors' => false,
             'query'       => ['id' => $publisher_id ?? ''],
         ];
+        $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
 
         if (env('APP_ENV') !== 'production') {
-            $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
             $requestConfig['auth'] = [env('IATI_USERNAME'), env('IATI_PASSWORD')];
         }
 
