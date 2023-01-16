@@ -2,7 +2,7 @@ name: Staging Deployment
 
 on:
   push:
-    branches: [ main ]
+    branches: [ staging-migration-fix ]
 
   workflow_dispatch:
 
