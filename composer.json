@@ -21,6 +21,7 @@
     "laravel/ui": "^3.4",
     "league/flysystem-aws-s3-v3": "^3.0",
     "maatwebsite/excel": "^3.1",
+    "owen-it/laravel-auditing": "^13.0",
     "predis/predis": "^2.0",
     "psr/simple-cache": "^2.0",
     "sabre/xml": "^4.0",
