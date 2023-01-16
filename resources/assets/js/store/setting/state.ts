@@ -13,7 +13,7 @@ export const state = {
     default_language: '',
     hierarchy: '',
     humanitarian: '',
-    budget_not_provided: ''
+    budget_not_provided: '',
   },
   publishingError: {
     api_token: '',
@@ -23,8 +23,9 @@ export const state = {
     default_language: '',
     hierarchy: '',
     humanitarian: '',
-    budget_not_provided: ''
+    budget_not_provided: '',
   },
+  isLoading: {},
 };
 
-export type State = typeof state
+export type State = typeof state;

@@ -4,6 +4,7 @@ const state = {
   unPublished: false,
   showPublished: false,
   publishErrors: [],
+  isLoading: false,
 };
 
 type State = typeof state;
@@ -17,6 +18,9 @@ const mutations = {
   },
   mutatePublishErrors: function (state: State, payload: []) {
     state.publishErrors = payload;
+  },
+  mutateIsLoading: function (state: State, payload: boolean) {
+    state.isLoading = payload;
   },
 };
 
@@ -33,6 +37,9 @@ const actions = {
   },
   updatePublishErrors: function ({ commit }: CommitFunction, payload: []) {
     commit('mutatePublishErrors', payload);
+  },
+  updateIsLoading: function ({ commit }: CommitFunction, payload: []) {
+    commit('mutateIsLoading', payload);
   },
 };
 
