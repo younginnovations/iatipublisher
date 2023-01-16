@@ -142,7 +142,7 @@
           <a
             target="_blank"
             rel="noopener noreferrer"
-            class="my-2"
+            class="my-2 cursor-pointer"
             @click="downloadManual('organization')"
           >
             [IATI Organisation Standard data PDF]
@@ -151,7 +151,7 @@
           <a
             target="_blank"
             rel="noopener noreferrer"
-            class="my-2"
+            class="my-2 cursor-pointer"
             @click="downloadManual('activity')"
           >
             [IATI Activity Standard data PDF]
