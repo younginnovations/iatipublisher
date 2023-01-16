@@ -8,21 +8,21 @@
   />
   <Modal :modal-active="unpublishValue" width="583" @close="unpublishToggle">
     <div class="mb-4">
-      <div class="flex mb-6 title">
+      <div class="title mb-6 flex">
         <svg-vue
           class="mr-1 mt-0.5 text-lg text-crimson-40"
           icon="cancel-cloud"
         />
         <b>Unpublish activity</b>
       </div>
-      <div class="p-4 rounded-lg bg-rose">
+      <div class="rounded-lg bg-rose p-4">
         Are you sure you want to unpublish this activity?
       </div>
     </div>
     <div class="flex justify-end">
       <div class="inline-flex">
         <BtnComponent
-          class="px-6 uppercase bg-white"
+          class="bg-white px-6 uppercase"
           text="Go Back"
           type=""
           @click="unpublishValue = false"
@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, reactive, inject, toRefs } from 'vue';
+import { defineProps, reactive, inject, onUpdated, toRefs } from 'vue';
 import { useToggle } from '@vueuse/core';
 import axios from 'axios';
 
@@ -88,10 +88,19 @@ interface ToastMessageTypeface {
   message: string;
   type: boolean;
 }
+onUpdated(() => {
+  if (unpublishValue.value) {
+    loader.value = false;
+  }
+  if (loader.value) {
+    unpublishValue.value = false;
+  }
+});
 
 const toastMessage = inject('toastMessage') as ToastMessageTypeface;
 
 const unPublishFunction = () => {
+  unpublishValue.value = false;
   loader.value = true;
   loader.text = 'Unpublishing';
 
