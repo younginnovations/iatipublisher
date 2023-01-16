@@ -126,7 +126,15 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, reactive, ref, toRefs, computed, inject } from 'vue';
+import {
+  defineProps,
+  reactive,
+  ref,
+  onUpdated,
+  toRefs,
+  computed,
+  inject,
+} from 'vue';
 import { useToggle } from '@vueuse/core';
 import axios from 'axios';
 
@@ -147,6 +155,22 @@ const props = defineProps({
 });
 
 const { linkedToIati, status, coreCompleted, activityId } = toRefs(props);
+onUpdated(() => {
+  if (loader.value) {
+    publishValue.value = false;
+  }
+  if (publishValue.value) {
+    loader.value = false;
+  }
+  if (publishStep.value == 1) {
+    publishValue.value = false;
+    loader.value = true;
+  }
+  if (publishStep.value == 3) {
+    loader.value = false;
+    publishValue.value = true;
+  }
+});
 
 /**
  *  Global State
@@ -273,7 +297,11 @@ let err: Err = reactive({
 // call api for validation
 
 const validatorFunction = () => {
-  loader.value = true;
+  publishValue.value = false;
+
+  if (!publishValue.value) {
+    loader.value = true;
+  }
   loaderText.value = 'Validating Activity';
 
   axios.post(`/activity/${id}/validateActivity`).then((res) => {
@@ -335,7 +363,10 @@ const checkPublish = () => {
 };
 
 const publishFunction = () => {
-  loader.value = true;
+  publishValue.value = false;
+  if (!publishValue.value) {
+    loader.value = true;
+  }
   loaderText.value = 'Publishing Activity';
   resetPublishStep();
 
