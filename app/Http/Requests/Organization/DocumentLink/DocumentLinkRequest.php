@@ -58,7 +58,7 @@ class DocumentLinkRequest extends OrganizationBaseRequest
                 $documentLinkIndex
             );
             $rules[sprintf('document_link.%s.url', $documentLinkIndex)] = 'nullable|url';
-            $rules[sprintf('document_link.%s.format', $documentLinkIndex)] = 'nullable';
+            $rules[sprintf('document_link.%s.format', $documentLinkIndex)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('FileFormat', 'Activity'))));
             $rules[sprintf('document_link.%s.document_date.0.date', $documentLinkIndex)] = 'nullable|date';
             $rules = array_merge(
                 $rules,
@@ -123,7 +123,7 @@ class DocumentLinkRequest extends OrganizationBaseRequest
         $rules[sprintf('%s.category', $formIndex)] = 'unique_category';
 
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
-            $rules[sprintf('%s.category.%s.code', $formIndex, $documentCategoryIndex)] = 'nullable';
+            $rules[sprintf('%s.category.%s.code', $formIndex, $documentCategoryIndex)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('DocumentCategory', 'Activity'))));
         }
 
         return $rules;
@@ -170,7 +170,7 @@ class DocumentLinkRequest extends OrganizationBaseRequest
         $rules[sprintf('%s.language', $formIndex)] = 'unique_language';
 
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
-            $rules[sprintf('%s.language.%s.language', $formIndex, $documentCategoryIndex)] = 'nullable';
+            $rules[sprintf('%s.language.%s.language', $formIndex, $documentCategoryIndex)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Language', 'Activity'))));
         }
 
         return $rules;
@@ -217,10 +217,11 @@ class DocumentLinkRequest extends OrganizationBaseRequest
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountryVal) {
             $budgetItemForm = sprintf('%s.recipient_country.%s', $formIndex, $recipientCountryIndex);
-            $rules = array_merge(
-                $rules,
-                $this->getRulesForNarrative($recipientCountryVal['narrative'], $budgetItemForm)
-            );
+            $rules[sprintf('%s.code', $budgetItemForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Country', 'Activity'))));
+
+            foreach ($this->getRulesForNarrative($recipientCountryVal['narrative'], $budgetItemForm) as $index => $rule) {
+                $rules[$index] = $rule;
+            }
         }
 
         return $rules;

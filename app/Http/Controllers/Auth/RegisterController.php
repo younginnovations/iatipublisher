@@ -108,8 +108,9 @@ class RegisterController extends Controller
                 'publisher_id'        => ['required', 'string', 'max:255', 'unique:organizations,publisher_id'],
                 'publisher_name'      => ['required', 'string', 'max:255', 'unique:organizations,publisher_name'],
                 'identifier'          => ['required', 'string', 'max:255', 'unique:organizations,identifier'],
-                'registration_agency' => ['required'],
+                'registration_agency' => ['required', sprintf('in:%s', implode(',', array_keys(getCodeListArray('OrganizationRegistrationAgency', 'OrganizationArray'))))],
                 'registration_number' => ['required'],
+                'country'             => ['nullable', sprintf('in:%s', implode(',', array_keys(getCodeList('Country', 'Activity'))))],
             ]);
 
             if ($validator->fails()) {

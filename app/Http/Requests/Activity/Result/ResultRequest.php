@@ -121,6 +121,7 @@ class ResultRequest extends ActivityBaseRequest
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
             $rules[sprintf('%s.vocabulary_uri', $referenceForm)] = 'nullable|url';
+            $rules[sprintf('%s.vocabulary', $referenceForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ResultVocabulary', 'Activity'))));
 
             if (!empty($reference['code']) && $reference['code'] !== '' && $hasResultId) {
                 if ($fileUpload) {

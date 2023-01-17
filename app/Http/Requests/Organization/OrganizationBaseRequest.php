@@ -193,8 +193,11 @@ class OrganizationBaseRequest extends FormRequest
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
+        $validLanguages = implode(',', array_keys(getCodeList('Language', 'Activity', false)));
 
         foreach ($formFields as $narrativeIndex => $narrative) {
+            $rules[sprintf('%s.narrative.%s.language', $formBase, $narrativeIndex)][] = 'nullable';
+            $rules[sprintf('%s.narrative.%s.language', $formBase, $narrativeIndex)][] = sprintf('in:%s', $validLanguages);
             $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with_language';
         }
 
@@ -213,6 +216,7 @@ class OrganizationBaseRequest extends FormRequest
     {
         $messages = [];
         $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The @xml:lang field must be unique.';
+        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = 'The narrative language field must be unique.';
 
         foreach ($formFields as $narrativeIndex => $narrative) {
             $messages[sprintf('%s.narrative.%s.narrative.required', $formBase, $narrativeIndex)] = 'The narrative field is required.';
@@ -244,6 +248,7 @@ class OrganizationBaseRequest extends FormRequest
         foreach ($formFields as $valueKey => $valueVal) {
             $valueForm = $formBase . '.value.' . $valueKey;
             $rules[$valueForm . '.amount'] = 'nullable|numeric|min:0';
+            $rules[$valueForm . '.currency'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Currency', 'Activity'))));
             $rules[$valueForm . '.value_date'] = $valueDateRule;
         }
 
@@ -438,6 +443,7 @@ class OrganizationBaseRequest extends FormRequest
 
         foreach ($formField as $budgetLineIndex => $budgetLine) {
             $rules[$formBase . '.value.' . $budgetLineIndex . '.amount'] = 'nullable|numeric|min:0';
+            $rules[$formBase . '.value.' . $budgetLineIndex . '.currency'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Currency', 'Activity'))));
             $rules[$formBase . '.value.' . $budgetLineIndex . '.value_date'] = $valueDateRule;
         }
 
@@ -480,6 +486,13 @@ class OrganizationBaseRequest extends FormRequest
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)] = 'unique_lang';
         $rules[sprintf('%s.narrative', $formBase)] = 'unique_default_lang';
+        $validLanguages = implode(',', array_keys(getCodeList('Language', 'Activity', false)));
+
+        foreach ($formFields as $narrativeIndex => $narrative) {
+            $rules[sprintf('%s.narrative.%s.language', $formBase, $narrativeIndex)][] = 'nullable';
+            $rules[sprintf('%s.narrative.%s.language', $formBase, $narrativeIndex)][] = sprintf('in:%s', $validLanguages);
+            $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with_language';
+        }
 
         return $rules;
     }
@@ -495,11 +508,11 @@ class OrganizationBaseRequest extends FormRequest
     public function getMessagesForBudgetOrExpenseLineNarrative($formFields, $formBase): array
     {
         $messages = [];
-        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = trans('validation.unique', ['attribute' => trans('elementForm.languages')]);
-        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = trans('validation.unique', ['attribute' => trans('elementForm.languages')]);
+        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The narrative language field must be unique.';
+        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = 'The narrative language field must be unique.';
 
         foreach ($formFields as $narrativeIndex => $narrative) {
-            $messages[sprintf('%s.narrative.%s.narrative.required_with', $formBase, $narrativeIndex)] = trans('validation.required', ['attribute' => trans('elementForm.narrative')]);
+            $messages[sprintf('%s.narrative.%s.narrative.required_with_language', $formBase, $narrativeIndex)] = 'The narrative field is required with language field.';
         }
 
         return $messages;

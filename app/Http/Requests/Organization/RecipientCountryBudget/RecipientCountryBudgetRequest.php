@@ -30,7 +30,7 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
             }
 
             $recipientCountryBudgetForm = sprintf('recipient_country_budget.%s', $recipientCountryBudgetIndex);
-
+            $rules[$recipientCountryBudgetForm . '.status'] = ['nullable', sprintf('in:%s', implode(',', array_keys(getCodeList('BudgetStatus', 'Activity'))))];
             $budgetRules = $this->getRecipientCountryBudgetRules($recipientCountryBudget['recipient_country'], $recipientCountryBudgetForm);
 
             foreach ($budgetRules as $key => $budgetRule) {
@@ -125,7 +125,7 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('%s.recipient_country.%s', $formBase, $recipientCountryIndex);
-            $rules[sprintf('%s.code', $recipientCountryForm)] = 'nullable';
+            $rules[sprintf('%s.code', $recipientCountryForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Country', 'Activity'))));
             $narrativeRules = $this->getRulesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
 
             foreach ($narrativeRules as $key => $narrativeRule) {

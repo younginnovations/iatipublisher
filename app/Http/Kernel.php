@@ -9,6 +9,7 @@ use App\Http\Middleware\LogoutIfInactive;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
 use App\Http\Middleware\RedirectActivity;
 use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Http\Middleware\SanitizeRequest;
 use App\Http\Middleware\SuperAdminMiddleware;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
@@ -107,5 +108,6 @@ class Kernel extends HttpKernel
         'throttle'         => ThrottleRequests::class,
         'verified'         => EnsureEmailIsVerified::class,
         'activity.auth'    => RedirectActivity::class,
+        'sanitize'         => SanitizeRequest::class,
     ];
 }

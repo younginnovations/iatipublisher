@@ -52,7 +52,7 @@ class TotalBudgetRequest extends OrganizationBaseRequest
             }
 
             $totalBudgetForm = sprintf('total_budget.%s', $totalBudgetIndex);
-
+            $rules[$totalBudgetForm . '.total_budget_status'] = ['nullable', sprintf('in:%s', implode(',', array_keys(getCodeList('BudgetStatus', 'Activity'))))];
             $periodStartRules = $this->getRulesForPeriodStart($totalBudget['period_start'], $totalBudgetForm, $diff, 365);
 
             foreach ($periodStartRules as $key => $periodStartRule) {

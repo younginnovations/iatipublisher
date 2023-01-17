@@ -36,10 +36,11 @@ class IatiRegisterFormRequest extends FormRequest
                     'publisher_id'        => ['required', 'string', 'max:255', 'unique:organizations,publisher_id', 'regex:/^([a-z0-9-_]+){2,}$/'],
                     'publisher_name'      => ['required', 'string', 'max:255', 'unique:organizations,publisher_name'],
                     'identifier'          => ['required', 'string', 'max:255', 'unique:organizations,identifier'],
-                    'registration_agency' => ['required'],
+                    'registration_agency' => ['required', sprintf('in:%s', implode(',', array_keys(getCodeListArray('OrganizationRegistrationAgency', 'OrganizationArray'))))],
+                    'country'             => ['nullable', sprintf('in:%s', implode(',', array_keys(getCodeList('Country', 'Activity'))))],
                     'registration_number' => ['required', 'regex:/^([0-9A-Za-z-_.]+)$/'],
-                    'publisher_type'      => ['required'],
-                    'license_id'          => ['required'],
+                    'publisher_type'      => ['required', sprintf('in:%s', implode(',', array_keys(getCodeList('OrganizationType', 'Organization'))))],
+                    'license_id'          => ['required', sprintf('in:%s', implode(',', array_keys(getCodeList('DataLicense', 'Activity'))))],
                     'description'         => ['sometimes'],
                     'image_url'           => ['nullable', 'url'],
                 ];
@@ -52,7 +53,7 @@ class IatiRegisterFormRequest extends FormRequest
                 break;
             case '3':
                 $rules = [
-                    'source' => 'required',
+                    'source'          => ['required', sprintf('in:%s', implode(',', array_keys(getCodeList('Source', 'Activity', false))))],
                 ];
                 break;
             case '4':

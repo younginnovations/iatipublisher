@@ -45,6 +45,8 @@ class ReportingOrgRequest extends OrganizationBaseRequest
         foreach ($formFields as $reportingOrganizationIndex => $reportingOrganization) {
             $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
             $rules[$reportingOrganizationForm . '.ref'] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
+            $rules[$reportingOrganizationForm . '.type'] = ['nullable', sprintf('in:%s', implode(',', array_keys(getCodeList('OrganizationType', 'Organization'))))];
+            $rules[$reportingOrganizationForm . '.secondary_reporter'] = ['nullable', 'in:0,1'];
 
             $narrativeRules = $this->getRulesForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
 

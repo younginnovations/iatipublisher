@@ -192,6 +192,7 @@ class TransactionRequest extends ActivityBaseRequest
             $valueForm = sprintf('value.%s', $valueIndex);
             $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric|min:0';
             $rules[sprintf('%s.date', $valueForm)] = 'nullable|before:tomorrow|date';
+            $rules[sprintf('%s.currency', $valueForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Currency', 'Activity'))));
         }
 
         return $rules;

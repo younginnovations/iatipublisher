@@ -30,6 +30,8 @@ class RecipientRegionBudgetRequest extends OrganizationBaseRequest
             }
 
             $recipientRegionBudgetForm = sprintf('recipient_region_budget.%s', $recipientRegionBudgetIndex);
+            $rules[$recipientRegionBudgetForm . '.status'] = ['nullable', sprintf('in:%s', implode(',', array_keys(getCodeList('BudgetStatus', 'Activity'))))];
+
             $budgetRules = $this->getRecipientRegionBudgetRules($recipientRegionBudget['recipient_region'], $recipientRegionBudgetForm);
 
             foreach ($budgetRules as $key => $item) {
@@ -124,6 +126,7 @@ class RecipientRegionBudgetRequest extends OrganizationBaseRequest
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = sprintf('%s.recipient_region.%s', $formBase, $recipientRegionIndex);
             $rules[sprintf('%s.vocabulary_uri', $recipientRegionForm)] = 'nullable|url';
+            $rules[sprintf('%s.region_vocabulary', $recipientRegionForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('RegionVocabulary', 'Activity', false))));
             $rules[sprintf('%s.code', $recipientRegionForm)] = 'nullable';
             $narrativeRules = $this->getRulesForNarrative($recipientRegion['narrative'], $recipientRegionForm);
 

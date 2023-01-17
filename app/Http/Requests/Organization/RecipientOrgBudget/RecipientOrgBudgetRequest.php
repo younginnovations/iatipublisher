@@ -29,6 +29,7 @@ class RecipientOrgBudgetRequest extends OrganizationBaseRequest
                 $diff = (dateStrToTime($end) - dateStrToTime($start)) / 86400;
             }
             $recipientOrganizationBudgetForm = sprintf('recipient_org_budget.%s', $recipientOrganizationBudgetIndex);
+            $rules[$recipientOrganizationBudgetForm . '.status'] = ['nullable', sprintf('in:%s', implode(',', array_keys(getCodeList('BudgetStatus', 'Activity'))))];
             $periodStartRules = $this->getRulesForPeriodStart($recipientOrganizationBudget['period_start'], $recipientOrganizationBudgetForm, $diff, 365);
 
             foreach ($periodStartRules as $key => $item) {
