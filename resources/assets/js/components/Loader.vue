@@ -9,18 +9,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 
 export default defineComponent({
   name: 'LoaderCmp',
+  setup() {
+    onMounted(() => {
+      console.log('true');
+    });
+    return {};
+  },
 });
 </script>
 
 <style lang="scss">
 .overlay {
-  @apply fixed left-0 top-0 h-full w-full bg-black;
+  @apply fixed left-0  top-0  h-full w-full bg-black;
   opacity: 0.7;
-  z-index: 100;
+  display: block !important;
+  z-index: 1000;
 
   &__inner {
     @apply absolute left-0 top-0 h-full w-full;
