@@ -23,6 +23,15 @@
                 }}</a>
               </li>
               <li><a href="/about">About</a></li>
+              <li>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="cursor-pointer"
+                  @click="downloadManual('user')"
+                  >User Manual V1.0</a
+                >
+              </li>
             </ul>
           </div>
           <div class="footer__links">
@@ -80,8 +89,25 @@
 
 <script setup lang="ts">
 import { defineProps } from "vue";
+import axios from "axios";
 
 defineProps({
   superAdmin: { type: Boolean, required: false, default: false },
 });
+
+function downloadManual(type: string) {
+  axios({
+    url: `/iati-standard/manual/${type}`,
+    method: "GET",
+    responseType: "arraybuffer",
+  }).then((response) => {
+    let blob = new Blob([response.data], {
+      type: "application/pdf",
+    });
+    let link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = response.headers["content-disposition"].split("=")[1];
+    link.click();
+  });
+}
 </script>

@@ -17,6 +17,14 @@
               <li><a href="/about">About</a></li>
               <li><a href="/">Sign In</a></li>
               <li><a href="/register/join">Join Now</a></li>
+              <li>
+                <a
+                  rel="noopener noreferrer"
+                  class="cursor-pointer"
+                  @click="downloadManual('user')"
+                  >User Manual V1.0</a
+                >
+              </li>
             </ul>
           </div>
           <div class="footer__links">
@@ -71,3 +79,23 @@
     </div>
   </footer>
 </template>
+
+<script setup lang="ts">
+import axios from "axios";
+
+function downloadManual(type: string) {
+  axios({
+    url: `/iati-standard/manual/${type}`,
+    method: "GET",
+    responseType: "arraybuffer",
+  }).then((response) => {
+    let blob = new Blob([response.data], {
+      type: "application/pdf",
+    });
+    let link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = response.headers["content-disposition"].split("=")[1];
+    link.click();
+  });
+}
+</script>
