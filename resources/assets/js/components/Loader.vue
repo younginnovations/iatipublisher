@@ -9,16 +9,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'LoaderCmp',
-  setup() {
-    onMounted(() => {
-      console.log('true');
-    });
-    return {};
-  },
 });
 </script>
 
@@ -26,7 +20,6 @@ export default defineComponent({
 .overlay {
   @apply fixed left-0  top-0  h-full w-full bg-black;
   opacity: 0.7;
-  display: block !important;
   z-index: 1000;
 
   &__inner {
