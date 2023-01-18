@@ -37,7 +37,7 @@
 @endsection
 
 @section('scripts')
-    <script>
+    <script defer>
         $(function() {
             new Chart(document.getElementById("stats-doughnut-chart"), {
                 type: 'doughnut',

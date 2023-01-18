@@ -166,7 +166,7 @@
     </section>
 
 @endsection
-<script>
+<script defer>
     import HoverText from '../../../assets/js/components/HoverText';
 
     export default {

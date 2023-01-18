@@ -2,7 +2,10 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <meta charset="utf-8">
+<style>
+         html{visibility: hidden;opacity:0;}
+         *{transition-duration: 0ms;}
+     </style>    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     
@@ -10,8 +13,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'IATI Publisher') }}</title>
-    <link rel="icon" type="image"
-        href="https://prod-iati-website.azureedge.net/prod-iati-website/favicons/favicon-32x32.png">
+    
 
     {{-- Normal --}}
     <link rel="preload" href="{{ asset('fonts/Arial/arial-webfont.woff') }}" as="font" type="font/woff"
@@ -31,15 +33,19 @@
         crossorigin>
 
 
-    <!-- Styles -->
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
-    <link rel="icon"
-        href="{{ URL::asset('https://prod-iati-website.azureedge.net/prod-iati-website/favicons/favicon-32x32.png') }}"
+  <!-- Styles -->
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}" media="print" onload="this.media='all'">  
+     <link rel="icon"
+        href="{{ asset('favicon.ico') }}"
         type="image/x-icon" />
 
-</head>
 
-<body class="overflow-x-hidden">
+
+</head>
+<body  class="overflow-x-hidden" >
+
+
+
     <div id="app">
         @if (isSuperAdmin() && Auth::user()->organization)
             <admin-bar :name="{{ json_encode(Auth::user()->full_name, JSON_THROW_ON_ERROR) }}"

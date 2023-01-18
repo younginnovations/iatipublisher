@@ -218,7 +218,7 @@
 @endsection
 
 @section('scripts')
-    <script>
+    <script defer>
         $(function () {
             var deleteLogModal = $('div#delete-log-modal'),
                 deleteLogForm  = $('form#delete-log-form'),

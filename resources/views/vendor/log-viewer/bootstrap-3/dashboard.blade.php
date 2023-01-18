@@ -36,7 +36,7 @@
 @endsection
 
 @section('scripts')
-    <script>
+    <script defer>
         $(function() {
             new Chart($('canvas#stats-doughnut-chart'), {
                 type: 'doughnut',

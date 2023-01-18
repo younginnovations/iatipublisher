@@ -1,8 +1,21 @@
 {
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=5e0b661005fff510a85ff1dc68946b17",
     "/js/script.js": "/js/script.js?id=264431dcb3436027a47c20d5a60082ba",
     "/js/formbuilder.js": "/js/formbuilder.js?id=c62d18f418859cf096b153785eb84c5f",
     "/manifest.js": "/manifest.js?id=768e516d1ea32102a3768224d6985f65",
     "/css/app.css": "/css/app.css?id=16e44a531f08112a30d790cd3e25ce8f",
     "/js/vendor.js": "/js/vendor.js?id=f6fc7891f11de7792693e07133dd058e"
+=======
+<<<<<<< HEAD
+    "/js/app.js": "/js/app.js?id=d495368d40c02478924e1006842110a3",
+=======
+    "/js/app.js": "/js/app.js?id=841f4183bd87a6b8ec54e1beb02e95ae",
+>>>>>>> 4cf38245 (- [x]  async loading css)
+    "/js/script.js": "/js/script.js?id=67f974d705cdb041f9d42e8c11e824d1",
+    "/js/formbuilder.js": "/js/formbuilder.js?id=23e0052da87288dd57b8df6421880767",
+    "/manifest.js": "/manifest.js?id=6ec4db78dd752c29bd9956118b1e0467",
+    "/css/app.css": "/css/app.css?id=f1ae69229f4cfb7f60dc6c0829b41191",
+    "/js/vendor.js": "/js/vendor.js?id=cedc06abcdd75c5694a39366a9fe3a1c"
+>>>>>>> 19cc8be5 (- [x]  async loading css)
 }
