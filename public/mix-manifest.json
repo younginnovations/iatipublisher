@@ -13,6 +13,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=d4e2fa6574773ba2a183d634ab257513",
 =======
     "/js/app.js": "/js/app.js?id=2d52b783c580d38c85e59d15b9601eac",
@@ -67,9 +68,12 @@
 =======
     "/js/app.js": "/js/app.js?id=34cf6ac1645829e0411e8ca65d2d34ad",
 >>>>>>> 58cfb490 (filter tag fixed)
+=======
+    "/js/app.js": "/js/app.js?id=14a69e9426313b80da347bd3b3d00b0d",
+>>>>>>> aa4754db (- [x] username validation added)
     "/js/script.js": "/js/script.js?id=67f974d705cdb041f9d42e8c11e824d1",
     "/js/formbuilder.js": "/js/formbuilder.js?id=23e0052da87288dd57b8df6421880767",
     "/manifest.js": "/manifest.js?id=6ec4db78dd752c29bd9956118b1e0467",
-    "/css/app.css": "/css/app.css?id=62b23c9bd0509040725acd4c184f17c5",
+    "/css/app.css": "/css/app.css?id=c1b5b37ac450598a418638b412b47b75",
     "/js/vendor.js": "/js/vendor.js?id=a0cc4df2bfc2b358079e5e0680f2e290"
 }
