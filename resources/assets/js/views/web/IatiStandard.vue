@@ -198,7 +198,7 @@ function downloadManual(type: string) {
     });
     let link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
-    link.target = "_blank";
+    link.download = response.headers["content-disposition"].split("=")[1];
     link.click();
   });
 }

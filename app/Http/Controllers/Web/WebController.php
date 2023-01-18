@@ -107,12 +107,26 @@ class WebController extends Controller
     public function downloadIatiStandardManual(string $type): BinaryFileResponse|JsonResponse
     {
         try {
+            $headers = [
+                'Content-Type' => 'application/pdf',
+            ];
+
             if ($type === 'organization') {
-                return response()->file(app_path('Data/Manuals/IATI_Publisher_Organisation_Standard.pdf'));
+                $headers['Content-Disposition'] = 'attachment; filename=IATI Publisher - Organisation Standard.pdf';
+
+                return response()->file(app_path('Data/Manuals/IATI_Publisher_Organisation_Standard.pdf'), $headers);
             }
 
             if ($type === 'activity') {
-                return response()->file(app_path('Data/Manuals/IATI_Publisher_Activity_Standard.pdf'));
+                $headers['Content-Disposition'] = 'attachment; filename=IATI Publisher - Activity Standard.pdf';
+
+                return response()->file(app_path('Data/Manuals/IATI_Publisher_Activity_Standard.pdf'), $headers);
+            }
+
+            if ($type === 'user') {
+                $headers['Content-Disposition'] = 'attachment; filename=IATI Publisher - User Manual v1.0.pdf';
+
+                return response()->file(app_path('Data/Manuals/IATI_Publisher-User_Manual_v1.0.pdf'), $headers);
             }
 
             return response()->json(['success' => false, 'message' =>'File couldn\'t be found.']);

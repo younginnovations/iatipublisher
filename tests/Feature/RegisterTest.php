@@ -98,7 +98,7 @@ class RegisterTest extends TestCase
             'publisher_name'      => env('IATI_YIPL_PUBLISHER_NAME'),
             'publisher_id'        => env('IATI_YIPL_PUBLISHER_ID'),
             'identifier'          => env('IATI_YIPL_REGISTRATION_AGENCY') . '-' . env('IATI_YIPL_REGISTRATION_NUMBER'),
-            'registration_agency' => 'test',
+            'registration_agency' => env('IATI_YIPL_REGISTRATION_AGENCY'),
             'registration_number' => 100,
         ])
              ->assertStatus(200)
