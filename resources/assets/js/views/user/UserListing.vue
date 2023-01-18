@@ -215,7 +215,8 @@
           <b>Delete user</b>
         </div>
         <p class="rounded-lg bg-rose p-4">
-          Are you sure you want to delete this user?
+          Are you sure you want to delete <b> {{ deleteUsername }}</b
+          >?
         </p>
         <div class="mt-6 flex justify-end space-x-2">
           <button
@@ -337,7 +338,10 @@
             class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
           >
             <span class="text-n-40">Org:</span
-            ><span>{{ textBubbledata(item, 'org') }}</span>
+            ><span
+              class="max-w-[500px] overflow-x-hidden text-ellipsis whitespace-nowrap"
+              >{{ textBubbledata(item, 'org') }}</span
+            >
             <svg-vue
               class="mx-2 mt-1 cursor-pointer text-xs"
               icon="cross"
@@ -550,7 +554,7 @@
                   />
                 </p>
                 <!-- <p @click="deleteUser(user['id'])"> -->
-                <p @click="openDeletemodel(user['id'])">
+                <p @click="openDeletemodel(user)">
                   <svg-vue class="cursor-pointer text-base" icon="delete" />
                 </p>
 
@@ -878,9 +882,10 @@ function fetchUsersList(active_page: number, filtered = false) {
   });
 }
 
-const openDeletemodel = (id) => {
+const openDeletemodel = (user) => {
   deleteModal.value = true;
-  deleteId.value = id;
+  deleteId.value = user.id;
+  deleteUsername.value = user.username;
 };
 
 function deleteUser(id: number) {
