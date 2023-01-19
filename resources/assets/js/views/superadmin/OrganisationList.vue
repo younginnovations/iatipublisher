@@ -26,7 +26,6 @@
 import { reactive, provide } from 'vue';
 
 // Components
-import PageTitle from 'Components/sections/PageTitle.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 import Toast from 'Components/ToastMessage.vue';
 
@@ -37,14 +36,6 @@ const loader = reactive({
   status: false,
   text: 'Please Wait',
 });
-
-//Breadcrumb data
-const breadcrumbData = [
-  {
-    title: 'Organisations',
-    link: '',
-  },
-];
 
 const toastMessage = reactive({
   visibility: false,

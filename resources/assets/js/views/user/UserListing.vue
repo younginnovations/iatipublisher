@@ -627,7 +627,6 @@
 <script setup lang="ts">
 import { defineProps, reactive, ref, computed, watch, onMounted } from 'vue';
 import Loader from '../../components/Loader.vue';
-import PageTitle from 'Components/sections/PageTitle.vue';
 import Toast from 'Components/ToastMessage.vue';
 import axios from 'axios';
 import PopupModal from 'Components/PopupModal.vue';
