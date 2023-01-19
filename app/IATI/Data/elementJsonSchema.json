@@ -502,7 +502,7 @@
         "placeholder": "Type percentage",
         "required": false,
         "criteria": "recommended",
-        "hover_text": "The URI where this vocabulary is defined. If the vocabulary is 99 (reporting organisation), the URI where this internal vocabulary is defined. While this is an optional field it is STRONGLY RECOMMENDED that all publishers use it to ensure that the meaning of their codes are fully understood by data users. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/recipient-region/'>For more information</a>",
+        "hover_text": "The percentage of total commitments or total activity budget to this item. Content must be a decimal number between 0 and 100 inclusive, with no percentage sign. Percentages for all reported countries and regions within a vocabulary MUST add up to 100. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/recipient-region/'>For more information</a>",
         "help_text": "The percentage of total commitments or total activity budget to this item. Content must be a decimal number between 0 and 100 inclusive, with no percentage sign. Percentages for all reported countries and regions within a vocabulary MUST add up to 100.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/recipient-region/'>For more information</a>"
       }
     },
