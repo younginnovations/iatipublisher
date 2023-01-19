@@ -7,7 +7,7 @@
         <div
           class="max-w-[40vw] overflow-hidden text-ellipsis text-[30px] font-bold md:max-w-[60vw]"
         >
-          {{ userData["full_name"] }}
+          {{ userData['full_name'] }}
         </div>
       </div>
       <div class="flex flex-wrap-reverse items-end justify-end gap-2">
@@ -37,7 +37,14 @@
     </div>
 
     <div class="my-4 rounded-lg bg-white p-8">
-      <PopupModal :modal-active="editPasswordForm">
+      <PopupModal
+        :modal-active="editPasswordForm"
+        @close="
+          () => {
+            editPasswordForm = false;
+          }
+        "
+      >
         <div class="popup-model h-auto" @keyup.enter="updatePassword">
           <div class="mb-4 text-2xl font-bold text-bluecoral">
             Change Password
@@ -161,7 +168,14 @@
         </div>
       </PopupModal>
       <!-- profile edit popup form -->
-      <PopupModal :modal-active="editProfileForm">
+      <PopupModal
+        :modal-active="editProfileForm"
+        @close="
+          () => {
+            editProfileForm = false;
+          }
+        "
+      >
         <div class="popup-model" @keyup.enter="updateProfile">
           <div class="mb-4 text-2xl font-bold text-bluecoral">
             Edit your profile

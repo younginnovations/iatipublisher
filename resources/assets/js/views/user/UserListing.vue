@@ -40,7 +40,15 @@
     </div>
 
     <div>
-      <PopupModal :modal-active="addUserForm || editUserForm">
+      <PopupModal
+        :modal-active="addUserForm || editUserForm"
+        @close="
+          () => {
+            addUserForm = false;
+            editUserForm = false;
+          }
+        "
+      >
         <div
           class="popup-model"
           @keyup.enter="addUserForm ? createUser() : updateUser()"
@@ -209,7 +217,14 @@
           </div>
         </div>
       </PopupModal>
-      <PopupModal :modal-active="deleteModal">
+      <PopupModal
+        :modal-active="deleteModal"
+        @close="
+          () => {
+            deleteModal = false;
+          }
+        "
+      >
         <div class="title mb-6 flex">
           <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
           <b>Delete user</b>
@@ -235,7 +250,14 @@
         </div>
       </PopupModal>
 
-      <PopupModal :modal-active="statusModal">
+      <PopupModal
+        :modal-active="statusModal"
+        @close="
+          () => {
+            statusModal = false;
+          }
+        "
+      >
         <div class="title mb-6 flex">
           <b>Make user {{ statusValue ? 'Inactive' : 'Active' }}</b>
         </div>
