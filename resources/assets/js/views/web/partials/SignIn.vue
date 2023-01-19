@@ -162,7 +162,7 @@ export default defineComponent({
           errorData.username = "";
           errorData.password = "";
 
-          if (response.status === 204) {
+          if (!("errors" in response)) {
             window.location.reload();
           }
         })

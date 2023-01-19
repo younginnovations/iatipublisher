@@ -124,7 +124,7 @@ class LoginController extends Controller
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
         if (Auth::attempt(['username' => $request['username'], 'password' => $request['password'], 'deleted_at' => null])) {
-            if (!Auth::attempt(['username' => $request['username'], 'password' => $request['password'], 'deleted_at' => null, 'status' => true])) {
+            if (!Auth::attempt(['username' => $request['username'], 'password' => $request['password'], 'deleted_at' => null, 'status' => 1])) {
                 throw ValidationException::withMessages([
                     $this->username() => [trans('auth.inactive_user')],
                 ]);

@@ -18,9 +18,9 @@ export default defineComponent({
 
 <style lang="scss">
 .overlay {
-  @apply fixed left-0 top-0 h-full w-full bg-black;
+  @apply fixed left-0  top-0  h-full w-full bg-black;
   opacity: 0.7;
-  z-index: 100;
+  z-index: 1000;
 
   &__inner {
     @apply absolute left-0 top-0 h-full w-full;

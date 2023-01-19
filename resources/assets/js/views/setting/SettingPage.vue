@@ -14,7 +14,10 @@
           <Toast v-if="toastVisibility" :message="toastMessage" :type="toastType" />
         </div>
       </div>
-      <div :class="tab === 'default' ? 'overflow-y-auto' : ''" class="setting__container">
+      <div
+        :class="tab === 'default' ? 'overflow-y-auto overflow-x-hidden' : ''"
+        class="setting__container"
+      >
         <div class="flex">
           <button
             class="tab-btn mr-2"
@@ -55,8 +58,14 @@
       class="fixed bottom-0 left-0 w-full bg-eggshell py-5 px-6 shadow-dropdown sm:pr-40"
     >
       <div class="flex items-center justify-end">
-        <a class="ghost-btn mr-4 sm:mr-8" href="/activities">Cancel</a>
+        <a
+          :class="userRole !== 'admin' && 'cursor-not-allowed'"
+          class="ghost-btn mr-4 sm:mr-8"
+          href="/activities"
+          >Cancel</a
+        >
         <button
+          :class="userRole !== 'admin' && 'cursor-not-allowed'"
           class="primary-btn save-btn"
           @click="submitForm('setting/store/publisher')"
         >
@@ -273,8 +282,10 @@ export default defineComponent({
     }
 
     function submitForm(url = "setting/verify") {
-      if (tab.value === "publish") submitPublishing(url);
-      if (tab.value === "default") submitDefault();
+      if (props.userRole === "admin") {
+        if (tab.value === "publish") submitPublishing(url);
+        if (tab.value === "default") submitDefault();
+      }
     }
 
     provide("userRole", props.userRole);

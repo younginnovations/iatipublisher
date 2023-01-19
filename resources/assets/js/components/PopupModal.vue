@@ -3,7 +3,7 @@
     <Transition name="modal-animation">
       <div
         v-if="modalActive"
-        class="modal fixed top-0 left-0 z-50 flex h-screen w-screen items-center justify-center p-4 sm:p-8"
+        class="modal fixed top-0 left-0 z-[200] flex h-screen w-screen items-center justify-center p-4 sm:p-8"
       >
         <Transition name="modal-animation-inner">
           <div class="flex h-full w-full items-center justify-center">
@@ -26,9 +26,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watch } from "vue";
+import { defineComponent, watch } from 'vue';
 export default defineComponent({
-  name: "PopupModal",
+  name: 'PopupModal',
   props: {
     modalActive: {
       type: Boolean,
@@ -37,25 +37,25 @@ export default defineComponent({
     width: {
       type: String,
       required: false,
-      default: "809",
+      default: '809',
     },
   },
-  emits: ["close", "reset"],
+  emits: ['close', 'reset'],
   setup(props, { emit }) {
     watch(
       () => props.modalActive,
       (modalActive) => {
         if (modalActive) {
-          document.documentElement.style.overflow = "hidden";
+          document.documentElement.style.overflow = 'hidden';
         } else {
-          document.documentElement.style.overflow = "auto";
+          document.documentElement.style.overflow = 'auto';
         }
       }
     );
     const close = () => {
-      document.documentElement.style.overflow = "auto";
-      emit("close");
-      emit("reset");
+      document.documentElement.style.overflow = 'auto';
+      emit('close');
+      emit('reset');
     };
     return { close };
   },

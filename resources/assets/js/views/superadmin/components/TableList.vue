@@ -6,7 +6,7 @@
           <tr class="bg-n-10">
             <th id="organisation_name" scope="col">
               <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
+                class="text-n-50 transition duration-500 hover:text-spring-50"
                 :class="
                   orderType === 'name'
                     ? sortingDirection()
@@ -28,7 +28,7 @@
             </th>
             <th id="activities" scope="col" style="width: 173px">
               <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
+                class="text-n-50 transition duration-500 hover:text-spring-50"
                 :class="
                   orderType === 'all_activities_count'
                     ? sortingDirection()
@@ -50,7 +50,7 @@
             </th>
             <th id="updated_on" scope="col" style="width: 173px">
               <a
-                class="transition duration-500 text-n-50 hover:text-spring-50"
+                class="text-n-50 transition duration-500 hover:text-spring-50"
                 :class="
                   orderType === 'updated_at'
                     ? sortingDirection()
@@ -88,11 +88,6 @@
                 <span class="ellipsis overflow-hidden">
                   {{ data?.name[0]?.narrative ?? 'Name Missing' }}
                 </span>
-                <div class="w-52">
-                  <span class="ellipsis__title--hover">
-                    {{ data?.name[0]?.narrative ?? 'Name Missing' }}
-                  </span>
-                </div>
               </div>
               <div v-else>Name Missing</div>
               <div class="text-blue-40">{{ data?.user?.email }}</div>

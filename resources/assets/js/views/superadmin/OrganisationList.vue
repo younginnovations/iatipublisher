@@ -1,6 +1,7 @@
 <template>
   <div class="bg-paper px-10 pt-4 pb-[71px]">
-    <PageTitle :breadcrumb-data="breadcrumbData" title="Organisations" back-link="">
+    <div class="my-4 flex justify-between">
+      <h4 class="mr-4 text-3xl font-bold xl:text-heading-4">Organisations</h4>
       <div class="inline-flex items-center">
         <Toast
           v-if="toastMessage.visibility"
@@ -9,8 +10,8 @@
           :type="toastMessage.type"
         />
       </div>
-    </PageTitle>
-    <div class="overflow-hidden">
+    </div>
+    <div class="organization-list overflow-hidden">
       <TableList />
     </div>
     <Loader
@@ -22,36 +23,27 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, provide } from "vue";
+import { reactive, provide } from 'vue';
 
 // Components
-import PageTitle from "Components/sections/PageTitle.vue";
-import Loader from "Components/sections/ProgressLoader.vue";
-import Toast from "Components/ToastMessage.vue";
+import Loader from 'Components/sections/ProgressLoader.vue';
+import Toast from 'Components/ToastMessage.vue';
 
-import TableList from "./components/TableList.vue";
+import TableList from './components/TableList.vue';
 
 // ref
 const loader = reactive({
   status: false,
-  text: "Please Wait",
+  text: 'Please Wait',
 });
-
-//Breadcrumb data
-const breadcrumbData = [
-  {
-    title: "Organisations",
-    link: "",
-  },
-];
 
 const toastMessage = reactive({
   visibility: false,
-  message: "",
+  message: '',
   type: true,
 });
 
 // provide
-provide("loader", loader);
-provide("toastData", toastMessage);
+provide('loader', loader);
+provide('toastData', toastMessage);
 </script>
