@@ -40,7 +40,7 @@
                     rel="noopener noreferrer"
                     href="/publishing-checklist"
                     class="text-bluecoral"
-                    ><b>Publishing Checklist</b></a
+                  ><b>Publishing Checklist</b></a
                   >
                   for more information.
                 </p>
@@ -58,16 +58,28 @@
           :message="toastMessage.message"
           :type="toastMessage.type"
         />
-        <ErrorPopUp
-          v-if="errorData.visibility"
-          :message="errorData.message"
-          title="Activity couldn’t be published because"
-          @close-popup="
-            () => {
-              errorData.visibility = false;
-            }
-          "
-        />
+
+        <Modal :modal-active="errorData.visibility" width="583">
+          <div>
+            <BulkPublishingErrorPopup></BulkPublishingErrorPopup>
+
+            <div class="mt-4 flex justify-between space-x-4">
+              <button
+                class="rounded py-3 px-5 font-semibold uppercase text-n-40 hover:bg-bluecoral hover:text-white"
+                @click="cancelOtherBulkPublish"
+              >
+                Cancel previous bulk publish
+              </button>
+              <button
+                class="rounded py-3 px-5 font-semibold text-white uppercase bg-bluecoral"
+                @click="closeModal"
+              >
+                Wait for completion
+              </button>
+            </div>
+          </div>
+        </Modal>
+
         <div class="inline-flex justify-end">
           <div
             class="inline-flex shrink-0 flex-col items-end justify-end gap-3 lg:flex-row"
@@ -96,25 +108,25 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from 'vue';
+import {inject} from 'vue';
 import DownloadActivityButton from './DownloadActivityButton.vue';
 import AddActivityButton from './AddActivityButton.vue';
 import Toast from 'Components/ToastMessage.vue';
 import RefreshToastMessage from 'Activity/bulk-publish/RefreshToast.vue';
 import PublishSelected from 'Activity/bulk-publish/PublishSelected.vue';
 import DeleteButton from 'Components/buttons/DeleteButton.vue';
-import ErrorPopUp from 'Components/ErrorPopUp.vue';
+import Modal from 'Components/PopupModal.vue';
+import BulkPublishingErrorPopup from "Components/BulkPublishingErrorPopup.vue";
 
 // Vuex Store
 import { useStore } from 'Store/activities/index';
+import axios from "axios";
 
 interface RefreshToastMsgTypeface {
   visibility: boolean;
   refreshMessageType: boolean;
   refreshMessage: string;
 }
-
-const store = useStore();
 
 interface ToastInterface {
   visibility: boolean;
@@ -124,6 +136,19 @@ interface ToastInterface {
 
 const toastMessage = inject('toastData') as ToastInterface;
 const errorData = inject('errorData') as ToastInterface;
+const store = useStore();
+
 
 const refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
+const closeModal = ()=>{
+  errorData.visibility = !errorData.visibility
+}
+
+const cancelOtherBulkPublish = ()=>{
+  const endpoint = "activities/cancel-bulk-publish";
+  axios.get(endpoint).then(() => {
+    closeModal();
+  });
+}
+
 </script>
