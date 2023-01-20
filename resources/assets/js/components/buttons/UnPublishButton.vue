@@ -89,6 +89,7 @@ interface ToastMessageTypeface {
   type: boolean;
 }
 onUpdated(() => {
+  console.log(unpublishValue.value);
   if (loader.value) {
     store.dispatch('updateIsLoading', true);
   } else {
@@ -114,6 +115,8 @@ const unPublishFunction = () => {
     toastMessage.message = response.message;
     toastMessage.type = response.success;
     unpublishToggle();
+    unpublishValue.value = false;
+
     setTimeout(() => {
       if (response.success === true) {
         store.dispatch('updateUnPublished', false);

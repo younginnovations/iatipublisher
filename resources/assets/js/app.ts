@@ -329,36 +329,16 @@ const stickySidebar = (
   }
 };
 
-const fixSidebar = (el) => {
-  // const footer = document.getElementById('footer');
-  // const rect = footer && footer.getBoundingClientRect();
-  // const progress = document.getElementById('progress');
-  // const top = progress && progress.getBoundingClientRect();
-  // if (document.body.clientWidth > 1024) {
-  //   if (rect && rect.top <= 800) {
-  //     el.style.cssText = `position: absolute; top: auto;  bottom: 0px;width:280px `;
-  //     affixType = 'sticky-bottom';
-  //   } else if (top && top.bottom > 0) {
-  //     el.style.cssText = `position: absolute; top:190px`;
-  //   } else {
-  //     el.style.cssText = `position: fixed; top:60px`;
-  //     affixType = 'fixed-top';
-  //   }
-  // }
-};
-
 // custom directive
 app.directive('sticky-component', {
   mounted(el, binding) {
     let { boundary } = binding.value || {};
     boundary = boundary || 'body';
     window.addEventListener('scroll', () => stickySidebar(el, boundary));
-    window.addEventListener('resize', () => fixSidebar(el));
   },
   unmounted(el, binding) {
     const parent = binding.value.boundary;
     window.removeEventListener('scroll', () => stickySidebar(el, parent));
-    window.removeEventListener('resize', () => fixSidebar(el));
   },
 });
 
