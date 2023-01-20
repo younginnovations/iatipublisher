@@ -69,11 +69,11 @@ class BulkPublishingStatusService
      * Returns activities that are currently undergoing bulk publishing for an organization.
      *
      * @param $organizationId
-     * @param $uuid
+     * @param string|null $uuid
      *
      * @return object|null
      */
-    public function getActivityPublishingStatus($organizationId, $uuid): ?object
+    public function getActivityPublishingStatus($organizationId, ?string $uuid): ?object
     {
         return $this->bulkPublishingStatusRepository->getActivityPublishingStatus($organizationId, $uuid);
     }
@@ -110,5 +110,14 @@ class BulkPublishingStatusService
         }
 
         return false;
+    }
+
+    public function stopBulkPublishing($organizationId): void
+    {
+        $this->bulkPublishingStatusRepository->stopBulkPublishing($organizationId);
+    }
+
+    public function deletePreviousFailedBulkPublish()
+    {
     }
 }
