@@ -263,9 +263,10 @@ const stickySidebar = (
         break;
 
       case 'sticky-bound':
-        // nothing to do here
-
-        break;
+        if (elParentBottom && elParentBottom < stickyCurrentBottom) {
+          stickyElement.style.cssText = `position : absolute;  width:280px; bottom: 16px`;
+          affixType = 'sticky-bound';
+        }
     }
   }
 
@@ -281,7 +282,7 @@ const stickySidebar = (
         break;
 
       case 'sticky-bottom':
-        stickyElement.style.cssText = `position: absolute; top: auto;  bottom: 0px;left: ${elScrollLeft}; width: ${elWidth}px `;
+        stickyElement.style.cssText = `position: fixed; top: 0px; left: ${elScrollLeft}; width: ${elWidth}px `;
         affixType = 'sticky-bound';
         break;
       case 'fixed-top':

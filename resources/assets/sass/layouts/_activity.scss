@@ -16,6 +16,7 @@
   transition: all 0.3s ease-out;
   max-height: 120px;
   overflow: auto;
+  white-space: nowrap;
 }
 .ellipsis:hover,
 .ellipsis__title:hover,
