@@ -244,7 +244,7 @@ const stickySidebar = (
         }
         break;
       case 'fixed-top':
-        el.style.cssText = `position: fixed; top:60px`;
+        el.style.cssText = `position: fixed; top:0px`;
         affixType = 'sticky-translate';
         break;
 
@@ -254,7 +254,7 @@ const stickySidebar = (
             viewportHeight + window.scrollY + 450 >=
             document.body.offsetHeight
           ) {
-            el.style.cssText = `position: sticky; top:60px`;
+            el.style.cssText = `position: sticky; top:0px`;
           } else {
             stickyElement.style.cssText = `position: fixed; top: auto; left: ${elScrollLeft}; bottom: 0; width: ${elWidth}px`;
             affixType = 'sticky-bottom';
@@ -276,22 +276,22 @@ const stickySidebar = (
           stickyElement.style.cssText = `position: relative;  `;
           affixType = 'sticky-none';
         } else {
-          stickyElement.style.cssText = `position: fixed; top: 60px;left: ${elScrollLeft}; width: ${elWidth}px `;
+          stickyElement.style.cssText = `position: fixed; top: 0px;left: ${elScrollLeft}; width: ${elWidth}px `;
         }
         break;
 
       case 'sticky-bottom':
-        stickyElement.style.cssText = `position: absolute; top: auto;  bottom: 60px;left: ${elScrollLeft}; width: ${elWidth}px `;
+        stickyElement.style.cssText = `position: absolute; top: auto;  bottom: 0px;left: ${elScrollLeft}; width: ${elWidth}px `;
         affixType = 'sticky-bound';
         break;
       case 'fixed-top':
-        el.style.cssText = `position: fixed; top:60px`;
+        el.style.cssText = `position: fixed; top:0px`;
         affixType = 'sticky-translate';
         break;
 
       case 'sticky-translate':
         if (stickyCurrentTop >= 0) {
-          stickyElement.style.cssText = `position: fixed; top: 60px; left: ${elScrollLeft}; width: ${elWidth}px`;
+          stickyElement.style.cssText = `position: fixed; top: 0px; left: ${elScrollLeft}; width: ${elWidth}px`;
           affixType = 'sticky-top';
         }
         break;
@@ -314,7 +314,7 @@ const stickySidebar = (
   }
 
   if (elHeight < viewportHeight) {
-    el.style.cssText = `position: sticky; top:60px`;
+    el.style.cssText = `position: sticky; top:0px`;
     stickyElement.style.cssText = ``;
   } else {
     el.style.cssText = `height: ${elHeight}px;`;
@@ -323,7 +323,7 @@ const stickySidebar = (
     } else if (isScrollUp && currentWindowsScrollPosition != 0) {
       handleScrollUp();
     } else {
-      el.style.cssText = `position: sticky; top:60px`;
+      el.style.cssText = `position: sticky; top:0px`;
       stickyElement.style.cssText = ``;
     }
   }
