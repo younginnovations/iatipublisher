@@ -249,8 +249,8 @@ span.select2-container--default {
 }
 .manual-import {
   .help__text {
+    transform: translateX(0) !important;
     @media (max-width: 1024px) {
-      transform: translateX(0) !important;
       width: 350px !important;
     }
   }

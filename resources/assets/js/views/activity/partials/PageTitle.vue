@@ -77,7 +77,7 @@
               :message="refreshToastMsg.refreshMessage"
               :type="refreshToastMsg.refreshMessageType"
             />
-            <div class="flex flex-col items-end gap-2 outline lg:flex-row">
+            <div class="flex flex-col items-end gap-2 lg:flex-row">
               <div class="flex gap-2">
                 <DownloadActivityButton /> <PublishSelected />
               </div>
