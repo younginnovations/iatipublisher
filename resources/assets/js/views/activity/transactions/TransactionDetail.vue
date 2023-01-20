@@ -52,10 +52,18 @@
     <aside
       :class="
         showSidebar
-          ? `  ${istopVisible ? 'top-[60px]' : 'top-[0px]'} translate-x-[0px]`
-          : `${istopVisible ? 'top-[60px]' : 'top-[0px]'} -translate-x-[150%]`
+          ? `  ${
+              istopVisible
+                ? 'top-[60px] h-[calc(100vh_-_60px)]'
+                : 'top-[0px] h-[100vh]'
+            } translate-x-[0px]`
+          : `${
+              istopVisible
+                ? 'top-[60px] h-[calc(100vh_-_60px)]'
+                : 'top-[0px] h-[100vh]'
+            } -translate-x-[150%]`
       "
-      class="activities__sidebar fixed left-0 z-[100] block h-[calc(100vh_-_60px)] overflow-y-auto bg-eggshell duration-200 lg:hidden"
+      class="activities__sidebar fixed left-0 z-[100] block overflow-y-auto bg-eggshell duration-200 lg:hidden"
     >
       <div class="indicator rounded-lg bg-eggshell px-6 py-4 text-n-50">
         <ul class="text-sm font-bold leading-relaxed">

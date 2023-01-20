@@ -55,10 +55,18 @@
     <aside
       :class="
         showSidebar
-          ? `  ${istopVisible ? 'top-[60px]' : 'top-[0px]'} translate-x-[0px]`
-          : `${istopVisible ? 'top-[60px]' : 'top-[0px]'} -translate-x-[150%]`
+          ? ` ${
+              istopVisible
+                ? 'top-[60px] h-[calc(100vh_-_50px)]'
+                : 'top-0 h-screen'
+            }  translate-x-[0px]`
+          : `  ${
+              istopVisible
+                ? 'top-[60px] h-[calc(100vh_-_50px)]'
+                : 'top-0 h-screen'
+            } -translate-x-[150%]`
       "
-      class="activities__sidebar fixed left-0 z-[100] block h-[calc(100vh_-_60px)] overflow-y-auto bg-eggshell duration-200 lg:hidden"
+      class="activities__sidebar fixed left-0 z-[100] block overflow-y-auto bg-eggshell duration-200 lg:hidden"
     >
       <div v-sticky-component>
         <div class="indicator rounded-lg bg-eggshell px-6 py-4 text-n-50">
@@ -127,6 +135,8 @@ import {
   ref,
   provide,
   onMounted,
+  onUnmounted,
+  watch,
   reactive,
 } from 'vue';
 
@@ -178,10 +188,14 @@ export default defineComponent({
   },
   setup(props) {
     const positionY = ref(0);
+    const screenWidth = ref(0);
 
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
     let { period, activity, parentData, types } = toRefs(props);
+    const handleScroll = () => {
+      positionY.value = window.scrollY;
+    };
 
     const istopVisible = computed(() => {
       return positionY.value === 0;
@@ -236,8 +250,28 @@ export default defineComponent({
         link: '',
       },
     ];
+    const calcWidth = (event) => {
+      screenWidth.value = event.target.innerWidth;
+      if (screenWidth.value > 1024) {
+        document.documentElement.style.overflow = 'auto';
+      } else {
+        showSidebar.value &&
+          (document.documentElement.style.overflow = 'hidden');
+      }
+    };
+    watch(
+      () => showSidebar.value,
+      (sidebar) => {
+        if (sidebar) {
+          document.documentElement.style.overflow = 'hidden';
+        } else document.documentElement.style.overflow = 'auto';
+      }
+    );
 
     onMounted(() => {
+      window.addEventListener('resize', calcWidth);
+      window.addEventListener('scroll', handleScroll);
+
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
@@ -247,6 +281,10 @@ export default defineComponent({
       setTimeout(() => {
         toastData.visibility = false;
       }, 5000);
+    });
+    onUnmounted(() => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', calcWidth);
     });
 
     return {
