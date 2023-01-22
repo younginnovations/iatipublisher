@@ -605,7 +605,7 @@ class UserService
     {
         $user = $this->userRepo->find($id);
         $adminRole = $this->roleRepo->getOrganizationAdminId();
-        $users = $this->userRepo->getUserDownloadData(['organization_id' => [$user->organization_id], 'role' => [$adminRole]]);
+        $users = $this->userRepo->getUserDownloadData(['organization_id' => [$user->organization_id], 'role' => [$adminRole], 'status' => [1]]);
 
         if ($user->role_id === $adminRole && count($users) === 1 && $user->status) {
             return false;
