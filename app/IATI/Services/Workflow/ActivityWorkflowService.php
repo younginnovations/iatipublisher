@@ -160,8 +160,6 @@ class ActivityWorkflowService
     public function removeActivityFromPublishedArray($publishedFile, $activity): void
     {
         $containedActivities = $publishedFile->extractActivities();
-        $unpublishedFile = Arr::get($containedActivities, $activity->id);
-        $this->xmlGeneratorService->deleteUnpublishedFile($unpublishedFile);
         $newPublishedFiles = Arr::except($containedActivities, $activity->id);
         $this->activityPublishedService->updateActivityPublished($publishedFile, $newPublishedFiles);
     }
@@ -291,5 +289,21 @@ class ActivityWorkflowService
     public function isOrganizationPublished($organization): bool
     {
         return $organization->is_published;
+    }
+
+    /**
+     * Deletes the unpublished file.
+     *
+     * @param $activity
+     *
+     * @return void
+     */
+    public function deletePublishedFile($activity): void
+    {
+        $settings = $activity->organization->settings;
+        $publishingInfo = $settings->publishing_info;
+        $publisherId = Arr::get($publishingInfo, 'publisher_id', 'Not Available');
+        $publishedActivity = sprintf('%s-%s.xml', $publisherId, $activity->id);
+        $this->xmlGeneratorService->deleteUnpublishedFile($publishedActivity);
     }
 }

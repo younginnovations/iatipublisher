@@ -101,6 +101,7 @@ class ActivityWorkflowController extends Controller
 
             $this->activityWorkflowService->unpublishActivity($activity);
             DB::commit();
+            $this->activityWorkflowService->deletePublishedFile($activity);
             Session::put('success', 'Activity has been un-published successfully.');
 
             return response()->json(['success' => true, 'message' => 'Activity has been un-published successfully.']);
