@@ -34,20 +34,20 @@ spec:
       serviceAccountName: iatipublisher
       imagePullSecrets:
         - name: github-credentials
-      # initContainers:
-      #   - name: migrations
-      #     image: ghcr.io/younginnovations/iatipublisher/cli
-      #     command:
-      #       - php
-      #     args:
-      #       - artisan
-      #       - migrate
-      #       - --force
-      #     envFrom:
-      #       - configMapRef:
-      #           name: iatipublisher
-      #       - secretRef:
-      #           name: iatipublisher
+      initContainers:
+        - name: migrations
+          image: ghcr.io/younginnovations/iatipublisher/cli
+          command:
+            - php
+          args:
+            - artisan
+            - migrate
+            - --force
+          envFrom:
+            - configMapRef:
+                name: iatipublisher
+            - secretRef:
+                name: iatipublisher
       containers:
       - name: iatipublisher-fpm
         envFrom:
@@ -61,16 +61,16 @@ spec:
         args: ["php artisan optimize:clear; php-fpm"]
         ports:
         - containerPort: 9000
-        # volumeMounts:
-        # - name: iati-persistent-storage
-        #   mountPath: /opt/apps/laravel-in-kubernetes/storage/logs
+        volumeMounts:
+        - name: iati-persistent-storage
+          mountPath: /opt/apps/laravel-in-kubernetes/storage/logs
         securityContext:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
               - ALL
             privileged: false
-      # volumes:
-      # - name: iati-persistent-storage
-      #   persistentVolumeClaim:
-      #     claimName: iati-pv-claim
+      volumes:
+      - name: iati-persistent-storage
+        persistentVolumeClaim:
+          claimName: iati-pv-claim
