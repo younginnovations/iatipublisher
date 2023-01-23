@@ -1,3 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: iati-pv-claim
+  labels:
+    tier: backend
+    layer: fpm
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 200Mi
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -47,9 +61,16 @@ spec:
         args: ["php artisan optimize:clear; php-fpm"]
         ports:
         - containerPort: 9000
+        volumeMounts:
+        - name: iati-persistent-storage
+          mountPath: /opt/apps/laravel-in-kubernetes/storage/logs
         securityContext:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
               - ALL
             privileged: false
+      volumes:
+      - name: iati-persistent-storage
+        persistentVolumeClaim:
+          claimName: iati-pv-claim

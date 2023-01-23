@@ -16,9 +16,9 @@ data:
   LOG_LEVEL: "debug"
 
   DB_CONNECTION: "pgsql"
-  DB_DATABASE: "iatipublisher_dev"
+  DB_DATABASE: "iati_dev_pool"
   DB_HOST: "private-yi-prod-postgres-do-user-4025190-0.b.db.ondigitalocean.com"
-  DB_PORT: "25060"
+  DB_PORT: "25061"
   DB_SSLMODE: 'require'
   DB_SSLROOTCERT: '/opt/apps/laravel-in-kubernetes/ca-certificate.crt'
 
