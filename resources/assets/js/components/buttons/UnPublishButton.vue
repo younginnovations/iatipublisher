@@ -89,7 +89,6 @@ interface ToastMessageTypeface {
   type: boolean;
 }
 onUpdated(() => {
-  console.log(unpublishValue.value);
   if (loader.value) {
     store.dispatch('updateIsLoading', true);
   } else {
