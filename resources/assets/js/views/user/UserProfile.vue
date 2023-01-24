@@ -5,7 +5,7 @@
     <div class="my-4 flex justify-between">
       <div class="inline-flex items-center">
         <div
-          class="max-w-[40vw] overflow-hidden text-ellipsis text-[30px] font-bold md:max-w-[60vw]"
+          class="max-w-[40vw] overflow-hidden text-ellipsis whitespace-nowrap text-[30px] font-bold md:max-w-[60vw]"
         >
           {{ userData['full_name'] }}
         </div>

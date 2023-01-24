@@ -50,7 +50,7 @@
         </div>
       </div>
       <div
-        class="actions relative inline-flex grow flex-col items-end justify-end space-y-2 lg:flex-row"
+        class="actions relative inline-flex grow flex-col items-end justify-end space-y-2 xl:flex-row"
       >
         <Toast
           v-if="toastMessage.visibility"
@@ -70,14 +70,14 @@
         />
         <div class="inline-flex justify-end">
           <div
-            class="inline-flex shrink-0 flex-col items-end justify-end gap-3 md:flex-row"
+            class="inline-flex shrink-0 flex-col items-end justify-end gap-3 lg:flex-row"
           >
             <RefreshToastMessage
               v-if="refreshToastMsg.visibility"
               :message="refreshToastMsg.refreshMessage"
               :type="refreshToastMsg.refreshMessageType"
             />
-            <div class="flex flex-col gap-2 md:flex-row">
+            <div class="flex flex-col items-end gap-2 lg:flex-row">
               <div class="flex gap-2">
                 <DownloadActivityButton /> <PublishSelected />
               </div>

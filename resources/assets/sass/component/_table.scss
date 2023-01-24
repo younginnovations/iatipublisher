@@ -4,13 +4,11 @@
 
   @media (max-width: 1024px) {
     overflow-x: auto;
-    overflow-y: visible;
+    overflow-y: hidden;
   }
 
   table {
     @apply table w-full  bg-white;
-
-    // min-width: 800px !important ;
   }
   tbody {
     tr {

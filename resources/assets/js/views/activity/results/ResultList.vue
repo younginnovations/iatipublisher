@@ -37,7 +37,7 @@
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="resultsData.data && resultsData.data.length > 0">
           <tr v-for="(result, t, index) in resultsData.data" :key="index">
             <td
               class="cursor-pointer"
@@ -87,6 +87,9 @@
               </div>
             </td>
           </tr>
+        </tbody>
+        <tbody v-else>
+          <td colspan="5" class="text-center">Results not found</td>
         </tbody>
       </table>
     </div>

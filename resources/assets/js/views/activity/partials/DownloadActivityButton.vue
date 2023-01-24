@@ -98,14 +98,14 @@
 </template>
 
 <script lang="ts">
-import { useStore } from "Store/activities/index";
-import { reactive, defineComponent, ref, onMounted } from "vue";
-import CreateModal from "../CreateModal.vue";
-import { useToggle } from "@vueuse/core";
-import Toast from "../../../components/ToastMessage.vue";
-import Modal from "Components/PopupModal.vue";
+import { useStore } from 'Store/activities/index';
+import { reactive, defineComponent, ref, onMounted } from 'vue';
+import CreateModal from '../CreateModal.vue';
+import { useToggle } from '@vueuse/core';
+import Toast from '../../../components/ToastMessage.vue';
+import Modal from 'Components/PopupModal.vue';
 
-import axios from "axios";
+import axios from 'axios';
 
 /**
  *  Global State
@@ -113,7 +113,7 @@ import axios from "axios";
 const store = useStore();
 
 export default defineComponent({
-  name: "AddActivityButton",
+  name: 'AddActivityButton',
   components: {
     CreateModal,
     Toast,
@@ -128,34 +128,34 @@ export default defineComponent({
 
     const modelVisible = ref(false);
     const toastVisibility = ref(false);
-    const toastMessage = ref("");
+    const toastMessage = ref('');
     const toastmessageType = ref(false);
     const showErrorpopup = ref(false);
-    const message = ref("");
+    const message = ref('');
 
     const toggleModel = (value: boolean) => {
       modelVisible.value = value;
     };
 
     const liClass =
-      "block p-2.5 text-n-40 text-tiny leading-[1.5] font-bold hover:text-n-50 hover:bg-n-10";
+      'block p-2.5 text-n-40 text-tiny leading-[1.5] font-bold hover:text-n-50 hover:bg-n-10';
     const dropdownBtn = ref();
     onMounted(() => {
-      window.addEventListener("click", (e) => {
+      window.addEventListener('click', (e) => {
         if (!dropdownBtn.value.contains(e.target)) {
           state.isVisible = false;
         }
       });
     });
     function downloadError(filename, text) {
-      var element = document.createElement("a");
+      var element = document.createElement('a');
       element.setAttribute(
-        "href",
-        "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+        'href',
+        'data:text/plain;charset=utf-8,' + encodeURIComponent(text)
       );
-      element.setAttribute("download", filename);
+      element.setAttribute('download', filename);
 
-      element.style.display = "none";
+      element.style.display = 'none';
       document.body.appendChild(element);
 
       element.click();
@@ -168,17 +168,18 @@ export default defineComponent({
     };
     const downloadErrorxml = (countActivities) => {
       showErrorpopup.value = false;
-      let queryParameters = window.location.href.split("?");
-      let addQueryParams = "";
+      let queryParameters = window.location.href.split('?');
+      let addQueryParams = '';
 
       if (queryParameters.length === 2) {
-        addQueryParams = "&" + queryParameters[1];
+        addQueryParams = '&' + queryParameters[1];
       }
 
-      let apiUrl = "/activities/download-xml/true?activities=all" + addQueryParams;
+      let apiUrl =
+        '/activities/download-xml/true?activities=all' + addQueryParams;
 
       if (countActivities > 0) {
-        const activities = store.state.selectedActivities.join(",");
+        const activities = store.state.selectedActivities.join(',');
         apiUrl = `/activities/download-xml/true?activities=[${activities}]`;
       }
 
@@ -191,27 +192,27 @@ export default defineComponent({
         } else {
           const response = res.data;
           let blob = new Blob([response], {
-            type: "application/xml",
+            type: 'application/xml',
           });
-          let link = document.createElement("a");
+          let link = document.createElement('a');
           link.href = window.URL.createObjectURL(blob);
-          link.download = res.headers["content-disposition"].split("=")[1];
+          link.download = res.headers['content-disposition'].split('=')[1];
           link.click();
         }
       });
     };
     const downloadXml = (countActivities) => {
-      let queryParameters = window.location.href.split("?");
-      let addQueryParams = "";
+      let queryParameters = window.location.href.split('?');
+      let addQueryParams = '';
 
       if (queryParameters.length === 2) {
-        addQueryParams = "&" + queryParameters[1];
+        addQueryParams = '&' + queryParameters[1];
       }
 
-      let apiUrl = "/activities/download-xml?activities=all" + addQueryParams;
+      let apiUrl = '/activities/download-xml?activities=all' + addQueryParams;
 
       if (countActivities > 0) {
-        const activities = store.state.selectedActivities.join(",");
+        const activities = store.state.selectedActivities.join(',');
         apiUrl = `/activities/download-xml?activities=[${activities}]`;
       }
 
@@ -229,28 +230,28 @@ export default defineComponent({
         } else {
           const response = res.data;
           let blob = new Blob([response], {
-            type: "application/xml",
+            type: 'application/xml',
           });
-          let link = document.createElement("a");
+          let link = document.createElement('a');
           link.href = window.URL.createObjectURL(blob);
-          link.download = res.headers["content-disposition"].split("=")[1];
+          link.download = res.headers['content-disposition'].split('=')[1];
           link.click();
         }
       });
     };
 
     const downloadCsv = (countActivities) => {
-      let queryParameters = window.location.href.split("?");
-      let addQueryParams = "";
+      let queryParameters = window.location.href.split('?');
+      let addQueryParams = '';
 
       if (queryParameters.length === 2) {
-        addQueryParams = "&" + queryParameters[1];
+        addQueryParams = '&' + queryParameters[1];
       }
 
-      let apiUrl = "/activities/download-csv?activities=all" + addQueryParams;
+      let apiUrl = '/activities/download-csv?activities=all' + addQueryParams;
 
       if (countActivities > 0) {
-        const activities = store.state.selectedActivities.join(",");
+        const activities = store.state.selectedActivities.join(',');
         apiUrl = `/activities/download-csv?activities=[${activities}]`;
       }
 
@@ -263,11 +264,11 @@ export default defineComponent({
         } else {
           const response = res.data;
           let blob = new Blob([response], {
-            type: "application/csv",
+            type: 'application/csv',
           });
-          let link = document.createElement("a");
+          let link = document.createElement('a');
           link.href = window.URL.createObjectURL(blob);
-          link.download = res.headers["content-disposition"].split("=")[1];
+          link.download = res.headers['content-disposition'].split('=')[1];
           link.click();
         }
       });

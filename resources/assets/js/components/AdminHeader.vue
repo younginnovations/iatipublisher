@@ -462,8 +462,6 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .activity__header {
-  position: fixed;
-  width: 100vw;
   top: 0px;
   z-index: 100;
 

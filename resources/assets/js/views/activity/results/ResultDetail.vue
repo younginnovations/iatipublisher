@@ -48,8 +48,20 @@
       <svg-vue icon="chevron" class="pb-2 text-3xl text-white" />
     </div>
     <aside
-      :class="showSidebar ? 'translate-x-[0px]' : '-translate-x-[150%]'"
-      class="activities__sidebar fixed top-[60px] left-0 z-[100] block h-[calc(100vh_-_50px)] overflow-y-auto bg-eggshell duration-200 lg:hidden"
+      :class="
+        showSidebar
+          ? `  ${
+              istopVisible
+                ? 'top-[60px] h-[calc(100vh_-_60px)]'
+                : 'top-[0px] h-[100vh]'
+            } translate-x-[0px]`
+          : `${
+              istopVisible
+                ? 'top-[60px] h-[calc(100vh_-_60px)]'
+                : 'top-[0px] h-[100vh]'
+            } -translate-x-[150%]`
+      "
+      class="activities__sidebar fixed left-0 z-[100] block overflow-y-auto bg-eggshell duration-200 lg:hidden"
     >
       <div
         class="indicator sticky top-0 h-full rounded-lg bg-eggshell px-6 py-4 text-n-50"

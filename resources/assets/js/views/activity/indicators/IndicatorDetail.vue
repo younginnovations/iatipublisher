@@ -79,7 +79,7 @@
       class="activities__sidebar fixed left-0 z-[100] block h-screen overflow-y-auto duration-200 lg:hidden"
     >
       <div
-        class="indicator sticky top-0 h-full rounded-lg bg-eggshell bg-eggshell px-6 py-4 text-n-50"
+        class="indicator sticky top-0 h-full bg-eggshell px-6 py-4 text-n-50"
       >
         <ul class="text-sm font-bold leading-relaxed">
           <li v-for="(rData, r, ri) in indicatorData" :key="ri">

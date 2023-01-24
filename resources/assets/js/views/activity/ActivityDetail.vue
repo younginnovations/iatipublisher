@@ -178,10 +178,18 @@
         <div
           :class="
             showSidebar
-              ? '   h-screen -translate-x-[20px]'
-              : ' h-screen -translate-x-[110%]'
+              ? `-translate-x-[20px]  ${
+                  istopVisible
+                    ? 'top-[60px] h-[calc(100vh_-_60px)]'
+                    : 'top-[0px] h-[100vh]'
+                }`
+              : ` -translate-x-[110%] ${
+                  istopVisible
+                    ? 'top-[60px] h-[calc(100vh_-_60px)]'
+                    : 'top-[0px] h-[100vh]'
+                } `
           "
-          class="opacity-1 fixed top-[60px] z-[200] block h-[calc(100vh_-_60px)] overflow-y-auto duration-200 lg:hidden"
+          class="opacity-1 fixed z-[200] block overflow-y-auto duration-200 lg:hidden"
         >
           <aside class="!z-[200] w-[280px] bg-white pt-8">
             <div

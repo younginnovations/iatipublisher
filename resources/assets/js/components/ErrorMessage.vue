@@ -1,10 +1,11 @@
 <template>
   <div
     v-if="hasErrors"
-    class="relative h-full bg-white duration-300"
+    class="relative bg-white duration-300"
     :class="{
-      'mb-5': !isEmpty || !show,
-      'mb-10 pb-4': show,
+      'h-[55px]': !show,
+      'mb-5  ': !isEmpty || !show,
+      'mb-10 h-[full] pb-4 ': show,
     }"
   >
     <Loader v-if="isLoaderVisible" />

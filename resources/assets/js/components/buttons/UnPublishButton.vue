@@ -114,6 +114,8 @@ const unPublishFunction = () => {
     toastMessage.message = response.message;
     toastMessage.type = response.success;
     unpublishToggle();
+    unpublishValue.value = false;
+
     setTimeout(() => {
       if (response.success === true) {
         store.dispatch('updateUnPublished', false);

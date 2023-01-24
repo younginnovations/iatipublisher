@@ -144,8 +144,7 @@ app
 /**
  * Registering user module related vue components
  */
-app.component('UserProfile', UserProfile)
-  .component('UserListing', UserListing);
+app.component('UserProfile', UserProfile).component('UserListing', UserListing);
 
 /**
  * Registering Additional Components
@@ -182,7 +181,7 @@ const stickySidebar = (
     offsetWidth: number;
     getBoundingClientRect: () => {
       (): object;
-      new(): object;
+      new (): object;
       left: number;
       top: number;
       bottom: number;
@@ -224,8 +223,9 @@ const stickySidebar = (
   function handleScrollDown() {
     switch (affixType) {
       case 'sticky-top':
-        stickyElement.style.cssText = `position: relative; transform: translate3d(0, ${stickyCurrentTop - elScrollTop
-          }px, 0);`;
+        stickyElement.style.cssText = `position: relative; transform: translate3d(0, ${
+          stickyCurrentTop - elScrollTop
+        }px, 0);`;
         affixType = 'sticky-translate';
 
         break;
@@ -244,7 +244,7 @@ const stickySidebar = (
         }
         break;
       case 'fixed-top':
-        el.style.cssText = `position: fixed; top:60px`;
+        el.style.cssText = `position: fixed; top:0px`;
         affixType = 'sticky-translate';
         break;
 
@@ -254,7 +254,7 @@ const stickySidebar = (
             viewportHeight + window.scrollY + 450 >=
             document.body.offsetHeight
           ) {
-            el.style.cssText = `position: sticky; top:60px`;
+            el.style.cssText = `position: sticky; top:0px`;
           } else {
             stickyElement.style.cssText = `position: fixed; top: auto; left: ${elScrollLeft}; bottom: 0; width: ${elWidth}px`;
             affixType = 'sticky-bottom';
@@ -263,9 +263,10 @@ const stickySidebar = (
         break;
 
       case 'sticky-bound':
-        // nothing to do here
-
-        break;
+        if (elParentBottom && elParentBottom < stickyCurrentBottom) {
+          stickyElement.style.cssText = `position : absolute;  width:280px; bottom: 16px`;
+          affixType = 'sticky-bound';
+        }
     }
   }
 
@@ -276,22 +277,22 @@ const stickySidebar = (
           stickyElement.style.cssText = `position: relative;  `;
           affixType = 'sticky-none';
         } else {
-          stickyElement.style.cssText = `position: fixed; top: 60px;left: ${elScrollLeft}; width: ${elWidth}px `;
+          stickyElement.style.cssText = `position: fixed; top: 0px;left: ${elScrollLeft}; width: ${elWidth}px `;
         }
         break;
 
       case 'sticky-bottom':
-        stickyElement.style.cssText = `position: absolute; top: auto;  bottom: 60px;left: ${elScrollLeft}; width: ${elWidth}px `;
+        stickyElement.style.cssText = `position: fixed; top: 0px; left: ${elScrollLeft}; width: ${elWidth}px `;
         affixType = 'sticky-bound';
         break;
       case 'fixed-top':
-        el.style.cssText = `position: fixed; top:60px`;
+        el.style.cssText = `position: fixed; top:0px`;
         affixType = 'sticky-translate';
         break;
 
       case 'sticky-translate':
         if (stickyCurrentTop >= 0) {
-          stickyElement.style.cssText = `position: fixed; top: 60px; left: ${elScrollLeft}; width: ${elWidth}px`;
+          stickyElement.style.cssText = `position: fixed; top: 0px; left: ${elScrollLeft}; width: ${elWidth}px`;
           affixType = 'sticky-top';
         }
         break;
@@ -314,7 +315,7 @@ const stickySidebar = (
   }
 
   if (elHeight < viewportHeight) {
-    el.style.cssText = `position: sticky; top:60px`;
+    el.style.cssText = `position: sticky; top:0px`;
     stickyElement.style.cssText = ``;
   } else {
     el.style.cssText = `height: ${elHeight}px;`;
@@ -323,27 +324,8 @@ const stickySidebar = (
     } else if (isScrollUp && currentWindowsScrollPosition != 0) {
       handleScrollUp();
     } else {
-      el.style.cssText = `position: sticky; top:60px`;
+      el.style.cssText = `position: sticky; top:0px`;
       stickyElement.style.cssText = ``;
-    }
-  }
-};
-
-const fixSidebar = (el) => {
-  const footer = document.getElementById('footer');
-  const rect = footer && footer.getBoundingClientRect();
-  const progress = document.getElementById('progress');
-  const top = progress && progress.getBoundingClientRect();
-
-  if (document.body.clientWidth > 1024) {
-    if (rect && rect.top <= 800) {
-      el.style.cssText = `position: absolute; top: auto;  bottom: 60px;width:280px `;
-      affixType = 'sticky-bottom';
-    } else if (top && top.bottom > 0) {
-      el.style.cssText = `position: absolute; top:190px`;
-    } else {
-      el.style.cssText = `position: fixed; top:60px`;
-      affixType = 'fixed-top';
     }
   }
 };
@@ -354,12 +336,10 @@ app.directive('sticky-component', {
     let { boundary } = binding.value || {};
     boundary = boundary || 'body';
     window.addEventListener('scroll', () => stickySidebar(el, boundary));
-    window.addEventListener('resize', () => fixSidebar(el));
   },
   unmounted(el, binding) {
     const parent = binding.value.boundary;
     window.removeEventListener('scroll', () => stickySidebar(el, parent));
-    window.removeEventListener('resize', () => fixSidebar(el));
   },
 });
 
