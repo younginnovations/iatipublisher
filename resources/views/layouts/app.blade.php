@@ -9,8 +9,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
-    <!-- Google tag (gtag.js) -->
-    <script defer data-domain="[publisher.iatistandard.org](http://publisher.iatistandard.org/)" src="https://plausible.io/js/script.js"></script>
+   <!-- Google tag (gtag.js) -->
+    <script defer data-domain="publisher.iatistandard.org" src=https://plausible.io/js/script.js></script>
 
     <title>{{ config('app.name', 'Laravel') }}</title>
     <!-- Fonts -->

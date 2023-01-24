@@ -7,8 +7,7 @@
 
     <!-- Google tag (gtag.js) -->
     @production
-        <script defer data-domain="[publisher.iatistandard.org](http://publisher.iatistandard.org/)"
-            src="https://plausible.io/js/script.js"></script>
+    <script defer data-domain="publisher.iatistandard.org" src=https://plausible.io/js/script.js></script>
     @endproduction
 
     <!-- CSRF Token -->
