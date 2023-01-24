@@ -5,11 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Google tag (gtag.js) -->
-    @production
-    <script defer data-domain="publisher.iatistandard.org" src=https://plausible.io/js/script.js></script>
-    @endproduction
-
+    
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
