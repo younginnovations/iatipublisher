@@ -175,6 +175,10 @@ onUpdated(() => {
     loader.value = false;
     publishValue.value = true;
   }
+  if (publishStep.value == 4) {
+    loader.value = false;
+    publishValue.value = true;
+  }
 });
 
 /**
@@ -274,7 +278,9 @@ const publishStateChange = computed(() => {
 
   return publishState;
 });
-
+onUpdated(() => {
+  console.log(publishValue.value);
+});
 // increment and decrement function
 const stepPlusOne = () => {
   if (publishStep.value >= 0 && publishStep.value < 4) {
@@ -354,6 +360,7 @@ const errorData = inject('errorData') as DataTypeface;
  * check publish status
  */
 const checkPublish = () => {
+  console.log();
   axios.get(`/activities/checks-for-activity-publish`).then((res) => {
     const response = res.data;
 
