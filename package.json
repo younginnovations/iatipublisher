@@ -44,8 +44,6 @@
     "sass-loader": "^11.0.1",
     "stylelint": "^14.5.1",
     "stylelint-config-prettier": "^9.0.3",
-    "stylelint-config-rational-order": "^0.1.2",
-    "stylelint-order": "^5.0.0",
     "stylelint-scss": "^4.1.0",
     "tailwindcss": "^3.0.23",
     "vue": "^3.2.31",
