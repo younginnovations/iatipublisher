@@ -18,7 +18,7 @@ data:
   DB_CONNECTION: "pgsql"
   DB_DATABASE: "iatipublisher_prod"
   DB_HOST: "private-iati-postgresql-prod-do-user-4025190-0.b.db.ondigitalocean.com"
-  DB_PORT: "25060"
+  DB_PORT: "25061"
   DB_SSLMODE: 'require'
   DB_SSLROOTCERT: './ca-certificate.crt'
 
