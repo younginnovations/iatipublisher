@@ -167,11 +167,11 @@ onUpdated(() => {
   if (publishValue.value) {
     loader.value = false;
   }
-  if (publishStep.value == 1) {
+  if (publishStep.value === 1) {
     publishValue.value = false;
     loader.value = true;
   }
-  if (publishStep.value == 3) {
+  if (publishStep.value === 3 || publishStep.value === 4) {
     loader.value = false;
     publishValue.value = true;
   }
