@@ -145,6 +145,7 @@ import Loader from 'Components/sections/ProgressLoader.vue';
 
 // Vuex Store
 import { detailStore } from 'Store/activities/show';
+import { Value } from 'Activity/transactions/elements/Index';
 
 const props = defineProps({
   type: { type: String, default: 'primary' },
@@ -171,7 +172,7 @@ onUpdated(() => {
     publishValue.value = false;
     loader.value = true;
   }
-  if (publishStep.value == 3 || publishStep.value == 4) {
+  if (publishStep.value === 3 || publishStep.value === 4) {
     loader.value = false;
     publishValue.value = true;
   }
