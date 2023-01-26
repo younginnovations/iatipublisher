@@ -37,12 +37,11 @@ spec:
       initContainers:
         - name: migrations
           image: ghcr.io/younginnovations/iatipublisher/cli
-          command:
-            - php
-          args:
-            - artisan
-            - migrate
-            - --force
+          command: [ "/bin/sh","-c" ]
+          args: ["php artisan migrate --force; chown -R www-data:www-data /opt/apps/laravel-in-kubernetes/storage/logs"]
+          volumeMounts:
+          - name: iati-persistent-storage
+            mountPath: /opt/apps/laravel-in-kubernetes/storage/logs
           envFrom:
             - configMapRef:
                 name: iatipublisher
