@@ -117,6 +117,7 @@ export default defineComponent({
     const lastpages = computed(() => {
       return last_pagelist.value;
     });
+
     const midpages = computed(() => {
       return mid_pagelist.value;
     });
@@ -133,6 +134,7 @@ export default defineComponent({
       active_page.value =
         active_page.value === props.data.last_page ? 1 : active_page.value + 1;
     }
+
     watch(
       () => active_page.value,
       (currentPage) => {
@@ -145,6 +147,7 @@ export default defineComponent({
             value > props.data.last_page - 5 && props.data.last_page != value
           );
         });
+
         mid_pagelist.value = Array.from(
           Array(currentPage + 2),
           (_, index) => index + 1
