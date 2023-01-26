@@ -7,6 +7,7 @@ namespace App\Http\Controllers\SuperAdmin;
 use App\Http\Controllers\Controller;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -34,14 +35,16 @@ class SuperAdminController extends Controller
      *
      * @return Application|Factory|View|JsonResponse
      */
-    public function listOrganizations(): View|Factory|JsonResponse|Application
+    public function listOrganizations(): View | Factory | JsonResponse | Application
     {
         try {
             return view('superadmin.organisationsList');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while fetching organisations.']);
+            return response()->json(
+                ['success' => false, 'error' => 'Error has occurred while fetching organisations.']
+            );
         }
     }
 
@@ -66,7 +69,7 @@ class SuperAdminController extends Controller
                 'message' => 'Organizations fetched successfully',
                 'data'    => $organizations,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
@@ -121,10 +124,41 @@ class SuperAdminController extends Controller
             }
 
             return response()->json(['success' => false, 'message' => 'Error occurred while trying to proxy']);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while trying to proxy']);
+        }
+    }
+
+    /**
+     * Returns System Version UI.
+     *
+     * @return View|Factory|JsonResponse|Application
+     */
+    public function listSystemVersion(): View | Factory | JsonResponse | Application
+    {
+        try {
+            $phpDependencies = json_decode(
+                file_get_contents('../app_versions/composer_package_versions.json')
+            )->installed ?? '';
+            $nodeDependencies = json_decode(file_get_contents('../app_versions/npm_package_versions.json'), true) ?? '';
+            $version = json_decode(file_get_contents('../app_versions/current_versions.json')) ?? '';
+            $latestVersion = json_decode(file_get_contents('../app_versions/latest_versions.json')) ?? '';
+
+            return view(
+                'superadmin.systemVersion',
+                compact(
+                    'phpDependencies',
+                    'nodeDependencies',
+                    'version',
+                    'latestVersion'
+                )
+            );
+        } catch (Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
         }
     }
 }

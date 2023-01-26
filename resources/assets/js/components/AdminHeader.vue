@@ -69,7 +69,9 @@
             :class="data.menuNavLiClasses"
           >
             <a
-              v-if="menu.name !== 'Add / Import Activity'"
+              v-if="
+                menu.name !== 'Add / Import Activity' && menu.name !== 'Logs'
+              "
               :class="[
                 { nav__pointer: menu.active },
                 data.menuNavAnchorClasses,
@@ -89,8 +91,7 @@
                 >{{ menu.name }}
                 <div
                   v-if="menu.name === 'Add / Import Activity'"
-                  style="visibility: hidden"
-                  class="button__dropdown add-import-dropdown absolute top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left shadow-dropdown duration-300"
+                  class="button__dropdown add-import-dropdown absolute top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left shadow-dropdown transition-all duration-300"
                 >
                   <ul class="flex-col">
                     <li>
@@ -112,8 +113,63 @@
             </span>
 
             <div
-              v-if="menu.name === 'Add / Import Activity'"
-              class="button__dropdown transition-allduration-300 invisible absolute left-4 top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left opacity-0 shadow-dropdown group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
+              v-if="menu.name === 'Logs'"
+              class="button__dropdown invisible absolute left-4 top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left opacity-0 shadow-dropdown outline transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
+            >
+              <ul class="flex-col">
+                <li>
+                  <a href="#" :class="liClass">User Logs</a>
+                </li>
+                <li>
+                  <a href="#" :class="liClass">API Logs</a>
+                </li>
+                <li>
+                  <a href="/log-viewer" :class="liClass">Error Logs</a>
+                </li>
+                <li>
+                  <a href="/import" :class="liClass">System Details</a>
+                </li>
+              </ul>
+            </div>
+
+            <span
+              v-if="menu.name === 'Logs'"
+              :class="[
+                { nav__pointer: menu.active },
+                data.menuNavAnchorClasses,
+              ]"
+            >
+              <span class="add-import"
+                >{{ menu.name }}
+                <div
+                  v-if="menu.name === 'Logs'"
+                  class="button__dropdown add-import-dropdown absolute top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left shadow-dropdown transition-all duration-300"
+                >
+                  <ul class="flex-col">
+                    <li>
+                      <a href="#" class="cursor-pointer" :class="liClass"
+                        >User Logs</a
+                      >
+                    </li>
+                    <li>
+                      <a href="#" :class="liClass">API Logs</a>
+                    </li>
+                    <li>
+                      <a href="/log-viewer" :class="liClass">Error Logs</a>
+                    </li>
+                    <li>
+                      <a href="/system-version" :class="liClass"
+                        >System Details</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </span>
+            </span>
+
+            <div
+              v-if="menu.name === 'Add / Import Activities'"
+              class="button__dropdown invisible absolute left-4 top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left opacity-0 shadow-dropdown outline transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
             >
               <ul class="flex-col">
                 <li>
@@ -351,6 +407,11 @@ const data = reactive({
       permalink: '/users',
       active: false,
     },
+    // {
+    //   name: 'Logs',
+    //   permalink: '/system-version',
+    //   active: false,
+    // },
   ],
 });
 watch(
@@ -411,6 +472,14 @@ function changeActiveMenu() {
   }
   if (path.includes('list-organisations')) {
     data.superadmin_menus[0]['active'] = true;
+  }
+  if (
+    path.includes('system-version') ||
+    path.includes('log-viewer') ||
+    path.includes('link3') ||
+    path.includes('link4')
+  ) {
+    data.superadmin_menus[2]['active'] = true;
   }
 }
 
