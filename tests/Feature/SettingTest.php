@@ -183,8 +183,8 @@ class SettingTest extends TestCase
                  'default_currency' => 'BND',
                  'default_language' => 'ab',
                  'hierarchy'        => '2',
-                 'budget_not_provided'  => 'test',
-                 'humanitarian'     => 'no',
+                 'budget_not_provided'  => '1',
+                 'humanitarian'     => '0',
              ])
              ->assertStatus(200)
              ->assertJsonStructure([

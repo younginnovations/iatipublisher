@@ -24,11 +24,11 @@ class DefaultFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'default_currency' => 'sometimes',
-            'default_language' => 'sometimes',
-            'hierarchy' => 'sometimes|nullable|integer|min:1|lte:4',
-            'budget_not_provided' => 'sometimes',
-            'humanitarian' => 'sometimes',
+            'default_currency'      => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Currency', 'Activity', false)))),
+            'default_language'      => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Language', 'Activity', false)))),
+            'hierarchy'             => 'sometimes|nullable|integer|min:1|lte:4',
+            'budget_not_provided'   => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('BudgetNotProvided', 'Activity', false)))),
+            'humanitarian'          => sprintf('nullable|in:0,1'),
         ];
     }
 }

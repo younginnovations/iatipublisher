@@ -49,6 +49,7 @@ class ReportingOrgRequest extends ActivityBaseRequest
             $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
             $rules[$reportingOrganizationForm . '.ref'] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
             $rules[$reportingOrganizationForm . '.type'] = sprintf('nullable|in:%s', $reportingOrganizationTypes);
+            $rules[$reportingOrganizationForm . '.secondary_reporter'] = ['nullable', 'in:0,1'];
 
             $narrativeRules = $this->getRulesForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
 

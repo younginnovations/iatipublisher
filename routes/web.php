@@ -19,15 +19,18 @@ Route::middleware(RedirectIfAuthenticated::class)->name('web.')->group(function 
     Route::get('/login', [App\Http\Controllers\Web\WebController::class, 'index'])->name('index.login');
     Route::get('/register/{page}', [App\Http\Controllers\Web\WebController::class, 'index'])->name('join');
     Route::get('/register', [App\Http\Controllers\Web\WebController::class, 'register'])->name('register');
-    Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login');
     Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register']);
-    Route::post('/verifyPublisher', [App\Http\Controllers\Auth\RegisterController::class, 'verifyPublisher'])->name('verify-publisher');
     Route::get('/password/email', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.email');
     Route::post('/password/email', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email.post');
     Route::get('/password/confirm', [App\Http\Controllers\Auth\ForgotPasswordController::class, 'showEmailSentMessage'])->name('password.confirm');
-    Route::post('/reset', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('reset');
     Route::get('/iati/register', [App\Http\Controllers\Auth\IatiRegisterController::class, 'showRegistrationForm'])->name('iati.register');
+});
+
+Route::group(['middleware'=>['guest', 'sanitize'], 'name'=>'web.'], static function () {
+    Route::post('/reset', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('reset');
+    Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login');
+    Route::post('/verifyPublisher', [App\Http\Controllers\Auth\RegisterController::class, 'verifyPublisher'])->name('verify-publisher');
+    Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register']);
     Route::post('/iati/register/publisher', [App\Http\Controllers\Auth\IatiRegisterController::class, 'verifyPublisher'])->name('iati.verify-publisher');
     Route::post('/iati/register/contact', [App\Http\Controllers\Auth\IatiRegisterController::class, 'verifyContactInfo'])->name('iati.verify-contact');
     Route::post('/iati/register/additional', [App\Http\Controllers\Auth\IatiRegisterController::class, 'verifyAdditionalInfo'])->name('iati.verify-source');
