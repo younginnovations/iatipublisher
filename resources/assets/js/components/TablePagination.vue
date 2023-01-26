@@ -93,7 +93,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onUpdated, computed, ref, watch } from 'vue';
+import { defineComponent, computed, ref, watch } from 'vue';
 
 export default defineComponent({
   name: 'PaginationComponent',
