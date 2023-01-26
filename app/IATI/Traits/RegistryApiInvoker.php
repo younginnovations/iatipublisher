@@ -42,6 +42,7 @@ trait RegistryApiInvoker
         $client = new Client($clientConfig);
 
         $res = $client->get(sprintf('%s/action/%s', env('IATI_API_ENDPOINT'), $action), $requestConfig);
+
         app(IatiApiLogRepository::class)->store(generateApiInfo(new Request('GET', sprintf('%s/action/%s', env('IATI_API_ENDPOINT'), $action), $requestConfig), $res));
 
         return $res->getBody()->getContents();

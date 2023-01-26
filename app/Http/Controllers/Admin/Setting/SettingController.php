@@ -248,7 +248,7 @@ class SettingController extends Controller
 
                 $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', $requestOptions);
                 $this->iatiApiLogService->store(generateApiInfo(new Request('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', $requestOptions), $res));
-                $response = json_decode($res->getBody()->getContents(), false)->result;
+                $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
 
                 return ['success' => true, 'validation' => in_array($data['publisher_id'], array_column($response, 'name'), true)];
             }

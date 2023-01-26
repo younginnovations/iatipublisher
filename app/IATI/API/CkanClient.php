@@ -2,9 +2,11 @@
 
 namespace App\IATI\API;
 
+use App\IATI\Repositories\IatiApiLog\IatiApiLogRepository;
 use DateTime;
 use DateTimeZone;
 use Exception;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -182,6 +184,8 @@ class CkanClient
         curl_setopt($this->curl_handler, CURLOPT_HTTPHEADER, $this->curl_headers);
         // Execute request and get response headers.
         $response = curl_exec($this->curl_handler);
+
+        app()->make(IatiApiLogRepository::class)->store(generateApiInfo(new Request($method, $uri, is_array($data) ? $data : []), $response));
 
         try {
             $responseArray = json_decode($response, true);

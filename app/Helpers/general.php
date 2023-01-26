@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 if (!function_exists('dashesToCamelCase')) {
     /**
@@ -1131,14 +1132,23 @@ if (!function_exists('generateApiInfo')) {
      *
      * @return array
      */
-    function generateApiInfo($request, $response = null):array
+    function generateApiInfo($request, $response = null): array
     {
+        $responseBody = is_string($response) ? null : $response->getBody();
+        $requestHeaders = $request->getHeaders();
+        $requestURI = $request->getUri();
+        $uri = Str::startsWith($requestURI, 'http') ? $requestURI : sprintf('%s/%s', env('IATI_API_ENDPOINT'), $requestURI);
+
         $requestInfo = [
             'method'       => $request->getMethod(),
-            'url'          => $request->getUri(),
-            'request'      => $request->getMethod() === 'GET' ? $request->getHeaders('query') : json_decode((string) $request->getBody()),
-            'response'     => $response ? json_decode((string) $response->getBody(), true) : null,
+            'url'          => $uri,
+            'request'      => $request->getMethod() === 'GET' ? Arr::get($requestHeaders, 'query') : json_decode((string) $request->getBody()),
+            'response'     => is_string($response) ? $response : json_decode((string) $response->getBody(), true),
         ];
+
+        if ($responseBody) {
+            $responseBody->seek(0);
+        }
 
         return $requestInfo;
     }

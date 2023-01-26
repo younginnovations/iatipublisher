@@ -217,7 +217,7 @@ class OrganizationService
             return false;
         }
 
-        $result = json_decode($res->getBody()->getContents())->result;
+        $result = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
 
         if (strcasecmp($result->state, 'active') === 0) {
             return true;

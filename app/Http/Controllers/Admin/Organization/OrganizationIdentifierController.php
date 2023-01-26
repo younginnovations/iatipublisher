@@ -103,8 +103,6 @@ class OrganizationIdentifierController extends Controller
      */
     public function verifyPublisher(array $data): bool
     {
-        $apiInfo = [];
-
         try {
             $organization = Auth::user()->organization;
             $identifier = $data['organization_registration_agency'] . '-' . $data['registration_number'];
@@ -123,19 +121,14 @@ class OrganizationIdentifierController extends Controller
                 'connect_timeout' => 500,
             ];
 
-            $apiInfo = generateApiInfo(new Request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOptions));
-
             $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOptions);
-            $apiInfo['response'] = json_decode((string) $res->getBody(), true);
-            $this->iatiApiLogService->store($apiInfo);
+            $this->iatiApiLogService->store(generateApiInfo(new Request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOptions), $res));
 
             $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
 
             return $response->publisher_iati_id === $identifier;
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            $apiInfo['response'] = $e->getMessage();
-            $this->iatiApiLogService->store($apiInfo);
 
             return false;
         }

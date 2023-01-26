@@ -97,6 +97,7 @@ class OrganizationWorkflowController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
+            logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while un-publishing organization.']);
         }

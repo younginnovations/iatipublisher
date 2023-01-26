@@ -144,7 +144,7 @@ class RegisterController extends Controller
             }
 
             $errors = [];
-            $response = json_decode($res->getBody()->getContents())->result;
+            $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
 
             if ($postData['publisher_name'] !== $response->title) {
                 $errors['publisher_name'] = ['Publisher Name doesn\'t match your IATI Registry information'];

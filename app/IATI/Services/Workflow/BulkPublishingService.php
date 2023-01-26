@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Workflow;
 
+use App\IATI\Repositories\IatiApiLog\IatiApiLogRepository;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\BulkPublishingStatusService;
 use App\IATI\Services\Validator\ActivityValidatorResponseService;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
@@ -38,23 +40,31 @@ class BulkPublishingService
     protected BulkPublishingStatusService $publishingStatusService;
 
     /**
+     * @var IatiApiLogRepository
+     */
+    protected IatiApiLogRepository $iatiApiLogRepo;
+
+    /**
      * BulkPublishingService Constructor.
      *
      * @param ActivityService $activityService
      * @param ActivityWorkflowService $activityWorkflowService
      * @param ActivityValidatorResponseService $validatorService
      * @param BulkPublishingStatusService $publishingStatusService
+     * @param IatiApiLogRepository $iatiApiLogRepo
      */
     public function __construct(
         ActivityService $activityService,
         ActivityWorkflowService $activityWorkflowService,
         ActivityValidatorResponseService $validatorService,
-        BulkPublishingStatusService $publishingStatusService
+        BulkPublishingStatusService $publishingStatusService,
+        IatiApiLogRepository $iatiApiLogRepo
     ) {
         $this->activityService = $activityService;
         $this->activityWorkflowService = $activityWorkflowService;
         $this->validatorService = $validatorService;
         $this->publishingStatusService = $publishingStatusService;
+        $this->iatiApiLogRepo = $iatiApiLogRepo;
     }
 
     /**
@@ -120,6 +130,7 @@ class BulkPublishingService
 
             if ($activity && $activity->status === 'draft') {
                 $response = $this->validateWithException($activity);
+                $this->iatiApiLogRepo->store(generateApiInfo(new Request('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => $activity]), $response));
 
                 if (!Arr::get($response, 'success', true)) {
                     logger()->error('Error has occurred while validating activity with id' . $activityId);
@@ -262,7 +273,7 @@ class BulkPublishingService
             }
         }
 
-//        $response['activities'] = array_values($response['activities']);
+        //        $response['activities'] = array_values($response['activities']);
         return $response;
     }
 

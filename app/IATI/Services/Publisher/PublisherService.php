@@ -9,6 +9,7 @@ use App\IATI\Services\Organization\OrganizationPublishedService;
 use App\IATI\Services\Workflow\RegistryApiHandler;
 use App\IATI\Traits\RegistryApiInvoker;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Psr7\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
