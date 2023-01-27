@@ -4,7 +4,7 @@
 <head>
      <style>
      html{visibility: hidden;opacity:0;}
-     *{transition-duration: 500ms;}
+     *{transition-duration: 30ms;}
      </style>
     <!-- Google tag (gtag.js) -->
     @production

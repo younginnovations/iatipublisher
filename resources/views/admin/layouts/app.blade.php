@@ -4,7 +4,7 @@
 <head>
 <style>
          html{visibility: hidden;opacity:0;}
-         *{transition-duration: 0ms;}
+         *{transition-duration: 30ms;}
      </style>    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
