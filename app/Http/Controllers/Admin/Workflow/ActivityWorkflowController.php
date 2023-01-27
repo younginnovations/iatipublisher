@@ -144,7 +144,7 @@ class ActivityWorkflowController extends Controller
             }
 
             $response = $this->activityWorkflowService->validateActivityOnIATIValidator($activity);
-            $this->iatiApiLogService->store(generateApiInfo(new Request('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)]), $response));
+            $this->iatiApiLogService->store(generateApiInfo(new Request('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)]), json_encode($response)));
 
             if ($this->validatorService->updateOrCreateresponse($id, json_decode($response, true, 512, JSON_THROW_ON_ERROR))) {
                 return response()->json(json_decode($response, true, 512, JSON_THROW_ON_ERROR));
@@ -154,7 +154,7 @@ class ActivityWorkflowController extends Controller
         } catch (BadResponseException $ex) {
             if ($ex->getCode() === 422) {
                 $response = $ex->getResponse()->getBody()->getContents();
-                $this->iatiApiLogService->store(generateApiInfo(new Request('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)]), $response));
+                $this->iatiApiLogService->store(generateApiInfo(new Request('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)]), json_encode($response)));
 
                 if ($this->validatorService->updateOrCreateResponse($id, json_decode($response, true, 512, JSON_THROW_ON_ERROR))) {
                     return response()->json(json_decode($response, true, 512, JSON_THROW_ON_ERROR));

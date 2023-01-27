@@ -120,7 +120,6 @@ class IatiRegisterController extends Controller
                 ]
             );
         } catch (Exception $e) {
-            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'errors' => 'Error has occurred while verifying the publisher.']);

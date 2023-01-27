@@ -130,7 +130,7 @@ class BulkPublishingService
 
             if ($activity && $activity->status === 'draft') {
                 $response = $this->validateWithException($activity);
-                $this->iatiApiLogRepo->store(generateApiInfo(new Request('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => $activity]), $response));
+                $this->iatiApiLogRepo->store(generateApiInfo(new Request('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)]), json_encode($response)));
 
                 if (!Arr::get($response, 'success', true)) {
                     logger()->error('Error has occurred while validating activity with id' . $activityId);
