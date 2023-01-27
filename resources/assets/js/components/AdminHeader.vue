@@ -351,6 +351,11 @@ const data = reactive({
       permalink: '/users',
       active: false,
     },
+    {
+      name: 'Audits',
+      permalink: '/audit',
+      active: false,
+    },
   ],
 });
 watch(

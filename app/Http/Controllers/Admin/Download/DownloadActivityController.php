@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Download;
 
 use App\Http\Controllers\Controller;
+use App\IATI\Services\Audit\AuditService;
 use App\IATI\Services\Download\CsvGenerator;
 use App\IATI\Services\Download\DownloadActivityService;
 use App\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
@@ -34,20 +35,28 @@ class DownloadActivityController extends Controller
     protected XmlServiceProvider $xmlServiceProvider;
 
     /**
+     * @var AuditService
+     */
+    protected AuditService $auditService;
+
+    /**
      * DownloadActivityController Constructor.
      *
      * @param DownloadActivityService $downloadActivityService
      * @param CsvGenerator $csvGenerator
      * @param XmlServiceProvider $xmlServiceProvider
+     * @param AuditService $auditService
      */
     public function __construct(
         DownloadActivityService $downloadActivityService,
         CsvGenerator $csvGenerator,
-        XmlServiceProvider $xmlServiceProvider
+        XmlServiceProvider $xmlServiceProvider,
+        AuditService $auditService
     ) {
         $this->downloadActivityService = $downloadActivityService;
         $this->csvGenerator = $csvGenerator;
         $this->xmlServiceProvider = $xmlServiceProvider;
+        $this->auditService = $auditService;
     }
 
     /**
@@ -77,9 +86,12 @@ class DownloadActivityController extends Controller
 
             $csvData = $this->downloadActivityService->getCsvData($activities);
 
+            $this->auditService->auditEvent($activities, 'download', 'csv');
+
             return $this->csvGenerator->generateWithHeaders(getTimeStampedText($filename), $csvData, $headers);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
+            $this->auditService->auditEvent(null, 'download', 'csv');
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity csv.']);
         }
@@ -116,6 +128,8 @@ class DownloadActivityController extends Controller
                 return response()->json(['success' => false, 'xml_error' => true, 'message' => json_encode(libxml_get_errors(), JSON_THROW_ON_ERROR)]);
             }
 
+            $this->auditService->auditEvent($activities, 'download', 'xml');
+
             return response($mergedContent)
                 ->withHeaders([
                     'Content-Type' => 'text/xml',
@@ -126,6 +140,7 @@ class DownloadActivityController extends Controller
                 ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
+            $this->auditService->auditEvent(null, 'download', 'xml');
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity csv.']);
         }

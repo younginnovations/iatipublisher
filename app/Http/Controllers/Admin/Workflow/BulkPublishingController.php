@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin\Workflow;
 
 use App\Http\Controllers\Controller;
+use App\IATI\Services\Activity\ActivityPublishedService;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\BulkPublishingStatusService;
 use App\IATI\Services\Workflow\ActivityWorkflowService;
@@ -38,6 +39,8 @@ class BulkPublishingController extends Controller
      */
     protected ActivityWorkflowService $activityWorkflowService;
 
+    protected ActivityPublishedService $activityPublishedService;
+
     /**
      * @var BulkPublishingStatusService
      */
@@ -55,12 +58,14 @@ class BulkPublishingController extends Controller
         BulkPublishingService $bulkPublishingService,
         ActivityService $activityService,
         ActivityWorkflowService $activityWorkflowService,
-        BulkPublishingStatusService $publishingStatusService
+        BulkPublishingStatusService $publishingStatusService,
+        ActivityPublishedService $activityPublishedService,
     ) {
         $this->bulkPublishingService = $bulkPublishingService;
         $this->activityService = $activityService;
         $this->activityWorkflowService = $activityWorkflowService;
         $this->publishingStatusService = $publishingStatusService;
+        $this->activityPublishedService = $activityPublishedService;
     }
 
     /**
@@ -182,7 +187,9 @@ class BulkPublishingController extends Controller
 
                 $response = $this->bulkPublishingService->generateInitialBulkPublishingResponse($activities);
                 $this->publishingStatusService->storeProcessingActivities($activities, $response['organization_id'], $response['job_batch_uuid']);
+
                 dispatch(new BulkPublishActivities($activities, $response['organization_id'], $response['job_batch_uuid']));
+
                 DB::commit();
 
                 return response()->json(['success' => true, 'message' => 'Bulk publishing started', 'data' => $response]);

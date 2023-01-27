@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UserProfileRequest;
 use App\Http\Requests\User\UserRequest;
 use App\Http\Requests\User\UserUpdateRequest;
+use App\IATI\Services\Audit\AuditService;
 use App\IATI\Services\Download\CsvGenerator;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
@@ -37,6 +38,11 @@ class UserController extends Controller
     protected OrganizationService $organizationService;
 
     /**
+     * @var AuditService
+     */
+    protected AuditService $auditService;
+
+    /**
      * @var CsvGenerator
      */
     protected CsvGenerator $csvGenerator;
@@ -49,15 +55,17 @@ class UserController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @param UserService      $userService
-     * @param OrganizationService      $organizationService
-     * @param CsvGenerator         $csvGenerator
-     * @param DatabaseManager     $db
+     * @param UserService $userService
+     * @param OrganizationService $organizationService
+     * @param AuditService $auditService
+     * @param CsvGenerator $csvGenerator
+     * @param DatabaseManager $db
      */
-    public function __construct(UserService $userService, OrganizationService $organizationService, CSVGenerator $csvGenerator, DatabaseManager $db)
+    public function __construct(UserService $userService, OrganizationService $organizationService, AuditService $auditService, CSVGenerator $csvGenerator, DatabaseManager $db)
     {
         $this->userService = $userService;
         $this->organizationService = $organizationService;
+        $this->auditService = $auditService;
         $this->csvGenerator = $csvGenerator;
         $this->db = $db;
     }
@@ -222,6 +230,7 @@ class UserController extends Controller
 
             return view('admin.user.profile', compact('user', 'languagePreference'));
         } catch (\Exception $e) {
+            dd($e->getMessage());
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.index')->with('error', 'Error while rendering setting page');
@@ -413,9 +422,12 @@ class UserController extends Controller
             $queryParams = $this->getQueryParams($request);
             $users = $this->userService->getUserDownloadData($queryParams);
 
-            return $this->csvGenerator->generateWithHeaders(getTimeStampedText('users'), $users, $headers);
+            $this->auditService->auditEvent($users, 'download');
+
+            return $this->csvGenerator->generateWithHeaders(getTimeStampedText('users'), $users->toArray(), $headers);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
+            $this->auditService->auditEvent(null, 'download');
 
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
