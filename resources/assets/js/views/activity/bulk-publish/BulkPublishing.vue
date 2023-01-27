@@ -1,22 +1,22 @@
 <template>
   <div id="publishing_activities" class="z-50 w-[366px]">
-    <div class="flex items-center justify-between p-4 bulk-head bg-eggshell">
-      <div class="text-sm font-bold leading-normal grow">
+    <div class="bulk-head flex items-center justify-between bg-eggshell p-4">
+      <div class="grow text-sm font-bold leading-normal">
         Publishing {{ Object.keys(activities).length }} activities
       </div>
       <div class="flex shrink-0">
         <div
           v-if="hasFailedActivities.ids.length > 0"
-          class="flex items-center cursor-pointer retry text-crimson-50"
+          class="retry flex cursor-pointer items-center text-crimson-50"
           @click="retryPublishing"
         >
           <svg-vue class="mr-1" icon="redo" />
           <span class="text-xs uppercase">Retry</span>
         </div>
-        <div v-else class="cursor-pointer minus" @click="toggleWindow"></div>
+        <div v-else class="minus cursor-pointer" @click="toggleWindow"></div>
         <div
           v-if="completed === 'completed'"
-          class="cursor-pointer cross"
+          class="cross cursor-pointer"
           @click="closeWindow"
         ></div>
       </div>
@@ -28,12 +28,12 @@
         <div
           v-for="(value, name, index) in activities"
           :key="index"
-          class="flex px-4 py-3 item"
+          class="item flex px-4 py-3"
         >
-          <div class="pr-2 text-sm leading-normal activity-title grow">
-            {{ value["activity_title"] }}
+          <div class="activity-title grow pr-2 text-sm leading-normal">
+            {{ value['activity_title'] }}
           </div>
-          <div class="text-xl shrink-0">
+          <div class="shrink-0 text-xl">
             <svg-vue
               v-if="value['status'] === 'completed'"
               class="text-spring-50"
@@ -52,8 +52,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, reactive, watch, inject } from "vue";
-import axios from "axios";
+import { onMounted, ref, reactive, watch, inject } from 'vue';
+import axios from 'axios';
 
 interface RefreshToastMsgTypeface {
   visibility: boolean;
@@ -61,7 +61,7 @@ interface RefreshToastMsgTypeface {
   refreshMessage: string;
 }
 
-let refreshToastMsg = inject("refreshToastMsg") as RefreshToastMsgTypeface;
+let refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
 
 interface paInterface {
   value: {
@@ -84,10 +84,10 @@ interface actElements {
 }
 
 //inject
-let paStorage = inject("paStorage") as paInterface;
+let paStorage = inject('paStorage') as paInterface;
 
 let activities = ref(paStorage.value.publishingActivities.activities),
-  completed = ref("processing");
+  completed = ref('processing');
 
 let hasFailedActivities = reactive({
   data: {} as actElements,
@@ -101,13 +101,13 @@ let intervalID;
  *   Component lifecycle - onMounted
  */
 onMounted(() => {
-  completed.value = paStorage.value.publishingActivities.status ?? "processing";
+  completed.value = paStorage.value.publishingActivities.status ?? 'processing';
   bulkPublishStatus();
 });
 
 // watching change in value of completed
 watch(completed, async (newValue) => {
-  if (newValue === "completed") {
+  if (newValue === 'completed') {
     clearInterval(intervalID);
 
     // resetting local storage
@@ -129,16 +129,17 @@ const bulkPublishStatus = () => {
       )
       .then((res) => {
         const response = res.data;
-        if ("data" in response) {
+        if ('data' in response) {
           activities.value = response.data.activities;
           completed.value = response.data.status;
 
           // saving in local storage
-          paStorage.value.publishingActivities.activities = response.data.activities;
+          paStorage.value.publishingActivities.activities =
+            response.data.activities;
           paStorage.value.publishingActivities.status = response.data.status;
           paStorage.value.publishingActivities.message = response.data.message;
 
-          if (completed.value === "completed") {
+          if (completed.value === 'completed') {
             failedActivities(paStorage.value.publishingActivities.activities);
             refreshToastMsg.visibility = true;
             setTimeout(() => {
@@ -146,7 +147,7 @@ const bulkPublishStatus = () => {
             }, 10000);
           }
         } else {
-          completed.value = "completed";
+          completed.value = 'completed';
         }
       });
   }, 2000);
@@ -158,10 +159,10 @@ const bulkPublishStatus = () => {
 const open = ref(true);
 const toggleWindow = (e: Event) => {
   const currentTarget = e.currentTarget as HTMLElement;
-  const target = (currentTarget.closest(
-    "#publishing_activities"
-  ) as HTMLElement).querySelector<HTMLElement>(".bulk-activities");
-  const elHeight = target?.querySelector("div")?.clientHeight;
+  const target = (
+    currentTarget.closest('#publishing_activities') as HTMLElement
+  ).querySelector<HTMLElement>('.bulk-activities');
+  const elHeight = target?.querySelector('div')?.clientHeight;
 
   if (open.value) {
     if (target != null) {
@@ -201,7 +202,7 @@ const failedActivities = (nestedObject: actElements) => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const filtered = asArrayData.filter(([key, value]) => {
-    if (Object.values(value).indexOf("failed") > -1) {
+    if (Object.values(value).indexOf('failed') > -1) {
       failedActivitiesID.push(value.activity_id);
       return key;
     }
@@ -214,7 +215,8 @@ const failedActivities = (nestedObject: actElements) => {
     hasFailedActivities.ids = failedActivitiesID;
     hasFailedActivities.data = failedActivitiesData as actElements;
     refreshToastMsg.refreshMessageType = false;
-    refreshToastMsg.refreshMessage = 'Some activities have failed to publish. Refresh to see changes.'
+    refreshToastMsg.refreshMessage =
+      'Some activities have failed to publish. Refresh to see changes.';
   } else {
     hasFailedActivities.status = false;
     hasFailedActivities.ids = [];
@@ -227,10 +229,10 @@ const failedActivities = (nestedObject: actElements) => {
  */
 const retryPublishing = () => {
   //reset required states
-  completed.value = "processing";
+  completed.value = 'processing';
 
   for (const key in hasFailedActivities.data) {
-    hasFailedActivities.data[key].status = "processing";
+    hasFailedActivities.data[key].status = 'processing';
   }
 
   activities.value = hasFailedActivities.data;
@@ -253,7 +255,7 @@ const retryPublishing = () => {
 .minus {
   @apply flex h-3 w-3 items-center;
   &:before {
-    content: "";
+    content: '';
     @apply block h-0.5 w-3 rounded-xl bg-blue-50;
   }
 }
@@ -275,7 +277,7 @@ const retryPublishing = () => {
 
   &:before,
   &:after {
-    content: "";
+    content: '';
     @apply absolute left-1/2 top-0 block h-3 w-0.5 -translate-x-1/2 rounded-xl bg-blue-50;
   }
 

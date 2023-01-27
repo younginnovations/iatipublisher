@@ -11,13 +11,15 @@
         {{
           recipient_region_budget.status
             ? types?.budgetType[recipient_region_budget.status]
-            : "Status Missing"
+            : 'Status Missing'
         }}
       </div>
       <div class="flex text-sm">
         <span v-if="recipient_region_budget.value[0].amount">
-          {{ Number(recipient_region_budget.value["0"].amount).toLocaleString() }}
-          {{ recipient_region_budget.value["0"].currency }}
+          {{
+            Number(recipient_region_budget.value['0'].amount).toLocaleString()
+          }}
+          {{ recipient_region_budget.value['0'].currency }}
         </span>
         <span v-else> Budget Amount Missing</span>
       </div>
@@ -27,7 +29,7 @@
             <tr>
               <td>Value date</td>
               <td>
-                {{ formatDate(recipient_region_budget.value["0"].value_date) }}
+                {{ formatDate(recipient_region_budget.value['0'].value_date) }}
               </td>
             </tr>
             <tr>
@@ -35,22 +37,32 @@
               <td>
                 {{
                   types?.regionVocabulary[
-                    recipient_region_budget.recipient_region["0"].region_vocabulary
-                  ] ?? "Vocabulary Missing"
+                    recipient_region_budget.recipient_region['0']
+                      .region_vocabulary
+                  ] ?? 'Vocabulary Missing'
                 }}
               </td>
             </tr>
             <tr
               v-if="
-                recipient_region_budget.recipient_region['0'].region_vocabulary === '99'
+                recipient_region_budget.recipient_region['0']
+                  .region_vocabulary === '99'
               "
             >
               <td>Vocabulary URI</td>
-              <td v-if="recipient_region_budget.recipient_region['0'].vocabulary_uri">
+              <td
+                v-if="
+                  recipient_region_budget.recipient_region['0'].vocabulary_uri
+                "
+              >
                 <a
                   target="_blank"
-                  :href="recipient_region_budget.recipient_region['0'].vocabulary_uri"
-                  >{{ recipient_region_budget.recipient_region["0"].vocabulary_uri }}</a
+                  :href="
+                    recipient_region_budget.recipient_region['0'].vocabulary_uri
+                  "
+                  >{{
+                    recipient_region_budget.recipient_region['0'].vocabulary_uri
+                  }}</a
                 >
               </td>
               <td v-else>Vocabulary URI Missing</td>
@@ -59,12 +71,14 @@
               <td>Code</td>
               <td>
                 {{
-                  recipient_region_budget.recipient_region["0"].region_vocabulary === "1"
+                  recipient_region_budget.recipient_region['0']
+                    .region_vocabulary === '1'
                     ? types.region[
-                        recipient_region_budget.recipient_region["0"].region_code
-                      ] ?? "Code Missing"
-                    : recipient_region_budget.recipient_region["0"].code ??
-                      "Code Missing"
+                        recipient_region_budget.recipient_region['0']
+                          .region_code
+                      ] ?? 'Code Missing'
+                    : recipient_region_budget.recipient_region['0'].code ??
+                      'Code Missing'
                 }}
               </td>
             </tr>
@@ -72,14 +86,16 @@
               <td>Narrative</td>
               <td>
                 <div
-                  v-for="(narrative, i) in recipient_region_budget.recipient_region['0']
-                    .narrative"
+                  v-for="(narrative, i) in recipient_region_budget
+                    .recipient_region['0'].narrative"
                   :key="i"
                   class="item"
                   :class="{
                     'mb-4':
                       i !=
-                      recipient_region_budget.recipient_region['0'].narrative.length - 1,
+                      recipient_region_budget.recipient_region['0'].narrative
+                        .length -
+                        1,
                   }"
                 >
                   <div class="description-content">
@@ -88,12 +104,12 @@
                       {{
                         narrative.language
                           ? `Language: ${types?.languages[narrative.language]}`
-                          : "Language : Missing"
+                          : 'Language : Missing'
                       }}
                       )
                     </div>
                     <div class="w-[500px] max-w-full">
-                      {{ narrative.narrative ?? "Narrative Missing" }}
+                      {{ narrative.narrative ?? 'Narrative Missing' }}
                     </div>
                   </div>
                 </div>
@@ -102,9 +118,9 @@
             <tr>
               <td>Period</td>
               <td>
-                {{ formatDate(recipient_region_budget.period_start["0"].date) }}
+                {{ formatDate(recipient_region_budget.period_start['0'].date) }}
                 -
-                {{ formatDate(recipient_region_budget.period_end["0"].date) }}
+                {{ formatDate(recipient_region_budget.period_end['0'].date) }}
               </td>
             </tr>
           </tbody>
@@ -130,11 +146,11 @@
             <div class="category flex">
               <span>
                 {{
-                  budget_line.value["0"].amount
+                  budget_line.value['0'].amount
                     ? Number(budget_line.value[0].amount).toLocaleString()
-                    : "Budget Missing"
+                    : 'Budget Missing'
                 }}
-                {{ budget_line.value["0"].currency }}
+                {{ budget_line.value['0'].currency }}
               </span>
             </div>
             <div class="ml-4">
@@ -143,13 +159,13 @@
                   <tr>
                     <td class="pr-20 text-n-40">Reference</td>
                     <td>
-                      {{ budget_line.ref ?? "Reference Missing" }}
+                      {{ budget_line.ref ?? 'Reference Missing' }}
                     </td>
                   </tr>
                   <tr>
                     <td>Value Date</td>
                     <td>
-                      {{ formatDate(budget_line.value["0"].value_date) }}
+                      {{ formatDate(budget_line.value['0'].value_date) }}
                     </td>
                   </tr>
                   <tr>
@@ -166,12 +182,14 @@
                         <div class="language mb-1.5">
                           ({{
                             narrative.language
-                              ? `Language: ${types?.languages[narrative.language]}`
-                              : "Language : Missing"
+                              ? `Language: ${
+                                  types?.languages[narrative.language]
+                                }`
+                              : 'Language : Missing'
                           }})
                         </div>
                         <div class="w-[500px] max-w-full">
-                          {{ narrative.narrative ?? "Narrative Missing" }}
+                          {{ narrative.narrative ?? 'Narrative Missing' }}
                         </div>
                       </div>
                     </td>
@@ -187,8 +205,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject } from "vue";
-import moment from "moment";
+import { defineProps, inject } from 'vue';
+import moment from 'moment';
 
 defineProps({
   content: { type: Object, required: true },
@@ -201,9 +219,9 @@ interface TypesInterface {
   region: [];
 }
 
-const types = inject("orgTypes") as TypesInterface;
+const types = inject('orgTypes') as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format("LL") : "Date Missing";
+  return date ? moment(date).format('LL') : 'Date Missing';
 }
 </script>

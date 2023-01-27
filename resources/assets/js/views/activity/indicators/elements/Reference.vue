@@ -9,7 +9,9 @@
           'mb-1.5': r !== Object.keys(refData).length - 1,
         }"
       >
-        <span v-if="ref.vocabulary"> Vocabulary: {{ refType.indicatorVocabulary[ref.vocabulary] }}, </span>
+        <span v-if="ref.vocabulary">
+          Vocabulary: {{ refType.indicatorVocabulary[ref.vocabulary] }},
+        </span>
         <span v-if="ref.code"> Code: {{ ref.code }}, </span>
         <span v-if="ref.indicator_uri">
           Indicator URI:

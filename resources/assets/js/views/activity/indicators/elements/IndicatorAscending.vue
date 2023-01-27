@@ -2,7 +2,7 @@
   <tr>
     <td>Ascending</td>
     <td>
-      {{ parseInt(data)? 'True' : (data?'False':'Missing') }}
+      {{ parseInt(data) ? 'True' : data ? 'False' : 'Missing' }}
     </td>
   </tr>
 </template>
@@ -17,7 +17,7 @@ export default defineComponent({
     data: {
       type: String,
       required: true,
-    }
+    },
   },
 });
 </script>

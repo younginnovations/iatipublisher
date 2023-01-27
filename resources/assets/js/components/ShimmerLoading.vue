@@ -11,7 +11,12 @@
   animation-timing-function: linear;
   animation-delay: 0.5s;
   background-color: #ededed;
-  background-image: linear-gradient(90deg, #ededed 14.36%, #d7d6d6 56.29%, #ededed 100%);
+  background-image: linear-gradient(
+    90deg,
+    #ededed 14.36%,
+    #d7d6d6 56.29%,
+    #ededed 100%
+  );
   background-repeat: no-repeat;
   background-size: 244px 104px;
   position: relative;

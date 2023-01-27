@@ -20,7 +20,7 @@
                 <div
                   v-for="(sd, i) in cou.narrative"
                   :key="i"
-                  class="mb-4 title-content"
+                  class="title-content mb-4"
                   :class="{
                     'mb-4': i !== cou.narrative.length - 1,
                   }"

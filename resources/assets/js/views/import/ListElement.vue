@@ -1,9 +1,9 @@
 <template>
   <td class="title">
     {{
-      activity["data"]["title"][0]["narrative"]
-        ? activity["data"]["title"][0]["narrative"]
-        : "Missing"
+      activity['data']['title'][0]['narrative']
+        ? activity['data']['title'][0]['narrative']
+        : 'Missing'
     }}
 
     <span
@@ -24,7 +24,7 @@
         <ul>
           <li v-for="(err, key, j) in ele_err" :key="j">
             <p>
-              {{ key.toString().replace(/_/g, " ").replace(/\./g, " > ") }}
+              {{ key.toString().replace(/_/g, ' ').replace(/\./g, ' > ') }}
             </p>
             <!-- eslint-disable-next-line vue/no-v-html -->
             <p v-html="err"></p>
@@ -36,7 +36,7 @@
 
   <td>
     <span class="text-sm leading-relaxed">{{
-      !activity["existence"] ? "New" : "Existing"
+      !activity['existence'] ? 'New' : 'Existing'
     }}</span>
   </td>
 
@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, ref, watch, reactive } from "vue";
+import { defineProps, defineEmits, ref, watch, reactive } from 'vue';
 
 const props = defineProps({
   activity: {
@@ -75,7 +75,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["selectElement"]);
+const emit = defineEmits(['selectElement']);
 
 const active = ref(false);
 let activities = reactive([]);
@@ -84,14 +84,14 @@ function toggleError() {
 }
 
 const selectElement = (index) => {
-  emit("selectElement", index);
+  emit('selectElement', index);
 };
 
 const countErrors = () => {
   let count = 0;
 
-  for (const index in props.activity["errors"]) {
-    count += Object.keys(props.activity["errors"][index]).length;
+  for (const index in props.activity['errors']) {
+    count += Object.keys(props.activity['errors'][index]).length;
   }
 
   return count;

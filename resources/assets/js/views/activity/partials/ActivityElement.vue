@@ -29,7 +29,7 @@
   <div :class="layout" class="activities__content--element p-3 text-n-50">
     <div :id="title" class="rounded-lg bg-white p-4">
       <div class="mb-4 flex">
-        <div class="title flex grow ">
+        <div class="title flex grow">
           <template
             v-if="
               title === 'reporting_org' ||

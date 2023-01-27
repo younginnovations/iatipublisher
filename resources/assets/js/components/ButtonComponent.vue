@@ -1,5 +1,5 @@
 <template>
-  <button class="relative button text-n-40" :class="btnType">
+  <button class="button relative text-n-40" :class="btnType">
     <svg-vue v-if="icon" :icon="icon" />
     <span v-if="text">{{ text }}</span>
   </button>
@@ -24,12 +24,12 @@ export default defineComponent({
     type: {
       type: String,
       required: false,
-      default: "",
+      default: '',
     },
     link: {
       type: String,
       required: false,
-      default: "",
+      default: '',
     },
   },
   setup(props) {

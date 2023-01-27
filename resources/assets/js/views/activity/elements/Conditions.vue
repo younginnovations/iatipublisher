@@ -49,11 +49,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from "vue";
-import dateFormat from "Composable/dateFormat";
+import { defineComponent, inject } from 'vue';
+import dateFormat from 'Composable/dateFormat';
 
 export default defineComponent({
-  name: "ActivityConditions",
+  name: 'ActivityConditions',
   props: {
     data: {
       type: Object,
@@ -66,7 +66,7 @@ export default defineComponent({
       languages: [];
     }
 
-    const types = inject("types") as Types;
+    const types = inject('types') as Types;
 
     return { types, dateFormat };
   },

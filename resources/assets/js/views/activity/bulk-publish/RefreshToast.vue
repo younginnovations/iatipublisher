@@ -1,6 +1,6 @@
 <template>
   <div
-    class="inline-flex items-center px-5 py-3 text-xs leading-normal border rounded-lg text-n-50"
+    class="inline-flex items-center rounded-lg border px-5 py-3 text-xs leading-normal text-n-50"
     :class="className"
   >
     <svg-vue
@@ -30,6 +30,6 @@ className.value = props.type
 
 const className2 = ref('');
 className2.value = props.type
-    ? 'text-spring-50 hover:text-spring-50'
-    : 'text-crimson-50 hover:text-crimson-50';
+  ? 'text-spring-50 hover:text-spring-50'
+  : 'text-crimson-50 hover:text-crimson-50';
 </script>

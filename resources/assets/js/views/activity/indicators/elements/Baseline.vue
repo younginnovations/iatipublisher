@@ -38,11 +38,7 @@
         <div class="flex" :class="elementSpacing">
           <div>Location:&nbsp;</div>
           <div>
-            {{
-              location(base.location)
-                ? location(base.location)
-                : 'Missing'
-            }}
+            {{ location(base.location) ? location(base.location) : 'Missing' }}
           </div>
         </div>
 
@@ -69,9 +65,7 @@
                   {{ com.narrative ? com.narrative : 'Missing' }}
                   (Language:
                   {{
-                    com.language
-                      ? baseType.language[com.language]
-                      : 'Missing'
+                    com.language ? baseType.language[com.language] : 'Missing'
                   }})
                 </div>
               </div>
@@ -84,7 +78,7 @@
             <div>Document Link:&nbsp;</div>
             <div></div>
           </div>
-          <div class="w-full h-px mb-4 border-b divider border-n-20"></div>
+          <div class="divider mb-4 h-px w-full border-b border-n-20"></div>
           <DocumentLink
             :data="base.document_link"
             :type="baseType"

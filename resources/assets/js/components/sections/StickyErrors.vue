@@ -9,7 +9,10 @@
     >
       <div class="validation__heading flex items-center justify-between">
         <div class="icon flex grow items-center text-sm leading-relaxed">
-          <svg-vue class="mr-1 text-base text-crimson-50" icon="warning-fill"></svg-vue>
+          <svg-vue
+            class="mr-1 text-base text-crimson-50"
+            icon="warning-fill"
+          ></svg-vue>
           <div class="font-bold">{{ errorData.length }} Issues found</div>
         </div>
         <button class="validation__toggle" @click="errorToggle()">Show</button>
@@ -44,11 +47,11 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, reactive, watch, defineProps } from "vue";
-import { useToggle } from "@vueuse/core";
+import { toRefs, reactive, watch, defineProps } from 'vue';
+import { useToggle } from '@vueuse/core';
 
 // components
-import ErrorLists from "Components/sections/ErrorLists.vue";
+import ErrorLists from 'Components/sections/ErrorLists.vue';
 
 const props = defineProps({
   errorData: { type: Array, required: true },
@@ -93,13 +96,13 @@ const updateTempMessage = () => {
   for (const data of errorDataProps) {
     const severity = data.severity;
     switch (severity) {
-      case "critical":
+      case 'critical':
         tempData.critical.push(data.message);
         break;
-      case "error":
+      case 'error':
         tempData.errors.push(data.message);
         break;
-      case "warning":
+      case 'warning':
         tempData.warnings.push(data.message);
         break;
     }

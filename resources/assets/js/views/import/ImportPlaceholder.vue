@@ -7,5 +7,5 @@
 </template>
 
 <script setup lang="ts">
-import Shimmer from "Components/ShimmerLoading.vue";
+import Shimmer from 'Components/ShimmerLoading.vue';
 </script>

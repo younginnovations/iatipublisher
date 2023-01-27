@@ -14,7 +14,7 @@
           : 'Language Missing'
       }})
     </div>
-    <div class="text-sm description">
+    <div class="description text-sm">
       {{ post.narrative ?? 'Narrative Missing' }}
     </div>
   </div>

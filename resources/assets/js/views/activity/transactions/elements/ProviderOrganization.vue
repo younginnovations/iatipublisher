@@ -17,7 +17,7 @@
               <div
                 v-for="(po, i) in PoData[0].narrative"
                 :key="i"
-                class="mb-4 title-content"
+                class="title-content mb-4"
                 :class="{
                   'mb-4': i !== PoData[0].narrative.length - 1,
                 }"

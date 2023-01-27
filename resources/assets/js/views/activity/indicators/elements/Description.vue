@@ -9,10 +9,13 @@
             'mb-3': t !== descriptionData.narrative.length - 1,
           }"
         >
-          <div class="mb-1 language">
-            (Language: {{ description.language ? descType[description.language] : 'Missing' }})
+          <div class="language mb-1">
+            (Language:
+            {{
+              description.language ? descType[description.language] : 'Missing'
+            }})
           </div>
-          <div class="text-xs description">
+          <div class="description text-xs">
             {{ description.narrative }}
           </div>
         </div>

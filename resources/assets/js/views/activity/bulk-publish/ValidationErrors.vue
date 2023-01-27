@@ -3,7 +3,7 @@
     v-if="data.critical.length > 0"
     class="mb-6 text-sm leading-relaxed text-n-50"
   >
-    <div class="flex mb-6 title">
+    <div class="title mb-6 flex">
       <svg-vue
         icon="warning"
         class="mr-1 mt-0.5 shrink-0 text-lg text-crimson-40"
@@ -13,7 +13,7 @@
         {{ criticalMessage }}
       </div>
     </div>
-    <div class="px-6 rounded-lg bg-rose">
+    <div class="rounded-lg bg-rose px-6">
       <div class="critical-errors">
         <ErrorItem :data="data.critical" :message="criticalMessage" />
       </div>
@@ -24,7 +24,7 @@
     v-if="data.errors.length > 0"
     class="mb-6 text-sm leading-relaxed text-n-50"
   >
-    <div class="flex mb-6 title">
+    <div class="title mb-6 flex">
       <svg-vue
         icon="warning-fill"
         class="mr-1 mt-0.5 shrink-0 text-lg text-camel-40"
@@ -34,7 +34,7 @@
         {{ warningMessage }}
       </div>
     </div>
-    <div class="px-6 rounded-lg bg-eggshell">
+    <div class="rounded-lg bg-eggshell px-6">
       <div class="warning-errors">
         <ErrorItem :data="data.errors" :message="warningMessage" />
       </div>
@@ -45,7 +45,7 @@
     v-if="data.no_errors.length > 0"
     class="mb-6 text-sm leading-relaxed text-n-50"
   >
-    <div class="flex mb-6 title">
+    <div class="title mb-6 flex">
       <svg-vue
         icon="tick"
         class="mr-1 mt-0.5 shrink-0 text-lg text-spring-50"
@@ -54,7 +54,7 @@
         {{ noErrorMessage }}
       </div>
     </div>
-    <div class="px-6 rounded-lg bg-mint">
+    <div class="rounded-lg bg-mint px-6">
       <div class="no-errors">
         <ErrorItem :data="data.no_errors" />
       </div>

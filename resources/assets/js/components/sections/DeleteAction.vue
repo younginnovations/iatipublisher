@@ -21,7 +21,6 @@
         <b v-else>Delete</b>
       </div>
       <div class="rounded-lg bg-rose p-4">
-
         <p v-if="props.itemType === 'result'">
           Are you sure you want to delete this Result? Related Indicators and
           Periods will also be deleted

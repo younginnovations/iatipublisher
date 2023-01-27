@@ -27,11 +27,13 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language ? types.languages[narrative.language] : "Missing"
+                    narrative.language
+                      ? types.languages[narrative.language]
+                      : 'Missing'
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? "Missing" }}
+                  {{ narrative.narrative ?? 'Missing' }}
                 </div>
               </div>
             </td>
@@ -50,11 +52,13 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language ? types.languages[narrative.language] : "Missing"
+                    narrative.language
+                      ? types.languages[narrative.language]
+                      : 'Missing'
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? "Missing" }}
+                  {{ narrative.narrative ?? 'Missing' }}
                 </div>
               </div>
             </td>
@@ -74,11 +78,13 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language ? types.languages[narrative.language] : "Missing"
+                    narrative.language
+                      ? types.languages[narrative.language]
+                      : 'Missing'
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? "Missing" }}
+                  {{ narrative.narrative ?? 'Missing' }}
                 </div>
               </div>
             </td>
@@ -97,11 +103,13 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language ? types.languages[narrative.language] : "Missing"
+                    narrative.language
+                      ? types.languages[narrative.language]
+                      : 'Missing'
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? "Missing" }}
+                  {{ narrative.narrative ?? 'Missing' }}
                 </div>
               </div>
             </td>
@@ -118,7 +126,7 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ email_value.email ?? "Missing" }}
+                  {{ email_value.email ?? 'Missing' }}
                 </div>
               </div>
             </td>
@@ -135,7 +143,7 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ tel.telephone ?? "Missing" }}
+                  {{ tel.telephone ?? 'Missing' }}
                 </div>
               </div>
             </td>
@@ -152,7 +160,7 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ w.website ?? "Missing" }}
+                  {{ w.website ?? 'Missing' }}
                 </div>
               </div>
             </td>
@@ -177,11 +185,11 @@
                     {{
                       narrative.language
                         ? types.languages[narrative.language]
-                        : "Not Available"
+                        : 'Not Available'
                     }})
                   </div>
                   <div class="w-[500px] max-w-full">
-                    {{ narrative.narrative ?? "Not Available" }}
+                    {{ narrative.narrative ?? 'Not Available' }}
                   </div>
                 </div>
               </div>
@@ -194,10 +202,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from "vue";
+import { defineComponent, inject } from 'vue';
 
 export default defineComponent({
-  name: "ActivityContactInfo",
+  name: 'ActivityContactInfo',
   components: {},
   props: {
     data: {
@@ -210,7 +218,7 @@ export default defineComponent({
       contactType: [];
       languages: [];
     }
-    const types = inject("types") as Types;
+    const types = inject('types') as Types;
 
     return { types };
   },

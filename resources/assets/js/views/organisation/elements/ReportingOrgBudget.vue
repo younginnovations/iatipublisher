@@ -12,24 +12,28 @@
         {{
           recipient_org_budget.status
             ? types?.budgetType[recipient_org_budget.status]
-            : "Status Missing"
+            : 'Status Missing'
         }}
       </div>
       <div class="flex text-sm">
         <span v-if="recipient_org_budget.value[0].amount">
-          {{ Number(recipient_org_budget.value["0"].amount).toLocaleString() }}
-          {{ recipient_org_budget.value["0"].currency }}
+          {{ Number(recipient_org_budget.value['0'].amount).toLocaleString() }}
+          {{ recipient_org_budget.value['0'].currency }}
         </span>
         <span v-else> Budget Amount Missing</span>
       </div>
     </div>
     <div class="elements-detail mb-4">
       <div
-        v-for="(recipient_org, recipient_org_index) in recipient_org_budget.recipient_org"
+        v-for="(
+          recipient_org, recipient_org_index
+        ) in recipient_org_budget.recipient_org"
         :key="recipient_org_index"
         class="item"
         :class="{
-          'mb-4': recipient_org_index != recipient_org_budget.recipient_org.length - 1,
+          'mb-4':
+            recipient_org_index !=
+            recipient_org_budget.recipient_org.length - 1,
         }"
       >
         <table>
@@ -39,7 +43,7 @@
               {{
                 recipient_org.ref
                   ? `Reference - ${recipient_org.ref}`
-                  : "Reference Missing"
+                  : 'Reference Missing'
               }}
               <div
                 v-for="(narrative, narrative_index) in recipient_org.narrative"
@@ -55,12 +59,12 @@
                     {{
                       narrative.language
                         ? `Language: ${types?.languages[narrative.language]}`
-                        : "Language : Missing"
+                        : 'Language : Missing'
                     }}
                     )
                   </div>
                   <div class="w-[500px] max-w-full">
-                    {{ narrative.narrative ?? "Narrative Missing" }}
+                    {{ narrative.narrative ?? 'Narrative Missing' }}
                   </div>
                 </div>
               </div>
@@ -71,7 +75,8 @@
             <td>
               {{
                 formatDate(
-                  recipient_org_budget.value["0"].value_date ?? "Value Date Missing"
+                  recipient_org_budget.value['0'].value_date ??
+                    'Value Date Missing'
                 )
               }}
             </td>
@@ -81,14 +86,15 @@
             <td>
               {{
                 formatDate(
-                  recipient_org_budget.period_start["0"].date ??
-                    "Period Start Missing"
+                  recipient_org_budget.period_start['0'].date ??
+                    'Period Start Missing'
                 )
               }}
               -
               {{
                 formatDate(
-                  recipient_org_budget.period_end["0"].date ?? "Period End Missing"
+                  recipient_org_budget.period_end['0'].date ??
+                    'Period End Missing'
                 )
               }}
             </td>
@@ -104,7 +110,8 @@
         v-for="(budget_line, j) in recipient_org_budget.budget_line"
         :key="j"
         :class="{
-          'mb-2 border-b border-n-20': j !== recipient_org_budget.budget_line.length - 1,
+          'mb-2 border-b border-n-20':
+            j !== recipient_org_budget.budget_line.length - 1,
         }"
       >
         <div class="indicator-content flex px-6 py-2">
@@ -112,11 +119,11 @@
             <div class="category flex">
               <span>
                 {{
-                  budget_line.value["0"].amount
+                  budget_line.value['0'].amount
                     ? Number(budget_line.value[0].amount).toLocaleString()
-                    : "Budget Missing"
+                    : 'Budget Missing'
                 }}
-                {{ budget_line.value["0"].currency }}
+                {{ budget_line.value['0'].currency }}
               </span>
             </div>
             <div class="ml-4">
@@ -125,15 +132,15 @@
                   <tr>
                     <td>Reference</td>
                     <td>
-                      {{ budget_line.ref ?? "Reference Missing" }}
+                      {{ budget_line.ref ?? 'Reference Missing' }}
                     </td>
                   </tr>
                   <tr>
                     <td>Value date</td>
                     <td>
                       {{
-                        formatDate(budget_line.value["0"].value_date) ??
-                        "Value Date Missing"
+                        formatDate(budget_line.value['0'].value_date) ??
+                        'Value Date Missing'
                       }}
                     </td>
                   </tr>
@@ -151,12 +158,14 @@
                         <div class="language mb-1.5">
                           ({{
                             narrative.language
-                              ? `Language: ${types?.languages[narrative.language]}`
-                              : "Language : Missing"
+                              ? `Language: ${
+                                  types?.languages[narrative.language]
+                                }`
+                              : 'Language : Missing'
                           }})
                         </div>
                         <div class="w-[500px] max-w-full">
-                          {{ narrative.narrative ?? "Narrative Missing" }}
+                          {{ narrative.narrative ?? 'Narrative Missing' }}
                         </div>
                       </div>
                     </td>
@@ -172,8 +181,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject } from "vue";
-import moment from "moment";
+import { defineProps, inject } from 'vue';
+import moment from 'moment';
 
 defineProps({
   content: { type: Object, required: true },
@@ -185,9 +194,9 @@ interface TypesInterface {
   budgetType: [];
 }
 
-const types = inject("orgTypes") as TypesInterface;
+const types = inject('orgTypes') as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format("LL") : "Date Missing";
+  return date ? moment(date).format('LL') : 'Date Missing';
 }
 </script>

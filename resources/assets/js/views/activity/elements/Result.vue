@@ -74,7 +74,7 @@
                 </div>
                 <!-- content -->
                 <div class="ml-4">
-                  <table class="mb-3 ">
+                  <table class="mb-3">
                     <tbody>
                       <tr>
                         <td>Result Type</td>

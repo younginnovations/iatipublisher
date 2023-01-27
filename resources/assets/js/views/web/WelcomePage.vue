@@ -10,16 +10,16 @@
           <span class="left__title font-bold">IATI Publishing Tool</span>
           <p class="pt-2 sm:pt-6 sm:pb-8">
             Welcome to IATI Publisher. Publish IATI data on your organisation’s
-            development and humanitarian financing and activities. Enter your login
-            information if you’re already a user or create a new account if you’re new
-            here.
+            development and humanitarian financing and activities. Enter your
+            login information if you’re already a user or create a new account
+            if you’re new here.
           </p>
           <div class="block">
             <span class="flex flex-wrap">
               {{
-                pageContent === "Join Now"
+                pageContent === 'Join Now'
                   ? "Haven't registered yet?"
-                  : "Already have an account?"
+                  : 'Already have an account?'
               }}
               <button
                 class="ml-1 border-b-2 border-b-transparent text-base text-turquoise hover:border-b-2 hover:border-b-turquoise"
@@ -32,16 +32,20 @@
         </div>
       </div>
 
-      <SignIn v-if="pageContent === 'Join Now'" :message="message" :intent="intent" />
+      <SignIn
+        v-if="pageContent === 'Join Now'"
+        :message="message"
+        :intent="intent"
+      />
       <JoinNow v-else />
     </div>
   </section>
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
-import SignIn from "./partials/SignIn.vue";
-import JoinNow from "./partials/JoinNow.vue";
+import { defineComponent, ref } from 'vue';
+import SignIn from './partials/SignIn.vue';
+import JoinNow from './partials/JoinNow.vue';
 
 export default defineComponent({
   components: {
@@ -52,7 +56,7 @@ export default defineComponent({
     page: {
       type: String,
       required: false,
-      default: "signin",
+      default: 'signin',
     },
     message: {
       type: String,
@@ -64,10 +68,11 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const pageContent = ref(props.page === "signin" ? "Join Now" : "Sign In");
+    const pageContent = ref(props.page === 'signin' ? 'Join Now' : 'Sign In');
 
     function togglePage() {
-      pageContent.value = pageContent.value === "Join Now" ? "Sign In" : "Join Now";
+      pageContent.value =
+        pageContent.value === 'Join Now' ? 'Sign In' : 'Join Now';
     }
 
     return {

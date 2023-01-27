@@ -11,7 +11,7 @@
       }}</span>
       <span v-else class="italic">Vocabulary Missing</span>
     </div>
-    <div class="flex mb-1 space-x-1 text-sm">
+    <div class="mb-1 flex space-x-1 text-sm">
       <div>
         <div v-if="post.sector_vocabulary == 1">
           <span v-if="post.code">{{ types.sectorCode[post.code] }}</span>
@@ -28,7 +28,9 @@
           <span v-else class="italic">Missing</span>
         </div>
         <div v-else-if="post.sector_vocabulary == 8">
-          <span v-if="post.sdg_target">{{ types.sdgTarget[post.sdg_target] }}</span>
+          <span v-if="post.sdg_target">{{
+            types.sdgTarget[post.sdg_target]
+          }}</span>
           <span v-else class="italic">Missing</span>
         </div>
         <div v-else>
@@ -40,7 +42,7 @@
         >({{ roundFloat(post.percentage) }}%)</span
       >
     </div>
-    <div class="ml-5 country_budget_items">
+    <div class="country_budget_items ml-5">
       <table>
         <tr class="multiline">
           <td>Narrative</td>
@@ -60,12 +62,19 @@
             </div>
           </td>
         </tr>
-        <tr v-if="post.sector_vocabulary === '98' || post.sector_vocabulary === '99'">
+        <tr
+          v-if="
+            post.sector_vocabulary === '98' || post.sector_vocabulary === '99'
+          "
+        >
           <td>Vocabulary URI</td>
           <td>
-            <a v-if="post.vocabulary_uri" target="_blank" :href="post.vocabulary_uri">{{
-              post.vocabulary_uri
-            }}</a>
+            <a
+              v-if="post.vocabulary_uri"
+              target="_blank"
+              :href="post.vocabulary_uri"
+              >{{ post.vocabulary_uri }}</a
+            >
             <span v-else class="italic">Missing</span>
           </td>
         </tr>
@@ -75,10 +84,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from "vue";
+import { defineComponent, inject } from 'vue';
 
 export default defineComponent({
-  name: "ActivitySector",
+  name: 'ActivitySector',
   props: {
     data: {
       type: Object,
@@ -95,7 +104,7 @@ export default defineComponent({
       languages: [];
     }
 
-    const types = inject("types") as Types;
+    const types = inject('types') as Types;
 
     function roundFloat(num: string) {
       return parseFloat(num).toFixed(2);

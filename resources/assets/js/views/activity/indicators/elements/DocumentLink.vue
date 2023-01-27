@@ -7,7 +7,7 @@
             <td v-if="alignment === 'center'" style="width: 190px"></td>
             <td>
               <div class="">
-                <div class="flex category">
+                <div class="category flex">
                   {{
                     getActivityTitle(post.title[0].narrative, 'en')
                       ? getActivityTitle(post.title[0].narrative, 'en')
@@ -28,7 +28,7 @@
                               'mb-1.5': post.title[0].narrative.length - 1 != n,
                             }"
                           >
-                            <div class="mb-1 language">
+                            <div class="language mb-1">
                               (Language:
                               {{
                                 na.language
@@ -36,7 +36,7 @@
                                   : 'Missing'
                               }})
                             </div>
-                            <div class="text-xs description">
+                            <div class="description text-xs">
                               {{ na.narrative ?? 'Missing' }}
                             </div>
                           </div>
@@ -46,7 +46,9 @@
                       <tr>
                         <td>Document Link</td>
                         <td>
-                          <a v-if="post.url" target='_blank' :href="post.url">{{ post.url }}</a>
+                          <a v-if="post.url" target="_blank" :href="post.url">{{
+                            post.url
+                          }}</a>
                           <span v-else>Missing</span>
                         </td>
                       </tr>
@@ -68,7 +70,7 @@
                                 post.description[0].narrative.length - 1 != n,
                             }"
                           >
-                            <div class="mb-1 language">
+                            <div class="language mb-1">
                               (Language:
                               {{
                                 na.language
@@ -76,7 +78,7 @@
                                   : 'Missing'
                               }})
                             </div>
-                            <div class="text-xs description">
+                            <div class="description text-xs">
                               {{ na.narrative ?? 'Missing' }}
                             </div>
                           </div>

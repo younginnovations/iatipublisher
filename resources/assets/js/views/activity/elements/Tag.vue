@@ -17,7 +17,9 @@
         <span v-else class="italic">Missing</span>
       </span>
       <span v-if="post.tag_vocabulary === '2'">
-        <span v-if="post.goals_tag_code">{{ types.sdgGoals[post.goals_tag_code] }}</span>
+        <span v-if="post.goals_tag_code">{{
+          types.sdgGoals[post.goals_tag_code]
+        }}</span>
         <span v-else class="italic">Missing</span>
       </span>
       <span v-if="post.tag_vocabulary === '3'">
@@ -32,7 +34,11 @@
         <tr v-if="post.tag_vocabulary === '99'">
           <td>Vocabulary URI</td>
           <td>
-            <a v-if="post.vocabulary_uri" target="_blank" :href="post.vocabulary_uri">
+            <a
+              v-if="post.vocabulary_uri"
+              target="_blank"
+              :href="post.vocabulary_uri"
+            >
               {{ post.vocabulary_uri }}
             </a>
             <span v-else class="italic">Missing</span>
@@ -62,11 +68,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from "vue";
-import dateFormat from "Composable/dateFormat";
+import { defineComponent, inject } from 'vue';
+import dateFormat from 'Composable/dateFormat';
 
 export default defineComponent({
-  name: "ActivityTag",
+  name: 'ActivityTag',
   props: {
     data: {
       type: Object,
@@ -81,7 +87,7 @@ export default defineComponent({
       languages: [];
     }
 
-    const types = inject("types") as Types;
+    const types = inject('types') as Types;
 
     return { types, dateFormat };
   },

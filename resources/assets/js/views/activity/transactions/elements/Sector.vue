@@ -12,7 +12,7 @@
         <span>{{
           sec.sector_vocabulary
             ? type.sectorVocabulary[sec.sector_vocabulary]
-            : "Vocabulary Missing"
+            : 'Vocabulary Missing'
         }}</span>
       </div>
       <div class="ml-4">
@@ -23,28 +23,38 @@
               <td>
                 <div class="text-sm">
                   <span v-if="sec.text">
-                    {{ sec.text ?? "Missing" }}
+                    {{ sec.text ?? 'Missing' }}
                   </span>
                   <span v-else-if="sec.code">
-                    {{ sec.code ? type.sectorCode[sec.code] : "Missing" }}
+                    {{ sec.code ? type.sectorCode[sec.code] : 'Missing' }}
                   </span>
                   <span v-else-if="sec.category_code">
                     {{
                       sec.category_code
                         ? type.sectorCategory[sec.category_code]
-                        : "Missing"
+                        : 'Missing'
                     }}
                   </span>
                   <span v-else-if="sec.sdg_goal">
-                    {{ sec.sdg_goal ? type.unsdgGoals[sec.sdg_goal] : "Missing" }}
+                    {{
+                      sec.sdg_goal ? type.unsdgGoals[sec.sdg_goal] : 'Missing'
+                    }}
                   </span>
                   <span v-else-if="sec.sdg_target">
-                    {{ sec.sdg_target ? type.unsdgTargets[sec.sdg_target] : "Missing" }}
+                    {{
+                      sec.sdg_target
+                        ? type.unsdgTargets[sec.sdg_target]
+                        : 'Missing'
+                    }}
                   </span>
                 </div>
               </td>
             </tr>
-            <tr v-if="sec.sector_vocabulary === '98' || sec.sector_vocabulary === '99'">
+            <tr
+              v-if="
+                sec.sector_vocabulary === '98' || sec.sector_vocabulary === '99'
+              "
+            >
               <td>Vocabulary URI</td>
               <td>
                 <div class="text-sm">
@@ -73,11 +83,11 @@
                     {{
                       sd.language
                         ? `Language: ${type.languages[sd.language]}`
-                        : "Language Missing"
+                        : 'Language Missing'
                     }})
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? "Narrative Missing" }}
+                    {{ sd.narrative ?? 'Narrative Missing' }}
                   </div>
                 </div>
               </td>
@@ -90,10 +100,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, inject } from "vue";
+import { defineComponent, toRefs, inject } from 'vue';
 
 export default defineComponent({
-  name: "TransactionSector",
+  name: 'TransactionSector',
   components: {},
   props: {
     data: {
@@ -113,7 +123,7 @@ export default defineComponent({
       languages: {};
     }
 
-    const type = inject("types") as Sector;
+    const type = inject('types') as Sector;
 
     interface ArrayObject {
       category_code: string;

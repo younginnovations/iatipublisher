@@ -1,7 +1,7 @@
 <template>
-  <div class="p-6 text-xs leading-relaxed bg-white rounded-lg text-n-40">
+  <div class="rounded-lg bg-white p-6 text-xs leading-relaxed text-n-40">
     <div class="mb-3">Note</div>
-    <div class="flex justify-between mb-3">
+    <div class="mb-3 flex justify-between">
       <div class="flex items-center space-x-1">
         <svg-vue class="text-sm" icon="core" />
         <span>Core Elements</span>
@@ -12,7 +12,7 @@
       />
     </div>
 
-    <div class="flex justify-between mb-3">
+    <div class="mb-3 flex justify-between">
       <div class="flex items-center space-x-1">
         <svg-vue class="text-sm" icon="star" />
         <span>Mandatory sub-elements</span>
@@ -23,7 +23,7 @@
       />
     </div>
 
-    <div class="flex justify-between mb-3">
+    <div class="mb-3 flex justify-between">
       <div class="flex items-center space-x-1">
         <svg-vue class="text-sm" icon="moon" />
         <span>Recommended sub-elements</span>

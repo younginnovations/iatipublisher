@@ -4,7 +4,8 @@
     :key="index"
     class="item"
     :class="{
-      'mb-4 border-b border-n-20 pb-4': Number(index) != data.content.length - 1,
+      'mb-4 border-b border-n-20 pb-4':
+        Number(index) != data.content.length - 1,
     }"
   >
     <div class="elements-detail mb-4">
@@ -12,7 +13,7 @@
         <span>{{
           reporting_org.type
             ? types?.organizationType[reporting_org.type]
-            : "Type Missing"
+            : 'Type Missing'
         }}</span>
       </div>
       <table>
@@ -20,7 +21,7 @@
           <tr>
             <td>Reference</td>
             <td>
-              {{ reporting_org.ref ?? "Reference Missing" }}
+              {{ reporting_org.ref ?? 'Reference Missing' }}
             </td>
           </tr>
           <tr>
@@ -28,10 +29,10 @@
             <td>
               {{
                 parseInt(reporting_org.secondary_reporter)
-                  ? "True"
+                  ? 'True'
                   : reporting_org.secondary_reporter
-                  ? "False"
-                  : "Missing"
+                  ? 'False'
+                  : 'Missing'
               }}
             </td>
           </tr>
@@ -50,11 +51,11 @@
                   ({{
                     narrative.language
                       ? `Language: ${types?.languages[narrative.language]}`
-                      : "Language : Missing"
+                      : 'Language : Missing'
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? "Narrative Missing" }}
+                  {{ narrative.narrative ?? 'Narrative Missing' }}
                 </div>
               </div>
             </td>
@@ -66,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject } from "vue";
+import { defineProps, inject } from 'vue';
 
 defineProps({
   data: { type: Object, required: true },
@@ -77,5 +78,5 @@ interface Types {
   organizationType: [];
 }
 
-const types = inject("types") as Types;
+const types = inject('types') as Types;
 </script>

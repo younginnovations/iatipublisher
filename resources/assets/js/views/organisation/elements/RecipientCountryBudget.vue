@@ -11,13 +11,15 @@
         {{
           recipient_country_budget.status
             ? types?.budgetType[recipient_country_budget.status]
-            : "Status Missing"
+            : 'Status Missing'
         }}
       </div>
       <div class="flex text-sm">
         <span v-if="recipient_country_budget.value[0].amount">
-          {{ Number(recipient_country_budget.value["0"].amount).toLocaleString() }}
-          {{ recipient_country_budget.value["0"].currency }}
+          {{
+            Number(recipient_country_budget.value['0'].amount).toLocaleString()
+          }}
+          {{ recipient_country_budget.value['0'].currency }}
         </span>
         <span v-else> Budget Amount Missing</span>
       </div>
@@ -27,16 +29,18 @@
             <tr>
               <td>Value date</td>
               <td>
-                {{ formatDate(recipient_country_budget.value["0"].value_date) }}
+                {{ formatDate(recipient_country_budget.value['0'].value_date) }}
               </td>
             </tr>
             <tr>
               <td>Code</td>
               <td>
                 {{
-                  recipient_country_budget.recipient_country["0"].code
-                    ? types.country[recipient_country_budget.recipient_country["0"].code]
-                    : "Code Missing"
+                  recipient_country_budget.recipient_country['0'].code
+                    ? types.country[
+                        recipient_country_budget.recipient_country['0'].code
+                      ]
+                    : 'Code Missing'
                 }}
               </td>
             </tr>
@@ -44,14 +48,15 @@
               <td>Narrative</td>
               <td>
                 <div
-                  v-for="(narrative, i) in recipient_country_budget.recipient_country['0']
-                    .narrative"
+                  v-for="(narrative, i) in recipient_country_budget
+                    .recipient_country['0'].narrative"
                   :key="i"
                   class="item"
                   :class="{
                     'mb-4':
                       i !=
-                      recipient_country_budget.recipient_country['0'].narrative.length -
+                      recipient_country_budget.recipient_country['0'].narrative
+                        .length -
                         1,
                   }"
                 >
@@ -61,12 +66,12 @@
                       {{
                         narrative.language
                           ? `Language: ${types?.languages[narrative.language]}`
-                          : "Language : Missing"
+                          : 'Language : Missing'
                       }}
                       )
                     </div>
                     <div class="w-[500px] max-w-full">
-                      {{ narrative.narrative ?? "Narrative Missing" }}
+                      {{ narrative.narrative ?? 'Narrative Missing' }}
                     </div>
                   </div>
                 </div>
@@ -75,9 +80,11 @@
             <tr>
               <td>Period</td>
               <td>
-                {{ formatDate(recipient_country_budget.period_start["0"].date) }}
+                {{
+                  formatDate(recipient_country_budget.period_start['0'].date)
+                }}
                 -
-                {{ formatDate(recipient_country_budget.period_end["0"].date) }}
+                {{ formatDate(recipient_country_budget.period_end['0'].date) }}
               </td>
             </tr>
           </tbody>
@@ -102,8 +109,8 @@
           <div class="elements-detail grow">
             <div class="category flex">
               <span v-if="budget_line.value['0'].amount">
-                {{ Number(budget_line.value["0"].amount).toLocaleString() }}
-                {{ budget_line.value["0"].currency }}
+                {{ Number(budget_line.value['0'].amount).toLocaleString() }}
+                {{ budget_line.value['0'].currency }}
               </span>
               <span v-else> Budget Amount Missing </span>
             </div>
@@ -113,13 +120,13 @@
                   <tr>
                     <td class="pr-20 text-n-40">Reference</td>
                     <td>
-                      {{ budget_line.ref ?? "Reference Missing" }}
+                      {{ budget_line.ref ?? 'Reference Missing' }}
                     </td>
                   </tr>
                   <tr>
                     <td>Value date</td>
                     <td>
-                      {{ formatDate(budget_line.value["0"].value_date) }}
+                      {{ formatDate(budget_line.value['0'].value_date) }}
                     </td>
                   </tr>
                   <tr>
@@ -136,12 +143,14 @@
                         <div class="language mb-1.5">
                           ({{
                             narrative.language
-                              ? `Language: ${types?.languages[narrative.language]}`
-                              : "Language : Missing"
+                              ? `Language: ${
+                                  types?.languages[narrative.language]
+                                }`
+                              : 'Language : Missing'
                           }})
                         </div>
                         <div class="w-[500px] max-w-full">
-                          {{ narrative.narrative ?? "Narrative Missing" }}
+                          {{ narrative.narrative ?? 'Narrative Missing' }}
                         </div>
                       </div>
                     </td>
@@ -157,8 +166,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject } from "vue";
-import moment from "moment";
+import { defineProps, inject } from 'vue';
+import moment from 'moment';
 
 defineProps({
   content: { type: Object, required: true },
@@ -171,9 +180,9 @@ interface TypesInterface {
   country: [];
 }
 
-const types = inject("orgTypes") as TypesInterface;
+const types = inject('orgTypes') as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format("LL") : "Date Missing";
+  return date ? moment(date).format('LL') : 'Date Missing';
 }
 </script>

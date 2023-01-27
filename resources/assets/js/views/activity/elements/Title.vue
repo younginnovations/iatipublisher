@@ -14,10 +14,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from "vue";
+import { defineComponent, inject } from 'vue';
 
 export default defineComponent({
-  name: "ActivityTitle",
+  name: 'ActivityTitle',
   components: {},
   props: {
     data: {
@@ -29,7 +29,7 @@ export default defineComponent({
     interface Types {
       languages: [];
     }
-    const types = inject("types") as Types;
+    const types = inject('types') as Types;
     return { types };
   },
 });

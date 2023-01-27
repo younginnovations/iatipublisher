@@ -4,7 +4,7 @@
     :key="key"
     :class="{ 'mb-4': Number(key) !== data.length - 1 }"
   >
-    <div class="text-sm related-content">
+    <div class="related-content text-sm">
       <div class="category">
         <span v-if="post.relationship_type">{{
           types.relatedActivityType[post.relationship_type]

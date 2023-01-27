@@ -16,7 +16,7 @@
         <span v-else class="italic">Reference Missing</span>
       </div>
       <div>
-        <div class="ml-5 tb-content">
+        <div class="tb-content ml-5">
           <div
             v-for="(post, i) in identifier.owner_org"
             :key="i"
