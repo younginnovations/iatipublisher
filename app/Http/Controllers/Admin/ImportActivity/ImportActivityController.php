@@ -18,7 +18,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use League\Flysystem\FilesystemException;
 
 /**
  * Class ActivityController.
@@ -101,7 +100,6 @@ class ImportActivityController extends Controller
      * @param ImportActivityRequest $request
      *
      * @return JsonResponse
-     * @throws FilesystemException
      */
     public function store(ImportActivityRequest $request): JsonResponse
     {

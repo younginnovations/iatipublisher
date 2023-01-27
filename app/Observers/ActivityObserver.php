@@ -154,6 +154,7 @@ class ActivityObserver
             'status',
             'updated_by',
             'created_by',
+            'upload_medium',
         ];
 
         foreach (array_keys($activityElements) as $key) {

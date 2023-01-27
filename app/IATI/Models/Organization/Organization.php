@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Crypt;
 use OwenIt\Auditing\Contracts\Auditable;
 
 /**
@@ -150,5 +151,27 @@ class Organization extends Model implements Auditable
     public function allActivities(): HasMany
     {
         return $this->hasMany(Activity::class, 'org_id', 'id');
+    }
+
+    /**
+     * Encrypt when organisation model is audited.
+     *
+     * {@inheritdoc}
+     */
+    public function transformAudit(array $data): array
+    {
+        if ($data['old_values']) {
+            foreach ($data['old_values'] as $key => $val) {
+                $data['old_values'][$key] = Crypt::encryptString($val);
+            }
+        }
+
+        if ($data['new_values']) {
+            foreach ($data['new_values'] as $key => $val) {
+                $data['new_values'][$key] = Crypt::encryptString($val);
+            }
+        }
+
+        return $data;
     }
 }

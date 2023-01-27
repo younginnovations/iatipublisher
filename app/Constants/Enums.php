@@ -52,6 +52,12 @@ abstract class Enums
         'es',
     ];
 
+    const UPLOAD_TYPE = [
+        'manual' => 'manual',
+        'csv'    => 'csv',
+        'xml'    => 'xml',
+    ];
+
     const API_TYPE = [
         'internal',
         'external',

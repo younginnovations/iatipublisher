@@ -70,6 +70,11 @@ import UserProfile from './views/user/UserProfile.vue';
 import UserListing from './views/user/UserListing.vue';
 
 /**
+ * Audit component
+ */
+import AuditListing from './views/audit/AuditListing.vue';
+
+/**
  * Additional Components
  */
 import HoverText from './components/HoverText.vue';
@@ -163,6 +168,11 @@ app.component('OrganisationData', OrganisationData);
  */
 app.component('OrganisationList', OrganisationList);
 app.component('AdminBar', AdminBar);
+
+/**
+ * Audit
+ */
+app.component('AuditListing', AuditListing)
 
 /**
  * Extension to inline SVG files with Vue.js and optimize them automatically with SVGO

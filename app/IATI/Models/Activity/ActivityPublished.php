@@ -7,13 +7,14 @@ namespace App\IATI\Models\Activity;
 use App\IATI\Models\Organization\Organization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
 /**
  * Class ActivityPublished.
  */
-class ActivityPublished extends Model
+class ActivityPublished extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory, \OwenIt\Auditing\Auditable;
 
     /**
      * @var string
@@ -60,7 +61,8 @@ class ActivityPublished extends Model
 
         if ($this->published_activities) {
             foreach ($this->published_activities as $publishedActivity) {
-                $pieces = explode('-', $this->getFilename('.', $publishedActivity));
+                $pieces = explode('-', $this->
+                getFilename('.', $publishedActivity));
                 $activityIds[end($pieces)] = $publishedActivity;
             }
         }
