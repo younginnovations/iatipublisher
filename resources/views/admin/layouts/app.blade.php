@@ -1,13 +1,10 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
-<head>
-<style>
-         html{visibility: hidden;opacity:0;}
-         *{transition-duration: 30ms;}
-     </style>    <meta charset="utf-8">
+    <head>
+    <style>html{display:none}</style> 
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -43,9 +40,6 @@
 
 </head>
 <body  class="overflow-x-hidden" >
-
-
-
     <div id="app">
         @if (isSuperAdmin() && Auth::user()->organization)
             <admin-bar :name="{{ json_encode(Auth::user()->full_name, JSON_THROW_ON_ERROR) }}"

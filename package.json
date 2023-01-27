@@ -62,7 +62,6 @@
     "@types/select2": "^4.0.55",
     "@vueform/multiselect": "^2.3.3",
     "@vueuse/core": "^8.3.1",
-    "criticalcss": "^2.1.0",
     "crypto-js": "^4.1.1",
     "moment": "^2.29.3",
     "select2": "^4.1.0-rc.0",

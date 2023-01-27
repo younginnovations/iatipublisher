@@ -3,8 +3,7 @@
 
 <head>
      <style>
-     html{visibility: hidden;opacity:0;}
-     *{transition-duration: 30ms;}
+         html{display:none}   
      </style>
     <!-- Google tag (gtag.js) -->
     @production
@@ -13,8 +12,7 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-
+        
     <title>{{ config('app.name', 'IATI Publisher') }}</title>
 
   <!-- Fonts -->
@@ -37,8 +35,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- styles -->
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}" media="print" onload="this.media='all'">
-
+    <link rel="stylesheet" href="{{ mix('css/webportal-app.css') }}" media="print" onload="this.media='all'">
+    
     <link rel="icon"
         href="{{ asset('favicon.ico') }}"
         type="image/x-icon" />
@@ -46,7 +44,6 @@
 </head>
 
 <body  class="font-sans bg-n-10 antialiased overflow-x-hidden">
-
     <div id="app">
         <web-header title='@yield('title', 'IATI PUBLISHER')' auth='{{ (bool) Auth::user() }}'
             :super-admin='{{ Auth::check() ? (int) isSuperAdmin() : 0 }}'></web-header>
@@ -61,7 +58,7 @@
     <script defer src="{{ mix('/manifest.js') }}"></script>
     <script defer src="{{ mix('/js/vendor.js') }}"></script>
     <script defer src="{{ mix('/js/app.js') }}"></script>
-    <script defer src="{{ mix('js/script.js') }}"></script>
+    <script defer src="{{ mix('js/webportal-script.js') }}"></script>
 
 </body>
 
