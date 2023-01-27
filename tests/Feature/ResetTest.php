@@ -63,11 +63,11 @@ class ResetTest extends TestCase
      */
     public function test_user_email_recovery(): void
     {
-        // $role = Role::factory()->create();
-        // $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
+        $role = Role::factory()->create();
+        $org = Organization::factory()->has(User::factory(['role_id'=>$role->id]))->create();
 
-        // $this->json('post', '/password/email', ['email' => $org->user->email])
-        //      ->assertStatus(200)
-        //      ->assertJsonStructure(['success', 'message']);
+        $this->json('post', '/password/email', ['email' => $org->user->email])
+             ->assertStatus(200)
+             ->assertJsonStructure(['success', 'message']);
     }
 }
