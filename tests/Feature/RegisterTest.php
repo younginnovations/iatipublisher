@@ -222,8 +222,8 @@ class RegisterTest extends TestCase
      */
     public function test_successful_registration(): void
     {
-        /*Role::factory()->create(['id' => 1]);
-        $password = Str::random(11);
+        Role::factory()->create(['id' => 1]);
+        $password = encryptString(Str::random(11));
 
         $this->post('/register', [
             'publisher_id'          => Str::random(5),
@@ -244,6 +244,6 @@ class RegisterTest extends TestCase
             [
                 'success' => true,
             ]
-        );*/
+        );
     }
 }
