@@ -185,7 +185,7 @@ class CkanClient
         // Execute request and get response headers.
         $response = curl_exec($this->curl_handler);
 
-        app()->make(IatiApiLogRepository::class)->store(generateApiInfo(new Request($method, $uri, is_array($data) ? $data : []), $response));
+        // app()->make(IatiApiLogRepository::class)->store(generateApiInfo(new Request($method, $uri, is_array($data) ? $data : []), $response));
 
         try {
             $responseArray = json_decode($response, true);
