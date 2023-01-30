@@ -10,7 +10,6 @@ use App\IATI\Services\IatiApiLog\IatiApiLogService;
 use App\IATI\Services\Organization\OrganizationIdentifierService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Request;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -122,7 +121,7 @@ class OrganizationIdentifierController extends Controller
             ];
 
             $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOptions);
-            $this->iatiApiLogService->store(generateApiInfo(new Request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOptions), $res));
+            $this->iatiApiLogService->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOptions, $res));
 
             $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
 

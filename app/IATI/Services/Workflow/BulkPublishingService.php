@@ -10,7 +10,6 @@ use App\IATI\Services\Activity\BulkPublishingStatusService;
 use App\IATI\Services\Validator\ActivityValidatorResponseService;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
@@ -130,7 +129,7 @@ class BulkPublishingService
 
             if ($activity && $activity->status === 'draft') {
                 $response = $this->validateWithException($activity);
-                $this->iatiApiLogRepo->store(generateApiInfo(new Request('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)]), json_encode($response)));
+                $this->iatiApiLogRepo->store(generateApiInfo('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)], json_encode($response)));
 
                 if (!Arr::get($response, 'success', true)) {
                     logger()->error('Error has occurred while validating activity with id' . $activityId);

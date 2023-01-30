@@ -12,7 +12,6 @@ use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Request;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -210,7 +209,7 @@ class SettingController extends Controller
             ];
 
             $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOption);
-            $this->iatiApiLogService->store(generateApiInfo(new Request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOption), $res));
+            $this->iatiApiLogService->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOption, $res));
             $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
 
             return ['success' => true, 'validation' => (bool) $response];
@@ -247,7 +246,7 @@ class SettingController extends Controller
                 ];
 
                 $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', $requestOptions);
-                $this->iatiApiLogService->store(generateApiInfo(new Request('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', $requestOptions), $res));
+                $this->iatiApiLogService->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', $requestOptions, $res));
                 $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
 
                 return ['success' => true, 'validation' => in_array($data['publisher_id'], array_column($response, 'name'), true)];

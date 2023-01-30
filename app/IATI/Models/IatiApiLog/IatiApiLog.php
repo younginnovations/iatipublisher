@@ -32,8 +32,8 @@ class IatiApiLog extends Model
      * @var array
      */
     protected $casts = [
-        'request'  => 'json',
-        'response' => 'json',
+        'request'  => 'encrypted:array',
+        'response' => 'encrypted:array',
     ];
     /**
      * @var string

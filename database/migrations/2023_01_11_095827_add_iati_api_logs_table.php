@@ -18,8 +18,8 @@ return new class extends Migration {
                 $table->bigIncrements('id');
                 $table->string('method')->nullable();
                 $table->text('url')->nullable();
-                $table->json('request')->nullable();
-                $table->json('response')->nullable();
+                $table->text('request')->nullable();
+                $table->text('response')->nullable();
                 $table->timestamps();
             }
         );

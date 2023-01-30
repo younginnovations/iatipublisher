@@ -10,7 +10,6 @@ use App\IATI\Services\IatiApiLog\IatiApiLogService;
 use App\IATI\Services\Validator\ActivityValidatorResponseService;
 use App\IATI\Services\Workflow\ActivityWorkflowService;
 use GuzzleHttp\Exception\BadResponseException;
-use GuzzleHttp\Psr7\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -144,7 +143,7 @@ class ActivityWorkflowController extends Controller
             }
 
             $response = $this->activityWorkflowService->validateActivityOnIATIValidator($activity);
-            $this->iatiApiLogService->store(generateApiInfo(new Request('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)]), json_encode($response)));
+            $this->iatiApiLogService->store(generateApiInfo('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)], json_encode($response)));
 
             if ($this->validatorService->updateOrCreateresponse($id, json_decode($response, true, 512, JSON_THROW_ON_ERROR))) {
                 return response()->json(json_decode($response, true, 512, JSON_THROW_ON_ERROR));
@@ -154,7 +153,7 @@ class ActivityWorkflowController extends Controller
         } catch (BadResponseException $ex) {
             if ($ex->getCode() === 422) {
                 $response = $ex->getResponse()->getBody()->getContents();
-                $this->iatiApiLogService->store(generateApiInfo(new Request('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)]), json_encode($response)));
+                $this->iatiApiLogService->store(generateApiInfo('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)], json_encode($response)));
 
                 if ($this->validatorService->updateOrCreateResponse($id, json_decode($response, true, 512, JSON_THROW_ON_ERROR))) {
                     return response()->json(json_decode($response, true, 512, JSON_THROW_ON_ERROR));

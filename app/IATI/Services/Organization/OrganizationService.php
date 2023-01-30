@@ -9,7 +9,6 @@ use App\IATI\Repositories\IatiApiLog\IatiApiLogRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Traits\OrganizationXmlBaseElements;
 use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
@@ -211,7 +210,7 @@ class OrganizationService
 
         $client = new Client($clientConfig);
         $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig);
-        $this->iatiApiLogRepo->store(generateApiInfo(new Request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig), $res));
+        $this->iatiApiLogRepo->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig, $res));
 
         if ($res->getStatusCode() === 404) {
             return false;

@@ -12,7 +12,6 @@ use App\IATI\Services\User\UserService;
 use App\Providers\RouteServiceProvider;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Psr7\Request as Psr7Request;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Model;
@@ -131,7 +130,7 @@ class RegisterController extends Controller
 
             $client = new Client($clientConfig);
             $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig);
-            $this->iatiApiLogService->store(generateApiInfo(new Psr7Request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig), $res));
+            $this->iatiApiLogService->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig, $res));
 
             if ($res->getStatusCode() === 404) {
                 return response()->json([

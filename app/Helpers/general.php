@@ -1132,17 +1132,15 @@ if (!function_exists('generateApiInfo')) {
      *
      * @return array
      */
-    function generateApiInfo($request, $response = null): array
+    function generateApiInfo($method, $requestURI, $requestOption, $response = null): array
     {
         $responseBody = is_string($response) ? null : $response->getBody();
-        $requestHeaders = $request->getHeaders();
-        $requestURI = $request->getUri();
         $uri = Str::startsWith($requestURI, 'http') ? $requestURI : sprintf('%s/%s', env('IATI_API_ENDPOINT'), $requestURI);
 
         $requestInfo = [
-            'method'       => $request->getMethod(),
+            'method'       => $method,
             'url'          => $uri,
-            'request'      => $request->getMethod() === 'GET' ? Arr::get($requestHeaders, 'query') : json_decode((string) $request->getBody()),
+            'request'      => $requestOption,
             'response'     => is_string($response) ? $response : json_decode((string) $response->getBody(), true),
         ];
 
