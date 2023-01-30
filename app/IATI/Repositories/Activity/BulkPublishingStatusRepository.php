@@ -67,12 +67,18 @@ class BulkPublishingStatusRepository extends Repository
                            ->get();
     }
 
-    public function stopBulkPublishing($organizationId)
+    /**
+     * Stop bulk publishing.
+     *
+     * @param $organizationId
+     *
+     * @return int
+     */
+    public function stopBulkPublishing($organizationId): int
     {
-        $this->model->where('organization_id', $organizationId, )
-            ->where('status', 'created')
-            ->update(['status'=>'failed']);
+        return $this->model->where('organization_id', $organizationId)
+                            ->where('status', '!=', 'completed')
+                            ->where('status', '!=', 'processing')
+                            ->delete();
     }
 }
-//update bulk_publishing_status set status = 'finish' where organisation_id = 1 and where status = 'created'
-//BulkPublishingStatus::where('organisation_id', 1)->where('status', 'created')->update(['status' => 'finish']);
