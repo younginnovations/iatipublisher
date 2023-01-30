@@ -1,5 +1,6 @@
 <?php
 
+use App\Constants\Enums;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -20,6 +21,7 @@ return new class extends Migration {
                 $table->text('url')->nullable();
                 $table->text('request')->nullable();
                 $table->text('response')->nullable();
+                $table->enum('type', Enums::API_TYPE)->nullable()->default('external');
                 $table->timestamps();
             }
         );

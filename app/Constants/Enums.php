@@ -51,4 +51,9 @@ abstract class Enums
         'fr',
         'es',
     ];
+
+    const API_TYPE = [
+        'internal',
+        'external',
+    ];
 }
