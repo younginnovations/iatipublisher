@@ -1,0 +1,29 @@
+//tailwind
+@import '~tailwindcss/base';
+@import '~tailwindcss/components';
+@import '~tailwindcss/utilities';
+
+// Abstracts
+@import 'abstracts/variables';
+// base
+@import 'base/typography';
+
+// layouts
+@import 'layouts/header';
+@import 'layouts/main';
+@import 'layouts/_webportalpages';
+@import 'component/input';
+@import 'component/forms';
+@import 'layouts/footer';
+@import 'component/select2';
+
+//components
+@import 'component/button';
+@import 'component/overlay';
+@import 'component/hamburger';
+
+html {
+  visibility: visible;
+  opacity: 1;
+  display: block !important;
+}

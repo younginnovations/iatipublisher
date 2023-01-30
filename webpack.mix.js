@@ -53,10 +53,16 @@ mix.webpackConfig({
 mix.ts('resources/assets/js/app.ts', 'public/js').vue().version();
 
 mix.ts('resources/assets/js/scripts/script.ts', 'public/js').version();
+mix
+  .ts('resources/assets/js/scripts/webportal-script.ts', 'public/js')
+  .version();
+
 mix.ts('resources/assets/js/scripts/formbuilder.ts', 'public/js').version();
 
 mix
   .sass('resources/assets/sass/app.scss', 'public/css')
+  .sass('resources/assets/sass/webportal-app.scss', 'public/css')
+
   .options({
     processCssUrls: false,
     postCss: [tailwindCss('tailwind.config.js')],

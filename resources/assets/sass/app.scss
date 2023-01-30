@@ -30,3 +30,9 @@
 
 //vendor overrides
 @import 'vendor-overrides/multiselect';
+
+html {
+  visibility: visible;
+  opacity: 1;
+  display: block;
+}

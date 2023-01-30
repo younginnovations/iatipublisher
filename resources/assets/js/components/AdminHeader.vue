@@ -89,7 +89,8 @@
                 >{{ menu.name }}
                 <div
                   v-if="menu.name === 'Add / Import Activity'"
-                  class="button__dropdown add-import-dropdown absolute top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left shadow-dropdown transition-all duration-300"
+                  style="visibility: hidden"
+                  class="button__dropdown add-import-dropdown absolute top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left shadow-dropdown duration-300"
                 >
                   <ul class="flex-col">
                     <li>
@@ -112,7 +113,7 @@
 
             <div
               v-if="menu.name === 'Add / Import Activity'"
-              class="button__dropdown invisible absolute left-4 top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left opacity-0 shadow-dropdown outline transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
+              class="button__dropdown transition-allduration-300 invisible absolute left-4 top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left opacity-0 shadow-dropdown group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
             >
               <ul class="flex-col">
                 <li>
@@ -577,8 +578,8 @@ onUnmounted(() => {
   opacity: 0;
 }
 .add-import:hover .add-import-dropdown {
-  visibility: visible;
-  opacity: 1;
+  visibility: visible !important;
+  opacity: 1 !important;
   transform: translateY(0);
 }
 
