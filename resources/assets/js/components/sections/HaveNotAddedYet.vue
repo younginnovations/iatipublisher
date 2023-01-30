@@ -1,10 +1,10 @@
 <template>
   <a
     :href="link"
-    class="px-4 py-3 text-xs leading-normal bg-white border border-dashed rounded add_indicator border-n-40 text-n-40"
+    class="add_indicator rounded border border-dashed border-n-40 bg-white px-4 py-3 text-xs leading-normal text-n-40"
     :class="{ 'flex w-full': btnText, 'inline-flex': !btnText }"
   >
-    <div class="italic text-left grow">
+    <div class="grow text-left italic">
       {{ description }}
     </div>
     <Btn v-if="btnText" :text="btnText" icon="add" />

@@ -19,7 +19,9 @@
         <span v-else class="italic">Missing</span>
       </div>
       <div v-else>
-        <span v-if="post.policy_marker_text">{{ post.policy_marker_text }}</span>
+        <span v-if="post.policy_marker_text">{{
+          post.policy_marker_text
+        }}</span>
         <span v-else class="italic">Missing</span>
       </div>
     </div>
@@ -28,9 +30,12 @@
         <tr v-if="post.policy_marker_vocabulary == '99'">
           <td>Vocabulary URI</td>
           <td>
-            <a v-if="post.vocabulary_uri" target="_blank" :href="post.vocabulary_uri">{{
-              post.vocabulary_uri
-            }}</a>
+            <a
+              v-if="post.vocabulary_uri"
+              target="_blank"
+              :href="post.vocabulary_uri"
+              >{{ post.vocabulary_uri }}</a
+            >
             <span v-else class="italic">Missing</span>
           </td>
         </tr>
@@ -43,7 +48,10 @@
             <span v-else class="italic">Missing</span>
           </td>
         </tr>
-        <tr class="multiline" :class="{ 'mb-4': k !== post.narrative.length - 1 }">
+        <tr
+          class="multiline"
+          :class="{ 'mb-4': k !== post.narrative.length - 1 }"
+        >
           <td>Narrative</td>
           <td>
             <div v-for="(narrative, k) in post.narrative" :key="k">
@@ -63,11 +71,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from "vue";
-import dateFormat from "Composable/dateFormat";
+import { defineComponent, inject } from 'vue';
+import dateFormat from 'Composable/dateFormat';
 
 export default defineComponent({
-  name: "PolicyMarker",
+  name: 'PolicyMarker',
   props: {
     data: {
       type: Object,
@@ -82,7 +90,7 @@ export default defineComponent({
       languages: [];
     }
 
-    const types = inject("types") as Types;
+    const types = inject('types') as Types;
 
     return { types, dateFormat };
   },

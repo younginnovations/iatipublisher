@@ -5,11 +5,11 @@
     class=""
     :class="{ 'mb-4': Number(t) !== data.length - 1 }"
   >
-    <div class="mb-4 text-sm font-bold inline-flex">
+    <div class="mb-4 inline-flex text-sm font-bold">
       {{
         types.transactionType[
           trans.transaction.transaction_type[0].transaction_type_code
-        ] ?? "Transaction type missing"
+        ] ?? 'Transaction type missing'
       }}
       <div class="ml-2">
         <Btn
@@ -24,12 +24,12 @@
         class="description text-sm"
         :class="{ 'mb-4': Number(t) !== trans.transaction.value.length - 1 }"
       >
-        {{ val.amount ? Number(val.amount).toLocaleString() : "Value missing" }}
+        {{ val.amount ? Number(val.amount).toLocaleString() : 'Value missing' }}
         {{ val.currency }}
         {{
-          dateFormat(val.date, "MMMM DD, YYYY")
-            ? "- valued at" + " " + dateFormat(val.date, "MMMM DD, YYYY")
-            : ""
+          dateFormat(val.date, 'MMMM DD, YYYY')
+            ? '- valued at' + ' ' + dateFormat(val.date, 'MMMM DD, YYYY')
+            : ''
         }}
       </div>
     </template>
@@ -37,12 +37,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from "vue";
-import dateFormat from "Composable/dateFormat";
-import Btn from "Components/buttons/Link.vue";
+import { defineComponent, inject } from 'vue';
+import dateFormat from 'Composable/dateFormat';
+import Btn from 'Components/buttons/Link.vue';
 
 export default defineComponent({
-  name: "ActivityTransactions",
+  name: 'ActivityTransactions',
   components: {
     Btn,
   },
@@ -58,7 +58,7 @@ export default defineComponent({
       languages: [];
     }
 
-    const types = inject("types") as Types;
+    const types = inject('types') as Types;
 
     return { types, dateFormat };
   },

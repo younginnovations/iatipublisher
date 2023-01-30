@@ -2,28 +2,28 @@
   <div
     v-for="(error, c) in data"
     :key="c"
-    class="py-6 item accordion"
+    class="item accordion py-6"
     :class="{
       'border-b border-n-20': Number(c) != data.length - 1,
     }"
   >
-    <div class="flex items-center accordion-title">
+    <div class="accordion-title flex items-center">
       <a
         :href="`/activity/${error.activity_id}`"
         target="_blank"
-        class="pr-2 activity-title grow text-n-50"
+        class="activity-title grow pr-2 text-n-50"
       >
         {{ error.title }}
       </a>
       <div
         v-if="message"
-        class="flex mr-2 cursor-pointer shrink-0"
+        class="mr-2 flex shrink-0 cursor-pointer"
         @click="accordionToggle"
       >
         <span class="text-xs">Show more</span>
         <span>
           <svg-vue
-            class="text-xl transition-transform duration-500 text-blue-50"
+            class="text-xl text-blue-50 transition-transform duration-500"
             icon="arrow-down"
           ></svg-vue>
         </span>

@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
+import { defineProps } from 'vue';
 
 defineProps({
   name: { type: String, required: true },
@@ -26,6 +26,6 @@ defineProps({
  * Switch Back
  */
 const switchBack = () => {
-  window.location.replace("/list-organisations");
+  window.location.replace('/list-organisations');
 };
 </script>

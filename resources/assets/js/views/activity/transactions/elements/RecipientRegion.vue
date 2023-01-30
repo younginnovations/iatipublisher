@@ -18,15 +18,19 @@
               <td>Code</td>
               <td>
                 <span v-if="cou.region_vocabulary === '1'">{{
-                  cou.region_code ? type.regionCode[cou.region_code] : "Code Missing"
+                  cou.region_code
+                    ? type.regionCode[cou.region_code]
+                    : 'Code Missing'
                 }}</span>
-                <span v-else>{{ cou.custom_code ?? "Code Missing" }}</span>
+                <span v-else>{{ cou.custom_code ?? 'Code Missing' }}</span>
               </td>
             </tr>
             <tr v-if="cou.vocabulary_uri">
               <td>Vocabulary URI</td>
               <td>
-                <a target="_blank" :href="cou.vocabulary_uri">{{ cou.vocabulary_uri }}</a>
+                <a target="_blank" :href="cou.vocabulary_uri">{{
+                  cou.vocabulary_uri
+                }}</a>
               </td>
             </tr>
             <tr>
@@ -35,7 +39,7 @@
                 <div
                   v-for="(sd, i) in cou.narrative"
                   :key="i"
-                  class="mb-4 title-content"
+                  class="title-content mb-4"
                   :class="{
                     'mb-4': i !== cou.narrative.length - 1,
                   }"
@@ -45,11 +49,11 @@
                     {{
                       sd.language
                         ? `Language: ${type.languages[sd.language]}`
-                        : "Language Missing"
+                        : 'Language Missing'
                     }})
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? "Narrative Missing" }}
+                    {{ sd.narrative ?? 'Narrative Missing' }}
                   </div>
                 </div>
               </td>
@@ -62,10 +66,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, inject } from "vue";
+import { defineComponent, toRefs, inject } from 'vue';
 
 export default defineComponent({
-  name: "TransactionRecipientRegion",
+  name: 'TransactionRecipientRegion',
   components: {},
   props: {
     data: {
@@ -92,7 +96,7 @@ export default defineComponent({
       languages: [];
     }
 
-    const type = inject("types") as TypesInterface;
+    const type = inject('types') as TypesInterface;
     return { country, type };
   },
 });

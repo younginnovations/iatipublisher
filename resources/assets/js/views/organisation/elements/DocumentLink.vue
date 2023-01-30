@@ -24,14 +24,15 @@
                   v-for="(narrative, j) in document_link.title['0'].narrative"
                   :key="j"
                   :class="{
-                    'mb-1.5': j != document_link.title['0'].narrative.length - 1,
+                    'mb-1.5':
+                      j != document_link.title['0'].narrative.length - 1,
                   }"
                 >
                   <span v-if="narrative.language" class="language">
                     ({{
                       narrative.language
                         ? `Language: ${types?.languages[narrative.language]}`
-                        : "Language : Missing"
+                        : 'Language : Missing'
                     }})
                   </span>
                   <div v-if="narrative.narrative" class="flex flex-col">
@@ -47,7 +48,8 @@
               <td>Description</td>
               <td>
                 <div
-                  v-for="(narrative, j) in document_link.description['0'].narrative"
+                  v-for="(narrative, j) in document_link.description['0']
+                    .narrative"
                   :key="j"
                   class="description-content"
                   :class="{
@@ -58,11 +60,11 @@
                     ({{
                       narrative.language
                         ? `Language: ${types?.languages[narrative.language]}`
-                        : "Language : Missing"
+                        : 'Language : Missing'
                     }})
                   </div>
                   <div class="w-[500px] max-w-full">
-                    {{ narrative.narrative ?? "Narrative Missing" }}
+                    {{ narrative.narrative ?? 'Narrative Missing' }}
                   </div>
                 </div>
               </td>
@@ -78,11 +80,11 @@
                     {{
                       document_link.language
                         .map((entry) => types.languages[entry.language])
-                        .join(", ") === ""
-                        ? "Language Missing"
+                        .join(', ') === ''
+                        ? 'Language Missing'
                         : document_link.language
                             .map((entry) => types.languages[entry.language])
-                            .join(", ")
+                            .join(', ')
                     }}
                   </span>
                 </div>
@@ -110,7 +112,7 @@
                     {{
                       category.code
                         ? types?.documentCategory[category.code]
-                        : "Category Missing"
+                        : 'Category Missing'
                     }}
                   </span>
                   <span v-else class="italic">Missing</span>
@@ -120,7 +122,10 @@
             <tr>
               <td>Document Date</td>
               <td>
-                <div v-for="(document_date, i) in document_link.document_date" :key="i">
+                <div
+                  v-for="(document_date, i) in document_link.document_date"
+                  :key="i"
+                >
                   <span v-if="document_date.date">
                     {{ formatDate(document_date.date) }}
                   </span>
@@ -132,14 +137,16 @@
               <td>Recipient Country</td>
               <td>
                 <div
-                  v-for="(recipient_country, i) in document_link.recipient_country"
+                  v-for="(
+                    recipient_country, i
+                  ) in document_link.recipient_country"
                   :key="i"
                 >
                   <div class="mb-1.5 text-xs">
                     {{
                       recipient_country.code
                         ? `${types?.country[recipient_country.code]}`
-                        : "Missing"
+                        : 'Missing'
                     }}
                   </div>
                   <div
@@ -154,11 +161,11 @@
                       ({{
                         narrative.language
                           ? `Language: ${types?.languages[narrative.language]} `
-                          : "Language : Missing"
+                          : 'Language : Missing'
                       }})
                     </div>
                     <div class="w-[500px] max-w-full">
-                      {{ narrative.narrative ?? "Narrative Missing" }}
+                      {{ narrative.narrative ?? 'Narrative Missing' }}
                     </div>
                   </div>
                 </div>
@@ -172,8 +179,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject } from "vue";
-import moment from "moment";
+import { defineProps, inject } from 'vue';
+import moment from 'moment';
 
 defineProps({
   content: { type: Object, required: true },
@@ -187,9 +194,9 @@ interface TypesInterface {
   documentCategory: [];
 }
 
-const types = inject("orgTypes") as TypesInterface;
+const types = inject('orgTypes') as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format("LL") : "Date Missing";
+  return date ? moment(date).format('LL') : 'Date Missing';
 }
 </script>

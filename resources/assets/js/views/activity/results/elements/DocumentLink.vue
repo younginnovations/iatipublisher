@@ -2,7 +2,7 @@
   <div class="documents">
     <template v-for="(post, i) in dlData" :key="i">
       <div class="item elements-detail">
-        <div class="flex category">
+        <div class="category flex">
           {{ post.title[0].narrative[0].narrative }}
         </div>
         <div class="ml-4">
@@ -13,10 +13,10 @@
                 <td>
                   <template v-for="(na, n) in post.title[0].narrative" :key="n">
                     <div class="title-content mb-1.5">
-                      <div class="mb-1 language">
+                      <div class="language mb-1">
                         (Language: {{ type.language[na.language] }})
                       </div>
-                      <div class="text-xs description">
+                      <div class="description text-xs">
                         {{ na.narrative }}
                       </div>
                     </div>
@@ -39,12 +39,15 @@
               <tr>
                 <td>Description</td>
                 <td>
-                  <template v-for="(na, n) in post.description[0].narrative" :key="n">
+                  <template
+                    v-for="(na, n) in post.description[0].narrative"
+                    :key="n"
+                  >
                     <div class="description-content mb-1.5">
-                      <div class="mb-1 language">
+                      <div class="language mb-1">
                         (Language: {{ type.language[na.language] }})
                       </div>
-                      <div class="text-xs description">
+                      <div class="description text-xs">
                         {{ na.narrative }}
                       </div>
                     </div>
@@ -70,7 +73,7 @@
                     {{
                       post.language
                         .map((entry) => type.language[entry.language])
-                        .join(", ")
+                        .join(', ')
                     }}
                   </div>
                 </td>
@@ -93,10 +96,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from "vue";
+import { defineComponent, toRefs } from 'vue';
 
 export default defineComponent({
-  name: "ResultDocumentLink",
+  name: 'ResultDocumentLink',
   components: {},
   props: {
     data: {

@@ -8,18 +8,18 @@
   />
   <Modal :modal-active="deleteValue" width="583" @close="deleteToggle">
     <div class="mb-4">
-      <div class="flex mb-6 title">
+      <div class="title mb-6 flex">
         <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
         <b>Delete activity</b>
       </div>
-      <div class="p-4 rounded-lg bg-rose">
+      <div class="rounded-lg bg-rose p-4">
         Are you sure you want to delete this activity?
       </div>
     </div>
     <div class="flex justify-end">
       <div class="inline-flex">
         <BtnComponent
-          class="px-6 uppercase bg-white"
+          class="bg-white px-6 uppercase"
           text="Go Back"
           type=""
           @click="deleteValue = false"

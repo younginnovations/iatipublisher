@@ -5,7 +5,7 @@
     class="item elements-detail"
     :class="{ 'mb-4': Number(r) !== data.length - 1 }"
   >
-    <div class="flex category">{{ type[ref.vocabulary] }}</div>
+    <div class="category flex">{{ type[ref.vocabulary] }}</div>
     <div class="ml-4">
       <table class="mb-3">
         <tbody>
@@ -15,7 +15,11 @@
           </tr>
           <tr>
             <td>Vocabulary URI</td>
-            <td><a target="_blank" :href="ref.vocabulary_uri">{{ ref.vocabulary_uri }}</a></td>
+            <td>
+              <a target="_blank" :href="ref.vocabulary_uri">{{
+                ref.vocabulary_uri
+              }}</a>
+            </td>
           </tr>
         </tbody>
       </table>

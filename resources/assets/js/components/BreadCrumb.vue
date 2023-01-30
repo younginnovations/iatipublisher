@@ -21,7 +21,10 @@
               </span>
             </div>
           </template>
-          <span v-if="Number(d) !== breadcrumbData.length - 1" class="separator mx-4">
+          <span
+            v-if="Number(d) !== breadcrumbData.length - 1"
+            class="separator mx-4"
+          >
             /
           </span>
         </template>
@@ -31,11 +34,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from "vue";
-import getActivityTitle from "Composable/title";
+import { defineComponent, toRefs } from 'vue';
+import getActivityTitle from 'Composable/title';
 
 export default defineComponent({
-  name: "BreadCrumb",
+  name: 'BreadCrumb',
   components: {},
   props: {
     data: {

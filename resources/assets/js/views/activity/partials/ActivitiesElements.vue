@@ -19,7 +19,10 @@
           class="button panel-btn dropdown-btn"
           @click="searchBtnToggle()"
         >
-          <svg-vue :icon="elementIcons[elements.status] ?? 'box'" class="text-lg" />
+          <svg-vue
+            :icon="elementIcons[elements.status] ?? 'box'"
+            class="text-lg"
+          />
           <svg-vue
             :class="{
               'rotate-180': searchBtnValue,
@@ -34,11 +37,17 @@
           class="button__dropdown button dropdown-btn"
         >
           <ul class="w-full bg-eggshell py-2">
-            <li class="flex py-1.5 px-3.5 hover:bg-white" @click="dropdownFilter('')">
+            <li
+              class="flex py-1.5 px-3.5 hover:bg-white"
+              @click="dropdownFilter('')"
+            >
               <svg-vue class="mr-1 text-lg" icon="box" />
               <span>All Elements</span>
             </li>
-            <li class="flex py-1.5 px-3.5 hover:bg-white" @click="dropdownFilter('core')">
+            <li
+              class="flex py-1.5 px-3.5 hover:bg-white"
+              @click="dropdownFilter('core')"
+            >
               <svg-vue class="mr-1 text-lg" icon="core" />
               <span>Core</span>
             </li>
@@ -63,11 +72,15 @@
     <div class="elements__listing mt-3 grid grid-cols-2 gap-2">
       <template v-for="(post, index) in filteredElements" :key="index">
         <a
-          v-if="!(index.toString() === 'indicator' || index.toString() === 'period')"
+          v-if="
+            !(index.toString() === 'indicator' || index.toString() === 'period')
+          "
           class="elements__item relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 py-2.5 text-n-30"
           :href="getLink(post.has_data, index.toString())"
         >
-          <div class="status_icons absolute top-0 right-0 mt-1 mr-1 inline-flex">
+          <div
+            class="status_icons absolute top-0 right-0 mt-1 mr-1 inline-flex"
+          >
             <svg-vue
               v-if="post.completed"
               class="text-base text-spring-50"
@@ -87,13 +100,19 @@
               index === 'fss'
             "
           >
-            <svg-vue class="text-base" icon="activity-elements/building"></svg-vue>
+            <svg-vue
+              class="text-base"
+              icon="activity-elements/building"
+            ></svg-vue>
           </template>
           <template v-else>
-            <svg-vue :icon="'activity-elements/' + index" class="text-base"></svg-vue>
+            <svg-vue
+              :icon="'activity-elements/' + index"
+              class="text-base"
+            ></svg-vue>
           </template>
           <div class="title mt-1 text-xs">
-            {{ index.toString().replace(/_/g, "-") }}
+            {{ index.toString().replace(/_/g, '-') }}
           </div>
         </a>
       </template>
@@ -102,10 +121,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, reactive, onMounted, ref, toRefs } from "vue";
-import { useToggle } from "@vueuse/core";
+import { computed, defineProps, reactive, onMounted, ref, toRefs } from 'vue';
+import { useToggle } from '@vueuse/core';
 
-import { activityCoreElements } from "Composable/coreElements";
+import { activityCoreElements } from 'Composable/coreElements';
 
 const props = defineProps({
   data: {
@@ -127,14 +146,14 @@ const [searchBtnValue, searchBtnToggle] = useToggle();
  * Search functionality
  */
 const elements = reactive({
-  search: "",
-  status: "",
+  search: '',
+  status: '',
 });
 
 const elementIcons = {
-  completed: "double-tick",
-  not_completed: "red-cross",
-  core: "core",
+  completed: 'double-tick',
+  not_completed: 'red-cross',
+  core: 'core',
 };
 
 const asArrayData = Object.entries(data.value);
@@ -143,12 +162,16 @@ const filteredElements = computed(() => {
     if (!elements.status) {
       return key
         .toLowerCase()
-        .includes(elements.search.toLowerCase().replace("_", "").replace("-", "_"));
+        .includes(
+          elements.search.toLowerCase().replace('_', '').replace('-', '_')
+        );
     } else {
       if (value[elements.status]) {
         return key
           .toLowerCase()
-          .includes(elements.search.toLowerCase().replace("_", "").replace("-", "_"));
+          .includes(
+            elements.search.toLowerCase().replace('_', '').replace('-', '_')
+          );
       }
     }
   });
@@ -162,7 +185,7 @@ const filteredElements = computed(() => {
  */
 Object.keys(data.value).map((key) => {
   if (activityCoreElements().includes(key.toString())) {
-    data.value[key]["core"] = true;
+    data.value[key]['core'] = true;
   }
 });
 
@@ -172,7 +195,7 @@ const dropdownFilter = (s: string) => {
 };
 
 onMounted(() => {
-  window.addEventListener("click", (e) => {
+  window.addEventListener('click', (e) => {
     if (
       !dropdownBtn.value.contains(e.target) &&
       !dropdown.value.contains(e.target) &&
@@ -186,8 +209,8 @@ onMounted(() => {
 function getLink(has_data: number, index: string) {
   if (has_data) {
     return `#${index}`;
-  } else if (index == "result" || index == "transactions") {
-    let element = index == "result" ? "result" : "transaction";
+  } else if (index == 'result' || index == 'transactions') {
+    let element = index == 'result' ? 'result' : 'transaction';
     return `/activity/${props.activityId}/${element}/create`;
   }
 

@@ -11,7 +11,7 @@
       <div class="mb-4 flex">
         <div class="title flex grow">
           <div class="title text-sm font-bold">
-            {{ elementName.toString().replace(/_/g, "-") }}
+            {{ elementName.toString().replace(/_/g, '-') }}
           </div>
         </div>
         <div class="icons flex items-center">
@@ -43,7 +43,7 @@
 
         <template v-else-if="elementName === 'humanitarian'">
           <div class="text-sm">
-            {{ data === "0" ? "False" : data === "1" ? "True" : "Missing" }}
+            {{ data === '0' ? 'False' : data === '1' ? 'True' : 'Missing' }}
           </div>
         </template>
 
@@ -83,7 +83,7 @@
           <TiedStatus :data="elementData" />
         </template>
         <template v-else>
-          <div class="text-sm">{{ data ?? "Missing" }}</div>
+          <div class="text-sm">{{ data ?? 'Missing' }}</div>
         </template>
       </div>
     </div>
@@ -91,9 +91,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, provide } from "vue";
-import HoverText from "./../../../components/HoverText.vue";
-import dateFormat from "./../../../composable/dateFormat";
+import { defineComponent, toRefs, provide } from 'vue';
+import HoverText from './../../../components/HoverText.vue';
+import dateFormat from './../../../composable/dateFormat';
 import {
   Description,
   AidType,
@@ -109,10 +109,10 @@ import {
   FlowType,
   FinanceType,
   TiedStatus,
-} from "./elements/Index";
+} from './elements/Index';
 
 export default defineComponent({
-  name: "ActivityElement",
+  name: 'ActivityElement',
   components: {
     HoverText,
     Description,
@@ -146,7 +146,7 @@ export default defineComponent({
     width: {
       type: String,
       required: false,
-      default: "",
+      default: '',
     },
     types: {
       type: Object,
@@ -155,14 +155,14 @@ export default defineComponent({
     hoverText: {
       type: String,
       required: false,
-      default: "",
+      default: '',
     },
   },
   setup(props) {
     let { data, types } = toRefs(props),
       elementData = data.value;
 
-    provide("types", types);
+    provide('types', types);
 
     /**
      * Joins data from array with a comma
@@ -174,7 +174,7 @@ export default defineComponent({
     }
 
     function getLanguages(language: Entry[]) {
-      return language.map((entry) => entry.language).join(", ");
+      return language.map((entry) => entry.language).join(', ');
     }
     return {
       elementData,

@@ -4,7 +4,7 @@
     :key="key"
     :class="{ 'mb-4': Number(key) !== data.length - 1 }"
   >
-    <div class="mb-2 text-sm recipient_country-code">
+    <div class="recipient_country-code mb-2 text-sm">
       <div v-if="participating_org.country_code" class="space-x-1">
         <span>{{ types.country[participating_org.country_code] }}</span>
         <span v-if="participating_org.percentage" class="text-sm font-normal"
@@ -18,7 +18,7 @@
       v-for="(item, i) in participating_org.narrative"
       :key="i"
       :class="{ 'mb-4': i !== participating_org.narrative.length - 1 }"
-      class="text-sm recipient_country-content"
+      class="recipient_country-content text-sm"
     >
       <div v-if="item.narrative" class="flex max-w-[887px] flex-col">
         <span v-if="item.language" class="language mb-1.5">

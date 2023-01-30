@@ -13,14 +13,18 @@
       <table>
         <tr>
           <td>Value</td>
-          <td v-if="post.value"><span class="description">{{ post.value }}</span></td>
+          <td v-if="post.value">
+            <span class="description">{{ post.value }}</span>
+          </td>
           <td v-else class="italic">Missing</td>
         </tr>
       </table>
       <table>
         <tr>
           <td>Iati-Equivalent</td>
-          <td v-if="post.iati_equivalent"><span class="description">{{ post.iati_equivalent }}</span></td>
+          <td v-if="post.iati_equivalent">
+            <span class="description">{{ post.iati_equivalent }}</span>
+          </td>
           <td v-else class="italic">Missing</td>
         </tr>
       </table>

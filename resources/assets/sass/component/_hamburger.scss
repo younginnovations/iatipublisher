@@ -1,5 +1,5 @@
 .hamburger {
-  @apply relative z-auto flex h-11 w-11 cursor-pointer duration-300 items-center justify-center overflow-hidden rounded;
+  @apply relative z-auto flex h-11 w-11 cursor-pointer items-center justify-center overflow-hidden rounded duration-300;
   z-index: 120;
 
   &.active {
@@ -20,7 +20,7 @@
   &.active {
     span:nth-child(1) {
       width: 40px;
-      transform: rotate(45deg)  translateZ(0);
+      transform: rotate(45deg) translateZ(0);
     }
     span:nth-child(2) {
       transform: translateX(60px);
@@ -55,4 +55,3 @@
     translate: -380% -90%;
   }
 }
-

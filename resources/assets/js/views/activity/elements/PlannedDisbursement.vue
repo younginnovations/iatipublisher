@@ -7,7 +7,7 @@
   >
     <div class="category">
       <span>
-        {{ types.budgetType[post.planned_disbursement_type] ?? "Type Missing" }}
+        {{ types.budgetType[post.planned_disbursement_type] ?? 'Type Missing' }}
       </span>
     </div>
 
@@ -23,9 +23,9 @@
               {{
                 post.value[0].amount
                   ? Number(post.value[0].amount).toLocaleString() +
-                    " " +
+                    ' ' +
                     types.currency[post.value[0].currency]
-                  : "Missing"
+                  : 'Missing'
               }}
             </td>
           </tr>
@@ -35,7 +35,7 @@
               {{
                 post.value[0].value_date
                   ? formatDate(post.value[0].value_date)
-                  : "Missing"
+                  : 'Missing'
               }}
             </td>
           </tr>
@@ -46,7 +46,7 @@
                 {{
                   post.period_start[0].date
                     ? formatDate(post.period_start[0].date)
-                    : "Date Missing"
+                    : 'Date Missing'
                 }}
               </span>
             </td>
@@ -58,7 +58,7 @@
                 {{
                   post.period_end[0].date
                     ? formatDate(post.period_end[0].date)
-                    : "Date Missing"
+                    : 'Date Missing'
                 }}
               </span>
             </td>
@@ -78,20 +78,20 @@
               {{
                 post.provider_org[0].type
                   ? types.organizationType[post.provider_org[0].type]
-                  : "Missing"
+                  : 'Missing'
               }}
             </td>
           </tr>
           <tr>
             <td>Provider Activity ID</td>
             <td>
-              {{ post.provider_org[0].provider_activity_id ?? "Missing" }}
+              {{ post.provider_org[0].provider_activity_id ?? 'Missing' }}
             </td>
           </tr>
           <tr>
             <td>Reference</td>
             <td>
-              {{ post.provider_org[0].ref ?? "Missing" }}
+              {{ post.provider_org[0].ref ?? 'Missing' }}
             </td>
           </tr>
           <tr>
@@ -108,11 +108,13 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language ? types.languages[narrative.language] : "Missing"
+                    narrative.language
+                      ? types.languages[narrative.language]
+                      : 'Missing'
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? "Missing" }}
+                  {{ narrative.narrative ?? 'Missing' }}
                 </div>
               </div>
             </td>
@@ -132,20 +134,20 @@
               {{
                 post.receiver_org[0].type
                   ? types.organizationType[post.receiver_org[0].type]
-                  : "Missing"
+                  : 'Missing'
               }}
             </td>
           </tr>
           <tr>
             <td>Receiver Activity ID</td>
             <td>
-              {{ post.receiver_org[0].receiver_activity_id ?? "Missing" }}
+              {{ post.receiver_org[0].receiver_activity_id ?? 'Missing' }}
             </td>
           </tr>
           <tr>
             <td>Reference</td>
             <td>
-              {{ post.receiver_org[0].ref ?? "Missing" }}
+              {{ post.receiver_org[0].ref ?? 'Missing' }}
             </td>
           </tr>
           <tr>
@@ -162,11 +164,13 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language ? types.languages[narrative.language] : "Missing"
+                    narrative.language
+                      ? types.languages[narrative.language]
+                      : 'Missing'
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? "Missing" }}
+                  {{ narrative.narrative ?? 'Missing' }}
                 </div>
               </div>
             </td>
@@ -178,8 +182,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject } from "vue";
-import moment from "moment";
+import { defineProps, inject } from 'vue';
+import moment from 'moment';
 
 defineProps({
   data: {
@@ -196,8 +200,8 @@ interface Types {
 }
 
 function formatDate(date: Date) {
-  return moment(date).format("LL");
+  return moment(date).format('LL');
 }
 
-const types = inject("types") as Types;
+const types = inject('types') as Types;
 </script>

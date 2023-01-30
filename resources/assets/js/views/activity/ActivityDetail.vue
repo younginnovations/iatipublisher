@@ -30,10 +30,10 @@
                 <div class="breadcrumb__title">
                   <span
                     class="breadcrumb__title last w-[200px] overflow-hidden text-ellipsis text-n-30"
-                    >{{ pageTitle ?? "Untitled" }}</span
+                    >{{ pageTitle ?? 'Untitled' }}</span
                   >
                   <span class="ellipsis__title--hover">{{
-                    pageTitle ? pageTitle : "Untitled"
+                    pageTitle ? pageTitle : 'Untitled'
                   }}</span>
                 </div>
               </div>
@@ -52,10 +52,10 @@
               <div class="inline-flex min-h-[48px] grow flex-wrap items-center">
                 <h4 class="ellipsis__title relative text-2xl font-bold">
                   <span class="ellipsis__title overflow-hidden">
-                    {{ pageTitle ? pageTitle : "Untitled" }}
+                    {{ pageTitle ? pageTitle : 'Untitled' }}
                   </span>
                   <span class="ellipsis__title--hover">
-                    {{ pageTitle ? pageTitle : "Untitled" }}
+                    {{ pageTitle ? pageTitle : 'Untitled' }}
                   </span>
                 </h4>
               </div>
@@ -118,7 +118,9 @@
       <div class="activities">
         <aside class="activities__sidebar hidden lg:block">
           <div
-            v-if="publishStatus.linked_to_iati && publishStatus.status === 'draft'"
+            v-if="
+              publishStatus.linked_to_iati && publishStatus.status === 'draft'
+            "
             class="mb-2"
           >
             <PreviouslyPublished />
@@ -193,7 +195,9 @@
         >
           <aside class="!z-[200] w-[280px] bg-white pt-8">
             <div
-              v-if="publishStatus.linked_to_iati && publishStatus.status === 'draft'"
+              v-if="
+                publishStatus.linked_to_iati && publishStatus.status === 'draft'
+              "
               class="mb-2"
             >
               <PreviouslyPublished />
@@ -262,7 +266,9 @@
               >
             </a>
           </div>
-          <div class="mb-3 inline-flex max-w-[70%] flex-wrap gap-2 lg:max-w-full">
+          <div
+            class="mb-3 inline-flex max-w-[70%] flex-wrap gap-2 lg:max-w-full"
+          >
             <a
               v-for="(post, key, index) in groupedData"
               :key="index"
@@ -297,7 +303,8 @@
                     v-if="
                       (typeof element.content === 'object'
                         ? Object.keys(element.content).length > 0
-                        : element.content) || typeof element.content === 'number'
+                        : element.content) ||
+                      typeof element.content === 'number'
                     "
                     :id="key"
                     :data="element"
@@ -315,7 +322,8 @@
                     v-if="
                       (typeof element.content === 'object'
                         ? Object.keys(element.content).length > 0
-                        : element.content) || typeof element.content === 'number'
+                        : element.content) ||
+                      typeof element.content === 'number'
                     "
                     :id="key"
                     :data="element"
@@ -346,28 +354,28 @@ import {
   onUnmounted,
   ref,
   watch,
-} from "vue";
-import { useToggle, watchIgnorable } from "@vueuse/core";
+} from 'vue';
+import { useToggle, watchIgnorable } from '@vueuse/core';
 
 // components
-import { Result } from "./elements/Index";
-import HoverText from "Components/HoverText.vue";
-import ProgressBar from "Components/RadialProgressBar.vue";
-import Publish from "Components/buttons/PublishButton.vue";
-import UnPublish from "Components/buttons/UnPublishButton.vue";
-import DeleteButton from "Components/buttons/DeleteButton.vue";
-import Errors from "Components/sections/StickyErrors.vue";
-import Toast from "Components/ToastMessage.vue";
-import ErrorPopUp from "Components/ErrorPopUp.vue";
+import { Result } from './elements/Index';
+import HoverText from 'Components/HoverText.vue';
+import ProgressBar from 'Components/RadialProgressBar.vue';
+import Publish from 'Components/buttons/PublishButton.vue';
+import UnPublish from 'Components/buttons/UnPublishButton.vue';
+import DeleteButton from 'Components/buttons/DeleteButton.vue';
+import Errors from 'Components/sections/StickyErrors.vue';
+import Toast from 'Components/ToastMessage.vue';
+import ErrorPopUp from 'Components/ErrorPopUp.vue';
 
 // Activity Components
-import Elements from "Activity/partials/ActivitiesElements.vue";
-import ActivityElement from "Activity/partials/ActivityElement.vue";
-import PreviouslyPublished from "Components/status/PreviouslyPublished.vue";
+import Elements from 'Activity/partials/ActivitiesElements.vue';
+import ActivityElement from 'Activity/partials/ActivityElement.vue';
+import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
 
 // Vuex Store
-import { detailStore } from "Store/activities/show";
-import { useStore } from "Store/activities/index";
+import { detailStore } from 'Store/activities/show';
+import { useStore } from 'Store/activities/index';
 
 export default defineComponent({
   components: {
@@ -441,12 +449,12 @@ export default defineComponent({
 
     const toastData = reactive({
       visibility: false,
-      message: "",
+      message: '',
       type: true,
     });
     const errorData = reactive({
       visibility: false,
-      message: "",
+      message: '',
       type: true,
     });
     showSidebar;
@@ -470,14 +478,14 @@ export default defineComponent({
     });
 
     onUnmounted(() => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", calcWidth);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', calcWidth);
     });
     onMounted(() => {
       screenWidth.value = window.innerWidth;
-      window.addEventListener("scroll", handleScroll);
-      window.addEventListener("resize", calcWidth);
-      if (props.toast.message !== "") {
+      window.addEventListener('scroll', handleScroll);
+      window.addEventListener('resize', calcWidth);
+      if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;
@@ -486,17 +494,18 @@ export default defineComponent({
     const calcWidth = (event) => {
       screenWidth.value = event.target.innerWidth;
       if (screenWidth.value > 1024) {
-        document.documentElement.style.overflow = "auto";
+        document.documentElement.style.overflow = 'auto';
       } else {
-        showSidebar.value && (document.documentElement.style.overflow = "hidden");
+        showSidebar.value &&
+          (document.documentElement.style.overflow = 'hidden');
       }
     };
     watch(
       () => showSidebar.value,
       (sidebar) => {
         if (sidebar) {
-          document.documentElement.style.overflow = "hidden";
-        } else document.documentElement.style.overflow = "auto";
+          document.documentElement.style.overflow = 'hidden';
+        } else document.documentElement.style.overflow = 'auto';
       }
     );
     watch(
@@ -531,16 +540,16 @@ export default defineComponent({
     Object.keys(activities).map((key) => {
       let flag = false;
 
-      Object.keys(activities[key]["elements"]).map((k) => {
+      Object.keys(activities[key]['elements']).map((k) => {
         if (
-          typeof activityProps[k] === "number" ||
-          (typeof activityProps[k] === "object" &&
+          typeof activityProps[k] === 'number' ||
+          (typeof activityProps[k] === 'object' &&
             activityProps[k] &&
             Object.keys(activityProps[k]).length)
         ) {
-          activities[key]["elements"][k]["content"] = activityProps[k];
-          activities[key]["elements"][k]["hover_text"] =
-            elementProps[k]["hover_text"] ?? "";
+          activities[key]['elements'][k]['content'] = activityProps[k];
+          activities[key]['elements'][k]['hover_text'] =
+            elementProps[k]['hover_text'] ?? '';
           flag = true;
         } else {
           delete activities[key][k];
@@ -555,9 +564,9 @@ export default defineComponent({
     // generating available categories of elements
     Object.keys(groupedData).map((key) => {
       if (Object.prototype.hasOwnProperty.call(activities, key)) {
-        groupedData[key]["status"] = "enabled";
+        groupedData[key]['status'] = 'enabled';
       } else {
-        groupedData[key]["status"] = "disabled";
+        groupedData[key]['status'] = 'disabled';
       }
     });
 
@@ -569,21 +578,21 @@ export default defineComponent({
      * @returns object
      */
     Object.keys(elementProps).map((key) => {
-      elementProps[key]["completed"] = statusProps[key] ?? false;
-      elementProps[key]["not_completed"] = !(statusProps[key] ?? false);
-      elementProps[key]["has_data"] = 0;
+      elementProps[key]['completed'] = statusProps[key] ?? false;
+      elementProps[key]['not_completed'] = !(statusProps[key] ?? false);
+      elementProps[key]['has_data'] = 0;
 
       if (key in activityProps) {
         if (
-          (typeof activityProps[key] === "object" ||
-            typeof activityProps[key] === "number") &&
+          (typeof activityProps[key] === 'object' ||
+            typeof activityProps[key] === 'number') &&
           activityProps[key]
         ) {
           if (
             Object.keys(activityProps[key]).length > 0 ||
             activityProps[key].toString.length > 0
           ) {
-            elementProps[key]["has_data"] = 1;
+            elementProps[key]['has_data'] = 1;
           }
         }
       }
@@ -592,9 +601,9 @@ export default defineComponent({
     /**
      * Finding current language - activity title
      */
-    let pageTitle = "";
+    let pageTitle = '';
     const found = activityProps.title.find((e: { language: string }) => {
-      const currentLanguage = "en";
+      const currentLanguage = 'en';
       return e.language === currentLanguage;
     });
 
@@ -606,21 +615,21 @@ export default defineComponent({
     }
 
     function formatTitle(title: string) {
-      return title.replace(/_/gi, " ");
+      return title.replace(/_/gi, ' ');
     }
 
     const toastMessage = reactive({
-      message: "",
+      message: '',
       type: false,
     });
 
     const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {
-      flush: "sync",
+      flush: 'sync',
     });
 
     const ignoreToastUpdate = () => {
       ignoreUpdates(() => {
-        toastData.message = "";
+        toastData.message = '';
       });
     };
 
@@ -635,25 +644,25 @@ export default defineComponent({
     });
 
     // vue provides
-    provide("types", types.value);
-    provide("coreCompleted", coreCompleted.value);
-    provide("toastMessage", toastMessage);
-    provide("toastData", toastData);
-    provide("errorData", errorData);
+    provide('types', types.value);
+    provide('coreCompleted', coreCompleted.value);
+    provide('toastMessage', toastMessage);
+    provide('toastData', toastData);
+    provide('errorData', errorData);
 
-    indexStore.dispatch("updateSelectedActivities", [activity.value.id]);
+    indexStore.dispatch('updateSelectedActivities', [activity.value.id]);
 
     /**
      * Breadcrumb data
      */
     const breadcrumbData = [
       {
-        title: "Your Activities",
-        link: "/activities",
+        title: 'Your Activities',
+        link: '/activities',
       },
       {
         title: pageTitle,
-        link: "",
+        link: '',
       },
     ];
 
@@ -664,19 +673,21 @@ export default defineComponent({
     const validationResult = iatiValidatorResponse.value;
 
     if (validationResult && validationResult.errors.length > 0) {
-      store.dispatch("updatePublishErrors", validationResult.errors);
+      store.dispatch('updatePublishErrors', validationResult.errors);
     }
 
     if (publishStatus.linked_to_iati) {
-      store.dispatch("updateUnPublished", true);
+      store.dispatch('updateUnPublished', true);
     } else {
-      store.dispatch("updateUnPublished", false);
+      store.dispatch('updateUnPublished', false);
     }
 
-    if (!(publishStatus.linked_to_iati && publishStatus.status === "published")) {
-      store.dispatch("updateShowPublished", true);
+    if (
+      !(publishStatus.linked_to_iati && publishStatus.status === 'published')
+    ) {
+      store.dispatch('updateShowPublished', true);
     } else {
-      store.dispatch("updateShowPublished", false);
+      store.dispatch('updateShowPublished', false);
     }
 
     return {

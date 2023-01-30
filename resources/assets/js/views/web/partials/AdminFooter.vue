@@ -10,7 +10,10 @@
         >
           <div>
             <a href="/">
-              <svg-vue class="h-auto w-60 text-6xl sm:w-64" icon="footer-logo" />
+              <svg-vue
+                class="h-auto w-60 text-6xl sm:w-64"
+                icon="footer-logo"
+              />
             </a>
           </div>
 
@@ -19,7 +22,7 @@
             <ul class="mt-2 flex flex-col">
               <li>
                 <a :href="superAdmin ? '/list-organisations' : '/activities'">{{
-                  superAdmin ? "Organisation List" : "Your Activities"
+                  superAdmin ? 'Organisation List' : 'Your Activities'
                 }}</a>
               </li>
               <li><a href="/about">About</a></li>
@@ -56,7 +59,9 @@
             </div>
             <ul>
               <li>
-                <a class="text-sm text-n-10" href="mailto:support@iatistandard.org"
+                <a
+                  class="text-sm text-n-10"
+                  href="mailto:support@iatistandard.org"
                   >support@iatistandard.org</a
                 >
               </li>
@@ -88,8 +93,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
-import axios from "axios";
+import { defineProps } from 'vue';
+import axios from 'axios';
 
 defineProps({
   superAdmin: { type: Boolean, required: false, default: false },
@@ -98,15 +103,15 @@ defineProps({
 function downloadManual(type: string) {
   axios({
     url: `/iati-standard/manual/${type}`,
-    method: "GET",
-    responseType: "arraybuffer",
+    method: 'GET',
+    responseType: 'arraybuffer',
   }).then((response) => {
     let blob = new Blob([response.data], {
-      type: "application/pdf",
+      type: 'application/pdf',
     });
-    let link = document.createElement("a");
+    let link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
-    link.download = response.headers["content-disposition"].split("=")[1];
+    link.download = response.headers['content-disposition'].split('=')[1];
     link.click();
   });
 }

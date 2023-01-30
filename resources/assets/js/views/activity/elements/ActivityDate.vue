@@ -4,12 +4,12 @@
     :key="key"
     :class="{ 'mb-4': Number(key) !== data.length - 1 }"
   >
-    <div class="flex flex-col mb-1 space-y-2 text-sm date-type">
+    <div class="date-type mb-1 flex flex-col space-y-2 text-sm">
       <div>
         <span v-if="post.type" class="font-bold">{{
           types.activityDate[post.type]
         }}</span>
-        <span v-else class="text-sm italic font-bold">Type Missing</span>
+        <span v-else class="text-sm font-bold italic">Type Missing</span>
       </div>
       <div>
         <span v-if="post.date" class="text-sm font-normal">{{

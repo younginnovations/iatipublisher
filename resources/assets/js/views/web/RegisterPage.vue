@@ -1,19 +1,23 @@
 <template>
-  <section class="section mx-3 mb-7 sm:mx-10 sm:mb-10 md:mb-14 xl:mx-24 xl:px-1">
+  <section
+    class="section mx-3 mb-7 sm:mx-10 sm:mb-10 md:mb-14 xl:mx-24 xl:px-1"
+  >
     <Loader v-if="isLoaderVisible" />
     <div class="section__container">
       <div class="section__title">
         <h2>Create IATI Publisher Account</h2>
         <p>
-          Register your organisation to start your IATI publishing journey by creating an
-          account in IATI publisher.
+          Register your organisation to start your IATI publishing journey by
+          creating an account in IATI publisher.
         </p>
       </div>
       <div class="section__wrapper flex justify-center">
         <EmailVerification v-if="checkStep('3')" :email="formData['email']" />
         <div v-else class="form input__field" @keyup.enter="goToNextForm">
           <aside class="mb-4 block border-b border-b-n-10 pb-4 xl:hidden">
-            <span class="text-base font-bold">Step {{ getCurrentStep() }} out of 3</span>
+            <span class="text-base font-bold"
+              >Step {{ getCurrentStep() }} out of 3</span
+            >
             <ul class="relative mt-3 text-sm text-n-40">
               <li
                 v-for="(form, key, i) in registerForm"
@@ -36,11 +40,11 @@
                       'text-n-40': !checkStep(key) && !form.is_complete,
                     }"
                   >
-                    {{ form["title"] }}
+                    {{ form['title'] }}
                   </span>
                 </div>
                 <p v-if="checkStep(key)" class="detail mt-2 font-normal">
-                  {{ form["description"] }}
+                  {{ form['description'] }}
                 </p>
               </li>
             </ul>
@@ -63,19 +67,22 @@
             >
               <p class="mb-2 flex font-bold">
                 <svg-vue class="mr-2 text-xl" icon="warning" />
-                Sorry, the information you provided doesn’t match your IATI Registry
-                information.
+                Sorry, the information you provided doesn’t match your IATI
+                Registry information.
               </p>
               <p class="ml-8 xl:mr-1">
                 Please note that if you’re an account holder in
-                <span><a href="https://iatiregistry.org/">IATI Registry</a></span
+                <span
+                  ><a href="https://iatiregistry.org/">IATI Registry</a></span
                 >, make sure your
                 <span class="font-bold"
                   >Publisher Name, Publisher ID and IATI Organisation ID</span
                 >
                 match your IATI Registry Information. Contact
                 <span
-                  ><a class="text-bluecoral" href="mailto:support@iatistandard.org"
+                  ><a
+                    class="text-bluecoral"
+                    href="mailto:support@iatistandard.org"
                     >support@iatistandard.org</a
                   ></span
                 >
@@ -84,13 +91,15 @@
             </div>
             <div class="form__content">
               <div
-                v-for="(field, index, key) in registerForm[getCurrentStep()]['fields']"
+                v-for="(field, index, key) in registerForm[getCurrentStep()][
+                  'fields'
+                ]"
                 :key="key"
                 :class="field.class"
               >
                 <div class="mb-2 flex items-center justify-between">
                   <label :for="field.id" class="label"
-                    >{{ field["label"] }}
+                    >{{ field['label'] }}
                     <span v-if="field.required" class="text-salmon-40"> *</span>
                   </label>
                   <HoverText
@@ -121,7 +130,9 @@
                   :placeholder="field.placeholder"
                   :type="field.type"
                   :value="
-                    formData.registration_agency + '-' + formData.registration_number
+                    formData.registration_agency +
+                    '-' +
+                    formData.registration_number
                   "
                   disabled="true"
                 />
@@ -143,18 +154,28 @@
                   >{{ field.help_text }}
                 </span>
 
-                <span v-if="errorData[field.name] !== ''" class="error" role="alert">
+                <span
+                  v-if="errorData[field.name] !== ''"
+                  class="error"
+                  role="alert"
+                >
                   {{ errorData[field.name] }}
                 </span>
               </div>
             </div>
           </div>
           <div class="flex flex-wrap items-center justify-between">
-            <button v-if="!checkStep(1)" class="btn-back" @click="goToPreviousForm()">
+            <button
+              v-if="!checkStep(1)"
+              class="btn-back"
+              @click="goToPreviousForm()"
+            >
               <svg-vue class="mr-3 cursor-pointer" icon="left-arrow" />
               Go back
             </button>
-            <span v-if="checkStep(1)" class="pb-4 text-sm font-normal text-n-40 sm:pb-0"
+            <span
+              v-if="checkStep(1)"
+              class="pb-4 text-sm font-normal text-n-40 sm:pb-0"
               >Already have an account?
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
@@ -162,7 +183,11 @@
                 >Sign In.</a
               ></span
             >
-            <button v-if="!checkStep(3)" class="btn btn-next" @click="goToNextForm()">
+            <button
+              v-if="!checkStep(3)"
+              class="btn btn-next"
+              @click="goToNextForm()"
+            >
               Next Step
               <svg-vue class="text-2xl" icon="right-arrow" />
             </button>
@@ -180,7 +205,9 @@
         </div>
 
         <aside class="register__sidebar hidden xl:block">
-          <span class="text-base font-bold">Step {{ getCurrentStep() }} out of 3</span>
+          <span class="text-base font-bold"
+            >Step {{ getCurrentStep() }} out of 3</span
+          >
           <ul class="relative mt-6 text-sm text-n-40">
             <li
               v-for="(form, key, i) in registerForm"
@@ -206,11 +233,14 @@
                     'text-n-40': !checkStep(key) && !form.is_complete,
                   }"
                 >
-                  {{ form["title"] }}
+                  {{ form['title'] }}
                 </span>
               </div>
-              <p v-if="checkStep(key)" class="detail mt-2 mb-6 font-normal xl:pr-2">
-                {{ form["description"] }}
+              <p
+                v-if="checkStep(key)"
+                class="detail mt-2 mb-6 font-normal xl:pr-2"
+              >
+                {{ form['description'] }}
               </p>
             </li>
           </ul>
@@ -221,13 +251,13 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, watch, toRefs } from "vue";
-import axios from "axios";
-import EmailVerification from "./EmailVerification.vue";
-import HoverText from "./../../components/HoverText.vue";
-import Multiselect from "@vueform/multiselect";
-import Loader from "../../components/Loader.vue";
-import encrypt from "Composable/encryption";
+import { computed, defineComponent, reactive, ref, watch, toRefs } from 'vue';
+import axios from 'axios';
+import EmailVerification from './EmailVerification.vue';
+import HoverText from './../../components/HoverText.vue';
+import Multiselect from '@vueform/multiselect';
+import Loader from '../../components/Loader.vue';
+import encrypt from 'Composable/encryption';
 
 export default defineComponent({
   components: {
@@ -260,37 +290,37 @@ export default defineComponent({
     }
 
     const errorData: ObjectType = reactive({
-      publisher_name: "",
-      publisher_id: "",
-      country: "",
-      registration_agency: "",
-      registration_number: "",
-      identifier: "",
-      username: "",
-      full_name: "",
-      email: "",
-      password: "",
-      password_confirmation: "",
+      publisher_name: '',
+      publisher_id: '',
+      country: '',
+      registration_agency: '',
+      registration_number: '',
+      identifier: '',
+      username: '',
+      full_name: '',
+      email: '',
+      password: '',
+      password_confirmation: '',
     });
 
     const formData: ObjectType = reactive({
-      publisher_name: "",
-      publisher_id: "",
-      country: "",
-      registration_agency: "",
-      registration_number: "",
-      identifier: "",
-      username: "",
-      full_name: "",
-      email: "",
-      password: "",
-      password_confirmation: "",
+      publisher_name: '',
+      publisher_id: '',
+      country: '',
+      registration_agency: '',
+      registration_number: '',
+      identifier: '',
+      username: '',
+      full_name: '',
+      email: '',
+      password: '',
+      password_confirmation: '',
     });
 
     watch(
       () => formData.country,
       () => {
-        formData.registration_agency = "";
+        formData.registration_agency = '';
       }
     );
 
@@ -298,7 +328,7 @@ export default defineComponent({
       const agencies = agency.value;
 
       if (formData.country) {
-        const uncategorized = ["XI", "XR"];
+        const uncategorized = ['XI', 'XR'];
 
         return Object.fromEntries(
           Object.entries(agencies).filter(
@@ -315,8 +345,10 @@ export default defineComponent({
     const isTextField = computed(() => {
       return (fieldType: string, fieldName: string) => {
         return (
-          (fieldType === "text" || fieldType === "password" || fieldType === "email") &&
-          fieldName != "identifier"
+          (fieldType === 'text' ||
+            fieldType === 'password' ||
+            fieldType === 'email') &&
+          fieldName != 'identifier'
         );
       };
     });
@@ -329,154 +361,155 @@ export default defineComponent({
 
     const registerForm = reactive({
       1: {
-        title: "Publisher Information",
+        title: 'Publisher Information',
         is_complete: false,
         description:
-          "This information will be used to create a Publisher in IATI Publisher",
+          'This information will be used to create a Publisher in IATI Publisher',
         hover_text:
-          "Provide information about your organisation. You will need to provide the same information that you used to create your Publisher Account on the IATI Registry (iatiregistry.org).",
+          'Provide information about your organisation. You will need to provide the same information that you used to create your Publisher Account on the IATI Registry (iatiregistry.org).',
         fields: {
           publisher_name: {
-            label: "Publisher Name",
-            name: "publisher_name",
-            placeholder: "Type your Publisher Name here",
-            id: "publisher-name",
+            label: 'Publisher Name',
+            name: 'publisher_name',
+            placeholder: 'Type your Publisher Name here',
+            id: 'publisher-name',
             required: true,
-            hover_text: "Provide the name of your organisation.",
-            type: "text",
-            class: "col-span-2 mb-4 lg:mb-2",
-            help_text: "",
+            hover_text: 'Provide the name of your organisation.',
+            type: 'text',
+            class: 'col-span-2 mb-4 lg:mb-2',
+            help_text: '',
           },
           publisher_id: {
-            label: "Publisher ID",
-            name: "publisher_id",
-            placeholder: "Type your organisation ID here",
-            id: "publisher-id",
+            label: 'Publisher ID',
+            name: 'publisher_id',
+            placeholder: 'Type your organisation ID here',
+            id: 'publisher-id',
             required: true,
             hover_text:
               "This is the unique ID for your organisation that you created when you set up your IATI Registry Publisher Account. It should be a shorter version of your organisation's name, which will include lowercase letters and may include numbers, - (dash) or _ (underscore). For example nef_mali' for Near East Foundation Mali.",
-            type: "text",
-            class: "mb-4 lg:mb-2",
-            help_text: "",
+            type: 'text',
+            class: 'mb-4 lg:mb-2',
+            help_text: '',
           },
           country: {
-            label: "Country",
-            name: "country",
-            placeholder: "Select a Country",
-            id: "country_select",
+            label: 'Country',
+            name: 'country',
+            placeholder: 'Select a Country',
+            id: 'country_select',
             required: false,
-            type: "select",
-            hover_text: "Add the location of your organisation.",
+            type: 'select',
+            hover_text: 'Add the location of your organisation.',
             options: props.country,
-            class: "mb-4 lg:mb-2 relative",
-            help_text: "",
+            class: 'mb-4 lg:mb-2 relative',
+            help_text: '',
           },
           organization_registration_agency: {
-            label: "Organisation Registration Agency",
-            name: "registration_agency",
-            placeholder: "Select an Organisation Registration Agency",
-            id: "registration-agency",
+            label: 'Organisation Registration Agency',
+            name: 'registration_agency',
+            placeholder: 'Select an Organisation Registration Agency',
+            id: 'registration-agency',
             required: true,
             hover_text:
-              "Provide the name of the agency in your country where you organisation is registered. If you do not know this information please email support@iatistandard.org.",
-            type: "select",
+              'Provide the name of the agency in your country where you organisation is registered. If you do not know this information please email support@iatistandard.org.',
+            type: 'select',
             options: registration_agency,
-            class: "mb-4 lg:mb-2 relative",
-            help_text: "",
+            class: 'mb-4 lg:mb-2 relative',
+            help_text: '',
           },
           organization_registration_no: {
-            label: "Organisation Registration Number",
-            name: "registration_number",
-            placeholder: "Type your Registration Number here",
-            id: "registration-number",
+            label: 'Organisation Registration Number',
+            name: 'registration_number',
+            placeholder: 'Type your Registration Number here',
+            id: 'registration-number',
             required: true,
             hover_text:
-              "Add the registration number for your organisation that has been provided by the registration agency named above.",
-            type: "text",
-            class: "mb-4 lg:mb-2",
-            help_text: "for e.g. 123456",
+              'Add the registration number for your organisation that has been provided by the registration agency named above.',
+            type: 'text',
+            class: 'mb-4 lg:mb-2',
+            help_text: 'for e.g. 123456',
           },
           iati_organizational_identifier: {
-            label: "IATI Organisational Identifier",
-            name: "identifier",
-            placeholder: "",
-            id: "identifier",
+            label: 'IATI Organisational Identifier',
+            name: 'identifier',
+            placeholder: '',
+            id: 'identifier',
             required: true,
             hover_text:
               'The Organisation Identifier is a unique code for your organisation. This is generated from the Organisation Registration Agency and Registration Number. For more information read: <a href="http://iatistandard.org/en/guidance/preparing-organisation/organisation-account/how-to-create-your-iati-organisation-identifier/" target="_blank">How to create your IATI organisation identifier.</a>',
-            type: "text",
-            class: "mb-4 lg:mb-6",
+            type: 'text',
+            class: 'mb-4 lg:mb-6',
             help_text:
-              "This is autogenerated, please make sure to fill the above fields correctly.",
+              'This is autogenerated, please make sure to fill the above fields correctly.',
           },
         },
       },
       2: {
-        title: "Administrator Information",
+        title: 'Administrator Information',
         is_complete: false,
         description:
-          "This information will be used to create an admin account in IATI Publisher",
+          'This information will be used to create an admin account in IATI Publisher',
         hover_text:
-          "Provide your information to create an admin account here on IATI Publisher.",
+          'Provide your information to create an admin account here on IATI Publisher.',
         fields: {
           username: {
-            label: "Username",
-            name: "username",
-            placeholder: "Type username here",
-            id: "username",
+            label: 'Username',
+            name: 'username',
+            placeholder: 'Type username here',
+            id: 'username',
             required: true,
-            hover_text: "You will need this later to login into IATI Publisher.",
-            type: "text",
-            class: "mb-4 lg:mb-2",
-            help_text: "",
+            hover_text:
+              'You will need this later to login into IATI Publisher.',
+            type: 'text',
+            class: 'mb-4 lg:mb-2',
+            help_text: '',
           },
           full_name: {
-            label: "Full Name",
-            name: "full_name",
-            placeholder: "Type your full name here",
-            id: "full-name",
-            hover_text: "",
+            label: 'Full Name',
+            name: 'full_name',
+            placeholder: 'Type your full name here',
+            id: 'full-name',
+            hover_text: '',
             required: true,
-            type: "text",
-            class: "col-start-1 mb-4 lg:mb-2",
+            type: 'text',
+            class: 'col-start-1 mb-4 lg:mb-2',
           },
           email: {
-            label: "Email Address",
-            name: "email",
-            placeholder: "Type valid email here",
-            id: "email",
+            label: 'Email Address',
+            name: 'email',
+            placeholder: 'Type valid email here',
+            id: 'email',
             required: true,
-            hover_text: "",
-            type: "email",
-            class: "mb-4 lg:mb-2",
+            hover_text: '',
+            type: 'email',
+            class: 'mb-4 lg:mb-2',
           },
           password: {
-            label: "Password",
-            name: "password",
-            placeholder: "Type password here",
-            id: "password",
+            label: 'Password',
+            name: 'password',
+            placeholder: 'Type password here',
+            id: 'password',
             required: true,
-            hover_text: "",
-            type: "password",
-            class: "mb-4 lg:mb-2",
+            hover_text: '',
+            type: 'password',
+            class: 'mb-4 lg:mb-2',
           },
           confirm_password: {
-            label: "Confirm Password",
-            name: "password_confirmation",
-            placeholder: "Type password here",
-            id: "password-confirmation",
+            label: 'Confirm Password',
+            name: 'password_confirmation',
+            placeholder: 'Type password here',
+            id: 'password-confirmation',
             required: true,
-            hover_text: "",
-            type: "password",
-            class: "mb-4 lg:mb-6",
+            hover_text: '',
+            type: 'password',
+            class: 'mb-4 lg:mb-6',
           },
         },
       },
       3: {
-        title: "Email Verification",
+        title: 'Email Verification',
         is_complete: false,
         description:
-          "Please verify and activate your IATI Publisher account through your provided email",
+          'Please verify and activate your IATI Publisher account through your provided email',
       },
     });
 
@@ -485,13 +518,13 @@ export default defineComponent({
 
       if (errorLength === 0) {
         for (const errKey in errorData) {
-          errorData[errKey] = "";
+          errorData[errKey] = '';
         }
       }
 
       if (errorLength > 0) {
         for (const errKey in errorData) {
-          errorData[errKey] = errKey in errors ? errors[errKey][0] : "";
+          errorData[errKey] = errKey in errors ? errors[errKey][0] : '';
         }
       }
     };
@@ -502,32 +535,36 @@ export default defineComponent({
       formData.identifier = `${formData.registration_agency}-${formData.registration_number}`;
 
       let form = {
-        password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
+        password: encrypt(
+          formData.password,
+          process.env.MIX_ENCRYPTION_KEY ?? ''
+        ),
         password_confirmation: encrypt(
           formData.password_confirmation,
-          process.env.MIX_ENCRYPTION_KEY ?? ""
+          process.env.MIX_ENCRYPTION_KEY ?? ''
         ),
       };
 
       axios
-        .post("/verifyPublisher", { ...formData, ...form })
+        .post('/verifyPublisher', { ...formData, ...form })
         .then((res) => {
-          if (res.request.responseURL.includes("activities")) {
-            window.location.href = "/activities";
+          if (res.request.responseURL.includes('activities')) {
+            window.location.href = '/activities';
           }
 
           const response = res.data;
           publisherExists.value = true;
-          const errors = !response.success || "errors" in response ? response.errors : [];
+          const errors =
+            !response.success || 'errors' in response ? response.errors : [];
 
           updateFormErrors(errors);
 
-          if ("publisher_error" in response) {
+          if ('publisher_error' in response) {
             publisherExists.value = false;
           }
 
           if (response.success) {
-            registerForm["1"].is_complete = true;
+            registerForm['1'].is_complete = true;
             step.value += 1;
           }
 
@@ -542,32 +579,36 @@ export default defineComponent({
       isLoaderVisible.value = true;
 
       let form = {
-        password: encrypt(formData.password, process.env.MIX_ENCRYPTION_KEY ?? ""),
+        password: encrypt(
+          formData.password,
+          process.env.MIX_ENCRYPTION_KEY ?? ''
+        ),
         password_confirmation: encrypt(
           formData.password_confirmation,
-          process.env.MIX_ENCRYPTION_KEY ?? ""
+          process.env.MIX_ENCRYPTION_KEY ?? ''
         ),
       };
 
       axios
-        .post("/register", { ...formData, ...form })
+        .post('/register', { ...formData, ...form })
         .then((res) => {
-          if (res.request.responseURL.includes("activities")) {
-            window.location.href = "/activities";
+          if (res.request.responseURL.includes('activities')) {
+            window.location.href = '/activities';
           }
 
           const response = res.data;
-          const errors = !response.success || "errors" in response ? response.errors : [];
+          const errors =
+            !response.success || 'errors' in response ? response.errors : [];
           updateFormErrors(errors);
           errorData.password_confirmation = errors.password_confirmation
             ? errors.password_confirmation[0]
             : errors.password
             ? errors.password[0]
-            : "";
+            : '';
           isLoaderVisible.value = false;
 
           if (response.success) {
-            registerForm["2"].is_complete = true;
+            registerForm['2'].is_complete = true;
             step.value += 1;
           }
         })
@@ -579,7 +620,7 @@ export default defineComponent({
             ? errors.password_confirmation[0]
             : errors.password
             ? errors.password[0]
-            : "";
+            : '';
         });
     }
 
@@ -670,7 +711,7 @@ export default defineComponent({
       }
 
       ul::before {
-        content: "";
+        content: '';
         width: 4px;
         height: 175px;
         @apply bg-n-20;
@@ -691,7 +732,7 @@ export default defineComponent({
         width: 6px;
         height: 85px;
         @apply bg-turquoise;
-        content: "";
+        content: '';
         border-radius: 2px;
         z-index: 5;
       }

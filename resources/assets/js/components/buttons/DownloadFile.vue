@@ -8,21 +8,21 @@
   />
   <Modal :modal-active="downloadValue" width="583" @close="downloadToggle">
     <div class="mb-4">
-      <div class="flex mb-6 title">
+      <div class="title mb-6 flex">
         <svg-vue
           class="mr-1 mt-0.5 text-lg text-spring-50"
           icon="download-file"
         />
         <b>Download file.</b>
       </div>
-      <div class="p-4 rounded-lg bg-mint">
+      <div class="rounded-lg bg-mint p-4">
         Click the download button to save the file.
       </div>
     </div>
     <div class="flex justify-end">
       <div class="inline-flex">
         <BtnComponent
-          class="px-6 uppercase bg-white"
+          class="bg-white px-6 uppercase"
           text="Go Back"
           type=""
           @click="downloadValue = false"

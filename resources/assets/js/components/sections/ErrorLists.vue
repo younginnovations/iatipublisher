@@ -2,7 +2,11 @@
   <div class="errors" :class="bgColor">
     <div class="errors__head cursor-pointer" @click="accordionToggle">
       <div class="errors__head--title">
-        <svg-vue class="mr-2 text-base" :class="iconColor" icon="alert"></svg-vue>
+        <svg-vue
+          class="mr-2 text-base"
+          :class="iconColor"
+          icon="alert"
+        ></svg-vue>
         <div class="capitalize">{{ errorType }}</div>
       </div>
       <svg-vue
@@ -22,36 +26,36 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, toRefs, ref, watch } from "vue";
+import { defineProps, toRefs, ref, watch } from 'vue';
 
 //props
 const props = defineProps({
   errors: { type: Object, required: true },
-  type: { type: String, default: "error" },
+  type: { type: String, default: 'error' },
 });
 
 //props destructuring
 const { type, errors } = toRefs(props);
 
-const errorType = ref("");
+const errorType = ref('');
 
 // colors based on type props value
-let bgColor = "",
-  iconColor = "";
+let bgColor = '',
+  iconColor = '';
 switch (type.value) {
-  case "critical":
-    bgColor = "bg-lavender-60 border-lavender-50";
-    iconColor = "text-lavender-50";
+  case 'critical':
+    bgColor = 'bg-lavender-60 border-lavender-50';
+    iconColor = 'text-lavender-50';
     break;
 
-  case "warnings":
-    bgColor = "bg-eggshell border-camel-50";
-    iconColor = "text-camel-50";
+  case 'warnings':
+    bgColor = 'bg-eggshell border-camel-50';
+    iconColor = 'text-camel-50';
     break;
 
   default:
-    bgColor = "bg-rose border-crimson-40";
-    iconColor = "text-crimson-40";
+    bgColor = 'bg-rose border-crimson-40';
+    iconColor = 'text-crimson-40';
     break;
 }
 
@@ -59,10 +63,10 @@ const toggle = ref(false);
 
 const accordionToggle = (e: Event) => {
   const currentTarget = e.currentTarget as HTMLElement;
-  const target = (currentTarget.parentElement as HTMLElement).querySelector<HTMLElement>(
-    ".errors__list"
-  );
-  const elHeight = target?.querySelector("ul")?.clientHeight;
+  const target = (
+    currentTarget.parentElement as HTMLElement
+  ).querySelector<HTMLElement>('.errors__list');
+  const elHeight = target?.querySelector('ul')?.clientHeight;
 
   if (toggle.value) {
     if (target != null) {
@@ -87,7 +91,10 @@ const accordionToggle = (e: Event) => {
 
 const updateErrorCountMessage = () => {
   errorType.value =
-    errors.value.length + " " + type.value.charAt(0).toUpperCase() + type.value.slice(1);
+    errors.value.length +
+    ' ' +
+    type.value.charAt(0).toUpperCase() +
+    type.value.slice(1);
 };
 
 updateErrorCountMessage();
