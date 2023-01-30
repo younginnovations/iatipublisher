@@ -7,7 +7,7 @@ namespace App\Http\Controllers\IatiApiLog;
 use App\Http\Controllers\Controller;
 use App\IATI\Services\IatiApiLog\IatiApiLogService;
 use Exception;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 /**
  * Class iatiApiLogController.
@@ -36,41 +36,26 @@ class IatiApiLogController extends Controller
      */
     public function index()
     {
-        return view('admin.log.api.index');
+        //
     }
 
     /**
      * Returns data from api log datatables.
      *
-     * @param Request $request
-     *
-     * @return JsonResponse|\Illuminate\Http\RedirectResponse
+     * @return JsonResponse
      * @throws \Throwable
      */
-    public function getData(Request $request)
+    public function getData(): JsonResponse
     {
         try {
-            $filters = $request->all();
-            $logs = $this->iatiApiLog->getFilteredLog($filters);
-
-            $json_data = [
-                'draw'              => intval($request->input('draw')),
-                'recordsTotal'      => $logs['count'],
-                'recordsFiltered'   => $logs['filteredCount'],
-                'data'              => $logs['data'],
-            ];
-
-            return $json_data;
+            return response()->json(['success' => true, 'message' => $this->iatiApiLog->getAllApiLogs()]);
         } catch (Exception $e) {
             logger()->error($e);
 
             return response()->json([
-                'draw'            => 1,
-                'recordsTotal'    => 0,
-                'recordsFiltered' => 0,
-                'data'            => [],
-                'error'           => trans('message.error_occured'),
-            ], 500);
+               'success' => false,
+               'message' => 'Error has occurred while fetching iati api log',
+            ]);
         }
     }
 }
