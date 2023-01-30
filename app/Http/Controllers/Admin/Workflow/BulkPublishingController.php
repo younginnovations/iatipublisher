@@ -246,13 +246,14 @@ class BulkPublishingController extends Controller
      *
      * @throws \Exception
      */
-    public function getOrganisationBulkPublishingStatus()
+    public function getOrganisationBulkPublishingStatus():JsonResponse
     {
         try {
             $organizationId = auth()->user()->organization->id;
 
             if ($organizationId) {
                 $publishStatus = $this->publishingStatusService->getActivityPublishingStatus($organizationId, '');
+
                 if (count($publishStatus)) {
                     $response = $this->bulkPublishingService->getPublishingResponse($publishStatus);
 
@@ -275,16 +276,20 @@ class BulkPublishingController extends Controller
     }
 
     /**
-     * @param $organization
+     * Cancels Bulk Publishing.
      *
      * @return JsonResponse
      */
     public function cancelBulkPublishing(): JsonResponse
     {
         try {
-            $this->bulkPublishingService->stopBulkPublishing(auth()->user()->organization->id);
+            $stoppedActivityCount = $this->bulkPublishingService->stopBulkPublishing(auth()->user()->organization->id);
 
-            return response()->json(['success'=>true, 'message'=>'Bulk publishing stopped']);
+            if ($stoppedActivityCount) {
+                return response()->json(['success'=>true, 'message'=>"Bulk publish of {$stoppedActivityCount} activities canceled."]);
+            }
+
+            return response()->json(['success'=>true, 'message'=>'No bulk publish were cancelled.']);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

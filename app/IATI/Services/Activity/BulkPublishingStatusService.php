@@ -112,12 +112,15 @@ class BulkPublishingStatusService
         return false;
     }
 
-    public function stopBulkPublishing($organizationId): void
+    /**
+     * Stop bulk publishing.
+     *
+     * @param $organizationId
+     *
+     * @return int
+     */
+    public function stopBulkPublishing($organizationId): int
     {
-        $this->bulkPublishingStatusRepository->stopBulkPublishing($organizationId);
-    }
-
-    public function deletePreviousFailedBulkPublish()
-    {
+        return $this->bulkPublishingStatusRepository->stopBulkPublishing($organizationId);
     }
 }

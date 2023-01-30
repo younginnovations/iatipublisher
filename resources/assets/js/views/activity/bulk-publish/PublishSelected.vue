@@ -50,7 +50,8 @@
           <div class="title mb-6 flex">
             <svg-vue icon="tick" class="mr-1 mt-0.5 text-lg text-spring-50" />
             <b>Core Elements Complete</b>
-          </div>Publishing alert
+          </div>
+          Publishing alert
 
           <div class="rounded-lg bg-mint px-6">
             <div
