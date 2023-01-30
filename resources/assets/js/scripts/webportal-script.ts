@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import jQuery from 'jquery';
-import 'select2';
 
 jQuery(function () {
   $('body').on('click', '#hamburger', () => {
@@ -13,7 +12,7 @@ jQuery(function () {
 
   // close the navMenu by clicking outside
   $('body').on('click', (e) => {
-    if (e.target.classList[0] == 'menu-overlay') {
+    if (e.target.classList[0] === 'menu-overlay') {
       $('#nav-list').removeClass('nav-active');
       $('#hamburger').removeClass('active');
       $('body').removeClass('overflow-hidden');
