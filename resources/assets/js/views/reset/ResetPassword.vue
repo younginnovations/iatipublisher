@@ -5,7 +5,7 @@
       <h2>Reset Password</h2>
       <p class="mb-4">Please enter your new password</p>
       <div class="text-center">
-        <span v-if="errorData.email != ''" class="error" role="alert">
+        <span v-if="errorData.email !== ''" class="error" role="alert">
           {{ errorData.email }}
         </span>
       </div>
@@ -23,13 +23,13 @@
           v-model="formData.password"
           class="input"
           :class="{
-            error__input: errorData.password != '',
+            error__input: errorData.password !== '',
           }"
           type="password"
           placeholder="Enter a new password"
         />
         <svg-vue class="lock-icon text-xl" icon="pw-lock" />
-        <span v-if="errorData.password != ''" class="error" role="alert">
+        <span v-if="errorData.password !== ''" class="error" role="alert">
           {{ errorData.password }}
         </span>
       </div>
@@ -46,14 +46,14 @@
           :class="{
             error__input:
               errorData.password_confirmation ||
-              (errorData.password && formData.password != '') != '',
+              (errorData.password && formData.password !== '') !== '',
           }"
           type="password"
           placeholder="Re-enter your password"
         />
         <svg-vue class="lock-icon text-xl" icon="pw-lock" />
         <span
-          v-if="errorData.password_confirmation != ''"
+          v-if="errorData.password_confirmation !== ''"
           class="error"
           role="alert"
         >
@@ -68,10 +68,9 @@
 </template>
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
-import Loader from '../../components/Loader.vue';
 import axios from 'axios';
-import CryptoJS from 'crypto-js';
-
+import Loader from 'Components/Loader.vue';
+import encrypt from 'Composable/encryption';
 export default defineComponent({
   components: {
     Loader,
@@ -99,36 +98,6 @@ export default defineComponent({
       password: '',
       password_confirmation: '',
     });
-
-    function encrypt(string: string, key: string) {
-      let iv = CryptoJS.lib.WordArray.random(16); // the reason to be 16, please read on `encryptMethod` property.
-
-      let salt = CryptoJS.lib.WordArray.random(256);
-      let iterations = 999;
-      let encryptMethodLength = 256 / 4; // example: AES number is 256 / 4 = 64
-      let hashKey = CryptoJS.PBKDF2(key, salt, {
-        hasher: CryptoJS.algo.SHA512,
-        keySize: encryptMethodLength / 8,
-        iterations: iterations,
-      });
-
-      let encrypted = CryptoJS.AES.encrypt(string, hashKey, {
-        mode: CryptoJS.mode.CBC,
-        iv: iv,
-      });
-      let encryptedString = CryptoJS.enc.Base64.stringify(encrypted.ciphertext);
-
-      let output = {
-        ciphertext: encryptedString,
-        iv: CryptoJS.enc.Hex.stringify(iv),
-        salt: CryptoJS.enc.Hex.stringify(salt),
-        iterations: iterations,
-      };
-
-      return CryptoJS.enc.Base64.stringify(
-        CryptoJS.enc.Utf8.parse(JSON.stringify(output))
-      );
-    }
 
     function reset() {
       loaderVisibility.value = true;
