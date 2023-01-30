@@ -47,7 +47,7 @@
     <div id="app">
         <web-header title='@yield('title', 'IATI PUBLISHER')' auth='{{ (bool) Auth::user() }}'
             :super-admin='{{ Auth::check() ? (int) isSuperAdmin() : 0 }}'></web-header>
-        @yield('content')
+        <main  >@yield('content')</main>
         @if (Auth::user())
             <admin-footer :super-admin='{{ Auth::check() ? (int) isSuperAdmin() : 0 }}'></admin-footer>
         @else
