@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import jQuery from 'jquery';
-import 'select2';
 
 jQuery(function () {
   $('body').on('click', '#hamburger', () => {

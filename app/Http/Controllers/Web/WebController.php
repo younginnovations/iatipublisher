@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
@@ -18,12 +19,13 @@ class WebController extends Controller
     /**
      * Shows the web page.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @param string $page
+     * @return Renderable
      */
-    public function index($page = 'signin'): \Illuminate\Contracts\Support\Renderable
+    public function index(string $page = 'signin'): Renderable
     {
         try {
-            list($message, $intent) = $this->updateMessageIntent();
+            [$message, $intent] = $this->updateMessageIntent();
 
             return view('web.welcome', compact('page', 'intent', 'message'));
         } catch (\Exception $e) {
@@ -52,9 +54,9 @@ class WebController extends Controller
     /**
      * Shows the web page.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return Renderable
      */
-    public function register(): \Illuminate\Contracts\Support\Renderable
+    public function register(): Renderable
     {
         return view('web.register');
     }
@@ -62,9 +64,9 @@ class WebController extends Controller
     /**
      * Shows the about page.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return Renderable
      */
-    public function about(): \Illuminate\Contracts\Support\Renderable
+    public function about(): Renderable
     {
         return view('web.about');
     }
@@ -72,9 +74,9 @@ class WebController extends Controller
     /**
      * Shows the publisher checklist page.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return Renderable
      */
-    public function publishingChecklist(): \Illuminate\Contracts\Support\Renderable
+    public function publishingChecklist(): Renderable
     {
         return view('web.publishing_checklist');
     }
@@ -82,9 +84,9 @@ class WebController extends Controller
     /**
      * Shows the iati standard checklist page.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return Renderable
      */
-    public function iatiStandard(): \Illuminate\Contracts\Support\Renderable
+    public function iatiStandard(): Renderable
     {
         return view('web.iati_standard');
     }
@@ -92,9 +94,9 @@ class WebController extends Controller
     /**
      * Shows the support checklist page.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return Renderable
      */
-    public function support(): \Illuminate\Contracts\Support\Renderable
+    public function support(): Renderable
     {
         return view('web.support');
     }
@@ -102,6 +104,7 @@ class WebController extends Controller
     /**
      * Returns csv file import template.
      *
+     * @param string $type
      * @return BinaryFileResponse|JsonResponse
      */
     public function downloadIatiStandardManual(string $type): BinaryFileResponse|JsonResponse
