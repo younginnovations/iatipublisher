@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\IATI\Services\IatiApiLog;
+namespace App\IATI\Services\ApiLog;
 
-use App\IATI\Repositories\IatiApiLog\IatiApiLogRepository;
+use App\IATI\Repositories\ApiLog\ApiLogRepository;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -12,12 +12,12 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class ApiLogService.
  */
-class IatiApiLogService
+class ApiLogService
 {
     /**
-     * @var iatiApiLogRepository
+     * @var ApiLogRepository
      */
-    private $iatiApiLogRepo;
+    private $apiLogRepo;
 
     /**
      * @var DatabaseManager
@@ -27,12 +27,12 @@ class IatiApiLogService
     /**
      * ApiLogService constructor.
      *
-     * @param iatiApiLogRepository $iatiApiLogRepo
+     * @param ApiLogRepository $apiLogRepo
      * @param DatabaseManager  $db
      */
-    public function __construct(IatiApiLogRepository $iatiApiLogRepo, DatabaseManager $db)
+    public function __construct(ApiLogRepository $apiLogRepo, DatabaseManager $db)
     {
-        $this->iatiApiLogRepo = $iatiApiLogRepo;
+        $this->apiLogRepo = $apiLogRepo;
         $this->db = $db;
     }
 
@@ -43,7 +43,7 @@ class IatiApiLogService
      */
     public function getAllApiLogs(): Collection
     {
-        return $this->iatiApiLogRepo->all();
+        return $this->apiLogRepo->all();
     }
 
     /**
@@ -53,7 +53,7 @@ class IatiApiLogService
      */
     public function save(array $postData): Model
     {
-        return $this->iatiApiLogRepo->store($postData);
+        return $this->apiLogRepo->store($postData);
     }
 
     /**
@@ -65,6 +65,6 @@ class IatiApiLogService
      */
     public function store(array $data): Model
     {
-        return $this->iatiApiLogRepo->store($data);
+        return $this->apiLogRepo->store($data);
     }
 }

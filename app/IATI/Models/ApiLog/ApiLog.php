@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\IATI\Models\IatiApiLog;
+namespace App\IATI\Models\ApiLog;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class ApiLog.
  */
-class IatiApiLog extends Model
+class ApiLog extends Model
 {
     /**
      * The attributes that are mass assignable.

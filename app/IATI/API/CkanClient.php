@@ -2,7 +2,7 @@
 
 namespace App\IATI\API;
 
-use App\IATI\Repositories\IatiApiLog\IatiApiLogRepository;
+use App\IATI\Repositories\ApiLog\ApiLogRepository;
 use DateTime;
 use DateTimeZone;
 use Exception;
@@ -184,7 +184,7 @@ class CkanClient
         // Execute request and get response headers.
         $response = curl_exec($this->curl_handler);
 
-        // app()->make(IatiApiLogRepository::class)->store(generateApiInfo($method, $uri, is_array($data) ? $data : [], $response));
+        // app()->make(ApiLogRepository::class)->store(generateApiInfo($method, $uri, is_array($data) ? $data : [], $response));
 
         try {
             $responseArray = json_decode($response, true);

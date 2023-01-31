@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\IATI\Models\User\Role;
-use App\IATI\Services\IatiApiLog\IatiApiLogService;
+use App\IATI\Services\ApiLog\ApiLogService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
 use App\Providers\RouteServiceProvider;
@@ -49,7 +49,7 @@ class RegisterController extends Controller
 
     protected OrganizationService $organizationService;
     protected UserService $userService;
-    protected IatiApiLogService $iatiApiLogService;
+    protected ApiLogService $apiLogService;
     protected DatabaseManager $db;
 
     /**
@@ -57,14 +57,14 @@ class RegisterController extends Controller
      *
      * @param OrganizationService $organizationService
      * @param UserService         $userService
-     * @param IatiApiLogService   $iatiApiLogService
+     * @param ApiLogService   $apiLogService
      * @param DatabaseManager     $db
      */
-    public function __construct(OrganizationService $organizationService, UserService $userService, IatiApiLogService $iatiApiLogService, DatabaseManager $db)
+    public function __construct(OrganizationService $organizationService, UserService $userService, ApiLogService $apiLogService, DatabaseManager $db)
     {
         $this->organizationService = $organizationService;
         $this->userService = $userService;
-        $this->iatiApiLogService = $iatiApiLogService;
+        $this->apiLogService = $apiLogService;
         $this->db = $db;
 
         $this->middleware('guest');
@@ -130,7 +130,7 @@ class RegisterController extends Controller
 
             $client = new Client($clientConfig);
             $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig);
-            $this->iatiApiLogService->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig, $res));
+            $this->apiLogService->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig, $res));
 
             if ($res->getStatusCode() === 404) {
                 return response()->json([

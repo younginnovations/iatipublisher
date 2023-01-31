@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\User;
 
 use App\IATI\Models\User\User;
-use App\IATI\Repositories\IatiApiLog\IatiApiLogRepository;
+use App\IATI\Repositories\ApiLog\ApiLogRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Repositories\Setting\SettingRepository;
 use App\IATI\Repositories\User\RoleRepository;
@@ -35,9 +35,9 @@ class UserService
     private RoleRepository $roleRepo;
 
     /**
-     * @var IatiApiLogRepository
+     * @var ApiLogRepository
      */
-    private IatiApiLogRepository $iatiApiLogRepo;
+    private ApiLogRepository $apiLogRepo;
 
     /**
      * @var OrganizationRepository
@@ -55,15 +55,15 @@ class UserService
      * @param UserRepository         $userRepo
      * @param RoleRepository         $roleRepo
      * @param OrganizationRepository $organizationRepo
-     * @param IatiApiLogRepository   $iatiApiLogRepo
+     * @param ApiLogRepository   $apiLogRepo
      * @param SettingRepository $settingRepo
      */
-    public function __construct(UserRepository $userRepo, RoleRepository $roleRepo, OrganizationRepository $organizationRepo, IatiApiLogRepository $iatiApiLogRepo, SettingRepository $settingRepo)
+    public function __construct(UserRepository $userRepo, RoleRepository $roleRepo, OrganizationRepository $organizationRepo, ApiLogRepository $apiLogRepo, SettingRepository $settingRepo)
     {
         $this->userRepo = $userRepo;
         $this->roleRepo = $roleRepo;
         $this->organizationRepo = $organizationRepo;
-        $this->iatiApiLogRepo = $iatiApiLogRepo;
+        $this->apiLogRepo = $apiLogRepo;
         $this->settingRepo = $settingRepo;
     }
 
@@ -188,7 +188,7 @@ class UserService
 
         $client = new Client($clientConfig);
         $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_list', $requestConfig);
-        $this->iatiApiLogRepo->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_list', $requestConfig, $res));
+        $this->apiLogRepo->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_list', $requestConfig, $res));
 
         $errors = [];
 
@@ -235,7 +235,7 @@ class UserService
 
         $client = new Client($clientConfig);
         $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_list', $requestConfig);
-        $this->iatiApiLogRepo->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_list', $requestConfig, $res));
+        $this->apiLogRepo->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_list', $requestConfig, $res));
 
         $errors = [];
 
@@ -286,7 +286,7 @@ class UserService
 
         $client = new Client($clientConfig);
         $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/user_show', $requestConfig);
-        $this->iatiApiLogRepo->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/user_show', $requestConfig, $res));
+        $this->apiLogRepo->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/user_show', $requestConfig, $res));
         $errors = [];
 
         if ($res->getStatusCode() === 404) {
@@ -339,7 +339,7 @@ class UserService
         $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
         $client = new Client($clientConfig);
         $res = $client->request('POST', env('IATI_API_ENDPOINT') . '/action/user_create', $requestConfig);
-        $this->iatiApiLogRepo->store(generateApiInfo('POST', env('IATI_API_ENDPOINT') . '/action/user_create', $requestConfig, $res));
+        $this->apiLogRepo->store(generateApiInfo('POST', env('IATI_API_ENDPOINT') . '/action/user_create', $requestConfig, $res));
         $response = json_decode($res->getBody()->getContents());
 
         if ($response->success) {
@@ -381,7 +381,7 @@ class UserService
         $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
         $client = new Client($clientConfig);
         $res = $client->request('POST', env('IATI_API_ENDPOINT') . '/action/api_token_create', $requestConfig);
-        $this->iatiApiLogRepo->store(generateApiInfo('POST', env('IATI_API_ENDPOINT') . '/action/api_token_create', $requestConfig, $res));
+        $this->apiLogRepo->store(generateApiInfo('POST', env('IATI_API_ENDPOINT') . '/action/api_token_create', $requestConfig, $res));
         $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
 
         if ($response->success) {
@@ -421,7 +421,7 @@ class UserService
         $clientConfig['headers']['X-CKAN-API-Key'] = $token;
         $client = new Client($clientConfig);
         $res = $client->request('POST', env('IATI_API_ENDPOINT') . '/action/organization_create', $requestConfig);
-        $this->iatiApiLogRepo->store(generateApiInfo('POST', env('IATI_API_ENDPOINT') . '/action/user_show', $requestConfig, $res));
+        $this->apiLogRepo->store(generateApiInfo('POST', env('IATI_API_ENDPOINT') . '/action/user_show', $requestConfig, $res));
         $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR);
 
         if ($response->success) {

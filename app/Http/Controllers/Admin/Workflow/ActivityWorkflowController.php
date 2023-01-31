@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Admin\Workflow;
 
 use App\Exceptions\PublisherNotFound;
 use App\Http\Controllers\Controller;
-use App\IATI\Services\IatiApiLog\IatiApiLogService;
+use App\IATI\Services\ApiLog\ApiLogService;
 use App\IATI\Services\Validator\ActivityValidatorResponseService;
 use App\IATI\Services\Workflow\ActivityWorkflowService;
 use GuzzleHttp\Exception\BadResponseException;
@@ -30,22 +30,22 @@ class ActivityWorkflowController extends Controller
     protected ActivityValidatorResponseService $validatorService;
 
     /**
-     * @var IatiApiLogService
+     * @var ApiLogService
      */
-    protected IatiApiLogService $iatiApiLogService;
+    protected ApiLogService $apiLogService;
 
     /**
      * ActivityWorkflowController Constructor.
      *
      * @param ActivityWorkflowService $activityWorkflowService
      * @param ActivityValidatorResponseService $validatorService
-     * @param IatiApiLogService $iatiApiLogService
+     * @param ApiLogService $apiLogService
      */
-    public function __construct(ActivityWorkflowService $activityWorkflowService, ActivityValidatorResponseService $validatorService, IatiApiLogService $iatiApiLogService)
+    public function __construct(ActivityWorkflowService $activityWorkflowService, ActivityValidatorResponseService $validatorService, ApiLogService $apiLogService)
     {
         $this->activityWorkflowService = $activityWorkflowService;
         $this->validatorService = $validatorService;
-        $this->iatiApiLogService = $iatiApiLogService;
+        $this->apiLogService = $apiLogService;
     }
 
     /**
@@ -143,7 +143,7 @@ class ActivityWorkflowController extends Controller
             }
 
             $response = $this->activityWorkflowService->validateActivityOnIATIValidator($activity);
-            $this->iatiApiLogService->store(generateApiInfo('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)], json_encode($response)));
+            $this->apiLogService->store(generateApiInfo('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)], json_encode($response)));
 
             if ($this->validatorService->updateOrCreateresponse($id, json_decode($response, true, 512, JSON_THROW_ON_ERROR))) {
                 return response()->json(json_decode($response, true, 512, JSON_THROW_ON_ERROR));
@@ -153,7 +153,7 @@ class ActivityWorkflowController extends Controller
         } catch (BadResponseException $ex) {
             if ($ex->getCode() === 422) {
                 $response = $ex->getResponse()->getBody()->getContents();
-                $this->iatiApiLogService->store(generateApiInfo('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)], json_encode($response)));
+                $this->apiLogService->store(generateApiInfo('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)], json_encode($response)));
 
                 if ($this->validatorService->updateOrCreateResponse($id, json_decode($response, true, 512, JSON_THROW_ON_ERROR))) {
                     return response()->json(json_decode($response, true, 512, JSON_THROW_ON_ERROR));

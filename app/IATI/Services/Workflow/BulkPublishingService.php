@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Workflow;
 
-use App\IATI\Repositories\IatiApiLog\IatiApiLogRepository;
+use App\IATI\Repositories\ApiLog\ApiLogRepository;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\BulkPublishingStatusService;
 use App\IATI\Services\Validator\ActivityValidatorResponseService;
@@ -39,9 +39,9 @@ class BulkPublishingService
     protected BulkPublishingStatusService $publishingStatusService;
 
     /**
-     * @var IatiApiLogRepository
+     * @var ApiLogRepository
      */
-    protected IatiApiLogRepository $iatiApiLogRepo;
+    protected ApiLogRepository $apiLogRepo;
 
     /**
      * BulkPublishingService Constructor.
@@ -50,20 +50,20 @@ class BulkPublishingService
      * @param ActivityWorkflowService $activityWorkflowService
      * @param ActivityValidatorResponseService $validatorService
      * @param BulkPublishingStatusService $publishingStatusService
-     * @param IatiApiLogRepository $iatiApiLogRepo
+     * @param ApiLogRepository $apiLogRepo
      */
     public function __construct(
         ActivityService $activityService,
         ActivityWorkflowService $activityWorkflowService,
         ActivityValidatorResponseService $validatorService,
         BulkPublishingStatusService $publishingStatusService,
-        IatiApiLogRepository $iatiApiLogRepo
+        ApiLogRepository $apiLogRepo
     ) {
         $this->activityService = $activityService;
         $this->activityWorkflowService = $activityWorkflowService;
         $this->validatorService = $validatorService;
         $this->publishingStatusService = $publishingStatusService;
-        $this->iatiApiLogRepo = $iatiApiLogRepo;
+        $this->apiLogRepo = $apiLogRepo;
     }
 
     /**
@@ -129,7 +129,7 @@ class BulkPublishingService
 
             if ($activity && $activity->status === 'draft') {
                 $response = $this->validateWithException($activity);
-                $this->iatiApiLogRepo->store(generateApiInfo('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)], json_encode($response)));
+                $this->apiLogRepo->store(generateApiInfo('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)], json_encode($response)));
 
                 if (!Arr::get($response, 'success', true)) {
                     logger()->error('Error has occurred while validating activity with id' . $activityId);

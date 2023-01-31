@@ -2,31 +2,31 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\IatiApiLog;
+namespace App\Http\Controllers\ApiLog;
 
 use App\Http\Controllers\Controller;
-use App\IATI\Services\IatiApiLog\IatiApiLogService;
+use App\IATI\Services\ApiLog\ApiLogService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Class iatiApiLogController.
+ * Class ApiLogController.
  */
-class IatiApiLogController extends Controller
+class ApiLogController extends Controller
 {
     /**
-     * @var IatiiatiApiLogService
+     * @var ApiLogService
      */
-    protected $iatiApiLog;
+    protected $apiLog;
 
     /**
-     * iatiApiLogController constructor.
+     * ApiLogController constructor.
      *
-     * @param IatiiatiApiLogService $iatiApiLog
+     * @param IatiApiLogService $apiLog
      */
-    public function __construct(IatiApiLogService $iatiApiLog)
+    public function __construct(ApiLogService $apiLog)
     {
-        $this->iatiApiLog = $iatiApiLog;
+        $this->apiLog = $apiLog;
     }
 
     /**
@@ -48,7 +48,7 @@ class IatiApiLogController extends Controller
     public function getData(): JsonResponse
     {
         try {
-            return response()->json(['success' => true, 'message' => $this->iatiApiLog->getAllApiLogs()]);
+            return response()->json(['success' => true, 'message' => $this->apiLog->getAllApiLogs()]);
         } catch (Exception $e) {
             logger()->error($e);
 

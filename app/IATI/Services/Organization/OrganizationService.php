@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Organization;
 
 use App\IATI\Models\Organization\Organization;
-use App\IATI\Repositories\IatiApiLog\IatiApiLogRepository;
+use App\IATI\Repositories\ApiLog\ApiLogRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Traits\OrganizationXmlBaseElements;
 use GuzzleHttp\Client;
@@ -28,20 +28,20 @@ class OrganizationService
     private OrganizationRepository $organizationRepo;
 
     /**
-     * @var IatiApiLogRepository
+     * @var ApiLogRepository
      */
-    private IatiApiLogRepository $iatiApiLogRepo;
+    private ApiLogRepository $apiLogRepo;
 
     /**
      * UserService constructor.
      *
      * @param OrganizationRepository $organizationRepo
-     * @param IatiApiLogRepository $iatiApiLogRepo
+     * @param ApiLogRepository $apiLogRepo
      */
-    public function __construct(OrganizationRepository $organizationRepo, IatiApiLogRepository $iatiApiLogRepo)
+    public function __construct(OrganizationRepository $organizationRepo, ApiLogRepository $apiLogRepo)
     {
         $this->organizationRepo = $organizationRepo;
-        $this->iatiApiLogRepo = $iatiApiLogRepo;
+        $this->apiLogRepo = $apiLogRepo;
     }
 
     /**
@@ -210,7 +210,7 @@ class OrganizationService
 
         $client = new Client($clientConfig);
         $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig);
-        $this->iatiApiLogRepo->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig, $res));
+        $this->apiLogRepo->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig, $res));
 
         if ($res->getStatusCode() === 404) {
             return false;

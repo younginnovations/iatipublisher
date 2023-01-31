@@ -3,7 +3,7 @@
 namespace App\IATI\Traits;
 
 use App\Exceptions\PublisherNotFound;
-use App\IATI\Repositories\IatiApiLog\IatiApiLogRepository;
+use App\IATI\Repositories\ApiLog\ApiLogRepository;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
@@ -42,7 +42,7 @@ trait RegistryApiInvoker
 
         $res = $client->get(sprintf('%s/action/%s', env('IATI_API_ENDPOINT'), $action), $requestConfig);
 
-        app(IatiApiLogRepository::class)->store(generateApiInfo('GET', sprintf('%s/action/%s', env('IATI_API_ENDPOINT'), $action), $requestConfig, $res));
+        app(ApiLogRepository::class)->store(generateApiInfo('GET', sprintf('%s/action/%s', env('IATI_API_ENDPOINT'), $action), $requestConfig, $res));
 
         return $res->getBody()->getContents();
     }

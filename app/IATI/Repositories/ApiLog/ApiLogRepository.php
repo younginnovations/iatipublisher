@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\IATI\Repositories\IatiApiLog;
+namespace App\IATI\Repositories\ApiLog;
 
-use App\IATI\Models\IatiApiLog\IatiApiLog;
+use App\IATI\Models\ApiLog\ApiLog;
 use App\IATI\Repositories\Repository;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Class ApiLogRepository.
  */
-class IatiApiLogRepository extends Repository
+class ApiLogRepository extends Repository
 {
     /**
      * Get model name with namespace.
@@ -20,7 +20,7 @@ class IatiApiLogRepository extends Repository
      */
     public function getModel(): string
     {
-        return IatiApiLog::class;
+        return ApiLog::class;
     }
 
     /**
