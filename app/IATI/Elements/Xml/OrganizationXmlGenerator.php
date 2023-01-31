@@ -169,9 +169,8 @@ class OrganizationXmlGenerator
         $xmlData['iati-organisation'] = $this->getXmlData($organization);
         $xmlData['iati-organisation']['@attributes'] = [
             'last-updated-datetime' => gmdate('c', time()),
-            'xml:lang'              => $default_values->default_language ?? null,
-            'default-currency'      => $default_values->default_currency ?? null,
-            'hierarchy'             => $activity_default_values->default_hierarchy ?? 1,
+            'xml:lang'              => Arr::get($default_values, 'default_language', null),
+            'default-currency'      => Arr::get($default_values, 'default_currency', null),
         ];
 
         return $this->arrayToXml->createXml('iati-organisations', $xmlData);
