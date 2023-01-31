@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin\Organization;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organization\OrganizationIdentifier\OrganizationIdentifierRequest;
+use App\IATI\Services\ApiLog\ApiLogService;
 use App\IATI\Services\Organization\OrganizationIdentifierService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -24,13 +25,19 @@ class OrganizationIdentifierController extends Controller
     protected OrganizationIdentifierService $organizationIdentifierService;
 
     /**
+     * @var ApiLogService
+     */
+    protected ApiLogService $apiLogService;
+
+    /**
      * OrganizationIdentifierController Constructor.
      *
      * @param OrganizationIdentifierService    $organizationIdentifierService
      */
-    public function __construct(OrganizationIdentifierService $organizationIdentifierService)
+    public function __construct(OrganizationIdentifierService $organizationIdentifierService, ApiLogService $apiLogService)
     {
         $this->organizationIdentifierService = $organizationIdentifierService;
+        $this->apiLogService = $apiLogService;
     }
 
     /**
@@ -107,12 +114,14 @@ class OrganizationIdentifierController extends Controller
                     ],
                 ]
             );
-
-            $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', [
+            $requestOptions = [
                 'auth'            => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
                 'query'           => ['id' => $organization['publisher_id']],
                 'connect_timeout' => 500,
-            ]);
+            ];
+
+            $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOptions);
+            $this->apiLogService->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOptions, $res));
 
             $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
 

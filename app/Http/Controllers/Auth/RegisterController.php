@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\IATI\Models\User\Role;
+use App\IATI\Services\ApiLog\ApiLogService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
 use App\Providers\RouteServiceProvider;
@@ -18,7 +19,6 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -49,7 +49,7 @@ class RegisterController extends Controller
 
     protected OrganizationService $organizationService;
     protected UserService $userService;
-    protected Log $logger;
+    protected ApiLogService $apiLogService;
     protected DatabaseManager $db;
 
     /**
@@ -57,14 +57,14 @@ class RegisterController extends Controller
      *
      * @param OrganizationService $organizationService
      * @param UserService         $userService
-     * @param Log                 $logger
+     * @param ApiLogService   $apiLogService
      * @param DatabaseManager     $db
      */
-    public function __construct(OrganizationService $organizationService, UserService $userService, Log $logger, DatabaseManager $db)
+    public function __construct(OrganizationService $organizationService, UserService $userService, ApiLogService $apiLogService, DatabaseManager $db)
     {
         $this->organizationService = $organizationService;
         $this->userService = $userService;
-        $this->logger = $logger;
+        $this->apiLogService = $apiLogService;
         $this->db = $db;
 
         $this->middleware('guest');
@@ -130,6 +130,7 @@ class RegisterController extends Controller
 
             $client = new Client($clientConfig);
             $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig);
+            $this->apiLogService->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig, $res));
 
             if ($res->getStatusCode() === 404) {
                 return response()->json([
@@ -142,7 +143,7 @@ class RegisterController extends Controller
             }
 
             $errors = [];
-            $response = json_decode($res->getBody()->getContents())->result;
+            $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
 
             if ($postData['publisher_name'] !== $response->title) {
                 $errors['publisher_name'] = ['Publisher Name doesn\'t match your IATI Registry information'];

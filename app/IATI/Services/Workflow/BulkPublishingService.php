@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Workflow;
 
+use App\IATI\Repositories\ApiLog\ApiLogRepository;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\BulkPublishingStatusService;
 use App\IATI\Services\Validator\ActivityValidatorResponseService;
@@ -38,23 +39,31 @@ class BulkPublishingService
     protected BulkPublishingStatusService $publishingStatusService;
 
     /**
+     * @var ApiLogRepository
+     */
+    protected ApiLogRepository $apiLogRepo;
+
+    /**
      * BulkPublishingService Constructor.
      *
      * @param ActivityService $activityService
      * @param ActivityWorkflowService $activityWorkflowService
      * @param ActivityValidatorResponseService $validatorService
      * @param BulkPublishingStatusService $publishingStatusService
+     * @param ApiLogRepository $apiLogRepo
      */
     public function __construct(
         ActivityService $activityService,
         ActivityWorkflowService $activityWorkflowService,
         ActivityValidatorResponseService $validatorService,
-        BulkPublishingStatusService $publishingStatusService
+        BulkPublishingStatusService $publishingStatusService,
+        ApiLogRepository $apiLogRepo
     ) {
         $this->activityService = $activityService;
         $this->activityWorkflowService = $activityWorkflowService;
         $this->validatorService = $validatorService;
         $this->publishingStatusService = $publishingStatusService;
+        $this->apiLogRepo = $apiLogRepo;
     }
 
     /**
@@ -120,6 +129,7 @@ class BulkPublishingService
 
             if ($activity && $activity->status === 'draft') {
                 $response = $this->validateWithException($activity);
+                $this->apiLogRepo->store(generateApiInfo('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)], json_encode($response)));
 
                 if (!Arr::get($response, 'success', true)) {
                     logger()->error('Error has occurred while validating activity with id' . $activityId);
@@ -262,7 +272,7 @@ class BulkPublishingService
             }
         }
 
-//        $response['activities'] = array_values($response['activities']);
+        //        $response['activities'] = array_values($response['activities']);
         return $response;
     }
 

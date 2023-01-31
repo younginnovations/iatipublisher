@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 if (!function_exists('dashesToCamelCase')) {
     /**
@@ -1120,5 +1121,33 @@ if (!function_exists('get_time_stamped_text')) {
     function getTimeStampedText(string $filename): string
     {
         return sprintf('%s_%s', $filename, date('Y_m_d_His'));
+    }
+}
+
+if (!function_exists('generateApiInfo')) {
+    /**
+     * Generates api log info for API logging.
+     *
+     * @param $request
+     *
+     * @return array
+     */
+    function generateApiInfo($method, $requestURI, $requestOption, $response = null): array
+    {
+        $responseBody = is_string($response) ? null : $response->getBody();
+        $uri = Str::startsWith($requestURI, 'http') ? $requestURI : sprintf('%s/%s', env('IATI_API_ENDPOINT'), $requestURI);
+
+        $requestInfo = [
+            'method'       => $method,
+            'url'          => $uri,
+            'request'      => $requestOption,
+            'response'     => is_string($response) ? $response : json_decode((string) $response->getBody(), true),
+        ];
+
+        if ($responseBody) {
+            $responseBody->seek(0);
+        }
+
+        return $requestInfo;
     }
 }

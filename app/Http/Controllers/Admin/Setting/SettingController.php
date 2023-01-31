@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin\Setting;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Setting\DefaultFormRequest;
 use App\Http\Requests\Setting\PublisherFormRequest;
+use App\IATI\Services\ApiLog\ApiLogService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
 use GuzzleHttp\Client;
@@ -26,6 +27,7 @@ class SettingController extends Controller
 {
     protected OrganizationService $organizationService;
     protected SettingService $settingService;
+    protected ApiLogService $apiLogService;
     protected DatabaseManager $db;
 
     /**
@@ -33,12 +35,14 @@ class SettingController extends Controller
      *
      * @param OrganizationService $organizationService
      * @param SettingService      $settingService
+     * @param ApiLogService   $apiLogService
      * @param DatabaseManager     $db
      */
-    public function __construct(OrganizationService $organizationService, SettingService $settingService, DatabaseManager $db)
+    public function __construct(OrganizationService $organizationService, SettingService $settingService, ApiLogService $apiLogService, DatabaseManager $db)
     {
         $this->organizationService = $organizationService;
         $this->settingService = $settingService;
+        $this->apiLogService = $apiLogService;
         $this->db = $db;
     }
 
@@ -198,13 +202,14 @@ class SettingController extends Controller
                     ],
                 ]
             );
-
-            $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', [
+            $requestOption = [
                 'auth'            => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
                 'query'           => ['id' => $data['publisher_id']],
                 'connect_timeout' => 500,
-            ]);
+            ];
 
+            $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOption);
+            $this->apiLogService->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOption, $res));
             $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
 
             return ['success' => true, 'validation' => (bool) $response];
@@ -235,13 +240,14 @@ class SettingController extends Controller
                         ],
                     ]
                 );
-
-                $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', [
+                $requestOptions = [
                     'auth'            => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
                     'connect_timeout' => 500,
-                ]);
+                ];
 
-                $response = json_decode($res->getBody()->getContents(), false)->result;
+                $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', $requestOptions);
+                $this->apiLogService->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_list_for_user', $requestOptions, $res));
+                $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
 
                 return ['success' => true, 'validation' => in_array($data['publisher_id'], array_column($response, 'name'), true)];
             }

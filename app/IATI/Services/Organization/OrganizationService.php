@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Services\Organization;
 
 use App\IATI\Models\Organization\Organization;
+use App\IATI\Repositories\ApiLog\ApiLogRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Traits\OrganizationXmlBaseElements;
 use GuzzleHttp\Client;
@@ -27,13 +28,20 @@ class OrganizationService
     private OrganizationRepository $organizationRepo;
 
     /**
+     * @var ApiLogRepository
+     */
+    private ApiLogRepository $apiLogRepo;
+
+    /**
      * UserService constructor.
      *
      * @param OrganizationRepository $organizationRepo
+     * @param ApiLogRepository $apiLogRepo
      */
-    public function __construct(OrganizationRepository $organizationRepo)
+    public function __construct(OrganizationRepository $organizationRepo, ApiLogRepository $apiLogRepo)
     {
         $this->organizationRepo = $organizationRepo;
+        $this->apiLogRepo = $apiLogRepo;
     }
 
     /**
@@ -202,12 +210,13 @@ class OrganizationService
 
         $client = new Client($clientConfig);
         $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig);
+        $this->apiLogRepo->store(generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestConfig, $res));
 
         if ($res->getStatusCode() === 404) {
             return false;
         }
 
-        $result = json_decode($res->getBody()->getContents())->result;
+        $result = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
 
         if (strcasecmp($result->state, 'active') === 0) {
             return true;
