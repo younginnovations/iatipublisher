@@ -61,12 +61,12 @@ onUnmounted(() => {
   }
 
   &.animate-loader &__viewer {
-    animation: FillAnimation 6s cubic-bezier(0.01, 1.06, 0.71, 1) forwards;
+    animation: FillAnimation 6s linear forwards;
   }
 
   &.animate-loader &__state::before {
     content: '';
-    animation: TextChange 6s cubic-bezier(0.01, 1.06, 0.71, 1) forwards;
+    animation: TextChange 6s linear forwards;
   }
 
   &__content {
@@ -82,47 +82,6 @@ onUnmounted(() => {
   0% {
     transform: scaleX(0.028);
   }
-  10% {
-    transform: scaleX(0.028);
-  }
-  20% {
-    transform: scaleX(0.028);
-  }
-
-  25% {
-    transform: scaleX(0.24);
-  }
-  35% {
-    transform: scaleX(0.24);
-  }
-  45% {
-    transform: scaleX(0.24);
-  }
-
-  50% {
-    transform: scaleX(0.624);
-  }
-
-  60% {
-    transform: scaleX(0.624);
-  }
-
-  70% {
-    transform: scaleX(0.624);
-  }
-
-  75% {
-    transform: scaleX(0.928);
-  }
-
-  85% {
-    transform: scaleX(0.928);
-  }
-
-  95% {
-    transform: scaleX(0.928);
-  }
-
   100% {
     transform: scaleX(1);
   }

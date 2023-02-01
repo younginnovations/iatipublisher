@@ -1,5 +1,5 @@
 <template>
-  <div class="iati-list-table">
+  <div class="iati-list-table mb-10">
     <table>
       <thead>
         <tr class="bg-n-10">

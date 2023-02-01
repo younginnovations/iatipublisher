@@ -489,6 +489,7 @@ export default defineComponent({
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;
+        console.log(toastData.message);
       }
     });
     const calcWidth = (event) => {
