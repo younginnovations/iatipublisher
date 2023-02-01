@@ -1,10 +1,19 @@
 {
+<<<<<<< HEAD
     "/js/app.js": "/js/app.js?id=74f053e3872148f5f06042407e1cfaa5",
+=======
+    "/js/app.js": "/js/app.js?id=437a8740a496637dda04af4916ccab82",
+>>>>>>> ad7a9133 (table overfloe isue fix)
     "/js/script.js": "/js/script.js?id=4920eb85d84da1e87cb71769c04a12a2",
     "/js/webportal-script.js": "/js/webportal-script.js?id=f9c23d4bccd261db9414465886315f45",
     "/js/formbuilder.js": "/js/formbuilder.js?id=23e0052da87288dd57b8df6421880767",
     "/manifest.js": "/manifest.js?id=3ed1124c8f4dcb98acc36de67cb80349",
+<<<<<<< HEAD
     "/css/webportal-app.css": "/css/webportal-app.css?id=40679b1f2341b788ef69f2785e119ca7",
     "/css/app.css": "/css/app.css?id=4ba9aa42728d914c5fd0023298ae995e",
+=======
+    "/css/webportal-app.css": "/css/webportal-app.css?id=d2ef04c6c832f39f668bcdd2590d9e78",
+    "/css/app.css": "/css/app.css?id=b0989bf858e98018024b0d23bf2e5df5",
+>>>>>>> ad7a9133 (table overfloe isue fix)
     "/js/vendor.js": "/js/vendor.js?id=57d9d32722889a1dd30e9b4bd81c8492"
 }
