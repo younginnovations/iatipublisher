@@ -208,14 +208,14 @@ class OrganizationXmlGenerator
     {
         $xmlOrganization = [];
         $xmlOrganization['organisation-identifier'] = $this->organizationIdentifierService->getXmlData($organization);
-        $xmlOrganization['document-link'] = $this->documentLinkService->getXmlData($organization);
-        $xmlOrganization['reporting-org'] = $this->reportingOrgService->getXmlData($organization);
-        $xmlOrganization['recipient-org-budget'] = $this->recipientOrgBudgetService->getXmlData($organization);
-        $xmlOrganization['recipient-country-budget'] = $this->recipientCountryBudgetService->getXmlData($organization);
-        $xmlOrganization['recipient-region-budget'] = $this->recipientRegionBudgetService->getXmlData($organization);
         $xmlOrganization['name'] = $this->nameService->getXmlData($organization);
+        $xmlOrganization['reporting-org'] = $this->reportingOrgService->getXmlData($organization);
         $xmlOrganization['total-budget'] = $this->totalBudgetService->getXmlData($organization);
+        $xmlOrganization['recipient-org-budget'] = $this->recipientOrgBudgetService->getXmlData($organization);
+        $xmlOrganization['recipient-region-budget'] = $this->recipientRegionBudgetService->getXmlData($organization);
+        $xmlOrganization['recipient-country-budget'] = $this->recipientCountryBudgetService->getXmlData($organization);
         $xmlOrganization['total-expenditure'] = $this->totalExpenditureService->getXmlData($organization);
+        $xmlOrganization['document-link'] = $this->documentLinkService->getXmlData($organization);
         removeEmptyValues($xmlOrganization);
 
         return $xmlOrganization;
