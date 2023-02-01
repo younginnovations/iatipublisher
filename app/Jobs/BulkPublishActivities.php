@@ -82,14 +82,16 @@ class BulkPublishActivities implements ShouldQueue
 
         if (count($this->activities)) {
             foreach ($this->activities as $activity) {
-                $this->publishingStatusService->updateActivityStatus($activity->id, $this->uuid, 'processing');
                 $publishFile = false;
 
                 if ($counter === 0 || $counter === count($this->activities) - 1) {
                     $publishFile = true;
                 }
 
-                $this->publishActivity($activity, $publishFile);
+                if ($this->publishingStatusService->updateActivityStatus($activity->id, $this->uuid, 'processing')) {
+                    $this->publishActivity($activity, $publishFile);
+                }
+
                 $counter++;
             }
         }

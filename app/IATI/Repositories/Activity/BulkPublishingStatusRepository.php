@@ -29,11 +29,19 @@ class BulkPublishingStatusRepository extends Repository
      * @param $uuid
      * @param $status
      *
-     * @return void
+     * @return bool
      */
-    public function updateActivityStatus($activityId, $uuid, $status): void
+    public function updateActivityStatus($activityId, $uuid, $status): bool
     {
-        $this->model->where('activity_id', $activityId)->where('job_batch_uuid', $uuid)->first()->update(['status' => $status]);
+        $activityStatus = $this->model->where('activity_id', $activityId)->where('job_batch_uuid', $uuid)->first();
+
+        if ($activityStatus) {
+            $activityStatus->status = $status;
+
+            return $activityStatus->save();
+        }
+
+        return false;
     }
 
     /**
