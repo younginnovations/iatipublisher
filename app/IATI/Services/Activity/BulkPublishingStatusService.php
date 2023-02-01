@@ -58,11 +58,11 @@ class BulkPublishingStatusService
      * @param $uuid
      * @param $status
      *
-     * @return void
+     * @return bool
      */
-    public function updateActivityStatus($activityId, $uuid, $status): void
+    public function updateActivityStatus($activityId, $uuid, $status): bool
     {
-        $this->bulkPublishingStatusRepository->updateActivityStatus($activityId, $uuid, $status);
+        return $this->bulkPublishingStatusRepository->updateActivityStatus($activityId, $uuid, $status);
     }
 
     /**
