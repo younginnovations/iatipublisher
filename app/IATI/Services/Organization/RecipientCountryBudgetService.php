@@ -122,6 +122,9 @@ class RecipientCountryBudgetService
         $recipientCountryBudget = (array) $organizationData->recipient_country_budget;
         foreach ($recipientCountryBudget as $orgRecipientCountry) {
             $orgRecipientCountryData[] = [
+                '@attributes'   => [
+                    'status' => $orgRecipientCountry['status'],
+                ],
                 'recipient-country' => [
                     '@attributes' => [
                         'code' => $orgRecipientCountry['recipient_country'][0]['code'],

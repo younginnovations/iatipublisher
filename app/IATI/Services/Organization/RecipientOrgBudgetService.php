@@ -118,7 +118,7 @@ class RecipientOrgBudgetService
     public function getXmlData($organization): array
     {
         $organizationData = [];
-        $recipientOrgBudgetData = (array) $organization->recipient_organization_budget;
+        $recipientOrgBudgetData = (array) $organization->recipient_org_budget;
 
         foreach ($recipientOrgBudgetData as $recipientOrgBudget) {
             $organizationData[] = [
@@ -127,9 +127,9 @@ class RecipientOrgBudgetService
                 ],
                 'recipient-org' => [
                     '@attributes' => [
-                        'ref' => $recipientOrgBudget['recipient_organization'][0]['ref'],
+                        'ref' => $recipientOrgBudget['recipient_org'][0]['ref'],
                     ],
-                    'narrative'   => $this->buildNarrative($recipientOrgBudget['recipient_organization'][0]['narrative']),
+                    'narrative'   => $this->buildNarrative($recipientOrgBudget['recipient_org'][0]['narrative']),
                 ],
                 'period-start'  => [
                     '@attributes' => [
