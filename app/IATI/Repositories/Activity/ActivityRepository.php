@@ -260,23 +260,29 @@ class ActivityRepository extends Repository
      */
     protected function setDefaultFieldValues($defaultFieldValues, $organizationId): mixed
     {
-        $settings = Setting::where('organization_id', $organizationId)->first()->toArray();
-        $settingsDefaultFieldValues = $settings ? [Arr::get($settings, 'default_values') ?? []] + [Arr::get($settings, 'activity_default_values') ?? []] : [];
+        $setting = Setting::where('organization_id', $organizationId)->first();
 
-        foreach ($defaultFieldValues as $index => $value) {
-            $settingsDefaultFieldValues[0]['default_currency'] = ((Arr::get((array) $value, 'default_currency')) === '')
-                ? Arr::get($settingsDefaultFieldValues, '0.default_currency', null) : (Arr::get((array) $value, 'default_currency', null));
-            $settingsDefaultFieldValues[0]['default_language'] = ((Arr::get((array) $value, 'default_language')) === '')
-                ? Arr::get($settingsDefaultFieldValues, '0.default_language', null) : Arr::get((array) $value, 'default_language', null);
-            $settingsDefaultFieldValues[0]['hierarchy'] = ((Arr::get((array) $value, 'hierarchy')) === '')
-                ? Arr::get($settingsDefaultFieldValues, '0.hierarchy', null) : (Arr::get((array) $value, 'hierarchy', null));
-            $settingsDefaultFieldValues[0]['humanitarian'] = ((Arr::get((array) $value, 'humanitarian')) === '')
-                ? Arr::get($settingsDefaultFieldValues, '0.humanitarian', null) : Arr::get((array) $value, 'humanitarian', null);
-            $settingsDefaultFieldValues[0]['budget_not_provided'] = ((Arr::get((array) $value, 'budget_not_provided')) === '')
-                ? Arr::get($settingsDefaultFieldValues, '0.budget_not_provided', null) : (Arr::get((array) $value, 'budget_not_provided', null));
+        if ($setting) {
+            $settings = $setting->toArray();
+            $settingsDefaultFieldValues = $settings ? [Arr::get($settings, 'default_values', [])] + [Arr::get($settings, 'activity_default_values', [])] : [];
+
+            foreach ($defaultFieldValues as $index => $value) {
+                $settingsDefaultFieldValues[0]['default_currency'] = ((Arr::get((array) $value, 'default_currency')) === '')
+                    ? Arr::get($settingsDefaultFieldValues, '0.default_currency', null) : (Arr::get((array) $value, 'default_currency', null));
+                $settingsDefaultFieldValues[0]['default_language'] = ((Arr::get((array) $value, 'default_language')) === '')
+                    ? Arr::get($settingsDefaultFieldValues, '0.default_language', null) : Arr::get((array) $value, 'default_language', null);
+                $settingsDefaultFieldValues[0]['hierarchy'] = ((Arr::get((array) $value, 'hierarchy')) === '')
+                    ? Arr::get($settingsDefaultFieldValues, '0.hierarchy', null) : (Arr::get((array) $value, 'hierarchy', null));
+                $settingsDefaultFieldValues[0]['humanitarian'] = ((Arr::get((array) $value, 'humanitarian')) === '')
+                    ? Arr::get($settingsDefaultFieldValues, '0.humanitarian', null) : Arr::get((array) $value, 'humanitarian', null);
+                $settingsDefaultFieldValues[0]['budget_not_provided'] = ((Arr::get((array) $value, 'budget_not_provided')) === '')
+                    ? Arr::get($settingsDefaultFieldValues, '0.budget_not_provided', null) : (Arr::get((array) $value, 'budget_not_provided', null));
+            }
+
+            return $settingsDefaultFieldValues;
         }
 
-        return $settingsDefaultFieldValues;
+        return $defaultFieldValues;
     }
 
     /**
@@ -438,9 +444,9 @@ class ActivityRepository extends Repository
         }
 
         return $this->model->with(['transactions', 'results', 'organization.settings'])
-                           ->whereRaw($whereSql, $bindParams)
-                           ->orderBy($orderBy, $direction)
-                           ->orderBy('id', $direction)
-                           ->get();
+            ->whereRaw($whereSql, $bindParams)
+            ->orderBy($orderBy, $direction)
+            ->orderBy('id', $direction)
+            ->get();
     }
 }

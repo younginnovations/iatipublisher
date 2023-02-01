@@ -134,11 +134,6 @@
                   }"
                   :placeholder="field.placeholder"
                   :type="field.type"
-                  :value="
-                    formData.registration_agency +
-                    '-' +
-                    formData.registration_number
-                  "
                   disabled="true"
                 />
 
@@ -346,6 +341,16 @@ export default defineComponent({
       event.target.style.height = 'auto';
       event.target.style.height = `${event.target.scrollHeight}px`;
     }
+
+    watch(
+      () => [formData.registration_agency, formData.registration_number],
+      () => {
+        formData.identifier = formData.registration_agency
+          ? formData.registration_agency + '-' + formData.registration_number
+          : formData.registration_number;
+      },
+      { deep: true }
+    );
 
     const registration_agency = computed(() => {
       const agencies = props.types.registrationAgency;
