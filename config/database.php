@@ -78,6 +78,10 @@ return [
             'sslmode' => env('DB_SSLMODE', 'prefer'),
             'sslrootcert' => env('DB_SSLROOTCERT', './ca-certificate.crt'),
             'pool_size' => 20,
+            'option' => [
+                PDO::ATTR_PERSISTENT => true,
+                PDO::ATTR_EMULATE_PREPARES => true,
+            ],
         ],
 
         'sqlsrv' => [
