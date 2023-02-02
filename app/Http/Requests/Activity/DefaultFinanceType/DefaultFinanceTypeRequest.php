@@ -20,6 +20,20 @@ class DefaultFinanceTypeRequest extends ActivityBaseRequest
      */
     public function rules($finance_type = null): array
     {
+        $totalRules = [$this->getCriticalRulesForDefaultFinanceType($finance_type), $this->getRulesForDefaultFinanceType()];
+
+        return mergeRules($totalRules);
+    }
+
+    /**
+     * Get the critical validation rules that apply to the request.
+     *
+     * @param $finance_type
+     *
+     * @return array
+     */
+    public function getCriticalRulesForDefaultFinanceType($finance_type = null): array
+    {
         if ($finance_type && is_array($finance_type)) {
             return [
                 'default_finance_type' => 'nullable|size:1',
@@ -29,6 +43,16 @@ class DefaultFinanceTypeRequest extends ActivityBaseRequest
         return [
             'default_finance_type' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('FinanceType', 'Activity', false)))),
         ];
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function getRulesForDefaultFinanceType(): array
+    {
+        return [];
     }
 
     /**

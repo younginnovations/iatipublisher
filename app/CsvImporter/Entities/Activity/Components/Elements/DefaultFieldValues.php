@@ -203,6 +203,9 @@ class DefaultFieldValues extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
+        $this->criticalValidator = $this->factory->sign($this->data())
+            ->with([], $this->messages())
+            ->getValidatorInstance();
 
         $this->setValidity();
 
@@ -210,7 +213,7 @@ class DefaultFieldValues extends Element
     }
 
     /**
-     * Provides the rules for the IATI Element validation.
+     * Provides the critical rules for the IATI Element validation.
      *
      * @return array
      * @throws \JsonException

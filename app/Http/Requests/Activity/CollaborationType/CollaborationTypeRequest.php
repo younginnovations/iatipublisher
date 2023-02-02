@@ -20,6 +20,20 @@ class CollaborationTypeRequest extends ActivityBaseRequest
      */
     public function rules($collaboration = null): array
     {
+        $totalRules = [$this->getRulesForCollaborationType($collaboration), $this->getCriticalRulesForCollaborationType($collaboration)];
+
+        return $mergeRules($totalRules);
+    }
+
+    /**
+     * returns critical rule for capital spend.
+     *
+     * @param $collaboration
+     *
+     * @return array
+     */
+    public function getCriticalRulesForCollaborationType($collaboration = null): array
+    {
         if ($collaboration && is_array($collaboration)) {
             return [
                 'collaboration_type' => 'nullable|size:1',
@@ -29,6 +43,18 @@ class CollaborationTypeRequest extends ActivityBaseRequest
         return [
             'collaboration_type' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('CollaborationType', 'Activity', false)))),
         ];
+    }
+
+    /**
+     * returns critical rule for capital spend.
+     *
+     * @param $collaboration
+     *
+     * @return array
+     */
+    public function getRulesForCollaborationType($collaboration = null): array
+    {
+        return [];
     }
 
     /**

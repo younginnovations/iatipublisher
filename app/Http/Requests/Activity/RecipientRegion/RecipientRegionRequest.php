@@ -34,7 +34,14 @@ class RecipientRegionRequest extends ActivityBaseRequest
      */
     public function rules($recipient_region = []): array
     {
-        return $this->getRulesForRecipientRegion($this->get('recipient_region') ?? $recipient_region);
+        $data = $this->get('recipient_region') ?? $recipient_region;
+
+        $totalRules = [
+            $this->getRulesForRecipientRegion($data),
+            $this->getCriticalRulesForRecipientRegion($data),
+        ];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -45,6 +52,61 @@ class RecipientRegionRequest extends ActivityBaseRequest
     public function messages($recipient_region = []): array
     {
         return $this->getMessagesForRecipientRegion($this->get('recipient_region') ?? $recipient_region);
+    }
+
+    /**
+     * @param $formFields
+     *
+     * @return array
+     */
+    public function groupRegion($formFields): array
+    {
+        $groupedRegion = [];
+
+        foreach ($formFields as $formField) {
+            if (array_key_exists($formField['region_vocabulary'], $groupedRegion)) {
+                $groupedRegion[$formField['region_vocabulary']]['count'] += 1;
+                $groupedRegion[$formField['region_vocabulary']]['total'] += (float) $formField['percentage'];
+            } else {
+                $groupedRegion[$formField['region_vocabulary']] = ['count' => 1, 'total' => (float) $formField['percentage']];
+            }
+        }
+
+        return $groupedRegion;
+    }
+
+    /**
+     * Return critical rules for recipient region.
+     *
+     * @param $formFields
+     * @param $fileUpload
+     * @param $recipientCoutnries
+     *
+     * @return array
+     */
+    public function getCriticalRulesForRecipientRegion(array $formFields, bool $fileUpload = false, array $recipientCountries = []): array
+    {
+        if (empty($formFields)) {
+            return [];
+        }
+
+        $rules = [];
+        $activityService = app()->make(ActivityService::class);
+        foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
+            $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
+            $rules[sprintf('%s.region_vocabulary', $recipientRegionForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('RegionVocabulary', 'Activity', false)));
+            $rules[sprintf('%s.region_code', $recipientRegionForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Region', 'Activity', false)));
+            $rules[$recipientRegionForm . '.vocabulary_uri'] = 'nullable|url';
+            $rules[$recipientRegionForm . '.percentage'] = 'nullable|numeric|min:0';
+
+            $narrativeRules = $this->getCriticalRulesForNarrative($recipientRegion['narrative'], $recipientRegionForm);
+
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
+            }
+        }
+
+        return $rules;
     }
 
     /**
@@ -103,11 +165,6 @@ class RecipientRegionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
-            $rules[sprintf('%s.region_vocabulary', $recipientRegionForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('RegionVocabulary', 'Activity', false)));
-            $rules[sprintf('%s.region_code', $recipientRegionForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Region', 'Activity', false)));
-            $rules[$recipientRegionForm . '.vocabulary_uri'] = 'nullable|url';
-            $rules[$recipientRegionForm . '.percentage'] = 'numeric|min:0';
-
             $narrativeRules = $this->getRulesForNarrative($recipientRegion['narrative'], $recipientRegionForm);
 
             foreach ($narrativeRules as $key => $item) {

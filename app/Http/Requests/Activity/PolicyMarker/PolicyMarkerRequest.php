@@ -19,7 +19,14 @@ class PolicyMarkerRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForPolicyMarker($this->get('policy_marker'));
+        $data = $this->get('policy_marker');
+
+        $totalRules = [
+            $this->getRulesForPolicyMarker($data),
+            $this->getCriticalRulesForPolicyMarker($data),
+        ];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -45,10 +52,6 @@ class PolicyMarkerRequest extends ActivityBaseRequest
 
         foreach ($formFields as $policyMarkerIndex => $policyMarker) {
             $policyMarkerForm = sprintf('policy_marker.%s', $policyMarkerIndex);
-            $rules[sprintf('%s.policy_marker_vocabulary', $policyMarkerForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('PolicyMarkerVocabulary', 'Activity', false)));
-            $rules[sprintf('%s.significance', $policyMarkerForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('PolicySignificance', 'Activity', false)));
-            $rules[sprintf('%s.policy_marker', $policyMarkerForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('PolicyMarker', 'Activity', false)));
-            $rules[sprintf('%s.vocabulary_uri', $policyMarkerForm)] = 'nullable|url';
 
             foreach ($this->getRulesForNarrative($policyMarker['narrative'], $policyMarkerForm) as $policyMarkerNarrativeIndex => $narrativeRules) {
                 $rules[$policyMarkerNarrativeIndex] = $narrativeRules;
@@ -58,6 +61,32 @@ class PolicyMarkerRequest extends ActivityBaseRequest
                 foreach (array_keys($policyMarker['narrative']) as $narrativeIndex) {
                     $rules[sprintf('%s.narrative.%s.narrative', $policyMarkerForm, $narrativeIndex)] = 'required';
                 }
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns criticalrules for related activity.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    public function getCriticalRulesForPolicyMarker(array $formFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $policyMarkerIndex => $policyMarker) {
+            $policyMarkerForm = sprintf('policy_marker.%s', $policyMarkerIndex);
+            $rules[sprintf('%s.policy_marker_vocabulary', $policyMarkerForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('PolicyMarkerVocabulary', 'Activity', false)));
+            $rules[sprintf('%s.significance', $policyMarkerForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('PolicySignificance', 'Activity', false)));
+            $rules[sprintf('%s.policy_marker', $policyMarkerForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('PolicyMarker', 'Activity', false)));
+            $rules[sprintf('%s.vocabulary_uri', $policyMarkerForm)] = 'nullable|url';
+
+            foreach ($this->getCriticalRulesForNarrative($policyMarker['narrative'], $policyMarkerForm) as $policyMarkerNarrativeIndex => $narrativeRules) {
+                $rules[$policyMarkerNarrativeIndex] = $narrativeRules;
             }
         }
 

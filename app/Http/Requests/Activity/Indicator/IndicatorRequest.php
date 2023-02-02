@@ -25,7 +25,13 @@ class IndicatorRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForIndicator(request()->except(['_token']));
+        $data = request()->except(['_token']);
+        $totalRules = [
+            $this->getRulesForIndicator($data),
+            $this->getCriticalRulesForIndicator($data),
+        ];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -51,16 +57,46 @@ class IndicatorRequest extends ActivityBaseRequest
     {
         $rules = [];
 
-        $rules['measure'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('IndicatorMeasure', 'Activity', false))));
-        $rules['ascending'] = sprintf('nullable|in:0,1');
-        $rules['aggregation_status'] = sprintf('nullable|in:0,1');
-
         $tempRules = [
             $this->getRulesForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
             $this->getRulesForNarrative(Arr::get($formFields, 'description', []), 'description.0'),
             $this->getRulesForDocumentLink(Arr::get($formFields, 'document_link', [])),
             $this->getRulesForReference(Arr::get($formFields, 'reference', []), $fileUpload, $result),
             $this->getRulesForBaseline(Arr::get($formFields, 'baseline', [])),
+        ];
+
+        foreach ($tempRules as $index => $tempRule) {
+            foreach ($tempRule as $idx => $rule) {
+                $rules[$idx] = $rule;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns rules for result indicator.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function getCriticalRulesForIndicator(array $formFields, bool $fileUpload = false, array $result = []): array
+    {
+        $rules = [];
+
+        $rules['measure'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('IndicatorMeasure', 'Activity', false))));
+        $rules['ascending'] = sprintf('nullable|in:0,1');
+        $rules['aggregation_status'] = sprintf('nullable|in:0,1');
+
+        $tempRules = [
+            $this->getCriticalRulesForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
+            $this->getCriticalRulesForNarrative(Arr::get($formFields, 'description', []), 'description.0'),
+            $this->getCriticalRulesForDocumentLink(Arr::get($formFields, 'document_link', [])),
+            $this->getCriticalRulesForReference(Arr::get($formFields, 'reference', []), $fileUpload, $result),
+            $this->getCriticalRulesForBaseline(Arr::get($formFields, 'baseline', [])),
         ];
 
         foreach ($tempRules as $index => $tempRule) {
@@ -125,8 +161,6 @@ class IndicatorRequest extends ActivityBaseRequest
 
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
-            $rules[sprintf('%s.indicator_uri', $referenceForm)] = 'nullable|url';
-            $rules[sprintf('%s.vocabulary', $referenceForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('IndicatorVocabulary', 'Activity', false))));
 
             if (!empty($reference['code']) && $reference['code'] && $reference['code'] !== '') {
                 if ($fileUpload) {
@@ -144,6 +178,26 @@ class IndicatorRequest extends ActivityBaseRequest
                     $rules[sprintf('%s.code', $referenceForm)] = 'result_ref_code_present';
                 }
             }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns rules for reference.
+     *
+     * @param $formFields
+     *
+     * @return array
+     */
+    protected function getCriticalRulesForReference($formFields, bool $fileUpload, array $result): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $referenceIndex => $reference) {
+            $referenceForm = sprintf('reference.%s', $referenceIndex);
+            $rules[sprintf('%s.indicator_uri', $referenceForm)] = 'nullable|url';
+            $rules[sprintf('%s.vocabulary', $referenceForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('IndicatorVocabulary', 'Activity', false))));
         }
 
         return $rules;
@@ -187,12 +241,13 @@ class IndicatorRequest extends ActivityBaseRequest
 
         foreach ($formFields as $baselineIndex => $baseline) {
             $baselineForm = sprintf('baseline.%s', $baselineIndex);
-            $baselineYearRule = 'nullable|date_format:Y|digits:4';
+            // $baselineYearRule = 'nullable|date_format:Y|digits:4';
 
-            if (!empty($baseline['date'])) {
-                $baselineYearRule = sprintf('%s|in:%s', $baselineYearRule, date('Y', strtotime($baseline['date'])));
-            }
-            $rules[sprintf('%s.year', $baselineForm)] = $baselineYearRule;
+            // if (!empty($baseline['date'])) {
+            //     $baselineYearRule = sprintf('%s|in:%s', $baselineYearRule, date('Y', strtotime($baseline['date'])));
+            // }
+
+            // $rules[sprintf('%s.year', $baselineForm)] = $baselineYearRule;
             $rules[sprintf('%s.value', $baselineForm)] = 'nullable|numeric|gte:0';
 
             if ((request()->get('measure') == 2) && Arr::get($baseline, 'value', null)) {
@@ -208,6 +263,52 @@ class IndicatorRequest extends ActivityBaseRequest
             }
 
             $dcoLinkRules = $this->getRulesForDocumentLink($baseline['document_link'], $baselineForm);
+
+            foreach ($dcoLinkRules as $key => $item) {
+                $rules[$key] = $item;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns rules for baseline.
+     *
+     * @param $formFields
+     *
+     * @return array
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    protected function getCriticalRulesForBaseline($formFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $baselineIndex => $baseline) {
+            $baselineForm = sprintf('baseline.%s', $baselineIndex);
+            $baselineYearRule = 'nullable|date_format:Y|digits:4';
+
+            if (!empty($baseline['date'])) {
+                $baselineYearRule = sprintf('%s|in:%s', $baselineYearRule, date('Y', strtotime($baseline['date'])));
+            }
+
+            $rules[sprintf('%s.year', $baselineForm)] = $baselineYearRule;
+            // $rules[sprintf('%s.value', $baselineForm)] = 'nullable|numeric|gte:0';
+
+            // if ((request()->get('measure') == 2) && Arr::get($baseline, 'value', null)) {
+            //     $rules[sprintf('%s.value', $baselineForm)] = 'nullable|numeric|gte:0';
+            // } elseif ((request()->get('measure') == 1) && Arr::get($baseline, 'value', null)) {
+            //     $rules[sprintf('%s.value', $baselineForm)] = 'nullable|numeric';
+            // }
+
+            $narrativeRules = $this->getCriticalRulesForNarrative($baseline['comment'][0]['narrative'], sprintf('%s.comment.0', $baselineForm));
+
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
+            }
+
+            $dcoLinkRules = $this->getCriticalRulesForDocumentLink($baseline['document_link'], $baselineForm);
 
             foreach ($dcoLinkRules as $key => $item) {
                 $rules[$key] = $item;

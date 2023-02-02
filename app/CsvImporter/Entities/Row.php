@@ -40,6 +40,11 @@ abstract class Row
     protected array $errors = [];
 
     /**
+     * @var array
+     */
+    protected array $criticalErrors = [];
+
+    /**
      * Initialize the Row object.
      *
      * @return void
