@@ -573,7 +573,8 @@ class UserService
     {
         $data['organization_id'] = Auth::user()->organization_id;
         $data['password'] = Hash::make($data['password']);
-        $data['role_id'] = $data['role_id'] ?? $this->roleRepo->getIatiAdminId();
+        $superAdminId = [$this->roleRepo->getSuperAdminId(), $this->roleRepo->getIatiAdminId()];
+        $data['role_id'] = in_array(Auth::user()->role_id, $superAdminId) ? $this->roleRepo->getIatiAdminId() : $data['role_id'];
         $data['registration_method'] = 'user_create';
         $user = $this->userRepo->store($data);
         User::sendNewUserEmail($user);

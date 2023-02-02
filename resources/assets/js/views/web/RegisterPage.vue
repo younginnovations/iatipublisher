@@ -129,11 +129,6 @@
                   }"
                   :placeholder="field.placeholder"
                   :type="field.type"
-                  :value="
-                    formData.registration_agency +
-                    '-' +
-                    formData.registration_number
-                  "
                   disabled="true"
                 />
 
@@ -322,6 +317,16 @@ export default defineComponent({
       () => {
         formData.registration_agency = '';
       }
+    );
+
+    watch(
+      () => [formData.registration_agency, formData.registration_number],
+      () => {
+        formData.identifier = formData.registration_agency
+          ? formData.registration_agency + '-' + formData.registration_number
+          : formData.registration_number;
+      },
+      { deep: true }
     );
 
     const registration_agency = computed(() => {
