@@ -59,40 +59,16 @@
           :type="toastMessage.type"
         />
 
-        <Modal :modal-active="errorData.visibility" width="583">
-          <div>
-            <BulkPublishingErrorPopup></BulkPublishingErrorPopup>
-
-            <div class="mt-4 flex justify-between space-x-4">
-              <button
-                class="rounded py-3 px-5 font-semibold uppercase text-n-40 hover:bg-bluecoral hover:text-white"
-                @click="cancelOtherBulkPublish"
-              >
-                Cancel previous bulk publish
-              </button>
-              <button
-                class="rounded bg-bluecoral py-3 px-5 font-semibold uppercase text-white"
-                @click="closeModal"
-              >
-                Wait for completion
-              </button>
-            </div>
-          </div>
-        </Modal>
-
-        <Modal width="583" :modal-active="showCancelledPopup">
-          <h3 class="mb-4 text-lg font-medium">
-            <svg-vue icon="tick" class="mr-2 inline text-spring-50"></svg-vue>
-            <span class="font-bold">Cancellation Successful</span>
-          </h3>
-          <div class="fw-bold rounded-lg bg-spring-20 px-3 py-2 text-white">
-            {{ messageOnCancellation }}
-          </div>
-          <div class="d-flex justify-content-end my-3">
-            <PublishSelected />
-          </div>
-        </Modal>
-
+        <ErrorPopUp
+          v-if="errorData.visibility"
+          :message="errorData.message"
+          title="Activity couldn’t be published because"
+          @close-popup="
+            () => {
+              errorData.visibility = false;
+            }
+          "
+        />
         <div class="inline-flex justify-end">
           <div
             class="inline-flex shrink-0 flex-col items-end justify-end gap-3 lg:flex-row"
@@ -121,19 +97,17 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref } from 'vue';
+import { inject } from 'vue';
 import DownloadActivityButton from './DownloadActivityButton.vue';
 import AddActivityButton from './AddActivityButton.vue';
 import Toast from 'Components/ToastMessage.vue';
 import RefreshToastMessage from 'Activity/bulk-publish/RefreshToast.vue';
 import PublishSelected from 'Activity/bulk-publish/PublishSelected.vue';
 import DeleteButton from 'Components/buttons/DeleteButton.vue';
-import Modal from 'Components/PopupModal.vue';
-import BulkPublishingErrorPopup from 'Components/BulkPublishingErrorPopup.vue';
 
 // Vuex Store
 import { useStore } from 'Store/activities/index';
-import axios from 'axios';
+import ErrorPopUp from 'Components/ErrorPopUp.vue';
 
 interface RefreshToastMsgTypeface {
   visibility: boolean;
@@ -147,37 +121,8 @@ interface ToastInterface {
   type: boolean;
 }
 
+const refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
 const toastMessage = inject('toastData') as ToastInterface;
 const errorData = inject('errorData') as ToastInterface;
 const store = useStore();
-
-const refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
-
-const showCancelledPopup = ref(false);
-const messageOnCancellation = ref('No bulk publish were cancelled');
-
-/*Closes Cancel Confirmation Popup*/
-const closeModal = () => {
-  errorData.visibility = !errorData.visibility;
-};
-
-/*Cancels on-going bulk publish*/
-const cancelOtherBulkPublish = () => {
-  const endpoint = 'activities/cancel-bulk-publish';
-  axios.get(endpoint).then((res) => {
-    closeModal();
-    setCancellationMessage(res.data.message);
-    showCancelledDetailPopup();
-  });
-};
-
-/*Show modal that shows number of bulk publish cancelled */
-const showCancelledDetailPopup = () => {
-  showCancelledPopup.value = true;
-};
-
-/*Sets message in modal triggered by showCancelledDetailPopup() */
-const setCancellationMessage = (msg) => {
-  messageOnCancellation.value = msg;
-};
 </script>

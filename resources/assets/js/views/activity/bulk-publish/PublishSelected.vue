@@ -157,6 +157,52 @@
       </template>
     </Modal>
 
+    <Modal :modal-active="showCancelConfirmationPopup" width="583">
+      <div>
+        <BulkPublishingErrorPopup></BulkPublishingErrorPopup>
+
+        <div class="mt-4 flex justify-between space-x-4">
+          <button
+            class="rounded py-3 px-5 font-semibold uppercase text-n-40 hover:bg-bluecoral hover:text-white"
+            @click="cancelOtherBulkPublish"
+          >
+            Cancel previous bulk publish
+          </button>
+
+          <button
+            class="rounded bg-bluecoral py-3 px-5 font-semibold uppercase text-white"
+            @click="closeCancelConfirmationModal"
+          >
+            Wait for completion
+          </button>
+        </div>
+      </div>
+    </Modal>
+
+    <Modal width="583" :modal-active="showCancelledPopup">
+      <h3 class="mb-4 text-lg font-medium">
+        <svg-vue icon="tick" class="mr-2 inline text-spring-50"></svg-vue>
+        <span class="font-bold">Cancellation Successful</span>
+      </h3>
+      <div class="fw-bold rounded-lg bg-spring-30 px-3 py-2 text-n-40">
+        {{ messageOnCancellation }}
+      </div>
+      <div class="my-3 flex justify-between">
+        <button
+          class="rounded py-3 px-5 font-semibold uppercase text-n-40"
+          @click="closeCancelledDetailsPopup"
+        >
+          Continue Selecting
+        </button>
+        <button
+          class="rounded bg-bluecoral py-3 px-5 font-semibold uppercase text-white"
+          @click="publishAfterCancel"
+        >
+          Publish
+        </button>
+      </div>
+    </Modal>
+
     <Loader
       v-if="loader"
       :text="loaderText"
@@ -180,6 +226,7 @@ import BulkPublishing from './BulkPublishing.vue';
 
 // Vuex Store
 import { useStore } from 'Store/activities/index';
+import BulkPublishingErrorPopup from 'Components/BulkPublishingErrorPopup.vue';
 
 defineProps({
   type: { type: String, default: 'primary' },
@@ -201,6 +248,11 @@ const loader = ref(false);
 
 // Dynamic text for loader
 const loaderText = ref('Please Wait');
+
+/*States for Bulk publish cancellation flow*/
+const showCancelConfirmationPopup = ref(false);
+const showCancelledPopup = ref(false);
+const messageOnCancellation = ref('No bulk publish were cancelled');
 
 // reset step to zero after closing modal
 const resetPublishStep = () => {
@@ -274,7 +326,6 @@ const verifyCoreElements = () => {
     .get(`/activities/core-elements-completed?activities=[${activities}]`)
     .then((res) => {
       const response = res.data;
-
       if (response.success) {
         coreCompletedActivities.value = response.data.complete;
         coreInCompletedActivities.value = response.data.incomplete;
@@ -282,7 +333,14 @@ const verifyCoreElements = () => {
       } else {
         loader.value = false;
         resetPublishStep();
-        displayToast(response.message, response.success);
+
+        if (
+          response.message == 'Another bulk publishing is already in progress.'
+        ) {
+          showCancelConfirmationModal();
+        } else {
+          displayToast(response.message, response.success);
+        }
       }
 
       setTimeout(() => {
@@ -353,6 +411,49 @@ const startBulkPublish = () => {
         loader.value = false;
       }, 1000);
     });
+};
+
+/*Cancels on-going bulk publish*/
+const cancelOtherBulkPublish = () => {
+  const endpoint = 'activities/cancel-bulk-publish';
+  axios.get(endpoint).then((res) => {
+    closeCancelConfirmationModal();
+    if (res.data.success) {
+      setCancellationMessage(res.data.message);
+      showCancelledDetailPopup();
+    }
+  });
+};
+
+/*Show modal that shows number of bulk publish cancelled */
+const showCancelledDetailPopup = () => {
+  showCancelledPopup.value = true;
+};
+
+/*Sets message in modal triggered by showCancelledDetailPopup() */
+const setCancellationMessage = (msg) => {
+  messageOnCancellation.value = msg;
+};
+
+/*Closes Cancel Confirmation Popup*/
+const closeCancelledDetailsPopup = () => {
+  showCancelledPopup.value = false;
+};
+
+/*Opens modal that allows to cancel existing bulk publish*/
+const showCancelConfirmationModal = () => {
+  showCancelConfirmationPopup.value = true;
+};
+
+/*Closes modal that allows to cancel existing bulk publish*/
+const closeCancelConfirmationModal = () => {
+  showCancelConfirmationPopup.value = false;
+};
+
+/* Trigger the normal flow of bulk publishing activities*/
+const publishAfterCancel = () => {
+  showCancelledPopup.value = false;
+  checkPublish();
 };
 
 provide('paStorage', pa);
