@@ -218,7 +218,7 @@ class BulkPublishingController extends Controller
             if ($organizationId && $uuid) {
                 $publishStatus = $this->publishingStatusService->getActivityPublishingStatus($organizationId, $uuid);
 
-                if (count($publishStatus)) {
+                if ($publishStatus && count($publishStatus)) {
                     $response = $this->bulkPublishingService->getPublishingResponse($publishStatus);
 
                     return response()->json(['success' => true, 'message' => $response['message'], 'data' => $response]);
@@ -252,9 +252,9 @@ class BulkPublishingController extends Controller
             $organizationId = auth()->user()->organization->id;
 
             if ($organizationId) {
-                $publishStatus = $this->publishingStatusService->getActivityPublishingStatus($organizationId, '');
+                $publishStatus = $this->publishingStatusService->getActivityPublishingStatus($organizationId);
 
-                if (count($publishStatus)) {
+                if ($publishStatus && count($publishStatus)) {
                     $response = $this->bulkPublishingService->getPublishingResponse($publishStatus);
 
                     return response()->json(['success' => true, 'message' => $response['message'], 'data' => $response]);
@@ -283,14 +283,25 @@ class BulkPublishingController extends Controller
     public function cancelBulkPublishing(): JsonResponse
     {
         try {
-            $stoppedActivityCount = $this->bulkPublishingService->stopBulkPublishing(auth()->user()->organization->id);
+            DB::beginTransaction();
+            $deletedIds = $this->bulkPublishingService->stopBulkPublishing(auth()->user()->organization->id);
+            $numberOfDeletedRows = count($deletedIds);
 
-            if ($stoppedActivityCount) {
-                return response()->json(['success'=>true, 'message'=>"Bulk publish of {$stoppedActivityCount} activities canceled."]);
+            if ($deletedIds) {
+                DB::commit();
+
+                return response()->json(
+                    [
+                        'success' => true,
+                        'message' => "Bulk publish of {$numberOfDeletedRows} activities canceled.",
+                        'data'    => $deletedIds,
+                    ]
+                );
             }
 
             return response()->json(['success'=>true, 'message'=>'No bulk publish were cancelled.']);
         } catch (\Exception $e) {
+            DB::rollBack();
             logger()->error($e->getMessage());
 
             return response()->json(['success'=>false, 'message'=>'Failed to stop bulk publishing']);

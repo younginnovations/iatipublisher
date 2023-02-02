@@ -323,9 +323,9 @@ class BulkPublishingService
      *
      * @param $organizationId
      *
-     * @return int
+     * @return array
      */
-    public function stopBulkPublishing($organizationId): int
+    public function stopBulkPublishing($organizationId): array
     {
         return $this->publishingStatusService->stopBulkPublishing($organizationId);
     }

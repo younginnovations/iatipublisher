@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
+use App\IATI\Repositories\Activity\BulkPublishingStatusRepository;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\BulkPublishingStatusService;
 use App\IATI\Services\Workflow\ActivityWorkflowService;
@@ -130,6 +131,20 @@ class BulkPublishActivities implements ShouldQueue
             awsUploadFile('error-bulk-publish.log', $e->getMessage());
             $this->activityService->updatePublishedStatus($activity, 'draft', false);
             $this->publishingStatusService->updateActivityStatus($activity->id, $this->uuid, 'failed');
+        }
+    }
+
+    /**
+     * In case of job failure , set created and processing to failed.
+     *
+     * @return void
+     */
+    public function failed(): void
+    {
+        try {
+            app(BulkPublishingStatusRepository::class)->failStuckActivities($this->organizationId);
+        } catch(\Exception $e) {
+            awsUploadFile('error-bulk-publish.log', $e->getMessage());
         }
     }
 }
