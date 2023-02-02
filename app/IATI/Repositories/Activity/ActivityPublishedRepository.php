@@ -83,8 +83,4 @@ class ActivityPublishedRepository extends Repository
         $activityPublished->published_to_registry = 1;
         $activityPublished->save();
     }
-
-    public function get()
-    {
-    }
 }

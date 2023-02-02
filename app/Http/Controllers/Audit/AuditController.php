@@ -48,8 +48,6 @@ class AuditController extends Controller
     /**
      * Returns paginated audit logs.
      *
-     *
-     *
      * @param Request $request
      * @param int $page
      *

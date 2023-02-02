@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\IATI\Services\Audit;
 
 use App\IATI\Repositories\Audit\AuditRepository;
@@ -165,7 +167,7 @@ class AuditService
      */
     public function getNewValues($auditables, $auditableType, $event): bool | string
     {
-        $auditables = json_decode($auditables, true);
+        $auditables = $auditables->toArray();
 
         if ($auditableType === get_class(auth()->user()) && $event !== 'signin') {
             foreach ($auditables as $index => $item) {

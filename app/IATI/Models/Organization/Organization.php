@@ -157,6 +157,8 @@ class Organization extends Model implements Auditable
      * Encrypt when organisation model is audited.
      *
      * {@inheritdoc}
+     *
+     * @return array
      */
     public function transformAudit(array $data): array
     {
