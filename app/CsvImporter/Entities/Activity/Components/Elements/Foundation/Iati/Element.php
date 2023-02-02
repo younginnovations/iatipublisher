@@ -17,6 +17,11 @@ abstract class Element
     public array $errors = [];
 
     /**
+     * @var array
+     */
+    public array $criticalErrors = [];
+
+    /**
      * Index under which the data is stored within the object.
      * @var string
      */
@@ -36,6 +41,11 @@ abstract class Element
      * @var
      */
     public $validator;
+
+    /**
+     * @var
+     */
+    public $criticalValidator;
 
     /**
      * @var
@@ -77,7 +87,7 @@ abstract class Element
      */
     protected function setValidity(): void
     {
-        $this->isValid = $this->validator->passes();
+        $this->isValid = $this->validator->passes() && $this->criticalValidator->passes();
     }
 
     /**
@@ -156,6 +166,10 @@ abstract class Element
         foreach ($this->validator->errors()->getMessages() as $element => $errors) {
             $this->errors[$element] = implode('<br>', $errors);
         }
+
+        foreach ($this->criticalValidator->errors()->getMessages() as $element => $errors) {
+            $this->criticalErrors[$element] = implode('<br>', $errors);
+        }
     }
 
     /**
@@ -166,6 +180,16 @@ abstract class Element
     public function errors(): array
     {
         return $this->errors;
+    }
+
+    /**
+     * Returns critical error.
+     *
+     * @return array
+     */
+    public function criticalErrors(): array
+    {
+        return $this->criticalErrors;
     }
 
     /**

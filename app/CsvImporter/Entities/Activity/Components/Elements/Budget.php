@@ -263,6 +263,9 @@ class Budget extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
+        $this->criticalValidator = $this->factory->sign($this->data())
+            ->with($this->criticalRules(), $this->messages())
+            ->getValidatorInstance();
 
         $this->setValidity();
 
@@ -292,6 +295,17 @@ class Budget extends Element
     public function rules(): array
     {
         return $this->request->getRulesForBudget(Arr::get($this->data(), 'budget', []));
+    }
+
+    /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function criticalRules(): array
+    {
+        return $this->request->getCriticalRulesForBudget(Arr::get($this->data(), 'budget', []));
     }
 
     /**

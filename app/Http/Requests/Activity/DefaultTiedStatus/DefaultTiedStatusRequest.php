@@ -20,6 +20,32 @@ class DefaultTiedStatusRequest extends ActivityBaseRequest
      */
     public function rules($tied_status = null): array
     {
+        $totalRules = [$this->getCriticalRulesForDefaultTiedStatus(), $this->getRulesForDefaultTiedStatus()];
+
+        return mergeRules($totalRules);
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @param $tied_status
+     *
+     * @return array
+     */
+    public function getRulesForDefaultTiedStatus(): array
+    {
+        return [];
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @param $tied_status
+     *
+     * @return array
+     */
+    public function getCriticalRulesForDefaultTiedStatus($tied_status = null): array
+    {
         if ($tied_status && is_array($tied_status)) {
             return [
                 'default_tied_status' => 'nullable|size:1',

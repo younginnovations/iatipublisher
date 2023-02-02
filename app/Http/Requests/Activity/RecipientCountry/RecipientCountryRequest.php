@@ -22,7 +22,9 @@ class RecipientCountryRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForRecipientCountry($this->get('recipient_country'));
+        $totalRules = [$this->getRulesForRecipientCountry($this->get('recipient_country')), $this->getCriticalRulesForRecipientCountry($this->get('recipient_country'))];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -52,6 +54,29 @@ class RecipientCountryRequest extends ActivityBaseRequest
         }
 
         return $total;
+    }
+
+    public function getCriticalRulesForRecipientCountry(array $formFields, bool $fileUpload = false): array
+    {
+        if (empty($formFields)) {
+            return [];
+        }
+
+        $rules = [];
+
+        foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
+            $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
+            $rules[sprintf('%s.country_code', $recipientCountryForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Country', 'Activity', false)));
+            $rules[$recipientCountryForm . '.percentage'] = 'nullable|numeric|min:0';
+
+            $narrativeRules = $this->getCriticalRulesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
+
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
+            }
+        }
+
+        return $rules;
     }
 
     /**
@@ -109,10 +134,9 @@ class RecipientCountryRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
-            $rules[sprintf('%s.country_code', $recipientCountryForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Country', 'Activity', false)));
 
             if (in_array($recipientCountry['country_code'], $groupedCountryCode, true)) {
-                $rules[sprintf('%s.country_code', $recipientCountryForm)] .= '|duplicate_country_code';
+                $rules[sprintf('%s.country_code', $recipientCountryForm)][] = 'duplicate_country_code';
             }
 
             $rules[$recipientCountryForm . '.percentage'] = 'numeric|min:0';

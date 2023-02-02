@@ -201,6 +201,17 @@ class OtherIdentifier extends Element
     }
 
     /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function criticalRules(): array
+    {
+        return $this->request->getRulesForOtherIdentifier(Arr::get($this->data(), 'other_identifier', []));
+    }
+
+    /**
      * Provides custom messages used for IATI Element Validation.
      *
      * @return array
@@ -220,6 +231,9 @@ class OtherIdentifier extends Element
     {
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
+                                         ->getValidatorInstance();
+        $this->criticalValidator = $this->factory->sign($this->data())
+                                         ->with($this->criticalRules(), $this->messages())
                                          ->getValidatorInstance();
         $this->setValidity();
 

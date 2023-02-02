@@ -309,6 +309,27 @@ class ActivityBaseRequest extends FormRequest
     public function getRulesForNarrative($formFields, $formBase): array
     {
         $rules = [];
+
+        foreach ($formFields as $narrativeIndex => $narrative) {
+            if (!empty(Arr::get($narrative, 'language', ''))) {
+                $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with_language:' . $narrative['narrative'];
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns rules for narrative.
+     *
+     * @param      $formFields
+     * @param      $formBase
+     *
+     * @return array
+     */
+    public function getCriticalRulesForNarrative($formFields, $formBase): array
+    {
+        $rules = [];
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
         $validLanguages = implode(',', array_keys(getCodeList('Language', 'Activity', false)));
@@ -316,10 +337,6 @@ class ActivityBaseRequest extends FormRequest
         foreach ($formFields as $narrativeIndex => $narrative) {
             $rules[sprintf('%s.narrative.%s.language', $formBase, $narrativeIndex)][] = 'nullable';
             $rules[sprintf('%s.narrative.%s.language', $formBase, $narrativeIndex)][] = sprintf('in:%s', $validLanguages);
-
-            if (!empty(Arr::get($narrative, 'language', ''))) {
-                $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with_language:' . $narrative['narrative'];
-            }
         }
 
         return $rules;
@@ -458,11 +475,6 @@ class ActivityBaseRequest extends FormRequest
 
         foreach ($formFields as $documentLinkIndex => $documentLink) {
             $documentLinkForm = $formBase ? sprintf('%s.document_link.%s', $formBase, $documentLinkIndex) : sprintf('document_link.%s', $documentLinkIndex);
-            $rules[sprintf('%s.format', $documentLinkForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('FileFormat', 'Activity', false)));
-
-            if (Arr::get($documentLink, 'url', null) !== '') {
-                $rules[sprintf('%s.url', $documentLinkForm)] = 'nullable|url';
-            }
 
             if (Arr::get($documentLink, 'document_date', null) !== '') {
                 $docDateRules = $this->getRulesForDocumentDate($documentLink['document_date'], $documentLinkForm);
@@ -473,9 +485,7 @@ class ActivityBaseRequest extends FormRequest
             }
 
             $rules[sprintf('%s.category', $documentLinkForm)][] = 'unique_category';
-            $rules[sprintf('%s.category.0.code', $documentLinkForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('DocumentCategory', 'Activity', false)));
             $rules[sprintf('%s.language', $documentLinkForm)][] = 'unique_language';
-            $rules[sprintf('%s.language.0.code', $documentLinkForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Language', 'Activity', false)));
 
             $narrativeTitleRules = $this->getRulesForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm));
 
@@ -487,6 +497,55 @@ class ActivityBaseRequest extends FormRequest
 
             foreach ($narrativeDesRules as $key => $item) {
                 $rules[$key] = $item;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns rules for Document Link.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    public function getCriticalRulesForDocumentLink($formFields, $formBase = null): array
+    {
+        $rules = [];
+
+        if (!empty($formFields)) {
+            foreach ($formFields as $documentLinkIndex => $documentLink) {
+                $documentLinkForm = $formBase ? sprintf('%s.document_link.%s', $formBase, $documentLinkIndex) : sprintf('document_link.%s', $documentLinkIndex);
+                $rules[sprintf('%s.format', $documentLinkForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('FileFormat', 'Activity', false)));
+
+                if (Arr::get($documentLink, 'url', null) !== '') {
+                    $rules[sprintf('%s.url', $documentLinkForm)] = 'nullable|url';
+                }
+
+                if (Arr::get($documentLink, 'document_date', null) !== '') {
+                    $docDateRules = $this->getCriticalRulesForDocumentDate($documentLink['document_date'], $documentLinkForm);
+
+                    foreach ($docDateRules as $key => $item) {
+                        $rules[$key] = $item;
+                    }
+                }
+
+                $rules[sprintf('%s.category.0.code', $documentLinkForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('DocumentCategory', 'Activity', false)));
+                $rules[sprintf('%s.language.0.code', $documentLinkForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Language', 'Activity', false)));
+
+                $narrativeTitleRules = $this->getCriticalRulesForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm));
+
+                foreach ($narrativeTitleRules as $key => $item) {
+                    $rules[$key] = $item;
+                }
+
+                $narrativeDesRules = $this->getCriticalRulesForNarrative($documentLink['description'][0]['narrative'], sprintf('%s.description.0', $documentLinkForm));
+
+                foreach ($narrativeDesRules as $key => $item) {
+                    $rules[$key] = $item;
+                }
             }
         }
 
@@ -506,7 +565,26 @@ class ActivityBaseRequest extends FormRequest
         $rules = [];
 
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
-            $rules[sprintf('%s.document_date.%s.date', $formIndex, $documentCategoryIndex)] = 'nullable|date|date_greater_than:1900';
+            $rules[sprintf('%s.document_date.%s.date', $formIndex, $documentCategoryIndex)] = 'date_greater_than:1900';
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns rules for document date.
+     *
+     * @param $formFields
+     * @param $formIndex
+     *
+     * @return array
+     */
+    protected function getCriticalRulesForDocumentDate($formFields, $formIndex): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $documentCategoryIndex => $documentCategory) {
+            $rules[sprintf('%s.document_date.%s.date', $formIndex, $documentCategoryIndex)] = 'nullable|date';
         }
 
         return $rules;
@@ -600,13 +678,34 @@ class ActivityBaseRequest extends FormRequest
         $rules = [];
         $periodStartFormBase = sprintf('%s.period_start.0.date', $formBase);
         $periodEndFormBase = sprintf('%s.period_end.0.date', $formBase);
-        $betweenRule = sprintf('nullable|date|after:%s|before:%s', $periodStartFormBase, $periodEndFormBase);
+        $betweenRule = sprintf('after:%s|before:%s', $periodStartFormBase, $periodEndFormBase);
 
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('%s.value.%s', $formBase, $valueIndex);
-            $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric|min:0';
-            $rules[sprintf('%s.currency', $valueForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Currency', 'Activity', false)));
+            $rules[sprintf('%s.amount', $valueForm)] = 'min:0';
             $rules[sprintf('%s.value_date', $valueForm)] = $betweenRule;
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns critical rules for value.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    protected function getCriticalRulesForValue($formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $valueIndex => $value) {
+            $valueForm = sprintf('%s.value.%s', $formBase, $valueIndex);
+            $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric';
+            $rules[sprintf('%s.currency', $valueForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Currency', 'Activity', false)));
+            $rules[sprintf('%s.value_date', $valueForm)] = 'nullable|date';
         }
 
         return $rules;

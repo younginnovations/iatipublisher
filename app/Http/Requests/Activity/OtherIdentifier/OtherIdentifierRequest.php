@@ -18,7 +18,13 @@ class OtherIdentifierRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForOtherIdentifier($this->get('other_identifier'));
+        $data = $this->get('other_identifier');
+        $totalRules = [
+            $this->getRulesForOtherIdentifier($data),
+            $this->getCriticalRulesForOtherIdentifier($data),
+        ];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -29,6 +35,29 @@ class OtherIdentifierRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return $this->getMessagesForOtherIdentifier($this->get('other_identifier'));
+    }
+
+    /**
+     * Get critical rule for other identifier request.
+     *
+     * @param $formFields
+     *
+     * @return array
+     */
+    public function getCriticalRulesForOtherIdentifier(array $formFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $otherIdentifierIndex => $otherIdentifier) {
+            $otherIdentifierForm = sprintf('other_identifier.%s', $otherIdentifierIndex);
+            $rules[sprintf('%s.reference_type', $otherIdentifierForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OtherIdentifierType', 'Activity', false)));
+
+            foreach ($this->getCriticalRulesForOwnerOrg($otherIdentifier['owner_org'], $otherIdentifierForm) as $ownerOrgIndex => $ownerOrgRules) {
+                $rules[$ownerOrgIndex] = $ownerOrgRules;
+            }
+        }
+
+        return $rules;
     }
 
     /**
@@ -45,7 +74,6 @@ class OtherIdentifierRequest extends ActivityBaseRequest
         foreach ($formFields as $otherIdentifierIndex => $otherIdentifier) {
             $otherIdentifierForm = sprintf('other_identifier.%s', $otherIdentifierIndex);
             $rules[sprintf('%s.reference', $otherIdentifierForm)] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
-            $rules[sprintf('%s.reference_type', $otherIdentifierForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OtherIdentifierType', 'Activity', false)));
 
             foreach ($this->getRulesForOwnerOrg($otherIdentifier['owner_org'], $otherIdentifierForm) as $ownerOrgIndex => $ownerOrgRules) {
                 $rules[$ownerOrgIndex] = $ownerOrgRules;
@@ -96,6 +124,21 @@ class OtherIdentifierRequest extends ActivityBaseRequest
             $rules[sprintf('%s.owner_org.%s.ref', $formBase, $ownerOrgIndex)] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
 
             foreach ($this->getRulesForNarrative($ownerOrg['narrative'], $ownerOrgForm) as $ownerOrgNarrativeIndex => $ownerOrgNarrativeRules) {
+                $rules[$ownerOrgNarrativeIndex] = $ownerOrgNarrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    public function getCriticalRulesForOwnerOrg($formFields, $formBase) : array
+    {
+        $rules = [];
+
+        foreach ($formFields as $ownerOrgIndex => $ownerOrg) {
+            $ownerOrgForm = sprintf('%s.owner_org.%s', $formBase, $ownerOrgIndex);
+
+            foreach ($this->getCriticalRulesForNarrative($ownerOrg['narrative'], $ownerOrgForm) as $ownerOrgNarrativeIndex => $ownerOrgNarrativeRules) {
                 $rules[$ownerOrgNarrativeIndex] = $ownerOrgNarrativeRules;
             }
         }

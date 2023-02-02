@@ -19,7 +19,13 @@ class ContactInfoRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForContactInfo($this->get('contact_info'));
+        $data = $this->get('contact_info');
+        $totalRules = [
+            $this->getRulesForContactInfo($data),
+            $this->getCriticalRulesForContactInfo($data),
+        ];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -30,6 +36,41 @@ class ContactInfoRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return $this->getMessagesForContactInfo($this->get('contact_info'));
+    }
+
+    /**
+     * Returns rules for contact info.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    public function getCriticalRulesForContactInfo(array $formFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $contactInfoIndex => $contactInfo) {
+            $contactInfoForm = sprintf('contact_info.%s', $contactInfoIndex);
+            $rules[sprintf('%s.type', $contactInfoForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('ContactType', 'Activity', false)));
+            $tempRules = [
+                $this->getCriticalRulesForDepartment(Arr::get($contactInfo, 'department', []), $contactInfoForm),
+                $this->getCriticalRulesForOrganisation(Arr::get($contactInfo, 'organisation', []), $contactInfoForm),
+                $this->getCriticalRulesForPersonName(Arr::get($contactInfo, 'person_name', []), $contactInfoForm),
+                $this->getCriticalRulesForJobTitle(Arr::get($contactInfo, 'job_title', []), $contactInfoForm),
+                $this->getRulesForMailingAddress(Arr::get($contactInfo, 'mailing_address', []), $contactInfoForm),
+                $this->getRulesForTelephone(Arr::get($contactInfo, 'telephone', []), $contactInfoForm),
+                $this->getRulesForEmail(Arr::get($contactInfo, 'email', []), $contactInfoForm),
+                $this->getRulesForWebsite(Arr::get($contactInfo, 'website', []), $contactInfoForm),
+            ];
+
+            foreach ($tempRules as $tempRule) {
+                foreach ($tempRule as $idx => $rule) {
+                    $rules[$idx] = $rule;
+                }
+            }
+        }
+
+        return $rules;
     }
 
     /**
@@ -126,6 +167,29 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns rules for organisation.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    protected function getCriticalRulesForOrganisation($formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $organisationIndex => $organisation) {
+            $organisationForm = sprintf('%s.organisation.%s', $formBase, $organisationIndex);
+
+            foreach ($this->getCriticalRulesForNarrative($organisation['narrative'], $organisationForm) as $organisationNarrativeIndex => $organisationNarrativeRules) {
+                $rules[$organisationNarrativeIndex] = $organisationNarrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
      * Returns messages for organisation.
      *
      * @param $formFields
@@ -164,6 +228,29 @@ class ContactInfoRequest extends ActivityBaseRequest
             $departmentForm = sprintf('%s.department.%s', $formBase, $departmentIndex);
 
             foreach ($this->getRulesForNarrative($department['narrative'], $departmentForm) as $departmentNarrativeIndex => $departmentNarrativeRules) {
+                $rules[$departmentNarrativeIndex] = $departmentNarrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns rules for department.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    protected function getCriticalRulesForDepartment($formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $departmentIndex => $department) {
+            $departmentForm = sprintf('%s.department.%s', $formBase, $departmentIndex);
+
+            foreach ($this->getCriticalRulesForNarrative($department['narrative'], $departmentForm) as $departmentNarrativeIndex => $departmentNarrativeRules) {
                 $rules[$departmentNarrativeIndex] = $departmentNarrativeRules;
             }
         }
@@ -218,6 +305,29 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns rules for person name.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    protected function getCriticalRulesForPersonName($formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $personNameIndex => $personName) {
+            $personNameForm = sprintf('%s.person_name.%s', $formBase, $personNameIndex);
+
+            foreach ($this->getCriticalRulesForNarrative($personName['narrative'], $personNameForm) as $personNameNarrativeIndex => $personNameNarrativeRules) {
+                $rules[$personNameNarrativeIndex] = $personNameNarrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
      * Returns messaged for person name.
      *
      * @param $formFields
@@ -264,6 +374,29 @@ class ContactInfoRequest extends ActivityBaseRequest
     }
 
     /**
+     * Returns rules for job title.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    protected function getCriticalRulesForJobTitle($formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $jobTitleIndex => $jobTitle) {
+            $jobTitleForm = sprintf('%s.job_title.%s', $formBase, $jobTitleIndex);
+
+            foreach ($this->getCriticalRulesForNarrative($jobTitle['narrative'], $jobTitleForm) as $jobTitleNarrativeIndex => $jobTitleNarrativeRules) {
+                $rules[$jobTitleNarrativeIndex] = $jobTitleNarrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
      * Returns messages for job title.
      *
      * @param $formFields
@@ -302,6 +435,29 @@ class ContactInfoRequest extends ActivityBaseRequest
             $mailingAddressForm = sprintf('%s.mailing_address.%s', $formBase, $mailingAddressIndex);
 
             foreach ($this->getRulesForNarrative($mailingAddress['narrative'], $mailingAddressForm) as $mailingAddressNarrativeIndex => $mailingAddressNarrativeRules) {
+                $rules[$mailingAddressNarrativeIndex] = $mailingAddressNarrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns rules for mailing address.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    protected function getCriticalRulesForMailingAddress($formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $mailingAddressIndex => $mailingAddress) {
+            $mailingAddressForm = sprintf('%s.mailing_address.%s', $formBase, $mailingAddressIndex);
+
+            foreach ($this->getCriticalRulesForNarrative($mailingAddress['narrative'], $mailingAddressForm) as $mailingAddressNarrativeIndex => $mailingAddressNarrativeRules) {
                 $rules[$mailingAddressNarrativeIndex] = $mailingAddressNarrativeRules;
             }
         }

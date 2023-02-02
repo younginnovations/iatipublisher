@@ -274,6 +274,9 @@ class RecipientRegion extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
+        $this->criticalValidator = $this->factory->sign($this->data())
+            ->with($this->criticalRules(), $this->messages())
+            ->getValidatorInstance();
         $this->setValidity();
         unset($this->data['recipient_region_total_percentage'], $this->data['recipient_country']);
 
@@ -289,6 +292,17 @@ class RecipientRegion extends Element
     public function rules(): array
     {
         return $this->request->getRulesForRecipientRegion($this->data('recipient_region'), true, Arr::get($this->recipientCountry->data, 'recipient_country', []));
+    }
+
+    /**
+     * Provides the rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws BindingResolutionException
+     */
+    public function criticalRules(): array
+    {
+        return $this->request->getCriticalRulesForRecipientRegion($this->data('recipient_region'), true, Arr::get($this->recipientCountry->data, 'recipient_country', []));
     }
 
     /**

@@ -18,7 +18,14 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForPlannedDisbursement($this->get('planned_disbursement'));
+        $data = $this->get('planned_disbursement');
+
+        $totalRules = [
+            $this->getRulesForPlannedDisbursement($data),
+            $this->getCriticalRulesForPlannedDisbursement($data),
+        ];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -44,7 +51,6 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
         foreach ($formFields as $plannedDisbursementIndex => $plannedDisbursement) {
             $plannedDisbursementForm = sprintf('planned_disbursement.%s', $plannedDisbursementIndex);
-            $rules[sprintf('%s.planned_disbursement_type', $plannedDisbursementForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('BudgetType', 'Activity', false)));
             $diff = 0;
             $start = $plannedDisbursement['period_start'][0]['date'];
             $end = $plannedDisbursement['period_end'][0]['date'];
@@ -53,34 +59,51 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
                 $diff = (dateStrToTime($end) - dateStrToTime($start)) / 86400;
             }
 
-            $periodStartRules = $this->getPlannedDisbursementRulesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementForm, $diff);
+            $tempRules = [
+                            $this->getPlannedDisbursementRulesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementForm, $diff),
+                            $this->getPlannedDisbursementRulesForPeriodEnd($plannedDisbursement['period_end'], $plannedDisbursementForm, $diff),
+                            $this->getRulesForValue($plannedDisbursement['value'], $plannedDisbursementForm),
+                            $this->getRulesForProviderOrg($plannedDisbursement['provider_org'], $plannedDisbursementForm),
+                            $this->getRulesForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementForm),
+                        ];
 
-            foreach ($periodStartRules as $key => $periodStartRule) {
-                $rules[$key] = $periodStartRule;
+            foreach ($tempRules as $rule) {
+                foreach ($rule as $key => $ruleValue) {
+                    $rules[$key] = $ruleValue;
+                }
             }
+        }
 
-            $periodEndRules = $this->getPlannedDisbursementRulesForPeriodEnd($plannedDisbursement['period_end'], $plannedDisbursementForm, $diff);
+        return $rules;
+    }
 
-            foreach ($periodEndRules as $key => $periodEndRule) {
-                $rules[$key] = $periodEndRule;
-            }
+    /**
+     * Generates planned disbursement rules.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    public function getCriticalRulesForPlannedDisbursement(array $formFields): array
+    {
+        $rules = [];
 
-            $valueRules = $this->getRulesForValue($plannedDisbursement['value'], $plannedDisbursementForm);
+        foreach ($formFields as $plannedDisbursementIndex => $plannedDisbursement) {
+            $plannedDisbursementForm = sprintf('planned_disbursement.%s', $plannedDisbursementIndex);
+            $rules[sprintf('%s.planned_disbursement_type', $plannedDisbursementForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('BudgetType', 'Activity', false)));
 
-            foreach ($valueRules as $key => $valueRule) {
-                $rules[$key] = $valueRule;
-            }
+            $tempRules = [
+                            $this->getCriticalPlannedDisbursementRulesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementForm),
+                            $this->getCriticalPlannedDisbursementRulesForPeriodEnd($plannedDisbursement['period_end'], $plannedDisbursementForm),
+                            $this->getCriticalRulesForValue($plannedDisbursement['value'], $plannedDisbursementForm),
+                            $this->getCriticalRulesForProviderOrg($plannedDisbursement['provider_org'], $plannedDisbursementForm),
+                            $this->getCriticalRulesForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementForm),
+                        ];
 
-            $providerOrgRules = $this->getRulesForProviderOrg($plannedDisbursement['provider_org'], $plannedDisbursementForm);
-
-            foreach ($providerOrgRules as $key => $providerOrgRule) {
-                $rules[$key] = $providerOrgRule;
-            }
-
-            $receiverOrgRules = $this->getRulesForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementForm);
-
-            foreach ($receiverOrgRules as $key => $receiverOrgRule) {
-                $rules[$key] = $receiverOrgRule;
+            foreach ($tempRules as $rule) {
+                foreach ($rule as $key => $ruleValue) {
+                    $rules[$key] = $ruleValue;
+                }
             }
         }
 
@@ -150,10 +173,33 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
         foreach ($formFields as $providerOrgIndex => $providerOrg) {
             $providerOrgForm = sprintf('%s.provider_org.%s', $formBase, $providerOrgIndex);
-            $rules[sprintf('%s.type', $providerOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
             $rules[sprintf('%s.ref', $providerOrgForm)] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
 
             foreach ($this->getRulesForNarrative($providerOrg['narrative'], $providerOrgForm) as $providerOrgNarrativeIndex => $providerOrgNarrativeRules) {
+                $rules[$providerOrgNarrativeIndex] = $providerOrgNarrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Critical rules for provider org.
+     *
+     * @param array $formFields
+     * @param       $formBase
+     *
+     * @return array
+     */
+    public function getCriticalRulesForProviderOrg(array $formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $providerOrgIndex => $providerOrg) {
+            $providerOrgForm = sprintf('%s.provider_org.%s', $formBase, $providerOrgIndex);
+            $rules[sprintf('%s.type', $providerOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
+
+            foreach ($this->getCriticalRulesForNarrative($providerOrg['narrative'], $providerOrgForm) as $providerOrgNarrativeIndex => $providerOrgNarrativeRules) {
                 $rules[$providerOrgNarrativeIndex] = $providerOrgNarrativeRules;
             }
         }
@@ -200,10 +246,33 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
         foreach ($formFields as $receiverOrgIndex => $receiverOrg) {
             $receiverOrgForm = sprintf('%s.receiver_org.%s', $formBase, $receiverOrgIndex);
-            $rules[sprintf('%s.type', $receiverOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
             $rules[sprintf('%s.ref', $receiverOrgForm)] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
 
             foreach ($this->getRulesForNarrative($receiverOrg['narrative'], $receiverOrgForm) as $receiverOrgNarrativeIndex => $receiverOrgNarrativeRules) {
+                $rules[$receiverOrgNarrativeIndex] = $receiverOrgNarrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Critical rules for receiver org.
+     *
+     * @param array $formFields
+     * @param       $formBase
+     *
+     * @return array
+     */
+    public function getCriticalRulesForReceiverOrg(array $formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $receiverOrgIndex => $receiverOrg) {
+            $receiverOrgForm = sprintf('%s.receiver_org.%s', $formBase, $receiverOrgIndex);
+            $rules[sprintf('%s.type', $receiverOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
+
+            foreach ($this->getCriticalRulesForNarrative($receiverOrg['narrative'], $receiverOrgForm) as $receiverOrgNarrativeIndex => $receiverOrgNarrativeRules) {
                 $rules[$receiverOrgNarrativeIndex] = $receiverOrgNarrativeRules;
             }
         }
@@ -275,7 +344,26 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'nullable|date|period_start_end:' . $diff . ',90';
+            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'period_start_end:' . $diff . ',90';
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns criticalrules for period start form.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    public function getCriticalPlannedDisbursementRulesForPeriodStart($formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $periodStartKey => $periodStartVal) {
+            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'nullable|date';
         }
 
         return $rules;
@@ -317,13 +405,31 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
-            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'nullable';
-            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'date';
             $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'period_start_end:' . $diff . ',90';
             $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = sprintf(
                 'after:%s',
                 $formBase . '.period_start.' . $periodEndKey . '.date'
             );
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns critical rules for period end form.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    public function getCriticalPlannedDisbursementRulesForPeriodEnd($formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $periodEndKey => $periodEndVal) {
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'nullable';
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'date';
         }
 
         return $rules;

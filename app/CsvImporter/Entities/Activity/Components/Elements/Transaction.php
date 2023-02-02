@@ -162,6 +162,9 @@ class Transaction extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
+        $this->criticalValidator = $this->factory->sign($this->data())
+            ->with($this->criticalRules(), $this->messages())
+            ->getValidatorInstance();
 
         $this->setValidity();
 
@@ -178,6 +181,17 @@ class Transaction extends Element
     public function rules(): array
     {
         return $this->getBaseRules($this->request->getRulesForTransaction(Arr::get($this->data, 'transaction', []), true, $this->getActivityData()), false);
+    }
+
+    /**
+     * Provides the rules for the IATI Element validation.
+     *
+     * @return array
+     * @throw \JsonException
+     */
+    public function criticalRules(): array
+    {
+        return $this->getBaseRules($this->request->getCriticalRulesForTransaction(Arr::get($this->data, 'transaction', []), true, $this->getActivityData()), false);
     }
 
     /**

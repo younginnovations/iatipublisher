@@ -108,21 +108,13 @@ class Validation extends Factory
      *
      * @return array
      */
-    public function withErrors($isDuplicate, $isIdentifierValid): array
+    public function withErrors(): array
     {
         $errors = [];
 
         foreach ($this->errors() as $index => $error) {
             $element = $this->parseErrors($index);
             $errors[$element][$index] = Arr::get($error, 0, '');
-        }
-
-        if ($isDuplicate) {
-            $errors['activity_identifier']['activity_identifier.identifier'] = 'The activity has been duplicated.';
-        }
-
-        if (!$isIdentifierValid) {
-            $errors['activity_identifier']['activity_identifier.activity_identifier'] = 'The activity is invalid. Please ensure that the activity identifier matches with organization identifier.';
         }
 
         return $errors;

@@ -204,6 +204,18 @@ class ReportingOrganization extends Element
     }
 
     /**
+     * Critical rules for reporting org.
+     *
+     * @return array
+     */
+    public function criticalRules(): array
+    {
+        return [];
+        //  --check me--
+        // return $this->request->getCriticalRulesForReportingOrganization(Arr:get($this->data, 'reporting_org', []));
+    }
+
+    /**
      * Provides custom messages used for IATI Element Validation.
      *
      * @return array
@@ -223,6 +235,9 @@ class ReportingOrganization extends Element
     {
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
+        $this->criticalValidator = $this->factory->sign($this->data())
+            ->with($this->criticalRules(), $this->messages())
             ->getValidatorInstance();
         $this->setValidity();
 

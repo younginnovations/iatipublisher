@@ -575,7 +575,11 @@ class ActivityRow extends Row
     protected function recordErrors($name, $element): void
     {
         if (!empty($element->errors())) {
-            $this->errors[$name] = $element->errors();
+            $this->errors['warning'][$name] = $element->errors();
+        }
+
+        if (!empty($element->criticalErrors())) {
+            $this->errors['critical'][$name] = $element->criticalErrors();
         }
     }
 
