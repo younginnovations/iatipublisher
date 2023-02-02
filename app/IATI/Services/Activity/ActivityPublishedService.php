@@ -50,7 +50,7 @@ class ActivityPublishedService
      */
     public function update($activityPublished, $publishedActivities): bool
     {
-        return $this->activityPublishedRepository->update($activityPublished, $publishedActivities);
+        return $this->activityPublishedRepository->updatePublishedActivity($activityPublished, $publishedActivities);
     }
 
     /**

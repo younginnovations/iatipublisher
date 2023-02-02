@@ -51,7 +51,7 @@ class ActivityPublishedRepository extends Repository
      *
      * @return bool
      */
-    public function update($activityPublished, $publishedActivities): bool
+    public function updatePublishedActivity($activityPublished, $publishedActivities): bool
     {
         $activityPublished->published_activities = $publishedActivities;
 
@@ -82,9 +82,5 @@ class ActivityPublishedRepository extends Repository
     {
         $activityPublished->published_to_registry = 1;
         $activityPublished->save();
-    }
-
-    public function get()
-    {
     }
 }

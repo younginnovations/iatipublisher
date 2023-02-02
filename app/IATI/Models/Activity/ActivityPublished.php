@@ -61,8 +61,7 @@ class ActivityPublished extends Model implements Auditable
 
         if ($this->published_activities) {
             foreach ($this->published_activities as $publishedActivity) {
-                $pieces = explode('-', $this->
-                getFilename('.', $publishedActivity));
+                $pieces = explode('-', $this->getFilename('.', $publishedActivity));
                 $activityIds[end($pieces)] = $publishedActivity;
             }
         }

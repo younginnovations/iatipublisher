@@ -55,7 +55,12 @@ class AuditRepository extends Repository
             ->paginate(10, ['*'], 'audit', $page);
     }
 
-    public function getModelId()
+    /**
+     * Returns active audit instance id.
+     *
+     * @return int
+     */
+    public function getModelId():int
     {
         return $this->activeModal;
     }

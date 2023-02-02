@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\IATI\Services\Audit;
 
 use App\IATI\Repositories\Audit\AuditRepository;
@@ -55,7 +57,7 @@ class AuditService
         $row = [];
         $row['user_type'] = $this->getUserType();
         $row['user_id'] = $this->getUserId();
-        $row['auditable_type'] = $event === 'signin' ? get_class(auth()->user()) : $this->getAuditableType($auditables);
+        $row['auditable_type'] = $event === 'signin' ? 'App\\IATI\\Models\\User\\User' : $this->getAuditableType($auditables);
         $row['auditable_id'] = $event === 'signin' ? auth()->user()->id : null;
         $row['event'] = $event;
         $row['url'] = request()->getUri();
@@ -94,7 +96,7 @@ class AuditService
      */
     public function getUserType(): string
     {
-        return get_class(Auth::user());
+        return 'App\\IATI\\Models\\User\\User';
     }
 
     /**
@@ -165,9 +167,9 @@ class AuditService
      */
     public function getNewValues($auditables, $auditableType, $event): bool | string
     {
-        $auditables = json_decode($auditables, true);
+        $auditables = $auditables->toArray();
 
-        if ($auditableType === get_class(auth()->user()) && $event !== 'signin') {
+        if ($auditableType === 'App\\IATI\\Models\\User\\User' && $event !== 'signin') {
             foreach ($auditables as $index => $item) {
                 foreach ($item as $key => $value) {
                     $item[$key] = Crypt::encryptString($value);
@@ -176,7 +178,7 @@ class AuditService
             }
         }
 
-        if ($auditableType === get_class(auth()->user()) && $event === 'signin') {
+        if ($auditableType === 'App\\IATI\\Models\\User\\User' && $event === 'signin') {
             foreach ($auditables as $index => $item) {
                 if ($index === 'id' || $index === 'username') {
                     $auditables[$index] = Crypt::encryptString($item);

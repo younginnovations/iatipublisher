@@ -85,7 +85,7 @@ class UserRepository extends Repository
      *
      * @param $queryParams
      *
-     * @return Collection|array ;
+     * @return Collection|array
      */
     public function getUserDownloadData($queryParams): Collection | array
     {

@@ -88,7 +88,6 @@ class Kernel extends HttpKernel
             'throttle:api',
             AccessibleRoute::class,
         ],
-
     ];
 
     /**
