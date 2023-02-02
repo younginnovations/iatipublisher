@@ -18,7 +18,10 @@ class DescriptionRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForDescription($this->get('description'));
+        $data = $this->get('description');
+        $totalRules = [$this->getCriticalRulesForDescription($data), $this->getRulesForDescription($data)];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -38,13 +41,36 @@ class DescriptionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForDescription(array $formFields): array
+    public function getCriticalRulesForDescription(array $formFields): array
     {
         $rules = [];
 
         foreach ($formFields as $descriptionIndex => $description) {
             $descriptionForm = sprintf('description.%s', $descriptionIndex);
             $rules[sprintf('%s.type', $descriptionForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('DescriptionType', 'Activity', false))));
+            $narrativeRules = $this->getCriticalRulesForNarrative($description['narrative'], $descriptionForm);
+
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns rules for related activity.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    public function getRulesForDescription(array $formFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $descriptionIndex => $description) {
+            $descriptionForm = sprintf('description.%s', $descriptionIndex);
             $narrativeRules = $this->getRulesForNarrative($description['narrative'], $descriptionForm);
 
             foreach ($narrativeRules as $key => $item) {

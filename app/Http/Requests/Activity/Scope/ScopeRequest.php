@@ -20,6 +20,28 @@ class ScopeRequest extends ActivityBaseRequest
      */
     public function rules($scope = null): array
     {
+        $totalRules = [$this->getCriticalRulesForActivityScope($scope), $this->getRulesForActivityScope()];
+
+        return mergeRules($totalRules);
+    }
+
+    /**
+     * Return general rules for scope.
+     */
+    public function getRulesForActivityScope(): array
+    {
+        return [];
+    }
+
+    /**
+     * Returns critical error for scope.
+     *
+     * @param $scope
+     *
+     * @return array
+     */
+    public function getCriticalRulesForActivityScope($scope = null): array
+    {
         if ($scope && is_array($scope)) {
             return [
                 'activity_scope' => 'nullable|size:1',

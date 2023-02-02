@@ -114,6 +114,9 @@ class ActivityStatus extends Element
         $this->validator = $this->factory->sign($this->data)
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
+        $this->criticalValidator = $this->factory->sign($this->data)
+            ->with($this->criticalRules(), $this->messages())
+            ->getValidatorInstance();
 
         $this->setValidity();
 
@@ -128,7 +131,18 @@ class ActivityStatus extends Element
      */
     public function rules(): array
     {
-        return $this->request->rules(Arr::get($this->data(), $this->csvHeader()));
+        return $this->request->getRulesForActivityStatus(Arr::get($this->data(), $this->csvHeader()));
+    }
+
+    /**
+     * Provides the rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function criticalRules(): array
+    {
+        return $this->request->getCriticalRulesForActivityStatus(Arr::get($this->data(), $this->csvHeader()));
     }
 
     /**

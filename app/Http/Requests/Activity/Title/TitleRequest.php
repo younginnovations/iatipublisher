@@ -25,8 +25,34 @@ class TitleRequest extends ActivityBaseRequest
             $titles = request()->get('narrative');
         }
 
+        $totalRules = [$this->getCriticalRulesForTitle($name), $this->getRulesForTitle($name, $titles)];
+
+        return mergeRules($totalRules);
+    }
+
+    /**
+     * Return critical rules for title.
+     *
+     * @param $name
+     *
+     * @return array
+     */
+    public function getCriticalRulesForTitle($name): array
+    {
+        return [sprintf('%s.0.narrative', $name) => 'required'];
+    }
+
+    /**
+     * Return rules for title.
+     *
+     * @param $name
+     * @param $titles
+     *
+     * @return array
+     */
+    public function getRulesForTitle($name, $titles = []): array
+    {
         $rules[$name] = 'unique_lang|unique_default_lang';
-        $rules[sprintf('%s.0.narrative', $name)] = 'required';
 
         if (is_array($titles) && count($titles)) {
             foreach ($titles as $key => $title) {

@@ -18,7 +18,14 @@ class RelatedActivityRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForRelatedActivity($this->get('related_activity'));
+        $data = $this->get('related_activity');
+
+        $totalRules = [
+            $this->getRulesForRelatedActivity($data),
+            $this->getCriticalRulesForRelatedActivity($data),
+        ];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -38,7 +45,7 @@ class RelatedActivityRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForRelatedActivity(array $formFields): array
+    public function getCriticalRulesForRelatedActivity(array $formFields): array
     {
         $rules = [];
         $relatedActivityType = implode(',', array_keys(getCodeList('RelatedActivityType', 'Activity', false)));
@@ -47,6 +54,20 @@ class RelatedActivityRequest extends ActivityBaseRequest
             $baseForm = sprintf('related_activity.%s', $index);
             $rules[sprintf('%s.relationship_type', $baseForm)] = sprintf('nullable|in:%s', $relatedActivityType);
         }
+
+        return $rules;
+    }
+
+    /**
+     * Returns rules for related activity.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    public function getRulesForRelatedActivity(array $formFields): array
+    {
+        $rules = [];
 
         return $rules;
     }

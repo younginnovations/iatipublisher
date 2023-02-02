@@ -18,7 +18,13 @@ class HumanitarianScopeRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForHumanitarianScope($this->get('humanitarian_scope'));
+        $data = $this->get('humanitarian_scope');
+        $totalRules = [
+            $this->getRulesForHumanitarianScope($data),
+            $this->getCriticalRulesForHumanitarianScope($data),
+        ];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -44,12 +50,34 @@ class HumanitarianScopeRequest extends ActivityBaseRequest
 
         foreach ($formFields as $humanitarianScopeIndex => $humanitarianScope) {
             $humanitarianScopeForm = 'humanitarian_scope.' . $humanitarianScopeIndex;
+
+            foreach ($this->getRulesForNarrative($humanitarianScope['narrative'], $humanitarianScopeForm) as $humanitarianIndex => $narrativeRules) {
+                $rules[$humanitarianIndex] = $narrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns rules for related activity.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    public function getCriticalRulesForHumanitarianScope(array $formFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $humanitarianScopeIndex => $humanitarianScope) {
+            $humanitarianScopeForm = 'humanitarian_scope.' . $humanitarianScopeIndex;
             $rules[sprintf('%s.type', $humanitarianScopeForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('HumanitarianScopeType', 'Activity', false)));
             $rules[sprintf('%s.vocabulary', $humanitarianScopeForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('HumanitarianScopeVocabulary', 'Activity', false)));
             $rules[sprintf('%s.vocabulary_uri', $humanitarianScopeForm)] = 'nullable|url';
             $rules[sprintf('%s.code', $humanitarianScopeForm)] = 'nullable|string';
 
-            foreach ($this->getRulesForNarrative($humanitarianScope['narrative'], $humanitarianScopeForm) as $humanitarianIndex => $narrativeRules) {
+            foreach ($this->getCriticalRulesForNarrative($humanitarianScope['narrative'], $humanitarianScopeForm) as $humanitarianIndex => $narrativeRules) {
                 $rules[$humanitarianIndex] = $narrativeRules;
             }
         }

@@ -251,6 +251,21 @@ class CountryBudgetItem extends Element
     }
 
     /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function criticalRules(): array
+    {
+        if (Arr::get($this->data, 'country_budget_items')) {
+            return $this->getBaseRules($this->request->getCriticalRulesForCountryBudgetItem(Arr::get($this->data, 'country_budget_items', [])), false);
+        }
+
+        return [];
+    }
+
+    /**
      * Provides custom messages used for IATI Element Validation.
      *
      * @return array
@@ -270,6 +285,9 @@ class CountryBudgetItem extends Element
     {
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
+        $this->criticalValidator = $this->factory->sign($this->data())
+            ->with($this->criticalRules(), $this->messages())
             ->getValidatorInstance();
         $this->setValidity();
 

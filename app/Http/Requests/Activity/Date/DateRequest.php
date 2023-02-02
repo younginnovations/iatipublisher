@@ -19,7 +19,10 @@ class DateRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForDate($this->get('activity_date'));
+        $data = $this->get('activity_date');
+        $totalRules = [$this->getCriticalRulesForActivityDate($data), $this->getRulesForActivityDate($data)];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -39,18 +42,43 @@ class DateRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForDate(array $formFields): array
+    public function getRulesForActivityDate(array $formFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $activityDateIndex => $activityDate) {
+            $activityDateForm = sprintf('activity_date.%s', $activityDateIndex);
+            // dd($this->getRulesForNarrative($activityDate['narrative'], $activityDateForm));
+
+            // --check me--
+            // $rules[sprintf('%s.narrative', $activityDateForm)] = $this->getRulesForNarrative($activityDate['narrative'], $activityDateForm)[sprintf('%s.narrative', $activityDateForm)];
+
+            // dd($rules[sprintf('%s.narrative', $activityDateForm)]);
+            // [sprintf('%s.narrative', $activityDateForm)]
+        }
+
+        return $this->validateDataRules($formFields, $rules);
+    }
+
+    /**
+     * Returns critical rules for date.
+     *
+     * @param array $formFields
+     *
+     * @return
+     */
+    public function getCriticalRulesForActivityDate(array $formFields) : array
     {
         $rules = [];
 
         foreach ($formFields as $activityDateIndex => $activityDate) {
             $activityDateForm = sprintf('activity_date.%s', $activityDateIndex);
             $rules[sprintf('%s.date', $activityDateForm)] = 'nullable|date';
-            $rules[sprintf('%s.type', $activityDateForm)] = 'nullable';
-            $rules[sprintf('%s.narrative', $activityDateForm)] = $this->getRulesForNarrative($activityDate['narrative'], $activityDateForm)[sprintf('%s.narrative', $activityDateForm)];
+            $rules[sprintf('%s.type', $activityDateForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ActivityDateType', 'Activity'))));
+            $rules[sprintf('%s.narrative', $activityDateForm)] = $this->getCriticalRulesForNarrative($activityDate['narrative'], $activityDateForm)[sprintf('%s.narrative', $activityDateForm)];
         }
 
-        return $this->validateDataRules($formFields, $rules);
+        return $rules;
     }
 
     /**

@@ -21,7 +21,13 @@ class ResultRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForResult(request()->except(['_token']));
+        $data = request()->except(['_token']);
+        $totalRules = [
+            $this->getRulesForResult($data),
+            $this->getCriticalRulesForResult($data),
+        ];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -35,9 +41,11 @@ class ResultRequest extends ActivityBaseRequest
     }
 
     /**
-     * Returns rules for transaction.
+     * Returns rules for result.
      *
      * @param array $formFields
+     * @param array $fileUpload
+     * @param array $indicator
      *
      * @return array
      */
@@ -45,14 +53,43 @@ class ResultRequest extends ActivityBaseRequest
     {
         $rules = [];
 
-        $rules['type'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ResultType', 'Activity', false))));
-        $rules['aggregation_status'] = sprintf('nullable|in:0,1');
-
         $tempRules = [
             $this->getRulesForNarrative($formFields['title'][0]['narrative'], 'title.0'),
             $this->getRulesForNarrative($formFields['description'][0]['narrative'], 'description.0'),
             $this->getRulesForDocumentLink($formFields['document_link']),
             $this->getRulesForReferences($formFields['reference'], $fileUpload, $indicators),
+        ];
+
+        foreach ($tempRules as $key => $tempRule) {
+            foreach ($tempRule as $idx => $rule) {
+                $rules[$idx] = $rule;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns critical rules for result.
+     *
+     * @param array $formFields
+     * @param array $fileUpload
+     * @param array $indicators
+     *
+     * @return array
+     */
+    public function getCriticalRulesForResult(array $formFields, bool $fileUpload = false, array $indicators = []): array
+    {
+        $rules = [];
+
+        $rules['type'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ResultType', 'Activity', false))));
+        $rules['aggregation_status'] = sprintf('nullable|in:0,1');
+
+        $tempRules = [
+            $this->getCriticalRulesForNarrative($formFields['title'][0]['narrative'], 'title.0'),
+            $this->getCriticalRulesForNarrative($formFields['description'][0]['narrative'], 'description.0'),
+            $this->getCriticalRulesForDocumentLink($formFields['document_link']),
+            $this->getCriticalRulesForReferences($formFields['reference'], $fileUpload, $indicators),
         ];
 
         foreach ($tempRules as $key => $tempRule) {
@@ -120,8 +157,6 @@ class ResultRequest extends ActivityBaseRequest
 
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
-            $rules[sprintf('%s.vocabulary_uri', $referenceForm)] = 'nullable|url';
-            $rules[sprintf('%s.vocabulary', $referenceForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ResultVocabulary', 'Activity'))));
 
             if (!empty($reference['code']) && $reference['code'] !== '' && $hasResultId) {
                 if ($fileUpload) {
@@ -139,6 +174,24 @@ class ResultRequest extends ActivityBaseRequest
                     $rules[sprintf('%s.code', $referenceForm)] = 'indicator_ref_code_present';
                 }
             }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns critical rules for Reference.
+     *
+     * @param $formFields
+     *
+     * @return array
+     */
+    protected function getCriticalRulesForReferences($formFields, $fileUpload = false, array $indicators = []): array
+    {
+        foreach ($formFields as $referenceIndex => $reference) {
+            $referenceForm = sprintf('reference.%s', $referenceIndex);
+            $rules[sprintf('%s.vocabulary_uri', $referenceForm)] = 'nullable|url';
+            $rules[sprintf('%s.vocabulary', $referenceForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ResultVocabulary', 'Activity'))));
         }
 
         return $rules;

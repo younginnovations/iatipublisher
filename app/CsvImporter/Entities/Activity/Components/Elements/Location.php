@@ -491,6 +491,17 @@ class Location extends Element
     }
 
     /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function criticalRules(): array
+    {
+        return $this->request->getCriticalRulesForLocation(Arr::get($this->data, 'location', []));
+    }
+
+    /**
      * Provides custom messages used for IATI Element Validation.
      *
      * @return array
@@ -510,6 +521,9 @@ class Location extends Element
     {
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
+        $this->criticalValidator = $this->factory->sign($this->data())
+            ->with($this->criticalRules(), $this->messages())
             ->getValidatorInstance();
         $this->setValidity();
 

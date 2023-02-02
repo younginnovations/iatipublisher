@@ -31,7 +31,10 @@ class BudgetRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForBudget($this->get('budget'));
+        $data = $this->get('budget');
+        $totalRules = [$this->getCriticalRulesForBudget($data), $this->getRulesForBudget($data)];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -42,6 +45,49 @@ class BudgetRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return $this->getMessagesForBudget($this->get('budget'));
+    }
+
+    /**
+     * Returns rules for related activity.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    public function getCriticalRulesForBudget(array $formFields): array
+    {
+        $rules = [];
+        $activityService = app()->make(ActivityService::class);
+        $formFields = $activityService->setBudgets($formFields);
+        $this->identicalIds = $activityService->checkSameMultipleBudgets($formFields);
+        $this->revisedIds = $activityService->checkRevisedBudgets($formFields);
+
+        foreach ($formFields as $budgetIndex => $budget) {
+            $budgetForm = sprintf('budget.%s', $budgetIndex);
+            $rules[sprintf('%s.budget_type', $budgetForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('BudgetType', 'Activity', false))));
+            $rules[sprintf('%s.budget_status', $budgetForm)][] = 'nullable';
+            $rules[sprintf('%s.budget_status', $budgetForm)][] = sprintf('in:%s', implode(',', array_keys(getCodeList('BudgetStatus', 'Activity', false))));
+
+            $periodStartRules = $this->getCriticalBudgetRulesForPeriodStart($budget['period_start'], $budgetForm);
+
+            foreach ($periodStartRules as $key => $periodStartRule) {
+                $rules[$key] = $periodStartRule;
+            }
+
+            $periodEndRules = $this->getCriticalBudgetRulesForPeriodEnd($budget['period_end'], $budgetForm);
+
+            foreach ($periodEndRules as $key => $periodEndRule) {
+                $rules[$key] = $periodEndRule;
+            }
+
+            $valueRules = $this->getCriticalRulesForValue($budget['budget_value'], $budgetForm);
+
+            foreach ($valueRules as $key => $valueRule) {
+                $rules[$key] = $valueRule;
+            }
+        }
+
+        return $rules;
     }
 
     /**
@@ -135,12 +181,32 @@ class BudgetRequest extends ActivityBaseRequest
         $rules = [];
         $periodStartFormBase = sprintf('%s.period_start.0.date', $formBase);
         $periodEndFormBase = sprintf('%s.period_end.0.date', $formBase);
-        $betweenRule = sprintf('nullable|date|after:%s|before:%s', $periodStartFormBase, $periodEndFormBase);
+        $betweenRule = sprintf('after:%s|before:%s', $periodStartFormBase, $periodEndFormBase);
+
+        foreach ($formFields as $valueIndex => $value) {
+            $valueForm = sprintf('%s.budget_value.%s', $formBase, $valueIndex);
+            $rules[sprintf('%s.value_date', $valueForm)] = $betweenRule;
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns rules for value.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    protected function getCriticalRulesForValue($formFields, $formBase): array
+    {
+        $rules = [];
 
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('%s.budget_value.%s', $formBase, $valueIndex);
             $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric|min:0';
-            $rules[sprintf('%s.value_date', $valueForm)] = $betweenRule;
+            $rules[sprintf('%s.value_date', $valueForm)] = 'nullable|date';
         }
 
         return $rules;
@@ -160,7 +226,26 @@ class BudgetRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'nullable|date|date_greater_than:1900|period_start_end:' . $diff . ',365';
+            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'date_greater_than:1900|period_start_end:' . $diff . ',365';
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns rules for period start form.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    public function getCriticalBudgetRulesForPeriodStart($formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $periodStartKey => $periodStartVal) {
+            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'nullable|date';
         }
 
         return $rules;
@@ -188,6 +273,26 @@ class BudgetRequest extends ActivityBaseRequest
             );
             $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'date_greater_than:1900';
             $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'period_start_end:' . $diff . ',365';
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns rules for period end form.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    public function getCriticalBudgetRulesForPeriodEnd($formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $periodEndKey => $periodEndVal) {
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'nullable';
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'date';
         }
 
         return $rules;

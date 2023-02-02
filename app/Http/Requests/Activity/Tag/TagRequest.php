@@ -18,7 +18,10 @@ class TagRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForTag($this->get('tag'));
+        $data = $this->get('tag');
+        $totalRules = [$this->getCriticalRulesForTag($data), $this->getRulesForTag($data)];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -39,6 +42,32 @@ class TagRequest extends ActivityBaseRequest
      * @return array
      */
     public function getRulesForTag(array $formFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $tagIndex => $tag) {
+            $tagForm = sprintf('tag.%s', $tagIndex);
+            $rules[sprintf('%s.tag_vocabulary', $tagForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('TagVocabulary', 'Activity', false)));
+            $rules[sprintf('%s.goals_tag_code', $tagForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Goals', 'Activity', false)));
+            $rules[sprintf('%s.targets_tag_code', $tagForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Targets', 'Activity', false)));
+            $rules[sprintf('%s.vocabulary_uri', $tagForm)] = 'nullable|url';
+
+            foreach ($this->getRulesForNarrative($tag['narrative'], $tagForm) as $tagNarrativeIndex => $narrativeRules) {
+                $rules[$tagNarrativeIndex] = $narrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns critical rules for related activity.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    public function getCriticalRulesForTag(array $formFields): array
     {
         $rules = [];
 

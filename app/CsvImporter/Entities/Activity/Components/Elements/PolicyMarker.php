@@ -248,6 +248,9 @@ class PolicyMarker extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
+        $this->criticalValidator = $this->factory->sign($this->data())
+            ->with($this->criticalRules(), $this->messages())
+            ->getValidatorInstance();
 
         $this->setValidity();
 
@@ -263,6 +266,17 @@ class PolicyMarker extends Element
     public function rules(): array
     {
         return $this->request->getRulesForPolicyMarker(Arr::get($this->data, 'policy_marker', []));
+    }
+
+    /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function criticalRules(): array
+    {
+        return $this->request->getCriticalRulesForPolicyMarker(Arr::get($this->data, 'policy_marker', []));
     }
 
     /**
