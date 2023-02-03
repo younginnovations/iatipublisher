@@ -184,7 +184,7 @@
         <svg-vue icon="tick" class="mr-2 inline text-spring-50"></svg-vue>
         <span class="font-bold">Cancellation Successful</span>
       </h3>
-      <div class="fw-bold rounded-lg bg-spring-30 px-3 py-2 text-n-40">
+      <div class="fw-bold rounded-lg bg-spring-30 px-3 py-2 text-white">
         {{ messageOnCancellation }}
       </div>
       <div class="my-3 flex justify-between">
@@ -334,9 +334,7 @@ const verifyCoreElements = () => {
         loader.value = false;
         resetPublishStep();
 
-        if (
-          response.message == 'Another bulk publishing is already in progress.'
-        ) {
+        if (response?.flag) {
           showCancelConfirmationModal();
         } else {
           displayToast(response.message, response.success);
