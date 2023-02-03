@@ -7,6 +7,7 @@ namespace App\IATI\Models\Activity;
 use App\IATI\Models\Organization\Organization;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use OwenIt\Auditing\Contracts\Auditable;
 
 /**
@@ -43,9 +44,9 @@ class ActivityPublished extends Model implements Auditable
     /**
      * An ActivityPublished record belongs to an Organization.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function organization(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class, 'organization_id', 'id');
     }

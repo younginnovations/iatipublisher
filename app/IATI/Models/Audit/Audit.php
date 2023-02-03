@@ -40,16 +40,16 @@ class Audit extends Model implements AuditContract
 
         static::saving(
             function ($model) {
-                if ($model->auditable_type != 'App\\IATI\\Models\\User\\User' && $model->auditable_type != 'App\\IATI\\Models\\Organization\\Organization') {
+                if ($model->auditable_type !== 'App\\IATI\\Models\\User\\User' && $model->auditable_type !== 'App\\IATI\\Models\\Organization\\Organization') {
                     $tempOldValues = [];
                     foreach ($model->old_values as $key => $item) {
-                        $tempOldValues[$key] = json_decode($item);
+                        $tempOldValues[$key] = json_decode($item, true, 512, JSON_THROW_ON_ERROR);
                     }
                     $model->old_values = $tempOldValues;
 
                     $tempNewValues = [];
                     foreach ($model->new_values as $key => $item) {
-                        $tempNewValues[$key] = json_decode($item);
+                        $tempNewValues[$key] = json_decode($item, true, 512, JSON_THROW_ON_ERROR);
                     }
                     $model->new_values = $tempNewValues;
                 }

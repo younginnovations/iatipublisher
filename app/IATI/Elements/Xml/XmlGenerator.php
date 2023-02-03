@@ -285,10 +285,7 @@ class XmlGenerator
 
         if (!is_array($publishedActivity)) {
             $publishedActivities = (array) $published->published_activities;
-            (in_array($publishedActivity, $publishedActivities)) ?: array_push(
-                $publishedActivities,
-                $publishedActivity
-            );
+            (in_array($publishedActivity, $publishedActivities, true)) ?: array_push($publishedActivities, $publishedActivity);
         }
 
         $this->activityPublishedService->update($published, array_unique($publishedActivities));
@@ -303,8 +300,9 @@ class XmlGenerator
      * @param $filename
      *
      * @return void
+     * @throws \DOMException
      */
-    public function getMergeXml($publishedFiles, $filename)
+    public function getMergeXml($publishedFiles, $filename): void
     {
         $dom = new \DOMDocument();
         $iatiActivities = $dom->appendChild($dom->createElement('iati-activities'));
@@ -338,7 +336,7 @@ class XmlGenerator
      *
      * @return void
      */
-    protected function saveXMLFile($dom, $filename = null)
+    protected function saveXMLFile($dom, $filename = null): void
     {
         $exists = awsHasFile(sprintf('%s/%s/%s', 'xml', 'mergedActivityXml', $filename));
 
@@ -358,14 +356,14 @@ class XmlGenerator
      * @param $settings
      * @param $organization
      *
-     * @return \DomDocument
+     * @return \DomDocument|null
      */
     public function getXml($activity, $transaction, $result, $settings, $organization): ?\DomDocument
     {
         $defaultValues = $activity->default_field_values;
 
         if (is_string($activity->default_field_values)) {
-            $defaultValues = json_decode($activity->default_field_values, true);
+            $defaultValues = json_decode($activity->default_field_values, true, 512, JSON_THROW_ON_ERROR);
         }
 
         $this->setServices();
@@ -412,7 +410,7 @@ class XmlGenerator
      *
      * @return void
      */
-    public function setServices()
+    public function setServices(): void
     {
         $this->titleService = $this->activityService->getService('TitleService');
         $this->reportingOrgService = $this->activityService->getService('ReportingOrgService');
@@ -457,7 +455,7 @@ class XmlGenerator
      *
      * @return array
      */
-    public function getXmlData($activity, $transaction, $result, $organization)
+    public function getXmlData($activity, $transaction, $result, $organization): array
     {
         $xmlActivity = [];
         $xmlActivity['iati-identifier'] = ($organization->identifier ?: 'Not Available') . '-' . Arr::get($activity->iati_identifier, 'activity_identifier', 'Not Available');
@@ -504,7 +502,7 @@ class XmlGenerator
      *
      * @return void
      */
-    public function deleteUnpublishedFile($filename)
+    public function deleteUnpublishedFile($filename): void
     {
         if (awsHasFile(sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $filename))) {
             awsDeleteFile(sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $filename));
@@ -517,6 +515,8 @@ class XmlGenerator
      * @param $activities
      *
      * @return string
+     * @throws \DOMException
+     * @throws \JsonException
      */
     public function getCombinedXmlFile($activities): string
     {

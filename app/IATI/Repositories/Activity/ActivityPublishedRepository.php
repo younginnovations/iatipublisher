@@ -76,6 +76,7 @@ class ActivityPublishedRepository extends Repository
     /**
      * Updates activity published table.
      *
+     * @param $activityPublished
      * @return void
      */
     public function updateStatus($activityPublished): void
