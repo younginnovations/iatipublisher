@@ -89,7 +89,7 @@ class BulkPublishingController extends Controller
             }
 
             if ($this->publishingStatusService->ongoingBulkPublishing(auth()->user()->organization->id)) {
-                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.', 'data'=>$this->getBulkPublishStatus()]);
+                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.', 'data'=>$this->getBulkPublishStatus(), 'flag'=>true]);
             }
 
             $activityIds = json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR);
@@ -173,7 +173,7 @@ class BulkPublishingController extends Controller
             }
 
             if ($this->publishingStatusService->ongoingBulkPublishing(auth()->user()->organization->id)) {
-                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.']);
+                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.', 'flag'=>true]);
             }
 
             $activityIds = json_decode($request->get('activities'), false, 512, JSON_THROW_ON_ERROR);
