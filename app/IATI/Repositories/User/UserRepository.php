@@ -7,6 +7,7 @@ namespace App\IATI\Repositories\User;
 use App\IATI\Models\User\User;
 use App\IATI\Repositories\Repository;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -84,9 +85,9 @@ class UserRepository extends Repository
      *
      * @param $queryParams
      *
-     * @return array
+     * @return Collection|array
      */
-    public function getUserDownloadData($queryParams): array
+    public function getUserDownloadData($queryParams): Collection | array
     {
         $query = $this->model
             ->leftJoin('organizations', 'organizations.id', 'users.organization_id')
@@ -96,7 +97,7 @@ class UserRepository extends Repository
             $query = $this->filterUsers($query, $queryParams);
         }
 
-        return $query->get(['username', 'full_name', 'name->0->narrative as publisher_name', 'email', 'roles.role', 'users.created_at'])->toArray();
+        return $query->get(['username', 'full_name', 'name->0->narrative as publisher_name', 'email', 'roles.role', 'users.created_at', 'users.id as id']);
     }
 
     /**

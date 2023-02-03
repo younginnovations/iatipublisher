@@ -79,6 +79,9 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware(['admin', 'auth'])
                  ->name('admin.')
                  ->group(base_path('routes/download.php'));
+            Route::middleware(['admin', 'auth', 'superadmin'])
+                 ->name('audit.')
+                 ->group(base_path('routes/audit.php'));
         });
     }
 

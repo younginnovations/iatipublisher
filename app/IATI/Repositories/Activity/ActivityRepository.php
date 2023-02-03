@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Repositories\Activity;
 
+use App\Constants\Enums;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Models\Setting\Setting;
 use App\IATI\Repositories\Repository;
@@ -164,7 +165,7 @@ class ActivityRepository extends Repository
     }
 
     /**
-     * @param       $activity_id
+     * @param      $activity_id
      * @param array $mappedActivity
      *
      * @return mixed
@@ -208,6 +209,7 @@ class ActivityRepository extends Repository
             'related_activity'     => $this->getActivityElement($mappedActivity, 'related_activity'),
             'default_field_values' => $defaultFieldValues[0] ?? $defaultFieldValues,
             'reporting_org'        => $this->getActivityElement($mappedActivity, 'reporting_org'),
+            'upload_medium'        => Enums::UPLOAD_TYPE['xml'],
         ];
 
         if ($activity_id) {
@@ -330,6 +332,7 @@ class ActivityRepository extends Repository
                 'location'             => $this->getActivityElement($activityData, 'location'),
                 'planned_disbursement' => $this->getActivityElement($activityData, 'planned_disbursement'),
                 'reporting_org'        => $this->getActivityElement($activityData, 'reporting_organization'),
+                'upload_medium'        => Enums::UPLOAD_TYPE['csv'],
             ]
         );
     }
@@ -366,7 +369,7 @@ class ActivityRepository extends Repository
                 'related_activity'     => $this->getActivityElement($activityData, 'related_activity'),
                 'other_identifier'     => $this->getActivityElement($activityData, 'other_identifier'),
                 'tag'                  => $this->getActivityElement($activityData, 'tag'),
-                'collaboration_type'    => $this->getSingleValuedActivityElement($activityData, 'collaboration_type'),
+                'collaboration_type'   => $this->getSingleValuedActivityElement($activityData, 'collaboration_type'),
                 'default_flow_type'    => $this->getSingleValuedActivityElement($activityData, 'default_flow_type'),
                 'default_finance_type' => $this->getSingleValuedActivityElement($activityData, 'default_finance_type'),
                 'default_tied_status'  => $this->getSingleValuedActivityElement($activityData, 'default_tied_status'),

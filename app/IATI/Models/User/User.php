@@ -16,6 +16,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\HasApiTokens;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -173,5 +174,27 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
     public function role(): BelongsTo
     {
         return $this->belongsTo('App\IATI\Models\User\Role', 'role_id');
+    }
+
+    /**
+     * Encrypt when user model is audited.
+     *
+     * {@inheritdoc}
+     */
+    public function transformAudit(array $data): array
+    {
+        if ($data['old_values']) {
+            foreach ($data['old_values'] as $key => $val) {
+                $data['old_values'][$key] = Crypt::encryptString($val);
+            }
+        }
+
+        if ($data['new_values']) {
+            foreach ($data['new_values'] as $key => $val) {
+                $data['new_values'][$key] = Crypt::encryptString($val);
+            }
+        }
+
+        return $data;
     }
 }

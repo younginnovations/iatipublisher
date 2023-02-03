@@ -51,7 +51,7 @@ class ActivityPublishedRepository extends Repository
      *
      * @return bool
      */
-    public function update($activityPublished, $publishedActivities): bool
+    public function updatePublishedActivity($activityPublished, $publishedActivities): bool
     {
         $activityPublished->published_activities = $publishedActivities;
 
@@ -76,6 +76,7 @@ class ActivityPublishedRepository extends Repository
     /**
      * Updates activity published table.
      *
+     * @param $activityPublished
      * @return void
      */
     public function updateStatus($activityPublished): void

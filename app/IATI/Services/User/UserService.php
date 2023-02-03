@@ -675,9 +675,9 @@ class UserService
      *
      * @param $queryParams
      *
-     * @return array
+     * @return Collection|array
      */
-    public function getUserDownloadData($queryParams): array
+    public function getUserDownloadData($queryParams): Collection | array
     {
         return $this->userRepo->getUserDownloadData($queryParams);
     }

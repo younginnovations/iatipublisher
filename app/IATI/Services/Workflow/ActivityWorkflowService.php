@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Workflow;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\ApiLog\ApiLogRepository;
 use App\IATI\Services\Activity\ActivityPublishedService;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ActivitySnapshotService;
+use App\IATI\Services\Audit\AuditService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Publisher\PublisherService;
 use App\IATI\Services\Validator\ActivityValidatorResponseService;
@@ -58,6 +60,11 @@ class ActivityWorkflowService
     protected ActivityValidatorResponseService $validatorService;
 
     /**
+     * @var AuditService
+     */
+    protected AuditService $auditService;
+
+    /**
      * @var ApiLogRepository
      */
     protected ApiLogRepository $apiLogRepo;
@@ -72,6 +79,7 @@ class ActivityWorkflowService
      * @param ActivityPublishedService $activityPublishedService
      * @param ActivitySnapshotService $activitySnapshotService
      * @param ActivityValidatorResponseService $validatorService
+     * @param AuditService $auditService
      * @param ApiLogRepository $apiLogRepo
      */
     public function __construct(
@@ -82,7 +90,8 @@ class ActivityWorkflowService
         ActivityPublishedService $activityPublishedService,
         ActivitySnapshotService $activitySnapshotService,
         ActivityValidatorResponseService $validatorService,
-        ApiLogRepository $apiLogRepo
+        ApiLogRepository $apiLogRepo,
+        AuditService $auditService
     ) {
         $this->organizationService = $organizationService;
         $this->activityService = $activityService;
@@ -92,6 +101,7 @@ class ActivityWorkflowService
         $this->activitySnapshotService = $activitySnapshotService;
         $this->validatorService = $validatorService;
         $this->apiLogRepo = $apiLogRepo;
+        $this->auditService = $auditService;
     }
 
     /**

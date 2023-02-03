@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\IATI\Models\User\Role;
-use App\IATI\Models\User\User;
+use App\IATI\Services\Audit\AuditService;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
@@ -42,12 +42,19 @@ class LoginController extends Controller
     protected string $redirectTo = RouteServiceProvider::HOME;
 
     /**
+     * @var AuditService
+     */
+    protected AuditService $auditService;
+
+    /**
      * Create a new controller instance.
      *
-     * @return void
+     * @param AuditService $auditService
      */
-    public function __construct()
+    public function __construct(AuditService $auditService)
     {
+        $this->auditService = $auditService;
+
         $this->middleware('guest')->except('logout');
     }
 
@@ -148,6 +155,8 @@ class LoginController extends Controller
                         $request->session()->put('superadmin_user_id', auth()->user()->id);
                     }
                 }
+
+                $this->auditService->auditEvent(Auth::user(), 'signin', '');
 
                 return $this->sendLoginResponse($request);
             }
