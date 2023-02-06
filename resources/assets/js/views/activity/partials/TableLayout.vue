@@ -134,7 +134,12 @@
         </tr>
       </tbody>
       <tbody v-else>
-        <td v-if="loader">loading</td>
+        <!-- <tr v-if="loader" class=" text-center ">
+          <div colspan="5" class="spin"></div>
+        </tr> -->
+        <td v-if="loader" colspan="5" class="text-center">
+          <div colspan="5" class="spin"></div>
+        </td>
         <td v-else colspan="5" class="text-center">Activities not found</td>
       </tbody>
     </table>
@@ -142,7 +147,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, onUpdated } from 'vue';
+import { defineProps } from 'vue';
 import moment from 'moment';
 import { useToggle } from '@vueuse/core';
 
@@ -156,15 +161,13 @@ import UnPublish from 'Components/buttons/UnPublishButton.vue';
 
 const [selectAllValue, selectAllToggle] = useToggle();
 
-const props = defineProps({
+defineProps({
   data: { type: Object, required: true },
   loader: { type: Boolean, required: false },
 });
 
 const store = useStore();
-onUpdated(() => {
-  console.log(props.loader);
-});
+
 function formatDate(date: Date) {
   return moment(date).fromNow();
 }
@@ -205,3 +208,35 @@ const sortByDateUrl = () => {
   return `?q=${query}&orderBy=updated_at&direction=${direction}`;
 };
 </script>
+<style scoped>
+@keyframes spinner {
+  0% {
+    transform: translate3d(-50%, -50%, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate3d(-50%, -50%, 0) rotate(360deg);
+  }
+}
+
+.spin::before {
+  animation: 1.5s linear infinite spinner;
+  animation-play-state: inherit;
+  border: solid 3px #cfd0d1;
+  border-bottom-color: grey;
+  border-radius: 50%;
+  content: '';
+  height: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  width: 20px;
+  will-change: transform;
+}
+.spin {
+  height: 40px;
+  position: relative;
+  width: 100%;
+  margin: auto;
+}
+</style>
