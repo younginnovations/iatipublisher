@@ -80,7 +80,7 @@ onUnmounted(() => {
 
 @keyframes FillAnimation {
   0% {
-    transform: scaleX(0.028);
+    transform: scaleX(0);
   }
   100% {
     transform: scaleX(1);
