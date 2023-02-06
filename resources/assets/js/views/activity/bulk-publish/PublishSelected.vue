@@ -189,7 +189,7 @@
       </div>
       <div class="my-3 flex justify-between">
         <button
-          class="rounded py-3 px-5 font-semibold uppercase text-n-40"
+          class="rounded py-3 px-5 font-semibold uppercase text-n-40 hover:bg-bluecoral hover:text-white"
           @click="closeCancelledDetailsPopup"
         >
           Continue Selecting
@@ -434,16 +434,19 @@ const cancelOtherBulkPublish = () => {
 
 /*Show modal that shows number of bulk publish cancelled */
 const showCancelledDetailPopup = () => {
+  errorData.visibility = false;
   showCancelledPopup.value = true;
 };
 
 /*Sets message in modal triggered by showCancelledDetailPopup() */
 const setCancellationMessage = (msg) => {
+  errorData.visibility = false;
   messageOnCancellation.value = msg;
 };
 
 /*Closes Cancel Confirmation Popup*/
 const closeCancelledDetailsPopup = () => {
+  errorData.visibility = false;
   showCancelledPopup.value = false;
 };
 
