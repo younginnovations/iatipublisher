@@ -12,6 +12,7 @@
         <TableLayout
           v-if="!isEmpty"
           :data="activities"
+          :loader="tableLoader"
           @show-or-hide="showOrHide"
         />
         <div v-if="!isEmpty" class="mt-6">
@@ -60,6 +61,7 @@ export default defineComponent({
     }
     const activities = reactive({}) as ActivitiesInterface;
     const isLoading = ref(true);
+    const tableLoader = ref(true);
     const currentURL = window.location.href;
     let endpoint = '';
     let showEmptyTemplate = false;
@@ -99,10 +101,12 @@ export default defineComponent({
     });
 
     onMounted(async () => {
+      tableLoader.value = true;
       axios.get(endpoint).then((res) => {
         const response = res.data;
         Object.assign(activities, response.data);
         isLoading.value = false;
+        tableLoader.value = false;
 
         if (showEmptyTemplate) {
           isEmpty.value = !response.data.data.length;
@@ -133,6 +137,7 @@ export default defineComponent({
     };
 
     function fetchActivities(active_page: number) {
+      tableLoader.value = true;
       let queryString = '';
       if (currentURL.includes('?')) {
         queryString = window.location.search;
@@ -142,6 +147,7 @@ export default defineComponent({
         Object.assign(activities, response.data);
         isEmpty.value = !response.data;
       });
+      tableLoader.value = false;
     }
 
     const { ignoreUpdates } = watchIgnorable(toastData, () => undefined, {
@@ -182,6 +188,7 @@ export default defineComponent({
       toastMessage,
       refreshToastMsg,
       errorData,
+      tableLoader,
     };
   },
 });
