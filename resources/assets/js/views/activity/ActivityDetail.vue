@@ -488,7 +488,13 @@ export default defineComponent({
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
-        toastData.message = props.toast.message;
+        console.log(
+          props.toast.message.charAt(0).toUpperCase() +
+            props.toast.message.slice(1).replace('_', '-')
+        );
+        toastData.message =
+          props.toast.message.charAt(0).toUpperCase() +
+          props.toast.message.slice(1).replace('_', '-');
         console.log(toastData.message);
       }
     });

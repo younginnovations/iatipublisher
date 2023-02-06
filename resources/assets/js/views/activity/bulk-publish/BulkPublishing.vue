@@ -1,5 +1,9 @@
 <template>
-  <div id="publishing_activities" class="z-50 w-[366px]">
+  <div
+    id="publishing_activities"
+    :class="isLoading && 'hidden'"
+    class="z-50 w-[366px]"
+  >
     <div class="bulk-head flex items-center justify-between bg-eggshell p-4">
       <div class="grow text-sm font-bold leading-normal">
         Publishing {{ Object.keys(activities).length }} activities
@@ -54,6 +58,11 @@
 <script setup lang="ts">
 import { onMounted, ref, reactive, watch, inject } from 'vue';
 import axios from 'axios';
+import { detailStore } from 'Store/activities/show';
+
+const store = detailStore();
+
+const isLoading = ref(false);
 
 interface RefreshToastMsgTypeface {
   visibility: boolean;
@@ -117,6 +126,12 @@ watch(completed, async (newValue) => {
     failedActivities(paStorage.value.publishingActivities.activities);
   }
 });
+watch(
+  () => store.state.isLoading,
+  (value) => {
+    isLoading.value = value;
+  }
+);
 
 /**
  * Bulk Publish Function
