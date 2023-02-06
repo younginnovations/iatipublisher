@@ -403,6 +403,15 @@ const startBulkPublish = () => {
         bulkPublishStep.value = 1;
         publishAlertValue.value = false;
         pa.value.publishingActivities = response.data;
+      } else {
+        loader.value = false;
+        resetPublishStep();
+
+        if (response?.flag) {
+          showCancelConfirmationModal();
+        } else {
+          displayToast(response.message, response.success);
+        }
       }
 
       setTimeout(() => {
