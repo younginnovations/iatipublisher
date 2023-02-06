@@ -134,14 +134,15 @@
         </tr>
       </tbody>
       <tbody v-else>
-        <td colspan="5" class="text-center">Activities not found</td>
+        <td v-if="loader">loading</td>
+        <td v-else colspan="5" class="text-center">Activities not found</td>
       </tbody>
     </table>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
+import { defineProps, onUpdated } from 'vue';
 import moment from 'moment';
 import { useToggle } from '@vueuse/core';
 
@@ -155,12 +156,15 @@ import UnPublish from 'Components/buttons/UnPublishButton.vue';
 
 const [selectAllValue, selectAllToggle] = useToggle();
 
-defineProps({
+const props = defineProps({
   data: { type: Object, required: true },
+  loader: { type: Boolean, required: false },
 });
 
 const store = useStore();
-
+onUpdated(() => {
+  console.log(props.loader);
+});
 function formatDate(date: Date) {
   return moment(date).fromNow();
 }
