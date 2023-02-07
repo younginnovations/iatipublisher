@@ -1203,3 +1203,31 @@ if (!function_exists('mergeRules')) {
         return $mergedRules;
     }
 }
+
+if (!function_exists('unsetErrorFields')) {
+    /**
+     * unset fields from imported activity that contains critical error.
+     *
+     * @param $request
+     *
+     * @return array
+     */
+    function unsetErrorFields($importContent): array
+    {
+        $importData = json_decode(json_encode($importContent, JSON_THROW_ON_ERROR | 512), true, 512, JSON_THROW_ON_ERROR);
+        $activity = $importData['data'];
+        $errors = Arr::get($importData, 'errors.error', []);
+
+        if (!empty($errors)) {
+            foreach (array_values($errors) as $error) {
+                foreach (array_keys($error) as $key) {
+                    Arr::set($activity, $key, '');
+                }
+            }
+        }
+
+        $importData['data'] = $activity;
+
+        return $importData;
+    }
+}

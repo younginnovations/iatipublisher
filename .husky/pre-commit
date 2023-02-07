@@ -4,6 +4,7 @@
 # php artisan test && \
 npx stylelint "resources/**/*.scss" --fix && \
 npm run lint && \
+npm run lint:fix && \
 npx lint-staged && \
 composer lint && \
 git add .

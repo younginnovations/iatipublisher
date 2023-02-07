@@ -203,7 +203,7 @@ class DefaultFieldValues extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
-        $this->criticalValidator = $this->factory->sign($this->data())
+        $this->errorValidator = $this->factory->sign($this->data())
             ->with([], $this->messages())
             ->getValidatorInstance();
 

@@ -178,7 +178,7 @@ class DefaultAidType extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForDefaultAidType($this->data('default_aid_type'));
+        return $this->request->getWarningForDefaultAidType($this->data('default_aid_type'));
     }
 
     /**
@@ -187,9 +187,9 @@ class DefaultAidType extends Element
      * @return array
      * @throws \JsonException
      */
-    public function criticalRules(): array
+    public function errorRules(): array
     {
-        return $this->request->getCriticalRulesForDefaultAidType($this->data('default_aid_type'));
+        return $this->request->getErrorsForDefaultAidType($this->data('default_aid_type'));
     }
 
     /**
@@ -213,8 +213,8 @@ class DefaultAidType extends Element
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
                                          ->getValidatorInstance();
-        $this->criticalValidator = $this->factory->sign($this->data())
-                                         ->with($this->criticalRules(), $this->messages())
+        $this->errorValidator = $this->factory->sign($this->data())
+                                         ->with($this->errorRules(), $this->messages())
                                          ->getValidatorInstance();
         $this->setValidity();
 

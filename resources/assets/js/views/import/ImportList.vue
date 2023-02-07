@@ -110,10 +110,10 @@
             <Placeholder />
           </template>
           <tr
-            class="hover:!bg-white"
             v-for="(activity, index) in activities"
             v-else
             :key="index"
+            class="hover:!bg-white"
             :class="{
               'upload-error': Object.keys(activity['errors']).length > 0,
             }"
@@ -186,7 +186,9 @@ onMounted(() => {
 function updateSelectedActivities(activity_id) {
   let index = selectedActivities.indexOf(activity_id);
 
-  if (activities[activity_id]['errors'].length === 0) {
+  if (
+    Object.keys(activities[activity_id]['errors']).indexOf('critical') === -1
+  ) {
     if (index >= 0) {
       selectedActivities.splice(index, 1);
       selectedCount.value = selectedCount.value - 1;
@@ -204,7 +206,9 @@ function selectAllActivities() {
 
   Object.keys(activities).forEach((activity_id) => {
     let index = selectedActivities.indexOf(activity_id);
-    if (activities[activity_id]['errors'].length === 0) {
+    if (
+      Object.keys(activities[activity_id]['errors']).indexOf('critical') === -1
+    ) {
       if (selectAll.value) {
         selectedActivities.push(activity_id);
         selectedCount.value = selectedCount.value + 1;

@@ -107,7 +107,7 @@ class ActivityScope extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
-        $this->criticalValidator = $this->factory->sign($this->data())
+        $this->errorValidator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
 
@@ -124,7 +124,7 @@ class ActivityScope extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForActivityScope();
+        return $this->request->getWarningForActivityScope();
     }
 
     /**
@@ -133,9 +133,9 @@ class ActivityScope extends Element
      * @return array
      * @throws \JsonException
      */
-    public function criticalRules(): array
+    public function errorRules(): array
     {
-        return $this->request->getCriticalRulesForActivityScope(Arr::get($this->data(), $this->csvHeader()));
+        return $this->request->getErrorsForActivityScope(Arr::get($this->data(), $this->csvHeader()));
     }
 
     /**

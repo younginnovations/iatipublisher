@@ -104,7 +104,7 @@
             </div>
 
             <Errors
-              v-if="store.state.publishErrors.length > 0"
+              v-if="store.state.publishErrors.length > 0 || importActivityError"
               :error-data="store.state.publishErrors"
               class="absolute right-0 bottom-[calc(100%-52px)]"
             />
@@ -437,6 +437,10 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    importActivityError: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     const { types, coreCompleted } = toRefs(props);
@@ -648,6 +652,7 @@ export default defineComponent({
     provide('toastMessage', toastMessage);
     provide('toastData', toastData);
     provide('errorData', errorData);
+    provide('importActivityError', props.importActivityError);
 
     indexStore.dispatch('updateSelectedActivities', [activity.value.id]);
 

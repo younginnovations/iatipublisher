@@ -18,7 +18,7 @@ class TotalBudgetRequest extends OrganizationBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForTotalBudget($this->get('total_budget'));
+        return $this->getWarningForTotalBudget($this->get('total_budget'));
     }
 
     /**
@@ -38,7 +38,7 @@ class TotalBudgetRequest extends OrganizationBaseRequest
      *
      * @return array
      */
-    public function getRulesForTotalBudget($formFields): array
+    public function getWarningForTotalBudget($formFields): array
     {
         $rules = [];
 
@@ -53,25 +53,25 @@ class TotalBudgetRequest extends OrganizationBaseRequest
 
             $totalBudgetForm = sprintf('total_budget.%s', $totalBudgetIndex);
             $rules[$totalBudgetForm . '.total_budget_status'] = ['nullable', sprintf('in:%s', implode(',', array_keys(getCodeList('BudgetStatus', 'Activity'))))];
-            $periodStartRules = $this->getRulesForPeriodStart($totalBudget['period_start'], $totalBudgetForm, $diff, 365);
+            $periodStartRules = $this->getWarningForPeriodStart($totalBudget['period_start'], $totalBudgetForm, $diff, 365);
 
             foreach ($periodStartRules as $key => $periodStartRule) {
                 $rules[$key] = $periodStartRule;
             }
 
-            $periodEndRules = $this->getRulesForPeriodEnd($totalBudget['period_end'], $totalBudgetForm, $diff, 365);
+            $periodEndRules = $this->getWarningForPeriodEnd($totalBudget['period_end'], $totalBudgetForm, $diff, 365);
 
             foreach ($periodEndRules as $key => $periodEndRule) {
                 $rules[$key] = $periodEndRule;
             }
 
-            $valueRules = $this->getRulesForValue($totalBudget['value'], $totalBudgetForm);
+            $valueRules = $this->getWarningForValue($totalBudget['value'], $totalBudgetForm);
 
             foreach ($valueRules as $key => $valueRule) {
                 $rules[$key] = $valueRule;
             }
 
-            $budgetLineRules = $this->getRulesForBudgetLine($totalBudget['budget_line'], $totalBudgetForm);
+            $budgetLineRules = $this->getWarningForBudgetLine($totalBudget['budget_line'], $totalBudgetForm);
 
             foreach ($budgetLineRules as $key => $budgetLineRule) {
                 $rules[$key] = $budgetLineRule;

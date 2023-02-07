@@ -19,7 +19,7 @@ class TagRequest extends ActivityBaseRequest
     public function rules(): array
     {
         $data = $this->get('tag');
-        $totalRules = [$this->getCriticalRulesForTag($data), $this->getRulesForTag($data)];
+        $totalRules = [$this->getErrorsForTag($data), $this->getWarningForTag($data)];
 
         return mergeRules($totalRules);
     }
@@ -41,7 +41,7 @@ class TagRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForTag(array $formFields): array
+    public function getWarningForTag(array $formFields): array
     {
         $rules = [];
 
@@ -52,7 +52,7 @@ class TagRequest extends ActivityBaseRequest
             $rules[sprintf('%s.targets_tag_code', $tagForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Targets', 'Activity', false)));
             $rules[sprintf('%s.vocabulary_uri', $tagForm)] = 'nullable|url';
 
-            foreach ($this->getRulesForNarrative($tag['narrative'], $tagForm) as $tagNarrativeIndex => $narrativeRules) {
+            foreach ($this->getWarningForNarrative($tag['narrative'], $tagForm) as $tagNarrativeIndex => $narrativeRules) {
                 $rules[$tagNarrativeIndex] = $narrativeRules;
             }
         }
@@ -67,7 +67,7 @@ class TagRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForTag(array $formFields): array
+    public function getErrorsForTag(array $formFields): array
     {
         $rules = [];
 
@@ -78,7 +78,7 @@ class TagRequest extends ActivityBaseRequest
             $rules[sprintf('%s.targets_tag_code', $tagForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Targets', 'Activity', false)));
             $rules[sprintf('%s.vocabulary_uri', $tagForm)] = 'nullable|url';
 
-            foreach ($this->getRulesForNarrative($tag['narrative'], $tagForm) as $tagNarrativeIndex => $narrativeRules) {
+            foreach ($this->getWarningForNarrative($tag['narrative'], $tagForm) as $tagNarrativeIndex => $narrativeRules) {
                 $rules[$tagNarrativeIndex] = $narrativeRules;
             }
         }

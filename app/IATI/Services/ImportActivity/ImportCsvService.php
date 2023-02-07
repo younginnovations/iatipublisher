@@ -8,6 +8,7 @@ use App\CsvImporter\Events\ActivityCsvWasUploaded;
 use App\CsvImporter\Queue\Processor;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Activity\TransactionRepository;
+use App\IATI\Repositories\ImportActivityError\ImportActivityErrorRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\Imports\CsvToArray;
 use Exception;
@@ -90,6 +91,11 @@ class ImportCsvService
     protected TransactionRepository $transactionRepo;
 
     /**
+     * @var ImportActivityErrorRepository
+     */
+    protected ImportActivityErrorRepository $importActivityErrorRepo;
+
+    /**
      * @var Filesystem
      */
     protected Filesystem $filesystem;
@@ -104,6 +110,7 @@ class ImportCsvService
      * @param ActivityRepository     $activityRepo
      * @param OrganizationRepository $organizationRepo
      * @param TransactionRepository  $transactionRepo
+     * @param ImportActivityErrorRepository  $importActivityErrorRepo
      * @param Filesystem             $filesystem
      */
     public function __construct(
@@ -114,6 +121,7 @@ class ImportCsvService
         ActivityRepository $activityRepo,
         OrganizationRepository $organizationRepo,
         TransactionRepository $transactionRepo,
+        ImportActivityErrorRepository $importActivityErrorRepo,
         Filesystem $filesystem
     ) {
         $this->excel = $excel;
@@ -123,6 +131,7 @@ class ImportCsvService
         $this->activityRepo = $activityRepo;
         $this->organizationRepo = $organizationRepo;
         $this->transactionRepo = $transactionRepo;
+        $this->importActivityErrorRepo = $importActivityErrorRepo;
         $this->filesystem = $filesystem;
         $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'CsvImporter/tmp');
         $this->csv_file_storage_path = env('CSV_FILE_STORAGE_PATH', 'CsvImporter/file');
@@ -192,7 +201,7 @@ class ImportCsvService
         );
 
         foreach ($activities as $value) {
-            $activity = $contents[$value];
+            $activity = unsetErrorFields($contents[$value]);
             $activity['data']['organization_id'] = $organizationId;
             $iati_identifier_text = $organizationIdentifier . '-' . Arr::get($activity, 'data.identifier.activity_identifier');
             $activity['data']['identifier']['iati_identifier_text'] = $iati_identifier_text;
@@ -200,17 +209,24 @@ class ImportCsvService
             if (Arr::get($activity, 'existence') === true) {
                 $oldActivity = $this->activityRepo->getActivityWithIdentifier($organizationId, Arr::get($activity, 'data.identifier'));
                 $this->activityRepo->updateActivity($oldActivity->id, Arr::get($activity, 'data'));
-
                 $this->transactionRepo->deleteTransaction($oldActivity->id);
 
                 if (array_key_exists('transaction', $activity['data'])) {
                     $this->createTransaction(Arr::get($activity['data'], 'transaction', []), $oldActivity->id);
+                }
+
+                if (!empty($activity['errors'])) {
+                    $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $activity['errors']);
                 }
             } else {
                 $createdActivity = $this->activityRepo->createActivity(Arr::get($activity, 'data'));
 
                 if (array_key_exists('transaction', $activity['data'])) {
                     $this->createTransaction(Arr::get($activity['data'], 'transaction', []), $createdActivity->id);
+                }
+
+                if (!empty($activity['errors'])) {
+                    $this->importActivityErrorRepo->updateOrCreateError($createdActivity->id, $activity['errors']);
                 }
             }
         }

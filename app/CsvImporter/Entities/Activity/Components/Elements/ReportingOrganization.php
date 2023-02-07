@@ -200,7 +200,7 @@ class ReportingOrganization extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForReportingOrganization(Arr::get($this->data, 'reporting_org', []));
+        return $this->request->getWarningForReportingOrganization(Arr::get($this->data, 'reporting_org', []));
     }
 
     /**
@@ -208,11 +208,9 @@ class ReportingOrganization extends Element
      *
      * @return array
      */
-    public function criticalRules(): array
+    public function errorRules(): array
     {
-        return [];
-        //  --check me--
-        // return $this->request->getCriticalRulesForReportingOrganization(Arr:get($this->data, 'reporting_org', []));
+        return $this->request->getErrorsForReportingOrganization(Arr::get($this->data, 'reporting_org', []));
     }
 
     /**
@@ -236,8 +234,8 @@ class ReportingOrganization extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
-        $this->criticalValidator = $this->factory->sign($this->data())
-            ->with($this->criticalRules(), $this->messages())
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
         $this->setValidity();
 

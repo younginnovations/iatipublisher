@@ -25,7 +25,7 @@ class IdentifierRequest extends FormRequest
      */
     public function rules(bool $fileUpload = false): array
     {
-        $totalRules = [$this->getRulesForIdentifier(), $this->getCriticalRulesForIdentifier()];
+        $totalRules = [$this->getWarningForIdentifier(), $this->getErrorsForIdentifier()];
 
         return mergeRules($totalRules);
     }
@@ -37,7 +37,7 @@ class IdentifierRequest extends FormRequest
      *
      * @return void
      */
-    public function getCriticalRulesForIdentifier(bool $fileUpload = false): array
+    public function getErrorsForIdentifier(bool $fileUpload = false): array
     {
         $activityIdentifiers = [];
 
@@ -66,7 +66,7 @@ class IdentifierRequest extends FormRequest
      *
      * @return array
      */
-    public function getRulesForIdentifier(): array
+    public function getWarningForIdentifier(): array
     {
         return [
             'activity_identifier'   => ['not_regex:/(&|!|\/|\||\?)/'],

@@ -26,7 +26,7 @@ class SectorRequest extends ActivityBaseRequest
 
         $totalRules = [
             $this->getSectorsRules($data),
-            $this->getCriticalRulesForSector($data),
+            $this->getErrorsForSector($data),
         ];
 
         return mergeRules($totalRules);
@@ -75,7 +75,7 @@ class SectorRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    public function getCriticalRulesForSector($formFields, bool $fileUpload = false): array
+    public function getErrorsForSector($formFields, bool $fileUpload = false): array
     {
         $rules = [];
         $groupedPercentSector = $this->groupSector($formFields);
@@ -95,7 +95,7 @@ class SectorRequest extends ActivityBaseRequest
 
             $rules[sprintf('%s.percentage', $sectorForm)] = 'nullable|numeric';
 
-            $narrativeRules = $this->getCriticalRulesForNarrative($sector['narrative'], $sectorForm);
+            $narrativeRules = $this->getErrorsForNarrative($sector['narrative'], $sectorForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -145,7 +145,7 @@ class SectorRequest extends ActivityBaseRequest
 
             $rules[sprintf('%s.percentage', $sectorForm)] = 'min:0';
 
-            $narrativeRules = $this->getRulesForNarrative($sector['narrative'], $sectorForm);
+            $narrativeRules = $this->getWarningForNarrative($sector['narrative'], $sectorForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $explodedKey = explode('.', $key);

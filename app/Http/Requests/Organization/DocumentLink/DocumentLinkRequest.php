@@ -28,7 +28,7 @@ class DocumentLinkRequest extends OrganizationBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForDocumentLink($this->get('document_link'));
+        return $this->getWarningForDocumentLink($this->get('document_link'));
     }
 
     /**
@@ -48,7 +48,7 @@ class DocumentLinkRequest extends OrganizationBaseRequest
      *
      * @return array
      */
-    public function getRulesForDocumentLink(array $formFields): array
+    public function getWarningForDocumentLink(array $formFields): array
     {
         $rules = [];
 
@@ -62,11 +62,11 @@ class DocumentLinkRequest extends OrganizationBaseRequest
             $rules[sprintf('document_link.%s.document_date.0.date', $documentLinkIndex)] = 'nullable|date';
             $rules = array_merge(
                 $rules,
-                $this->getRulesForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm), true),
-                $this->getRulesForNarrative($documentLink['description'][0]['narrative'], sprintf('%s.description.0', $documentLinkForm)),
-                $this->getRulesForDocumentCategory($documentLink['category'], $documentLinkForm),
-                $this->getRulesForDocumentLanguage($documentLink['language'], $documentLinkForm),
-                $this->getRulesForRecipientCountry($documentLink['recipient_country'], $documentLinkForm)
+                $this->getWarningForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm), true),
+                $this->getWarningForNarrative($documentLink['description'][0]['narrative'], sprintf('%s.description.0', $documentLinkForm)),
+                $this->getWarningForDocumentCategory($documentLink['category'], $documentLinkForm),
+                $this->getWarningForDocumentLanguage($documentLink['language'], $documentLinkForm),
+                $this->getWarningForRecipientCountry($documentLink['recipient_country'], $documentLinkForm)
             );
         }
 
@@ -117,7 +117,7 @@ class DocumentLinkRequest extends OrganizationBaseRequest
      *
      * @return array
      */
-    public function getRulesForDocumentCategory($formFields, $formIndex): array
+    public function getWarningForDocumentCategory($formFields, $formIndex): array
     {
         $rules = [];
         $rules[sprintf('%s.category', $formIndex)] = 'unique_category';
@@ -164,7 +164,7 @@ class DocumentLinkRequest extends OrganizationBaseRequest
      *
      * @return array
      */
-    public function getRulesForDocumentLanguage($formFields, $formIndex): array
+    public function getWarningForDocumentLanguage($formFields, $formIndex): array
     {
         $rules = [];
         $rules[sprintf('%s.language', $formIndex)] = 'unique_language';
@@ -211,7 +211,7 @@ class DocumentLinkRequest extends OrganizationBaseRequest
      *
      * @return array
      */
-    public function getRulesForRecipientCountry($formFields, $formIndex): array
+    public function getWarningForRecipientCountry($formFields, $formIndex): array
     {
         $rules = [];
 
@@ -219,7 +219,7 @@ class DocumentLinkRequest extends OrganizationBaseRequest
             $budgetItemForm = sprintf('%s.recipient_country.%s', $formIndex, $recipientCountryIndex);
             $rules[sprintf('%s.code', $budgetItemForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Country', 'Activity'))));
 
-            foreach ($this->getRulesForNarrative($recipientCountryVal['narrative'], $budgetItemForm) as $index => $rule) {
+            foreach ($this->getWarningForNarrative($recipientCountryVal['narrative'], $budgetItemForm) as $index => $rule) {
                 $rules[$index] = $rule;
             }
         }

@@ -31,31 +31,31 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
 
             $recipientCountryBudgetForm = sprintf('recipient_country_budget.%s', $recipientCountryBudgetIndex);
             $rules[$recipientCountryBudgetForm . '.status'] = ['nullable', sprintf('in:%s', implode(',', array_keys(getCodeList('BudgetStatus', 'Activity'))))];
-            $budgetRules = $this->getRecipientCountryBudgetRules($recipientCountryBudget['recipient_country'], $recipientCountryBudgetForm);
+            $budgetWarning = $this->getRecipientCountryBudgetWarning($recipientCountryBudget['recipient_country'], $recipientCountryBudgetForm);
 
-            foreach ($budgetRules as $key => $budgetRule) {
+            foreach ($budgetWarning as $key => $budgetRule) {
                 $rules[$key] = $budgetRule;
             }
 
-            $periodStartRules = $this->getRulesForPeriodStart($recipientCountryBudget['period_start'], $recipientCountryBudgetForm, $diff, 365);
+            $periodStartRules = $this->getWarningForPeriodStart($recipientCountryBudget['period_start'], $recipientCountryBudgetForm, $diff, 365);
 
             foreach ($periodStartRules as $key => $periodStartRule) {
                 $rules[$key] = $periodStartRule;
             }
 
-            $periodEndRules = $this->getRulesForPeriodEnd($recipientCountryBudget['period_end'], $recipientCountryBudgetForm, $diff, 365);
+            $periodEndRules = $this->getWarningForPeriodEnd($recipientCountryBudget['period_end'], $recipientCountryBudgetForm, $diff, 365);
 
             foreach ($periodEndRules as $key => $periodEndRule) {
                 $rules[$key] = $periodEndRule;
             }
 
-            $valueRules = $this->getRulesForValue($recipientCountryBudget['value'], $recipientCountryBudgetForm);
+            $valueRules = $this->getWarningForValue($recipientCountryBudget['value'], $recipientCountryBudgetForm);
 
             foreach ($valueRules as $key => $valueRule) {
                 $rules[$key] = $valueRule;
             }
 
-            $budgetLineRules = $this->getRulesForBudgetLine($recipientCountryBudget['budget_line'], $recipientCountryBudgetForm);
+            $budgetLineRules = $this->getWarningForBudgetLine($recipientCountryBudget['budget_line'], $recipientCountryBudgetForm);
 
             foreach ($budgetLineRules as $key => $budgetLineRule) {
                 $rules[$key] = $budgetLineRule;
@@ -119,14 +119,14 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
      *
      * @return array
      */
-    public function getRecipientCountryBudgetRules(array $formFields, $formBase): array
+    public function getRecipientCountryBudgetWarning(array $formFields, $formBase): array
     {
         $rules = [];
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('%s.recipient_country.%s', $formBase, $recipientCountryIndex);
             $rules[sprintf('%s.code', $recipientCountryForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Country', 'Activity'))));
-            $narrativeRules = $this->getRulesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
+            $narrativeRules = $this->getWarningForNarrative($recipientCountry['narrative'], $recipientCountryForm);
 
             foreach ($narrativeRules as $key => $narrativeRule) {
                 $rules[$key] = $narrativeRule;

@@ -25,7 +25,7 @@ class TitleRequest extends ActivityBaseRequest
             $titles = request()->get('narrative');
         }
 
-        $totalRules = [$this->getCriticalRulesForTitle($name), $this->getRulesForTitle($name, $titles)];
+        $totalRules = [$this->getErrorsForTitle($name), $this->getWarningForTitle($name, $titles)];
 
         return mergeRules($totalRules);
     }
@@ -37,7 +37,7 @@ class TitleRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForTitle($name): array
+    public function getErrorsForTitle($name): array
     {
         return [sprintf('%s.0.narrative', $name) => 'required'];
     }
@@ -50,7 +50,7 @@ class TitleRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForTitle($name, $titles = []): array
+    public function getWarningForTitle($name, $titles = []): array
     {
         $rules[$name] = 'unique_lang|unique_default_lang';
 

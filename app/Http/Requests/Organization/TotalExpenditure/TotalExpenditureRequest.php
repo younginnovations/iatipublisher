@@ -18,7 +18,7 @@ class TotalExpenditureRequest extends OrganizationBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForTotalExpenditure($this->get('total_expenditure'));
+        return $this->getWarningForTotalExpenditure($this->get('total_expenditure'));
     }
 
     /**
@@ -38,7 +38,7 @@ class TotalExpenditureRequest extends OrganizationBaseRequest
      *
      * @return array
      */
-    public function getRulesForTotalExpenditure($formFields): array
+    public function getWarningForTotalExpenditure($formFields): array
     {
         $rules = [];
 
@@ -53,25 +53,25 @@ class TotalExpenditureRequest extends OrganizationBaseRequest
 
             $totalExpenditureForm = sprintf('total_expenditure.%s', $totalExpenditureIndex);
 
-            $periodStartRules = $this->getRulesForPeriodStart($totalExpenditure['period_start'], $totalExpenditureForm, $diff, 365);
+            $periodStartRules = $this->getWarningForPeriodStart($totalExpenditure['period_start'], $totalExpenditureForm, $diff, 365);
 
             foreach ($periodStartRules as $key => $periodStartRule) {
                 $rules[$key] = $periodStartRule;
             }
 
-            $periodEndRules = $this->getRulesForPeriodEnd($totalExpenditure['period_end'], $totalExpenditureForm, $diff, 365);
+            $periodEndRules = $this->getWarningForPeriodEnd($totalExpenditure['period_end'], $totalExpenditureForm, $diff, 365);
 
             foreach ($periodEndRules as $key => $periodEndRule) {
                 $rules[$key] = $periodEndRule;
             }
 
-            $valueRules = $this->getRulesForValue($totalExpenditure['value'], $totalExpenditureForm);
+            $valueRules = $this->getWarningForValue($totalExpenditure['value'], $totalExpenditureForm);
 
             foreach ($valueRules as $key => $valueRule) {
                 $rules[$key] = $valueRule;
             }
 
-            $expenseLineRules = $this->getRulesForExpenseLine($totalExpenditure['expense_line'], $totalExpenditureForm);
+            $expenseLineRules = $this->getWarningForExpenseLine($totalExpenditure['expense_line'], $totalExpenditureForm);
 
             foreach ($expenseLineRules as $key => $expenseLineRule) {
                 $rules[$key] = $expenseLineRule;
@@ -131,20 +131,20 @@ class TotalExpenditureRequest extends OrganizationBaseRequest
      *
      * @return array
      */
-    public function getRulesForExpenseLine($formFields, $formBase): array
+    public function getWarningForExpenseLine($formFields, $formBase): array
     {
         $rules = [];
 
         foreach ($formFields as $expenseLineIndex => $expenseLine) {
             $expenseLineForm = sprintf('%s.expense_line.%s', $formBase, $expenseLineIndex);
 
-            $valueRules = $this->getRulesForBudgetOrExpenseLineValue($expenseLine['value'], $expenseLineForm, $formBase);
+            $valueRules = $this->getWarningForBudgetOrExpenseLineValue($expenseLine['value'], $expenseLineForm, $formBase);
 
             foreach ($valueRules as $key => $valueRule) {
                 $rules[$key] = $valueRule;
             }
 
-            $narrativeRules = $this->getRulesForNarrative($expenseLine['narrative'], $expenseLineForm);
+            $narrativeRules = $this->getWarningForNarrative($expenseLine['narrative'], $expenseLineForm);
 
             foreach ($narrativeRules as $key => $narrativeRule) {
                 $rules[$key] = $narrativeRule;

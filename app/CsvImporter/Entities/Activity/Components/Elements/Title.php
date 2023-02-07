@@ -134,7 +134,17 @@ class Title extends Element
      *
      * @return array
      */
-    public function criticalRules(): array
+    public function errors(): array
+    {
+        return  [];
+    }
+
+    /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     */
+    public function criticalErrors(): array
     {
         $rules['activity_title.0.narrative'] = 'required';
 
@@ -163,8 +173,11 @@ class Title extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errors(), $this->messages())
+            ->getValidatorInstance();
         $this->criticalValidator = $this->factory->sign($this->data())
-            ->with($this->criticalRules(), $this->messages())
+            ->with($this->criticalErrors(), $this->messages())
             ->getValidatorInstance();
 
         $this->setValidity();

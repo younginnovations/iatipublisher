@@ -27,8 +27,8 @@ class IndicatorRequest extends ActivityBaseRequest
     {
         $data = request()->except(['_token']);
         $totalRules = [
-            $this->getRulesForIndicator($data),
-            $this->getCriticalRulesForIndicator($data),
+            $this->getWarningForIndicator($data),
+            $this->getErrorsForIndicator($data),
         ];
 
         return mergeRules($totalRules);
@@ -53,16 +53,16 @@ class IndicatorRequest extends ActivityBaseRequest
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function getRulesForIndicator(array $formFields, bool $fileUpload = false, array $result = []): array
+    public function getWarningForIndicator(array $formFields, bool $fileUpload = false, array $result = []): array
     {
         $rules = [];
 
         $tempRules = [
-            $this->getRulesForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
-            $this->getRulesForNarrative(Arr::get($formFields, 'description', []), 'description.0'),
-            $this->getRulesForDocumentLink(Arr::get($formFields, 'document_link', [])),
-            $this->getRulesForReference(Arr::get($formFields, 'reference', []), $fileUpload, $result),
-            $this->getRulesForBaseline(Arr::get($formFields, 'baseline', [])),
+            $this->getWarningForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
+            $this->getWarningForNarrative(Arr::get($formFields, 'description', []), 'description.0'),
+            $this->getWarningForDocumentLink(Arr::get($formFields, 'document_link', [])),
+            $this->getWarningForReference(Arr::get($formFields, 'reference', []), $fileUpload, $result),
+            $this->getWarningForBaseline(Arr::get($formFields, 'baseline', [])),
         ];
 
         foreach ($tempRules as $index => $tempRule) {
@@ -83,7 +83,7 @@ class IndicatorRequest extends ActivityBaseRequest
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function getCriticalRulesForIndicator(array $formFields, bool $fileUpload = false, array $result = []): array
+    public function getErrorsForIndicator(array $formFields, bool $fileUpload = false, array $result = []): array
     {
         $rules = [];
 
@@ -92,11 +92,11 @@ class IndicatorRequest extends ActivityBaseRequest
         $rules['aggregation_status'] = sprintf('nullable|in:0,1');
 
         $tempRules = [
-            $this->getCriticalRulesForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
-            $this->getCriticalRulesForNarrative(Arr::get($formFields, 'description', []), 'description.0'),
-            $this->getCriticalRulesForDocumentLink(Arr::get($formFields, 'document_link', [])),
-            $this->getCriticalRulesForReference(Arr::get($formFields, 'reference', []), $fileUpload, $result),
-            $this->getCriticalRulesForBaseline(Arr::get($formFields, 'baseline', [])),
+            $this->getErrorsForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
+            $this->getErrorsForNarrative(Arr::get($formFields, 'description', []), 'description.0'),
+            $this->getErrorsForDocumentLink(Arr::get($formFields, 'document_link', [])),
+            $this->getErrorsForReference(Arr::get($formFields, 'reference', []), $fileUpload, $result),
+            $this->getErrorsForBaseline(Arr::get($formFields, 'baseline', [])),
         ];
 
         foreach ($tempRules as $index => $tempRule) {
@@ -146,7 +146,7 @@ class IndicatorRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForReference($formFields, bool $fileUpload, array $result): array
+    protected function getWarningForReference($formFields, bool $fileUpload, array $result): array
     {
         $rules = [];
 
@@ -190,7 +190,7 @@ class IndicatorRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getCriticalRulesForReference($formFields, bool $fileUpload, array $result): array
+    protected function getErrorsForReference($formFields, bool $fileUpload, array $result): array
     {
         $rules = [];
 
@@ -235,7 +235,7 @@ class IndicatorRequest extends ActivityBaseRequest
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    protected function getRulesForBaseline($formFields): array
+    protected function getWarningForBaseline($formFields): array
     {
         $rules = [];
 
@@ -256,13 +256,13 @@ class IndicatorRequest extends ActivityBaseRequest
                 $rules[sprintf('%s.value', $baselineForm)] = 'nullable|numeric';
             }
 
-            $narrativeRules = $this->getRulesForNarrative($baseline['comment'][0]['narrative'], sprintf('%s.comment.0', $baselineForm));
+            $narrativeRules = $this->getWarningForNarrative($baseline['comment'][0]['narrative'], sprintf('%s.comment.0', $baselineForm));
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
             }
 
-            $dcoLinkRules = $this->getRulesForDocumentLink($baseline['document_link'], $baselineForm);
+            $dcoLinkRules = $this->getWarningForDocumentLink($baseline['document_link'], $baselineForm);
 
             foreach ($dcoLinkRules as $key => $item) {
                 $rules[$key] = $item;
@@ -281,7 +281,7 @@ class IndicatorRequest extends ActivityBaseRequest
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    protected function getCriticalRulesForBaseline($formFields): array
+    protected function getErrorsForBaseline($formFields): array
     {
         $rules = [];
 
@@ -302,13 +302,13 @@ class IndicatorRequest extends ActivityBaseRequest
             //     $rules[sprintf('%s.value', $baselineForm)] = 'nullable|numeric';
             // }
 
-            $narrativeRules = $this->getCriticalRulesForNarrative($baseline['comment'][0]['narrative'], sprintf('%s.comment.0', $baselineForm));
+            $narrativeRules = $this->getErrorsForNarrative($baseline['comment'][0]['narrative'], sprintf('%s.comment.0', $baselineForm));
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
             }
 
-            $dcoLinkRules = $this->getCriticalRulesForDocumentLink($baseline['document_link'], $baselineForm);
+            $dcoLinkRules = $this->getErrorsForDocumentLink($baseline['document_link'], $baselineForm);
 
             foreach ($dcoLinkRules as $key => $item) {
                 $rules[$key] = $item;

@@ -20,8 +20,8 @@ class HumanitarianScopeRequest extends ActivityBaseRequest
     {
         $data = $this->get('humanitarian_scope');
         $totalRules = [
-            $this->getRulesForHumanitarianScope($data),
-            $this->getCriticalRulesForHumanitarianScope($data),
+            $this->getWarningForHumanitarianScope($data),
+            $this->getErrorsForHumanitarianScope($data),
         ];
 
         return mergeRules($totalRules);
@@ -44,14 +44,14 @@ class HumanitarianScopeRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForHumanitarianScope(array $formFields): array
+    public function getWarningForHumanitarianScope(array $formFields): array
     {
         $rules = [];
 
         foreach ($formFields as $humanitarianScopeIndex => $humanitarianScope) {
             $humanitarianScopeForm = 'humanitarian_scope.' . $humanitarianScopeIndex;
 
-            foreach ($this->getRulesForNarrative($humanitarianScope['narrative'], $humanitarianScopeForm) as $humanitarianIndex => $narrativeRules) {
+            foreach ($this->getWarningForNarrative($humanitarianScope['narrative'], $humanitarianScopeForm) as $humanitarianIndex => $narrativeRules) {
                 $rules[$humanitarianIndex] = $narrativeRules;
             }
         }
@@ -66,7 +66,7 @@ class HumanitarianScopeRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForHumanitarianScope(array $formFields): array
+    public function getErrorsForHumanitarianScope(array $formFields): array
     {
         $rules = [];
 
@@ -77,7 +77,7 @@ class HumanitarianScopeRequest extends ActivityBaseRequest
             $rules[sprintf('%s.vocabulary_uri', $humanitarianScopeForm)] = 'nullable|url';
             $rules[sprintf('%s.code', $humanitarianScopeForm)] = 'nullable|string';
 
-            foreach ($this->getCriticalRulesForNarrative($humanitarianScope['narrative'], $humanitarianScopeForm) as $humanitarianIndex => $narrativeRules) {
+            foreach ($this->getErrorsForNarrative($humanitarianScope['narrative'], $humanitarianScopeForm) as $humanitarianIndex => $narrativeRules) {
                 $rules[$humanitarianIndex] = $narrativeRules;
             }
         }

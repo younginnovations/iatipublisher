@@ -20,7 +20,7 @@ class DefaultFinanceTypeRequest extends ActivityBaseRequest
      */
     public function rules($finance_type = null): array
     {
-        $totalRules = [$this->getCriticalRulesForDefaultFinanceType($finance_type), $this->getRulesForDefaultFinanceType()];
+        $totalRules = [$this->getErrorsForDefaultFinanceType($finance_type), $this->getWarningForDefaultFinanceType()];
 
         return mergeRules($totalRules);
     }
@@ -32,7 +32,7 @@ class DefaultFinanceTypeRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForDefaultFinanceType($finance_type = null): array
+    public function getErrorsForDefaultFinanceType($finance_type = null): array
     {
         if ($finance_type && is_array($finance_type)) {
             return [
@@ -50,7 +50,7 @@ class DefaultFinanceTypeRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForDefaultFinanceType(): array
+    public function getWarningForDefaultFinanceType(): array
     {
         return [];
     }

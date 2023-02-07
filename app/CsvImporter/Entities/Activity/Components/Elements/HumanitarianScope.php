@@ -230,7 +230,7 @@ class HumanitarianScope extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForHumanitarianScope(Arr::get($this->data(), 'humanitarian_scope', []));
+        return $this->request->getWarningForHumanitarianScope(Arr::get($this->data(), 'humanitarian_scope', []));
     }
 
     /**
@@ -239,9 +239,9 @@ class HumanitarianScope extends Element
      * @return array
      * @throws \JsonException
      */
-    public function criticalRules(): array
+    public function errorRules(): array
     {
-        return $this->request->getCriticalRulesForHumanitarianScope(Arr::get($this->data(), 'humanitarian_scope', []));
+        return $this->request->getErrorsForHumanitarianScope(Arr::get($this->data(), 'humanitarian_scope', []));
     }
 
     /**
@@ -265,8 +265,8 @@ class HumanitarianScope extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
-        $this->criticalValidator = $this->factory->sign($this->data())
-            ->with($this->criticalRules(), $this->messages())
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
         $this->setValidity();
 

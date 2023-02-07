@@ -18,7 +18,7 @@ class ReportingOrgRequest extends OrganizationBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForReportingOrganization($this->get('reporting_org'));
+        return $this->getWarningForReportingOrganization($this->get('reporting_org'));
     }
 
     /**
@@ -38,7 +38,7 @@ class ReportingOrgRequest extends OrganizationBaseRequest
      *
      * @return array
      */
-    public function getRulesForReportingOrganization(array $formFields): array
+    public function getWarningForReportingOrganization(array $formFields): array
     {
         $rules = [];
 
@@ -48,7 +48,7 @@ class ReportingOrgRequest extends OrganizationBaseRequest
             $rules[$reportingOrganizationForm . '.type'] = ['nullable', sprintf('in:%s', implode(',', array_keys(getCodeList('OrganizationType', 'Organization'))))];
             $rules[$reportingOrganizationForm . '.secondary_reporter'] = ['nullable', 'in:0,1'];
 
-            $narrativeRules = $this->getRulesForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
+            $narrativeRules = $this->getWarningForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;

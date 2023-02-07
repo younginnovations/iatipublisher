@@ -19,7 +19,7 @@ class DescriptionRequest extends ActivityBaseRequest
     public function rules(): array
     {
         $data = $this->get('description');
-        $totalRules = [$this->getCriticalRulesForDescription($data), $this->getRulesForDescription($data)];
+        $totalRules = [$this->getErrorsForDescription($data), $this->getWarningForDescription($data)];
 
         return mergeRules($totalRules);
     }
@@ -41,14 +41,14 @@ class DescriptionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForDescription(array $formFields): array
+    public function getErrorsForDescription(array $formFields): array
     {
         $rules = [];
 
         foreach ($formFields as $descriptionIndex => $description) {
             $descriptionForm = sprintf('description.%s', $descriptionIndex);
             $rules[sprintf('%s.type', $descriptionForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('DescriptionType', 'Activity', false))));
-            $narrativeRules = $this->getCriticalRulesForNarrative($description['narrative'], $descriptionForm);
+            $narrativeRules = $this->getErrorsForNarrative($description['narrative'], $descriptionForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -65,13 +65,13 @@ class DescriptionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForDescription(array $formFields): array
+    public function getWarningForDescription(array $formFields): array
     {
         $rules = [];
 
         foreach ($formFields as $descriptionIndex => $description) {
             $descriptionForm = sprintf('description.%s', $descriptionIndex);
-            $narrativeRules = $this->getRulesForNarrative($description['narrative'], $descriptionForm);
+            $narrativeRules = $this->getWarningForNarrative($description['narrative'], $descriptionForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;

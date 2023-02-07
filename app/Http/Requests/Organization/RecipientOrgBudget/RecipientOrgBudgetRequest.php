@@ -30,31 +30,31 @@ class RecipientOrgBudgetRequest extends OrganizationBaseRequest
             }
             $recipientOrganizationBudgetForm = sprintf('recipient_org_budget.%s', $recipientOrganizationBudgetIndex);
             $rules[$recipientOrganizationBudgetForm . '.status'] = ['nullable', sprintf('in:%s', implode(',', array_keys(getCodeList('BudgetStatus', 'Activity'))))];
-            $periodStartRules = $this->getRulesForPeriodStart($recipientOrganizationBudget['period_start'], $recipientOrganizationBudgetForm, $diff, 365);
+            $periodStartRules = $this->getWarningForPeriodStart($recipientOrganizationBudget['period_start'], $recipientOrganizationBudgetForm, $diff, 365);
 
             foreach ($periodStartRules as $key => $item) {
                 $rules[$key] = $item;
             }
 
-            $periodEndRules = $this->getRulesForPeriodEnd($recipientOrganizationBudget['period_end'], $recipientOrganizationBudgetForm, $diff, 365);
+            $periodEndRules = $this->getWarningForPeriodEnd($recipientOrganizationBudget['period_end'], $recipientOrganizationBudgetForm, $diff, 365);
 
             foreach ($periodEndRules as $key => $item) {
                 $rules[$key] = $item;
             }
 
-            $valueRules = $this->getRulesForValue($recipientOrganizationBudget['value'], $recipientOrganizationBudgetForm);
+            $valueRules = $this->getWarningForValue($recipientOrganizationBudget['value'], $recipientOrganizationBudgetForm);
 
             foreach ($valueRules as $key => $item) {
                 $rules[$key] = $item;
             }
 
-            $budgetLineRules = $this->getRulesForBudgetLine($recipientOrganizationBudget['budget_line'], $recipientOrganizationBudgetForm);
+            $budgetLineRules = $this->getWarningForBudgetLine($recipientOrganizationBudget['budget_line'], $recipientOrganizationBudgetForm);
 
             foreach ($budgetLineRules as $key => $item) {
                 $rules[$key] = $item;
             }
 
-            $narrativeRules = $this->getRulesForNarrative($recipientOrganizationBudget['recipient_org'][0]['narrative'], $recipientOrganizationBudgetForm . '.recipient_org.0');
+            $narrativeRules = $this->getWarningForNarrative($recipientOrganizationBudget['recipient_org'][0]['narrative'], $recipientOrganizationBudgetForm . '.recipient_org.0');
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;

@@ -356,7 +356,7 @@ class PlannedDisbursement extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForPlannedDisbursement(Arr::get($this->data, 'planned_disbursement', []));
+        return $this->request->getWarningForPlannedDisbursement(Arr::get($this->data, 'planned_disbursement', []));
     }
 
     /**
@@ -365,9 +365,9 @@ class PlannedDisbursement extends Element
      * @return array
      * @throws \JsonException
      */
-    public function criticalRules(): array
+    public function errorRules(): array
     {
-        return $this->request->getCriticalRulesForPlannedDisbursement(Arr::get($this->data, 'planned_disbursement', []));
+        return $this->request->getErrorsForPlannedDisbursement(Arr::get($this->data, 'planned_disbursement', []));
     }
 
     /**
@@ -391,8 +391,8 @@ class PlannedDisbursement extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
-        $this->criticalValidator = $this->factory->sign($this->data())
-            ->with($this->criticalRules(), $this->messages())
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
         $this->setValidity();
 
