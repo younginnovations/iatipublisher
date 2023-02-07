@@ -18,7 +18,8 @@ class DocumentLinkRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        $totalRules = [$this->getCriticalRules(), $this->getRules()];
+        $data = $this->get('document_link');
+        $totalRules = [$this->getErrors($data), $this->getWarning($data)];
 
         return mergeRules($totalRules);
     }
@@ -26,21 +27,25 @@ class DocumentLinkRequest extends ActivityBaseRequest
     /**
      * Return critical rules for document link.
      *
+     * @param $data
+     *
      * @return array
      */
-    public function getCriticalRules(): array
+    public function getErrors($data): array
     {
-        return $this->getCriticalRulesForDocumentLink($this->get('document_link'));
+        return $this->getErrorsForDocumentLink($data);
     }
 
     /**
      * Return critical rules for document link.
      *
+     * @param $data
+     *
      * @return array
      */
-    public function getRules(): array
+    public function getWarning($data): array
     {
-        return $this->getRulesForDocumentLink($this->get('document_link'));
+        return $this->getWarningForDocumentLink($data);
     }
 
     /**

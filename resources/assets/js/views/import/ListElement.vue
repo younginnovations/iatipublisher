@@ -14,8 +14,8 @@
       >
         <span class="flex items-center space-x-2">
           <svg-vue class="text-crimson-40" icon="alert" />
-          <span> Show {{ countErrors() }} Issues</span></span
-        >
+          <span> Show {{ countErrors() }} Issues</span>
+        </span>
 
         <svg-vue
           icon="dropdown-arrow"
@@ -26,7 +26,10 @@
 
     <div class="upload-error-content duration-200" :class="{ closed: !active }">
       <div class="p-4">
-        <div class="critical-container mt-2">
+        <div
+          v-if="Object.keys(activity['errors']).indexOf('critical') !== -1"
+          class="critical-container mt-2"
+        >
           <div
             class="flex items-center justify-between border border-none bg-rose p-3"
             @click="
@@ -37,8 +40,8 @@
           >
             <span class="flex items-center space-x-2">
               <svg-vue class="text-crimson-40" icon="alert" />
-              <span> Critical errors</span></span
-            >
+              <span> Critical errors</span>
+            </span>
             <svg-vue
               icon="dropdown-arrow"
               class="ml-1 cursor-pointer text-[4px] duration-200"
@@ -47,25 +50,72 @@
           </div>
           <div class="error-dropdown" :class="showCritical ? '' : 'hide-error'">
             <div
-              class="bg-rose p-4"
               v-for="(ele_err, i) in activity['errors']['critical']"
               :key="i"
+              class="bg-rose p-4"
             >
               <p class="mb-2 font-semibold capitalize">
-                {{ Object.keys(activity['errors']['critical'])[+i] }}{{ i }}
+                {{ i }}
               </p>
 
               <p
-                v-for="item in Object.values(ele_err)"
+                v-for="item in Object.keys(ele_err)"
                 :key="(item as string)"
                 class="error-list text-sm font-medium"
               >
-                {{ item }}
+                {{ item.toString().replace(/_/g, ' ').replace(/\./g, ' > ') }}
+                ( {{ ele_err[item] }} )
               </p>
             </div>
           </div>
         </div>
-        <div class="warning-container my-2 border-none">
+        <div
+          v-if="Object.keys(activity['errors']).indexOf('error') !== -1"
+          class="error-container mt-2"
+        >
+          <div
+            class="flex items-center justify-between border border-none bg-rose p-3"
+            @click="
+              () => {
+                showError = !showError;
+              }
+            "
+          >
+            <span class="flex items-center space-x-2">
+              <svg-vue class="text-crimson-40" icon="alert" />
+              <span> Errors</span>
+            </span>
+            <svg-vue
+              icon="dropdown-arrow"
+              class="ml-1 cursor-pointer text-[4px] duration-200"
+              :class="{ 'rotate-180': showError, '': !showError }"
+            />
+          </div>
+          <div class="error-dropdown" :class="showError ? '' : 'hide-error'">
+            <div
+              v-for="(ele_err, i) in activity['errors']['error']"
+              :key="i"
+              class="bg-rose p-4"
+            >
+              <p class="mb-2 font-semibold capitalize">
+                {{ i }}
+              </p>
+
+              <p
+                v-for="item in Object.keys(ele_err)"
+                :key="(item as string)"
+                class="error-list text-sm font-medium"
+              >
+                {{ item.toString().replace(/_/g, ' ').replace(/\./g, ' > ') }}
+                ( {{ ele_err[item] }} )
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          v-if="Object.keys(activity['errors']).indexOf('warning') !== -1"
+          class="warning-container my-2 border-none"
+        >
           <div
             class="flex items-center justify-between bg-eggshell p-3"
             @click="
@@ -77,8 +127,8 @@
             <span class="flex items-center space-x-2">
               <svg-vue icon="alert" class="text-camel-40" /><span
                 >Warnings</span
-              ></span
-            >
+              >
+            </span>
             <svg-vue
               icon="dropdown-arrow"
               class="ml-1 text-[4px] duration-200"
@@ -87,20 +137,21 @@
           </div>
           <div :class="showWarning ? '' : 'hide-error'" class="error-dropdown">
             <div
-              class="bg-eggshell p-4"
               v-for="(ele_err, i) in activity['errors']['warning']"
               :key="i"
+              class="bg-eggshell p-4"
             >
               <p class="mb-2 font-semibold capitalize">
-                {{ Object.keys(activity['errors']['warning'])[+i] }}{{ i }}
+                {{ i }}
               </p>
 
               <p
-                v-for="item in Object.values(ele_err)"
+                v-for="item in Object.keys(ele_err)"
                 :key="(item as string)"
                 class="error-list text-sm font-medium"
               >
-                {{ item }}
+                {{ item.toString().replace(/_/g, ' ').replace(/\./g, ' > ') }}
+                ( {{ ele_err[item] }} )
               </p>
             </div>
           </div>
@@ -133,7 +184,10 @@
 
   <td class="check-column" @click="(event: Event) => event.stopPropagation()">
     <label class="sr-only" for=""> Select </label>
-    <label v-if="countErrors() === 0" class="checkbox">
+    <label
+      v-if="Object.keys(activity['errors']).indexOf('critical') === -1"
+      class="checkbox"
+    >
       <input
         v-model="activities"
         type="checkbox"
@@ -149,7 +203,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, ref, watch, reactive, onUpdated } from 'vue';
+import { defineProps, defineEmits, ref, watch, reactive } from 'vue';
 
 const props = defineProps({
   activity: {
@@ -170,6 +224,7 @@ const emit = defineEmits(['selectElement']);
 
 const active = ref(false);
 const showCritical = ref(false);
+const showError = ref(false);
 const showWarning = ref(false);
 let activities = reactive([]);
 function toggleError() {
@@ -183,12 +238,15 @@ const selectElement = (index) => {
 const countErrors = () => {
   let count = 0;
 
-  for (const index in props.activity['errors']) {
-    count += Object.keys(props.activity['errors'][index]).length;
+  for (const type in props.activity['errors']) {
+    for (const index in props.activity['errors'][type]) {
+      count += Object.keys(props.activity['errors'][type][index]).length;
+    }
   }
 
   return count;
 };
+
 watch(
   () => props.selectedActivities,
   () => {
@@ -200,9 +258,6 @@ watch(
     }
   }
 );
-onUpdated(() => {
-  console.log(Object.keys(props.activity['errors']['critical'])[0]);
-});
 </script>
 <style scoped>
 .error-dropdown {
@@ -211,12 +266,15 @@ onUpdated(() => {
   height: auto;
   max-height: 600px;
 }
+
 .error-dropdown.hide-error {
   max-height: 0;
 }
+
 .critical-container {
   position: relative;
 }
+
 .critical-container::after {
   position: absolute;
   content: ' ';
@@ -227,9 +285,11 @@ onUpdated(() => {
   left: 0;
   top: 0;
 }
+
 .warning-container {
   position: relative;
 }
+
 .warning-container::after {
   position: absolute;
   content: ' ';

@@ -91,8 +91,8 @@ class Identifier extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
-        $this->criticalValidator = $this->factory->sign($this->data())
-            ->with($this->criticalRules(), $this->messages())
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
 
         $this->setValidity();
@@ -107,7 +107,7 @@ class Identifier extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForIdentifier();
+        return $this->request->getWarningForIdentifier();
     }
 
     /**
@@ -115,9 +115,9 @@ class Identifier extends Element
      *
      * @return array
      */
-    public function criticalRules(): array
+    public function errorRules(): array
     {
-        return $this->request->getCriticalRulesForIdentifier(true);
+        return $this->request->getErrorsForIdentifier(true);
     }
 
     /**

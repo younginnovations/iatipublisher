@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati;
 
 use Illuminate\Support\Arr;
+use Str;
 
 /**
  * Class Element.
@@ -12,14 +13,25 @@ use Illuminate\Support\Arr;
 abstract class Element
 {
     /**
+     * LIst of warnings.
+     *
+     * @var array
+     */
+    public array $warnings = [];
+
+    /**
+     * List of errors.
+     *
      * @var array
      */
     public array $errors = [];
 
     /**
+     * List of critical errors.
+     *
      * @var array
      */
-    public array $criticalErrors = [];
+    public array $criticals = [];
 
     /**
      * Index under which the data is stored within the object.
@@ -44,6 +56,11 @@ abstract class Element
 
     /**
      * @var
+     */
+    public $errorValidator;
+
+    /**
+     * @var mixed
      */
     public $criticalValidator;
 
@@ -87,7 +104,11 @@ abstract class Element
      */
     protected function setValidity(): void
     {
-        $this->isValid = $this->validator->passes() && $this->criticalValidator->passes();
+        if ($this->criticalValidator) {
+            $this->isValid = $this->validator->passes() && $this->errorValidator->passes() && $this->criticalValidator->passes();
+        } else {
+            $this->isValid = $this->validator->passes() && $this->errorValidator->passes();
+        }
     }
 
     /**
@@ -95,7 +116,7 @@ abstract class Element
      *
      * @return array|int|string|float
      */
-    public function data($popIndex = null): array|int|string|float
+    public function data($popIndex = null): array |int|string|float
     {
         if (!$this->data) {
             $this->data = [];
@@ -159,21 +180,56 @@ abstract class Element
     /**
      * Record all errors within the Element classes.
      *
+     * @param $transactionIndex
+     *
      * @return void
      */
-    public function withErrors(): void
+    public function withErrors($transactionIndex = null): void
     {
         foreach ($this->validator->errors()->getMessages() as $element => $errors) {
-            $this->errors[$element] = implode('<br>', $errors);
+            $this->warnings[$this->addIndexToTransactionErrors($element, $transactionIndex)] = implode('<br>', $errors);
         }
 
-        foreach ($this->criticalValidator->errors()->getMessages() as $element => $errors) {
-            $this->criticalErrors[$element] = implode('<br>', $errors);
+        foreach ($this->errorValidator->errors()->getMessages() as $element => $errors) {
+            $this->errors[$this->addIndexToTransactionErrors($element, $transactionIndex)] = implode('<br>', $errors);
+        }
+
+        if ($this->criticalValidator) {
+            foreach ($this->criticalValidator->errors()->getMessages() as $element => $errors) {
+                $this->criticals[$this->addIndexToTransactionErrors($element, $transactionIndex)] = implode('<br>', $errors);
+            }
         }
     }
 
     /**
-     * Returns error.
+     * Adds transaction index to.
+     *
+     * @param string $element
+     * @param $transactionIndex
+     *
+     * @return string
+     */
+    public function addIndexToTransactionErrors($element, $transactionIndex): string
+    {
+        if (is_null($transactionIndex)) {
+            return $element;
+        }
+
+        return Str::replaceFirst('transaction', "transaction.$transactionIndex", $element);
+    }
+
+    /**
+     * Returns warnings.
+     *
+     * @return array
+     */
+    public function warnings(): array
+    {
+        return $this->warnings;
+    }
+
+    /**
+     * Returns errors.
      *
      * @return array
      */
@@ -187,9 +243,9 @@ abstract class Element
      *
      * @return array
      */
-    public function criticalErrors(): array
+    public function criticals(): array
     {
-        return $this->criticalErrors;
+        return $this->criticals;
     }
 
     /**

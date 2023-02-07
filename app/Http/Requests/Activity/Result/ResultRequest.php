@@ -23,8 +23,8 @@ class ResultRequest extends ActivityBaseRequest
     {
         $data = request()->except(['_token']);
         $totalRules = [
-            $this->getRulesForResult($data),
-            $this->getCriticalRulesForResult($data),
+            $this->getWarningForResult($data),
+            $this->getErrorsForResult($data),
         ];
 
         return mergeRules($totalRules);
@@ -44,20 +44,20 @@ class ResultRequest extends ActivityBaseRequest
      * Returns rules for result.
      *
      * @param array $formFields
-     * @param array $fileUpload
+     * @param bool $fileUpload
      * @param array $indicator
      *
      * @return array
      */
-    public function getRulesForResult(array $formFields, bool $fileUpload = false, array $indicators = []): array
+    public function getWarningForResult(array $formFields, bool $fileUpload = false, array $indicators = []): array
     {
         $rules = [];
 
         $tempRules = [
-            $this->getRulesForNarrative($formFields['title'][0]['narrative'], 'title.0'),
-            $this->getRulesForNarrative($formFields['description'][0]['narrative'], 'description.0'),
-            $this->getRulesForDocumentLink($formFields['document_link']),
-            $this->getRulesForReferences($formFields['reference'], $fileUpload, $indicators),
+            $this->getWarningForNarrative($formFields['title'][0]['narrative'], 'title.0'),
+            $this->getWarningForNarrative($formFields['description'][0]['narrative'], 'description.0'),
+            $this->getWarningForDocumentLink($formFields['document_link']),
+            $this->getWarningForReferences($formFields['reference'], $fileUpload, $indicators),
         ];
 
         foreach ($tempRules as $key => $tempRule) {
@@ -73,12 +73,12 @@ class ResultRequest extends ActivityBaseRequest
      * Returns critical rules for result.
      *
      * @param array $formFields
-     * @param array $fileUpload
+     * @param bool $fileUpload
      * @param array $indicators
      *
      * @return array
      */
-    public function getCriticalRulesForResult(array $formFields, bool $fileUpload = false, array $indicators = []): array
+    public function getErrorsForResult(array $formFields, bool $fileUpload = false, array $indicators = []): array
     {
         $rules = [];
 
@@ -86,10 +86,10 @@ class ResultRequest extends ActivityBaseRequest
         $rules['aggregation_status'] = sprintf('nullable|in:0,1');
 
         $tempRules = [
-            $this->getCriticalRulesForNarrative($formFields['title'][0]['narrative'], 'title.0'),
-            $this->getCriticalRulesForNarrative($formFields['description'][0]['narrative'], 'description.0'),
-            $this->getCriticalRulesForDocumentLink($formFields['document_link']),
-            $this->getCriticalRulesForReferences($formFields['reference'], $fileUpload, $indicators),
+            $this->getErrorsForNarrative($formFields['title'][0]['narrative'], 'title.0'),
+            $this->getErrorsForNarrative($formFields['description'][0]['narrative'], 'description.0'),
+            $this->getErrorsForDocumentLink($formFields['document_link']),
+            $this->getErrorsForReferences($formFields['reference'], $fileUpload, $indicators),
         ];
 
         foreach ($tempRules as $key => $tempRule) {
@@ -135,7 +135,7 @@ class ResultRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForReferences($formFields, $fileUpload = false, array $indicators = []): array
+    protected function getWarningForReferences($formFields, $fileUpload = false, array $indicators = []): array
     {
         Validator::extendImplicit(
             'indicator_ref_code_present',
@@ -186,7 +186,7 @@ class ResultRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getCriticalRulesForReferences($formFields, $fileUpload = false, array $indicators = []): array
+    protected function getErrorsForReferences($formFields, $fileUpload = false, array $indicators = []): array
     {
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);

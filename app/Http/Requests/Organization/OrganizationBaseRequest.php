@@ -188,7 +188,7 @@ class OrganizationBaseRequest extends FormRequest
      *
      * @return array
      */
-    public function getRulesForNarrative($formFields, $formBase): array
+    public function getWarningForNarrative($formFields, $formBase): array
     {
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
@@ -238,7 +238,7 @@ class OrganizationBaseRequest extends FormRequest
      *
      * @return array
      */
-    public function getRulesForValue($formFields, $formBase): array
+    public function getWarningForValue($formFields, $formBase): array
     {
         $rules = [];
         $periodStartFormBase = sprintf('%s.period_start.0.date', $formBase);
@@ -289,19 +289,19 @@ class OrganizationBaseRequest extends FormRequest
      *
      * @return array
      */
-    public function getRulesForBudgetLine($formFields, $formBase): array
+    public function getWarningForBudgetLine($formFields, $formBase): array
     {
         $rules = [];
 
         foreach ($formFields as $budgetLineKey => $budgetLineVal) {
             $budgetLineForm = $formBase . '.budget_line.' . $budgetLineKey;
-            $valueRules = $this->getRulesForBudgetOrExpenseLineValue($budgetLineVal['value'], $budgetLineForm, $formBase);
+            $valueRules = $this->getWarningForBudgetOrExpenseLineValue($budgetLineVal['value'], $budgetLineForm, $formBase);
 
             foreach ($valueRules as $key => $valueRule) {
                 $rules[$key] = $valueRule;
             }
 
-            $narrativeRules = $this->getRulesForBudgetOrExpenseLineNarrative($budgetLineVal['narrative'], $budgetLineForm);
+            $narrativeRules = $this->getWarningForBudgetOrExpenseLineNarrative($budgetLineVal['narrative'], $budgetLineForm);
 
             foreach ($narrativeRules as $key => $narrativeRule) {
                 $rules[$key] = $narrativeRule;
@@ -351,7 +351,7 @@ class OrganizationBaseRequest extends FormRequest
      *
      * @return array
      */
-    public function getRulesForPeriodStart($formFields, $formBase, $diff, $time_period = null): array
+    public function getWarningForPeriodStart($formFields, $formBase, $diff, $time_period = null): array
     {
         $rules = [];
 
@@ -393,7 +393,7 @@ class OrganizationBaseRequest extends FormRequest
      *
      * @return array
      */
-    public function getRulesForPeriodEnd($formFields, $formBase, $diff, $time_period = null): array
+    public function getWarningForPeriodEnd($formFields, $formBase, $diff, $time_period = null): array
     {
         $rules = [];
 
@@ -434,7 +434,7 @@ class OrganizationBaseRequest extends FormRequest
      *
      * @return array
      */
-    public function getRulesForBudgetOrExpenseLineValue($formField, $formBase, $parentFormBase): array
+    public function getWarningForBudgetOrExpenseLineValue($formField, $formBase, $parentFormBase): array
     {
         $rules = [];
         $periodStartFormBase = sprintf('%s.period_start.0.date', $parentFormBase);
@@ -481,7 +481,7 @@ class OrganizationBaseRequest extends FormRequest
      *
      * @return array
      */
-    public function getRulesForBudgetOrExpenseLineNarrative($formFields, $formBase): array
+    public function getWarningForBudgetOrExpenseLineNarrative($formFields, $formBase): array
     {
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)] = 'unique_lang';

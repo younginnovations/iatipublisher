@@ -20,7 +20,7 @@ class StatusRequest extends ActivityBaseRequest
      */
     public function rules($status = null): array
     {
-        $totalRules = [$this->getCriticalRulesForActivityStatus($status), $this->getRulesForActivityStatus($status)];
+        $totalRules = [$this->getErrorsForActivityStatus($status), $this->getWarningForActivityStatus($status)];
 
         return mergeRules($totalRules);
     }
@@ -32,7 +32,7 @@ class StatusRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForActivityStatus($status): array
+    public function getWarningForActivityStatus($status): array
     {
         if ($status && is_array($status)) {
             return [
@@ -50,7 +50,7 @@ class StatusRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForActivityStatus($status): array
+    public function getErrorsForActivityStatus($status): array
     {
         return [
           'activity_status' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ActivityStatus', 'Activity', false)))),

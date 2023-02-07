@@ -9,6 +9,7 @@ use App\IATI\Repositories\Activity\IndicatorRepository;
 use App\IATI\Repositories\Activity\PeriodRepository;
 use App\IATI\Repositories\Activity\ResultRepository;
 use App\IATI\Repositories\Activity\TransactionRepository;
+use App\IATI\Repositories\ImportActivityError\ImportActivityErrorRepository;
 use App\XmlImporter\Events\XmlWasUploaded;
 use App\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
 use App\XmlImporter\Foundation\XmlProcessor;
@@ -90,7 +91,12 @@ class ImportXmlService
     /**
      * @var IndicatorRepository
      */
-    private IndicatorRepository $indicatorRepository;
+    protected IndicatorRepository $indicatorRepository;
+
+    /**
+     * @var ImportActivityErrorRepository
+     */
+    protected ImportActivityErrorRepository $importActivityErrorRepo;
 
     /**
      * XmlImportManager constructor.
@@ -101,6 +107,7 @@ class ImportXmlService
      * @param ResultRepository      $resultRepository
      * @param PeriodRepository      $periodRepository
      * @param IndicatorRepository   $indicatorRepository
+     * @param ImportActivityErrorRepository  $importActivityErrorRepo
      * @param XmlProcessor          $xmlProcessor
      * @param LoggerInterface       $logger
      * @param Filesystem            $filesystem
@@ -113,6 +120,7 @@ class ImportXmlService
         ResultRepository $resultRepository,
         PeriodRepository $periodRepository,
         IndicatorRepository $indicatorRepository,
+        ImportActivityErrorRepository $importActivityErrorRepo,
         XmlProcessor $xmlProcessor,
         LoggerInterface $logger,
         Filesystem $filesystem,
@@ -127,6 +135,7 @@ class ImportXmlService
         $this->activityRepository = $activityRepository;
         $this->resultRepository = $resultRepository;
         $this->indicatorRepository = $indicatorRepository;
+        $this->importActivityErrorRepo = $importActivityErrorRepo;
         $this->periodRepository = $periodRepository;
         $this->xml_file_storage_path = env('XML_FILE_STORAGE_PATH', 'XmlImporter/file');
         $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH', 'XmlImporter/tmp');
@@ -181,21 +190,30 @@ class ImportXmlService
         $contents = $this->loadJsonFile('valid.json');
 
         foreach ($activities as $value) {
-            $activity = $contents[$value];
+            $activity = unsetErrorFields($contents[$value]);
+            $activityData = Arr::get($activity, 'data', []);
 
-            if ($activity->existence === true) {
-                $oldActivity = $this->activityRepository->getActivityWithIdentifier(Auth::user()->organization->id, (array) $activity->data->iati_identifier);
+            if (Arr::get($activity, 'existence', false)) {
+                $oldActivity = $this->activityRepository->getActivityWithIdentifier(Auth::user()->organization->id, Arr::get($activity, 'iati_identifier'));
 
-                $this->activityRepository->importXmlActivities($oldActivity->id, (array) $activity->data);
+                $this->activityRepository->importXmlActivities($oldActivity->id, $activityData);
                 $this->transactionRepository->deleteTransaction($oldActivity->id);
                 $this->resultRepository->deleteResult($oldActivity->id);
-                $this->saveTransactions($activity->data->transactions, $oldActivity->id)
-                    ->saveResults($activity->data->result, $oldActivity->id);
-            } else {
-                $storeActivity = $this->activityRepository->importXmlActivities(null, (array) $activity->data);
+                $this->saveTransactions(Arr::get($activityData, 'transactions'), $oldActivity->id)
+                    ->saveResults(Arr::get($activityData, 'result'), $oldActivity->id);
 
-                $this->saveTransactions($activity->data->transactions, $storeActivity->id)
-                    ->saveResults($activity->data->result, $storeActivity->id);
+                if (!empty($activity['errors'])) {
+                    $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $$activity['errors']);
+                }
+            } else {
+                $storeActivity = $this->activityRepository->importXmlActivities(null, $activityData);
+
+                $this->saveTransactions(Arr::get($activityData, 'transactions'), $storeActivity->id)
+                    ->saveResults(Arr::get($activityData, 'result'), $storeActivity->id);
+
+                if (!empty($activity['errors'])) {
+                    $this->importActivityErrorRepo->updateOrCreateError($storeActivity->id, $activity['errors']);
+                }
             }
         }
 

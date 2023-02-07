@@ -230,7 +230,6 @@ class UserController extends Controller
 
             return view('admin.user.profile', compact('user', 'languagePreference'));
         } catch (\Exception $e) {
-            dd($e->getMessage());
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.index')->with('error', 'Error while rendering setting page');

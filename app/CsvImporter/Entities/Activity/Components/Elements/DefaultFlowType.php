@@ -114,8 +114,8 @@ class DefaultFlowType extends Element
         $this->validator = $this->factory->sign($this->data)
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
-        $this->criticalValidator = $this->factory->sign($this->data)
-            ->with($this->criticalRules(), $this->messages())
+        $this->errorValidator = $this->factory->sign($this->data)
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
 
         $this->setValidity();
@@ -131,7 +131,7 @@ class DefaultFlowType extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForDefaultFlowType(Arr::get($this->data(), $this->csvHeader()));
+        return $this->request->getWarningForDefaultFlowType(Arr::get($this->data(), $this->csvHeader()));
     }
 
     /**
@@ -140,9 +140,9 @@ class DefaultFlowType extends Element
      * @return array
      * @throws \JsonException
      */
-    public function criticalRules(): array
+    public function errorRules(): array
     {
-        return $this->request->getCriticalRulesForDefaultFlowType(Arr::get($this->data(), $this->csvHeader()));
+        return $this->request->getErrorsForDefaultFlowType(Arr::get($this->data(), $this->csvHeader()));
     }
 
     /**

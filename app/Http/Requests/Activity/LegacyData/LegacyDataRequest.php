@@ -18,7 +18,7 @@ class LegacyDataRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        $totalRules = [$this->getCriticalRulesForLegacyData(), $this->getRulesForActivityLegacyData()];
+        $totalRules = [$this->getErrorsForLegacyData(), $this->getWarningForActivityLegacyData()];
 
         return mergeRules($totalRules);
     }
@@ -38,7 +38,7 @@ class LegacyDataRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForLegacyData(): array
+    public function getErrorsForLegacyData(): array
     {
         return [];
     }
@@ -48,7 +48,7 @@ class LegacyDataRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForActivityLegacyData(): array
+    public function getWarningForActivityLegacyData(): array
     {
         return [];
     }

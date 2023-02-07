@@ -152,7 +152,7 @@ class Validation extends Factory
      *
      * @return array
      */
-    public function getRulesForNarrative($elementNarrative, $elementName): array
+    public function getWarningForNarrative($elementNarrative, $elementName): array
     {
         $rules = [];
         $rules[sprintf('%s.narrative', $elementName)][] = 'unique_lang';
@@ -200,7 +200,7 @@ class Validation extends Factory
      *
      * @return array
      */
-    public function getRulesForRequiredNarrative($elementNarrative, $elementName): array
+    public function getWarningForRequiredNarrative($elementNarrative, $elementName): array
     {
         $rules = [];
         $rules[sprintf('%s.narrative', $elementName)][] = 'unique_lang';
@@ -272,7 +272,7 @@ class Validation extends Factory
      *
      * @return array
      */
-    public function getRulesForTransactionSectorNarrative($sector, $formFields, $formBase): array
+    public function getWarningForTransactionSectorNarrative($sector, $formFields, $formBase): array
     {
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
@@ -395,7 +395,7 @@ class Validation extends Factory
      *
      * @return array
      */
-    public function getRulesForResultNarrative($formFields, $formBase): array
+    public function getWarningForResultNarrative($formFields, $formBase): array
     {
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
@@ -416,7 +416,7 @@ class Validation extends Factory
      *
      * @return array
      */
-    public function getRulesForPeriodStart($formFields, $formBase): array
+    public function getWarningForPeriodStart($formFields, $formBase): array
     {
         $rules = [];
 
@@ -461,7 +461,7 @@ class Validation extends Factory
      *
      * @return array
      */
-    public function getRulesForPeriodEnd($formFields, $formBase): array
+    public function getWarningForPeriodEnd($formFields, $formBase): array
     {
         $rules = [];
 

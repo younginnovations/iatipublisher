@@ -129,7 +129,7 @@ class Description extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForDescription($this->data('description'));
+        return $this->request->getWarningForDescription($this->data('description'));
     }
 
     /**
@@ -137,9 +137,9 @@ class Description extends Element
      *
      * @return array
      */
-    public function criticalRules(): array
+    public function errorRules(): array
     {
-        return $this->request->getCriticalRulesForDescription($this->data('description'));
+        return $this->request->getErrorsForDescription($this->data('description'));
     }
 
     /**
@@ -162,8 +162,8 @@ class Description extends Element
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
                                          ->getValidatorInstance();
-        $this->criticalValidator = $this->factory->sign($this->data())
-                                         ->with($this->criticalRules(), $this->messages())
+        $this->errorValidator = $this->factory->sign($this->data())
+                                         ->with($this->errorRules(), $this->messages())
                                          ->getValidatorInstance();
 
         $this->setValidity();

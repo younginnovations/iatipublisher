@@ -21,8 +21,8 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
         $data = $this->get('planned_disbursement');
 
         $totalRules = [
-            $this->getRulesForPlannedDisbursement($data),
-            $this->getCriticalRulesForPlannedDisbursement($data),
+            $this->getWarningForPlannedDisbursement($data),
+            $this->getErrorsForPlannedDisbursement($data),
         ];
 
         return mergeRules($totalRules);
@@ -45,7 +45,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForPlannedDisbursement(array $formFields): array
+    public function getWarningForPlannedDisbursement(array $formFields): array
     {
         $rules = [];
 
@@ -62,9 +62,9 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
             $tempRules = [
                             $this->getPlannedDisbursementRulesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementForm, $diff),
                             $this->getPlannedDisbursementRulesForPeriodEnd($plannedDisbursement['period_end'], $plannedDisbursementForm, $diff),
-                            $this->getRulesForValue($plannedDisbursement['value'], $plannedDisbursementForm),
-                            $this->getRulesForProviderOrg($plannedDisbursement['provider_org'], $plannedDisbursementForm),
-                            $this->getRulesForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementForm),
+                            $this->getWarningForValue($plannedDisbursement['value'], $plannedDisbursementForm),
+                            $this->getWarningForProviderOrg($plannedDisbursement['provider_org'], $plannedDisbursementForm),
+                            $this->getWarningForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementForm),
                         ];
 
             foreach ($tempRules as $rule) {
@@ -84,7 +84,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForPlannedDisbursement(array $formFields): array
+    public function getErrorsForPlannedDisbursement(array $formFields): array
     {
         $rules = [];
 
@@ -95,9 +95,9 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
             $tempRules = [
                             $this->getCriticalPlannedDisbursementRulesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementForm),
                             $this->getCriticalPlannedDisbursementRulesForPeriodEnd($plannedDisbursement['period_end'], $plannedDisbursementForm),
-                            $this->getCriticalRulesForValue($plannedDisbursement['value'], $plannedDisbursementForm),
-                            $this->getCriticalRulesForProviderOrg($plannedDisbursement['provider_org'], $plannedDisbursementForm),
-                            $this->getCriticalRulesForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementForm),
+                            $this->getErrorsForValue($plannedDisbursement['value'], $plannedDisbursementForm),
+                            $this->getErrorsForProviderOrg($plannedDisbursement['provider_org'], $plannedDisbursementForm),
+                            $this->getErrorsForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementForm),
                         ];
 
             foreach ($tempRules as $rule) {
@@ -167,7 +167,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForProviderOrg(array $formFields, $formBase): array
+    public function getWarningForProviderOrg(array $formFields, $formBase): array
     {
         $rules = [];
 
@@ -175,7 +175,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
             $providerOrgForm = sprintf('%s.provider_org.%s', $formBase, $providerOrgIndex);
             $rules[sprintf('%s.ref', $providerOrgForm)] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
 
-            foreach ($this->getRulesForNarrative($providerOrg['narrative'], $providerOrgForm) as $providerOrgNarrativeIndex => $providerOrgNarrativeRules) {
+            foreach ($this->getWarningForNarrative($providerOrg['narrative'], $providerOrgForm) as $providerOrgNarrativeIndex => $providerOrgNarrativeRules) {
                 $rules[$providerOrgNarrativeIndex] = $providerOrgNarrativeRules;
             }
         }
@@ -191,7 +191,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForProviderOrg(array $formFields, $formBase): array
+    public function getErrorsForProviderOrg(array $formFields, $formBase): array
     {
         $rules = [];
 
@@ -199,7 +199,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
             $providerOrgForm = sprintf('%s.provider_org.%s', $formBase, $providerOrgIndex);
             $rules[sprintf('%s.type', $providerOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
 
-            foreach ($this->getCriticalRulesForNarrative($providerOrg['narrative'], $providerOrgForm) as $providerOrgNarrativeIndex => $providerOrgNarrativeRules) {
+            foreach ($this->getErrorsForNarrative($providerOrg['narrative'], $providerOrgForm) as $providerOrgNarrativeIndex => $providerOrgNarrativeRules) {
                 $rules[$providerOrgNarrativeIndex] = $providerOrgNarrativeRules;
             }
         }
@@ -240,7 +240,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForReceiverOrg(array $formFields, $formBase): array
+    public function getWarningForReceiverOrg(array $formFields, $formBase): array
     {
         $rules = [];
 
@@ -248,7 +248,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
             $receiverOrgForm = sprintf('%s.receiver_org.%s', $formBase, $receiverOrgIndex);
             $rules[sprintf('%s.ref', $receiverOrgForm)] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
 
-            foreach ($this->getRulesForNarrative($receiverOrg['narrative'], $receiverOrgForm) as $receiverOrgNarrativeIndex => $receiverOrgNarrativeRules) {
+            foreach ($this->getWarningForNarrative($receiverOrg['narrative'], $receiverOrgForm) as $receiverOrgNarrativeIndex => $receiverOrgNarrativeRules) {
                 $rules[$receiverOrgNarrativeIndex] = $receiverOrgNarrativeRules;
             }
         }
@@ -264,7 +264,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForReceiverOrg(array $formFields, $formBase): array
+    public function getErrorsForReceiverOrg(array $formFields, $formBase): array
     {
         $rules = [];
 
@@ -272,7 +272,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
             $receiverOrgForm = sprintf('%s.receiver_org.%s', $formBase, $receiverOrgIndex);
             $rules[sprintf('%s.type', $receiverOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
 
-            foreach ($this->getCriticalRulesForNarrative($receiverOrg['narrative'], $receiverOrgForm) as $receiverOrgNarrativeIndex => $receiverOrgNarrativeRules) {
+            foreach ($this->getErrorsForNarrative($receiverOrg['narrative'], $receiverOrgForm) as $receiverOrgNarrativeIndex => $receiverOrgNarrativeRules) {
                 $rules[$receiverOrgNarrativeIndex] = $receiverOrgNarrativeRules;
             }
         }

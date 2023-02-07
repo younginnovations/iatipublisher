@@ -37,8 +37,8 @@ class RecipientRegionRequest extends ActivityBaseRequest
         $data = $this->get('recipient_region') ?? $recipient_region;
 
         $totalRules = [
-            $this->getRulesForRecipientRegion($data),
-            $this->getCriticalRulesForRecipientRegion($data),
+            $this->getWarningForRecipientRegion($data),
+            $this->getErrorsForRecipientRegion($data),
         ];
 
         return mergeRules($totalRules);
@@ -84,7 +84,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForRecipientRegion(array $formFields, bool $fileUpload = false, array $recipientCountries = []): array
+    public function getErrorsForRecipientRegion(array $formFields, bool $fileUpload = false, array $recipientCountries = []): array
     {
         if (empty($formFields)) {
             return [];
@@ -99,7 +99,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
             $rules[$recipientRegionForm . '.vocabulary_uri'] = 'nullable|url';
             $rules[$recipientRegionForm . '.percentage'] = 'nullable|numeric|min:0';
 
-            $narrativeRules = $this->getCriticalRulesForNarrative($recipientRegion['narrative'], $recipientRegionForm);
+            $narrativeRules = $this->getErrorsForNarrative($recipientRegion['narrative'], $recipientRegionForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -119,7 +119,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    public function getRulesForRecipientRegion(array $formFields, bool $fileUpload = false, array $recipientCountries = []): array
+    public function getWarningForRecipientRegion(array $formFields, bool $fileUpload = false, array $recipientCountries = []): array
     {
         if (empty($formFields)) {
             return [];
@@ -165,7 +165,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
-            $narrativeRules = $this->getRulesForNarrative($recipientRegion['narrative'], $recipientRegionForm);
+            $narrativeRules = $this->getWarningForNarrative($recipientRegion['narrative'], $recipientRegionForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -177,6 +177,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
         $firstGroupTotalPercentage = Arr::first($this->groupedPercentRegion, static function ($value) {
             return $value;
         });
+        
         $this->merge(['total_region_percentage' => $firstGroupTotalPercentage['total'] ?? null]);
 
         return $rules;

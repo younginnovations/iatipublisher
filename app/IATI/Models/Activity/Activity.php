@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Models\Activity;
 
 use App\IATI\Models\Document\Document;
+use App\IATI\Models\ImportActivityError\ImportActivityError;
 use App\IATI\Models\Organization\Organization;
 use Arr;
 use Database\Factories\IATI\Models\Activity\ActivityFactory;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Auth;
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -146,7 +148,7 @@ class Activity extends Model implements Auditable
     }
 
     /**
-     * Activity hasmany transactions.
+     * Activity has many transactions.
      *
      * @return HasMany
      */
@@ -156,13 +158,23 @@ class Activity extends Model implements Auditable
     }
 
     /**
-     * Activity hasmany results.
+     * Activity has many results.
      *
      * @return HasMany
      */
     public function results(): HasMany
     {
         return $this->hasMany(Result::class, 'activity_id', 'id');
+    }
+
+    /**
+     * Activity has one import error.
+     *
+     * @return HasOne
+     */
+    public function importError(): HasOne
+    {
+        return $this->hasOne(ImportActivityError::class, 'activity_id', 'id');
     }
 
     /**

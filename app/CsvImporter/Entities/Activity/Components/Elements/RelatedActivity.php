@@ -144,7 +144,7 @@ class RelatedActivity extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForRelatedActivity(Arr::get($this->data(), 'related_activity', []));
+        return $this->request->getWarningForRelatedActivity(Arr::get($this->data(), 'related_activity', []));
     }
 
     /**
@@ -153,9 +153,9 @@ class RelatedActivity extends Element
      * @return array
      * @throws \JsonException
      */
-    public function criticalRules(): array
+    public function errorRules(): array
     {
-        return $this->request->getCriticalRulesForRelatedActivity(Arr::get($this->data(), 'related_activity', []));
+        return $this->request->getErrorsForRelatedActivity(Arr::get($this->data(), 'related_activity', []));
     }
 
     /**
@@ -179,8 +179,8 @@ class RelatedActivity extends Element
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
                                          ->getValidatorInstance();
-        $this->criticalValidator = $this->factory->sign($this->data())
-                                         ->with($this->criticalRules(), $this->messages())
+        $this->errorValidator = $this->factory->sign($this->data())
+                                         ->with($this->errorRules(), $this->messages())
                                          ->getValidatorInstance();
 
         $this->setValidity();

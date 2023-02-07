@@ -387,8 +387,8 @@ class Sector extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
-        $this->criticalValidator = $this->factory->sign($this->data())
-            ->with($this->criticalRules(), $this->messages())
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
         $this->setValidity();
 
@@ -412,9 +412,9 @@ class Sector extends Element
      * @return array
      * @throws BindingResolutionException
      */
-    public function criticalRules(): array
+    public function errorRules(): array
     {
-        return $this->request->getCriticalRulesForSector(Arr::get($this->data(), 'sector', []), true);
+        return $this->request->getErrorsForSector(Arr::get($this->data(), 'sector', []), true);
     }
 
     /**

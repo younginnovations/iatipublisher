@@ -487,7 +487,7 @@ class Location extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForLocation(Arr::get($this->data, 'location', []));
+        return $this->request->getWarningForLocation(Arr::get($this->data, 'location', []));
     }
 
     /**
@@ -496,9 +496,9 @@ class Location extends Element
      * @return array
      * @throws \JsonException
      */
-    public function criticalRules(): array
+    public function errorRules(): array
     {
-        return $this->request->getCriticalRulesForLocation(Arr::get($this->data, 'location', []));
+        return $this->request->getErrorsForLocation(Arr::get($this->data, 'location', []));
     }
 
     /**
@@ -522,8 +522,8 @@ class Location extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
-        $this->criticalValidator = $this->factory->sign($this->data())
-            ->with($this->criticalRules(), $this->messages())
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
         $this->setValidity();
 

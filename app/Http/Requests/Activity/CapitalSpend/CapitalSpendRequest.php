@@ -18,7 +18,7 @@ class CapitalSpendRequest extends ActivityBaseRequest
      */
     public function rules($capital_spend = null): array
     {
-        $totalRules = [$this->getCriticalRulesForCapitalSpend($capital_spend), $this->getRulesForCapitalSpend($capital_spend)];
+        $totalRules = [$this->getErrorsForCapitalSpend($capital_spend), $this->getWarningForCapitalSpend($capital_spend)];
 
         return mergeRules($totalRules);
     }
@@ -30,7 +30,7 @@ class CapitalSpendRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForCapitalSpend($capital_spend = null): array
+    public function getErrorsForCapitalSpend($capital_spend = null): array
     {
         if ($capital_spend && is_array($capital_spend)) {
             return [
@@ -50,7 +50,7 @@ class CapitalSpendRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForCapitalSpend($capital_spend = null): array
+    public function getWarningForCapitalSpend($capital_spend = null): array
     {
         return [];
     }
