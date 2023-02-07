@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: iati-pv-claim
+  labels:
+    tier: backend
+    layer: fpm
+spec:
+  storageClassName: nfs-rwx-storage
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
