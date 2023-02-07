@@ -20,7 +20,7 @@ class DefaultTiedStatusRequest extends ActivityBaseRequest
      */
     public function rules($tied_status = null): array
     {
-        $totalRules = [$this->getCriticalRulesForDefaultTiedStatus(), $this->getRulesForDefaultTiedStatus()];
+        $totalRules = [$this->getErrorsForDefaultTiedStatus(), $this->getWarningForDefaultTiedStatus()];
 
         return mergeRules($totalRules);
     }
@@ -32,7 +32,7 @@ class DefaultTiedStatusRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForDefaultTiedStatus(): array
+    public function getWarningForDefaultTiedStatus(): array
     {
         return [];
     }
@@ -44,7 +44,7 @@ class DefaultTiedStatusRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForDefaultTiedStatus($tied_status = null): array
+    public function getErrorsForDefaultTiedStatus($tied_status = null): array
     {
         if ($tied_status && is_array($tied_status)) {
             return [

@@ -261,7 +261,7 @@ class ActivityBaseRequest extends FormRequest
      *
      * @return array
      */
-    public function getRulesForRequiredNarrative($formFields, $formBase): array
+    public function getWarningForRequiredNarrative($formFields, $formBase): array
     {
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
@@ -306,7 +306,7 @@ class ActivityBaseRequest extends FormRequest
      *
      * @return array
      */
-    public function getRulesForNarrative($formFields, $formBase): array
+    public function getWarningForNarrative($formFields, $formBase): array
     {
         $rules = [];
 
@@ -327,7 +327,7 @@ class ActivityBaseRequest extends FormRequest
      *
      * @return array
      */
-    public function getCriticalRulesForNarrative($formFields, $formBase): array
+    public function getErrorsForNarrative($formFields, $formBase): array
     {
         $rules = [];
         $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
@@ -385,7 +385,7 @@ class ActivityBaseRequest extends FormRequest
      *
      * @return array
      */
-    public function getRulesForPeriodStart($formFields, $formBase): array
+    public function getWarningForPeriodStart($formFields, $formBase): array
     {
         $rules = [];
 
@@ -424,7 +424,7 @@ class ActivityBaseRequest extends FormRequest
      *
      * @return array
      */
-    public function getRulesForPeriodEnd($formFields, $formBase): array
+    public function getWarningForPeriodEnd($formFields, $formBase): array
     {
         $rules = [];
 
@@ -469,7 +469,7 @@ class ActivityBaseRequest extends FormRequest
      *
      * @return array
      */
-    public function getRulesForDocumentLink($formFields, $formBase = null): array
+    public function getWarningForDocumentLink($formFields, $formBase = null): array
     {
         $rules = [];
 
@@ -477,7 +477,7 @@ class ActivityBaseRequest extends FormRequest
             $documentLinkForm = $formBase ? sprintf('%s.document_link.%s', $formBase, $documentLinkIndex) : sprintf('document_link.%s', $documentLinkIndex);
 
             if (Arr::get($documentLink, 'document_date', null) !== '') {
-                $docDateRules = $this->getRulesForDocumentDate($documentLink['document_date'], $documentLinkForm);
+                $docDateRules = $this->getWarningForDocumentDate($documentLink['document_date'], $documentLinkForm);
 
                 foreach ($docDateRules as $key => $item) {
                     $rules[$key] = $item;
@@ -487,13 +487,13 @@ class ActivityBaseRequest extends FormRequest
             $rules[sprintf('%s.category', $documentLinkForm)][] = 'unique_category';
             $rules[sprintf('%s.language', $documentLinkForm)][] = 'unique_language';
 
-            $narrativeTitleRules = $this->getRulesForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm));
+            $narrativeTitleRules = $this->getWarningForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm));
 
             foreach ($narrativeTitleRules as $key => $item) {
                 $rules[$key] = $item;
             }
 
-            $narrativeDesRules = $this->getRulesForNarrative($documentLink['description'][0]['narrative'], sprintf('%s.description.0', $documentLinkForm));
+            $narrativeDesRules = $this->getWarningForNarrative($documentLink['description'][0]['narrative'], sprintf('%s.description.0', $documentLinkForm));
 
             foreach ($narrativeDesRules as $key => $item) {
                 $rules[$key] = $item;
@@ -511,7 +511,7 @@ class ActivityBaseRequest extends FormRequest
      *
      * @return array
      */
-    public function getCriticalRulesForDocumentLink($formFields, $formBase = null): array
+    public function getErrorsForDocumentLink($formFields, $formBase = null): array
     {
         $rules = [];
 
@@ -525,7 +525,7 @@ class ActivityBaseRequest extends FormRequest
                 }
 
                 if (Arr::get($documentLink, 'document_date', null) !== '') {
-                    $docDateRules = $this->getCriticalRulesForDocumentDate($documentLink['document_date'], $documentLinkForm);
+                    $docDateRules = $this->getErrorsForDocumentDate($documentLink['document_date'], $documentLinkForm);
 
                     foreach ($docDateRules as $key => $item) {
                         $rules[$key] = $item;
@@ -535,13 +535,13 @@ class ActivityBaseRequest extends FormRequest
                 $rules[sprintf('%s.category.0.code', $documentLinkForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('DocumentCategory', 'Activity', false)));
                 $rules[sprintf('%s.language.0.code', $documentLinkForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Language', 'Activity', false)));
 
-                $narrativeTitleRules = $this->getCriticalRulesForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm));
+                $narrativeTitleRules = $this->getErrorsForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm));
 
                 foreach ($narrativeTitleRules as $key => $item) {
                     $rules[$key] = $item;
                 }
 
-                $narrativeDesRules = $this->getCriticalRulesForNarrative($documentLink['description'][0]['narrative'], sprintf('%s.description.0', $documentLinkForm));
+                $narrativeDesRules = $this->getErrorsForNarrative($documentLink['description'][0]['narrative'], sprintf('%s.description.0', $documentLinkForm));
 
                 foreach ($narrativeDesRules as $key => $item) {
                     $rules[$key] = $item;
@@ -560,7 +560,7 @@ class ActivityBaseRequest extends FormRequest
      *
      * @return array
      */
-    protected function getRulesForDocumentDate($formFields, $formIndex): array
+    protected function getWarningForDocumentDate($formFields, $formIndex): array
     {
         $rules = [];
 
@@ -579,7 +579,7 @@ class ActivityBaseRequest extends FormRequest
      *
      * @return array
      */
-    protected function getCriticalRulesForDocumentDate($formFields, $formIndex): array
+    protected function getErrorsForDocumentDate($formFields, $formIndex): array
     {
         $rules = [];
 
@@ -673,7 +673,7 @@ class ActivityBaseRequest extends FormRequest
      *
      * @return array
      */
-    protected function getRulesForValue($formFields, $formBase): array
+    protected function getWarningForValue($formFields, $formBase): array
     {
         $rules = [];
         $periodStartFormBase = sprintf('%s.period_start.0.date', $formBase);
@@ -697,7 +697,7 @@ class ActivityBaseRequest extends FormRequest
      *
      * @return array
      */
-    protected function getCriticalRulesForValue($formFields, $formBase): array
+    protected function getErrorsForValue($formFields, $formBase): array
     {
         $rules = [];
 

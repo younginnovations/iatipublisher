@@ -39,8 +39,8 @@ class TransactionRequest extends ActivityBaseRequest
         $data = request()->except('_token');
 
         $totalRules = [
-            $this->getRulesForTransaction($data),
-            $this->getCriticalRulesForTransaction($data),
+            $this->getWarningForTransaction($data),
+            $this->getErrorsForTransaction($data),
         ];
 
         return mergeRules($totalRules);
@@ -66,7 +66,7 @@ class TransactionRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException|\JsonException
      */
-    public function getRulesForTransaction(array $formFields, bool $fileUpload = false, array $activityData = []): array
+    public function getWarningForTransaction(array $formFields, bool $fileUpload = false, array $activityData = []): array
     {
         $rules = [];
         $this->transactionFormField = $formFields;
@@ -95,10 +95,10 @@ class TransactionRequest extends ActivityBaseRequest
             $this->getValueRules($formFields['value']),
             $this->getDescriptionRules($formFields['description']),
             $this->getSectorsRules($formFields['sector'], $fileUpload, Arr::get($activityData, 'sector', [])),
-            $this->getRulesForProviderOrg($formFields['provider_organization']),
-            $this->getRulesForReceiverOrg($formFields['receiver_organization']),
-            $this->getRulesForRecipientRegion($formFields['recipient_region'], $fileUpload, Arr::get($activityData, 'recipient_region', [])),
-            $this->getRulesForRecipientCountry($formFields['recipient_country'], $fileUpload, Arr::get($activityData, 'recipient_country', [])),
+            $this->getWarningForProviderOrg($formFields['provider_organization']),
+            $this->getWarningForReceiverOrg($formFields['receiver_organization']),
+            $this->getWarningForRecipientRegion($formFields['recipient_region'], $fileUpload, Arr::get($activityData, 'recipient_region', [])),
+            $this->getWarningForRecipientCountry($formFields['recipient_country'], $fileUpload, Arr::get($activityData, 'recipient_country', [])),
         ];
 
         foreach ($tempRules as $tempRule) {
@@ -120,7 +120,7 @@ class TransactionRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    public function getCriticalRulesForTransaction(array $formFields, bool $fileUpload = false, array $activityData = []): array
+    public function getErrorsForTransaction(array $formFields, bool $fileUpload = false, array $activityData = []): array
     {
         $rules = [];
 
@@ -139,10 +139,10 @@ class TransactionRequest extends ActivityBaseRequest
             $this->getCriticalValueRules($formFields['value']),
             $this->getCriticalDescriptionRules($formFields['description']),
             $this->getCriticalSectorsRules($formFields['sector'], $fileUpload, Arr::get($activityData, 'sector', [])),
-            $this->getCriticalRulesForProviderOrg($formFields['provider_organization']),
-            $this->getCriticalRulesForReceiverOrg($formFields['receiver_organization']),
-            $this->getCriticalRulesForRecipientRegion($formFields['recipient_region'], $fileUpload, Arr::get($activityData, 'recipient_region', [])),
-            $this->getCriticalRulesForRecipientCountry($formFields['recipient_country'], $fileUpload, Arr::get($activityData, 'recipient_country', [])),
+            $this->getErrorsForProviderOrg($formFields['provider_organization']),
+            $this->getErrorsForReceiverOrg($formFields['receiver_organization']),
+            $this->getErrorsForRecipientRegion($formFields['recipient_region'], $fileUpload, Arr::get($activityData, 'recipient_region', [])),
+            $this->getErrorsForRecipientCountry($formFields['recipient_country'], $fileUpload, Arr::get($activityData, 'recipient_country', [])),
         ];
 
         foreach ($tempRules as $tempRule) {
@@ -310,7 +310,7 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $descriptionIndex => $description) {
             $narrativeForm = sprintf('description.%s', $descriptionIndex);
-            $narrativeRules = $this->getRulesForNarrative($description['narrative'], $narrativeForm);
+            $narrativeRules = $this->getWarningForNarrative($description['narrative'], $narrativeForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -333,7 +333,7 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $descriptionIndex => $description) {
             $narrativeForm = sprintf('description.%s', $descriptionIndex);
-            $narrativeRules = $this->getCriticalRulesForNarrative($description['narrative'], $narrativeForm);
+            $narrativeRules = $this->getErrorsForNarrative($description['narrative'], $narrativeForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -427,7 +427,7 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
-            $narrativeRules = $this->getRulesForNarrative($sector['narrative'], $sectorForm);
+            $narrativeRules = $this->getWarningForNarrative($sector['narrative'], $sectorForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -465,7 +465,7 @@ class TransactionRequest extends ActivityBaseRequest
                 $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
             }
 
-            $narrativeRules = $this->getCriticalRulesForNarrative($sector['narrative'], $sectorForm);
+            $narrativeRules = $this->getErrorsForNarrative($sector['narrative'], $sectorForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -523,14 +523,14 @@ class TransactionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForProviderOrg(array $formFields): array
+    public function getWarningForProviderOrg(array $formFields): array
     {
         $rules = [];
 
         foreach ($formFields as $providerOrgIndex => $providerOrg) {
             $providerOrgForm = sprintf('provider_organization.%s', $providerOrgIndex);
             $rules[sprintf('%s.%s', $providerOrgForm, 'provider_activity_id')] = 'exclude_operators';
-            $narrativeRules = $this->getRulesForNarrative($providerOrg['narrative'], $providerOrgForm);
+            $narrativeRules = $this->getWarningForNarrative($providerOrg['narrative'], $providerOrgForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -547,14 +547,14 @@ class TransactionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForProviderOrg(array $formFields): array
+    public function getErrorsForProviderOrg(array $formFields): array
     {
         $rules = [];
 
         foreach ($formFields as $providerOrgIndex => $providerOrg) {
             $providerOrgForm = sprintf('provider_organization.%s', $providerOrgIndex);
             $rules[sprintf('%s.%s', $providerOrgForm, 'type')] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
-            $narrativeRules = $this->getCriticalRulesForNarrative($providerOrg['narrative'], $providerOrgForm);
+            $narrativeRules = $this->getErrorsForNarrative($providerOrg['narrative'], $providerOrgForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -596,14 +596,14 @@ class TransactionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForReceiverOrg(array $formFields): array
+    public function getWarningForReceiverOrg(array $formFields): array
     {
         $rules = [];
 
         foreach ($formFields as $receiverOrgIndex => $receiverOrg) {
             $receiverOrgForm = sprintf('receiver_organization.%s', $receiverOrgIndex);
             $rules[sprintf('%s.%s', $receiverOrgForm, 'receiver_activity_id')] = 'exclude_operators';
-            $narrativeRules = $this->getRulesForNarrative($receiverOrg['narrative'], $receiverOrgForm);
+            $narrativeRules = $this->getWarningForNarrative($receiverOrg['narrative'], $receiverOrgForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -620,14 +620,14 @@ class TransactionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForReceiverOrg(array $formFields): array
+    public function getErrorsForReceiverOrg(array $formFields): array
     {
         $rules = [];
 
         foreach ($formFields as $receiverOrgIndex => $receiverOrg) {
             $receiverOrgForm = sprintf('receiver_organization.%s', $receiverOrgIndex);
             $rules[sprintf('%s.%s', $receiverOrgForm, 'type')] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
-            $narrativeRules = $this->getCriticalRulesForNarrative($receiverOrg['narrative'], $receiverOrgForm);
+            $narrativeRules = $this->getErrorsForNarrative($receiverOrg['narrative'], $receiverOrgForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -672,7 +672,7 @@ class TransactionRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    public function getRulesForRecipientRegion(array $formFields, bool $fileUpload, array $activityRecipientRegions, array $transaction = []): array
+    public function getWarningForRecipientRegion(array $formFields, bool $fileUpload, array $activityRecipientRegions): array
     {
         if (empty($formFields)) {
             return [];
@@ -701,7 +701,7 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = sprintf('recipient_region.%s', $recipientRegionIndex);
-            $narrativeRules = $this->getRulesForNarrative($recipientRegion['narrative'], $recipientRegionForm);
+            $narrativeRules = $this->getWarningForNarrative($recipientRegion['narrative'], $recipientRegionForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -721,7 +721,7 @@ class TransactionRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    public function getCriticalRulesForRecipientRegion(array $formFields, bool $fileUpload, array $activityRecipientRegions): array
+    public function getErrorsForRecipientRegion(array $formFields, bool $fileUpload, array $activityRecipientRegions): array
     {
         if (empty($formFields)) {
             return [];
@@ -738,7 +738,7 @@ class TransactionRequest extends ActivityBaseRequest
             if (Arr::get($recipientRegion, 'region_vocabulary', 1) === '99') {
                 $rules[sprintf('%s.vocabulary_uri', $recipientRegionForm)] = 'nullable|url';
             }
-            $narrativeRules = $this->getCriticalRulesForNarrative($recipientRegion['narrative'], $recipientRegionForm);
+            $narrativeRules = $this->getErrorsForNarrative($recipientRegion['narrative'], $recipientRegionForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -801,7 +801,7 @@ class TransactionRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    public function getRulesForRecipientCountry(array $formFields, bool $fileUpload, array $activityRecipientCountries): array
+    public function getWarningForRecipientCountry(array $formFields, bool $fileUpload, array $activityRecipientCountries): array
     {
         if (empty($formFields)) {
             return [];
@@ -830,7 +830,7 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('recipient_country.%s', $recipientCountryIndex);
-            $narrativeRules = $this->getRulesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
+            $narrativeRules = $this->getWarningForNarrative($recipientCountry['narrative'], $recipientCountryForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -854,7 +854,7 @@ class TransactionRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    public function getCriticalRulesForRecipientCountry(array $formFields, bool $fileUpload, array $activityRecipientCountries): array
+    public function getErrorsForRecipientCountry(array $formFields, bool $fileUpload, array $activityRecipientCountries): array
     {
         if (empty($formFields)) {
             return [];
@@ -865,7 +865,7 @@ class TransactionRequest extends ActivityBaseRequest
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('recipient_country.%s', $recipientCountryIndex);
             $rules[sprintf('%s.country_code', $recipientCountryForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Country', 'Activity', false)));
-            $narrativeRules = $this->getCriticalRulesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
+            $narrativeRules = $this->getErrorsForNarrative($recipientCountry['narrative'], $recipientCountryForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;

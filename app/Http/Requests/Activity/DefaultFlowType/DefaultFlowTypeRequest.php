@@ -20,7 +20,7 @@ class DefaultFlowTypeRequest extends ActivityBaseRequest
      */
     public function rules($default_flow_type = null): array
     {
-        $totalRules = [$this->getCriticalRulesForDefaultFlowType($default_flow_type), $this->getRulesForDefaultFlowType()];
+        $totalRules = [$this->getErrorsForDefaultFlowType($default_flow_type), $this->getWarningForDefaultFlowType()];
 
         return mergeRules($totalRules);
     }
@@ -32,7 +32,7 @@ class DefaultFlowTypeRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForDefaultFlowType($default_flow_type = null): array
+    public function getErrorsForDefaultFlowType($default_flow_type = null): array
     {
         if ($default_flow_type && is_array($default_flow_type)) {
             return [
@@ -52,7 +52,7 @@ class DefaultFlowTypeRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForDefaultFlowType(): array
+    public function getWarningForDefaultFlowType(): array
     {
         return [];
     }

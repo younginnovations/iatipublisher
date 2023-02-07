@@ -154,7 +154,7 @@ class LegacyData extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForActivityLegacyData(Arr::get($this->data(), 'legacy_data', []));
+        return $this->request->getWarningForActivityLegacyData(Arr::get($this->data(), 'legacy_data', []));
     }
 
     /**
@@ -163,9 +163,9 @@ class LegacyData extends Element
      * @return array
      * @throws \JsonException
      */
-    public function criticalRules(): array
+    public function errorRules(): array
     {
-        return $this->request->getCriticalRulesForLegacyData(Arr::get($this->data(), 'legacy_data', []));
+        return $this->request->getErrorsForLegacyData(Arr::get($this->data(), 'legacy_data', []));
     }
 
     /**
@@ -189,8 +189,8 @@ class LegacyData extends Element
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
                                          ->getValidatorInstance();
-        $this->criticalValidator = $this->factory->sign($this->data())
-                                         ->with($this->criticalRules(), $this->messages())
+        $this->errorValidator = $this->factory->sign($this->data())
+                                         ->with($this->errorRules(), $this->messages())
                                          ->getValidatorInstance();
         $this->setValidity();
 

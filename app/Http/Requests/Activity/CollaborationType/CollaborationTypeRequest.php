@@ -20,7 +20,7 @@ class CollaborationTypeRequest extends ActivityBaseRequest
      */
     public function rules($collaboration = null): array
     {
-        $totalRules = [$this->getRulesForCollaborationType($collaboration), $this->getCriticalRulesForCollaborationType($collaboration)];
+        $totalRules = [$this->getWarningForCollaborationType($collaboration), $this->getErrorsForCollaborationType($collaboration)];
 
         return $mergeRules($totalRules);
     }
@@ -32,7 +32,7 @@ class CollaborationTypeRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForCollaborationType($collaboration = null): array
+    public function getErrorsForCollaborationType($collaboration = null): array
     {
         if ($collaboration && is_array($collaboration)) {
             return [
@@ -52,7 +52,7 @@ class CollaborationTypeRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForCollaborationType($collaboration = null): array
+    public function getWarningForCollaborationType($collaboration = null): array
     {
         return [];
     }

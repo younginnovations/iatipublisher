@@ -21,8 +21,8 @@ class RelatedActivityRequest extends ActivityBaseRequest
         $data = $this->get('related_activity');
 
         $totalRules = [
-            $this->getRulesForRelatedActivity($data),
-            $this->getCriticalRulesForRelatedActivity($data),
+            $this->getWarningForRelatedActivity($data),
+            $this->getErrorsForRelatedActivity($data),
         ];
 
         return mergeRules($totalRules);
@@ -45,7 +45,7 @@ class RelatedActivityRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForRelatedActivity(array $formFields): array
+    public function getErrorsForRelatedActivity(array $formFields): array
     {
         $rules = [];
         $relatedActivityType = implode(',', array_keys(getCodeList('RelatedActivityType', 'Activity', false)));
@@ -65,7 +65,7 @@ class RelatedActivityRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForRelatedActivity(array $formFields): array
+    public function getWarningForRelatedActivity(array $formFields): array
     {
         $rules = [];
 

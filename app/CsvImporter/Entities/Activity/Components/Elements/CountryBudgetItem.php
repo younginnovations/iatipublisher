@@ -244,7 +244,7 @@ class CountryBudgetItem extends Element
     public function rules(): array
     {
         if (Arr::get($this->data, 'country_budget_items')) {
-            return $this->getBaseRules($this->request->getRulesForCountryBudgetItem(Arr::get($this->data, 'country_budget_items', [])), false);
+            return $this->getBaseRules($this->request->getWarningForCountryBudgetItem(Arr::get($this->data, 'country_budget_items', [])), false);
         }
 
         return [];
@@ -256,10 +256,10 @@ class CountryBudgetItem extends Element
      * @return array
      * @throws \JsonException
      */
-    public function criticalRules(): array
+    public function errorRules(): array
     {
         if (Arr::get($this->data, 'country_budget_items')) {
-            return $this->getBaseRules($this->request->getCriticalRulesForCountryBudgetItem(Arr::get($this->data, 'country_budget_items', [])), false);
+            return $this->getBaseRules($this->request->getErrorsForCountryBudgetItem(Arr::get($this->data, 'country_budget_items', [])), false);
         }
 
         return [];
@@ -286,8 +286,8 @@ class CountryBudgetItem extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
-        $this->criticalValidator = $this->factory->sign($this->data())
-            ->with($this->criticalRules(), $this->messages())
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
         $this->setValidity();
 

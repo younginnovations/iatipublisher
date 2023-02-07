@@ -22,7 +22,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        $totalRules = [$this->getRulesForRecipientCountry($this->get('recipient_country')), $this->getCriticalRulesForRecipientCountry($this->get('recipient_country'))];
+        $totalRules = [$this->getWarningForRecipientCountry($this->get('recipient_country')), $this->getErrorsForRecipientCountry($this->get('recipient_country'))];
 
         return mergeRules($totalRules);
     }
@@ -56,7 +56,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
         return $total;
     }
 
-    public function getCriticalRulesForRecipientCountry(array $formFields, bool $fileUpload = false): array
+    public function getErrorsForRecipientCountry(array $formFields, bool $fileUpload = false): array
     {
         if (empty($formFields)) {
             return [];
@@ -69,7 +69,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
             $rules[sprintf('%s.country_code', $recipientCountryForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Country', 'Activity', false)));
             $rules[$recipientCountryForm . '.percentage'] = 'nullable|numeric|min:0';
 
-            $narrativeRules = $this->getCriticalRulesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
+            $narrativeRules = $this->getErrorsForNarrative($recipientCountry['narrative'], $recipientCountryForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -88,7 +88,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    public function getRulesForRecipientCountry(array $formFields, bool $fileUpload = false): array
+    public function getWarningForRecipientCountry(array $formFields, bool $fileUpload = false): array
     {
         if (empty($formFields)) {
             return [];
@@ -139,9 +139,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
                 $rules[sprintf('%s.country_code', $recipientCountryForm)][] = 'duplicate_country_code';
             }
 
-            $rules[$recipientCountryForm . '.percentage'] = 'numeric|min:0';
-
-            $narrativeRules = $this->getRulesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
+            $narrativeRules = $this->getWarningForNarrative($recipientCountry['narrative'], $recipientCountryForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;

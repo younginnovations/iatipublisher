@@ -15,6 +15,7 @@
         :transactions="{{ json_encode($transactions) }}"
         :core-completed="{{ json_encode($coreCompleted) }}"
         :iati-validator-response="{{ json_encode($iatiValidatorResponse) }}"
+        :import-activity-error="{{ json_encode($importActivityError) }}"
     >
     </activities-detail>
 @endsection

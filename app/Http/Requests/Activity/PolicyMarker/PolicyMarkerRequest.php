@@ -22,8 +22,8 @@ class PolicyMarkerRequest extends ActivityBaseRequest
         $data = $this->get('policy_marker');
 
         $totalRules = [
-            $this->getRulesForPolicyMarker($data),
-            $this->getCriticalRulesForPolicyMarker($data),
+            $this->getWarningForPolicyMarker($data),
+            $this->getErrorsForPolicyMarker($data),
         ];
 
         return mergeRules($totalRules);
@@ -46,14 +46,14 @@ class PolicyMarkerRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForPolicyMarker(array $formFields): array
+    public function getWarningForPolicyMarker(array $formFields): array
     {
         $rules = [];
 
         foreach ($formFields as $policyMarkerIndex => $policyMarker) {
             $policyMarkerForm = sprintf('policy_marker.%s', $policyMarkerIndex);
 
-            foreach ($this->getRulesForNarrative($policyMarker['narrative'], $policyMarkerForm) as $policyMarkerNarrativeIndex => $narrativeRules) {
+            foreach ($this->getWarningForNarrative($policyMarker['narrative'], $policyMarkerForm) as $policyMarkerNarrativeIndex => $narrativeRules) {
                 $rules[$policyMarkerNarrativeIndex] = $narrativeRules;
             }
 
@@ -74,7 +74,7 @@ class PolicyMarkerRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForPolicyMarker(array $formFields): array
+    public function getErrorsForPolicyMarker(array $formFields): array
     {
         $rules = [];
 
@@ -85,7 +85,7 @@ class PolicyMarkerRequest extends ActivityBaseRequest
             $rules[sprintf('%s.policy_marker', $policyMarkerForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('PolicyMarker', 'Activity', false)));
             $rules[sprintf('%s.vocabulary_uri', $policyMarkerForm)] = 'nullable|url';
 
-            foreach ($this->getCriticalRulesForNarrative($policyMarker['narrative'], $policyMarkerForm) as $policyMarkerNarrativeIndex => $narrativeRules) {
+            foreach ($this->getErrorsForNarrative($policyMarker['narrative'], $policyMarkerForm) as $policyMarkerNarrativeIndex => $narrativeRules) {
                 $rules[$policyMarkerNarrativeIndex] = $narrativeRules;
             }
         }

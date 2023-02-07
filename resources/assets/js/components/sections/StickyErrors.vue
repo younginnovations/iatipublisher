@@ -41,13 +41,21 @@
         >
           <ErrorLists v-if="error.length > 0" :type="e" :errors="error" />
         </div>
+        <div
+          v-for="(error, e) in importErrors"
+          :key="e"
+          :class="{ 'mb-4': Number(e) != Object.keys(tempData).length - 1 }"
+        >
+          {{ error }}
+          <!-- <ErrorLists v-if="error.length > 0" :type="e" :errors="error" /> -->
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { toRefs, reactive, watch, defineProps } from 'vue';
+import { toRefs, reactive, watch, defineProps, inject } from 'vue';
 import { useToggle } from '@vueuse/core';
 
 // components
@@ -59,6 +67,7 @@ const props = defineProps({
 
 // toggle issues
 const [errorValue, errorToggle] = useToggle();
+const importErrors = inject('importActivityError');
 
 /**
  * list of errors

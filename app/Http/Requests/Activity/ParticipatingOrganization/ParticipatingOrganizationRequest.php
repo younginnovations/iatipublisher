@@ -19,7 +19,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
     public function rules($participating_org = []): array
     {
         $data = $this->get('participating_org') ?? [];
-        $totalRules = [$this->getRulesForParticipatingOrg($data), $this->getCriticalRulesForParticipatingOrg($data)];
+        $totalRules = [$this->getWarningForParticipatingOrg($data), $this->getErrorsForParticipatingOrg($data)];
 
         return mergeRules($totalRules);
     }
@@ -40,7 +40,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
      *
      * @return array|mixed
      */
-    public function getRulesForParticipatingOrg($formFields): array
+    public function getWarningForParticipatingOrg($formFields): array
     {
         $rules = [];
 
@@ -49,7 +49,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
             $identifier = $participatingOrgForm . '.identifier';
             $rules[$identifier] = 'nullable|exclude_operators';
 
-            foreach ($this->getRulesForNarrative($participatingOrg['narrative'], $participatingOrgForm) as $participatingNarrativeIndex => $narrativeRules) {
+            foreach ($this->getWarningForNarrative($participatingOrg['narrative'], $participatingOrgForm) as $participatingNarrativeIndex => $narrativeRules) {
                 $rules[$participatingNarrativeIndex] = $narrativeRules;
             }
         }
@@ -64,7 +64,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
      *
      * @return array|mixed
      */
-    public function getCriticalRulesForParticipatingOrg($formFields): array
+    public function getErrorsForParticipatingOrg($formFields): array
     {
         $rules = [];
 
@@ -75,7 +75,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
             $rules[sprintf('%s.type', $participatingOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
             $rules[sprintf('%s.crs_channel_code', $participatingOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('CRSChannelCode', 'Activity', false)));
 
-            foreach ($this->getCriticalRulesForNarrative($participatingOrg['narrative'], $participatingOrgForm) as $participatingNarrativeIndex => $narrativeRules) {
+            foreach ($this->getErrorsForNarrative($participatingOrg['narrative'], $participatingOrgForm) as $participatingNarrativeIndex => $narrativeRules) {
                 $rules[$participatingNarrativeIndex] = $narrativeRules;
             }
         }

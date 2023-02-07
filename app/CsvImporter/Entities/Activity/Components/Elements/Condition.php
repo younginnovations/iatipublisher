@@ -216,7 +216,7 @@ class Condition extends Element
      */
     public function rules(): array
     {
-        $rules = $this->getBaseRules($this->request->getRulesForCondition(Arr::get($this->data, 'conditions.condition', [])), false);
+        $rules = $this->getBaseRules($this->request->getWarningForCondition(Arr::get($this->data, 'conditions.condition', [])), false);
 
         return $rules;
     }
@@ -227,9 +227,9 @@ class Condition extends Element
      * @return array
      * @throws \JsonException
      */
-    public function criticalRules(): array
+    public function errorRules(): array
     {
-        $rules = $this->getBaseRules($this->request->getCriticalRulesForCondition(Arr::get($this->data, 'conditions.condition', [])), false);
+        $rules = $this->getBaseRules($this->request->getErrorsForCondition(Arr::get($this->data, 'conditions.condition', [])), false);
         $rules['conditions.condition_attached'] = 'in:0,1';
 
         return $rules;
@@ -259,8 +259,8 @@ class Condition extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
-        $this->criticalValidator = $this->factory->sign($this->data())
-            ->with($this->criticalRules(), $this->messages())
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
         $this->setValidity();
 

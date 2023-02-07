@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\XmlImporter\Foundation\Support\Factory;
 
-use App\XmlImporter\Foundation\Support\Factory\Traits\CriticalValidationRules;
+use App\Http\Requests\Activity\Title\TitleRequest;
+use App\XmlImporter\Foundation\Support\Factory\Traits\ErrorValidationRules;
 use App\XmlImporter\Foundation\Support\Factory\Traits\ValidationMessages;
-use App\XmlImporter\Foundation\Support\Factory\Traits\ValidationRules;
+use App\XmlImporter\Foundation\Support\Factory\Traits\WarningValidationRules;
 
 /**
  * Class XmlValidator.
  */
 class XmlValidator
 {
-    use CriticalValidationRules;
-    use ValidationRules;
+    use ErrorValidationRules;
+    use WarningValidationRules;
     use ValidationMessages;
 
     /**
@@ -36,6 +37,8 @@ class XmlValidator
     }
 
     /**
+     * Returns warnings for xml uploaded activity.
+     *
      * @return array
      */
     public function rules(): array
@@ -44,37 +47,37 @@ class XmlValidator
         $rules = [];
 
         $tempRules = [
-            $this->rulesForActivityStatus($activity),
-            $this->rulesForActivityScope($activity),
-            $this->rulesForCollaborationType($activity),
-            $this->rulesForDefaultFlowType($activity),
-            $this->rulesForDefaultFinanceType($activity),
-            $this->rulesForDefaultTiedStatus($activity),
-            $this->rulesForCapitalSpend($activity),
-            $this->rulesForTitle($activity),
-            $this->rulesForDescription($activity),
-            $this->rulesForOtherIdentifier($activity),
-            $this->rulesForActivityDate($activity),
-            $this->rulesForDefaultAidType($activity),
-            $this->rulesForContactInfo($activity),
-            $this->rulesForParticipatingOrg($activity),
-            $this->rulesForRecipientCountry($activity),
-            $this->rulesForRecipientRegion($activity),
-            $this->rulesForLocation($activity),
-            $this->rulesForSector($activity),
-            $this->rulesForTag($activity),
-            $this->rulesForCountryBudgetItems($activity),
-            $this->rulesForHumanitarianScope($activity),
-            $this->rulesForPolicyMarker($activity),
-            $this->rulesForBudget($activity),
-            $this->rulesForPlannedDisbursement($activity),
-            $this->rulesForDocumentLink($activity),
-            $this->rulesForRelatedActivity($activity),
-            $this->rulesForLegacyData($activity),
-            $this->rulesForCondition($activity),
-            $this->rulesForTransaction($activity),
-            $this->rulesForResult($activity),
-            $this->rulesForReportingOrganization($activity),
+            $this->warningForActivityStatus($activity),
+            $this->warningForActivityScope($activity),
+            $this->warningForCollaborationType($activity),
+            $this->warningForDefaultFlowType($activity),
+            $this->warningForDefaultFinanceType($activity),
+            $this->warningForDefaultTiedStatus($activity),
+            $this->warningForCapitalSpend($activity),
+            $this->warningForTitle($activity),
+            $this->warningForDescription($activity),
+            $this->warningForOtherIdentifier($activity),
+            $this->warningForActivityDate($activity),
+            $this->warningForDefaultAidType($activity),
+            $this->warningForContactInfo($activity),
+            $this->warningForParticipatingOrg($activity),
+            $this->warningForRecipientCountry($activity),
+            $this->warningForRecipientRegion($activity),
+            $this->warningForLocation($activity),
+            $this->warningForSector($activity),
+            $this->warningForTag($activity),
+            $this->warningForCountryBudgetItems($activity),
+            $this->warningForHumanitarianScope($activity),
+            $this->warningForPolicyMarker($activity),
+            $this->warningForBudget($activity),
+            $this->warningForPlannedDisbursement($activity),
+            $this->warningForDocumentLink($activity),
+            $this->warningForRelatedActivity($activity),
+            $this->warningForLegacyData($activity),
+            $this->warningForCondition($activity),
+            $this->warningForTransaction($activity),
+            $this->warningForResult($activity),
+            $this->warningForReportingOrganization($activity),
         ];
 
         foreach ($tempRules as $tempRule) {
@@ -87,45 +90,46 @@ class XmlValidator
     }
 
     /**
+     * Returns error rules for xml uploaded activity.
+     *
      * @return array
      */
-    public function criticalRules(): array
+    public function errorRules(): array
     {
         $activity = $this->activity;
         $rules = [];
 
         $tempRules = [
-            $this->criticalRulesForActivityStatus($activity),
-            $this->criticalRulesForActivityScope($activity),
-            $this->criticalRulesForCollaborationType($activity),
-            $this->criticalRulesForDefaultFlowType($activity),
-            $this->criticalRulesForDefaultFinanceType($activity),
-            $this->criticalRulesForDefaultTiedStatus($activity),
-            $this->criticalRulesForCapitalSpend($activity),
-            $this->criticalRulesForTitle($activity),
-            $this->criticalRulesForDescription($activity),
-            $this->criticalRulesForOtherIdentifier($activity),
-            $this->criticalRulesForActivityDate($activity),
-            $this->criticalRulesForDefaultAidType($activity),
-            $this->criticalRulesForContactInfo($activity),
-            $this->criticalRulesForParticipatingOrg($activity),
-            $this->criticalRulesForRecipientCountry($activity),
-            $this->criticalRulesForRecipientRegion($activity),
-            $this->criticalRulesForLocation($activity),
-            $this->criticalRulesForSector($activity),
-            $this->criticalRulesForTag($activity),
-            $this->criticalRulesForCountryBudgetItem($activity),
-            $this->criticalRulesForHumanitarianScope($activity),
-            $this->criticalRulesForPolicyMarker($activity),
-            $this->criticalRulesForBudget($activity),
-            $this->criticalRulesForPlannedDisbursement($activity),
-            $this->criticalRulesForDocumentLink($activity),
-            $this->criticalRulesForRelatedActivity($activity),
-            $this->criticalRulesForLegacyData($activity),
-            $this->criticalRulesForCondition($activity),
-            $this->criticalRulesForTransaction($activity),
-            $this->criticalRulesForResult($activity),
-            $this->criticalRulesForReportingOrganization($activity),
+            $this->errorForActivityStatus($activity),
+            $this->errorForActivityScope($activity),
+            $this->errorForCollaborationType($activity),
+            $this->errorForDefaultFlowType($activity),
+            $this->errorForDefaultFinanceType($activity),
+            $this->errorForDefaultTiedStatus($activity),
+            $this->errorForCapitalSpend($activity),
+            $this->errorForDescription($activity),
+            $this->errorForOtherIdentifier($activity),
+            $this->errorForActivityDate($activity),
+            $this->errorForDefaultAidType($activity),
+            $this->errorForContactInfo($activity),
+            $this->errorForParticipatingOrg($activity),
+            $this->errorForRecipientCountry($activity),
+            $this->errorForRecipientRegion($activity),
+            $this->errorForLocation($activity),
+            $this->errorForSector($activity),
+            $this->errorForTag($activity),
+            $this->errorForCountryBudgetItem($activity),
+            $this->errorForHumanitarianScope($activity),
+            $this->errorForPolicyMarker($activity),
+            $this->errorForBudget($activity),
+            $this->errorForPlannedDisbursement($activity),
+            $this->errorForDocumentLink($activity),
+            $this->errorForRelatedActivity($activity),
+            $this->errorForLegacyData($activity),
+            $this->errorForCondition($activity),
+            $this->errorForTransaction($activity),
+            $this->errorForResult($activity),
+            $this->errorForReportingOrganization($activity),
         ];
 
         foreach ($tempRules as $tempRule) {
@@ -135,6 +139,17 @@ class XmlValidator
         }
 
         return $rules;
+    }
+
+    /**
+     * Returns critical rules for xml uploaded activity.
+     * @return array
+     */
+    public function criticalRules(): array
+    {
+        $activity = $this->activity;
+
+        return (new TitleRequest())->getErrorsForTitle('title');
     }
 
     /**
@@ -210,6 +225,9 @@ class XmlValidator
             'warning' => $this->factory->initialize($this->activity, $this->rules(), $this->messages())
                 ->passes()
                 ->withErrors(),
+            'error' => $this->factory->initialize($this->activity, $this->errorRules(), $this->messages())
+                ->passes()
+                ->withErrors(),
             'critical' => $this->factory->initialize($this->activity, $this->criticalRules(), $this->messages())
                 ->passes()
                 ->withErrors(),
@@ -220,11 +238,17 @@ class XmlValidator
         }
 
         if ($duplicateTransaction) {
-            $errors['critical']['transactions']['transaction.reference'] = 'The activity contains duplicate transactions.';
+            $errors['warning']['transactions']['transaction.reference'] = 'The activity contains duplicate transactions.';
         }
 
         if (!$isIdentifierValid) {
             $errors['critical']['activity_identifier']['activity_identifier.activity_identifier'] = 'The activity is invalid. Please ensure that the activity identifier matches with organization identifier.';
+        }
+
+        foreach ($errors as $key => $value) {
+            if (empty($value)) {
+                unset($errors[$key]);
+            }
         }
 
         return $errors;

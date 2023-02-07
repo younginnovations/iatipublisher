@@ -162,8 +162,8 @@ class Transaction extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
-        $this->criticalValidator = $this->factory->sign($this->data())
-            ->with($this->criticalRules(), $this->messages())
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
 
         $this->setValidity();
@@ -180,7 +180,7 @@ class Transaction extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->getRulesForTransaction(Arr::get($this->data, 'transaction', []), true, $this->getActivityData()), false);
+        return $this->getBaseRules($this->request->getWarningForTransaction(Arr::get($this->data, 'transaction', []), true, $this->getActivityData()), false);
     }
 
     /**
@@ -189,9 +189,9 @@ class Transaction extends Element
      * @return array
      * @throw \JsonException
      */
-    public function criticalRules(): array
+    public function errorRules(): array
     {
-        return $this->getBaseRules($this->request->getCriticalRulesForTransaction(Arr::get($this->data, 'transaction', []), true, $this->getActivityData()), false);
+        return $this->getBaseRules($this->request->getErrorsForTransaction(Arr::get($this->data, 'transaction', []), true, $this->getActivityData()), false);
     }
 
     /**

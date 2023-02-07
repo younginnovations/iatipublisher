@@ -24,7 +24,7 @@ class PeriodRequest extends ActivityBaseRequest
     public function rules(): array
     {
         $data = request()->except(['_token']);
-        $totalRules = [$this->getRulesForPeriod($data), $this->getCriticalRulesForPeriod($data)];
+        $totalRules = [$this->getWarningForPeriod($data), $this->getErrorsForPeriod($data)];
 
         return mergeRules($totalRules);
     }
@@ -48,14 +48,14 @@ class PeriodRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    public function getRulesForPeriod(array $formFields, bool $fileUpload = false, array $indicator = [], $periodBase = []): array
+    public function getWarningForPeriod(array $formFields, bool $fileUpload = false, array $indicator = [], $periodBase = []): array
     {
         $rules = [];
         $tempRules = [
-            $this->getRulesForResultPeriodStart($formFields['period_start'], 'period_start'),
-            $this->getRulesForResultPeriodEnd($formFields['period_end'], 'period_end', $periodBase),
-            $this->getRulesForTarget($formFields['target'], 'target', $fileUpload, $indicator),
-            $this->getRulesForTarget($formFields['actual'], 'actual', $fileUpload, $indicator),
+            $this->getWarningForResultPeriodStart($formFields['period_start'], 'period_start'),
+            $this->getWarningForResultPeriodEnd($formFields['period_end'], 'period_end', $periodBase),
+            $this->getWarningForTarget($formFields['target'], 'target', $fileUpload, $indicator),
+            $this->getWarningForTarget($formFields['actual'], 'actual', $fileUpload, $indicator),
         ];
 
         foreach ($tempRules as $index => $tempRule) {
@@ -75,14 +75,14 @@ class PeriodRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    public function getCriticalRulesForPeriod(array $formFields, bool $fileUpload = false, array $indicator = [], $periodBase = []): array
+    public function getErrorsForPeriod(array $formFields, bool $fileUpload = false, array $indicator = [], $periodBase = []): array
     {
         $rules = [];
         $tempRules = [
-            $this->getCriticalRulesForResultPeriodStart($formFields['period_start'], 'period_start'),
-            $this->getCriticalRulesForResultPeriodEnd($formFields['period_end'], 'period_end', $periodBase),
-            $this->getCriticalRulesForTarget($formFields['target'], 'target', $fileUpload, $indicator),
-            $this->getCriticalRulesForTarget($formFields['actual'], 'actual', $fileUpload, $indicator),
+            $this->getErrorsForResultPeriodStart($formFields['period_start'], 'period_start'),
+            $this->getErrorsForResultPeriodEnd($formFields['period_end'], 'period_end', $periodBase),
+            $this->getErrorsForTarget($formFields['target'], 'target', $fileUpload, $indicator),
+            $this->getErrorsForTarget($formFields['actual'], 'actual', $fileUpload, $indicator),
         ];
 
         foreach ($tempRules as $index => $tempRule) {
@@ -129,7 +129,7 @@ class PeriodRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForResultPeriodStart($formFields, $periodType): array
+    protected function getWarningForResultPeriodStart($formFields, $periodType): array
     {
         $rules = [];
 
@@ -148,7 +148,7 @@ class PeriodRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getCriticalRulesForResultPeriodStart($formFields, $periodType): array
+    protected function getErrorsForResultPeriodStart($formFields, $periodType): array
     {
         $rules = [];
 
@@ -167,7 +167,7 @@ class PeriodRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForResultPeriodEnd($formFields, $periodType, $periodBase): array
+    protected function getWarningForResultPeriodEnd($formFields, $periodType, $periodBase): array
     {
         $rules = [];
 
@@ -190,7 +190,7 @@ class PeriodRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getCriticalRulesForResultPeriodEnd($formFields, $periodType, $periodBase): array
+    protected function getErrorsForResultPeriodEnd($formFields, $periodType, $periodBase): array
     {
         $rules = [];
 
@@ -252,7 +252,7 @@ class PeriodRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    protected function getRulesForTarget($formFields, $valueType, $fileUpload, $indicator): array
+    protected function getWarningForTarget($formFields, $valueType, $fileUpload, $indicator): array
     {
         $rules = [];
 
@@ -274,8 +274,8 @@ class PeriodRequest extends ActivityBaseRequest
 
         foreach ($formFields as $targetIndex => $target) {
             $targetForm = sprintf('%s.%s', $valueType, $targetIndex);
-            $narrativeRules = $this->getRulesForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm));
-            $docLinkRules = $this->getRulesForDocumentLink($target['document_link'], $targetForm);
+            $narrativeRules = $this->getWarningForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm));
+            $docLinkRules = $this->getWarningForDocumentLink($target['document_link'], $targetForm);
 
             foreach ($narrativeRules as $key => $narrativeRule) {
                 $rules[$key] = $narrativeRule;
@@ -304,14 +304,14 @@ class PeriodRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    protected function getCriticalRulesForTarget($formFields, $valueType, $fileUpload, $indicator): array
+    protected function getErrorsForTarget($formFields, $valueType, $fileUpload, $indicator): array
     {
         $rules = [];
 
         foreach ($formFields as $targetIndex => $target) {
             $targetForm = sprintf('%s.%s', $valueType, $targetIndex);
-            $narrativeRules = $this->getCriticalRulesForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm));
-            $docLinkRules = $this->getCriticalRulesForDocumentLink($target['document_link'], $targetForm);
+            $narrativeRules = $this->getErrorsForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm));
+            $docLinkRules = $this->getErrorsForDocumentLink($target['document_link'], $targetForm);
 
             foreach ($narrativeRules as $key => $narrativeRule) {
                 $rules[$key] = $narrativeRule;

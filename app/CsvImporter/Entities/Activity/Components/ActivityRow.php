@@ -256,7 +256,7 @@ class ActivityRow extends Row
     public function keep(): void
     {
         /*$this->makeDirectoryIfNonExistent()
-            ->writeCsvDataAsJson($this->getCsvFilepath());*/
+        ->writeCsvDataAsJson($this->getCsvFilepath());*/
 
         $path = sprintf('%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, self::VALID_CSV_FILE);
         $this->writeCsvDataAsJson($path);
@@ -302,7 +302,7 @@ class ActivityRow extends Row
     {
         $this->mapTransactionData();
 
-        foreach ($this->transactionRows as $transactionRow) {
+        foreach ($this->transactionRows as $index => $transactionRow) {
             $namespace = $this->getNamespace($this->transactionElement(), self::BASE_NAMESPACE);
 
             if (class_exists($namespace)) {
@@ -389,7 +389,7 @@ class ActivityRow extends Row
      *
      * @return array|string
      */
-    protected function transactionElement(): array|string
+    protected function transactionElement(): array |string
     {
         return $this->transactionElement;
     }
@@ -413,9 +413,9 @@ class ActivityRow extends Row
     {
         foreach ($this->elements() as $element) {
             if ($element === 'transaction') {
-                foreach ($this->$element as $transaction) {
-                    $transaction->validate()->withErrors();
-                    $this->recordErrors($element, $transaction);
+                foreach ($this->$element as $index => $transaction) {
+                    $transaction->validate()->withErrors($index);
+                    $this->recordErrors($element, $transaction, true);
 
                     $this->validElements[] = $transaction->isElementValid();
                 }
@@ -477,7 +477,7 @@ class ActivityRow extends Row
      *
      * @return array|string|int
      */
-    protected function data(): array|string|int
+    protected function data(): array |string|int
     {
         $this->data = [];
 
@@ -564,23 +564,63 @@ class ActivityRow extends Row
      */
     public function errors(): array
     {
-        return $this->errors;
+        $tempErrors = $this->errors;
+
+        foreach ($this->errors as $key =>$value) {
+            if (empty($tempErrors[$key])) {
+                unset($tempErrors[$key]);
+            }
+        }
+
+        return $tempErrors;
     }
 
     /**
-     * Record errors within the ActivityRow.
+     * Record errors into warning, error and critical.
      *
-     * @param $element
+     * @param mixed $name
+     * @param mixed $element
+     * @param bool $isTransaction
+     *
+     * @return void
      */
-    protected function recordErrors($name, $element): void
+    protected function recordErrors($name, $element, $isTransaction = false): void
     {
-        if (!empty($element->errors())) {
-            $this->errors['warning'][$name] = $element->errors();
+        if (!empty($element->warnings())) {
+            $this->errors['warning'][$name] = $isTransaction ? $this->mergeTransactionErrors('warning', $element) : $element->warnings();
         }
 
-        if (!empty($element->criticalErrors())) {
-            $this->errors['critical'][$name] = $element->criticalErrors();
+        if (!empty($element->errors())) {
+            $this->errors['error'][$name] = $isTransaction ? $this->mergeTransactionErrors('error', $element) : $element->errors();
         }
+
+        if (!empty($element->criticals())) {
+            $this->errors['critical'][$name] = $isTransaction ? $this->mergeTransactionErrors('critical', $element) : $element->criticals();
+        }
+    }
+
+    /**
+     * Merge error of multiple transaction within activity.
+     *
+     * @param string $ruleType
+     * @param $element
+     *
+     * @return array
+     */
+    protected function mergeTransactionErrors($ruleType, $element) : array
+    {
+        $currentErrors = call_user_func([$element, $ruleType . 's']);
+        $existingErrors = Arr::get($this->errors, "$ruleType.transaction", []);
+
+        if (!empty($existingErrors)) {
+            foreach ($currentErrors as $index => $errorMessage) {
+                $existingErrors[$index] = $errorMessage;
+            }
+
+            return $existingErrors;
+        }
+
+        return $currentErrors;
     }
 
     /**
@@ -677,7 +717,7 @@ class ActivityRow extends Row
     protected function containsDuplicateTransactions($references): bool
     {
         if ((!empty($references)) && (count(array_unique($references)) !== count($references))) {
-            $this->errors['transactions']['transactions.reference'] = 'There are duplicate Transactions for this Activity in the uploaded Csv File.';
+            $this->errors['warning']['transactions']['transactions.reference'] = 'There are duplicate Transactions for this Activity in the uploaded Csv File.';
 
             return true;
         }
@@ -695,7 +735,7 @@ class ActivityRow extends Row
     protected function containsDuplicateActivities($commonIdentifierCount): bool
     {
         if ($commonIdentifierCount > 1) {
-            $this->errors['activity_identifier']['activity_identifier'] = 'This Activity has been duplicated in the uploaded Csv File.';
+            $this->errors['critical']['activity_identifier']['activity_identifier'] = 'This Activity has been duplicated in the uploaded Csv File.';
 
             return true;
         }

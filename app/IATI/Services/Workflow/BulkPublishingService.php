@@ -198,7 +198,7 @@ class BulkPublishingService
         ];
 
         foreach ($totalResponse as $response) {
-            $modifiedResponse = $this->checkActivityErrors($response, $modifiedResponse);
+            $modifiedResponse = $this->checkActivityError($response, $modifiedResponse);
         }
 
         return $modifiedResponse;
@@ -212,7 +212,7 @@ class BulkPublishingService
      *
      * @return array
      */
-    public function checkActivityErrors($response, $modifiedResponse): array
+    public function checkActivityError($response, $modifiedResponse): array
     {
         $summary = Arr::get($response, 'response.summary', []);
 

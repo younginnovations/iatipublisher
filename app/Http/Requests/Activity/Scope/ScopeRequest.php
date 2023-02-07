@@ -20,7 +20,7 @@ class ScopeRequest extends ActivityBaseRequest
      */
     public function rules($scope = null): array
     {
-        $totalRules = [$this->getCriticalRulesForActivityScope($scope), $this->getRulesForActivityScope()];
+        $totalRules = [$this->getErrorsForActivityScope($scope), $this->getWarningForActivityScope()];
 
         return mergeRules($totalRules);
     }
@@ -28,7 +28,7 @@ class ScopeRequest extends ActivityBaseRequest
     /**
      * Return general rules for scope.
      */
-    public function getRulesForActivityScope(): array
+    public function getWarningForActivityScope(): array
     {
         return [];
     }
@@ -40,7 +40,7 @@ class ScopeRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalRulesForActivityScope($scope = null): array
+    public function getErrorsForActivityScope($scope = null): array
     {
         if ($scope && is_array($scope)) {
             return [
