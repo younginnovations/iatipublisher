@@ -110,6 +110,7 @@
             <Placeholder />
           </template>
           <tr
+            class="hover:!bg-white"
             v-for="(activity, index) in activities"
             v-else
             :key="index"
@@ -236,3 +237,4 @@ function importActivities() {
     });
 }
 </script>
+<style scoped></style>
