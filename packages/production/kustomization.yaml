@@ -8,6 +8,7 @@ resources:
 - config.yaml
 - cronjob.yaml
 - ingress.yaml
+- pvc.yaml
 - github-credentails-sealed-secret.yaml
 
 images:
