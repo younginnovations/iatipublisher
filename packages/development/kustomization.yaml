@@ -7,6 +7,7 @@ resources:
 - sealed-secret.yaml
 - config.yaml
 - ingress.yaml
+- pvc.yaml
 - github-credentails-sealed-secret.yaml
 
 images:
