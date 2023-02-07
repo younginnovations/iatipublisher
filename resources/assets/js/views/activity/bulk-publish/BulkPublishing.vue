@@ -56,7 +56,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, reactive, watch, inject } from 'vue';
+import { onMounted, ref, reactive, watch, onUpdated, inject } from 'vue';
 import axios from 'axios';
 import { detailStore } from 'Store/activities/show';
 
@@ -102,6 +102,10 @@ let hasFailedActivities = reactive({
   data: {} as actElements,
   ids: [] as number[],
   status: false,
+});
+
+onUpdated(() => {
+  console.log(activities.value);
 });
 
 let intervalID;
