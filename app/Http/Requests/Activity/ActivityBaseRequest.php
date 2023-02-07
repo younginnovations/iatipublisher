@@ -320,6 +320,11 @@ class ActivityBaseRequest extends FormRequest
             if (!empty(Arr::get($narrative, 'language', ''))) {
                 $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with_language:' . $narrative['narrative'];
             }
+//            if (in_array($sectorVocabulary, ['99', '98'])) {
+//                $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required';
+//            } elseif (!empty(Arr::get($narrative, 'language', ''))) {
+//                $rules[sprintf('%s.narrative.%s.narrative', $formBase, $narrativeIndex)][] = 'required_with_language:' . $narrative['narrative'];
+//            }
         }
 
         return $rules;
@@ -350,6 +355,11 @@ class ActivityBaseRequest extends FormRequest
                 $formBase,
                 $narrativeIndex
             )] = 'The @xml:lang field is invalid.';
+            $messages[sprintf(
+                '%s.narrative.%s.narrative.required',
+                $formBase,
+                $narrativeIndex
+            )] = 'The narrative field is required.';
         }
 
         return $messages;

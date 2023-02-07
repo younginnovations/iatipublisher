@@ -230,7 +230,6 @@ class TransactionRequest extends ActivityBaseRequest
     public function getDescriptionRules(array $formFields): array
     {
         $rules = [];
-
         foreach ($formFields as $descriptionIndex => $description) {
             $narrativeForm = sprintf('description.%s', $descriptionIndex);
             $narrativeRules = $this->getRulesForNarrative($description['narrative'], $narrativeForm);
@@ -287,7 +286,6 @@ class TransactionRequest extends ActivityBaseRequest
 
         if (!$fileUpload) {
             $params = $this->route()->parameters();
-
             if (!$activityService->isElementEmpty($formFields, 'sectorFields') && $activityService->hasSectorDefinedInActivity($params['id'])) {
                 Validator::extend('already_in_activity', function () {
                     return false;
