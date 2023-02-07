@@ -134,9 +134,6 @@
         </tr>
       </tbody>
       <tbody v-else>
-        <!-- <tr v-if="loader" class=" text-center ">
-          <div colspan="5" class="spin"></div>
-        </tr> -->
         <td v-if="loader" colspan="5" class="text-center">
           <div colspan="5" class="spin"></div>
         </td>
