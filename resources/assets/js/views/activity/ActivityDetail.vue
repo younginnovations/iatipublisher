@@ -84,16 +84,19 @@
               <!-- {{ typeof toastData.message }} -->
               <div class="inline-flex items-center justify-end gap-3">
                 <!-- Delete Activity -->
-                <DeleteButton />
+                <DeleteButton v-if="loaded" />
 
                 <!-- Unpublish Activity -->
                 <UnPublish
+                  @load="buttonLoaded"
                   v-if="store.state.unPublished"
                   :activity-id="activityProps.id"
                 />
 
                 <!-- Publish Activity -->
                 <Publish
+                  @load="buttonLoaded"
+                  @loading="buttonLoading"
                   v-if="store.state.showPublished"
                   :linked-to-iati="activityProps.linked_to_iati"
                   :status="activityProps.status"
@@ -446,7 +449,7 @@ export default defineComponent({
     const showSidebar = ref(false);
     const positionY = ref(0);
     const screenWidth = ref(0);
-
+    const loaded = ref(false);
     const toastData = reactive({
       visibility: false,
       message: '',
@@ -463,7 +466,12 @@ export default defineComponent({
      */
     const [deleteValue, deleteToggle] = useToggle();
     const [downloadValue, downloadToggle] = useToggle();
-
+    const buttonLoaded = () => {
+      loaded.value = true;
+    };
+    const buttonLoading = () => {
+      loaded.value = false;
+    };
     const toggleSidebar = () => {
       showSidebar.value = !showSidebar.value;
     };
@@ -488,14 +496,8 @@ export default defineComponent({
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
-        console.log(
-          props.toast.message.charAt(0).toUpperCase() +
-            props.toast.message.slice(1).replace('_', '-')
-        );
-        toastData.message =
-          props.toast.message.charAt(0).toUpperCase() +
-          props.toast.message.slice(1).replace('_', '-');
-        console.log(toastData.message);
+
+        toastData.message = props.toast.message;
       }
     });
     const calcWidth = (event) => {
@@ -706,6 +708,7 @@ export default defineComponent({
       downloadToggle,
       toastData,
       elementProps,
+      loaded,
       props,
       formatTitle,
       pageTitle,
@@ -719,6 +722,8 @@ export default defineComponent({
       toggleSidebar,
       istopVisible,
       screenWidth,
+      buttonLoaded,
+      buttonLoading,
       width,
     };
   },
