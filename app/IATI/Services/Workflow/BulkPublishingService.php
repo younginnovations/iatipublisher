@@ -317,4 +317,16 @@ class BulkPublishingService
 
         return $response;
     }
+
+    /**
+     * Stop bulk publishing.
+     *
+     * @param $organizationId
+     *
+     * @return array
+     */
+    public function stopBulkPublishing($organizationId): array
+    {
+        return $this->publishingStatusService->stopBulkPublishing($organizationId);
+    }
 }

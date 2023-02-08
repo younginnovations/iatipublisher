@@ -89,7 +89,7 @@ class BulkPublishingController extends Controller
             }
 
             if ($this->publishingStatusService->ongoingBulkPublishing(auth()->user()->organization->id)) {
-                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.']);
+                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.', 'data'=>$this->getBulkPublishStatus(), 'flag'=>true]);
             }
 
             $activityIds = json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR);
@@ -173,7 +173,7 @@ class BulkPublishingController extends Controller
             }
 
             if ($this->publishingStatusService->ongoingBulkPublishing(auth()->user()->organization->id)) {
-                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.']);
+                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.', 'flag'=>true]);
             }
 
             $activityIds = json_decode($request->get('activities'), false, 512, JSON_THROW_ON_ERROR);
@@ -187,9 +187,7 @@ class BulkPublishingController extends Controller
 
                 $response = $this->bulkPublishingService->generateInitialBulkPublishingResponse($activities);
                 $this->publishingStatusService->storeProcessingActivities($activities, $response['organization_id'], $response['job_batch_uuid']);
-
                 dispatch(new BulkPublishActivities($activities, $response['organization_id'], $response['job_batch_uuid']));
-
                 DB::commit();
 
                 return response()->json(['success' => true, 'message' => 'Bulk publishing started', 'data' => $response]);
@@ -220,7 +218,7 @@ class BulkPublishingController extends Controller
             if ($organizationId && $uuid) {
                 $publishStatus = $this->publishingStatusService->getActivityPublishingStatus($organizationId, $uuid);
 
-                if (count($publishStatus)) {
+                if ($publishStatus && count($publishStatus)) {
                     $response = $this->bulkPublishingService->getPublishingResponse($publishStatus);
 
                     return response()->json(['success' => true, 'message' => $response['message'], 'data' => $response]);
@@ -238,6 +236,75 @@ class BulkPublishingController extends Controller
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Request error']);
+        }
+    }
+
+    /**
+     * Get status of bulk publishing for users belonging to same org.
+     *
+     * @return JsonResponse
+     *
+     * @throws \Exception
+     */
+    public function getOrganisationBulkPublishingStatus():JsonResponse
+    {
+        try {
+            $organizationId = auth()->user()->organization->id;
+
+            if ($organizationId) {
+                $publishStatus = $this->publishingStatusService->getActivityPublishingStatus($organizationId);
+
+                if ($publishStatus && count($publishStatus)) {
+                    $response = $this->bulkPublishingService->getPublishingResponse($publishStatus);
+
+                    return response()->json(['success' => true, 'message' => $response['message'], 'data' => $response]);
+                }
+
+                return response()->json(['success' => true, 'message' => 'No bulk publishing in process.']);
+            }
+
+            return response()->json(['success' => false, 'message' => 'Insufficient data.']);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Status generation failed.']);
+        } catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Request error']);
+        }
+    }
+
+    /**
+     * Cancels Bulk Publishing.
+     *
+     * @return JsonResponse
+     */
+    public function cancelBulkPublishing(): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+            $deletedIds = $this->bulkPublishingService->stopBulkPublishing(auth()->user()->organization->id);
+            $numberOfDeletedRows = count($deletedIds);
+
+            if ($deletedIds) {
+                DB::commit();
+
+                return response()->json(
+                    [
+                        'success' => true,
+                        'message' => "Bulk publish of {$numberOfDeletedRows} activities canceled.",
+                        'data'    => $deletedIds,
+                    ]
+                );
+            }
+
+            return response()->json(['success'=>true, 'message'=>'No bulk publish were cancelled.']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            logger()->error($e->getMessage());
+
+            return response()->json(['success'=>false, 'message'=>'Failed to stop bulk publishing']);
         }
     }
 }

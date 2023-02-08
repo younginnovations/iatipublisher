@@ -29,26 +29,35 @@ class BulkPublishingStatusRepository extends Repository
      * @param $uuid
      * @param $status
      *
-     * @return void
+     * @return bool
      */
-    public function updateActivityStatus($activityId, $uuid, $status): void
+    public function updateActivityStatus($activityId, $uuid, $status): bool
     {
-        $this->model->where('activity_id', $activityId)->where('job_batch_uuid', $uuid)->first()->update(['status' => $status]);
+        $activityStatus = $this->model->where('activity_id', $activityId)->where('job_batch_uuid', $uuid)->first();
+
+        if ($activityStatus) {
+            $activityStatus->status = $status;
+
+            return $activityStatus->save();
+        }
+
+        return false;
     }
 
     /**
      * Returns activities that are currently undergoing bulk publishing for an organization.
      *
      * @param $organizationId
-     * @param $uuid
+     * @param string|null $uuid
      *
      * @return object|null
      */
-    public function getActivityPublishingStatus($organizationId, $uuid): ?object
+    public function getActivityPublishingStatus($organizationId, ?string $uuid = ''): ?object
     {
-        return $this->model->where('organization_id', $organizationId)
-                           ->where('job_batch_uuid', $uuid)
-                           ->get();
+        return $this->model->where('organization_id', '=', $organizationId)
+                           ->when(!empty($uuid), function ($query) use ($uuid) {
+                               return $query->where('job_batch_uuid', '=', $uuid);
+                           })->get();
     }
 
     /**
@@ -62,7 +71,57 @@ class BulkPublishingStatusRepository extends Repository
     {
         return $this->model->where('organization_id', $organizationId)
                            ->where('status', 'created')
-                           ->orWhere('status', 'processing')
                            ->get();
+    }
+
+    /**
+     * Stop bulk publishing.
+     *
+     * @param $organizationId
+     *
+     * @return array
+     */
+    public function stopBulkPublishing($organizationId): array
+    {
+        $deleteableIds = $this->model->where('organization_id', $organizationId)
+            ->where('status', '=', 'created')
+            ->get()->pluck('activity_id')
+            ->toArray();
+
+        $this->model->where('organization_id', $organizationId)
+            ->where('status', '=', 'created')
+            ->delete();
+
+        return $deleteableIds;
+    }
+
+    /**
+     * Pre-emptively delete activities with failed or completed status.
+     *
+     * @param $organizationId
+     *
+     * @return void
+     */
+    public function clearExistingStatuses($organizationId): void
+    {
+        $this->model->where('organization_id', $organizationId)
+            ->where('status', '=', 'completed')
+            ->orWhere('status', '=', 'failed')
+            ->delete();
+    }
+
+    /**
+     * Update publishing activities that are stuck to failed.
+     *
+     * @param $organizationId
+     *
+     * @return int
+     */
+    public function failStuckActivities($organizationId): int
+    {
+        return $this->model->where('organization_id', $organizationId)
+            ->where('status', '=', 'created')
+            ->orWhere('status', '=', 'processing')
+            ->update(['status'=>'failed']);
     }
 }

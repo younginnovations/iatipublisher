@@ -58,22 +58,22 @@ class BulkPublishingStatusService
      * @param $uuid
      * @param $status
      *
-     * @return void
+     * @return bool
      */
-    public function updateActivityStatus($activityId, $uuid, $status): void
+    public function updateActivityStatus($activityId, $uuid, $status): bool
     {
-        $this->bulkPublishingStatusRepository->updateActivityStatus($activityId, $uuid, $status);
+        return $this->bulkPublishingStatusRepository->updateActivityStatus($activityId, $uuid, $status);
     }
 
     /**
      * Returns activities that are currently undergoing bulk publishing for an organization.
      *
      * @param $organizationId
-     * @param $uuid
+     * @param string $uuid
      *
      * @return object|null
      */
-    public function getActivityPublishingStatus($organizationId, $uuid): ?object
+    public function getActivityPublishingStatus($organizationId, string $uuid = ''): ?object
     {
         return $this->bulkPublishingStatusRepository->getActivityPublishingStatus($organizationId, $uuid);
     }
@@ -103,6 +103,8 @@ class BulkPublishingStatusService
      */
     public function ongoingBulkPublishing($organizationId): bool
     {
+        $this->bulkPublishingStatusRepository->clearExistingStatuses($organizationId);
+
         $statuses = $this->bulkPublishingStatusRepository->ongoingActivityPublishingStatus($organizationId);
 
         if (count($statuses)) {
@@ -110,5 +112,29 @@ class BulkPublishingStatusService
         }
 
         return false;
+    }
+
+    /**
+     * Stop bulk publishing.
+     *
+     * @param $organizationId
+     *
+     * @return array
+     */
+    public function stopBulkPublishing($organizationId): array
+    {
+        return $this->bulkPublishingStatusRepository->stopBulkPublishing($organizationId);
+    }
+
+    /**
+     * In case of job failure , set created and processing to failed.
+     *
+     * @param $organizationId
+     *
+     * @return int
+     */
+    public function failStuckActivities($organizationId): int
+    {
+        $this->bulkPublishingStatusRepository->failStuckActivities($organizationId);
     }
 }

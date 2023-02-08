@@ -58,6 +58,7 @@
           :message="toastMessage.message"
           :type="toastMessage.type"
         />
+
         <ErrorPopUp
           v-if="errorData.visibility"
           :message="errorData.message"
@@ -103,10 +104,10 @@ import Toast from 'Components/ToastMessage.vue';
 import RefreshToastMessage from 'Activity/bulk-publish/RefreshToast.vue';
 import PublishSelected from 'Activity/bulk-publish/PublishSelected.vue';
 import DeleteButton from 'Components/buttons/DeleteButton.vue';
-import ErrorPopUp from 'Components/ErrorPopUp.vue';
 
 // Vuex Store
 import { useStore } from 'Store/activities/index';
+import ErrorPopUp from 'Components/ErrorPopUp.vue';
 
 interface RefreshToastMsgTypeface {
   visibility: boolean;
@@ -114,16 +115,14 @@ interface RefreshToastMsgTypeface {
   refreshMessage: string;
 }
 
-const store = useStore();
-
 interface ToastInterface {
   visibility: boolean;
   message: string;
   type: boolean;
 }
 
+const refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
 const toastMessage = inject('toastData') as ToastInterface;
 const errorData = inject('errorData') as ToastInterface;
-
-const refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
+const store = useStore();
 </script>
