@@ -170,8 +170,8 @@ class ActivityWorkflowService
         $settings = $organization->settings;
         $publishedFile = $this->activityPublishedService->getActivityPublished($activity->org_id);
         $this->removeActivityFromPublishedArray($publishedFile, $activity);
-        $this->xmlGeneratorService->generateNewXmlFile($publishedFile);
         $activityPublished = $this->activityPublishedService->getActivityPublished($organization->id);
+        $this->xmlGeneratorService->generateNewXmlFile($activityPublished);
         $publishingInfo = $settings->publishing_info;
         $this->publisherService->publishFile($publishingInfo, $activityPublished, $organization);
         $this->activityService->updatePublishedStatus($activity, 'draft', false);
