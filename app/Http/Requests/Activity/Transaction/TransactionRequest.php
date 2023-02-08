@@ -284,10 +284,9 @@ class TransactionRequest extends ActivityBaseRequest
 
         $rules = [];
         $activityService = app()->make(ActivityService::class);
+        $params = $this->route()->parameters();
 
         if (!$fileUpload) {
-            $params = $this->route()->parameters();
-
             if (!$activityService->isElementEmpty($formFields, 'sectorFields') && $activityService->hasSectorDefinedInActivity($params['id'])) {
                 Validator::extend('already_in_activity', function () {
                     return false;
@@ -319,10 +318,7 @@ class TransactionRequest extends ActivityBaseRequest
         }
         $transactionService = app()->make(TransactionService::class);
 
-        if (
-            is_variable_null($formFields)
-            && $transactionService->hasSectorDefinedInTransaction($params['id'])
-        ) {
+        if (is_variable_null($formFields) && $transactionService->hasSectorDefinedInTransaction($params['id'])) {
             Validator::extend('sector_required', function () {
                 return false;
             });
