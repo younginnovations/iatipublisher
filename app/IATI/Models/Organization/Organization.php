@@ -71,6 +71,7 @@ class Organization extends Model implements Auditable
         'organisation_identifier' => 'json',
         'name' => 'json',
         'element_status' => 'json',
+        'is_published' => 'boolean',
     ];
 
     /**
