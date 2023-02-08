@@ -131,6 +131,8 @@ import {
   reactive,
   ref,
   onUpdated,
+  defineEmits,
+  onMounted,
   toRefs,
   computed,
   inject,
@@ -145,6 +147,7 @@ import Loader from 'Components/sections/ProgressLoader.vue';
 
 // Vuex Store
 import { detailStore } from 'Store/activities/show';
+const emit = defineEmits(['load', 'loading']);
 
 const props = defineProps({
   type: { type: String, default: 'primary' },
@@ -155,6 +158,12 @@ const props = defineProps({
 });
 
 const { linkedToIati, status, coreCompleted, activityId } = toRefs(props);
+onMounted(() => {
+  emit('loading');
+  setTimeout(() => {
+    emit('load');
+  }, 150);
+});
 onUpdated(() => {
   if (loader.value) {
     store.dispatch('updateIsLoading', true);
@@ -175,6 +184,7 @@ onUpdated(() => {
     loader.value = false;
     publishValue.value = true;
   }
+  emit('load');
 });
 
 /**
@@ -364,6 +374,7 @@ const checkPublish = () => {
       errorData.type = response.success;
       errorData.visibility = true;
     }
+    emit('load');
   });
 };
 

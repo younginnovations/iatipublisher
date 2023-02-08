@@ -44,8 +44,7 @@ class ActivityController extends Controller
                 return response(['status' => false, 'message' => 'Error has occurred while deleting activity element.']);
             }
 
-            $message = "$element element deleted successfully.";
-
+            $message = sprintf('The %s element deleted successfully.', str_replace('_', '-', $element));
             Session::put('success', $message);
 
             return response(['status' => true, 'message' => $message]);
