@@ -314,13 +314,16 @@ class XmlGenerator
         foreach ($publishedFiles as $xml) {
             $addDom = new \DOMDocument();
             $fileContent = awsGetFile(sprintf('%s/%s/%s', 'xml', 'activityXmlFiles', $xml));
-            $addDom->loadXML($fileContent);
 
-            if ($addDom->documentElement) {
-                foreach ($addDom->documentElement->childNodes as $node) {
-                    $dom->documentElement->appendChild(
-                        $dom->importNode($node, true)
-                    );
+            if ($fileContent) {
+                $addDom->loadXML($fileContent);
+
+                if ($addDom->documentElement) {
+                    foreach ($addDom->documentElement->childNodes as $node) {
+                        $dom->documentElement->appendChild(
+                            $dom->importNode($node, true)
+                        );
+                    }
                 }
             }
         }
