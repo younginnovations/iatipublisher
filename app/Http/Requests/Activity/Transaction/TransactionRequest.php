@@ -317,6 +317,17 @@ class TransactionRequest extends ActivityBaseRequest
                 $rules[$key] = $item;
             }
         }
+        $transactionService = app()->make(TransactionService::class);
+
+        if (
+            is_variable_null($formFields)
+            && $transactionService->hasSectorDefinedInTransaction($params['id'])
+        ) {
+            Validator::extend('sector_required', function () {
+                return false;
+            });
+            $rules['sector'] = 'sector_required';
+        }
 
         return $rules;
     }
@@ -330,7 +341,10 @@ class TransactionRequest extends ActivityBaseRequest
      */
     public function getSectorsMessages(array $formFields): array
     {
-        $messages = ['sector.already_in_activity' => 'Sector already defined in Activity so cannot be mentioned in transaction.'];
+        $messages = [
+            'sector.already_in_activity' => 'Sector has already been declared at activity level. You can’t declare a sector at the transaction level. To declare at transaction level, you need to remove sector at activity level.',
+            'sector.sector_required' => 'You have declared sector at transaction level so you must declare sector for all the transactions.',
+        ];
 
         if (empty($formFields)) {
             return $messages;
