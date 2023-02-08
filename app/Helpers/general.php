@@ -1152,3 +1152,29 @@ if (!function_exists('generateApiInfo')) {
         return $requestInfo;
     }
 }
+
+if (!function_exists('sectorDefaultValue')) {
+    /**
+     * Sector Default value if missing from activity or transaction level while publishing.
+     *
+     * @return array
+     */
+    function sectorDefaultValue(): array
+    {
+        return [
+            'sector' => [
+                [
+                    'sector_vocabulary' => '1',
+                    'code' => '99810',
+                    'percentage' => null,
+                    'narrative' => [
+                        [
+                            'narrative' => null,
+                            'language' => null,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+}

@@ -9,6 +9,7 @@ use App\IATI\Repositories\ApiLog\ApiLogRepository;
 use App\IATI\Services\Activity\ActivityPublishedService;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ActivitySnapshotService;
+use App\IATI\Services\Activity\SectorService;
 use App\IATI\Services\Audit\AuditService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Publisher\PublisherService;
@@ -60,6 +61,11 @@ class ActivityWorkflowService
     protected ActivityValidatorResponseService $validatorService;
 
     /**
+     * @var SectorService
+     */
+    protected SectorService $sectorService;
+
+    /**
      * @var AuditService
      */
     protected AuditService $auditService;
@@ -81,6 +87,7 @@ class ActivityWorkflowService
      * @param ActivityValidatorResponseService $validatorService
      * @param AuditService $auditService
      * @param ApiLogRepository $apiLogRepo
+     * @param SectorService $sectorService
      */
     public function __construct(
         OrganizationService $organizationService,
@@ -91,7 +98,8 @@ class ActivityWorkflowService
         ActivitySnapshotService $activitySnapshotService,
         ActivityValidatorResponseService $validatorService,
         ApiLogRepository $apiLogRepo,
-        AuditService $auditService
+        AuditService $auditService,
+        SectorService $sectorService,
     ) {
         $this->organizationService = $organizationService;
         $this->activityService = $activityService;
@@ -102,6 +110,7 @@ class ActivityWorkflowService
         $this->validatorService = $validatorService;
         $this->apiLogRepo = $apiLogRepo;
         $this->auditService = $auditService;
+        $this->sectorService = $sectorService;
     }
 
     /**
@@ -128,6 +137,8 @@ class ActivityWorkflowService
     {
         $organization = $activity->organization;
         $settings = $organization->settings;
+        $activity = $this->populateSectorIfMissing($activity);
+
         $this->xmlGeneratorService->generateActivityXml(
             $activity,
             $activity->transactions,
@@ -323,5 +334,26 @@ class ActivityWorkflowService
         $publisherId = Arr::get($publishingInfo, 'publisher_id', 'Not Available');
         $publishedActivity = sprintf('%s-%s.xml', $publisherId, $activity->id);
         $this->xmlGeneratorService->deleteUnpublishedFile($publishedActivity);
+    }
+
+    /**
+     * Checks if sector is missing from activity and transaction level
+     * if Missing it populates default value.
+     *
+     * @param $activity
+     * @return object
+     */
+    public function populateSectorIfMissing($activity): object
+    {
+        $data = sectorDefaultValue();
+
+        if (
+            empty($activity->sector)
+            && !$this->activityService->checkIfTransactionHasSector($activity)
+        ) {
+            $this->sectorService->update($activity->id, $data);
+        }
+
+        return $activity->refresh();
     }
 }

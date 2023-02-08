@@ -39,6 +39,9 @@ class TransactionObserver
         $elementStatus = $activityObj->element_status;
         $elementStatus['transactions'] = $this->elementCompleteService->isTransactionsElementCompleted($transaction->activity);
 
+        if (!is_variable_null($transaction->transaction['sector'])) {
+            $elementStatus['sector'] = true;
+        }
         $activityObj->element_status = $elementStatus;
         $activityObj->saveQuietly();
     }

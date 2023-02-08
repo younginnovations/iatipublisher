@@ -222,6 +222,7 @@ class ActivityService
     public function activityPublishingProgress($activity): float|int
     {
         $core_elements = getCoreElements();
+
         $completed_core_element_count = 0;
 
         foreach ($core_elements as $core_element) {
@@ -649,5 +650,29 @@ class ActivityService
         }
 
         return true;
+    }
+
+    /**
+     * Checks if activity transactions has sector defined.
+     *
+     * @param $activity
+     * @return bool
+     */
+    public function checkIfTransactionHasSector($activity): bool
+    {
+        $transactionData = $activity->transactions()->get()->toArray();
+
+        if (!empty($transactionData)) {
+            foreach ($transactionData as $transactionDatum) {
+                if (
+                    isset($transactionDatum['sector'])
+                    && !is_variable_null($transactionDatum['sector'])
+                ) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

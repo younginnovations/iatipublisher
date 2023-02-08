@@ -94,7 +94,7 @@ class SectorRequest extends ActivityBaseRequest
         });
         $rules = [];
         $groupedPercentSector = $this->groupSector($formFields);
-        $hasFiveDigitOecd = false;
+
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
             $rules[sprintf('%s.sector_vocabulary', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorVocabulary', 'Activity', false)));
@@ -117,10 +117,6 @@ class SectorRequest extends ActivityBaseRequest
                 $rules[$key] = $item;
             }
 
-            if ($sector['sector_vocabulary'] === '1') {
-                $hasFiveDigitOecd = true;
-            }
-
             if ($groupedPercentSector[$sector['sector_vocabulary']]['count'] > 1) {
                 if ($groupedPercentSector[$sector['sector_vocabulary']]['total'] !== 100.0) {
                     $rules[$sectorForm . '.percentage'] = empty($sector['percentage']) ? 'required' : 'sector_total_percent';
@@ -132,13 +128,6 @@ class SectorRequest extends ActivityBaseRequest
             }
         }
 
-        if (!$hasFiveDigitOecd) {
-            foreach ($formFields as $sectorIndex => $sector) {
-                $sectorForm = sprintf('sector.%s', $sectorIndex);
-                $rules[$sectorForm . '.sector_vocabulary'] = 'sector_has_five_digit_oced_vocab';
-            }
-        }
-//        dd($rules);
         return $rules;
     }
 
