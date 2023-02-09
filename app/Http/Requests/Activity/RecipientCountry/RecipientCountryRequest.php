@@ -135,7 +135,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
      */
     public function getMessagesForRecipientCountry(array $formFields): array
     {
-        $messages = ['recipient_country.already_in_transactions' => 'Recipient Country Already defined in Transactions'];
+        $messages = ['recipient_country.already_in_transactions' => 'Recipient Country is already added at transaction level. You can add a Recipient Country either at activity level or at transaction level but not at both.'];
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
@@ -149,7 +149,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
             foreach ($narrativeMessages as $key => $item) {
                 $messages[$key] = $item;
             }
-            $messages[$recipientCountryForm . '.percentage.in'] = 'Recipient country percent must be equal to allocated percent';
+            $messages[$recipientCountryForm . '.percentage.in'] = 'The sum of percentages of Recipient Region(s) and Recipient country must be 100%';
             $messages[$recipientCountryForm . '.percentage.allocated_country_percent_exceeded'] = 'Recipient country percent must match with allocated percent';
         }
 
