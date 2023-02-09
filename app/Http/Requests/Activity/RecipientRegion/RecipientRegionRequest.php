@@ -151,7 +151,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
      */
     public function getMessagesForRecipientRegion(array $formFields): array
     {
-        $messages = ['recipient_region.already_in_transactions' => 'Recipient Region already defined in Transactions'];
+        $messages = ['recipient_region.already_in_transactions' => 'Recipient Region is already added at transaction level. You can add a Recipient Region either at activity level or at transaction level but not at both.'];
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
