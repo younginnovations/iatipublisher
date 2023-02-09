@@ -518,7 +518,7 @@ class TransactionRequest extends ActivityBaseRequest
             }
         }
 
-        if (!is_variable_null($formFields) && !is_variable_null($this->all()['recipient_region'])) {
+        if (!is_variable_null($formFields) && !is_variable_null($this->all()['recipient_country'])) {
             Validator::extend('country_or_region', function () {
                 return false;
             });
