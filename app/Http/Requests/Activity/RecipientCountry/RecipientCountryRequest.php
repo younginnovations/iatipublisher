@@ -95,6 +95,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
         });
 
         $totalCountryPercent = $this->getTotalPercent($formFields);
+        $this->merge(['total_country_percentage' => $totalCountryPercent]);
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
