@@ -88,20 +88,20 @@
 
                 <!-- Unpublish Activity -->
                 <UnPublish
-                  @load="buttonLoaded"
                   v-if="store.state.unPublished"
                   :activity-id="activityProps.id"
+                  @load="buttonLoaded"
                 />
 
                 <!-- Publish Activity -->
                 <Publish
-                  @load="buttonLoaded"
-                  @loading="buttonLoading"
                   v-if="store.state.showPublished"
                   :linked-to-iati="activityProps.linked_to_iati"
                   :status="activityProps.status"
                   :core-completed="coreCompleted"
                   :activity-id="activityProps.id"
+                  @load="buttonLoaded"
+                  @loading="buttonLoading"
                 />
               </div>
             </div>
