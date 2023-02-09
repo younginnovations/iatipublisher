@@ -155,6 +155,7 @@ const props = defineProps({
 });
 
 const { linkedToIati, status, coreCompleted, activityId } = toRefs(props);
+
 onUpdated(() => {
   if (loader.value) {
     store.dispatch('updateIsLoading', true);
@@ -169,7 +170,9 @@ onUpdated(() => {
   }
   if (publishStep.value === 1) {
     publishValue.value = false;
-    loader.value = true;
+    setTimeout(function () {
+      loader.value = true;
+    }, 500);
   }
   if (publishStep.value === 3 || publishStep.value === 4) {
     loader.value = false;
@@ -305,7 +308,9 @@ const validatorFunction = () => {
   publishValue.value = false;
 
   if (!publishValue.value) {
-    loader.value = true;
+    setTimeout(function () {
+      loader.value = true;
+    }, 500);
   }
   loaderText.value = 'Validating Activity';
 
@@ -369,12 +374,13 @@ const checkPublish = () => {
 
 const publishFunction = () => {
   publishValue.value = false;
-  if (!publishValue.value) {
-    loader.value = true;
-  }
-  loaderText.value = 'Publishing Activity';
-  resetPublishStep();
 
+  setTimeout(function () {
+    loader.value = true;
+  }, 500);
+
+  loaderText.value = 'Publishing Activity';
+  publishStep.value = 0;
   axios.post(`/activity/${id}/publish`).then((res) => {
     const response = res.data;
     store.dispatch('updateUnPublished', response.success);

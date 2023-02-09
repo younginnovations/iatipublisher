@@ -446,7 +446,6 @@ export default defineComponent({
     const showSidebar = ref(false);
     const positionY = ref(0);
     const screenWidth = ref(0);
-
     const toastData = reactive({
       visibility: false,
       message: '',

@@ -609,6 +609,9 @@
             </tr>
           </tbody>
           <tbody v-else>
+            <td v-if="loader" colspan="5" class="text-center">
+              <div colspan="5" class="spin"></div>
+            </td>
             <td colspan="8" class="text-center">Users not found</td>
           </tbody>
         </table>
@@ -670,10 +673,9 @@ const deleteId = ref();
 const statusId = ref();
 const statusModal = ref(false);
 const statusValue = ref();
-
 const statusUsername = ref();
 const deleteUsername = ref();
-
+const loader = ref(true);
 const selectedIds = ref({});
 const checklist = ref([]);
 const currentpageData = ref([]);
@@ -736,6 +738,7 @@ onMounted(async () => {
     }
     Object.assign(usersData, response.data);
     isEmpty.value = response.data.data.length ? false : true;
+    loader.value = false;
   });
 
   setTimeout(() => {
@@ -1028,3 +1031,35 @@ const downloadAll = () => {
   });
 };
 </script>
+<style scoped>
+@keyframes spinner {
+  0% {
+    transform: translate3d(-50%, -50%, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate3d(-50%, -50%, 0) rotate(360deg);
+  }
+}
+
+.spin::before {
+  animation: 1.5s linear infinite spinner;
+  animation-play-state: inherit;
+  border: solid 3px #cfd0d1;
+  border-bottom-color: grey;
+  border-radius: 50%;
+  content: '';
+  height: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  width: 20px;
+  will-change: transform;
+}
+.spin {
+  height: 40px;
+  position: relative;
+  width: 100%;
+  margin: auto;
+}
+</style>

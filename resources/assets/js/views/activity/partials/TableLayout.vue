@@ -1,5 +1,5 @@
 <template>
-  <div class="iati-list-table">
+  <div class="iati-list-table mb-10">
     <table>
       <thead>
         <tr class="bg-n-10">
@@ -134,7 +134,10 @@
         </tr>
       </tbody>
       <tbody v-else>
-        <td colspan="5" class="text-center">Activities not found</td>
+        <td v-if="loader" colspan="5" class="text-center">
+          <div colspan="5" class="spin"></div>
+        </td>
+        <td v-else colspan="5" class="text-center">Activities not found</td>
       </tbody>
     </table>
   </div>
@@ -157,6 +160,7 @@ const [selectAllValue, selectAllToggle] = useToggle();
 
 defineProps({
   data: { type: Object, required: true },
+  loader: { type: Boolean, required: false },
 });
 
 const store = useStore();
@@ -201,3 +205,35 @@ const sortByDateUrl = () => {
   return `?q=${query}&orderBy=updated_at&direction=${direction}`;
 };
 </script>
+<style scoped>
+@keyframes spinner {
+  0% {
+    transform: translate3d(-50%, -50%, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate3d(-50%, -50%, 0) rotate(360deg);
+  }
+}
+
+.spin::before {
+  animation: 1.5s linear infinite spinner;
+  animation-play-state: inherit;
+  border: solid 3px #cfd0d1;
+  border-bottom-color: grey;
+  border-radius: 50%;
+  content: '';
+  height: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  width: 20px;
+  will-change: transform;
+}
+.spin {
+  height: 40px;
+  position: relative;
+  width: 100%;
+  margin: auto;
+}
+</style>

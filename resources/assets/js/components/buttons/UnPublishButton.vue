@@ -106,14 +106,17 @@ const toastMessage = inject('toastMessage') as ToastMessageTypeface;
 
 const unPublishFunction = () => {
   unpublishValue.value = false;
-  loader.value = true;
+
+  setTimeout(function () {
+    loader.value = true;
+  }, 500);
+
   loader.text = 'Unpublishing';
 
   axios.post(`/activity/${id}/unpublish`).then((res) => {
     const response = res.data;
     toastMessage.message = response.message;
     toastMessage.type = response.success;
-    unpublishToggle();
     unpublishValue.value = false;
 
     setTimeout(() => {
