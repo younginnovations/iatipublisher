@@ -74,7 +74,13 @@ class RecipientCountryService
      */
     public function update($id, $activityRecipientCountry): bool
     {
-        return $this->activityRepository->update($id, ['recipient_country' => $this->sanitizeRecipientCountryData($activityRecipientCountry)]);
+        $data = [
+            'recipient_country' => $this->sanitizeRecipientCountryData($activityRecipientCountry),
+        ];
+
+        $data = $activityRecipientCountry['total_country_percentage'] === 100.0 ? $this->setRecipientRegionStatus((int) $id, $data) : $data;
+
+        return $this->activityRepository->update($id, $data);
     }
 
     /**
@@ -135,5 +141,22 @@ class RecipientCountryService
         }
 
         return array_values($activityRecipientCountry['recipient_country']);
+    }
+
+    /**
+     * Sets Recipient Region Complete Status if Recipient Country is 100%.
+     *
+     * @param int $id
+     * @param array $data
+     * @return array
+     */
+    public function setRecipientRegionStatus(int $id, array &$data): array
+    {
+        $activity = $this->activityRepository->find($id);
+        $elementStatus['element_status'] = $activity->element_status;
+        $elementStatus['element_status']['recipient_region'] = true;
+        $data = array_merge($data, $elementStatus);
+
+        return $data;
     }
 }
