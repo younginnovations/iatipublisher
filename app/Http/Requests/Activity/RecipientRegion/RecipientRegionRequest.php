@@ -166,10 +166,10 @@ class RecipientRegionRequest extends ActivityBaseRequest
                 $messages[$key] = $item;
             }
 
-            $messages[$recipientRegionForm . '.percentage.in'] = 'Region percent must be equal to allocated percent';
-            $messages[$recipientRegionForm . '.percentage.allocated_region_total_mismatch'] = 'Region percent must match with allocated percent';
+            $messages[$recipientRegionForm . '.percentage.in'] = 'The sum of the percentages of Recipient Country(ies) and Recipient Region(s) must always be 100%';
+            $messages[$recipientRegionForm . '.percentage.allocated_region_total_mismatch'] = 'The sum of percentages of Recipient Country and Recipient Regions with same Region Vocabulary must be equal to 100%';
             $messages[$recipientRegionForm . '.percentage.sum_greater_than'] = 'Sum of percentage within vocabulary cannot be greater than 100';
-            $messages[$recipientRegionForm . '.percentage.percentage_within_vocabulary'] = 'The total percentage within different vocabulary must be equal.';
+            $messages[$recipientRegionForm . '.percentage.percentage_within_vocabulary'] = 'The sum of percentage of Recipient Country and Recipient Regions (within the same Region Vocabulary) must be equal to 100%';
         }
 
         return $messages;
