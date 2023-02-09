@@ -162,7 +162,7 @@ onMounted(() => {
   emit('loading');
   setTimeout(() => {
     emit('load');
-  }, 150);
+  }, 250);
 });
 onUpdated(() => {
   if (loader.value) {
@@ -178,7 +178,9 @@ onUpdated(() => {
   }
   if (publishStep.value === 1) {
     publishValue.value = false;
-    loader.value = true;
+    setTimeout(function () {
+      loader.value = true;
+    }, 500);
   }
   if (publishStep.value === 3 || publishStep.value === 4) {
     loader.value = false;
@@ -315,7 +317,9 @@ const validatorFunction = () => {
   publishValue.value = false;
 
   if (!publishValue.value) {
-    loader.value = true;
+    setTimeout(function () {
+      loader.value = true;
+    }, 500);
   }
   loaderText.value = 'Validating Activity';
 
@@ -381,7 +385,9 @@ const checkPublish = () => {
 const publishFunction = () => {
   publishValue.value = false;
   if (!publishValue.value) {
-    loader.value = true;
+    setTimeout(function () {
+      loader.value = true;
+    }, 500);
   }
   loaderText.value = 'Publishing Activity';
   resetPublishStep();
