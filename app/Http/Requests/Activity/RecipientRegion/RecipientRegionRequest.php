@@ -7,6 +7,7 @@ namespace App\Http\Requests\Activity\RecipientRegion;
 use App\Http\Requests\Activity\ActivityBaseRequest;
 use App\IATI\Services\Activity\ActivityService;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -132,6 +133,11 @@ class RecipientRegionRequest extends ActivityBaseRequest
                 $rules[$recipientRegionForm . '.percentage'] .= '|percentage_within_vocabulary';
             }
         }
+        $firstGroupTotalPercentage = Arr::first($groupedPercentRegion, static function ($value) {
+            return $value;
+        });
+
+        $this->merge(['total_region_percentage' => $firstGroupTotalPercentage['total'] ?? null]);
 
         return $rules;
     }
