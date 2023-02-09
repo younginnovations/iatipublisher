@@ -84,13 +84,12 @@
               <!-- {{ typeof toastData.message }} -->
               <div class="inline-flex items-center justify-end gap-3">
                 <!-- Delete Activity -->
-                <DeleteButton v-if="loaded" />
+                <DeleteButton />
 
                 <!-- Unpublish Activity -->
                 <UnPublish
                   v-if="store.state.unPublished"
                   :activity-id="activityProps.id"
-                  @load="buttonLoaded"
                 />
 
                 <!-- Publish Activity -->
@@ -100,8 +99,6 @@
                   :status="activityProps.status"
                   :core-completed="coreCompleted"
                   :activity-id="activityProps.id"
-                  @load="buttonLoaded"
-                  @loading="buttonLoading"
                 />
               </div>
             </div>
@@ -449,7 +446,6 @@ export default defineComponent({
     const showSidebar = ref(false);
     const positionY = ref(0);
     const screenWidth = ref(0);
-    const loaded = ref(false);
     const toastData = reactive({
       visibility: false,
       message: '',
@@ -466,12 +462,7 @@ export default defineComponent({
      */
     const [deleteValue, deleteToggle] = useToggle();
     const [downloadValue, downloadToggle] = useToggle();
-    const buttonLoaded = () => {
-      loaded.value = true;
-    };
-    const buttonLoading = () => {
-      loaded.value = false;
-    };
+
     const toggleSidebar = () => {
       showSidebar.value = !showSidebar.value;
     };
@@ -708,7 +699,7 @@ export default defineComponent({
       downloadToggle,
       toastData,
       elementProps,
-      loaded,
+
       props,
       formatTitle,
       pageTitle,
@@ -722,8 +713,7 @@ export default defineComponent({
       toggleSidebar,
       istopVisible,
       screenWidth,
-      buttonLoaded,
-      buttonLoading,
+
       width,
     };
   },
