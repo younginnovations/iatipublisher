@@ -487,7 +487,6 @@ export default defineComponent({
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
-
         toastData.message = props.toast.message;
       }
     });
@@ -699,7 +698,6 @@ export default defineComponent({
       downloadToggle,
       toastData,
       elementProps,
-
       props,
       formatTitle,
       pageTitle,
@@ -713,7 +711,6 @@ export default defineComponent({
       toggleSidebar,
       istopVisible,
       screenWidth,
-
       width,
     };
   },

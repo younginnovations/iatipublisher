@@ -178,7 +178,6 @@ onUpdated(() => {
     loader.value = false;
     publishValue.value = true;
   }
-  console.log('updated', publishStep.value);
 });
 
 /**
@@ -382,8 +381,6 @@ const publishFunction = () => {
 
   loaderText.value = 'Publishing Activity';
   publishStep.value = 0;
-  // resetPublishStep();
-
   axios.post(`/activity/${id}/publish`).then((res) => {
     const response = res.data;
     store.dispatch('updateUnPublished', response.success);

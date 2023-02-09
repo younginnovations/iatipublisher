@@ -673,10 +673,9 @@ const deleteId = ref();
 const statusId = ref();
 const statusModal = ref(false);
 const statusValue = ref();
-
 const statusUsername = ref();
 const deleteUsername = ref();
-const loader = ref(false);
+const loader = ref(true);
 const selectedIds = ref({});
 const checklist = ref([]);
 const currentpageData = ref([]);
@@ -730,7 +729,6 @@ const ignoreToastUpdate = () => {
 };
 
 onMounted(async () => {
-  loader.value = true;
   axios.get(`/users/page/1`).then((res) => {
     const response = res.data;
     for (let i = 0; i < response.data.data.length; i++) {
