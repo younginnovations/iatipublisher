@@ -44,15 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  defineProps,
-  reactive,
-  inject,
-  onMounted,
-  defineEmits,
-  onUpdated,
-  toRefs,
-} from 'vue';
+import { defineProps, reactive, inject, onUpdated, toRefs } from 'vue';
 import { useToggle } from '@vueuse/core';
 import axios from 'axios';
 
@@ -70,16 +62,13 @@ const props = defineProps({
 });
 
 const { activityId } = toRefs(props);
-const emit = defineEmits(['load']);
 
 // toggle state for modal popup
 let [unpublishValue, unpublishToggle] = useToggle();
 
 //Global State
 const store = detailStore();
-onMounted(() => {
-  emit('load');
-});
+
 //activity id
 const id = activityId.value;
 
@@ -117,6 +106,7 @@ const toastMessage = inject('toastMessage') as ToastMessageTypeface;
 
 const unPublishFunction = () => {
   unpublishValue.value = false;
+
   setTimeout(function () {
     loader.value = true;
   }, 500);
