@@ -653,6 +653,7 @@ export default defineComponent({
     provide('toastData', toastData);
     provide('errorData', errorData);
     provide('importActivityError', props.importActivityError);
+    provide('activityId', props.activity.id);
 
     indexStore.dispatch('updateSelectedActivities', [activity.value.id]);
 

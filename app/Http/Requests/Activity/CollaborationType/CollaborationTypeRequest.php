@@ -22,7 +22,7 @@ class CollaborationTypeRequest extends ActivityBaseRequest
     {
         $totalRules = [$this->getWarningForCollaborationType($collaboration), $this->getErrorsForCollaborationType($collaboration)];
 
-        return $mergeRules($totalRules);
+        return mergeRules($totalRules);
     }
 
     /**

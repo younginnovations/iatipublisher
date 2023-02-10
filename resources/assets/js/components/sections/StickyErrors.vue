@@ -107,6 +107,7 @@ import { useToggle } from '@vueuse/core';
 // components
 import ErrorLists from 'Components/sections/ErrorLists.vue';
 import uploadedErrors from 'Components/sections/uploadedErrors.vue';
+import axios from 'axios';
 const props = defineProps({
   errorData: { type: Array, required: true },
 });
@@ -114,6 +115,7 @@ const props = defineProps({
 // toggle issues
 const [errorValue, errorToggle] = useToggle();
 const importErrors = inject('importActivityError') as object;
+const activityId = inject('activityId');
 const issueType = ref();
 
 /**
@@ -193,7 +195,11 @@ watch(
   }
 );
 const deleteErrors = () => {
-  console.log('dellte');
+  axios.delete(`/import/errors/${activityId}`).then((res) => {
+    if (res.status) {
+      console.log('Sucess');
+    }
+  });
 };
 </script>
 
