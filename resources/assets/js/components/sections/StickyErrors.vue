@@ -13,7 +13,9 @@
             class="mr-1 text-base text-crimson-50"
             icon="warning-fill"
           ></svg-vue>
-          <div class="font-bold">{{ errorData.length }} Issues found</div>
+          <div class="font-bold">
+            {{ errorData.length + importErrorlength }} Issues found
+          </div>
         </div>
         <button class="validation__toggle" @click="errorToggle()">Show</button>
       </div>
@@ -25,29 +27,64 @@
         'invisible opacity-0': !errorValue,
       }"
     >
-      <div class="validation__heading flex items-center justify-between">
-        <div class="icon flex grow items-center text-sm leading-relaxed">
-          <div class="font-bold">
-            {{ errorData.length }} Issues found in IATI Validator
+      <div class="flex justify-between px-5 py-4">
+        <div class="flex space-x-8">
+          <div
+            v-if="errorData.length"
+            class="relative cursor-pointer"
+            :class="
+              issueType === 'validator'
+                ? 'active text-sm font-bold text-n-50'
+                : 'text-sm font-bold text-n-30'
+            "
+            @click="issueType = 'validator'"
+          >
+            IATI Validator Issues
+          </div>
+          <div
+            v-if="importErrors"
+            class="relative cursor-pointer"
+            :class="
+              issueType === 'upload'
+                ? 'active text-sm font-bold text-n-50'
+                : 'text-sm font-bold text-n-30'
+            "
+            @click="issueType = 'upload'"
+          >
+            Uploaded file Issues
           </div>
         </div>
-        <button class="validation__toggle" @click="errorToggle()">Hide</button>
+        <div class="flex items-center space-x-2">
+          <button
+            v-if="issueType == 'upload'"
+            class="flex items-center"
+            @click="deleteErrors"
+          >
+            <svg-vue class="text-sm text-bluecoral" icon="delete"></svg-vue>
+            <span class="mt-1 ml-0.5 text-bluecoral">REMOVE</span>
+          </button>
+          <button
+            class="validation__toggle text-bluecoral"
+            @click="errorToggle()"
+          >
+            <svg-vue class="mr-1 mt-2.5 text-lg" icon="cross"></svg-vue>
+          </button>
+        </div>
       </div>
       <div class="validation__errors-list">
-        <div
-          v-for="(error, e) in tempData"
-          :key="e"
-          :class="{ 'mb-4': Number(e) != Object.keys(tempData).length - 1 }"
-        >
-          <ErrorLists v-if="error.length > 0" :type="e" :errors="error" />
+        <div v-if="issueType === 'validator'">
+          <div
+            v-for="(error, e) in tempData"
+            :key="e"
+            :class="{ 'mb-4': Number(e) != Object.keys(tempData).length - 1 }"
+          >
+            <ErrorLists v-if="error.length > 0" :type="e" :errors="error" />
+          </div>
         </div>
-        <div
-          v-for="(error, e) in importErrors"
-          :key="e"
-          :class="{ 'mb-4': Number(e) != Object.keys(tempData).length - 1 }"
-        >
-          {{ error }}
-          <!-- <ErrorLists v-if="error.length > 0" :type="e" :errors="error" /> -->
+        <div v-if="issueType === 'upload'">
+          <div v-for="(item, index) in importErrors" :key="index">
+            <uploadedErrors :item="item" :index="index" />
+          </div>
         </div>
       </div>
     </div>
@@ -55,19 +92,29 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, reactive, watch, defineProps, inject } from 'vue';
+import {
+  toRefs,
+  reactive,
+  watch,
+  defineProps,
+  inject,
+  ref,
+  computed,
+  onMounted,
+} from 'vue';
 import { useToggle } from '@vueuse/core';
 
 // components
 import ErrorLists from 'Components/sections/ErrorLists.vue';
-
+import uploadedErrors from 'Components/sections/uploadedErrors.vue';
 const props = defineProps({
   errorData: { type: Array, required: true },
 });
 
 // toggle issues
 const [errorValue, errorToggle] = useToggle();
-const importErrors = inject('importActivityError');
+const importErrors = inject('importActivityError') as object;
+const issueType = ref();
 
 /**
  * list of errors
@@ -88,6 +135,14 @@ interface TempData {
   critical: string[];
   warnings: string[];
 }
+onMounted(() => {
+  if (errorData.value.length) {
+    console.log(errorData.value.length);
+    issueType.value = 'validator';
+    return;
+  }
+  issueType.value = 'upload';
+});
 
 const tempData: TempData = reactive({
   errors: [],
@@ -119,6 +174,17 @@ const updateTempMessage = () => {
 };
 
 updateTempMessage();
+const importErrorlength = computed(() => {
+  let count = 0;
+
+  for (const type in importErrors) {
+    for (const index in importErrors[type]) {
+      count += Object.keys(importErrors[type][index]).length;
+    }
+  }
+
+  return count;
+});
 
 watch(
   () => errorData.value,
@@ -126,6 +192,9 @@ watch(
     updateTempMessage();
   }
 );
+const deleteErrors = () => {
+  console.log('dellte');
+};
 </script>
 
 <style lang="scss" scoped>
@@ -139,7 +208,7 @@ watch(
   }
 
   &__errors {
-    @apply absolute top-0 right-0 z-10 flex w-[424px] flex-col overflow-hidden border-white bg-white;
+    @apply absolute top-0 right-0 z-10 flex w-[595px] flex-col overflow-hidden border-white bg-white;
     max-height: calc(100vh - 60px);
   }
 
@@ -153,6 +222,18 @@ watch(
 
   &__toggle {
     @apply text-xs uppercase leading-normal text-blue-50;
+  }
+}
+.active {
+  &::after {
+    content: '';
+    position: absolute;
+    height: 2px;
+    border-radius: 2px;
+    background-color: #06dbe4;
+    width: 100%;
+    top: calc(100% + 3px);
+    left: 0;
   }
 }
 </style>

@@ -7,7 +7,7 @@
           :class="iconColor"
           icon="alert"
         ></svg-vue>
-        <div class="capitalize">{{ errorType }}</div>
+        <div class="font-bold capitalize">{{ errorType }}</div>
       </div>
       <svg-vue
         class="text-xl text-blue-50 transition-transform duration-500"
