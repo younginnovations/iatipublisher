@@ -177,7 +177,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
         $firstGroupTotalPercentage = Arr::first($this->groupedPercentRegion, static function ($value) {
             return $value;
         });
-        
+
         $this->merge(['total_region_percentage' => $firstGroupTotalPercentage['total'] ?? null]);
 
         return $rules;

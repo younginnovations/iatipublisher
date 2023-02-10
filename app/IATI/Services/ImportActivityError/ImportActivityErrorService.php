@@ -51,4 +51,16 @@ class ImportActivityErrorService
     {
         return $this->importActivityErrorRepository->getImportActivityError($activityId);
     }
+
+    /**
+     * Delete Upload Error having $activityId.
+     *
+     * @param mixed $activityId
+     *
+     * @return bool
+     */
+    public function deleteImportError($activityId) : bool
+    {
+        return $this->importActivityErrorRepository->deleteImportError($activityId);
+    }
 }

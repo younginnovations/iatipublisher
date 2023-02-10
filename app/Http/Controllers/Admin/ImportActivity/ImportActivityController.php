@@ -9,6 +9,7 @@ use App\Http\Requests\Activity\UploadActivity\ImportActivityRequest;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\ImportActivity\ImportCsvService;
 use App\IATI\Services\ImportActivity\ImportXmlService;
+use App\IATI\Services\ImportActivityError\ImportActivityErrorService;
 use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -40,6 +41,11 @@ class ImportActivityController extends Controller
     protected ImportXmlService $importXmlService;
 
     /**
+     * @var ImportActivityErrorService
+     */
+    protected ImportActivityErrorService $importActivityErrorService;
+
+    /**
      * @var DatabaseManager
      */
     protected DatabaseManager $db;
@@ -60,13 +66,15 @@ class ImportActivityController extends Controller
      * @param ActivityService  $activityService
      * @param ImportCsvService $importCsvService
      * @param ImportXmlService $importXmlService
+     * @param ImportActivityErrorService $importActivityErrorService
      * @param DatabaseManager  $db
      */
-    public function __construct(ActivityService $activityService, ImportCsvService $importCsvService, ImportXmlService $importXmlService, DatabaseManager $db)
+    public function __construct(ActivityService $activityService, ImportCsvService $importCsvService, ImportXmlService $importXmlService, ImportActivityErrorService $importActivityErrorService, DatabaseManager $db)
     {
         $this->activityService = $activityService;
         $this->importCsvService = $importCsvService;
         $this->importXmlService = $importXmlService;
+        $this->importActivityErrorService = $importActivityErrorService;
         $this->db = $db;
         $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'CsvImporter/tmp');
         $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH', 'XmlImporter/tmp');
@@ -299,6 +307,26 @@ class ImportActivityController extends Controller
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Delete upload error with activityId.
+     *
+     * @param mixed $activityId
+     *
+     * @return JsonResponse
+     */
+    public function deleteImportError($activityId): JsonResponse
+    {
+        try {
+            $this->importActivityErrorService->deleteImportError($activityId);
+
+            return response()->json(['success' => true, 'message' => 'Import error for activity has been successfully deleted.']);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error has occurred while trying to delete import error.']);
         }
     }
 }

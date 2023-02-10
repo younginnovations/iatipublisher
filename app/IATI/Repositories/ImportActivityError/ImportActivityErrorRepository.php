@@ -50,4 +50,16 @@ class ImportActivityErrorRepository extends Repository
     {
         return $this->model->where('activity_id', $activityId)->first();
     }
+
+    /**
+     * Delete import error of activity with $activityId.
+     *
+     * @param $activityId
+     *
+     * @return bool
+     */
+    public function deleteImportError($activityId): bool
+    {
+        return (bool) $this->model->where('activity_id', $activityId)->delete();
+    }
 }
