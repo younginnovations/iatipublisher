@@ -206,4 +206,40 @@ class Activity extends Model implements Auditable
 
         return '';
     }
+
+    /**
+     * Sets recipient region value
+     * Also removes recipient country completeness if null.
+     *
+     * @param $value
+     * @return void
+     * @throws \JsonException
+     */
+    public function setRecipientRegionAttribute($value): void
+    {
+        if (empty($value) && empty($this->attributes['recipient_country'])) {
+            $elementStatus = json_decode($this->attributes['element_status'], true, 512, JSON_THROW_ON_ERROR);
+            $elementStatus['recipient_country'] = false;
+            $this->attributes['element_status'] = json_encode($elementStatus, JSON_THROW_ON_ERROR);
+        }
+        $this->attributes['recipient_region'] = !empty($value) ? json_encode($value, JSON_THROW_ON_ERROR) : null;
+    }
+
+    /**
+     * Sets recipient country value
+     * Also removed recipient region completeness if null.
+     *
+     * @param $value
+     * @return void
+     * @throws \JsonException
+     */
+    public function setRecipientCountryAttribute($value): void
+    {
+        if (empty($value) && empty($this->attributes['recipient_region'])) {
+            $elementStatus = json_decode($this->attributes['element_status'], true, 512, JSON_THROW_ON_ERROR);
+            $elementStatus['recipient_region'] = false;
+            $this->attributes['element_status'] = json_encode($elementStatus, JSON_THROW_ON_ERROR);
+        }
+        $this->attributes['recipient_country'] = !empty($value) ? json_encode($value, JSON_THROW_ON_ERROR) : null;
+    }
 }

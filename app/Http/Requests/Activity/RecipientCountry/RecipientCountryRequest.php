@@ -83,7 +83,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
                 return ['recipient_country' => 'already_in_transactions'];
             }
 
-            Validator::extend('allocated_country_percent_exceeded', function () {
+            Validator::extend('allocated_country_percent', function () {
                 return false;
             });
 
@@ -100,7 +100,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
             $rules[sprintf('%s.country_code', $recipientCountryForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Country', 'Activity', false)));
-            $rules[$recipientCountryForm . '.percentage'] = 'nullable|numeric|min:0';
+            $rules[$recipientCountryForm . '.percentage'] = 'numeric|min:0';
 
             $narrativeRules = $this->getRulesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
 
@@ -114,11 +114,11 @@ class RecipientCountryRequest extends ActivityBaseRequest
 
             if (!$fileUpload) {
                 if ($allottedCountryPercent === 100.0) {
-                    $rules[$recipientCountryForm . '.percentage'] .= '|max:100';
+                    $rules[$recipientCountryForm . '.percentage'] .= '|nullable|max:100';
                 }
 
                 if ($totalCountryPercent !== $allottedCountryPercent && $allottedCountryPercent !== 100.0) {
-                    $rules[$recipientCountryForm . '.percentage'] .= '|allocated_country_percent_exceeded:';
+                    $rules[$recipientCountryForm . '.percentage'] .= '|allocated_country_percent';
                 }
             }
         }
@@ -150,7 +150,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
                 $messages[$key] = $item;
             }
             $messages[$recipientCountryForm . '.percentage.in'] = 'The sum of percentages of Recipient Region(s) and Recipient country must be 100%';
-            $messages[$recipientCountryForm . '.percentage.allocated_country_percent_exceeded'] = 'Recipient country percent must match with allocated percent';
+            $messages[$recipientCountryForm . '.percentage.allocated_country_percent'] = 'The sum of percentages of Recipient Region(s) and Recipient country must be 100%';
         }
 
         return $messages;
