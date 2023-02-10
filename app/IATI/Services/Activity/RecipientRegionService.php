@@ -77,8 +77,8 @@ class RecipientRegionService
         $data = [
             'recipient_region' => $this->sanitizeRecipientRegionData($activityRecipientRegion),
         ];
-
-        $data = $activityRecipientRegion['total_region_percentage'] === 100.0 ? $this->setRecipientCountryStatus((int) $id, $data) : $data;
+        $totalRecipientRegionPercentage = $activityRecipientRegion['total_region_percentage'] ?? 0;
+        $data = $this->setRecipientCountryStatus((int) $id, $data, (int) $totalRecipientRegionPercentage);
 
         return $this->activityRepository->update($id, $data);
     }
@@ -166,15 +166,53 @@ class RecipientRegionService
      *
      * @param int $id
      * @param array $data
+     * @param int $totalRecipientRegionPercentage
      * @return array
      */
-    public function setRecipientCountryStatus(int $id, array &$data): array
+    public function setRecipientCountryStatus(int $id, array &$data, int $totalRecipientRegionPercentage): array
     {
         $activity = $this->activityRepository->find($id);
+        $recipientCountryStatus = ($totalRecipientRegionPercentage === 100 && is_variable_null($activity->recipient_country))
+                                    || ($totalRecipientRegionPercentage !== 100 && !is_variable_null($activity->recipient_country))
+                                    || ($totalRecipientRegionPercentage === 100 && !is_variable_null($activity->recipient_country)
+                                                                                && empty($this->countryTotalPercentage($activity->recipient_country)));
+
         $elementStatus['element_status'] = $activity->element_status;
-        $elementStatus['element_status']['recipient_country'] = true;
+        $elementStatus['element_status']['recipient_country'] = $recipientCountryStatus;
         $data = array_merge($data, $elementStatus);
 
         return $data;
+    }
+
+    /**
+     * Calculates total percentage of a country.
+     *
+     * @param $recipientCountry
+     * @return int
+     */
+    public function countryTotalPercentage($recipientCountry): int
+    {
+        return array_sum(array_map(static fn ($item) => $item['percentage'], $recipientCountry));
+    }
+
+    /**
+     * @param $formFields
+     *
+     * @return array
+     */
+    public function groupRegion($formFields): array
+    {
+        $groupedRegion = [];
+
+        foreach ($formFields as $formField) {
+            if (array_key_exists($formField['region_vocabulary'], $groupedRegion)) {
+                $groupedRegion[$formField['region_vocabulary']]['count'] += 1;
+                $groupedRegion[$formField['region_vocabulary']]['total'] += (float) $formField['percentage'];
+            } else {
+                $groupedRegion[$formField['region_vocabulary']] = ['count' => 1, 'total' => (float) $formField['percentage']];
+            }
+        }
+
+        return $groupedRegion;
     }
 }
