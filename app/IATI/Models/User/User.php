@@ -68,6 +68,8 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_active' => 'boolean',
+        'status' => 'boolean',
     ];
 
     /**

@@ -102,7 +102,7 @@ class Activity extends Model implements Auditable
         'tag'                  => 'json',
         'reporting_org'        => 'json',
         'element_status'       => 'json',
-        'reporting_org'       => 'json',
+        'linked_to_iati'       => 'boolean',
     ];
 
     /**
