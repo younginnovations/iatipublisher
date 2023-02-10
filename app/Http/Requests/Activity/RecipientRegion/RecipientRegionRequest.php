@@ -6,6 +6,7 @@ namespace App\Http\Requests\Activity\RecipientRegion;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 use App\IATI\Services\Activity\ActivityService;
+use App\IATI\Services\Activity\RecipientRegionService;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
@@ -34,27 +35,6 @@ class RecipientRegionRequest extends ActivityBaseRequest
     public function messages($recipient_region = []): array
     {
         return $this->getMessagesForRecipientRegion($this->get('recipient_region') ?? $recipient_region);
-    }
-
-    /**
-     * @param $formFields
-     *
-     * @return array
-     */
-    public function groupRegion($formFields): array
-    {
-        $groupedRegion = [];
-
-        foreach ($formFields as $formField) {
-            if (array_key_exists($formField['region_vocabulary'], $groupedRegion)) {
-                $groupedRegion[$formField['region_vocabulary']]['count'] += 1;
-                $groupedRegion[$formField['region_vocabulary']]['total'] += (float) $formField['percentage'];
-            } else {
-                $groupedRegion[$formField['region_vocabulary']] = ['count' => 1, 'total' => (float) $formField['percentage']];
-            }
-        }
-
-        return $groupedRegion;
     }
 
     /**
@@ -104,7 +84,8 @@ class RecipientRegionRequest extends ActivityBaseRequest
             return false;
         });
 
-        $groupedPercentRegion = $this->groupRegion($formFields);
+        $recipientRegionService = app()->make(RecipientRegionService::class);
+        $groupedPercentRegion = $recipientRegionService->groupRegion($formFields);
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
@@ -122,7 +103,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
             if ($allottedRegionPercent !== 100.0) {
                 if ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['count'] > 1) {
                     if ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] !== $allottedRegionPercent) {
-                        $rules[$recipientRegionForm . '.percentage'] .= '|allocated_region_total_mismatch:';
+                        $rules[$recipientRegionForm . '.percentage'] .= '|allocated_region_total_mismatch';
                     }
                 } else {
                     $rules[$recipientRegionForm . '.percentage'] .= '|in:' . $allottedRegionPercent;
@@ -133,12 +114,12 @@ class RecipientRegionRequest extends ActivityBaseRequest
                 $rules[$recipientRegionForm . '.percentage'] .= '|percentage_within_vocabulary';
             }
         }
+
         $firstGroupTotalPercentage = Arr::first($groupedPercentRegion, static function ($value) {
             return $value;
         });
-
         $this->merge(['total_region_percentage' => $firstGroupTotalPercentage['total'] ?? null]);
-
+//        dd($rules);
         return $rules;
     }
 
