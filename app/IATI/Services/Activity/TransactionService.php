@@ -456,7 +456,7 @@ class TransactionService
      * @param $activity
      * @return bool
      */
-    public function checksIfTransactionHasSectorDefinedInTransaction($activity): bool
+    public function checksIfTransactionHasSectorDefined($activity): bool
     {
         $hasDefined = false;
         $transactionData = $activity->transactions()->get()->toArray();
@@ -464,8 +464,8 @@ class TransactionService
         if (!empty($transactionData)) {
             foreach ($transactionData as $transactionDatum) {
                 if (
-                    isset($transactionDatum['sector'])
-                    && !is_variable_null($transactionDatum['sector'])
+                    isset($transactionDatum['transaction']['sector'])
+                    && !is_variable_null($transactionDatum['transaction']['sector'])
                 ) {
                     $hasDefined = true;
                 }
