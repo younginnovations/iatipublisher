@@ -487,10 +487,9 @@ class TransactionRequest extends ActivityBaseRequest
 
         $rules = [];
         $activityService = app()->make(ActivityService::class);
+        $params = $this->route()->parameters();
 
         if (!$fileUpload) {
-            $params = $this->route()->parameters();
-
             if (!$activityService->isElementEmpty($formFields, 'recipientRegionFields') && $activityService->hasRecipientRegionDefinedInActivity($params['id'])) {
                 Validator::extend('already_in_activity', function () {
                     return false;
@@ -518,7 +517,9 @@ class TransactionRequest extends ActivityBaseRequest
             }
         }
 
-        if (!is_variable_null($formFields) && !is_variable_null($this->all()['recipient_country'])) {
+        $transactionService = app()->make(TransactionService::class);
+
+        if (($transactionService->hasRecipientRegionOrCountryDefinedInTransaction($params['id'])) || (!is_variable_null($formFields) && !is_variable_null($this->all()['recipient_country']))) {
             Validator::extend('country_or_region', function () {
                 return false;
             });
@@ -538,7 +539,7 @@ class TransactionRequest extends ActivityBaseRequest
     public function getMessagesForRecipientRegion(array $formFields): array
     {
         $messages = [
-            'recipient_region.already_in_activity' => 'Recipient Region is already added at activity level. You can add a Recipient Region either at activity level or at transaction level.',
+            'recipient_region.already_in_activity' => 'Recipient Region or Recipient Country is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.',
             'recipient_region.country_or_region' => 'You must add either recipient country or recipient region.',
         ];
 
@@ -630,7 +631,7 @@ class TransactionRequest extends ActivityBaseRequest
     public function getMessagesForRecipientCountry(array $formFields): array
     {
         $messages = [
-            'recipient_country.already_in_activity' => 'Recipient Country is already added at activity level. You can add a Recipient Country either at activity level or at transaction level.',
+            'recipient_country.already_in_activity' => 'Recipient Region or Recipient Country is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.',
             'recipient_country.country_or_region' => 'You must add either recipient country or recipient region.',
         ];
 
