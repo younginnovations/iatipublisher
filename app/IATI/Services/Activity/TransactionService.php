@@ -480,7 +480,7 @@ class TransactionService
      * @param $activity
      * @return bool
      */
-    public function checksIfTransactionHasSectorDefinedInTransaction($activity): bool
+    public function checksIfTransactionHasSectorDefined($activity): bool
     {
         $hasDefined = false;
         $transactionData = $activity->transactions()->get()->toArray();

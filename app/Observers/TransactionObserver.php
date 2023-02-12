@@ -48,7 +48,7 @@ class TransactionObserver
 
         $transactionService = app()->make(TransactionService::class);
 
-        if (is_variable_null($transaction->transaction['sector']) && !$transactionService->checksIfTransactionHasSectorDefinedInTransaction($activityObj)) {
+        if (is_variable_null($transaction->transaction['sector']) && !$transactionService->checksIfTransactionHasSectorDefined($activityObj)) {
             $elementStatus['sector'] = false;
         }
 
@@ -113,5 +113,26 @@ class TransactionObserver
         $updatedData = $this->elementCompleteService->setDefaultValues($transactionData, $transaction->activity);
         $transaction->transaction = $updatedData;
         $transaction->saveQuietly();
+    }
+
+    /**
+     * Handles transaction "Deleted" Event.
+     *
+     * @param Transaction $transaction
+     * @return void
+     * @throws BindingResolutionException
+     */
+    public function deleted(Transaction $transaction): void
+    {
+        $activityObj = $transaction->activity;
+        $transactionService = app()->make(TransactionService::class);
+        $hasSectorDefinedInTransaction = $transactionService->checksIfTransactionHasSectorDefined($activityObj);
+
+        if (!$hasSectorDefinedInTransaction) {
+            $elementStatus = $activityObj->element_status;
+            $elementStatus['sector'] = false;
+            $activityObj->element_status = $elementStatus;
+            $activityObj->save();
+        }
     }
 }
