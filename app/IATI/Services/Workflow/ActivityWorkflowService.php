@@ -347,9 +347,8 @@ class ActivityWorkflowService
     {
         $data = sectorDefaultValue();
 
-        if (
-            empty($activity->sector)
-            && !$this->activityService->checkIfTransactionHasSector($activity)
+        if ((empty($activity->sector) && !$this->activityService->checkIfTransactionHasSector($activity))
+            || (is_variable_null($activity->sector))
         ) {
             $this->sectorService->update($activity->id, $data);
         }
