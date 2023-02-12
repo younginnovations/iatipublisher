@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Observers;
 
 use App\IATI\Models\Activity\Transaction;
+use App\IATI\Services\Activity\TransactionService;
 use App\IATI\Services\ElementCompleteService;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 /**
  * Class TransactionObserver.
@@ -32,6 +34,7 @@ class TransactionObserver
      *
      * @return void
      * @throws \JsonException
+     * @throws BindingResolutionException
      */
     public function updateActivityElementStatus($transaction): void
     {
@@ -42,6 +45,13 @@ class TransactionObserver
         if (!is_variable_null($transaction->transaction['sector'])) {
             $elementStatus['sector'] = true;
         }
+
+        $transactionService = app()->make(TransactionService::class);
+
+        if (is_variable_null($transaction->transaction['sector']) && !$transactionService->checksIfTransactionHasSectorDefinedInTransaction($activityObj)) {
+            $elementStatus['sector'] = false;
+        }
+
         $activityObj->element_status = $elementStatus;
         $activityObj->saveQuietly();
     }

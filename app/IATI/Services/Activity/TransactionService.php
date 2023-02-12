@@ -449,4 +449,29 @@ class TransactionService
     {
         return $this->transactionRepository->delete($id);
     }
+
+    /**
+     * Checks if Transaction has Sector Defined.
+     *
+     * @param $activity
+     * @return bool
+     */
+    public function checksIfTransactionHasSectorDefinedInTransaction($activity): bool
+    {
+        $hasDefined = false;
+        $transactionData = $activity->transactions()->get()->toArray();
+
+        if (!empty($transactionData)) {
+            foreach ($transactionData as $transactionDatum) {
+                if (
+                    isset($transactionDatum['sector'])
+                    && !is_variable_null($transactionDatum['sector'])
+                ) {
+                    $hasDefined = true;
+                }
+            }
+        }
+
+        return $hasDefined;
+    }
 }
