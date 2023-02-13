@@ -112,13 +112,14 @@
           <tr
             v-for="(activity, index) in activities"
             v-else
+            ref="tableRow"
             :key="index"
-            class="hover:!bg-white"
             :class="{
               'upload-error': Object.keys(activity['errors']).length > 0,
             }"
           >
             <ListElement
+              :width="tableWidth"
               :activity="activity"
               :index="index"
               :selected-activities="JSON.stringify(selectedActivities)"
@@ -138,7 +139,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted, reactive, nextTick, onUnmounted } from 'vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 import Placeholder from './ImportPlaceholder.vue';
@@ -152,9 +153,19 @@ const activitiesLength = ref(0);
 const loader = ref(false);
 const selectAll = ref(false);
 const loaderText = ref('Please Wait');
-let timer;
+const tableRow = ref();
+const tableWidth = ref();
 
+let timer;
+const getDimensions = async () => {
+  await nextTick();
+  tableWidth.value = tableRow?.value['0'].clientWidth;
+};
+onUnmounted(() => {
+  window.removeEventListener('resize', getDimensions);
+});
 onMounted(() => {
+  window.addEventListener('resize', getDimensions);
   loader.value = true;
   loaderText.value = 'Please Wait';
   let count = 0;
@@ -175,6 +186,8 @@ onMounted(() => {
           window.location.href = '/activities';
         }
         count++;
+
+        setTimeout(getDimensions, 200);
       })
       .catch(() => {
         loader.value = false;
@@ -241,4 +254,22 @@ function importActivities() {
     });
 }
 </script>
-<style scoped></style>
+<style lang="scss" scoped>
+.upload-error {
+  position: relative !important;
+  background: rgba(0, 0, 0, 0) !important;
+  z-index: 1;
+
+  &::after {
+    position: absolute;
+    content: '';
+    height: 68px;
+    width: 100%;
+    border-left: 2px solid #d1001e;
+    left: 0;
+    top: 0;
+    background-color: #fff1f0;
+    z-index: -1;
+  }
+}
+</style>

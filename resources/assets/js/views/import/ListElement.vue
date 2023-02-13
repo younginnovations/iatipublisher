@@ -1,6 +1,6 @@
 <template>
   <td class="title">
-    <span class="flex justify-between">
+    <span class="flex">
       <span class="font-normal">{{
         activity['data']['title'][0]['narrative']
           ? activity['data']['title'][0]['narrative']
@@ -24,20 +24,23 @@
         /> </span
     ></span>
 
-    <div class="upload-error-content duration-200" :class="{ closed: !active }">
-      <div class="p-4">
+    <div
+      :style="`width: ${width - 40}px;`"
+      class="upload-error-content duration-200"
+      :class="{ closed: !active }"
+    >
+      <div class="py-4">
         <div
           v-if="Object.keys(activity['errors']).indexOf('critical') !== -1"
-          class="critical-container mt-2"
+          class="critical-container mt-2 cursor-pointer"
+          :style="`width: ${width - 40}px;`"
+          @click="
+            () => {
+              showCritical = !showCritical;
+            }
+          "
         >
-          <div
-            class="flex items-center justify-between border border-none bg-rose p-3"
-            @click="
-              () => {
-                showCritical = !showCritical;
-              }
-            "
-          >
+          <div class="flex items-center justify-between border border-none p-3">
             <span class="flex items-center space-x-2">
               <svg-vue class="text-crimson-40" icon="alert" />
               <span> Critical errors</span>
@@ -46,13 +49,18 @@
               icon="dropdown-arrow"
               class="ml-1 cursor-pointer text-[4px] duration-200"
               :class="{ 'rotate-180': showCritical, '': !showCritical }"
+              @click="
+                () => {
+                  showCritical = !showCritical;
+                }
+              "
             />
           </div>
           <div class="error-dropdown" :class="showCritical ? '' : 'hide-error'">
             <div
               v-for="(ele_err, i) in activity['errors']['critical']"
               :key="i"
-              class="bg-rose p-4"
+              class="p-4"
             >
               <p class="mb-2 font-semibold capitalize">
                 {{ i }}
@@ -71,15 +79,16 @@
         </div>
         <div
           v-if="Object.keys(activity['errors']).indexOf('error') !== -1"
-          class="error-container mt-2"
+          class="error-container mt-2 cursor-pointer"
+          :style="`width: ${width - 40}px;`"
+          @click="
+            () => {
+              showError = !showError;
+            }
+          "
         >
           <div
             class="flex items-center justify-between border border-none bg-rose p-3"
-            @click="
-              () => {
-                showError = !showError;
-              }
-            "
           >
             <span class="flex items-center space-x-2">
               <svg-vue class="text-crimson-40" icon="alert" />
@@ -89,6 +98,11 @@
               icon="dropdown-arrow"
               class="ml-1 cursor-pointer text-[4px] duration-200"
               :class="{ 'rotate-180': showError, '': !showError }"
+              @click="
+                () => {
+                  showError = !showError;
+                }
+              "
             />
           </div>
           <div class="error-dropdown" :class="showError ? '' : 'hide-error'">
@@ -114,16 +128,15 @@
         </div>
         <div
           v-if="Object.keys(activity['errors']).indexOf('warning') !== -1"
-          class="warning-container my-2 border-none"
+          class="warning-container my-2 cursor-pointer border-none"
+          :style="`width: ${width - 40}px;`"
+          @click="
+            () => {
+              showWarning = !showWarning;
+            }
+          "
         >
-          <div
-            class="flex items-center justify-between bg-eggshell p-3"
-            @click="
-              () => {
-                showWarning = !showWarning;
-              }
-            "
-          >
+          <div class="flex items-center justify-between bg-eggshell p-3">
             <span class="flex items-center space-x-2">
               <svg-vue icon="alert" class="text-camel-40" /><span
                 >Warnings</span
@@ -131,8 +144,13 @@
             </span>
             <svg-vue
               icon="dropdown-arrow"
-              class="ml-1 text-[4px] duration-200"
+              class="ml-1 cursor-pointer text-[4px] duration-200"
               :class="{ 'rotate-180': showWarning, '': !showWarning }"
+              @click="
+                () => {
+                  showWarning = !showWarning;
+                }
+              "
             />
           </div>
           <div :class="showWarning ? '' : 'hide-error'" class="error-dropdown">
@@ -214,6 +232,7 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  width: { type: Number, required: false, default: 0 },
   selectedActivities: {
     type: String,
     required: true,
@@ -273,9 +292,26 @@ watch(
 
 .critical-container {
   position: relative;
+  background-color: #f6f0ff;
+  z-index: 100;
 }
 
 .critical-container::after {
+  position: absolute;
+  content: ' ';
+  z-index: 10;
+  background-color: #a66ee9;
+  height: 100%;
+  width: 2px;
+  left: 0;
+  top: 0;
+}
+
+.warning-container {
+  position: relative;
+  z-index: 100;
+}
+.error-container::after {
   position: absolute;
   content: ' ';
   z-index: 10;
@@ -285,11 +321,12 @@ watch(
   left: 0;
   top: 0;
 }
-
-.warning-container {
+.error-container {
   position: relative;
-}
+  z-index: 100;
 
+  @apply bg-rose;
+}
 .warning-container::after {
   position: absolute;
   content: ' ';

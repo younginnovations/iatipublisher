@@ -444,6 +444,7 @@ export default defineComponent({
   },
   setup(props) {
     const { types, coreCompleted } = toRefs(props);
+    let removed = sessionStorage.getItem('removed');
 
     const store = detailStore();
     const indexStore = useStore();
@@ -485,6 +486,14 @@ export default defineComponent({
       window.removeEventListener('resize', calcWidth);
     });
     onMounted(() => {
+      window.onload = () => {
+        if (removed) {
+          toastData.type = true;
+          toastData.visibility = true;
+          toastData.message = 'Removed succesfully';
+          sessionStorage.clear();
+        }
+      };
       screenWidth.value = window.innerWidth;
       window.addEventListener('scroll', handleScroll);
       window.addEventListener('resize', calcWidth);
