@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex space-x-2">
     <div
       class="validation validation__errorHead"
       :class="{
@@ -108,6 +108,7 @@ import { useToggle } from '@vueuse/core';
 import ErrorLists from 'Components/sections/ErrorLists.vue';
 import uploadedErrors from 'Components/sections/uploadedErrors.vue';
 import axios from 'axios';
+
 const props = defineProps({
   errorData: { type: Array, required: true },
 });
@@ -139,7 +140,6 @@ interface TempData {
 }
 onMounted(() => {
   if (errorData.value.length) {
-    console.log(errorData.value.length);
     issueType.value = 'validator';
     return;
   }
@@ -197,7 +197,8 @@ watch(
 const deleteErrors = () => {
   axios.delete(`/import/errors/${activityId}`).then((res) => {
     if (res.status) {
-      console.log('Sucess');
+      sessionStorage.setItem('removed', 'true');
+      location.reload();
     }
   });
 };

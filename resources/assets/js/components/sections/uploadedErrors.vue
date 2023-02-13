@@ -15,7 +15,8 @@
           icon="alert"
         />
         <span class="text-sm font-bold capitalize"
-          >{{ index === 'error' ? errorLength : warningLength }}
+          >{{ errorLength(index) }}
+
           {{ index }}</span
         >
       </div>
@@ -57,7 +58,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, ref, computed } from 'vue';
+import { defineProps, ref } from 'vue';
 
 const active = ref(false);
 const props = defineProps({
@@ -71,30 +72,16 @@ const props = defineProps({
   },
 });
 const toggle = ref(false);
-const errorLength = computed(() => {
+const errorLength = (currentError) => {
   let count = 0;
 
-  if (props.index === 'error') {
+  if (props.index === currentError) {
     for (const type in props.item) {
-      for (const index in props.item[type]) {
-        count++;
-      }
+      count += Object.keys(props.item[type]).length;
     }
   }
   return count;
-});
-const warningLength = computed(() => {
-  let count = 0;
-
-  if (props.index === 'warning') {
-    for (const type in props.item) {
-      for (const index in props.item[type]) {
-        count++;
-      }
-    }
-  }
-  return count;
-});
+};
 
 const accordionToggle = (e: Event) => {
   active.value = !active.value;
