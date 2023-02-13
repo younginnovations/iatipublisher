@@ -121,7 +121,7 @@ class DateRequest extends ActivityBaseRequest
 
             if (isset($date, $type)) {
                 if (($type === '2' || $type === '4')) {
-                    (strtotime($date) <= strtotime(date('Y-m-d'))) ?: $rules[sprintf('%s.date', $activityDateForm)] .= '|before:' . now();
+                    (dateStrToTime($date) <= dateStrToTime(date('Y-m-d'))) ?: $rules[sprintf('%s.date', $activityDateForm)] .= '|before:' . now();
                 }
 
                 if ($type === '4') {
@@ -134,7 +134,7 @@ class DateRequest extends ActivityBaseRequest
 
                     if (count($actualStartDate)) {
                         foreach ($actualStartDate as $startDate) {
-                            strtotime($date) > strtotime($startDate) ?: $rules[sprintf('%s.date', $activityDateForm)] .= '|end_later_than_start';
+                            dateStrToTime($date) > dateStrToTime($startDate) ?: $rules[sprintf('%s.date', $activityDateForm)] .= '|end_later_than_start';
                         }
                     }
                 }
@@ -149,7 +149,7 @@ class DateRequest extends ActivityBaseRequest
 
                     if (count($plannedStartDate)) {
                         foreach ($plannedStartDate as $startDate) {
-                            strtotime($date) > strtotime($startDate) ?: $rules[sprintf('%s.date', $activityDateForm)] .= '|end_later_than_start';
+                            dateStrToTime($date) > dateStrToTime($startDate) ?: $rules[sprintf('%s.date', $activityDateForm)] .= '|end_later_than_start';
                         }
                     }
                 }

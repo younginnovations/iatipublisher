@@ -123,7 +123,7 @@ class ParticipatingOrganization extends Element
 
         if ($key === $this->_csvHeaders[0] && (!is_null($value))) {
             $validOrganizationRoles = $this->loadCodeList('OrganisationRole', 'Organization');
-            $value = $value ? trim($value) : '';
+            $value = $value ? trim($value) : $value;
 
             if ($value) {
                 foreach ($validOrganizationRoles as $code => $name) {
@@ -199,7 +199,7 @@ class ParticipatingOrganization extends Element
 
         if ($key === $this->_csvHeaders[2] && (!is_null($value))) {
             $validOrganizationType = $this->loadCodeList('OrganizationType', 'Organization');
-            $value = $value ? trim($value) : '';
+            $value = $value ? trim($value) : $value;
 
             if ($value) {
                 foreach ($validOrganizationType as $code => $name) {

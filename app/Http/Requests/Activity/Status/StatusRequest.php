@@ -34,12 +34,6 @@ class StatusRequest extends ActivityBaseRequest
      */
     public function getWarningForActivityStatus($status): array
     {
-        if ($status && is_array($status)) {
-            return [
-                'activity_status' => 'nullable|size:1',
-            ];
-        }
-
         return [];
     }
 
@@ -52,8 +46,14 @@ class StatusRequest extends ActivityBaseRequest
      */
     public function getErrorsForActivityStatus($status): array
     {
+        if ($status && is_array($status)) {
+            return [
+                'activity_status' => 'nullable|size:1',
+            ];
+        }
+
         return [
-          'activity_status' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ActivityStatus', 'Activity', false)))),
+            'activity_status' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ActivityStatus', 'Activity', false)))),
         ];
     }
 
@@ -65,8 +65,8 @@ class StatusRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => 'The activity status does not exist.',
-            'size'      => 'The activity status cannot have more than one value.',
+            'in' => 'The activity status does not exist.',
+            'size' => 'The activity status cannot have more than one value.',
         ];
     }
 }

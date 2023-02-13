@@ -13,7 +13,6 @@ use App\IATI\Repositories\ImportActivityError\ImportActivityErrorRepository;
 use App\XmlImporter\Events\XmlWasUploaded;
 use App\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
 use App\XmlImporter\Foundation\XmlProcessor;
-use DOMDocument;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
@@ -143,17 +142,6 @@ class ImportXmlService
     }
 
     /**
-     * @param $path
-     * @param $content
-     *
-     * @return void
-     */
-    public function uploadFile($path, $content): void
-    {
-        Storage::disk('s3')->put($path, $content);
-    }
-
-    /**
      * Temporarily store the uploaded Xml file.
      *
      * @param UploadedFile $file
@@ -163,13 +151,13 @@ class ImportXmlService
     public function store(UploadedFile $file): bool
     {
         try {
-            return awsUploadFile(sprintf('%s/%s/%s', $this->xml_file_storage_path, Auth::user()->organization_id, $file->getClientOriginalName()), $file->getContent());
+            return awsUploadFile(sprintf('%s/%s/%s/%s', $this->xml_file_storage_path, Auth::user()->organization_id, Auth::user()->id, $file->getClientOriginalName()), $file->getContent());
         } catch (Exception $exception) {
             $this->logger->error(
                 sprintf('Error uploading Xml file due to %s', $exception->getMessage()),
                 [
                     'trace' => $exception->getTraceAsString(),
-                    'user'  => auth()->user()->id,
+                    'user' => auth()->user()->id,
                 ]
             );
 
@@ -239,6 +227,7 @@ class ImportXmlService
                     'transaction' => json_encode($transaction),
                 ];
             }
+
             $this->transactionRepository->upsert($transactionList, 'id');
         }
 
@@ -256,49 +245,52 @@ class ImportXmlService
     protected function saveResults($results, $activityId): static
     {
         if ($results) {
+            $resultWithoutIndicator = [];
+
             foreach ($results as $result) {
                 $result = (array) $result;
                 $indicators = Arr::get($result, 'indicator', []);
                 unset($result['indicator']);
 
-                $savedResult = $this->resultRepository->store([
-                    'activity_id' => $activityId,
-                    'result'      => $result,
-                ]);
-
-                foreach ($indicators as $indicator) {
-                    $indicator = (array) $indicator;
-                    $periods = Arr::get($indicator, 'period', []);
-                    unset($indicator['period']);
-
-                    $savedIndicator = $this->indicatorRepository->store([
-                        'result_id' => $savedResult['id'],
-                        'indicator' => $indicator,
+                if (!empty($indicators)) {
+                    $savedResult = $this->resultRepository->store([
+                        'activity_id' => $activityId,
+                        'result' => $result,
                     ]);
 
-                    foreach ($periods as $period) {
-                        $this->periodRepository->store([
-                            'indicator_id' => $savedIndicator['id'],
-                            'period'       => $period,
+                    foreach ($indicators as $indicator) {
+                        $indicator = (array) $indicator;
+                        $periods = Arr::get($indicator, 'period', []);
+                        $tempPeriod = [];
+                        unset($indicator['period']);
+
+                        $savedIndicator = $this->indicatorRepository->store([
+                            'result_id' => $savedResult['id'],
+                            'indicator' => $indicator,
                         ]);
+
+                        if (!empty($periods)) {
+                            foreach ($periods as $period) {
+                                $tempPeriod[] = [
+                                    'period' => $period,
+                                ];
+                            }
+
+                            $savedIndicator->periods()->createMany($tempPeriod);
+                        }
                     }
+                } else {
+                    $resultWithoutIndicator[] = [
+                        'activity_id' => $activityId,
+                        'result' => $result,
+                    ];
                 }
             }
+
+            $this->resultRepository->upsert($resultWithoutIndicator, 'id');
         }
 
         return $this;
-    }
-
-    /**
-     * Get the temporary storage path for the uploaded Xml file.
-     *
-     * @param $filename
-     *
-     * @return string
-     */
-    protected function getXmlDataStoragePath($filename): string
-    {
-        return sprintf('%s/%s', storage_path(sprintf('%s/%s', $this->xml_data_storage_path, Auth::user()->organization_id)), $filename);
     }
 
     /**
@@ -311,8 +303,8 @@ class ImportXmlService
      */
     public function startImport($filename, $userId, $orgId): void
     {
-        awsDeleteFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'valid.json'));
-        awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'status.json'), json_encode(['success' => true, 'message' => 'Started'], JSON_THROW_ON_ERROR));
+        awsDeleteFile(sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, $orgId, $userId, 'valid.json'));
+        awsUploadFile(sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, $orgId, $userId, 'status.json'), json_encode(['success' => true, 'message' => 'Started'], JSON_THROW_ON_ERROR));
 
         $this->fireXmlUploadEvent($filename, $userId, $orgId);
     }
@@ -344,7 +336,7 @@ class ImportXmlService
     public function loadJsonFile($filename): mixed
     {
         try {
-            $contents = awsGetFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, Auth::user()->organization_id, $filename));
+            $contents = awsGetFile(sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, Auth::user()->organization_id, Auth::user()->id, $filename));
 
             if ($contents) {
                 return json_decode($contents, false, 512, JSON_THROW_ON_ERROR);
@@ -355,31 +347,14 @@ class ImportXmlService
             $this->logger->error(
                 sprintf('Error due to %s', $exception->getMessage()),
                 [
-                    'trace'    => $exception->getTraceAsString(),
-                    'user_id'  => auth()->user()->id,
+                    'trace' => $exception->getTraceAsString(),
+                    'user_id' => auth()->user()->id,
                     'filename' => $filename,
                 ]
             );
 
             return null;
         }
-    }
-
-    /**
-     * Load the xml from the given filePath.
-     *
-     * @param $filePath
-     *
-     * @return string
-     */
-    protected function loadXml($filePath): string
-    {
-        libxml_use_internal_errors(true);
-
-        $document = new DOMDocument();
-        $document->load($filePath);
-
-        return $document->saveXML();
     }
 
     /**

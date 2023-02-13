@@ -216,7 +216,7 @@ class XmlQueueWriter
             $return[] = $a;
         });
 
-        $validJsonFile = awsGetFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $this->orgId, 'valid.json'));
+        $validJsonFile = awsGetFile(sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, $this->orgId, $this->userId, 'valid.json'));
 
         if ($validJsonFile) {
             $currentContents = json_decode($validJsonFile, true, 512, JSON_THROW_ON_ERROR);
@@ -227,7 +227,7 @@ class XmlQueueWriter
         }
 
         try {
-            $path = sprintf('%s/%s/%s', $this->xml_data_storage_path, $this->orgId, 'valid.json');
+            $path = sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, $this->orgId, $this->userId, 'valid.json');
             awsUploadFile($path, $content);
         } catch (\Exception $e) {
             awsUploadFile('error-appendDataIntoFile.log', $e->getMessage());

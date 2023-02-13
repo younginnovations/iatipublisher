@@ -143,7 +143,7 @@ class RecipientRegion extends Element
             $this->regions[] = $value;
             $this->regions = array_unique($this->regions);
             $validRegionCode = $this->loadCodeList('Region');
-            $value = $value ? trim($value) : '';
+            $value = $value ? trim($value) : $value;
 
             if ($value) {
                 foreach ($validRegionCode as $code => $name) {
