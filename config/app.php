@@ -1,5 +1,6 @@
 <?php
 
+use App\Providers\ExtendedMailServiceProvider;
 use Illuminate\Support\Facades\Facade;
 
 return [
@@ -183,6 +184,7 @@ return [
         Kris\LaravelFormBuilder\FormBuilderServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         OwenIt\Auditing\AuditingServiceProvider::class,
+        ExtendedMailServiceProvider::class,
     ],
 
     /*
