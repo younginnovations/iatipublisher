@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
 use Illuminate\Mail\MailServiceProvider;
@@ -15,7 +17,7 @@ class ExtendedMailServiceProvider extends MailServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         if (!app()->isProduction()) {
             Mail::fake();
