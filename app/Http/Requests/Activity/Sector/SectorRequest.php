@@ -89,12 +89,8 @@ class SectorRequest extends ActivityBaseRequest
         Validator::extend('sector_total_percent', function () {
             return false;
         });
-        Validator::extend('sector_has_five_digit_oced_vocab', function () {
-            return false;
-        });
         $rules = [];
         $groupedPercentSector = $this->groupSector($formFields);
-        $hasFiveDigitOecd = false;
 
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
@@ -116,23 +112,12 @@ class SectorRequest extends ActivityBaseRequest
                 $rules[$key] = $item;
             }
 
-            if ($sector['sector_vocabulary'] === '1') {
-                $hasFiveDigitOecd = true;
-            }
-
             if ($groupedPercentSector[$sector['sector_vocabulary']]['count'] > 1) {
                 if ($groupedPercentSector[$sector['sector_vocabulary']]['total'] !== 100.0) {
                     $rules[$sectorForm . '.percentage'] .= '|sector_total_percent';
                 }
             } else {
                 $rules[$sectorForm . '.percentage'] .= '|in:' . 100.0;
-            }
-        }
-
-        if (!$hasFiveDigitOecd) {
-            foreach ($formFields as $sectorIndex => $sector) {
-                $sectorForm = sprintf('sector.%s', $sectorIndex);
-                $rules[$sectorForm . '.sector_vocabulary'] = 'sector_has_five_digit_oced_vocab';
             }
         }
 
