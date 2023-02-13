@@ -258,7 +258,7 @@ class ActivityRow extends Row
         /*$this->makeDirectoryIfNonExistent()
         ->writeCsvDataAsJson($this->getCsvFilepath());*/
 
-        $path = sprintf('%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, self::VALID_CSV_FILE);
+        $path = sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, $this->userId, self::VALID_CSV_FILE);
         $this->writeCsvDataAsJson($path);
     }
 
@@ -469,7 +469,7 @@ class ActivityRow extends Row
      */
     protected function getCsvFilepath(): string
     {
-        return storage_path(sprintf('%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, self::VALID_CSV_FILE));
+        return storage_path(sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, $this->userId, self::VALID_CSV_FILE));
     }
 
     /**
@@ -511,12 +511,11 @@ class ActivityRow extends Row
         if ($validJsonFile) {
             $content = $this->appendDataIntoFile($validJsonFile);
         } else {
-            //$this->createNewFile($destinationFilePath);
             $content = json_encode([['data' => $this->data(), 'errors' => $this->errors(), 'status' => 'processed', 'existence' => $this->existence]], JSON_THROW_ON_ERROR);
         }
 
         try {
-            $path = sprintf('%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, self::VALID_CSV_FILE);
+            $path = sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, $this->userId, self::VALID_CSV_FILE);
             awsUploadFile($path, $content);
         } catch (\Exception $e) {
             awsUploadFile('error-csv-appendDataIntoFile.log', $e->getMessage());

@@ -129,7 +129,7 @@ class RecipientCountry extends Element
             $this->countries[] = $value;
             $this->countries = array_unique($this->countries);
             $validCountry = $this->loadCodeList('Country');
-            $value = $value ? trim($value) : '';
+            $value = $value ? trim($value) : $value;
 
             if ($value) {
                 foreach ($validCountry as $code => $name) {
@@ -208,6 +208,7 @@ class RecipientCountry extends Element
         $recipientRegion = $this->recipientRegion->data;
         $this->data['recipient_region'] = (empty($recipientRegion)) ? '' : $recipientRegion;
         $this->data['recipient_country_total_percentage'] = Arr::get($this->data, 'recipient_country', []);
+
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
                                          ->getValidatorInstance();
@@ -229,7 +230,7 @@ class RecipientCountry extends Element
      */
     public function rules(): array
     {
-        return $this->request->getWarningForRecipientCountry($this->data('recipient_country'), true);
+        return $this->request->getWarningForRecipientCountry($this->data['recipient_country'], true);
     }
 
     /**
@@ -240,7 +241,7 @@ class RecipientCountry extends Element
      */
     public function errorRules(): array
     {
-        return $this->request->getErrorsForRecipientCountry($this->data('recipient_country'), true);
+        return $this->request->getErrorsForRecipientCountry($this->data['recipient_country'], true);
     }
 
     /**
@@ -250,7 +251,7 @@ class RecipientCountry extends Element
      */
     public function messages(): array
     {
-        return $this->request->getMessagesForRecipientCountry($this->data('recipient_country'));
+        return $this->request->getMessagesForRecipientCountry($this->data['recipient_country']);
     }
 
     /**

@@ -41,11 +41,6 @@ class ImportCsvService
     public const VALID_CSV_FILE = 'valid.json';
 
     /**
-     * File in which the invalid Csv data is written before import.
-     */
-    public const INVALID_CSV_FILE = 'invalid.json';
-
-    /**
      * Directory where the uploaded Csv file is stored temporarily before import.
      */
     public string $csv_file_storage_path;
@@ -147,7 +142,8 @@ class ImportCsvService
     public function process($filename): void
     {
         try {
-            $uploadedFile = awsGetFile(sprintf('%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization->id, $filename));
+            $uploadedFile = awsGetFile(sprintf('%s/%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization->id, Auth::user()->id, $filename));
+            awsUploadFile(sprintf('%s/%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization->id, Auth::user()->id, 'valid.json'), '');
             $localStorageFile = $this->localStorageFile($uploadedFile, $filename);
             Session::put('user_id', Auth::user()->id);
             Session::put('org_id', Auth::user()->organization->id);
@@ -157,7 +153,7 @@ class ImportCsvService
             $this->logger->error(
                 $e->getMessage(),
                 [
-                    'user'  => auth()->user(),
+                    'user' => auth()->user(),
                     'trace' => $e->getTraceAsString(),
                 ]
             );
@@ -192,7 +188,8 @@ class ImportCsvService
     public function create($activities): void
     {
         $organizationId = Auth::user()->organization_id;
-        $file = awsGetFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, $organizationId, self::VALID_CSV_FILE));
+        $userId = Auth::user()->id;
+        $file = awsGetFile(sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, $organizationId, $userId, self::VALID_CSV_FILE));
         $contents = json_decode($file, true, 512, JSON_THROW_ON_ERROR);
 
         $organizationIdentifier = Arr::get(
@@ -351,22 +348,6 @@ class ImportCsvService
     }
 
     /**
-     * Get the filepath for the temporary files used by the import process.
-     *
-     * @param $filename
-     *
-     * @return string
-     */
-    public function getTemporaryFilepath($filename = null): string
-    {
-        if ($filename) {
-            return storage_path(sprintf('%s/%s/%s', $this->csv_data_storage_path, Session::get('org_id'), $filename));
-        }
-
-        return storage_path(sprintf('%s/%s/', $this->csv_data_storage_path, Session::get('org_id')));
-    }
-
-    /**
      * Set import-status key when the processing is complete.
      *
      * @return void
@@ -374,61 +355,6 @@ class ImportCsvService
     protected function completeImport(): void
     {
         Session::put('import-status', 'Complete');
-    }
-
-    /**
-     * Get the processed data from the server.
-     *
-     * @param $filePath
-     * @param $temporaryFileName
-     * @param $view
-     *
-     * @return mixed
-     * @throws \JsonException
-     */
-    protected function getDataFrom($filePath, $temporaryFileName, $view): mixed
-    {
-        $activities = json_decode(file_get_contents($filePath), true, 512, JSON_THROW_ON_ERROR);
-        $path = $this->getTemporaryFilepath($temporaryFileName);
-
-        FileFacade::put($path, json_encode($activities, JSON_THROW_ON_ERROR));
-
-        return $activities;
-    }
-
-    /**
-     * Get processed data from the server.
-     *
-     * @return array|null
-     */
-    public function getData(): ?array
-    {
-        try {
-            [$validFilepath, $invalidFilepath, $response] = [$this->getFilePath(true), $this->getFilePath(false), []];
-
-            if (file_exists($validFilepath)) {
-                $validResponse = $this->getDataFrom($validFilepath, 'valid-temp.json', 'valid');
-                $response['validData'] = ['render' => $validResponse];
-            }
-
-            if (file_exists($invalidFilepath)) {
-                $invalidResponse = $this->getDataFrom($invalidFilepath, 'invalid-temp.json', 'invalid');
-                $response['invalidData'] = ['render' => $invalidResponse];
-            }
-
-            return $response;
-        } catch (Exception $e) {
-            $this->logger->error(
-                sprintf('Error during reading data due to [%s]', $e->getMessage()),
-                [
-                    'trace'           => $e->getTraceAsString(),
-                    'user_id'         => Auth::user()->organization_id,
-                    'organization_id' => Session::get('org_id'),
-                ]
-            );
-
-            return null;
-        }
     }
 
     /**
@@ -441,34 +367,18 @@ class ImportCsvService
     public function storeCsv(UploadedFile $file): ?bool
     {
         try {
-            return awsUploadFile(sprintf('%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization_id, str_replace(' ', '', $file->getClientOriginalName())), $file->getContent());
+            return awsUploadFile(sprintf('%s/%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization_id, Auth::user()->id, str_replace(' ', '', $file->getClientOriginalName())), $file->getContent());
         } catch (Exception $e) {
             $this->logger->error(
                 sprintf('Error uploading Activity CSV file due to [%s]', $e->getMessage()),
                 [
-                    'trace'   => $e->getTraceAsString(),
+                    'trace' => $e->getTraceAsString(),
                     'user_id' => Auth::user()->organization_id,
                 ]
             );
 
             return null;
         }
-    }
-
-    /**
-     * Get the temporary Csv filepath for the uploaded Csv file.
-     *
-     * @param $filename
-     *
-     * @return string
-     */
-    public function getStoredCsvPath($filename = null): string
-    {
-        if ($filename) {
-            return sprintf('%s/%s', storage_path(sprintf('%s/%s', 'CsvImporter/file', Session::get('org_id'))), $filename);
-        }
-
-        return storage_path(sprintf('%s/%s/', 'CsvImporter/file', Session::get('org_id')));
     }
 
     /**
@@ -508,8 +418,9 @@ class ImportCsvService
      */
     public function clearOldImport(): void
     {
-        awsDeleteFile(sprintf('%s/%s', $this->csv_data_storage_path, Session::get('org_id')));
-
+        awsUploadFile(sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, Session::get('org_id'), Session::get('user_id'), 'valid.json'), '');
+        awsDeleteFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, Session::get('org_id'), Session::get('user_id')));
+        awsDeleteFile(sprintf('%s/%s/%s', $this->csv_file_storage_path, Session::get('org_id'), Session::get('user_id')));
         if ($this->hasOldData()) {
             $this->clearSession(['import-status', 'filename']);
         }
@@ -548,9 +459,9 @@ class ImportCsvService
      */
     public function isInUTF8Encoding($filename): bool
     {
-        $uploadedFile = awsGetFile(sprintf('%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization->id, $filename));
+        $uploadedFile = awsGetFile(sprintf('%s/%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization->id, Auth::user()->id, $filename));
         $s3 = Storage::disk('local');
-        $localPath = sprintf('%s/%s/%s', 'CsvImporter/file', Auth::user()->organization->id, $filename);
+        $localPath = sprintf('%s/%s/%s/%s', 'CsvImporter/file', Auth::user()->organization->id, Auth::user()->id, $filename);
         $s3->put($localPath, $uploadedFile);
 
         $file = new File(storage_path(sprintf('%s/%s', 'app', $localPath)));
@@ -561,7 +472,7 @@ class ImportCsvService
     public function getAwsCsvData($filename)
     {
         try {
-            $contents = awsGetFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, Auth::user()->organization_id, $filename));
+            $contents = awsGetFile(sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, Auth::user()->organization_id, Auth::user()->id, $filename));
 
             if ($contents) {
                 return json_decode($contents, false, 512, JSON_THROW_ON_ERROR);
@@ -572,8 +483,8 @@ class ImportCsvService
             $this->logger->error(
                 sprintf('Error due to %s', $exception->getMessage()),
                 [
-                    'trace'    => $exception->getTraceAsString(),
-                    'user_id'  => auth()->user()->id,
+                    'trace' => $exception->getTraceAsString(),
+                    'user_id' => auth()->user()->id,
                     'filename' => $filename,
                 ]
             );

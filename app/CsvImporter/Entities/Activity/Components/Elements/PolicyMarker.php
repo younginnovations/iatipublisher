@@ -98,7 +98,7 @@ class PolicyMarker extends Element
 
         if ($key === $this->_csvHeaders[0]) {
             $validVocabulary = $this->loadCodeList('PolicyMarkerVocabulary');
-            $value = $value ? trim($value) : '';
+            $value = $value ? trim($value) : $value;
 
             if ($value) {
                 foreach ($validVocabulary as $code => $name) {
@@ -184,7 +184,7 @@ class PolicyMarker extends Element
             switch ($vocabulary) {
                 case '1':
                     $validMarker = $this->loadCodeList('PolicyMarker');
-                    $value = $value ? trim($value) : '';
+                    $value = $value ? trim($value) : $value;
 
                     if ($value) {
                         foreach ($validMarker as $code => $name) {

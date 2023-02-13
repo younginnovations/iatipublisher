@@ -154,9 +154,9 @@ class ReportingOrganization extends Element
         }
 
         if ($key === $this->_csvHeaders[2]) {
-            if ((is_string($value) && (strtolower($value) === 'yes' || strtolower($value) === 'true')) || $value) {
+            if ((is_string($value) && (strtolower($value) === 'yes' || strtolower($value) === 'true')) || $value === true) {
                 $value = '1';
-            } elseif ((is_string($value) && (strtolower($value) === 'no' || strtolower($value) === 'false')) || !$value) {
+            } elseif ((is_string($value) && (strtolower($value) === 'no' || strtolower($value) === 'false')) || $value === false) {
                 $value = '0';
             }
 
