@@ -109,7 +109,7 @@ class Budget extends Element
 
         if ($key === $this->_csvHeaders[0]) {
             $validBudgetType = $this->loadCodeList('BudgetType');
-            $value = $value ? trim($value) : '';
+            $value = $value ? trim($value) : $value;
 
             if ($value) {
                 foreach ($validBudgetType as $code => $name) {

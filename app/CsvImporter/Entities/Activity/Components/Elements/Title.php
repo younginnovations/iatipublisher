@@ -147,6 +147,7 @@ class Title extends Element
     public function criticalErrors(): array
     {
         $rules['activity_title.0.narrative'] = 'required';
+        $rules['activity_title'] = 'size:1';
 
         return $rules;
     }
@@ -159,6 +160,7 @@ class Title extends Element
     public function messages(): array
     {
         $messages['activity_title.0.narrative.required'] = 'The activity title is required.';
+        $messages['activity_title'] = 'There should be only one activity title.';
 
         return $messages;
     }

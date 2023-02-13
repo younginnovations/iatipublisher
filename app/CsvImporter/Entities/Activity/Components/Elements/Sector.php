@@ -172,7 +172,7 @@ class Sector extends Element
             $sectorVocabulary = Arr::get($this->data['sector'], $index . '.sector_vocabulary', null);
 
             if ($sectorVocabulary === '1') {
-                $value = $value ? trim($value) : '';
+                $value = $value ? trim($value) : $value;
                 $this->codes[] = $value;
                 $validSectorCode = $this->loadCodeList('SectorCode');
 
@@ -226,7 +226,7 @@ class Sector extends Element
     protected function setSectorCategoryCode($value, $index): void
     {
         $validCategoryCode = $this->loadCodeList('SectorCategory');
-        $value = $value ? trim($value) : '';
+        $value = $value ? trim($value) : $value;
 
         if ($value) {
             foreach ($validCategoryCode as $code => $name) {

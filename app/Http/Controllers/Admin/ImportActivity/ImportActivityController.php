@@ -123,7 +123,7 @@ class ImportActivityController extends Controller
                 }
             } else {
                 if ($this->importCsvService->isCsvFileEmpty($file)) {
-                    $response = ['success' => false, 'type' => 'danger', 'code' => ['message', ['message' => trans('Data not available')]], 'error' => trans('Data not available')];
+                    $response = ['success' => false, 'errors' =>['activity' => 'The file is empty. Please upload file with activities.']];
 
                     return response()->json($response);
                 }
@@ -138,7 +138,7 @@ class ImportActivityController extends Controller
             }
 
             return response()->json(['success' => true, 'message' => 'Uploaded successfully', 'type' => $filetype]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while rendering activity import page.']);
@@ -176,7 +176,7 @@ class ImportActivityController extends Controller
             Session::put('success', 'Imported data successfully.');
 
             return response()->json(['success' => true, 'message' => 'Imported successfully', 'type' => $filetype]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Session::put('error', 'Error occurred while importing activity');
             logger()->error($e->getMessage());
             logger()->error($e);
@@ -195,6 +195,7 @@ class ImportActivityController extends Controller
         try {
             $filetype = Session::get('import_filetype');
             $orgId = Auth::user()->organization_id;
+            $userId = Auth::user()->id;
 
             if (!$orgId) {
                 Session::put('error', 'User is not associated with any organization.');
@@ -206,8 +207,8 @@ class ImportActivityController extends Controller
                 return redirect()->route('admin.activities.index');
             }
 
-            $status = awsGetFile(sprintf('%s/%s/%s', $filetype === 'xml' ? $this->xml_data_storage_path : $this->csv_data_storage_path, $orgId, 'status.json'));
-            $schema_error = awsGetFile(sprintf('%s/%s/%s', $filetype === 'xml' ? $this->xml_data_storage_path : $this->csv_data_storage_path, $orgId, 'schema_error.log'));
+            $status = awsGetFile(sprintf('%s/%s/%s/%s', $filetype === 'xml' ? $this->xml_data_storage_path : $this->csv_data_storage_path, $orgId, $userId, 'status.json'));
+            $schema_error = awsGetFile(sprintf('%s/%s/%s/%s', $filetype === 'xml' ? $this->xml_data_storage_path : $this->csv_data_storage_path, $orgId, $userId, 'schema_error.log'));
 
             if (!$status) {
                 Session::put('error', 'status.json file not present in AWS');
@@ -219,7 +220,7 @@ class ImportActivityController extends Controller
 
             if ($schema_error) {
                 Session::put('error', $status['message'] . '. To see errors <b>
-                <a href=' . awsUrl(sprintf('%s/%s/%s', $filetype === 'xml' ? $this->xml_data_storage_path : $this->csv_data_storage_path, $orgId, 'schema_error.log')) . ' target="_blank">Open Error File</a></b>');
+                <a href=' . awsUrl(sprintf('%s/%s/%s/%s', $filetype === 'xml' ? $this->xml_data_storage_path : $this->csv_data_storage_path, $orgId, $userId, 'schema_error.log')) . ' target="_blank">Open Error File</a></b>');
 
                 return redirect()->route('admin.activities.index');
             }
@@ -231,7 +232,7 @@ class ImportActivityController extends Controller
             }
 
             return view('admin.import.list');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.index')->withResponse(['success' => false, 'error' => 'Error has occurred while checking the status.']);
@@ -269,7 +270,7 @@ class ImportActivityController extends Controller
             }
 
             return response()->json(['status' => $status, 'data' => $data]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
@@ -303,7 +304,7 @@ class ImportActivityController extends Controller
     {
         try {
             return file_get_contents(app_path(sprintf('CsvImporter/Templates/%s/%s.csv', 'Activity', 'other_fields_transaction')));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
@@ -323,7 +324,7 @@ class ImportActivityController extends Controller
             $this->importActivityErrorService->deleteImportError($activityId);
 
             return response()->json(['success' => true, 'message' => 'Import error for activity has been successfully deleted.']);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while trying to delete import error.']);

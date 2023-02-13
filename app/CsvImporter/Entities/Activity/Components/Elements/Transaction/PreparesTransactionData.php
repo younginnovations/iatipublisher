@@ -58,7 +58,7 @@ trait PreparesTransactionData
 
         if ($key === $this->_csvHeaders[1]) {
             $validTransactionType = $this->loadCodeList('TransactionType', 'Activity');
-            $value = $value ? trim($value) : '';
+            $value = $value ? trim($value) : $value;
 
             if ($value) {
                 foreach ($validTransactionType as $code => $name) {
@@ -283,7 +283,7 @@ trait PreparesTransactionData
 
         if ($key === $this->_csvHeaders[14]) {
             $validSectorVocabulary = $this->loadCodeList('SectorVocabulary');
-            $value = $value ? trim($value) : '';
+            $value = $value ? trim($value) : $value;
 
             if ($value) {
                 foreach ($validSectorVocabulary as $code => $name) {
@@ -332,7 +332,7 @@ trait PreparesTransactionData
      */
     protected function setSectorCode($sectorVocabulary, $value): void
     {
-        $value = $value ? trim($value) : '';
+        $value = $value ? trim($value) : $value;
 
         if ($sectorVocabulary === '1') {
             $validSectorCode = $this->loadCodeList('SectorCode');
@@ -432,7 +432,7 @@ trait PreparesTransactionData
 
         if ($key === $this->_csvHeaders[18]) {
             $validCountry = $this->loadCodeList('Country');
-            $value = $value ? trim($value) : '';
+            $value = $value ? trim($value) : $value;
 
             if ($value) {
                 foreach ($validCountry as $code => $name) {
@@ -469,7 +469,7 @@ trait PreparesTransactionData
 
         if ($key === $this->_csvHeaders[19]) {
             $validRegion = $this->loadCodeList('Region');
-            $value = $value ? trim($value) : '';
+            $value = $value ? trim($value) : $value;
 
             if ($value) {
                 foreach ($validRegion as $code => $name) {
@@ -568,7 +568,7 @@ trait PreparesTransactionData
     protected function setOrganizationTypeNameToCode($value): mixed
     {
         $validOrganizationType = $this->loadCodeList('OrganizationType', 'Organization');
-        $value = $value ? trim($value) : '';
+        $value = $value ? trim($value) : $value;
 
         if ($value) {
             foreach ($validOrganizationType as $code => $name) {
