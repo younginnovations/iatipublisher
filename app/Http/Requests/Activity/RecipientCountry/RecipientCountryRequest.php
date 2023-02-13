@@ -94,6 +94,9 @@ class RecipientCountryRequest extends ActivityBaseRequest
             return false;
         });
 
+        Validator::extend('region_percentage_complete', function () {
+            return false;
+        });
         $totalCountryPercent = $this->getTotalPercent($formFields);
         $this->merge(['total_country_percentage' => $totalCountryPercent]);
 
@@ -117,7 +120,11 @@ class RecipientCountryRequest extends ActivityBaseRequest
                     $rules[$recipientCountryForm . '.percentage'] .= '|nullable|max:100';
                 }
 
-                if ($totalCountryPercent !== $allottedCountryPercent && $allottedCountryPercent !== 100.0) {
+                if ($allottedCountryPercent === 0.0) {
+                    $rules[$recipientCountryForm . '.percentage'] .= $totalCountryPercent > 0.0
+                                                                    ? '|region_percentage_complete'
+                                                                    : '|nullable';
+                } elseif ($totalCountryPercent !== $allottedCountryPercent && $allottedCountryPercent !== 100.0) {
                     $rules[$recipientCountryForm . '.percentage'] .= '|allocated_country_percent';
                 }
             }
@@ -143,6 +150,8 @@ class RecipientCountryRequest extends ActivityBaseRequest
             $messages[$recipientCountryForm . '.percentage.numeric'] = 'The recipient country percentage must be a number.';
             $messages[$recipientCountryForm . '.percentage.max'] = 'The recipient country percentage cannot be greater than 100';
             $messages[$recipientCountryForm . '.percentage.sum_exceeded'] = 'The sum of recipient country percentage cannot be greater than 100';
+            $messages[$recipientCountryForm . '.percentage.min'] = 'The recipient country percentage must be at least 0.';
+            $messages[$recipientCountryForm . '.percentage.region_percentage_complete'] = 'Recipient Region’s percentage is already 100%. The sum of the percentages of Recipient Country and Recipient Region must be 100%.';
 
             $narrativeMessages = $this->getMessagesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
 

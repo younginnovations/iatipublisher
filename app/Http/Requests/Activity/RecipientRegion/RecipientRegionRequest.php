@@ -84,6 +84,10 @@ class RecipientRegionRequest extends ActivityBaseRequest
             return false;
         });
 
+        Validator::extend('country_percentage_complete', function () {
+            return false;
+        });
+
         $recipientRegionService = app()->make(RecipientRegionService::class);
         $groupedPercentRegion = $recipientRegionService->groupRegion($formFields);
 
@@ -92,7 +96,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
             $rules[sprintf('%s.region_vocabulary', $recipientRegionForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('RegionVocabulary', 'Activity', false)));
             $rules[sprintf('%s.region_code', $recipientRegionForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Region', 'Activity', false)));
             $rules[$recipientRegionForm . '.vocabulary_uri'] = 'nullable|url';
-            $rules[$recipientRegionForm . '.percentage'] = 'nullable|numeric|min:0';
+            $rules[$recipientRegionForm . '.percentage'] = 'numeric|min:0';
 
             $narrativeRules = $this->getRulesForNarrative($recipientRegion['narrative'], $recipientRegionForm);
 
@@ -103,15 +107,19 @@ class RecipientRegionRequest extends ActivityBaseRequest
             if ($allottedRegionPercent !== 100.0) {
                 if ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['count'] > 1) {
                     if ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] !== $allottedRegionPercent) {
-                        $rules[$recipientRegionForm . '.percentage'] .= '|allocated_region_total_mismatch';
+                        $rules[$recipientRegionForm . '.percentage'] .= '|nullable|allocated_region_total_mismatch';
                     }
+                } elseif ($allottedRegionPercent === 0.0 && $groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] > $allottedRegionPercent) {
+                    $rules[$recipientRegionForm . '.percentage'] .= '|country_percentage_complete';
                 } else {
-                    $rules[$recipientRegionForm . '.percentage'] .= '|in:' . $allottedRegionPercent;
+                    $rules[$recipientRegionForm . '.percentage'] .= '|nullable|in:' . $allottedRegionPercent;
                 }
             } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] > 100.0) {
                 $rules[$recipientRegionForm . '.percentage'] .= '|sum_greater_than';
             } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] !== $groupedPercentRegion[array_key_first($groupedPercentRegion)]['total']) {
                 $rules[$recipientRegionForm . '.percentage'] .= '|percentage_within_vocabulary';
+            } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] !== 100.0) {
+                $rules[$recipientRegionForm . '.percentage'] .= '|allocated_region_total_mismatch';
             }
         }
 
@@ -119,7 +127,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
             return $value;
         });
         $this->merge(['total_region_percentage' => $firstGroupTotalPercentage['total'] ?? null]);
-//        dd($rules);
+
         return $rules;
     }
 
@@ -132,7 +140,9 @@ class RecipientRegionRequest extends ActivityBaseRequest
      */
     public function getMessagesForRecipientRegion(array $formFields): array
     {
-        $messages = ['recipient_region.already_in_transactions' => 'Recipient Region is already added at transaction level. You can add a Recipient Region either at activity level or at transaction level but not at both.'];
+        $messages = [
+            'recipient_region.already_in_transactions' => 'Recipient Region is already added at transaction level. You can add a Recipient Region either at activity level or at transaction level but not at both.',
+        ];
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
@@ -140,7 +150,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
             $messages[sprintf('%s.region_code.in', $recipientRegionForm)] = 'The recipient region code is invalid.';
             $messages[$recipientRegionForm . '.percentage.numeric'] = 'The recipient region percentage field must be a number.';
             $messages[sprintf('%s.vocabulary_uri.url', $recipientRegionForm)] = 'The recipient region vocabulary uri must be a valid url.';
-
+            $messages[sprintf('%s.percentage.country_percentage_complete', $recipientRegionForm)] = 'Recipient Country’s percentage is already 100%. The sum of the percentages of Recipient Country and Recipient Region must be 100%';
             $narrativeMessages = $this->getMessagesForNarrative($recipientRegion['narrative'], $recipientRegionForm);
 
             foreach ($narrativeMessages as $key => $item) {
