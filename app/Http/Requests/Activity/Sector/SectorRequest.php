@@ -89,12 +89,8 @@ class SectorRequest extends ActivityBaseRequest
         Validator::extend('sector_total_percent', function () {
             return false;
         });
-        Validator::extend('sector_has_five_digit_oced_vocab', function () {
-            return false;
-        });
         $rules = [];
         $groupedPercentSector = $this->groupSector($formFields);
-        $hasFiveDigitOecd = false;
 
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
@@ -113,11 +109,14 @@ class SectorRequest extends ActivityBaseRequest
             $narrativeRules = $this->getRulesForNarrative($sector['narrative'], $sectorForm);
 
             foreach ($narrativeRules as $key => $item) {
-                $rules[$key] = $item;
-            }
+                $explodedKey = explode('.', $key);
+                $isNarrative = count($explodedKey) === 5 && $explodedKey[4] === 'language';
 
-            if ($sector['sector_vocabulary'] === '1') {
-                $hasFiveDigitOecd = true;
+                if ($isNarrative && in_array($sector['sector_vocabulary'], ['98', '99'])) {
+                    $rules[sprintf('%s.%s.%s.%s', $sectorForm, 'narrative', $explodedKey[3], 'narrative')] = ['required'];
+                } else {
+                    $rules[$key] = $item;
+                }
             }
 
             if ($groupedPercentSector[$sector['sector_vocabulary']]['count'] > 1) {
@@ -126,13 +125,6 @@ class SectorRequest extends ActivityBaseRequest
                 }
             } else {
                 $rules[$sectorForm . '.percentage'] .= '|in:' . 100.0;
-            }
-        }
-
-        if (!$hasFiveDigitOecd) {
-            foreach ($formFields as $sectorIndex => $sector) {
-                $sectorForm = sprintf('sector.%s', $sectorIndex);
-                $rules[$sectorForm . '.sector_vocabulary'] = 'sector_has_five_digit_oced_vocab';
             }
         }
 
@@ -159,8 +151,8 @@ class SectorRequest extends ActivityBaseRequest
             $messages[sprintf('%s.sdg_target.in', $sectorForm)] = 'The sector code is invalid.';
             $messages[sprintf('%s.vocabulary_uri.url', $sectorForm)] = 'The sector vocabulary-uri field must be a valid url.';
             $messages[sprintf('%s.percentage.numeric', $sectorForm)] = 'The sector percentage field must be a number.';
-            $messages[sprintf('%s.percentage.in', $sectorForm)] = 'The sector percentage for single sector must be either omitted or be 100.';
-            $messages[sprintf('%s.percentage.sector_total_percent', $sectorForm)] = 'The total percentage within a vocabulary must be 100.';
+            $messages[sprintf('%s.percentage.in', $sectorForm)] = 'The percentage must be 100% or left empty, which is assumed as 100%.';
+            $messages[sprintf('%s.percentage.sector_total_percent', $sectorForm)] = 'The sum of percentages of same vocabulary must be equal to 100%';
             $messages[sprintf('%s.sector_vocabulary.sector_has_five_digit_oced_vocab', $sectorForm)] = 'The sector vocabulary must have 5 digit OECD';
 
             $messageNarratives = $this->getMessagesForNarrative($sector['narrative'], $sectorForm);

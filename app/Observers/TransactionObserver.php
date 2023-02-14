@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Observers;
 
 use App\IATI\Models\Activity\Transaction;
+use App\IATI\Services\Activity\TransactionService;
 use App\IATI\Services\ElementCompleteService;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 /**
  * Class TransactionObserver.
@@ -32,12 +34,23 @@ class TransactionObserver
      *
      * @return void
      * @throws \JsonException
+     * @throws BindingResolutionException
      */
     public function updateActivityElementStatus($transaction): void
     {
         $activityObj = $transaction->activity;
         $elementStatus = $activityObj->element_status;
         $elementStatus['transactions'] = $this->elementCompleteService->isTransactionsElementCompleted($transaction->activity);
+
+        if (!is_variable_null($transaction->transaction['sector'])) {
+            $elementStatus['sector'] = true;
+        }
+
+        $transactionService = app()->make(TransactionService::class);
+
+        if (is_variable_null($transaction->transaction['sector']) && !$transactionService->checksIfTransactionHasSectorDefined($activityObj)) {
+            $elementStatus['sector'] = false;
+        }
 
         $activityObj->element_status = $elementStatus;
         $activityObj->saveQuietly();
@@ -100,5 +113,26 @@ class TransactionObserver
         $updatedData = $this->elementCompleteService->setDefaultValues($transactionData, $transaction->activity);
         $transaction->transaction = $updatedData;
         $transaction->saveQuietly();
+    }
+
+    /**
+     * Handles transaction "Deleted" Event.
+     *
+     * @param Transaction $transaction
+     * @return void
+     * @throws BindingResolutionException
+     */
+    public function deleted(Transaction $transaction): void
+    {
+        $activityObj = $transaction->activity;
+        $transactionService = app()->make(TransactionService::class);
+        $hasSectorDefinedInTransaction = $transactionService->checksIfTransactionHasSectorDefined($activityObj);
+
+        if (!$hasSectorDefinedInTransaction) {
+            $elementStatus = $activityObj->element_status;
+            $elementStatus['sector'] = false;
+            $activityObj->element_status = $elementStatus;
+            $activityObj->save();
+        }
     }
 }

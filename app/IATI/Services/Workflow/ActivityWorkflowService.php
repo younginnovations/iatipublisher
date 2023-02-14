@@ -324,4 +324,24 @@ class ActivityWorkflowService
         $publishedActivity = sprintf('%s-%s.xml', $publisherId, $activity->id);
         $this->xmlGeneratorService->deleteUnpublishedFile($publishedActivity);
     }
+
+    /**
+     * Checks if sector is missing from activity and transaction level
+     * if Missing it populates default value.
+     *
+     * @param $activity
+     * @return object
+     */
+    public function populateSectorIfMissing($activity): object
+    {
+        $data = sectorDefaultValue();
+
+        if ((empty($activity->sector) && !$this->activityService->checkIfTransactionHasSector($activity))
+            || (is_variable_null($activity->sector))
+        ) {
+            $this->sectorService->update($activity->id, $data);
+        }
+
+        return $activity->refresh();
+    }
 }

@@ -350,6 +350,11 @@ class ActivityBaseRequest extends FormRequest
                 $formBase,
                 $narrativeIndex
             )] = 'The @xml:lang field is invalid.';
+            $messages[sprintf(
+                '%s.narrative.%s.narrative.required',
+                $formBase,
+                $narrativeIndex
+            )] = 'The Narrative field is required.';
         }
 
         return $messages;

@@ -450,8 +450,8 @@ class TransactionService
         return $this->transactionRepository->delete($id);
     }
 
-    /**
-     * Checks if recipient country or region already defined in previous transaction.
+     /**
+     * Checks if sector defined in one of the activity transaction.
      *
      * @param $activityId
      * @return bool
@@ -472,6 +472,31 @@ class TransactionService
         }
 
         return false;
+    }
+
+    /**
+     * Checks if Transaction has Sector Defined.
+     *
+     * @param $activity
+     * @return bool
+     */
+    public function checksIfTransactionHasSectorDefined($activity): bool
+    {
+        $hasDefined = false;
+        $transactionData = $activity->transactions()->get()->toArray();
+
+        if (!empty($transactionData)) {
+            foreach ($transactionData as $transactionDatum) {
+                if (
+                    isset($transactionDatum['transaction']['sector'])
+                    && !is_variable_null($transactionDatum['transaction']['sector'])
+                ) {
+                    $hasDefined = true;
+                }
+            }
+        }
+
+        return $hasDefined;
     }
 
     /**
