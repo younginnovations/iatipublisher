@@ -451,7 +451,7 @@ class TransactionService
     }
 
     /**
-     * Checks if sector defined in one of the activity transaction.
+     * Checks if recipient country or region already defined in previous transaction.
      *
      * @param $activityId
      * @return bool
@@ -472,5 +472,29 @@ class TransactionService
         }
 
         return false;
+    }
+
+    /**
+     *  Checks if recipient region or country defined in transaction
+     *
+     * @param [type] $activityId
+     * @return boolean
+     */
+    public function hasRecipientRegionOrCountryDefinedInTransaction($activityId): bool
+    {
+        $hasDefined = false;
+        $transactions = $this->getActivityTransactions($activityId);
+
+        foreach ($transactions as $transaction) {
+            $recipientRegion = $transaction->transaction['recipient_region'];
+            $recipientCountry = $transaction->transaction['recipient_country'];
+
+            if (!is_variable_null($recipientCountry) || !is_variable_null($recipientRegion)) {
+                $hasDefined = true;
+                break;
+            }
+        }
+
+        return $hasDefined;
     }
 }
