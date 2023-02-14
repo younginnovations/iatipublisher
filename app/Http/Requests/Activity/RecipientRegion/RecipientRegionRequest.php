@@ -109,17 +109,19 @@ class RecipientRegionRequest extends ActivityBaseRequest
                     }
                 } elseif ($allottedRegionPercent === 0.0 && $groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] > $allottedRegionPercent) {
                     $rules[$recipientRegionForm . '.percentage'] .= '|country_percentage_complete';
-                } else {
+                } elseif ($allottedRegionPercent !== 0.0) {
                     $rules[$recipientRegionForm . '.percentage'] .= '|in:' . $allottedRegionPercent;
+                } else {
+                    $rules[$recipientRegionForm . '.percentage'] .= '|nullable';
                 }
             } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] > 100.0) {
                 $rules[$recipientRegionForm . '.percentage'] .= '|sum_greater_than';
             } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] !== $groupedPercentRegion[array_key_first($groupedPercentRegion)]['total']) {
                 $rules[$recipientRegionForm . '.percentage'] .= '|percentage_within_vocabulary';
-            } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] === 0.0 && $activityService->hasRecipientCountryDefinedInTransactions($params['id'])) {
+            } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] === 0.0 && !$activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
                 $rules[$recipientRegionForm . '.percentage'] .= '|nullable';
-            } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] === 0.0 && !$activityService->hasRecipientCountryDefinedInTransactions($params['id'])) {
-                $rules[$recipientRegionForm . '.percentage'] .= '|nullable|allocated_region_total_mismatch';
+            } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] < $allottedRegionPercent && $activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
+                $rules[$recipientRegionForm . '.percentage'] .= '|allocated_region_total_mismatch';
             }
         }
 

@@ -130,7 +130,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
                     $rules[$recipientCountryForm . '.percentage'] .= '|nullable|max:100';
                 }
 
-                if ($allottedCountryPercent === 100.0 && $activityService->hasRecipientRegionDefinedInActivity($params['id'])) {
+                if ($allottedCountryPercent === 100.0 && $totalCountryPercent < $allottedCountryPercent && $activityService->hasRecipientRegionDefinedInActivity($params['id'])) {
                     $rules[$recipientCountryForm . '.percentage'] = '|allocated_country_percent';
                 }
 
