@@ -503,12 +503,10 @@ class ActivityService
                         'period_end'    => $getBudgetPeriodEndDate,
                     ];
                 } elseif (
-
                     $getBudgetPeriodStartDate === $getArrayPeriodStartDate
                     || $getBudgetPeriodEndDate === $getArrayPeriodEndDate
                     || Carbon::parse($getBudgetPeriodStartDate)->betweenIncluded($getArrayPeriodStartDate, $getArrayPeriodEndDate)
                     || Carbon::parse($getBudgetPeriodEndDate)->betweenIncluded($getArrayPeriodStartDate, $getArrayPeriodEndDate)
-
                 ) {
                     if (empty($ids) ||
                         !in_array(Arr::get($array, Arr::get($budget, 'budget_type', '1') . '.id'), $ids[Arr::get($budget, 'budget_type', '1')], true)
@@ -518,7 +516,6 @@ class ActivityService
                             Arr::get($budget, 'budget_type', '1') . '.id'
                         );
                     }
-
                     $ids[Arr::get($budget, 'budget_type', '1')][] = $key;
                 }
             }
