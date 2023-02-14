@@ -118,7 +118,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
                 $rules[$recipientRegionForm . '.percentage'] .= '|sum_greater_than';
             } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] !== $groupedPercentRegion[array_key_first($groupedPercentRegion)]['total']) {
                 $rules[$recipientRegionForm . '.percentage'] .= '|percentage_within_vocabulary';
-            } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] !== 100.0) {
+            } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] === 0.0) {
                 $rules[$recipientRegionForm . '.percentage'] .= '|nullable|allocated_region_total_mismatch';
             }
         }

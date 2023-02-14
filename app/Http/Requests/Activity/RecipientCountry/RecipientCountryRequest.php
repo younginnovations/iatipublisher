@@ -70,11 +70,10 @@ class RecipientCountryRequest extends ActivityBaseRequest
         }
 
         $rules = [];
+        $params = $this->route()->parameters();
+        $activityService = app()->make(ActivityService::class);
 
         if (!$fileUpload) {
-            $params = $this->route()->parameters();
-            $activityService = app()->make(ActivityService::class);
-
             if ($activityService->hasRecipientCountryDefinedInTransactions($params['id'])) {
                 Validator::extend('already_in_transactions', function () {
                     return false;
@@ -129,6 +128,10 @@ class RecipientCountryRequest extends ActivityBaseRequest
             if (!$fileUpload) {
                 if ($allottedCountryPercent === 100.0) {
                     $rules[$recipientCountryForm . '.percentage'] .= '|nullable|max:100';
+                }
+
+                if ($allottedCountryPercent === 100.0 && $activityService->hasRecipientRegionDefinedInActivity($params['id'])) {
+                    $rules[$recipientCountryForm . '.percentage'] = '|allocated_country_percent';
                 }
 
                 if ($allottedCountryPercent === 0.0) {
@@ -187,6 +190,9 @@ class RecipientCountryRequest extends ActivityBaseRequest
     {
         $array = $formFields;
         $column = array_column($array, 'country_code');
+        if ($column[0] === null) {
+            return [];
+        }
         $counted = array_count_values($column);
         $duplicates = array_filter($counted, static function ($value) {
             return $value > 1;
