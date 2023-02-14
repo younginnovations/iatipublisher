@@ -112,7 +112,7 @@ abstract class Element
     }
 
     /**
-     * @param null $popIndex
+     * @param null|string $popIndex
      *
      * @return array|int|string|float
      */
