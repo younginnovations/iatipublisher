@@ -488,11 +488,10 @@ class ActivityService
 
         if (count($budgets)) {
             foreach ($budgets as $key => $budget) {
-                $getBudgetBudgetType = Arr::get($budget, 'budget_Type', '1');
+                $getBudgetBudgetType = Arr::get($budget, 'budget_type', '1');
                 $getBudgetBudgetStatus = Arr::get($budget, 'budget_status', '1');
                 $getBudgetPeriodStartDate = Arr::get($budget, 'period_start.0.date', '');
                 $getBudgetPeriodEndDate = Arr::get($budget, 'period_end.0.date', '');
-                $getArrayBudgetStatus = Arr::get($array, $getBudgetBudgetType . '.budget_status', '1');
                 $getArrayPeriodStartDate = Arr::get($array, $getBudgetBudgetType . '.period_start', '');
                 $getArrayPeriodEndDate = Arr::get($array, $getBudgetBudgetType . '.period_end', '');
 
@@ -504,10 +503,12 @@ class ActivityService
                         'period_end'    => $getBudgetPeriodEndDate,
                     ];
                 } elseif (
+
                     $getBudgetPeriodStartDate === $getArrayPeriodStartDate
                     || $getBudgetPeriodEndDate === $getArrayPeriodEndDate
                     || Carbon::parse($getBudgetPeriodStartDate)->betweenIncluded($getArrayPeriodStartDate, $getArrayPeriodEndDate)
                     || Carbon::parse($getBudgetPeriodEndDate)->betweenIncluded($getArrayPeriodStartDate, $getArrayPeriodEndDate)
+
                 ) {
                     if (empty($ids) ||
                         !in_array(Arr::get($array, Arr::get($budget, 'budget_type', '1') . '.id'), $ids[Arr::get($budget, 'budget_type', '1')], true)
@@ -573,7 +574,7 @@ class ActivityService
         if (count($budgets)) {
             foreach ($budgets as $key => $budget) {
                 if (Arr::get($budget, 'budget_type', '1') === '1') {
-                    $originalBudgets[Arr::get($budget, 'budget_status', '1')][] = [
+                    $originalBudgets[Arr::get($budget, 'budget_type', '1')][] = [
                         'id'           => $key,
                         'period_start' => Arr::get($budget, 'period_start.0.date', ''),
                         'period_end'   => Arr::get($budget, 'period_end.0.date', ''),
@@ -582,10 +583,10 @@ class ActivityService
             }
 
             foreach ($budgets as $key => $budget) {
-                if ((Arr::get($budget, 'budget_type', '1') === '2') && !empty($originalBudgets[Arr::get($budget, 'budget_status', '1')])) {
+                if ((Arr::get($budget, 'budget_type', '1') === '2')) {
                     $valid = false;
 
-                    foreach ($originalBudgets[Arr::get($budget, 'budget_status', '1')] as $originalBudget) {
+                    foreach ($originalBudgets[1] as $originalBudget) {
                         if ($originalBudget['period_start'] === Arr::get($budget, 'period_start.0.date', '') &&
                             $originalBudget['period_end'] === Arr::get($budget, 'period_end.0.date', '')
                         ) {
@@ -594,10 +595,10 @@ class ActivityService
                     }
 
                     if (!$valid) {
-                        $ids[Arr::get($budget, 'budget_status', '1')][] = $key;
+                        $ids[Arr::get($budget, 'budget_type', '1')][] = $key;
 
-                        foreach ($originalBudgets[Arr::get($budget, 'budget_status', '1')] as $originalBudget) {
-                            $ids[Arr::get($budget, 'budget_status', '1')][] = $originalBudget['id'];
+                        foreach ($originalBudgets[Arr::get($budget, 'budget_type', '1')] as $originalBudget) {
+                            $ids[Arr::get($budget, 'budget_type', '1')][] = $originalBudget['id'];
                         }
                     }
                 }
