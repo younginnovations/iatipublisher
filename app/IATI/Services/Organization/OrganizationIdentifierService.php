@@ -6,6 +6,7 @@ namespace App\IATI\Services\Organization;
 
 use App\IATI\Elements\Builder\BaseFormCreator;
 use App\IATI\Models\Organization\Organization;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use Illuminate\Database\Eloquent\Model;
 use Kris\LaravelFormBuilder\Form;
@@ -26,14 +27,23 @@ class OrganizationIdentifierService
     protected BaseFormCreator $baseFormCreator;
 
     /**
+     * @var ActivityRepository
+     */
+    protected ActivityRepository $activityRepository;
+
+    /**
      * OrganizationIdentifierService constructor.
      *
      * @param OrganizationRepository $organizationRepository
      * @param BaseFormCreator $baseFormCreator
      */
-    public function __construct(OrganizationRepository $organizationRepository, BaseFormCreator $baseFormCreator)
-    {
+    public function __construct(
+        OrganizationRepository $organizationRepository,
+        ActivityRepository $activityRepository,
+        BaseFormCreator $baseFormCreator
+    ) {
         $this->organizationRepository = $organizationRepository;
+        $this->activityRepository = $activityRepository;
         $this->baseFormCreator = $baseFormCreator;
     }
 
@@ -65,20 +75,28 @@ class OrganizationIdentifierService
      * Updates Organization identifier.
      *
      * @param $id
-     * @param $organizationIdentifier
+     * @param $organizationIdentifiers
      *
      * @return bool
      */
-    public function update($id, $organizationIdentifier): bool
+    public function update($id, $organizationIdentifiers): bool
     {
-        $organizationIdentifier = [
-            'identifier' => $organizationIdentifier['organization_registration_agency'] . '-' . $organizationIdentifier['registration_number'],
-            'country' => $organizationIdentifier['organization_country'],
-            'registration_agency' => $organizationIdentifier['organization_registration_agency'],
-            'registration_number' => $organizationIdentifier['registration_number'],
+        $organization = $this->organizationRepository->find($id);
+        $reportingOrg = $organization->reporting_org;
+        $reportingOrg[0]['ref'] = $organizationIdentifiers['organization_registration_agency'] . '-' . $organizationIdentifiers['registration_number'];
+
+        $organizationIdentifiers = [
+            'identifier'          => $reportingOrg[0]['ref'],
+            'country'             => $organizationIdentifiers['organization_country'],
+            'registration_agency' => $organizationIdentifiers['organization_registration_agency'],
+            'registration_number' => $organizationIdentifiers['registration_number'],
+            'reporting_org'       => $reportingOrg,
         ];
 
-        return $this->organizationRepository->update($id, $organizationIdentifier);
+        $organization->fill($organizationIdentifiers);
+        $hasChanged = $organization->isDirty('identifier');
+
+        return $organization->save() && ($hasChanged ? $this->syncActivityReportingOrgFromIdentifier($id) : true);
     }
 
     /**
@@ -90,7 +108,10 @@ class OrganizationIdentifierService
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true);
+        $element = json_decode(
+            file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')),
+            true
+        );
         $organization = $this->getOrganizationData($id);
         $model['organisation_identifier'] = $organization['identifier'];
         $model['organization_country'] = $organization['country'];
@@ -113,5 +134,19 @@ class OrganizationIdentifierService
         $organizationData[] = $organization->identifier;
 
         return $organizationData;
+    }
+
+    /**
+     * Updates activity->reporting_org when there's change in organaisation identifier.
+     *
+     * @param $id
+     *
+     * @return int|object|bool
+     */
+    public function syncActivityReportingOrgFromIdentifier($id): int | object | bool
+    {
+        $orgReportingOrg = $this->organizationRepository->find($id)->reporting_org[0];
+
+        return $this->activityRepository->syncReportingOrg($id, $orgReportingOrg);
     }
 }

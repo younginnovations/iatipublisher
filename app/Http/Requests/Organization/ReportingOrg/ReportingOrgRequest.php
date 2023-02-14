@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Organization\ReportingOrg;
 
 use App\Http\Requests\Organization\OrganizationBaseRequest;
+use AWS\CRT\HTTP\Request;
 
 /**
  * Class ReportingOrgRequest.
@@ -40,13 +41,27 @@ class ReportingOrgRequest extends OrganizationBaseRequest
      */
     public function getWarningForReportingOrganization(array $formFields): array
     {
+        $organization = auth()->user()->organization;
+        $organisationIdentifier = $organization->identifier;
+
         $rules = [];
 
         foreach ($formFields as $reportingOrganizationIndex => $reportingOrganization) {
             $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
-            $rules[$reportingOrganizationForm . '.ref'] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
-            $rules[$reportingOrganizationForm . '.type'] = ['nullable', sprintf('in:%s', implode(',', array_keys(getCodeList('OrganizationType', 'Organization'))))];
-            $rules[$reportingOrganizationForm . '.secondary_reporter'] = ['nullable', 'in:0,1'];
+
+            $rules[$reportingOrganizationForm . '.ref'] = [
+                'nullable',
+                'not_regex:/(&|!|\/|\||\?)/',
+                $reportingOrganization['ref'] ? "must_match:{$organisationIdentifier}" : '',
+            ];
+            $rules[$reportingOrganizationForm . '.type'] = [
+                'nullable',
+                sprintf('in:%s', implode(',', array_keys(getCodeList('OrganizationType', 'Organization')))),
+            ];
+            $rules[$reportingOrganizationForm . '.secondary_reporter'] = [
+                'nullable',
+                'in:0,1',
+            ];
 
             $narrativeRules = $this->getWarningForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
 
@@ -73,6 +88,7 @@ class ReportingOrgRequest extends OrganizationBaseRequest
             $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
 
             $messages[$reportingOrganizationForm . '.ref.not_regex'] = 'The @ref format is invalid.';
+            $messages[$reportingOrganizationForm . '.ref.must_match'] = 'The @ref of reporting-org must match the organisation-identifier.';
 
             $narrativeMessages = $this->getMessagesForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
 

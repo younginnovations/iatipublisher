@@ -102,7 +102,8 @@
         "required": true,
         "criteria": "mandatory",
         "hover_text": "Machine-readable identification string for the organisation issuing the report. Must be in the format {RegistrationAgency}-{RegistrationNumber}.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
-        "help_text": "Provide the IATI Organisation Identifier of the organisation publishing the data. The quickest way to find this is to search for the organisation in the <a target='_blank' href='https://www.iatiregistry.org/publisher/'>IATI Publisher List</a>. If you cannot find the organisation, see <a target='_blank' href='https://iatistandard.org/en/guidance/publishing-data/data-quality-and-visualisation/finding-other-organisations-identifiers/'>further guidance</a>. "
+        "help_text": "Provide the IATI Organisation Identifier of the organisation publishing the data. The quickest way to find this is to search for the organisation in the <a target='_blank' href='https://www.iatiregistry.org/publisher/'>IATI Publisher List</a>. If you cannot find the organisation, see <a target='_blank' href='https://iatistandard.org/en/guidance/publishing-data/data-quality-and-visualisation/finding-other-organisations-identifiers/'>further guidance</a>. ",
+        "read_only": true
       },
       "type": {
         "name": "type",
@@ -121,8 +122,8 @@
         "label": "secondary-reporter",
         "type": "select",
         "choices": {
-          "1": "Yes",
-          "0": "No"
+          "1": "True",
+          "0": "False"
         },
         "placeholder": "Select secondary-reporter",
         "required": false,

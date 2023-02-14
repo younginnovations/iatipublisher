@@ -40,14 +40,14 @@ class Processor
      *
      * @return void
      */
-    public function pushIntoQueue($file, $filename, $activityIdentifiers): void
+    public function pushIntoQueue($file, $filename, $activityIdentifiers, $organizationReportingOrg): void
     {
         $str = mb_convert_encoding(file_get_contents($file->getPathName()), 'UTF-8');
         file_put_contents($file->getPathName(), $str);
         $csv = Excel::toCollection(new CsvToArrayWithHeaders, $file)->first()->toArray();
 
         $this->dispatch(
-            new ImportActivity(new CsvProcessor($csv), $filename, $activityIdentifiers)
+            new ImportActivity(new CsvProcessor($csv), $filename, $activityIdentifiers, $organizationReportingOrg)
         );
     }
 }

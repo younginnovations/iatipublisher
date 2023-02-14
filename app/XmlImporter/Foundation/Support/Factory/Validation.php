@@ -535,4 +535,14 @@ class Validation extends Factory
 
         return $errors;
     }
+
+    public function mustMatchValidationForReportingOrg(): void
+    {
+        $this->extend(
+            'must_match',
+            function ($attribute, $value, $parameters, $validator) {
+                return $value == $parameters[0];
+            }
+        );
+    }
 }

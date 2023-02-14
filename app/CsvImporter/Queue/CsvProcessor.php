@@ -53,14 +53,14 @@ class CsvProcessor
      *
      * @throws \JsonException
      */
-    public function handle($orgId, $userId, $activityIdentifiers): void
+    public function handle($orgId, $userId, $activityIdentifiers, $organizationReportingOrg): void
     {
         $this->filterHeader();
 
         if ($this->isCorrectCsv()) {
             $this->groupValues();
 
-            $this->initActivity(['organization_id' => $orgId, 'user_id' => $userId, 'activity_identifiers' => $activityIdentifiers]);
+            $this->initActivity(['organization_id' => $orgId, 'user_id' => $userId, 'activity_identifiers' => $activityIdentifiers, 'reporting_org' => $organizationReportingOrg]);
 
             $this->activity->process();
         } else {
@@ -77,7 +77,7 @@ class CsvProcessor
      */
     protected function initActivity(array $options = []): void
     {
-        $this->activity = new Activity($this->data, Arr::get($options, 'organization_id'), Arr::get($options, 'user_id'), Arr::get($options, 'activity_identifiers'));
+        $this->activity = new Activity($this->data, Arr::get($options, 'organization_id'), Arr::get($options, 'user_id'), Arr::get($options, 'activity_identifiers'), Arr::get($options, 'reporting_org'));
     }
 
     /**

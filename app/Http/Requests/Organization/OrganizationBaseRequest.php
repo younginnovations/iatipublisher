@@ -66,6 +66,13 @@ class OrganizationBaseRequest extends FormRequest
                 return $this->uniqueLanguageValidator($attribute, $value);
             }
         );
+
+        Validator::extend(
+            'must_match',
+            function ($attribute, $value, $parameters, $validator) {
+                return $value == $parameters[0];
+            }
+        );
     }
 
     /**
@@ -215,8 +222,8 @@ class OrganizationBaseRequest extends FormRequest
     public function getMessagesForNarrative($formFields, $formBase): array
     {
         $messages = [];
-        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The @xml:lang field must be unique.';
-        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = 'The narrative language field must be unique.';
+        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The @xml:lang field must be unique 3.';
+        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = 'The narrative language field must be unique 4.';
 
         foreach ($formFields as $narrativeIndex => $narrative) {
             $messages[sprintf('%s.narrative.%s.narrative.required', $formBase, $narrativeIndex)] = 'The narrative field is required.';
@@ -508,8 +515,8 @@ class OrganizationBaseRequest extends FormRequest
     public function getMessagesForBudgetOrExpenseLineNarrative($formFields, $formBase): array
     {
         $messages = [];
-        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The narrative language field must be unique.';
-        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = 'The narrative language field must be unique.';
+        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The narrative language field must be unique 6.';
+        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = 'The narrative language field must be unique 7.';
 
         foreach ($formFields as $narrativeIndex => $narrative) {
             $messages[sprintf('%s.narrative.%s.narrative.required_with_language', $formBase, $narrativeIndex)] = 'The narrative field is required with language field.';

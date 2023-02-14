@@ -51,11 +51,11 @@ class XmlProcessor
      * @throws BindingResolutionException
      * @throws \JsonException
      */
-    public function process(array $xml, $userId, $orgId, $orgRef, $dbIatiIdentifiers): bool
+    public function process(array $xml, $userId, $orgId, $orgRef, $dbIatiIdentifiers, $organizationReportingOrg): bool
     {
         if ($this->xmlMapper->isValidActivityFile($xml)) {
             $this->xmlMapper
-                ->map($xml, $this->templateServiceProvider->load(), $userId, $orgId, $orgRef, $dbIatiIdentifiers);
+                ->map($xml, $this->templateServiceProvider->load(), $userId, $orgId, $orgRef, $dbIatiIdentifiers, $organizationReportingOrg);
 
             return true;
         }

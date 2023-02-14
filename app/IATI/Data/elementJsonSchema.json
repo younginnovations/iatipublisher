@@ -54,7 +54,8 @@
         "required": true,
         "criteria": "mandatory",
         "hover_text": "Machine-readable identification string for the organisation issuing the report. Must be in the format {RegistrationAgency}-{RegistrationNumber}. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
-        "help_text": ""
+        "help_text": "",
+        "read_only": true
       },
       "type": {
         "name": "type",
@@ -66,7 +67,8 @@
         "required": true,
         "criteria": "mandatory",
         "hover_text": "The type of organisation issuing the report. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
-        "help_text": ""
+        "help_text": "",
+        "read_only": true
       },
       "secondary_reporter": {
         "name": "secondary_reporter",
@@ -97,6 +99,7 @@
         },
         "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/narrative/'>For more information</a>",
         "help_text": "This is the name you provided for your organisation when you registered.",
+        "read_only": true,
         "attributes": {
           "lang": {
             "name": "language",
@@ -108,7 +111,8 @@
             "required": false,
             "criteria": "recommended",
             "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/narrative/'>For more information</a>",
-            "help_text": "Select the language of the text you provided in the narrative. If no language is selected, then your default language is assumed."
+            "help_text": "Select the language of the text you provided in the narrative. If no language is selected, then your default language is assumed.",
+            "read_only": true
           }
         },
         "sub_elements": {}

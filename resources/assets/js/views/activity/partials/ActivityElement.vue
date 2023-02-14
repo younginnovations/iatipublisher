@@ -85,7 +85,11 @@
               class="edit-button"
             />
             <Btn
-              v-if="title !== 'title' && title !== 'iati_identifier'"
+              v-if="
+                title !== 'title' &&
+                title !== 'iati_identifier' &&
+                title !== 'reporting_org'
+              "
               text="Delete"
               class="delete-button"
               icon="delete"

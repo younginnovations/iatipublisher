@@ -147,7 +147,7 @@ class ImportCsvService
             Session::put('user_id', Auth::user()->id);
             Session::put('org_id', Auth::user()->organization->id);
 
-            $this->processor->pushIntoQueue($localStorageFile, $filename, $this->getIdentifiers());
+            $this->processor->pushIntoQueue($localStorageFile, $filename, $this->getIdentifiers(), Auth::user()->organization->reporting_org);
         } catch (Exception $e) {
             $this->logger->error(
                 $e->getMessage(),
@@ -201,6 +201,15 @@ class ImportCsvService
             $activity['data']['organization_id'] = $organizationId;
             $iati_identifier_text = $organizationIdentifier . '-' . Arr::get($activity, 'data.identifier.activity_identifier');
             $activity['data']['identifier']['iati_identifier_text'] = $iati_identifier_text;
+
+            if (count($activity['data']['reporting_organization']) > 1) {
+                $activity['data']['reporting_organization'][0]['secondary_reporter'] = '';
+                foreach ($activity['data']['reporting_organization'] as $key => $value) {
+                    if ($key > 0) {
+                        unset($activity['data']['reporting_organization'][$key]);
+                    }
+                }
+            }
 
             if (Arr::get($activity, 'existence', false) && $this->activityRepo->getActivityWithIdentifier($organizationId, Arr::get($activity, 'data.identifier.activity_identifier'))) {
                 $oldActivity = $this->activityRepo->getActivityWithIdentifier($organizationId, Arr::get($activity, 'data.identifier.activity_identifier'));

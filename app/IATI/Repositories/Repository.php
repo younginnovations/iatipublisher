@@ -76,10 +76,11 @@ abstract class Repository implements RepositoryInterface
      * Store multiple data.
      *
      * @param array $data
+     * @param $uniqueBy
      *
      * @return int
      */
-    public function upsert($data, $uniqueBy): int
+    public function upsert(array $data, $uniqueBy): int
     {
         return $this->model->upsert($data, $uniqueBy);
     }

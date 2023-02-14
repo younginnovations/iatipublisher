@@ -9,6 +9,7 @@ use App\IATI\Models\Activity\Activity;
 use App\IATI\Models\Setting\Setting;
 use App\IATI\Repositories\Repository;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 
@@ -456,5 +457,43 @@ class ActivityRepository extends Repository
             ->orderBy($orderBy, $direction)
             ->orderBy('id', $direction)
             ->get();
+    }
+
+    /**
+     * Updates ReportingOrg of activity with that of organisation.
+     *
+     * @param $id
+     * @param $reportingOrg
+     *
+     * @return object|int
+     */
+    public function syncReportingOrg($id, $reportingOrg): object|int
+    {
+        $activitiesCount = $this->model->where('org_id', $id)->count();
+        if ($activitiesCount > 0) {
+            $this->model->where('org_id', $id)->update(['reporting_org->0->ref'=>$reportingOrg['ref'] ?? '']);
+            $this->model->where('org_id', $id)->update(['reporting_org->0->type'=>$reportingOrg['type'] ?? '']);
+
+            return $this->model->where('org_id', $id)->update([
+                'reporting_org->0->narrative'=>$reportingOrg['narrative'] ?? '',
+                'status'=>'draft',
+            ]);
+        }
+
+        return 1;
+    }
+
+    /**
+     * Updates specific key inside reporting_org (json field).
+     *
+     * @param $id
+     * @param $key
+     * @param $data
+     *
+     * @return int
+     */
+    public function updateReportingOrg($id, $key, $data): int
+    {
+        return $this->model->where('id', $id)->update(["reporting_org->0->{$key}"=>$data]);
     }
 }

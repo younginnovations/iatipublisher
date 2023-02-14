@@ -413,7 +413,7 @@ $(function () {
       $('#organization_registration_agency').val() + '-' + $(this).val();
     $('#organisation_identifier').val(identifier);
   });
-  
+
   // add class to title of collection when validation error occurs on collection level
   const subelement = document.querySelectorAll('.subelement');
 
@@ -424,6 +424,18 @@ $(function () {
 
     if (childCount && childCount > 0) {
       title?.classList.add('error-title');
+    }
+  }
+
+  // Adding cursor not allowed to <select> where elementJsonSchema read_only : true
+  const readOnlySelects =  document.querySelectorAll("select.cursor-not-allowed");
+  for (let i = 0; i < readOnlySelects.length; i++) {
+    const select = readOnlySelects[i];
+    const selectElementParentWrapper = select.nextSibling;
+    const selectElementParent = selectElementParentWrapper?.firstChild;
+    const selectElement = selectElementParent?.firstChild as HTMLElement;
+    if (selectElement) {
+      selectElement.style.cursor = "not-allowed";
     }
   }
 });

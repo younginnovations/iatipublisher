@@ -154,6 +154,7 @@ class Validation extends Factory
         $this->recipientRegionCountryValidation();
         $this->budgetValidation();
         $this->transactionValidation();
+        $this->mustMatchValidationForReportingOrg();
     }
 
     /**
@@ -170,7 +171,7 @@ class Validation extends Factory
 
                 if (is_array($value)) {
                     foreach ($value as $narrative) {
-                        $language = Arr::get($narrative, 'narrative.0.language', '');
+                        $language = Arr::get($narrative, 'language', '');
 
                         if (in_array($language, $languages, true)) {
                             return false;
@@ -714,6 +715,16 @@ class Validation extends Factory
         $this->extend('budget_revised_invalid', function () {
             return false;
         });
+    }
+
+    public function mustMatchValidationForReportingOrg(): void
+    {
+        $this->extend(
+            'must_match',
+            function ($attribute, $value, $parameters, $validator) {
+                return $value == $parameters[0];
+            }
+        );
     }
 
     /**

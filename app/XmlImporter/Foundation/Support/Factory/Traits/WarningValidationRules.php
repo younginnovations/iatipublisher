@@ -483,8 +483,11 @@ trait WarningValidationRules
      *
      * @return array
      */
-    protected function warningForReportingOrganization(array $activity): array
+    protected function warningForReportingOrganization(array $activity, $organizationReportingOrg): array
     {
-        return (new ReportingOrgRequest())->getWarningForReportingOrganization(Arr::get($activity, 'reporting_org', []));
+        $reportingOrgRequest = new ReportingOrgRequest();
+        $reportingOrgRequest->reportingOrganisationInOrganisation($organizationReportingOrg);
+
+        return $reportingOrgRequest->getWarningForReportingOrganization(Arr::get($activity, 'reporting_org', []));
     }
 }

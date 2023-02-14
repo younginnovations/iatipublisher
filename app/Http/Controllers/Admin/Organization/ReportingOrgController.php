@@ -10,6 +10,7 @@ use App\IATI\Services\Organization\ReportingOrgService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ReportingOrgController.
@@ -63,12 +64,17 @@ class ReportingOrgController extends Controller
     public function update(ReportingOrgRequest $request): RedirectResponse
     {
         try {
+            DB::beginTransaction();
+
             if (!$this->reportingOrgService->update(Auth::user()->organization_id, $request->all())) {
                 return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization reporting_org.');
             }
 
+            DB::commit();
+
             return redirect()->route('admin.organisation.index')->with('success', 'Organization reporting_org updated successfully.');
         } catch (\Exception $e) {
+            DB::rollBack();
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization reporting_org.');

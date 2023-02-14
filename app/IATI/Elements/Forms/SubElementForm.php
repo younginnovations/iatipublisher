@@ -81,6 +81,28 @@ class SubElementForm extends Form
             $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
             $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList($field['choices'])) : $field['choices']) : false;
             $options['default_value'] = $field['default'] ?? '';
+
+            $options['attr']['disabled'] = (array_key_exists(
+                'read_only',
+                $field
+            ) && $field['read_only'] == true) ? 'readonly' : false;
+            $classWithCursorNotAllowed = $options['attr']['class'] . ' cursor-not-allowed';
+
+            $options['attr']['class'] = (
+                array_key_exists('read_only', $field) && $field['read_only'] == true
+            ) ? $classWithCursorNotAllowed : $options['attr']['class'];
+        }
+
+        if ($field['type'] == 'textarea') {
+            $options['attr']['disabled'] = (array_key_exists(
+                'read_only',
+                $field
+            ) && $field['read_only'] == true) ? 'readonly' : false;
+            $classWithCursorNotAllowed = $options['attr']['class'] . ' cursor-not-allowed';
+
+            $options['attr']['class'] = (
+                array_key_exists('read_only', $field) && $field['read_only'] == true
+            ) ? $classWithCursorNotAllowed : $options['attr']['class'];
         }
 
         $this
