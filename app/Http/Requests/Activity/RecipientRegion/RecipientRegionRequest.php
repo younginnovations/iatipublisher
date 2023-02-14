@@ -55,10 +55,8 @@ class RecipientRegionRequest extends ActivityBaseRequest
 
         $rules = [];
         $activityService = app()->make(ActivityService::class);
-
+        $params = $this->route()->parameters();
         if (!$fileUpload) {
-            $params = $this->route()->parameters();
-
             if ($activityService->hasRecipientRegionDefinedInTransactions($params['id'])) {
                 Validator::extend('already_in_transactions', function () {
                     return false;
