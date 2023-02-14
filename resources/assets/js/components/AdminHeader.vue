@@ -91,7 +91,8 @@
                 >{{ menu.name }}
                 <div
                   v-if="menu.name === 'Add / Import Activity'"
-                  class="button__dropdown add-import-dropdown absolute top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left shadow-dropdown transition-all duration-300"
+                  style="visibility: hidden"
+                  class="button__dropdown add-import-dropdown absolute top-full z-50 w-56 -translate-y-3 bg-white p-2 text-left shadow-dropdown duration-300"
                 >
                   <ul class="flex-col">
                     <li>

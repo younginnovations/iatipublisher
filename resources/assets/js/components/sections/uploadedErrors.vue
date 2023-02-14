@@ -28,12 +28,12 @@
     </div>
     <div class="container">
       <div class="error-container">
-        <div v-if="index === 'error'" class="pl-6 text-xs italic">
+        <div v-if="index === 'error'" class="pl-3 text-xs italic">
           (The fields with errors are not uploaded to our system during import.
           Please edit the corresponding elements to fill these fields with the
           correct data)
         </div>
-        <div v-else class="pl-6 text-xs italic">
+        <div v-else class="pl-3 text-xs italic">
           (The fields with warnings are stored in our system. They contain data
           that are against the IATI validator and will throw errors on
           publishing. Please open the edit form of the corresponding elements
@@ -48,9 +48,11 @@
           <div class="mb-1 font-bold capitalize">{{ errorIndex }}</div>
           <div v-for="(errorList, listIndex) in error" :key="listIndex">
             <div class="list-index text-sm">
-              {{ listIndex.toString().split('.').join(' > ') }}
+              {{
+                listIndex.toString().split('.').join(' > ').split('_').join(' ')
+              }}
             </div>
-            <div class="pl-6 text-sm">{{ errorList }}</div>
+            <div class="mb-2 pl-6 text-sm">{{ errorList }}</div>
           </div>
         </div>
       </div>
