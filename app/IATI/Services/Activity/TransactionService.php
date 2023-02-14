@@ -450,7 +450,7 @@ class TransactionService
         return $this->transactionRepository->delete($id);
     }
 
-     /**
+    /**
      * Checks if sector defined in one of the activity transaction.
      *
      * @param $activityId
@@ -500,7 +500,6 @@ class TransactionService
     }
 
     /**
-     *  Checks if recipient region or country defined in transaction
      *  Checks if recipient region or country defined in transaction.
      *
      * @param [type] $activityId
