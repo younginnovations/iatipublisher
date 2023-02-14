@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App;
 use Illuminate\Mail\MailServiceProvider;
 use Illuminate\Support\Facades\Mail;
 
@@ -19,7 +20,7 @@ class ExtendedMailServiceProvider extends MailServiceProvider
      */
     public function boot(): void
     {
-        if (!app()->isProduction()) {
+        if (!App::environment(['production', 'staging'])) {
             Mail::fake();
         }
     }
