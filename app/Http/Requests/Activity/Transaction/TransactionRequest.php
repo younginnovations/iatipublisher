@@ -65,6 +65,10 @@ class TransactionRequest extends ActivityBaseRequest
             }
         }
 
+        Validator::extend('country_or_region', function () {
+            return false;
+        });
+
         $rules['transaction_type.0.transaction_type_code'] = 'nullable|in:' . implode(',', array_keys(getCodeList('TransactionType', 'Activity', false)));
         $rules['flow_type.0.flow_type'] = 'nullable|in:' . implode(',', array_keys(getCodeList('FlowType', 'Activity', false)));
         $rules['finance_type.0.finance_type'] = 'nullable|in:' . implode(',', array_keys(getCodeList('FinanceType', 'Activity', false)));
@@ -487,9 +491,10 @@ class TransactionRequest extends ActivityBaseRequest
 
         $rules = [];
         $activityService = app()->make(ActivityService::class);
-        $params = $this->route()->parameters();
 
         if (!$fileUpload) {
+            $params = $this->route()->parameters();
+
             if (!$activityService->isElementEmpty($formFields, 'recipientRegionFields') && $activityService->hasRecipientRegionDefinedInActivity($params['id'])) {
                 Validator::extend('already_in_activity', function () {
                     return false;
@@ -517,14 +522,7 @@ class TransactionRequest extends ActivityBaseRequest
             }
         }
 
-        $transactionService = app()->make(TransactionService::class);
-
-        if (($transactionService->hasRecipientRegionOrCountryDefinedInTransaction($params['id'])) && (!is_variable_null($formFields) && !is_variable_null($this->all()['recipient_country']))) {
-            Validator::extend('country_or_region', function () {
-                return false;
-            });
-            $rules['recipient_region'] = 'country_or_region';
-        }
+        $this->getRecipientRegionOrCountryRule($rules);
 
         return $rules;
     }
@@ -589,7 +587,6 @@ class TransactionRequest extends ActivityBaseRequest
 
         if (!$fileUpload) {
             $params = $this->route()->parameters();
-
             if (!$activityService->isElementEmpty($formFields, 'recipientCountryFields') && $activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
                 Validator::extend('already_in_activity', function () {
                     return false;
@@ -611,12 +608,7 @@ class TransactionRequest extends ActivityBaseRequest
             }
         }
 
-        if (!is_variable_null($formFields) && !is_variable_null($this->all()['recipient_region'])) {
-            Validator::extend('country_or_region', function () {
-                return false;
-            });
-            $rules['recipient_country'] = 'country_or_region';
-        }
+        $this->getRecipientRegionOrCountryRule($rules);
 
         return $rules;
     }
@@ -650,5 +642,26 @@ class TransactionRequest extends ActivityBaseRequest
         }
 
         return $messages;
+    }
+
+    /**
+     * Checks if recipient region or country is required or not.
+     *
+     * @param $rules
+     * @return array
+     * @throws BindingResolutionException
+     */
+    public function getRecipientRegionOrCountryRule(&$rules): array
+    {
+        $transactionService = app()->make(TransactionService::class);
+        $params = $this->route()->parameters();
+
+        if (($transactionService->hasRecipientRegionOrCountryDefinedInTransaction($params['id'])) && (is_variable_null($this->all()['recipient_region']) && is_variable_null($this->all()['recipient_country']))) {
+            $rules['recipient_region'] = 'country_or_region';
+        } elseif (!is_variable_null($this->all()['recipient_region']) && !is_variable_null($this->all()['recipient_country'])) {
+            $rules['recipient_region'] = 'country_or_region';
+        }
+
+        return $rules;
     }
 }
