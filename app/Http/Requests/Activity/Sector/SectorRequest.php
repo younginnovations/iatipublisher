@@ -107,6 +107,7 @@ class SectorRequest extends ActivityBaseRequest
             $rules[sprintf('%s.percentage', $sectorForm)] = 'nullable|numeric|min:0';
 
             $narrativeRules = $this->getRulesForNarrative($sector['narrative'], $sectorForm);
+
             foreach ($narrativeRules as $key => $item) {
                 $explodedKey = explode('.', $key);
                 $isNarrative = count($explodedKey) === 5 && $explodedKey[4] === 'language';
