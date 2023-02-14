@@ -79,6 +79,18 @@ class BulkPublishingStatusService
     }
 
     /**
+     * Returns job uuid.
+     *
+     * @param $organizationId
+     *
+     * @return string|null
+     */
+    public function getPublishingUuid($organizationId): ?string
+    {
+        return $this->bulkPublishingStatusRepository->getPublishingUuid($organizationId);
+    }
+
+    /**
      * Deletes bulk publishing statuses once all are completed.
      *
      * @param $publishStatuses

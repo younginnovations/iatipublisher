@@ -11,6 +11,7 @@ use App\IATI\Services\Activity\BulkPublishingStatusService;
 use App\IATI\Services\Workflow\ActivityWorkflowService;
 use App\IATI\Services\Workflow\BulkPublishingService;
 use App\Jobs\BulkPublishActivities;
+use Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -212,8 +213,8 @@ class BulkPublishingController extends Controller
     public function getBulkPublishStatus(): JsonResponse
     {
         try {
-            $organizationId = request()->get('organization_id');
-            $uuid = request()->get('uuid');
+            $organizationId = Auth::user()->organization_id;
+            $uuid = $this->publishingStatusService->getPublishingUuid($organizationId);
 
             if ($organizationId && $uuid) {
                 $publishStatus = $this->publishingStatusService->getActivityPublishingStatus($organizationId, $uuid);
@@ -305,6 +306,32 @@ class BulkPublishingController extends Controller
             logger()->error($e->getMessage());
 
             return response()->json(['success'=>false, 'message'=>'Failed to stop bulk publishing']);
+        }
+    }
+
+    /**
+     * Performs required checks for publishing activity.
+     *
+     * @return JsonResponse
+     */
+    public function checksForActivityBulkPublish(): JsonResponse
+    {
+        try {
+            $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization);
+
+            if (!empty($message)) {
+                return response()->json(['success' => false, 'message' => $message]);
+            }
+
+            if ($this->publishingStatusService->ongoingBulkPublishing(auth()->user()->organization->id)) {
+                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.', 'data'=>$this->getBulkPublishStatus(), 'flag'=>true]);
+            }
+
+            return response()->json(['success' => true, 'message' => 'Activity is ready to be published.']);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error has occurred while checking activity.']);
         }
     }
 }

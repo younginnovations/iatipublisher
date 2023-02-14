@@ -294,13 +294,17 @@ const displayToast = (message, type) => {
  * check publish status
  */
 const checkPublish = () => {
-  axios.get(`/activities/checks-for-activity-publish`).then((res) => {
+  axios.get(`/activities/checks-for-activity-bulk-publish`).then((res) => {
     const response = res.data;
 
     if (response.success === true) {
       publishAlertValue.value = true;
     } else {
-      displayToast(response.message, response.success);
+      if (response?.flag) {
+        showCancelConfirmationModal();
+      } else {
+        displayToast(response.message, response.success);
+      }
     }
   });
 };
