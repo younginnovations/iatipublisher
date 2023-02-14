@@ -6,6 +6,7 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ActivityRepository;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -117,11 +118,15 @@ class ActivityService
             ],
         ];
 
+        $defaultElementStatus = getDefaultElementStatus();
+        $budgetNotProvided = Auth::user()->organization->settings->activity_default_values['budget_not_provided'] ?? '';
+        $defaultElementStatus['budget'] = $budgetNotProvided === '1' || $defaultElementStatus['budget'];
+
         return $this->activityRepository->store([
             'iati_identifier'      => $activity_identifier,
             'title'                => $activity_title,
             'org_id'               => Auth::user()->organization_id,
-            'element_status'       => getDefaultElementStatus(),
+            'element_status'       => $defaultElementStatus,
             'default_field_values' => $this->getDefaultValues(),
             'reporting_org'        => Auth::user()->organization->reporting_org,
         ]);
@@ -483,28 +488,25 @@ class ActivityService
 
         if (count($budgets)) {
             foreach ($budgets as $key => $budget) {
-                if (!array_key_exists(Arr::get($budget, 'budget_type', '1'), $array)) {
-                    $array[Arr::get($budget, 'budget_type', '1')] = [
+                $getBudgetBudgetType = Arr::get($budget, 'budget_type', '1');
+                $getBudgetBudgetStatus = Arr::get($budget, 'budget_status', '1');
+                $getBudgetPeriodStartDate = Arr::get($budget, 'period_start.0.date', '');
+                $getBudgetPeriodEndDate = Arr::get($budget, 'period_end.0.date', '');
+                $getArrayPeriodStartDate = Arr::get($array, $getBudgetBudgetType . '.period_start', '');
+                $getArrayPeriodEndDate = Arr::get($array, $getBudgetBudgetType . '.period_end', '');
+
+                if (!array_key_exists($getBudgetBudgetType, $array)) {
+                    $array[$getBudgetBudgetType] = [
                         'id'            => $key,
-                        'budget_status' => Arr::get($budget, 'budget_status', '1'),
-                        'period_start'  => Arr::get($budget, 'period_start.0.date', ''),
-                        'period_end'    => Arr::get($budget, 'period_end.0.date', ''),
+                        'budget_status' => $getBudgetBudgetStatus,
+                        'period_start'  => $getBudgetPeriodStartDate,
+                        'period_end'    => $getBudgetPeriodEndDate,
                     ];
-                } elseif (Arr::get($budget, 'budget_status', '1') === Arr::get(
-                    $array,
-                    Arr::get($budget, 'budget_type', '1') . '.budget_status',
-                    '1'
-                ) &&
-                    Arr::get($budget, 'period_start.0.date', '') === Arr::get(
-                        $array,
-                        Arr::get($budget, 'budget_type', '1') . '.period_start',
-                        ''
-                    ) &&
-                    Arr::get($budget, 'period_end.0.date', '') === Arr::get(
-                        $array,
-                        Arr::get($budget, 'budget_type', '1') . '.period_end',
-                        ''
-                    )
+                } elseif (
+                    $getBudgetPeriodStartDate === $getArrayPeriodStartDate
+                    || $getBudgetPeriodEndDate === $getArrayPeriodEndDate
+                    || Carbon::parse($getBudgetPeriodStartDate)->betweenIncluded($getArrayPeriodStartDate, $getArrayPeriodEndDate)
+                    || Carbon::parse($getBudgetPeriodEndDate)->betweenIncluded($getArrayPeriodStartDate, $getArrayPeriodEndDate)
                 ) {
                     if (empty($ids) ||
                         !in_array(Arr::get($array, Arr::get($budget, 'budget_type', '1') . '.id'), $ids[Arr::get($budget, 'budget_type', '1')], true)
@@ -514,7 +516,6 @@ class ActivityService
                             Arr::get($budget, 'budget_type', '1') . '.id'
                         );
                     }
-
                     $ids[Arr::get($budget, 'budget_type', '1')][] = $key;
                 }
             }
@@ -570,7 +571,7 @@ class ActivityService
         if (count($budgets)) {
             foreach ($budgets as $key => $budget) {
                 if (Arr::get($budget, 'budget_type', '1') === '1') {
-                    $originalBudgets[Arr::get($budget, 'budget_status', '1')][] = [
+                    $originalBudgets[Arr::get($budget, 'budget_type', '1')][] = [
                         'id'           => $key,
                         'period_start' => Arr::get($budget, 'period_start.0.date', ''),
                         'period_end'   => Arr::get($budget, 'period_end.0.date', ''),
@@ -579,10 +580,10 @@ class ActivityService
             }
 
             foreach ($budgets as $key => $budget) {
-                if ((Arr::get($budget, 'budget_type', '1') === '2') && !empty($originalBudgets[Arr::get($budget, 'budget_status', '1')])) {
+                if ((Arr::get($budget, 'budget_type', '1') === '2')) {
                     $valid = false;
 
-                    foreach ($originalBudgets[Arr::get($budget, 'budget_status', '1')] as $originalBudget) {
+                    foreach ($originalBudgets[1] as $originalBudget) {
                         if ($originalBudget['period_start'] === Arr::get($budget, 'period_start.0.date', '') &&
                             $originalBudget['period_end'] === Arr::get($budget, 'period_end.0.date', '')
                         ) {
@@ -591,10 +592,10 @@ class ActivityService
                     }
 
                     if (!$valid) {
-                        $ids[Arr::get($budget, 'budget_status', '1')][] = $key;
+                        $ids[Arr::get($budget, 'budget_type', '1')][] = $key;
 
-                        foreach ($originalBudgets[Arr::get($budget, 'budget_status', '1')] as $originalBudget) {
-                            $ids[Arr::get($budget, 'budget_status', '1')][] = $originalBudget['id'];
+                        foreach ($originalBudgets[Arr::get($budget, 'budget_type', '1')] as $originalBudget) {
+                            $ids[Arr::get($budget, 'budget_type', '1')][] = $originalBudget['id'];
                         }
                     }
                 }

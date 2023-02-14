@@ -43,7 +43,7 @@ class ActivityDefaultService
      */
     public function updateActivityDefaultValues($activityId, array $data): bool
     {
-        return $this->activityRepository->update($activityId, [
+        $defaultFieldValues = [
             'default_field_values' => [
                 'default_currency'    => $data['default_currency'] ?? '',
                 'default_language'    => $data['default_language'] ?? '',
@@ -51,6 +51,15 @@ class ActivityDefaultService
                 'humanitarian'        => $data['humanitarian'] ?? '1',
                 'budget_not_provided' => $data['budget_not_provided'] ?? '',
             ],
-        ]);
+        ];
+
+        if ($data['budget_not_provided'] === '1') {
+            $activity = $this->activityRepository->find($activityId);
+            $elementStatus['element_status'] = $activity->element_status;
+            $elementStatus['element_status']['budget'] = true;
+            $defaultFieldValues = array_merge($defaultFieldValues, $elementStatus);
+        }
+
+        return $this->activityRepository->update($activityId, $defaultFieldValues);
     }
 }

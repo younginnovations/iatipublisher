@@ -214,7 +214,7 @@ class BudgetRequest extends ActivityBaseRequest
         if (count($this->identicalIds)) {
             foreach ($this->identicalIds as $ids) {
                 foreach ($ids as $id) {
-                    $messages['budget.' . $id . '.budget_status.budgets_identical'] = $fileUpload ? 'Budget elements are duplicated.' : 'Budget elements at position ' . $this->getIdenticalIds($ids) . ' have same status, type, period start and period end.';
+                    $messages['budget.' . $id . '.budget_status.budgets_identical'] = $fileUpload ? 'Budget elements are duplicated.' : 'The periods of multiple budgets with the same type should not be the same';
                 }
             }
         }
@@ -222,7 +222,7 @@ class BudgetRequest extends ActivityBaseRequest
         if (count($this->revisedIds)) {
             foreach ($this->revisedIds as $ids) {
                 foreach ($ids as $id) {
-                    $messages['budget.' . $id . '.budget_status.budget_revised_invalid'] = 'Budget with type revised must have period start and end same to that of one of the budgets having same status and type original for budgets elements at position ' . $this->getIdenticalIds($ids);
+                    $messages['budget.' . $id . '.budget_status.budget_revised_invalid'] = 'Budget with type revised must have period start and end same to that of one of the budgets having same type original for budgets elements at position ' . $this->getIdenticalIds($ids);
                 }
             }
         }
