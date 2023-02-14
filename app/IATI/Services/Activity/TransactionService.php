@@ -484,6 +484,7 @@ class TransactionService
     {
         $hasDefined = false;
         $transactions = $this->getActivityTransactions($activityId);
+
         foreach ($transactions as $transaction) {
             $recipientRegion = $transaction->transaction['recipient_region'];
             $recipientCountry = $transaction->transaction['recipient_country'];
