@@ -449,4 +449,28 @@ class TransactionService
     {
         return $this->transactionRepository->delete($id);
     }
+
+    /**
+     * Checks if sector defined in one of the activity transaction.
+     *
+     * @param $activityId
+     * @return bool
+     */
+    public function hasSectorDefinedInTransaction($activityId): bool
+    {
+        $transactionData = $this->getActivityTransactions($activityId);
+
+        if (!empty($transactionData)) {
+            foreach ($transactionData as $transactionDatum) {
+                if (
+                    isset($transactionDatum->transaction['sector'])
+                    && !is_variable_null($transactionDatum->transaction['sector'])
+                ) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }
