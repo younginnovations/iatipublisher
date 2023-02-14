@@ -41,7 +41,7 @@
           >
             <span class="flex items-center space-x-2">
               <svg-vue class="text-crimson-40" icon="alert" />
-              <span> {{ errorLength('crirical') }} Critical errors</span>
+              <span> {{ errorLength('critical') }} Critical errors</span>
             </span>
 
             <svg-vue
@@ -328,10 +328,12 @@ const errorAccordionToggle = (e: Event) => {
 };
 const errorLength = (currentError) => {
   let count = 0;
-  console.log(props.activity['errors'][currentError]);
+
+  // if (Object.keys(props.activity).indexOf('errors') !== -1) {
   Object.values(props.activity['errors'][currentError]).map((item) => {
     count += Object.keys(item as object).length;
   });
+  // }
 
   return count;
 };
@@ -392,15 +394,18 @@ watch(
   left: 0;
   top: 0;
 }
+
 .error-dropdown-container,
 .warning-dropdown-container,
 .critical-dropdown-container {
-  @apply h-0 overflow-hidden  transition-all duration-500;
+  @apply h-0 overflow-hidden transition-all duration-500;
 }
+
 .warning-container {
   position: relative;
   z-index: 1;
 }
+
 .error-container::after {
   position: absolute;
   content: ' ';
@@ -411,12 +416,14 @@ watch(
   left: 0;
   top: 0;
 }
+
 .error-container {
   position: relative;
   z-index: 1;
 
   @apply bg-rose;
 }
+
 .warning-container::after {
   position: absolute;
   content: ' ';
@@ -427,6 +434,7 @@ watch(
   left: 0;
   top: 0;
 }
+
 .error-help {
   font-size: 12px;
   padding-left: 30px;
