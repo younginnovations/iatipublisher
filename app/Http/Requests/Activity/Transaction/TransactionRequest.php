@@ -519,7 +519,7 @@ class TransactionRequest extends ActivityBaseRequest
 
         $transactionService = app()->make(TransactionService::class);
 
-        if (($transactionService->hasRecipientRegionOrCountryDefinedInTransaction($params['id'])) || (!is_variable_null($formFields) && !is_variable_null($this->all()['recipient_country']))) {
+        if (($transactionService->hasRecipientRegionOrCountryDefinedInTransaction($params['id'])) && (!is_variable_null($formFields) && !is_variable_null($this->all()['recipient_country']))) {
             Validator::extend('country_or_region', function () {
                 return false;
             });
