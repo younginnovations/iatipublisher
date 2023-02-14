@@ -107,9 +107,15 @@ class SectorRequest extends ActivityBaseRequest
             $rules[sprintf('%s.percentage', $sectorForm)] = 'nullable|numeric|min:0';
 
             $narrativeRules = $this->getRulesForNarrative($sector['narrative'], $sectorForm);
-
             foreach ($narrativeRules as $key => $item) {
-                $rules[$key] = $item;
+                $explodedKey = explode('.', $key);
+                $isNarrative = count($explodedKey) === 5 && $explodedKey[4] === 'language';
+
+                if ($isNarrative && in_array($sector['sector_vocabulary'], ['98', '99'])) {
+                    $rules[sprintf('%s.%s.%s.%s', $sectorForm, 'narrative', $explodedKey[3], 'narrative')] = ['required'];
+                } else {
+                    $rules[$key] = $item;
+                }
             }
 
             if ($groupedPercentSector[$sector['sector_vocabulary']]['count'] > 1) {
