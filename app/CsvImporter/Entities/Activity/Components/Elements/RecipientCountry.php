@@ -230,7 +230,7 @@ class RecipientCountry extends Element
      */
     public function rules(): array
     {
-        return $this->request->getWarningForRecipientCountry($this->data['recipient_country'], true);
+        return $this->request->getWarningForRecipientCountry($this->data('recipient_country'), true);
     }
 
     /**
@@ -241,7 +241,7 @@ class RecipientCountry extends Element
      */
     public function errorRules(): array
     {
-        return $this->request->getErrorsForRecipientCountry($this->data['recipient_country'], true);
+        return $this->request->getErrorsForRecipientCountry($this->data('recipient_country'), true);
     }
 
     /**
@@ -251,7 +251,7 @@ class RecipientCountry extends Element
      */
     public function messages(): array
     {
-        return $this->request->getMessagesForRecipientCountry($this->data['recipient_country']);
+        return $this->request->getMessagesForRecipientCountry($this->data('recipient_country'));
     }
 
     /**
