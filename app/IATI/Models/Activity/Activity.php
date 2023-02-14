@@ -223,6 +223,7 @@ class Activity extends Model implements Auditable
             $elementStatus['recipient_country'] = false;
             $this->attributes['element_status'] = json_encode($elementStatus, JSON_THROW_ON_ERROR);
         }
+
         $this->attributes['recipient_region'] = !empty($value) ? json_encode($value, JSON_THROW_ON_ERROR) : null;
     }
 

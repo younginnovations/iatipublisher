@@ -119,7 +119,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
             } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] !== $groupedPercentRegion[array_key_first($groupedPercentRegion)]['total']) {
                 $rules[$recipientRegionForm . '.percentage'] .= '|percentage_within_vocabulary';
             } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] !== 100.0) {
-                $rules[$recipientRegionForm . '.percentage'] .= '|allocated_region_total_mismatch';
+                $rules[$recipientRegionForm . '.percentage'] .= '|nullable|allocated_region_total_mismatch';
             }
         }
 
@@ -161,6 +161,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
             $messages[$recipientRegionForm . '.percentage.allocated_region_total_mismatch'] = 'The sum of percentages of Recipient Country and Recipient Regions with same Region Vocabulary must be equal to 100%';
             $messages[$recipientRegionForm . '.percentage.sum_greater_than'] = 'Sum of percentage within vocabulary cannot be greater than 100';
             $messages[$recipientRegionForm . '.percentage.percentage_within_vocabulary'] = 'The sum of percentage of Recipient Country and Recipient Regions (within the same Region Vocabulary) must be equal to 100%';
+            $messages[$recipientRegionForm . '.percentage.min'] = 'The recipient country percentage must be at least 0. ';
         }
 
         return $messages;

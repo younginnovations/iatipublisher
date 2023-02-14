@@ -97,12 +97,23 @@ class RecipientCountryRequest extends ActivityBaseRequest
         Validator::extend('region_percentage_complete', function () {
             return false;
         });
+
+        Validator::extend('duplicate_country_code', function () {
+            return false;
+        });
+
         $totalCountryPercent = $this->getTotalPercent($formFields);
+        $groupedCountryCode = $this->getGroupedCountryCode($formFields);
+
         $this->merge(['total_country_percentage' => $totalCountryPercent]);
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
             $rules[sprintf('%s.country_code', $recipientCountryForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Country', 'Activity', false)));
+            if (in_array($recipientCountry['country_code'], $groupedCountryCode)) {
+                $rules[sprintf('%s.country_code', $recipientCountryForm)] .= '|duplicate_country_code';
+            }
+
             $rules[$recipientCountryForm . '.percentage'] = 'numeric|min:0';
 
             $narrativeRules = $this->getRulesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
@@ -147,6 +158,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
             $messages[sprintf('%s.country_code.in', $recipientCountryForm)] = 'The recipient country code is invalid.';
+            $messages[sprintf('%s.country_code.duplicate_country_code', $recipientCountryForm)] = 'The Country Code cannot be redundant.';
             $messages[$recipientCountryForm . '.percentage.numeric'] = 'The recipient country percentage must be a number.';
             $messages[$recipientCountryForm . '.percentage.max'] = 'The recipient country percentage cannot be greater than 100';
             $messages[$recipientCountryForm . '.percentage.sum_exceeded'] = 'The sum of recipient country percentage cannot be greater than 100';
@@ -163,5 +175,23 @@ class RecipientCountryRequest extends ActivityBaseRequest
         }
 
         return $messages;
+    }
+
+    /**
+     * Groups Country code.
+     *
+     * @param $formFields
+     * @return array
+     */
+    public function getGroupedCountryCode($formFields): array
+    {
+        $array = $formFields;
+        $column = array_column($array, 'country_code');
+        $counted = array_count_values($column);
+        $duplicates = array_filter($counted, static function ($value) {
+            return $value > 1;
+        });
+
+        return array_keys($duplicates);
     }
 }
