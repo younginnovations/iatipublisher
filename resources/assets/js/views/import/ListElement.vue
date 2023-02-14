@@ -34,95 +34,97 @@
           v-if="Object.keys(activity['errors']).indexOf('critical') !== -1"
           class="critical-container mt-2 cursor-pointer"
           :style="`width: ${width - 40}px;`"
-          @click="
-            () => {
-              showCritical = !showCritical;
-            }
-          "
+          @click="criticalAccordionToggle"
         >
-          <div class="flex items-center justify-between border border-none p-3">
+          <div
+            class="flex items-center justify-between border border-none p-3 pb-0.5"
+          >
             <span class="flex items-center space-x-2">
               <svg-vue class="text-crimson-40" icon="alert" />
-              <span> Critical errors</span>
+              <span> {{ errorLength('crirical') }} Critical errors</span>
             </span>
+
             <svg-vue
               icon="dropdown-arrow"
               class="ml-1 cursor-pointer text-[4px] duration-200"
               :class="{ 'rotate-180': showCritical, '': !showCritical }"
-              @click="
-                () => {
-                  showCritical = !showCritical;
-                }
-              "
             />
           </div>
-          <div class="error-dropdown" :class="showCritical ? '' : 'hide-error'">
-            <div
-              v-for="(ele_err, i) in activity['errors']['critical']"
-              :key="i"
-              class="p-4"
-            >
-              <p class="mb-2 font-semibold capitalize">
-                {{ i }}
-              </p>
-
-              <p
-                v-for="item in Object.keys(ele_err)"
-                :key="(item as string)"
-                class="error-list text-sm font-medium"
+          <div class="error-help">
+            (The activity contains critical errors and thus cannot be uploaded
+            to the system.)
+          </div>
+          <div class="critical-dropdown-container">
+            <div class="critical-dropdown">
+              <div
+                v-for="(ele_err, i) in activity['errors']['critical']"
+                :key="i"
+                class="p-4"
               >
-                {{ item.toString().replace(/_/g, ' ').replace(/\./g, ' > ') }}
-                ( {{ ele_err[item] }} )
-              </p>
+                <p class="mb-2 font-semibold capitalize">
+                  {{ i }}
+                </p>
+
+                <p
+                  v-for="item in Object.keys(ele_err)"
+                  :key="(item as string)"
+                  class="error-list mb-2 text-sm font-medium"
+                >
+                  {{ item.toString().replace(/_/g, ' ').replace(/\./g, ' > ') }}
+                  <br />
+                  {{ ele_err[item] }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
+
         <div
           v-if="Object.keys(activity['errors']).indexOf('error') !== -1"
           class="error-container mt-2 cursor-pointer"
           :style="`width: ${width - 40}px;`"
-          @click="
-            () => {
-              showError = !showError;
-            }
-          "
+          @click="errorAccordionToggle"
         >
           <div
-            class="flex items-center justify-between border border-none bg-rose p-3"
+            class="flex items-center justify-between border border-none bg-rose p-3 pb-0.5"
           >
             <span class="flex items-center space-x-2">
               <svg-vue class="text-crimson-40" icon="alert" />
-              <span> Errors</span>
+              <span>{{ errorLength('error') }} Errors</span>
             </span>
             <svg-vue
               icon="dropdown-arrow"
               class="ml-1 cursor-pointer text-[4px] duration-200"
               :class="{ 'rotate-180': showError, '': !showError }"
-              @click="
-                () => {
-                  showError = !showError;
-                }
-              "
             />
           </div>
-          <div class="error-dropdown" :class="showError ? '' : 'hide-error'">
-            <div
-              v-for="(ele_err, i) in activity['errors']['error']"
-              :key="i"
-              class="bg-rose p-4"
-            >
-              <p class="mb-2 font-semibold capitalize">
-                {{ i }}
-              </p>
-
-              <p
-                v-for="item in Object.keys(ele_err)"
-                :key="(item as string)"
-                class="error-list text-sm font-medium"
+          <div class="error-help">
+            (The activity with the errors will be uploaded to our system, but
+            the field containing the error will be removed. You will need to
+            refill these fields with correct data once the activity is uploaded
+            to our system.)
+          </div>
+          <div class="error-dropdown-container">
+            <div class="error-dropdown">
+              <div
+                v-for="(ele_err, i) in activity['errors']['error']"
+                :key="i"
+                class="bg-rose p-4"
               >
-                {{ item.toString().replace(/_/g, ' ').replace(/\./g, ' > ') }}
-                ( {{ ele_err[item] }} )
-              </p>
+                <p class="mb-2 font-semibold capitalize">
+                  {{ i }}
+                </p>
+
+                <p
+                  v-for="item in Object.keys(ele_err)"
+                  :key="(item as string)"
+                  class="error-list mb-2 text-sm font-medium"
+                >
+                  {{ item.toString().replace(/_/g, ' ').replace(/\./g, ' > ') }}
+                  <br />
+                  {{ ele_err[item] }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -130,47 +132,46 @@
           v-if="Object.keys(activity['errors']).indexOf('warning') !== -1"
           class="warning-container my-2 cursor-pointer border-none"
           :style="`width: ${width - 40}px;`"
-          @click="
-            () => {
-              showWarning = !showWarning;
-            }
-          "
+          @click="warningAccordionToggle"
         >
-          <div class="flex items-center justify-between bg-eggshell p-3">
+          <div class="flex items-center justify-between bg-eggshell p-3 pb-0.5">
             <span class="flex items-center space-x-2">
-              <svg-vue icon="alert" class="text-camel-40" /><span
-                >Warnings</span
+              <svg-vue icon="alert" class="text-camel-40" /><span>
+                {{ errorLength('warning') }} Warnings</span
               >
             </span>
             <svg-vue
               icon="dropdown-arrow"
               class="ml-1 cursor-pointer text-[4px] duration-200"
               :class="{ 'rotate-180': showWarning, '': !showWarning }"
-              @click="
-                () => {
-                  showWarning = !showWarning;
-                }
-              "
             />
           </div>
-          <div :class="showWarning ? '' : 'hide-error'" class="error-dropdown">
-            <div
-              v-for="(ele_err, i) in activity['errors']['warning']"
-              :key="i"
-              class="bg-eggshell p-4"
-            >
-              <p class="mb-2 font-semibold capitalize">
-                {{ i }}
-              </p>
-
-              <p
-                v-for="item in Object.keys(ele_err)"
-                :key="(item as string)"
-                class="error-list text-sm font-medium"
+          <div class="error-help">
+            (The field with warnings will be uploaded to our system. These
+            fields contain data that are against the rules of the IATI Validator
+            and will cause validation errors while publishing.)
+          </div>
+          <div class="warning-dropdown-container">
+            <div class="warning-dropdown">
+              <div
+                v-for="(ele_err, i) in activity['errors']['warning']"
+                :key="i"
+                class="bg-eggshell p-4"
               >
-                {{ item.toString().replace(/_/g, ' ').replace(/\./g, ' > ') }}
-                ( {{ ele_err[item] }} )
-              </p>
+                <p class="mb-2 font-semibold capitalize">
+                  {{ i }}
+                </p>
+
+                <p
+                  v-for="item in Object.keys(ele_err)"
+                  :key="(item as string)"
+                  class="error-list mb-2 text-sm font-medium"
+                >
+                  {{ item.toString().replace(/_/g, ' ').replace(/\./g, ' > ') }}
+                  <br />
+                  {{ ele_err[item] }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -184,7 +185,7 @@
             <p
               v-for="item in Object.values(err)"
               :key="(item as string)"
-              class="error-list"
+              class="error-list mb-2"
             >
               {{ item }}
             </p>
@@ -246,6 +247,10 @@ const showCritical = ref(false);
 const showError = ref(false);
 const showWarning = ref(false);
 let activities = reactive([]);
+const criticalToggle = ref(false);
+const errorToggle = ref(false);
+const warningToggle = ref(false);
+
 function toggleError() {
   active.value = !active.value;
 }
@@ -266,6 +271,97 @@ const countErrors = () => {
   return count;
 };
 
+const criticalAccordionToggle = (e: Event) => {
+  showCritical.value = !showCritical.value;
+  const currentTarget = e.currentTarget as HTMLElement;
+  const target = (
+    currentTarget.parentElement as HTMLElement
+  ).querySelector<HTMLElement>('.critical-dropdown-container');
+  const elHeight = target?.querySelector('.critical-dropdown')?.clientHeight;
+
+  if (criticalToggle.value) {
+    if (target != null) {
+      target.style.cssText = `height: ${elHeight}px;`;
+      setTimeout(function () {
+        target.style.cssText = ``;
+      }, 100);
+      criticalToggle.value = false;
+    }
+  } else {
+    if (target != null) {
+      target.style.cssText = `height: ${elHeight}px;`;
+
+      setTimeout(function () {
+        target.style.cssText = `height: auto;`;
+      }, 600);
+
+      criticalToggle.value = true;
+    }
+  }
+};
+const errorAccordionToggle = (e: Event) => {
+  showError.value = !showError.value;
+  const currentTarget = e.currentTarget as HTMLElement;
+  const target = (
+    currentTarget.parentElement as HTMLElement
+  ).querySelector<HTMLElement>('.error-dropdown-container');
+  const elHeight = target?.querySelector('.error-dropdown')?.clientHeight;
+  if (errorToggle.value) {
+    if (target != null) {
+      target.style.cssText = `height: ${elHeight}px;`;
+      setTimeout(function () {
+        target.style.cssText = ``;
+      }, 100);
+      errorToggle.value = false;
+    }
+  } else {
+    if (target != null) {
+      target.style.cssText = `height: ${elHeight}px;`;
+
+      setTimeout(function () {
+        target.style.cssText = `height: auto;`;
+      }, 600);
+
+      errorToggle.value = true;
+    }
+  }
+};
+const errorLength = (currentError) => {
+  let count = 0;
+  console.log(props.activity['errors'][currentError]);
+  Object.values(props.activity['errors'][currentError]).map((item) => {
+    count += Object.keys(item as object).length;
+  });
+
+  return count;
+};
+const warningAccordionToggle = (e: Event) => {
+  showWarning.value = !showWarning.value;
+  const currentTarget = e.currentTarget as HTMLElement;
+  const target = (
+    currentTarget.parentElement as HTMLElement
+  ).querySelector<HTMLElement>('.warning-dropdown-container');
+  const elHeight = target?.querySelector('.warning-dropdown')?.clientHeight;
+  if (warningToggle.value) {
+    if (target != null) {
+      target.style.cssText = `height: ${elHeight}px;`;
+      setTimeout(function () {
+        target.style.cssText = ``;
+      }, 100);
+      warningToggle.value = false;
+    }
+  } else {
+    if (target != null) {
+      target.style.cssText = `height: ${elHeight}px;`;
+
+      setTimeout(function () {
+        target.style.cssText = `height: auto;`;
+      }, 600);
+
+      warningToggle.value = true;
+    }
+  }
+};
 watch(
   () => props.selectedActivities,
   () => {
@@ -279,21 +375,10 @@ watch(
 );
 </script>
 <style scoped>
-.error-dropdown {
-  overflow: hidden;
-  transition: max-height 0.3s ease-out;
-  height: auto;
-  max-height: 600px;
-}
-
-.error-dropdown.hide-error {
-  max-height: 0;
-}
-
 .critical-container {
   position: relative;
   background-color: #f6f0ff;
-  z-index: 100;
+  z-index: 1;
 }
 
 .critical-container::after {
@@ -302,14 +387,19 @@ watch(
   z-index: 10;
   background-color: #a66ee9;
   height: 100%;
+
   width: 2px;
   left: 0;
   top: 0;
 }
-
+.error-dropdown-container,
+.warning-dropdown-container,
+.critical-dropdown-container {
+  @apply h-0 overflow-hidden  transition-all duration-500;
+}
 .warning-container {
   position: relative;
-  z-index: 100;
+  z-index: 1;
 }
 .error-container::after {
   position: absolute;
@@ -323,7 +413,7 @@ watch(
 }
 .error-container {
   position: relative;
-  z-index: 100;
+  z-index: 1;
 
   @apply bg-rose;
 }
@@ -336,5 +426,12 @@ watch(
   width: 2px;
   left: 0;
   top: 0;
+}
+.error-help {
+  font-size: 12px;
+  padding-left: 30px;
+  font-style: italic;
+  font-weight: 400;
+  margin-bottom: 18px;
 }
 </style>

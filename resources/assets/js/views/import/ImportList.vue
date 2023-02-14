@@ -26,7 +26,7 @@
                   <svg-vue icon="question-mark" />
                   <span>What is an activity?</span>
                 </button>
-                <div class="tooltip-btn__content z-[1]">
+                <div class="tooltip-btn__content z-[50]">
                   <div class="content">
                     <div
                       class="mb-1.5 text-caption-c1 font-bold text-bluecoral"
@@ -161,6 +161,7 @@ const getDimensions = async () => {
   await nextTick();
   tableWidth.value = tableRow?.value['0'].clientWidth;
 };
+
 onUnmounted(() => {
   window.removeEventListener('resize', getDimensions);
 });
