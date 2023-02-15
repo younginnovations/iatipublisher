@@ -190,9 +190,11 @@ class RecipientCountryRequest extends ActivityBaseRequest
     {
         $array = $formFields;
         $column = array_column($array, 'country_code');
+
         if ($column[0] === null) {
             return [];
         }
+
         $counted = array_count_values($column);
         $duplicates = array_filter($counted, static function ($value) {
             return $value > 1;
