@@ -70,11 +70,10 @@ class RecipientCountryRequest extends ActivityBaseRequest
         }
 
         $rules = [];
+        $params = $this->route()->parameters();
+        $activityService = app()->make(ActivityService::class);
 
         if (!$fileUpload) {
-            $params = $this->route()->parameters();
-            $activityService = app()->make(ActivityService::class);
-
             if ($activityService->hasRecipientCountryDefinedInTransactions($params['id'])) {
                 Validator::extend('already_in_transactions', function () {
                     return false;
@@ -83,7 +82,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
                 return ['recipient_country' => 'already_in_transactions'];
             }
 
-            Validator::extend('allocated_country_percent_exceeded', function () {
+            Validator::extend('allocated_country_percent', function () {
                 return false;
             });
 
@@ -94,12 +93,27 @@ class RecipientCountryRequest extends ActivityBaseRequest
             return false;
         });
 
+        Validator::extend('region_percentage_complete', function () {
+            return false;
+        });
+
+        Validator::extend('duplicate_country_code', function () {
+            return false;
+        });
+
         $totalCountryPercent = $this->getTotalPercent($formFields);
+        $groupedCountryCode = $this->getGroupedCountryCode($formFields);
+
+        $this->merge(['total_country_percentage' => $totalCountryPercent]);
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
             $rules[sprintf('%s.country_code', $recipientCountryForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Country', 'Activity', false)));
-            $rules[$recipientCountryForm . '.percentage'] = 'nullable|numeric|min:0';
+            if (in_array($recipientCountry['country_code'], $groupedCountryCode)) {
+                $rules[sprintf('%s.country_code', $recipientCountryForm)] .= '|duplicate_country_code';
+            }
+
+            $rules[$recipientCountryForm . '.percentage'] = 'numeric|min:0';
 
             $narrativeRules = $this->getRulesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
 
@@ -113,11 +127,19 @@ class RecipientCountryRequest extends ActivityBaseRequest
 
             if (!$fileUpload) {
                 if ($allottedCountryPercent === 100.0) {
-                    $rules[$recipientCountryForm . '.percentage'] .= '|max:100';
+                    $rules[$recipientCountryForm . '.percentage'] .= '|nullable|max:100';
                 }
 
-                if ($totalCountryPercent !== $allottedCountryPercent && $allottedCountryPercent !== 100.0) {
-                    $rules[$recipientCountryForm . '.percentage'] .= '|allocated_country_percent_exceeded:';
+                if ($allottedCountryPercent === 100.0 && $totalCountryPercent < $allottedCountryPercent && $activityService->hasRecipientRegionDefinedInActivity($params['id'])) {
+                    $rules[$recipientCountryForm . '.percentage'] = '|allocated_country_percent';
+                }
+
+                if ($allottedCountryPercent === 0.0) {
+                    $rules[$recipientCountryForm . '.percentage'] .= $totalCountryPercent > 0.0
+                                                                    ? '|region_percentage_complete'
+                                                                    : '|nullable';
+                } elseif ($totalCountryPercent !== $allottedCountryPercent && $allottedCountryPercent !== 100.0) {
+                    $rules[$recipientCountryForm . '.percentage'] .= '|allocated_country_percent';
                 }
             }
         }
@@ -134,24 +156,50 @@ class RecipientCountryRequest extends ActivityBaseRequest
      */
     public function getMessagesForRecipientCountry(array $formFields): array
     {
-        $messages = ['recipient_country.already_in_transactions' => 'Recipient Country Already defined in Transactions'];
+        $messages = ['recipient_country.already_in_transactions' => 'Recipient Country is already added at transaction level. You can add a Recipient Country either at activity level or at transaction level but not at both.'];
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
             $messages[sprintf('%s.country_code.in', $recipientCountryForm)] = 'The recipient country code is invalid.';
+            $messages[sprintf('%s.country_code.duplicate_country_code', $recipientCountryForm)] = 'The Country Code cannot be redundant.';
             $messages[$recipientCountryForm . '.percentage.numeric'] = 'The recipient country percentage must be a number.';
             $messages[$recipientCountryForm . '.percentage.max'] = 'The recipient country percentage cannot be greater than 100';
             $messages[$recipientCountryForm . '.percentage.sum_exceeded'] = 'The sum of recipient country percentage cannot be greater than 100';
+            $messages[$recipientCountryForm . '.percentage.min'] = 'The recipient country percentage must be at least 0.';
+            $messages[$recipientCountryForm . '.percentage.region_percentage_complete'] = 'Recipient Region’s percentage is already 100%. The sum of the percentages of Recipient Country and Recipient Region must be 100%.';
 
             $narrativeMessages = $this->getMessagesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
 
             foreach ($narrativeMessages as $key => $item) {
                 $messages[$key] = $item;
             }
-            $messages[$recipientCountryForm . '.percentage.in'] = 'Recipient country percent must be equal to allocated percent';
-            $messages[$recipientCountryForm . '.percentage.allocated_country_percent_exceeded'] = 'Recipient country percent must match with allocated percent';
+            $messages[$recipientCountryForm . '.percentage.in'] = 'The sum of percentages of Recipient Region(s) and Recipient country must be 100%';
+            $messages[$recipientCountryForm . '.percentage.allocated_country_percent'] = 'The sum of percentages of Recipient Region(s) and Recipient country must be 100%';
         }
 
         return $messages;
+    }
+
+    /**
+     * Groups Country code.
+     *
+     * @param $formFields
+     * @return array
+     */
+    public function getGroupedCountryCode($formFields): array
+    {
+        $array = $formFields;
+        $column = array_column($array, 'country_code');
+
+        if ($column[0] === null) {
+            return [];
+        }
+
+        $counted = array_count_values($column);
+        $duplicates = array_filter($counted, static function ($value) {
+            return $value > 1;
+        });
+
+        return array_keys($duplicates);
     }
 }
