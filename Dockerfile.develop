@@ -106,7 +106,7 @@ FROM nginx:1.20-alpine as web_server
 WORKDIR /opt/apps/laravel-in-kubernetes
 
 COPY docker/nginx.conf.template /etc/nginx/templates/default.conf.template
-ph
+
 COPY --from=frontend /opt/apps/laravel-in-kubernetes/public /opt/apps/laravel-in-kubernetes/public
 
 FROM cli as cron
