@@ -140,7 +140,7 @@ class SectorRequest extends ActivityBaseRequest
      */
     public function getSectorsMessages($formFields): array
     {
-        $messages = ['sector.already_in_transactions' => 'Sector already defined in Transactions'];
+        $messages = ['sector.already_in_transactions' => 'Sector has already been declared at transaction level. You can’t declare a sector at the activity level.'];
 
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
