@@ -85,7 +85,6 @@
 
   .upload-error-content {
     height: auto;
-    max-height: 1000px;
     overflow-y: hidden;
     transition: max-height 0.3s ease-out; // note that we're transitioning max-height, not height!
     .error-dropdown {
