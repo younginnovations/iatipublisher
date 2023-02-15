@@ -13,12 +13,12 @@
       >
         <ul>
           <li>
-            <a href="#" :class="liClass" @click="modalValue = true"
+            <a href="#" :class="liClass" id="add-activity-manually" @click="modalValue = true"
               >Add activity manually</a
             >
           </li>
           <li>
-            <a href="/import" :class="liClass"
+            <a href="/import" :class="liClass" id="import-activity"
               >Import activities from .csv/.xml</a
             >
           </li>

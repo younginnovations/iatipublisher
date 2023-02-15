@@ -37,14 +37,20 @@
                     </div>
                 </div>' : '';
             $label = strtolower(str_replace(' ', '-', $options['label']));
+            $collectionLabel='<div class="flex justify-between items-center w-full" >'. 
+                                $label .
+                                '<div class="flex items-center">'. 
+                                    $help_text . $hover_text . 
+                                '</div>' . 
+                            '</div>';
             ?>
            
             <?php if (isset($options['options']['element_criteria']) && $options['options']['element_criteria'] === 'mandatory') : ?>
-                <?= htmlspecialchars_decode(Form::customLabel($name,  '<svg-vue icon="core" class="mr-2"></svg-vue>' . $label . $help_text . $hover_text, $options['label_attr'])) ?>
+                <?= htmlspecialchars_decode(Form::customLabel($name,  '<svg-vue icon="core" class="mr-2"></svg-vue>' .  $collectionLabel, $options['label_attr'])) ?>
             <?php elseif (isset($options['options']['element_criteria']) && $options['options']['element_criteria'] === 'recommended') : ?>
-                <?= htmlspecialchars_decode(Form::customLabel($name, '<svg-vue icon="core" class="mr-2"></svg-vue>' . $label . $help_text . $hover_text, $options['label_attr'])) ?>
+                <?= htmlspecialchars_decode(Form::customLabel($name, '<svg-vue icon="core" class="mr-2"></svg-vue>' .  $collectionLabel, $options['label_attr'])) ?>
             <?php else : ?>
-                <?= htmlspecialchars_decode(Form::customLabel($name,'<div class="flex justify-between items-center w-full" >'. $label .'<div class="flex items-center">'. $help_text . $hover_text . '</div>' . '</div>', $options['label_attr'])) ?>
+                <?= htmlspecialchars_decode(Form::customLabel($name, $collectionLabel, $options['label_attr'])) ?>
             <?php endif; ?>
         <?php endif; ?>
         <section class="collection_error">

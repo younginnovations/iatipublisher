@@ -98,12 +98,14 @@
                       <a
                         class="cursor-pointer"
                         :class="liClass"
+                        id="header-add-activity-manually"
                         @click="modalValue = true"
                         >Add activity manually</a
                       >
                     </li>
                     <li>
                       <a href="/import" :class="liClass"
+                      id="header-import-activity"
                         >Import activities from .csv/.xml</a
                       >
                     </li>
