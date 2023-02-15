@@ -26,7 +26,7 @@
 
     <div
       :style="`width: ${width - 40}px;`"
-      class="upload-error-content duration-200"
+      class="upload-error-content h-[auto] !max-h-[auto] duration-200"
       :class="{ closed: !active }"
     >
       <div class="py-4">
@@ -130,7 +130,7 @@
         </div>
         <div
           v-if="Object.keys(activity['errors']).indexOf('warning') !== -1"
-          class="warning-container my-2 cursor-pointer border-none"
+          class="warning-container my-2 cursor-pointer border-none bg-eggshell"
           :style="`width: ${width - 40}px;`"
           @click="warningAccordionToggle"
         >
@@ -146,7 +146,7 @@
               :class="{ 'rotate-180': showWarning, '': !showWarning }"
             />
           </div>
-          <div class="error-help">
+          <div class="error-help bg-eggshell">
             (The field with warnings will be uploaded to our system. These
             fields contain data that are against the rules of the IATI Validator
             and will cause validation errors while publishing.)
@@ -355,10 +355,10 @@ const warningAccordionToggle = (e: Event) => {
   } else {
     if (target != null) {
       target.style.cssText = `height: ${elHeight}px;`;
-
+      console.log(elHeight);
       setTimeout(function () {
         target.style.cssText = `height: auto;`;
-      }, 600);
+      }, 100);
 
       warningToggle.value = true;
     }
@@ -389,7 +389,6 @@ watch(
   z-index: 10;
   background-color: #a66ee9;
   height: 100%;
-
   width: 2px;
   left: 0;
   top: 0;
@@ -441,5 +440,6 @@ watch(
   font-style: italic;
   font-weight: 400;
   margin-bottom: 18px;
+  background-color: none;
 }
 </style>

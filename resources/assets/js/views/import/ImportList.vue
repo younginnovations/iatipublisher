@@ -80,14 +80,7 @@
       </div>
     </div>
     <!-- Table layout: show after upload complete -->
-    <div class="mb-2 border-l-2 border-l-salmon-50 bg-paper">
-      <div class="alert__content m-2 mb-2.5 rounded bg-camel-10 p-2">
-        <span class="overflow-hidden text-sm font-normal">
-          Activities with errors cannot be imported. Please solve the errors to
-          import your activities.</span
-        >
-      </div>
-    </div>
+
     <div class="iati-list-table upload-list-table">
       <table>
         <thead>
