@@ -9,6 +9,7 @@ use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\TransactionService;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -17,10 +18,21 @@ use Illuminate\Support\Facades\Validator;
 class TransactionRequest extends ActivityBaseRequest
 {
     /**
+     * @var array
+     */
+    protected array $transactionFormField;
+
+    /**
+     * @var array
+     */
+    protected array $activityFormField;
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
      * @throws BindingResolutionException
+     * @throws \JsonException
      */
     public function rules(): array
     {
@@ -45,11 +57,13 @@ class TransactionRequest extends ActivityBaseRequest
      * @param array $activityData
      *
      * @return array
-     * @throws BindingResolutionException
+     * @throws BindingResolutionException|\JsonException
      */
     public function getRulesForTransaction(array $formFields, bool $fileUpload = false, array $activityData = []): array
     {
         $rules = [];
+        $this->transactionFormField = $formFields;
+        $this->activityFormField = $activityData;
 
         if (!$fileUpload) {
             $transactionId = $this->segment(4);
@@ -65,7 +79,7 @@ class TransactionRequest extends ActivityBaseRequest
             }
         }
 
-        Validator::extend('country_or_region', function () {
+        Validator::extend('country_or_region', static function () {
             return false;
         });
 
@@ -279,15 +293,13 @@ class TransactionRequest extends ActivityBaseRequest
      * @param array $transactions
      *
      * @return array
-     * @throws BindingResolutionException
+     * @throws BindingResolutionException|\JsonException
      */
     public function getSectorsRules(array $formFields, bool $fileUpload, array $activitySectors, array $transactions = []): array
     {
         if (empty($formFields)) {
             return [];
         }
-
-        dump($transactions);
 
         $rules = [];
         $activityService = app()->make(ActivityService::class);
@@ -311,7 +323,7 @@ class TransactionRequest extends ActivityBaseRequest
                 $rules['sector'] = 'sector_required';
             }
         } else {
-            if (!$activityService->isElementEmpty($formFields, 'sectorFields') && !empty($activitySectors)) {
+            if (!empty($activitySectors) && !$activityService->isElementEmpty($formFields, 'sectorFields')) {
                 return ['sector' => 'already_in_activity'];
             }
 
@@ -504,7 +516,7 @@ class TransactionRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    public function getWarningForRecipientRegion(array $formFields, bool $fileUpload, array $activityRecipientRegions, array $transaction = []): array
+    public function getRulesForRecipientRegion(array $formFields, bool $fileUpload, array $activityRecipientRegions, array $transaction = []): array
     {
         if (empty($formFields)) {
             return [];
@@ -512,7 +524,6 @@ class TransactionRequest extends ActivityBaseRequest
 
         $rules = [];
         $activityService = app()->make(ActivityService::class);
-        $transactionService = app()->make(TransactionService::class);
 
         if (!$fileUpload) {
             $params = $this->route()->parameters();
@@ -527,13 +538,8 @@ class TransactionRequest extends ActivityBaseRequest
         } else {
             if (!$activityService->isElementEmpty($formFields, 'recipientRegionFields') && !$activityService->isElementEmpty($activityRecipientRegions, 'recipientRegionFields')) {
                 return ['recipient_region' => 'already_in_activity'];
-            }
-
-            if (($transactionService->hasRecipientRegionOrCountryDefinedInTransaction($params['id'])) && (!is_variable_null($formFields) && !is_variable_null($this->all()['recipient_country']))) {
-                Validator::extend('country_or_region', function () {
-                    return false;
-                });
-                $rules['recipient_region'] = 'country_or_region';
+            } elseif ($activityService->isElementEmpty($activityRecipientRegions, 'recipientRegionFields')) {
+                $this->getRecipientRegionOrCountryRuleFromFileUpload($rules, 'recipient_country');
             }
         }
 
@@ -546,6 +552,7 @@ class TransactionRequest extends ActivityBaseRequest
             if (Arr::get($recipientRegion, 'region_vocabulary', 1) === '99') {
                 $rules[sprintf('%s.vocabulary_uri', $recipientRegionForm)] = 'nullable|url';
             }
+
             $narrativeRules = $this->getRulesForNarrative($recipientRegion['narrative'], $recipientRegionForm);
 
             foreach ($narrativeRules as $key => $item) {
@@ -554,7 +561,7 @@ class TransactionRequest extends ActivityBaseRequest
         }
 
         if (!$fileUpload) {
-            $this->getRecipientRegionOrCountryRule($rules);
+            $this->getRecipientRegionOrCountryRule($rules, 'recipient_region');
         }
 
         return $rules;
@@ -628,8 +635,12 @@ class TransactionRequest extends ActivityBaseRequest
 
                 return ['recipient_country' => 'already_in_activity'];
             }
-        } elseif (!$activityService->isElementEmpty($formFields, 'recipientCountryFields') && !$activityService->isElementEmpty($activityRecipientCountries, 'recipientCountryFields')) {
-            return ['recipient_country' => 'already_in_activity'];
+        } else {
+            if (!$activityService->isElementEmpty($formFields, 'recipientCountryFields') && !$activityService->isElementEmpty($activityRecipientCountries, 'recipientCountryFields')) {
+                return ['recipient_country' => 'already_in_activity'];
+            } elseif ($activityService->isElementEmpty($activityRecipientCountries, 'recipientCountryFields')) {
+                $this->getRecipientRegionOrCountryRuleFromFileUpload($rules, 'recipient_country');
+            }
         }
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
@@ -643,7 +654,7 @@ class TransactionRequest extends ActivityBaseRequest
         }
 
         if (!$fileUpload) {
-            $this->getRecipientRegionOrCountryRule($rules);
+            $this->getRecipientRegionOrCountryRule($rules, 'recipient_country');
         }
 
         return $rules;
@@ -684,18 +695,44 @@ class TransactionRequest extends ActivityBaseRequest
      * Checks if recipient region or country is required or not.
      *
      * @param $rules
+     * @param $attribute
      * @return array
      * @throws BindingResolutionException
      */
-    public function getRecipientRegionOrCountryRule(&$rules): array
+    public function getRecipientRegionOrCountryRule(&$rules, $attribute): array
     {
         $transactionService = app()->make(TransactionService::class);
         $params = $this->route()->parameters();
 
         if (($transactionService->hasRecipientRegionOrCountryDefinedInTransaction($params['id'])) && (is_variable_null($this->all()['recipient_region']) && is_variable_null($this->all()['recipient_country']))) {
-            $rules['recipient_region'] = 'country_or_region';
+            $rules[$attribute] = 'country_or_region';
         } elseif (!is_variable_null($this->all()['recipient_region']) && !is_variable_null($this->all()['recipient_country'])) {
-            $rules['recipient_region'] = 'country_or_region';
+            $rules[$attribute] = 'country_or_region';
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Checks if country or region rule required or not from file upload.
+     *
+     * @param $rules
+     * @param $attribute
+     * @return array
+     */
+    public function getRecipientRegionOrCountryRuleFromFileUpload(&$rules, $attribute): array
+    {
+        $hasRegionOrCountryDefinedInTransaction = Session::get('has_region_or_country_defined_in_transaction');
+        $recipientRegion = $this->transactionFormField['recipient_region'];
+        $recipientCountry = $this->transactionFormField['recipient_country'];
+
+        if (!is_variable_null($recipientRegion) || !is_variable_null($recipientCountry)) {
+            $rules[$attribute] = 'country_or_region';
+            Session::put('has_region_or_country_defined_in_transaction', true);
+        } elseif ($hasRegionOrCountryDefinedInTransaction && (is_variable_null($recipientRegion) && is_variable_null($recipientCountry))) {
+            $rules[$attribute] = 'country_or_region';
+        } elseif (!is_variable_null($recipientRegion) && !is_variable_null($recipientCountry)) {
+            $rules[$attribute] = 'country_or_region';
         }
 
         return $rules;
