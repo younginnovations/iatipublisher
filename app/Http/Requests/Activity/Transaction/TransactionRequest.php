@@ -175,7 +175,7 @@ class TransactionRequest extends ActivityBaseRequest
         foreach ($formFields as $dateIndex => $date) {
             $dateForm = sprintf('transaction_date.%s', $dateIndex);
             $messages[sprintf('%s.date.before', $dateForm)] = 'The @iso-date must not be in future.';
-            $messages[sprintf('%s.date.date', $dateForm)] = 'The @iso-date field mus be a valid date.';
+            $messages[sprintf('%s.date.date', $dateForm)] = 'The @iso-date field must be a valid date.';
         }
 
         return $messages;
@@ -276,39 +276,59 @@ class TransactionRequest extends ActivityBaseRequest
      * @param array $formFields
      * @param bool $fileUpload
      * @param array $activitySectors
+     * @param array $transactions
      *
      * @return array
      * @throws BindingResolutionException
      */
-    public function getSectorsRules(array $formFields, bool $fileUpload, array $activitySectors): array
+    public function getSectorsRules(array $formFields, bool $fileUpload, array $activitySectors, array $transactions = []): array
     {
         if (empty($formFields)) {
             return [];
         }
 
+        dump($transactions);
+
         $rules = [];
         $activityService = app()->make(ActivityService::class);
+        $transactionService = app()->make(TransactionService::class);
+
+        Validator::extend('already_in_activity', function () {
+            return false;
+        });
+
+        Validator::extend('sector_required', function () {
+            return false;
+        });
 
         if (!$fileUpload) {
             $params = $this->route()->parameters();
-            $transactionService = app()->make(TransactionService::class);
-
             if (!$activityService->isElementEmpty($formFields, 'sectorFields') && $activityService->hasSectorDefinedInActivity($params['id'])) {
-                Validator::extend('already_in_activity', function () {
-                    return false;
-                });
-
                 return ['sector' => 'already_in_activity'];
             }
 
             if (is_variable_null($formFields) && $transactionService->hasSectorDefinedInTransaction($params['id'])) {
-                Validator::extend('sector_required', function () {
-                    return false;
-                });
                 $rules['sector'] = 'sector_required';
             }
-        } elseif (!$activityService->isElementEmpty($formFields, 'sectorFields') && !empty($activitySectors)) {
-            return ['sector' => 'already_in_activity'];
+        } else {
+            if (!$activityService->isElementEmpty($formFields, 'sectorFields') && !empty($activitySectors)) {
+                return ['sector' => 'already_in_activity'];
+            }
+
+            if (!empty($transactions)) {
+                $hasSector = false;
+
+                foreach ($transactions as $transaction) {
+                    if (Arr::get($transaction, 'sector', [])) {
+                        $hasSector = true;
+                        break;
+                    }
+                }
+
+                if ($hasSector) {
+                    $rules['sector'] = 'sector_required';
+                }
+            }
         }
 
         foreach ($formFields as $sectorIndex => $sector) {
@@ -484,7 +504,7 @@ class TransactionRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    public function getRulesForRecipientRegion(array $formFields, bool $fileUpload, array $activityRecipientRegions): array
+    public function getWarningForRecipientRegion(array $formFields, bool $fileUpload, array $activityRecipientRegions, array $transaction = []): array
     {
         if (empty($formFields)) {
             return [];
@@ -492,6 +512,7 @@ class TransactionRequest extends ActivityBaseRequest
 
         $rules = [];
         $activityService = app()->make(ActivityService::class);
+        $transactionService = app()->make(TransactionService::class);
 
         if (!$fileUpload) {
             $params = $this->route()->parameters();
@@ -503,8 +524,17 @@ class TransactionRequest extends ActivityBaseRequest
 
                 return ['recipient_region' => 'already_in_activity'];
             }
-        } elseif (!$activityService->isElementEmpty($formFields, 'recipientRegionFields') && !$activityService->isElementEmpty($activityRecipientRegions, 'recipientRegionFields')) {
-            return ['recipient_region' => 'already_in_activity'];
+        } else {
+            if (!$activityService->isElementEmpty($formFields, 'recipientRegionFields') && !$activityService->isElementEmpty($activityRecipientRegions, 'recipientRegionFields')) {
+                return ['recipient_region' => 'already_in_activity'];
+            }
+
+            if (($transactionService->hasRecipientRegionOrCountryDefinedInTransaction($params['id'])) && (!is_variable_null($formFields) && !is_variable_null($this->all()['recipient_country']))) {
+                Validator::extend('country_or_region', function () {
+                    return false;
+                });
+                $rules['recipient_region'] = 'country_or_region';
+            }
         }
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {

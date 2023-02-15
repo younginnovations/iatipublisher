@@ -89,6 +89,7 @@ class SectorRequest extends ActivityBaseRequest
         Validator::extend('sector_total_percent', function () {
             return false;
         });
+
         $rules = [];
         $groupedPercentSector = $this->groupSector($formFields);
 
