@@ -159,6 +159,19 @@ form {
   .wrapped-child-body + .collection_error {
     display: block;
   }
+  .control-label + .collection_error {
+    display: block;
+    padding-left: 24px;
+    padding-right: 24px;
+    font-style: italic;
+    margin-top: -16px;
+    min-height: 16px;
+    border-right: 1px solid rgb(var(--spring-50));
+    padding-bottom: 6px;
+    .div {
+      line-height: 4px !important;
+    }
+  }
 }
 
 /**
@@ -302,4 +315,7 @@ aside {
   .help__text {
     transform: translateX(0%) !important;
   }
+}
+.error-title {
+  color: #d1001e;
 }
