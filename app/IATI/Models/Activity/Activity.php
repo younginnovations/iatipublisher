@@ -238,12 +238,12 @@ class Activity extends Model implements Auditable
      */
     public function setRecipientCountryAttribute($value): void
     {
-        logger()->error(json_encode($this->attributes));
         if (empty($value) && empty($this->attributes['recipient_region'])) {
             $elementStatus = Arr::get($this->attributes, 'element_status', []) ? json_decode($this->attributes['element_status'], true, 512, JSON_THROW_ON_ERROR) : [];
             $elementStatus['recipient_region'] = false;
             $this->attributes['element_status'] = json_encode($elementStatus, JSON_THROW_ON_ERROR);
         }
+
         $this->attributes['recipient_country'] = !empty($value) ? json_encode($value, JSON_THROW_ON_ERROR) : null;
     }
 }

@@ -74,6 +74,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
 
         if (!$fileUpload) {
             $params = $this->route()->parameters();
+
             if ($activityService->hasRecipientCountryDefinedInTransactions($params['id'])) {
                 Validator::extend('already_in_transactions', function () {
                     return false;
