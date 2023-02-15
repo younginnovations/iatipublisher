@@ -288,15 +288,24 @@ class TransactionRequest extends ActivityBaseRequest
 
         $rules = [];
         $activityService = app()->make(ActivityService::class);
-        $params = $this->route()->parameters();
 
         if (!$fileUpload) {
+            $params = $this->route()->parameters();
+            $transactionService = app()->make(TransactionService::class);
+
             if (!$activityService->isElementEmpty($formFields, 'sectorFields') && $activityService->hasSectorDefinedInActivity($params['id'])) {
                 Validator::extend('already_in_activity', function () {
                     return false;
                 });
 
                 return ['sector' => 'already_in_activity'];
+            }
+
+            if (is_variable_null($formFields) && $transactionService->hasSectorDefinedInTransaction($params['id'])) {
+                Validator::extend('sector_required', function () {
+                    return false;
+                });
+                $rules['sector'] = 'sector_required';
             }
         } elseif (!$activityService->isElementEmpty($formFields, 'sectorFields') && !empty($activitySectors)) {
             return ['sector' => 'already_in_activity'];
@@ -319,14 +328,6 @@ class TransactionRequest extends ActivityBaseRequest
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
             }
-        }
-        $transactionService = app()->make(TransactionService::class);
-
-        if (is_variable_null($formFields) && $transactionService->hasSectorDefinedInTransaction($params['id'])) {
-            Validator::extend('sector_required', function () {
-                return false;
-            });
-            $rules['sector'] = 'sector_required';
         }
 
         return $rules;
@@ -522,7 +523,9 @@ class TransactionRequest extends ActivityBaseRequest
             }
         }
 
-        $this->getRecipientRegionOrCountryRule($rules);
+        if (!$fileUpload) {
+            $this->getRecipientRegionOrCountryRule($rules);
+        }
 
         return $rules;
     }
@@ -587,6 +590,7 @@ class TransactionRequest extends ActivityBaseRequest
 
         if (!$fileUpload) {
             $params = $this->route()->parameters();
+
             if (!$activityService->isElementEmpty($formFields, 'recipientCountryFields') && $activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
                 Validator::extend('already_in_activity', function () {
                     return false;
@@ -608,7 +612,9 @@ class TransactionRequest extends ActivityBaseRequest
             }
         }
 
-        $this->getRecipientRegionOrCountryRule($rules);
+        if (!$fileUpload) {
+            $this->getRecipientRegionOrCountryRule($rules);
+        }
 
         return $rules;
     }
