@@ -726,11 +726,11 @@ class TransactionRequest extends ActivityBaseRequest
         $recipientRegion = $this->transactionFormField['recipient_region'];
         $recipientCountry = $this->transactionFormField['recipient_country'];
 
-        if (!is_variable_null($recipientRegion) && !is_variable_null($recipientCountry)) {
+        if (!is_array_value_null($recipientRegion) && !is_array_value_null($recipientCountry)) {
             $rules[$attribute] = 'country_or_region';
-        } elseif (!is_variable_null($recipientRegion) || !is_variable_null($recipientCountry)) {
+        } elseif (!is_array_value_null($recipientRegion) || !is_array_value_null($recipientCountry)) {
             Session::put('has_region_or_country_defined_in_transaction', true);
-        } elseif ($hasRegionOrCountryDefinedInTransaction && (is_variable_null($recipientRegion) && is_variable_null($recipientCountry))) {
+        } elseif ($hasRegionOrCountryDefinedInTransaction && (is_array_value_null($recipientRegion) && is_array_value_null($recipientCountry))) {
             $rules[$attribute] = 'country_or_region';
         }
 

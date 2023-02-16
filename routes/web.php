@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::middleware(RedirectIfAuthenticated::class)->name('web.')->group(function () {
     Route::get('/', [App\Http\Controllers\Web\WebController::class, 'index']);
     Route::get('/login', [App\Http\Controllers\Web\WebController::class, 'index'])->name('index.login');

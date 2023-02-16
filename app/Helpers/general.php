@@ -1152,3 +1152,21 @@ if (!function_exists('generateApiInfo')) {
         return $requestInfo;
     }
 }
+
+if (!function_exists('is_array_value_null')) {
+    /**
+     * Checks if array | nested array values are null or empty string.
+     *
+     * @param $array
+     * @return bool
+     */
+    function is_array_value_null($array): bool
+    {
+        $flatArray = Arr::flatten($array);
+        $value = array_filter($flatArray, static function ($q) {
+            return $q;
+        });
+
+        return empty($value);
+    }
+}
