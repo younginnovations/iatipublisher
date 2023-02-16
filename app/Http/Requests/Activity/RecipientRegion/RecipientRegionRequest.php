@@ -98,6 +98,9 @@ class RecipientRegionRequest extends ActivityBaseRequest
             return false;
         });
 
+        $recipientRegionService = app()->make(RecipientRegionService::class);
+        $this->groupedPercentRegion = $recipientRegionService->groupRegion($formFields);
+
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
             $rules[sprintf('%s.region_vocabulary', $recipientRegionForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('RegionVocabulary', 'Activity', false)));
@@ -114,8 +117,6 @@ class RecipientRegionRequest extends ActivityBaseRequest
             $this->getPercentageRule($rules, $recipientRegionForm, $recipientRegion, $fileUpload, $recipientCountries);
         }
 
-        $recipientRegionService = app()->make(RecipientRegionService::class);
-        $this->groupedPercentRegion = $recipientRegionService->groupRegion($formFields);
         $firstGroupTotalPercentage = Arr::first($this->groupedPercentRegion, static function ($value) {
             return $value;
         });

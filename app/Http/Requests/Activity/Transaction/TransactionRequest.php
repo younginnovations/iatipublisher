@@ -727,7 +727,6 @@ class TransactionRequest extends ActivityBaseRequest
         $recipientCountry = $this->transactionFormField['recipient_country'];
 
         if (!is_variable_null($recipientRegion) || !is_variable_null($recipientCountry)) {
-            $rules[$attribute] = 'country_or_region';
             Session::put('has_region_or_country_defined_in_transaction', true);
         } elseif ($hasRegionOrCountryDefinedInTransaction && (is_variable_null($recipientRegion) && is_variable_null($recipientCountry))) {
             $rules[$attribute] = 'country_or_region';
