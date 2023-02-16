@@ -1160,7 +1160,7 @@ if (!function_exists('is_array_value_null')) {
      * @param $array
      * @return bool
      */
-    function is_array_value_null($array): bool
+    function is_array_value_empty($array): bool
     {
         $flatArray = Arr::flatten($array);
         $value = array_filter($flatArray, static function ($q) {
