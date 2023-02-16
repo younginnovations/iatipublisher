@@ -139,12 +139,14 @@ class SuperAdminController extends Controller
     public function listSystemVersion(): View | Factory | JsonResponse | Application
     {
         try {
-            $phpDependencies = json_decode(
-                file_get_contents('../app_versions/composer_package_versions.json')
-            )->installed ?? '';
+            $composerPackageDetails = json_decode(file_get_contents('../app_versions/composer_package_versions.json'));
+
+            $phpDependencies = $composerPackageDetails->package_details->installed ?? '';
             $nodeDependencies = json_decode(file_get_contents('../app_versions/npm_package_versions.json'), true) ?? '';
             $version = json_decode(file_get_contents('../app_versions/current_versions.json')) ?? '';
             $latestVersion = json_decode(file_get_contents('../app_versions/latest_versions.json')) ?? '';
+
+            $version->composer = $composerPackageDetails->composer_version;
 
             return view(
                 'superadmin.systemVersion',
@@ -158,7 +160,7 @@ class SuperAdminController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+            return  redirect('listOrganizations')->with('error', 'Something with wrong.');
         }
     }
 }

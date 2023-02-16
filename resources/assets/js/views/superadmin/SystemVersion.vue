@@ -156,7 +156,7 @@ const resolveLatestVersion = (latestManagerVersion, key) => {
   if (key in latestManagerVersion) {
     return latestManagerVersion[key];
   } else if (key == 'composer') {
-    return '2.1.4';
+    return '2.5.4';
   }
   return 'NA';
 };
