@@ -50,9 +50,9 @@
         icon="tick"
         class="mr-1 mt-0.5 shrink-0 text-lg text-spring-50"
       />
-      <div>
-        {{ noErrorMessage }}
-      </div>
+      <!-- eslint-disable vue/no-v-html -->
+      <div v-html="noErrorMessage"></div>
+      <!--eslint-enable-->
     </div>
     <div class="rounded-lg bg-mint px-6">
       <div class="no-errors">
