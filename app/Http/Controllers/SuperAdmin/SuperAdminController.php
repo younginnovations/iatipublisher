@@ -160,7 +160,7 @@ class SuperAdminController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return  redirect('listOrganizations')->with('error', 'Something with wrong.');
+            return  redirect('listOrganizations')->with('error', 'Failed opening System Version page.');
         }
     }
 }
