@@ -20,7 +20,7 @@ Route::group([], static function () {
     Route::get('activities/start-bulk-publish', [BulkPublishingController::class, 'startBulkPublish'])->name('activities.startBulkPublish');
     Route::get('activities/bulk-publish-status', [BulkPublishingController::class, 'getBulkPublishStatus'])->name('activities.bulkPublishStatus');
     Route::get('activities/checks-for-activity-publish', [ActivityWorkflowController::class, 'checksForActivityPublish'])->name('activities.checks_for_publish');
-    Route::get('activities/checks-for-activity-bulk-publish', [BulkPublishingController::class, 'checksForActivityBulkPublish'])->name('activities.checks_for_publish');
+    Route::get('activities/checks-for-activity-bulk-publish', [BulkPublishingController::class, 'checksForActivityBulkPublish'])->name('activities.checks_for_bulk_publish');
     Route::get('activities/cancel-bulk-publish', [BulkPublishingController::class, 'cancelBulkPublishing'])->name('activities.stopBulkPublish');
     Route::get('activities/organisation-bulk-publish-status', [BulkPublishingController::class, 'getOrganisationBulkPublishingStatus'])->name('activities.orgBulkPublishStatus');
 });
