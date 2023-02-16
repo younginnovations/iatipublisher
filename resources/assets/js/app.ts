@@ -82,8 +82,6 @@ import PageTitle from './components/sections/PageTitle.vue';
 import LoadingState from './components/Loader.vue';
 import SystemVersion from "./views/superadmin/SystemVersion.vue";
 
-
-
 const app = createApp({});
 
 /**
