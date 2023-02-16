@@ -96,6 +96,7 @@ USER  www-data
 
 COPY --from=composer_base --chown=www-data /opt/apps/laravel-in-kubernetes /opt/apps/laravel-in-kubernetes
 COPY --from=frontend --chown=www-data /opt/apps/laravel-in-kubernetes/public /opt/apps/laravel-in-kubernetes/public
+COPY --from=frontend --chown=www-data /opt/apps/laravel-in-kubernetes/app_versions/ /opt/apps/laravel-in-kubernetes/app_versions/
 
 RUN php artisan event:cache && \
     php artisan route:cache && \
