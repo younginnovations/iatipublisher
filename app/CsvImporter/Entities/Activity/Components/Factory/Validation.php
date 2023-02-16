@@ -320,6 +320,10 @@ class Validation extends Factory
         $this->extend('percentage_within_vocabulary', function () {
             return false;
         });
+
+        $this->extend('country_percentage_complete', function () {
+            return false;
+        });
     }
 
     /**
