@@ -693,6 +693,10 @@ class Validation extends Factory
         $this->extend('country_or_region', function () {
             return false;
         });
+
+        $this->extend('duplicate_country_code', function () {
+            return false;
+        });
     }
 
     /**
