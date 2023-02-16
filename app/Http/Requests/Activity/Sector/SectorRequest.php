@@ -54,7 +54,6 @@ class SectorRequest extends ActivityBaseRequest
             } else {
                 $groupedSector[$formField['sector_vocabulary']] = ['count' => 1, 'total' => (float) $formField['percentage']];
             }
-            \Log::info($groupedSector);
         }
 
         return $groupedSector;
