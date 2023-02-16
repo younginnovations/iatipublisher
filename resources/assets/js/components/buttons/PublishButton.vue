@@ -174,7 +174,11 @@ onUpdated(() => {
       loader.value = true;
     }, 500);
   }
-  if (publishStep.value === 3 || publishStep.value === 4) {
+  if (
+    publishStep.value === 3 ||
+    publishStep.value === 2 ||
+    publishStep.value === 4
+  ) {
     loader.value = false;
     publishValue.value = true;
   }
@@ -312,6 +316,7 @@ const validatorFunction = () => {
       loader.value = true;
     }, 500);
   }
+
   loaderText.value = 'Validating Activity';
 
   axios.post(`/activity/${id}/validateActivity`).then((res) => {
