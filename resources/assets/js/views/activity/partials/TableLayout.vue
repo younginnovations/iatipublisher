@@ -44,16 +44,16 @@
         >
           <td class="title">
             <div
-              class="inline-flex items-start transition duration-500 hover:text-spring-50"
+              class="flex items-start transition duration-500 hover:text-spring-50"
             >
               <PreviouslyPublished
                 v-if="datum['linked_to_iati'] && datum['status'] === 'draft'"
                 class="absolute top-0 left-0"
               />
-              <div class="ellipsis relative">
+              <div class="ellipsis relative w-full">
                 <a
                   :href="'/activity/' + datum['id']"
-                  class="ellipsis overflow-hidden text-n-50"
+                  class="ellipsis w-full !max-w-full overflow-hidden text-n-50"
                   >{{
                     datum['default_title_narrative'] &&
                     datum['default_title_narrative'] !== ''
