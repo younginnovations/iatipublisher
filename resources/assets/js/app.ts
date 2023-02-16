@@ -80,6 +80,7 @@ import AuditListing from './views/audit/AuditListing.vue';
 import HoverText from './components/HoverText.vue';
 import PageTitle from './components/sections/PageTitle.vue';
 import LoadingState from './components/Loader.vue';
+import SystemVersion from "./views/superadmin/SystemVersion.vue";
 
 const app = createApp({});
 
@@ -136,6 +137,8 @@ app
  * Setting page
  */
 app.component('SettingPage', SettingPage);
+
+app.component('SystemVersion', SystemVersion);
 
 app.component('ActivityDefaultValues', ActivityDefaultValues);
 /*

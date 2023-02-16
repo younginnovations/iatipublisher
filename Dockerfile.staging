@@ -7,7 +7,7 @@ FROM composer:2.1 as composer_base
 ARG PHP_EXTS
 ARG PHP_PECL_EXTS
 
-RUN mkdir -p /opt/apps/laravel-in-kubernetes /opt/apps/laravel-in-kubernetes/bin
+RUN mkdir -p /opt/apps/laravel-in-kubernetes /opt/apps/laravel-in-kubernetes/bin /opt/apps/laravel-in-kubernetes/app_versions
 
 WORKDIR /opt/apps/laravel-in-kubernetes
 
@@ -31,6 +31,8 @@ COPY --chown=composer . .
 
 RUN composer install --prefer-dist --optimize-autoloader
 
+RUN ./getComposerInfo.sh
+
 FROM node:16 as frontend
 
 ARG MIX_ENCRYPTION_KEY
@@ -42,6 +44,7 @@ WORKDIR /opt/apps/laravel-in-kubernetes
 RUN npm install && \
     npm run prod
 
+RUN ./getNodeInfo.sh
 
 FROM php:8.1-alpine as cli
 
@@ -93,6 +96,7 @@ USER  www-data
 
 COPY --from=composer_base --chown=www-data /opt/apps/laravel-in-kubernetes /opt/apps/laravel-in-kubernetes
 COPY --from=frontend --chown=www-data /opt/apps/laravel-in-kubernetes/public /opt/apps/laravel-in-kubernetes/public
+COPY --from=frontend --chown=www-data /opt/apps/laravel-in-kubernetes/app_versions/ /opt/apps/laravel-in-kubernetes/app_versions/
 
 RUN php artisan event:cache && \
     php artisan route:cache && \

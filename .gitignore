@@ -19,3 +19,4 @@ supervisord.log
 supervisord.pid
 secret.yaml
 github-credentials.yaml
+/app_versions/*.json

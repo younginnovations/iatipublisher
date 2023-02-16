@@ -49,6 +49,7 @@
           </div>
         </div>
       </div>
+
       <div
         class="actions relative inline-flex grow flex-col items-end justify-end space-y-2 xl:flex-row"
       >

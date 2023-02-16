@@ -18,5 +18,6 @@ Route::group(['namespace' => 'SuperAdmin', 'middleware' => ['can:list_organizati
     Route::get('/list-organisations', [SuperAdminController::class, 'listOrganizations'])->name('listOrganizations');
     Route::get('/list-organisations/page/{page?}', [SuperAdminController::class, 'getPaginatedOrganizations'])->name('listOrganizations.paginate');
     Route::get('/proxy-organisation/{userId}', [SuperAdminController::class, 'proxyOrganization'])->name('proxyOrganization');
+    Route::get('/system-version', [SuperAdminController::class, 'listSystemVersion'])->name('systemVersion');
     Route::get('/api-log', [ApiLogController::class, 'getData'])->name('getData');
 });
