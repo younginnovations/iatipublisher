@@ -313,7 +313,9 @@ class Result
 
         if (!empty($comments)) {
             foreach ($comments as $index => $comment) {
-                $commentData[0]['narrative'][$index] = Arr::get($this->narrative($comment), '0');
+                $narrativeComment = Arr::get($this->narrative($comment), '0');
+                $narrativeComment['language'] = strtolower($narrativeComment['language']);
+                $commentData[0]['narrative'][$index] = $narrativeComment;
             }
         }
 
