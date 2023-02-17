@@ -63,7 +63,6 @@
         <?php endif; ?>
 
         <?php if ($showField): ?>
-
             <?php foreach ((array) $options['children'] as $child): ?>
                 <?= $child->render() ?>
             <?php endforeach; ?>
