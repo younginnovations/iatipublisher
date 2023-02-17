@@ -413,14 +413,14 @@ $(function () {
       $('#organization_registration_agency').val() + '-' + $(this).val();
     $('#organisation_identifier').val(identifier);
   });
-});
-const subelement = document.querySelectorAll('.subelement');
+  const subelement = document.querySelectorAll('.subelement');
 
-for (let i = 0; i < subelement.length; i++) {
-  const title = subelement[i].querySelector('.control-label');
-  const errorContainer = subelement[i].querySelector('.collection_error');
-  const childCount = errorContainer?.childElementCount;
-  if (childCount && childCount > 0) {
-    title?.classList.add('error-title');
+  for (let i = 0; i < subelement.length; i++) {
+    const title = subelement[i].querySelector('.control-label');
+    const errorContainer = subelement[i].querySelector('.collection_error');
+    const childCount = errorContainer?.childElementCount;
+    if (childCount && childCount > 0) {
+      title?.classList.add('error-title');
+    }
   }
-}
+});

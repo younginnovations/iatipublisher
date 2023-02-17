@@ -45,12 +45,12 @@
                 }
             }
 
-            $collectionLabel = '<div class=" w-full" > <div class="flex  justify-between items-center w-full" >' .
+            $collectionLabel = '<div class="title-container w-full" > <div class="flex  justify-between items-center w-full" >' .
                 $label .
                 '<div class="flex   items-center">' .
                 $help_text . $hover_text .
                 '</div>' .
-                '</div>'.$error.'<section class="collection_error">' . $error .
+                '</div>'.'<section class="collection_error">' . $error .
                 '</section> </div>';
             ?>
 
