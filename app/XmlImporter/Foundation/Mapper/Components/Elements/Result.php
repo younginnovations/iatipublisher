@@ -42,7 +42,7 @@ class Result
             $value = Arr::get($result, 'value', []) ?? [];
             $this->result[$index] = $template['result'];
             $this->result[$index]['type'] = $this->attributes($result, 'type');
-            $this->result[$index]['aggregation_status'] = $this->attributes($result, 'aggregation-status');
+            $this->result[$index]['aggregation_status'] = $this->setBooleanField($this->attributes($result, 'aggregation-status'));
             $this->result[$index]['title'][0]['narrative'] = $this->value($value, 'title');
             $this->result[$index]['description'][0]['narrative'] = $this->value($value, 'description');
             $this->result[$index]['document_link'] = $this->documentLink($result, $index);
@@ -51,6 +51,24 @@ class Result
         }
 
         return $this->result;
+    }
+
+    /**
+     * Returns value for boolean field.
+     *
+     * @param $value
+     *
+     * @return string
+     */
+    public function setBooleanField($value): string
+    {
+        if ((strtolower($value) === 'yes') || (strtolower($value) === 'true') || $value === true || $value === '1') {
+            return '1';
+        } elseif ((strtolower($value) === 'no') || (strtolower($value) === 'false') || $value === false || $value === '0') {
+            return '0';
+        }
+
+        return $value;
     }
 
     /**
@@ -69,8 +87,8 @@ class Result
             foreach ($indicators as $key => $indicator) {
                 $indicator = $indicator['indicator'];
                 $indicatorData[$key]['measure'] = $indicatorAttributes[$key]['measure'];
-                $indicatorData[$key]['ascending'] = $indicatorAttributes[$key]['ascending'];
-                $indicatorData[$key]['aggregation_status'] = Arr::get($indicatorAttributes[$key], 'aggregation-status', '');
+                $indicatorData[$key]['ascending'] = $this->setBooleanField($indicatorAttributes[$key]['ascending']);
+                $indicatorData[$key]['aggregation_status'] = $this->setBooleanField(Arr::get($indicatorAttributes[$key], 'aggregation-status', ''));
 
                 if (!empty($indicator) && $indicator !== '') {
                     $indicatorData[$key]['title'][0]['narrative'] = $this->value($indicator, 'title');
@@ -79,8 +97,10 @@ class Result
                     $indicatorData[$key]['baseline'] = $this->baseline($indicator, $indicatorTemplate, $index);
                     $indicatorData[$key]['document_link'] = $this->documentLink(['value' => $indicator], $index);
                     $indicatorData[$key]['period'] = $this->period($indicator, $indicatorTemplate, $index);
-                } else {
-                    unset($indicatorData[$key]['period']);
+                }
+
+                if (isset($indicatorData[$key]) && $this->checkEmptyData($indicatorData[$key])) {
+                    unset($indicatorData[$key]);
                 }
             }
 
@@ -118,12 +138,12 @@ class Result
         $referenceData = Arr::get($resultTemplate, '0.reference');
 
         foreach ($references as $referenceIndex => $reference) {
-            $vocabulary = Arr::get($reference, 'vocabulary');
-            $code = Arr::get($reference, 'code');
-            $vocabulary_uri = Arr::get($reference, 'vocabulary_uri');
-            $referenceData[$referenceIndex]['vocabulary'] = $vocabulary && !empty($vocabulary) ? $vocabulary : null;
-            $referenceData[$referenceIndex]['code'] = $code && !empty($code) ? $code : null;
-            $referenceData[$referenceIndex]['vocabulary_uri'] = $vocabulary_uri && !empty($vocabulary_uri) ? $vocabulary_uri : null;
+            $vocabulary = Arr::get($reference, 'vocabulary', '');
+            $code = Arr::get($reference, 'code', '');
+            $vocabulary_uri = Arr::get($reference, 'vocabulary-uri', '');
+            $referenceData[$referenceIndex]['vocabulary'] = $vocabulary;
+            $referenceData[$referenceIndex]['code'] = $code;
+            $referenceData[$referenceIndex]['vocabulary_uri'] = $vocabulary_uri;
         }
 
         return $referenceData;
@@ -187,12 +207,36 @@ class Result
                     $periodsData[$key]['target'] = $this->target($period, $periodsTemplate, $index);
                     $periodsData[$key]['actual'] = $this->actual($period, $periodsTemplate, $index);
                 }
+
+                if (isset($periodsData[$key]) && $this->checkEmptyData($periodsData[$key])) {
+                    unset($periodsData[$key]);
+                }
             }
 
             return $periodsData;
         }
 
         return [];
+    }
+
+    /**
+     * Checks if the period, indicator or result is empty.
+     *
+     * @param $elementData
+     *
+     * @return bool
+     */
+    public function checkEmptyData($elementData): bool
+    {
+        $elementValues = Arr::flatten($elementData);
+
+        foreach ($elementValues as $value) {
+            if ($value && $value != '') {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

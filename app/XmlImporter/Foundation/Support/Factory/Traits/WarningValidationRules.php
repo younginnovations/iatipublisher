@@ -353,10 +353,6 @@ trait WarningValidationRules
 
         foreach ($results as $resultIndex => $result) {
             $resultBase = sprintf('result.%s', $resultIndex);
-            $rules[sprintf('%s.type', $resultBase)] = sprintf(
-                'nullable|in:%s',
-                $this->validCodeList('ResultType')
-            );
 
             $tempRules = [
                 $this->getWarningForIndicator(Arr::get($result, 'indicator', []), $resultBase, $result),
@@ -386,7 +382,6 @@ trait WarningValidationRules
 
         foreach ($indicators as $indicatorIndex => $indicator) {
             $indicatorBase = sprintf('indicator.%s', $indicatorIndex);
-            $rules[sprintf('%s.ascending', $indicatorBase)] = 'nullable|in:1,0';
 
             $tempRules = [
                 (new IndicatorRequest())->getWarningForIndicator($indicator, true, $result),

@@ -7,12 +7,15 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Title\TitleRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 
 /**
  * Class Title.
  */
 class Title extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Header for Title element.
      * @var array
@@ -78,6 +81,8 @@ class Title extends Element
                 $this->data[end($this->_csvHeader)][] = ['narrative' => null, 'language' => null];
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**

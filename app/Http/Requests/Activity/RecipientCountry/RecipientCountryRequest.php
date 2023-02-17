@@ -151,7 +151,8 @@ class RecipientCountryRequest extends ActivityBaseRequest
 
             if (!$fileUpload) {
                 if ($allottedCountryPercent === 100.0) {
-                    $rules[$recipientCountryForm . '.percentage'][] = ['nullable','max:100'];
+                    $rules[$recipientCountryForm . '.percentage'][] = 'nullable';
+                    $rules[$recipientCountryForm . '.percentage'][] = 'max:100';
                 }
 
                 if ($allottedCountryPercent === 100.0 && $totalCountryPercent < $allottedCountryPercent && $activityService->hasRecipientRegionDefinedInActivity($params['id'])) {

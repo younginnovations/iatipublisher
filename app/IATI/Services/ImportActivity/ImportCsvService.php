@@ -203,8 +203,8 @@ class ImportCsvService
             $iati_identifier_text = $organizationIdentifier . '-' . Arr::get($activity, 'data.identifier.activity_identifier');
             $activity['data']['identifier']['iati_identifier_text'] = $iati_identifier_text;
 
-            if (Arr::get($activity, 'existence') === true) {
-                $oldActivity = $this->activityRepo->getActivityWithIdentifier($organizationId, Arr::get($activity, 'data.identifier'));
+            if (Arr::get($activity, 'existence', false) && $this->activityRepo->getActivityWithIdentifier($organizationId, Arr::get($activity, 'data.identifier.activity_identifier'))) {
+                $oldActivity = $this->activityRepo->getActivityWithIdentifier($organizationId, Arr::get($activity, 'data.identifier.activity_identifier'));
                 $this->activityRepo->updateActivity($oldActivity->id, Arr::get($activity, 'data'));
                 $this->transactionRepo->deleteTransaction($oldActivity->id);
 
@@ -214,6 +214,8 @@ class ImportCsvService
 
                 if (!empty($activity['errors'])) {
                     $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $activity['errors']);
+                } else {
+                    $this->importActivityErrorRepo->delete($oldActivity->id);
                 }
             } else {
                 $createdActivity = $this->activityRepo->createActivity(Arr::get($activity, 'data'));

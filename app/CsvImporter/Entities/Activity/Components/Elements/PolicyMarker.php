@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\PolicyMarker\PolicyMarkerRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Support\Arr;
 
 /**
@@ -14,6 +15,8 @@ use Illuminate\Support\Arr;
  */
 class PolicyMarker extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Header for PolicyMarker element.
      * @var array
@@ -59,6 +62,8 @@ class PolicyMarker extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**

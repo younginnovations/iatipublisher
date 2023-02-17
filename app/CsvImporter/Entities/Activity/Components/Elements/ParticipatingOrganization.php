@@ -7,12 +7,15 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\ParticipatingOrganization\ParticipatingOrganizationRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 
 /**
  * Class ParticipatingOrganization.
  */
 class ParticipatingOrganization extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * @var array
      */
@@ -80,6 +83,8 @@ class ParticipatingOrganization extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**

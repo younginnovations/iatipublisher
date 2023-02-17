@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Condition\ConditionRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Support\Arr;
 
 /**
@@ -14,6 +15,8 @@ use Illuminate\Support\Arr;
  */
 class Condition extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Header for Condition element.
      * @var array
@@ -67,6 +70,8 @@ class Condition extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -230,7 +235,7 @@ class Condition extends Element
     public function errorRules(): array
     {
         $rules = $this->getBaseRules($this->request->getErrorsForCondition(Arr::get($this->data, 'conditions.condition', [])), false);
-        $rules['conditions.condition_attached'] = 'in:0,1';
+        $rules['conditions.condition_attached'] = 'size:1|in:0,1';
 
         return $rules;
     }

@@ -389,7 +389,7 @@ class ActivityRow extends Row
      *
      * @return array|string
      */
-    protected function transactionElement(): array |string
+    protected function transactionElement(): array|string
     {
         return $this->transactionElement;
     }
@@ -477,7 +477,7 @@ class ActivityRow extends Row
      *
      * @return array|string|int
      */
-    protected function data(): array |string|int
+    protected function data(): array|string|int
     {
         $this->data = [];
 
@@ -565,7 +565,7 @@ class ActivityRow extends Row
     {
         $tempErrors = $this->errors;
 
-        foreach ($this->errors as $key =>$value) {
+        foreach ($this->errors as $key => $value) {
             if (empty($tempErrors[$key])) {
                 unset($tempErrors[$key]);
             }
@@ -585,16 +585,16 @@ class ActivityRow extends Row
      */
     protected function recordErrors($name, $element, $isTransaction = false): void
     {
-        if (!empty($element->warnings())) {
-            $this->errors['warning'][$name] = $isTransaction ? $this->mergeTransactionErrors('warning', $element) : $element->warnings();
+        if (!empty($element->criticals())) {
+            $this->errors['critical'][$name] = $isTransaction ? $this->mergeTransactionErrors('critical', $element) : $element->criticals();
         }
 
         if (!empty($element->errors())) {
             $this->errors['error'][$name] = $isTransaction ? $this->mergeTransactionErrors('error', $element) : $element->errors();
         }
 
-        if (!empty($element->criticals())) {
-            $this->errors['critical'][$name] = $isTransaction ? $this->mergeTransactionErrors('critical', $element) : $element->criticals();
+        if (!empty($element->warnings())) {
+            $this->errors['warning'][$name] = $isTransaction ? $this->mergeTransactionErrors('warning', $element) : $element->warnings();
         }
     }
 
@@ -606,7 +606,7 @@ class ActivityRow extends Row
      *
      * @return array
      */
-    protected function mergeTransactionErrors($ruleType, $element) : array
+    protected function mergeTransactionErrors($ruleType, $element): array
     {
         $currentErrors = call_user_func([$element, $ruleType . 's']);
         $existingErrors = Arr::get($this->errors, "$ruleType.transaction", []);

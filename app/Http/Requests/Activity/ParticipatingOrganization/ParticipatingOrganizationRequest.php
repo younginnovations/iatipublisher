@@ -98,11 +98,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
             $participatingOrgForm = 'participating_org.' . $participatingOrgIndex;
             $messages[$participatingOrgForm . '.organization_role.required'] = trans('validation.required', ['attribute' => trans('elementForm.organisation_role')]);
             $identifier = $participatingOrgForm . '.identifier';
-            $narrative = sprintf('%s.narrative.0.narrative', $participatingOrgForm);
-            $messages[$identifier . '.exclude_operators'] = trans(
-                'validation.exclude_operators',
-                ['attribute' => trans('elementForm.identifier'), 'values' => trans('elementForm.identifier')]
-            );
+            $messages[$identifier . '.exclude_operators'] = 'The identifier must not contain symbols or blank space';
 
             $messages[sprintf('%s.organization_role.in', $participatingOrgForm)] = 'The participating organisation role is invalid.';
             $messages[sprintf('%s.type.in', $participatingOrgForm)] = 'The participating organisation type is invalid.';

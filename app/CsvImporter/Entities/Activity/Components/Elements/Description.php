@@ -7,12 +7,15 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Description\DescriptionRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 
 /**
  * Class Description.
  */
 class Description extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * CSV Header of Description with their code.
      */
@@ -73,6 +76,8 @@ class Description extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
