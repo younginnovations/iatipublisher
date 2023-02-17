@@ -34,10 +34,9 @@
 </template>
 
 <script lang="ts" setup>
-import { defineComponent, onUnmounted, onMounted, ref, inject } from 'vue';
-import axios from 'axios';
+import { onUnmounted, onMounted, inject } from 'vue';
 
-const bulkPublishStatus = inject('bulkPublishingStatus');
+const bulkPublishStatus = inject('bulkPublishStatus');
 
 onMounted(() => {
   document.documentElement.style.overflow = 'hidden';

@@ -90,7 +90,14 @@ class BulkPublishingController extends Controller
             }
 
             if ($this->publishingStatusService->ongoingBulkPublishing(auth()->user()->organization->id)) {
-                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.', 'data' => $this->getBulkPublishStatus(), 'flag' => true]);
+                $pubishingStatus = $this->bulkPublishingService->getOrganisationBulkPublishingStatus();
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Another bulk publishing is already in progress.',
+                    'data' => $pubishingStatus['publishingData'],
+                    'in_progress' => $pubishingStatus['inProgress'],
+                ]);
             }
 
             $activityIds = json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR);
@@ -174,7 +181,14 @@ class BulkPublishingController extends Controller
             }
 
             if ($this->publishingStatusService->ongoingBulkPublishing(auth()->user()->organization->id)) {
-                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.', 'data' => $this->getBulkPublishStatus(), 'flag' => true]);
+                $pubishingStatus = $this->bulkPublishingService->getOrganisationBulkPublishingStatus();
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Another bulk publishing is already in progress.',
+                    'data' => $pubishingStatus['publishingData'],
+                    'in_progress' => $pubishingStatus['inProgress'],
+                ]);
             }
 
             $activityIds = json_decode($request->get('activities'), false, 512, JSON_THROW_ON_ERROR);
@@ -218,42 +232,6 @@ class BulkPublishingController extends Controller
 
             if ($organizationId && $uuid) {
                 $publishStatus = $this->publishingStatusService->getActivityPublishingStatus($organizationId, $uuid);
-
-                if ($publishStatus && count($publishStatus)) {
-                    $response = $this->bulkPublishingService->getPublishingResponse($publishStatus);
-
-                    return response()->json(['success' => true, 'message' => $response['message'], 'data' => $response]);
-                }
-
-                return response()->json(['success' => true, 'message' => 'No bulk publishing in process.']);
-            }
-
-            return response()->json(['success' => false, 'message' => 'Insufficient data.']);
-        } catch (\Exception $e) {
-            logger()->error($e->getMessage());
-
-            return response()->json(['success' => false, 'message' => 'Status generation failed.']);
-        } catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
-            logger()->error($e->getMessage());
-
-            return response()->json(['success' => false, 'message' => 'Request error']);
-        }
-    }
-
-    /**
-     * Get status of bulk publishing for users belonging to same org.
-     *
-     * @return JsonResponse
-     *
-     * @throws \Exception
-     */
-    public function getOrganisationBulkPublishingStatus(): JsonResponse
-    {
-        try {
-            $organizationId = auth()->user()->organization->id;
-
-            if ($organizationId) {
-                $publishStatus = $this->publishingStatusService->getActivityPublishingStatus($organizationId);
 
                 if ($publishStatus && count($publishStatus)) {
                     $response = $this->bulkPublishingService->getPublishingResponse($publishStatus);
@@ -324,7 +302,14 @@ class BulkPublishingController extends Controller
             }
 
             if ($this->publishingStatusService->ongoingBulkPublishing(auth()->user()->organization->id)) {
-                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.', 'data' => $this->getBulkPublishStatus(), 'flag' => true]);
+                $pubishingStatus = $this->bulkPublishingService->getOrganisationBulkPublishingStatus();
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Another bulk publishing is already in progress.',
+                    'data' => $pubishingStatus['publishingData'],
+                    'in_progress' => $pubishingStatus['inProgress'],
+                ]);
             }
 
             return response()->json(['success' => true, 'message' => 'Activity is ready to be published.']);

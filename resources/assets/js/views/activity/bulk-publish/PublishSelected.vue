@@ -235,7 +235,6 @@ import BulkPublishing from './BulkPublishing.vue';
 // Vuex Store
 import { useStore } from 'Store/activities/index';
 import BulkPublishingErrorPopup from 'Components/BulkPublishingErrorPopup.vue';
-import { emptyStatement } from '@babel/types';
 
 defineProps({
   type: { type: String, default: 'primary' },
@@ -316,9 +315,9 @@ const checkPublish = () => {
     if (response.success === true) {
       publishAlertValue.value = true;
     } else {
-      if (response?.flag) {
+      if (response?.in_progress) {
         emptybulkPublishStatus();
-        Object.assign(bulkPublishStatus, response.data);
+        Object.assign(bulkPublishStatus, response.data.activities);
         showCancelConfirmationModal();
       } else {
         displayToast(response.message, response.success);
@@ -356,9 +355,9 @@ const verifyCoreElements = () => {
         loader.value = false;
         resetPublishStep();
 
-        if (response?.flag) {
+        if (response?.in_progress) {
           emptybulkPublishStatus();
-          Object.assign(bulkPublishStatus, response.data);
+          Object.assign(bulkPublishStatus, response.data.activities);
           showCancelConfirmationModal();
         } else {
           displayToast(response.message, response.success);
@@ -431,9 +430,9 @@ const startBulkPublish = () => {
         loader.value = false;
         resetPublishStep();
 
-        if (response?.flag) {
+        if (response?.in_progress) {
           emptybulkPublishStatus();
-          Object.assign(bulkPublishStatus, response.data);
+          Object.assign(bulkPublishStatus, response.data.activities);
           showCancelConfirmationModal();
         } else {
           displayToast(response.message, response.success);
