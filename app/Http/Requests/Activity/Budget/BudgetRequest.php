@@ -211,7 +211,7 @@ class BudgetRequest extends ActivityBaseRequest
         if (count($this->identicalIds)) {
             foreach ($this->identicalIds as $ids) {
                 foreach ($ids as $id) {
-                    $messages['budget.' . $id . '.budget_type.budgets_identical'] = $fileUpload ? 'Budget elements are duplicated.' : 'The periods of multiple budgets with the same type should not be the same';
+                    $messages['budget.' . $id . '.budget_type.budgets_identical'] = 'The periods of multiple budgets with the same type should not be the same';
                 }
             }
         }
