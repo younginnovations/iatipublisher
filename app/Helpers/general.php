@@ -514,7 +514,8 @@ if (!function_exists('getList')) {
                 array_key_exists(
                     'name',
                     $list
-                ) ? ' - ' . $list['name'] : '') : $list['name'];
+                ) ? ' - ' . $list['name'] : ''
+            ) : $list['name'];
         }
 
         return $data;

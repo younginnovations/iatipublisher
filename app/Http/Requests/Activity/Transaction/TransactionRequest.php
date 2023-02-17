@@ -89,7 +89,7 @@ class TransactionRequest extends ActivityBaseRequest
         Validator::extend('country_or_region', static function () {
             return false;
         });
-        
+
         $tempRules = [
             $this->getTransactionDateRules($formFields['transaction_date']),
             $this->getValueRules($formFields['value']),
