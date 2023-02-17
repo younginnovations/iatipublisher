@@ -1,19 +1,17 @@
 <?php if ($showLabel && $showField): ?>
 
-
-
     <?php if (isset($options['options']['dynamic_wrapper'])): ?>
         <div
-            class="<?= strtolower($options['label']) === "narrative" ? $options['options']['dynamic_wrapper']['class'] . ' narrative' : $options['options']['dynamic_wrapper']['class'] ?> ">
-        <?php endif; ?>
+            class="<?= strtolower($options['label']) === "narrative" ? $options['options']['dynamic_wrapper']['class'] . ' narrative' : $options['options']['dynamic_wrapper']['class'] ?> ">        
+            <?php endif; ?>
+
         <?php if (!isset($options['options']['dynamic_wrapper']) && $options['wrapper']): ?>
             <div <?= $options['wrapperAttrs'] ?>>
             <?php endif; ?>
+
         <?php endif; ?>
 
         <?php if ($showLabel && $options['label'] !== false && $options['label_show'] && strtolower($options['label']) !== "narrative"): ?>
-
-
             <?php
             $label = $options['options']['data']['label'] ?? $options['label'];
             $help_text = $options['options']['help_text'] !== '' ? '<div>
@@ -61,17 +59,22 @@
             <?php else: ?>
                 <?= htmlspecialchars_decode(Form::customLabel($name, $collectionLabel, $options['label_attr'])) ?>
             <?php endif; ?>
+
         <?php endif; ?>
+
         <?php if ($showField): ?>
+
             <?php foreach ((array) $options['children'] as $child): ?>
                 <?= $child->render() ?>
             <?php endforeach; ?>
 
             <?php include helpBlockPath(); ?>
-
         <?php endif; ?>
+
         <?php if ($showLabel && $showField): ?>
             <?php if ($options['wrapper'] !== false): ?>
             </div>
         <?php endif; ?>
+        
     <?php endif; ?>
+    
