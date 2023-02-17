@@ -96,18 +96,18 @@
                   <ul class="flex-col">
                     <li>
                       <a
+                        id="header-add-activity-manually"
                         class="cursor-pointer"
                         :class="liClass"
-                        id="header-add-activity-manually"
                         @click="modalValue = true"
                         >Add activity manually</a
                       >
                     </li>
                     <li>
                       <a
+                        id="header-import-activity"
                         href="/import"
                         :class="liClass"
-                        id="header-import-activity"
                         >Import activities from .csv/.xml</a
                       >
                     </li>
