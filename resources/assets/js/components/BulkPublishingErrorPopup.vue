@@ -7,14 +7,23 @@
     Activities being published:
     <ul class="list-disc rounded-md bg-salmon-10 p-3 font-medium">
       <li
-        v-for="(activity, index) in message"
+        v-for="(activity, index) in bulkPublishStatus"
         :key="index"
         class="flex justify-between py-2 pr-2"
       >
-        <span>{{ activity.activity_title }}</span>
-        <span :class="getActivityClass(activity.status)">
+        <span>{{ activity['activity_title'] }}</span>
+        <span
+          :class="[
+            {
+              'text-bluecoral': activity['status'] === 'processing',
+              'text-salmon-50': activity['status'] === 'created',
+              'text-spring-50': activity['status'] === 'completed',
+            },
+            'text-bluecoral',
+          ]"
+        >
           <small>
-            {{ activity.status }}
+            {{ activity['status'] }}
           </small>
         </span>
       </li>
@@ -24,46 +33,17 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
+<script lang="ts" setup>
+import { defineComponent, onUnmounted, onMounted, ref, inject } from 'vue';
 import axios from 'axios';
 
-export default defineComponent({
-  name: 'BulkPublishingErrorPopup',
-  components: {},
+const bulkPublishStatus = inject('bulkPublishingStatus');
 
-  setup() {
-    const message = ref('');
+onMounted(() => {
+  document.documentElement.style.overflow = 'hidden';
+});
 
-    onMounted(() => {
-      document.documentElement.style.overflow = 'hidden';
-
-      axios.get('activities/organisation-bulk-publish-status').then((res) => {
-        const response = res.data;
-        message.value = response.data.activities;
-      });
-    });
-
-    onUnmounted(() => {
-      document.documentElement.style.overflow = 'auto';
-    });
-
-    const getActivityClass = (status) => {
-      if (status === 'processing') {
-        return 'text-bluecoral';
-      } else if (status === 'created') {
-        return 'text-salmon-50';
-      } else if (status === 'completed') {
-        return 'text-spring-50';
-      } else {
-        return 'text-crimson-50';
-      }
-    };
-
-    return {
-      message,
-      getActivityClass,
-    };
-  },
+onUnmounted(() => {
+  document.documentElement.style.overflow = 'auto';
 });
 </script>

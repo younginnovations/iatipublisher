@@ -90,7 +90,7 @@ class BulkPublishingController extends Controller
             }
 
             if ($this->publishingStatusService->ongoingBulkPublishing(auth()->user()->organization->id)) {
-                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.', 'data'=>$this->getBulkPublishStatus(), 'flag'=>true]);
+                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.', 'data' => $this->getBulkPublishStatus(), 'flag' => true]);
             }
 
             $activityIds = json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR);
@@ -174,7 +174,7 @@ class BulkPublishingController extends Controller
             }
 
             if ($this->publishingStatusService->ongoingBulkPublishing(auth()->user()->organization->id)) {
-                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.', 'flag'=>true]);
+                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.', 'data' => $this->getBulkPublishStatus(), 'flag' => true]);
             }
 
             $activityIds = json_decode($request->get('activities'), false, 512, JSON_THROW_ON_ERROR);
@@ -247,7 +247,7 @@ class BulkPublishingController extends Controller
      *
      * @throws \Exception
      */
-    public function getOrganisationBulkPublishingStatus():JsonResponse
+    public function getOrganisationBulkPublishingStatus(): JsonResponse
     {
         try {
             $organizationId = auth()->user()->organization->id;
@@ -295,17 +295,17 @@ class BulkPublishingController extends Controller
                     [
                         'success' => true,
                         'message' => "Bulk publish of {$numberOfDeletedRows} activities canceled.",
-                        'data'    => $deletedIds,
+                        'data' => $deletedIds,
                     ]
                 );
             }
 
-            return response()->json(['success'=>true, 'message'=>'No bulk publish were cancelled.']);
+            return response()->json(['success' => true, 'message' => 'No bulk publish were cancelled.']);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return response()->json(['success'=>false, 'message'=>'Failed to stop bulk publishing']);
+            return response()->json(['success' => false, 'message' => 'Failed to stop bulk publishing']);
         }
     }
 
@@ -324,7 +324,7 @@ class BulkPublishingController extends Controller
             }
 
             if ($this->publishingStatusService->ongoingBulkPublishing(auth()->user()->organization->id)) {
-                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.', 'data'=>$this->getBulkPublishStatus(), 'flag'=>true]);
+                return response()->json(['success' => false, 'message' => 'Another bulk publishing is already in progress.', 'data' => $this->getBulkPublishStatus(), 'flag' => true]);
             }
 
             return response()->json(['success' => true, 'message' => 'Activity is ready to be published.']);
