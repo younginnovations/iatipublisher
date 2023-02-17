@@ -1,18 +1,18 @@
+<?php if ($showLabel && $showField): ?>
 
-<?php if ($showLabel && $showField) : ?>
-       
-   
-       
-    <?php if (isset($options['options']['dynamic_wrapper'])) : ?>
-        <div class="<?= strtolower($options['label']) === "narrative" ? $options['options']['dynamic_wrapper']['class'] . ' narrative' : $options['options']['dynamic_wrapper']['class'] ?> ">
+
+
+    <?php if (isset($options['options']['dynamic_wrapper'])): ?>
+        <div
+            class="<?= strtolower($options['label']) === "narrative" ? $options['options']['dynamic_wrapper']['class'] . ' narrative' : $options['options']['dynamic_wrapper']['class'] ?> ">
         <?php endif; ?>
-        <?php if (!isset($options['options']['dynamic_wrapper']) && $options['wrapper']) : ?>
+        <?php if (!isset($options['options']['dynamic_wrapper']) && $options['wrapper']): ?>
             <div <?= $options['wrapperAttrs'] ?>>
             <?php endif; ?>
         <?php endif; ?>
-          
-        <?php if ($showLabel && $options['label'] !== false && $options['label_show'] && strtolower($options['label']) !== "narrative") : ?>
-                      
+
+        <?php if ($showLabel && $options['label'] !== false && $options['label_show'] && strtolower($options['label']) !== "narrative"): ?>
+
 
             <?php
             $label = $options['options']['data']['label'] ?? $options['label'];
@@ -37,35 +37,41 @@
                     </div>
                 </div>' : '';
             $label = strtolower(str_replace(' ', '-', $options['label']));
-            $collectionLabel='<div class="flex justify-between items-center w-full" >'. 
-                                $label .
-                                '<div class="flex items-center">'. 
-                                    $help_text . $hover_text . 
-                                '</div>' . 
-                            '</div>';
+            $error = '';
+            
+            if ($showError && isset($errors) && $errors->hasBag($errorBag)) {
+                foreach ($errors->getBag($errorBag)->get($nameKey) as $err) {
+                    $error = $error.'<div class="text-danger-error">' . $err . '</div>';
+                }
+            }
+
+            $collectionLabel = '<div class="flex justify-between items-center w-full" >' .
+                $label .
+                '<div class="flex items-center">' .
+                $help_text . $hover_text .
+                '</div>' .
+                '</div>'.$error.'<section class="collection_error">' . $error .
+                '</section>';
             ?>
-           
-            <?php if (isset($options['options']['element_criteria']) && $options['options']['element_criteria'] === 'mandatory') : ?>
-                <?= htmlspecialchars_decode(Form::customLabel($name,  '<svg-vue icon="core" class="mr-2"></svg-vue>' .  $collectionLabel, $options['label_attr'])) ?>
-            <?php elseif (isset($options['options']['element_criteria']) && $options['options']['element_criteria'] === 'recommended') : ?>
-                <?= htmlspecialchars_decode(Form::customLabel($name, '<svg-vue icon="core" class="mr-2"></svg-vue>' .  $collectionLabel, $options['label_attr'])) ?>
-            <?php else : ?>
+
+            <?php if (isset($options['options']['element_criteria']) && $options['options']['element_criteria'] === 'mandatory'): ?>
+                <?= htmlspecialchars_decode(Form::customLabel($name, '<svg-vue icon="core" class="mr-2"></svg-vue>' . $collectionLabel, $options['label_attr'])) ?>
+            <?php elseif (isset($options['options']['element_criteria']) && $options['options']['element_criteria'] === 'recommended'): ?>
+                <?= htmlspecialchars_decode(Form::customLabel($name, '<svg-vue icon="core" class="mr-2"></svg-vue>' . $collectionLabel, $options['label_attr'])) ?>
+            <?php else: ?>
                 <?= htmlspecialchars_decode(Form::customLabel($name, $collectionLabel, $options['label_attr'])) ?>
             <?php endif; ?>
         <?php endif; ?>
-        <section class="collection_error">
-            <?php include errorBlockPath(); ?>
-        </section>
-        <?php if ($showField) : ?>
-            <?php foreach ((array)$options['children'] as $child) : ?>
+        <?php if ($showField): ?>
+            <?php foreach ((array) $options['children'] as $child): ?>
                 <?= $child->render() ?>
             <?php endforeach; ?>
 
             <?php include helpBlockPath(); ?>
 
-        <?php endif; ?>     
-        <?php if ($showLabel && $showField) : ?>
-            <?php if ($options['wrapper'] !== false) : ?>
+        <?php endif; ?>
+        <?php if ($showLabel && $showField): ?>
+            <?php if ($options['wrapper'] !== false): ?>
             </div>
         <?php endif; ?>
     <?php endif; ?>
