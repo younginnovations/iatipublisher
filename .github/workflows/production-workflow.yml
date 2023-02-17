@@ -250,7 +250,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: production
-      url: https://iatipublisher.yipl.com.np
+      url: https://publisher.iatistandard.org
     needs: [cli_build_push, fpm_server_build_push, web_server_build_push, cron_build_push, horizon_build_push]
     permissions:
       contents: write
