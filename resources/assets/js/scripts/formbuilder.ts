@@ -18,11 +18,11 @@ class FormBuilder {
 
     const parent_count = $(target).attr('parent_count')
       ? parseInt($(target).attr('parent_count') as string)
-      : $(target).parents('.multi-form').index()-1;
+      : $(target).parents('.multi-form').index() - 1;
 
     const wrapper_parent_count = $(target).attr('wrapped_parent_count')
       ? parseInt($(target).attr('wrapped_parent_count') as string)
-      : $(target).parents('.wrapped-child-body').index()-1;
+      : $(target).parents('.wrapped-child-body').index() - 1;
 
     let proto = container
       .data('prototype')
@@ -111,8 +111,8 @@ class FormBuilder {
     const count = $(target).attr('parent_count')
       ? parseInt($(target).attr('parent_count') as string) + 1
       : ($(target).prev().find('.multi-form').length
-        ? $(target).prev().find('.multi-form').length
-        : $(target).prev().find('.wrapped-child-body').length) + 1;
+          ? $(target).prev().find('.multi-form').length
+          : $(target).prev().find('.wrapped-child-body').length) + 1;
 
     let proto = container.data('prototype').replace(/__PARENT_NAME__/g, count);
     proto = proto.replace(/__NAME__/g, 0);
@@ -250,7 +250,9 @@ class FormBuilder {
     $('body').on('click', '.add_to_collection', (event: Event) => {
       if ($(event.target as EventTarget).hasClass('add-icon')) {
         event.stopPropagation();
-        $(event.target as EventTarget).parent('button').trigger('click');
+        $(event.target as EventTarget)
+          .parent('button')
+          .trigger('click');
       } else {
         this.addForm(event);
       }
@@ -259,7 +261,9 @@ class FormBuilder {
     $('.add_to_parent').on('click', (event: Event) => {
       if ($(event.target as EventTarget).hasClass('add-icon')) {
         event.stopPropagation();
-        $(event.target as EventTarget).parent('button').trigger('click');
+        $(event.target as EventTarget)
+          .parent('button')
+          .trigger('click');
       } else {
         this.addParentForm(event);
       }
@@ -409,4 +413,17 @@ $(function () {
       $('#organization_registration_agency').val() + '-' + $(this).val();
     $('#organisation_identifier').val(identifier);
   });
+  
+  // add class to title of collection when validation error occurs on collection level
+  const subelement = document.querySelectorAll('.subelement');
+
+  for (let i = 0; i < subelement.length; i++) {
+    const title = subelement[i].querySelector('.control-label');
+    const errorContainer = subelement[i].querySelector('.collection_error');
+    const childCount = errorContainer?.childElementCount;
+
+    if (childCount && childCount > 0) {
+      title?.classList.add('error-title');
+    }
+  }
 });

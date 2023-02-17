@@ -159,6 +159,15 @@ form {
   .wrapped-child-body + .collection_error {
     display: block;
   }
+  .control-label + .collection_error,
+  .title-container .collection_error {
+    display: block;
+    padding-right: 24px;
+    font-style: italic;
+    .div {
+      line-height: 4px !important;
+    }
+  }
 }
 
 /**
@@ -302,4 +311,15 @@ aside {
   .help__text {
     transform: translateX(0%) !important;
   }
+}
+.error-title {
+  color: #d1001e;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+.text-danger-error {
+  font-style: italic;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 400;
 }
