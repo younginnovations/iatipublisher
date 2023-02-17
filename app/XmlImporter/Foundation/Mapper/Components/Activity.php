@@ -216,7 +216,7 @@ class Activity
     {
         $this->otherIdentifier[$this->index] = $template['other_identifier'];
         $this->otherIdentifier[$this->index]['reference'] = $this->attributes($element, 'ref');
-        $this->otherIdentifier[$this->index]['reference_type'] = $this->attributes($element, 'type');
+        $this->otherIdentifier[$this->index]['reference_type'] = strtoupper($this->attributes($element, 'type'));
         $this->otherIdentifier[$this->index]['owner_org'][0]['ref'] = $this->attributes($element, 'ref', 'ownerOrg');
         $this->otherIdentifier[$this->index]['owner_org'][0]['narrative'] = $this->narrative(Arr::get($element, 'value.0', []));
         $this->index++;
@@ -476,7 +476,7 @@ class Activity
         $this->budget[$this->index]['period_start'][0]['date'] = dateFormat('Y-m-d', $this->attributes($element, 'iso-date', 'periodStart'));
         $this->budget[$this->index]['period_end'][0]['date'] = dateFormat('Y-m-d', $this->attributes($element, 'iso-date', 'periodEnd'));
         $this->budget[$this->index]['budget_value'][0]['amount'] = $this->value(Arr::get($element, 'value', []), 'value');
-        $this->budget[$this->index]['budget_value'][0]['currency'] = $this->attributes($element, 'currency', 'value');
+        $this->budget[$this->index]['budget_value'][0]['currency'] = strtoupper($this->attributes($element, 'currency', 'value'));
         $this->budget[$this->index]['budget_value'][0]['value_date'] = dateFormat('Y-m-d', $this->attributes($element, 'value-date', 'value'));
         $this->index++;
 
@@ -513,7 +513,7 @@ class Activity
     public function recipientCountry($element, $template): array
     {
         $this->recipientCountry[$this->index] = $template['recipient_country'];
-        $this->recipientCountry[$this->index]['country_code'] = $this->attributes($element, 'code');
+        $this->recipientCountry[$this->index]['country_code'] = strtoupper($this->attributes($element, 'code'));
         $this->recipientCountry[$this->index]['percentage'] = $this->attributes($element, 'percentage');
         $this->recipientCountry[$this->index]['narrative'] = $this->narrative($element);
         $this->index++;
@@ -534,7 +534,7 @@ class Activity
         $this->location[$this->index]['ref'] = $this->attributes($element, 'ref');
         $this->location[$this->index]['location_reach'][0]['code'] = $this->attributes($element, 'code', 'locationReach');
         $this->location[$this->index]['location_id'] = $this->getLocationIdData($element);
-        $this->location[$this->index]['location_id'][0]['vocabulary'] = $this->attributes($element, 'vocabulary', 'locationId');
+        $this->location[$this->index]['location_id'][0]['vocabulary'] = strtoupper($this->attributes($element, 'vocabulary', 'locationId'));
         $this->location[$this->index]['location_id'][0]['code'] = $this->attributes($element, 'code', 'locationId');
         $this->location[$this->index]['name'][0]['narrative'] = (($name = $this->value($value, 'name')) === '') ? $this->emptyNarrative : $name;
         $this->location[$this->index]['description'][0]['narrative'] = (($locationDesc = $this->value(
@@ -545,6 +545,7 @@ class Activity
             $value,
             'activityDescription'
         )) === '') ? $this->emptyNarrative : $elementDesc;
+
         $this->location[$this->index]['administrative'] = $this->filterAttributes($value, 'administrative', ['code', 'vocabulary', 'level']);
         $this->location[$this->index]['point'][0]['srs_name'] = $this->attributes($element, 'srsName', 'point');
         $this->location[$this->index]['point'][0]['pos'][0] = $this->latAndLong($value);
@@ -569,7 +570,7 @@ class Activity
         $this->plannedDisbursement[$this->index]['period_start'][0]['date'] = dateFormat('Y-m-d', $this->attributes($element, 'iso-date', 'periodStart'));
         $this->plannedDisbursement[$this->index]['period_end'][0]['date'] = dateFormat('Y-m-d', $this->attributes($element, 'iso-date', 'periodEnd'));
         $this->plannedDisbursement[$this->index]['value'][0]['amount'] = $this->value(Arr::get($element, 'value', []), 'value');
-        $this->plannedDisbursement[$this->index]['value'][0]['currency'] = $this->attributes($element, 'currency', 'value');
+        $this->plannedDisbursement[$this->index]['value'][0]['currency'] = strtoupper($this->attributes($element, 'currency', 'value'));
         $this->plannedDisbursement[$this->index]['value'][0]['value_date'] = dateFormat('Y-m-d', $this->attributes($element, 'value-date', 'value'));
         $this->plannedDisbursement[$this->index]['provider_org'][0]['ref'] = $this->attributes($element, 'ref', 'providerOrg');
         $this->plannedDisbursement[$this->index]['provider_org'][0]['provider_activity_id'] = $this->attributes($element, 'provider-activity-id', 'providerOrg');
@@ -793,13 +794,13 @@ class Activity
 
         switch ($vocabulary) {
             case '1':
-                $this->defaultAidType[$this->index]['default_aid_type'] = $code;
+                $this->defaultAidType[$this->index]['default_aid_type'] = strtoupper($code);
                 break;
             case '2':
                 $this->defaultAidType[$this->index]['earmarking_category'] = $code;
                 break;
             case '3':
-                $this->defaultAidType[$this->index]['earmarking_modality'] = $code;
+                $this->defaultAidType[$this->index]['earmarking_modality'] = strtoupper($code);
                 break;
             case '4':
                 $this->defaultAidType[$this->index]['cash_and_voucher_modalities'] = $code;
@@ -838,7 +839,7 @@ class Activity
                 $this->tagVariable[$this->index]['goals_tag_code'] = $this->attributes($element, 'code');
                 break;
             case '3':
-                $this->tagVariable[$this->index]['targets_tag_code'] = $this->attributes($element, 'code');
+                $this->tagVariable[$this->index]['targets_tag_code'] = strtolower($this->attributes($element, 'code'));
                 break;
             case '99':
                 $this->tagVariable[$this->index]['tag_text'] = $this->attributes($element, 'code');
