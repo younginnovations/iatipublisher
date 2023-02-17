@@ -261,7 +261,6 @@ trait XmlHelper
     protected function getLanguageAttribute(array $element, $key): mixed
     {
         $value = Arr::get($element, 'attributes', []);
-
         if ($value) {
             foreach ($value as $itemKey => $item) {
                 if ($key === substr($itemKey, -4, 4)) {
