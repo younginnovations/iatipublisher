@@ -9,6 +9,7 @@ use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Elemen
 use App\CsvImporter\Entities\Activity\Components\Elements\Transaction\PreparesTransactionData;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Transaction\TransactionRequest;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
 /**
@@ -96,6 +97,11 @@ class Transaction extends Element
     private TransactionRequest $request;
 
     /**
+     * @var
+     */
+    private mixed $transactionRow;
+
+    /**
      * Transaction constructor.
      *
      * @param            $transactionRow
@@ -106,6 +112,7 @@ class Transaction extends Element
      */
     public function __construct($transactionRow, $activityRow, Validation $factory)
     {
+        $this->transactionRow = $transactionRow;
         $this->activityRow = $activityRow;
         $this->prepare($transactionRow);
         $this->factory = $factory;
@@ -165,7 +172,8 @@ class Transaction extends Element
      * Provides the rules for the IATI Element validation.
      *
      * @return array
-     * @throw \JsonException
+     * @throws BindingResolutionException
+     * @throws \JsonException
      */
     public function rules(): array
     {

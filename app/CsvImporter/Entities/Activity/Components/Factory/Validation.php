@@ -320,6 +320,10 @@ class Validation extends Factory
         $this->extend('percentage_within_vocabulary', function () {
             return false;
         });
+
+        $this->extend('country_percentage_complete', function () {
+            return false;
+        });
     }
 
     /**
@@ -683,6 +687,14 @@ class Validation extends Factory
         });
 
         $this->extend('allocated_region_total_mismatch', function () {
+            return false;
+        });
+
+        $this->extend('country_or_region', function () {
+            return false;
+        });
+
+        $this->extend('duplicate_country_code', function () {
             return false;
         });
     }

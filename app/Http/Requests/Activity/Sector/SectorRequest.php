@@ -48,8 +48,9 @@ class SectorRequest extends ActivityBaseRequest
 
         foreach ($formFields as $formField) {
             if (array_key_exists($formField['sector_vocabulary'], $groupedSector)) {
+                $groupedSectorPercentage = $groupedSector[$formField['sector_vocabulary']]['total'];
                 $groupedSector[$formField['sector_vocabulary']]['count'] += 1;
-                $groupedSector[$formField['sector_vocabulary']]['total'] += (float) $formField['percentage'];
+                $groupedSector[$formField['sector_vocabulary']]['total'] = (float) number_format(round($groupedSectorPercentage + $formField['percentage'], 2), 2);
             } else {
                 $groupedSector[$formField['sector_vocabulary']] = ['count' => 1, 'total' => (float) $formField['percentage']];
             }
@@ -89,6 +90,7 @@ class SectorRequest extends ActivityBaseRequest
         Validator::extend('sector_total_percent', function () {
             return false;
         });
+
         $rules = [];
         $groupedPercentSector = $this->groupSector($formFields);
 

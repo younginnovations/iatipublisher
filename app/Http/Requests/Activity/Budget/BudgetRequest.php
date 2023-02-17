@@ -66,7 +66,7 @@ class BudgetRequest extends ActivityBaseRequest
 
             foreach ($this->identicalIds as $ids) {
                 foreach ($ids as $id) {
-                    $rules['budget.' . $id . '.budget_status'][] = 'budgets_identical';
+                    $rules['budget.' . $id . '.budget_type'][] = 'budgets_identical';
                 }
             }
         }
@@ -78,16 +78,13 @@ class BudgetRequest extends ActivityBaseRequest
 
             foreach ($this->revisedIds as $ids) {
                 foreach ($ids as $id) {
-                    $rules['budget.' . $id . '.budget_status'][] = 'budget_revised_invalid';
+                    $rules['budget.' . $id . '.budget_type'][] = 'budget_revised_invalid';
                 }
             }
         }
 
         foreach ($formFields as $budgetIndex => $budget) {
             $budgetForm = sprintf('budget.%s', $budgetIndex);
-            $rules[sprintf('%s.budget_type', $budgetForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('BudgetType', 'Activity', false))));
-            $rules[sprintf('%s.budget_status', $budgetForm)][] = 'nullable';
-            $rules[sprintf('%s.budget_status', $budgetForm)][] = sprintf('in:%s', implode(',', array_keys(getCodeList('BudgetStatus', 'Activity', false))));
             $diff = 0;
             $start = $budget['period_start'][0]['date'];
             $end = $budget['period_end'][0]['date'];
@@ -214,7 +211,7 @@ class BudgetRequest extends ActivityBaseRequest
         if (count($this->identicalIds)) {
             foreach ($this->identicalIds as $ids) {
                 foreach ($ids as $id) {
-                    $messages['budget.' . $id . '.budget_status.budgets_identical'] = $fileUpload ? 'Budget elements are duplicated.' : 'The periods of multiple budgets with the same type should not be the same';
+                    $messages['budget.' . $id . '.budget_type.budgets_identical'] = 'The periods of multiple budgets with the same type should not be the same';
                 }
             }
         }
@@ -222,7 +219,7 @@ class BudgetRequest extends ActivityBaseRequest
         if (count($this->revisedIds)) {
             foreach ($this->revisedIds as $ids) {
                 foreach ($ids as $id) {
-                    $messages['budget.' . $id . '.budget_status.budget_revised_invalid'] = 'Budget with type revised must have period start and end same to that of one of the budgets having same type original for budgets elements at position ' . $this->getIdenticalIds($ids);
+                    $messages['budget.' . $id . '.budget_type.budget_revised_invalid'] = 'Budget with type revised must have period start and end same to that of one of the budgets having same type original for budgets elements at position ' . $this->getIdenticalIds($ids);
                 }
             }
         }
@@ -248,7 +245,7 @@ class BudgetRequest extends ActivityBaseRequest
             }
 
             $messages[$budgetForm . '.budget_type.in'] = 'The budget type is invalid.';
-            $messages[$budgetForm . '.budget_status.in'] = 'The budget status is invalid.';
+            $messages[$budgetForm . '.budget_type.in'] = 'The budget status is invalid.';
             $messages[$budgetForm . '.period_end.0.date.before'] = 'The Period End iso-date must be within a year after Period Start iso-date.';
             $messages[$budgetForm . '.period_end.0.date.period_start_end'] = 'The Budget Period must not be longer than one year';
         }

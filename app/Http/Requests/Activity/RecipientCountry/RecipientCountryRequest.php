@@ -110,7 +110,8 @@ class RecipientCountryRequest extends ActivityBaseRequest
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
             $rules[sprintf('%s.country_code', $recipientCountryForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Country', 'Activity', false)));
-            if (in_array($recipientCountry['country_code'], $groupedCountryCode)) {
+
+            if (in_array($recipientCountry['country_code'], $groupedCountryCode, true)) {
                 $rules[sprintf('%s.country_code', $recipientCountryForm)] .= '|duplicate_country_code';
             }
 
