@@ -45,13 +45,13 @@
                 }
             }
 
-            $collectionLabel = '<div class="flex justify-between items-center w-full" >' .
+            $collectionLabel = '<div class=" w-full" > <div class="flex  justify-between items-center w-full" >' .
                 $label .
-                '<div class="flex items-center">' .
+                '<div class="flex   items-center">' .
                 $help_text . $hover_text .
                 '</div>' .
                 '</div>'.$error.'<section class="collection_error">' . $error .
-                '</section>';
+                '</section> </div>';
             ?>
 
             <?php if (isset($options['options']['element_criteria']) && $options['options']['element_criteria'] === 'mandatory'): ?>

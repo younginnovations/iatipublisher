@@ -13,7 +13,11 @@
       >
         <ul>
           <li>
-            <a href="#" :class="liClass" id="add-activity-manually" @click="modalValue = true"
+            <a
+              href="#"
+              :class="liClass"
+              id="add-activity-manually"
+              @click="modalValue = true"
               >Add activity manually</a
             >
           </li>

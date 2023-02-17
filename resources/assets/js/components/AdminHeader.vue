@@ -104,8 +104,10 @@
                       >
                     </li>
                     <li>
-                      <a href="/import" :class="liClass"
-                      id="header-import-activity"
+                      <a
+                        href="/import"
+                        :class="liClass"
+                        id="header-import-activity"
                         >Import activities from .csv/.xml</a
                       >
                     </li>
