@@ -187,16 +187,16 @@ abstract class Element
     public function withErrors($transactionIndex = null): void
     {
         foreach ($this->validator->errors()->getMessages() as $element => $errors) {
-            $this->warnings[$this->addIndexToTransactionErrors($element, $transactionIndex)] = implode('<br>', $errors);
+            $this->warnings[$this->addIndexToTransactionErrors($element, $transactionIndex)] = implode(' ', $errors);
         }
 
         foreach ($this->errorValidator->errors()->getMessages() as $element => $errors) {
-            $this->errors[$this->addIndexToTransactionErrors($element, $transactionIndex)] = implode('<br>', $errors);
+            $this->errors[$this->addIndexToTransactionErrors($element, $transactionIndex)] = implode(' ', $errors);
         }
 
         if ($this->criticalValidator) {
             foreach ($this->criticalValidator->errors()->getMessages() as $element => $errors) {
-                $this->criticals[$this->addIndexToTransactionErrors($element, $transactionIndex)] = implode('<br>', $errors);
+                $this->criticals[$this->addIndexToTransactionErrors($element, $transactionIndex)] = implode(' ', $errors);
             }
         }
     }

@@ -165,7 +165,7 @@ trait XmlHelper
                 $narrative = empty(Arr::get($value, 'value', '')) ? '' : Arr::get($value, 'value', '');
                 $field[$index] = [
                     'narrative' => trim($narrative),
-                    'language'  => $this->attributes($value, 'lang'),
+                    'language' => $this->attributes($value, 'lang'),
                 ];
             }
 
@@ -176,7 +176,7 @@ trait XmlHelper
 
         $field[0] = [
             'narrative' => trim($narrative),
-            'language'  => $this->attributes((array) $subElement, 'lang'),
+            'language' => $this->attributes((array) $subElement, 'lang'),
         ];
 
         return $field;
@@ -209,8 +209,8 @@ trait XmlHelper
      * If fieldName and key both are provided then the attributes inside value is returned.
      *
      * @param array $element
-     * @param null  $key
-     * @param null  $fieldName
+     * @param ?string  $key
+     * @param ?string  $fieldName
      *
      * @return mixed|string
      */

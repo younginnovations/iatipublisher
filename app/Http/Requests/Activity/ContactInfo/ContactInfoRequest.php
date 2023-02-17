@@ -57,10 +57,10 @@ class ContactInfoRequest extends ActivityBaseRequest
                 $this->getErrorsForOrganisation(Arr::get($contactInfo, 'organisation', []), $contactInfoForm),
                 $this->getErrorsForPersonName(Arr::get($contactInfo, 'person_name', []), $contactInfoForm),
                 $this->getErrorsForJobTitle(Arr::get($contactInfo, 'job_title', []), $contactInfoForm),
-                $this->getWarningForMailingAddress(Arr::get($contactInfo, 'mailing_address', []), $contactInfoForm),
-                $this->getWarningForTelephone(Arr::get($contactInfo, 'telephone', []), $contactInfoForm),
-                $this->getWarningForEmail(Arr::get($contactInfo, 'email', []), $contactInfoForm),
-                $this->getWarningForWebsite(Arr::get($contactInfo, 'website', []), $contactInfoForm),
+                $this->getErrorsForMailingAddress(Arr::get($contactInfo, 'mailing_address', []), $contactInfoForm),
+                $this->getErrorsForTelephone(Arr::get($contactInfo, 'telephone', []), $contactInfoForm),
+                $this->getErrorsForEmail(Arr::get($contactInfo, 'email', []), $contactInfoForm),
+                $this->getErrorsForWebsite(Arr::get($contactInfo, 'website', []), $contactInfoForm),
             ];
 
             foreach ($tempRules as $tempRule) {
@@ -86,16 +86,13 @@ class ContactInfoRequest extends ActivityBaseRequest
 
         foreach ($formFields as $contactInfoIndex => $contactInfo) {
             $contactInfoForm = sprintf('contact_info.%s', $contactInfoIndex);
-            $rules[sprintf('%s.type', $contactInfoForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('ContactType', 'Activity', false)));
+
             $tempRules = [
                 $this->getWarningForDepartment(Arr::get($contactInfo, 'department', []), $contactInfoForm),
                 $this->getWarningForOrganisation(Arr::get($contactInfo, 'organisation', []), $contactInfoForm),
                 $this->getWarningForPersonName(Arr::get($contactInfo, 'person_name', []), $contactInfoForm),
                 $this->getWarningForJobTitle(Arr::get($contactInfo, 'job_title', []), $contactInfoForm),
                 $this->getWarningForMailingAddress(Arr::get($contactInfo, 'mailing_address', []), $contactInfoForm),
-                $this->getWarningForTelephone(Arr::get($contactInfo, 'telephone', []), $contactInfoForm),
-                $this->getWarningForEmail(Arr::get($contactInfo, 'email', []), $contactInfoForm),
-                $this->getWarningForWebsite(Arr::get($contactInfo, 'website', []), $contactInfoForm),
             ];
 
             foreach ($tempRules as $tempRule) {
@@ -496,7 +493,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getWarningForTelephone($formFields, $formBase): array
+    protected function getErrorsForTelephone($formFields, $formBase): array
     {
         $rules = [];
 
@@ -520,8 +517,8 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $telephoneIndex => $telephone) {
-            $messages[sprintf('%s.telephone.%s.telephone.numeric', $formBase, $telephoneIndex)] = 'The contact info telephone number must be valid numeric value';
-            $messages[sprintf('%s.telephone.%s.telephone.regex', $formBase, $telephoneIndex)] = 'The contact info telephone number is invalid';
+            $messages[sprintf('%s.telephone.%s.telephone.numeric', $formBase, $telephoneIndex)] = 'The contact info telephone number must be valid numeric value.';
+            $messages[sprintf('%s.telephone.%s.telephone.regex', $formBase, $telephoneIndex)] = 'The contact info telephone number is invalid.';
             $messages[sprintf('%s.telephone.%s.telephone.min', $formBase, $telephoneIndex)] = 'The contact info telephone number must have atleast 7 digits.';
             $messages[sprintf('%s.telephone.%s.telephone.max', $formBase, $telephoneIndex)] = 'The contact info telephone number must not have more than 20 digits.';
         }
@@ -537,7 +534,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getWarningForEmail($formFields, $formBase): array
+    protected function getErrorsForEmail($formFields, $formBase): array
     {
         $rules = [];
 
@@ -561,8 +558,8 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $emailIndex => $email) {
-            $messages[sprintf('%s.email.%s.email.email', $formBase, $emailIndex)] = 'The contact info email must be valid';
-            $messages[sprintf('%s.email.%s.email.regex', $formBase, $emailIndex)] = 'The contact info email format is invalid';
+            $messages[sprintf('%s.email.%s.email.email', $formBase, $emailIndex)] = 'The contact info email must be valid.';
+            $messages[sprintf('%s.email.%s.email.regex', $formBase, $emailIndex)] = 'The contact info email format is invalid.';
         }
 
         return $messages;
@@ -576,7 +573,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getWarningForWebsite($formFields, $formBase): array
+    protected function getErrorsForWebsite($formFields, $formBase): array
     {
         $rules = [];
 

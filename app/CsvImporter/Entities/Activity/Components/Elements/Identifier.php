@@ -7,12 +7,15 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Identifier\IdentifierRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 
 /**
  * Class Identifier.
  */
 class Identifier extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * @var
      */
@@ -67,6 +70,8 @@ class Identifier extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**

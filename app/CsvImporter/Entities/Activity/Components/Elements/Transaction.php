@@ -9,6 +9,7 @@ use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Elemen
 use App\CsvImporter\Entities\Activity\Components\Elements\Transaction\PreparesTransactionData;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Transaction\TransactionRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
@@ -18,6 +19,7 @@ use Illuminate\Support\Arr;
 class Transaction extends Element
 {
     use PreparesTransactionData;
+    use DataSanitizeTrait;
 
     /**
      * @var array
@@ -149,6 +151,8 @@ class Transaction extends Element
             $this->setAidType();
             $this->setTiedStatus();
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**

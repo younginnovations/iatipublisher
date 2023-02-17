@@ -8,6 +8,7 @@ use App\CsvImporter\Entities\Activity\Components\ActivityRow;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\RecipientRegion\RecipientRegionRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
@@ -16,6 +17,8 @@ use Illuminate\Support\Arr;
  */
 class RecipientRegion extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * CSV Header of Description with their code.
      */
@@ -100,6 +103,8 @@ class RecipientRegion extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**

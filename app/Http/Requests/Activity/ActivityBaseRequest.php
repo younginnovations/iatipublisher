@@ -309,6 +309,8 @@ class ActivityBaseRequest extends FormRequest
     public function getWarningForNarrative($formFields, $formBase): array
     {
         $rules = [];
+        $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
+        $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
 
         foreach ($formFields as $narrativeIndex => $narrative) {
             if (!empty(Arr::get($narrative, 'language', ''))) {
@@ -330,8 +332,6 @@ class ActivityBaseRequest extends FormRequest
     public function getErrorsForNarrative($formFields, $formBase): array
     {
         $rules = [];
-        $rules[sprintf('%s.narrative', $formBase)][] = 'unique_lang';
-        $rules[sprintf('%s.narrative', $formBase)][] = 'unique_default_lang';
         $validLanguages = implode(',', array_keys(getCodeList('Language', 'Activity', false)));
 
         foreach ($formFields as $narrativeIndex => $narrative) {

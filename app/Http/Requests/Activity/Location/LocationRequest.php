@@ -87,8 +87,8 @@ class LocationRequest extends ActivityBaseRequest
                 $this->getErrorsForName($location['name'], $locationForm),
                 $this->getErrorsForLocationDescription($location['description'], $locationForm),
                 $this->getErrorsForActivityDescription($location['activity_description'], $locationForm),
-                $this->getWarningForAdministrative($location['administrative'], $locationForm),
-                $this->getWarningForPoint($location['point'], $locationForm),
+                $this->getErrorsForAdministrative($location['administrative'], $locationForm),
+                $this->getErrorsForPoing($location['point'], $locationForm),
             ];
 
             foreach ($tempRules as $tempRule) {
@@ -351,7 +351,7 @@ class LocationRequest extends ActivityBaseRequest
         foreach ($formFields as $descriptionIndex => $description) {
             $narrativeForm = sprintf('%s.activity_description.%s', $formBase, $descriptionIndex);
 
-            foreach ($this->getWarningForNarrative($description['narrative'], $narrativeForm) as $locationActivityDescriptionIndex => $locationActivityDescriptionNarrativeRules) {
+            foreach ($this->getErrorsForNarrative($description['narrative'], $narrativeForm) as $locationActivityDescriptionIndex => $locationActivityDescriptionNarrativeRules) {
                 $rules[$locationActivityDescriptionIndex] = $locationActivityDescriptionNarrativeRules;
             }
         }
@@ -390,7 +390,7 @@ class LocationRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getWarningForAdministrative($formFields, $formBase): array
+    public function getErrorsForAdministrative($formFields, $formBase): array
     {
         $rules = [];
 
@@ -435,7 +435,7 @@ class LocationRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getWarningForPoint($formFields, $formBase): array
+    public function getErrorsForPoing($formFields, $formBase): array
     {
         $rules = [];
         $pointForm = sprintf('%s.point.0', $formBase);

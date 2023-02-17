@@ -72,7 +72,10 @@ class DateRequest extends ActivityBaseRequest
             $activityDateForm = sprintf('activity_date.%s', $activityDateIndex);
             $rules[sprintf('%s.date', $activityDateForm)] = 'nullable|date';
             $rules[sprintf('%s.type', $activityDateForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ActivityDateType', 'Activity'))));
-            $rules[sprintf('%s.narrative', $activityDateForm)] = $this->getErrorsForNarrative($activityDate['narrative'], $activityDateForm)[sprintf('%s.narrative', $activityDateForm)];
+
+            foreach ($this->getErrorsForNarrative($activityDate['narrative'], $activityDateForm) as $narrativeIndex => $narrativeRules) {
+                $rules[$narrativeIndex] = $narrativeRules;
+            }
         }
 
         return $rules;
@@ -121,7 +124,7 @@ class DateRequest extends ActivityBaseRequest
 
             if (isset($date, $type)) {
                 if (($type === '2' || $type === '4')) {
-                    (dateStrToTime($date) <= dateStrToTime(date('Y-m-d'))) ?: $rules[sprintf('%s.date', $activityDateForm)] .= '|before:' . now();
+                    (dateStrToTime($date) <= dateStrToTime(date('Y-m-d'))) ?: $rules[sprintf('%s.date', $activityDateForm)][] = 'before:' . now();
                 }
 
                 if ($type === '4') {
@@ -134,7 +137,7 @@ class DateRequest extends ActivityBaseRequest
 
                     if (count($actualStartDate)) {
                         foreach ($actualStartDate as $startDate) {
-                            dateStrToTime($date) > dateStrToTime($startDate) ?: $rules[sprintf('%s.date', $activityDateForm)] .= '|end_later_than_start';
+                            dateStrToTime($date) > dateStrToTime($startDate) ?: $rules[sprintf('%s.date', $activityDateForm)][] = 'end_later_than_start';
                         }
                     }
                 }
@@ -149,7 +152,7 @@ class DateRequest extends ActivityBaseRequest
 
                     if (count($plannedStartDate)) {
                         foreach ($plannedStartDate as $startDate) {
-                            dateStrToTime($date) > dateStrToTime($startDate) ?: $rules[sprintf('%s.date', $activityDateForm)] .= '|end_later_than_start';
+                            dateStrToTime($date) > dateStrToTime($startDate) ?: $rules[sprintf('%s.date', $activityDateForm)][] = 'end_later_than_start';
                         }
                     }
                 }

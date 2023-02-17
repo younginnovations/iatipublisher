@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\RecipientCountry\RecipientCountryRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
@@ -15,6 +16,8 @@ use Illuminate\Support\Arr;
  */
 class RecipientCountry extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * CSV Header of Description with their code.
      */
@@ -90,6 +93,8 @@ class RecipientCountry extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**

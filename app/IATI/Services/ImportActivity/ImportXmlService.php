@@ -180,24 +180,27 @@ class ImportXmlService
         foreach ($activities as $value) {
             $activity = unsetErrorFields($contents[$value]);
             $activityData = Arr::get($activity, 'data', []);
+            $organizationId = Auth::user()->organization->id;
 
-            if (Arr::get($activity, 'existence', false)) {
-                $oldActivity = $this->activityRepository->getActivityWithIdentifier(Auth::user()->organization->id, Arr::get($activity, 'iati_identifier'));
+            if (Arr::get($activity, 'existence', false) && $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'))) {
+                $oldActivity = $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'));
 
                 $this->activityRepository->importXmlActivities($oldActivity->id, $activityData);
                 $this->transactionRepository->deleteTransaction($oldActivity->id);
                 $this->resultRepository->deleteResult($oldActivity->id);
-                $this->saveTransactions(Arr::get($activityData, 'transactions'), $oldActivity->id)
-                    ->saveResults(Arr::get($activityData, 'result'), $oldActivity->id);
+                $this->saveTransactions(Arr::get($activityData, 'transactions'), $oldActivity->id);
+                $this->saveResults(Arr::get($activityData, 'result'), $oldActivity->id);
 
                 if (!empty($activity['errors'])) {
-                    $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $$activity['errors']);
+                    $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $activity['errors']);
+                } else {
+                    $this->importActivityErrorRepo->deleteImportError($oldActivity->id);
                 }
             } else {
                 $storeActivity = $this->activityRepository->importXmlActivities(null, $activityData);
 
-                $this->saveTransactions(Arr::get($activityData, 'transactions'), $storeActivity->id)
-                    ->saveResults(Arr::get($activityData, 'result'), $storeActivity->id);
+                $this->saveTransactions(Arr::get($activityData, 'transactions'), $storeActivity->id);
+                $this->saveResults(Arr::get($activityData, 'result'), $storeActivity->id);
 
                 if (!empty($activity['errors'])) {
                     $this->importActivityErrorRepo->updateOrCreateError($storeActivity->id, $activity['errors']);
@@ -282,7 +285,7 @@ class ImportXmlService
                 } else {
                     $resultWithoutIndicator[] = [
                         'activity_id' => $activityId,
-                        'result' => $result,
+                        'result' => json_encode($result),
                     ];
                 }
             }
