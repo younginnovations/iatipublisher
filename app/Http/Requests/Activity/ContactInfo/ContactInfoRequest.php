@@ -520,8 +520,8 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $telephoneIndex => $telephone) {
-            $messages[sprintf('%s.telephone.%s.telephone.numeric', $formBase, $telephoneIndex)] = 'The contact info telephone number must be valid numeric value';
-            $messages[sprintf('%s.telephone.%s.telephone.regex', $formBase, $telephoneIndex)] = 'The contact info telephone number is invalid';
+            $messages[sprintf('%s.telephone.%s.telephone.numeric', $formBase, $telephoneIndex)] = 'The contact info telephone number must be valid numeric value.';
+            $messages[sprintf('%s.telephone.%s.telephone.regex', $formBase, $telephoneIndex)] = 'The contact info telephone number is invalid.';
             $messages[sprintf('%s.telephone.%s.telephone.min', $formBase, $telephoneIndex)] = 'The contact info telephone number must have atleast 7 digits.';
             $messages[sprintf('%s.telephone.%s.telephone.max', $formBase, $telephoneIndex)] = 'The contact info telephone number must not have more than 20 digits.';
         }
@@ -561,8 +561,8 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $emailIndex => $email) {
-            $messages[sprintf('%s.email.%s.email.email', $formBase, $emailIndex)] = 'The contact info email must be valid';
-            $messages[sprintf('%s.email.%s.email.regex', $formBase, $emailIndex)] = 'The contact info email format is invalid';
+            $messages[sprintf('%s.email.%s.email.email', $formBase, $emailIndex)] = 'The contact info email must be valid.';
+            $messages[sprintf('%s.email.%s.email.regex', $formBase, $emailIndex)] = 'The contact info email format is invalid.';
         }
 
         return $messages;

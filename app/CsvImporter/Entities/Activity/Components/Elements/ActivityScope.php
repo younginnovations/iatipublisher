@@ -108,7 +108,7 @@ class ActivityScope extends Element
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
         $this->errorValidator = $this->factory->sign($this->data())
-            ->with($this->rules(), $this->messages())
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
 
         $this->setValidity();

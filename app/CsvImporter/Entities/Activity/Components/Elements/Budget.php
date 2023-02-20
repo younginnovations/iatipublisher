@@ -140,6 +140,9 @@ class Budget extends Element
         }
         if ($key === $this->_csvHeaders[1]) {
             $validBudgetStatus = $this->loadCodeList('BudgetStatus');
+            // logger()->error('budget value');
+            // logger()->error($value);
+            // dd($value);
 
             if ($value) {
                 foreach ($validBudgetStatus as $code => $name) {
@@ -149,6 +152,9 @@ class Budget extends Element
                     }
                 }
             }
+
+            // logger()->error('updated');
+            // logger()->error($value);
 
             $this->data['budget'][$index]['budget_status'] = trim($value);
         }

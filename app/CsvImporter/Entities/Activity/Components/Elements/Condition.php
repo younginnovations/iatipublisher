@@ -230,7 +230,7 @@ class Condition extends Element
     public function errorRules(): array
     {
         $rules = $this->getBaseRules($this->request->getErrorsForCondition(Arr::get($this->data, 'conditions.condition', [])), false);
-        $rules['conditions.condition_attached'] = 'in:0,1';
+        $rules['conditions.condition_attached'] = 'size:1|in:0,1';
 
         return $rules;
     }

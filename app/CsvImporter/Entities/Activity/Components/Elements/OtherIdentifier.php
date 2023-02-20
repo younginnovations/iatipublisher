@@ -208,7 +208,7 @@ class OtherIdentifier extends Element
      */
     public function errorRules(): array
     {
-        return $this->request->getWarningForOtherIdentifier(Arr::get($this->data(), 'other_identifier', []));
+        return $this->request->getErrorsForOtherIdentifier(Arr::get($this->data(), 'other_identifier', []));
     }
 
     /**

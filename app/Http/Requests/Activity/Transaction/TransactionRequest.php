@@ -256,7 +256,7 @@ class TransactionRequest extends ActivityBaseRequest
     }
 
     /**
-     * get values critical rules.
+     * get values rules.
      *
      * @param array $formFields
      *
@@ -269,7 +269,27 @@ class TransactionRequest extends ActivityBaseRequest
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('value.%s', $valueIndex);
             $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric';
-            $rules[sprintf('%s.date', $valueForm)] = 'nullable|before:tomorrow|date';
+            $rules[sprintf('%s.date', $valueForm)] = 'nullable|before:tomorrow';
+        }
+
+        return $rules;
+    }
+
+    /**
+     * get values critical rules.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    public function getCriticalValueRules(array $formFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $valueIndex => $value) {
+            $valueForm = sprintf('value.%s', $valueIndex);
+            $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric';
+            $rules[sprintf('%s.date', $valueForm)] = 'date';
             $rules[sprintf('%s.currency', $valueForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Currency', 'Activity'))));
         }
 

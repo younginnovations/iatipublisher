@@ -1222,7 +1222,8 @@ if (!function_exists('unsetErrorFields')) {
         if (!empty($errors)) {
             foreach (array_values($errors) as $error) {
                 foreach (array_keys($error) as $key) {
-                    Arr::set($activity, $key, '');
+                    logger()->error($key);
+                    Arr::set($activity, $key, null);
                 }
             }
         }
