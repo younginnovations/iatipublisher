@@ -441,14 +441,19 @@ class TransactionService
      * Checks if sector defined in one of the activity transaction.
      *
      * @param $activityId
+     * @param $transactionId
      * @return bool
      */
-    public function hasSectorDefinedInTransaction($activityId): bool
+    public function hasSectorDefinedInTransaction($activityId, $transactionId = null): bool
     {
         $transactionData = $this->getActivityTransactions($activityId);
 
         if (!empty($transactionData)) {
             foreach ($transactionData as $transactionDatum) {
+                if ($transactionDatum->id === $transactionId) {
+                    continue;
+                }
+
                 if (
                     isset($transactionDatum->transaction['sector'])
                     && !is_variable_null($transactionDatum->transaction['sector'])

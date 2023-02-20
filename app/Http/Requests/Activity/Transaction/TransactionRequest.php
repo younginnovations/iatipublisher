@@ -400,11 +400,12 @@ class TransactionRequest extends ActivityBaseRequest
 
         if (!$fileUpload) {
             $params = $this->route()->parameters();
+
             if (!$activityService->isElementEmpty($formFields, 'sectorFields') && $activityService->hasSectorDefinedInActivity($params['id'])) {
                 return ['sector' => 'already_in_activity'];
             }
 
-            if (is_variable_null($formFields) && $transactionService->hasSectorDefinedInTransaction($params['id'])) {
+            if (is_variable_null($formFields) && $transactionService->hasSectorDefinedInTransaction($params['id'], (int) $params['transactionId'])) {
                 $rules['sector'] = 'sector_required';
             }
         } else {

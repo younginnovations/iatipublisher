@@ -160,10 +160,10 @@ class SectorRequest extends ActivityBaseRequest
 
             if ($groupedPercentSector[$sector['sector_vocabulary']]['count'] > 1) {
                 if ($groupedPercentSector[$sector['sector_vocabulary']]['total'] !== 100.0) {
-                    $rules[$sectorForm . '.percentage'] .= '|sector_total_percent';
+                    $rules[$sectorForm . '.percentage'] = 'sector_total_percent';
                 }
             } else {
-                $rules[$sectorForm . '.percentage'] .= '|in:' . 100.0;
+                $rules[$sectorForm . '.percentage'] = 'in:' . 100.0;
             }
         }
 
