@@ -591,7 +591,7 @@ class ActivityRow extends Row
         $commonIdentifierCount = $this->countDuplicateActivityIdentifiers($rows);
         $references = $this->getTransactionInternalReferences();
 
-        if ($this->containsDuplicateActivities($commonIdentifierCount) || $this->containsDuplicateTransactions($references)) {
+        if ($this->containsDuplicateActivities($commonIdentifierCount)) {
             $this->isValid = false;
         }
 
@@ -661,24 +661,6 @@ class ActivityRow extends Row
         }
 
         return $commonIdentifierCount;
-    }
-
-    /**
-     * Check if the Transaction Internal References are duplicated within the uploaded CSV file.
-     *
-     * @param $references
-     *
-     * @return bool
-     */
-    protected function containsDuplicateTransactions($references): bool
-    {
-        if ((!empty($references)) && (count(array_unique($references)) !== count($references))) {
-            $this->errors['transactions']['transactions.reference'] = 'There are duplicate Transactions for this Activity in the uploaded Csv File.';
-
-            return true;
-        }
-
-        return false;
     }
 
     /**

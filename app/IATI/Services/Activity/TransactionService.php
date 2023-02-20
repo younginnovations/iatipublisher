@@ -134,19 +134,6 @@ class TransactionService
     }
 
     /**
-     * get the references of all transactions except transactionId.
-     *
-     * @param $activityId
-     * @param $transactionId
-     *
-     * @return array
-     */
-    public function getTransactionReferencesExcept($activityId, $transactionId): array
-    {
-        return $this->transactionRepository->getTransactionReferencesExcept($activityId, $transactionId);
-    }
-
-    /**
      * Returns all transactions of a particular activity.
      *
      * @param $activityId
