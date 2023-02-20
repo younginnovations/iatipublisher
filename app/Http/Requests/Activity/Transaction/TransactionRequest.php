@@ -208,7 +208,7 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('value.%s', $valueIndex);
-            $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric|min:0';
+            $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric';
             $rules[sprintf('%s.date', $valueForm)] = 'nullable|before:tomorrow|date';
             $rules[sprintf('%s.currency', $valueForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Currency', 'Activity'))));
         }
@@ -230,7 +230,6 @@ class TransactionRequest extends ActivityBaseRequest
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('value.%s', $valueIndex);
             $messages[sprintf('%s.amount.numeric', $valueForm)] = 'The @amount field must be a number.';
-            $messages[sprintf('%s.amount.min', $valueForm)] = 'The @amount field must not be in negative.';
             $messages[sprintf('%s.date.before', $valueForm)] = 'The @value-date must not be in future.';
             $messages[sprintf('%s.date.date', $valueForm)] = 'The @value-date field must be a valid date.';
         }

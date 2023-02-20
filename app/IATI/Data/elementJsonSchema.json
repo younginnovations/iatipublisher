@@ -4328,7 +4328,7 @@
         "label": "value",
         "element_criteria": "mandatory",
         "add_more": false,
-        "hover_text": "The amount of the contribution. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/value/'>For more information</a>",
+        "hover_text": "The amount of the contribution. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/transaction/value/'>For more information</a><p>Transactions can be positive or negative. An example of a negative transaction would be money that was disbursed to a partner and is then being returned to the funder. The returned funds should be published as a disbursement transaction with a negative value, i.e. with a minus symbol in front of the figure, e.g. -1000.</p>",
         "attributes": {
           "amount": {
             "name": "amount",
