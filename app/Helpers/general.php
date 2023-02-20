@@ -1180,6 +1180,7 @@ if (!function_exists('is_array_value_null')) {
      */
     function is_array_value_empty($array): bool
     {
+        $array = empty($array) || !is_array($array) ? [] : $array;
         $flatArray = Arr::flatten($array);
         $value = array_filter($flatArray, static function ($q) {
             return $q;

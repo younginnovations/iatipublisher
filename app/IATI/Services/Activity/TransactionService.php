@@ -462,31 +462,6 @@ class TransactionService
     }
 
     /**
-     * Checks if Transaction has Sector Defined.
-     *
-     * @param $activity
-     * @return bool
-     */
-    public function checksIfTransactionHasSectorDefined($activity): bool
-    {
-        $hasDefined = false;
-        $transactionData = $activity->transactions()->get()->toArray();
-
-        if (!empty($transactionData)) {
-            foreach ($transactionData as $transactionDatum) {
-                if (
-                    isset($transactionDatum['transaction']['sector'])
-                    && !is_variable_null($transactionDatum['transaction']['sector'])
-                ) {
-                    $hasDefined = true;
-                }
-            }
-        }
-
-        return $hasDefined;
-    }
-
-    /**
      *  Checks if recipient region or country defined in transaction.
      *
      * @param [type] $activityId
@@ -501,9 +476,35 @@ class TransactionService
             $recipientRegion = $transaction->transaction['recipient_region'];
             $recipientCountry = $transaction->transaction['recipient_country'];
 
-            if (!is_variable_null($recipientCountry) || !is_variable_null($recipientRegion)) {
+            if (!is_array_value_empty($recipientCountry) || !is_array_value_empty($recipientRegion)) {
                 $hasDefined = true;
                 break;
+            }
+        }
+
+        return $hasDefined;
+    }
+
+    /**
+     * Checks element is defined in transaction.
+     *
+     * @param $activity
+     * @param $elementName
+     * @return bool
+     */
+    public function checkIfTransactionHasElementDefined($activity, $elementName): bool
+    {
+        $hasDefined = false;
+        $transactionData = $activity->transactions()->get()->toArray();
+
+        if (!empty($transactionData)) {
+            foreach ($transactionData as $transactionDatum) {
+                if (
+                    isset($transactionDatum['transaction'][$elementName])
+                    && !is_array_value_empty($transactionDatum['transaction'][$elementName])
+                ) {
+                    $hasDefined = true;
+                }
             }
         }
 

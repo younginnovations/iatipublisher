@@ -7,6 +7,7 @@ namespace App\Http\Requests\Activity\RecipientRegion;
 use App\Http\Requests\Activity\ActivityBaseRequest;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\RecipientRegionService;
+use App\IATI\Services\Activity\TransactionService;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
@@ -130,8 +131,9 @@ class RecipientRegionRequest extends ActivityBaseRequest
 
         if (!$fileUpload) {
             $params = $this->route()->parameters();
+            $transactionService = app()->make(TransactionService::class);
 
-            if ($activityService->hasRecipientRegionDefinedInTransactions($params['id'])) {
+            if ($transactionService->hasRecipientRegionOrCountryDefinedInTransaction($params['id'])) {
                 Validator::extend('already_in_transactions', function () {
                     return false;
                 });
@@ -145,6 +147,10 @@ class RecipientRegionRequest extends ActivityBaseRequest
         }
 
         Validator::extend('allocated_region_total_mismatch', function () {
+            return false;
+        });
+
+        Validator::extend('single_allocated_region_total_mismatch', function () {
             return false;
         });
 
@@ -210,10 +216,11 @@ class RecipientRegionRequest extends ActivityBaseRequest
             }
 
             $messages[$recipientRegionForm . '.percentage.in'] = 'The sum of the percentages of Recipient Country(ies) and Recipient Region(s) must always be 100%';
-            $messages[$recipientRegionForm . '.percentage.allocated_region_total_mismatch'] = 'The sum of percentages of Recipient Country and Recipient Regions with same Region Vocabulary must be equal to 100%';
+            $messages[$recipientRegionForm . '.percentage.allocated_region_total_mismatch'] = 'The sum of recipient country and recipient region of a specific vocabulary must be 100%';
             $messages[$recipientRegionForm . '.percentage.sum_greater_than'] = 'Sum of percentage within vocabulary cannot be greater than 100';
             $messages[$recipientRegionForm . '.percentage.percentage_within_vocabulary'] = 'The sum of percentage of Recipient Country and Recipient Regions (within the same Region Vocabulary) must be equal to 100%';
             $messages[$recipientRegionForm . '.percentage.min'] = 'The recipient country percentage must be at least 0. ';
+            $messages[$recipientRegionForm . '.percentage.single_allocated_region_total_mismatch'] = 'The sum of the percentages of Recipient Country(ies) and Recipient Region(s) must always be 100%';
         }
 
         return $messages;
@@ -260,12 +267,16 @@ class RecipientRegionRequest extends ActivityBaseRequest
             if ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] === 0.0 && !$activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
                 $rules[$recipientRegionForm . '.percentage'][] = 'nullable';
             } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] < $allottedRegionPercent && $activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
-                $rules[$recipientRegionForm . '.percentage'][] = 'allocated_region_total_mismatch';
+                if ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] !== $groupedPercentRegion[array_key_first($groupedPercentRegion)]['total']) {
+                    $rules[$recipientRegionForm . '.percentage'] = 'percentage_within_vocabulary';
+                } else {
+                    $rules[$recipientRegionForm . '.percentage'] = 'single_allocated_region_total_mismatch';
+                }
             }
         } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] === 0.0 && is_array_values_null($recipientCountries)) {
             $rules[$recipientRegionForm . '.percentage'][] = 'nullable';
         } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] < $allottedRegionPercent && !is_array_values_null($recipientCountries)) {
-            $rules[$recipientRegionForm . '.percentage'][] = 'allocated_region_total_mismatch';
+            $rules[$recipientRegionForm . '.percentage'] = 'allocated_region_total_mismatch';
         }
 
         return $rules;

@@ -7,13 +7,14 @@ namespace App\IATI\Models\Activity;
 use App\IATI\Models\Document\Document;
 use App\IATI\Models\ImportActivityError\ImportActivityError;
 use App\IATI\Models\Organization\Organization;
-use Arr;
+use App\IATI\Services\Activity\RecipientRegionService;
 use Database\Factories\IATI\Models\Activity\ActivityFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -231,12 +232,20 @@ class Activity extends Model implements Auditable
      */
     public function setRecipientRegionAttribute($value): void
     {
-        if (empty($value) && empty($this->attributes['recipient_country'])) {
-            $elementStatus = Arr::get($this->attributes, 'element_status', []) ? json_decode($this->attributes['element_status'], true, 512, JSON_THROW_ON_ERROR) : [];
-            $elementStatus['recipient_country'] = false;
-            $this->attributes['element_status'] = json_encode($elementStatus, JSON_THROW_ON_ERROR);
+        $elementStatus = Arr::get($this->attributes, 'element_status', []) ? json_decode($this->attributes['element_status'], true, 512, JSON_THROW_ON_ERROR) : [];
+
+        if (empty($value) && !empty($this->attributes['recipient_country'])) {
+            $countryTotalPercentage = (float) array_sum(array_column($this->recipient_country, 'percentage'));
+            if ($countryTotalPercentage !== 100.0) {
+                $elementStatus['recipient_country'] = false;
+            }
         }
 
+        if (empty($value) && empty($this->recipient_region)) {
+            $elementStatus['recipient_country'] = false;
+        }
+
+        $this->attributes['element_status'] = json_encode($elementStatus, JSON_THROW_ON_ERROR);
         $this->attributes['recipient_region'] = !empty($value) ? json_encode($value, JSON_THROW_ON_ERROR) : null;
     }
 
@@ -250,12 +259,25 @@ class Activity extends Model implements Auditable
      */
     public function setRecipientCountryAttribute($value): void
     {
-        if (empty($value) && empty($this->attributes['recipient_region'])) {
-            $elementStatus = Arr::get($this->attributes, 'element_status', []) ? json_decode($this->attributes['element_status'], true, 512, JSON_THROW_ON_ERROR) : [];
-            $elementStatus['recipient_region'] = false;
-            $this->attributes['element_status'] = json_encode($elementStatus, JSON_THROW_ON_ERROR);
+        $elementStatus = Arr::get($this->attributes, 'element_status', []) ? json_decode($this->attributes['element_status'], true, 512, JSON_THROW_ON_ERROR) : [];
+
+        if (empty($value) && !empty($this->attributes['recipient_region'])) {
+            $recipientRegionService = app()->make(RecipientRegionService::class);
+            $groupPercentage = $recipientRegionService->groupRegion($this->recipient_region);
+            $firstGroupTotalPercentage = Arr::first($groupPercentage, static function ($value) {
+                return $value;
+            })['total'];
+
+            if ($firstGroupTotalPercentage !== 100.0) {
+                $elementStatus['recipient_region'] = false;
+            }
         }
 
+        if (empty($value) && empty($this->recipient_region)) {
+            $elementStatus['recipient_region'] = false;
+        }
+
+        $this->attributes['element_status'] = json_encode($elementStatus, JSON_THROW_ON_ERROR);
         $this->attributes['recipient_country'] = !empty($value) ? json_encode($value, JSON_THROW_ON_ERROR) : null;
     }
 }

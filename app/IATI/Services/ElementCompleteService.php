@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services;
 
+use App\IATI\Services\Activity\RecipientRegionService;
 use App\IATI\Traits\ElementCompleteServiceTrait;
 use Illuminate\Support\Arr;
 
@@ -256,7 +257,7 @@ class ElementCompleteService
     {
         $this->element = 'recipient_country';
 
-        return $this->isLevelOneMultiDimensionElementCompleted($activity->recipient_country);
+        return $this->checkIfRecipientCountryElementCompleted($activity);
     }
 
     /**
@@ -286,7 +287,7 @@ class ElementCompleteService
     {
         $this->element = 'recipient_region';
 
-        return $this->isLevelOneMultiDimensionElementCompleted($activity->recipient_region);
+        return $this->checkIfRecipientRegionElementCompleted($activity);
     }
 
     /**
@@ -913,5 +914,77 @@ class ElementCompleteService
         if ($key === 'currency' && empty($datum) && !empty($this->tempAmount)) {
             $data['currency'] = Arr::get($activity->default_field_values, 'default_currency', null);
         }
+    }
+
+    /**
+     * Checks if recipient Region is completed.
+     *
+     * @param $activity
+     * @return bool
+     * @throws \JsonException
+     */
+    public function checkIfRecipientRegionElementCompleted($activity): bool
+    {
+        $regionStatus = $this->isLevelOneMultiDimensionElementCompleted($activity->recipient_region);
+
+        if (empty($activity->recipient_region) && !empty($activity->recipient_country)) {
+            $countryTotalPercentage = (float) array_sum(array_column($activity->recipient_country, 'percentage'));
+
+            if ($countryTotalPercentage === 100.0) {
+                return true;
+            }
+
+            return false;
+        }
+
+        if (!empty($activity->recipient_region)) {
+            $recipientRegionService = app()->make(RecipientRegionService::class);
+            $groupPercentage = $recipientRegionService->groupRegion($activity->recipient_region);
+            $firstGroupTotalPercentage = Arr::first($groupPercentage, static function ($value) {
+                return $value;
+            })['total'];
+
+            if (empty($activity->recipient_country) && $firstGroupTotalPercentage === 0.0) {
+                return false;
+            }
+        }
+
+        return $regionStatus;
+    }
+
+    /**
+     * Checks if recipient country is completed.
+     *
+     * @param $activity
+     * @return bool
+     * @throws \JsonException
+     */
+    public function checkIfRecipientCountryElementCompleted($activity): bool
+    {
+        $countryStatus = $this->isLevelOneMultiDimensionElementCompleted($activity->recipient_country);
+
+        if (empty($activity->recipient_country) && !empty($activity->recipient_region)) {
+            $recipientRegionService = app()->make(RecipientRegionService::class);
+            $groupPercentage = $recipientRegionService->groupRegion($activity->recipient_region);
+            $firstGroupTotalPercentage = Arr::first($groupPercentage, static function ($value) {
+                return $value;
+            })['total'];
+
+            if ($firstGroupTotalPercentage === 100.0) {
+                return true;
+            }
+
+            return false;
+        }
+
+        if (!empty($activity->recipient_country)) {
+            $countryTotalPercentage = (float) array_sum(array_column($activity->recipient_country, 'percentage'));
+
+            if (empty($activity->recipient_region) && $countryTotalPercentage === 0.0) {
+                return false;
+            }
+        }
+
+        return $countryStatus;
     }
 }
