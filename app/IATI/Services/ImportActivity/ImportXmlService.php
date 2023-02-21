@@ -180,9 +180,10 @@ class ImportXmlService
         foreach ($activities as $value) {
             $activity = unsetErrorFields($contents[$value]);
             $activityData = Arr::get($activity, 'data', []);
+            $organizationId = Auth::user()->organization->id;
 
-            if (Arr::get($activity, 'existence', false)) {
-                $oldActivity = $this->activityRepository->getActivityWithIdentifier(Auth::user()->organization->id, Arr::get($activity, 'iati_identifier'));
+            if (Arr::get($activity, 'existence', false) && $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'))) {
+                $oldActivity = $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'));
 
                 $this->activityRepository->importXmlActivities($oldActivity->id, $activityData);
                 $this->transactionRepository->deleteTransaction($oldActivity->id);
