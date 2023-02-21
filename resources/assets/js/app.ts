@@ -232,10 +232,7 @@ const stickySidebar = (
   const isScrollUp = !isScrollDown;
   lastScrollTop =
     currentWindowsScrollPosition <= 0 ? 0 : currentWindowsScrollPosition;
-  const bottomVisible = () =>
-    document.documentElement.clientHeight + window.scrollY + 446 >=
-    (document.documentElement.scrollHeight ||
-      document.documentElement.clientHeight);
+
   function handleScrollDown() {
     switch (affixType) {
       case 'sticky-top':
