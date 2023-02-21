@@ -151,7 +151,26 @@ watch(
   }
 );
 const checkBulkpublishStatus = () => {
-  console.log('checking bulk publish status');
+  console.log(activities);
+  console.log('activities');
+
+  for (let key in activities.value) {
+    const activity = activities.value[key];
+    if (activity.status == 'processing') {
+      let url = `activities/queue-status-test?activity_id=${activity.activity_id}&&uuid=${paStorage.value.publishingActivities.job_batch_uuid}`;
+
+      axios.get(url).then((response) => {
+        console.log(response);
+      });
+    }
+  }
+  // axios.post('activities/queue-status-test', data)
+  //   .then(response => {
+  //     console.log(response.data);
+  //   })
+  //   .catch(error => {
+  //     console.error(error);
+  //   });
 };
 
 /**

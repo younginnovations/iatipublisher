@@ -319,4 +319,30 @@ class BulkPublishingController extends Controller
             return response()->json(['success' => false, 'message' => 'Error has occurred while checking activity.']);
         }
     }
+
+    /**
+     * Checks if activity with publishing in bulk publish status is published or draft in activities table
+     * Updates it and returns msg.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function checkBulkPublishStatusTest(Request $request): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+            $activity_id = $request->input('activity_id');
+            $uuid = $request->input('uuid');
+            $returnMsg = $this->bulkPublishingService->checkActivityStatusTest($activity_id, $uuid);
+            DB::commit();
+
+            return response()->json(['success'=>true, 'message'=>$returnMsg]);
+        } catch(\Exception $e) {
+            logger()->error($e->getMessage());
+            DB::rollBack();
+
+            return response()->json(['success'=>false, 'message'=>'Failed to stop bulk publishing']);
+        }
+    }
 }

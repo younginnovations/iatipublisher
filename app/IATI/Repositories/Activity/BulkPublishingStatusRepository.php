@@ -143,4 +143,12 @@ class BulkPublishingStatusRepository extends Repository
             ->orWhere('status', '=', 'processing')
             ->update(['status' => 'failed']);
     }
+
+    public function setBulkPublishStatus($status, $id, $organizationId, $uuid = ''): int
+    {
+        return $this->model->where('activity_id', $id)
+            ->where('organization_id', $organizationId)
+            ->whereIn('job_batch_uuid', $uuid)
+            ->update(['status'=>$status]);
+    }
 }
