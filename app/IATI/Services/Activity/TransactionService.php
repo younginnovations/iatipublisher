@@ -470,14 +470,19 @@ class TransactionService
      *  Checks if recipient region or country defined in transaction.
      *
      * @param [type] $activityId
+     * @param null $transactionId
      * @return bool
      */
-    public function hasRecipientRegionOrCountryDefinedInTransaction($activityId): bool
+    public function hasRecipientRegionOrCountryDefinedInTransaction($activityId, $transactionId = null): bool
     {
         $hasDefined = false;
         $transactions = $this->getActivityTransactions($activityId);
 
         foreach ($transactions as $transaction) {
+            if ($transaction->id === $transactionId) {
+                continue;
+            }
+
             $recipientRegion = $transaction->transaction['recipient_region'];
             $recipientCountry = $transaction->transaction['recipient_country'];
 

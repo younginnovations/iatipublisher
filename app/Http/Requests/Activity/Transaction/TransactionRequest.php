@@ -405,7 +405,9 @@ class TransactionRequest extends ActivityBaseRequest
                 return ['sector' => 'already_in_activity'];
             }
 
-            if (is_variable_null($formFields) && $transactionService->hasSectorDefinedInTransaction($params['id'], (int) $params['transactionId'])) {
+            $transactionId = isset($params['transactionId']) ? (int) $params['transactionId'] : null;
+
+            if (is_variable_null($formFields) && $transactionService->hasSectorDefinedInTransaction($params['id'], $transactionId)) {
                 $rules['sector'] = 'sector_required';
             }
         } else {
@@ -688,7 +690,8 @@ class TransactionRequest extends ActivityBaseRequest
         if (!$fileUpload) {
             $params = $this->route()->parameters();
 
-            if (!$activityService->isElementEmpty($formFields, 'recipientRegionFields') && $activityService->hasRecipientRegionDefinedInActivity($params['id'])) {
+            if (!$activityService->isElementEmpty($formFields, 'recipientRegionFields')
+                && ($activityService->hasRecipientRegionDefinedInActivity($params['id']) || $activityService->hasRecipientCountryDefinedInActivity($params['id']))) {
                 Validator::extend('already_in_activity', function () {
                     return false;
                 });
@@ -817,7 +820,8 @@ class TransactionRequest extends ActivityBaseRequest
         if (!$fileUpload) {
             $params = $this->route()->parameters();
 
-            if (!$activityService->isElementEmpty($formFields, 'recipientCountryFields') && $activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
+            if (!$activityService->isElementEmpty($formFields, 'recipientCountryFields')
+                && ($activityService->hasRecipientCountryDefinedInActivity($params['id']) || $activityService->hasRecipientRegionDefinedInActivity($params['id']))) {
                 Validator::extend('already_in_activity', function () {
                     return false;
                 });
@@ -922,8 +926,9 @@ class TransactionRequest extends ActivityBaseRequest
     {
         $transactionService = app()->make(TransactionService::class);
         $params = $this->route()->parameters();
+        $transactionId = isset($params['transactionId']) ? (int) $params['transactionId'] : null;
 
-        if (($transactionService->hasRecipientRegionOrCountryDefinedInTransaction($params['id'])) && (is_variable_null($this->all()['recipient_region']) && is_variable_null($this->all()['recipient_country']))) {
+        if ((!$transactionService->hasRecipientRegionOrCountryDefinedInTransaction($params['id'], $transactionId)) && (is_variable_null($this->all()['recipient_region']) && is_variable_null($this->all()['recipient_country']))) {
             $rules[$attribute] = 'country_or_region';
         } elseif (!is_variable_null($this->all()['recipient_region']) && !is_variable_null($this->all()['recipient_country'])) {
             $rules[$attribute] = 'country_or_region';
