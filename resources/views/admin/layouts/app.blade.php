@@ -74,8 +74,9 @@
     <script type="text/javascript">
         window.zESettings = {
             webWidget: {
-                color: { theme: '#FFFFFF'},
-                offset: { horizontal: '-14px', vertical: '7px'},
+                color: { theme: '#FFFFFF',
+                launcherText: '#155366'},
+               
                 contactForm: {
                     attachments: true,
                 }
