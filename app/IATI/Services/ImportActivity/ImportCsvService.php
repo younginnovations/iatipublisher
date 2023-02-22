@@ -214,6 +214,8 @@ class ImportCsvService
 
                 if (!empty($activity['errors'])) {
                     $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $activity['errors']);
+                } else {
+                    $this->importActivityErrorRepo->delete($oldActivity->id);
                 }
             } else {
                 $createdActivity = $this->activityRepo->createActivity(Arr::get($activity, 'data'));

@@ -18,37 +18,37 @@ class Activity
      * @var array
      */
     protected array $activityElements = [
-        'iatiIdentifier'      => 'iati_identifier',
-        'otherIdentifier'     => 'other_identifier',
-        'reportingOrg'        => 'identifier',
-        'title'               => 'title',
-        'description'         => 'description',
-        'activityStatus'      => 'activity_status',
-        'activityDate'        => 'activity_date',
-        'contactInfo'         => 'contact_info',
-        'activityScope'       => 'activity_scope',
-        'participatingOrg'    => 'participating_org',
-        'tag'                 => 'tag',
-        'recipientCountry'    => 'recipient_country',
-        'recipientRegion'     => 'recipient_region',
-        'location'            => 'location',
-        'sector'              => 'sector',
-        'countryBudgetItems'  => 'country_budget_items',
-        'humanitarianScope'   => 'humanitarian_scope',
-        'policyMarker'        => 'policy_marker',
-        'collaborationType'   => 'collaboration_type',
-        'defaultFlowType'     => 'default_flow_type',
-        'defaultFinanceType'  => 'default_finance_type',
-        'defaultAidType'      => 'default_aid_type',
-        'defaultTiedStatus'   => 'default_tied_status',
-        'budget'              => 'budget',
+        'iatiIdentifier' => 'iati_identifier',
+        'otherIdentifier' => 'other_identifier',
+        'reportingOrg' => 'identifier',
+        'title' => 'title',
+        'description' => 'description',
+        'activityStatus' => 'activity_status',
+        'activityDate' => 'activity_date',
+        'contactInfo' => 'contact_info',
+        'activityScope' => 'activity_scope',
+        'participatingOrg' => 'participating_org',
+        'tag' => 'tag',
+        'recipientCountry' => 'recipient_country',
+        'recipientRegion' => 'recipient_region',
+        'location' => 'location',
+        'sector' => 'sector',
+        'countryBudgetItems' => 'country_budget_items',
+        'humanitarianScope' => 'humanitarian_scope',
+        'policyMarker' => 'policy_marker',
+        'collaborationType' => 'collaboration_type',
+        'defaultFlowType' => 'default_flow_type',
+        'defaultFinanceType' => 'default_finance_type',
+        'defaultAidType' => 'default_aid_type',
+        'defaultTiedStatus' => 'default_tied_status',
+        'budget' => 'budget',
         'plannedDisbursement' => 'planned_disbursement',
-        'capitalSpend'        => 'capital_spend',
-        'documentLink'        => 'document_link',
-        'relatedActivity'     => 'related_activity',
-        'legacyData'          => 'legacy_data',
-        'conditions'          => 'conditions',
-        'defaultFieldValues'  => 'default_field_values',
+        'capitalSpend' => 'capital_spend',
+        'documentLink' => 'document_link',
+        'relatedActivity' => 'related_activity',
+        'legacyData' => 'legacy_data',
+        'conditions' => 'conditions',
+        'defaultFieldValues' => 'default_field_values',
     ];
 
     /**
@@ -439,7 +439,7 @@ class Activity
      */
     public function defaultFlowType($element): ?int
     {
-        return $this->attributes($element, 'code') && $this->attributes($element, 'code') != '' ? (int) $this->attributes($element, 'code') : null;
+        return is_numeric($this->attributes($element, 'code')) ? (int) $this->attributes($element, 'code') : $this->attributes($element, 'code');
     }
 
     /**
@@ -449,7 +449,7 @@ class Activity
      */
     public function defaultFinanceType($element): ?int
     {
-        return $this->attributes($element, 'code') && $this->attributes($element, 'code') != '' ? (int) $this->attributes($element, 'code') : null;
+        return is_numeric($this->attributes($element, 'code')) ? (int) $this->attributes($element, 'code') : $this->attributes($element, 'code');
     }
 
     /**
@@ -459,7 +459,7 @@ class Activity
      */
     public function defaultTiedStatus($element): ?int
     {
-        return $this->attributes($element, 'code') && $this->attributes($element, 'code') != '' ? (int) $this->attributes($element, 'code') : null;
+        return is_numeric($this->attributes($element, 'code')) ? (int) $this->attributes($element, 'code') : $this->attributes($element, 'code');
     }
 
     /**
@@ -537,14 +537,18 @@ class Activity
         $this->location[$this->index]['location_id'][0]['vocabulary'] = $this->attributes($element, 'vocabulary', 'locationId');
         $this->location[$this->index]['location_id'][0]['code'] = $this->attributes($element, 'code', 'locationId');
         $this->location[$this->index]['name'][0]['narrative'] = (($name = $this->value($value, 'name')) === '') ? $this->emptyNarrative : $name;
-        $this->location[$this->index]['description'][0]['narrative'] = (($locationDesc = $this->value(
+        $this->location[$this->index]['description'][0]['narrative'] = ((
+            $locationDesc = $this->value(
             $value,
             'description'
-        )) === '') ? $this->emptyNarrative : $locationDesc;
-        $this->location[$this->index]['activity_description'][0]['narrative'] = (($elementDesc = $this->value(
+        )
+        ) === '') ? $this->emptyNarrative : $locationDesc;
+        $this->location[$this->index]['activity_description'][0]['narrative'] = ((
+            $elementDesc = $this->value(
             $value,
             'activityDescription'
-        )) === '') ? $this->emptyNarrative : $elementDesc;
+        )
+        ) === '') ? $this->emptyNarrative : $elementDesc;
         $this->location[$this->index]['administrative'] = $this->filterAttributes($value, 'administrative', ['code', 'vocabulary', 'level']);
         $this->location[$this->index]['point'][0]['srs_name'] = $this->attributes($element, 'srsName', 'point');
         $this->location[$this->index]['point'][0]['pos'][0] = $this->latAndLong($value);
@@ -574,17 +578,21 @@ class Activity
         $this->plannedDisbursement[$this->index]['provider_org'][0]['ref'] = $this->attributes($element, 'ref', 'providerOrg');
         $this->plannedDisbursement[$this->index]['provider_org'][0]['provider_activity_id'] = $this->attributes($element, 'provider-activity-id', 'providerOrg');
         $this->plannedDisbursement[$this->index]['provider_org'][0]['type'] = $this->attributes($element, 'type', 'providerOrg');
-        $this->plannedDisbursement[$this->index]['provider_org'][0]['narrative'] = (($providerOrg = $this->value(
+        $this->plannedDisbursement[$this->index]['provider_org'][0]['narrative'] = ((
+            $providerOrg = $this->value(
             Arr::get($element, 'value', []),
             'providerOrg'
-        )) === '') ? $this->emptyNarrative : $providerOrg;
+        )
+        ) === '') ? $this->emptyNarrative : $providerOrg;
         $this->plannedDisbursement[$this->index]['receiver_org'][0]['ref'] = $this->attributes($element, 'ref', 'receiverOrg');
         $this->plannedDisbursement[$this->index]['receiver_org'][0]['receiver_activity_id'] = $this->attributes($element, 'receiver-activity-id', 'receiverOrg');
         $this->plannedDisbursement[$this->index]['receiver_org'][0]['type'] = $this->attributes($element, 'type', 'receiverOrg');
-        $this->plannedDisbursement[$this->index]['receiver_org'][0]['narrative'] = (($receiverOrg = $this->value(
+        $this->plannedDisbursement[$this->index]['receiver_org'][0]['narrative'] = ((
+            $receiverOrg = $this->value(
             Arr::get($element, 'value', []),
             'receiverOrg'
-        )) === '') ? $this->emptyNarrative : $receiverOrg;
+        )
+        ) === '') ? $this->emptyNarrative : $receiverOrg;
         $this->index++;
 
         return $this->plannedDisbursement;
@@ -657,6 +665,28 @@ class Activity
     }
 
     /**
+     * Returns condition attached.
+     *
+     * @param $element
+     *
+     * @return string
+     */
+    public function isConditionAttached($element): string
+    {
+        $conditionAttached = $this->attributes($element, 'attached');
+
+        if ((is_string($conditionAttached) && strtolower($conditionAttached) === 'true') || $conditionAttached === '1') {
+            return '1';
+        }
+
+        if ((is_string($conditionAttached) && strtolower($conditionAttached) === 'false') || $conditionAttached === '0') {
+            return '0';
+        }
+
+        return '';
+    }
+
+    /**
      * @param $element
      * @param $template
      *
@@ -665,7 +695,7 @@ class Activity
     public function conditions($element, $template): array
     {
         $this->conditions = $template['conditions'];
-        $this->conditions['condition_attached'] = $this->attributes($element, 'attached');
+        $this->conditions['condition_attached'] = $this->isConditionAttached($element);
 
         if (Arr::get($element, 'value', false)) {
             foreach (Arr::get($element, 'value', []) as $index => $condition) {
@@ -732,7 +762,7 @@ class Activity
      */
     private function capitalSpend($element): ?float
     {
-        return $this->attributes($element, 'percentage') && $this->attributes($element, 'percentage') != '' ? (float) $this->attributes($element, 'percentage') : null;
+        return is_numeric($this->attributes($element, 'percentage')) ? (float) $this->attributes($element, 'percentage') : $this->attributes($element, 'percentage');
     }
 
     /**

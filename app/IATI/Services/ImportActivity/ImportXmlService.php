@@ -193,6 +193,8 @@ class ImportXmlService
 
                 if (!empty($activity['errors'])) {
                     $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $activity['errors']);
+                } else {
+                    $this->importActivityErrorRepo->deleteImportError($oldActivity->id);
                 }
             } else {
                 $storeActivity = $this->activityRepository->importXmlActivities(null, $activityData);
