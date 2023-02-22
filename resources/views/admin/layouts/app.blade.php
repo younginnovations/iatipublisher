@@ -2,15 +2,15 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
     <head>
-    <style>html{display:none}</style> 
+    <style>html{display:none}</style>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'IATI Publisher') }}</title>
-    
+
 
     {{-- Normal --}}
     <link rel="preload" href="{{ asset('fonts/Arial/arial-webfont.woff') }}" as="font" type="font/woff"
@@ -31,7 +31,7 @@
 
 
   <!-- Styles -->
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}" media="print" onload="this.media='all'">  
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}" media="print" onload="this.media='all'">
      <link rel="icon"
         href="{{ asset('favicon.ico') }}"
         type="image/x-icon" />
@@ -69,7 +69,19 @@
     <script defer src="{{ mix('/js/app.js') }}"></script>
     <script defer src="{{ mix('/js/script.js') }}"></script>
     <script defer src="{{ mix('js/formbuilder.js') }}"></script>
-
+    <!-- Start of iati Zendesk Widget script -->
+    <script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=f1df04e0-f01e-4ab5-9091-67b2fddd6e60"> </script>
+    <script type="text/javascript">
+        window.zESettings = {
+            webWidget: {
+                color: { theme: '#FFFFFF'},
+                offset: { horizontal: '-14px', vertical: '7px'},
+                contactForm: {
+                    attachments: true,
+                }
+            }
+        };
+    </script>
 </body>
 
 </html>
