@@ -47,10 +47,6 @@ class TagRequest extends ActivityBaseRequest
 
         foreach ($formFields as $tagIndex => $tag) {
             $tagForm = sprintf('tag.%s', $tagIndex);
-            $rules[sprintf('%s.tag_vocabulary', $tagForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('TagVocabulary', 'Activity', false)));
-            $rules[sprintf('%s.goals_tag_code', $tagForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Goals', 'Activity', false)));
-            $rules[sprintf('%s.targets_tag_code', $tagForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Targets', 'Activity', false)));
-            $rules[sprintf('%s.vocabulary_uri', $tagForm)] = 'nullable|url';
 
             foreach ($this->getWarningForNarrative($tag['narrative'], $tagForm) as $tagNarrativeIndex => $narrativeRules) {
                 $rules[$tagNarrativeIndex] = $narrativeRules;
@@ -73,6 +69,10 @@ class TagRequest extends ActivityBaseRequest
 
         foreach ($formFields as $tagIndex => $tag) {
             $tagForm = sprintf('tag.%s', $tagIndex);
+            $rules[sprintf('%s.tag_vocabulary', $tagForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('TagVocabulary', 'Activity', false)));
+            $rules[sprintf('%s.goals_tag_code', $tagForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Goals', 'Activity', false)));
+            $rules[sprintf('%s.targets_tag_code', $tagForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Targets', 'Activity', false)));
+            $rules[sprintf('%s.vocabulary_uri', $tagForm)] = 'nullable|url';
 
             foreach ($this->getErrorsForNarrative($tag['narrative'], $tagForm) as $tagNarrativeIndex => $narrativeRules) {
                 $rules[$tagNarrativeIndex] = $narrativeRules;

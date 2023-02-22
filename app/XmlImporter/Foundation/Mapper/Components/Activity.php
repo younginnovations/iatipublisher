@@ -647,8 +647,8 @@ class Activity
         $this->policyMarker[$this->index] = $template['policy_marker'];
         $this->policyMarker[$this->index]['policy_marker_vocabulary'] = $vocabulary;
         $this->policyMarker[$this->index]['vocabulary_uri'] = $this->attributes($element, 'vocabulary-uri');
-        $this->policyMarker[$this->index]['policy_marker'] = ($vocabulary !== '99') ? $code : '';
-        $this->policyMarker[$this->index]['policy_marker_text'] = ($vocabulary === '99') ? $code : '';
+        $this->policyMarker[$this->index]['policy_marker'] = ($vocabulary === '1') ? $code : '';
+        $this->policyMarker[$this->index]['policy_marker_text'] = ($vocabulary !== '99') ? $code : '';
         $this->policyMarker[$this->index]['significance'] = $this->attributes($element, 'significance');
         $this->policyMarker[$this->index]['narrative'] = $this->narrative($element);
         $this->index++;
@@ -718,11 +718,11 @@ class Activity
     /**
      * @param $element
      *
-     * @return int|null
+     * @return mixed
      */
-    public function collaborationType($element): ?int
+    public function collaborationType($element): mixed
     {
-        return $this->attributes($element, 'code') && $this->attributes($element, 'code') != '' ? (int) $this->attributes($element, 'code') : null;
+        return is_numeric($this->attributes($element, 'code')) ? (int) $this->attributes($element, 'code') : $this->attributes($element, 'code');
     }
 
     /**

@@ -222,13 +222,13 @@ class XmlValidator
     public function validateActivity(bool $isDuplicate, bool $duplicateTransaction, bool $isIdentifierValid): array
     {
         $errors = [
-            'warning' => $this->factory->initialize($this->activity, $this->rules(), $this->messages())
+            'critical' => $this->factory->initialize($this->activity, $this->criticalRules(), $this->messages())
                 ->passes()
                 ->withErrors(),
             'error' => $this->factory->initialize($this->activity, $this->errorRules(), $this->messages())
                 ->passes()
                 ->withErrors(),
-            'critical' => $this->factory->initialize($this->activity, $this->criticalRules(), $this->messages())
+            'warning' => $this->factory->initialize($this->activity, $this->rules(), $this->messages())
                 ->passes()
                 ->withErrors(),
         ];
