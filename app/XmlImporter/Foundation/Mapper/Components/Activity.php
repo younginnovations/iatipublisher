@@ -270,11 +270,11 @@ class Activity
     {
         $secondaryReporter = $this->attributes($element, 'secondary-reporter');
 
-        if ((is_string($secondaryReporter) && strtolower($secondaryReporter) === 'true')) {
+        if ((is_string($secondaryReporter) && strtolower($secondaryReporter) === 'true') || $secondaryReporter === '1') {
             return '1';
         }
 
-        if ((is_string($secondaryReporter) && strtolower($secondaryReporter) === 'false')) {
+        if ((is_string($secondaryReporter) && strtolower($secondaryReporter) === 'false') || $secondaryReporter === '0') {
             return '0';
         }
 
@@ -289,7 +289,7 @@ class Activity
     public function description($element): array
     {
         $type = $this->attributes($element, 'type');
-        $descType = ($type === '') ? '1' : $type;
+        $descType = $type;
         $this->description[$descType]['type'] = $descType;
 
         if (array_key_exists('narrative', Arr::get($this->description, $descType, []))) {
@@ -333,7 +333,7 @@ class Activity
      */
     public function activityStatus($element): mixed
     {
-        return $this->attributes($element, 'code') && $this->attributes($element, 'code') != '' ? (int) $this->attributes($element, 'code') : null;
+        return is_numeric($this->attributes($element, 'code')) ? (int) $this->attributes($element, 'code') : $this->attributes($element, 'code');
     }
 
     /**
@@ -355,11 +355,11 @@ class Activity
     /**
      * @param $element
      *
-     * @return int|null
+     * @return mixed
      */
-    public function activityScope($element): ?int
+    public function activityScope($element): mixed
     {
-        return $this->attributes($element, 'code') && $this->attributes($element, 'code') != '' ? (int) $this->attributes($element, 'code') : null;
+        return is_numeric($this->attributes($element, 'code')) ? (int) $this->attributes($element, 'code') : $this->attributes($element, 'code');
     }
 
     /**

@@ -615,7 +615,8 @@ export default defineComponent({
      */
     let pageTitle = '';
     const found = activityProps.title.find((e: { language: string }) => {
-      const currentLanguage = 'en';
+      const currentLanguage =
+        activityProps.default_field_values.default_language;
       return e.language === currentLanguage;
     });
 

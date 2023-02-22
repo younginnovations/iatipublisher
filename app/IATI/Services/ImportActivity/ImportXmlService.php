@@ -192,7 +192,7 @@ class ImportXmlService
                     ->saveResults(Arr::get($activityData, 'result'), $oldActivity->id);
 
                 if (!empty($activity['errors'])) {
-                    $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $$activity['errors']);
+                    $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $activity['errors']);
                 }
             } else {
                 $storeActivity = $this->activityRepository->importXmlActivities(null, $activityData);
