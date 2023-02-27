@@ -272,9 +272,8 @@ span.select2-container--default {
 .register,
 aside {
   .help__text {
-    transform: translateX(100%) !important;
-    @media (max-width: 1024px) {
-      transform: translateX(0) !important;
+    transform: translateX(0) !important;
+    @media (max-width: 1370px) {
       width: 250px !important;
     }
   }

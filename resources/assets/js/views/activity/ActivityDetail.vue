@@ -254,7 +254,7 @@
             </div>
           </aside>
         </div>
-        <div>
+        <div class="w-full">
           <div class="flex justify-end">
             <a
               :href="`/activity/${activityProps.id}/default_values`"

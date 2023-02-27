@@ -80,7 +80,7 @@ import AuditListing from './views/audit/AuditListing.vue';
 import HoverText from './components/HoverText.vue';
 import PageTitle from './components/sections/PageTitle.vue';
 import LoadingState from './components/Loader.vue';
-import SystemVersion from "./views/superadmin/SystemVersion.vue";
+import SystemVersion from './views/superadmin/SystemVersion.vue';
 
 const app = createApp({});
 
@@ -175,7 +175,7 @@ app.component('AdminBar', AdminBar);
 /**
  * Audit
  */
-app.component('AuditListing', AuditListing)
+app.component('AuditListing', AuditListing);
 
 /**
  * Extension to inline SVG files with Vue.js and optimize them automatically with SVGO
