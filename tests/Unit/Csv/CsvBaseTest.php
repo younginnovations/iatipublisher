@@ -3,12 +3,19 @@
 namespace Tests\Unit\Csv;
 
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\CsvImporter\Queue\CsvProcessor;
+use App\Imports\CsvToArrayWithHeaders;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Http\UploadedFile;
+use Maatwebsite\Excel\Facades\Excel;
 use Tests\Unit\ImportBaseTest;
 
 class CsvBaseTest extends ImportBaseTest
 {
-    private string $csvFile = 'tests/Unit/TestFiles/Csv/file.csv';
+    /**
+     * @var string
+     */
+    public string $csvFile;
     /**
      * @var object
      */
@@ -39,24 +46,74 @@ class CsvBaseTest extends ImportBaseTest
         }
 
         $fp = fopen($this->csvFile, 'w');
-        $savedKeys = [];
-
-        foreach ($data as $getKey => $value) {
-            $savedKeys[] = $getKey;
-        }
-
-        $savedKeys = array_unique($savedKeys);
-        fputcsv($fp, $savedKeys);
-
-        foreach ($data as $fields) {
-            foreach ($savedKeys as $checkKey) {
-                if (!isset($field[$checkKey])) {
-                    $field[$checkKey] = '';
-                }
-            }
-            fputcsv($fp, $fields);
+        foreach ($this->convertActivityData($data) as $rows) {
+            fputcsv($fp, $rows);
         }
 
         fclose($fp);
+    }
+
+    /**
+     * @param $data
+     * @return array
+     */
+    public function convertActivityData($data): array
+    {
+        $keys = array_keys($data);
+        $values = array_values($data);
+        $num_rows = max(array_map('count', $values));
+        $num_cols = count($keys);
+        $new_data = [array_values($keys)];
+
+        for ($i = 0; $i < $num_rows; $i++) {
+            $row = [];
+            for ($j = 0; $j < $num_cols; $j++) {
+                if (isset($values[$j][$i])) {
+                    $row[] = $values[$j][$i];
+                } else {
+                    $row[] = '';
+                }
+            }
+            $new_data[] = $row;
+        }
+
+        return $new_data;
+    }
+
+    /**
+     * Sets csv file path to generate csv.
+     * @param $path
+     * @return void
+     */
+    public function setCsvFilePath($path): void
+    {
+        $this->csvFile = $path;
+    }
+
+    /**
+     * Fetches csv rows in to array.
+     *
+     * @param $filePath
+     * @return array
+     * @throws \ReflectionException
+     */
+    public function getCsvRows($filePath): array
+    {
+        $file = new UploadedFile($filePath, basename($filePath));
+        $str = mb_convert_encoding(file_get_contents($file->getPathName()), 'UTF-8');
+        file_put_contents($file->getPathName(), $str);
+        $csv = Excel::toCollection(new CsvToArrayWithHeaders, $file)->first()->toArray();
+
+        $csvProcessorObj = new CsvProcessor($csv);
+        $csvProcessorObjReflection = new \ReflectionClass($csvProcessorObj);
+
+        $groupvalues = $csvProcessorObjReflection->getMethod('groupValues');
+        $groupvalues->setAccessible(true);
+        $groupvalues->invoke($csvProcessorObj);
+
+        $dataProperty = $csvProcessorObjReflection->getProperty('data');
+        $dataProperty->setAccessible(true);
+
+        return $dataProperty->getValue($csvProcessorObj);
     }
 }

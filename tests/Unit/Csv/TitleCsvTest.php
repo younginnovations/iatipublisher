@@ -2,21 +2,36 @@
 
 namespace Tests\Unit\Csv;
 
+use App\CsvImporter\Entities\Activity\Components\Elements\Title;
+use Illuminate\Support\Arr;
+
 class TitleCsvTest extends CsvBaseTest
 {
-    private string $csvFile = 'tests/TestFiles/csv/file.csv';
+    private string $csvFilePath = 'tests/Unit/TestFiles/Csv/';
 
     /**
-     * A basic unit test example.
+     * checks if it throws validation if title empty.
      *
      * @return void
+     * @test
      */
-    public function test_example(): void
+    public function check_if_throws_validation_if_title_empty(): void
     {
+        $csvFile = $this->csvFilePath . 'title_empty.csv';
         $this->signIn();
+        $this->setCsvFilePath($csvFile);
         $this->initializeCsv($this->title_empty_data());
-        dd('nice');
-        $this->assertTrue(true);
+        $rows = $this->getCsvRows($csvFile);
+        $errors = [];
+        foreach ($rows as $row) {
+            $title = new Title($row, $this->validation);
+            $title->validate()->withErrors();
+            if (!empty($title->errors())) {
+                $errors[] = $title->errors();
+            }
+        }
+
+        $this->assertContains('The activity title is required.', Arr::flatten($errors));
     }
 
     /**
@@ -28,7 +43,7 @@ class TitleCsvTest extends CsvBaseTest
     {
         return [
             'Activity Identifier' => ['12345', '67890'],
-            'Activity Title' => ['title one', 'title two'],
+            'Activity Title' => [],
         ];
     }
 }
