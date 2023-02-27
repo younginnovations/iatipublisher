@@ -551,7 +551,7 @@ class Activity
         $this->location[$this->index]['point'][0]['pos'][0] = $this->latAndLong($value);
         $this->location[$this->index]['exactness'][0]['code'] = $this->attributes($element, 'code', 'exactness');
         $this->location[$this->index]['location_class'][0]['code'] = $this->attributes($element, 'code', 'locationClass');
-        $this->location[$this->index]['feature_designation'][0]['code'] = $this->attributes($element, 'code', 'featureDesignation');
+        $this->location[$this->index]['feature_designation'][0]['code'] = strtoupper($this->attributes($element, 'code', 'featureDesignation'));
         $this->index++;
 
         return $this->location;

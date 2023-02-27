@@ -256,7 +256,7 @@ class DocumentLink extends Element
                 }
             }
 
-            $this->data['document_link'][$index]['language'][0]['code'] = $value;
+            $this->data['document_link'][$index]['language'][0]['code'] = strtolower($value);
         }
     }
 
