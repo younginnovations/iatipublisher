@@ -78,8 +78,6 @@ class SectorRequest extends ActivityBaseRequest
     public function getErrorsForSector($formFields, bool $fileUpload = false): array
     {
         $rules = [];
-        $groupedPercentSector = $this->groupSector($formFields);
-        $hasFiveDigitOecd = false;
 
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
@@ -93,12 +91,17 @@ class SectorRequest extends ActivityBaseRequest
                 $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
             }
 
-            $rules[sprintf('%s.percentage', $sectorForm)] = 'nullable|numeric';
-
             $narrativeRules = $this->getErrorsForNarrative($sector['narrative'], $sectorForm);
 
             foreach ($narrativeRules as $key => $item) {
-                $rules[$key] = $item;
+                $explodedKey = explode('.', $key);
+                $isNarrative = count($explodedKey) === 5 && $explodedKey[4] === 'language';
+
+                if ($isNarrative && in_array($sector['sector_vocabulary'], ['98', '99'])) {
+                    $rules[sprintf('%s.%s.%s.%s', $sectorForm, 'narrative', $explodedKey[3], 'narrative')] = ['required'];
+                } else {
+                    $rules[$key] = $item;
+                }
             }
         }
 
@@ -143,26 +146,13 @@ class SectorRequest extends ActivityBaseRequest
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
 
-            $rules[sprintf('%s.percentage', $sectorForm)] = 'min:0';
-
-            $narrativeRules = $this->getWarningForNarrative($sector['narrative'], $sectorForm);
-
-            foreach ($narrativeRules as $key => $item) {
-                $explodedKey = explode('.', $key);
-                $isNarrative = count($explodedKey) === 5 && $explodedKey[4] === 'language';
-
-                if ($isNarrative && in_array($sector['sector_vocabulary'], ['98', '99'])) {
-                    $rules[sprintf('%s.%s.%s.%s', $sectorForm, 'narrative', $explodedKey[3], 'narrative')] = ['required'];
-                } else {
-                    $rules[$key] = $item;
-                }
-            }
+            $rules[sprintf('%s.percentage', $sectorForm)] = 'nullable|numeric|min:0';
 
             if ($groupedPercentSector[$sector['sector_vocabulary']]['count'] > 1) {
                 if ($groupedPercentSector[$sector['sector_vocabulary']]['total'] !== 100.0) {
                     $rules[$sectorForm . '.percentage'] = 'sector_total_percent';
                 }
-            } else {
+            } elseif (!empty($groupedPercentSector[$sector['sector_vocabulary']]['total']) && $groupedPercentSector[$sector['sector_vocabulary']]['total'] !== 100.0) {
                 $rules[$sectorForm . '.percentage'] = 'in:' . 100.0;
             }
         }

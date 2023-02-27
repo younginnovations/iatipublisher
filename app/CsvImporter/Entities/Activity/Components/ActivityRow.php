@@ -414,15 +414,13 @@ class ActivityRow extends Row
         foreach ($this->elements() as $element) {
             if ($element === 'transaction') {
                 foreach ($this->$element as $index => $transaction) {
-                    $transaction->validate()->withErrors($index);
+                    $transaction->validate(Arr::get($this->data(), 'transaction', []))->withErrors($index);
                     $this->recordErrors($element, $transaction, true);
-
                     $this->validElements[] = $transaction->isElementValid();
                 }
             } else {
                 $this->$element->validate()->withErrors();
                 $this->recordErrors($element, $this->$element);
-
                 $this->validElements[] = $this->$element->isElementValid();
             }
         }
@@ -623,7 +621,7 @@ class ActivityRow extends Row
     }
 
     /**
-     * Validate unique against Identifiers and Transaction Internal References within the uploaded CSV file.
+     * Validate unique against Identifiers Internal References within the uploaded CSV file.
      *
      * @param $rows
      *
@@ -632,7 +630,6 @@ class ActivityRow extends Row
     public function validateUnique($rows): static
     {
         $commonIdentifierCount = $this->countDuplicateActivityIdentifiers($rows);
-        $references = $this->getTransactionInternalReferences();
 
         if ($this->containsDuplicateActivities($commonIdentifierCount)) {
             $this->isValid = false;

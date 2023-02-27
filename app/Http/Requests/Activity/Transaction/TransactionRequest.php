@@ -66,7 +66,7 @@ class TransactionRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException|\JsonException
      */
-    public function getWarningForTransaction(array $formFields, bool $fileUpload = false, array $activityData = []): array
+    public function getWarningForTransaction(array $formFields, bool $fileUpload = false, array $activityData = [], array $multipleTransactions = []): array
     {
         $rules = [];
         $this->transactionFormField = $formFields;
@@ -80,7 +80,7 @@ class TransactionRequest extends ActivityBaseRequest
             $this->getTransactionDateRules($formFields['transaction_date']),
             $this->getValueRules($formFields['value']),
             $this->getDescriptionRules($formFields['description']),
-            $this->getSectorsRules($formFields['sector'], $fileUpload, Arr::get($activityData, 'sector', [])),
+            $this->getSectorsRules($formFields['sector'], $fileUpload, Arr::get($activityData, 'sector', []), $multipleTransactions),
             $this->getWarningForProviderOrg($formFields['provider_organization']),
             $this->getWarningForReceiverOrg($formFields['receiver_organization']),
             $this->getWarningForRecipientRegion($formFields['recipient_region'], $fileUpload, Arr::get($activityData, 'recipient_region', [])),
@@ -415,19 +415,28 @@ class TransactionRequest extends ActivityBaseRequest
                 return ['sector' => 'already_in_activity'];
             }
 
-            if (!empty($transactions)) {
-                $hasSector = false;
+            $hasSector = false;
+            if (!empty($transactions) && count($transactions) > 1) {
+                $sectors = array_column($transactions, 'sector');
+                $notNullCount = 0;
+                $nullCount = 0;
 
-                foreach ($transactions as $transaction) {
-                    if (Arr::get($transaction, 'sector', [])) {
-                        $hasSector = true;
-                        break;
+                foreach ($sectors as $sector) {
+                    if (!is_array_value_empty($sector)) {
+                        $notNullCount++;
+                    } else {
+                        $nullCount++;
                     }
                 }
 
-                if ($hasSector) {
-                    $rules['sector'] = 'sector_required';
+                if ($notNullCount >= 1 && $nullCount >= 1) {
+                    $hasSector = true;
                 }
+            }
+//
+
+            if ($hasSector) {
+                $rules['sector'] = 'sector_required';
             }
         }
 
@@ -928,7 +937,7 @@ class TransactionRequest extends ActivityBaseRequest
         $params = $this->route()->parameters();
         $transactionId = isset($params['transactionId']) ? (int) $params['transactionId'] : null;
 
-        if ((!$transactionService->hasRecipientRegionOrCountryDefinedInTransaction($params['id'], $transactionId)) && (is_variable_null($this->all()['recipient_region']) && is_variable_null($this->all()['recipient_country']))) {
+        if (($transactionService->hasRecipientRegionOrCountryDefinedInTransaction($params['id'], $transactionId)) && (is_variable_null($this->all()['recipient_region']) && is_variable_null($this->all()['recipient_country']))) {
             $rules[$attribute] = 'country_or_region';
         } elseif (!is_variable_null($this->all()['recipient_region']) && !is_variable_null($this->all()['recipient_country'])) {
             $rules[$attribute] = 'country_or_region';

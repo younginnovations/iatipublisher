@@ -350,7 +350,7 @@ class BudgetRequest extends ActivityBaseRequest
             }
 
             $messages[$budgetForm . '.budget_type.in'] = 'The budget type is invalid.';
-            $messages[$budgetForm . '.budget_type.in'] = 'The budget status is invalid.';
+            $messages[$budgetForm . '.budget_status.in'] = 'The budget status is invalid.';
             $messages[$budgetForm . '.period_end.0.date.before'] = 'The Period End iso-date must be within a year after Period Start iso-date.';
             $messages[$budgetForm . '.period_end.0.date.period_start_end'] = 'The period must not exceed a year.';
         }

@@ -30,11 +30,6 @@ class ActivityStatus extends Element
     protected string $index = 'activity_status';
 
     /**
-     * @var array
-     */
-    protected array $data;
-
-    /**
      * @var StatusRequest
      */
     private StatusRequest $request;
@@ -116,10 +111,10 @@ class ActivityStatus extends Element
      */
     public function validate(): static
     {
-        $this->validator = $this->factory->sign($this->data)
+        $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
-        $this->errorValidator = $this->factory->sign($this->data)
+        $this->errorValidator = $this->factory->sign($this->data())
             ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
 
