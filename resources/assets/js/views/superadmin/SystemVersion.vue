@@ -34,7 +34,7 @@
         </thead>
         <tbody v-if="!isEmpty(packageManagerVersion)">
           <tr v-for="(item, key, index) in packageManagerVersion" :key="index">
-            <td>{{ index + 1 }}</td>
+            <td>{{ getIndex(index) }}</td>
             <td>{{ key }}</td>
             <td>{{ item }}</td>
             <td>{{ resolveLatestVersion(latestManagerVersion, key) }}</td>
@@ -68,7 +68,7 @@
         </thead>
         <tbody v-if="!isEmpty(phpDependencies)">
           <tr v-for="(pkg, index) in phpDependencies" :key="index">
-            <td>{{ index + 1 }}</td>
+            <td>{{ getIndex(index) }}</td>
             <td>{{ pkg.name }}</td>
             <td>{{ pkg.version }}</td>
             <td>{{ pkg.latest }}</td>
@@ -106,7 +106,7 @@
         </thead>
         <tbody v-if="!isEmpty(nodeDependencies)">
           <tr v-for="(pkg, key, index) in nodeDependencies" :key="index">
-            <td>{{ index + 1 }}</td>
+            <td>{{ getIndex(index) }}</td>
             <td>{{ key }}</td>
             <td>{{ pkg['current'] }}</td>
             <td>{{ pkg['latest'] }}</td>
@@ -159,5 +159,9 @@ const resolveLatestVersion = (latestManagerVersion, key) => {
     return '2.5.4';
   }
   return 'NA';
+};
+
+const getIndex = (index) => {
+  return parseInt(index.toString()) + 1;
 };
 </script>

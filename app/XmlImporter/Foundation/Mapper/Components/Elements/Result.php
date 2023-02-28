@@ -62,13 +62,15 @@ class Result
      */
     public function setBooleanField($value): string
     {
-        if ((strtolower($value) === 'yes') || (strtolower($value) === 'true') || $value === true || $value === '1') {
-            return '1';
-        } elseif ((strtolower($value) === 'no') || (strtolower($value) === 'false') || $value === false || $value === '0') {
-            return '0';
+        if ($value) {
+            if ((strtolower($value) === 'yes') || (strtolower($value) === 'true') || $value === true || $value === '1') {
+                return '1';
+            } elseif ((strtolower($value) === 'no') || (strtolower($value) === 'false') || $value === false || $value === '0') {
+                return '0';
+            }
         }
 
-        return $value;
+        return '';
     }
 
     /**

@@ -284,6 +284,24 @@ class Activity
     }
 
     /**
+     * Returns value of single valued element\.
+     *
+     * @param $element
+     *
+     * @return int|string|null
+     */
+    public function getSingleValuedField($element): int|string|null
+    {
+        $value = $this->attributes($element, 'code');
+
+        if (is_numeric($value)) {
+            return (int) $value;
+        }
+
+        return empty($value) ? null : $value;
+    }
+
+    /**
      * @param $element
      *
      * @return array
@@ -335,7 +353,7 @@ class Activity
      */
     public function activityStatus($element): mixed
     {
-        return is_numeric($this->attributes($element, 'code')) ? (int) $this->attributes($element, 'code') : $this->attributes($element, 'code');
+        return $this->getSingleValuedField($element);
     }
 
     /**
@@ -361,7 +379,7 @@ class Activity
      */
     public function activityScope($element): mixed
     {
-        return is_numeric($this->attributes($element, 'code')) ? (int) $this->attributes($element, 'code') : $this->attributes($element, 'code');
+        return $this->getSingleValuedField($element);
     }
 
     /**
@@ -437,21 +455,21 @@ class Activity
     /**
      * @param $element
      *
-     * @return int|null
+     * @return mixed
      */
-    public function defaultFlowType($element): ?int
+    public function defaultFlowType($element): mixed
     {
-        return is_numeric($this->attributes($element, 'code')) ? (int) $this->attributes($element, 'code') : $this->attributes($element, 'code');
+        return $this->getSingleValuedField($element);
     }
 
     /**
      * @param $element
      *
-     * @return int|null
+     * @return mixed
      */
-    public function defaultFinanceType($element): ?int
+    public function defaultFinanceType($element): mixed
     {
-        return is_numeric($this->attributes($element, 'code')) ? (int) $this->attributes($element, 'code') : $this->attributes($element, 'code');
+        return $this->getSingleValuedField($element);
     }
 
     /**
@@ -461,10 +479,31 @@ class Activity
      */
     public function defaultTiedStatus($element): ?int
     {
-        return is_numeric($this->attributes($element, 'code')) ? (int) $this->attributes($element, 'code') : $this->attributes($element, 'code');
+        return $this->getSingleValuedField($element);
     }
 
     /**
+     * Returns default status type.
+     *
+     * @param $element
+     * @param $attribute
+     *
+     * @return string
+     */
+    public function getDefaultStatusType($element, $attribute)
+    {
+        $value = $this->attributes($element, $attribute);
+
+        if (is_string($value) && !empty($value)) {
+            return $value;
+        }
+
+        return '1';
+    }
+
+    /**
+     * Returns activity budget.
+     *
      * @param $element
      * @param $template
      *
@@ -473,8 +512,8 @@ class Activity
     public function budget($element, $template): array
     {
         $this->budget[$this->index] = $template['budget'];
-        $this->budget[$this->index]['budget_status'] = $this->attributes($element, 'status');
-        $this->budget[$this->index]['budget_type'] = $this->attributes($element, 'type');
+        $this->budget[$this->index]['budget_status'] = $this->getDefaultStatusType($element, 'status');
+        $this->budget[$this->index]['budget_type'] = $this->getDefaultStatusType($element, 'type');
         $this->budget[$this->index]['period_start'][0]['date'] = dateFormat('Y-m-d', $this->attributes($element, 'iso-date', 'periodStart'));
         $this->budget[$this->index]['period_end'][0]['date'] = dateFormat('Y-m-d', $this->attributes($element, 'iso-date', 'periodEnd'));
         $this->budget[$this->index]['budget_value'][0]['amount'] = $this->value(Arr::get($element, 'value', []), 'value');
@@ -614,7 +653,7 @@ class Activity
         foreach (Arr::get($element, 'value', []) as $index => $budgetItem) {
             $this->countryBudgetItems[$this->index]['budget_item'][$index]['code'] = $this->attributes($budgetItem, 'code');
             $this->countryBudgetItems[$this->index]['budget_item'][$index]['percentage'] = $this->attributes($budgetItem, 'percentage');
-            $desc = $this->value(Arr::get($budgetItem, 'value', []), 'description');
+            $desc = $this->value(Arr::get($budgetItem, 'value', []) ?? [], 'description');
             $this->countryBudgetItems[$this->index]['budget_item'][$index]['description'][0]['narrative'] = ($desc === '') ? $this->emptyNarrative : $desc;
         }
         $this->index++;
@@ -754,7 +793,7 @@ class Activity
      */
     public function collaborationType($element): mixed
     {
-        return is_numeric($this->attributes($element, 'code')) ? (int) $this->attributes($element, 'code') : $this->attributes($element, 'code');
+        return $this->getSingleValuedField($element);
     }
 
     /**

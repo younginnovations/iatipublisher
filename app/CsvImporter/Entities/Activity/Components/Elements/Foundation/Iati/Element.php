@@ -116,7 +116,7 @@ abstract class Element
      *
      * @return array|int|string|float
      */
-    public function data($popIndex = null): array |int|string|float
+    public function data($popIndex = null): array|int|string|float
     {
         if (!$this->data) {
             $this->data = [];
@@ -296,5 +296,21 @@ abstract class Element
         }
 
         return $messages;
+    }
+
+    /**
+     * Check if value is empty string or null.
+     *
+     * @param $elementData
+     *
+     * @return int
+     */
+    public function countArrayElements($elementData): int
+    {
+        $nonEmptyArrayElements = array_filter($elementData, function ($value) {
+            return $value !== null && $value !== '';
+        });
+
+        return count($nonEmptyArrayElements);
     }
 }

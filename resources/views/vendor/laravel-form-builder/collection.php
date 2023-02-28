@@ -2,8 +2,8 @@
 
     <?php if (isset($options['options']['dynamic_wrapper'])): ?>
         <div
-            class="<?= strtolower($options['label']) === "narrative" ? $options['options']['dynamic_wrapper']['class'] . ' narrative' : $options['options']['dynamic_wrapper']['class'] ?> ">        
-            <?php endif; ?>
+            class="<?= strtolower($options['label']) === "narrative" ? $options['options']['dynamic_wrapper']['class'] . ' narrative' : $options['options']['dynamic_wrapper']['class'] ?> ">
+        <?php endif; ?>
 
         <?php if (!isset($options['options']['dynamic_wrapper']) && $options['wrapper']): ?>
             <div <?= $options['wrapperAttrs'] ?>>
@@ -36,10 +36,10 @@
                 </div>' : '';
             $label = strtolower(str_replace(' ', '-', $options['label']));
             $error = '';
-            
+
             if ($showError && isset($errors) && $errors->hasBag($errorBag)) {
                 foreach ($errors->getBag($errorBag)->get($nameKey) as $err) {
-                    $error = $error.'<div class="text-danger-error">' . $err . '</div>';
+                    $error = $error . '<div class="text-danger-error">' . $err . '</div>';
                 }
             }
 
@@ -48,7 +48,7 @@
                 '<div class="flex   items-center">' .
                 $help_text . $hover_text .
                 '</div>' .
-                '</div>'.'<section class="collection_error">' . $error .
+                '</div>' . '<section class="collection_error">' . $error .
                 '</section> </div>';
             ?>
 
@@ -59,7 +59,6 @@
             <?php else: ?>
                 <?= htmlspecialchars_decode(Form::customLabel($name, $collectionLabel, $options['label_attr'])) ?>
             <?php endif; ?>
-
         <?php endif; ?>
 
         <?php if ($showField): ?>
@@ -70,10 +69,14 @@
             <?php include helpBlockPath(); ?>
         <?php endif; ?>
 
+        <?php if (strtolower($options['label']) === "narrative"): ?>
+            <section class="collection_error ml-2">
+                <?php include errorBlockPath(); ?>
+            </section>
+        <?php endif; ?>
         <?php if ($showLabel && $showField): ?>
             <?php if ($options['wrapper'] !== false): ?>
             </div>
         <?php endif; ?>
-        
+
     <?php endif; ?>
-    

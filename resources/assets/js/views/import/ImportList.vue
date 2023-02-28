@@ -147,7 +147,7 @@ const loader = ref(false);
 const selectAll = ref(false);
 const loaderText = ref('Please Wait');
 const tableRow = ref();
-const tableWidth = ref();
+const tableWidth = ref({});
 
 let timer;
 const getDimensions = async () => {
@@ -175,7 +175,7 @@ onMounted(() => {
           loader.value = false;
         }
 
-        if (res.data.status === 'error' || (!res.data.data && count >= 5)) {
+        if (res.data.status === 'error' || (!res.data.data && count >= 40)) {
           clearInterval(timer);
           window.location.href = '/activities';
         }

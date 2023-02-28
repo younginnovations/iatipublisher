@@ -110,7 +110,6 @@ class XmlQueueProcessor
             $this->filename = $filename;
             $contents = awsGetFile(sprintf('%s/%s/%s/%s', $this->xml_file_storage_path, $this->orgId, $this->userId, $filename));
             awsUploadFile(sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
-            awsDeleteFile(sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, $this->orgId, $this->userId, 'schema_error.log'));
 
             if ($this->xmlServiceProvider->isValidAgainstSchema($contents)) {
                 $xmlData = $this->xmlServiceProvider->load($contents);
@@ -138,6 +137,7 @@ class XmlQueueProcessor
 
             return false;
         } catch (\Exception $e) {
+            logger()->error($e);
             awsUploadFile(sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, $orgId, $userId, 'status.json'), json_encode(['success' => false, 'message' => 'Error has occurred while importing the file.'], JSON_THROW_ON_ERROR));
 
             throw  $e;

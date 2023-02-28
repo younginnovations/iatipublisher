@@ -131,7 +131,7 @@ trait XmlHelper
     protected function value(array $fields, $key = null): mixed
     {
         if (!$key) {
-            return Arr::get($fields, 'value', '');
+            return Arr::get($fields, 'value', '') ?? '';
         }
 
         if (!empty($fields)) {
@@ -141,7 +141,7 @@ trait XmlHelper
                         return $this->narrative($field);
                     }
 
-                    return Arr::get($field, 'value', '');
+                    return Arr::get($field, 'value', '') ?? '';
                 }
             }
         }

@@ -509,7 +509,7 @@ class ActivityService
                     || Carbon::parse($getBudgetPeriodEndDate)->betweenIncluded($getArrayPeriodStartDate, $getArrayPeriodEndDate)
                 ) {
                     if (empty($ids) ||
-                        !in_array(Arr::get($array, Arr::get($budget, 'budget_type', '1') . '.id'), $ids[Arr::get($budget, 'budget_type', '1')], true)
+                        !in_array(Arr::get($array, Arr::get($budget, 'budget_type', '1') . '.id'), Arr::get($ids, Arr::get($budget, 'budget_type', '1'), []), true)
                     ) {
                         $ids[Arr::get($budget, 'budget_type', '1')][] = Arr::get(
                             $array,

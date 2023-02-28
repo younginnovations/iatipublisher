@@ -84,7 +84,18 @@ class Transaction
      */
     protected function humanitarian($element, $index): void
     {
-        $this->transaction[$index]['humanitarian'] = $this->attributes($element, 'humanitarian');
+        $humanitarian = $this->attributes($element, 'humanitarian');
+        $humanitarianValue = '';
+
+        if ((is_string($humanitarian) && strtolower($humanitarian) === 'true') || $humanitarian === '1') {
+            $humanitarianValue = '1';
+        }
+
+        if ((is_string($humanitarian) && strtolower($humanitarian) === 'false') || $humanitarian === '0') {
+            $humanitarianValue = '0';
+        }
+
+        $this->transaction[$index]['humanitarian'] = $humanitarianValue;
     }
 
     /**

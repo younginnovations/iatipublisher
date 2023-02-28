@@ -68,7 +68,7 @@ class DefaultFinanceType extends Element
                     $this->map($value, $values);
                 }
 
-                if (empty($this->data[$this->csvHeader()])) {
+                if (is_array($this->data[$this->csvHeader()]) && empty($this->data[$this->csvHeader()])) {
                     $this->data[$this->csvHeader()] = '';
                 }
             }
@@ -100,7 +100,7 @@ class DefaultFinanceType extends Element
                 }
             }
 
-            (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
+            ($this->countArrayElements($values) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
         }
     }
 
@@ -132,7 +132,7 @@ class DefaultFinanceType extends Element
      */
     public function rules(): array
     {
-        return $this->request->getWarningForDefaultFinanceType(Arr::get($this->data(), $this->csvHeader()));
+        return $this->request->getWarningForDefaultFinanceType();
     }
 
     /**
