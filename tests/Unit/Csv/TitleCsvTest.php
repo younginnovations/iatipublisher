@@ -7,8 +7,6 @@ use Illuminate\Support\Arr;
 
 class TitleCsvTest extends CsvBaseTest
 {
-    private string $csvFilePath = 'tests/Unit/TestFiles/Csv/';
-
     /**
      * checks if it throws validation if title empty.
      *
@@ -17,12 +15,8 @@ class TitleCsvTest extends CsvBaseTest
      */
     public function check_if_throws_validation_if_title_empty(): void
     {
-        $csvFile = $this->csvFilePath . 'title_empty.csv';
         $this->signIn();
-        $this->setCsvFilePath($csvFile);
-        $this->initializeCsv($this->title_empty_data());
-        $rows = $this->getCsvRows($csvFile);
-
+        $rows = $this->title_empty_data();
         $errors = [];
 
         foreach ($rows as $row) {
@@ -44,8 +38,8 @@ class TitleCsvTest extends CsvBaseTest
      */
     public function title_empty_data(): array
     {
-        $data = $this->getPerfectData();
-        $data['Activity Title'] = [];
+        $data = $this->completeData;
+        $data[0]['activity_title'] = [];
 
         return $data;
     }

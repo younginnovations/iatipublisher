@@ -13,6 +13,8 @@ use Tests\Unit\ImportBaseTest;
 
 class CsvBaseTest extends ImportBaseTest
 {
+    private string $completeCsvFile = 'tests/Unit/TestFiles/Csv/complete.csv';
+
     /**
      * @var string
      */
@@ -22,6 +24,8 @@ class CsvBaseTest extends ImportBaseTest
      */
     protected object $validation;
 
+    protected array $completeData;
+
     /**
      * @return void
      * @throws BindingResolutionException
@@ -30,6 +34,7 @@ class CsvBaseTest extends ImportBaseTest
     {
         parent::setUp();
         $this->validation = app()->make(Validation::class);
+        $this->getCompleteData();
     }
 
     /**
@@ -47,7 +52,8 @@ class CsvBaseTest extends ImportBaseTest
         }
 
         $fp = fopen($this->csvFile, 'w');
-        foreach ($this->convertActivityData($data) as $rows) {
+
+        foreach ($data as $rows) {
             fputcsv($fp, $rows);
         }
 
@@ -79,16 +85,6 @@ class CsvBaseTest extends ImportBaseTest
         }
 
         return $new_data;
-    }
-
-    /**
-     * Sets csv file path to generate csv.
-     * @param $path
-     * @return void
-     */
-    public function setCsvFilePath($path): void
-    {
-        $this->csvFile = $path;
     }
 
     /**
@@ -291,5 +287,17 @@ class CsvBaseTest extends ImportBaseTest
             'Planned Disbursement Receiver Org Type' => [],
             'Planned Disbursement Receiver Org Narrative' => [],
         ];
+    }
+
+    /**
+     * Sets 100% complete csv file to array variable.
+     *
+     * @return void
+     * @throws BindingResolutionException
+     * @throws \ReflectionException
+     */
+    public function getCompleteData(): void
+    {
+        $this->completeData = $this->getCsvRows($this->completeCsvFile);
     }
 }
