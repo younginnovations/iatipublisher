@@ -32,6 +32,31 @@ class TitleCsvTest extends CsvBaseTest
     }
 
     /**
+     * Multiple activity tile upload is not allowed in csv
+     * Check if it throws validation if multiple activity title.
+     *
+     * @return void
+     * @test
+     */
+    public function check_throws_validation_if_title_multiple(): void
+    {
+        $this->signIn();
+        $rows = $this->multiple_title_data();
+        $errors = [];
+
+        foreach ($rows as $row) {
+            $title = new Title($row, $this->validation);
+            $title->validate()->withErrors();
+
+            if (!empty($title->errors()) || !empty($title->criticals()) || !empty($title->warnings())) {
+                $errors[] = $title->errors() + $title->criticals() + $title->warnings();
+            }
+        }
+
+        $this->assertContains('There should be only one activity title.', Arr::flatten($errors));
+    }
+
+    /**
      * sets of data with empty title.
      *
      * @return array
@@ -40,6 +65,14 @@ class TitleCsvTest extends CsvBaseTest
     {
         $data = $this->completeData;
         $data[0]['activity_title'] = [];
+
+        return $data;
+    }
+
+    public function multiple_title_data(): array
+    {
+        $data = $this->completeData;
+        $data[0]['activity_title'] = ['title one', 'title two'];
 
         return $data;
     }
