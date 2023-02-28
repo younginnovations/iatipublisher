@@ -66,7 +66,7 @@ class ActivityScope extends Element
                     $this->map($value, $values);
                 }
 
-                if (empty($this->data[$this->csvHeader()])) {
+                if (is_array($this->data[$this->csvHeader()]) && empty($this->data[$this->csvHeader()])) {
                     $this->data[$this->csvHeader()] = '';
                 }
             }
@@ -91,13 +91,13 @@ class ActivityScope extends Element
             if (!is_int($value)) {
                 foreach ($validActivityScope as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = is_numeric($code) ? (int) $code : $code;
                         break;
                     }
                 }
             }
 
-            (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
+            ($this->countArrayElements($values) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
         }
     }
 

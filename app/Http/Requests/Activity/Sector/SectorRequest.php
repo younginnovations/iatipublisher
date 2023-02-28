@@ -57,7 +57,7 @@ class SectorRequest extends ActivityBaseRequest
             if (array_key_exists($formField['sector_vocabulary'], $groupedSector)) {
                 $groupedSectorPercentage = $groupedSector[$formField['sector_vocabulary']]['total'];
                 $groupedSector[$formField['sector_vocabulary']]['count'] += 1;
-                $groupedSector[$formField['sector_vocabulary']]['total'] = (float) number_format(round($groupedSectorPercentage + $formField['percentage'], 2), 2);
+                $groupedSector[$formField['sector_vocabulary']]['total'] = (float) number_format(round((float) $groupedSectorPercentage + (float) $formField['percentage'], 2), 2);
             } else {
                 $groupedSector[$formField['sector_vocabulary']] = ['count' => 1, 'total' => (float) $formField['percentage']];
             }

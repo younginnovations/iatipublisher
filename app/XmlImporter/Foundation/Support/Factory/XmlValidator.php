@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\XmlImporter\Foundation\Support\Factory;
 
+use App\Http\Requests\Activity\Identifier\IdentifierRequest;
 use App\Http\Requests\Activity\Title\TitleRequest;
 use App\XmlImporter\Foundation\Support\Factory\Traits\ErrorValidationRules;
 use App\XmlImporter\Foundation\Support\Factory\Traits\ValidationMessages;
@@ -55,6 +56,7 @@ class XmlValidator
             $this->warningForDefaultTiedStatus($activity),
             $this->warningForCapitalSpend($activity),
             $this->warningForTitle($activity),
+            $this->warningForIdentifier($activity),
             $this->warningForDescription($activity),
             $this->warningForOtherIdentifier($activity),
             $this->warningForActivityDate($activity),
@@ -148,8 +150,19 @@ class XmlValidator
     public function criticalRules(): array
     {
         $activity = $this->activity;
+        $rules = [];
+        $tempRules = [
+            (new TitleRequest())->getErrorsForTitle('title'),
+            (new IdentifierRequest())->getErrorsForIdentifier(true, 'identifier'),
+        ];
 
-        return (new TitleRequest())->getErrorsForTitle('title');
+        foreach ($tempRules as $index => $tempRule) {
+            foreach ($tempRule as $key => $rule) {
+                $rules[$key] = $rule;
+            }
+        }
+
+        return $rules;
     }
 
     /**

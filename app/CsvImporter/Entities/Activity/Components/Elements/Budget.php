@@ -109,7 +109,7 @@ class Budget extends Element
     protected function setBudgetType($key, $value, $index): void
     {
         if (!isset($this->data['budget'][$index]['budget_type'])) {
-            $this->data['budget'][$index]['budget_type'] = '';
+            $this->data['budget'][$index]['budget_type'] = '1';
         }
 
         if ($key === $this->_csvHeaders[0]) {
@@ -141,7 +141,7 @@ class Budget extends Element
     protected function setBudgetStatus($key, $value, $index): void
     {
         if (!isset($this->data['budget'][$index]['budget_status'])) {
-            $this->data['budget'][$index]['budget_status'] = '';
+            $this->data['budget'][$index]['budget_status'] = '1';
         }
         if ($key === $this->_csvHeaders[1]) {
             $validBudgetStatus = $this->loadCodeList('BudgetStatus');

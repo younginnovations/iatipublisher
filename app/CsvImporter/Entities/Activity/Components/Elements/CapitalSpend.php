@@ -65,7 +65,7 @@ class CapitalSpend extends Element
                     $this->map($value, $values);
                 }
 
-                if (empty($this->data[$this->csvHeader()])) {
+                if (is_array($this->data[$this->csvHeader()]) && empty($this->data[$this->csvHeader()])) {
                     $this->data[$this->csvHeader()] = '';
                 }
             }
@@ -84,7 +84,7 @@ class CapitalSpend extends Element
     public function map($value, $values): void
     {
         if (!(is_null($value) || $value === '')) {
-            (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
+            ($this->countArrayElements($values) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
         }
     }
 

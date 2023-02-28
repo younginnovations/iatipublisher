@@ -941,6 +941,22 @@ if (!function_exists('awsDeleteFile')) {
     }
 }
 
+if (!function_exists('awsDeleteDirectory')) {
+    /**
+     * @param $folderName
+     *
+     * @return bool
+     */
+    function awsDeleteDirectory($folderName): bool
+    {
+        if (Storage::disk('s3')->exists($folderName)) {
+            return Storage::disk('s3')->deleteDirectory($folderName);
+        }
+
+        return false;
+    }
+}
+
 if (!function_exists('awsUrl')) {
     /**
      * @param $filePath

@@ -18,6 +18,7 @@ use App\Http\Requests\Activity\DefaultTiedStatus\DefaultTiedStatusRequest;
 use App\Http\Requests\Activity\Description\DescriptionRequest;
 use App\Http\Requests\Activity\DocumentLink\DocumentLinkRequest;
 use App\Http\Requests\Activity\HumanitarianScope\HumanitarianScopeRequest;
+use App\Http\Requests\Activity\Identifier\IdentifierRequest;
 use App\Http\Requests\Activity\Indicator\IndicatorRequest;
 use App\Http\Requests\Activity\LegacyData\LegacyDataRequest;
 use App\Http\Requests\Activity\Location\LocationRequest;
@@ -122,6 +123,16 @@ trait WarningValidationRules
     protected function warningForTitle(array $activity): array
     {
         return (new TitleRequest())->getWarningForTitle('title', Arr::get($activity, 'title', []));
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function warningForIdentifier(array $activity): array
+    {
+        return (new IdentifierRequest())->getWarningForIdentifier(true);
     }
 
     /**

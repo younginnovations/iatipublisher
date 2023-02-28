@@ -37,7 +37,7 @@ class IdentifierRequest extends FormRequest
      *
      * @return void
      */
-    public function getErrorsForIdentifier(bool $fileUpload = false): array
+    public function getErrorsForIdentifier(bool $fileUpload = false, $elementName = ''): array
     {
         $activityIdentifiers = [];
 
@@ -54,10 +54,14 @@ class IdentifierRequest extends FormRequest
                     }
                 }
             }
+
+            return [
+                'activity_identifier' => ['required', Rule::notIn($activityIdentifiers), 'not_regex:/(&|!|\/|\||\?)/'],
+            ];
         }
 
         return [
-            'activity_identifier'   => ['required', Rule::notIn($activityIdentifiers)],
+            empty($elementName) ? 'activity_identifier' : "$elementName.activity_identifier" => ['required', 'not_regex:/(&|!|\/|\||\?)/'],
         ];
     }
 
@@ -69,8 +73,7 @@ class IdentifierRequest extends FormRequest
     public function getWarningForIdentifier(): array
     {
         return [
-            'activity_identifier'   => ['not_regex:/(&|!|\/|\||\?)/'],
-            'iati_identifier_text'  => 'sometimes',
+            'iati_identifier_text' => 'sometimes',
         ];
     }
 

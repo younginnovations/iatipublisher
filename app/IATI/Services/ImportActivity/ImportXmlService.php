@@ -151,6 +151,8 @@ class ImportXmlService
     public function store(UploadedFile $file): bool
     {
         try {
+            awsDeleteDirectory(sprintf('%s/%s/%s', $this->xml_file_storage_path, Auth::user()->organization_id, Auth::user()->id));
+
             return awsUploadFile(sprintf('%s/%s/%s/%s', $this->xml_file_storage_path, Auth::user()->organization_id, Auth::user()->id, $file->getClientOriginalName()), $file->getContent());
         } catch (Exception $exception) {
             $this->logger->error(
@@ -306,7 +308,7 @@ class ImportXmlService
      */
     public function startImport($filename, $userId, $orgId): void
     {
-        awsDeleteFile(sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, $orgId, $userId, 'valid.json'));
+        awsDeleteDirectory(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, $userId));
         awsUploadFile(sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, $orgId, $userId, 'status.json'), json_encode(['success' => true, 'message' => 'Started'], JSON_THROW_ON_ERROR));
 
         $this->fireXmlUploadEvent($filename, $userId, $orgId);

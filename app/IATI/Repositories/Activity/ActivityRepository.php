@@ -180,7 +180,7 @@ class ActivityRepository extends Repository
             'iati_identifier' => $mappedActivity['iati_identifier'],
             'title' => $this->getActivityElement($mappedActivity, 'title'),
             'description' => $this->getActivityElement($mappedActivity, 'description'),
-            'activity_status' => $mappedActivity['activity_status'] ?? null,
+            'activity_status' => $this->getSingleValuedActivityElement($mappedActivity, 'activity_status'),
             'activity_date' => $this->getActivityElement($mappedActivity, 'activity_date'),
             'participating_org' => $this->getActivityElement($mappedActivity, 'participating_org'),
             'recipient_country' => $this->getActivityElement($mappedActivity, 'recipient_country'),
@@ -198,13 +198,13 @@ class ActivityRepository extends Repository
             'org_id' => $mappedActivity['org_id'],
             'policy_marker' => $this->getActivityElement($mappedActivity, 'policy_marker'),
             'budget' => $this->getActivityElement($mappedActivity, 'budget'),
-            'activity_scope' => Arr::get($this->getActivityElement($mappedActivity, 'activity_scope'), '0', null),
-            'collaboration_type' => Arr::get($mappedActivity, 'collaboration_type', null),
-            'capital_spend' => Arr::get($mappedActivity, 'capital_spend', null),
-            'default_flow_type' => Arr::get($mappedActivity, 'default_flow_type', null),
-            'default_finance_type' => Arr::get($mappedActivity, 'default_finance_type', null),
+            'activity_scope' => $this->getSingleValuedActivityElement($mappedActivity, 'activity_scope'),
+            'collaboration_type' => $this->getSingleValuedActivityElement($mappedActivity, 'collaboration_type'),
+            'capital_spend' => $this->getSingleValuedActivityElement($mappedActivity, 'capital_spend'),
+            'default_flow_type' => $this->getSingleValuedActivityElement($mappedActivity, 'default_flow_type'),
+            'default_finance_type' => $this->getSingleValuedActivityElement($mappedActivity, 'default_finance_type'),
             'default_aid_type' => $this->getActivityElement($mappedActivity, 'default_aid_type'),
-            'default_tied_status' => Arr::get($mappedActivity, 'default_tied_status', null),
+            'default_tied_status' => $this->getSingleValuedActivityElement($mappedActivity, 'default_tied_status'),
             'contact_info' => $this->getActivityElement($mappedActivity, 'contact_info'),
             'related_activity' => $this->getActivityElement($mappedActivity, 'related_activity'),
             'default_field_values' => $defaultFieldValues[0] ?? $defaultFieldValues,
@@ -247,9 +247,9 @@ class ActivityRepository extends Repository
      */
     public function getSingleValuedActivityElement($activity, $type): int|float|null
     {
-        $data = Arr::get($activity, $type, false);
+        $data = Arr::get($activity, $type, '');
 
-        return ($data && $data !== '') ? $data : null;
+        return (!is_null($data) && $data !== '' && !is_array($data)) ? $data : null;
     }
 
     /**

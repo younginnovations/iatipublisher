@@ -17,7 +17,6 @@ use Illuminate\Session\SessionManager;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\File as FileFacade;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Excel;
@@ -143,7 +142,7 @@ class ImportCsvService
     {
         try {
             $uploadedFile = awsGetFile(sprintf('%s/%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization->id, Auth::user()->id, $filename));
-            awsUploadFile(sprintf('%s/%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization->id, Auth::user()->id, 'valid.json'), '');
+            awsUploadFile(sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, Auth::user()->organization->id, Auth::user()->id, 'valid.json'), '');
             $localStorageFile = $this->localStorageFile($uploadedFile, $filename);
             Session::put('user_id', Auth::user()->id);
             Session::put('org_id', Auth::user()->organization->id);
@@ -215,7 +214,7 @@ class ImportCsvService
                 if (!empty($activity['errors'])) {
                     $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $activity['errors']);
                 } else {
-                    $this->importActivityErrorRepo->delete($oldActivity->id);
+                    $this->importActivityErrorRepo->deleteImportError($oldActivity->id);
                 }
             } else {
                 $createdActivity = $this->activityRepo->createActivity(Arr::get($activity, 'data'));
@@ -229,8 +228,6 @@ class ImportCsvService
                 }
             }
         }
-
-        $this->activityImportStatus($activities);
     }
 
     /**
@@ -246,65 +243,6 @@ class ImportCsvService
         foreach ($transactions as $transaction) {
             $this->transactionRepo->store(['transaction' => $transaction, 'activity_id' => $activityId]);
         }
-    }
-
-    /**
-     * Check the status of the csv activities being imported.
-     *
-     * @param $activities
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    protected function activityImportStatus($activities): void
-    {
-        if (session('importing') && $this->checkStatusFile()) {
-            $this->removeImportedActivity($activities);
-        }
-
-        if ($this->checkStatusFile() && is_null(session('importing'))) {
-            $this->removeImportDirectory();
-        }
-    }
-
-    /**
-     * Remove the imported activity if the csv is still being processed.
-     *
-     * @param $checkedActivities
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    protected function removeImportedActivity($checkedActivities): void
-    {
-        $validActivities = json_decode(file_get_contents($this->getFilePath(true)), true, 512, JSON_THROW_ON_ERROR);
-
-        foreach ($checkedActivities as $key => $activity) {
-            unset($validActivities[$key]);
-        }
-
-        FileFacade::put($this->getFilePath(true), $validActivities);
-    }
-
-    /**
-     * Check if the status.json file is present.
-     *
-     * @return bool
-     */
-    protected function checkStatusFile(): bool
-    {
-        return file_exists(sprintf('%s/%s/%s', $this->csv_data_storage_path, Session::get('org_id'), 'status.json'));
-    }
-
-    /**
-     * Remove the user folder containing valid, invalid and status json.
-     *
-     * @return void
-     */
-    public function removeImportDirectory(): void
-    {
-        $directoryPath = storage_path(sprintf('%s/%s', $this->csv_data_storage_path, Session::get('org_id')));
-        $this->filesystem->deleteDirectory($directoryPath);
     }
 
     /**
@@ -420,9 +358,9 @@ class ImportCsvService
      */
     public function clearOldImport(): void
     {
-        awsUploadFile(sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, Session::get('org_id'), Session::get('user_id'), 'valid.json'), '');
-        awsDeleteFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, Session::get('org_id'), Session::get('user_id')));
-        awsDeleteFile(sprintf('%s/%s/%s', $this->csv_file_storage_path, Session::get('org_id'), Session::get('user_id')));
+        awsDeleteDirectory(sprintf('%s/%s/%s', $this->csv_data_storage_path, Session::get('org_id'), Session::get('user_id')));
+        awsDeleteDirectory(sprintf('%s/%s/%s', $this->csv_file_storage_path, Session::get('org_id'), Session::get('user_id')));
+
         if ($this->hasOldData()) {
             $this->clearSession(['import-status', 'filename']);
         }

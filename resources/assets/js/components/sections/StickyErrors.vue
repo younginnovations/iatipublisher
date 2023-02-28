@@ -82,8 +82,12 @@
           </div>
         </div>
         <div v-if="issueType === 'upload'">
-          <div v-for="(item, index) in importErrors" :key="index">
-            <uploadedErrors :item="item" :index="index" />
+          <div v-for="(item, index) in importErrorTypes" :key="index">
+            <UploadedErrors
+              v-if="Object.keys(importErrors).indexOf(item) !== -1"
+              :item="importErrors[item]"
+              :index="item"
+            />
           </div>
         </div>
       </div>
@@ -106,7 +110,7 @@ import { useToggle } from '@vueuse/core';
 
 // components
 import ErrorLists from 'Components/sections/ErrorLists.vue';
-import uploadedErrors from 'Components/sections/uploadedErrors.vue';
+import UploadedErrors from 'Components/sections/UploadedErrors.vue';
 import axios from 'axios';
 
 const props = defineProps({
@@ -132,6 +136,7 @@ interface ErrorInterface {
   title: string;
 }
 const { errorData } = toRefs(props);
+const importErrorTypes = ['error', 'warning'];
 
 interface TempData {
   errors: string[];
@@ -194,6 +199,7 @@ watch(
     updateTempMessage();
   }
 );
+
 const deleteErrors = () => {
   axios.delete(`/import/errors/${activityId}`).then((res) => {
     if (res.status) {

@@ -1177,6 +1177,9 @@ video {
 .w-\[280px\] {
   width: 280px;
 }
+.w-\[400px\] {
+  width: 400px;
+}
 .w-8 {
   width: 2rem;
 }
@@ -1218,9 +1221,6 @@ video {
 }
 .w-\[442px\] {
   width: 442px;
-}
-.w-\[400px\] {
-  width: 400px;
 }
 .min-w-\[300px\] {
   min-width: 300px;
