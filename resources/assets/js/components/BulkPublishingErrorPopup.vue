@@ -36,7 +36,7 @@
 <script lang="ts" setup>
 import { onUnmounted, onMounted, inject } from 'vue';
 
-const bulkPublishStatus = inject('bulkPublishStatus');
+const bulkPublishStatus = inject('bulkPublishStatus') as object;
 
 onMounted(() => {
   document.documentElement.style.overflow = 'hidden';
