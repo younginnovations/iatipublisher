@@ -18,6 +18,18 @@ trait DataSanitizeTrait
      */
     public function sanitizeData(array &$data): array
     {
+        $keys = array_keys($data);
+        $isNumeric = true;
+
+        foreach ($keys as $key) {
+            if (!is_int($key)) {
+                $isNumeric = false;
+                break;
+            }
+        }
+
+        $data = $isNumeric ? array_values($data) : $data;
+
         foreach ($data as $key => $dataDatum) {
             if (is_array($dataDatum)) {
                 if (is_string($key)) {

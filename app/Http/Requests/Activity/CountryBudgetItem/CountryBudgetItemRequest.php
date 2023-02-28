@@ -58,7 +58,7 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
      */
     public function getErrorsForCountryBudgetItem(array $formFields): array
     {
-        $rules = $this->getCriticalBudgetItemRules(Arr::get($formFields, 'budget_item', []), $formFields);
+        $rules = $this->getErrorBudgetItemRules(Arr::get($formFields, 'budget_item', []), $formFields);
         $rules['country_budget_vocabulary'] = 'nullable|in:' . implode(',', array_keys(getCodeList('BudgetIdentifierVocabulary', 'Activity', false)));
 
         return $rules;
@@ -117,7 +117,7 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getCriticalBudgetItemRules(array $formFields, array $allFields): array
+    public function getErrorBudgetItemRules(array $formFields, array $allFields): array
     {
         $rules = [];
 

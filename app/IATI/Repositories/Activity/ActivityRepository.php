@@ -247,7 +247,7 @@ class ActivityRepository extends Repository
      */
     public function getSingleValuedActivityElement($activity, $type): int|float|null
     {
-        $data = Arr::get($activity, $type);
+        $data = Arr::get($activity, $type, false);
 
         return ($data && $data !== '') ? $data : null;
     }

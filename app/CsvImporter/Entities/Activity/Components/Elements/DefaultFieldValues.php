@@ -4,12 +4,15 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\IATI\Traits\DataSanitizeTrait;
 
 /**
  * Class DefaultFieldValues.
  */
 class DefaultFieldValues extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * @var array
      */
@@ -48,6 +51,8 @@ class DefaultFieldValues extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**

@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\DefaultFinanceType\DefaultFinanceTypeRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Support\Arr;
 
 /**
@@ -14,6 +15,8 @@ use Illuminate\Support\Arr;
  */
 class DefaultFinanceType extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * CSV Header of Description with their code.
      */
@@ -70,6 +73,8 @@ class DefaultFinanceType extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**

@@ -188,8 +188,8 @@ class ImportXmlService
                 $this->activityRepository->importXmlActivities($oldActivity->id, $activityData);
                 $this->transactionRepository->deleteTransaction($oldActivity->id);
                 $this->resultRepository->deleteResult($oldActivity->id);
-                $this->saveTransactions(Arr::get($activityData, 'transactions'), $oldActivity->id)
-                    ->saveResults(Arr::get($activityData, 'result'), $oldActivity->id);
+                $this->saveTransactions(Arr::get($activityData, 'transactions'), $oldActivity->id);
+                $this->saveResults(Arr::get($activityData, 'result'), $oldActivity->id);
 
                 if (!empty($activity['errors'])) {
                     $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $activity['errors']);
@@ -199,8 +199,8 @@ class ImportXmlService
             } else {
                 $storeActivity = $this->activityRepository->importXmlActivities(null, $activityData);
 
-                $this->saveTransactions(Arr::get($activityData, 'transactions'), $storeActivity->id)
-                    ->saveResults(Arr::get($activityData, 'result'), $storeActivity->id);
+                $this->saveTransactions(Arr::get($activityData, 'transactions'), $storeActivity->id);
+                $this->saveResults(Arr::get($activityData, 'result'), $storeActivity->id);
 
                 if (!empty($activity['errors'])) {
                     $this->importActivityErrorRepo->updateOrCreateError($storeActivity->id, $activity['errors']);
@@ -285,7 +285,7 @@ class ImportXmlService
                 } else {
                     $resultWithoutIndicator[] = [
                         'activity_id' => $activityId,
-                        'result' => $result,
+                        'result' => json_encode($result),
                     ];
                 }
             }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\XmlImporter\Foundation\Mapper\Components;
 
+use App\IATI\Traits\DataSanitizeTrait;
 use App\XmlImporter\Foundation\Support\Helpers\Traits\XmlHelper;
 use Illuminate\Support\Arr;
 
@@ -13,6 +14,7 @@ use Illuminate\Support\Arr;
 class Activity
 {
     use XmlHelper;
+    use DataSanitizeTrait;
 
     /**
      * @var array
@@ -539,15 +541,15 @@ class Activity
         $this->location[$this->index]['name'][0]['narrative'] = (($name = $this->value($value, 'name')) === '') ? $this->emptyNarrative : $name;
         $this->location[$this->index]['description'][0]['narrative'] = ((
             $locationDesc = $this->value(
-            $value,
-            'description'
-        )
+                $value,
+                'description'
+            )
         ) === '') ? $this->emptyNarrative : $locationDesc;
         $this->location[$this->index]['activity_description'][0]['narrative'] = ((
             $elementDesc = $this->value(
-            $value,
-            'activityDescription'
-        )
+                $value,
+                'activityDescription'
+            )
         ) === '') ? $this->emptyNarrative : $elementDesc;
         $this->location[$this->index]['administrative'] = $this->filterAttributes($value, 'administrative', ['code', 'vocabulary', 'level']);
         $this->location[$this->index]['point'][0]['srs_name'] = $this->attributes($element, 'srsName', 'point');
@@ -580,18 +582,18 @@ class Activity
         $this->plannedDisbursement[$this->index]['provider_org'][0]['type'] = $this->attributes($element, 'type', 'providerOrg');
         $this->plannedDisbursement[$this->index]['provider_org'][0]['narrative'] = ((
             $providerOrg = $this->value(
-            Arr::get($element, 'value', []),
-            'providerOrg'
-        )
+                Arr::get($element, 'value', []),
+                'providerOrg'
+            )
         ) === '') ? $this->emptyNarrative : $providerOrg;
         $this->plannedDisbursement[$this->index]['receiver_org'][0]['ref'] = $this->attributes($element, 'ref', 'receiverOrg');
         $this->plannedDisbursement[$this->index]['receiver_org'][0]['receiver_activity_id'] = $this->attributes($element, 'receiver-activity-id', 'receiverOrg');
         $this->plannedDisbursement[$this->index]['receiver_org'][0]['type'] = $this->attributes($element, 'type', 'receiverOrg');
         $this->plannedDisbursement[$this->index]['receiver_org'][0]['narrative'] = ((
             $receiverOrg = $this->value(
-            Arr::get($element, 'value', []),
-            'receiverOrg'
-        )
+                Arr::get($element, 'value', []),
+                'receiverOrg'
+            )
         ) === '') ? $this->emptyNarrative : $receiverOrg;
         $this->index++;
 
@@ -795,12 +797,15 @@ class Activity
             $elementName = $this->name($element);
 
             if (array_key_exists($elementName, $this->activityElements)) {
-                $this->activity[$this->activityElements[$elementName]] = $this->$elementName($element, $template);
+                $elementData = $this->$elementName($element, $template);
+
+                $this->activity[$this->activityElements[$elementName]] = is_array($elementData) ? $this->sanitizeData($elementData) : $elementData;
             }
         }
 
         if (array_key_exists('description', $this->activity)) {
-            $this->activity['description'] = array_values(Arr::get($this->activity, 'description', null));
+            $descriptionData = array_values(Arr::get($this->activity, 'description', null));
+            $this->activity['description'] = is_array($descriptionData) ? $this->sanitizeData($descriptionData) : $descriptionData;
         }
 
         return $this->activity;

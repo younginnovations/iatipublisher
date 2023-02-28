@@ -7,12 +7,15 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\DefaultAidType\DefaultAidTypeRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 
 /**
  * Class DefaultAidType.
  */
 class DefaultAidType extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Header for DefaultAidType element.
      * @var array
@@ -64,6 +67,8 @@ class DefaultAidType extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**

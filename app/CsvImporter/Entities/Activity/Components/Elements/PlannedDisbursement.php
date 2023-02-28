@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\PlannedDisbursement\PlannedDisbursementRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Support\Arr;
 
 /**
@@ -14,6 +15,8 @@ use Illuminate\Support\Arr;
  */
 class PlannedDisbursement extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Header for PlannedDisbursement element.
      * @var array
@@ -78,6 +81,8 @@ class PlannedDisbursement extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**

@@ -7,12 +7,15 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Date\DateRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 
 /**
  * Class ActivityDate.
  */
 class ActivityDate extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Headers for the ActivityDate element.
      *
@@ -94,6 +97,8 @@ class ActivityDate extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**

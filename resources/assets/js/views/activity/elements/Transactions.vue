@@ -11,7 +11,6 @@
           trans.transaction.transaction_type[0].transaction_type_code
         ] ?? 'Transaction type missing'
       }}
-      {{ trans.transaction.transaction_type[0].transaction_type_code }}
       <div class="ml-2">
         <Btn
           text="Edit"
