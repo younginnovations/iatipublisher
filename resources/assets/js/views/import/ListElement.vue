@@ -1,11 +1,14 @@
 <template>
   <td class="title">
     <span class="flex">
-      <span class="font-normal">{{
-        activity['data']['title'][0]['narrative']
-          ? activity['data']['title'][0]['narrative']
-          : 'Missing'
-      }}</span>
+      <span
+        class="ellipsis !inline-block w-[400px] overflow-x-hidden text-ellipsis whitespace-nowrap font-normal"
+        >{{
+          activity['data']['title'][0]['narrative']
+            ? activity['data']['title'][0]['narrative']
+            : 'Missing'
+        }}</span
+      >
 
       <span
         v-if="Object.keys(activity['errors']).length > 0"
