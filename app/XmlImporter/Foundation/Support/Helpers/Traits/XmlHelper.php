@@ -87,7 +87,7 @@ trait XmlHelper
                     }
 
                     if (array_key_exists($attributeKey, array_flip($template))) {
-                        $data[$index][$attributeKey] = $attributeKey === 'vocabulary' || $value['name'] === '{}category'
+                        $data[$index][$attributeKey] = $attributeKey === 'vocabulary' || in_array($value['name'], ['{}category', '{}administrative'])
                                                                 ? strtoupper($attribute)
                                                                 : $attribute;
                     }
