@@ -85,7 +85,7 @@ class TransactionCsvTest extends CsvBaseTest
     {
         $errors = [];
         foreach ($rows as $row) {
-            $activityRow = new ActivityRow($row, $this->organization->id, $this->user->id, $this->getIdentifiers());
+            $activityRow = new ActivityRow($row, $this->organization->id, $this->user->id, $this->getIdentifiers(), $this->user->organization->reporting_org);
             $activityRow->validateUnique($row);
             $this->validateElements($activityRow);
             $errors[] = $activityRow->errors();

@@ -109,4 +109,72 @@ class ReportingOrgRequest extends ActivityBaseRequest
 
         return $messages;
     }
+<<<<<<< HEAD
+=======
+
+/**
+ * Sets reporting org values in property $reportingOrganisationInOrganisation.
+ *
+ * @param $reportingOrganisationInOrganisation
+ *
+ * @return $this
+ */
+public function reportingOrganisationInOrganisation($reportingOrganisationInOrganisation):static
+{
+    $this->reportingOrganisationInOrganisation = $reportingOrganisationInOrganisation;
+
+    return $this;
+}
+
+    /**
+     * Returns organization level reporting orgs narratives and languages in respective arrays.
+     *
+     * @param $reportingOrg
+     *
+     * @return array
+     */
+    private function getNarrativesAndLanguages($reportingOrg): array
+    {
+        $narrativeFields = $reportingOrg[0]['narrative'] ?? '';
+
+        if ($narrativeFields) {
+            $narratives = [];
+            $languages = [];
+
+            foreach ($narrativeFields as $index=>$item) {
+                $narratives[] = $item['narrative'];
+                $languages[] = $item['language'];
+            }
+
+            return [$narratives, $languages];
+        }
+
+        return [false, false];
+    }
+
+    /**
+     * Rules for reporting organization form.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    public function getWarningForReportingOrganization(array $formFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $reportingOrganizationIndex => $reportingOrganization) {
+            $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
+            $rules[$reportingOrganizationForm . '.ref'] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
+
+            $narrativeRules = $this->getWarningForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
+
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
+            }
+        }
+
+        return $rules;
+    }
+>>>>>>> df0129cd (	-[x] test|refactor: modified reporting org and transaction csv unit test files)
 }

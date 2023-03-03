@@ -17,9 +17,24 @@ class OrganizationFactory extends Factory
      * Define the model's default state.
      *
      * @return array
+     * @throws \JsonException
      */
     public function definition(): array
     {
+        $reporting_org = [
+            [
+                'ref' => 'Quis fugiat animi',
+                'type' => '70',
+                'secondary_reporter' => null,
+                'narrative' => [
+                    [
+                        'narrative' => 'Similique repudianda',
+                        'language' => 'ae',
+                    ],
+                ],
+            ],
+        ];
+
         return [
             'publisher_id'        => env('IATI_YIPL_PUBLISHER_ID'),
             'publisher_name'      => env('IATI_YIPL_PUBLISHER_NAME'),
@@ -30,6 +45,7 @@ class OrganizationFactory extends Factory
             'identifier'          => env('IATI_YIPL_IDENTIFIER'),
             'iati_status'         => 'pending',
             'status'              => 'draft',
+            'reporting_org'       => $reporting_org,
         ];
     }
 }
