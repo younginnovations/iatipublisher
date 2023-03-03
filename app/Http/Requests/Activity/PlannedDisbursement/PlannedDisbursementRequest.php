@@ -326,6 +326,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
             $messages[sprintf('%s.value_date.required', $valueForm)] = 'Value date is a required field';
             $messages[sprintf('%s.value_date.after', $valueForm)] = 'The value date field must be a between period start and period end';
             $messages[sprintf('%s.value_date.before', $valueForm)] = 'The value date field must be a between period start and period end';
+            $messages[sprintf('%s.value_date.date', $valueForm)] = 'The Value Date must be a valid Date';
         }
 
         return $messages;
@@ -380,12 +381,12 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
     public function getMessagesForPeriodStart($formFields, $formBase): array
     {
         $messages = [];
-
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.required'] = trans('validation.required', ['attribute' => trans('elementForm.period_start')]);
             $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = 'Period end must be a date.';
             $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date_greater_than'] = 'Period end date must be date greater than year 1900.';
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.period_start_end'] = 'The Planned Disbursement Period must not be longer than three months';
+            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date'] = 'Period Start must be a date.';
         }
 
         return $messages;

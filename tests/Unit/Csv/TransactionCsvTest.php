@@ -237,6 +237,7 @@ class TransactionCsvTest extends CsvBaseTest
     /**
      * @return void
      * @test
+     * @throws \JsonException
      */
     public function pass_if_negative_value_passed_in_transaction(): void
     {

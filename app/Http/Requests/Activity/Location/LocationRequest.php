@@ -439,7 +439,7 @@ class LocationRequest extends ActivityBaseRequest
     {
         $rules = [];
         $pointForm = sprintf('%s.point.0', $formBase);
-        $positionForm = sprintf('%s.position.0', $pointForm);
+        $positionForm = sprintf('%s.pos.0', $pointForm);
         $latitude = sprintf('%s.latitude', $positionForm);
         $longitude = sprintf('%s.longitude', $positionForm);
         $rules[$latitude] = 'nullable|numeric';
@@ -461,7 +461,7 @@ class LocationRequest extends ActivityBaseRequest
         $messages = [];
 
         $pointForm = sprintf('%s.point.0', $formBase);
-        $positionForm = sprintf('%s.position.0', $pointForm);
+        $positionForm = sprintf('%s.pos.0', $pointForm);
         $messages[sprintf('%s.latitude.numeric', $positionForm)] = 'The pos latitude must be numeric';
         $messages[sprintf('%s.longitude.numeric', $positionForm)] = 'The pos longitude must be numeric';
 

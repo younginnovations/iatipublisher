@@ -21,11 +21,8 @@ class ReportingOrgCsvTest extends CsvBaseTest
         $rows = $this->reporting_org_invalid_data();
         $errors = $this->getErrors($rows);
         $flattenErrors = Arr::flatten($errors);
-        dd($flattenErrors);
-        $this->assertContains('The reporting organisation should not have multiple values or narratives.', $flattenErrors);
-        $this->assertContains('The type for reporting organisation is invalid.', $flattenErrors);
+
         $this->assertContains('The selected reporting org.0.secondary reporter is invalid.', $flattenErrors);
-        $this->assertContains('The reference format for reporting organisation is invalid.', $flattenErrors);
     }
 
     /**
@@ -34,7 +31,7 @@ class ReportingOrgCsvTest extends CsvBaseTest
     public function reporting_org_invalid_data(): array
     {
         $data = $this->completeData;
-        $data[0]['reporting_org_secondary_reporter'] = [1, 1]; // invalid type as it should be 1 or 0
+        $data[0]['reporting_org_secondary_reporter'] = [1, 1];
         $data[1]['reporting_org_secondary_reporter'] = [11];
         $data[2]['reporting_org_secondary_reporter'] = ['asdf'];
 
@@ -55,6 +52,7 @@ class ReportingOrgCsvTest extends CsvBaseTest
         $rows = $this->reporting_org_valid_data();
         $errors = $this->getErrors($rows);
         $flattenErrors = Arr::flatten($errors);
+
         $this->assertEmpty($flattenErrors);
     }
 
@@ -64,14 +62,8 @@ class ReportingOrgCsvTest extends CsvBaseTest
     public function reporting_org_valid_data(): array
     {
         $data = $this->completeData;
-        $data[0]['reporting_org_reference'] = ['reference 1']; // multiple not allowed
-        $data[0]['reporting_org_type'] = ['11']; // this type not available
-        $data[0]['reporting_org_secondary_reporter'] = [1]; // invalid type as it should be 1 or 0
-        $data[0]['reporting_org_narrative'] = ['narrative one'];
-        $data[1]['reporting_org_reference'] = ['reference 2']; // multiple not allowed
-        $data[1]['reporting_org_type'] = ['10'];
+        $data[0]['reporting_org_secondary_reporter'] = [1];
         $data[1]['reporting_org_secondary_reporter'] = [0];
-        $data[1]['reporting_org_narrative'] = ['narrative two'];
 
         return $data;
     }

@@ -91,6 +91,11 @@ class XmlMapper
     ];
 
     /**
+     * @var array
+     */
+    public array $mappedActivity;
+
+    /**
      * Xml constructor.
      */
     public function __construct()
@@ -142,6 +147,7 @@ class XmlMapper
 
             $xmlQueueWriter->save($mappedData[$index], $totalActivities, $index);
         }
+        $this->mappedActivity = $mappedData;
 
         return $this;
     }

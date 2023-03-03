@@ -26,10 +26,6 @@ class CapitalSpend extends Element
      */
     protected string $index = 'capital_spend';
 
-    /**
-     * @var array
-     */
-    protected array $data;
     private CapitalSpendRequest $request;
 
     /**
@@ -96,10 +92,10 @@ class CapitalSpend extends Element
      */
     public function validate(): static
     {
-        $this->validator = $this->factory->sign($this->data)
+        $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
-        $this->errorValidator = $this->factory->sign($this->data)
+        $this->errorValidator = $this->factory->sign($this->data())
             ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
 

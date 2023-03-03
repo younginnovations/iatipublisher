@@ -4,7 +4,6 @@ namespace Tests\Unit\Csv;
 
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\CsvImporter\Queue\CsvProcessor;
-use App\IATI\Services\ImportActivity\ImportCsvService;
 use App\Imports\CsvToArrayWithHeaders;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\UploadedFile;
@@ -113,21 +112,6 @@ class CsvBaseTest extends ImportBaseTest
         $dataProperty->setAccessible(true);
 
         return $dataProperty->getValue($csvProcessorObj);
-    }
-
-    /**
-     * @return array
-     * @throws BindingResolutionException
-     * @throws \ReflectionException
-     */
-    public function getIdentifiers(): array
-    {
-        $importCsvService = app()->make(ImportCsvService::class);
-        $reflectionImportCsvService = new \ReflectionClass($importCsvService);
-        $activityIdentifier = $reflectionImportCsvService->getMethod('getIdentifiers');
-        $activityIdentifier->setAccessible(true);
-
-        return $activityIdentifier->invoke($importCsvService);
     }
 
     /**
