@@ -545,7 +545,6 @@ class Activity
             $value,
             'activityDescription'
         )) === '') ? $this->emptyNarrative : $elementDesc;
-
         $this->location[$this->index]['administrative'] = $this->filterAttributes($value, 'administrative', ['code', 'vocabulary', 'level']);
         $this->location[$this->index]['point'][0]['srs_name'] = $this->attributes($element, 'srsName', 'point');
         $this->location[$this->index]['point'][0]['pos'][0] = $this->latAndLong($value);
