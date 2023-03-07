@@ -239,19 +239,19 @@ class RegisterController extends Controller
     /**
      * Show the application registration form.
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\View\View|RedirectResponse
      */
-    public function showRegistrationForm(): \Illuminate\View\View
+    public function showRegistrationForm(): \Illuminate\View\View|RedirectResponse
     {
         try {
             $countries = getCodeListArray('Country', 'OrganizationArray');
-            $registration_agencies = getCodeListArray('OrganizationRegistrationAgency', 'OrganizationArray');
+            $registration_agencies = getCodeList('OrganizationRegistrationAgency', 'Organization');
 
             return view('web.register', compact('countries', 'registration_agencies'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return view('web.welcome');
+            return redirect()->route('web.index.login');
         }
     }
 }

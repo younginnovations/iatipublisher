@@ -53,6 +53,8 @@ class TitleRequest extends ActivityBaseRequest
     public function getWarningForTitle($name, $titles = []): array
     {
         $rules[$name] = 'unique_lang|unique_default_lang';
+        $firstTitleKey = array_key_first($titles) ?? '0';
+        $rules[sprintf('%s.%s.narrative', $name, $firstTitleKey)] = 'required';
 
         if (is_array($titles) && count($titles)) {
             foreach ($titles as $key => $title) {
