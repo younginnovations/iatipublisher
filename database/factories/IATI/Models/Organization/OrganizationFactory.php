@@ -41,7 +41,7 @@ class OrganizationFactory extends Factory
     {
         $reporting_org = [
             [
-                'ref' => 'org-ref-1',
+                'ref' => 'NP-SWC-0987',
                 'type' => '70',
                 'secondary_reporter' => null,
                 'narrative' => [

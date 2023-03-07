@@ -294,7 +294,12 @@ trait RegistersValidationRules
         $this->extend(
             'date_greater_than',
             function ($attribute, $value, $parameters, $validator) {
-                $inserted = Carbon::parse($value)->year;
+                $inserted = dateFormat('Y', $value);
+
+                if (!$inserted) {
+                    return false;
+                }
+
                 $since = $parameters[0];
 
                 return $inserted >= $since;
@@ -552,6 +557,10 @@ trait RegistersValidationRules
         $this->extendImplicit('sector_has_five_digit_oced_vocab', function () {
             return false;
         });
+
+        $this->extend('sector_required', function () {
+            return false;
+        });
     }
 
     /**
@@ -610,6 +619,10 @@ trait RegistersValidationRules
         });
 
         $this->extend('duplicate_country_code', function () {
+            return false;
+        });
+
+        $this->extend('country_percentage_complete', function () {
             return false;
         });
     }

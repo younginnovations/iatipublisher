@@ -53,7 +53,6 @@ class RecipientCountryCsvTest extends CsvBaseTest
         $this->assertContains('The Country Code cannot be redundant.', $flattenErrors);
         $this->assertContains('The recipient country code is invalid.', $flattenErrors);
         $this->assertContains('The sum of recipient country percentage cannot be greater than 100', $flattenErrors);
-        $this->assertContains('The sum of recipient country percentage cannot be greater than 100', $flattenErrors);
     }
 
     /**

@@ -416,6 +416,7 @@ class TransactionRequest extends ActivityBaseRequest
             }
 
             $hasSector = false;
+
             if (!empty($transactions) && count($transactions) > 1) {
                 $sectors = array_column($transactions, 'sector');
                 $notNullCount = 0;

@@ -1,0 +1,261 @@
+<?php
+
+namespace Tests\Unit\Xml;
+
+class SectorXmlTest extends XmlBaseTest
+{
+    /**
+     * @return void
+     * @test
+     */
+    public function throw_validation_if_multiple_sector_same_vocabulary_empty_percentage(): void
+    {
+        $rows = $this->vocabulary_same_empty_percentage_data();
+        $flattenErrors = $this->getErrors($rows);
+        $this->assertContains('The sum of percentages of same vocabulary must be equal to 100%', $flattenErrors);
+    }
+
+    /**
+     * @return array
+     */
+    public function vocabulary_same_empty_percentage_data(): array
+    {
+        $data = $this->completeXml;
+        $data[0]['sector'] = [
+            [
+                'sector_vocabulary' => '1',
+                'vocabulary_uri' => null,
+                'code' => '11130',
+                'category_code' => null,
+                'sdg_goal' => null,
+                'sdg_target' => null,
+                'text' => null,
+                'percentage' => null,
+                'narrative' => [
+                    [
+                        'narrative' => 'narrative one',
+                        'language' => 'en',
+                    ],
+                ],
+            ],
+            [
+                'sector_vocabulary' => '1',
+                'vocabulary_uri' => null,
+                'code' => '11130',
+                'category_code' => null,
+                'sdg_goal' => null,
+                'sdg_target' => null,
+                'text' => null,
+                'percentage' => null,
+                'narrative' => [
+                    [
+                        'narrative' => 'narrative one',
+                        'language' => 'en',
+                    ],
+                ],
+            ],
+            [
+                'sector_vocabulary' => '1',
+                'vocabulary_uri' => null,
+                'code' => '11130',
+                'category_code' => null,
+                'sdg_goal' => null,
+                'sdg_target' => null,
+                'text' => null,
+                'percentage' => null,
+                'narrative' => [
+                    [
+                        'narrative' => 'narrative one',
+                        'language' => 'en',
+                    ],
+                ],
+            ],
+        ];
+
+        return $data;
+    }
+
+    /**
+     * @return void
+     * @test
+     */
+    public function pass_if_single_sector_empty_percentage(): void
+    {
+        $rows = $this->single_sector_empty_percentage_data();
+        $flattenErrors = $this->getErrors($rows);
+        $this->assertEmpty($flattenErrors);
+    }
+
+    /**
+     * @return array
+     */
+    public function single_sector_empty_percentage_data(): array
+    {
+        $data = $this->completeXml;
+        $data[0]['sector'] = [
+            [
+                'sector_vocabulary' => '1',
+                'vocabulary_uri' => null,
+                'code' => '11130',
+                'category_code' => null,
+                'sdg_goal' => null,
+                'sdg_target' => null,
+                'text' => null,
+                'percentage' => null,
+                'narrative' => [
+                    [
+                        'narrative' => 'narrative one',
+                        'language' => 'en',
+                    ],
+                ],
+            ],
+        ];
+
+        return $data;
+    }
+
+    /**
+     * @return void
+     * @test
+     */
+    public function check_if_narrative_required_when_vocabulary_98_or_99(): void
+    {
+        $rows = $this->narrative_empty_vocabulary_98_or_99();
+        $flattenErrors = $this->getErrors($rows);
+        $this->assertContains('The Narrative field is required.', $flattenErrors);
+    }
+
+    /**
+     * @return array
+     */
+    public function narrative_empty_vocabulary_98_or_99(): array
+    {
+        $data = $this->completeXml;
+        $data[0]['sector'] = [
+            [
+                'sector_vocabulary' => '1',
+                'vocabulary_uri' => null,
+                'code' => '11130',
+                'category_code' => null,
+                'sdg_goal' => null,
+                'sdg_target' => null,
+                'text' => null,
+                'percentage' => '100',
+                'narrative' => [
+                    [
+                        'narrative' => 'narrative one',
+                        'language' => 'en',
+                    ],
+                ],
+            ],
+            [
+                'sector_vocabulary' => '98',
+                'vocabulary_uri' => 'https://www.google.com',
+                'code' => null,
+                'category_code' => null,
+                'sdg_goal' => null,
+                'sdg_target' => null,
+                'text' => '12345',
+                'percentage' => '100',
+                'narrative' => [
+                    [
+                        'narrative' => null,
+                        'language' => null,
+                    ],
+                ],
+            ],
+            [
+                'sector_vocabulary' => '99',
+                'vocabulary_uri' => 'https://www.google.com',
+                'code' => null,
+                'category_code' => null,
+                'sdg_goal' => null,
+                'sdg_target' => null,
+                'text' => '12345',
+                'percentage' => '100',
+                'narrative' => [
+                    [
+                        'narrative' => null,
+                        'language' => null,
+                    ],
+                ],
+            ],
+        ];
+
+        return $data;
+    }
+
+    /**
+     * @return void
+     * @test
+     */
+    public function throws_validation_if_all_invalid_data(): void
+    {
+        $rows = $this->get_invalid_data();
+        $flattenErrors = $this->getErrors($rows);
+        $this->assertContains('The sector code is invalid.', $flattenErrors);
+        $this->assertContains('The sector vocabulary-uri field must be a valid url.', $flattenErrors);
+        $this->assertContains('The sector vocabulary is invalid.', $flattenErrors);
+        $this->assertContains('The sector percentage field must be a number.', $flattenErrors);
+    }
+
+    /**
+     * @return array
+     */
+    public function get_invalid_data(): array
+    {
+        $data = $this->completeXml;
+        $data[0]['sector'] = [
+            [
+                'sector_vocabulary' => '1',
+                'vocabulary_uri' => null,
+                'code' => 'invalid code',
+                'category_code' => null,
+                'sdg_goal' => null,
+                'sdg_target' => null,
+                'text' => null,
+                'percentage' => '-100',
+                'narrative' => [
+                    [
+                        'narrative' => 'narrative one',
+                        'language' => 'en',
+                    ],
+                ],
+            ],
+            [
+                'sector_vocabulary' => '98',
+                'vocabulary_uri' => 'invalid uri',
+                'code' => null,
+                'category_code' => null,
+                'sdg_goal' => null,
+                'sdg_target' => null,
+                'text' => '12345',
+                'percentage' => 'invalid percentage',
+                'narrative' => [
+                    [
+                        'narrative' => 'narrative one',
+                        'language' => 'en',
+                    ],
+                ],
+            ],
+            [
+                'sector_vocabulary' => '91231239',
+                'vocabulary_uri' => 'https://www.google.com',
+                'code' => null,
+                'category_code' => null,
+                'sdg_goal' => null,
+                'sdg_target' => null,
+                'text' => '123',
+                'percentage' => '100',
+                'narrative' => [
+                    [
+                        'narrative' => 'narrative one',
+                        'language' => 'en',
+                    ],
+                ],
+            ],
+        ];
+
+        return $data;
+    }
+}

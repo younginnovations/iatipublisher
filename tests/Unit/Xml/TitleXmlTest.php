@@ -2,46 +2,60 @@
 
 namespace Tests\Unit\Xml;
 
-use App\XmlImporter\Foundation\Support\Factory\XmlValidator;
-use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Support\Arr;
-
 class TitleXmlTest extends XmlBaseTest
 {
     /**
-     * A basic unit test example.
+     * Pass if all valid data.
      *
      * @return void
-     * @throws BindingResolutionException
+     * @test
      */
-    public function test_example()
+    public function pass_if_all_valid_data(): void
     {
         $rows = $this->valid_data();
-        $errors = [];
-        $xmlValidator = new XmlValidator($this->validation);
-        foreach ($rows as $row) {
-            $errors[] = $xmlValidator->init($row)->validateActivity(false, false);
-        }
-        $flattenErrors = Arr::flatten($errors);
-        dd($flattenErrors);
-        $this->assertTrue(true);
+        $flattenErrors = $this->getErrors($rows);
+        $this->assertEmpty($flattenErrors);
     }
 
     /**
      * @return array
-     * @throws BindingResolutionException
      */
     public function valid_data(): array
     {
-        $data = $this->getXmlActivity();
+        return $this->completeXml;
+    }
+
+    /**
+     * @test
+     * @return void
+     */
+    public function throw_validation_if_invalid_data(): void
+    {
+        $rows = $this->invalid_data();
+        $flattenErrors = $this->getErrors($rows);
+        $this->assertContains('The first title is required.', $flattenErrors);
+        $this->assertContains('The narrative is required when language is specified.', $flattenErrors);
+        $this->assertContains('The title language field must be unique.', $flattenErrors);
+    }
+
+    /**
+     * @return array
+     */
+    public function invalid_data(): array
+    {
+        $data = $this->valid_data();
         $data[0]['title'] = [
             [
-                'narrative' => 'custom narrative',
-                'language' => 'custom language',
+                'narrative' => null,
+                'language' => null,
             ],
             [
-                'narrative' => 'custom narrative two',
-                'language' => 'custom language two',
+                'narrative' => null,
+                'language' => null,
+            ],
+            [
+                'narrative' => null,
+                'language' => 'en',
             ],
         ];
 
