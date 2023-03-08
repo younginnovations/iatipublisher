@@ -227,7 +227,11 @@
         >
           <svg-vue icon="user-profile" />
           <svg-vue class="dropdown__arrow" icon="dropdown-arrow" />
-          <div v-if="!isTouchDevice" class="profile__dropdown">
+          <div
+            v-if="!isTouchDevice"
+            :class="{ 'mt-14': hasAdminBar == 1 }"
+            class="profile__dropdown"
+          >
             <ul>
               <li class="border-b border-b-n-20">
                 <div>
@@ -339,6 +343,7 @@ const props = defineProps({
     },
   },
   superAdmin: { type: Boolean, required: true },
+  hasAdminBar: { type: Number || Boolean, default: false },
 });
 
 const showUserDropdown = ref(false);
