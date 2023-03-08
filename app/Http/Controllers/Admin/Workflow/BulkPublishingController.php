@@ -328,7 +328,7 @@ class BulkPublishingController extends Controller
      *
      * @return JsonResponse
      */
-    public function checkBulkPublishStatusTest(Request $request): JsonResponse
+    public function checkBulkPublishStatus(Request $request): JsonResponse
     {
         try {
             DB::beginTransaction();
