@@ -133,9 +133,6 @@ watch(
   }
 );
 const checkBulkpublishStatus = () => {
-  console.log(activities);
-  console.log('activities');
-
   for (let key in activities.value) {
     const activity = activities.value[key];
     if (activity.status == 'processing') {
@@ -197,41 +194,6 @@ const bulkPublishStatus = () => {
   if (paStorage.value.publishingActivities.status === 'processing') {
     checkBulkpublishStatus();
   }
-
-  // axios
-  //   .get(
-  //     `activities/bulk-publish-status?organization_id=${paStorage.value.publishingActivities.organization_id}&&uuid=${paStorage.value.publishingActivities.job_batch_uuid}`
-  //   )
-  //   .then((res) => {
-  //     const response = res.data;
-  //     if ('data' in response) {
-  //       activities.value = response.data.activities;
-  //       completed.value = response.data.status;
-
-  //       // saving in local storage
-  //       paStorage.value.publishingActivities.activities =
-  //         response.data.activities;
-  //       paStorage.value.publishingActivities.status = response.data.status;
-  //       paStorage.value.publishingActivities.message = response.data.message;
-
-  //       if (completed.value === 'completed') {
-  //         failedActivities(paStorage.value.publishingActivities.activities);
-  //         refreshToastMsg.visibility = true;
-  //         setTimeout(() => {
-  //           refreshToastMsg.visibility = false;
-  //         }, 10000);
-  //       }
-  //     } else {
-  //       completed.value = 'completed';
-  //     }
-  //   });
-
-  // Object.values(activities.value).map((item, index) => {
-  //   console.log(item['status']);
-  //   if (item['status'] === 'created') {
-  //     return (item['status'] = 'failed');
-  //   }
-  // });
 };
 
 /**
