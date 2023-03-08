@@ -67,31 +67,6 @@ class TransactionRepository extends Repository
     }
 
     /**
-     * get the references of all transactions except transactionId.
-     *
-     * @param $activityId
-     * @param $transactionId
-     *
-     * @return array
-     */
-    public function getTransactionReferencesExcept($activityId, $transactionId): array
-    {
-        $transactions = $this->model->where(
-            function ($query) use ($activityId, $transactionId) {
-                $query->where('id', '<>', $transactionId);
-                $query->where('activity_id', '=', $activityId);
-            }
-        )->get();
-        $references = [];
-
-        foreach ($transactions as $transactionRow) {
-            $references[$transactionRow->transaction['reference']] = $transactionRow->id;
-        }
-
-        return $references;
-    }
-
-    /**
      * Delete transactions with activity id.
      *
      * @param $activityId

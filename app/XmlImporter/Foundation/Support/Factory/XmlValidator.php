@@ -177,11 +177,11 @@ class XmlValidator
      *
      * @return array
      */
-    public function validateActivity(bool $isDuplicate, bool $duplicateTransaction, bool $isIdentifierValid): array
+    public function validateActivity(bool $isDuplicate, bool $isIdentifierValid): array
     {
         return $this->factory->initialize($this->activity, $this->rules(), $this->messages())
             ->passes()
-            ->withErrors($isDuplicate, $duplicateTransaction, $isIdentifierValid);
+            ->withErrors($isDuplicate, $isIdentifierValid);
     }
 
     /**

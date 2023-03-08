@@ -65,20 +65,6 @@ class TransactionRequest extends ActivityBaseRequest
         $this->transactionFormField = $formFields;
         $this->activityFormField = $activityData;
 
-        if (!$fileUpload) {
-            $transactionId = $this->segment(4);
-            $activityId = $this->segment(2);
-            $references = ($transactionId) ? app()->make(TransactionService::class)->getTransactionReferencesExcept($activityId, $transactionId) : app()
-                ->make(TransactionService::class)
-                ->getTransactionReferences($activityId);
-
-            $transactionReference = implode(',', array_filter(array_keys($references)));
-
-            if ($transactionReference !== '') {
-                $rules['reference'] = 'not_in:' . $transactionReference;
-            }
-        }
-
         Validator::extend('country_or_region', static function () {
             return false;
         });
@@ -123,9 +109,6 @@ class TransactionRequest extends ActivityBaseRequest
     public function getMessagesForTransaction(array $formFields): array
     {
         $messages = [];
-
-        $messages['reference.not_in']
-            = 'The transaction reference field must be unique for an activity.';
 
         $messages['transaction_type.0.transaction_type_code.in'] = 'The transaction type is invalid.';
         $messages['flow_type.0.flow_type.in'] = 'The transaction flow type code is invalid.';

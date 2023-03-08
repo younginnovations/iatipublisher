@@ -108,7 +108,7 @@ class Validation extends Factory
      *
      * @return array
      */
-    public function withErrors($isDuplicate, $duplicateTransaction, $isIdentifierValid): array
+    public function withErrors($isDuplicate, $isIdentifierValid): array
     {
         $errors = [];
 
@@ -119,10 +119,6 @@ class Validation extends Factory
 
         if ($isDuplicate) {
             $errors['activity_identifier']['activity_identifier.identifier'] = 'The activity has been duplicated.';
-        }
-
-        if ($duplicateTransaction) {
-            $errors['transactions']['transaction.reference'] = 'The activity contains duplicate transactions.';
         }
 
         if (!$isIdentifierValid) {
