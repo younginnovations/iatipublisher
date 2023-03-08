@@ -144,11 +144,15 @@ class BulkPublishingStatusRepository extends Repository
             ->update(['status' => 'failed']);
     }
 
-    public function setBulkPublishStatus($status, $id, $organizationId, $uuid = ''): int
+    /**
+     * Delete all the bulk publishing status belonging to $organizationId.
+     *
+     * @param $organizationId
+     *
+     * @return bool
+     */
+    public function deleteBulkPublishingStatus($organizationId): bool
     {
-        return $this->model->where('activity_id', $id)
-            ->where('organization_id', $organizationId)
-            ->whereIn('job_batch_uuid', $uuid)
-            ->update(['status'=>$status]);
+        return (bool) $this->model->where('organization_id', $organizationId)->delete();
     }
 }

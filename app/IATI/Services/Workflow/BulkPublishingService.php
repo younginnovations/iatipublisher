@@ -310,9 +310,9 @@ class BulkPublishingService
             $response['message'] = 'Bulk publishing processing.';
         }
 
-        if (!$processing) {
-            $this->publishingStatusService->deleteStatuses($publishStatus);
-        }
+        // if (!$processing) {
+        //     $this->publishingStatusService->deleteStatuses($publishStatus);
+        // }
 
         return $response;
     }
@@ -352,14 +352,14 @@ class BulkPublishingService
     }
 
     /**
-     * Returns status of activity publish based on activity table
-     * 
+     * Returns status of activity publish based on activity table.
+     *
      * @param $activityId
      * @param $uuid
      *
      * @return bool|int|string
      */
-    public function checkActivityStatusTest($activityId, $uuid): bool | int | string
+    public function checkActivityStatusTest($activityId, $uuid): bool|int|string
     {
         $activity = $this->activityService->getActivity($activityId);
         $returnMsg = false;
@@ -371,5 +371,17 @@ class BulkPublishingService
         }
 
         return $returnMsg;
+    }
+
+    /**
+     * Delete bulk publishing status having organizationId.
+     *
+     * @param $organizationId
+     *
+     * @return bool
+     */
+    public function deleteBulkPublishingStatus($organizationId): bool
+    {
+        return $this->publishingStatusService->deleteBulkPublishingStatus($organizationId);
     }
 }

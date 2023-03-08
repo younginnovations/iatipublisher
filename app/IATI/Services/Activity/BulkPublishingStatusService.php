@@ -147,6 +147,18 @@ class BulkPublishingStatusService
      */
     public function failStuckActivities($organizationId): int
     {
-        $this->bulkPublishingStatusRepository->failStuckActivities($organizationId);
+        return $this->bulkPublishingStatusRepository->failStuckActivities($organizationId);
+    }
+
+    /**
+     * Delete all the bulk publishing status belonging to $organizationId.
+     *
+     * @param $organizationId
+     *
+     * @return bool
+     */
+    public function deleteBulkPublishingStatus($organizationId): bool
+    {
+        return $this->bulkPublishingStatusRepository->deleteBulkPublishingStatus($organizationId);
     }
 }
