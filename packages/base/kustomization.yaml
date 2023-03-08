@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
 - common/service-account.yaml
 - cron/cronjob.yaml
+- cron/clear-laravel-logs.yaml
 - fpm/deployment.yaml
 - fpm/service.yaml
 - queue-workers/deployment.yaml
