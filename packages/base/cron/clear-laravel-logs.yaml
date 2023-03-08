@@ -16,7 +16,4 @@ spec:
               - "-c"
               - |
                 find /opt/apps/laravel-in-kubernetes/storage/logs -type f -mtime +10 -exec rm {} \;
-            volumeMounts:
-            - name: iati-persistent-storage
-              mountPath: /opt/apps/laravel-in-kubernetes/storage/logs
           restartPolicy: OnFailure
