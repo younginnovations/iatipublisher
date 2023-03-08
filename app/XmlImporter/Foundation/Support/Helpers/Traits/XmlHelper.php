@@ -87,7 +87,9 @@ trait XmlHelper
                     }
 
                     if (array_key_exists($attributeKey, array_flip($template))) {
-                        $data[$index][$attributeKey] = $attribute;
+                        $data[$index][$attributeKey] = $attributeKey === 'vocabulary' || in_array($value['name'], ['{}category', '{}administrative'])
+                                                                ? strtoupper($attribute)
+                                                                : $attribute;
                     }
                 }
                 $index++;
@@ -165,7 +167,7 @@ trait XmlHelper
                 $narrative = empty(Arr::get($value, 'value', '')) ? '' : Arr::get($value, 'value', '');
                 $field[$index] = [
                     'narrative' => trim($narrative),
-                    'language' => $this->attributes($value, 'lang'),
+                    'language'  => strtolower($this->attributes($value, 'lang')),
                 ];
             }
 
@@ -261,7 +263,6 @@ trait XmlHelper
     protected function getLanguageAttribute(array $element, $key): mixed
     {
         $value = Arr::get($element, 'attributes', []);
-
         if ($value) {
             foreach ($value as $itemKey => $item) {
                 if ($key === substr($itemKey, -4, 4)) {

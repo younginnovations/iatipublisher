@@ -136,7 +136,7 @@ class Transaction
     {
         $this->transaction[$key]['value'][0]['amount'] = $this->getValue($fields);
         $this->transaction[$key]['value'][0]['date'] = dateFormat('Y-m-d', $this->attributes($fields, 'value-date'));
-        $this->transaction[$key]['value'][0]['currency'] = $this->attributes($fields, 'currency');
+        $this->transaction[$key]['value'][0]['currency'] = strtoupper($this->attributes($fields, 'currency'));
     }
 
     /**
