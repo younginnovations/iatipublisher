@@ -133,7 +133,7 @@ class ReportingOrgRequest extends ActivityBaseRequest
     public function getMessagesForReportingOrganization(array $formFields): array
     {
         $messages = [];
-        $messages['reporting_org.size'] = 'The reporting organisation should not have multiple values or narratives. Only the first item from multiple values will be imported.';
+        $messages['reporting_org.size'] = 'The reporting organisation should not have multiple values or narratives.';
 
         $reportingOrganization = $formFields[0];
         $reportingOrganizationIndex = 0;
