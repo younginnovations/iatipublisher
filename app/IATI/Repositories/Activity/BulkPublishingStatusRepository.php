@@ -55,9 +55,28 @@ class BulkPublishingStatusRepository extends Repository
     public function getActivityPublishingStatus($organizationId, ?string $uuid = ''): ?object
     {
         return $this->model->where('organization_id', '=', $organizationId)
-                           ->when(!empty($uuid), function ($query) use ($uuid) {
-                               return $query->where('job_batch_uuid', '=', $uuid);
-                           })->get();
+            ->when(!empty($uuid), function ($query) use ($uuid) {
+                return $query->where('job_batch_uuid', '=', $uuid);
+            })->get();
+    }
+
+    /**
+     * Returns activities that are currently undergoing bulk publishing for an organization.
+     *
+     * @param $organizationId
+     *
+     * @return string|null
+     */
+    public function getPublishingUuid($organizationId): ?string
+    {
+        $publishingData = $this->model->where('organization_id', '=', $organizationId)
+            ->first();
+
+        if ($publishingData) {
+            return $publishingData->job_batch_uuid;
+        }
+
+        return null;
     }
 
     /**
@@ -70,8 +89,8 @@ class BulkPublishingStatusRepository extends Repository
     public function ongoingActivityPublishingStatus($organizationId): ?object
     {
         return $this->model->where('organization_id', $organizationId)
-                           ->where('status', 'created')
-                           ->get();
+            ->where('status', 'created')
+            ->get();
     }
 
     /**
@@ -122,6 +141,6 @@ class BulkPublishingStatusRepository extends Repository
         return $this->model->where('organization_id', $organizationId)
             ->where('status', '=', 'created')
             ->orWhere('status', '=', 'processing')
-            ->update(['status'=>'failed']);
+            ->update(['status' => 'failed']);
     }
 }

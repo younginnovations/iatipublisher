@@ -272,7 +272,6 @@ class BulkPublishingService
             }
         }
 
-        //        $response['activities'] = array_values($response['activities']);
         return $response;
     }
 
@@ -328,5 +327,27 @@ class BulkPublishingService
     public function stopBulkPublishing($organizationId): array
     {
         return $this->publishingStatusService->stopBulkPublishing($organizationId);
+    }
+
+    /**
+     * Get status of bulk publishing for users belonging to same org.
+     *
+     * @return array
+     *
+     * @throws \Exception
+     */
+    public function getOrganisationBulkPublishingStatus(): array
+    {
+        $organizationId = auth()->user()->organization->id;
+
+        $publishStatus = $this->publishingStatusService->getActivityPublishingStatus($organizationId);
+
+        if ($publishStatus && count($publishStatus)) {
+            $response = $this->getPublishingResponse($publishStatus);
+
+            return ['inProgress' => true, 'publishingData' => $response];
+        }
+
+        return ['inProgress' => false, 'publishingData' => []];
     }
 }

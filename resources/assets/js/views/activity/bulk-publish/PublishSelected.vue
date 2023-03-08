@@ -213,7 +213,15 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref, Ref, computed, provide, inject } from 'vue';
+import {
+  defineProps,
+  ref,
+  reactive,
+  Ref,
+  computed,
+  provide,
+  inject,
+} from 'vue';
 import { useToggle, useStorage } from '@vueuse/core';
 import axios from 'axios';
 
@@ -242,6 +250,7 @@ let [publishAlertValue, publishAlertToggle] = useToggle();
 
 // state for step of the flow
 const bulkPublishStep = ref(1);
+const bulkPublishStatus = reactive({});
 
 // display/hide validator loader
 const loader = ref(false);
@@ -290,17 +299,29 @@ const displayToast = (message, type) => {
   errorData.visibility = true;
 };
 
+const emptybulkPublishStatus = () => {
+  for (const status in bulkPublishStatus) {
+    delete bulkPublishStatus[status];
+  }
+};
+
 /**
  * check publish status
  */
 const checkPublish = () => {
-  axios.get(`/activities/checks-for-activity-publish`).then((res) => {
+  axios.get(`/activities/checks-for-activity-bulk-publish`).then((res) => {
     const response = res.data;
 
     if (response.success === true) {
       publishAlertValue.value = true;
     } else {
-      displayToast(response.message, response.success);
+      if (response?.in_progress) {
+        emptybulkPublishStatus();
+        Object.assign(bulkPublishStatus, response.data.activities);
+        showCancelConfirmationModal();
+      } else {
+        displayToast(response.message, response.success);
+      }
     }
   });
 };
@@ -334,7 +355,9 @@ const verifyCoreElements = () => {
         loader.value = false;
         resetPublishStep();
 
-        if (response?.flag) {
+        if (response?.in_progress) {
+          emptybulkPublishStatus();
+          Object.assign(bulkPublishStatus, response.data.activities);
           showCancelConfirmationModal();
         } else {
           displayToast(response.message, response.success);
@@ -407,7 +430,9 @@ const startBulkPublish = () => {
         loader.value = false;
         resetPublishStep();
 
-        if (response?.flag) {
+        if (response?.in_progress) {
+          emptybulkPublishStatus();
+          Object.assign(bulkPublishStatus, response.data.activities);
           showCancelConfirmationModal();
         } else {
           displayToast(response.message, response.success);
@@ -422,13 +447,19 @@ const startBulkPublish = () => {
 
 /*Cancels on-going bulk publish*/
 const cancelOtherBulkPublish = () => {
-  const endpoint = 'activities/cancel-bulk-publish';
-  axios.get(endpoint).then((res) => {
-    closeCancelConfirmationModal();
+  loaderText.value = 'Cancelling Bulk Publish';
+  loader.value = true;
+  closeCancelConfirmationModal();
+
+  axios.get('activities/cancel-bulk-publish').then((res) => {
     if (res.data.success) {
       setCancellationMessage(res.data.message);
       showCancelledDetailPopup();
     }
+
+    setTimeout(() => {
+      loader.value = false;
+    }, 500);
   });
 };
 
@@ -467,4 +498,5 @@ const publishAfterCancel = () => {
 };
 
 provide('paStorage', pa);
+provide('bulkPublishStatus', bulkPublishStatus);
 </script>

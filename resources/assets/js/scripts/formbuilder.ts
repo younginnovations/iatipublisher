@@ -318,7 +318,7 @@ class FormBuilder {
       $(this)
         .closest('.form-field-group')
         .find('input[id*="[url]"]')
-        .val(`${endpoint}/${file_name?.split('\\').pop()?.replace(' ', '_')}`);
+        .val(`${endpoint}/${file_name?.split('\\').pop()?.replace(/' '/g, '_')}`);
     });
   }
 }
