@@ -804,7 +804,6 @@ class XmlValidator
                 $rules[$index] = $rule;
             }
         }
-        \Log::info($rules);
 
         return $rules;
     }
