@@ -112,7 +112,7 @@
               <div
                 v-for="(ele_err, i) in activity['errors']['error']"
                 :key="i"
-                class="bg-rose p-4"
+                class="text-primary-black bg-rose p-4"
               >
                 <p class="mb-2 font-semibold capitalize">
                   {{ i }}
@@ -444,5 +444,8 @@ watch(
   font-weight: 400;
   margin-bottom: 18px;
   background-color: none;
+}
+.error-dropdown-container p {
+  color: black;
 }
 </style>
