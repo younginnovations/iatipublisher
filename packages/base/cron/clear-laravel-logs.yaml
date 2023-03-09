@@ -8,12 +8,18 @@ spec:
     spec:
       template:
         spec:
+          serviceAccountName: iatipublisher
+          imagePullSecrets:
+            - name: github-credentials
           containers:
-          - name: clear-laravel-logs
-            image: ghcr.io/younginnovations/iatipublisher/cli
-            command: ["/bin/sh"]
-            args:
-              - "-c"
-              - |
-                find /opt/apps/laravel-in-kubernetes/storage/logs -type f -mtime +10 -exec rm {} \;
+            - name: clear-laravel-logs
+              image: ghcr.io/younginnovations/iatipublisher/cli
+              command: ["/bin/sh"]
+              args:
+                - "-c"
+                - |
+                  find /opt/apps/laravel-in-kubernetes/storage/logs -type f -mtime +10 -exec rm {} \;
+              volumeMounts:
+                - name: iati-persistent-storage
+                  mountPath: /opt/apps/laravel-in-kubernetes/storage/logs
           restartPolicy: OnFailure

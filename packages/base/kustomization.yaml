@@ -2,10 +2,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - common/service-account.yaml
-- cron/cronjob.yaml
-- cron/clear-laravel-logs.yaml
 - fpm/deployment.yaml
 - fpm/service.yaml
+- cron/cronjob.yaml
+- cron/clear-laravel-logs.yaml
 - queue-workers/deployment.yaml
 - webserver/deployment.yaml
 - webserver/service.yaml
