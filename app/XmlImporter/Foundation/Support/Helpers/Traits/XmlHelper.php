@@ -166,7 +166,7 @@ trait XmlHelper
             foreach (Arr::get($subElement, 'value', []) as $index => $value) {
                 $narrative = empty(Arr::get($value, 'value', '')) ? '' : Arr::get($value, 'value', '');
                 $field[$index] = [
-                    'narrative' => trim($narrative),
+                    'narrative' => is_string($narrative) ? trim($narrative) : $narrative,
                     'language'  => strtolower($this->attributes($value, 'lang')),
                 ];
             }
