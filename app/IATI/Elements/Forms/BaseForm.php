@@ -239,10 +239,7 @@ class BaseForm extends Form
         ];
 
         if ($field['type'] === 'text') {
-            $classWithCursorNotAllowed = $options['attr']['class'] . ' cursor-not-allowed';
-            $options['attr']['class'] = (
-                array_key_exists('read_only', $field) && $field['read_only'] == true
-            ) ? $classWithCursorNotAllowed : $options['attr']['class'];
+            $options['attr']['class'] = $this->getAttributeClasses($field, $options);
         }
 
         if ($field['type'] === 'select') {
@@ -256,10 +253,7 @@ class BaseForm extends Form
                 $field
             ) && $field['read_only'] == true) ? 'disabled' : false;
 
-            $classWithCursorNotAllowed = $options['attr']['class'] . ' cursor-not-allowed';
-            $options['attr']['class'] = (
-                array_key_exists('read_only', $field) && $field['read_only'] == true
-            ) ? $classWithCursorNotAllowed : $options['attr']['class'];
+            $options['attr']['class'] = $this->getAttributeClasses($field, $options);
         }
 
         $this
@@ -268,5 +262,23 @@ class BaseForm extends Form
                 $field['type'],
                 $options
             );
+    }
+
+    /**
+     * Returns attribute class$options
+     * Returns attribute class + 'cursor-not-allowed' (if read_only : true in json-schema).
+     *
+     * @param $field
+     * @param $options
+     *
+     * @return string
+     */
+    public function getAttributeClasses($field, $options): string
+    {
+        $classWithCursorNotAllowed = $options['attr']['class'] . ' cursor-not-allowed';
+
+        return (
+            array_key_exists('read_only', $field) && $field['read_only'] == true
+        ) ? $classWithCursorNotAllowed : $options['attr']['class'];
     }
 }
