@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\XmlImporter\Foundation\Mapper\Components\Elements;
 
+use App\Exceptions\InvalidTag;
 use App\XmlImporter\Foundation\Support\Helpers\Traits\XmlHelper;
 use Illuminate\Support\Arr;
 
@@ -317,7 +318,12 @@ class Transaction
 
             foreach ($this->getValue($transaction) as $sub_index => $subElement) {
                 $fieldName = $this->name($subElement['name']);
-                $this->$fieldName($subElement, $index, $sub_index);
+
+                if (method_exists($this, $fieldName)) {
+                    $this->$fieldName($subElement, $index, $sub_index);
+                } else {
+                    throw new InvalidTag('Use of invalid tag in Transaction.');
+                }
             }
         }
 
