@@ -146,7 +146,7 @@ const activitiesLength = ref(0);
 const loader = ref(false);
 const selectAll = ref(false);
 const loaderText = ref('Please Wait');
-const tableRow = ref();
+const tableRow = ref({});
 const tableWidth = ref({});
 
 let timer;
@@ -231,9 +231,8 @@ function selectAllActivities() {
 }
 
 function importActivities() {
-  loader.value = true;
   loaderText.value = 'Importing .csv/.xml file';
-  clearInterval(timer);
+  loader.value = true;
 
   axios
     .post('/import/activity', {
