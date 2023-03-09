@@ -23,3 +23,7 @@ spec:
                 - name: iati-persistent-storage
                   mountPath: /opt/apps/laravel-in-kubernetes/storage/logs
           restartPolicy: OnFailure
+          volumes:
+            - name: iati-persistent-storage
+              persistentVolumeClaim:
+                claimName: iati-pv-claim
