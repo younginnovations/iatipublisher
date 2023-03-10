@@ -1,0 +1,254 @@
+{
+    "title": {
+        "language": "Activity/Language.json"
+    },
+    "reporting_org": {
+        "type": "Organization/OrganizationType.json",
+        "secondary_reporter": {
+            "1": "True",
+            "0": "False"
+        },
+        "narrative language": "Activity/Language.json"
+    },
+    "iati_identifier": {},
+    "other_identifier": {
+        "reference_type": "Activity/OtherIdentifierType.json",
+        "owner_org narrative language": "Activity/Language.json"
+    },
+    "description": {
+        "type": "Activity/DescriptionType.json",
+        "narrative language": "Activity/Language.json"
+    },
+    "activity_status": {
+        "activity_status": "Activity/ActivityStatus.json"
+    },
+    "activity_date": {
+        "type": "Activity/ActivityDateType.json",
+        "narrative language": "Activity/Language.json"
+    },
+    "activity_scope": {
+        "activity_scope": "Activity/ActivityScope.json"
+    },
+    "recipient_country": {
+        "country_code": "Activity/Country.json",
+        "narrative language": "Activity/Language.json"
+    },
+    "recipient_region": {
+        "region_vocabulary": "Activity/RegionVocabulary.json",
+        "region_code": "Activity/Region.json",
+        "narrative language": "Activity/Language.json"
+    },
+    "sector": {
+        "sector_vocabulary": "Activity/SectorVocabulary.json",
+        "code": "Activity/SectorCode.json",
+        "category_code": "Activity/SectorCategory.json",
+        "sdg_goal": "Activity/UNSDG-Goals.json",
+        "sdg_target": "Activity/UNSDG-Targets.json",
+        "narrative language": "Activity/Language.json"
+    },
+    "tag": {
+        "tag_vocabulary": "Activity/TagVocabulary.json",
+        "goals_tag_code": "Activity/UNSDG-Goals.json",
+        "targets_tag_code": "Activity/UNSDG-Targets.json",
+        "narrative language": "Activity/Language.json"
+    },
+    "policy_marker": {
+        "policy_marker_vocabulary": "Activity/PolicyMarkerVocabulary.json",
+        "significance": "Activity/PolicySignificance.json",
+        "policy_marker": "Activity/PolicyMarker.json",
+        "narrative language": "Activity/Language.json"
+    },
+    "collaboration_type": {
+        "collaboration_type": "Activity/CollaborationType.json"
+    },
+    "default_flow_type": {
+        "default_flow_type": "Activity/FlowType.json"
+    },
+    "default_finance_type": {
+        "default_finance_type": "Activity/FinanceType.json"
+    },
+    "default_aid_type": {
+        "default_aid_type_vocabulary": "Activity/AidTypeVocabulary.json",
+        "default_aid_type": "Activity/AidType.json",
+        "earmarking_category": "Activity/EarmarkingCategory.json",
+        "earmarking_modality": "Activity/EarmarkingModality.json",
+        "cash_and_voucher_modalities": "Activity/CashandVoucherModalities.json"
+    },
+    "default_tied_status": {
+        "default_tied_status": "Activity/TiedStatus.json"
+    },
+    "country_budget_items": {
+        "country_budget_vocabulary": "Activity/BudgetIdentifierVocabulary.json",
+        "budget_item code": "Activity/BudgetIdentifier.json",
+        "budget_item description narrative language": "Activity/Language.json"
+    },
+    "humanitarian_scope": {
+        "type": "Activity/HumanitarianScopeType.json",
+        "vocabulary": "Activity/HumanitarianScopeVocabulary.json",
+        "narrative language": "Activity/Language.json"
+    },
+    "capital_spend": {},
+    "related_activity": {
+        "relationship_type": "Activity/RelatedActivityType.json"
+    },
+    "conditions": {
+        "condition_attached": {
+            "0": "False",
+            "1": "True"
+        },
+        "condition condition_type": "Activity/ConditionType.json",
+        "condition narrative language": "Activity/Language.json"
+    },
+    "legacy_data": {},
+    "document_link": {
+        "format": "Activity/FileFormat.json",
+        "title narrative language": "Activity/Language.json",
+        "description narrative language": "Activity/Language.json",
+        "category code": "Activity/DocumentCategory.json",
+        "language code": "Activity/Language.json"
+    },
+    "contact_info": {
+        "type": "Activity/ContactType.json",
+        "organisation narrative language": "Activity/Language.json",
+        "department narrative language": "Activity/Language.json",
+        "person_name narrative language": "Activity/Language.json",
+        "job_title narrative language": "Activity/Language.json",
+        "mailing_address narrative language": "Activity/Language.json"
+    },
+    "location": {
+        "location_reach code": "Activity/GeographicLocationReach.json",
+        "location_id vocabulary": "Activity/GeographicVocabulary.json",
+        "name narrative language": "Activity/Language.json",
+        "description narrative language": "Activity/Language.json",
+        "activity_description narrative language": "Activity/Language.json",
+        "administrative vocabulary": "Activity/GeographicVocabulary.json",
+        "administrative code": "Activity/Country.json",
+        "exactness code": "Activity/GeographicExactness.json",
+        "location_class code": "Activity/GeographicLocationClass.json",
+        "feature_designation code": "Activity/LocationType.json"
+    },
+    "planned_disbursement": {
+        "planned_disbursement_type": "Activity/BudgetType.json",
+        "value currency": "Activity/Currency.json",
+        "provider_org type": "Organization/OrganizationType.json",
+        "provider_org narrative language": "Activity/Language.json",
+        "receiver_org type": "Organization/OrganizationType.json",
+        "receiver_org narrative language": "Activity/Language.json"
+    },
+    "participating_org": {
+        "organization_role": "Organization/OrganisationRole.json",
+        "type": "Organization/OrganizationType.json",
+        "crs_channel_code": "Activity/CRSChannelCode.json",
+        "narrative language": "Activity/Language.json"
+    },
+    "budget": {
+        "budget_status": "Activity/BudgetStatus.json",
+        "budget_type": "Activity/BudgetType.json",
+        "budget_value currency": "Activity/Currency.json"
+    },
+    "result": {
+        "type": "Type",
+        "aggregation_status": "Aggregation-status",
+        "title narrative narrative": "Title Narrative Narrative",
+        "title narrative language": "Title Narrative Language",
+        "description narrative narrative": "Description Narrative Narrative",
+        "description narrative language": "Description Narrative Language",
+        "document_link url": "Document-link Url",
+        "document_link format": "Document-link Format",
+        "document_link title narrative narrative": "Document-link Title Narrative Narrative",
+        "document_link title narrative language": "Document-link Title Narrative Language",
+        "document_link description narrative narrative": "Document-link Description Narrative Narrative",
+        "document_link description narrative language": "Document-link Description Narrative Language",
+        "document_link category code": "Document-link Category Code",
+        "document_link language language": "Document-link Language Language",
+        "document_link document_date date": "Document-link Document_date Date",
+        "reference vocabulary": "Reference Vocabulary",
+        "reference code": "Reference Code",
+        "reference vocabulary_uri": "Reference Vocabulary Uri"
+    },
+    "indicator": {
+        "measure": "Activity/IndicatorMeasure.json",
+        "ascending": {
+            "0": "False",
+            "1": "True"
+          },
+        "aggregation_status": {
+            "0": "False",
+            "1": "True"
+          },
+        "title narrative language": "Activity/Language.json",
+        "description narrative language": "Activity/Language.json",
+        "reference vocabulary": "Activity/IndicatorVocabulary.json"
+    },
+    "indicator document_link": {
+        "format": "Activity/FileFormat.json",
+        "title narrative language": "Activity/Language.json",
+        "description narrative language": "Activity/Language.json",
+        "category code": "Activity/DocumentCategory.json",
+        "language code": "Activity/Language.json"
+    },
+    "baseline": {
+        "comment narrative language": "Activity/Language.json"
+    },
+    "baseline document_link": {
+        "format": "Activity/FileFormat.json",
+        "title narrative language": "Activity/Language.json",
+        "description narrative language": "Activity/Language.json",
+        "category code": "Activity/DocumentCategory.json",
+        "language code": "Activity/Language.json"
+    },
+    "period": {},
+    "target": {
+        "comment narrative language": "Activity/Language.json"
+    },
+    "target document_link": {
+        "format": "Activity/FileFormat.json",
+        "title narrative language": "Activity/Language.json",
+        "description narrative language": "Activity/Language.json",
+        "category code": "Activity/DocumentCategory.json",
+        "language code": "Activity/Language.json"
+    },
+    "actual": {
+        "comment narrative language": "Activity/Language.json"
+    },
+    "actual document_link": {
+        "format": "Activity/FileFormat.json",
+        "title narrative language": "Activity/Language.json",
+        "description narrative language": "Activity/Language.json",
+        "category code": "Activity/DocumentCategory.json",
+        "language code": "Activity/Language.json"
+    },
+    "transactions": {
+        "humanitarian": {
+            "0": "False",
+            "1": "True"
+        },
+        "transaction_type transaction_type_code": "Activity/TransactionType.json",
+        "value currency": "Activity/Currency.json",
+        "description narrative language": "Activity/Language.json",
+        "provider_organization type": "Organization/OrganizationType.json",
+        "provider_organization narrative language": "Activity/Language.json",
+        "receiver_organization type": "Organization/OrganizationType.json",
+        "receiver_organization narrative language": "Activity/Language.json",
+        "disbursement_channel disbursement_channel_code": "Activity/DisbursementChannel.json",
+        "sector sector_vocabulary": "Activity/SectorVocabulary.json",
+        "sector code": "Activity/SectorCode.json",
+        "sector category_code": "Activity/SectorCategory.json",
+        "sector sdg_goal": "Activity/UNSDG-Goals.json",
+        "sector sdg_target": "Activity/UNSDG-Targets.json",
+        "sector narrative language": "Activity/Language.json",
+        "recipient_country country_code": "Activity/Country.json",
+        "recipient_country narrative language": "Activity/Language.json",
+        "recipient_region region_vocabulary": "Activity/RegionVocabulary.json",
+        "recipient_region region_code": "Activity/Region.json",
+        "recipient_region narrative language": "Activity/Language.json",
+        "flow_type flow_type": "Activity/FlowType.json",
+        "finance_type finance_type": "Activity/FinanceType.json",
+        "aid_type aid_type_vocabulary": "Activity/AidTypeVocabulary.json",
+        "aid_type aid_type_code": "Activity/AidType.json",
+        "aid_type earmarking_category": "Activity/EarmarkingCategory.json",
+        "aid_type earmarking_modality": "Activity/EarmarkingModality.json",
+        "aid_type cash_and_voucher_modalities": "Activity/CashandVoucherModalities.json",
+        "tied_status tied_status_code": "Activity/TiedStatus.json"
+    }
+}

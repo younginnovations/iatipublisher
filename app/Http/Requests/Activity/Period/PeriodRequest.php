@@ -51,6 +51,7 @@ class PeriodRequest extends ActivityBaseRequest
     public function getWarningForPeriod(array $formFields, bool $fileUpload = false, array $indicator = [], $periodBase = []): array
     {
         $rules = [];
+
         $tempRules = [
             $this->getWarningForResultPeriodStart($formFields['period_start'], 'period_start'),
             $this->getWarningForResultPeriodEnd($formFields['period_end'], 'period_end', $periodBase),
@@ -275,7 +276,7 @@ class PeriodRequest extends ActivityBaseRequest
         foreach ($formFields as $targetIndex => $target) {
             $targetForm = sprintf('%s.%s', $valueType, $targetIndex);
             $narrativeRules = $this->getWarningForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm));
-            $docLinkRules = $this->getWarningForDocumentLink($target['document_link'], $targetForm);
+            $docLinkRules = $this->getWarningForDocumentLink(Arr::get($target, 'document_link', []), $targetForm);
 
             foreach ($narrativeRules as $key => $narrativeRule) {
                 $rules[$key] = $narrativeRule;
@@ -311,7 +312,7 @@ class PeriodRequest extends ActivityBaseRequest
         foreach ($formFields as $targetIndex => $target) {
             $targetForm = sprintf('%s.%s', $valueType, $targetIndex);
             $narrativeRules = $this->getErrorsForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm));
-            $docLinkRules = $this->getErrorsForDocumentLink($target['document_link'], $targetForm);
+            $docLinkRules = $this->getErrorsForDocumentLink(Arr::get($target, 'document_link', []), $targetForm);
 
             foreach ($narrativeRules as $key => $narrativeRule) {
                 $rules[$key] = $narrativeRule;
@@ -361,7 +362,7 @@ class PeriodRequest extends ActivityBaseRequest
                 $messages[$key] = $narrativeMessage;
             }
 
-            $docLinkMessages = $this->getMessagesForDocumentLink($target['document_link'], $targetForm);
+            $docLinkMessages = $this->getMessagesForDocumentLink(Arr::get($target, 'document_link', []), $targetForm);
 
             foreach ($docLinkMessages as $key => $docLinkMessage) {
                 $messages[$key] = $docLinkMessage;

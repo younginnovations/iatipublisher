@@ -35,6 +35,7 @@ import LoggedInHeader from './components/AdminHeader.vue';
 import ActivitiesDetail from './views/activity/ActivityDetail.vue';
 import SidebarHelpBlock from './views/activity/partials/SidebarHelpBlock.vue';
 import ActivityUpload from './views/import/ActivityUpload.vue';
+import ActivityXlsUpload from './views/import/ActivityXlsUpload.vue';
 import ImportList from './views/import/ImportList.vue';
 
 /**
@@ -131,6 +132,7 @@ app
  */
 app
   .component('ActivityUpload', ActivityUpload)
+  .component('ActivityXlsUpload', ActivityXlsUpload)
   .component('ImportList', ImportList);
 
 /*

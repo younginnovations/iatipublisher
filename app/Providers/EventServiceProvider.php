@@ -16,6 +16,8 @@ use App\Observers\OrganizationObserver;
 use App\Observers\PeriodObserver;
 use App\Observers\ResultObserver;
 use App\Observers\TransactionObserver;
+use App\XlsImporter\Events\XlsWasUploaded;
+use App\XlsImporter\Listeners\XlsUpload;
 use App\XmlImporter\Events\XmlWasUploaded;
 use App\XmlImporter\Listeners\XmlUpload;
 use Illuminate\Auth\Events\Registered;
@@ -38,6 +40,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         ActivityCsvWasUploaded::class => [ActivityCsvUpload::class],
         XmlWasUploaded::class => [XmlUpload::class],
+        XlsWasUploaded::class => [XlsUpload::class],
     ];
 
     /**
