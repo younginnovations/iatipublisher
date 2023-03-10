@@ -84,6 +84,27 @@ return [
             ],
         ],
 
+        'aidstream' => [
+            'driver' => 'pgsql',
+            'url' => env('AIDSTREAM_DATABASE_URL'),
+            'host' => env('AIDSTREAM_DB_HOST'),
+            'port' => env('AIDSTREAM_DB_PORT'),
+            'database' => env('AIDSTREAM_DB_DATABASE'),
+            'username' => env('AIDSTREAM_DB_USERNAME'),
+            'password' => env('AIDSTREAM_DB_PASSWORD'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => 'public',
+            'sslmode' => env('DB_SSLMODE', 'prefer'),
+            'sslrootcert' => env('DB_SSLROOTCERT', './ca-certificate.crt'),
+            'pool_size' => 20,
+            'options' => [
+                PDO::ATTR_PERSISTENT => true,
+                PDO::ATTR_EMULATE_PREPARES => true,
+            ],
+        ],
+
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
