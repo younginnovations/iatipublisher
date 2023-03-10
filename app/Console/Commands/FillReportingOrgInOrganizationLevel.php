@@ -41,24 +41,21 @@ class FillReportingOrgInOrganizationLevel extends Command
                 ],
             ];
             $organizations = app()->make(OrganizationRepository::class)->all();
-            $data = [];
-
-            foreach ($organizations as $organization) {
-                $organization = $this->applyTemplate($reportingOrgTemplate, $organization);
-                $data[] = [
-                    'id'            => $organization->id,
-                    'reporting_org' => $organization->reporting_org,
-                ];
-            }
-
-            $this->upsert($data, ['id']);
-
             DB::table('activities')->where('reporting_org', null)->update(['reporting_org'=>$reportingOrgTemplate]);
             $activityRepository = app()->make(ActivityRepository::class);
 
             foreach ($organizations as $index => $organization) {
-                $reportingOrg = $data[$index]['reporting_org'][0];
-                $activityRepository->syncReportingOrg($data[$index]['id'], $reportingOrg);
+                $organization = $this->applyTemplate($reportingOrgTemplate, $organization);
+                $organization->updateOrInsert(
+                    ['id' => $organization->id],
+                    [
+                        'reporting_org' => json_encode($organization->reporting_org),
+                        'status'        => 'draft',
+                    ]
+                );
+
+                $reportingOrg = $organization->reporting_org[0];
+                $activityRepository->syncReportingOrg($organization->id, $reportingOrg);
             }
 
             DB::commit();
@@ -99,30 +96,5 @@ class FillReportingOrgInOrganizationLevel extends Command
         $organization->reporting_org = $manipulatedReportingOrg;
 
         return $organization;
-    }
-
-    /**
-     * Upserts rows.
-     *
-     * @param $data
-     * @param $uniqueKeys
-     *
-     * @return void
-     */
-    public function upsert($data, $uniqueKeys): void
-    {
-        foreach ($data as $record) {
-            $id = $record['id'];
-            $reportingOrg = $record['reporting_org'];
-
-            DB::table('organizations')
-                ->updateOrInsert(
-                    [$uniqueKeys[0] => $id],
-                    [
-                      'reporting_org' => json_encode($reportingOrg),
-                      'status'        => 'draft',
-                    ]
-                );
-        }
     }
 }
