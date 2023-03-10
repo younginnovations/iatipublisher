@@ -654,6 +654,18 @@ class ActivityService
     }
 
     /**
+     * Creates activity.
+     *
+     * @param $data
+     *
+     * @return object
+     */
+    public function create($data): object
+    {
+        return $this->activityRepository->store($data);
+    }
+
+    /**
      * Returns organisation->reporting_org.
      *
      * @return mixed
