@@ -41,10 +41,9 @@ class FillReportingOrgInOrganizationLevel extends Command
                 ],
             ];
             $organizations = app()->make(OrganizationRepository::class)->all();
-            DB::table('activities')->where('reporting_org', null)->update(['reporting_org'=>$reportingOrgTemplate]);
             $activityRepository = app()->make(ActivityRepository::class);
 
-            foreach ($organizations as $index => $organization) {
+            foreach ($organizations as $organization) {
                 $organization = $this->applyTemplate($reportingOrgTemplate, $organization);
                 $organization->updateOrInsert(
                     ['id' => $organization->id],
@@ -55,6 +54,9 @@ class FillReportingOrgInOrganizationLevel extends Command
                 );
 
                 $reportingOrg = $organization->reporting_org[0];
+                $activityModel = (new ($activityRepository->getModel()));
+
+                $activityModel->whereNull('reporting_org')->update(['reporting_org'=>$organization->reporting_org]);
                 $activityRepository->syncReportingOrg($organization->id, $reportingOrg);
             }
 
