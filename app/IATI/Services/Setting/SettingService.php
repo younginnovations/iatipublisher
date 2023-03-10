@@ -6,6 +6,7 @@ namespace App\IATI\Services\Setting;
 
 use App\IATI\Models\Setting\Setting;
 use App\IATI\Repositories\Setting\SettingRepository;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
@@ -120,5 +121,17 @@ class SettingService
                !in_array('', array_values($default_values), true) &&
                !in_array(null, array_values($activity_default_values), true) &&
                !in_array('', array_values($activity_default_values), true);
+    }
+
+    /**
+     * Saves setting to table.
+     *
+     * @param $data
+     *
+     * @return Model
+     */
+    public function create($data): Model
+    {
+        return $this->settingRepo->store($data);
     }
 }
