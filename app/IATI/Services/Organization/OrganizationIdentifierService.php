@@ -81,6 +81,7 @@ class OrganizationIdentifierService
      */
     public function update($id, $organizationIdentifiers): bool
     {
+        $organizationService =
         $organization = $this->organizationRepository->find($id);
         $reportingOrg = $organization->reporting_org;
         $reportingOrg[0]['ref'] = $organizationIdentifiers['organization_registration_agency'] . '-' . $organizationIdentifiers['registration_number'];

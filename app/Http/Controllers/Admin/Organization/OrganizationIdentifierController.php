@@ -76,9 +76,9 @@ class OrganizationIdentifierController extends Controller
             $id = Auth::user()->organization_id;
             $organizationIdentifier = $request->all();
 
-//            if (!$this->verifyPublisher($organizationIdentifier)) {
-//                return redirect()->route('admin.organisation.identifier.edit')->with('error', 'Please enter correct identifier as present in IATI Registry.')->withInput();
-//            }
+            if (!$this->verifyPublisher($organizationIdentifier)) {
+                return redirect()->route('admin.organisation.identifier.edit')->with('error', 'Please enter correct identifier as present in IATI Registry.')->withInput();
+            }
 
             if (!$this->organizationIdentifierService->update($id, $organizationIdentifier)) {
                 return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization identifier.');

@@ -717,6 +717,11 @@ class Validation extends Factory
         });
     }
 
+    /**
+     * 'Must match' validation for reporting-org.
+     *
+     * @return void
+     */
     public function mustMatchValidationForReportingOrg(): void
     {
         $this->extend(
