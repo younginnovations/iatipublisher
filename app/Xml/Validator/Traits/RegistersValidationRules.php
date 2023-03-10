@@ -210,12 +210,24 @@ trait RegistersValidationRules
      */
     public function activityDateValidation(): void
     {
+        $this->actualDateValidator();
+        $this->multipleActivityDateValidator();
+        $this->yearValueNarrativeValidator();
+        $this->diffOneYearValidator();
+        $this->dateGreaterThanValidator();
+    }
+
+    /**
+     * @return void
+     */
+    public function actualDateValidator(): void
+    {
         $this->extend(
             'actual_date',
             function ($attribute, $date) {
                 $dateType = (!is_array($date)) ?: Arr::get($date, '0.type');
 
-                if ($dateType === '2' || $dateType === '4') {
+                if (in_array($dateType, ['2', '4'], true)) {
                     $actual_date = (!is_array($date)) ?: Arr::get($date, '0.date');
                     if ($actual_date > date('Y-m-d')) {
                         return false;
@@ -225,7 +237,13 @@ trait RegistersValidationRules
                 return true;
             }
         );
+    }
 
+    /**
+     * @return void
+     */
+    public function multipleActivityDateValidator(): void
+    {
         $this->extend(
             'multiple_activity_date',
             function ($attribute, $dates) {
@@ -242,7 +260,13 @@ trait RegistersValidationRules
                 return false;
             }
         );
+    }
 
+    /**
+     * @return void
+     */
+    public function yearValueNarrativeValidator(): void
+    {
         $this->extendImplicit(
             'year_value_narrative_validation',
             function ($attribute, $value) {
@@ -265,7 +289,13 @@ trait RegistersValidationRules
                 return $value['year'] || $value['value'];
             }
         );
+    }
 
+    /**
+     * @return void
+     */
+    public function diffOneYearValidator(): void
+    {
         $this->extend(
             'diff_one_year',
             function ($attribute, $values) {
@@ -290,10 +320,16 @@ trait RegistersValidationRules
                 return true;
             }
         );
+    }
 
+    /**
+     * @return void
+     */
+    public function dateGreaterThanValidator(): void
+    {
         $this->extend(
             'date_greater_than',
-            function ($attribute, $value, $parameters, $validator) {
+            function ($attribute, $value, $parameters) {
                 $inserted = dateFormat('Y', $value);
 
                 if (!$inserted) {
