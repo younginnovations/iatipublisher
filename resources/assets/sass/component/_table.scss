@@ -78,52 +78,66 @@
 
 .upload-list-table {
   .upload-error {
-    @apply bg-rose;
-
-    &:hover {
-      @apply bg-rose;
-    }
-
     .title {
       font-weight: bold;
     }
   }
 
   .upload-error-content {
-    display: none;
-
-    div {
-      &:not(:last-child) {
-        @apply border-b border-b-n-20 pb-4;
-      }
-
-      ul {
-        @apply mt-4 space-y-4 text-sm font-normal text-bluecoral;
-      }
-
-      li {
-        position: relative;
-        padding-left: 36px;
+    height: auto;
+    overflow-y: hidden;
+    transition: max-height 0.3s ease-out; // note that we're transitioning max-height, not height!
+    .error-dropdown {
+      div {
+        @apply text-bluecoral;
 
         &:not(:last-child) {
           @apply border-b border-b-n-20 pb-4;
         }
 
-        &::before {
-          position: absolute;
-          top: 8px;
-          left: 20px;
-          width: 4px;
-          height: 4px;
-          border-radius: 50%;
-          content: '';
-          @apply bg-bluecoral;
+        ul {
+          @apply mt-4 space-y-4 text-sm font-normal;
+        }
+
+        li {
+          position: relative;
+          // padding-left: 36px;
+          width: 100%;
+          display: block;
+
+          &:not(:last-child) {
+            @apply border-b border-b-n-20 pb-4;
+          }
+
+          // &::before {
+          //   position: absolute;
+          //   top: 8px;
+          //   left: 20px;
+          //   width: 4px;
+          //   height: 4px;
+          //   border-radius: 50%;
+          //   content: '';
+          //   @apply bg-bluecoral;
+          // }
         }
       }
     }
-
-    &.open {
-      display: block;
+    .error-list {
+      position: relative;
+      padding-left: 20px;
+      &::before {
+        position: absolute;
+        top: 8px;
+        left: 10px;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        content: '';
+        @apply bg-bluecoral;
+      }
+    }
+    &.closed {
+      max-height: 0;
     }
   }
 

@@ -10,6 +10,7 @@ use App\IATI\Models\Activity\Activity;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ResultService;
 use App\IATI\Services\Activity\TransactionService;
+use App\IATI\Services\ImportActivityError\ImportActivityErrorService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Validator\ActivityValidatorResponseService;
 use Exception;
@@ -53,6 +54,11 @@ class ActivityController extends Controller
     protected ActivityValidatorResponseService $activityValidatorResponseService;
 
     /**
+     * @var ImportActivityErrorService
+     */
+    protected ImportActivityErrorService $importActivityErrorService;
+
+    /**
      * @var OrganizationService
      */
     private OrganizationService $organizationService;
@@ -65,6 +71,7 @@ class ActivityController extends Controller
      * @param ResultService                    $resultService
      * @param TransactionService               $transactionService
      * @param ActivityValidatorResponseService $activityValidatorResponseService
+     * @param ImportActivityErrorService       $mportActivityErrorService
      * @param OrganizationService              $organizationService
      */
     public function __construct(
@@ -73,6 +80,7 @@ class ActivityController extends Controller
         ResultService $resultService,
         TransactionService $transactionService,
         ActivityValidatorResponseService $activityValidatorResponseService,
+        ImportActivityErrorService $importActivityErrorService,
         OrganizationService $organizationService
     ) {
         $this->activityService = $activityService;
@@ -80,6 +88,7 @@ class ActivityController extends Controller
         $this->resultService = $resultService;
         $this->transactionService = $transactionService;
         $this->activityValidatorResponseService = $activityValidatorResponseService;
+        $this->importActivityErrorService = $importActivityErrorService;
         $this->organizationService = $organizationService;
     }
 
@@ -133,7 +142,7 @@ class ActivityController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Activity created successfully.',
-                'data'    => $activity,
+                'data' => $activity,
             ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
@@ -166,16 +175,18 @@ class ActivityController extends Controller
             $progress = $this->activityService->activityPublishingProgress($activity);
             $coreCompleted = isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_element_completed], $activity->element_status));
             $validatorResponse = $this->activityValidatorResponseService->getValidatorResponse($id);
+            $importActivityError = $this->importActivityErrorService->getImportActivityError($id);
             $organization_identifier = $activity->organization->identifier;
             $activity->iati_identifier = [
                 'activity_identifier' => $activity->iati_identifier['activity_identifier'],
                 'iati_identifier_text' => $activity->organization->identifier . '-' . $activity->iati_identifier['activity_identifier'],
             ];
             $iatiValidatorResponse = $validatorResponse->response ?? null;
+            $importActivityError = $importActivityError->error ?? null;
 
             return view(
                 'admin.activity.show',
-                compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicatorPeriod', 'transactions', 'coreCompleted', 'iatiValidatorResponse', 'organization_identifier')
+                compact('elements', 'elementGroups', 'progress', 'activity', 'toast', 'types', 'status', 'results', 'hasIndicatorPeriod', 'transactions', 'coreCompleted', 'iatiValidatorResponse', 'importActivityError', 'organization_identifier')
             );
         } catch (Exception $e) {
             logger()->error($e->getMessage());
@@ -283,7 +294,7 @@ class ActivityController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Activities fetched successfully',
-                'data'    => $activities,
+                'data' => $activities,
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
@@ -293,10 +304,10 @@ class ActivityController extends Controller
     }
 
     /*
-    * Get languages
-    *
-    * @return JsonResponse
-    */
+     * Get languages
+     *
+     * @return JsonResponse
+     */
     public function getLanguagesOrganization(): JsonResponse
     {
         try {
@@ -306,8 +317,8 @@ class ActivityController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Languages fetched successfully',
-                'data'    => [
-                    'languages'    => $languages,
+                'data' => [
+                    'languages' => $languages,
                     'organization' => $organization,
                 ],
             ]);
@@ -327,54 +338,54 @@ class ActivityController extends Controller
     public function getActivityDetailDataType(): array
     {
         return [
-            'languages'                   => getCodeListArray('Languages', 'ActivityArray', false),
-            'activityDate'                => getCodeList('ActivityDateType', 'Activity', false),
-            'activityScope'               => getCodeList('ActivityScope', 'Activity', false),
-            'activityStatus'              => getCodeList('ActivityStatus', 'Activity', false),
-            'aidType'                     => getCodeList('AidType', 'Activity', false),
-            'aidTypeVocabulary'           => getCodeList('AidTypeVocabulary', 'Activity', false),
-            'collaborationType'           => getCodeList('CollaborationType', 'Activity', false),
-            'conditionType'               => getCodeList('ConditionType', 'Activity', false),
-            'financeType'                 => getCodeList('FinanceType', 'Activity', false),
-            'flowType'                    => getCodeList('FlowType', 'Activity', false),
-            'relatedActivityType'         => getCodeList('RelatedActivityType', 'Activity', false),
-            'tiedStatus'                  => getCodeList('TiedStatus', 'Activity', false),
-            'descriptionType'             => getCodeList('DescriptionType', 'Activity', false),
-            'humanitarianScopeType'       => getCodeList('HumanitarianScopeType', 'Activity', false),
+            'languages' => getCodeListArray('Languages', 'ActivityArray', false),
+            'activityDate' => getCodeList('ActivityDateType', 'Activity', false),
+            'activityScope' => getCodeList('ActivityScope', 'Activity', false),
+            'activityStatus' => getCodeList('ActivityStatus', 'Activity', false),
+            'aidType' => getCodeList('AidType', 'Activity', false),
+            'aidTypeVocabulary' => getCodeList('AidTypeVocabulary', 'Activity', false),
+            'collaborationType' => getCodeList('CollaborationType', 'Activity', false),
+            'conditionType' => getCodeList('ConditionType', 'Activity', false),
+            'financeType' => getCodeList('FinanceType', 'Activity', false),
+            'flowType' => getCodeList('FlowType', 'Activity', false),
+            'relatedActivityType' => getCodeList('RelatedActivityType', 'Activity', false),
+            'tiedStatus' => getCodeList('TiedStatus', 'Activity', false),
+            'descriptionType' => getCodeList('DescriptionType', 'Activity', false),
+            'humanitarianScopeType' => getCodeList('HumanitarianScopeType', 'Activity', false),
             'humanitarianScopeVocabulary' => getCodeList('HumanitarianScopeVocabulary', 'Activity', false),
-            'earmarkingCategory'          => getCodeList('EarmarkingCategory', 'Activity', false),
-            'earmarkingModality'          => getCodeList('EarmarkingModality', 'Activity', false),
-            'cashandVoucherModalities'    => getCodeList('CashandVoucherModalities', 'Activity', false),
-            'budgetIdentifierVocabulary'  => getCodeList('BudgetIdentifierVocabulary', 'Activity', false),
-            'sectorVocabulary'            => getCodeList('SectorVocabulary', 'Activity', false),
-            'sectorCode'                  => getCodeList('SectorCode', 'Activity', false),
-            'sectorCategory'              => getCodeList('SectorCategory', 'Activity', false),
-            'sdgGoals'                    => getCodeList('UNSDG-Goals', 'Activity', false),
-            'sdgTarget'                   => getCodeList('UNSDG-Targets', 'Activity', false),
-            'regionVocabulary'            => getCodeList('RegionVocabulary', 'Activity', false),
-            'region'                      => getCodeList('Region', 'Activity', false),
-            'policyMarkerVocabulary'      => getCodeList('PolicyMarkerVocabulary', 'Activity', false),
-            'policySignificance'          => getCodeList('PolicySignificance', 'Activity', false),
-            'policyMarker'                => getCodeList('PolicyMarker', 'Activity', false),
-            'tagVocabulary'               => getCodeList('TagVocabulary', 'Activity', false),
-            'budgetType'                  => getCodeList('BudgetType', 'Activity', false),
-            'budgetStatus'                => getCodeList('BudgetStatus', 'Activity', false),
-            'otherIdentifierType'         => getCodeList('OtherIdentifierType', 'Activity', false),
-            'contactType'                 => getCodeList('ContactType', 'Activity', false),
-            'country'                     => getCodeList('Country', 'Activity', false),
-            'locationType'                => getCodeList('LocationType', 'Activity', false),
-            'currency'                    => getCodeList('Currency', 'Activity', false),
-            'geographicVocabulary'        => getCodeList('GeographicVocabulary', 'Activity', false),
-            'budgetIdentifier'            => getCodeList('BudgetIdentifier', 'Activity', false),
-            'organizationType'            => getCodeList('OrganizationType', 'Organization', false),
-            'geographicLocationReach'     => getCodeList('GeographicLocationReach', 'Activity', false),
-            'organisationRole'            => getCodeList('OrganisationRole', 'Organization', false),
-            'documentCategory'            => getCodeList('DocumentCategory', 'Activity', false),
-            'geographicExactness'         => getCodeList('GeographicExactness', 'Activity', false),
-            'geographicLocationClass'     => getCodeList('GeographicLocationClass', 'Activity', false),
-            'resultType'                  => getCodeList('ResultType', 'Activity', false),
-            'transactionType'             => getCodeList('TransactionType', 'Activity', false),
-            'crsChannelCode'              => getCodeList('CRSChannelCode', 'Activity', false),
+            'earmarkingCategory' => getCodeList('EarmarkingCategory', 'Activity', false),
+            'earmarkingModality' => getCodeList('EarmarkingModality', 'Activity', false),
+            'cashandVoucherModalities' => getCodeList('CashandVoucherModalities', 'Activity', false),
+            'budgetIdentifierVocabulary' => getCodeList('BudgetIdentifierVocabulary', 'Activity', false),
+            'sectorVocabulary' => getCodeList('SectorVocabulary', 'Activity', false),
+            'sectorCode' => getCodeList('SectorCode', 'Activity', false),
+            'sectorCategory' => getCodeList('SectorCategory', 'Activity', false),
+            'sdgGoals' => getCodeList('UNSDG-Goals', 'Activity', false),
+            'sdgTarget' => getCodeList('UNSDG-Targets', 'Activity', false),
+            'regionVocabulary' => getCodeList('RegionVocabulary', 'Activity', false),
+            'region' => getCodeList('Region', 'Activity', false),
+            'policyMarkerVocabulary' => getCodeList('PolicyMarkerVocabulary', 'Activity', false),
+            'policySignificance' => getCodeList('PolicySignificance', 'Activity', false),
+            'policyMarker' => getCodeList('PolicyMarker', 'Activity', false),
+            'tagVocabulary' => getCodeList('TagVocabulary', 'Activity', false),
+            'budgetType' => getCodeList('BudgetType', 'Activity', false),
+            'budgetStatus' => getCodeList('BudgetStatus', 'Activity', false),
+            'otherIdentifierType' => getCodeList('OtherIdentifierType', 'Activity', false),
+            'contactType' => getCodeList('ContactType', 'Activity', false),
+            'country' => getCodeList('Country', 'Activity', false),
+            'locationType' => getCodeList('LocationType', 'Activity', false),
+            'currency' => getCodeList('Currency', 'Activity', false),
+            'geographicVocabulary' => getCodeList('GeographicVocabulary', 'Activity', false),
+            'budgetIdentifier' => getCodeList('BudgetIdentifier', 'Activity', false),
+            'organizationType' => getCodeList('OrganizationType', 'Organization', false),
+            'geographicLocationReach' => getCodeList('GeographicLocationReach', 'Activity', false),
+            'organisationRole' => getCodeList('OrganisationRole', 'Organization', false),
+            'documentCategory' => getCodeList('DocumentCategory', 'Activity', false),
+            'geographicExactness' => getCodeList('GeographicExactness', 'Activity', false),
+            'geographicLocationClass' => getCodeList('GeographicLocationClass', 'Activity', false),
+            'resultType' => getCodeList('ResultType', 'Activity', false),
+            'transactionType' => getCodeList('TransactionType', 'Activity', false),
+            'crsChannelCode' => getCodeList('CRSChannelCode', 'Activity', false),
         ];
     }
 }

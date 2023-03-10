@@ -7,12 +7,15 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Description\DescriptionRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 
 /**
  * Class Description.
  */
 class Description extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * CSV Header of Description with their code.
      */
@@ -73,6 +76,8 @@ class Description extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -129,7 +134,17 @@ class Description extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForDescription($this->data('description'));
+        return $this->request->getWarningForDescription($this->data('description'));
+    }
+
+    /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     */
+    public function errorRules(): array
+    {
+        return $this->request->getErrorsForDescription($this->data('description'));
     }
 
     /**
@@ -151,6 +166,9 @@ class Description extends Element
     {
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
+                                         ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+                                         ->with($this->errorRules(), $this->messages())
                                          ->getValidatorInstance();
 
         $this->setValidity();

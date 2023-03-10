@@ -22,7 +22,14 @@ class SectorRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getSectorsRules($this->get('sector'));
+        $data = $this->get('sector');
+
+        $totalRules = [
+            $this->getSectorsRules($data),
+            $this->getErrorsForSector($data),
+        ];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -50,13 +57,52 @@ class SectorRequest extends ActivityBaseRequest
             if (array_key_exists($formField['sector_vocabulary'], $groupedSector)) {
                 $groupedSectorPercentage = $groupedSector[$formField['sector_vocabulary']]['total'];
                 $groupedSector[$formField['sector_vocabulary']]['count'] += 1;
-                $groupedSector[$formField['sector_vocabulary']]['total'] = (float) number_format(round($groupedSectorPercentage + $formField['percentage'], 2), 2);
+                $groupedSector[$formField['sector_vocabulary']]['total'] = (float) number_format(round((float) $groupedSectorPercentage + (float) $formField['percentage'], 2), 2);
             } else {
                 $groupedSector[$formField['sector_vocabulary']] = ['count' => 1, 'total' => (float) $formField['percentage']];
             }
         }
 
         return $groupedSector;
+    }
+
+    /**
+     * returns rules for sector.
+     *
+     * @param $formFields
+     * @param bool $fileUpload
+     *
+     * @return array
+     * @throws BindingResolutionException
+     */
+    public function getErrorsForSector($formFields, bool $fileUpload = false): array
+    {
+        $rules = [];
+        $groupedPercentSector = $this->groupSector($formFields);
+        $hasFiveDigitOecd = false;
+
+        foreach ($formFields as $sectorIndex => $sector) {
+            $sectorForm = sprintf('sector.%s', $sectorIndex);
+            $rules[sprintf('%s.sector_vocabulary', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorVocabulary', 'Activity', false)));
+            $rules[sprintf('%s.code', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorCode', 'Activity', false)));
+            $rules[sprintf('%s.category_code', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorCategory', 'Activity', false)));
+            $rules[sprintf('%s.sdg_goal', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Goals', 'Activity', false)));
+            $rules[sprintf('%s.sdg_target', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Targets', 'Activity', false)));
+
+            if (isset($sector['sector_vocabulary']) && ($sector['sector_vocabulary'] === '99' || $sector['sector_vocabulary'] === '98')) {
+                $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
+            }
+
+            $rules[sprintf('%s.percentage', $sectorForm)] = 'nullable|numeric';
+
+            $narrativeRules = $this->getErrorsForNarrative($sector['narrative'], $sectorForm);
+
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
+            }
+        }
+
+        return $rules;
     }
 
     /**
@@ -96,19 +142,10 @@ class SectorRequest extends ActivityBaseRequest
 
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
-            $rules[sprintf('%s.sector_vocabulary', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorVocabulary', 'Activity', false)));
-            $rules[sprintf('%s.code', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorCode', 'Activity', false)));
-            $rules[sprintf('%s.category_code', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorCategory', 'Activity', false)));
-            $rules[sprintf('%s.sdg_goal', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Goals', 'Activity', false)));
-            $rules[sprintf('%s.sdg_target', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Targets', 'Activity', false)));
 
-            if (isset($sector['sector_vocabulary']) && ($sector['sector_vocabulary'] === '99' || $sector['sector_vocabulary'] === '98')) {
-                $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
-            }
+            $rules[sprintf('%s.percentage', $sectorForm)] = 'min:0';
 
-            $rules[sprintf('%s.percentage', $sectorForm)] = 'nullable|numeric|min:0';
-
-            $narrativeRules = $this->getRulesForNarrative($sector['narrative'], $sectorForm);
+            $narrativeRules = $this->getWarningForNarrative($sector['narrative'], $sectorForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $explodedKey = explode('.', $key);

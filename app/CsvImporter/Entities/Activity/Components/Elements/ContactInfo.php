@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\ContactInfo\ContactInfoRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Support\Arr;
 
 /**
@@ -14,6 +15,8 @@ use Illuminate\Support\Arr;
  */
 class ContactInfo extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Header for ContactInfo element.
      * @var array
@@ -71,6 +74,8 @@ class ContactInfo extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -341,7 +346,18 @@ class ContactInfo extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForContactInfo(Arr::get($this->data(), 'contact_info', []));
+        return $this->request->getWarningForContactInfo(Arr::get($this->data(), 'contact_info', []));
+    }
+
+    /**
+     * Provides critical rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function errorRules(): array
+    {
+        return $this->request->getErrorsForContactInfo(Arr::get($this->data(), 'contact_info', []));
     }
 
     /**
@@ -364,6 +380,9 @@ class ContactInfo extends Element
     {
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
         $this->setValidity();
 

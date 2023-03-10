@@ -154,9 +154,9 @@ class ReportingOrganization extends Element
         }
 
         if ($key === $this->_csvHeaders[2]) {
-            if ((is_string($value) && (strtolower($value) === 'yes' || strtolower($value) === 'true')) || $value) {
+            if ((is_string($value) && (strtolower($value) === 'yes' || strtolower($value) === 'true')) || $value === true) {
                 $value = '1';
-            } elseif ((is_string($value) && (strtolower($value) === 'no' || strtolower($value) === 'false')) || !$value) {
+            } elseif ((is_string($value) && (strtolower($value) === 'no' || strtolower($value) === 'false')) || $value === false) {
                 $value = '0';
             }
 
@@ -200,7 +200,17 @@ class ReportingOrganization extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForReportingOrganization(Arr::get($this->data, 'reporting_org', []));
+        return $this->request->getWarningForReportingOrganization(Arr::get($this->data, 'reporting_org', []));
+    }
+
+    /**
+     * Critical rules for reporting org.
+     *
+     * @return array
+     */
+    public function errorRules(): array
+    {
+        return $this->request->getErrorsForReportingOrganization(Arr::get($this->data, 'reporting_org', []));
     }
 
     /**
@@ -223,6 +233,9 @@ class ReportingOrganization extends Element
     {
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
         $this->setValidity();
 

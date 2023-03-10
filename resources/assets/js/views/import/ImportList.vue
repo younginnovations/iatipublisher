@@ -26,7 +26,7 @@
                   <svg-vue icon="question-mark" />
                   <span>What is an activity?</span>
                 </button>
-                <div class="tooltip-btn__content z-[1]">
+                <div class="tooltip-btn__content z-[50]">
                   <div class="content">
                     <div
                       class="mb-1.5 text-caption-c1 font-bold text-bluecoral"
@@ -80,14 +80,7 @@
       </div>
     </div>
     <!-- Table layout: show after upload complete -->
-    <div class="mb-2 border-l-2 border-l-salmon-50 bg-paper">
-      <div class="alert__content m-2 mb-2.5 rounded bg-camel-10 p-2">
-        <span class="overflow-hidden text-sm font-normal">
-          Activities with errors cannot be imported. Please solve the errors to
-          import your activities.</span
-        >
-      </div>
-    </div>
+
     <div class="iati-list-table upload-list-table">
       <table>
         <thead>
@@ -112,12 +105,14 @@
           <tr
             v-for="(activity, index) in activities"
             v-else
+            ref="tableRow"
             :key="index"
             :class="{
               'upload-error': Object.keys(activity['errors']).length > 0,
             }"
           >
             <ListElement
+              :width="tableWidth"
               :activity="activity"
               :index="index"
               :selected-activities="JSON.stringify(selectedActivities)"
@@ -137,7 +132,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted, reactive, nextTick, onUnmounted } from 'vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 import Placeholder from './ImportPlaceholder.vue';
@@ -151,9 +146,20 @@ const activitiesLength = ref(0);
 const loader = ref(false);
 const selectAll = ref(false);
 const loaderText = ref('Please Wait');
-let timer;
+const tableRow = ref({});
+const tableWidth = ref({});
 
+let timer;
+const getDimensions = async () => {
+  await nextTick();
+  tableWidth.value = tableRow?.value['0'].clientWidth;
+};
+
+onUnmounted(() => {
+  window.removeEventListener('resize', getDimensions);
+});
 onMounted(() => {
+  window.addEventListener('resize', getDimensions);
   loader.value = true;
   loaderText.value = 'Please Wait';
   let count = 0;
@@ -169,11 +175,13 @@ onMounted(() => {
           loader.value = false;
         }
 
-        if (res.data.status === 'error' || (!res.data.data && count >= 5)) {
+        if (res.data.status === 'error' || (!res.data.data && count >= 40)) {
           clearInterval(timer);
           window.location.href = '/activities';
         }
         count++;
+
+        setTimeout(getDimensions, 200);
       })
       .catch(() => {
         loader.value = false;
@@ -185,7 +193,9 @@ onMounted(() => {
 function updateSelectedActivities(activity_id) {
   let index = selectedActivities.indexOf(activity_id);
 
-  if (activities[activity_id]['errors'].length === 0) {
+  if (
+    Object.keys(activities[activity_id]['errors']).indexOf('critical') === -1
+  ) {
     if (index >= 0) {
       selectedActivities.splice(index, 1);
       selectedCount.value = selectedCount.value - 1;
@@ -203,7 +213,9 @@ function selectAllActivities() {
 
   Object.keys(activities).forEach((activity_id) => {
     let index = selectedActivities.indexOf(activity_id);
-    if (activities[activity_id]['errors'].length === 0) {
+    if (
+      Object.keys(activities[activity_id]['errors']).indexOf('critical') === -1
+    ) {
       if (selectAll.value) {
         selectedActivities.push(activity_id);
         selectedCount.value = selectedCount.value + 1;
@@ -219,9 +231,8 @@ function selectAllActivities() {
 }
 
 function importActivities() {
-  loader.value = true;
   loaderText.value = 'Importing .csv/.xml file';
-  clearInterval(timer);
+  loader.value = true;
 
   axios
     .post('/import/activity', {
@@ -236,3 +247,22 @@ function importActivities() {
     });
 }
 </script>
+<style lang="scss" scoped>
+.upload-error {
+  position: relative !important;
+  background: rgba(0, 0, 0, 0) !important;
+  z-index: 1;
+
+  &::after {
+    position: absolute;
+    content: '';
+    height: 68px;
+    width: 100%;
+    border-left: 2px solid #d1001e;
+    left: 0;
+    top: 0;
+    background-color: #fff1f0;
+    z-index: -1;
+  }
+}
+</style>

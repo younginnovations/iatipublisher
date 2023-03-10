@@ -4,12 +4,15 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
+use App\IATI\Traits\DataSanitizeTrait;
 
 /**
  * Class DefaultFieldValues.
  */
 class DefaultFieldValues extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * @var array
      */
@@ -48,6 +51,8 @@ class DefaultFieldValues extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -182,9 +187,9 @@ class DefaultFieldValues extends Element
         }
 
         if ($key === $this->_csvHeaders[2]) {
-            if ((strtolower($value) === 'yes') || (strtolower($value) === 'true') || $value) {
+            if ((strtolower($value) === 'yes') || (strtolower($value) === 'true') || $value === true) {
                 $value = '1';
-            } elseif ((strtolower($value) === 'no') || (strtolower($value) === 'false') || !$value) {
+            } elseif ((strtolower($value) === 'no') || (strtolower($value) === 'false') || $value === false) {
                 $value = '0';
             }
 
@@ -201,6 +206,9 @@ class DefaultFieldValues extends Element
     public function validate(): static
     {
         $this->validator = $this->factory->sign($this->data())
+            ->with([], $this->messages())
+            ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
 
@@ -210,7 +218,7 @@ class DefaultFieldValues extends Element
     }
 
     /**
-     * Provides the rules for the IATI Element validation.
+     * Provides the critical rules for the IATI Element validation.
      *
      * @return array
      * @throws \JsonException
@@ -218,10 +226,10 @@ class DefaultFieldValues extends Element
     public function rules(): array
     {
         return [
-            'default_field_values'                    => 'size:1',
+            'default_field_values' => 'size:1',
             'default_field_values.*.default_currency' => sprintf('in:%s', $this->defaultValueCodeList('Currency')),
             'default_field_values.*.default_language' => sprintf('in:%s', $this->defaultValueCodeList('Language')),
-            'default_field_values.*.humanitarian'     => sprintf('in:%s', '1,0'),
+            'default_field_values.*.humanitarian' => sprintf('in:%s', '1,0'),
         ];
     }
 
@@ -233,10 +241,10 @@ class DefaultFieldValues extends Element
     public function messages(): array
     {
         return [
-            'default_field_values.size'                  => trans('validation.multiple_values', ['attribute' => trans('default_field_values')]),
+            'default_field_values.size' => trans('validation.multiple_values', ['attribute' => trans('default_field_values')]),
             'default_field_values.*.default_currency.in' => trans('validation.code_list', ['attribute' => trans('default_currency')]),
             'default_field_values.*.default_language.in' => trans('validation.code_list', ['attribute' => trans('default_language')]),
-            'default_field_values.*.humanitarian.in'     => trans('validation.code_list', ['attribute' => trans('humanitarian')]),
+            'default_field_values.*.humanitarian.in' => trans('validation.code_list', ['attribute' => trans('humanitarian')]),
         ];
     }
 

@@ -7,12 +7,15 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\ParticipatingOrganization\ParticipatingOrganizationRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 
 /**
  * Class ParticipatingOrganization.
  */
 class ParticipatingOrganization extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * @var array
      */
@@ -80,6 +83,8 @@ class ParticipatingOrganization extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -123,7 +128,7 @@ class ParticipatingOrganization extends Element
 
         if ($key === $this->_csvHeaders[0] && (!is_null($value))) {
             $validOrganizationRoles = $this->loadCodeList('OrganisationRole', 'Organization');
-            $value = $value ? trim($value) : '';
+            $value = $value ? trim($value) : $value;
 
             if ($value) {
                 foreach ($validOrganizationRoles as $code => $name) {
@@ -199,7 +204,7 @@ class ParticipatingOrganization extends Element
 
         if ($key === $this->_csvHeaders[2] && (!is_null($value))) {
             $validOrganizationType = $this->loadCodeList('OrganizationType', 'Organization');
-            $value = $value ? trim($value) : '';
+            $value = $value ? trim($value) : $value;
 
             if ($value) {
                 foreach ($validOrganizationType as $code => $name) {
@@ -284,7 +289,18 @@ class ParticipatingOrganization extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForParticipatingOrg($this->data('participating_org'));
+        return $this->request->getWarningForParticipatingOrg($this->data('participating_org'));
+    }
+
+    /**
+     * Provides the rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function errorRules(): array
+    {
+        return $this->request->getErrorsForParticipatingOrg($this->data('participating_org'));
     }
 
     /**
@@ -307,6 +323,9 @@ class ParticipatingOrganization extends Element
     {
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
+                                         ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+                                         ->with($this->errorRules(), $this->messages())
                                          ->getValidatorInstance();
 
         $this->setValidity();

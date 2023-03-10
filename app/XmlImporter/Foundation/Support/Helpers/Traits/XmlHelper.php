@@ -131,7 +131,7 @@ trait XmlHelper
     protected function value(array $fields, $key = null): mixed
     {
         if (!$key) {
-            return Arr::get($fields, 'value', '');
+            return Arr::get($fields, 'value', '') ?? '';
         }
 
         if (!empty($fields)) {
@@ -141,7 +141,7 @@ trait XmlHelper
                         return $this->narrative($field);
                     }
 
-                    return Arr::get($field, 'value', '');
+                    return Arr::get($field, 'value', '') ?? '';
                 }
             }
         }
@@ -164,8 +164,8 @@ trait XmlHelper
             foreach (Arr::get($subElement, 'value', []) as $index => $value) {
                 $narrative = empty(Arr::get($value, 'value', '')) ? '' : Arr::get($value, 'value', '');
                 $field[$index] = [
-                    'narrative' => trim($narrative),
-                    'language'  => $this->attributes($value, 'lang'),
+                    'narrative' => is_string($narrative) ? trim($narrative) : $narrative,
+                    'language'  => strtolower($this->attributes($value, 'lang')),
                 ];
             }
 
@@ -176,7 +176,7 @@ trait XmlHelper
 
         $field[0] = [
             'narrative' => trim($narrative),
-            'language'  => $this->attributes((array) $subElement, 'lang'),
+            'language' => $this->attributes((array) $subElement, 'lang'),
         ];
 
         return $field;
@@ -209,8 +209,8 @@ trait XmlHelper
      * If fieldName and key both are provided then the attributes inside value is returned.
      *
      * @param array $element
-     * @param null  $key
-     * @param null  $fieldName
+     * @param ?string  $key
+     * @param ?string  $fieldName
      *
      * @return mixed|string
      */

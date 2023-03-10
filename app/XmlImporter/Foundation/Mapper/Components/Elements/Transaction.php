@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\XmlImporter\Foundation\Mapper\Components\Elements;
 
+use App\Exceptions\InvalidTag;
 use App\XmlImporter\Foundation\Support\Helpers\Traits\XmlHelper;
 use Illuminate\Support\Arr;
 
@@ -84,7 +85,18 @@ class Transaction
      */
     protected function humanitarian($element, $index): void
     {
-        $this->transaction[$index]['humanitarian'] = $this->attributes($element, 'humanitarian');
+        $humanitarian = $this->attributes($element, 'humanitarian');
+        $humanitarianValue = '';
+
+        if ((is_string($humanitarian) && strtolower($humanitarian) === 'true') || $humanitarian === '1') {
+            $humanitarianValue = '1';
+        }
+
+        if ((is_string($humanitarian) && strtolower($humanitarian) === 'false') || $humanitarian === '0') {
+            $humanitarianValue = '0';
+        }
+
+        $this->transaction[$index]['humanitarian'] = $humanitarianValue;
     }
 
     /**
@@ -306,7 +318,12 @@ class Transaction
 
             foreach ($this->getValue($transaction) as $sub_index => $subElement) {
                 $fieldName = $this->name($subElement['name']);
-                $this->$fieldName($subElement, $index, $sub_index);
+
+                if (method_exists($this, $fieldName)) {
+                    $this->$fieldName($subElement, $index, $sub_index);
+                } else {
+                    throw new InvalidTag('Use of invalid tag in Transaction.');
+                }
             }
         }
 

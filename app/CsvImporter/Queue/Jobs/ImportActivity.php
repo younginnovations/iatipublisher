@@ -80,31 +80,15 @@ class ImportActivity extends Job implements ShouldQueue
     public function handle(): void
     {
         try {
-            awsDeleteFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, 'valid.json'));
-            awsUploadFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, 'status.json'), json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
-
+            awsUploadFile(sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, $this->userId, 'status.json'), json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
             $this->csvProcessor->handle($this->organizationId, $this->userId, $this->activityIdentifiers);
-
-            awsUploadFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, 'status.json'), json_encode(['success' => true, 'message' => 'Complete'], JSON_THROW_ON_ERROR));
-            awsDeleteFile(sprintf('%s/%s/%s', $this->csv_file_storage_path, $this->organizationId, $this->filename));
+            awsUploadFile(sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, $this->userId, 'status.json'), json_encode(['success' => true, 'message' => 'Complete'], JSON_THROW_ON_ERROR));
 
             $this->delete();
         } catch (\Exception $e) {
-            awsUploadFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, 'status.json'), json_encode(['success' => false, 'message'=>$e->getMessage()], JSON_THROW_ON_ERROR));
+            awsUploadFile(sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => $e->getMessage()], JSON_THROW_ON_ERROR));
 
             $this->delete();
         }
-    }
-
-    /**
-     * Get the temporary Csv filepath for the uploaded Csv file.
-     *
-     * @param $filename
-     *
-     * @return string
-     */
-    protected function getStoredCsvFilePath($filename): string
-    {
-        return sprintf('%s/%s', storage_path(sprintf('%s/%s', $this->csv_file_storage_path, Session::get('org_id'))), $filename);
     }
 }

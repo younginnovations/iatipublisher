@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\PolicyMarker\PolicyMarkerRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Support\Arr;
 
 /**
@@ -14,6 +15,8 @@ use Illuminate\Support\Arr;
  */
 class PolicyMarker extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Header for PolicyMarker element.
      * @var array
@@ -59,6 +62,8 @@ class PolicyMarker extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -98,7 +103,7 @@ class PolicyMarker extends Element
 
         if ($key === $this->_csvHeaders[0]) {
             $validVocabulary = $this->loadCodeList('PolicyMarkerVocabulary');
-            $value = $value ? trim($value) : '';
+            $value = $value ? trim($value) : $value;
 
             if ($value) {
                 foreach ($validVocabulary as $code => $name) {
@@ -184,7 +189,7 @@ class PolicyMarker extends Element
             switch ($vocabulary) {
                 case '1':
                     $validMarker = $this->loadCodeList('PolicyMarker');
-                    $value = $value ? trim($value) : '';
+                    $value = $value ? trim($value) : $value;
 
                     if ($value) {
                         foreach ($validMarker as $code => $name) {
@@ -248,6 +253,9 @@ class PolicyMarker extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
+            ->getValidatorInstance();
 
         $this->setValidity();
 
@@ -262,7 +270,18 @@ class PolicyMarker extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForPolicyMarker(Arr::get($this->data, 'policy_marker', []));
+        return $this->request->getWarningForPolicyMarker(Arr::get($this->data, 'policy_marker', []));
+    }
+
+    /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function errorRules(): array
+    {
+        return $this->request->getErrorsForPolicyMarker(Arr::get($this->data, 'policy_marker', []));
     }
 
     /**

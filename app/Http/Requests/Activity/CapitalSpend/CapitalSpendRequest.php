@@ -18,6 +18,20 @@ class CapitalSpendRequest extends ActivityBaseRequest
      */
     public function rules($capital_spend = null): array
     {
+        $totalRules = [$this->getErrorsForCapitalSpend($capital_spend), $this->getWarningForCapitalSpend($capital_spend)];
+
+        return mergeRules($totalRules);
+    }
+
+    /**
+     * returns critical rule for capital spend.
+     *
+     * @param $capital_spend
+     *
+     * @return array
+     */
+    public function getErrorsForCapitalSpend($capital_spend = null): array
+    {
         if ($capital_spend && is_array($capital_spend)) {
             return [
                 'capital_spend' => 'nullable|size:1',
@@ -27,6 +41,18 @@ class CapitalSpendRequest extends ActivityBaseRequest
         return [
             'capital_spend' => ['nullable', 'numeric', 'between:0, 100'],
         ];
+    }
+
+    /**
+     * returns critical rule for capital spend.
+     *
+     * @param $capital_spend
+     *
+     * @return array
+     */
+    public function getWarningForCapitalSpend($capital_spend = null): array
+    {
+        return [];
     }
 
     /**

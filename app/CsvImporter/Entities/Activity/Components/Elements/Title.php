@@ -7,12 +7,15 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Title\TitleRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 
 /**
  * Class Title.
  */
 class Title extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Header for Title element.
      * @var array
@@ -78,6 +81,8 @@ class Title extends Element
                 $this->data[end($this->_csvHeader)][] = ['narrative' => null, 'language' => null];
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -126,7 +131,28 @@ class Title extends Element
      */
     public function rules(): array
     {
+        return [];
+    }
+
+    /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     */
+    public function errors(): array
+    {
+        return  [];
+    }
+
+    /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     */
+    public function criticalErrors(): array
+    {
         $rules['activity_title.0.narrative'] = 'required';
+        $rules['activity_title'] = 'size:1';
 
         return $rules;
     }
@@ -139,6 +165,7 @@ class Title extends Element
     public function messages(): array
     {
         $messages['activity_title.0.narrative.required'] = 'The activity title is required.';
+        $messages['activity_title'] = 'There should be only one activity title.';
 
         return $messages;
     }
@@ -152,6 +179,12 @@ class Title extends Element
     {
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errors(), $this->messages())
+            ->getValidatorInstance();
+        $this->criticalValidator = $this->factory->sign($this->data())
+            ->with($this->criticalErrors(), $this->messages())
             ->getValidatorInstance();
 
         $this->setValidity();

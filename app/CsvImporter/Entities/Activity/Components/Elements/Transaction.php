@@ -9,6 +9,7 @@ use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Elemen
 use App\CsvImporter\Entities\Activity\Components\Elements\Transaction\PreparesTransactionData;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Transaction\TransactionRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
@@ -18,6 +19,7 @@ use Illuminate\Support\Arr;
 class Transaction extends Element
 {
     use PreparesTransactionData;
+    use DataSanitizeTrait;
 
     /**
      * @var array
@@ -149,6 +151,8 @@ class Transaction extends Element
             $this->setAidType();
             $this->setTiedStatus();
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -161,6 +165,9 @@ class Transaction extends Element
     {
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
 
         $this->setValidity();
@@ -177,7 +184,18 @@ class Transaction extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->getRulesForTransaction(Arr::get($this->data, 'transaction', []), true, $this->getActivityData()), false);
+        return $this->getBaseRules($this->request->getWarningForTransaction(Arr::get($this->data, 'transaction', []), true, $this->getActivityData()), false);
+    }
+
+    /**
+     * Provides the rules for the IATI Element validation.
+     *
+     * @return array
+     * @throw \JsonException
+     */
+    public function errorRules(): array
+    {
+        return $this->getBaseRules($this->request->getErrorsForTransaction(Arr::get($this->data, 'transaction', []), true, $this->getActivityData()), false);
     }
 
     /**

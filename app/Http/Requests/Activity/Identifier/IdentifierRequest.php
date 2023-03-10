@@ -25,6 +25,20 @@ class IdentifierRequest extends FormRequest
      */
     public function rules(bool $fileUpload = false): array
     {
+        $totalRules = [$this->getWarningForIdentifier(), $this->getErrorsForIdentifier()];
+
+        return mergeRules($totalRules);
+    }
+
+    /**
+     * Return critical rules for identifier.
+     *
+     * @param $fileUpload
+     *
+     * @return void
+     */
+    public function getErrorsForIdentifier(bool $fileUpload = false, $elementName = ''): array
+    {
         $activityIdentifiers = [];
 
         if (!$fileUpload) {
@@ -40,11 +54,26 @@ class IdentifierRequest extends FormRequest
                     }
                 }
             }
+
+            return [
+                'activity_identifier' => ['required', Rule::notIn($activityIdentifiers), 'not_regex:/(&|!|\/|\||\?)/'],
+            ];
         }
 
         return [
-            'activity_identifier'   => ['required', Rule::notIn($activityIdentifiers), 'not_regex:/(&|!|\/|\||\?)/'],
-            'iati_identifier_text'  => ['sometimes'],
+            empty($elementName) ? 'activity_identifier' : "$elementName.activity_identifier" => ['required', 'not_regex:/(&|!|\/|\||\?)/'],
+        ];
+    }
+
+    /**
+     * Return rules for identifier.
+     *
+     * @return array
+     */
+    public function getWarningForIdentifier(): array
+    {
+        return [
+            'iati_identifier_text' => 'sometimes',
         ];
     }
 

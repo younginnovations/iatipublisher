@@ -18,7 +18,10 @@ class TagRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForTag($this->get('tag'));
+        $data = $this->get('tag');
+        $totalRules = [$this->getErrorsForTag($data), $this->getWarningForTag($data)];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -38,7 +41,29 @@ class TagRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForTag(array $formFields): array
+    public function getWarningForTag(array $formFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $tagIndex => $tag) {
+            $tagForm = sprintf('tag.%s', $tagIndex);
+
+            foreach ($this->getWarningForNarrative($tag['narrative'], $tagForm) as $tagNarrativeIndex => $narrativeRules) {
+                $rules[$tagNarrativeIndex] = $narrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns critical rules for related activity.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    public function getErrorsForTag(array $formFields): array
     {
         $rules = [];
 
@@ -49,7 +74,7 @@ class TagRequest extends ActivityBaseRequest
             $rules[sprintf('%s.targets_tag_code', $tagForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Targets', 'Activity', false)));
             $rules[sprintf('%s.vocabulary_uri', $tagForm)] = 'nullable|url';
 
-            foreach ($this->getRulesForNarrative($tag['narrative'], $tagForm) as $tagNarrativeIndex => $narrativeRules) {
+            foreach ($this->getErrorsForNarrative($tag['narrative'], $tagForm) as $tagNarrativeIndex => $narrativeRules) {
                 $rules[$tagNarrativeIndex] = $narrativeRules;
             }
         }

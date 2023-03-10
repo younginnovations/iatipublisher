@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Sector\SectorRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
@@ -15,6 +16,8 @@ use Illuminate\Support\Arr;
  */
 class Sector extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * @var null|string
      */
@@ -97,6 +100,8 @@ class Sector extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -172,7 +177,7 @@ class Sector extends Element
             $sectorVocabulary = Arr::get($this->data['sector'], $index . '.sector_vocabulary', null);
 
             if ($sectorVocabulary === '1') {
-                $value = $value ? trim($value) : '';
+                $value = $value ? trim($value) : $value;
                 $this->codes[] = $value;
                 $validSectorCode = $this->loadCodeList('SectorCode');
 
@@ -226,7 +231,7 @@ class Sector extends Element
     protected function setSectorCategoryCode($value, $index): void
     {
         $validCategoryCode = $this->loadCodeList('SectorCategory');
-        $value = $value ? trim($value) : '';
+        $value = $value ? trim($value) : $value;
 
         if ($value) {
             foreach ($validCategoryCode as $code => $name) {
@@ -387,6 +392,9 @@ class Sector extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
+            ->getValidatorInstance();
         $this->setValidity();
 
         return $this;
@@ -401,6 +409,17 @@ class Sector extends Element
     public function rules(): array
     {
         return $this->request->getSectorsRules(Arr::get($this->data(), 'sector', []), true);
+    }
+
+    /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws BindingResolutionException
+     */
+    public function errorRules(): array
+    {
+        return $this->request->getErrorsForSector(Arr::get($this->data(), 'sector', []), true);
     }
 
     /**

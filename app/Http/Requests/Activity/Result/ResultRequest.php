@@ -21,7 +21,13 @@ class ResultRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForResult(request()->except(['_token']));
+        $data = request()->except(['_token']);
+        $totalRules = [
+            $this->getWarningForResult($data),
+            $this->getErrorsForResult($data),
+        ];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -35,13 +41,44 @@ class ResultRequest extends ActivityBaseRequest
     }
 
     /**
-     * Returns rules for transaction.
+     * Returns rules for result.
      *
      * @param array $formFields
+     * @param bool $fileUpload
+     * @param array $indicator
      *
      * @return array
      */
-    public function getRulesForResult(array $formFields, bool $fileUpload = false, array $indicators = []): array
+    public function getWarningForResult(array $formFields, bool $fileUpload = false, array $indicators = []): array
+    {
+        $rules = [];
+
+        $tempRules = [
+            $this->getWarningForNarrative($formFields['title'][0]['narrative'], 'title.0'),
+            $this->getWarningForNarrative($formFields['description'][0]['narrative'], 'description.0'),
+            $this->getWarningForDocumentLink($formFields['document_link']),
+            $this->getWarningForReferences($formFields['reference'], $fileUpload, $indicators),
+        ];
+
+        foreach ($tempRules as $key => $tempRule) {
+            foreach ($tempRule as $idx => $rule) {
+                $rules[$idx] = $rule;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns critical rules for result.
+     *
+     * @param array $formFields
+     * @param bool $fileUpload
+     * @param array $indicators
+     *
+     * @return array
+     */
+    public function getErrorsForResult(array $formFields, bool $fileUpload = false, array $indicators = []): array
     {
         $rules = [];
 
@@ -49,10 +86,10 @@ class ResultRequest extends ActivityBaseRequest
         $rules['aggregation_status'] = sprintf('nullable|in:0,1');
 
         $tempRules = [
-            $this->getRulesForNarrative($formFields['title'][0]['narrative'], 'title.0'),
-            $this->getRulesForNarrative($formFields['description'][0]['narrative'], 'description.0'),
-            $this->getRulesForDocumentLink($formFields['document_link']),
-            $this->getRulesForReferences($formFields['reference'], $fileUpload, $indicators),
+            $this->getErrorsForNarrative($formFields['title'][0]['narrative'], 'title.0'),
+            $this->getErrorsForNarrative($formFields['description'][0]['narrative'], 'description.0'),
+            $this->getErrorsForDocumentLink($formFields['document_link']),
+            $this->getErrorsForReferences($formFields['reference'], $fileUpload, $indicators),
         ];
 
         foreach ($tempRules as $key => $tempRule) {
@@ -98,7 +135,7 @@ class ResultRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForReferences($formFields, $fileUpload = false, array $indicators = []): array
+    protected function getWarningForReferences($formFields, $fileUpload = false, array $indicators = []): array
     {
         Validator::extendImplicit(
             'indicator_ref_code_present',
@@ -120,8 +157,6 @@ class ResultRequest extends ActivityBaseRequest
 
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
-            $rules[sprintf('%s.vocabulary_uri', $referenceForm)] = 'nullable|url';
-            $rules[sprintf('%s.vocabulary', $referenceForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ResultVocabulary', 'Activity'))));
 
             if (!empty($reference['code']) && $reference['code'] !== '' && $hasResultId) {
                 if ($fileUpload) {
@@ -139,6 +174,24 @@ class ResultRequest extends ActivityBaseRequest
                     $rules[sprintf('%s.code', $referenceForm)] = 'indicator_ref_code_present';
                 }
             }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns critical rules for Reference.
+     *
+     * @param $formFields
+     *
+     * @return array
+     */
+    protected function getErrorsForReferences($formFields, $fileUpload = false, array $indicators = []): array
+    {
+        foreach ($formFields as $referenceIndex => $reference) {
+            $referenceForm = sprintf('reference.%s', $referenceIndex);
+            $rules[sprintf('%s.vocabulary_uri', $referenceForm)] = 'nullable|url';
+            $rules[sprintf('%s.vocabulary', $referenceForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ResultVocabulary', 'Activity'))));
         }
 
         return $rules;

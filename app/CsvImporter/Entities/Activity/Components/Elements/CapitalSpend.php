@@ -65,7 +65,7 @@ class CapitalSpend extends Element
                     $this->map($value, $values);
                 }
 
-                if (empty($this->data[$this->csvHeader()])) {
+                if (is_array($this->data[$this->csvHeader()]) && empty($this->data[$this->csvHeader()])) {
                     $this->data[$this->csvHeader()] = '';
                 }
             }
@@ -84,7 +84,7 @@ class CapitalSpend extends Element
     public function map($value, $values): void
     {
         if (!(is_null($value) || $value === '')) {
-            (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
+            ($this->countArrayElements($values) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
         }
     }
 
@@ -98,6 +98,9 @@ class CapitalSpend extends Element
     {
         $this->validator = $this->factory->sign($this->data)
             ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data)
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
 
         $this->setValidity();
@@ -113,7 +116,18 @@ class CapitalSpend extends Element
      */
     public function rules(): array
     {
-        return $this->request->rules(Arr::get($this->data, $this->csvHeader()));
+        return $this->request->getWarningForCapitalSpend(Arr::get($this->data, $this->csvHeader()));
+    }
+
+    /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function errorRules(): array
+    {
+        return $this->request->getErrorsForCapitalSpend(Arr::get($this->data, $this->csvHeader()));
     }
 
     /**

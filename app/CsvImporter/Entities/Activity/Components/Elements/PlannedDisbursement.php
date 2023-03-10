@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\PlannedDisbursement\PlannedDisbursementRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Support\Arr;
 
 /**
@@ -14,6 +15,8 @@ use Illuminate\Support\Arr;
  */
 class PlannedDisbursement extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Header for PlannedDisbursement element.
      * @var array
@@ -78,6 +81,8 @@ class PlannedDisbursement extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -356,7 +361,18 @@ class PlannedDisbursement extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForPlannedDisbursement(Arr::get($this->data, 'planned_disbursement', []));
+        return $this->request->getWarningForPlannedDisbursement(Arr::get($this->data, 'planned_disbursement', []));
+    }
+
+    /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function errorRules(): array
+    {
+        return $this->request->getErrorsForPlannedDisbursement(Arr::get($this->data, 'planned_disbursement', []));
     }
 
     /**
@@ -379,6 +395,9 @@ class PlannedDisbursement extends Element
     {
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
         $this->setValidity();
 

@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Scope\ScopeRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Support\Arr;
 
 /**
@@ -14,6 +15,8 @@ use Illuminate\Support\Arr;
  */
 class ActivityScope extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Header for ActivityScope element.
      *
@@ -63,11 +66,13 @@ class ActivityScope extends Element
                     $this->map($value, $values);
                 }
 
-                if (empty($this->data[$this->csvHeader()])) {
+                if (is_array($this->data[$this->csvHeader()]) && empty($this->data[$this->csvHeader()])) {
                     $this->data[$this->csvHeader()] = '';
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -86,13 +91,13 @@ class ActivityScope extends Element
             if (!is_int($value)) {
                 foreach ($validActivityScope as $code => $name) {
                     if (strcasecmp(trim($value), $name) === 0) {
-                        $value = is_int($code) ? (int) $code : $code;
+                        $value = is_numeric($code) ? (int) $code : $code;
                         break;
                     }
                 }
             }
 
-            (count(array_filter($values)) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
+            ($this->countArrayElements($values) === 1) ? $this->data[$this->csvHeader()] = $value : $this->data[$this->csvHeader()][] = $value;
         }
     }
 
@@ -106,6 +111,9 @@ class ActivityScope extends Element
     {
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
 
         $this->setValidity();
@@ -121,7 +129,18 @@ class ActivityScope extends Element
      */
     public function rules(): array
     {
-        return $this->request->rules(Arr::get($this->data(), $this->csvHeader()));
+        return $this->request->getWarningForActivityScope();
+    }
+
+    /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function errorRules(): array
+    {
+        return $this->request->getErrorsForActivityScope(Arr::get($this->data(), $this->csvHeader()));
     }
 
     /**

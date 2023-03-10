@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\HumanitarianScope\HumanitarianScopeRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Support\Arr;
 
 /**
@@ -14,6 +15,8 @@ use Illuminate\Support\Arr;
  */
 class HumanitarianScope extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Header for HumanitarianScope element.
      * @var array
@@ -68,6 +71,8 @@ class HumanitarianScope extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -230,7 +235,18 @@ class HumanitarianScope extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForHumanitarianScope(Arr::get($this->data(), 'humanitarian_scope', []));
+        return $this->request->getWarningForHumanitarianScope(Arr::get($this->data(), 'humanitarian_scope', []));
+    }
+
+    /**
+     * Provides the rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function errorRules(): array
+    {
+        return $this->request->getErrorsForHumanitarianScope(Arr::get($this->data(), 'humanitarian_scope', []));
     }
 
     /**
@@ -253,6 +269,9 @@ class HumanitarianScope extends Element
     {
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
         $this->setValidity();
 

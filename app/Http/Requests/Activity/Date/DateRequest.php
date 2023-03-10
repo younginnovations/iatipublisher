@@ -19,7 +19,10 @@ class DateRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForDate($this->get('activity_date'));
+        $data = $this->get('activity_date');
+        $totalRules = [$this->getErrorsForActivityDate($data), $this->getWarningForActivityDate($data)];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -39,18 +42,43 @@ class DateRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForDate(array $formFields): array
+    public function getWarningForActivityDate(array $formFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $activityDateIndex => $activityDate) {
+            $activityDateForm = sprintf('activity_date.%s', $activityDateIndex);
+
+            foreach ($this->getWarningForNarrative($activityDate['narrative'], $activityDateForm) as $narrativeIndex => $narrativeRules) {
+                $rules[$narrativeIndex] = $narrativeRules;
+            }
+        }
+
+        return $this->validateDataRules($formFields, $rules);
+    }
+
+    /**
+     * Returns critical rules for date.
+     *
+     * @param array $formFields
+     *
+     * @return
+     */
+    public function getErrorsForActivityDate(array $formFields): array
     {
         $rules = [];
 
         foreach ($formFields as $activityDateIndex => $activityDate) {
             $activityDateForm = sprintf('activity_date.%s', $activityDateIndex);
             $rules[sprintf('%s.date', $activityDateForm)] = 'nullable|date';
-            $rules[sprintf('%s.type', $activityDateForm)] = 'nullable';
-            $rules[sprintf('%s.narrative', $activityDateForm)] = $this->getRulesForNarrative($activityDate['narrative'], $activityDateForm)[sprintf('%s.narrative', $activityDateForm)];
+            $rules[sprintf('%s.type', $activityDateForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ActivityDateType', 'Activity'))));
+
+            foreach ($this->getErrorsForNarrative($activityDate['narrative'], $activityDateForm) as $narrativeIndex => $narrativeRules) {
+                $rules[$narrativeIndex] = $narrativeRules;
+            }
         }
 
-        return $this->validateDataRules($formFields, $rules);
+        return $rules;
     }
 
     /**
@@ -96,7 +124,7 @@ class DateRequest extends ActivityBaseRequest
 
             if (isset($date, $type)) {
                 if (($type === '2' || $type === '4')) {
-                    (strtotime($date) <= strtotime(date('Y-m-d'))) ?: $rules[sprintf('%s.date', $activityDateForm)] .= '|before:' . now();
+                    (dateStrToTime($date) <= dateStrToTime(date('Y-m-d'))) ?: $rules[sprintf('%s.date', $activityDateForm)][] = 'before:' . now();
                 }
 
                 if ($type === '4') {
@@ -109,7 +137,7 @@ class DateRequest extends ActivityBaseRequest
 
                     if (count($actualStartDate)) {
                         foreach ($actualStartDate as $startDate) {
-                            strtotime($date) > strtotime($startDate) ?: $rules[sprintf('%s.date', $activityDateForm)] .= '|end_later_than_start';
+                            dateStrToTime($date) > dateStrToTime($startDate) ?: $rules[sprintf('%s.date', $activityDateForm)][] = 'end_later_than_start';
                         }
                     }
                 }
@@ -124,7 +152,7 @@ class DateRequest extends ActivityBaseRequest
 
                     if (count($plannedStartDate)) {
                         foreach ($plannedStartDate as $startDate) {
-                            strtotime($date) > strtotime($startDate) ?: $rules[sprintf('%s.date', $activityDateForm)] .= '|end_later_than_start';
+                            dateStrToTime($date) > dateStrToTime($startDate) ?: $rules[sprintf('%s.date', $activityDateForm)][] = 'end_later_than_start';
                         }
                     }
                 }

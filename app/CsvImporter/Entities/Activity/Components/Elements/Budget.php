@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Budget\BudgetRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Support\Arr;
 
 /**
@@ -14,6 +15,8 @@ use Illuminate\Support\Arr;
  */
 class Budget extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Header for Budget element.
      * @var array
@@ -70,6 +73,8 @@ class Budget extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -104,12 +109,12 @@ class Budget extends Element
     protected function setBudgetType($key, $value, $index): void
     {
         if (!isset($this->data['budget'][$index]['budget_type'])) {
-            $this->data['budget'][$index]['budget_type'] = '';
+            $this->data['budget'][$index]['budget_type'] = '1';
         }
 
         if ($key === $this->_csvHeaders[0]) {
             $validBudgetType = $this->loadCodeList('BudgetType');
-            $value = $value ? trim($value) : '';
+            $value = $value ? trim($value) : $value;
 
             if ($value) {
                 foreach ($validBudgetType as $code => $name) {
@@ -136,7 +141,7 @@ class Budget extends Element
     protected function setBudgetStatus($key, $value, $index): void
     {
         if (!isset($this->data['budget'][$index]['budget_status'])) {
-            $this->data['budget'][$index]['budget_status'] = '';
+            $this->data['budget'][$index]['budget_status'] = '1';
         }
         if ($key === $this->_csvHeaders[1]) {
             $validBudgetStatus = $this->loadCodeList('BudgetStatus');
@@ -263,6 +268,9 @@ class Budget extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
+            ->getValidatorInstance();
 
         $this->setValidity();
 
@@ -291,7 +299,18 @@ class Budget extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForBudget(Arr::get($this->data(), 'budget', []));
+        return $this->request->getWarningForBudget(Arr::get($this->data(), 'budget', []));
+    }
+
+    /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function errorRules(): array
+    {
+        return $this->request->getErrorsForBudget(Arr::get($this->data(), 'budget', []));
     }
 
     /**

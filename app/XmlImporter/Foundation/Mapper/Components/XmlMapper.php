@@ -166,7 +166,7 @@ class XmlMapper
             }
         }
 
-        return array_count_values($xmlActivityIdentifiers);
+        return !empty($xmlActivityIdentifiers) ? array_count_values($xmlActivityIdentifiers) : [];
     }
 
     /**

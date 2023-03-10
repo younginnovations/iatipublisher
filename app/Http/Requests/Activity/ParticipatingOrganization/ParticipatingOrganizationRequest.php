@@ -18,7 +18,10 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
      */
     public function rules($participating_org = []): array
     {
-        return $this->getRulesForParticipatingOrg($this->get('participating_org') ?? $participating_org);
+        $data = $this->get('participating_org') ?? [];
+        $totalRules = [$this->getWarningForParticipatingOrg($data), $this->getErrorsForParticipatingOrg($data)];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -37,20 +40,42 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
      *
      * @return array|mixed
      */
-    public function getRulesForParticipatingOrg($formFields): array
+    public function getWarningForParticipatingOrg($formFields): array
     {
         $rules = [];
 
         foreach ($formFields as $participatingOrgIndex => $participatingOrg) {
             $participatingOrgForm = 'participating_org.' . $participatingOrgIndex;
             $identifier = $participatingOrgForm . '.identifier';
-            $narrative = sprintf('%s.narrative.0.narrative', $participatingOrgForm);
             $rules[$identifier] = 'nullable|exclude_operators';
+
+            foreach ($this->getWarningForNarrative($participatingOrg['narrative'], $participatingOrgForm) as $participatingNarrativeIndex => $narrativeRules) {
+                $rules[$participatingNarrativeIndex] = $narrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns rules for participating organization.
+     *
+     * @param $formFields
+     *
+     * @return array|mixed
+     */
+    public function getErrorsForParticipatingOrg($formFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $participatingOrgIndex => $participatingOrg) {
+            $participatingOrgForm = 'participating_org.' . $participatingOrgIndex;
+            $identifier = $participatingOrgForm . '.identifier';
             $rules[sprintf('%s.organization_role', $participatingOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganisationRole', 'Organization', false)));
             $rules[sprintf('%s.type', $participatingOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
             $rules[sprintf('%s.crs_channel_code', $participatingOrgForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('CRSChannelCode', 'Activity', false)));
 
-            foreach ($this->getRulesForNarrative($participatingOrg['narrative'], $participatingOrgForm) as $participatingNarrativeIndex => $narrativeRules) {
+            foreach ($this->getErrorsForNarrative($participatingOrg['narrative'], $participatingOrgForm) as $participatingNarrativeIndex => $narrativeRules) {
                 $rules[$participatingNarrativeIndex] = $narrativeRules;
             }
         }
@@ -73,11 +98,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
             $participatingOrgForm = 'participating_org.' . $participatingOrgIndex;
             $messages[$participatingOrgForm . '.organization_role.required'] = trans('validation.required', ['attribute' => trans('elementForm.organisation_role')]);
             $identifier = $participatingOrgForm . '.identifier';
-            $narrative = sprintf('%s.narrative.0.narrative', $participatingOrgForm);
-            $messages[$identifier . '.exclude_operators'] = trans(
-                'validation.exclude_operators',
-                ['attribute' => trans('elementForm.identifier'), 'values' => trans('elementForm.identifier')]
-            );
+            $messages[$identifier . '.exclude_operators'] = 'The identifier must not contain symbols or blank space';
 
             $messages[sprintf('%s.organization_role.in', $participatingOrgForm)] = 'The participating organisation role is invalid.';
             $messages[sprintf('%s.type.in', $participatingOrgForm)] = 'The participating organisation type is invalid.';

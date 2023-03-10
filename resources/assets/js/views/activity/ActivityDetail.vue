@@ -104,7 +104,7 @@
             </div>
 
             <Errors
-              v-if="store.state.publishErrors.length > 0"
+              v-if="store.state.publishErrors.length > 0 || importActivityError"
               :error-data="store.state.publishErrors"
               class="absolute right-0 bottom-[calc(100%-52px)]"
             />
@@ -437,9 +437,14 @@ export default defineComponent({
       type: Object,
       required: true,
     },
+    importActivityError: {
+      type: Object,
+      required: true,
+    },
   },
   setup(props) {
     const { types, coreCompleted } = toRefs(props);
+    let removed = sessionStorage.getItem('removed');
 
     const store = detailStore();
     const indexStore = useStore();
@@ -481,6 +486,14 @@ export default defineComponent({
       window.removeEventListener('resize', calcWidth);
     });
     onMounted(() => {
+      window.onload = () => {
+        if (removed) {
+          toastData.type = true;
+          toastData.visibility = true;
+          toastData.message = 'Removed succesfully';
+          sessionStorage.clear();
+        }
+      };
       screenWidth.value = window.innerWidth;
       window.addEventListener('scroll', handleScroll);
       window.addEventListener('resize', calcWidth);
@@ -602,7 +615,8 @@ export default defineComponent({
      */
     let pageTitle = '';
     const found = activityProps.title.find((e: { language: string }) => {
-      const currentLanguage = 'en';
+      const currentLanguage =
+        activityProps.default_field_values?.default_language;
       return e.language === currentLanguage;
     });
 
@@ -648,6 +662,8 @@ export default defineComponent({
     provide('toastMessage', toastMessage);
     provide('toastData', toastData);
     provide('errorData', errorData);
+    provide('importActivityError', props.importActivityError);
+    provide('activityId', props.activity.id);
 
     indexStore.dispatch('updateSelectedActivities', [activity.value.id]);
 

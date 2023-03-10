@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\CountryBudgetItem\CountryBudgetItemRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Support\Arr;
 
 /**
@@ -14,6 +15,8 @@ use Illuminate\Support\Arr;
  */
 class CountryBudgetItem extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Header for CountryBudgetItem element.
      * @var array
@@ -68,6 +71,8 @@ class CountryBudgetItem extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -244,7 +249,22 @@ class CountryBudgetItem extends Element
     public function rules(): array
     {
         if (Arr::get($this->data, 'country_budget_items')) {
-            return $this->getBaseRules($this->request->getRulesForCountryBudgetItem(Arr::get($this->data, 'country_budget_items', [])), false);
+            return $this->getBaseRules($this->request->getWarningForCountryBudgetItem(Arr::get($this->data, 'country_budget_items', [])), false);
+        }
+
+        return [];
+    }
+
+    /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function errorRules(): array
+    {
+        if (Arr::get($this->data, 'country_budget_items')) {
+            return $this->getBaseRules($this->request->getErrorsForCountryBudgetItem(Arr::get($this->data, 'country_budget_items', [])), false);
         }
 
         return [];
@@ -270,6 +290,9 @@ class CountryBudgetItem extends Element
     {
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
         $this->setValidity();
 

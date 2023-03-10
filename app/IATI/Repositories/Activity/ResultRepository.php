@@ -129,6 +129,12 @@ class ResultRepository extends Repository
      */
     public function deleteResult($activity_id): mixed
     {
-        return $this->model->where('activity_id', $activity_id)->delete();
+        $results = $this->model->where('activity_id', $activity_id)->get();
+
+        if (!empty($results)) {
+            return $results->each->delete();
+        }
+
+        return false;
     }
 }

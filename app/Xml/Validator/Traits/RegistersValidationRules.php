@@ -604,6 +604,14 @@ trait RegistersValidationRules
         $this->extend('allocated_region_total_mismatch', function () {
             return false;
         });
+
+        $this->extend('country_or_region', function () {
+            return false;
+        });
+
+        $this->extend('duplicate_country_code', function () {
+            return false;
+        });
     }
 
     /**

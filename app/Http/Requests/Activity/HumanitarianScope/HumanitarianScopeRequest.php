@@ -18,7 +18,13 @@ class HumanitarianScopeRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForHumanitarianScope($this->get('humanitarian_scope'));
+        $data = $this->get('humanitarian_scope');
+        $totalRules = [
+            $this->getWarningForHumanitarianScope($data),
+            $this->getErrorsForHumanitarianScope($data),
+        ];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -38,7 +44,29 @@ class HumanitarianScopeRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForHumanitarianScope(array $formFields): array
+    public function getWarningForHumanitarianScope(array $formFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $humanitarianScopeIndex => $humanitarianScope) {
+            $humanitarianScopeForm = 'humanitarian_scope.' . $humanitarianScopeIndex;
+
+            foreach ($this->getWarningForNarrative($humanitarianScope['narrative'], $humanitarianScopeForm) as $humanitarianIndex => $narrativeRules) {
+                $rules[$humanitarianIndex] = $narrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns rules for related activity.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    public function getErrorsForHumanitarianScope(array $formFields): array
     {
         $rules = [];
 
@@ -49,7 +77,7 @@ class HumanitarianScopeRequest extends ActivityBaseRequest
             $rules[sprintf('%s.vocabulary_uri', $humanitarianScopeForm)] = 'nullable|url';
             $rules[sprintf('%s.code', $humanitarianScopeForm)] = 'nullable|string';
 
-            foreach ($this->getRulesForNarrative($humanitarianScope['narrative'], $humanitarianScopeForm) as $humanitarianIndex => $narrativeRules) {
+            foreach ($this->getErrorsForNarrative($humanitarianScope['narrative'], $humanitarianScopeForm) as $humanitarianIndex => $narrativeRules) {
                 $rules[$humanitarianIndex] = $narrativeRules;
             }
         }

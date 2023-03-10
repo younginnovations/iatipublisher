@@ -7,12 +7,15 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Date\DateRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 
 /**
  * Class ActivityDate.
  */
 class ActivityDate extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Headers for the ActivityDate element.
      *
@@ -94,6 +97,8 @@ class ActivityDate extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -165,7 +170,17 @@ class ActivityDate extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForDate($this->data('activity_date'));
+        return $this->request->getWarningForActivityDate($this->data('activity_date'));
+    }
+
+    /**
+     * Provides the rules for the IATI Element validation.
+     *
+     * @return array
+     */
+    public function errorRules(): array
+    {
+        return $this->request->getErrorsForActivityDate($this->data('activity_date'));
     }
 
     /**
@@ -187,6 +202,9 @@ class ActivityDate extends Element
     {
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
+                                         ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+                                         ->with($this->errorRules(), $this->messages())
                                          ->getValidatorInstance();
 
         $this->setValidity();

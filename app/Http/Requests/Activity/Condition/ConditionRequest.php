@@ -18,7 +18,9 @@ class ConditionRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForCondition($this->get('condition'));
+        $totalRules = [$this->getWarningForCondition($this->get('condition')), $this->getErrorsForCondition($this->get('condition'))];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -38,7 +40,7 @@ class ConditionRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForCondition(array $formFields): array
+    public function getErrorsForCondition(array $formFields): array
     {
         $rules = [];
 
@@ -46,7 +48,29 @@ class ConditionRequest extends ActivityBaseRequest
             $conditionForm = sprintf('condition.%s', $conditionIndex);
             $rules[sprintf('%s.condition_type', $conditionForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('ConditionType', 'Activity', false)));
 
-            foreach ($this->getRulesForNarrative($condition['narrative'], $conditionForm) as $conditionNarrativeIndex => $conditionNarrativeRules) {
+            foreach ($this->getErrorsForNarrative($condition['narrative'], $conditionForm) as $conditionNarrativeIndex => $conditionNarrativeRules) {
+                $rules[$conditionNarrativeIndex] = $conditionNarrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns rules for related activity.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    public function getWarningForCondition(array $formFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $conditionIndex => $condition) {
+            $conditionForm = sprintf('condition.%s', $conditionIndex);
+
+            foreach ($this->getWarningForNarrative($condition['narrative'], $conditionForm) as $conditionNarrativeIndex => $conditionNarrativeRules) {
                 $rules[$conditionNarrativeIndex] = $conditionNarrativeRules;
             }
         }

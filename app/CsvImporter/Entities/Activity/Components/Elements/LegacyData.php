@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\LegacyData\LegacyDataRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Support\Arr;
 
 /**
@@ -14,6 +15,8 @@ use Illuminate\Support\Arr;
  */
 class LegacyData extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Header for LegacyData element.
      * @var array
@@ -66,6 +69,8 @@ class LegacyData extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -154,7 +159,18 @@ class LegacyData extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForActivityLegacyData(Arr::get($this->data(), 'legacy_data', []));
+        return $this->request->getWarningForActivityLegacyData(Arr::get($this->data(), 'legacy_data', []));
+    }
+
+    /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function errorRules(): array
+    {
+        return $this->request->getErrorsForLegacyData(Arr::get($this->data(), 'legacy_data', []));
     }
 
     /**
@@ -177,6 +193,9 @@ class LegacyData extends Element
     {
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
+                                         ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+                                         ->with($this->errorRules(), $this->messages())
                                          ->getValidatorInstance();
         $this->setValidity();
 

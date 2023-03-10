@@ -22,7 +22,9 @@ class RecipientCountryRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForRecipientCountry($this->get('recipient_country'));
+        $totalRules = [$this->getWarningForRecipientCountry($this->get('recipient_country')), $this->getErrorsForRecipientCountry($this->get('recipient_country'))];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -54,6 +56,29 @@ class RecipientCountryRequest extends ActivityBaseRequest
         return $total;
     }
 
+    public function getErrorsForRecipientCountry(array $formFields, bool $fileUpload = false): array
+    {
+        if (empty($formFields)) {
+            return [];
+        }
+
+        $rules = [];
+
+        foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
+            $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
+            $rules[sprintf('%s.country_code', $recipientCountryForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Country', 'Activity', false)));
+            $rules[$recipientCountryForm . '.percentage'] = 'nullable|numeric|min:0';
+
+            $narrativeRules = $this->getErrorsForNarrative($recipientCountry['narrative'], $recipientCountryForm);
+
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
+            }
+        }
+
+        return $rules;
+    }
+
     /**
      * Returns rules for related activity.
      *
@@ -63,7 +88,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    public function getRulesForRecipientCountry(array $formFields, bool $fileUpload = false): array
+    public function getWarningForRecipientCountry(array $formFields, bool $fileUpload = false): array
     {
         if (empty($formFields)) {
             return [];
@@ -109,39 +134,37 @@ class RecipientCountryRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
-            $rules[sprintf('%s.country_code', $recipientCountryForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Country', 'Activity', false)));
 
             if (in_array($recipientCountry['country_code'], $groupedCountryCode, true)) {
-                $rules[sprintf('%s.country_code', $recipientCountryForm)] .= '|duplicate_country_code';
+                $rules[sprintf('%s.country_code', $recipientCountryForm)][] = 'duplicate_country_code';
             }
 
-            $rules[$recipientCountryForm . '.percentage'] = 'numeric|min:0';
-
-            $narrativeRules = $this->getRulesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
+            $narrativeRules = $this->getWarningForNarrative($recipientCountry['narrative'], $recipientCountryForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
             }
 
             if ($totalCountryPercent > 100.0) {
-                $rules[$recipientCountryForm . '.percentage'] .= '|sum_exceeded';
+                $rules[$recipientCountryForm . '.percentage'][] = 'sum_exceeded';
             }
 
             if (!$fileUpload) {
                 if ($allottedCountryPercent === 100.0) {
-                    $rules[$recipientCountryForm . '.percentage'] .= '|nullable|max:100';
+                    $rules[$recipientCountryForm . '.percentage'][] = 'nullable';
+                    $rules[$recipientCountryForm . '.percentage'][] = 'max:100';
                 }
 
                 if ($allottedCountryPercent === 100.0 && $totalCountryPercent < $allottedCountryPercent && $activityService->hasRecipientRegionDefinedInActivity($params['id'])) {
-                    $rules[$recipientCountryForm . '.percentage'] = '|allocated_country_percent';
+                    $rules[$recipientCountryForm . '.percentage'][] = 'allocated_country_percent';
                 }
 
                 if ($allottedCountryPercent === 0.0) {
-                    $rules[$recipientCountryForm . '.percentage'] .= $totalCountryPercent > 0.0
-                                                                    ? '|region_percentage_complete'
-                                                                    : '|nullable';
+                    $rules[$recipientCountryForm . '.percentage'][] = $totalCountryPercent > 0.0
+                                                                    ? 'region_percentage_complete'
+                                                                    : 'nullable';
                 } elseif ($totalCountryPercent !== $allottedCountryPercent && $allottedCountryPercent !== 100.0) {
-                    $rules[$recipientCountryForm . '.percentage'] .= '|allocated_country_percent';
+                    $rules[$recipientCountryForm . '.percentage'][] = 'allocated_country_percent';
                 }
             }
         }

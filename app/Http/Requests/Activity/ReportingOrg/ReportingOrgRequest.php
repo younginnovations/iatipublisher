@@ -18,7 +18,9 @@ class ReportingOrgRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForReportingOrganization($this->get('reporting_org'));
+        $totalRules = [$this->getErrorsForReportingOrganization($this->get('reporting_org')), $this->getWarningForReportingOrganization($this->get('reporting_org'))];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -32,13 +34,13 @@ class ReportingOrgRequest extends ActivityBaseRequest
     }
 
     /**
-     * Rules for reporting organization form.
+     * Critical rules for reporting organization form.
      *
      * @param array $formFields
      *
      * @return array
      */
-    public function getRulesForReportingOrganization(array $formFields): array
+    public function getErrorsForReportingOrganization(array $formFields): array
     {
         $rules = [];
         $reportingOrganizationTypes = implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
@@ -47,11 +49,29 @@ class ReportingOrgRequest extends ActivityBaseRequest
 
         foreach ($formFields as $reportingOrganizationIndex => $reportingOrganization) {
             $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
-            $rules[$reportingOrganizationForm . '.ref'] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
             $rules[$reportingOrganizationForm . '.type'] = sprintf('nullable|in:%s', $reportingOrganizationTypes);
             $rules[$reportingOrganizationForm . '.secondary_reporter'] = ['nullable', 'in:0,1'];
+        }
 
-            $narrativeRules = $this->getRulesForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
+        return $rules;
+    }
+
+    /**
+     * Rules for reporting organization form.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    public function getWarningForReportingOrganization(array $formFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $reportingOrganizationIndex => $reportingOrganization) {
+            $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
+            $rules[$reportingOrganizationForm . '.ref'] = ['nullable', 'not_regex:/(&|!|\/|\||\?)/'];
+
+            $narrativeRules = $this->getWarningForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;

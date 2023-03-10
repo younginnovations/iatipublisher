@@ -19,7 +19,10 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForCountryBudgetItem(request()->except(['_token', '_method']));
+        $data = request()->except(['_token', '_method']);
+        $totalRules = [$this->getErrorsForCountryBudgetItem($data), $this->getWarningForCountryBudgetItem($data)];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -39,9 +42,23 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForCountryBudgetItem(array $formFields): array
+    public function getWarningForCountryBudgetItem(array $formFields): array
     {
         $rules = $this->getBudgetItemRules(Arr::get($formFields, 'budget_item', []), $formFields);
+
+        return $rules;
+    }
+
+    /**
+     * Returns rules for related activity.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    public function getErrorsForCountryBudgetItem(array $formFields): array
+    {
+        $rules = $this->getErrorBudgetItemRules(Arr::get($formFields, 'budget_item', []), $formFields);
         $rules['country_budget_vocabulary'] = 'nullable|in:' . implode(',', array_keys(getCodeList('BudgetIdentifierVocabulary', 'Activity', false)));
 
         return $rules;
@@ -77,15 +94,40 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
 
         foreach ($formFields as $budgetItemIndex => $budgetItem) {
             $budgetItemForm = sprintf('budget_item.%s', $budgetItemIndex);
-            $rules[sprintf('%s.code', $budgetItemForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('BudgetIdentifier', 'Activity', false)));
-            $rules[sprintf('%s.percentage', $budgetItemForm)] = 'nullable|numeric|max:100';
+            $rules[sprintf('%s.percentage', $budgetItemForm)] = 'max:100';
 
             foreach ($this->getBudgetItemDescriptionRules($budgetItem['description'], $budgetItemForm) as $budgetItemDescriptionIndex => $budgetItemDescriptionNarrativeRules) {
                 $rules[$budgetItemDescriptionIndex] = $budgetItemDescriptionNarrativeRules;
             }
 
-            foreach ($this->getRulesForPercentage($allFields) as $budgetItemPercentageIndex => $budgetItemPercentageRules) {
+            foreach ($this->getWarningForPercentage($allFields) as $budgetItemPercentageIndex => $budgetItemPercentageRules) {
                 $rules[$budgetItemPercentageIndex] = $budgetItemPercentageRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns budget item validation rules.
+     *
+     * @param array $formFields
+     * @param array $allFields
+     * @param array $budgetItemForm
+     *
+     * @return array
+     */
+    public function getErrorBudgetItemRules(array $formFields, array $allFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $budgetItemIndex => $budgetItem) {
+            $budgetItemForm = sprintf('budget_item.%s', $budgetItemIndex);
+            $rules[sprintf('%s.code', $budgetItemForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('BudgetIdentifier', 'Activity', false)));
+            $rules[sprintf('%s.percentage', $budgetItemForm)] = 'nullable|numeric';
+
+            foreach ($this->getCriticalBudgetItemDescriptionRules($budgetItem['description'], $budgetItemForm) as $budgetItemDescriptionIndex => $budgetItemDescriptionNarrativeRules) {
+                $rules[$budgetItemDescriptionIndex] = $budgetItemDescriptionNarrativeRules;
             }
         }
 
@@ -133,7 +175,27 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
 
         foreach ($formFields as $descriptionIndex => $description) {
             $descriptionForm = sprintf('%s.description.%s', $formBase, $descriptionIndex);
-            $rules = $this->getRulesForNarrative($description['narrative'], $descriptionForm);
+            $rules = $this->getWarningForNarrative($description['narrative'], $descriptionForm);
+        }
+
+        return $rules;
+    }
+
+    /**
+     * return budget item description critical rules.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    public function getCriticalBudgetItemDescriptionRules(array $formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $descriptionIndex => $description) {
+            $descriptionForm = sprintf('%s.description.%s', $formBase, $descriptionIndex);
+            $rules = $this->getErrorsForNarrative($description['narrative'], $descriptionForm);
         }
 
         return $rules;
@@ -166,7 +228,7 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForPercentage($countryBudget): array
+    public function getWarningForPercentage($countryBudget): array
     {
         $countryBudgetItems = Arr::get($countryBudget, 'budget_item', []);
         $totalPercentage = 0;

@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Location\LocationRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Support\Arr;
 
 /**
@@ -14,6 +15,8 @@ use Illuminate\Support\Arr;
  */
 class Location extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Header for Location element.
      * @var array
@@ -79,6 +82,8 @@ class Location extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -487,7 +492,18 @@ class Location extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForLocation(Arr::get($this->data, 'location', []));
+        return $this->request->getWarningForLocation(Arr::get($this->data, 'location', []));
+    }
+
+    /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function errorRules(): array
+    {
+        return $this->request->getErrorsForLocation(Arr::get($this->data, 'location', []));
     }
 
     /**
@@ -510,6 +526,9 @@ class Location extends Element
     {
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
         $this->setValidity();
 

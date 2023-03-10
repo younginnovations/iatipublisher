@@ -19,7 +19,13 @@ class ContactInfoRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForContactInfo($this->get('contact_info'));
+        $data = $this->get('contact_info');
+        $totalRules = [
+            $this->getWarningForContactInfo($data),
+            $this->getErrorsForContactInfo($data),
+        ];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -39,7 +45,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForContactInfo(array $formFields): array
+    public function getErrorsForContactInfo(array $formFields): array
     {
         $rules = [];
 
@@ -47,14 +53,46 @@ class ContactInfoRequest extends ActivityBaseRequest
             $contactInfoForm = sprintf('contact_info.%s', $contactInfoIndex);
             $rules[sprintf('%s.type', $contactInfoForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('ContactType', 'Activity', false)));
             $tempRules = [
-                $this->getRulesForDepartment(Arr::get($contactInfo, 'department', []), $contactInfoForm),
-                $this->getRulesForOrganisation(Arr::get($contactInfo, 'organisation', []), $contactInfoForm),
-                $this->getRulesForPersonName(Arr::get($contactInfo, 'person_name', []), $contactInfoForm),
-                $this->getRulesForJobTitle(Arr::get($contactInfo, 'job_title', []), $contactInfoForm),
-                $this->getRulesForMailingAddress(Arr::get($contactInfo, 'mailing_address', []), $contactInfoForm),
-                $this->getRulesForTelephone(Arr::get($contactInfo, 'telephone', []), $contactInfoForm),
-                $this->getRulesForEmail(Arr::get($contactInfo, 'email', []), $contactInfoForm),
-                $this->getRulesForWebsite(Arr::get($contactInfo, 'website', []), $contactInfoForm),
+                $this->getErrorsForDepartment(Arr::get($contactInfo, 'department', []), $contactInfoForm),
+                $this->getErrorsForOrganisation(Arr::get($contactInfo, 'organisation', []), $contactInfoForm),
+                $this->getErrorsForPersonName(Arr::get($contactInfo, 'person_name', []), $contactInfoForm),
+                $this->getErrorsForJobTitle(Arr::get($contactInfo, 'job_title', []), $contactInfoForm),
+                $this->getErrorsForMailingAddress(Arr::get($contactInfo, 'mailing_address', []), $contactInfoForm),
+                $this->getErrorsForTelephone(Arr::get($contactInfo, 'telephone', []), $contactInfoForm),
+                $this->getErrorsForEmail(Arr::get($contactInfo, 'email', []), $contactInfoForm),
+                $this->getErrorsForWebsite(Arr::get($contactInfo, 'website', []), $contactInfoForm),
+            ];
+
+            foreach ($tempRules as $tempRule) {
+                foreach ($tempRule as $idx => $rule) {
+                    $rules[$idx] = $rule;
+                }
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns rules for contact info.
+     *
+     * @param array $formFields
+     *
+     * @return array
+     */
+    public function getWarningForContactInfo(array $formFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $contactInfoIndex => $contactInfo) {
+            $contactInfoForm = sprintf('contact_info.%s', $contactInfoIndex);
+
+            $tempRules = [
+                $this->getWarningForDepartment(Arr::get($contactInfo, 'department', []), $contactInfoForm),
+                $this->getWarningForOrganisation(Arr::get($contactInfo, 'organisation', []), $contactInfoForm),
+                $this->getWarningForPersonName(Arr::get($contactInfo, 'person_name', []), $contactInfoForm),
+                $this->getWarningForJobTitle(Arr::get($contactInfo, 'job_title', []), $contactInfoForm),
+                $this->getWarningForMailingAddress(Arr::get($contactInfo, 'mailing_address', []), $contactInfoForm),
             ];
 
             foreach ($tempRules as $tempRule) {
@@ -110,14 +148,37 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForOrganisation($formFields, $formBase): array
+    protected function getWarningForOrganisation($formFields, $formBase): array
     {
         $rules = [];
 
         foreach ($formFields as $organisationIndex => $organisation) {
             $organisationForm = sprintf('%s.organisation.%s', $formBase, $organisationIndex);
 
-            foreach ($this->getRulesForNarrative($organisation['narrative'], $organisationForm) as $organisationNarrativeIndex => $organisationNarrativeRules) {
+            foreach ($this->getWarningForNarrative($organisation['narrative'], $organisationForm) as $organisationNarrativeIndex => $organisationNarrativeRules) {
+                $rules[$organisationNarrativeIndex] = $organisationNarrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns rules for organisation.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    protected function getErrorsForOrganisation($formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $organisationIndex => $organisation) {
+            $organisationForm = sprintf('%s.organisation.%s', $formBase, $organisationIndex);
+
+            foreach ($this->getErrorsForNarrative($organisation['narrative'], $organisationForm) as $organisationNarrativeIndex => $organisationNarrativeRules) {
                 $rules[$organisationNarrativeIndex] = $organisationNarrativeRules;
             }
         }
@@ -156,14 +217,37 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForDepartment($formFields, $formBase): array
+    protected function getWarningForDepartment($formFields, $formBase): array
     {
         $rules = [];
 
         foreach ($formFields as $departmentIndex => $department) {
             $departmentForm = sprintf('%s.department.%s', $formBase, $departmentIndex);
 
-            foreach ($this->getRulesForNarrative($department['narrative'], $departmentForm) as $departmentNarrativeIndex => $departmentNarrativeRules) {
+            foreach ($this->getWarningForNarrative($department['narrative'], $departmentForm) as $departmentNarrativeIndex => $departmentNarrativeRules) {
+                $rules[$departmentNarrativeIndex] = $departmentNarrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns rules for department.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    protected function getErrorsForDepartment($formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $departmentIndex => $department) {
+            $departmentForm = sprintf('%s.department.%s', $formBase, $departmentIndex);
+
+            foreach ($this->getErrorsForNarrative($department['narrative'], $departmentForm) as $departmentNarrativeIndex => $departmentNarrativeRules) {
                 $rules[$departmentNarrativeIndex] = $departmentNarrativeRules;
             }
         }
@@ -202,14 +286,37 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForPersonName($formFields, $formBase): array
+    protected function getWarningForPersonName($formFields, $formBase): array
     {
         $rules = [];
 
         foreach ($formFields as $personNameIndex => $personName) {
             $personNameForm = sprintf('%s.person_name.%s', $formBase, $personNameIndex);
 
-            foreach ($this->getRulesForNarrative($personName['narrative'], $personNameForm) as $personNameNarrativeIndex => $personNameNarrativeRules) {
+            foreach ($this->getWarningForNarrative($personName['narrative'], $personNameForm) as $personNameNarrativeIndex => $personNameNarrativeRules) {
+                $rules[$personNameNarrativeIndex] = $personNameNarrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns rules for person name.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    protected function getErrorsForPersonName($formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $personNameIndex => $personName) {
+            $personNameForm = sprintf('%s.person_name.%s', $formBase, $personNameIndex);
+
+            foreach ($this->getErrorsForNarrative($personName['narrative'], $personNameForm) as $personNameNarrativeIndex => $personNameNarrativeRules) {
                 $rules[$personNameNarrativeIndex] = $personNameNarrativeRules;
             }
         }
@@ -248,14 +355,37 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForJobTitle($formFields, $formBase): array
+    protected function getWarningForJobTitle($formFields, $formBase): array
     {
         $rules = [];
 
         foreach ($formFields as $jobTitleIndex => $jobTitle) {
             $jobTitleForm = sprintf('%s.job_title.%s', $formBase, $jobTitleIndex);
 
-            foreach ($this->getRulesForNarrative($jobTitle['narrative'], $jobTitleForm) as $jobTitleNarrativeIndex => $jobTitleNarrativeRules) {
+            foreach ($this->getWarningForNarrative($jobTitle['narrative'], $jobTitleForm) as $jobTitleNarrativeIndex => $jobTitleNarrativeRules) {
+                $rules[$jobTitleNarrativeIndex] = $jobTitleNarrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns rules for job title.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    protected function getErrorsForJobTitle($formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $jobTitleIndex => $jobTitle) {
+            $jobTitleForm = sprintf('%s.job_title.%s', $formBase, $jobTitleIndex);
+
+            foreach ($this->getErrorsForNarrative($jobTitle['narrative'], $jobTitleForm) as $jobTitleNarrativeIndex => $jobTitleNarrativeRules) {
                 $rules[$jobTitleNarrativeIndex] = $jobTitleNarrativeRules;
             }
         }
@@ -294,14 +424,37 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForMailingAddress($formFields, $formBase): array
+    protected function getWarningForMailingAddress($formFields, $formBase): array
     {
         $rules = [];
 
         foreach ($formFields as $mailingAddressIndex => $mailingAddress) {
             $mailingAddressForm = sprintf('%s.mailing_address.%s', $formBase, $mailingAddressIndex);
 
-            foreach ($this->getRulesForNarrative($mailingAddress['narrative'], $mailingAddressForm) as $mailingAddressNarrativeIndex => $mailingAddressNarrativeRules) {
+            foreach ($this->getWarningForNarrative($mailingAddress['narrative'], $mailingAddressForm) as $mailingAddressNarrativeIndex => $mailingAddressNarrativeRules) {
+                $rules[$mailingAddressNarrativeIndex] = $mailingAddressNarrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Returns rules for mailing address.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    protected function getErrorsForMailingAddress($formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $mailingAddressIndex => $mailingAddress) {
+            $mailingAddressForm = sprintf('%s.mailing_address.%s', $formBase, $mailingAddressIndex);
+
+            foreach ($this->getErrorsForNarrative($mailingAddress['narrative'], $mailingAddressForm) as $mailingAddressNarrativeIndex => $mailingAddressNarrativeRules) {
                 $rules[$mailingAddressNarrativeIndex] = $mailingAddressNarrativeRules;
             }
         }
@@ -340,7 +493,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForTelephone($formFields, $formBase): array
+    protected function getErrorsForTelephone($formFields, $formBase): array
     {
         $rules = [];
 
@@ -364,8 +517,8 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $telephoneIndex => $telephone) {
-            $messages[sprintf('%s.telephone.%s.telephone.numeric', $formBase, $telephoneIndex)] = 'The contact info telephone number must be valid numeric value';
-            $messages[sprintf('%s.telephone.%s.telephone.regex', $formBase, $telephoneIndex)] = 'The contact info telephone number is invalid';
+            $messages[sprintf('%s.telephone.%s.telephone.numeric', $formBase, $telephoneIndex)] = 'The contact info telephone number must be valid numeric value.';
+            $messages[sprintf('%s.telephone.%s.telephone.regex', $formBase, $telephoneIndex)] = 'The contact info telephone number is invalid.';
             $messages[sprintf('%s.telephone.%s.telephone.min', $formBase, $telephoneIndex)] = 'The contact info telephone number must have atleast 7 digits.';
             $messages[sprintf('%s.telephone.%s.telephone.max', $formBase, $telephoneIndex)] = 'The contact info telephone number must not have more than 20 digits.';
         }
@@ -381,7 +534,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForEmail($formFields, $formBase): array
+    protected function getErrorsForEmail($formFields, $formBase): array
     {
         $rules = [];
 
@@ -405,8 +558,8 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $emailIndex => $email) {
-            $messages[sprintf('%s.email.%s.email.email', $formBase, $emailIndex)] = 'The contact info email must be valid';
-            $messages[sprintf('%s.email.%s.email.regex', $formBase, $emailIndex)] = 'The contact info email format is invalid';
+            $messages[sprintf('%s.email.%s.email.email', $formBase, $emailIndex)] = 'The contact info email must be valid.';
+            $messages[sprintf('%s.email.%s.email.regex', $formBase, $emailIndex)] = 'The contact info email format is invalid.';
         }
 
         return $messages;
@@ -420,7 +573,7 @@ class ContactInfoRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getRulesForWebsite($formFields, $formBase): array
+    protected function getErrorsForWebsite($formFields, $formBase): array
     {
         $rules = [];
 

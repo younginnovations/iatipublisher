@@ -7,12 +7,15 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\DefaultAidType\DefaultAidTypeRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 
 /**
  * Class DefaultAidType.
  */
 class DefaultAidType extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Header for DefaultAidType element.
      * @var array
@@ -64,6 +67,8 @@ class DefaultAidType extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -178,7 +183,18 @@ class DefaultAidType extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForDefaultAidType($this->data('default_aid_type'));
+        return $this->request->getWarningForDefaultAidType($this->data('default_aid_type'));
+    }
+
+    /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function errorRules(): array
+    {
+        return $this->request->getErrorsForDefaultAidType($this->data('default_aid_type'));
     }
 
     /**
@@ -201,6 +217,9 @@ class DefaultAidType extends Element
     {
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
+                                         ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+                                         ->with($this->errorRules(), $this->messages())
                                          ->getValidatorInstance();
         $this->setValidity();
 

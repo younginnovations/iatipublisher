@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Tag\TagRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Support\Arr;
 
 /**
@@ -14,6 +15,8 @@ use Illuminate\Support\Arr;
  */
 class Tag extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Header for Tag element.
      * @var array
@@ -66,6 +69,8 @@ class Tag extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -225,7 +230,18 @@ class Tag extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForTag(Arr::get($this->data(), 'tag', []));
+        return $this->request->getWarningForTag(Arr::get($this->data(), 'tag', []));
+    }
+
+    /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function errorRules(): array
+    {
+        return $this->request->getErrorsForTag(Arr::get($this->data(), 'tag', []));
     }
 
     /**
@@ -248,6 +264,9 @@ class Tag extends Element
     {
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
+            ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
         $this->setValidity();
 

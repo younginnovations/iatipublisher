@@ -9,10 +9,10 @@ use App\IATI\Repositories\Activity\IndicatorRepository;
 use App\IATI\Repositories\Activity\PeriodRepository;
 use App\IATI\Repositories\Activity\ResultRepository;
 use App\IATI\Repositories\Activity\TransactionRepository;
+use App\IATI\Repositories\ImportActivityError\ImportActivityErrorRepository;
 use App\XmlImporter\Events\XmlWasUploaded;
 use App\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
 use App\XmlImporter\Foundation\XmlProcessor;
-use DOMDocument;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
@@ -90,7 +90,12 @@ class ImportXmlService
     /**
      * @var IndicatorRepository
      */
-    private IndicatorRepository $indicatorRepository;
+    protected IndicatorRepository $indicatorRepository;
+
+    /**
+     * @var ImportActivityErrorRepository
+     */
+    protected ImportActivityErrorRepository $importActivityErrorRepo;
 
     /**
      * XmlImportManager constructor.
@@ -101,6 +106,7 @@ class ImportXmlService
      * @param ResultRepository      $resultRepository
      * @param PeriodRepository      $periodRepository
      * @param IndicatorRepository   $indicatorRepository
+     * @param ImportActivityErrorRepository  $importActivityErrorRepo
      * @param XmlProcessor          $xmlProcessor
      * @param LoggerInterface       $logger
      * @param Filesystem            $filesystem
@@ -113,6 +119,7 @@ class ImportXmlService
         ResultRepository $resultRepository,
         PeriodRepository $periodRepository,
         IndicatorRepository $indicatorRepository,
+        ImportActivityErrorRepository $importActivityErrorRepo,
         XmlProcessor $xmlProcessor,
         LoggerInterface $logger,
         Filesystem $filesystem,
@@ -127,21 +134,11 @@ class ImportXmlService
         $this->activityRepository = $activityRepository;
         $this->resultRepository = $resultRepository;
         $this->indicatorRepository = $indicatorRepository;
+        $this->importActivityErrorRepo = $importActivityErrorRepo;
         $this->periodRepository = $periodRepository;
         $this->xml_file_storage_path = env('XML_FILE_STORAGE_PATH', 'XmlImporter/file');
         $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH', 'XmlImporter/tmp');
         $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'CsvImporter/tmp');
-    }
-
-    /**
-     * @param $path
-     * @param $content
-     *
-     * @return void
-     */
-    public function uploadFile($path, $content): void
-    {
-        Storage::disk('s3')->put($path, $content);
     }
 
     /**
@@ -154,13 +151,15 @@ class ImportXmlService
     public function store(UploadedFile $file): bool
     {
         try {
-            return awsUploadFile(sprintf('%s/%s/%s', $this->xml_file_storage_path, Auth::user()->organization_id, $file->getClientOriginalName()), $file->getContent());
+            awsDeleteDirectory(sprintf('%s/%s/%s', $this->xml_file_storage_path, Auth::user()->organization_id, Auth::user()->id));
+
+            return awsUploadFile(sprintf('%s/%s/%s/%s', $this->xml_file_storage_path, Auth::user()->organization_id, Auth::user()->id, $file->getClientOriginalName()), $file->getContent());
         } catch (Exception $exception) {
             $this->logger->error(
                 sprintf('Error uploading Xml file due to %s', $exception->getMessage()),
                 [
                     'trace' => $exception->getTraceAsString(),
-                    'user'  => auth()->user()->id,
+                    'user' => auth()->user()->id,
                 ]
             );
 
@@ -181,21 +180,33 @@ class ImportXmlService
         $contents = $this->loadJsonFile('valid.json');
 
         foreach ($activities as $value) {
-            $activity = $contents[$value];
+            $activity = unsetErrorFields($contents[$value]);
+            $activityData = Arr::get($activity, 'data', []);
+            $organizationId = Auth::user()->organization->id;
 
-            if ($activity->existence === true) {
-                $oldActivity = $this->activityRepository->getActivityWithIdentifier(Auth::user()->organization->id, (array) $activity->data->iati_identifier);
+            if (Arr::get($activity, 'existence', false) && $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'))) {
+                $oldActivity = $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'));
 
-                $this->activityRepository->importXmlActivities($oldActivity->id, (array) $activity->data);
+                $this->activityRepository->importXmlActivities($oldActivity->id, $activityData);
                 $this->transactionRepository->deleteTransaction($oldActivity->id);
                 $this->resultRepository->deleteResult($oldActivity->id);
-                $this->saveTransactions($activity->data->transactions, $oldActivity->id)
-                    ->saveResults($activity->data->result, $oldActivity->id);
-            } else {
-                $storeActivity = $this->activityRepository->importXmlActivities(null, (array) $activity->data);
+                $this->saveTransactions(Arr::get($activityData, 'transactions'), $oldActivity->id);
+                $this->saveResults(Arr::get($activityData, 'result'), $oldActivity->id);
 
-                $this->saveTransactions($activity->data->transactions, $storeActivity->id)
-                    ->saveResults($activity->data->result, $storeActivity->id);
+                if (!empty($activity['errors'])) {
+                    $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $activity['errors']);
+                } else {
+                    $this->importActivityErrorRepo->deleteImportError($oldActivity->id);
+                }
+            } else {
+                $storeActivity = $this->activityRepository->importXmlActivities(null, $activityData);
+
+                $this->saveTransactions(Arr::get($activityData, 'transactions'), $storeActivity->id);
+                $this->saveResults(Arr::get($activityData, 'result'), $storeActivity->id);
+
+                if (!empty($activity['errors'])) {
+                    $this->importActivityErrorRepo->updateOrCreateError($storeActivity->id, $activity['errors']);
+                }
             }
         }
 
@@ -221,6 +232,7 @@ class ImportXmlService
                     'transaction' => json_encode($transaction),
                 ];
             }
+
             $this->transactionRepository->upsert($transactionList, 'id');
         }
 
@@ -238,49 +250,52 @@ class ImportXmlService
     protected function saveResults($results, $activityId): static
     {
         if ($results) {
+            $resultWithoutIndicator = [];
+
             foreach ($results as $result) {
                 $result = (array) $result;
                 $indicators = Arr::get($result, 'indicator', []);
                 unset($result['indicator']);
 
-                $savedResult = $this->resultRepository->store([
-                    'activity_id' => $activityId,
-                    'result'      => $result,
-                ]);
-
-                foreach ($indicators as $indicator) {
-                    $indicator = (array) $indicator;
-                    $periods = Arr::get($indicator, 'period', []);
-                    unset($indicator['period']);
-
-                    $savedIndicator = $this->indicatorRepository->store([
-                        'result_id' => $savedResult['id'],
-                        'indicator' => $indicator,
+                if (!empty($indicators)) {
+                    $savedResult = $this->resultRepository->store([
+                        'activity_id' => $activityId,
+                        'result' => $result,
                     ]);
 
-                    foreach ($periods as $period) {
-                        $this->periodRepository->store([
-                            'indicator_id' => $savedIndicator['id'],
-                            'period'       => $period,
+                    foreach ($indicators as $indicator) {
+                        $indicator = (array) $indicator;
+                        $periods = Arr::get($indicator, 'period', []);
+                        $tempPeriod = [];
+                        unset($indicator['period']);
+
+                        $savedIndicator = $this->indicatorRepository->store([
+                            'result_id' => $savedResult['id'],
+                            'indicator' => $indicator,
                         ]);
+
+                        if (!empty($periods)) {
+                            foreach ($periods as $period) {
+                                $tempPeriod[] = [
+                                    'period' => $period,
+                                ];
+                            }
+
+                            $savedIndicator->periods()->createMany($tempPeriod);
+                        }
                     }
+                } else {
+                    $resultWithoutIndicator[] = [
+                        'activity_id' => $activityId,
+                        'result' => json_encode($result),
+                    ];
                 }
             }
+
+            $this->resultRepository->upsert($resultWithoutIndicator, 'id');
         }
 
         return $this;
-    }
-
-    /**
-     * Get the temporary storage path for the uploaded Xml file.
-     *
-     * @param $filename
-     *
-     * @return string
-     */
-    protected function getXmlDataStoragePath($filename): string
-    {
-        return sprintf('%s/%s', storage_path(sprintf('%s/%s', $this->xml_data_storage_path, Auth::user()->organization_id)), $filename);
     }
 
     /**
@@ -293,8 +308,8 @@ class ImportXmlService
      */
     public function startImport($filename, $userId, $orgId): void
     {
-        awsDeleteFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'valid.json'));
-        awsUploadFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, 'status.json'), json_encode(['success' => true, 'message' => 'Started'], JSON_THROW_ON_ERROR));
+        awsDeleteDirectory(sprintf('%s/%s/%s', $this->xml_data_storage_path, $orgId, $userId));
+        awsUploadFile(sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, $orgId, $userId, 'status.json'), json_encode(['success' => true, 'message' => 'Started'], JSON_THROW_ON_ERROR));
 
         $this->fireXmlUploadEvent($filename, $userId, $orgId);
     }
@@ -326,7 +341,7 @@ class ImportXmlService
     public function loadJsonFile($filename): mixed
     {
         try {
-            $contents = awsGetFile(sprintf('%s/%s/%s', $this->xml_data_storage_path, Auth::user()->organization_id, $filename));
+            $contents = awsGetFile(sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, Auth::user()->organization_id, Auth::user()->id, $filename));
 
             if ($contents) {
                 return json_decode($contents, false, 512, JSON_THROW_ON_ERROR);
@@ -337,31 +352,14 @@ class ImportXmlService
             $this->logger->error(
                 sprintf('Error due to %s', $exception->getMessage()),
                 [
-                    'trace'    => $exception->getTraceAsString(),
-                    'user_id'  => auth()->user()->id,
+                    'trace' => $exception->getTraceAsString(),
+                    'user_id' => auth()->user()->id,
                     'filename' => $filename,
                 ]
             );
 
             return null;
         }
-    }
-
-    /**
-     * Load the xml from the given filePath.
-     *
-     * @param $filePath
-     *
-     * @return string
-     */
-    protected function loadXml($filePath): string
-    {
-        libxml_use_internal_errors(true);
-
-        $document = new DOMDocument();
-        $document->load($filePath);
-
-        return $document->saveXML();
     }
 
     /**

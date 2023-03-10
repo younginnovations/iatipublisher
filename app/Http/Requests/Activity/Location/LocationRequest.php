@@ -18,7 +18,10 @@ class LocationRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForLocation($this->get('location'));
+        $data = $this->get('location');
+        $totalRules = [$this->getWarningForLocation($data), $this->getErrorsForLocation($data)];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -38,7 +41,36 @@ class LocationRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForLocation($formFields): array
+    public function getWarningForLocation($formFields): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $locationIndex => $location) {
+            $locationForm = 'location.' . $locationIndex;
+            $tempRules = [
+                $this->getWarningForName($location['name'], $locationForm),
+                $this->getWarningForLocationDescription($location['description'], $locationForm),
+                $this->getWarningForActivityDescription($location['activity_description'], $locationForm),
+            ];
+
+            foreach ($tempRules as $tempRule) {
+                foreach ($tempRule as $idx => $rule) {
+                    $rules[$idx] = $rule;
+                }
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns rules for location form.
+     *
+     * @param $formFields
+     *
+     * @return array
+     */
+    public function getErrorsForLocation($formFields): array
     {
         $rules = [];
 
@@ -51,12 +83,12 @@ class LocationRequest extends ActivityBaseRequest
             $rules[sprintf('%s.feature_designation.0.code', $locationForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('LocationType', 'Activity', false)));
 
             $tempRules = [
-                $this->getRulesForLocationId($location['location_id'], $locationForm),
-                $this->getRulesForName($location['name'], $locationForm),
-                $this->getRulesForLocationDescription($location['description'], $locationForm),
-                $this->getRulesForActivityDescription($location['activity_description'], $locationForm),
-                $this->getRulesForAdministrative($location['administrative'], $locationForm),
-                $this->getRulesForPoint($location['point'], $locationForm),
+                $this->getWarningForLocationId($location['location_id'], $locationForm),
+                $this->getErrorsForName($location['name'], $locationForm),
+                $this->getErrorsForLocationDescription($location['description'], $locationForm),
+                $this->getErrorsForActivityDescription($location['activity_description'], $locationForm),
+                $this->getErrorsForAdministrative($location['administrative'], $locationForm),
+                $this->getErrorsForPoing($location['point'], $locationForm),
             ];
 
             foreach ($tempRules as $tempRule) {
@@ -112,7 +144,7 @@ class LocationRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForLocationId($formFields, $formBase): array
+    public function getWarningForLocationId($formFields, $formBase): array
     {
         $rules = [];
 
@@ -152,14 +184,37 @@ class LocationRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForName($formFields, $formBase): array
+    public function getWarningForName($formFields, $formBase): array
     {
         $rules = [];
 
         foreach ($formFields as $nameIndex => $name) {
             $narrativeForm = sprintf('%s.name.%s', $formBase, $nameIndex);
 
-            foreach ($this->getRulesForNarrative($name['narrative'], $narrativeForm) as $locationNameIndex => $locationNameNarrativeRules) {
+            foreach ($this->getWarningForNarrative($name['narrative'], $narrativeForm) as $locationNameIndex => $locationNameNarrativeRules) {
+                $rules[$locationNameIndex] = $locationNameNarrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns rules for name.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    public function getErrorsForName($formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $nameIndex => $name) {
+            $narrativeForm = sprintf('%s.name.%s', $formBase, $nameIndex);
+
+            foreach ($this->getErrorsForNarrative($name['narrative'], $narrativeForm) as $locationNameIndex => $locationNameNarrativeRules) {
                 $rules[$locationNameIndex] = $locationNameNarrativeRules;
             }
         }
@@ -197,14 +252,37 @@ class LocationRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForLocationDescription($formFields, $formBase): array
+    public function getWarningForLocationDescription($formFields, $formBase): array
     {
         $rules = [];
 
         foreach ($formFields as $descriptionIndex => $description) {
             $narrativeForm = sprintf('%s.description.%s', $formBase, $descriptionIndex);
 
-            foreach ($this->getRulesForNarrative($description['narrative'], $narrativeForm) as $locationDescriptionIndex => $locationDescriptionNarrativeRules) {
+            foreach ($this->getWarningForNarrative($description['narrative'], $narrativeForm) as $locationDescriptionIndex => $locationDescriptionNarrativeRules) {
+                $rules[$locationDescriptionIndex] = $locationDescriptionNarrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns rules for location description.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    public function getErrorsForLocationDescription($formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $descriptionIndex => $description) {
+            $narrativeForm = sprintf('%s.description.%s', $formBase, $descriptionIndex);
+
+            foreach ($this->getErrorsForNarrative($description['narrative'], $narrativeForm) as $locationDescriptionIndex => $locationDescriptionNarrativeRules) {
                 $rules[$locationDescriptionIndex] = $locationDescriptionNarrativeRules;
             }
         }
@@ -243,14 +321,37 @@ class LocationRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForActivityDescription($formFields, $formBase): array
+    public function getWarningForActivityDescription($formFields, $formBase): array
     {
         $rules = [];
 
         foreach ($formFields as $descriptionIndex => $description) {
             $narrativeForm = sprintf('%s.activity_description.%s', $formBase, $descriptionIndex);
 
-            foreach ($this->getRulesForNarrative($description['narrative'], $narrativeForm) as $locationActivityDescriptionIndex => $locationActivityDescriptionNarrativeRules) {
+            foreach ($this->getWarningForNarrative($description['narrative'], $narrativeForm) as $locationActivityDescriptionIndex => $locationActivityDescriptionNarrativeRules) {
+                $rules[$locationActivityDescriptionIndex] = $locationActivityDescriptionNarrativeRules;
+            }
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns rules for activity description.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    public function getErrorsForActivityDescription($formFields, $formBase): array
+    {
+        $rules = [];
+
+        foreach ($formFields as $descriptionIndex => $description) {
+            $narrativeForm = sprintf('%s.activity_description.%s', $formBase, $descriptionIndex);
+
+            foreach ($this->getErrorsForNarrative($description['narrative'], $narrativeForm) as $locationActivityDescriptionIndex => $locationActivityDescriptionNarrativeRules) {
                 $rules[$locationActivityDescriptionIndex] = $locationActivityDescriptionNarrativeRules;
             }
         }
@@ -289,7 +390,7 @@ class LocationRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForAdministrative($formFields, $formBase): array
+    public function getErrorsForAdministrative($formFields, $formBase): array
     {
         $rules = [];
 
@@ -334,7 +435,7 @@ class LocationRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForPoint($formFields, $formBase): array
+    public function getErrorsForPoing($formFields, $formBase): array
     {
         $rules = [];
         $pointForm = sprintf('%s.point.0', $formBase);

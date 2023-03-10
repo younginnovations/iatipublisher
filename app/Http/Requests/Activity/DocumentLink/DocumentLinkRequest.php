@@ -12,11 +12,40 @@ use App\Http\Requests\Activity\ActivityBaseRequest;
 class DocumentLinkRequest extends ActivityBaseRequest
 {
     /**
+     * Return rules for document link.
+     *
      * @return array
      */
     public function rules(): array
     {
-        return $this->getRulesForDocumentLink($this->get('document_link'));
+        $data = $this->get('document_link');
+        $totalRules = [$this->getErrors($data), $this->getWarning($data)];
+
+        return mergeRules($totalRules);
+    }
+
+    /**
+     * Return critical rules for document link.
+     *
+     * @param $data
+     *
+     * @return array
+     */
+    public function getErrors($data): array
+    {
+        return $this->getErrorsForDocumentLink($data);
+    }
+
+    /**
+     * Return critical rules for document link.
+     *
+     * @param $data
+     *
+     * @return array
+     */
+    public function getWarning($data): array
+    {
+        return $this->getWarningForDocumentLink($data);
     }
 
     /**

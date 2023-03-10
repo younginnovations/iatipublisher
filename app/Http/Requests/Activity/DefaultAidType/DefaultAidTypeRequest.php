@@ -18,7 +18,9 @@ class DefaultAidTypeRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return $this->getRulesForDefaultAidType($this->get('default_aid_type'));
+        $totalRules = [$this->getErrorsForDefaultAidType($this->get('default_aid_type')), $this->getWarningForDefaultAidType()];
+
+        return mergeRules($totalRules);
     }
 
     /**
@@ -38,7 +40,7 @@ class DefaultAidTypeRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getRulesForDefaultAidType(array $formFields): array
+    public function getErrorsForDefaultAidType(array $formFields): array
     {
         $rules = [];
 
@@ -52,6 +54,16 @@ class DefaultAidTypeRequest extends ActivityBaseRequest
         }
 
         return $rules;
+    }
+
+    /**
+     * Returns rules for related activity.
+     *
+     * @return array
+     */
+    public function getWarningForDefaultAidType(): array
+    {
+        return [];
     }
 
     /**

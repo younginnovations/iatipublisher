@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\RelatedActivity\RelatedActivityRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Support\Arr;
 
 /**
@@ -14,6 +15,8 @@ use Illuminate\Support\Arr;
  */
 class RelatedActivity extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * Csv Header for RelatedActivity element.
      *
@@ -63,6 +66,8 @@ class RelatedActivity extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -144,7 +149,18 @@ class RelatedActivity extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForRelatedActivity(Arr::get($this->data(), 'related_activity', []));
+        return $this->request->getWarningForRelatedActivity(Arr::get($this->data(), 'related_activity', []));
+    }
+
+    /**
+     * Provides the critical rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function errorRules(): array
+    {
+        return $this->request->getErrorsForRelatedActivity(Arr::get($this->data(), 'related_activity', []));
     }
 
     /**
@@ -167,6 +183,9 @@ class RelatedActivity extends Element
     {
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
+                                         ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+                                         ->with($this->errorRules(), $this->messages())
                                          ->getValidatorInstance();
 
         $this->setValidity();

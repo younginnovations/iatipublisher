@@ -7,6 +7,7 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\RecipientCountry\RecipientCountryRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
@@ -15,6 +16,8 @@ use Illuminate\Support\Arr;
  */
 class RecipientCountry extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * CSV Header of Description with their code.
      */
@@ -90,6 +93,8 @@ class RecipientCountry extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -129,7 +134,7 @@ class RecipientCountry extends Element
             $this->countries[] = $value;
             $this->countries = array_unique($this->countries);
             $validCountry = $this->loadCodeList('Country');
-            $value = $value ? trim($value) : '';
+            $value = $value ? trim($value) : $value;
 
             if ($value) {
                 foreach ($validCountry as $code => $name) {
@@ -208,8 +213,12 @@ class RecipientCountry extends Element
         $recipientRegion = $this->recipientRegion->data;
         $this->data['recipient_region'] = (empty($recipientRegion)) ? '' : $recipientRegion;
         $this->data['recipient_country_total_percentage'] = Arr::get($this->data, 'recipient_country', []);
+
         $this->validator = $this->factory->sign($this->data())
                                          ->with($this->rules(), $this->messages())
+                                         ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+                                         ->with($this->errorRules(), $this->messages())
                                          ->getValidatorInstance();
         $this->setValidity();
 
@@ -226,7 +235,18 @@ class RecipientCountry extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForRecipientCountry($this->data('recipient_country'), true);
+        return $this->request->getWarningForRecipientCountry($this->data('recipient_country'), true);
+    }
+
+    /**
+     * Provides the rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function errorRules(): array
+    {
+        return $this->request->getErrorsForRecipientCountry($this->data('recipient_country'), true);
     }
 
     /**

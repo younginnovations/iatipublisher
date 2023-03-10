@@ -8,6 +8,7 @@ use App\CsvImporter\Entities\Activity\Components\ActivityRow;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\RecipientRegion\RecipientRegionRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
@@ -16,6 +17,8 @@ use Illuminate\Support\Arr;
  */
 class RecipientRegion extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * CSV Header of Description with their code.
      */
@@ -100,6 +103,8 @@ class RecipientRegion extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -143,7 +148,7 @@ class RecipientRegion extends Element
             $this->regions[] = $value;
             $this->regions = array_unique($this->regions);
             $validRegionCode = $this->loadCodeList('Region');
-            $value = $value ? trim($value) : '';
+            $value = $value ? trim($value) : $value;
 
             if ($value) {
                 foreach ($validRegionCode as $code => $name) {
@@ -274,6 +279,9 @@ class RecipientRegion extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
+            ->getValidatorInstance();
         $this->setValidity();
         unset($this->data['recipient_region_total_percentage'], $this->data['recipient_country']);
 
@@ -288,7 +296,18 @@ class RecipientRegion extends Element
      */
     public function rules(): array
     {
-        return $this->request->getRulesForRecipientRegion($this->data('recipient_region'), true, Arr::get($this->recipientCountry->data, 'recipient_country', []));
+        return $this->request->getWarningForRecipientRegion($this->data('recipient_region'), true, Arr::get($this->recipientCountry->data, 'recipient_country', []));
+    }
+
+    /**
+     * Provides the rules for the IATI Element validation.
+     *
+     * @return array
+     * @throws BindingResolutionException
+     */
+    public function errorRules(): array
+    {
+        return $this->request->getErrorsForRecipientRegion($this->data('recipient_region'), true, Arr::get($this->recipientCountry->data, 'recipient_country', []));
     }
 
     /**

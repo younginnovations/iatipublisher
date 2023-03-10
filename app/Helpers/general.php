@@ -147,37 +147,37 @@ if (!function_exists('getDefaultElementStatus')) {
     function getDefaultElementStatus(): array
     {
         return [
-            'iati_identifier'      => false,
-            'title'                => false,
-            'description'          => false,
-            'activity_status'      => false,
-            'activity_date'        => false,
-            'activity_scope'       => false,
-            'recipient_country'    => false,
-            'recipient_region'     => false,
-            'collaboration_type'   => false,
-            'default_flow_type'    => false,
+            'iati_identifier' => false,
+            'title' => false,
+            'description' => false,
+            'activity_status' => false,
+            'activity_date' => false,
+            'activity_scope' => false,
+            'recipient_country' => false,
+            'recipient_region' => false,
+            'collaboration_type' => false,
+            'default_flow_type' => false,
             'default_finance_type' => false,
-            'default_aid_type'     => false,
-            'default_tied_status'  => false,
-            'capital_spend'        => false,
-            'related_activity'     => false,
-            'conditions'           => false,
-            'sector'               => false,
-            'humanitarian_scope'   => false,
-            'legacy_data'          => false,
-            'tag'                  => false,
-            'policy_marker'        => false,
-            'other_identifier'     => false,
+            'default_aid_type' => false,
+            'default_tied_status' => false,
+            'capital_spend' => false,
+            'related_activity' => false,
+            'conditions' => false,
+            'sector' => false,
+            'humanitarian_scope' => false,
+            'legacy_data' => false,
+            'tag' => false,
+            'policy_marker' => false,
+            'other_identifier' => false,
             'country_budget_items' => false,
-            'budget'               => false,
-            'participating_org'    => false,
-            'document_link'        => false,
-            'contact_info'         => false,
-            'location'             => false,
+            'budget' => false,
+            'participating_org' => false,
+            'document_link' => false,
+            'contact_info' => false,
+            'location' => false,
             'planned_disbursement' => false,
-            'transactions'         => false,
-            'result'               => false,
+            'transactions' => false,
+            'result' => false,
         ];
     }
 }
@@ -191,15 +191,15 @@ if (!function_exists('getDefaultOrganizationElementStatus')) {
     function getDefaultOrganizationElementStatus(): array
     {
         return [
-            'identifier'               => false,
-            'name'                     => false,
-            'reporting_org'            => false,
-            'total_budget'             => false,
-            'total_expenditure'        => false,
-            'recipient_org_budget'     => false,
+            'identifier' => false,
+            'name' => false,
+            'reporting_org' => false,
+            'total_budget' => false,
+            'total_expenditure' => false,
+            'recipient_org_budget' => false,
             'recipient_country_budget' => false,
-            'recipient_region_budget'  => false,
-            'document_link'            => false,
+            'recipient_region_budget' => false,
+            'document_link' => false,
         ];
     }
 }
@@ -263,22 +263,22 @@ if (!function_exists('getCoreElementsWithTrueValue')) {
     function getCoreElementsWithTrueValue(): array
     {
         return [
-            'reporting_org'        => true,
-            'iati_identifier'      => true,
-            'title'                => true,
-            'description'          => true,
-            'participating_org'    => true,
-            'activity_status'      => true,
-            'activity_date'        => true,
-            'recipient_country'    => true,
-            'recipient_region'     => true,
-            'sector'               => true,
-            'collaboration_type'   => true,
-            'default_flow_type'    => true,
+            'reporting_org' => true,
+            'iati_identifier' => true,
+            'title' => true,
+            'description' => true,
+            'participating_org' => true,
+            'activity_status' => true,
+            'activity_date' => true,
+            'recipient_country' => true,
+            'recipient_region' => true,
+            'sector' => true,
+            'collaboration_type' => true,
+            'default_flow_type' => true,
             'default_finance_type' => true,
-            'default_aid_type'     => true,
-            'budget'               => true,
-            'transactions'         => true,
+            'default_aid_type' => true,
+            'budget' => true,
+            'transactions' => true,
         ];
     }
 }
@@ -292,15 +292,15 @@ if (!function_exists('getMandatoryElementsWithTrueValue')) {
     function getMandatoryElementsWithTrueValue(): array
     {
         return [
-            'identifier'               => true,
-            'name'                     => true,
-            'reporting_org'            => true,
-            'total_budget'             => true,
-            'total_expenditure'        => true,
-            'recipient_org_budget'     => true,
+            'identifier' => true,
+            'name' => true,
+            'reporting_org' => true,
+            'total_budget' => true,
+            'total_expenditure' => true,
+            'recipient_org_budget' => true,
             'recipient_country_budget' => true,
-            'recipient_region_budget'  => true,
-            'document_link'            => true,
+            'recipient_region_budget' => true,
+            'document_link' => true,
         ];
     }
 }
@@ -510,10 +510,12 @@ if (!function_exists('getList')) {
         $data = [];
 
         foreach ($codeList as $list) {
-            $data[$list['code']] = ($code) ? $list['code'] . (array_key_exists(
-                'name',
-                $list
-            ) ? ' - ' . $list['name'] : '') : $list['name'];
+            $data[$list['code']] = ($code) ? $list['code'] . (
+                array_key_exists(
+                    'name',
+                    $list
+                ) ? ' - ' . $list['name'] : ''
+            ) : $list['name'];
         }
 
         return $data;
@@ -530,26 +532,26 @@ if (!function_exists('getTransactionTypes')) {
     function getTransactionTypes(): array
     {
         return [
-            'transactionType'          => getCodeList('TransactionType', 'Activity', false),
-            'organizationType'         => getCodeList('OrganizationType', 'Organization', false),
-            'disbursementChannel'      => getCodeList('DisbursementChannel', 'Activity', false),
-            'sectorVocabulary'         => getCodeList('SectorVocabulary', 'Activity', false),
-            'sectorCode'               => getCodeList('SectorCode', 'Activity', false),
-            'sectorCategory'           => getCodeList('SectorCategory', 'Activity', false),
-            'unsdgGoals'               => getCodeList('UNSDG-Goals', 'Activity', false),
-            'unsdgTargets'             => getCodeList('UNSDG-Targets', 'Activity', false),
-            'countryCode'              => getCodeList('Country', 'Activity', false),
-            'regionVocabulary'         => getCodeList('RegionVocabulary', 'Activity', false),
-            'regionCode'               => getCodeList('Region', 'Activity', false),
-            'flowType'                 => getCodeList('FlowType', 'Activity', false),
-            'financeType'              => getCodeList('FinanceType', 'Activity', false),
-            'tiedStatusType'           => getCodeList('TiedStatus', 'Activity', false),
-            'aidTypeVocabulary'        => getCodeList('AidTypeVocabulary', 'Activity', false),
-            'aidType'                  => getCodeList('AidType', 'Activity', false),
+            'transactionType' => getCodeList('TransactionType', 'Activity', false),
+            'organizationType' => getCodeList('OrganizationType', 'Organization', false),
+            'disbursementChannel' => getCodeList('DisbursementChannel', 'Activity', false),
+            'sectorVocabulary' => getCodeList('SectorVocabulary', 'Activity', false),
+            'sectorCode' => getCodeList('SectorCode', 'Activity', false),
+            'sectorCategory' => getCodeList('SectorCategory', 'Activity', false),
+            'unsdgGoals' => getCodeList('UNSDG-Goals', 'Activity', false),
+            'unsdgTargets' => getCodeList('UNSDG-Targets', 'Activity', false),
+            'countryCode' => getCodeList('Country', 'Activity', false),
+            'regionVocabulary' => getCodeList('RegionVocabulary', 'Activity', false),
+            'regionCode' => getCodeList('Region', 'Activity', false),
+            'flowType' => getCodeList('FlowType', 'Activity', false),
+            'financeType' => getCodeList('FinanceType', 'Activity', false),
+            'tiedStatusType' => getCodeList('TiedStatus', 'Activity', false),
+            'aidTypeVocabulary' => getCodeList('AidTypeVocabulary', 'Activity', false),
+            'aidType' => getCodeList('AidType', 'Activity', false),
             'cashAndVoucherModalities' => getCodeList('CashandVoucherModalities', 'Activity', false),
-            'earMarkingCategory'       => getCodeList('EarmarkingCategory', 'Activity', false),
-            'earMarkingModality'       => getCodeList('EarmarkingModality', 'Activity', false),
-            'languages'                => getCodeList('Language', 'Activity', false),
+            'earMarkingCategory' => getCodeList('EarmarkingCategory', 'Activity', false),
+            'earMarkingModality' => getCodeList('EarmarkingModality', 'Activity', false),
+            'languages' => getCodeList('Language', 'Activity', false),
         ];
     }
 }
@@ -564,10 +566,10 @@ if (!function_exists('getResultTypes')) {
     function getResultTypes(): array
     {
         return [
-            'resultType'       => getCodeList('ResultType', 'Activity', false),
+            'resultType' => getCodeList('ResultType', 'Activity', false),
             'resultVocabulary' => getCodeList('ResultVocabulary', 'Activity', false),
             'indicatorMeasure' => getCodeList('IndicatorMeasure', 'Activity', false),
-            'language'         => getCodeList('Language', 'Activity', false),
+            'language' => getCodeList('Language', 'Activity', false),
             'documentCategory' => getCodeList('DocumentCategory', 'Activity', false),
         ];
     }
@@ -584,10 +586,10 @@ if (!function_exists('getIndicatorTypes')) {
     {
         return [
             'indicatorVocabulary' => getCodeList('IndicatorVocabulary', 'Activity'),
-            'indicatorMeasure'    => getCodeList('IndicatorMeasure', 'Activity', false),
-            'language'            => getCodeList('Language', 'Activity', false),
-            'documentCategory'    => getCodeList('DocumentCategory', 'Activity', false),
-            'fileFormat'          => getCodeList('FileFormat', 'Activity', false),
+            'indicatorMeasure' => getCodeList('IndicatorMeasure', 'Activity', false),
+            'language' => getCodeList('Language', 'Activity', false),
+            'documentCategory' => getCodeList('DocumentCategory', 'Activity', false),
+            'fileFormat' => getCodeList('FileFormat', 'Activity', false),
         ];
     }
 }
@@ -603,9 +605,9 @@ if (!function_exists('getPeriodTypes')) {
     {
         return [
             'indicatorMeasure' => getCodeList('IndicatorMeasure', 'Activity', false),
-            'language'         => getCodeList('Language', 'Activity', false),
+            'language' => getCodeList('Language', 'Activity', false),
             'documentCategory' => getCodeList('DocumentCategory', 'Activity', false),
-            'fileFormat'       => getCodeList('FileFormat', 'Activity', false),
+            'fileFormat' => getCodeList('FileFormat', 'Activity', false),
         ];
     }
 }
@@ -670,10 +672,10 @@ if (!function_exists('getTableConfig')) {
     function getTableConfig($module): array
     {
         $tableConfig = [
-            'activity'     => ['orderBy' => ['updated_at'], 'direction' => ['asc', 'desc']],
+            'activity' => ['orderBy' => ['updated_at'], 'direction' => ['asc', 'desc']],
             'organisation' => ['orderBy' => ['updated_at', 'all_activities_count', 'name'], 'direction' => ['asc', 'desc']],
-            'user'         => ['orderBy' => ['username', 'publisher_name', 'created_at'], 'direction' => ['asc', 'desc']],
-            'audit'        => ['orderBy' => ['user_id', 'user_type', 'event', 'auditable_type', 'created_at'], 'direction'=>['asc', 'desc']],
+            'user' => ['orderBy' => ['username', 'publisher_name', 'created_at'], 'direction' => ['asc', 'desc']],
+            'audit' => ['orderBy' => ['user_id', 'user_type', 'event', 'auditable_type', 'created_at'], 'direction' => ['asc', 'desc']],
         ];
 
         return $tableConfig[$module];
@@ -939,6 +941,22 @@ if (!function_exists('awsDeleteFile')) {
     }
 }
 
+if (!function_exists('awsDeleteDirectory')) {
+    /**
+     * @param $folderName
+     *
+     * @return bool
+     */
+    function awsDeleteDirectory($folderName): bool
+    {
+        if (Storage::disk('s3')->exists($folderName)) {
+            return Storage::disk('s3')->deleteDirectory($folderName);
+        }
+
+        return false;
+    }
+}
+
 if (!function_exists('awsUrl')) {
     /**
      * @param $filePath
@@ -1139,10 +1157,10 @@ if (!function_exists('generateApiInfo')) {
         $uri = Str::startsWith($requestURI, 'http') ? $requestURI : sprintf('%s/%s', env('IATI_API_ENDPOINT'), $requestURI);
 
         $requestInfo = [
-            'method'       => $method,
-            'url'          => $uri,
-            'request'      => $requestOption,
-            'response'     => is_string($response) ? $response : json_decode((string) $response->getBody(), true),
+            'method' => $method,
+            'url' => $uri,
+            'request' => $requestOption,
+            'response' => is_string($response) ? $response : json_decode((string) $response->getBody(), true),
         ];
 
         if ($responseBody) {
@@ -1168,5 +1186,65 @@ if (!function_exists('is_array_value_null')) {
         });
 
         return empty($value);
+    }
+}
+
+if (!function_exists('mergeRules')) {
+    /**
+     * Generates api log info for API logging.
+     *
+     * @param $request
+     *
+     * @return array
+     */
+    function mergeRules($totalRules): array
+    {
+        $mergedRules = [];
+
+        foreach ($totalRules as $rules) {
+            foreach ($rules as $index => $rule) {
+                if (is_string($rule)) {
+                    $rule = explode('|', $rule);
+                }
+
+                if (is_array($rule)) {
+                    foreach (array_values($rule) as $ruleValue) {
+                        if (!in_array($ruleValue, Arr::get($mergedRules, $index, []))) {
+                            $mergedRules[$index][] = $ruleValue;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $mergedRules;
+    }
+}
+
+if (!function_exists('unsetErrorFields')) {
+    /**
+     * unset fields from imported activity that contains critical error.
+     *
+     * @param $request
+     *
+     * @return array
+     */
+    function unsetErrorFields($importContent): array
+    {
+        $importData = json_decode(json_encode($importContent, JSON_THROW_ON_ERROR | 512), true, 512, JSON_THROW_ON_ERROR);
+        $activity = $importData['data'];
+        $errors = Arr::get($importData, 'errors.error', []);
+
+        if (!empty($errors)) {
+            foreach (array_values($errors) as $error) {
+                foreach (array_keys($error) as $key) {
+                    Arr::set($activity, $key, null);
+                }
+            }
+        }
+
+        $importData['data'] = $activity;
+
+        return $importData;
     }
 }

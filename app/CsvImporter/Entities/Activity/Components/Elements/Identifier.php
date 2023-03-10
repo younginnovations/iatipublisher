@@ -7,12 +7,15 @@ namespace App\CsvImporter\Entities\Activity\Components\Elements;
 use App\CsvImporter\Entities\Activity\Components\Elements\Foundation\Iati\Element;
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
 use App\Http\Requests\Activity\Identifier\IdentifierRequest;
+use App\IATI\Traits\DataSanitizeTrait;
 
 /**
  * Class Identifier.
  */
 class Identifier extends Element
 {
+    use DataSanitizeTrait;
+
     /**
      * @var
      */
@@ -67,6 +70,8 @@ class Identifier extends Element
                 }
             }
         }
+
+        $fields = is_array($fields) ? $this->sanitizeData($fields) : $fields;
     }
 
     /**
@@ -91,7 +96,12 @@ class Identifier extends Element
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
-
+        $this->errorValidator = $this->factory->sign($this->data())
+            ->with($this->errorRules(), $this->messages())
+            ->getValidatorInstance();
+        $this->criticalValidator = $this->factory->sign($this->data())
+            ->with($this->criticalRules(), $this->messages())
+            ->getValidatorInstance();
         $this->setValidity();
 
         return $this;
@@ -104,7 +114,27 @@ class Identifier extends Element
      */
     public function rules(): array
     {
-        return $this->request->rules(true);
+        return $this->request->getWarningForIdentifier();
+    }
+
+    /**
+     * Provides the rules for the Identifier validation.
+     *
+     * @return array
+     */
+    public function criticalRules(): array
+    {
+        return $this->request->getErrorsForIdentifier(true);
+    }
+
+    /**
+     * Returns errorRules for identifier.
+     *
+     * @return array
+     */
+    public function errorRules(): array
+    {
+        return [];
     }
 
     /**

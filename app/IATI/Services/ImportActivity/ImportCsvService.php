@@ -8,6 +8,7 @@ use App\CsvImporter\Events\ActivityCsvWasUploaded;
 use App\CsvImporter\Queue\Processor;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Activity\TransactionRepository;
+use App\IATI\Repositories\ImportActivityError\ImportActivityErrorRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\Imports\CsvToArray;
 use Exception;
@@ -16,7 +17,6 @@ use Illuminate\Session\SessionManager;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\File as FileFacade;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Excel;
@@ -38,11 +38,6 @@ class ImportCsvService
      * File in which the valida Csv data is written before import.
      */
     public const VALID_CSV_FILE = 'valid.json';
-
-    /**
-     * File in which the invalid Csv data is written before import.
-     */
-    public const INVALID_CSV_FILE = 'invalid.json';
 
     /**
      * Directory where the uploaded Csv file is stored temporarily before import.
@@ -90,6 +85,11 @@ class ImportCsvService
     protected TransactionRepository $transactionRepo;
 
     /**
+     * @var ImportActivityErrorRepository
+     */
+    protected ImportActivityErrorRepository $importActivityErrorRepo;
+
+    /**
      * @var Filesystem
      */
     protected Filesystem $filesystem;
@@ -104,6 +104,7 @@ class ImportCsvService
      * @param ActivityRepository     $activityRepo
      * @param OrganizationRepository $organizationRepo
      * @param TransactionRepository  $transactionRepo
+     * @param ImportActivityErrorRepository  $importActivityErrorRepo
      * @param Filesystem             $filesystem
      */
     public function __construct(
@@ -114,6 +115,7 @@ class ImportCsvService
         ActivityRepository $activityRepo,
         OrganizationRepository $organizationRepo,
         TransactionRepository $transactionRepo,
+        ImportActivityErrorRepository $importActivityErrorRepo,
         Filesystem $filesystem
     ) {
         $this->excel = $excel;
@@ -123,6 +125,7 @@ class ImportCsvService
         $this->activityRepo = $activityRepo;
         $this->organizationRepo = $organizationRepo;
         $this->transactionRepo = $transactionRepo;
+        $this->importActivityErrorRepo = $importActivityErrorRepo;
         $this->filesystem = $filesystem;
         $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'CsvImporter/tmp');
         $this->csv_file_storage_path = env('CSV_FILE_STORAGE_PATH', 'CsvImporter/file');
@@ -138,7 +141,8 @@ class ImportCsvService
     public function process($filename): void
     {
         try {
-            $uploadedFile = awsGetFile(sprintf('%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization->id, $filename));
+            $uploadedFile = awsGetFile(sprintf('%s/%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization->id, Auth::user()->id, $filename));
+            awsUploadFile(sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, Auth::user()->organization->id, Auth::user()->id, 'valid.json'), '');
             $localStorageFile = $this->localStorageFile($uploadedFile, $filename);
             Session::put('user_id', Auth::user()->id);
             Session::put('org_id', Auth::user()->organization->id);
@@ -148,7 +152,7 @@ class ImportCsvService
             $this->logger->error(
                 $e->getMessage(),
                 [
-                    'user'  => auth()->user(),
+                    'user' => auth()->user(),
                     'trace' => $e->getTraceAsString(),
                 ]
             );
@@ -183,7 +187,8 @@ class ImportCsvService
     public function create($activities): void
     {
         $organizationId = Auth::user()->organization_id;
-        $file = awsGetFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, $organizationId, self::VALID_CSV_FILE));
+        $userId = Auth::user()->id;
+        $file = awsGetFile(sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, $organizationId, $userId, self::VALID_CSV_FILE));
         $contents = json_decode($file, true, 512, JSON_THROW_ON_ERROR);
 
         $organizationIdentifier = Arr::get(
@@ -192,19 +197,24 @@ class ImportCsvService
         );
 
         foreach ($activities as $value) {
-            $activity = $contents[$value];
+            $activity = unsetErrorFields($contents[$value]);
             $activity['data']['organization_id'] = $organizationId;
             $iati_identifier_text = $organizationIdentifier . '-' . Arr::get($activity, 'data.identifier.activity_identifier');
             $activity['data']['identifier']['iati_identifier_text'] = $iati_identifier_text;
 
-            if (Arr::get($activity, 'existence') === true) {
-                $oldActivity = $this->activityRepo->getActivityWithIdentifier($organizationId, Arr::get($activity, 'data.identifier'));
+            if (Arr::get($activity, 'existence', false) && $this->activityRepo->getActivityWithIdentifier($organizationId, Arr::get($activity, 'data.identifier.activity_identifier'))) {
+                $oldActivity = $this->activityRepo->getActivityWithIdentifier($organizationId, Arr::get($activity, 'data.identifier.activity_identifier'));
                 $this->activityRepo->updateActivity($oldActivity->id, Arr::get($activity, 'data'));
-
                 $this->transactionRepo->deleteTransaction($oldActivity->id);
 
                 if (array_key_exists('transaction', $activity['data'])) {
                     $this->createTransaction(Arr::get($activity['data'], 'transaction', []), $oldActivity->id);
+                }
+
+                if (!empty($activity['errors'])) {
+                    $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $activity['errors']);
+                } else {
+                    $this->importActivityErrorRepo->deleteImportError($oldActivity->id);
                 }
             } else {
                 $createdActivity = $this->activityRepo->createActivity(Arr::get($activity, 'data'));
@@ -212,10 +222,12 @@ class ImportCsvService
                 if (array_key_exists('transaction', $activity['data'])) {
                     $this->createTransaction(Arr::get($activity['data'], 'transaction', []), $createdActivity->id);
                 }
+
+                if (!empty($activity['errors'])) {
+                    $this->importActivityErrorRepo->updateOrCreateError($createdActivity->id, $activity['errors']);
+                }
             }
         }
-
-        $this->activityImportStatus($activities);
     }
 
     /**
@@ -231,65 +243,6 @@ class ImportCsvService
         foreach ($transactions as $transaction) {
             $this->transactionRepo->store(['transaction' => $transaction, 'activity_id' => $activityId]);
         }
-    }
-
-    /**
-     * Check the status of the csv activities being imported.
-     *
-     * @param $activities
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    protected function activityImportStatus($activities): void
-    {
-        if (session('importing') && $this->checkStatusFile()) {
-            $this->removeImportedActivity($activities);
-        }
-
-        if ($this->checkStatusFile() && is_null(session('importing'))) {
-            $this->removeImportDirectory();
-        }
-    }
-
-    /**
-     * Remove the imported activity if the csv is still being processed.
-     *
-     * @param $checkedActivities
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    protected function removeImportedActivity($checkedActivities): void
-    {
-        $validActivities = json_decode(file_get_contents($this->getFilePath(true)), true, 512, JSON_THROW_ON_ERROR);
-
-        foreach ($checkedActivities as $key => $activity) {
-            unset($validActivities[$key]);
-        }
-
-        FileFacade::put($this->getFilePath(true), $validActivities);
-    }
-
-    /**
-     * Check if the status.json file is present.
-     *
-     * @return bool
-     */
-    protected function checkStatusFile(): bool
-    {
-        return file_exists(sprintf('%s/%s/%s', $this->csv_data_storage_path, Session::get('org_id'), 'status.json'));
-    }
-
-    /**
-     * Remove the user folder containing valid, invalid and status json.
-     *
-     * @return void
-     */
-    public function removeImportDirectory(): void
-    {
-        $directoryPath = storage_path(sprintf('%s/%s', $this->csv_data_storage_path, Session::get('org_id')));
-        $this->filesystem->deleteDirectory($directoryPath);
     }
 
     /**
@@ -335,22 +288,6 @@ class ImportCsvService
     }
 
     /**
-     * Get the filepath for the temporary files used by the import process.
-     *
-     * @param $filename
-     *
-     * @return string
-     */
-    public function getTemporaryFilepath($filename = null): string
-    {
-        if ($filename) {
-            return storage_path(sprintf('%s/%s/%s', $this->csv_data_storage_path, Session::get('org_id'), $filename));
-        }
-
-        return storage_path(sprintf('%s/%s/', $this->csv_data_storage_path, Session::get('org_id')));
-    }
-
-    /**
      * Set import-status key when the processing is complete.
      *
      * @return void
@@ -358,61 +295,6 @@ class ImportCsvService
     protected function completeImport(): void
     {
         Session::put('import-status', 'Complete');
-    }
-
-    /**
-     * Get the processed data from the server.
-     *
-     * @param $filePath
-     * @param $temporaryFileName
-     * @param $view
-     *
-     * @return mixed
-     * @throws \JsonException
-     */
-    protected function getDataFrom($filePath, $temporaryFileName, $view): mixed
-    {
-        $activities = json_decode(file_get_contents($filePath), true, 512, JSON_THROW_ON_ERROR);
-        $path = $this->getTemporaryFilepath($temporaryFileName);
-
-        FileFacade::put($path, json_encode($activities, JSON_THROW_ON_ERROR));
-
-        return $activities;
-    }
-
-    /**
-     * Get processed data from the server.
-     *
-     * @return array|null
-     */
-    public function getData(): ?array
-    {
-        try {
-            [$validFilepath, $invalidFilepath, $response] = [$this->getFilePath(true), $this->getFilePath(false), []];
-
-            if (file_exists($validFilepath)) {
-                $validResponse = $this->getDataFrom($validFilepath, 'valid-temp.json', 'valid');
-                $response['validData'] = ['render' => $validResponse];
-            }
-
-            if (file_exists($invalidFilepath)) {
-                $invalidResponse = $this->getDataFrom($invalidFilepath, 'invalid-temp.json', 'invalid');
-                $response['invalidData'] = ['render' => $invalidResponse];
-            }
-
-            return $response;
-        } catch (Exception $e) {
-            $this->logger->error(
-                sprintf('Error during reading data due to [%s]', $e->getMessage()),
-                [
-                    'trace'           => $e->getTraceAsString(),
-                    'user_id'         => Auth::user()->organization_id,
-                    'organization_id' => Session::get('org_id'),
-                ]
-            );
-
-            return null;
-        }
     }
 
     /**
@@ -425,34 +307,18 @@ class ImportCsvService
     public function storeCsv(UploadedFile $file): ?bool
     {
         try {
-            return awsUploadFile(sprintf('%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization_id, str_replace(' ', '', $file->getClientOriginalName())), $file->getContent());
+            return awsUploadFile(sprintf('%s/%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization_id, Auth::user()->id, str_replace(' ', '', $file->getClientOriginalName())), $file->getContent());
         } catch (Exception $e) {
             $this->logger->error(
                 sprintf('Error uploading Activity CSV file due to [%s]', $e->getMessage()),
                 [
-                    'trace'   => $e->getTraceAsString(),
+                    'trace' => $e->getTraceAsString(),
                     'user_id' => Auth::user()->organization_id,
                 ]
             );
 
             return null;
         }
-    }
-
-    /**
-     * Get the temporary Csv filepath for the uploaded Csv file.
-     *
-     * @param $filename
-     *
-     * @return string
-     */
-    public function getStoredCsvPath($filename = null): string
-    {
-        if ($filename) {
-            return sprintf('%s/%s', storage_path(sprintf('%s/%s', 'CsvImporter/file', Session::get('org_id'))), $filename);
-        }
-
-        return storage_path(sprintf('%s/%s/', 'CsvImporter/file', Session::get('org_id')));
     }
 
     /**
@@ -492,7 +358,8 @@ class ImportCsvService
      */
     public function clearOldImport(): void
     {
-        awsDeleteFile(sprintf('%s/%s', $this->csv_data_storage_path, Session::get('org_id')));
+        awsDeleteDirectory(sprintf('%s/%s/%s', $this->csv_data_storage_path, Session::get('org_id'), Session::get('user_id')));
+        awsDeleteDirectory(sprintf('%s/%s/%s', $this->csv_file_storage_path, Session::get('org_id'), Session::get('user_id')));
 
         if ($this->hasOldData()) {
             $this->clearSession(['import-status', 'filename']);
@@ -532,9 +399,9 @@ class ImportCsvService
      */
     public function isInUTF8Encoding($filename): bool
     {
-        $uploadedFile = awsGetFile(sprintf('%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization->id, $filename));
+        $uploadedFile = awsGetFile(sprintf('%s/%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization->id, Auth::user()->id, $filename));
         $s3 = Storage::disk('local');
-        $localPath = sprintf('%s/%s/%s', 'CsvImporter/file', Auth::user()->organization->id, $filename);
+        $localPath = sprintf('%s/%s/%s/%s', 'CsvImporter/file', Auth::user()->organization->id, Auth::user()->id, $filename);
         $s3->put($localPath, $uploadedFile);
 
         $file = new File(storage_path(sprintf('%s/%s', 'app', $localPath)));
@@ -545,7 +412,7 @@ class ImportCsvService
     public function getAwsCsvData($filename)
     {
         try {
-            $contents = awsGetFile(sprintf('%s/%s/%s', $this->csv_data_storage_path, Auth::user()->organization_id, $filename));
+            $contents = awsGetFile(sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, Auth::user()->organization_id, Auth::user()->id, $filename));
 
             if ($contents) {
                 return json_decode($contents, false, 512, JSON_THROW_ON_ERROR);
@@ -556,8 +423,8 @@ class ImportCsvService
             $this->logger->error(
                 sprintf('Error due to %s', $exception->getMessage()),
                 [
-                    'trace'    => $exception->getTraceAsString(),
-                    'user_id'  => auth()->user()->id,
+                    'trace' => $exception->getTraceAsString(),
+                    'user_id' => auth()->user()->id,
                     'filename' => $filename,
                 ]
             );
