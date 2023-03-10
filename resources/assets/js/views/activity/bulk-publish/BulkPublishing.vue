@@ -135,13 +135,12 @@ watch(
 const checkBulkpublishStatus = () => {
   for (let key in activities.value) {
     const activity = activities.value[key];
-    if (activity.status == 'processing') {
-      let url = `activities/queue-status?activity_id=${activity.activity_id}&&uuid=${paStorage.value.publishingActivities.job_batch_uuid}`;
 
-      axios.get(url).then((response) => {
-        console.log(response);
-      });
-    }
+    let url = `activities/queue-status?activity_id=${activity.activity_id}&&uuid=${paStorage.value.publishingActivities.job_batch_uuid}`;
+
+    axios.get(url).then((response) => {
+      paStorage.value.publishingActivities.status = response.data.message;
+    });
   }
 };
 
@@ -149,40 +148,35 @@ const checkBulkpublishStatus = () => {
  * Bulk Publish Function
  */
 const bulkPublishStatus = () => {
-  let count = 0;
-  while (count < 10) {
-    intervalID = setInterval(() => {
-      axios
-        .get(
-          `activities/bulk-publish-status?organization_id=${paStorage.value.publishingActivities.organization_id}&&uuid=${paStorage.value.publishingActivities.job_batch_uuid}`
-        )
-        .then((res) => {
-          const response = res.data;
-          if ('data' in response) {
-            activities.value = response.data.activities;
-            completed.value = response.data.status;
+  intervalID = setInterval(() => {
+    axios
+      .get(
+        `activities/bulk-publish-status?organization_id=${paStorage.value.publishingActivities.organization_id}&&uuid=${paStorage.value.publishingActivities.job_batch_uuid}`
+      )
+      .then((res) => {
+        const response = res.data;
+        if ('data' in response) {
+          activities.value = response.data.activities;
+          completed.value = response.data.status;
 
-            // saving in local storage
-            paStorage.value.publishingActivities.activities =
-              response.data.activities;
-            paStorage.value.publishingActivities.status = response.data.status;
-            paStorage.value.publishingActivities.message =
-              response.data.message;
+          // saving in local storage
+          paStorage.value.publishingActivities.activities =
+            response.data.activities;
+          paStorage.value.publishingActivities.status = response.data.status;
+          paStorage.value.publishingActivities.message = response.data.message;
 
-            if (completed.value === 'completed') {
-              failedActivities(paStorage.value.publishingActivities.activities);
-              refreshToastMsg.visibility = true;
-              setTimeout(() => {
-                refreshToastMsg.visibility = false;
-              }, 10000);
-            }
-          } else {
-            completed.value = 'completed';
+          if (completed.value === 'completed') {
+            failedActivities(paStorage.value.publishingActivities.activities);
+            refreshToastMsg.visibility = true;
+            setTimeout(() => {
+              refreshToastMsg.visibility = false;
+            }, 10000);
           }
-        });
-    }, 2000);
-    count++;
-  }
+        } else {
+          completed.value = 'completed';
+        }
+      });
+  }, 2000);
 
   if (paStorage.value.publishingActivities.status === 'processing') {
     checkBulkpublishStatus();
