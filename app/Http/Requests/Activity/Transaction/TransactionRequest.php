@@ -942,6 +942,8 @@ class TransactionRequest extends ActivityBaseRequest
             $rules[$attribute] = 'country_or_region';
         } elseif (!is_variable_null($this->all()['recipient_region']) && !is_variable_null($this->all()['recipient_country'])) {
             $rules[$attribute] = 'country_or_region';
+        } elseif (is_variable_null($this->all()['recipient_region']) && is_variable_null($this->all()['recipient_country'])) {
+            $rules[$attribute] = 'country_or_region';
         }
 
         return $rules;
