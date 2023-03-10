@@ -138,12 +138,10 @@ class XmlQueueProcessor
 
             return false;
         } catch (InvalidTag $e) {
-            logger()->error($e);
             awsUploadFile(sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, $orgId, $userId, 'status.json'), json_encode(['success' => false, 'message' => $e->getMessage()], JSON_THROW_ON_ERROR));
 
             throw $e;
         } catch (\Exception $e) {
-            logger()->error($e);
             awsUploadFile(sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, $orgId, $userId, 'status.json'), json_encode(['success' => false, 'message' => 'Error has occurred while importing the file.'], JSON_THROW_ON_ERROR));
 
             throw  $e;
