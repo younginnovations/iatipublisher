@@ -76,7 +76,7 @@ class NameService
     {
         $organizationName = array_values($organizationName['narrative']);
 
-        return $this->organizationRepository->update($id, ['name' => $organizationName]);
+        return $this->organizationRepository->update($id, ['name' => ['narrative'=>$organizationName]]);
     }
 
     /**

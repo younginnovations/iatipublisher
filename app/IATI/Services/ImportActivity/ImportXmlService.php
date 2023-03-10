@@ -10,6 +10,7 @@ use App\IATI\Repositories\Activity\PeriodRepository;
 use App\IATI\Repositories\Activity\ResultRepository;
 use App\IATI\Repositories\Activity\TransactionRepository;
 use App\IATI\Repositories\ImportActivityError\ImportActivityErrorRepository;
+use App\IATI\Traits\FillDefaultValuesTrait;
 use App\XmlImporter\Events\XmlWasUploaded;
 use App\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
 use App\XmlImporter\Foundation\XmlProcessor;
@@ -27,6 +28,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class ImportXmlService
 {
+    use FillDefaultValuesTrait;
+
     /**
      * Temporary Xml file storage location.
      */
@@ -190,8 +193,8 @@ class ImportXmlService
                 $this->activityRepository->importXmlActivities($oldActivity->id, $activityData);
                 $this->transactionRepository->deleteTransaction($oldActivity->id);
                 $this->resultRepository->deleteResult($oldActivity->id);
-                $this->saveTransactions(Arr::get($activityData, 'transactions'), $oldActivity->id);
-                $this->saveResults(Arr::get($activityData, 'result'), $oldActivity->id);
+                $this->saveTransactions(Arr::get($activityData, 'transactions'), $oldActivity->id, Arr::get($activityData, 'default_field_values.0', []));
+                $this->saveResults(Arr::get($activityData, 'result'), $oldActivity->id, Arr::get($activityData, 'default_field_values.0', []));
 
                 if (!empty($activity['errors'])) {
                     $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $activity['errors']);
@@ -201,8 +204,8 @@ class ImportXmlService
             } else {
                 $storeActivity = $this->activityRepository->importXmlActivities(null, $activityData);
 
-                $this->saveTransactions(Arr::get($activityData, 'transactions'), $storeActivity->id);
-                $this->saveResults(Arr::get($activityData, 'result'), $storeActivity->id);
+                $this->saveTransactions(Arr::get($activityData, 'transactions'), $storeActivity->id, Arr::get($activityData, 'default_field_values.0', []));
+                $this->saveResults(Arr::get($activityData, 'result'), $storeActivity->id, Arr::get($activityData, 'default_field_values.0', []));
 
                 if (!empty($activity['errors'])) {
                     $this->importActivityErrorRepo->updateOrCreateError($storeActivity->id, $activity['errors']);
@@ -218,14 +221,17 @@ class ImportXmlService
      *
      * @param $transactions
      * @param $activityId
+     * @param $defaultValues
      *
      * @return $this
      */
-    protected function saveTransactions($transactions, $activityId): static
+    protected function saveTransactions($transactions, $activityId, $defaultValues): static
     {
         $transactionList = [];
 
         if ($transactions) {
+            $transactions = $this->populateDefaultFields($transactions, $defaultValues);
+
             foreach ($transactions as $transaction) {
                 $transactionList[] = [
                     'activity_id' => $activityId,
@@ -244,12 +250,14 @@ class ImportXmlService
      *
      * @param $results
      * @param $activityId
+     * @param $defaultValues
      *
      * @return $this
      */
-    protected function saveResults($results, $activityId): static
+    protected function saveResults($results, $activityId, $defaultValues): static
     {
         if ($results) {
+            $results = $this->populateDefaultFields($results, $defaultValues);
             $resultWithoutIndicator = [];
 
             foreach ($results as $result) {

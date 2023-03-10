@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\IATI\Repositories\Activity;
 
 use App\IATI\Models\Activity\Result;
+use App\IATI\Models\Setting\Setting;
 use App\IATI\Repositories\Repository;
+use App\IATI\Traits\FillDefaultValuesTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -15,6 +17,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class ResultRepository extends Repository
 {
+    use FillDefaultValuesTrait;
+
     /**
      * @return string
      */
@@ -136,5 +140,29 @@ class ResultRepository extends Repository
         }
 
         return false;
+    }
+
+    /**
+     * Overriding base Repository class's update method.
+     * Modified to populate default field values on update.
+     *
+     * @param $id
+     * @param $data
+     *
+     * @inheritDoc
+     *
+     * @return bool
+     */
+    public function update($id, $data): bool
+    {
+        $defaultValuesFromActivity = $this->getDefaultValuesFromActivity($id, 'result');
+        $orgId = auth()->user()->organization->id;
+        $defaultValuesFromSettings = Setting::where('organization_id', $orgId)->first()?->default_values ?? [];
+        $defaultValues = $defaultValuesFromActivity ?? $defaultValuesFromSettings;
+        if (!empty($defaultValues)) {
+            $data = $this->populateDefaultFields($data, $defaultValues);
+        }
+
+        return $this->model->find($id)->update($data);
     }
 }

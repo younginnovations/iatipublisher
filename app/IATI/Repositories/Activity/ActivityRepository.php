@@ -8,6 +8,7 @@ use App\Constants\Enums;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Models\Setting\Setting;
 use App\IATI\Repositories\Repository;
+use App\IATI\Traits\FillDefaultValuesTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -18,6 +19,8 @@ use Illuminate\Support\Arr;
  */
 class ActivityRepository extends Repository
 {
+    use FillDefaultValuesTrait;
+
     /**
      * Returns activity model.
      *
@@ -213,11 +216,13 @@ class ActivityRepository extends Repository
             'upload_medium' => Enums::UPLOAD_TYPE['xml'],
         ];
 
+        $data['default_field_values']['default_language'] = strtolower($data['default_field_values']['default_language']);
+
         if ($activity_id) {
-            return $this->model->find($activity_id)->update($data);
+            return $this->update($activity_id, $data);
         }
 
-        return $this->model->create($data);
+        return $this->store($data);
     }
 
     /**
@@ -303,13 +308,13 @@ class ActivityRepository extends Repository
      *
      * @param $activityData
      *
-     * @return Activity
+     * @return Model
      */
-    public function createActivity($activityData): Activity
+    public function createActivity($activityData): Model
     {
         $defaultFieldValues = $this->setDefaultFieldValues($activityData['default_field_values'], $activityData['organization_id']);
 
-        return $this->model->create(
+        return $this->store(
             [
                 'iati_identifier' => $activityData['identifier'],
                 'title' => $this->getActivityElement($activityData, 'title'),
@@ -394,7 +399,7 @@ class ActivityRepository extends Repository
             'reporting_org' => $this->getActivityElement($activityData, 'reporting_organization'),
         ];
 
-        return $this->model->find($id)->update($activity);
+        return $this->update($id, $activity);
     }
 
     /**
@@ -506,5 +511,48 @@ class ActivityRepository extends Repository
     public function updateReportingOrg($id, $key, $data): int
     {
         return $this->model->where('id', $id)->update(["reporting_org->0->{$key}"=>$data]);
+    }
+
+    /**
+     * Overriding base Repository class's store method.
+     * Modified to populate default field values on save.
+     *
+     * @param array $data
+     *
+     * @inheritDoc
+     *
+     * @return Model
+     */
+    public function store(array $data): Model
+    {
+        $defaultFieldValues = $data['default_field_values'];
+        $data = $this->populateDefaultFields($data, $defaultFieldValues);
+
+        return $this->model->create($data);
+    }
+
+    /**
+     * Overriding base Repository class's update method.
+     * Modified to populate default field values on update.
+     *
+     * @param $id
+     * @param $data
+     *
+     * @inheritDoc
+     *
+     * @return bool
+     */
+    public function update($id, $data): bool
+    {
+        $defaultValuesFromActivity = $this->getDefaultValuesFromActivity($id);
+        $orgId = auth()->user()->organization->id;
+        $defaultValuesFromSettings = Setting::where('organization_id', $orgId)->first()?->default_values ?? [];
+        $defaultValues = $defaultValuesFromActivity ?? $defaultValuesFromSettings;
+
+        if (!empty($defaultValues)) {
+            $data = $this->populateDefaultFields($data, $defaultValues);
+        }
+
+        return $this->model->find($id)->update($data);
     }
 }

@@ -73,7 +73,9 @@ class TitleService
      */
     public function update($id, $activityTitle): bool
     {
-        return $this->activityRepository->update($id, ['title' => array_values($activityTitle['narrative'])]);
+        logger(['title'=>$activityTitle['narrative']]);
+
+        return $this->activityRepository->update($id, ['title'=>$activityTitle['narrative']]);
     }
 
     /**
