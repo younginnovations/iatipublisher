@@ -86,14 +86,16 @@ class FillReportingOrgInOrganizationLevel extends Command
         $manipulatedReportingOrg = $template;
 
         foreach ($template[0] as $key => $item) {
-            if ($key === 'narrative') {
-                if (isset($reportingOrg[0]['narrative'])) {
-                    foreach ($reportingOrg[0]['narrative'] as $index =>$narrative) {
+            if (($key === 'narrative') && isset($reportingOrg[0]['narrative'])) {
+                if (is_array($reportingOrg[0]['narrative']) || is_object($reportingOrg[0]['narrative'])) {
+                    foreach ((array) $reportingOrg[0]['narrative'] as $index =>$narrative) {
                         if ($narrative['narrative']) {
                             $manipulatedReportingOrg[0]['narrative'][$index]['narrative'] = $narrative['narrative'];
                             $manipulatedReportingOrg[0]['narrative'][$index]['language'] = $narrative['language'] ?? '';
                         }
                     }
+                } else {
+                    $manipulatedReportingOrg[0]['narrative'] = [['narrative'=>'', 'language'=>'']];
                 }
             } else {
                 $manipulatedReportingOrg[0][$key] = $key === 'ref' ? $organization->identifier : ($reportingOrg[0][$key] ?? '');
