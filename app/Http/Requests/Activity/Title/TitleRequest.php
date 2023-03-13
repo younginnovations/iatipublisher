@@ -37,8 +37,11 @@ class TitleRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getErrorsForTitle($name): array
+    public function getErrorsForTitle($name, $titles = []): array
     {
+        $firstTitleKey = array_key_first($titles) ?? '0';
+        $rules[sprintf('%s.%s.narrative', $name, $firstTitleKey)] = 'required';
+
         return [sprintf('%s.0.narrative', $name) => 'required'];
     }
 
@@ -53,8 +56,6 @@ class TitleRequest extends ActivityBaseRequest
     public function getWarningForTitle($name, $titles = []): array
     {
         $rules[$name] = 'unique_lang|unique_default_lang';
-        $firstTitleKey = array_key_first($titles) ?? '0';
-        $rules[sprintf('%s.%s.narrative', $name, $firstTitleKey)] = 'required';
 
         if (is_array($titles) && count($titles)) {
             foreach ($titles as $key => $title) {
