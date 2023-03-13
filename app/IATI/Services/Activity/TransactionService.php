@@ -456,7 +456,7 @@ class TransactionService
 
                 if (
                     isset($transactionDatum->transaction['sector'])
-                    && !is_variable_null($transactionDatum->transaction['sector'])
+                    && !is_array_value_empty($transactionDatum->transaction['sector'])
                 ) {
                     return true;
                 }
