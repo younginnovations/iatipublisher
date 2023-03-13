@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\IATI\Repositories\User\RoleRepository;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
+use App\IATI\Services\User\UserService;
 use Illuminate\Console\Command;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Arr;
@@ -38,7 +40,9 @@ class MigrateOrganizationCommand extends Command
         protected DB $db,
         protected DatabaseManager $databaseManager,
         protected OrganizationService $organizationService,
-        protected SettingService $settingService
+        protected SettingService $settingService,
+        protected RoleRepository $roleRepository,
+        protected UserService $userService
     ) {
         parent::__construct();
     }
@@ -89,8 +93,32 @@ class MigrateOrganizationCommand extends Command
 
                 if ($aidStreamOrganizationSetting) {
                     $this->info('Started settings migration for organization id: ' . $aidstreamOrganizationId);
-                    $this->settingService->create($this->getNewSetting($aidStreamOrganizationSetting, $iatiOrganization));
+                    $this->settingService->create(
+                        $this->getNewSetting($aidStreamOrganizationSetting, $iatiOrganization)
+                    );
                     $this->info('Completed setting migration for organization id: ' . $aidstreamOrganizationId);
+                }
+
+                $aidstreamUsers = $this->db::connection('aidstream')->table('users')->where(
+                    'org_id',
+                    $aidstreamOrganizationId
+                )->get();
+
+                if (count($aidstreamUsers)) {
+                    $mappedUsers = [];
+
+                    foreach ($aidstreamUsers as $aidstreamUser) {
+                        $this->info(
+                            'Started user migration for user id: ' . $aidstreamUser->id . ' of organization: ' . $aidStreamOrganization->name
+                        );
+                        $iatiUser = $this->userService->create($this->getNewUser($aidstreamUser, $iatiOrganization));
+                        $mappedUsers[$aidstreamOrganizationId][$aidstreamUser->id] = $iatiUser->id;
+                        $this->info(
+                            'Completed user migration for user id: ' . $aidstreamUser->id . ' of organization: ' . $aidStreamOrganization->name
+                        );
+                    }
+
+                    $this->updateOrganizationUpdatedBy($aidstreamOrganizationId, $iatiOrganization, $mappedUsers);
                 }
 
                 $this->databaseManager->commit();
@@ -184,31 +212,34 @@ class MigrateOrganizationCommand extends Command
             $aidstreamOrganization->id
         )->where('is_reporting_org', true)->first();
 
-        $newOrganization['total_budget'] = $this->getColumnValueArray(
-            $aidstreamOrganizationData,
-            'total_budget'
-        );
-        $newOrganization['recipient_org_budget'] = $this->getColumnValueArray(
-            $aidstreamOrganizationData,
-            'recipient_organization_budget'
-        );
+        $newOrganization['total_budget'] = $aidstreamOrganizationData ? $this->getOrganizationBudget(
+            $aidstreamOrganizationData->total_budget,
+            'total_budget_status',
+            'budget_line'
+        ) : null;
+        $newOrganization['recipient_org_budget'] = $aidstreamOrganizationData ? $this->getOrganizationBudget(
+            $aidstreamOrganizationData->recipient_organization_budget,
+            'recipient_org',
+            'budget_line'
+        ) : null;
         $newOrganization['default_field_values'] = null;
-        $newOrganization['recipient_region_budget'] = $this->getColumnValueArray(
-            $aidstreamOrganizationData,
-            'recipient_region_budget'
-        );
-        $newOrganization['recipient_country_budget'] = $this->getColumnValueArray(
-            $aidstreamOrganizationData,
-            'recipient_country_budget'
-        );
+        $newOrganization['recipient_region_budget'] = $aidstreamOrganizationData ? $this->getOrganizationRecipientRegionBudget(
+            $aidstreamOrganizationData->recipient_region_budget,
+        ) : null;
+        $newOrganization['recipient_country_budget'] = $aidstreamOrganizationData ? $this->getOrganizationBudget(
+            $aidstreamOrganizationData->recipient_country_budget,
+            'recipient_country',
+            'budget_line'
+        ) : null;
         $newOrganization['document_link'] = $this->getColumnValueArray(
             $aidstreamOrganizationData,
             'document_link'
         );
-        $newOrganization['total_expenditure'] = $this->getColumnValueArray(
-            $aidstreamOrganizationData,
-            'total_expenditure'
-        );
+        $newOrganization['total_expenditure'] = $aidstreamOrganizationData ? $this->getOrganizationBudget(
+            $aidstreamOrganizationData->total_expenditure,
+            'total_expenditure',
+            'expense_line'
+        ) : null;
         $newOrganization['name'] = $this->getColumnValueArray(
             $aidstreamOrganizationData,
             'name'
@@ -225,9 +256,143 @@ class MigrateOrganizationCommand extends Command
         $newOrganization['created_at'] = $aidstreamOrganization->created_at;
         $newOrganization['updated_at'] = $aidstreamOrganization->updated_at;
         $newOrganization['org_status'] = 'active';
-        $newOrganization['updated_by'] = null; // Needs to be updated after migrating users
+        $newOrganization['updated_by'] = null; // Updated after migrating users
+        $newOrganization['migrated_from_aidstream'] = true;
 
         return $newOrganization;
+    }
+
+    /**
+     * Returns required budget data for IATI organization.
+     *
+     * @param $orgBudget
+     * @param $firstKey
+     * @param $secondKey
+     *
+     * @return array|null
+     *
+     * @throws \JsonException
+     */
+    public function getOrganizationBudget($orgBudget, $firstKey, $secondKey): ?array
+    {
+        if (!$orgBudget) {
+            return null;
+        }
+
+        $newOrgBudget = [];
+        $orgBudgetArray = json_decode($orgBudget, true, 512, JSON_THROW_ON_ERROR);
+
+        if (count($orgBudgetArray)) {
+            foreach ($orgBudgetArray as $key => $array) {
+                $newOrgBudget[$key] = match ($firstKey) {
+                    'total_budget_status' => [
+                        'total_budget_status' => Arr::get($array, 'status', null),
+                        'period_start'        => Arr::get($array, 'period_start', null),
+                        'period_end'          => Arr::get($array, 'period_end', null),
+                        'value'               => Arr::get($array, 'value', null),
+                    ],
+                    'recipient_org' => [
+                        'status'        => Arr::get($array, 'status', null),
+                        'recipient_org' => Arr::get($array, 'recipient_organization', null),
+                        'period_start'  => Arr::get($array, 'period_start', null),
+                        'period_end'    => Arr::get($array, 'period_end', null),
+                        'value'         => Arr::get($array, 'value', null),
+                    ],
+                    'recipient_country' => [
+                        'recipient_country' => Arr::get($array, 'recipient_country', null),
+                        'period_start'      => Arr::get($array, 'period_start', null),
+                        'period_end'        => Arr::get($array, 'period_end', null),
+                        'value'             => Arr::get($array, 'value', null),
+                    ],
+                    default => [
+                        'period_start'      => Arr::get($array, 'period_start', null),
+                        'period_end'        => Arr::get($array, 'period_end', null),
+                        'value'             => Arr::get($array, 'value', null),
+                    ],
+                };
+
+                foreach (Arr::get($array, $secondKey, []) as $innerKey => $innerArray) {
+                    $newOrgBudget[$key][$secondKey][$innerKey] = [
+                        'ref'       => Arr::get($innerArray, 'reference', null),
+                        'value'     => Arr::get($innerArray, 'value', null),
+                        'narrative' => Arr::get($innerArray, 'narrative', null),
+                    ];
+                }
+            }
+        }
+
+        return $newOrgBudget;
+    }
+
+    /**
+     * Returns required recipient region budget for IATI organization.
+     *
+     * @param $recipientRegionBudget
+     *
+     * @return array|null
+     *
+     * @throws \JsonException
+     */
+    public function getOrganizationRecipientRegionBudget($recipientRegionBudget): ?array
+    {
+        if (!$recipientRegionBudget) {
+            return null;
+        }
+
+        $newRecipientRegionBudget = [];
+        $recipientRegionBudgetArray = json_decode($recipientRegionBudget, true, 512, JSON_THROW_ON_ERROR);
+
+        if (count($recipientRegionBudgetArray)) {
+            foreach ($recipientRegionBudgetArray as $key => $array) {
+                $newRecipientRegionBudget[$key] = [
+                    'status'           => Arr::get($array, 'status', null),
+                    'recipient_region' => $this->getOrganizationRecipientRegionData(
+                        Arr::get($array, 'recipient_region', [])
+                    ),
+                    'period_start'     => Arr::get($array, 'period_start', null),
+                    'period_end'       => Arr::get($array, 'period_end', null),
+                    'value'            => Arr::get($array, 'value', null),
+                ];
+
+                foreach (Arr::get($array, 'budget_line', []) as $innerKey => $innerArray) {
+                    $newRecipientRegionBudget[$key]['budget_line'][$innerKey] = [
+                        'ref'       => Arr::get($innerArray, 'reference', null),
+                        'value'     => Arr::get($innerArray, 'value', null),
+                        'narrative' => Arr::get($innerArray, 'narrative', null),
+                    ];
+                }
+            }
+        }
+
+        return $newRecipientRegionBudget;
+    }
+
+    /**
+     * Returns required recipient region data for IATI organization.
+     *
+     * @param $recipientRegions
+     *
+     * @return array
+     */
+    public function getOrganizationRecipientRegionData($recipientRegions): array
+    {
+        $array = [];
+
+        foreach ($recipientRegions as $key => $recipientRegion) {
+            $array[$key]['region_vocabulary'] = Arr::get($recipientRegion, 'vocabulary', null);
+
+            if (Arr::get($recipientRegion, 'vocabulary', null) === '1') {
+                $array[$key]['region_code'] = Arr::get($recipientRegion, 'code', null);
+            } else {
+                $array[$key]['code'] = Arr::get($recipientRegion, 'code', null);
+
+                if (Arr::get($recipientRegion, 'vocabulary', null) === '99') {
+                    $array[$key]['vocabulary_uri'] = Arr::get($recipientRegion, 'vocabulary_uri', null);
+                }
+            }
+        }
+
+        return $array;
     }
 
     /**
@@ -282,20 +447,19 @@ class MigrateOrganizationCommand extends Command
      */
     public function getNewSetting($aidstreamOrganizationSetting, $iatiOrganization): array
     {
-        $newSetting = [];
-        $newSetting['organization_id'] = $iatiOrganization->id;
-        $newSetting['publishing_info'] = $this->getPublishingInfo(
-            $aidstreamOrganizationSetting->registry_info,
-            $iatiOrganization->publisher_id
-        );
-        $newSetting['default_values'] = $this->getDefaultValues($aidstreamOrganizationSetting->default_field_values);
-        $newSetting['activity_default_values'] = $this->getActivityDefaultValues(
-            $aidstreamOrganizationSetting->default_field_values
-        );
-        $newSetting['created_at'] = $aidstreamOrganizationSetting->created_at;
-        $newSetting['updated_at'] = $aidstreamOrganizationSetting->updated_at;
-
-        return $newSetting;
+        return [
+            'organization_id'         => $iatiOrganization->id,
+            'publishing_info'         => $this->getPublishingInfo(
+                $aidstreamOrganizationSetting->registry_info,
+                $iatiOrganization->publisher_id
+            ),
+            'default_values'          => $this->getDefaultValues($aidstreamOrganizationSetting->default_field_values),
+            'activity_default_values' => $this->getActivityDefaultValues(
+                $aidstreamOrganizationSetting->default_field_values
+            ),
+            'created_at'              => $aidstreamOrganizationSetting->created_at,
+            'updated_at'              => $aidstreamOrganizationSetting->updated_at,
+        ];
     }
 
     /**
@@ -385,5 +549,87 @@ class MigrateOrganizationCommand extends Command
             ) : '1',
             'budget_not_provided' => '',
         ];
+    }
+
+    /**
+     * Returns new IATI user data.
+     *
+     * @param $aidstreamUser
+     * @param $iatiOrganization
+     *
+     * @return array
+     */
+    public function getNewUser($aidstreamUser, $iatiOrganization): array
+    {
+        return [
+            'username'                => $aidstreamUser->username,
+            'full_name'               => sprintf('%s %s', $aidstreamUser->first_name, $aidstreamUser->last_name),
+            'email'                   => $aidstreamUser->email,
+            'address'                 => $iatiOrganization->address,
+            'organization_id'         => $iatiOrganization->id,
+            'is_active'               => true,
+            'email_verified_at'       => $aidstreamUser->verification_created_at,
+            'password'                => $aidstreamUser->password,
+            'remember_token'          => null,
+            'created_at'              => $aidstreamUser->created_at,
+            'updated_at'              => $aidstreamUser->updated_at,
+            'role_id'                 => $this->getRoleId($aidstreamUser->role_id),
+            'status'                  => true,
+            'registration_method'     => $aidstreamUser->role_id === 1 ? 'existing_org' : 'user_create',
+            'language_preference'     => 'en',
+            'created_by'              => null,
+            'updated_by'              => null,
+            'deleted_at'              => null,
+            'migrated_from_aidstream' => true,
+        ];
+    }
+
+    /**
+     * Returns role id for IATI user.
+     *
+     * @param $roleId
+     *
+     * @return int
+     */
+    public function getRoleId($roleId): int
+    {
+        if ($roleId === 1 || $roleId === 5) {
+            return $this->roleRepository->getOrganizationAdminId();
+        }
+
+        return $this->roleRepository->getGeneralUserId();
+    }
+
+    /**
+     * Updates organization updated by.
+     *
+     * @param $aidstreamOrganizationId
+     * @param $iatiOrganization
+     * @param $mappedUsers
+     *
+     * @return void
+     */
+    public function updateOrganizationUpdatedBy($aidstreamOrganizationId, $iatiOrganization, $mappedUsers): void
+    {
+        $orgUpdated = $this->db::connection('aidstream')->table('user_activities')
+                               ->where('organization_id', $aidstreamOrganizationId)
+                               ->where('action', 'LIKE', 'organization%')
+                               ->orderBy('updated_at', 'desc')
+                               ->first();
+
+        if ($orgUpdated) {
+            if (array_key_exists($orgUpdated->user_id, $mappedUsers[$aidstreamOrganizationId])) {
+                $iatiOrganization->updated_by = $mappedUsers[$aidstreamOrganizationId][$orgUpdated->user_id];
+            } else {
+                $adminUser = $this->db::connection('aidstream')->table('users')
+                                      ->where('role_id', 1)
+                                      ->where('org_id', $aidstreamOrganizationId)
+                                      ->first();
+
+                $iatiOrganization->updated_by = $mappedUsers[$aidstreamOrganizationId][$adminUser->id];
+            }
+
+            $iatiOrganization->save();
+        }
     }
 }
