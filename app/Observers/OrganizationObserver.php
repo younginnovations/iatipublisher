@@ -106,7 +106,11 @@ class OrganizationObserver
 
         $this->setElementStatus($organization);
         $this->resetOrganizationStatus($organization);
-        $organization->updated_by = Auth::user()->id;
+
+        if (auth()->check()) {
+            $organization->updated_by = Auth::user()->id;
+        }
+
         $organization->saveQuietly();
     }
 
