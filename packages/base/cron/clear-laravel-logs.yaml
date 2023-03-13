@@ -18,7 +18,7 @@ spec:
               args:
                 - "-c"
                 - |
-                  find /opt/apps/laravel-in-kubernetes/storage/logs -type f -mtime +10 -exec rm {} \;
+                  find /opt/apps/laravel-in-kubernetes/storage/logs -type f -mtime +30 -exec rm {} \;
               volumeMounts:
                 - name: iati-persistent-storage
                   mountPath: /opt/apps/laravel-in-kubernetes/storage/logs
