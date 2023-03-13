@@ -57,6 +57,7 @@ class FillReportingOrgInOrganizationLevel extends Command
                         'status'        => 'draft',
                     ]
                 );
+                $organization = $organizations->find($organization->id);
 
                 $reportingOrg = $organization->reporting_org[0];
                 $activityModel = (new ($activityRepository->getModel()));
@@ -85,19 +86,19 @@ class FillReportingOrgInOrganizationLevel extends Command
         $reportingOrg = $organization->reporting_org;
         $manipulatedReportingOrg = $template;
 
-        foreach ($template[0] as $key => $item) {
-            if (($key === 'narrative') && isset($reportingOrg[0]['narrative'])) {
-                if (is_array($reportingOrg[0]['narrative']) || is_object($reportingOrg[0]['narrative'])) {
-                    foreach ((array) $reportingOrg[0]['narrative'] as $index =>$narrative) {
-                        if ($narrative['narrative']) {
-                            $manipulatedReportingOrg[0]['narrative'][$index]['narrative'] = $narrative['narrative'];
-                            $manipulatedReportingOrg[0]['narrative'][$index]['language'] = $narrative['language'] ?? '';
-                        }
-                    }
-                } else {
-                    $manipulatedReportingOrg[0]['narrative'] = [['narrative'=>'', 'language'=>'']];
+        if (isset($reportingOrg[0]['narrative']) && !is_string($reportingOrg[0]['narrative'])) {
+            foreach ((array) $reportingOrg[0]['narrative'] as $index => $narrative) {
+                if ($narrative['narrative']) {
+                    $manipulatedReportingOrg[0]['narrative'][$index]['narrative'] = $narrative['narrative'];
+                    $manipulatedReportingOrg[0]['narrative'][$index]['language'] = $narrative['language'] ?? '';
                 }
-            } else {
+            }
+        } else {
+            $manipulatedReportingOrg[0]['narrative'] = [];
+        }
+
+        foreach ($template[0] as $key => $item) {
+            if ($key !== 'narrative') {
                 $manipulatedReportingOrg[0][$key] = $key === 'ref' ? $organization->identifier : ($reportingOrg[0][$key] ?? '');
             }
         }
