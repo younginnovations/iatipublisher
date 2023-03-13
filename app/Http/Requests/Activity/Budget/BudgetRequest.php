@@ -316,7 +316,7 @@ class BudgetRequest extends ActivityBaseRequest
         if (count($this->identicalIds)) {
             foreach ($this->identicalIds as $ids) {
                 foreach ($ids as $id) {
-                    $messages['budget.' . $id . '.budget_type.budgets_identical'] = 'The periods with same @type must not be same or overlap.';
+                    $messages['budget.' . $id . '.budget_type.budgets_identical'] = 'The periods of multiple budgets with the same type should not be the same';
                 }
             }
         }
@@ -324,7 +324,7 @@ class BudgetRequest extends ActivityBaseRequest
         if (count($this->revisedIds)) {
             foreach ($this->revisedIds as $ids) {
                 foreach ($ids as $id) {
-                    $messages['budget.' . $id . '.budget_type.budget_revised_invalid'] = "The revised budget's period must match with an original budget's period.";
+                    $messages['budget.' . $id . '.budget_type.budget_revised_invalid'] = 'Budget with type revised must have period start and end same to that of one of the budgets having same type original for budgets elements at position ' . $this->getIdenticalIds($ids);
                 }
             }
         }
@@ -350,9 +350,9 @@ class BudgetRequest extends ActivityBaseRequest
             }
 
             $messages[$budgetForm . '.budget_type.in'] = 'The budget type is invalid.';
-            $messages[$budgetForm . '.budget_type.in'] = 'The budget status is invalid.';
+            $messages[$budgetForm . '.budget_status.in'] = 'The budget status is invalid.';
             $messages[$budgetForm . '.period_end.0.date.before'] = 'The Period End iso-date must be within a year after Period Start iso-date.';
-            $messages[$budgetForm . '.period_end.0.date.period_start_end'] = 'The period must not exceed a year.';
+            $messages[$budgetForm . '.period_end.0.date.period_start_end'] = 'The Budget Period must not be longer than one year';
         }
 
         return $messages;
@@ -373,7 +373,7 @@ class BudgetRequest extends ActivityBaseRequest
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date'] = 'The iso-date field must be a valid date.';
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date_greater_than'] = 'The iso-date field must date after year 1900.';
-            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.period_start_end'] = 'The period must not exceed a year.';
+            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.period_start_end'] = 'The Budget Period must not be longer than one year';
         }
 
         return $messages;
@@ -415,7 +415,7 @@ class BudgetRequest extends ActivityBaseRequest
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('%s.budget_value.%s', $formBase, $valueIndex);
             $messages[sprintf('%s.amount.numeric', $valueForm)] = 'The amount field must be a number.';
-            $messages[sprintf('%s.amount.min', $valueForm)] = 'Budget value must not be negative.';
+            $messages[sprintf('%s.amount.min', $valueForm)] = 'The amount field must not be in negative.';
             $messages[sprintf('%s.value_date.date', $valueForm)] = 'The value-date field must be a valid date.';
             $messages[sprintf('%s.value_date.after', $valueForm)] = 'The value-date field must be between period start and period end.';
             $messages[sprintf('%s.value_date.before', $valueForm)] = 'The value-date field must be between period start and period end.';

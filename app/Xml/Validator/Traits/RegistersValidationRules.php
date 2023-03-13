@@ -210,12 +210,26 @@ trait RegistersValidationRules
      */
     public function activityDateValidation(): void
     {
+        $this->actualDateValidator();
+        $this->multipleActivityDateValidator();
+        $this->yearValueNarrativeValidator();
+        $this->diffOneYearValidator();
+        $this->dateGreaterThanValidator();
+    }
+
+    /**
+     * Actual Date validation.
+     *
+     * @return void
+     */
+    public function actualDateValidator(): void
+    {
         $this->extend(
             'actual_date',
             function ($attribute, $date) {
                 $dateType = (!is_array($date)) ?: Arr::get($date, '0.type');
 
-                if ($dateType === '2' || $dateType === '4') {
+                if (in_array($dateType, ['2', '4'], true)) {
                     $actual_date = (!is_array($date)) ?: Arr::get($date, '0.date');
                     if ($actual_date > date('Y-m-d')) {
                         return false;
@@ -225,7 +239,15 @@ trait RegistersValidationRules
                 return true;
             }
         );
+    }
 
+    /**
+     * Multiple Activity Date Validation.
+     *
+     * @return void
+     */
+    public function multipleActivityDateValidator(): void
+    {
         $this->extend(
             'multiple_activity_date',
             function ($attribute, $dates) {
@@ -242,7 +264,15 @@ trait RegistersValidationRules
                 return false;
             }
         );
+    }
 
+    /**
+     * Narrative Validation.
+     *
+     * @return void
+     */
+    public function yearValueNarrativeValidator(): void
+    {
         $this->extendImplicit(
             'year_value_narrative_validation',
             function ($attribute, $value) {
@@ -265,7 +295,15 @@ trait RegistersValidationRules
                 return $value['year'] || $value['value'];
             }
         );
+    }
 
+    /**
+     * Date validation.
+     *
+     * @return void
+     */
+    public function diffOneYearValidator(): void
+    {
         $this->extend(
             'diff_one_year',
             function ($attribute, $values) {
@@ -290,11 +328,24 @@ trait RegistersValidationRules
                 return true;
             }
         );
+    }
 
+    /**
+     * Date greater than validation.
+     *
+     * @return void
+     */
+    public function dateGreaterThanValidator(): void
+    {
         $this->extend(
             'date_greater_than',
-            function ($attribute, $value, $parameters, $validator) {
-                $inserted = Carbon::parse($value)->year;
+            function ($attribute, $value, $parameters) {
+                $inserted = dateFormat('Y', $value);
+
+                if (!$inserted) {
+                    return false;
+                }
+
                 $since = $parameters[0];
 
                 return $inserted >= $since;
@@ -552,6 +603,10 @@ trait RegistersValidationRules
         $this->extendImplicit('sector_has_five_digit_oced_vocab', function () {
             return false;
         });
+
+        $this->extend('sector_required', function () {
+            return false;
+        });
     }
 
     /**
@@ -610,6 +665,10 @@ trait RegistersValidationRules
         });
 
         $this->extend('duplicate_country_code', function () {
+            return false;
+        });
+
+        $this->extend('country_percentage_complete', function () {
             return false;
         });
     }

@@ -17,6 +17,7 @@ class OrganizationFactory extends Factory
      * Define the model's default state.
      *
      * @return array
+     * @throws \JsonException
      */
     public function definition(): array
     {
@@ -31,5 +32,31 @@ class OrganizationFactory extends Factory
             'iati_status'         => 'pending',
             'status'              => 'draft',
         ];
+    }
+
+    /**
+     * @return Factory
+     */
+    public function reportingOrg(): Factory
+    {
+        $reporting_org = [
+            [
+                'ref' => 'NP-SWC-0987',
+                'type' => '70',
+                'secondary_reporter' => null,
+                'narrative' => [
+                    [
+                        'narrative' => 'organization narrative',
+                        'language' => 'ae',
+                    ],
+                ],
+            ],
+        ];
+
+        return $this->state(function () use ($reporting_org) {
+            return [
+                'reporting_org' => $reporting_org,
+            ];
+        });
     }
 }

@@ -275,6 +275,8 @@ class RecipientRegionRequest extends ActivityBaseRequest
             }
         } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] === 0.0 && is_array_values_null($recipientCountries)) {
             $rules[$recipientRegionForm . '.percentage'][] = 'nullable';
+        } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] !== $groupedPercentRegion[array_key_first($groupedPercentRegion)]['total']) {
+            $rules[$recipientRegionForm . '.percentage'][] = 'percentage_within_vocabulary';
         } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] < $allottedRegionPercent && !is_array_values_null($recipientCountries)) {
             $rules[$recipientRegionForm . '.percentage'] = 'allocated_region_total_mismatch';
         }

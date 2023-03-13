@@ -339,7 +339,7 @@ trait WarningValidationRules
         $transactions = Arr::get($activity, 'transactions', []);
 
         foreach ($transactions as $idx => $transaction) {
-            $tempRules = $this->getBaseRules((new TransactionRequest())->getWarningForTransaction($transaction, true, $activity), 'transactions.' . $idx, $transaction, false);
+            $tempRules = $this->getBaseRules((new TransactionRequest())->getWarningForTransaction($transaction, true, $activity, $transactions), 'transactions.' . $idx, $transaction, false);
 
             foreach ($tempRules as $index => $rule) {
                 $rules[$index] = $rule;

@@ -104,6 +104,11 @@ class Transaction extends Element
     private mixed $transactionRow;
 
     /**
+     * @var array
+     */
+    protected array $multipleTransaction;
+
+    /**
      * Transaction constructor.
      *
      * @param            $transactionRow
@@ -157,12 +162,14 @@ class Transaction extends Element
 
     /**
      * Validate data for IATI Element.
-     *
+     * @param array $multipleTransaction
      * @return $this
      * @throw \JsonException
      */
-    public function validate(): static
+    public function validate(array $multipleTransaction = []): static
     {
+        $this->multipleTransaction = $multipleTransaction;
+
         $this->validator = $this->factory->sign($this->data())
             ->with($this->rules(), $this->messages())
             ->getValidatorInstance();
@@ -184,7 +191,7 @@ class Transaction extends Element
      */
     public function rules(): array
     {
-        return $this->getBaseRules($this->request->getWarningForTransaction(Arr::get($this->data, 'transaction', []), true, $this->getActivityData()), false);
+        return $this->getBaseRules($this->request->getWarningForTransaction(Arr::get($this->data, 'transaction', []), true, $this->getActivityData(), $this->multipleTransaction), false);
     }
 
     /**

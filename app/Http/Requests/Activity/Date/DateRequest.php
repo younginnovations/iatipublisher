@@ -97,6 +97,7 @@ class DateRequest extends ActivityBaseRequest
             $messages[sprintf('%s.date.date', $activityDateForm)] = 'Date is invalid.';
             $messages[sprintf('%s.date.before', $activityDateForm)] = 'Actual start and end dates may not be in the future.';
             $messages[sprintf('%s.date.end_later_than_start', $activityDateForm)] = 'End date must be later than the start date.';
+            $messages[sprintf('%s.type.in', $activityDateForm)] = 'The selected type is invalid.';
             $messages += $this->getMessagesForNarrative($activityDate['narrative'], $activityDateForm);
         }
 

@@ -112,14 +112,14 @@ class PolicyMarkerRequest extends ActivityBaseRequest
             $messages[sprintf('%s.vocabulary_uri.url', $policyMarkerForm)]
                 = 'The @vocabulary-uri field must be a valid url.';
 
+            foreach ($this->getMessagesForNarrative($policyMarker['narrative'], $policyMarkerForm) as $policyMarkerNarrativeIndex => $narrativeMessages) {
+                $messages[$policyMarkerNarrativeIndex] = $narrativeMessages;
+            }
+
             if (Arr::get($policyMarker, 'policy_marker_vocabulary') === '99') {
                 foreach (array_keys($policyMarker['narrative']) as $narrativeIndex) {
                     $messages[sprintf('%s.narrative.%s.narrative.required', $policyMarkerForm, $narrativeIndex)] = 'The narrative field is required when vocabulary is reporting organisation.';
                 }
-            }
-
-            foreach ($this->getMessagesForNarrative($policyMarker['narrative'], $policyMarkerForm) as $policyMarkerNarrativeIndex => $narrativeMessages) {
-                $messages[$policyMarkerNarrativeIndex] = $narrativeMessages;
             }
         }
 

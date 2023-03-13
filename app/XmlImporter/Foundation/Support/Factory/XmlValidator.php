@@ -227,7 +227,6 @@ class XmlValidator
 
     /**
      * @param bool $isDuplicate
-     * @param bool $duplicateTransaction
      * @param bool $isIdentifierValid
      *
      * @return array
@@ -317,5 +316,18 @@ class XmlValidator
         }
 
         return $messages;
+    }
+
+    /**
+     * Sets Organization reporting org.
+     *
+     * @param $organizationReportingOrg
+     * @return $this
+     */
+    public function reportingOrganisationInOrganisation($organizationReportingOrg):static
+    {
+        $this->organizationReportingOrg = $organizationReportingOrg;
+
+        return $this;
     }
 }

@@ -188,7 +188,7 @@ class Tag extends Element
      */
     protected function setVocabularyUri($key, $value, $index): void
     {
-        if ($key === $this->_csvHeaders[2] && Arr::get($this->data, 'tag.' . $index . '.vocabulary') === '99') {
+        if ($key === $this->_csvHeaders[2] && Arr::get($this->data, 'tag.' . $index . '.tag_vocabulary') === '99') {
             $this->data['tag'][$index]['vocabulary_uri'] = $value;
         }
     }

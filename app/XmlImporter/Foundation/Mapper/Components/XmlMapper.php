@@ -91,6 +91,11 @@ class XmlMapper
     ];
 
     /**
+     * @var array
+     */
+    public array $mappedActivity;
+
+    /**
      * Xml constructor.
      */
     public function __construct()
@@ -142,6 +147,7 @@ class XmlMapper
 
             $xmlQueueWriter->save($mappedData[$index], $totalActivities, $index);
         }
+        $this->mappedActivity = $mappedData;
 
         return $this;
     }
@@ -289,5 +295,33 @@ class XmlMapper
         if ($this->name($subElement) === $elementName) {
             $this->{$elementName}[] = $subElement;
         }
+    }
+
+    /**
+     * This method is same as that of map() function above but without XML QUEUE writer
+     * This method is only for testing purpose.
+     *
+     *
+     * @param array $activities
+     * @param $template
+     * @param $orgRef
+     * @param $organizationReportingOrg
+     * @return array
+     * @throws BindingResolutionException
+     */
+    public function mapForTest(array $activities, $template, $orgRef, $organizationReportingOrg): array
+    {
+        $mappedData = [];
+
+        foreach ($activities as $index => $activity) {
+            $this->initComponents($organizationReportingOrg);
+            $mappedData[$index] = $this->activity->map($this->filter($activity, 'iatiActivity'), $template, $orgRef);
+            $mappedData[$index]['default_field_values'] = $this->defaultFieldValues($activity, $template);
+            $mappedData[$index]['transactions'] = $this->transactionElement->map($this->filter($activity, 'transaction'), $template);
+            $mappedData[$index]['transaction_references'] = $this->transactionElement->getReferences();
+            $mappedData[$index]['result'] = $this->resultElement->map($this->filter($activity, 'result'), $template);
+        }
+
+        return $mappedData;
     }
 }

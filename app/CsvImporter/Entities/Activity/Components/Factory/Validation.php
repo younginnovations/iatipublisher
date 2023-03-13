@@ -153,6 +153,7 @@ class Validation extends Factory
         $this->sectorValidation();
         $this->recipientRegionCountryValidation();
         $this->budgetValidation();
+        $this->transactionValidation();
     }
 
     /**
@@ -711,6 +712,18 @@ class Validation extends Factory
         });
 
         $this->extend('budget_revised_invalid', function () {
+            return false;
+        });
+    }
+
+    /**
+     * Transaction Validation.
+     *
+     * @return void
+     */
+    public function transactionValidation(): void
+    {
+        $this->extend('sector_required', function () {
             return false;
         });
     }

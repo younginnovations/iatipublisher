@@ -102,6 +102,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
 
             $messages[sprintf('%s.organization_role.in', $participatingOrgForm)] = 'The participating organisation role is invalid.';
             $messages[sprintf('%s.type.in', $participatingOrgForm)] = 'The participating organisation type is invalid.';
+            $messages[sprintf('%s.crs_channel_code.in', $participatingOrgForm)] = 'The Crs Channel Code is invalid.';
 
             foreach ($this->getMessagesForNarrative($participatingOrg['narrative'], $participatingOrgForm) as $participatingNarrativeIndex => $narrativeMessages) {
                 $messages[$participatingNarrativeIndex] = $narrativeMessages;
