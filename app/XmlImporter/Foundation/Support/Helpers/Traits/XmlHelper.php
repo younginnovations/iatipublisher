@@ -88,8 +88,8 @@ trait XmlHelper
 
                     if (array_key_exists($attributeKey, array_flip($template))) {
                         $data[$index][$attributeKey] = $attributeKey === 'vocabulary' || in_array($value['name'], ['{}category', '{}administrative'])
-                                                                ? strtoupper($attribute)
-                                                                : $attribute;
+                            ? strtoupper($attribute)
+                            : $attribute;
                     }
                 }
                 $index++;
@@ -164,11 +164,13 @@ trait XmlHelper
 
         if (is_array(Arr::get($subElement, 'value', []))) {
             foreach (Arr::get($subElement, 'value', []) as $index => $value) {
-                $narrative = empty(Arr::get($value, 'value', '')) ? '' : Arr::get($value, 'value', '');
-                $field[$index] = [
-                    'narrative' => is_string($narrative) ? trim($narrative) : $narrative,
-                    'language'  => strtolower($this->attributes($value, 'lang')),
-                ];
+                if ($this->name($value) === 'narrative') {
+                    $narrative = empty(Arr::get($value, 'value', '')) ? '' : Arr::get($value, 'value', '');
+                    $field[$index] = [
+                        'narrative' => is_string($narrative) ? trim($narrative) : $narrative,
+                        'language' => strtolower($this->attributes($value, 'lang')),
+                    ];
+                }
             }
 
             return $field;
