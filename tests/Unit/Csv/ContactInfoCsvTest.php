@@ -8,6 +8,8 @@ use Illuminate\Support\Arr;
 class ContactInfoCsvTest extends CsvBaseTest
 {
     /**
+     * Collects error messages.
+     *
      * @param $rows
      * @return array
      * @throws \JsonException
@@ -28,6 +30,10 @@ class ContactInfoCsvTest extends CsvBaseTest
         return $errors;
     }
 
+    /**
+     * All valid data.
+     * @return array
+     */
     public function valid_data(): array
     {
         $data = $this->completeData;
@@ -55,6 +61,8 @@ class ContactInfoCsvTest extends CsvBaseTest
     }
 
     /**
+     * Pass if all valid data.
+     *
      * @return void
      * @test
      * @throws \JsonException
@@ -69,6 +77,7 @@ class ContactInfoCsvTest extends CsvBaseTest
     }
 
     /**
+     * Throw validation messages for all invalid data.
      * @return void
      * @throws \JsonException
      * @test
@@ -88,6 +97,10 @@ class ContactInfoCsvTest extends CsvBaseTest
         $this->assertContains('The contact info website url must be valid url.', $flattenErrors);
     }
 
+    /**
+     * Invalid Contact info data.
+     * @return array
+     */
     public function invalid_data(): array
     {
         $data = $this->valid_data();

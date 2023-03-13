@@ -236,7 +236,7 @@ class Activity extends Model implements Auditable
 
         if (empty($value) && !empty($this->attributes['recipient_country'])) {
             $countryTotalPercentage = (float) array_sum(array_column($this->recipient_country, 'percentage'));
-            
+
             if ($countryTotalPercentage !== 100.0) {
                 $elementStatus['recipient_country'] = false;
             }

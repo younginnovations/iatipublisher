@@ -30,6 +30,8 @@ class SectorCsvTest extends CsvBaseTest
     }
 
     /**
+     * Collects validation messages.
+     *
      * @param $rows
      * @return array
      * @throws \JsonException
@@ -119,6 +121,7 @@ class SectorCsvTest extends CsvBaseTest
     }
 
     /**
+     * Percentage empty in single sector data.
      * @return array
      */
     public function single_sector_empty_percentage_data(): array
@@ -156,6 +159,7 @@ class SectorCsvTest extends CsvBaseTest
     }
 
     /**
+     * if vocab 98 or 99 then narrative empty.
      * @return array
      */
     public function narrative_empty_vocabulary_98_or_99(): array
@@ -196,6 +200,7 @@ class SectorCsvTest extends CsvBaseTest
     }
 
     /**
+     * Invalid sector data.
      * @return array
      *
      * @throws \JsonException

@@ -8,6 +8,8 @@ use Illuminate\Support\Arr;
 class BudgetCsvTest extends CsvBaseTest
 {
     /**
+     * Collects validation error messages.
+     *
      * @param $rows
      * @return array
      * @throws \JsonException
@@ -28,6 +30,11 @@ class BudgetCsvTest extends CsvBaseTest
     }
 
     /**
+     * Invalid data for budget period
+     *  - same budget type
+     *  - period end before period start
+     *  - budget period longer than one year.
+     *
      * @return void
      * @throws \JsonException
      * @test
@@ -47,7 +54,7 @@ class BudgetCsvTest extends CsvBaseTest
     }
 
     /**
-     * i.
+     * Invalid Budget Periods.
      * @return array
      */
     public function get_invalid_budget_period(): array
@@ -81,6 +88,8 @@ class BudgetCsvTest extends CsvBaseTest
     }
 
     /**
+     * Revised date not matched with one of the budget type original.
+     *
      * @return void
      * @test
      * @throws \JsonException
@@ -96,6 +105,8 @@ class BudgetCsvTest extends CsvBaseTest
     }
 
     /**
+     * Invalid reviosed period.
+     *
      * @return array
      */
     public function get_revised_period_not_matched_date(): array
@@ -121,6 +132,8 @@ class BudgetCsvTest extends CsvBaseTest
     }
 
     /**
+     * All Possible invalid data.
+     *
      * @return void
      * @test
      * @throws \JsonException

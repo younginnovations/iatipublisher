@@ -8,6 +8,8 @@ use Illuminate\Support\Arr;
 class DefaultFlowTypeCsvTest extends CsvBaseTest
 {
     /**
+     * Collects validation error messages.
+     *
      * @throws \JsonException
      */
     public function getErrors($rows): array
@@ -26,6 +28,7 @@ class DefaultFlowTypeCsvTest extends CsvBaseTest
     }
 
     /**
+     * Thorw validation message for all invalid data.
      * @return void
      * @test
      * @throws \JsonException
@@ -42,6 +45,7 @@ class DefaultFlowTypeCsvTest extends CsvBaseTest
     }
 
     /**
+     * Invalid Default flow type data.
      * @return array
      */
     public function invalid_data(): array
@@ -54,6 +58,7 @@ class DefaultFlowTypeCsvTest extends CsvBaseTest
     }
 
     /**
+     * Valid data.
      * @return void
      * @test
      * @throws \JsonException
@@ -68,6 +73,7 @@ class DefaultFlowTypeCsvTest extends CsvBaseTest
     }
 
     /**
+     * Valid data.
      * @return array
      */
     public function valid_data(): array

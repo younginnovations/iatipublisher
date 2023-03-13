@@ -8,6 +8,8 @@ use Illuminate\Support\Arr;
 class DefaultTiedStatusCsvTest extends CsvBaseTest
 {
     /**
+     * Collects validation error messages.
+     *
      * @throws \JsonException
      */
     public function getErrors($rows): array
@@ -26,6 +28,7 @@ class DefaultTiedStatusCsvTest extends CsvBaseTest
     }
 
     /**
+     * Throw validatoin messages if invalid data.
      * @return void
      * @test
      * @throws \JsonException
@@ -42,6 +45,7 @@ class DefaultTiedStatusCsvTest extends CsvBaseTest
     }
 
     /**
+     * Invalid Default tied status.
      * @return array
      */
     public function invalid_data(): array
@@ -54,6 +58,7 @@ class DefaultTiedStatusCsvTest extends CsvBaseTest
     }
 
     /**
+     * Valid data.
      * @return void
      * @test
      * @throws \JsonException
@@ -69,6 +74,7 @@ class DefaultTiedStatusCsvTest extends CsvBaseTest
     }
 
     /**
+     * All Valid data.
      * @return array
      */
     public function valid_data(): array

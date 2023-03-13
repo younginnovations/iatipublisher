@@ -35,6 +35,7 @@ class ActivityStatusCsvTest extends CsvBaseTest
     }
 
     /**
+     * Activity status invalid data.
      * @return array
      */
     public function activity_status_invalid_data(): array
@@ -73,6 +74,8 @@ class ActivityStatusCsvTest extends CsvBaseTest
     }
 
     /**
+     * Valid activity status data.
+     *
      * @return array
      */
     public function activity_status_valid_data(): array

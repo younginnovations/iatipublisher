@@ -5,10 +5,11 @@ namespace Tests\Unit\Xml;
 class HumanitarianScopeXmlTest extends XmlBaseTest
 {
     /**
+     * Throws validation messages for all invalid data.
      * @return void
      * @test
      */
-    public function throw_all_possible_valiation_for_invalid_data(): void
+    public function throw_all_possible_validation_for_invalid_data(): void
     {
         $rows = $this->invalid_data();
         $flattenErrors = $this->getErrors($rows);
@@ -20,6 +21,7 @@ class HumanitarianScopeXmlTest extends XmlBaseTest
     }
 
     /**
+     * Invalid humanitarian scope.
      * @return array
      */
     public function invalid_data(): array

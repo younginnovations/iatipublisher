@@ -42,6 +42,7 @@ class XmlBaseTest extends ImportBaseTest
     }
 
     /**
+     * Sets complete xml data.
      * @return void
      * @throws BindingResolutionException
      * @throws \ReflectionException
@@ -52,6 +53,7 @@ class XmlBaseTest extends ImportBaseTest
     }
 
     /**
+     * Gets mapped activity in an array.
      * @return array
      * @throws BindingResolutionException
      * @throws \ReflectionException
@@ -68,6 +70,7 @@ class XmlBaseTest extends ImportBaseTest
     }
 
     /**
+     * Load complete xml file  and reads.
      * @return array
      */
     public function loadXmlData(): array
@@ -79,6 +82,7 @@ class XmlBaseTest extends ImportBaseTest
     }
 
     /**
+     * Collects validation messages.
      * @param $rows
      * @return array
      */

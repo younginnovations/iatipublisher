@@ -298,6 +298,10 @@ class XmlMapper
     }
 
     /**
+     * This method is same as that of map() function above but without XML QUEUE writer
+     * This method is only for testing purpose.
+     *
+     *
      * @param array $activities
      * @param $template
      * @param $orgRef

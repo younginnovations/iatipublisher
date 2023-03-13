@@ -5,6 +5,7 @@ namespace Tests\Unit\Xml;
 class LocationXmlTest extends XmlBaseTest
 {
     /**
+     * Throws validation messages for all invalid data.
      * @return void
      * @test
      */
@@ -27,6 +28,7 @@ class LocationXmlTest extends XmlBaseTest
     }
 
     /**
+     * Invalid location.
      * @return array
      */
     public function invalid_data(): array

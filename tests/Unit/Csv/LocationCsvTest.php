@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 class LocationCsvTest extends CsvBaseTest
 {
     /**
+     * Collect validation message.
      * @param $rows
      * @return array
      * @throws \JsonException
@@ -28,6 +29,10 @@ class LocationCsvTest extends CsvBaseTest
         return $errors;
     }
 
+    /**
+     * All Valid data.
+     * @return array
+     */
     public function valid_data(): array
     {
         $data = $this->completeData;
@@ -69,6 +74,7 @@ class LocationCsvTest extends CsvBaseTest
     }
 
     /**
+     * Pass if all valid data.
      * @return void
      * @test
      * @throws \JsonException
@@ -83,6 +89,7 @@ class LocationCsvTest extends CsvBaseTest
     }
 
     /**
+     * Throw all validation messages for invalid data.
      * @return void
      * @test
      * @throws \JsonException
@@ -108,6 +115,10 @@ class LocationCsvTest extends CsvBaseTest
         $this->assertContains('The pos longitude must be numeric', $flattenErrors);
     }
 
+    /**
+     * Invalid data.
+     * @return array
+     */
     public function invalid_data(): array
     {
         $data = $this->valid_data();

@@ -5,6 +5,7 @@ namespace Tests\Unit\Xml;
 class SectorXmlTest extends XmlBaseTest
 {
     /**
+     * throw validation same vocab but empty percentage.
      * @return void
      * @test
      */
@@ -16,6 +17,7 @@ class SectorXmlTest extends XmlBaseTest
     }
 
     /**
+     * empty percentage data.
      * @return array
      */
     public function vocabulary_same_empty_percentage_data(): array
@@ -76,6 +78,7 @@ class SectorXmlTest extends XmlBaseTest
     }
 
     /**
+     * pass single sector with empty percentage.
      * @return void
      * @test
      */
@@ -87,6 +90,7 @@ class SectorXmlTest extends XmlBaseTest
     }
 
     /**
+     * empty percentage data for single sector.
      * @return array
      */
     public function single_sector_empty_percentage_data(): array
@@ -115,6 +119,7 @@ class SectorXmlTest extends XmlBaseTest
     }
 
     /**
+     * Throw validation ifn empty narrative for vocab 98 or 99.
      * @return void
      * @test
      */
@@ -126,6 +131,7 @@ class SectorXmlTest extends XmlBaseTest
     }
 
     /**
+     * empty narrative for vocab 98 or 99.
      * @return array
      */
     public function narrative_empty_vocabulary_98_or_99(): array
@@ -186,6 +192,7 @@ class SectorXmlTest extends XmlBaseTest
     }
 
     /**
+     * Throws validation messages for all invalid data.
      * @return void
      * @test
      */
@@ -200,6 +207,7 @@ class SectorXmlTest extends XmlBaseTest
     }
 
     /**
+     * Invalid data.
      * @return array
      */
     public function get_invalid_data(): array

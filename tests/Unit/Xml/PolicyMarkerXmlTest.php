@@ -5,6 +5,7 @@ namespace Tests\Unit\Xml;
 class PolicyMarkerXmlTest extends XmlBaseTest
 {
     /**
+     * Throws validation messages for all invalid data.
      * @return void
      * @test
      */
@@ -22,6 +23,7 @@ class PolicyMarkerXmlTest extends XmlBaseTest
     }
 
     /**
+     * Invalid policy marker data.
      * @return array
      */
     public function invalid_data(): array

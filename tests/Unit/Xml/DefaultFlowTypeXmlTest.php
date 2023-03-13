@@ -5,6 +5,7 @@ namespace Tests\Unit\Xml;
 class DefaultFlowTypeXmlTest extends XmlBaseTest
 {
     /**
+     * Throws validation messages for all invalid data.
      * @return void
      * @test
      */
@@ -17,6 +18,7 @@ class DefaultFlowTypeXmlTest extends XmlBaseTest
     }
 
     /**
+     * Invalid default flow type.
      * @return array
      */
     public function invalid_data(): array

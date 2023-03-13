@@ -36,6 +36,7 @@ class OtherIdentifierCsvTest extends CsvBaseTest
     }
 
     /**
+     * Invalid other identifier data.
      * @return array
      */
     public function invalid_other_identifier_data(): array
@@ -74,6 +75,10 @@ class OtherIdentifierCsvTest extends CsvBaseTest
         $this->assertEmpty($flattenErrors);
     }
 
+    /**
+     * Valid data.
+     * @return array
+     */
     public function valid_other_identifier_data(): array
     {
         $data = $this->completeData;

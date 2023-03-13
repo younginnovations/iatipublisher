@@ -5,6 +5,7 @@ namespace Tests\Unit\Xml;
 class OtherIdentifierXmlTest extends XmlBaseTest
 {
     /**
+     * Throws validation messages for all invalid data.
      * @return void
      * @test
      */
@@ -20,6 +21,7 @@ class OtherIdentifierXmlTest extends XmlBaseTest
     }
 
     /**
+     * Invalid identifier data.
      * @return array
      */
     public function invalid_other_identifier_data(): array

@@ -8,6 +8,8 @@ use Illuminate\Support\Arr;
 class ConditionCsvTest extends CsvBaseTest
 {
     /**
+     * Collects error messages.
+     *
      * @param $rows
      * @return array
      */
@@ -27,6 +29,10 @@ class ConditionCsvTest extends CsvBaseTest
         return $errors;
     }
 
+    /**
+     * All valid data.
+     * @return array
+     */
     public function valid_data(): array
     {
         $data = $this->completeData;
@@ -42,6 +48,8 @@ class ConditionCsvTest extends CsvBaseTest
     }
 
     /**
+     * Valid data.
+     *
      * @return void
      * @test
      */
@@ -55,6 +63,7 @@ class ConditionCsvTest extends CsvBaseTest
     }
 
     /**
+     * Throw validation messages for all invalid data.
      * @return void
      * @test
      */
@@ -67,6 +76,10 @@ class ConditionCsvTest extends CsvBaseTest
         $this->assertContains('The condition type is invalid.', $flattenErrors);
     }
 
+    /**
+     * Invalid Condition data.
+     * @return array
+     */
     public function invalid_data(): array
     {
         $data = $this->completeData;

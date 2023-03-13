@@ -8,6 +8,8 @@ use Illuminate\Support\Arr;
 class CollaborationTypeCsvTest extends CsvBaseTest
 {
     /**
+     * Collects error messages.
+     *
      * @throws \JsonException
      */
     public function getErrors($rows): array
@@ -26,6 +28,8 @@ class CollaborationTypeCsvTest extends CsvBaseTest
     }
 
     /**
+     * Throws all validation messages if all invalid data.
+     *
      * @return void
      * @test
      * @throws \JsonException
@@ -42,6 +46,7 @@ class CollaborationTypeCsvTest extends CsvBaseTest
     }
 
     /**
+     * Invalid collaboration type data.
      * @return array
      */
     public function invalid_data(): array
@@ -54,6 +59,7 @@ class CollaborationTypeCsvTest extends CsvBaseTest
     }
 
     /**
+     * All data invalid.
      * @return void
      * @test
      * @throws \JsonException
@@ -68,6 +74,8 @@ class CollaborationTypeCsvTest extends CsvBaseTest
     }
 
     /**
+     * Valid data.
+     *
      * @return array
      */
     public function valid_data(): array

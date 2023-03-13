@@ -26,6 +26,7 @@ class ReportingOrgCsvTest extends CsvBaseTest
     }
 
     /**
+     * Invalid reporting org data.
      * @return array
      */
     public function reporting_org_invalid_data(): array
@@ -57,6 +58,7 @@ class ReportingOrgCsvTest extends CsvBaseTest
     }
 
     /**
+     * Valid reporting org data.
      * @return array
      */
     public function reporting_org_valid_data(): array
@@ -69,6 +71,7 @@ class ReportingOrgCsvTest extends CsvBaseTest
     }
 
     /**
+     * Collects validation messages.
      * @param $rows
      * @return array
      * @throws \JsonException

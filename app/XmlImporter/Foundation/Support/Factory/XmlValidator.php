@@ -319,6 +319,8 @@ class XmlValidator
     }
 
     /**
+     * Sets Organization reporting org.
+     *
      * @param $organizationReportingOrg
      * @return $this
      */

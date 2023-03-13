@@ -5,6 +5,7 @@ namespace Tests\Unit\Xml;
 class RecipientCountryXmlTest extends XmlBaseTest
 {
     /**
+     * All valid data.
      * @return array
      */
     public function valid_data(): array
@@ -13,6 +14,7 @@ class RecipientCountryXmlTest extends XmlBaseTest
     }
 
     /**
+     * Pass if all valid data.
      * @test
      * @return void
      */
@@ -24,6 +26,7 @@ class RecipientCountryXmlTest extends XmlBaseTest
     }
 
     /**
+     * Throws validation messages for all invalid data.
      * @return void
      * @test
      */
@@ -40,6 +43,7 @@ class RecipientCountryXmlTest extends XmlBaseTest
     }
 
     /**
+     * Invalid recipient country data.
      * @return array
      */
     public function invalid_data(): array
@@ -112,10 +116,11 @@ class RecipientCountryXmlTest extends XmlBaseTest
     }
 
     /**
+     * Throw validation if recipient country already at activity level.
      * @return void
      * @test
      */
-    public function throw_validation_if_already_at_transaction_level(): void
+    public function throw_validation_if_already_at_activity_level(): void
     {
         $rows = $this->country_at_transaction_data();
         $flattenErrors = $this->getErrors($rows);
@@ -123,6 +128,7 @@ class RecipientCountryXmlTest extends XmlBaseTest
     }
 
     /**
+     * Country at transaction data.
      * @return array
      */
     public function country_at_transaction_data(): array
@@ -144,6 +150,7 @@ class RecipientCountryXmlTest extends XmlBaseTest
     }
 
     /**
+     * Throw validation when sum of region and country percentage not equal to 100.
      * @return void
      * @test
      */
@@ -158,6 +165,7 @@ class RecipientCountryXmlTest extends XmlBaseTest
     }
 
     /**
+     * Invalid percentage data.
      * @return array
      */
     public function invalid_percentage_data(): array
@@ -216,6 +224,7 @@ class RecipientCountryXmlTest extends XmlBaseTest
     }
 
     /**
+     * Throw validation if both have 100% region or country.
      * @return void
      * @test
      */
@@ -227,6 +236,7 @@ class RecipientCountryXmlTest extends XmlBaseTest
     }
 
     /**
+     * Country 100 and region 100 percentage data.
      * @return array
      */
     public function country_region_100_data(): array

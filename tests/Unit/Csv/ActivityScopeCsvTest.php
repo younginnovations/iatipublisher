@@ -35,6 +35,8 @@ class ActivityScopeCsvTest extends CsvBaseTest
     }
 
     /**
+     * Invalid Scope Data.
+     *
      * @return array
      */
     public function invalid_activity_scope_data(): array
@@ -47,6 +49,8 @@ class ActivityScopeCsvTest extends CsvBaseTest
     }
 
     /**
+     * All valid date.
+     *
      * @return void
      * @throws \JsonException
      * @test
@@ -71,6 +75,8 @@ class ActivityScopeCsvTest extends CsvBaseTest
     }
 
     /**
+     * Valid Scope Data.
+     *
      * @return array
      */
     public function valid_activity_scope_data(): array

@@ -479,7 +479,6 @@ class TransactionService
         $transactions = $this->getActivityTransactions($activityId);
 
         foreach ($transactions as $transaction) {
-            
             if ($transaction->id === $transactionId) {
                 continue;
             }
@@ -510,7 +509,6 @@ class TransactionService
 
         if (!empty($transactionData)) {
             foreach ($transactionData as $transactionDatum) {
-                
                 if (
                     isset($transactionDatum['transaction'][$elementName])
                     && !is_array_value_empty($transactionDatum['transaction'][$elementName])

@@ -69,6 +69,10 @@ class TitleCsvTest extends CsvBaseTest
         return $data;
     }
 
+    /**
+     * Multiple title data.
+     * @return array
+     */
     public function multiple_title_data(): array
     {
         $data = $this->completeData;

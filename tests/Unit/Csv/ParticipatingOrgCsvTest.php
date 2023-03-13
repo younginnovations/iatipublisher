@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 class ParticipatingOrgCsvTest extends CsvBaseTest
 {
     /**
+     * Collects validation error messages.
      * @param $rows
      * @return array
      * @throws \JsonException
@@ -29,6 +30,7 @@ class ParticipatingOrgCsvTest extends CsvBaseTest
     }
 
     /**
+     * All valid data.
      * @return array
      */
     public function valid_data(): array
@@ -52,6 +54,7 @@ class ParticipatingOrgCsvTest extends CsvBaseTest
     }
 
     /**
+     * Pass if all valid data.
      * @return void
      * @throws \JsonException
      * @test
@@ -66,6 +69,7 @@ class ParticipatingOrgCsvTest extends CsvBaseTest
     }
 
     /**
+     * Throw validation for all invalid data.
      * @return void
      * @test
      * @throws \JsonException
@@ -84,6 +88,7 @@ class ParticipatingOrgCsvTest extends CsvBaseTest
     }
 
     /**
+     * Invalid participating org data.
      * @return array
      */
     public function invalid_data(): array

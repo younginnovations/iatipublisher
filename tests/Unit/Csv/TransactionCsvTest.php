@@ -9,6 +9,7 @@ use Illuminate\Support\Arr;
 class TransactionCsvTest extends CsvBaseTest
 {
     /**
+     * All valid data.
      * @return array
      */
     public function valid_data(): array
@@ -78,6 +79,8 @@ class TransactionCsvTest extends CsvBaseTest
     }
 
     /**
+     * Collects validation error messages.
+     *
      * @return array
      * @throws \JsonException
      */
@@ -103,7 +106,13 @@ class TransactionCsvTest extends CsvBaseTest
         return $errors;
     }
 
-    public function validateElements($activityRow)
+    /**
+     * Validate elements.
+     * @param $activityRow
+     * @return mixed
+     * @throws \ReflectionException
+     */
+    public function validateElements($activityRow): mixed
     {
         $activityRowReflection = new \ReflectionClass($activityRow);
         $transactionRow = $activityRowReflection->getMethod('validateElements');
@@ -112,7 +121,14 @@ class TransactionCsvTest extends CsvBaseTest
         return $transactionRow->invoke($activityRow);
     }
 
-    public function getTransactionRows($activityRow)
+    /**
+     * Get transaction rows.
+     *
+     * @param $activityRow
+     * @return mixed
+     * @throws \ReflectionException
+     */
+    public function getTransactionRows($activityRow): mixed
     {
         $activityRowReflection = new \ReflectionClass($activityRow);
         $transactionRow = $activityRowReflection->getProperty('transactionRows');
@@ -122,6 +138,7 @@ class TransactionCsvTest extends CsvBaseTest
     }
 
     /**
+     * Pass if all valid data.
      * @return void
      * @test
      * @throws \JsonException
@@ -136,6 +153,7 @@ class TransactionCsvTest extends CsvBaseTest
     }
 
     /**
+     * pass even if reference is duplicate in transaction.
      * @return void
      * @test
      * @throws \JsonException
@@ -150,6 +168,7 @@ class TransactionCsvTest extends CsvBaseTest
     }
 
     /**
+     * Duplicate reference data.
      * @return array
      */
     public function duplicate_reference_data(): array
@@ -162,6 +181,7 @@ class TransactionCsvTest extends CsvBaseTest
     }
 
     /**
+     * throw validation if sector already at activity level.
      * @return void
      * @throws \JsonException
      * @test
@@ -176,6 +196,7 @@ class TransactionCsvTest extends CsvBaseTest
     }
 
     /**
+     * Sector at activity level.
      * @return array
      */
     public function sector_activity_transaction_level_data(): array
@@ -190,6 +211,7 @@ class TransactionCsvTest extends CsvBaseTest
     }
 
     /**
+     * Throw if sector empty at activity level but one at transaction level and empty at another transaction.
      * @return void
      * @test
      * @throws \JsonException
@@ -204,6 +226,7 @@ class TransactionCsvTest extends CsvBaseTest
     }
 
     /**
+     * Sector at one transaction but empty at another.
      * @return array
      */
     public function sector_at_one_transaction_empty_at_another_transaction_data(): array
@@ -235,6 +258,7 @@ class TransactionCsvTest extends CsvBaseTest
     }
 
     /**
+     * Allow negative value in transaction.
      * @return void
      * @test
      * @throws \JsonException
@@ -249,6 +273,7 @@ class TransactionCsvTest extends CsvBaseTest
     }
 
     /**
+     * Negative value data.
      * @return array
      */
     public function negative_value_in_transaction(): array
@@ -290,6 +315,7 @@ class TransactionCsvTest extends CsvBaseTest
     }
 
     /**
+     * Invalid data.
      * @return array
      */
     public function invalid_data(): array
@@ -361,6 +387,7 @@ class TransactionCsvTest extends CsvBaseTest
     }
 
     /**
+     * Throw validation if region or country already at activity level.
      * @return void
      * @test
      * @throws \JsonException
@@ -375,6 +402,7 @@ class TransactionCsvTest extends CsvBaseTest
     }
 
     /**
+     * country or region already at activity level.
      * @return array
      */
     public function region_or_country_already_at_activity_level_data(): array
@@ -387,6 +415,7 @@ class TransactionCsvTest extends CsvBaseTest
     }
 
     /**
+     * Throw valdiation if both region or country at transaction.
      * @return void
      * @throws \JsonException
      * @test
@@ -401,6 +430,7 @@ class TransactionCsvTest extends CsvBaseTest
     }
 
     /**
+     * region or country both at transaction level.
      * @return array
      */
     public function both_region_and_country_at_transaction_level_data(): array
@@ -447,6 +477,7 @@ class TransactionCsvTest extends CsvBaseTest
     }
 
     /**
+     * throw validation region or country at one transaction but empty at other.
      * @return void
      * @test
      * @throws \JsonException
@@ -460,6 +491,10 @@ class TransactionCsvTest extends CsvBaseTest
         $this->assertContains('You must add either recipient country or recipient region.', $flattenErrors);
     }
 
+    /**
+     * Region or country at one transaction but empty at other data.
+     * @return array
+     */
     public function region_or_country_at_one_transaction_empty_at_another_transaction_data(): array
     {
         $data = $this->valid_data();

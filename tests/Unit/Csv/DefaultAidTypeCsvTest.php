@@ -8,6 +8,8 @@ use Illuminate\Support\Arr;
 class DefaultAidTypeCsvTest extends CsvBaseTest
 {
     /**
+     * Collects validation error messages.
+     *
      * @throws \JsonException
      */
     public function getErrors($rows): array
@@ -26,6 +28,8 @@ class DefaultAidTypeCsvTest extends CsvBaseTest
     }
 
     /**
+     * Pass if all data are valid.
+     *
      * @return void
      * @test
      * @throws \JsonException
@@ -40,6 +44,7 @@ class DefaultAidTypeCsvTest extends CsvBaseTest
     }
 
     /**
+     * Valid data.
      * @return array
      */
     public function valid_data(): array
@@ -55,6 +60,7 @@ class DefaultAidTypeCsvTest extends CsvBaseTest
     }
 
     /**
+     * Throws validation messages for all invalid data.
      * @throws \JsonException
      * @test
      */
@@ -74,6 +80,7 @@ class DefaultAidTypeCsvTest extends CsvBaseTest
     }
 
     /**
+     * Invalid Default Aid Type.
      * @return array
      */
     public function invalid_data(): array

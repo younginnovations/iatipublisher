@@ -5,6 +5,7 @@ namespace Tests\Unit\Xml;
 class CollaborationTypeXmlTest extends XmlBaseTest
 {
     /**
+     * Throw validation message for all invalid data.
      * @return void
      * @test
      */
@@ -17,6 +18,7 @@ class CollaborationTypeXmlTest extends XmlBaseTest
     }
 
     /**
+     * All invalid data.
      * @return array
      */
     public function invalid_data(): array

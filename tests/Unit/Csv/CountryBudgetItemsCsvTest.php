@@ -8,6 +8,8 @@ use Illuminate\Support\Arr;
 class CountryBudgetItemsCsvTest extends CsvBaseTest
 {
     /**
+     * Collects validation error messages.
+     *
      * @throws \JsonException
      */
     public function getErrors($rows): array
@@ -26,6 +28,7 @@ class CountryBudgetItemsCsvTest extends CsvBaseTest
     }
 
     /**
+     * All valid data.
      * @return array
      */
     public function valid_data(): array
@@ -45,6 +48,7 @@ class CountryBudgetItemsCsvTest extends CsvBaseTest
     }
 
     /**
+     * All valid data.
      * @return void
      * @throws \JsonException
      * @test
@@ -59,6 +63,8 @@ class CountryBudgetItemsCsvTest extends CsvBaseTest
     }
 
     /**
+     * Invalid Country budget items data.
+     *
      * @return void
      * @test
      * @throws \JsonException
@@ -78,6 +84,7 @@ class CountryBudgetItemsCsvTest extends CsvBaseTest
     }
 
     /**
+     * Invalid Country budget items data.
      * @return array
      */
     public function invalid_data(): array

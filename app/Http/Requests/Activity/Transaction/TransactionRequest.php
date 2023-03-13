@@ -434,7 +434,6 @@ class TransactionRequest extends ActivityBaseRequest
                     $hasSector = true;
                 }
             }
-//
 
             if ($hasSector) {
                 $rules['sector'] = 'sector_required';

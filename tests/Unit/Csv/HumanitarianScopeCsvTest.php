@@ -8,6 +8,8 @@ use Illuminate\Support\Arr;
 class HumanitarianScopeCsvTest extends CsvBaseTest
 {
     /**
+     * Collects validation messages.
+     *
      * @param $rows
      * @return array
      * @throws \JsonException
@@ -29,6 +31,7 @@ class HumanitarianScopeCsvTest extends CsvBaseTest
     }
 
    /**
+    * All valid data.
     * @return array
     */
    public function valid_data(): array
@@ -50,6 +53,7 @@ class HumanitarianScopeCsvTest extends CsvBaseTest
    }
 
    /**
+    * Pass if all valid data.
     * @return void
     * @test
     * @throws \JsonException
@@ -64,10 +68,11 @@ class HumanitarianScopeCsvTest extends CsvBaseTest
    }
 
     /**
+     * Thorw validaiton message for all invalid data.
      * @throws \JsonException
      * @test
      */
-    public function throw_all_possible_valiation_for_invalid_data(): void
+    public function throw_all_possible_validation_for_invalid_data(): void
     {
         $this->signIn();
         $rows = $this->invalid_data();
@@ -79,6 +84,7 @@ class HumanitarianScopeCsvTest extends CsvBaseTest
     }
 
    /**
+    * Invalid humanitarian scope data.
     * @return array
     */
    public function invalid_data(): array

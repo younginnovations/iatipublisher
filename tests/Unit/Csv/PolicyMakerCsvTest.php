@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 class PolicyMakerCsvTest extends CsvBaseTest
 {
     /**
+     * Throw validation for all invalid data.
      * @return void
      * @test
      * @throws \JsonException
@@ -27,6 +28,7 @@ class PolicyMakerCsvTest extends CsvBaseTest
     }
 
     /**
+     * Collects validation messages.
      * @param $rows
      * @return array
      * @throws \JsonException
@@ -46,6 +48,11 @@ class PolicyMakerCsvTest extends CsvBaseTest
         return $errors;
     }
 
+    /**
+     * Invalid data.
+     *
+     * @return array
+     */
     public function invalid_data(): array
     {
         $data = $this->completeData;

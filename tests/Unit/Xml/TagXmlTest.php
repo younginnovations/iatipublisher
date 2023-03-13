@@ -5,6 +5,7 @@ namespace Tests\Unit\Xml;
 class TagXmlTest extends XmlBaseTest
 {
     /**
+     * Throws validation messages for all invalid data.
      * @return void
      * @test
      */
@@ -19,6 +20,7 @@ class TagXmlTest extends XmlBaseTest
     }
 
     /**
+     * Invalid tag data.
      * @return array
      */
     public function invalid_data(): array

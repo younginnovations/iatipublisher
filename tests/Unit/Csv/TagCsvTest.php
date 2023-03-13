@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 class TagCsvTest extends CsvBaseTest
 {
     /**
+     * Collects validation messages.
      * @param $rows
      * @return array
      * @throws \JsonException
@@ -48,6 +49,7 @@ class TagCsvTest extends CsvBaseTest
    }
 
    /**
+    * Invalid tag data.
     * @return array
     */
    public function invalid_data(): array
@@ -67,6 +69,7 @@ class TagCsvTest extends CsvBaseTest
    }
 
    /**
+    * Pass if all data valid.
     * @return void
     * @throws \JsonException
     * @test
@@ -80,6 +83,10 @@ class TagCsvTest extends CsvBaseTest
        $this->assertEmpty($flattenErrors);
    }
 
+   /**
+    * All valid data.
+    * @return array
+    */
    public function valid_data(): array
    {
        $data = $this->completeData;

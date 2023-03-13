@@ -5,6 +5,7 @@ namespace Tests\Unit\Xml;
 class DescriptionXmlTest extends XmlBaseTest
 {
     /**
+     * Throws validation messages for all invalid data.
      * @return void
      * @test
      */
@@ -18,6 +19,7 @@ class DescriptionXmlTest extends XmlBaseTest
     }
 
     /**
+     * Invalid description data.
      * @return array
      */
     public function invalid_data(): array

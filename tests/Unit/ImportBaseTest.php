@@ -38,6 +38,7 @@ class ImportBaseTest extends TestCase
     }
 
     /**
+     * Gets activity identifiers.
      * @return array
      * @throws BindingResolutionException
      * @throws \ReflectionException

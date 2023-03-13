@@ -8,6 +8,8 @@ use Illuminate\Support\Arr;
 class DocumentLinkCsvTest extends CsvBaseTest
 {
     /**
+     * Collects validation error messages.
+     *
      * @param $rows
      * @return array
      * @throws \JsonException
@@ -28,6 +30,10 @@ class DocumentLinkCsvTest extends CsvBaseTest
         return $errors;
     }
 
+    /**
+     * Valid Document Link Data.
+     * @return array
+     */
     public function valid_data(): array
     {
         $data = $this->completeData;
@@ -51,6 +57,7 @@ class DocumentLinkCsvTest extends CsvBaseTest
     }
 
     /**
+     * Pass if all valid data.
      * @throws \JsonException
      * @test
      */
@@ -64,6 +71,7 @@ class DocumentLinkCsvTest extends CsvBaseTest
     }
 
     /**
+     * Throw validaiotn messages for all invalid data.
      * @return void
      * @throws \JsonException
      * @test
@@ -78,13 +86,12 @@ class DocumentLinkCsvTest extends CsvBaseTest
         $this->assertContains('The @url field must be a valid url.', $flattenErrors);
         $this->assertContains('The @iso-date field must be a proper date.', $flattenErrors);
         $this->assertContains('The @iso-date field must be a greater than 1900.', $flattenErrors);
-//        $this->assertContains('The document link category code field must be a unique.', $flattenErrors); //this fails test cannot use for multiple
         $this->assertContains('The document link category code is invalid.', $flattenErrors);
-//        $this->assertContains('The document link language code field must be a unique.', $flattenErrors); //this fails test cannot use for multiple language
         $this->assertContains('The document link language code is invalid.', $flattenErrors);
     }
 
     /**
+     * Invalid document link data.
      * @return array
      */
     public function invalid_data(): array

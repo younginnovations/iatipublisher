@@ -5,6 +5,7 @@ namespace Tests\Unit\Xml;
 class ContactInfoXmlTest extends XmlBaseTest
 {
     /**
+     * Throws validation messages for all invalid data.
      * @return void
      * @test
      */
@@ -21,6 +22,7 @@ class ContactInfoXmlTest extends XmlBaseTest
     }
 
     /**
+     * Invalid contact info data.
      * @return array
      */
     public function invalid_data(): array

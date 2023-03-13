@@ -5,6 +5,7 @@ namespace Tests\Unit\Xml;
 class DefaultTiedStatusXmlTest extends XmlBaseTest
 {
     /**
+     * Throws validation messages for all invalid data.
      * @return void
      * @test
      */
@@ -17,6 +18,7 @@ class DefaultTiedStatusXmlTest extends XmlBaseTest
     }
 
     /**
+     * Invalid default tied status.
      * @return array
      */
     public function invalid_data(): array
