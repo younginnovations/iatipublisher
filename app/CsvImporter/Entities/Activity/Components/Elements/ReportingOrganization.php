@@ -15,14 +15,14 @@ use Illuminate\Support\Arr;
 class ReportingOrganization extends Element
 {
     /**
-     * @var
+     * @var array
      */
-    public $reportingOrg;
+    public array $reportingOrg = [];
 
     /**
-     * @var
+     * @var string|int
      */
-    public $temp;
+    public string|int $temp = '';
 
     /**
      * Csv Header for ReportingOrganization element.

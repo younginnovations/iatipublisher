@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\IATI\Repositories\Activity\ActivityRepository;
@@ -7,6 +9,9 @@ use App\IATI\Repositories\Organization\OrganizationRepository;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
+/*
+ * Class FillReportingOrgInOrganizationLevel.
+ */
 class FillReportingOrgInOrganizationLevel extends Command
 {
     /**

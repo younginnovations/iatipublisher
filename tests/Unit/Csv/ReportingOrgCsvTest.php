@@ -87,8 +87,7 @@ class ReportingOrgCsvTest extends CsvBaseTest
         $errors = [];
 
         foreach ($rows as $row) {
-//            $reportingOrg = new ReportingOrganization($row, $this->organization->reporting_org, $this->validation);
-            $reportingOrg = new ReportingOrganization($row, $this->validation);
+            $reportingOrg = new ReportingOrganization($row, $this->organization->reporting_org, $this->validation);
             $reportingOrg->validate()->withErrors();
 
             if (!empty($reportingOrg->errors()) || !empty($reportingOrg->criticals()) || !empty($reportingOrg->warnings())) {

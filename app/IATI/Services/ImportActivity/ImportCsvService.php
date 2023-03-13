@@ -204,6 +204,7 @@ class ImportCsvService
 
             if (count($activity['data']['reporting_organization']) > 1) {
                 $activity['data']['reporting_organization'][0]['secondary_reporter'] = '';
+
                 foreach ($activity['data']['reporting_organization'] as $key => $value) {
                     if ($key > 0) {
                         unset($activity['data']['reporting_organization'][$key]);

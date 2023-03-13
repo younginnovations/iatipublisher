@@ -290,7 +290,7 @@ class Activity
             return '0';
         }
 
-        return $this->organizationReportingOrg[0]['secondary_reporter'];
+        return $this->organizationReportingOrg[0]['secondary_reporter'] ?? '';
     }
 
     /**

@@ -470,6 +470,7 @@ class ActivityRepository extends Repository
     public function syncReportingOrg($id, $reportingOrg): object|int
     {
         $activitiesCount = $this->model->where('org_id', $id)->count();
+
         if ($activitiesCount > 0) {
             $this->model->where('org_id', $id)->update(['reporting_org->0->ref'=>$reportingOrg['ref'] ?? '']);
             $this->model->where('org_id', $id)->update(['reporting_org->0->type'=>$reportingOrg['type'] ?? '']);
