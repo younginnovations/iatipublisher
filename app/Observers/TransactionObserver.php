@@ -42,14 +42,19 @@ class TransactionObserver
         $elementStatus = $activityObj->element_status;
         $elementStatus['transactions'] = $this->elementCompleteService->isTransactionsElementCompleted($transaction->activity);
 
-        if (!is_variable_null($transaction->transaction['sector'])) {
+        if (!is_array_value_empty($transaction->transaction['sector'])) {
             $elementStatus['sector'] = true;
         }
 
         $transactionService = app()->make(TransactionService::class);
 
-        if (is_variable_null($transaction->transaction['sector']) && !$transactionService->checksIfTransactionHasSectorDefined($activityObj)) {
+        if (is_array_value_empty($transaction->transaction['sector']) && !$transactionService->checkIfTransactionHasElementDefined($activityObj, 'sector')) {
             $elementStatus['sector'] = false;
+        }
+
+        if (is_array_value_empty($transaction->transaction['recipient_region']) || is_array_value_empty($transaction->transaction['recipient_country'])) {
+            $elementStatus['recipient_region'] = true;
+            $elementStatus['recipient_country'] = true;
         }
 
         $activityObj->element_status = $elementStatus;
@@ -125,14 +130,39 @@ class TransactionObserver
     public function deleted(Transaction $transaction): void
     {
         $activityObj = $transaction->activity;
+        $elementStatus = $activityObj->element_status;
         $transactionService = app()->make(TransactionService::class);
-        $hasSectorDefinedInTransaction = $transactionService->checksIfTransactionHasSectorDefined($activityObj);
+        $hasSectorDefinedInTransaction = $transactionService->checkIfTransactionHasElementDefined($activityObj, 'sector');
+        $hasRecipientCountryDefinedInTransaction = $transactionService->checkIfTransactionHasElementDefined($activityObj, 'recipient_country');
+        $hasRecipientRegionDefinedInTransaction = $transactionService->checkIfTransactionHasElementDefined($activityObj, 'recipient_region');
 
         if (!$hasSectorDefinedInTransaction) {
-            $elementStatus = $activityObj->element_status;
             $elementStatus['sector'] = false;
-            $activityObj->element_status = $elementStatus;
-            $activityObj->save();
         }
+
+        if (!count($activityObj->transactions) && empty($activityObj->recipient_region) && empty($activityObj->recipient_country)) {
+            $elementStatus['recipient_region'] = false;
+            $elementStatus['recipient_country'] = false;
+            $elementStatus['transactions'] = false;
+        }
+
+        if ($hasRecipientCountryDefinedInTransaction && count($activityObj->transactions) > 1) {
+            $elementStatus['recipient_country'] = false;
+
+            if (!empty($activityObj->recipient_region)) {
+                $elementStatus['recipient_region'] = false;
+            }
+        }
+
+        if ($hasRecipientRegionDefinedInTransaction && count($activityObj->transactions) > 1) {
+            $elementStatus['recipient_region'] = false;
+
+            if (!empty($activityObj->recipient_region)) {
+                $elementStatus['recipient_country'] = false;
+            }
+        }
+
+        $activityObj->element_status = $elementStatus;
+        $activityObj->save();
     }
 }

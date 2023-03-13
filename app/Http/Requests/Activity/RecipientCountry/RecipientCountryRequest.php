@@ -6,6 +6,7 @@ namespace App\Http\Requests\Activity\RecipientCountry;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 use App\IATI\Services\Activity\ActivityService;
+use App\IATI\Services\Activity\TransactionService;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Validator;
 
@@ -99,8 +100,9 @@ class RecipientCountryRequest extends ActivityBaseRequest
 
         if (!$fileUpload) {
             $params = $this->route()->parameters();
+            $transactionService = app()->make(TransactionService::class);
 
-            if ($activityService->hasRecipientCountryDefinedInTransactions($params['id'])) {
+            if ($transactionService->hasRecipientRegionOrCountryDefinedInTransaction($params['id'])) {
                 Validator::extend('already_in_transactions', function () {
                     return false;
                 });

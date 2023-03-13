@@ -181,6 +181,7 @@ class ActivityController extends Controller
                 'activity_identifier' => $activity->iati_identifier['activity_identifier'],
                 'iati_identifier_text' => $activity->organization->identifier . '-' . $activity->iati_identifier['activity_identifier'],
             ];
+
             $iatiValidatorResponse = $validatorResponse->response ?? null;
             $importActivityError = $importActivityError->error ?? null;
 
