@@ -22,7 +22,7 @@ class ImportActivityRequest extends ActivityBaseRequest
         Validator::extend(
             'activity_file',
             function ($attribute, $value, $parameters, $validator) {
-                $mimes = ['application/excel', 'application/vnd.ms-excel', 'application/msexcel', 'text/csv', 'text/xml', 'application/xml'];
+                $mimes = ['text/csv', 'text/xml', 'application/xml'];
                 $fileMime = $value->getClientMimeType();
 
                 return in_array($fileMime, $mimes, true);
