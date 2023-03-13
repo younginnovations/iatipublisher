@@ -2,10 +2,14 @@
 
 namespace Tests\Unit\Xml;
 
+/**
+ * Class CountryBudgetItemXmlTest.
+ */
 class CountryBudgetItemXmlTest extends XmlBaseTest
 {
     /**
      * Throws validation messages for all invalid data.
+     *
      * @return void
      * @test
      */
@@ -24,6 +28,7 @@ class CountryBudgetItemXmlTest extends XmlBaseTest
 
     /**
      * Invalid country budget item.
+     *
      * @return array
      */
     public function invalid_data(): array

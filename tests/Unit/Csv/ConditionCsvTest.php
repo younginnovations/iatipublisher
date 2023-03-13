@@ -5,6 +5,9 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\Condition;
 use Illuminate\Support\Arr;
 
+/**
+ * Class ConditionCsvTest.
+ */
 class ConditionCsvTest extends CsvBaseTest
 {
     /**
@@ -31,6 +34,7 @@ class ConditionCsvTest extends CsvBaseTest
 
     /**
      * All valid data.
+     *
      * @return array
      */
     public function valid_data(): array
@@ -64,6 +68,7 @@ class ConditionCsvTest extends CsvBaseTest
 
     /**
      * Throw validation messages for all invalid data.
+     *
      * @return void
      * @test
      */
@@ -78,6 +83,7 @@ class ConditionCsvTest extends CsvBaseTest
 
     /**
      * Invalid Condition data.
+     *
      * @return array
      */
     public function invalid_data(): array

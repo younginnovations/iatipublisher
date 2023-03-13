@@ -5,6 +5,9 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\CollaborationType;
 use Illuminate\Support\Arr;
 
+/**
+ * Class CollaborationTypeCsvTest.
+ */
 class CollaborationTypeCsvTest extends CsvBaseTest
 {
     /**
@@ -47,6 +50,7 @@ class CollaborationTypeCsvTest extends CsvBaseTest
 
     /**
      * Invalid collaboration type data.
+     *
      * @return array
      */
     public function invalid_data(): array
@@ -60,6 +64,7 @@ class CollaborationTypeCsvTest extends CsvBaseTest
 
     /**
      * All data invalid.
+     *
      * @return void
      * @test
      * @throws \JsonException

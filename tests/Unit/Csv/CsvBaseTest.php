@@ -10,6 +10,9 @@ use Illuminate\Http\UploadedFile;
 use Maatwebsite\Excel\Facades\Excel;
 use Tests\Unit\ImportBaseTest;
 
+/**
+ * Class CsvBaseTest.
+ */
 class CsvBaseTest extends ImportBaseTest
 {
     /**

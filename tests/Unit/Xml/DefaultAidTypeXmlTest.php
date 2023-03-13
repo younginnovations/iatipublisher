@@ -2,10 +2,14 @@
 
 namespace Tests\Unit\Xml;
 
+/**
+ * Class DefaultAidTypeXmltest.
+ */
 class DefaultAidTypeXmlTest extends XmlBaseTest
 {
     /**
      * Throws validation messages for all invalid data.
+     *
      * @return void
      * @test
      */
@@ -22,6 +26,7 @@ class DefaultAidTypeXmlTest extends XmlBaseTest
 
     /**
      * Invalid default aid type.
+     *
      * @return array
      */
     public function invalid_data(): array

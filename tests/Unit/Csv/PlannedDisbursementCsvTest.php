@@ -5,6 +5,9 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\PlannedDisbursement;
 use Illuminate\Support\Arr;
 
+/**
+ * Class PlannedDisbursementCsvTest.
+ */
 class PlannedDisbursementCsvTest extends CsvBaseTest
 {
     /**
@@ -32,6 +35,7 @@ class PlannedDisbursementCsvTest extends CsvBaseTest
 
     /**
      * All Valid data.
+     *
      * @return array
      */
     public function valid_data(): array
@@ -72,6 +76,7 @@ class PlannedDisbursementCsvTest extends CsvBaseTest
 
     /**
      * pass if all valid data.
+     *
      * @throws \JsonException
      * @test
      */

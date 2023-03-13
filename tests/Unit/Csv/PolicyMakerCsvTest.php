@@ -5,10 +5,14 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\PolicyMarker;
 use Illuminate\Support\Arr;
 
+/**
+ * Class PolicyMarkerCsvTest.
+ */
 class PolicyMakerCsvTest extends CsvBaseTest
 {
     /**
      * Throw validation for all invalid data.
+     *
      * @return void
      * @test
      * @throws \JsonException
@@ -29,6 +33,7 @@ class PolicyMakerCsvTest extends CsvBaseTest
 
     /**
      * Collects validation messages.
+     *
      * @param $rows
      * @return array
      * @throws \JsonException

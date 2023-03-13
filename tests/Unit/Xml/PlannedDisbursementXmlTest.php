@@ -2,10 +2,14 @@
 
 namespace Tests\Unit\Xml;
 
+/**
+ * Class PlannedDisbursementXmlTest.
+ */
 class PlannedDisbursementXmlTest extends XmlBaseTest
 {
     /**
      * Throws validation messages for all invalid data.
+     *
      * @return void
      * @test
      */
@@ -31,6 +35,7 @@ class PlannedDisbursementXmlTest extends XmlBaseTest
 
     /**
      * Invalid planned disbursement data.
+     *
      * @return array
      */
     public function invalid_data(): array

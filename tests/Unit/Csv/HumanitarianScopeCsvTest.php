@@ -5,6 +5,9 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\HumanitarianScope;
 use Illuminate\Support\Arr;
 
+/**
+ * Class HumanitarianScopeCsvTest.
+ */
 class HumanitarianScopeCsvTest extends CsvBaseTest
 {
     /**
@@ -32,6 +35,7 @@ class HumanitarianScopeCsvTest extends CsvBaseTest
 
    /**
     * All valid data.
+    *
     * @return array
     */
    public function valid_data(): array
@@ -54,6 +58,7 @@ class HumanitarianScopeCsvTest extends CsvBaseTest
 
    /**
     * Pass if all valid data.
+    *
     * @return void
     * @test
     * @throws \JsonException
@@ -68,7 +73,8 @@ class HumanitarianScopeCsvTest extends CsvBaseTest
    }
 
     /**
-     * Thorw validaiton message for all invalid data.
+     * Throw validation message for all invalid data.
+     *
      * @throws \JsonException
      * @test
      */
@@ -85,6 +91,7 @@ class HumanitarianScopeCsvTest extends CsvBaseTest
 
    /**
     * Invalid humanitarian scope data.
+    *
     * @return array
     */
    public function invalid_data(): array

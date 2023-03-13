@@ -5,6 +5,9 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\DefaultTiedStatus;
 use Illuminate\Support\Arr;
 
+/**
+ * Class DefaultTiedStatusCsvTest.
+ */
 class DefaultTiedStatusCsvTest extends CsvBaseTest
 {
     /**
@@ -28,7 +31,8 @@ class DefaultTiedStatusCsvTest extends CsvBaseTest
     }
 
     /**
-     * Throw validatoin messages if invalid data.
+     * Throw Validation messages if invalid data.
+     *
      * @return void
      * @test
      * @throws \JsonException
@@ -46,6 +50,7 @@ class DefaultTiedStatusCsvTest extends CsvBaseTest
 
     /**
      * Invalid Default tied status.
+     *
      * @return array
      */
     public function invalid_data(): array
@@ -59,6 +64,7 @@ class DefaultTiedStatusCsvTest extends CsvBaseTest
 
     /**
      * Valid data.
+     *
      * @return void
      * @test
      * @throws \JsonException
@@ -75,6 +81,7 @@ class DefaultTiedStatusCsvTest extends CsvBaseTest
 
     /**
      * All Valid data.
+     *
      * @return array
      */
     public function valid_data(): array

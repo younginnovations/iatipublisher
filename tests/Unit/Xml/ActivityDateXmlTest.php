@@ -2,10 +2,14 @@
 
 namespace Tests\Unit\Xml;
 
+/**
+ * Class ActivityDateXmlTest.
+ */
 class ActivityDateXmlTest extends XmlBaseTest
 {
     /**
      * Throw validation for all invalid data.
+     *
      * @return void
      * @test
      */
@@ -23,6 +27,7 @@ class ActivityDateXmlTest extends XmlBaseTest
 
     /**
      * All invalid data.
+     *
      * @return array
      */
     public function invalid_data(): array

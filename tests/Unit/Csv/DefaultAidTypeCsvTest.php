@@ -5,6 +5,9 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\DefaultAidType;
 use Illuminate\Support\Arr;
 
+/**
+ * Class DefaultAidTypeCsvTest.
+ */
 class DefaultAidTypeCsvTest extends CsvBaseTest
 {
     /**
@@ -45,6 +48,7 @@ class DefaultAidTypeCsvTest extends CsvBaseTest
 
     /**
      * Valid data.
+     *
      * @return array
      */
     public function valid_data(): array
@@ -61,6 +65,7 @@ class DefaultAidTypeCsvTest extends CsvBaseTest
 
     /**
      * Throws validation messages for all invalid data.
+     *
      * @throws \JsonException
      * @test
      */
@@ -81,6 +86,7 @@ class DefaultAidTypeCsvTest extends CsvBaseTest
 
     /**
      * Invalid Default Aid Type.
+     *
      * @return array
      */
     public function invalid_data(): array

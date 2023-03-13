@@ -2,10 +2,14 @@
 
 namespace Tests\Unit\Xml;
 
+/**
+ * Class ConditionXmlTest.
+ */
 class ConditionXmlTest extends XmlBaseTest
 {
     /**
      * Throws validation messages for all invalid data.
+     *
      * @return void
      * @test
      */
@@ -20,6 +24,7 @@ class ConditionXmlTest extends XmlBaseTest
 
     /**
      * All invalid data.
+     *
      * @return array
      */
     public function invalid_data(): array

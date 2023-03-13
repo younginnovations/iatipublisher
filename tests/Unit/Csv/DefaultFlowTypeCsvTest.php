@@ -5,6 +5,9 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\DefaultFlowType;
 use Illuminate\Support\Arr;
 
+/**
+ * Class DefaultFlowTypeCsvTest.
+ */
 class DefaultFlowTypeCsvTest extends CsvBaseTest
 {
     /**
@@ -28,7 +31,8 @@ class DefaultFlowTypeCsvTest extends CsvBaseTest
     }
 
     /**
-     * Thorw validation message for all invalid data.
+     * Throw validation message for all invalid data.
+     *
      * @return void
      * @test
      * @throws \JsonException
@@ -46,6 +50,7 @@ class DefaultFlowTypeCsvTest extends CsvBaseTest
 
     /**
      * Invalid Default flow type data.
+     *
      * @return array
      */
     public function invalid_data(): array
@@ -59,6 +64,7 @@ class DefaultFlowTypeCsvTest extends CsvBaseTest
 
     /**
      * Valid data.
+     *
      * @return void
      * @test
      * @throws \JsonException
@@ -74,6 +80,7 @@ class DefaultFlowTypeCsvTest extends CsvBaseTest
 
     /**
      * Valid data.
+     *
      * @return array
      */
     public function valid_data(): array

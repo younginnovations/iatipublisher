@@ -5,10 +5,14 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\RecipientCountry;
 use Illuminate\Support\Arr;
 
+/**
+ * Class RecipientCountryCsvTest.
+ */
 class RecipientCountryCsvTest extends CsvBaseTest
 {
     /**
      * All invalid data.
+     *
      * @return array
      */
     public function invalid_data(): array
@@ -40,6 +44,7 @@ class RecipientCountryCsvTest extends CsvBaseTest
 
     /**
      * Throws validation if sum of country and region percentage is not equal to 100.
+     *
      * @test
      */
     public function check_throws_validation_if_region_country_percentage_sum_not_100(): void
@@ -56,6 +61,7 @@ class RecipientCountryCsvTest extends CsvBaseTest
 
     /**
      * All data valid.
+     *
      * @return void
      * @test
      */
@@ -92,6 +98,7 @@ class RecipientCountryCsvTest extends CsvBaseTest
 
     /**
      * All valid data.
+     *
      * @return array
      */
     public function valid_data(): array

@@ -2,10 +2,14 @@
 
 namespace Tests\Unit\Xml;
 
+/**
+ * Class BudgetXmlTest.
+ */
 class BudgetXmlTest extends XmlBaseTest
 {
     /**
      * Throw validation if Invalid budget period.
+     *
      * @return void
      * @test
      */
@@ -20,6 +24,7 @@ class BudgetXmlTest extends XmlBaseTest
 
     /**
      * invalid budget period data.
+     *
      * @return array
      */
     public function get_invalid_budget_period(): array
@@ -120,6 +125,7 @@ class BudgetXmlTest extends XmlBaseTest
     /**
      * throw validation if budget period longer than one year
      * Should not start before 1900.
+     *
      * @return void
      * @test
      */
@@ -135,6 +141,7 @@ class BudgetXmlTest extends XmlBaseTest
 
     /**
      * Invalid budget period data.
+     *
      * @return array
      */
     public function date_longer_than_one_year_1800_data(): array
@@ -190,6 +197,7 @@ class BudgetXmlTest extends XmlBaseTest
 
     /**
      * Throw validation if revised not match with budget period.
+     *
      * @return void
      * @test
      */
@@ -202,6 +210,7 @@ class BudgetXmlTest extends XmlBaseTest
 
     /**
      * Revised period with original budget type data.
+     *
      * @return array
      */
     public function get_revised_period_not_matched_date(): array
@@ -257,6 +266,7 @@ class BudgetXmlTest extends XmlBaseTest
 
     /**
      * Validation messages for all invalid data.
+     *
      * @return void
      * @test
      */
@@ -273,6 +283,7 @@ class BudgetXmlTest extends XmlBaseTest
 
     /**
      * All invalid data.
+     *
      * @return array
      */
     public function get_invalid_data(): array

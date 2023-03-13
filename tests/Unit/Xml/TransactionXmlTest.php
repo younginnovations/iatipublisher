@@ -2,10 +2,14 @@
 
 namespace Tests\Unit\Xml;
 
+/**
+ * Class TransactionXmlTest.
+ */
 class TransactionXmlTest extends XmlBaseTest
 {
     /**
      * Pass even if duplicate reference.
+     *
      * @return void
      * @test
      */
@@ -18,6 +22,7 @@ class TransactionXmlTest extends XmlBaseTest
 
     /**
      * Duplicate reference data.
+     *
      * @return array
      */
     public function duplicate_reference_data(): array
@@ -239,6 +244,7 @@ class TransactionXmlTest extends XmlBaseTest
 
     /**
      * Throw validation if sector already at activity.
+     *
      * @return void
      * @test
      */
@@ -251,6 +257,7 @@ class TransactionXmlTest extends XmlBaseTest
 
     /**
      * Sector at activity and transaction.
+     *
      * @return array
      */
     public function sector_activity_transaction_level_data(): array
@@ -385,6 +392,7 @@ class TransactionXmlTest extends XmlBaseTest
 
      /**
       * Sector at one transaction but empty at other.
+      *
       * @return void
       * @test
       */
@@ -397,6 +405,7 @@ class TransactionXmlTest extends XmlBaseTest
 
      /**
       * sector at one but empty at other.
+      *
       * @return array
       */
      public function sector_at_one_transaction_empty_at_another_transaction_data(): array
@@ -633,6 +642,7 @@ class TransactionXmlTest extends XmlBaseTest
 
      /**
       * Pass even if negative value is passed.
+      *
       * @return void
       * @test
       */
@@ -645,6 +655,7 @@ class TransactionXmlTest extends XmlBaseTest
 
      /**
       * Negative value transaction.
+      *
       * @return array
       */
      public function negative_value_in_transaction(): array
@@ -663,6 +674,7 @@ class TransactionXmlTest extends XmlBaseTest
 
      /**
       * Throws validation messages for all invalid data.
+      *
       * @return void
       * @test
       */
@@ -686,7 +698,8 @@ class TransactionXmlTest extends XmlBaseTest
      }
 
      /**
-      * Invalid ata.
+      * Invalid data.
+      *
       * @return array
       */
      public function invalid_data(): array
@@ -952,6 +965,7 @@ class TransactionXmlTest extends XmlBaseTest
 
      /**
       * Throw validation if already at activity level.
+      *
       * @return void
       * @test
       */
@@ -964,6 +978,7 @@ class TransactionXmlTest extends XmlBaseTest
 
      /**
       * Country already at activity level.
+      *
       * @return array
       */
      public function country_already_at_activity_level_data(): array
@@ -986,6 +1001,7 @@ class TransactionXmlTest extends XmlBaseTest
 
      /**
       * Throw validation if region at activity level.
+      *
       * @return void
       * @test
       */
@@ -998,6 +1014,7 @@ class TransactionXmlTest extends XmlBaseTest
 
      /**
       * region at activity level.
+      *
       * @return array
       */
      public function region_already_at_activity_level_data(): array
@@ -1022,7 +1039,8 @@ class TransactionXmlTest extends XmlBaseTest
      }
 
      /**
-      * region or country at transaciton level.
+      * region or country at transaction level.
+      *
       * @return void
       * @test
       */
@@ -1035,6 +1053,7 @@ class TransactionXmlTest extends XmlBaseTest
 
      /**
       * region and country both at transaction level.
+      *
       * @return array
       */
      public function both_region_and_country_at_transaction_level_data(): array
@@ -1073,6 +1092,7 @@ class TransactionXmlTest extends XmlBaseTest
 
      /**
       * Throw validation if region or country at one transaction but empty at other.
+      *
       * @return void
       * @test
       */
@@ -1084,7 +1104,8 @@ class TransactionXmlTest extends XmlBaseTest
      }
 
      /**
-      * region or country at one transactino empty at another transaction data.
+      * region or country at one transaction empty at another transaction data.
+      *
       * @return array
       */
      public function region_or_country_at_one_transaction_empty_at_another_transaction_data(): array

@@ -2,10 +2,14 @@
 
 namespace Tests\Unit\Xml;
 
+/**
+ * Class RecipientRegionXmltest.
+ */
 class RecipientRegionXmlTest extends XmlBaseTest
 {
     /**
      * Throws validation if region or country percentage sum not equal to 100.
+     *
      * @return void
      * @test
      */
@@ -18,6 +22,7 @@ class RecipientRegionXmlTest extends XmlBaseTest
 
     /**
      * Throws validation if country oregion percentage not equal to 100.
+     *
      * @return array
      */
     public function region_country_percentage_sum_not_equal_to_100_single_data(): array
@@ -55,6 +60,7 @@ class RecipientRegionXmlTest extends XmlBaseTest
 
     /**
      * Pass if sum percentage is equal to 100.
+     *
      * @return void
      * @test
      */
@@ -67,6 +73,7 @@ class RecipientRegionXmlTest extends XmlBaseTest
 
     /**
      * Sum percentage equal to 100 data.
+     *
      * @return array
      */
     public function region_country_percentage_sum_equal_to_100_single_data(): array
@@ -105,6 +112,7 @@ class RecipientRegionXmlTest extends XmlBaseTest
 
     /**
      * Throw validation if sam vocab percentage sum not equal to 100 one 20 but other not 80.
+     *
      * @return void
      * @test
      */
@@ -117,6 +125,7 @@ class RecipientRegionXmlTest extends XmlBaseTest
 
     /**
      * Country 20 but region 60 with multiple vocab.
+     *
      * @return array
      */
     public function country_20_region_60_multiple_data(): array
@@ -206,7 +215,8 @@ class RecipientRegionXmlTest extends XmlBaseTest
     }
 
     /**
-     * Thorws validation if percentage sum not equal withing same vocab.
+     * Throws validation if percentage sum not equal withing same vocab.
+     *
      * @return void
      * @test
      */
@@ -219,6 +229,7 @@ class RecipientRegionXmlTest extends XmlBaseTest
 
     /**
      * Different vocab percentage but not equal.
+     *
      * @return array
      */
     public function diff_vocal_percentage(): array
@@ -280,6 +291,7 @@ class RecipientRegionXmlTest extends XmlBaseTest
 
     /**
      * Throws validation messages for all invalid data.
+     *
      * @return void
      * @test
      */
@@ -295,6 +307,7 @@ class RecipientRegionXmlTest extends XmlBaseTest
 
     /**
      * All invalid data.
+     *
      * @return array
      */
     public function invalid_data(): array

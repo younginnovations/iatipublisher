@@ -5,6 +5,9 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\CapitalSpend;
 use Illuminate\Support\Arr;
 
+/**
+ * Class CapitalSpendCsvTest.
+ */
 class CapitalSpendCsvTest extends CsvBaseTest
 {
     /**
@@ -59,6 +62,7 @@ class CapitalSpendCsvTest extends CsvBaseTest
 
    /**
     * Invalid Capital Spend data.
+    *
     * @return array
     */
    public function invalid_data(): array

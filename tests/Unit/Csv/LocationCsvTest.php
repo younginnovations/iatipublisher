@@ -5,10 +5,14 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\Location;
 use Illuminate\Support\Arr;
 
+/**
+ * Class LocationCsvTest.
+ */
 class LocationCsvTest extends CsvBaseTest
 {
     /**
      * Collect validation message.
+     *
      * @param $rows
      * @return array
      * @throws \JsonException
@@ -31,6 +35,7 @@ class LocationCsvTest extends CsvBaseTest
 
     /**
      * All Valid data.
+     *
      * @return array
      */
     public function valid_data(): array
@@ -75,6 +80,7 @@ class LocationCsvTest extends CsvBaseTest
 
     /**
      * Pass if all valid data.
+     *
      * @return void
      * @test
      * @throws \JsonException
@@ -90,6 +96,7 @@ class LocationCsvTest extends CsvBaseTest
 
     /**
      * Throw all validation messages for invalid data.
+     *
      * @return void
      * @test
      * @throws \JsonException
@@ -117,6 +124,7 @@ class LocationCsvTest extends CsvBaseTest
 
     /**
      * Invalid data.
+     *
      * @return array
      */
     public function invalid_data(): array

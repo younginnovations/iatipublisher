@@ -2,10 +2,14 @@
 
 namespace Tests\Unit\Xml;
 
+/**
+ * Class CapitalSpendXmlTest.
+ */
 class CapitalSpendXmlTest extends XmlBaseTest
 {
     /**
      * Throw validation messages for all invalid data.
+     *
      * @return void
      * @test
      */
@@ -19,6 +23,7 @@ class CapitalSpendXmlTest extends XmlBaseTest
 
     /**
      * All invalid data.
+     *
      * @return array
      */
     public function invalid_data(): array

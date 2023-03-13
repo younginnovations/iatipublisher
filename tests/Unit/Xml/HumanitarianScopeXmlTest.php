@@ -2,10 +2,14 @@
 
 namespace Tests\Unit\Xml;
 
+/**
+ * Class HumanitarianScopeXmlTest.
+ */
 class HumanitarianScopeXmlTest extends XmlBaseTest
 {
     /**
      * Throws validation messages for all invalid data.
+     *
      * @return void
      * @test
      */
@@ -22,6 +26,7 @@ class HumanitarianScopeXmlTest extends XmlBaseTest
 
     /**
      * Invalid humanitarian scope.
+     *
      * @return array
      */
     public function invalid_data(): array

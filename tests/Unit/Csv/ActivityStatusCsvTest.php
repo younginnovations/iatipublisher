@@ -5,6 +5,9 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\ActivityStatus;
 use Illuminate\Support\Arr;
 
+/**
+ * Class ActivityStatusCsvTest.
+ */
 class ActivityStatusCsvTest extends CsvBaseTest
 {
     /**
@@ -36,6 +39,7 @@ class ActivityStatusCsvTest extends CsvBaseTest
 
     /**
      * Activity status invalid data.
+     *
      * @return array
      */
     public function activity_status_invalid_data(): array

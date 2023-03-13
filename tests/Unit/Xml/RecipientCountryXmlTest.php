@@ -2,10 +2,14 @@
 
 namespace Tests\Unit\Xml;
 
+/**
+ * Class RecipientCountryXmlTest.
+ */
 class RecipientCountryXmlTest extends XmlBaseTest
 {
     /**
      * All valid data.
+     *
      * @return array
      */
     public function valid_data(): array
@@ -15,6 +19,7 @@ class RecipientCountryXmlTest extends XmlBaseTest
 
     /**
      * Pass if all valid data.
+     *
      * @test
      * @return void
      */
@@ -27,6 +32,7 @@ class RecipientCountryXmlTest extends XmlBaseTest
 
     /**
      * Throws validation messages for all invalid data.
+     *
      * @return void
      * @test
      */
@@ -44,6 +50,7 @@ class RecipientCountryXmlTest extends XmlBaseTest
 
     /**
      * Invalid recipient country data.
+     *
      * @return array
      */
     public function invalid_data(): array
@@ -151,6 +158,7 @@ class RecipientCountryXmlTest extends XmlBaseTest
 
     /**
      * Throw validation when sum of region and country percentage not equal to 100.
+     *
      * @return void
      * @test
      */
@@ -166,6 +174,7 @@ class RecipientCountryXmlTest extends XmlBaseTest
 
     /**
      * Invalid percentage data.
+     *
      * @return array
      */
     public function invalid_percentage_data(): array
@@ -225,6 +234,7 @@ class RecipientCountryXmlTest extends XmlBaseTest
 
     /**
      * Throw validation if both have 100% region or country.
+     *
      * @return void
      * @test
      */
@@ -237,6 +247,7 @@ class RecipientCountryXmlTest extends XmlBaseTest
 
     /**
      * Country 100 and region 100 percentage data.
+     *
      * @return array
      */
     public function country_region_100_data(): array

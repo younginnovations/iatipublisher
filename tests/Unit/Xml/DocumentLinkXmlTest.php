@@ -2,10 +2,14 @@
 
 namespace Tests\Unit\Xml;
 
+/**
+ * Class DocumentLinkXmlTest.
+ */
 class DocumentLinkXmlTest extends XmlBaseTest
 {
     /**
      * Throws validation messages for all invalid data.
+     *
      * @return void
      * @test
      */
@@ -27,6 +31,7 @@ class DocumentLinkXmlTest extends XmlBaseTest
 
     /**
      * Invalid document link.
+     *
      * @return array
      */
     public function invalid_data(): array

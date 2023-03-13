@@ -5,10 +5,14 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\Tag;
 use Illuminate\Support\Arr;
 
+/**
+ * Class TagCsvTest.
+ */
 class TagCsvTest extends CsvBaseTest
 {
     /**
      * Collects validation messages.
+     *
      * @param $rows
      * @return array
      * @throws \JsonException
@@ -50,6 +54,7 @@ class TagCsvTest extends CsvBaseTest
 
    /**
     * Invalid tag data.
+    *
     * @return array
     */
    public function invalid_data(): array
@@ -70,6 +75,7 @@ class TagCsvTest extends CsvBaseTest
 
    /**
     * Pass if all data valid.
+    *
     * @return void
     * @throws \JsonException
     * @test
@@ -85,6 +91,7 @@ class TagCsvTest extends CsvBaseTest
 
    /**
     * All valid data.
+    *
     * @return array
     */
    public function valid_data(): array

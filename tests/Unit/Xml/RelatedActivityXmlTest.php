@@ -2,10 +2,14 @@
 
 namespace Tests\Unit\Xml;
 
+/**
+ * Class RelatedActivityXmlTest.
+ */
 class RelatedActivityXmlTest extends XmlBaseTest
 {
     /**
      * Throws validation messages for all invalid data.
+     *
      * @return void
      * @test
      */
@@ -18,6 +22,7 @@ class RelatedActivityXmlTest extends XmlBaseTest
 
     /**
      * Invalid related activity data.
+     *
      * @return array
      */
     public function invalid_data(): array

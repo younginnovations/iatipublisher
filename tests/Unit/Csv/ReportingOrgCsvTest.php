@@ -5,6 +5,9 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\ReportingOrganization;
 use Illuminate\Support\Arr;
 
+/**
+ * Class ReportingOrgCsvTest.
+ */
 class ReportingOrgCsvTest extends CsvBaseTest
 {
     /**
@@ -27,6 +30,7 @@ class ReportingOrgCsvTest extends CsvBaseTest
 
     /**
      * Invalid reporting org data.
+     *
      * @return array
      */
     public function reporting_org_invalid_data(): array
@@ -59,6 +63,7 @@ class ReportingOrgCsvTest extends CsvBaseTest
 
     /**
      * Valid reporting org data.
+     *
      * @return array
      */
     public function reporting_org_valid_data(): array
@@ -72,6 +77,7 @@ class ReportingOrgCsvTest extends CsvBaseTest
 
     /**
      * Collects validation messages.
+     *
      * @param $rows
      * @return array
      * @throws \JsonException

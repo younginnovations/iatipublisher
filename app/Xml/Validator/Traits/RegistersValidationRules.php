@@ -218,6 +218,8 @@ trait RegistersValidationRules
     }
 
     /**
+     * Actual Date validation.
+     *
      * @return void
      */
     public function actualDateValidator(): void
@@ -240,6 +242,8 @@ trait RegistersValidationRules
     }
 
     /**
+     * Multiple Activity Date Validation.
+     *
      * @return void
      */
     public function multipleActivityDateValidator(): void
@@ -263,6 +267,8 @@ trait RegistersValidationRules
     }
 
     /**
+     * Narrative Validation.
+     *
      * @return void
      */
     public function yearValueNarrativeValidator(): void
@@ -292,6 +298,8 @@ trait RegistersValidationRules
     }
 
     /**
+     * Date validation.
+     *
      * @return void
      */
     public function diffOneYearValidator(): void
@@ -323,6 +331,8 @@ trait RegistersValidationRules
     }
 
     /**
+     * Date greater than validation.
+     *
      * @return void
      */
     public function dateGreaterThanValidator(): void

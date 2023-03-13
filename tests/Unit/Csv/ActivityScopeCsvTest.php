@@ -5,6 +5,9 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\ActivityScope;
 use Illuminate\Support\Arr;
 
+/**
+ * Class ActivityScopeCsvTest.
+ */
 class ActivityScopeCsvTest extends CsvBaseTest
 {
     /**

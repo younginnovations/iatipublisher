@@ -6,10 +6,14 @@ use App\CsvImporter\Entities\Activity\Components\Elements\RecipientRegion;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
+/**
+ * Class RecipientRegionCsvTest.
+ */
 class RecipientRegionCsvTest extends CsvBaseTest
 {
     /**
      * Throw validation if sum of region and country percentage not equal to 100.
+     *
      * @return void
      * @test
      * @throws \JsonException
@@ -28,6 +32,7 @@ class RecipientRegionCsvTest extends CsvBaseTest
     /**
      * 50-50.
      * region or country percentage sum equal to 100.
+     *
      * @return void
      * @test
      * @throws \JsonException
@@ -45,6 +50,7 @@ class RecipientRegionCsvTest extends CsvBaseTest
     /**
      * Throw validation if same vocabulary percentage sum not equal to 100
      * if country 20 then vocab percentage not equal to 80.
+     *
      * @return void
      * @test
      * @throws \JsonException
@@ -61,6 +67,7 @@ class RecipientRegionCsvTest extends CsvBaseTest
 
     /**
      * Throw validation if Percentage sum withing same vocabulary not equal.
+     *
      * @return void
      * @test
      */
@@ -76,6 +83,7 @@ class RecipientRegionCsvTest extends CsvBaseTest
 
     /**
      * Throws and collects Errors.
+     *
      * @param $rows
      * @return array
      * @throws BindingResolutionException
@@ -175,6 +183,7 @@ class RecipientRegionCsvTest extends CsvBaseTest
 
     /**
      * Different vocal percentage.
+     *
      * @return array
      */
     public function diff_vocal_percentage(): array
@@ -221,6 +230,7 @@ class RecipientRegionCsvTest extends CsvBaseTest
 
     /**
      * All invalid data.
+     *
      * @return array
      */
     public function invalid_data(): array

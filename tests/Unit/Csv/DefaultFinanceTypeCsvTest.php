@@ -5,6 +5,9 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\DefaultFinanceType;
 use Illuminate\Support\Arr;
 
+/**
+ * Class DefaultFinanceTypeCsvTest.
+ */
 class DefaultFinanceTypeCsvTest extends CsvBaseTest
 {
     /**
@@ -29,6 +32,7 @@ class DefaultFinanceTypeCsvTest extends CsvBaseTest
 
     /**
      * Throws validation messages for invalid data.
+     *
      * @return void
      * @test
      * @throws \JsonException
@@ -46,6 +50,7 @@ class DefaultFinanceTypeCsvTest extends CsvBaseTest
 
     /**
      * Invalid default finance type data.
+     *
      * @return array
      */
     public function invalid_data(): array
@@ -58,7 +63,8 @@ class DefaultFinanceTypeCsvTest extends CsvBaseTest
     }
 
     /**
-     * valid adata.
+     * valid data.
+     *
      * @return void
      * @test
      * @throws \JsonException
@@ -74,6 +80,7 @@ class DefaultFinanceTypeCsvTest extends CsvBaseTest
 
     /**
      * Valid data.
+     *
      * @return array
      */
     public function valid_data(): array

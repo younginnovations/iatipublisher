@@ -5,6 +5,9 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\OtherIdentifier;
 use Illuminate\Support\Arr;
 
+/**
+ * Class OtherIdentifierCsvTest.
+ */
 class OtherIdentifierCsvTest extends CsvBaseTest
 {
     /**
@@ -37,6 +40,7 @@ class OtherIdentifierCsvTest extends CsvBaseTest
 
     /**
      * Invalid other identifier data.
+     *
      * @return array
      */
     public function invalid_other_identifier_data(): array
@@ -77,6 +81,7 @@ class OtherIdentifierCsvTest extends CsvBaseTest
 
     /**
      * Valid data.
+     *
      * @return array
      */
     public function valid_other_identifier_data(): array

@@ -5,6 +5,9 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\CountryBudgetItem;
 use Illuminate\Support\Arr;
 
+/**
+ * Class CountryBudgetItemsCsvTest.
+ */
 class CountryBudgetItemsCsvTest extends CsvBaseTest
 {
     /**
@@ -29,6 +32,7 @@ class CountryBudgetItemsCsvTest extends CsvBaseTest
 
     /**
      * All valid data.
+     *
      * @return array
      */
     public function valid_data(): array
@@ -49,6 +53,7 @@ class CountryBudgetItemsCsvTest extends CsvBaseTest
 
     /**
      * All valid data.
+     *
      * @return void
      * @throws \JsonException
      * @test
@@ -85,6 +90,7 @@ class CountryBudgetItemsCsvTest extends CsvBaseTest
 
     /**
      * Invalid Country budget items data.
+     *
      * @return array
      */
     public function invalid_data(): array

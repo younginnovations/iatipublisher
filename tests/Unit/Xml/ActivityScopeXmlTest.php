@@ -2,10 +2,14 @@
 
 namespace Tests\Unit\Xml;
 
+/**
+ * Class ActivityScopeXmlTest.
+ */
 class ActivityScopeXmlTest extends XmlBaseTest
 {
     /**
      * Throws validation for all invalid data.
+     *
      * @return void
      * @test
      */
@@ -19,6 +23,7 @@ class ActivityScopeXmlTest extends XmlBaseTest
 
     /**
      * Invalid scope data.
+     *
      * @return array
      */
     public function invalid_activity_scope_data(): array

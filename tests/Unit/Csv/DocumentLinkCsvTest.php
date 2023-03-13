@@ -5,6 +5,9 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\DocumentLink;
 use Illuminate\Support\Arr;
 
+/**
+ * Class DocumentLinkCsvTest.
+ */
 class DocumentLinkCsvTest extends CsvBaseTest
 {
     /**
@@ -32,6 +35,7 @@ class DocumentLinkCsvTest extends CsvBaseTest
 
     /**
      * Valid Document Link Data.
+     *
      * @return array
      */
     public function valid_data(): array
@@ -58,6 +62,7 @@ class DocumentLinkCsvTest extends CsvBaseTest
 
     /**
      * Pass if all valid data.
+     *
      * @throws \JsonException
      * @test
      */
@@ -71,7 +76,8 @@ class DocumentLinkCsvTest extends CsvBaseTest
     }
 
     /**
-     * Throw validaiotn messages for all invalid data.
+     * Throw validation messages for all invalid data.
+     *
      * @return void
      * @throws \JsonException
      * @test
@@ -92,6 +98,7 @@ class DocumentLinkCsvTest extends CsvBaseTest
 
     /**
      * Invalid document link data.
+     *
      * @return array
      */
     public function invalid_data(): array

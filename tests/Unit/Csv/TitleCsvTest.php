@@ -5,6 +5,9 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\Title;
 use Illuminate\Support\Arr;
 
+/**
+ * Class TitleCsvTest.
+ */
 class TitleCsvTest extends CsvBaseTest
 {
     /**
@@ -71,6 +74,7 @@ class TitleCsvTest extends CsvBaseTest
 
     /**
      * Multiple title data.
+     *
      * @return array
      */
     public function multiple_title_data(): array

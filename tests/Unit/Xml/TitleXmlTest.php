@@ -2,6 +2,9 @@
 
 namespace Tests\Unit\Xml;
 
+/**
+ * Class TitleXmlTest.
+ */
 class TitleXmlTest extends XmlBaseTest
 {
     /**
@@ -19,6 +22,7 @@ class TitleXmlTest extends XmlBaseTest
 
     /**
      * All valid data.
+     *
      * @return array
      */
     public function valid_data(): array
@@ -28,6 +32,7 @@ class TitleXmlTest extends XmlBaseTest
 
     /**
      * Throws validation messages for all invalid data.
+     *
      * @test
      * @return void
      */
@@ -42,6 +47,7 @@ class TitleXmlTest extends XmlBaseTest
 
     /**
      * Invalid data.
+     *
      * @return array
      */
     public function invalid_data(): array

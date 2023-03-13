@@ -2,10 +2,14 @@
 
 namespace Tests\Unit\Xml;
 
+/**
+ * Class DefaultFinanceTypeXmltest.
+ */
 class DefaultFinanceTypeXmlTest extends XmlBaseTest
 {
     /**
      * Throws validation messages for all invalid data.
+     *
      * @return void
      * @test
      */
@@ -19,6 +23,7 @@ class DefaultFinanceTypeXmlTest extends XmlBaseTest
 
     /**
      * Invalid default finance type.
+     *
      * @return array
      */
     public function invalid_data(): array

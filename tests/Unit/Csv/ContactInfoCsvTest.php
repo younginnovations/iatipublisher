@@ -5,6 +5,9 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\ContactInfo;
 use Illuminate\Support\Arr;
 
+/**
+ * Class ContactInfoCsvTest.
+ */
 class ContactInfoCsvTest extends CsvBaseTest
 {
     /**
@@ -32,6 +35,7 @@ class ContactInfoCsvTest extends CsvBaseTest
 
     /**
      * All valid data.
+     *
      * @return array
      */
     public function valid_data(): array
@@ -78,6 +82,7 @@ class ContactInfoCsvTest extends CsvBaseTest
 
     /**
      * Throw validation messages for all invalid data.
+     *
      * @return void
      * @throws \JsonException
      * @test
@@ -99,6 +104,7 @@ class ContactInfoCsvTest extends CsvBaseTest
 
     /**
      * Invalid Contact info data.
+     *
      * @return array
      */
     public function invalid_data(): array

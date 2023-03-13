@@ -5,6 +5,9 @@ namespace Tests\Unit\Csv;
 use App\CsvImporter\Entities\Activity\Components\Elements\Budget;
 use Illuminate\Support\Arr;
 
+/**
+ * Class BudgetCsvTest.
+ */
 class BudgetCsvTest extends CsvBaseTest
 {
     /**
@@ -55,6 +58,7 @@ class BudgetCsvTest extends CsvBaseTest
 
     /**
      * Invalid Budget Periods.
+     *
      * @return array
      */
     public function get_invalid_budget_period(): array
@@ -153,6 +157,7 @@ class BudgetCsvTest extends CsvBaseTest
 
     /**
      * negative value.
+     *
      * @return array
      */
     public function get_invalid_data(): array
