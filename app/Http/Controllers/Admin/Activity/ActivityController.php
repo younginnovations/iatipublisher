@@ -71,7 +71,7 @@ class ActivityController extends Controller
      * @param ResultService                    $resultService
      * @param TransactionService               $transactionService
      * @param ActivityValidatorResponseService $activityValidatorResponseService
-     * @param ImportActivityErrorService       $mportActivityErrorService
+     * @param ImportActivityErrorService       $importActivityErrorService
      * @param OrganizationService              $organizationService
      */
     public function __construct(
