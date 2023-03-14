@@ -121,7 +121,23 @@ class MigrateOrganizationCommand extends Command
                     $this->updateOrganizationUpdatedBy($aidstreamOrganizationId, $iatiOrganization, $mappedUsers);
                 }
 
-                $this->databaseManager->commit();
+                $aidstreamActivities = $this->db::connection('aidstream')->table('activity_data')->where(
+                    'organization_id',
+                    $aidstreamOrganizationId
+                )->get();
+
+                if (count($aidstreamActivities)) {
+                    foreach ($aidstreamActivities as $aidstreamActivity) {
+                        $this->info(
+                            'Started activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
+                        );
+                        $iatiActivity = $this->getNewActivity($aidstreamActivity, $iatiOrganization);
+                        $this->info(
+                            'Completed activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
+                        );
+                    }
+                }
+//                $this->databaseManager->commit();
             }
         } catch (\Exception $exception) {
             $this->databaseManager->rollBack();
@@ -305,9 +321,9 @@ class MigrateOrganizationCommand extends Command
                         'value'             => Arr::get($array, 'value', null),
                     ],
                     default => [
-                        'period_start'      => Arr::get($array, 'period_start', null),
-                        'period_end'        => Arr::get($array, 'period_end', null),
-                        'value'             => Arr::get($array, 'value', null),
+                        'period_start' => Arr::get($array, 'period_start', null),
+                        'period_end'   => Arr::get($array, 'period_end', null),
+                        'value'        => Arr::get($array, 'value', null),
                     ],
                 };
 
@@ -631,5 +647,152 @@ class MigrateOrganizationCommand extends Command
 
             $iatiOrganization->save();
         }
+    }
+
+    /**
+     * Returns IATI activity data.
+     *
+     * @param $aidstreamActivity
+     * @param $iatiOrganization
+     *
+     * @return array
+     *
+     * @throws \JsonException
+     */
+    public function getNewActivity($aidstreamActivity, $iatiOrganization)
+    {
+        $newActivity = [];
+        $newActivity['iati_identifier'] = $aidstreamActivity->identifier ? [
+            'activity_identifier' => Arr::get(
+                json_decode($aidstreamActivity->identifier, true, 512, JSON_THROW_ON_ERROR),
+                'activity_identifier',
+                null
+            ),
+        ] : null;
+        $newActivity['other_identifier'] = $aidstreamActivity ? $this->getActivityOtherIdentifier(
+            $aidstreamActivity->other_identifier
+        ) : null;
+        $newActivity['title'] = $this->getColumnValueArray($aidstreamActivity, 'title');
+        $newActivity['description'] = $this->getColumnValueArray($aidstreamActivity, 'description');
+        $newActivity['activity_status'] = $aidstreamActivity ? $this->getIntSelectValue(
+            $aidstreamActivity->activity_status,
+            'ActivityStatus',
+            'Activity'
+        ) : null;
+        $newActivity['status'] = ($aidstreamActivity && $aidstreamActivity->activity_workflow === 3 && $aidstreamActivity->published_to_registry === 1) ? 'published' : 'draft';
+        $newActivity['activity_date'] = $this->getColumnValueArray($aidstreamActivity, 'activity_date');
+        $newActivity['contact_info'] = $aidstreamActivity ? $this->getActivityFirstLevelData(
+            $aidstreamActivity->contact_info,
+            ['organization' => 'organisation']
+        ) : null;
+        $newActivity['activity_scope'] = $aidstreamActivity ? $this->getIntSelectValue(
+            $aidstreamActivity->activity_scope,
+            'ActivityScope',
+            'Activity'
+        ) : null;
+        dd($newActivity);
+    }
+
+    /**
+     * Returns activity other identifier data.
+     *
+     * @param $aidstreamOtherIdentifiers
+     *
+     * @return array|null
+     *
+     * @throws \JsonException
+     */
+    public function getActivityOtherIdentifier($aidstreamOtherIdentifiers): ?array
+    {
+        if (!$aidstreamOtherIdentifiers) {
+            return null;
+        }
+
+        $newOtherIdentifiers = [];
+        $otherIdentifiersArray = json_decode($aidstreamOtherIdentifiers, true, 512, JSON_THROW_ON_ERROR);
+
+        if (count($otherIdentifiersArray)) {
+            foreach ($otherIdentifiersArray as $key => $otherIdentifier) {
+                $newOtherIdentifiers[$key]['reference'] = Arr::get($otherIdentifier, 'reference', null);
+                $newOtherIdentifiers[$key]['reference_type'] = Arr::get($otherIdentifier, 'type', null);
+
+                foreach (Arr::get($otherIdentifier, 'owner_org', []) as $innerKey => $ownerOrg) {
+                    $newOtherIdentifiers[$key]['owner_org'][$innerKey]['ref'] = Arr::get($ownerOrg, 'reference', null);
+                    $newOtherIdentifiers[$key]['owner_org'][$innerKey]['narrative'] = Arr::get(
+                        $ownerOrg,
+                        'narrative',
+                        null
+                    );
+                }
+            }
+        }
+
+        return $newOtherIdentifiers;
+    }
+
+    /**
+     * Returns updated activity first level data.
+     *
+     * @param $object
+     * @param $replaceArray
+     *
+     * @return array|null
+     *
+     * @throws \JsonException
+     */
+    public function getActivityFirstLevelData($object, $replaceArray): ?array
+    {
+        if (!$object) {
+            return null;
+        }
+
+        $newArray = [];
+        $array = json_decode($object, true, 512, JSON_THROW_ON_ERROR);
+
+        if (count($array)) {
+            foreach ($array as $key => $item) {
+                foreach ($item as $innerKey => $innerItem) {
+                    if (array_key_exists($innerKey, $replaceArray)) {
+                        $newArray[$key][$replaceArray[$innerKey]] = $innerItem;
+                        continue;
+                    }
+
+                    $newArray[$key][$innerKey] = $innerItem;
+                }
+            }
+        }
+
+        return $newArray;
+    }
+
+    /**
+     * Checks if select value is valid and returns after typecasting into integer.
+     *
+     * @param $value
+     * @param $listName
+     * @param $listType
+     *
+     * @return int|null
+     *
+     * @throws \JsonException
+     */
+    public function getIntSelectValue($value, $listName, $listType): ?int
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        if (is_string($value)) {
+            $value = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
+        }
+
+        $validKeys = array_keys(getCodeList($listName, $listType, false));
+        $value = (int) $value;
+
+        if (in_array($value, $validKeys, true)) {
+            return $value;
+        }
+
+        return null;
     }
 }
