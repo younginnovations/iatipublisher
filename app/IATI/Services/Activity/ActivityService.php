@@ -651,4 +651,16 @@ class ActivityService
 
         return true;
     }
+
+    /**
+     * Creates activity.
+     *
+     * @param $data
+     *
+     * @return object
+     */
+    public function create($data): object
+    {
+        return $this->activityRepository->store($data);
+    }
 }
