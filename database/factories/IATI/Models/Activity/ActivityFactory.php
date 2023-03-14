@@ -33,4 +33,20 @@ class ActivityFactory extends Factory
             ],
         ];
     }
+
+    /**
+     * Sets missing Field.
+     *
+     * @return Factory
+     */
+    public function addMissingField($orgId, $user_id): Factory
+    {
+        return $this->state(function () use ($orgId, $user_id) {
+            return [
+                'org_id' => $orgId,
+                'created_by' => $user_id,
+                'updated_by' => $user_id,
+            ];
+        });
+    }
 }
