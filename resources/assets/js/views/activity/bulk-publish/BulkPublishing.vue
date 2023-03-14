@@ -148,6 +148,7 @@ const checkBulkpublishStatus = () => {
  * Bulk Publish Function
  */
 const bulkPublishStatus = () => {
+  let count = 0;
   intervalID = setInterval(() => {
     axios
       .get(
@@ -166,6 +167,7 @@ const bulkPublishStatus = () => {
           paStorage.value.publishingActivities.message = response.data.message;
 
           if (completed.value === 'completed') {
+            count = 0;
             failedActivities(paStorage.value.publishingActivities.activities);
             refreshToastMsg.visibility = true;
             setTimeout(() => {
@@ -175,10 +177,17 @@ const bulkPublishStatus = () => {
         } else {
           completed.value = 'completed';
         }
+        if (completed.value === 'processing') {
+          count++;
+          if (count > 30) {
+            clearInterval(intervalID);
+          }
+        }
       });
   }, 2000);
 
   if (paStorage.value.publishingActivities.status === 'processing') {
+    console.log('checking satus');
     checkBulkpublishStatus();
   }
 };

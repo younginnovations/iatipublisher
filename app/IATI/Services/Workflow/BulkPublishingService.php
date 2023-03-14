@@ -352,8 +352,8 @@ class BulkPublishingService
     }
 
     /**
-     * Returns status of activity publish based on activity table
-     * 
+     * Returns status of activity publish based on activity table.
+     *
      * @param $activityId
      * @param $uuid
      *
