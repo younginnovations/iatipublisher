@@ -47,6 +47,7 @@ class FillReportingOrgInOrganizationLevel extends Command
             ];
             $organizations = app()->make(OrganizationRepository::class)->all();
             $activityRepository = app()->make(ActivityRepository::class);
+            $activityModel = (new ($activityRepository->getModel()));
 
             foreach ($organizations as $organization) {
                 $organization = $this->applyTemplate($reportingOrgTemplate, $organization);
@@ -58,11 +59,16 @@ class FillReportingOrgInOrganizationLevel extends Command
                     ]
                 );
                 $organization = $organizations->find($organization->id);
-
                 $reportingOrg = $organization->reporting_org[0];
-                $activityModel = (new ($activityRepository->getModel()));
 
                 $activityModel->whereNull('reporting_org')->update(['reporting_org'=>$organization->reporting_org]);
+                $activitiesWithImproperData = $activityModel->where('reporting_org', 'not like', '%[%"%]%')->get();
+
+                foreach ($activitiesWithImproperData as $activityWithImproperData) {
+                    $newReportingOrg = [$activityWithImproperData->reporting_org];
+                    $activityWithImproperData->updateQuietly(['reporting_org'=>$newReportingOrg]);
+                }
+
                 $activityRepository->syncReportingOrg($organization->id, $reportingOrg);
             }
 
@@ -94,7 +100,7 @@ class FillReportingOrgInOrganizationLevel extends Command
                 }
             }
         } else {
-            $manipulatedReportingOrg[0]['narrative'] = [];
+            $manipulatedReportingOrg[0]['narrative'] = [['narrative'=>'', 'language'=>'']];
         }
 
         foreach ($template[0] as $key => $item) {
