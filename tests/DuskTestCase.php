@@ -82,28 +82,28 @@ abstract class DuskTestCase extends BaseTestCase
                isset($_ENV['DUSK_START_MAXIMIZED']);
     }
 
-    /**
+    /*
      * Signs In For Test and sets user and organization object.
      *
      * @return void
      * @throws \Throwable
      */
-    public function signIn(): void
-    {
-        $this->browse(function (Browser $browser) {
-            $this->role = Role::factory()->create();
-            $this->organization = Organization::factory()->has(User::factory(['role_id' => $this->role->id]))->create();
-            $browser->loginAs($this->organization->user)->assertAuthenticated();
-        });
-    }
+//    public function signIn(): void
+//    {
+//        $this->browse(function (Browser $browser) {
+//            $this->role = Role::factory()->create();
+//            $this->organization = Organization::factory()->has(User::factory(['role_id' => $this->role->id]))->create();
+//            $browser->loginAs($this->organization->user)->assertAuthenticated();
+//        });
+//    }
 
-    /**
+    /*
      * Creates Activity.
      *
      * @return object
      */
-    public function createActivity(): object
-    {
-        return Activity::factory()->has(Transaction::factory())->addMissingField($this->organization->id, $this->organization->user->id)->create();
-    }
+//    public function createActivity(): object
+//    {
+//        return Activity::factory()->has(Transaction::factory())->addMissingField($this->organization->id, $this->organization->user->id)->create();
+//    }
 }
