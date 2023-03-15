@@ -290,4 +290,10 @@ class ElementCompleteTest extends TestCase
             $this->assertTrue($this->elementCompleteService->isPeriodElementCompleted($actualData));
         }
     }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        unset($this->elementCompleteService);
+    }
 }
