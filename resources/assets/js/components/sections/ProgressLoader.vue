@@ -32,10 +32,22 @@ defineProps({
 
 onMounted(() => {
   document.body.classList.add('overflow-y-hidden');
+  const supportButton: HTMLElement = document.querySelector(
+    '#launcher'
+  ) as HTMLElement;
+  if (supportButton !== null) {
+    supportButton.style.display = 'none';
+  }
 });
 
 onUnmounted(() => {
   document.body.classList.remove('overflow-y-hidden');
+  const supportButton: HTMLElement = document.querySelector(
+    '#launcher'
+  ) as HTMLElement;
+  if (supportButton !== null) {
+    supportButton.style.display = 'block';
+  }
 });
 </script>
 
