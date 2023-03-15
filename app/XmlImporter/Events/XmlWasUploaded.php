@@ -2,18 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\XmlImporter\Events;
+namespace App\XlsImporter\Events;
 
 use App\Events\Event;
-use Illuminate\Queue\SerializesModels;
 
 /**
  * Class XmlWasUploaded.
  */
 class XmlWasUploaded extends Event
 {
-    //    use SerializesModels;
-
     /**
      * @var
      */

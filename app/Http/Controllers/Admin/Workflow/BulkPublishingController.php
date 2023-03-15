@@ -229,8 +229,9 @@ class BulkPublishingController extends Controller
         try {
             $organizationId = Auth::user()->organization_id;
             $uuid = $this->publishingStatusService->getPublishingUuid($organizationId);
+            logger()->error($uuid);
 
-            if ($organizationId && $uuid) {
+            if ($organizationId) {
                 $publishStatus = $this->publishingStatusService->getActivityPublishingStatus($organizationId, $uuid);
 
                 if ($publishStatus && count($publishStatus)) {
