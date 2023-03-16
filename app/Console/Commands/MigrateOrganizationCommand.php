@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\IATI\Repositories\User\RoleRepository;
+use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
 use App\IATI\Services\User\UserService;
@@ -53,6 +54,7 @@ class MigrateOrganizationCommand extends Command
         protected SettingService $settingService,
         protected RoleRepository $roleRepository,
         protected UserService $userService,
+        protected ActivityService $activityService
     ) {
         parent::__construct();
     }
@@ -143,7 +145,7 @@ class MigrateOrganizationCommand extends Command
                         $this->info(
                             'Started activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
                         );
-                        $iatiActivity = $this->getNewActivity($aidstreamActivity, $iatiOrganization);
+                        $iatiActivity = $this->activityService->create($this->getNewActivity($aidstreamActivity, $iatiOrganization));
                         $this->info(
                             'Completed activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
                         );
