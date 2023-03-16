@@ -114,6 +114,11 @@ class MigrateOrganizationCommand extends Command
                     $this->settingService->create(
                         $this->getNewSetting($aidStreamOrganizationSetting, $iatiOrganization)
                     );
+
+                    $defaultFieldValues = $aidStreamOrganizationSetting->default_field_values;
+                    $data = $iatiOrganization->toArray();
+                    $updatedData = $this->populateDefaultFields($data, $defaultFieldValues);
+                    $iatiOrganization->update($updatedData);
                     $this->info('Completed setting migration for organization id: ' . $aidstreamOrganizationId);
                 }
 
