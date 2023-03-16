@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Traits;
 
+use App\IATI\Models\User\Role;
 use Illuminate\Support\Arr;
 
 /**
@@ -286,6 +287,163 @@ trait MigrateActivityTrait
         ];
 
     /**
+     * Contains key value pair to be replaced for each vocabulary.
+     *
+     * @var array
+     */
+    protected array $policyMarkerReplaceArray
+        = [
+            '1'  => [
+                'vocabulary' => 'policy_marker_vocabulary',
+            ],
+            '99' => [
+                'vocabulary' => 'policy_marker_vocabulary',
+            ],
+        ];
+
+    /**
+     * Contains key value pair to be removed for particular vocabulary.
+     *
+     * @var array
+     */
+    protected array $policyMarkerRemoveArray
+        = [
+            '1'  => ['vocabulary', 'vocabulary_uri', 'custom_vocabulary_uri', 'custom_code', 'policy_marker_text'],
+            '99' => ['vocabulary', 'custom_vocabulary_uri', 'custom_code', 'policy_marker'],
+        ];
+
+    /**
+     * Contains key value pair to be replaced for particular vocabulary.
+     *
+     * @var array
+     */
+    protected array $defaultAidTypeReplaceArray
+        = [
+            '1' => [
+                'default_aidtype_vocabulary' => 'default_aid_type_vocabulary',
+            ],
+            '2' => [
+                'default_aidtype_vocabulary' => 'default_aid_type_vocabulary',
+            ],
+            '3' => [
+                'default_aidtype_vocabulary' => 'default_aid_type_vocabulary',
+                'default_aid_type_text'      => 'earmarking_modality',
+            ],
+            '4' => [
+                'default_aidtype_vocabulary' => 'default_aid_type_vocabulary',
+            ],
+        ];
+
+    /**
+     * Contains key value pair to be removed for particular vocabulary.
+     *
+     * @var array
+     */
+    protected array $defaultAidTypeRemoveArray
+        = [
+            '1' => [
+                'default_aidtype_vocabulary',
+                'earmarking_category',
+                'cash_and_voucher_modalities',
+                'default_aid_type_text',
+            ],
+            '2' => [
+                'default_aidtype_vocabulary',
+                'default_aid_type',
+                'cash_and_voucher_modalities',
+                'default_aid_type_text',
+            ],
+            '3' => [
+                'default_aidtype_vocabulary',
+                'default_aid_type',
+                'earmarking_category',
+                'cash_and_voucher_modalities',
+                'default_aid_type_text',
+            ],
+            '4' => ['default_aidtype_vocabulary', 'default_aid_type', 'earmarking_category', 'default_aid_type_text'],
+        ];
+
+    /**
+     * Contains key value pair to be replaced.
+     *
+     * @var array
+     */
+    protected array $budgetReplaceArray
+        = [
+            'status' => 'budget_status',
+            'value'  => 'budget_value',
+        ];
+
+    /**
+     * Document link language template.
+     *
+     * @var array
+     */
+    protected array $documentLinkLanguageTemplate
+        = [
+            [
+                'code' => null,
+            ],
+        ];
+
+    /**
+     * Contains key value pair to be replaced.
+     *
+     * @var array
+     */
+    protected array $legacyDataReplaceArray
+        = [
+            'name' => 'legacy_name',
+        ];
+
+    /**
+     * Contains key value pair to be replaced for particular vocabulary.
+     *
+     * @var array
+     */
+    protected array $tagReplaceArray
+        = [
+            '1' => [
+                'tag_code' => 'tag_text',
+            ],
+        ];
+
+    /**
+     * Contains key value pair to be removed for particular vocabulary.
+     *
+     * @var array
+     */
+    protected array $tagRemoveArray
+        = [
+            '1'  => [
+                'tag_text',
+                'vocabulary_uri',
+                'custom_vocabulary_uri',
+                'tag_code',
+                'goals_tag_code',
+                'targets_tag_code',
+                'custom_code',
+            ],
+            '2'  => [
+                'vocabulary_uri',
+                'custom_vocabulary_uri',
+                'tag_code',
+                'targets_tag_code',
+                'tag_text',
+                'custom_code',
+            ],
+            '3'  => [
+                'vocabulary_uri',
+                'custom_vocabulary_uri',
+                'tag_code',
+                'goals_tag_code',
+                'tag_text',
+                'custom_code',
+            ],
+            '99' => ['custom_vocabulary_uri', 'tag_code', 'goals_tag_code', 'targets_tag_code', 'custom_code'],
+        ];
+
+    /**
      * Returns IATI activity data.
      *
      * @param $aidstreamActivity
@@ -295,7 +453,7 @@ trait MigrateActivityTrait
      *
      * @throws \JsonException
      */
-    public function getNewActivity($aidstreamActivity, $iatiOrganization)
+    public function getNewActivity($aidstreamActivity, $iatiOrganization): array
     {
         $newActivity = [];
         $newActivity['iati_identifier'] = $aidstreamActivity->identifier ? [
@@ -356,6 +514,71 @@ trait MigrateActivityTrait
             [],
             $this->humanitarianScopeRemoveArray
         ) : null;
+        $newActivity['policy_marker'] = $aidstreamActivity ? $this->getActivityUpdatedVocabularyData(
+            $aidstreamActivity->policy_marker,
+            'vocabulary',
+            $this->policyMarkerReplaceArray,
+            $this->policyMarkerRemoveArray
+        ) : null;
+        $newActivity['collaboration_type'] = $aidstreamActivity ? $this->getIntSelectValue(
+            $aidstreamActivity->collaboration_type,
+            'CollaborationType',
+            'Activity'
+        ) : null;
+        $newActivity['default_flow_type'] = $aidstreamActivity ? $this->getIntSelectValue(
+            $aidstreamActivity->default_flow_type,
+            'FlowType',
+            'Activity'
+        ) : null;
+        $newActivity['default_finance_type'] = $aidstreamActivity ? $this->getIntSelectValue(
+            $aidstreamActivity->default_finance_type,
+            'FinanceType',
+            'Activity'
+        ) : null;
+        $newActivity['default_aid_type'] = $aidstreamActivity ? $this->getActivityDefaultAidTypeData(
+            $aidstreamActivity->default_aid_type
+        ) : null;
+        $newActivity['default_tied_status'] = $aidstreamActivity ? $this->getIntSelectValue(
+            $aidstreamActivity->default_tied_status,
+            'TiedStatus',
+            'Activity'
+        ) : null;
+        $newActivity['budget'] = $aidstreamActivity ? $this->getActivityFirstLevelData(
+            $aidstreamActivity->budget,
+            $this->budgetReplaceArray,
+        ) : null;
+        $newActivity['planned_disbursement'] = $aidstreamActivity ? $this->getActivityPlannedDisbursementData(
+            $aidstreamActivity->planned_disbursement
+        ) : null;
+        $newActivity['capital_spend'] = $aidstreamActivity ? $this->getActivityCapitalSpendData(
+            $aidstreamActivity->capital_spend
+        ) : null;
+        $newActivity['document_link'] = $aidstreamActivity ? $this->getActivityDocumentLinkData(
+            $aidstreamActivity
+        ) : null;
+        $newActivity['related_activity'] = $this->getColumnValueArray($aidstreamActivity, 'related_activity');
+        $newActivity['legacy_data'] = $aidstreamActivity ? $this->getActivityFirstLevelData(
+            $aidstreamActivity->legacy_data,
+            $this->legacyDataReplaceArray,
+        ) : null;
+        $newActivity['conditions'] = $this->getColumnValueArray($aidstreamActivity, 'conditions');
+        $newActivity['org_id'] = $iatiOrganization->id;
+        $newActivity['default_field_values'] = $aidstreamActivity ? $this->getActivityDefaultFieldValues(
+            $aidstreamActivity->default_field_values
+        ) : null;
+        $newActivity['linked_to_iati'] = $aidstreamActivity && $aidstreamActivity->published_to_registry;
+        $newActivity['tag'] = $aidstreamActivity ? $this->getActivityTagData($aidstreamActivity->tag) : null;
+        $newActivity['element_status'] = null; // Will be updated by observer
+        $newActivity['created_at'] = $aidstreamActivity ? $aidstreamActivity->created_at : null;
+        $newActivity['updated_at'] = $aidstreamActivity ? $aidstreamActivity->updated_at : null;
+
+        $adminId = $iatiOrganization->user->where('role_id', app(Role::class)->getOrganizationAdminId())->first()->id;
+        $newActivity['created_by'] = $adminId;
+        $newActivity['updated_by'] = $adminId;
+        $newActivity['reporting_org'] = null;
+        $newActivity['upload_medium'] = 'manual';
+
+        return $newActivity;
     }
 
     /**
@@ -424,6 +647,8 @@ trait MigrateActivityTrait
                         }
 
                         $newArray[$key][$innerKey] = $innerItem;
+                    } elseif (array_key_exists($innerKey, $replaceArray)) {
+                        $newArray[$key][$replaceArray[$innerKey]] = $innerItem;
                     }
                 }
             }
@@ -530,8 +755,10 @@ trait MigrateActivityTrait
                     Arr::get($locationArray, 'administrative', null)
                 );
                 $newLocations[$key]['point'] = [
-                    'srs_name' => Arr::get($locationArray, 'point.0.srs_name', null),
-                    'pos'      => Arr::get($locationArray, 'point.0.position', null),
+                    [
+                        'srs_name' => Arr::get($locationArray, 'point.0.srs_name', null),
+                        'pos'      => Arr::get($locationArray, 'point.0.position', null),
+                    ],
                 ];
                 $newLocations[$key]['exactness'] = Arr::get($locationArray, 'exactness', null);
                 $newLocations[$key]['location_class'] = Arr::get($locationArray, 'location_class', null);
@@ -655,5 +882,297 @@ trait MigrateActivityTrait
         }
 
         return count($newBudgetItems) ? $newBudgetItems : $this->emptyBudgetItemTemplate;
+    }
+
+    /**
+     * Returns activity default aid type data.
+     *
+     * @param $defaultAidTypes
+     *
+     * @return array|null
+     *
+     * @throws \JsonException
+     */
+    public function getActivityDefaultAidTypeData($defaultAidTypes): ?array
+    {
+        if (!$defaultAidTypes) {
+            return null;
+        }
+
+        $defaultAidTypesArray = json_decode($defaultAidTypes, true, 512, JSON_THROW_ON_ERROR);
+
+        if (!$defaultAidTypesArray) {
+            return null;
+        }
+
+        if (is_array($defaultAidTypesArray)) {
+            return $this->getActivityUpdatedVocabularyData(
+                $defaultAidTypes,
+                'default_aidtype_vocabulary',
+                $this->defaultAidTypeReplaceArray,
+                $this->defaultAidTypeRemoveArray
+            );
+        }
+
+        if (array_key_exists($defaultAidTypesArray, getCodeList('AidType', 'Activity', false))) {
+            return [
+                [
+                    'default_aid_type_vocabulary' => '1',
+                    'default_aid_type'            => $defaultAidTypesArray,
+                ],
+            ];
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns activity planned disbursement data.
+     *
+     * @param $plannedDisbursements
+     *
+     * @return array|null
+     *
+     * @throws \JsonException
+     */
+    public function getActivityPlannedDisbursementData($plannedDisbursements): ?array
+    {
+        if (!$plannedDisbursements) {
+            return null;
+        }
+
+        $newPlannedDisbursements = [];
+        $plannedDisbursementsArray = json_decode($plannedDisbursements, true, 512, JSON_THROW_ON_ERROR);
+
+        if ($plannedDisbursementsArray && count($plannedDisbursementsArray)) {
+            foreach (array_values($plannedDisbursementsArray) as $key => $plannedDisbursement) {
+                $newPlannedDisbursements[$key] = [
+                    'planned_disbursement_type' => Arr::get($plannedDisbursement, 'planned_disbursement_type', null),
+                    'period_start'              => Arr::get($plannedDisbursement, 'period_start', null),
+                    'period_end'                => Arr::get($plannedDisbursement, 'period_end', null),
+                    'value'                     => Arr::get($plannedDisbursement, 'value', null),
+                    'provider_org'              => [
+                        [
+                            'ref'                  => Arr::get($plannedDisbursement, 'provider_org.0.ref', null),
+                            'provider_activity_id' => Arr::get(
+                                $plannedDisbursement,
+                                'provider_org.0.activity_id',
+                                null
+                            ),
+                            'type'                 => Arr::get($plannedDisbursement, 'provider_org.0.type', null),
+                            'narrative'            => Arr::get($plannedDisbursement, 'provider_org.0.narrative', null),
+                        ],
+                    ],
+                    'receiver_org'              => [
+                        [
+                            'ref'                  => Arr::get($plannedDisbursement, 'receiver_org.0.ref', null),
+                            'receiver_activity_id' => Arr::get(
+                                $plannedDisbursement,
+                                'receiver_org.0.activity_id',
+                                null
+                            ),
+                            'type'                 => Arr::get($plannedDisbursement, 'receiver_org.0.type', null),
+                            'narrative'            => Arr::get($plannedDisbursement, 'receiver_org.0.narrative', null),
+                        ],
+                    ],
+                ];
+            }
+        }
+
+        return count($newPlannedDisbursements) ? $newPlannedDisbursements : null;
+    }
+
+    /**
+     * Returns activity capital spend data.
+     *
+     * @param $capitalSpend
+     *
+     * @return float|null
+     *
+     * @throws \JsonException
+     */
+    public function getActivityCapitalSpendData($capitalSpend): ?float
+    {
+        if (!$capitalSpend) {
+            return null;
+        }
+
+        if (is_int($capitalSpend) || is_float($capitalSpend)) {
+            return (float) $capitalSpend;
+        }
+
+        return (float) json_decode($capitalSpend, true, 512, JSON_THROW_ON_ERROR);
+    }
+
+    /**
+     * Returns activity document link data.
+     *
+     * @param $aidstreamActivity
+     *
+     * @return array|null
+     *
+     * @throws \JsonException
+     */
+    public function getActivityDocumentLinkData($aidstreamActivity): ?array
+    {
+        if (!$aidstreamActivity) {
+            return null;
+        }
+
+        $documentLinks = $this->db::connection('aidstream')->table('activity_document_links')->where(
+            'activity_id',
+            $aidstreamActivity->id
+        )->get();
+
+        if (!count($documentLinks)) {
+            return null;
+        }
+
+        $newDocumentLinks = [];
+
+        foreach ($documentLinks as $documentLink) {
+            $document = $documentLink->document_link ? json_decode(
+                $documentLink->document_link,
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            ) : [];
+            $newDocumentLinks[] = [
+                'url'           => Arr::get($document, 'url', null),
+                'format'        => Arr::get($document, 'format', null),
+                'title'         => Arr::get($document, 'title', null),
+                'description'   => Arr::get($document, 'description', null),
+                'category'      => Arr::get($document, 'category', null),
+                'language'      => $this->getDocumentLinkLanguage(Arr::get($document, 'language', null)),
+                'document_date' => Arr::get($document, 'document_date', null),
+            ];
+        }
+
+        return count($newDocumentLinks) ? $newDocumentLinks : null;
+    }
+
+    /**
+     * Returns document link language data.
+     *
+     * @param $languages
+     *
+     * @return array
+     */
+    public function getDocumentLinkLanguage($languages): array
+    {
+        if (!$languages) {
+            return $this->documentLinkLanguageTemplate;
+        }
+
+        $newLanguages = [];
+
+        if (count($languages)) {
+            foreach ($languages as $language) {
+                $newLanguages[] = [
+                    'code' => Arr::get($language, 'language', null),
+                ];
+            }
+        }
+
+        return count($newLanguages) ? $newLanguages : $this->documentLinkLanguageTemplate;
+    }
+
+    /**
+     * Returns activity default values data.
+     *
+     * @param $defaultValues
+     *
+     * @return array|null
+     *
+     * @throws \JsonException
+     */
+    public function getActivityDefaultFieldValues($defaultValues): ?array
+    {
+        if (!$defaultValues) {
+            return null;
+        }
+
+        $defaultValues = json_decode($defaultValues, true, 512, JSON_THROW_ON_ERROR);
+
+        if (!$defaultValues) {
+            return null;
+        }
+
+        return [
+            'default_currency'    => Arr::get($defaultValues, '0.default_currency', null),
+            'default_language'    => Arr::get($defaultValues, '0.default_language', null),
+            'hierarchy'           => !is_null(Arr::get($defaultValues, '0.default_hierarchy', null)) ? Arr::get(
+                $defaultValues,
+                '0.default_hierarchy',
+                null
+            ) : '1',
+            'budget_not_provided' => Arr::get($defaultValues, '0.budget_not_provided', null),
+            'humanitarian'        => !is_null(Arr::get($defaultValues, '0.humanitarian', null)) ? Arr::get(
+                $defaultValues,
+                '0.humanitarian',
+                null
+            ) : '1',
+        ];
+    }
+
+    /**
+     * Returns activity tag data.
+     *
+     * @param $tags
+     *
+     * @return array|null
+     *
+     * @throws \JsonException
+     */
+    public function getActivityTagData($tags): ?array
+    {
+        if (!$tags) {
+            return null;
+        }
+
+        $newTags = [];
+        $tagsArray = json_decode($tags, true, 512, JSON_THROW_ON_ERROR);
+
+        if (count($tagsArray)) {
+            foreach (array_values($tagsArray) as $key => $tag) {
+                $newTags[$key] = $this->getTagData($tag);
+            }
+        }
+
+        return count($newTags) ? $newTags : null;
+    }
+
+    /**
+     * Returns tag data.
+     *
+     * @param $tag
+     *
+     * @return array
+     */
+    public function getTagData($tag): array
+    {
+        return match (Arr::get($tag, 'tag_vocabulary', '1')) {
+            '2' => [
+                'tag_vocabulary' => Arr::get($tag, 'vocabulary', '2'),
+                'goals_tag_code' => Arr::get($tag, 'goals_tag_code', null),
+                'narrative'      => Arr::get($tag, 'narrative', null),
+            ],
+            '3' => [
+                'tag_vocabulary'   => Arr::get($tag, 'vocabulary', '3'),
+                'targets_tag_code' => Arr::get($tag, 'targets_tag_code', null),
+                'narrative'        => Arr::get($tag, 'narrative', null),
+            ],
+            '99' => [
+                'tag_vocabulary' => Arr::get($tag, 'vocabulary', '99'),
+                'tag_text'       => Arr::get($tag, 'tag_text', null),
+                'vocabulary_uri' => Arr::get($tag, 'vocabulary_uri', null),
+                'narrative'      => Arr::get($tag, 'narrative', null),
+            ],
+            default => [
+                'tag_vocabulary' => Arr::get($tag, 'vocabulary', '1'),
+                'tag_text'       => Arr::get($tag, 'tag_code', null),
+                'narrative'      => Arr::get($tag, 'narrative', null),
+            ],
+        };
     }
 }
