@@ -108,4 +108,13 @@ class CsvBaseTest extends ImportBaseTest
     {
         $this->completeData = $this->getCsvRows($this->completeCsvFile);
     }
+
+    /**
+     * @return void
+     */
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        unset($this->csvFile, $this->validation, $this->completeData, $this->user, $this->organization);
+    }
 }

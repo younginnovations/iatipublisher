@@ -110,6 +110,6 @@ class XmlBaseTest extends ImportBaseTest
     public function tearDown(): void
     {
         parent::tearDown();
-        unset($this->completeXml, $this->validation);
+        unset($this->completeXml, $this->validation, $this->user, $this->organization);
     }
 }

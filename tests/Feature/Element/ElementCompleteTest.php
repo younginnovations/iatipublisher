@@ -291,6 +291,9 @@ class ElementCompleteTest extends TestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function tearDown(): void
     {
         parent::tearDown();

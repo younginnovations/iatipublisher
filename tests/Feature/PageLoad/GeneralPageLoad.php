@@ -8,7 +8,7 @@ use App\IATI\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class GeneralPageLoadTest extends TestCase
+class GeneralPageLoad extends TestCase
 {
     use RefreshDatabase;
 

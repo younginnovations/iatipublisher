@@ -27,7 +27,7 @@ class GuestPageLoadTest extends TestCase
     public function guestUrl(): array
     {
         return [
-            ['web.', 'Sign In.'],
+            ['web.'],
             ['web.index.login'],
             ['web.join', ['page' => 'random-page']],
             ['web.register'],

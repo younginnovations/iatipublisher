@@ -52,4 +52,13 @@ class ImportBaseTest extends TestCase
 
         return $activityIdentifier->invoke($importCsvService);
     }
+
+    /**
+     * @return void
+     */
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        unset($this->user, $this->organization);
+    }
 }
