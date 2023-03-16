@@ -135,7 +135,7 @@ trait MigrateSettingTrait
                 '0.humanitarian',
                 null
             ) : '1',
-            'budget_not_provided' => '',
+            'budget_not_provided' => Arr::get($aidstreamDefaultValuesArray, '0.budget_not_provided', null),
         ];
     }
 }
