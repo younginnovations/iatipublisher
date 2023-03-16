@@ -11,6 +11,9 @@ use Illuminate\Support\Arr;
  */
 trait MigrateOrganizationTrait
 {
+    public $tempAmount;
+    public $tempNarrative;
+
     /**
      * Returns required data for creating new IATI organization.
      *
@@ -38,10 +41,7 @@ trait MigrateOrganizationTrait
         );
         $newOrganization['address'] = $aidstreamOrganization->address;
         $newOrganization['telephone'] = $aidstreamOrganization->telephone;
-        $newOrganization['reporting_org'] = $this->getColumnValueArray(
-            $aidstreamOrganization,
-            'reporting_org'
-        );
+        $newOrganization['reporting_org'] = $this->getReportingOrgWithCorrectTemplate($aidstreamOrganization->reporting_org, $aidstreamOrganization->secondary_reporter);
 
         $aidstreamOrganizationData = $this->db::connection('aidstream')->table('organization_data')->where(
             'organization_id',
@@ -83,9 +83,10 @@ trait MigrateOrganizationTrait
         $newOrganization['country'] = $aidstreamOrganization->country;
         $newOrganization['logo_url'] = $aidstreamOrganization->logo_url;
         $newOrganization['organization_url'] = $aidstreamOrganization->organization_url;
+
         $newOrganization['status'] = $aidstreamOrganizationData ? ($aidstreamOrganizationData->status === 3 ? 'published' : 'draft') : 'draft';
         $newOrganization['iati_status'] = 'pending';
-        $newOrganization['is_published'] = $aidstreamOrganizationData && ($aidstreamOrganizationData->status === 3);
+        $newOrganization['is_published'] = $aidstreamOrganizationData && $aidstreamOrganizationData->status === 3;
         $newOrganization['registration_agency'] = $aidstreamOrganization->registration_agency;
         $newOrganization['registration_number'] = $aidstreamOrganization->registration_number;
         $newOrganization['element_status'] = null; // Will be updated by observer
@@ -287,5 +288,131 @@ trait MigrateOrganizationTrait
 
             $iatiOrganization->save();
         }
+    }
+
+    /**
+     * Fill reporting org in proper format.
+     *
+     * @param $reportingOrg
+     * @param $secondaryReporter
+     *
+     * @return array
+     */
+    public function getReportingOrgWithCorrectTemplate($reportingOrg, $secondaryReporter): array
+    {
+        $reportingOrg = json_decode($reportingOrg);
+        $reportingOrgTemplate = [];
+
+        $reportingOrgTemplate[0]['ref'] = $reportingOrg[0]->reporting_organization_identifier ?? '';
+        $reportingOrgTemplate[0]['type'] = $reportingOrg[0]->reporting_organization_type ?? '';
+        $reportingOrgTemplate[0]['secondary_reporter'] = $secondaryReporter ?? '';
+        $reportingOrgTemplate[0]['narrative'] = $reportingOrg[0]->narrative ?? [['narrative'=>'', 'language'=>'']];
+
+        return $reportingOrgTemplate;
+    }
+
+    /**
+     * Populates default fields
+     * [langugage and currency].
+     *
+     * @param $data
+     * @param $defaultValues
+     *
+     * @return mixed
+     */
+    public function populateDefaultFields(&$data, $defaultValues): mixed
+    {
+        foreach ($data as $key => &$datum) {
+            if (is_array($datum)) {
+                $this->populateDefaultFields($datum, $defaultValues);
+            }
+
+            $this->setTempNarrative((string) $key, $datum);
+            $this->setTempAmount((string) $key, $datum);
+            $this->setLanguage($data, (string) $key, $datum, $defaultValues);
+            $this->setCurrency($data, (string) $key, $datum, $defaultValues);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Sets $tempNarrative.
+     *
+     * @param string $key
+     * @param $datum
+     *
+     * @return void
+     */
+    public function setTempNarrative(string $key, $datum): void
+    {
+        if ($key === 'narrative') {
+            $this->tempNarrative = $datum;
+        }
+    }
+
+    /**
+     * Sets $tempAmount.
+     *
+     * @param string $key
+     * @param $datum
+     *
+     * @return void
+     */
+    public function setTempAmount(string $key, $datum): void
+    {
+        if ($key === 'amount') {
+            $this->tempAmount = $datum;
+        }
+    }
+
+    /**
+     * Sets default language if language is empty && non-empty narrative['narrative'].
+     *
+     * @param array $data
+     * @param string $key
+     * @param $datum
+     * @param $defaultValues
+     *
+     * @return void
+     */
+    public function setLanguage(array &$data, string $key, $datum, $defaultValues): void
+    {
+        if ($key === 'language' && empty($datum) && !empty($this->tempNarrative)) {
+            $defaultValues = json_decode($defaultValues);
+            $defaultValues = $defaultValues[0];
+            $defaultLanguage = $defaultValues?->default_language ?? '';
+            $data['language'] = $defaultLanguage;
+        }
+    }
+
+    /**
+     * Sets default currency if currency is empty && non-empty amount['amount'].
+     *
+     * @param array $data
+     * @param string $key
+     * @param $datum
+     * @param $defaultValues
+     *
+     * @return void
+     */
+    public function setCurrency(array &$data, string $key, $datum, $defaultValues): void
+    {
+        if ($key === 'currency' && empty($datum) && !empty($this->tempAmount)) {
+            $defaultValues = json_decode($defaultValues);
+            $defaultValues = $defaultValues[0];
+            $defaultCurrency = $defaultValues?->default_currency ?? '';
+            $data['currency'] = $defaultCurrency;
+        }
+    }
+
+    public function getPublishedStatus($aidstreamOrganization): string
+    {
+        $aidstreamOrganizationData = $this->db::connection('aidstream')->table('organization_data')->where(
+            'organization_id',
+            $aidstreamOrganization->id
+        )->where('is_reporting_org', true)->first();
+
+        return $aidstreamOrganizationData ? ($aidstreamOrganizationData->status === 3 ? 'published' : 'draft') : 'draft';
     }
 }
