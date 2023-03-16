@@ -28,6 +28,8 @@ class ActivitySnapshot extends Model
             'activity_id',
             'published_data',
             'filename',
+            'created_at',
+            'updated_at',
         ];
 
     /**

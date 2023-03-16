@@ -31,6 +31,8 @@ class BulkPublishingStatus extends Model
             'activity_title',
             'status',
             'job_batch_uuid',
+            'created_at',
+            'updated_at',
         ];
 
     /**

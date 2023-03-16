@@ -29,11 +29,13 @@ class Result extends Model implements Auditable
      * @var array
      */
     protected $fillable
-        = [
-            'activity_id',
-            'result',
-            'migrated_from_aidstream',
-        ];
+    = [
+        'activity_id',
+        'result',
+        'migrated_from_aidstream',
+        'created_at',
+        'updated_at',
+    ];
 
     /**
      * @var array

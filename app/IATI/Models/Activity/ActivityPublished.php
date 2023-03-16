@@ -31,6 +31,8 @@ class ActivityPublished extends Model implements Auditable
             'filename',
             'published_to_registry',
             'organization_id',
+            'created_at',
+            'updated_at',
         ];
 
     /**

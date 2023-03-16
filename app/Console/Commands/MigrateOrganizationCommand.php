@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
+use App\IATI\Elements\Xml\XmlGenerator;
 use App\IATI\Repositories\User\RoleRepository;
+use App\IATI\Services\Activity\ActivityPublishedService;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ActivitySnapshotService;
 use App\IATI\Services\Activity\IndicatorService;
@@ -13,11 +17,14 @@ use App\IATI\Services\Document\DocumentService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
 use App\IATI\Services\User\UserService;
+use App\IATI\Traits\MigrateActivityPublishedTrait;
 use App\IATI\Traits\MigrateActivityResultsTrait;
 use App\IATI\Traits\MigrateActivityTrait;
 use App\IATI\Traits\MigrateActivityTransactionTrait;
+use App\IATI\Traits\MigrateDocumentFileTrait;
 use App\IATI\Traits\MigrateGeneralTrait;
 use App\IATI\Traits\MigrateIndicatorPeriodTrait;
+use App\IATI\Traits\MigrateOrganizationPublishedTrait;
 use App\IATI\Traits\MigrateOrganizationTrait;
 use App\IATI\Traits\MigrateResultIndicatorTrait;
 use App\IATI\Traits\MigrateSettingTrait;
@@ -41,6 +48,9 @@ class MigrateOrganizationCommand extends Command
     use MigrateActivityResultsTrait;
     use MigrateResultIndicatorTrait;
     use MigrateIndicatorPeriodTrait;
+    use MigrateActivityPublishedTrait;
+    use MigrateOrganizationPublishedTrait;
+    use MigrateDocumentFileTrait;
 
     /**
      * The name and signature of the console command.
@@ -74,7 +84,9 @@ class MigrateOrganizationCommand extends Command
         protected IndicatorService $indicatorService,
         protected PeriodService $periodService,
         protected ActivitySnapshotService $activitySnapshotService,
-        protected DocumentService $documentService
+        protected DocumentService $documentService,
+        protected ActivityPublishedService $activityPublishedService,
+        protected XmlGenerator $xmlGenerator,
     ) {
         parent::__construct();
     }
@@ -89,14 +101,14 @@ class MigrateOrganizationCommand extends Command
     public function handle(): void
     {
         try {
-            $aidstreamOrganizationIdString = $this->askValid(
-                'Please enter the organization ids which you want to migrate separated by comma (Compulsory)',
-                'aidstreamOrganizationIdString',
-                ['required']
-            );
-
-            $aidstreamOrganizationIds = explode(',', $aidstreamOrganizationIdString);
-
+//            $aidstreamOrganizationIdString = $this->askValid(
+//                'Please enter the organization ids which you want to migrate separated by comma (Compulsory)',
+//                'aidstreamOrganizationIdString',
+//                ['required']
+//            );
+//
+//            $aidstreamOrganizationIds = explode(',', $aidstreamOrganizationIdString);
+            $aidstreamOrganizationIds = [1397];
             // Convert all the values to integer.
             foreach ($aidstreamOrganizationIds as $key => $aidstreamOrganizationId) {
                 $aidstreamOrganizationIds[$key] = (int) $aidstreamOrganizationId;
@@ -137,6 +149,7 @@ class MigrateOrganizationCommand extends Command
                     );
 
                     $this->setDefaultValues($iatiOrganization, $aidStreamOrganizationSetting);
+                    $this->syncPublisherIdInSettingAndOrganizationLevel($iatiOrganization, $aidStreamOrganizationSetting);
                     $this->logInfo('Completed setting migration for organization id: ' . $aidstreamOrganizationId);
                 }
 
@@ -162,28 +175,41 @@ class MigrateOrganizationCommand extends Command
                     $this->updateOrganizationUpdatedBy($aidstreamOrganizationId, $iatiOrganization, $mappedUsers);
                 }
 
-                $this->db::connection('aidstream')->table('activity_data')->where(
+                $aidstreamActivities = $this->db::connection('aidstream')->table('activity_data')->where(
                     'organization_id',
                     $aidstreamOrganizationId
-                )->orderBy('id')->chunk(2, function ($aidstreamActivities) use ($aidStreamOrganization, $iatiOrganization) {
-                    if (count($aidstreamActivities)) {
-                        foreach ($aidstreamActivities as $aidstreamActivity) {
-                            $this->logInfo(
-                                'Started activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
-                            );
+                )->get();
 
-                            $iatiActivity = $this->activityService->create($this->getNewActivity($aidstreamActivity, $iatiOrganization));
-                            $this->logInfo(
-                                'Completed basic activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
-                            );
-                            $this->migrateActivityTransactions($aidstreamActivity->id, $iatiActivity->id);
-                            $this->migrateActivityResults($iatiActivity, $aidstreamActivity);
-                            $this->migrateActivitySnapshot($iatiActivity, $aidstreamActivity);
-                        }
+                if (count($aidstreamActivities)) {
+                    $migratedActivitiesLookupTable = [];
+
+                    foreach ($aidstreamActivities as $aidstreamActivity) {
+                        $this->logInfo(
+                            'Started activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
+                        );
+
+                        $iatiActivity = $this->activityService->create($this->getNewActivity($aidstreamActivity, $iatiOrganization));
+                        $migratedActivitiesLookupTable[$aidstreamActivity->id] = $iatiActivity->id;
+
+                        $this->logInfo(
+                            'Completed basic activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
+                        );
+
+                        $this->migrateActivityTransactions($aidstreamActivity->id, $iatiActivity->id);
+                        $this->migrateActivityResults($iatiActivity, $aidstreamActivity);
+                        $this->migrateActivitySnapshot($iatiActivity, $aidstreamActivity);
                     }
-                });
+
+                    $this->migrateActivitiesPublishedFiles($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable);
+                    $this->migrateActivityPublishedTable($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable);
+                }
 
                 $this->migrateDocuments($aidstreamOrganizationId, $iatiOrganization);
+//                $this->migrateDocumentFiles($aidstreamOrganizationId);
+                $this->migrateActivityMergedFile($aidStreamOrganization, $iatiOrganization);
+                $this->migrateOrganizationPublishedFile($aidStreamOrganization, $iatiOrganization);
+                $this->migrateOrganizationPublishedTable($aidStreamOrganization, $iatiOrganization);
+
                 $this->databaseManager->commit();
             }
         } catch (\Exception $exception) {
@@ -382,13 +408,17 @@ class MigrateOrganizationCommand extends Command
      *
      * @param $url
      *
-     * @return string
+     * @return null|string
      */
-    public function replaceDocumentLinkUrl($url): string
+    public function replaceDocumentLinkUrl($url): ?string
     {
-        $replaceText = ['http://aidstream.org', 'http://www.aidstream.org', 'https://aidstream.org', 'https://www.aidstream.org'];
-        $replaceWith = env('AWS_ENDPOINT') . '/' . env('AWS_BUCKET');
+        if ($url) {
+            $replaceText = ['http://aidstream.org', 'http://www.aidstream.org', 'https://aidstream.org', 'https://www.aidstream.org'];
+            $replaceWith = env('AWS_ENDPOINT') . '/' . env('AWS_BUCKET');
 
-        return str_replace($replaceText, $replaceWith, $url);
+            return str_replace($replaceText, $replaceWith, $url);
+        }
+
+        return null;
     }
 }
