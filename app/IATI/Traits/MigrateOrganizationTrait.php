@@ -83,9 +83,10 @@ trait MigrateOrganizationTrait
         $newOrganization['country'] = $aidstreamOrganization->country;
         $newOrganization['logo_url'] = $aidstreamOrganization->logo_url;
         $newOrganization['organization_url'] = $aidstreamOrganization->organization_url;
+
         $newOrganization['status'] = $aidstreamOrganizationData ? ($aidstreamOrganizationData->status === 3 ? 'published' : 'draft') : 'draft';
         $newOrganization['iati_status'] = 'pending';
-        $newOrganization['is_published'] = $aidstreamOrganizationData && ($aidstreamOrganizationData->status === 3);
+        $newOrganization['is_published'] = $aidstreamOrganizationData && $aidstreamOrganizationData->status === 3;
         $newOrganization['registration_agency'] = $aidstreamOrganization->registration_agency;
         $newOrganization['registration_number'] = $aidstreamOrganization->registration_number;
         $newOrganization['element_status'] = null; // Will be updated by observer
@@ -403,5 +404,15 @@ trait MigrateOrganizationTrait
             $defaultCurrency = $defaultValues?->default_currency ?? '';
             $data['currency'] = $defaultCurrency;
         }
+    }
+
+    public function getPublishedStatus($aidstreamOrganization): string
+    {
+        $aidstreamOrganizationData = $this->db::connection('aidstream')->table('organization_data')->where(
+            'organization_id',
+            $aidstreamOrganization->id
+        )->where('is_reporting_org', true)->first();
+
+        return $aidstreamOrganizationData ? ($aidstreamOrganizationData->status === 3 ? 'published' : 'draft') : 'draft';
     }
 }
