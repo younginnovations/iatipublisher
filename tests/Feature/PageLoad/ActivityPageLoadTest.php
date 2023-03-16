@@ -11,34 +11,22 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 /**
- * Class ActivityPageLoad.
+ * Class ActivityPageLoadTest.
  */
-class ActivityPageLoad extends TestCase
+class ActivityPageLoadTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * @var object
-     */
-    protected object $activity;
-
-    /**
-     * @var object
-     */
-    protected object $user;
-
-    /**
+     * A basic feature test example.
+     *
+     * @param $route
      * @return void
+     *
+     * @dataProvider activityUrl
+     * @test
      */
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    /**
-     * @return void
-     */
-    public function signIn(): void
+    public function check_activity_page_load($route): void
     {
         $role = Role::factory()->create();
         $org = Organization::factory()->has(User::factory(['role_id' => $role->id]))->create();
@@ -48,22 +36,7 @@ class ActivityPageLoad extends TestCase
             'updated_by' => $org->user->id,
         ]);
         $this->actingAs($org->user);
-        $this->user = $org->user;
-        $this->activity = $activity;
-    }
-
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     *
-     * @dataProvider activityUrl
-     * @test
-     */
-    public function check_activity_page_load($route): void
-    {
-        $this->signIn();
-        $response = $this->get(route($route, ['id' => $this->activity->id, 'transactionId' => $this->activity->transactions[0]->id]));
+        $response = $this->get(route($route, ['id' => $activity->id, 'transactionId' => $activity->transactions[0]->id]));
         $response->assertStatus(200);
     }
 
@@ -111,14 +84,5 @@ class ActivityPageLoad extends TestCase
             ['admin.activity.transaction.create'],
             ['admin.activity.transaction.edit'],
         ];
-    }
-
-    /**
-     * @return void
-     */
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        unset($this->user, $this->activity);
     }
 }

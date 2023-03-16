@@ -19,7 +19,7 @@ class OrganizationPageLoad extends TestCase
      * @test
      * @dataProvider organization_page_url
      */
-    public function organization_page_load_test($route)
+    public function organization_page_load_test($route): void
     {
         $role = Role::factory()->create();
         $org = Organization::factory()->has(User::factory(['role_id' => $role->id]))->create();

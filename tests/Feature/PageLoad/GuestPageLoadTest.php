@@ -9,6 +9,8 @@ class GuestPageLoadTest extends TestCase
     /**
      * Guest Page Load test.
      *
+     * @param $route
+     * @param null $params
      * @return void
      * @test
      * @dataProvider guestUrl

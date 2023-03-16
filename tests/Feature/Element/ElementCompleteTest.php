@@ -282,11 +282,11 @@ class ElementCompleteTest extends TestCase
     {
         $this->elementCompleteService->element = $element;
 
-        if ($element == 'result') {
+        if ($element === 'result') {
             $this->assertTrue($this->elementCompleteService->isResultElementDataCompleted($actualData));
-        } elseif ($element == 'indicator') {
+        } elseif ($element === 'indicator') {
             $this->assertTrue($this->elementCompleteService->isIndicatorElementCompleted($actualData));
-        } elseif ($element == 'period') {
+        } elseif ($element === 'period') {
             $this->assertTrue($this->elementCompleteService->isPeriodElementCompleted($actualData));
         }
     }
