@@ -16,7 +16,7 @@ trait MigrateActivityResultsTrait
      *
      * @var array|string[]
      */
-    public array $neededKeys = ['title', 'type', 'aggregation_status', 'description', 'document_link', 'reference'];
+    public array $neededKeys = ['id', 'title', 'type', 'aggregation_status', 'description', 'document_link', 'reference'];
 
     /**
      * Any level keys we do not need.
@@ -25,7 +25,12 @@ trait MigrateActivityResultsTrait
      */
     public array $notNeededKeys = ['id', 'updated_at', 'created_at', 'result_id', 'publication_date'];
 
-    public $emptyResultTemplate = [
+    /**
+     * Template of a complete result.
+     *
+     * @var array
+     */
+    public array $emptyResultTemplate = [
         'type'               => null,
         'aggregation_status' => null,
         'title'              => [
@@ -87,6 +92,50 @@ trait MigrateActivityResultsTrait
     ];
 
     /**
+     * Migrates Aidstream activity result to iati activity result.
+     *
+     * @param $iatiActivity
+     * @param $aidstreamActivity
+     *
+     * @return void
+     */
+    public function migrateActivityResults($iatiActivity, $aidstreamActivity): void
+    {
+        $aidStreamActivityResult = $this->getAidStreamActivityResult($aidstreamActivity->id);
+
+        foreach ($aidStreamActivityResult as $result) {
+            $iatiResult = $this->resultService->create(['activity_id'=>$iatiActivity->id, 'result'=>$result]);
+        }
+    }
+
+    /**
+     * Returns activity result for iati.
+     *
+     * @param $id
+     *
+     * @return array
+     */
+    public function getAidStreamActivityResult($id): array
+    {
+        $this->info("Started fetching AidStream Activity Results for activity id: {$id}");
+
+        $baseResults = $this->getBaseResult($id);
+        $resultIds = $baseResults->pluck('id');
+
+        $this->info("Started fetching AidStream Reference and Document Link for activity id: {$id}");
+
+        $resultsReference = $this->getResultReference($resultIds);
+        $resultsDocumentLink = $this->getResultDocumentLink($resultIds);
+
+        $returnArr = $this->resolveResult($baseResults->toArray(), $resultsReference->toArray(), $resultsDocumentLink->toArray());
+
+        $this->info("Started fetching AidStream Reference and Document Link for activity id: {$id}");
+        $this->info("Completed fetching AidStream Activity Results for activity id: {$id}");
+
+        return $returnArr;
+    }
+
+    /**
      * Gets base result from aidstream.
      *
      * @param $activityId
@@ -134,16 +183,20 @@ trait MigrateActivityResultsTrait
     public function resolveResult($baseResults, $resultsReferences, $resultsDocumentLinks): mixed
     {
         $merged = [];
+        $resultIds = [];
 
         foreach ($baseResults as $index => $baseResult) {
+            $this->info("Started resolving result for result_id: {$baseResult->id}");
+
             foreach ($baseResult as $key=>$data) {
                 if (in_array($key, $this->neededKeys)) {
                     $merged[$index][$key] = $data;
                 }
             }
 
-            $merged[$index]['reference'] = $resultsReferences;
-            $merged[$index]['document_link'] = $resultsDocumentLinks;
+            $resultIds[$index] = $baseResult->id;
+            $merged[$index]['reference'] = $this->resolveResultReferences($baseResult, $resultsReferences);
+            $merged[$index]['document_link'] = $this->resolveDocumentLinks($baseResult, $resultsDocumentLinks);
             $merged[$index] = $this->resolveJsonString($merged[$index]);
 
             $merged[$index]['document_link'][0]['document_date'] = [];
@@ -152,34 +205,62 @@ trait MigrateActivityResultsTrait
             if (isset($merged[$index]['document_link'][0]['date'])) {
                 unset($merged[$index]['document_link'][0]['date']);
             }
+
+            $this->info("Completed resolving result for result_id: {$baseResult->id}");
         }
+
         $merged = $this->unsetNotNeededKeys($merged, $this->notNeededKeys);
+
+        foreach ($merged as $index => $value) {
+            +$merged[$index]['id'] = $resultIds[$index];
+        }
 
         return $this->castToString($merged);
     }
 
     /**
-     * Unsets keys that do not fit iati keys
-     * Unsets keys we do not need.
+     * Get References for only those result_id that match.
      *
-     * @param $arr
-     * @param $notNeededKeys
+     * @param $baseResult
+     * @param $resultReferences
      *
-     * @return mixed
+     * @return array
      */
-    public function unsetNotNeededKeys($arr, $notNeededKeys): mixed
+    public function resolveResultReferences($baseResult, $resultReferences): array
     {
-        foreach ($arr as $key => &$value) {
-            if (is_array($value)) {
-                $value = $this->unsetNotNeededKeys($value, $notNeededKeys);
-            } else {
-                if (in_array($key, $notNeededKeys)) {
-                    unset($arr[$key]);
-                }
+        $referencesThatMatchResultId = [];
+
+        foreach ($resultReferences as $reference) {
+            if ($reference->result_id === $baseResult->id) {
+                $this->info("Reference of id: {$reference->id} exists in result of id {$baseResult->id}.");
+                $referencesThatMatchResultId[] = $reference;
             }
         }
 
-        return $arr;
+        return $referencesThatMatchResultId;
+    }
+
+    /**
+     * Get Document link for only those result_id that match.
+     *
+     * @param $baseResult
+     * @param $resultDocumentLinks
+     *
+     * @return array
+     */
+    public function resolveDocumentLinks($baseResult, $resultDocumentLinks): array
+    {
+        $documentLinksThatMatchResultId = [];
+
+        foreach ($resultDocumentLinks as $documentLink) {
+            if ($documentLink->result_id === $baseResult->id) {
+                $this->info("Document link of id: {$documentLink->id} exists in result of id {$baseResult->id}.");
+                logger()->info("Document link of id: {$documentLink->id} exists in result of id {$baseResult->id}.");
+                $documentLinksThatMatchResultId[] = $documentLink;
+            }
+        }
+
+        return $documentLinksThatMatchResultId;
     }
 
     /**
@@ -215,25 +296,33 @@ trait MigrateActivityResultsTrait
     }
 
     /**
-     * Returns activity result for iati.
+     * Unsets keys that do not fit iati keys
+     * Unsets keys we do not need.
      *
-     * @param $id
+     * @param $arr
+     * @param $notNeededKeys
      *
-     * @return array
+     * @return mixed
      */
-    public function getAidStreamActivityResult($id): array
+    public function unsetNotNeededKeys($arr, $notNeededKeys): mixed
     {
-        $baseResults = $this->getBaseResult($id);
-        $resultIds = $baseResults->pluck('id');
-        $resultsReference = $this->getResultReference($resultIds);
-        $resultsDocumentLink = $this->getResultDocumentLink($resultIds);
+        foreach ($arr as $key => &$value) {
+            if (is_array($value)) {
+                $value = $this->unsetNotNeededKeys($value, $notNeededKeys);
+            } else {
+                if (in_array($key, $notNeededKeys)) {
+                    unset($arr[$key]);
+                }
+            }
+        }
 
-        return $this->resolveResult($baseResults->toArray(), $resultsReference->toArray(), $resultsDocumentLink->toArray());
+        return $arr;
     }
 
     /**
      * Recursively cast int to string,
      * Bool to "1" or "0".
+     *
      * @param $array
      *
      * @return mixed
