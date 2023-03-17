@@ -8,7 +8,7 @@ use App\IATI\Models\User\Role;
 use Illuminate\Support\Arr;
 
 /**
- * Class MigrateOrganizationTrait.
+ * Class MigrateActivityTrait.
  */
 trait MigrateActivityTrait
 {
@@ -394,53 +394,6 @@ trait MigrateActivityTrait
     protected array $legacyDataReplaceArray
         = [
             'name' => 'legacy_name',
-        ];
-
-    /**
-     * Contains key value pair to be replaced for particular vocabulary.
-     *
-     * @var array
-     */
-    protected array $tagReplaceArray
-        = [
-            '1' => [
-                'tag_code' => 'tag_text',
-            ],
-        ];
-
-    /**
-     * Contains key value pair to be removed for particular vocabulary.
-     *
-     * @var array
-     */
-    protected array $tagRemoveArray
-        = [
-            '1'  => [
-                'tag_text',
-                'vocabulary_uri',
-                'custom_vocabulary_uri',
-                'tag_code',
-                'goals_tag_code',
-                'targets_tag_code',
-                'custom_code',
-            ],
-            '2'  => [
-                'vocabulary_uri',
-                'custom_vocabulary_uri',
-                'tag_code',
-                'targets_tag_code',
-                'tag_text',
-                'custom_code',
-            ],
-            '3'  => [
-                'vocabulary_uri',
-                'custom_vocabulary_uri',
-                'tag_code',
-                'goals_tag_code',
-                'tag_text',
-                'custom_code',
-            ],
-            '99' => ['custom_vocabulary_uri', 'tag_code', 'goals_tag_code', 'targets_tag_code', 'custom_code'],
         ];
 
     /**

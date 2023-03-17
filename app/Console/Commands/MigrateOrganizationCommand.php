@@ -4,10 +4,12 @@ namespace App\Console\Commands;
 
 use App\IATI\Repositories\User\RoleRepository;
 use App\IATI\Services\Activity\ActivityService;
+use App\IATI\Services\Activity\TransactionService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
 use App\IATI\Services\User\UserService;
 use App\IATI\Traits\MigrateActivityTrait;
+use App\IATI\Traits\MigrateActivityTransactionTrait;
 use App\IATI\Traits\MigrateGeneralTrait;
 use App\IATI\Traits\MigrateOrganizationTrait;
 use App\IATI\Traits\MigrateSettingTrait;
@@ -27,6 +29,7 @@ class MigrateOrganizationCommand extends Command
     use MigrateGeneralTrait;
     use MigrateSettingTrait;
     use MigrateUserTrait;
+    use MigrateActivityTransactionTrait;
 
     /**
      * The name and signature of the console command.
@@ -54,7 +57,8 @@ class MigrateOrganizationCommand extends Command
         protected SettingService $settingService,
         protected RoleRepository $roleRepository,
         protected UserService $userService,
-        protected ActivityService $activityService
+        protected ActivityService $activityService,
+        protected TransactionService $transactionService
     ) {
         parent::__construct();
     }
@@ -147,8 +151,9 @@ class MigrateOrganizationCommand extends Command
                         );
                         $iatiActivity = $this->activityService->create($this->getNewActivity($aidstreamActivity, $iatiOrganization));
                         $this->info(
-                            'Completed activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
+                            'Completed basic activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
                         );
+                        $this->migrateActivityTransactions($aidstreamActivity->id, $iatiActivity->id);
                     }
                 }
 
