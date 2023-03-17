@@ -17,7 +17,7 @@ trait MigrateActivityResultsTrait
      *
      * @var array|string[]
      */
-    public array $neededKeys = ['title', 'type', 'aggregation_status', 'description', 'document_link', 'reference'];
+    public array $neededKeys = ['id', 'title', 'type', 'aggregation_status', 'description', 'document_link', 'reference'];
 
     /**
      * Any level keys we do not need.
