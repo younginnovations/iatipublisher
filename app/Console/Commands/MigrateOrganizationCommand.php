@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\IATI\Repositories\User\RoleRepository;
 use App\IATI\Services\Activity\ActivityService;
+use App\IATI\Services\Activity\IndicatorService;
 use App\IATI\Services\Activity\ResultService;
 use App\IATI\Services\Activity\TransactionService;
 use App\IATI\Services\Organization\OrganizationService;
@@ -14,6 +15,7 @@ use App\IATI\Traits\MigrateActivityTrait;
 use App\IATI\Traits\MigrateActivityTransactionTrait;
 use App\IATI\Traits\MigrateGeneralTrait;
 use App\IATI\Traits\MigrateOrganizationTrait;
+use App\IATI\Traits\MigrateResultIndicatorTrait;
 use App\IATI\Traits\MigrateSettingTrait;
 use App\IATI\Traits\MigrateUserTrait;
 use Illuminate\Console\Command;
@@ -33,6 +35,7 @@ class MigrateOrganizationCommand extends Command
     use MigrateUserTrait;
     use MigrateActivityTransactionTrait;
     use MigrateActivityResultsTrait;
+    use MigrateResultIndicatorTrait;
 
     /**
      * The name and signature of the console command.
@@ -63,6 +66,7 @@ class MigrateOrganizationCommand extends Command
         protected ActivityService $activityService,
         protected TransactionService $transactionService,
         protected ResultService $resultService,
+        protected IndicatorService $indicatorService
     ) {
         parent::__construct();
     }
@@ -111,6 +115,7 @@ class MigrateOrganizationCommand extends Command
                     'organization_id',
                     $aidstreamOrganizationId
                 )->first();
+
                 if ($aidStreamOrganizationSetting) {
                     $this->info('Started settings migration for organization id: ' . $aidstreamOrganizationId);
                     $this->settingService->create(
@@ -158,17 +163,20 @@ class MigrateOrganizationCommand extends Command
                         $this->info(
                             'Started activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
                         );
-                        $iatiActivity = $this->activityService->create($this->getNewActivity($aidstreamActivity, $iatiOrganization));
-                        $aidStreamActivityResult = $this->getAidStreamActivityResult($aidstreamActivity->id);
-
-                        foreach ($aidStreamActivityResult as $index => $result) {
-                            $result = $this->resultService->create(['activity_id'=>$iatiActivity->id, 'result'=>$result]);
-                        }
-
+                        $iatiActivity = $this->activityService->create(
+                            $this->getNewActivity($aidstreamActivity, $iatiOrganization)
+                        );
                         $this->info(
                             'Completed basic activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
                         );
                         $this->migrateActivityTransactions($aidstreamActivity->id, $iatiActivity->id);
+
+                        $aidStreamActivityResult = $this->getAidStreamActivityResult($aidstreamActivity->id);
+
+                        foreach ($aidStreamActivityResult as $index => $result) {
+                            $iatiResult = $this->resultService->create(['activity_id'=>$iatiActivity->id, 'result'=>$result]);
+//                            $this->migrateResultIndicator($result->id, $iatiResult->id);
+                        }
                     }
                 }
 
