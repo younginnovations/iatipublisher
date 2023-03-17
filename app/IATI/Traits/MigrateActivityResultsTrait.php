@@ -234,6 +234,7 @@ trait MigrateActivityResultsTrait
     /**
      * Recursively cast int to string,
      * Bool to "1" or "0".
+     *
      * @param $array
      *
      * @return mixed

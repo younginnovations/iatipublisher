@@ -4,8 +4,8 @@ namespace App\Console\Commands;
 
 use App\IATI\Repositories\User\RoleRepository;
 use App\IATI\Services\Activity\ActivityService;
-use App\IATI\Services\Activity\TransactionService;
 use App\IATI\Services\Activity\ResultService;
+use App\IATI\Services\Activity\TransactionService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
 use App\IATI\Services\User\UserService;
@@ -120,8 +120,9 @@ class MigrateOrganizationCommand extends Command
                     $defaultFieldValues = $aidStreamOrganizationSetting->default_field_values;
                     $data = $iatiOrganization->toArray();
                     $updatedData = $this->populateDefaultFields($data, $defaultFieldValues);
-                    $updatedData['status'] = $this->getPublishedStatus($aidStreamOrganization);
-                    $iatiOrganization->updateQuietly($updatedData);
+//                    $updatedData['status'] = $this->getPublishedStatus($aidStreamOrganization);
+//                    $iatiOrganization->updateQuietly($updatedData);
+                    $iatiOrganization->update($updatedData);
                     $this->info('Completed setting migration for organization id: ' . $aidstreamOrganizationId);
                 }
 
@@ -161,7 +162,7 @@ class MigrateOrganizationCommand extends Command
                         $aidStreamActivityResult = $this->getAidStreamActivityResult($aidstreamActivity->id);
 
                         foreach ($aidStreamActivityResult as $index => $result) {
-                            $result = $this->resultService->create(['activity_id'=>2, 'result'=>$result]);
+                            $result = $this->resultService->create(['activity_id'=>$iatiActivity->id, 'result'=>$result]);
                         }
 
                         $this->info(
