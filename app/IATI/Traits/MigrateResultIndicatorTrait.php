@@ -270,7 +270,7 @@ trait MigrateResultIndicatorTrait
 
         foreach ($aidstreamDocumentLinks as $documentLink) {
             $newDocumentLinks[] = [
-                'url'           => $documentLink->url,
+                'url'           => !empty($documentLink->url) ? $this->replaceDocumentLinkUrl($documentLink->url) : null,
                 'format'        => $documentLink->format,
                 'title'         => !is_null($documentLink->title) ? json_decode(
                     $documentLink->title,

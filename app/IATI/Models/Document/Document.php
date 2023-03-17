@@ -26,6 +26,7 @@ class Document extends Model
         'extension',
         'document_link',
         'size',
+        'organization_id',
     ];
 
     /**

@@ -1036,8 +1036,9 @@ trait MigrateActivityTrait
                 512,
                 JSON_THROW_ON_ERROR
             ) : [];
+
             $newDocumentLinks[] = [
-                'url'           => Arr::get($document, 'url', null),
+                'url'           => !empty(Arr::get($document, 'url', null)) ? $this->replaceDocumentLinkUrl(Arr::get($document, 'url', null)) : null,
                 'format'        => Arr::get($document, 'format', null),
                 'title'         => Arr::get($document, 'title', $this->emptyDocumentLinkTemplate['title']),
                 'description'   => Arr::get($document, 'description', $this->emptyDocumentLinkTemplate['description']),

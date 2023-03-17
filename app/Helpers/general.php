@@ -1264,3 +1264,23 @@ if (!function_exists('compareStringIgnoringWhitespace')) {
         return preg_replace('/\s+/', '', $string1) === preg_replace('/\s+/', '', $string2);
     }
 }
+
+if (!function_exists('getFileNameExtension')) {
+    /**
+     * Get extension from filename.
+     *
+     * @param $fileName
+     *
+     * @return string|null
+     */
+    function getFileNameExtension($fileName): ?string
+    {
+        if (empty($fileName)) {
+            return null;
+        }
+
+        $explodedFileName = explode('.', $fileName);
+
+        return $explodedFileName[1] ?? null;
+    }
+}
