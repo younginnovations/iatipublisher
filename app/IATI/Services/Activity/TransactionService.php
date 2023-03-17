@@ -520,4 +520,16 @@ class TransactionService
 
         return $hasDefined;
     }
+
+    /**
+     * Inserts multiple transactions.
+     *
+     * @param $transactions
+     *
+     * @return bool
+     */
+    public function insert($transactions): bool
+    {
+        return $this->transactionRepository->insert($transactions);
+    }
 }
