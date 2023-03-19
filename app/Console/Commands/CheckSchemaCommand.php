@@ -76,6 +76,34 @@ class CheckSchemaCommand extends Command
     ];
 
     /**
+     * @var array|string[]
+     */
+    protected array $activityDataSchema = [
+        'identifier',
+        'other_identifier',
+        'title',
+        'description',
+        'activity_date',
+        'contact_info',
+        'participating_organization',
+        'recipient_country',
+        'recipient_region',
+        'location',
+        'sector',
+        'country_budget_items',
+        'humanitarian_scope',
+        'policy_marker',
+        'default_aid_type',
+        'budget',
+        'planned_disbursement',
+        'document_link',
+        'related_activity',
+        'conditions',
+        'default_field_values',
+        'guidelines',
+    ];
+
+    /**
      * @return void
      * @throws \JsonException
      */
@@ -83,6 +111,7 @@ class CheckSchemaCommand extends Command
     {
         $this->checkOrganizationDataSchema();
         $this->checkSettingDataSchema();
+        $this->checkActivityDataSchema();
     }
 
     /**
@@ -136,21 +165,60 @@ class CheckSchemaCommand extends Command
     }
 
     /**
+     * @return void
+     * @throws \JsonException
+     */
+    public function checkActivityDataSchema(): void
+    {
+        $aidStreamActivityDataTemplate = readJsonFile('DataMigration/Templates/AidStreamActivitySchema.json');
+        $aidStreamActivityData = $this->db::connection('aidstream')
+            ->table('activity_data')
+            ->whereIn('organization_id', $this->organizationIds)
+            ->get();
+
+        foreach ($aidStreamActivityData as $activityData) {
+            foreach ($activityData as $key => $data) {
+                if (empty($data) || $data === 'null' || $data === '""' || !in_array($key, $this->activityDataSchema, true)) {
+                    continue;
+                }
+
+                $elementDataTemplate = Arr::get($aidStreamActivityDataTemplate, $key);
+                $itemData = ['tableName' => 'activity_data', 'columnName' => $key, 'rows' => $activityData];
+                $this->checkObjectKey($key, $data, $elementDataTemplate, $itemData);
+            }
+        }
+    }
+
+    /**
      * @throws \JsonException
      */
     public function checkObjectKey($key, $aidStreamData, $template, array $itemData): void
     {
-        $templateData = $template[0] ?? $template;
-        $keys = array_keys($templateData);
-        $aidData = is_array($aidStreamData) ? $aidStreamData : json_decode($aidStreamData, true, 512, JSON_THROW_ON_ERROR);
-        $checkIfNestedArray = count(array_filter($aidData, 'is_array'));
         $row = $itemData['rows'];
+        $templateData = $template[0] ?? $template;
         $tableName = $itemData['tableName'];
         $columnName = $itemData['columnName'];
 
+        if ($templateData === '""' || empty($templateData)) {
+            \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Invalid Data");
+
+            return;
+        }
+
+        $keys = array_keys($templateData);
+        $aidData = is_array($aidStreamData) ? $aidStreamData : json_decode($aidStreamData, true, 512, JSON_THROW_ON_ERROR);
+
+        if (!is_array($aidData)) {
+            \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Invalid Data");
+
+            return;
+        }
+
+        $checkIfNestedArray = count(array_filter($aidData, 'is_array')) === count($aidData);
         /*
          * To check if keys are matched with schema we need nested array but sometimes data are simply an array . So we convert array into nested array
          */
+
         if (!$checkIfNestedArray) {
             $aidData = [
                 $aidData,
