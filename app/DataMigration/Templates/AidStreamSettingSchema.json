@@ -1,0 +1,68 @@
+{
+  "publishing_type": "",
+  "registry_info": [
+    {
+      "publisher_id": "",
+      "api_id": "",
+      "publish_files": "",
+      "publisher_id_status": "",
+      "api_id_status": ""
+    }
+  ],
+  "default_field_values": [
+    {
+      "default_currency": "",
+      "default_language": "",
+      "default_hierarchy": "",
+      "linked_data_uri": "",
+      "default_collaboration_type": "",
+      "default_flow_type": "",
+      "default_finance_type": "",
+      "default_aid_type": "",
+      "default_tied_status": "",
+      "humanitarian": ""
+    }
+  ],
+  "default_field_groups": [
+    {
+      "Basic Activity Information": {
+          "title": "",
+          "description": "",
+          "activity_status": "",
+          "activity_date": "",
+          "contact_info": ""
+      },
+      "Participating Organizations": {
+        "participating_organization": ""
+      },
+      "Geopolitical Information": {
+        "recipient_country": ""
+      },
+      "Classifications": {
+        "sector": ""
+      },
+      "Financial": {
+        "budget": "",
+        "transaction": ""
+      }
+    }
+  ],
+  "version": "",
+  "post_on_twitter": "",
+  "simplify_fields": [
+    {
+      "narrative": [
+        {
+          "narrative": ""
+        }
+      ],
+      "sector": [
+        {
+          "default_vocab": "",
+          "sector_vocabulary": "",
+          "sector_in": ""
+        }
+      ]
+    }
+  ]
+}
