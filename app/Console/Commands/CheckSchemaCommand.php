@@ -66,12 +66,23 @@ class CheckSchemaCommand extends Command
     ];
 
     /**
+     * @var array|string[]
+     */
+    protected array $settingDataSchema = [
+        'registry_info',
+        'default_field_values',
+        'default_field_groups',
+        'simplify_fields',
+    ];
+
+    /**
      * @return void
      * @throws \JsonException
      */
     public function checkSchema(): void
     {
         $this->checkOrganizationDataSchema();
+        $this->checkSettingDataSchema();
     }
 
     /**
@@ -93,7 +104,33 @@ class CheckSchemaCommand extends Command
                 }
 
                 $elementDataTemplate = Arr::get($aidStreamOrganizationDataTemplate, $key);
-                $this->checkObjectKey($key, $data, $elementDataTemplate, $orgData);
+                $itemData = ['tableName' => 'organization_data', 'columnName' => $key, 'rows' => $orgData];
+                $this->checkObjectKey($key, $data, $elementDataTemplate, $itemData);
+            }
+        }
+    }
+
+    /**
+     * @return void
+     * @throws \JsonException
+     */
+    public function checkSettingDataSchema(): void
+    {
+        $aidStreamSettingDataTemplate = readJsonFile('DataMigration/Templates/AidStreamSettingSchema.json');
+        $aidStreamSettingData = $this->db::connection('aidstream')
+                                           ->table('settings')
+                                           ->whereIn('organization_id', $this->organizationIds)
+                                           ->get();
+
+        foreach ($aidStreamSettingData as $settingData) {
+            foreach ($settingData as $key => $data) {
+                if (empty($data) || $data === 'null' || !in_array($key, $this->settingDataSchema, true)) {
+                    continue;
+                }
+
+                $elementDataTemplate = Arr::get($aidStreamSettingDataTemplate, $key);
+                $itemData = ['tableName' => 'settings', 'columnName' => $key, 'rows' => $settingData];
+                $this->checkObjectKey($key, $data, $elementDataTemplate, $itemData);
             }
         }
     }
@@ -101,11 +138,24 @@ class CheckSchemaCommand extends Command
     /**
      * @throws \JsonException
      */
-    public function checkObjectKey($key, $aidStreamData, $template, $org): void
+    public function checkObjectKey($key, $aidStreamData, $template, array $itemData): void
     {
         $templateData = $template[0] ?? $template;
         $keys = array_keys($templateData);
         $aidData = is_array($aidStreamData) ? $aidStreamData : json_decode($aidStreamData, true, 512, JSON_THROW_ON_ERROR);
+        $checkIfNestedArray = count(array_filter($aidData, 'is_array'));
+        $row = $itemData['rows'];
+        $tableName = $itemData['tableName'];
+        $columnName = $itemData['columnName'];
+
+        /*
+         * To check if keys are matched with schema we need nested array but sometimes data are simply an array . So we convert array into nested array
+         */
+        if (!$checkIfNestedArray) {
+            $aidData = [
+                $aidData,
+            ];
+        }
 
         foreach ($aidData as $aidDatum) {
             $aidDataKeys = array_keys($aidDatum);
@@ -113,12 +163,17 @@ class CheckSchemaCommand extends Command
 
             if (count($is_different)) {
                 $differentKeys = implode(' | ', $is_different);
-                \Log::info("organizationId $org->organization_id and row number $org->id in this column $key Missing keys are ( $differentKeys )");
+                \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Missing keys are $key > ( $differentKeys )\n");
             }
 
-            foreach ($aidDatum as $nestedKey=>$nestedData) {
+            foreach ($aidDatum as $nestedKey => $nestedData) {
                 if (is_array($nestedData)) {
-                    $this->checkObjectKey($nestedKey, $nestedData, Arr::get($templateData, $nestedKey, []), $org);
+                    $itemData = [
+                        'tableName'  => $tableName,
+                        'columnName' => $columnName,
+                        'rows' => $row,
+                    ];
+                    $this->checkObjectKey($nestedKey, $nestedData, Arr::get($templateData, $nestedKey, []), $itemData);
                 }
             }
         }
