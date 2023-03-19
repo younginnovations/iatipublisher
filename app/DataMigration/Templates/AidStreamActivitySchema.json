@@ -123,15 +123,19 @@
   "activity_scope": "",
   "participating_organization": [
     {
-      "organization_role": "",
       "identifier": "",
+      "activity_id": "",
+      "organization_role": "",
       "organization_type": "",
+      "country": "",
+      "org_data_id": "",
       "narrative": [
         {
           "narrative": "",
           "language": ""
         }
-      ]
+      ],
+      "is_publisher": ""
     }
   ],
   "recipient_country": [
@@ -312,7 +316,8 @@
     {
       "default_aidtype_vocabulary": "",
       "default_aid_type": "",
-      "aidtype_earmarking_category": "",
+      "earmarking_category": "",
+      "cash_and_voucher_modalities": "",
       "default_aid_type_text": ""
     }
   ],
@@ -463,11 +468,11 @@
       "vocabulary_uri": "",
       "tag_code": "",
       "tag_text": "",
+      "goals_tag_code": "",
+      "targets_tag_code": "",
+      "custom_code": "",
+      "custom_vocabulary_uri": "",
       "narrative": [
-        {
-          "narrative": "",
-          "language": ""
-        },
         {
           "narrative": "",
           "language": ""
