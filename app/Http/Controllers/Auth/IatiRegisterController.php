@@ -292,7 +292,7 @@ class IatiRegisterController extends Controller
         try {
             $types = [
                 'country' => getCodeListArray('Country', 'OrganizationArray'),
-                'registrationAgency' => getCodeListArray('OrganizationRegistrationAgency', 'OrganizationArray'),
+                'registrationAgency' => getCodeList('OrganizationRegistrationAgency', 'Organization'),
                 'publisherType' => getCodeList('OrganizationType', 'Organization'),
                 'dataLicense' => getCodeList('DataLicense', 'Activity', false),
                 'source' => getCodeList('Source', 'Activity', false),
