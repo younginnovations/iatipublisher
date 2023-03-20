@@ -596,9 +596,10 @@ export default defineComponent({
 
       if (key in activityProps) {
         if (
-          (typeof activityProps[key] === 'object' ||
-            typeof activityProps[key] === 'number') &&
-          activityProps[key]
+          typeof activityProps[key] === 'number' ||
+          (typeof activityProps[key] === 'object' &&
+            activityProps[key] &&
+            Object.keys(activityProps[key]).length)
         ) {
           if (
             Object.keys(activityProps[key]).length > 0 ||

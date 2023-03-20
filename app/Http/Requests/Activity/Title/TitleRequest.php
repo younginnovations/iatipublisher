@@ -25,7 +25,7 @@ class TitleRequest extends ActivityBaseRequest
             $titles = request()->get('narrative');
         }
 
-        $totalRules = [$this->getErrorsForTitle($name), $this->getWarningForTitle($name, $titles)];
+        $totalRules = [$this->getErrorsForTitle($name, $titles), $this->getWarningForTitle($name, $titles)];
 
         return mergeRules($totalRules);
     }
@@ -40,9 +40,13 @@ class TitleRequest extends ActivityBaseRequest
     public function getErrorsForTitle($name, $titles = []): array
     {
         $firstTitleKey = array_key_first($titles) ?? '0';
-        $rules[sprintf('%s.%s.narrative', $name, $firstTitleKey)] = 'required';
 
-        return [sprintf('%s.0.narrative', $name) => 'required'];
+        // dd($titles, Arr::get($titles, sprintf('%s.narrative', $firstTitleKey),null),empty(Arr::get($titles, sprintf('%s.narrative', $firstTitleKey),null)));
+        if (empty(Arr::get($titles, sprintf('%s.narrative', $firstTitleKey), null))) {
+            return [sprintf('%s.%s.narrative', $name, $firstTitleKey) => 'required'];
+        }
+
+        return [];
     }
 
     /**
