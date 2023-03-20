@@ -98,13 +98,18 @@ trait MigrateActivityResultsTrait
      * @param $aidstreamActivity
      *
      * @return void
+     *
+     * @throws \JsonException
      */
     public function migrateActivityResults($iatiActivity, $aidstreamActivity): void
     {
         $aidStreamActivityResult = $this->getAidStreamActivityResult($aidstreamActivity->id);
 
         foreach ($aidStreamActivityResult as $result) {
+            $this->logInfo("Started migrating AidStream Activity Result for activity id: {$aidstreamActivity->id} and result id: {$result['id']}");
             $iatiResult = $this->resultService->create(['activity_id'=>$iatiActivity->id, 'result'=>$result]);
+            $this->logInfo("Completed migrating AidStream Activity Result for activity id: {$aidstreamActivity->id} and result id: {$result['id']}");
+            $this->migrateResultIndicator($result['id'], $iatiResult->id);
         }
     }
 
@@ -117,20 +122,19 @@ trait MigrateActivityResultsTrait
      */
     public function getAidStreamActivityResult($id): array
     {
-        $this->info("Started fetching AidStream Activity Results for activity id: {$id}");
+        $this->logInfo("Started fetching AidStream Activity Results for activity id: {$id}");
 
         $baseResults = $this->getBaseResult($id);
         $resultIds = $baseResults->pluck('id');
 
-        $this->info("Started fetching AidStream Reference and Document Link for activity id: {$id}");
+        $this->logInfo("Started fetching AidStream Reference and Document Link for activity id: {$id}");
 
         $resultsReference = $this->getResultReference($resultIds);
         $resultsDocumentLink = $this->getResultDocumentLink($resultIds);
 
         $returnArr = $this->resolveResult($baseResults->toArray(), $resultsReference->toArray(), $resultsDocumentLink->toArray());
 
-        $this->info("Started fetching AidStream Reference and Document Link for activity id: {$id}");
-        $this->info("Completed fetching AidStream Activity Results for activity id: {$id}");
+        $this->logInfo("Completed fetching AidStream Activity Results for activity id: {$id}");
 
         return $returnArr;
     }
@@ -186,7 +190,7 @@ trait MigrateActivityResultsTrait
         $resultIds = [];
 
         foreach ($baseResults as $index => $baseResult) {
-            $this->info("Started resolving result for result_id: {$baseResult->id}");
+            $this->logInfo("Started resolving result for result_id: {$baseResult->id}");
 
             foreach ($baseResult as $key=>$data) {
                 if (in_array($key, $this->neededKeys)) {
@@ -206,13 +210,13 @@ trait MigrateActivityResultsTrait
                 unset($merged[$index]['document_link'][0]['date']);
             }
 
-            $this->info("Completed resolving result for result_id: {$baseResult->id}");
+            $this->logInfo("Completed resolving result for result_id: {$baseResult->id}");
         }
 
         $merged = $this->unsetNotNeededKeys($merged, $this->notNeededKeys);
 
         foreach ($merged as $index => $value) {
-            +$merged[$index]['id'] = $resultIds[$index];
+            $merged[$index]['id'] = $resultIds[$index];
         }
 
         return $this->castToString($merged);
@@ -232,7 +236,7 @@ trait MigrateActivityResultsTrait
 
         foreach ($resultReferences as $reference) {
             if ($reference->result_id === $baseResult->id) {
-                $this->info("Reference of id: {$reference->id} exists in result of id {$baseResult->id}.");
+                $this->logInfo("Reference of id: {$reference->id} exists in result of id {$baseResult->id}.");
                 $referencesThatMatchResultId[] = $reference;
             }
         }
@@ -254,8 +258,7 @@ trait MigrateActivityResultsTrait
 
         foreach ($resultDocumentLinks as $documentLink) {
             if ($documentLink->result_id === $baseResult->id) {
-                $this->info("Document link of id: {$documentLink->id} exists in result of id {$baseResult->id}.");
-                logger()->info("Document link of id: {$documentLink->id} exists in result of id {$baseResult->id}.");
+                $this->logInfo("Document link of id: {$documentLink->id} exists in result of id {$baseResult->id}.");
                 $documentLinksThatMatchResultId[] = $documentLink;
             }
         }
