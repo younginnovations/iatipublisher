@@ -122,12 +122,7 @@ class MigrateOrganizationCommand extends Command
                         $this->getNewSetting($aidStreamOrganizationSetting, $iatiOrganization)
                     );
 
-                    $defaultFieldValues = $aidStreamOrganizationSetting->default_field_values;
-                    $data = $iatiOrganization->toArray();
-                    $updatedData = $this->populateDefaultFields($data, $defaultFieldValues);
-//                    $updatedData['status'] = $this->getPublishedStatus($aidStreamOrganization);
-//                    $iatiOrganization->updateQuietly($updatedData);
-                    $iatiOrganization->update($updatedData);
+                    $this->setDefaultValues($iatiOrganization, $aidStreamOrganizationSetting);
                     $this->info('Completed setting migration for organization id: ' . $aidstreamOrganizationId);
                 }
 
@@ -163,20 +158,14 @@ class MigrateOrganizationCommand extends Command
                         $this->info(
                             'Started activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
                         );
-                        $iatiActivity = $this->activityService->create(
-                            $this->getNewActivity($aidstreamActivity, $iatiOrganization)
-                        );
+
+                        $iatiActivity = $this->activityService->create($this->getNewActivity($aidstreamActivity, $iatiOrganization));
+                        $this->migrateActivityResults($iatiActivity, $aidstreamActivity);
+
                         $this->info(
                             'Completed basic activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
                         );
                         $this->migrateActivityTransactions($aidstreamActivity->id, $iatiActivity->id);
-
-                        $aidStreamActivityResult = $this->getAidStreamActivityResult($aidstreamActivity->id);
-
-                        foreach ($aidStreamActivityResult as $index => $result) {
-                            $iatiResult = $this->resultService->create(['activity_id'=>$iatiActivity->id, 'result'=>$result]);
-//                            $this->migrateResultIndicator($result->id, $iatiResult->id);
-                        }
                     }
                 }
 
@@ -232,5 +221,21 @@ class MigrateOrganizationCommand extends Command
         return $validator->fails()
             ? $validator->errors()->first($fieldName)
             : null;
+    }
+
+    /**
+     * Set default values where empty.
+     *
+     * @param $iatiOrganization
+     * @param $aidStreamOrganizationSetting
+     *
+     * @return void
+     */
+    private function setDefaultValues($iatiOrganization, $aidStreamOrganizationSetting): void
+    {
+        $defaultFieldValues = $aidStreamOrganizationSetting->default_field_values;
+        $data = $iatiOrganization->toArray();
+        $updatedIatiData = $this->populateDefaultFields($data, $defaultFieldValues);
+        $iatiOrganization->update($updatedIatiData);
     }
 }
