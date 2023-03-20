@@ -167,7 +167,7 @@ trait MigrateResultIndicatorTrait
      *
      * @throws \JsonException
      */
-    public function migrateResultIndicator($aidstreamResultId, $iatiResultId)
+    public function migrateResultIndicator($aidstreamResultId, $iatiResultId): void
     {
         $aidstreamIndicators = $this->db::connection('aidstream')->table('activity_result_indicators_new')->where(
             'result_id',
@@ -176,6 +176,7 @@ trait MigrateResultIndicatorTrait
 
         if (count($aidstreamIndicators)) {
             foreach ($aidstreamIndicators as $aidstreamIndicator) {
+                $this->logInfo('Migrating result indicator for result id: ' . $aidstreamResultId) . ' with indicator id: ' . $aidstreamIndicator->id;
                 $newIatiIndicator = [
                     'result_id'  => $iatiResultId,
                     'indicator'  => $this->getNewIndicatorData($aidstreamIndicator),
@@ -183,8 +184,10 @@ trait MigrateResultIndicatorTrait
                     'updated_at' => $aidstreamIndicator->updated_at,
                 ];
 
-//                $iatiIndicator = $this->indicatorService->create($newIatiIndicator);
-                // Need to write code for creating periods and so on here
+                $iatiIndicator = $this->indicatorService->create($newIatiIndicator);
+                $this->logInfo('Completed migrating result indicator for result id: ' . $aidstreamResultId . ' with indicator id: ' . $aidstreamIndicator->id);
+
+                $this->migrateIndicatorPeriod($aidstreamIndicator->id, $iatiIndicator->id);
             }
         }
     }
