@@ -447,7 +447,8 @@ trait MigrateActivityTrait
             $aidstreamActivity->recipient_region,
             'region_vocabulary',
             $this->recipientRegionReplaceArray,
-            $this->recipientRegionRemoveArray
+            $this->recipientRegionRemoveArray,
+            '1'
         ) : null;
         $newActivity['location'] = $aidstreamActivity ? $this->getActivityLocationData(
             $aidstreamActivity->location
@@ -456,7 +457,8 @@ trait MigrateActivityTrait
             $aidstreamActivity->sector,
             'sector_vocabulary',
             $this->sectorReplaceArray,
-            $this->sectorRemoveArray
+            $this->sectorRemoveArray,
+            '1'
         ) : null;
         $newActivity['country_budget_items'] = $aidstreamActivity ? $this->getActivityCountryBudgetItemsData(
             $aidstreamActivity->country_budget_items
@@ -465,13 +467,15 @@ trait MigrateActivityTrait
             $aidstreamActivity->humanitarian_scope,
             'vocabulary',
             [],
-            $this->humanitarianScopeRemoveArray
+            $this->humanitarianScopeRemoveArray,
+            '1-2'
         ) : null;
         $newActivity['policy_marker'] = $aidstreamActivity ? $this->getActivityUpdatedVocabularyData(
             $aidstreamActivity->policy_marker,
             'vocabulary',
             $this->policyMarkerReplaceArray,
-            $this->policyMarkerRemoveArray
+            $this->policyMarkerRemoveArray,
+            '1'
         ) : null;
         $newActivity['collaboration_type'] = $aidstreamActivity ? $this->getIntSelectValue(
             $aidstreamActivity->collaboration_type,
@@ -616,7 +620,7 @@ trait MigrateActivityTrait
      * @param $object
      * @param $vocabulary
      * @param $replaceArray
-     * @param  array  $removeArray
+     * @param $removeArray
      *
      * @return array|null
      *
@@ -626,7 +630,8 @@ trait MigrateActivityTrait
         $object,
         $vocabulary,
         $replaceArray,
-        array $removeArray = []
+        $removeArray,
+        $defaultVocabulary = '1'
     ): ?array {
         if (!$object) {
             return null;
@@ -637,10 +642,16 @@ trait MigrateActivityTrait
 
         if ($array && count($array)) {
             foreach (array_values($array) as $key => $item) {
+                if (is_null(Arr::get($item, $vocabulary)) || (is_string(Arr::get($item, $vocabulary)) && trim(
+                    Arr::get($item, $vocabulary)
+                ) === '')) {
+                    $item[$vocabulary] = $defaultVocabulary;
+                }
+
                 $newArray[$key] = $this->formatUpdatedVocabularyData(
                     $item,
                     Arr::get($replaceArray, Arr::get($item, $vocabulary, null), []),
-                    Arr::get($removeArray, Arr::get($item, $vocabulary, null), [])
+                    Arr::get($removeArray, Arr::get($item, $vocabulary, null), []),
                 );
             }
         }
@@ -863,7 +874,8 @@ trait MigrateActivityTrait
                 $defaultAidTypes,
                 'default_aidtype_vocabulary',
                 $this->defaultAidTypeReplaceArray,
-                $this->defaultAidTypeRemoveArray
+                $this->defaultAidTypeRemoveArray,
+                '1'
             );
         }
 
