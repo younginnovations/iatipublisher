@@ -125,17 +125,29 @@ class CheckSchemaCommand extends Command
         'language',
     ];
 
+    protected $file;
+
     /**
      * @return void
      * @throws \JsonException
      */
     public function checkSchema(): void
     {
+        $this->file = fopen(app_path('DataMigration/remarks.csv'), 'w');
+        $csvHeader = [];
+        $csvHeader[] = 'Table';
+        $csvHeader[] = 'Organization Id';
+        $csvHeader[] = 'Primary Id';
+        $csvHeader[] = 'Column Name';
+        $csvHeader[] = 'Missing Keys';
+        fputcsv($this->file, $csvHeader);
+
         $this->checkOrganizationDataSchema();
         $this->checkSettingDataSchema();
         $this->checkActivityDataSchema();
         $this->checkBaseResultDataSchema();
 //        $this->checkActivityTransactionDataSchema();
+        fclose($this->file);
     }
 
     /**
@@ -320,6 +332,7 @@ class CheckSchemaCommand extends Command
         $columnName = $itemData['columnName'];
 
         if ($templateData === '""' || empty($templateData)) {
+            fputcsv($this->file, [$tableName, $row->organization_id, $row->id, $columnName, 'Invalid Data']);
             \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Invalid Data");
 
             return;
@@ -329,6 +342,7 @@ class CheckSchemaCommand extends Command
         $aidData = is_array($aidStreamData) ? $aidStreamData : json_decode($aidStreamData, true, 512, JSON_THROW_ON_ERROR);
 
         if (!is_array($aidData)) {
+            fputcsv($this->file, [$tableName, $row->organization_id, $row->id, $columnName, 'Invalid Data']);
             \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Invalid Data");
 
             return;
@@ -345,13 +359,13 @@ class CheckSchemaCommand extends Command
                 $aidData,
             ];
         }
-
         foreach ($aidData as $aidDatum) {
             $aidDataKeys = array_keys($aidDatum);
             $is_different = array_diff($keys, $aidDataKeys);
 
             if (count($is_different)) {
                 $differentKeys = implode(' | ', $is_different);
+                fputcsv($this->file, [$tableName, $row->organization_id, $row->id, $columnName, $key . ' > ( ' . $differentKeys . ' )']);
                 \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Missing keys are $key > ( $differentKeys )\n");
             }
 
