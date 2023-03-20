@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Traits;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 /**
@@ -204,8 +205,9 @@ trait MigrateActivityResultsTrait
             $merged[$index] = $this->resolveJsonString($merged[$index]);
 
             $merged[$index]['document_link'][0]['document_date'] = [];
-            $publicationDate = ['date' => isset($merged[$index]['document_link'][0]['publication_date']) ?? []];
+            $publicationDate = ['date' => Arr::get($merged[$index]['document_link'], '0.publication_date', null)];
             $merged[$index]['document_link'][0]['document_date'][] = $publicationDate;
+
             if (isset($merged[$index]['document_link'][0]['date'])) {
                 unset($merged[$index]['document_link'][0]['date']);
             }
@@ -328,20 +330,21 @@ trait MigrateActivityResultsTrait
      *
      * @param $array
      *
-     * @return mixed
+     * @return array|mixed
      */
-    public function castToString($array): mixed
+    public function castToString(&$array): mixed
     {
-        foreach ($array as &$value) {
+        $temp = [];
+
+        foreach ($array as $key => &$value) {
+            $temp = $array;
             if (is_array($value)) {
                 $this->castToString($value);
-            } elseif (is_bool($value)) {
-                $value = $value ? '1' : '0';
-            } elseif (is_int($value)) {
-                $value = strval($value);
+            } elseif (is_bool($value) || is_int($value)) {
+                $temp[$key] = (string) $value;
             }
         }
 
-        return $array;
+        return $temp;
     }
 }
