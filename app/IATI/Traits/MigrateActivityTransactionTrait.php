@@ -214,7 +214,7 @@ trait MigrateActivityTransactionTrait
         )->get();
 
         if (count($aidstreamTransactions)) {
-            $this->info('Migrating activity transactions...');
+            $this->logInfo('Migrating activity transactions for activity id ' . $aidstreamActivityId);
             $iatiTransactions = [];
 
             foreach ($aidstreamTransactions as $aidstreamTransaction) {
@@ -230,7 +230,7 @@ trait MigrateActivityTransactionTrait
             }
 
             $this->transactionService->insert($iatiTransactions);
-            $this->info('Migration of activity transactions completed.');
+            $this->logInfo('Completed migrating activity transactions for activity id ' . $aidstreamActivityId);
         }
     }
 
@@ -300,7 +300,8 @@ trait MigrateActivityTransactionTrait
                 json_encode($aidstreamTransactionArray['sector'], JSON_THROW_ON_ERROR),
                 'sector_vocabulary',
                 $this->sectorReplaceArray,
-                $this->sectorRemoveArray
+                $this->sectorRemoveArray,
+                '1'
             ) : $this->emptyTransaction['sector'],
             'recipient_country'     => Arr::get(
                 $aidstreamTransactionArray,
@@ -327,7 +328,8 @@ trait MigrateActivityTransactionTrait
                 ),
                 'default_aidtype_vocabulary',
                 $this->transactionAidTypeReplaceArray,
-                $this->transactionAidTypeRemoveArray
+                $this->transactionAidTypeRemoveArray,
+                '1'
             ),
             'tied_status'           => Arr::get(
                 $aidstreamTransactionArray,

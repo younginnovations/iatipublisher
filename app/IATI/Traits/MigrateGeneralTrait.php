@@ -62,4 +62,17 @@ trait MigrateGeneralTrait
 
         return null;
     }
+
+    /**
+     * Logs required messages.
+     *
+     * @param $message
+     *
+     * @return void
+     */
+    public function logInfo($message): void
+    {
+        $this->info($message);
+        logger()->info($message);
+    }
 }
