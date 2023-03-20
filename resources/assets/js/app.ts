@@ -248,11 +248,38 @@ const stickySidebar = (
           stickyElement.style.cssText = `position : absolute;  width:280px; bottom: 16px`;
           affixType = 'sticky-bound';
         }
+
         break;
 
       case 'sticky-translate':
         if (stickyCurrentBottom <= viewportHeight) {
-          stickyElement.style.cssText = `position: fixed; top: auto; left: ${elScrollLeft}; bottom: 0; width: ${elWidth}px`;
+          {
+            (window.scrollY,
+            window.scrollY +
+              document.documentElement.clientHeight +
+              476 -
+              document.documentElement.scrollHeight >
+              0)
+              ? window.scrollY +
+                document.documentElement.clientHeight +
+                476 -
+                document.documentElement.scrollHeight
+              : 16;
+          }
+          stickyElement.style.cssText = `position: fixed; top: auto; left: ${elScrollLeft}; bottom:${
+            (window.scrollY,
+            window.scrollY +
+              document.documentElement.clientHeight +
+              476 -
+              document.documentElement.scrollHeight >
+              16)
+              ? window.scrollY +
+                document.documentElement.clientHeight +
+                476 -
+                document.documentElement.scrollHeight
+              : 16
+          }px; width: ${elWidth}px`;
+
           affixType = 'sticky-bottom';
         }
         break;
@@ -270,8 +297,8 @@ const stickySidebar = (
             el.style.cssText = `position: sticky; top:0px`;
           } else {
             stickyElement.style.cssText = `position: fixed; top: auto; left: ${elScrollLeft}; bottom: 0; width: ${elWidth}px`;
-            affixType = 'sticky-bottom';
           }
+          affixType = 'sticky-bottom';
         }
         break;
 
@@ -290,7 +317,19 @@ const stickySidebar = (
           stickyElement.style.cssText = `position: relative;  `;
           affixType = 'sticky-none';
         } else {
-          stickyElement.style.cssText = `position: fixed; top: 0px;left: ${elScrollLeft}; width: ${elWidth}px `;
+          stickyElement.style.cssText = `position: fixed; top: auto; bottom:${
+            (window.scrollY,
+            window.scrollY +
+              document.documentElement.clientHeight +
+              476 -
+              document.documentElement.scrollHeight >
+              16)
+              ? window.scrollY +
+                document.documentElement.clientHeight +
+                476 -
+                document.documentElement.scrollHeight
+              : 16
+          }px; left: ${elScrollLeft}; width: ${elWidth}px `;
         }
         break;
 
