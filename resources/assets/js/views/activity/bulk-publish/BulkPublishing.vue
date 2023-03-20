@@ -56,7 +56,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, reactive, watch, inject } from 'vue';
+import { onMounted, ref, reactive, watch, inject, onUnmounted } from 'vue';
 import axios from 'axios';
 import { detailStore } from 'Store/activities/show';
 
@@ -112,20 +112,39 @@ let intervalID;
 onMounted(() => {
   completed.value = paStorage.value.publishingActivities.status ?? 'processing';
   bulkPublishStatus();
+  setTimeout(() => {
+    const supportButton: HTMLElement = document.querySelector(
+      '#launcher'
+    ) as HTMLElement;
+    if (supportButton !== null) {
+      supportButton.style.transform = 'translateX(-350px)';
+    }
+    console.log(supportButton);
+  }, 680);
+  // const supportButton: HTMLElement = document.querySelector(
+  //   '#launcher'
+  // ) as HTMLElement;
 });
-
-// watching change in value of completed
-watch(completed, async (newValue) => {
-  if (newValue === 'completed') {
-    clearInterval(intervalID);
-
-    // resetting local storage
-    // paStorage.value.publishingActivities = {} as paElements;
-
-    // check for failed publish
-    failedActivities(paStorage.value.publishingActivities.activities);
+onUnmounted(() => {
+  const supportButton: HTMLElement = document.querySelector(
+    '#launcher'
+  ) as HTMLElement;
+  if (supportButton !== null) {
+    supportButton.style.transform = 'translateX(0px)';
   }
-});
+}),
+  // watching change in value of completed
+  watch(completed, async (newValue) => {
+    if (newValue === 'completed') {
+      clearInterval(intervalID);
+
+      // resetting local storage
+      // paStorage.value.publishingActivities = {} as paElements;
+
+      // check for failed publish
+      failedActivities(paStorage.value.publishingActivities.activities);
+    }
+  });
 watch(
   () => store.state.isLoading,
   (value) => {
