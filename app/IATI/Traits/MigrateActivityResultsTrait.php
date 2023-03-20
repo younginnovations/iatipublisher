@@ -107,12 +107,13 @@ trait MigrateActivityResultsTrait
         $aidStreamActivityResult = $this->getAidStreamActivityResult($aidstreamActivity->id);
 
         foreach ($aidStreamActivityResult as $result) {
-            $resultId = $result['id'];
+            $aidStreamResultId = $result['id'];
             unset($result['id']);
-            $this->logInfo("Started migrating AidStream Activity Result for activity id: {$aidstreamActivity->id} and result id: {$resultId}");
-            $iatiResult = $this->resultService->create(['activity_id'=>$iatiActivity->id, 'result'=>$result, 'migrated_from_aidstream' => true]);
-            $this->logInfo("Completed migrating AidStream Activity Result for activity id: {$aidstreamActivity->id} and result id: {$resultId}");
-            $this->migrateResultIndicator($resultId, $iatiResult->id);
+
+            $this->logInfo("Started migrating AidStream Activity Result for activity id: {$aidstreamActivity->id} and result id: {$aidStreamResultId}");
+            $iatiResult = $this->resultService->create(['activity_id'=>$iatiActivity->id, 'result'=>$result]);
+            $this->logInfo("Completed migrating AidStream Activity Result for activity id: {$aidstreamActivity->id} and result id: {$aidStreamResultId}");
+            $this->migrateResultIndicator($aidStreamResultId, $iatiResult->id);
         }
     }
 
@@ -343,11 +344,13 @@ trait MigrateActivityResultsTrait
 
         foreach ($array as $key => &$value) {
             $temp = $array;
+
             if (is_array($value)) {
                 $this->castToString($value);
             } elseif (is_bool($value) || is_int($value)) {
                 $temp[$key] = (string) $value;
             }
+
         }
 
         return $temp;

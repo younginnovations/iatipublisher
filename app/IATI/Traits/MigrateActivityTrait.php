@@ -20,6 +20,26 @@ trait MigrateActivityTrait
     protected array $contactInfoReplaceArray = ['organization' => 'organisation'];
 
     /**
+     * Contains key value pair to be replaced.
+     *
+     * @var array
+     */
+    protected array $participatingOrgReplaceArray
+        = [
+            'identifier'        => 'ref',
+            'activity_id'       => 'identifier',
+            'organization_type' => 'type',
+            'Crs Channel Code'  => 'crs_channel_code',
+        ];
+
+    /**
+     * Contains values to be removed.
+     *
+     * @var array
+     */
+    protected array $participatingOrgRemoveArray = ['country', 'org_data_id', 'is_publisher'];
+
+    /**
      * Contains key value pair to be replaced for each vocabulary.
      *
      * @var array
@@ -533,7 +553,7 @@ trait MigrateActivityTrait
         $adminId = $iatiOrganization->user->where('role_id', app(Role::class)->getOrganizationAdminId())->first()->id;
         $newActivity['created_by'] = $adminId;
         $newActivity['updated_by'] = $adminId;
-        $newActivity['reporting_org'] = null;
+        $newActivity['reporting_org'] = $iatiOrganization->reporting_org;
         $newActivity['upload_medium'] = 'manual';
         $newActivity['migrated_from_aidstream'] = true;
 

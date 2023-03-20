@@ -395,7 +395,7 @@ trait MigrateOrganizationTrait
 
     /**
      * Populates default fields
-     * [langugage and currency].
+     * [language and currency].
      *
      * @param $data
      * @param $defaultValues
@@ -488,6 +488,13 @@ trait MigrateOrganizationTrait
         }
     }
 
+    /**
+     * Gets published status of aidstream organization.
+     *
+     * @param $aidstreamOrganization
+     *
+     * @return string
+     */
     public function getPublishedStatus($aidstreamOrganization): string
     {
         $aidstreamOrganizationData = $this->db::connection('aidstream')->table('organization_data')->where(

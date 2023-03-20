@@ -1,0 +1,69 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\IATI\Traits;
+
+use App\IATI\Models\Organization\OrganizationPublished;
+use Illuminate\Support\Facades\Storage;
+
+/**
+ * Class MigrateOrganizationPublishedTrait.
+ */
+trait MigrateOrganizationPublishedTrait
+{
+    /**
+     * Migrates OrganizationPublished XML file.
+     *
+     * @param $aidStreamOrganization
+     * @param $iatiOrganization
+     *
+     * @return void
+     */
+    public function migrateOrganizationPublishedFile($aidStreamOrganization, $iatiOrganization): void
+    {
+        $publishedOrganization = $this->db::connection('aidstream')->table('organization_published')
+            ->where('organization_id', '=', $aidStreamOrganization->id)
+            ->first();
+
+        if ($publishedOrganization) {
+            $pathToAidstreamOrganizationFile = 'aidstream-xml';
+            $aidstreamFilename = $publishedOrganization->filename;
+            $pathToIatiOrganizationFile = 'organizationXmlFiles';
+            $iatiFilename = "{$iatiOrganization->publisher_id}-organisation.xml";
+
+            $contents = Storage::disk('s3')->get("{$pathToAidstreamOrganizationFile}/$aidstreamFilename");
+            if (!$contents) {
+                dd('aaa');
+            }
+            Storage::disk('s3')->put("$pathToIatiOrganizationFile/$iatiFilename", $contents);
+        }
+    }
+
+    /**
+     * Migrates OrganizationPublished table record.
+     *
+     * @param $aidStreamOrganization
+     * @param $iatiOrganization
+     *
+     * @return bool
+     */
+    public function migrateOrganizationPublishedTable($aidStreamOrganization, $iatiOrganization): bool
+    {
+        $publishedOrganization = $this->db::connection('aidstream')->table('organization_published')
+            ->where('organization_id', $aidStreamOrganization->id)
+            ->first();
+
+        if ($publishedOrganization) {
+            $organizationPublished = new OrganizationPublished();
+
+            return $organizationPublished->fill([
+                'filename'=>"{$iatiOrganization->publisher_id}-organisation.xml",
+                'organization_id'=>$iatiOrganization->id,
+                'published_to_registry'=> (bool) $publishedOrganization->published_to_register,
+            ])->save();
+        }
+
+        return true;
+    }
+}

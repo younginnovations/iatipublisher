@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
+use App\IATI\Elements\Xml\XmlGenerator;
 use App\IATI\Repositories\User\RoleRepository;
+use App\IATI\Services\Activity\ActivityPublishedService;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ActivitySnapshotService;
 use App\IATI\Services\Activity\IndicatorService;
@@ -13,11 +17,13 @@ use App\IATI\Services\Document\DocumentService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
 use App\IATI\Services\User\UserService;
+use App\IATI\Traits\MigrateActivityPublishedTrait;
 use App\IATI\Traits\MigrateActivityResultsTrait;
 use App\IATI\Traits\MigrateActivityTrait;
 use App\IATI\Traits\MigrateActivityTransactionTrait;
 use App\IATI\Traits\MigrateGeneralTrait;
 use App\IATI\Traits\MigrateIndicatorPeriodTrait;
+use App\IATI\Traits\MigrateOrganizationPublishedTrait;
 use App\IATI\Traits\MigrateOrganizationTrait;
 use App\IATI\Traits\MigrateResultIndicatorTrait;
 use App\IATI\Traits\MigrateSettingTrait;
@@ -41,6 +47,8 @@ class MigrateOrganizationCommand extends Command
     use MigrateActivityResultsTrait;
     use MigrateResultIndicatorTrait;
     use MigrateIndicatorPeriodTrait;
+    use MigrateActivityPublishedTrait;
+    use MigrateOrganizationPublishedTrait;
 
     /**
      * The name and signature of the console command.
@@ -74,7 +82,9 @@ class MigrateOrganizationCommand extends Command
         protected IndicatorService $indicatorService,
         protected PeriodService $periodService,
         protected ActivitySnapshotService $activitySnapshotService,
-        protected DocumentService $documentService
+        protected DocumentService $documentService,
+        protected ActivityPublishedService $activityPublishedService,
+        protected XmlGenerator $xmlGenerator,
     ) {
         parent::__construct();
     }
@@ -137,6 +147,7 @@ class MigrateOrganizationCommand extends Command
                     );
 
                     $this->setDefaultValues($iatiOrganization, $aidStreamOrganizationSetting);
+                    $this->syncPublisherIdInSettingAndOrganizationLevel($iatiOrganization, $aidStreamOrganizationSetting);
                     $this->logInfo('Completed setting migration for organization id: ' . $aidstreamOrganizationId);
                 }
 
@@ -166,6 +177,7 @@ class MigrateOrganizationCommand extends Command
                     'organization_id',
                     $aidstreamOrganizationId
                 )->orderBy('id')->chunk(2, function ($aidstreamActivities) use ($aidStreamOrganization, $iatiOrganization) {
+
                     if (count($aidstreamActivities)) {
                         foreach ($aidstreamActivities as $aidstreamActivity) {
                             $this->logInfo(
@@ -184,6 +196,11 @@ class MigrateOrganizationCommand extends Command
                 });
 
                 $this->migrateDocuments($aidstreamOrganizationId, $iatiOrganization);
+                $this->migrateActivitiesPublishedFiles($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable);
+                $this->migrateActivityPublishedTable($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable);
+                $this->migrateOrganizationPublishedFile($aidStreamOrganization, $iatiOrganization);
+                $this->migrateOrganizationPublishedTable($aidStreamOrganization, $iatiOrganization);
+
                 $this->databaseManager->commit();
             }
         } catch (\Exception $exception) {
