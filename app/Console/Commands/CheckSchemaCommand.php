@@ -111,6 +111,21 @@ class CheckSchemaCommand extends Command
     ];
 
     /**
+     * @var array|string[]
+     */
+    protected array $baseResultDataSchema = [
+        'title',
+        'description',
+    ];
+
+    protected array $resultDocumentLinkDataSchema = [
+        'title',
+        'description',
+        'category',
+        'language',
+    ];
+
+    /**
      * @return void
      * @throws \JsonException
      */
@@ -119,6 +134,7 @@ class CheckSchemaCommand extends Command
         $this->checkOrganizationDataSchema();
         $this->checkSettingDataSchema();
         $this->checkActivityDataSchema();
+        $this->checkBaseResultDataSchema();
 //        $this->checkActivityTransactionDataSchema();
     }
 
@@ -193,6 +209,69 @@ class CheckSchemaCommand extends Command
                 $elementDataTemplate = Arr::get($aidStreamActivityDataTemplate, $key);
                 $itemData = ['tableName' => 'activity_data', 'columnName' => $key, 'rows' => $activityData];
                 $this->checkObjectKey($key, $data, $elementDataTemplate, $itemData);
+            }
+        }
+    }
+
+    /**
+     * @return void
+     * @throws \JsonException
+     */
+    public function checkBaseResultDataSchema(): void
+    {
+        $aidStreamBaseResultDataTemplate = readJsonFile('DataMigration/Templates/AidStreamActivityResultNewSchema.json');
+        $aidStreamActivityData = $this->db::connection('aidstream')
+            ->table('activity_data')
+            ->whereIn('organization_id', $this->organizationIds)
+            ->get();
+
+        foreach ($aidStreamActivityData as $aidActivityData) {
+            $aidStreamBaseResultData = $this->db::connection('aidstream')
+                ->table('activity_results_new')
+                ->where('activity_id', $aidActivityData->id)
+                ->get();
+
+            foreach ($aidStreamBaseResultData as $baseResult) {
+                foreach ($baseResult as $key => $data) {
+                    if (empty($data) || $data === 'null' || $data === '""' || !in_array($key, $this->baseResultDataSchema, true)) {
+                        continue;
+                    }
+
+                    $baseResult->organization_id = $aidActivityData->organization_id;
+                    $elementDataTemplate = Arr::get($aidStreamBaseResultDataTemplate, $key);
+                    $itemData = ['tableName' => 'activity_results_new', 'columnName' => $key, 'rows' => $baseResult];
+                    $this->checkObjectKey($key, $data, $elementDataTemplate, $itemData);
+                }
+            }
+
+            $this->checkResultDocumentLinkDataSchema($aidStreamBaseResultData, $aidActivityData->organization_id);
+        }
+    }
+
+    /**
+     * @param $aidStreamBaseResultData
+     * @param $organizationId
+     * @return void
+     * @throws \JsonException
+     */
+    public function checkResultDocumentLinkDataSchema($aidStreamBaseResultData, $organizationId): void
+    {
+        $aidStreamResultDocumentLinkDataTemplate = readJsonFile('DataMigration/Templates/AidStreamResultDocumentLinkSchema.json');
+        $aidStreamResultDocumentLinkData = $this->db::connection('aidstream')
+            ->table('result_document_links')
+            ->whereIn('result_id', $aidStreamBaseResultData->pluck('id')->toArray())
+            ->get();
+
+        foreach ($aidStreamResultDocumentLinkData as $documentLinkData) {
+            $documentLinkData->organization_id = $organizationId;
+            foreach ($documentLinkData as $documentKey => $documentData) {
+                if (empty($documentData) || $documentData === 'null' || $documentData === '""' || !in_array($documentKey, $this->resultDocumentLinkDataSchema, true)) {
+                    continue;
+                }
+
+                $elementDataTemplate = Arr::get($aidStreamResultDocumentLinkDataTemplate, $documentKey);
+                $itemData = ['tableName' => 'result_document_link', 'columnName' => $documentKey, 'rows' => $documentLinkData];
+                $this->checkObjectKey($documentKey, $documentData, $elementDataTemplate, $itemData);
             }
         }
     }
