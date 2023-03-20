@@ -104,6 +104,13 @@ class CheckSchemaCommand extends Command
     ];
 
     /**
+     * @var array|string[]
+     */
+    protected array $activityTransactionDataSchema = [
+      'transaction',
+    ];
+
+    /**
      * @return void
      * @throws \JsonException
      */
@@ -112,6 +119,7 @@ class CheckSchemaCommand extends Command
         $this->checkOrganizationDataSchema();
         $this->checkSettingDataSchema();
         $this->checkActivityDataSchema();
+//        $this->checkActivityTransactionDataSchema();
     }
 
     /**
@@ -190,6 +198,39 @@ class CheckSchemaCommand extends Command
     }
 
     /**
+     * @return void
+     * @throws \JsonException
+     */
+    public function checkActivityTransactionDataSchema(): void
+    {
+        $aidStreamActivityTransactionDataTemplate = readJsonFile('DataMigration/Templates/AidStreamActivityTransactionSchema.json');
+        $aidStreamActivityData = $this->db::connection('aidstream')
+            ->table('activity_data')
+            ->whereIn('organization_id', $this->organizationIds)
+            ->get()->pluck('id')->toArray();
+
+        foreach ($aidStreamActivityData as $aidActivityData) {
+            $aidStreamActivityTransactionData = $this->db::connection('aidstream')
+                ->table('activity_transactions')
+                ->whereIn('activity_id', $aidStreamActivityData)
+                ->get();
+
+            foreach ($aidStreamActivityTransactionData as $aidStreamActivityTransactions) {
+                foreach ($aidStreamActivityTransactions as $key => $data) {
+                    if (empty($data) || $data === 'null' || $data === '""' || !in_array($key, $this->activityTransactionDataSchema, true)) {
+                        continue;
+                    }
+
+                    $aidStreamActivityTransactions->organization_id = $aidActivityData->organization_id;
+                    $elementDataTemplate = Arr::get($aidStreamActivityTransactionDataTemplate, $key);
+                    $itemData = ['tableName' => 'activity_transactions', 'columnName' => $key, 'rows' => $aidStreamActivityTransactions];
+                    $this->checkObjectKey($key, $data, $elementDataTemplate, $itemData);
+                }
+            }
+        }
+    }
+
+    /**
      * @throws \JsonException
      */
     public function checkObjectKey($key, $aidStreamData, $template, array $itemData): void
@@ -215,6 +256,7 @@ class CheckSchemaCommand extends Command
         }
 
         $checkIfNestedArray = count(array_filter($aidData, 'is_array')) === count($aidData);
+
         /*
          * To check if keys are matched with schema we need nested array but sometimes data are simply an array . So we convert array into nested array
          */
