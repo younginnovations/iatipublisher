@@ -5,6 +5,9 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Exception;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 /**
  * Class CheckSchemaCommand.
@@ -118,6 +121,9 @@ class CheckSchemaCommand extends Command
         'description',
     ];
 
+    /**
+     * @var array|string[]
+     */
     protected array $resultDocumentLinkDataSchema = [
         'title',
         'description',
@@ -125,29 +131,33 @@ class CheckSchemaCommand extends Command
         'language',
     ];
 
-    protected $file;
+    /**
+     * @var
+     */
+    protected $spreadSheet;
+
+    /**
+     * @var array
+     */
+    protected array $logStack = [];
 
     /**
      * @return void
      * @throws \JsonException
+     * @throws Exception
      */
     public function checkSchema(): void
     {
-        $this->file = fopen(app_path('DataMigration/remarks.csv'), 'w');
-        $csvHeader = [];
-        $csvHeader[] = 'Table';
-        $csvHeader[] = 'Organization Id';
-        $csvHeader[] = 'Primary Id';
-        $csvHeader[] = 'Column Name';
-        $csvHeader[] = 'Missing Keys';
-        fputcsv($this->file, $csvHeader);
-
+        $this->spreadSheet = new Spreadsheet();
         $this->checkOrganizationDataSchema();
         $this->checkSettingDataSchema();
         $this->checkActivityDataSchema();
         $this->checkBaseResultDataSchema();
-//        $this->checkActivityTransactionDataSchema();
-        fclose($this->file);
+        $this->checkActivityTransactionDataSchema();
+        $this->generateExcelFile();
+        $xlsFile = new Xlsx($this->spreadSheet);
+        $fileName = app_path('DataMigration/remarks.xlsx');
+        $xlsFile->save($fileName);
     }
 
     /**
@@ -156,6 +166,10 @@ class CheckSchemaCommand extends Command
      */
     public function checkOrganizationDataSchema(): void
     {
+//        $this->spreadSheet->createSheet();
+        $this->spreadSheet->setActiveSheetIndex(0);
+        $this->spreadSheet->getActiveSheet()->setTitle('organization_data');
+
         $aidStreamOrganizationDataTemplate = readJsonFile('DataMigration/Templates/AidStreamOrganizationDataSchema.json');
         $aidStreamOrganizationData = $this->db::connection('aidstream')
             ->table('organization_data')
@@ -181,6 +195,9 @@ class CheckSchemaCommand extends Command
      */
     public function checkSettingDataSchema(): void
     {
+        $this->spreadSheet->createSheet();
+        $this->spreadSheet->setActiveSheetIndex(1);
+        $this->spreadSheet->getActiveSheet()->setTitle('settings');
         $aidStreamSettingDataTemplate = readJsonFile('DataMigration/Templates/AidStreamSettingSchema.json');
         $aidStreamSettingData = $this->db::connection('aidstream')
                                            ->table('settings')
@@ -206,6 +223,9 @@ class CheckSchemaCommand extends Command
      */
     public function checkActivityDataSchema(): void
     {
+        $this->spreadSheet->createSheet();
+        $this->spreadSheet->setActiveSheetIndex(2);
+        $this->spreadSheet->getActiveSheet()->setTitle('activity_data');
         $aidStreamActivityDataTemplate = readJsonFile('DataMigration/Templates/AidStreamActivitySchema.json');
         $aidStreamActivityData = $this->db::connection('aidstream')
             ->table('activity_data')
@@ -231,62 +251,71 @@ class CheckSchemaCommand extends Command
      */
     public function checkBaseResultDataSchema(): void
     {
+        $this->spreadSheet->createSheet();
+        $this->spreadSheet->setActiveSheetIndex(3);
+        $this->spreadSheet->getActiveSheet()->setTitle('activity_results_new');
         $aidStreamBaseResultDataTemplate = readJsonFile('DataMigration/Templates/AidStreamActivityResultNewSchema.json');
         $aidStreamActivityData = $this->db::connection('aidstream')
             ->table('activity_data')
             ->whereIn('organization_id', $this->organizationIds)
-            ->get();
+            ->get()->pluck('id')->toArray();
 
-        foreach ($aidStreamActivityData as $aidActivityData) {
-            $aidStreamBaseResultData = $this->db::connection('aidstream')
+        $chunkedActivityId = array_chunk($aidStreamActivityData, 1000);
+
+        foreach ($chunkedActivityId as $activityId) {
+            $this->db::connection('aidstream')
                 ->table('activity_results_new')
-                ->where('activity_id', $aidActivityData->id)
-                ->get();
+                ->whereIn('activity_id', $activityId)
+                ->orderBy('id')
+                ->chunk(10000, function ($aidStreamBaseResultData) use ($aidStreamBaseResultDataTemplate) {
+                    foreach ($aidStreamBaseResultData as $baseResult) {
+                        foreach ($baseResult as $key => $data) {
+                            if (empty($data) || $data === 'null' || $data === '""' || !in_array($key, $this->baseResultDataSchema, true)) {
+                                continue;
+                            }
 
-            foreach ($aidStreamBaseResultData as $baseResult) {
-                foreach ($baseResult as $key => $data) {
-                    if (empty($data) || $data === 'null' || $data === '""' || !in_array($key, $this->baseResultDataSchema, true)) {
-                        continue;
+                            $baseResult->organization_id = 1;
+                            $elementDataTemplate = Arr::get($aidStreamBaseResultDataTemplate, $key);
+                            $itemData = ['tableName' => 'activity_results_new', 'columnName' => $key, 'rows' => $baseResult];
+                            $this->checkObjectKey($key, $data, $elementDataTemplate, $itemData);
+                        }
                     }
-
-                    $baseResult->organization_id = $aidActivityData->organization_id;
-                    $elementDataTemplate = Arr::get($aidStreamBaseResultDataTemplate, $key);
-                    $itemData = ['tableName' => 'activity_results_new', 'columnName' => $key, 'rows' => $baseResult];
-                    $this->checkObjectKey($key, $data, $elementDataTemplate, $itemData);
-                }
-            }
-
-            $this->checkResultDocumentLinkDataSchema($aidStreamBaseResultData, $aidActivityData->organization_id);
+                    $this->checkResultDocumentLinkDataSchema($aidStreamBaseResultData, 1);
+                });
         }
     }
 
-    /**
-     * @param $aidStreamBaseResultData
-     * @param $organizationId
-     * @return void
-     * @throws \JsonException
-     */
-    public function checkResultDocumentLinkDataSchema($aidStreamBaseResultData, $organizationId): void
-    {
-        $aidStreamResultDocumentLinkDataTemplate = readJsonFile('DataMigration/Templates/AidStreamResultDocumentLinkSchema.json');
-        $aidStreamResultDocumentLinkData = $this->db::connection('aidstream')
-            ->table('result_document_links')
-            ->whereIn('result_id', $aidStreamBaseResultData->pluck('id')->toArray())
-            ->get();
+        /**
+         * @param $aidStreamBaseResultData
+         * @param $organizationId
+         * @return void
+         * @throws \JsonException
+         */
+        public function checkResultDocumentLinkDataSchema($aidStreamBaseResultData, $organizationId): void
+        {
+            $this->spreadSheet->createSheet();
+            $this->spreadSheet->setActiveSheetIndex(4);
+            $this->spreadSheet->getActiveSheet()->setTitle('result_document_links');
+            $aidStreamResultDocumentLinkDataTemplate = readJsonFile('DataMigration/Templates/AidStreamResultDocumentLinkSchema.json');
+            $this->db::connection('aidstream')
+                ->table('result_document_links')
+                ->whereIn('result_id', $aidStreamBaseResultData->pluck('id')->toArray())
+                ->orderBy('id')
+                ->chunk(50, function ($aidStreamResultDocumentLinkData) use ($aidStreamResultDocumentLinkDataTemplate) {
+                    foreach ($aidStreamResultDocumentLinkData as $documentLinkData) {
+                        $documentLinkData->organization_id = 1;
+                        foreach ($documentLinkData as $documentKey => $documentData) {
+                            if (empty($documentData) || $documentData === 'null' || $documentData === '""' || !in_array($documentKey, $this->resultDocumentLinkDataSchema, true)) {
+                                continue;
+                            }
 
-        foreach ($aidStreamResultDocumentLinkData as $documentLinkData) {
-            $documentLinkData->organization_id = $organizationId;
-            foreach ($documentLinkData as $documentKey => $documentData) {
-                if (empty($documentData) || $documentData === 'null' || $documentData === '""' || !in_array($documentKey, $this->resultDocumentLinkDataSchema, true)) {
-                    continue;
-                }
-
-                $elementDataTemplate = Arr::get($aidStreamResultDocumentLinkDataTemplate, $documentKey);
-                $itemData = ['tableName' => 'result_document_link', 'columnName' => $documentKey, 'rows' => $documentLinkData];
-                $this->checkObjectKey($documentKey, $documentData, $elementDataTemplate, $itemData);
-            }
+                            $elementDataTemplate = Arr::get($aidStreamResultDocumentLinkDataTemplate, $documentKey);
+                            $itemData = ['tableName' => 'result_document_link', 'columnName' => $documentKey, 'rows' => $documentLinkData];
+                            $this->checkObjectKey($documentKey, $documentData, $elementDataTemplate, $itemData);
+                        }
+                    }
+                });
         }
-    }
 
     /**
      * @return void
@@ -294,30 +323,35 @@ class CheckSchemaCommand extends Command
      */
     public function checkActivityTransactionDataSchema(): void
     {
+        $this->spreadSheet->createSheet();
+        $this->spreadSheet->setActiveSheetIndex(5);
+        $this->spreadSheet->getActiveSheet()->setTitle('activity_transactions');
         $aidStreamActivityTransactionDataTemplate = readJsonFile('DataMigration/Templates/AidStreamActivityTransactionSchema.json');
         $aidStreamActivityData = $this->db::connection('aidstream')
             ->table('activity_data')
             ->whereIn('organization_id', $this->organizationIds)
             ->get()->pluck('id')->toArray();
 
-        foreach ($aidStreamActivityData as $aidActivityData) {
-            $aidStreamActivityTransactionData = $this->db::connection('aidstream')
+        $chunkedActivityId = array_chunk($aidStreamActivityData, 1000);
+        foreach ($chunkedActivityId as $activityId) {
+            $this->db::connection('aidstream')
                 ->table('activity_transactions')
-                ->whereIn('activity_id', $aidStreamActivityData)
-                ->get();
+                ->whereIn('activity_id', $activityId)
+                ->orderBy('id')
+                ->chunk(1000, function ($aidStreamActivityTransactionData) use ($aidStreamActivityTransactionDataTemplate) {
+                    foreach ($aidStreamActivityTransactionData as $aidStreamActivityTransactions) {
+                        foreach ($aidStreamActivityTransactions as $key => $data) {
+                            if (empty($data) || $data === 'null' || $data === '""' || !in_array($key, $this->activityTransactionDataSchema, true)) {
+                                continue;
+                            }
 
-            foreach ($aidStreamActivityTransactionData as $aidStreamActivityTransactions) {
-                foreach ($aidStreamActivityTransactions as $key => $data) {
-                    if (empty($data) || $data === 'null' || $data === '""' || !in_array($key, $this->activityTransactionDataSchema, true)) {
-                        continue;
+                            $aidStreamActivityTransactions->organization_id = 1;
+                            $elementDataTemplate = Arr::get($aidStreamActivityTransactionDataTemplate, $key);
+                            $itemData = ['tableName' => 'activity_transactions', 'columnName' => $key, 'rows' => $aidStreamActivityTransactions];
+                            $this->checkObjectKey($key, $data, $elementDataTemplate, $itemData);
+                        }
                     }
-
-                    $aidStreamActivityTransactions->organization_id = $aidActivityData->organization_id;
-                    $elementDataTemplate = Arr::get($aidStreamActivityTransactionDataTemplate, $key);
-                    $itemData = ['tableName' => 'activity_transactions', 'columnName' => $key, 'rows' => $aidStreamActivityTransactions];
-                    $this->checkObjectKey($key, $data, $elementDataTemplate, $itemData);
-                }
-            }
+                });
         }
     }
 
@@ -330,11 +364,17 @@ class CheckSchemaCommand extends Command
         $templateData = $template[0] ?? $template;
         $tableName = $itemData['tableName'];
         $columnName = $itemData['columnName'];
+        $encodedAidStreamData = json_encode($aidStreamData, JSON_THROW_ON_ERROR);
 
         if ($templateData === '""' || empty($templateData)) {
-            fputcsv($this->file, [$tableName, $row->organization_id, $row->id, $columnName, 'Invalid Data']);
-            \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Invalid Data");
-
+            $this->logStack[] = [
+                'tableName' => $tableName,
+                'columnName' => $columnName,
+                'key' => $key,
+                'missingKeys' => 'Invalid Data',
+//                'json_value' => $encodedAidStreamData
+            ];
+//            \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Invalid Data");
             return;
         }
 
@@ -342,8 +382,14 @@ class CheckSchemaCommand extends Command
         $aidData = is_array($aidStreamData) ? $aidStreamData : json_decode($aidStreamData, true, 512, JSON_THROW_ON_ERROR);
 
         if (!is_array($aidData)) {
-            fputcsv($this->file, [$tableName, $row->organization_id, $row->id, $columnName, 'Invalid Data']);
-            \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Invalid Data");
+            $this->logStack[] = [
+                'tableName' => $tableName,
+                'columnName' => $columnName,
+                'key' => $key,
+                'missingKeys' => 'Invalid Data',
+//                'json_value' => $encodedAidStreamData
+            ];
+//            \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Invalid Data");
 
             return;
         }
@@ -359,13 +405,20 @@ class CheckSchemaCommand extends Command
                 $aidData,
             ];
         }
+
         foreach ($aidData as $aidDatum) {
             $aidDataKeys = array_keys($aidDatum);
             $is_different = array_diff($keys, $aidDataKeys);
 
             if (count($is_different)) {
                 $differentKeys = implode(' | ', $is_different);
-                fputcsv($this->file, [$tableName, $row->organization_id, $row->id, $columnName, $key . ' > ( ' . $differentKeys . ' )']);
+                $this->logStack[] = [
+                    'tableName' => $tableName,
+                    'columnName' => $columnName,
+                    'key' => $key,
+                    'missingKeys' => $differentKeys,
+//                      'json_value' => $encodedAidStreamData
+                ];
                 \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Missing keys are $key > ( $differentKeys )\n");
             }
 
@@ -379,6 +432,31 @@ class CheckSchemaCommand extends Command
                     $this->checkObjectKey($nestedKey, $nestedData, Arr::get($templateData, $nestedKey, []), $itemData);
                 }
             }
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function generateExcelFile(): void
+    {
+        $stack = $this->logStack;
+        $uniqueStack = array_unique($stack, SORT_REGULAR);
+
+        foreach ($uniqueStack as $data) {
+            $this->spreadSheet->setActiveSheetIndexByName($data['tableName']);
+            $sheet = $this->spreadSheet->getActiveSheet();
+            $excelRow = $sheet->getHighestRow() + 1;
+            $sheet->insertNewRowBefore($excelRow);
+            $sheet->setCellValue('A1', 'Table Name');
+            $sheet->setCellValue('B1', 'Column Name');
+            $sheet->setCellValue('C1', 'Missing Keys');
+//            $sheet->setCellValue('D1', 'Json Value');
+            $sheet->getStyle('A1:C1')->getFont()->applyFromArray(['bold' => true]);
+            $sheet->setCellValue('A' . $excelRow, $data['tableName']);
+            $sheet->setCellValue('B' . $excelRow, $data['columnName']);
+            $sheet->setCellValue('C' . $excelRow, $data['key'] . ' > ' . $data['missingKeys']);
+//            $sheet->setCellValue('D'.$excelRow, $data['json_value']);
         }
     }
 }
