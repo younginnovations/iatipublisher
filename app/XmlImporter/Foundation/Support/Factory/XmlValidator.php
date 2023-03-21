@@ -154,7 +154,7 @@ class XmlValidator
         $rules = [];
         $tempRules = [
             (new TitleRequest())->getErrorsForTitle('title', Arr::get($activity, 'title', [])),
-            (new IdentifierRequest())->getErrorsForIdentifier(true, 'identifier'),
+            (new IdentifierRequest())->getErrorsForIdentifier(true, 'iati_identifier'),
         ];
 
         foreach ($tempRules as $index => $tempRule) {
