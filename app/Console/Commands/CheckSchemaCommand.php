@@ -48,6 +48,7 @@ class CheckSchemaCommand extends Command
      * Execute the console command.
      *
      * @return void
+     *
      * @throws \JsonException
      */
     public function handle(): void
@@ -181,6 +182,7 @@ class CheckSchemaCommand extends Command
      * Checks aidstream organization data schema.
      *
      * @return void
+     *
      * @throws \JsonException
      */
     public function checkOrganizationDataSchema(): void
@@ -191,18 +193,21 @@ class CheckSchemaCommand extends Command
         $aidStreamOrganizationDataTemplate = readJsonFile('DataMigration/Templates/AidStreamOrganizationDataSchema.json');
         $aidStreamOrganizationData = $this->db::connection('aidstream')
             ->table('organization_data')
+            ->where('is_reporting_org', true)
             ->whereIn('organization_id', $this->organizationIds)
             ->get();
 
-        foreach ($aidStreamOrganizationData as $orgData) {
-            foreach ($orgData as $key => $data) {
-                if (empty($data) || $data === 'null' || !in_array($key, $this->organizationDataSchema, true)) {
-                    continue;
-                }
+        if (count($aidStreamOrganizationData)) {
+            foreach ($aidStreamOrganizationData as $orgData) {
+                foreach ($orgData as $key => $data) {
+                    if (empty($data) || $data === 'null' || !in_array($key, $this->organizationDataSchema, true)) {
+                        continue;
+                    }
 
-                $elementDataTemplate = Arr::get($aidStreamOrganizationDataTemplate, $key);
-                $itemData = ['tableName' => 'organization_data', 'columnName' => $key, 'rows' => $orgData];
-                $this->checkObjectKey($key, $data, $elementDataTemplate, $itemData);
+                    $elementDataTemplate = Arr::get($aidStreamOrganizationDataTemplate, $key);
+                    $itemData = ['tableName' => 'organization_data', 'columnName' => $key, 'rows' => $orgData];
+                    $this->checkObjectKey($key, $data, $elementDataTemplate, $itemData);
+                }
             }
         }
     }
@@ -335,6 +340,7 @@ class CheckSchemaCommand extends Command
                 ->chunk(50, function ($aidStreamResultDocumentLinkData) use ($aidStreamResultDocumentLinkDataTemplate) {
                     foreach ($aidStreamResultDocumentLinkData as $documentLinkData) {
                         $documentLinkData->organization_id = 1;
+
                         foreach ($documentLinkData as $documentKey => $documentData) {
                             if (empty($documentData) || $documentData === 'null' || $documentData === '""' || !in_array($documentKey, $this->resultDocumentLinkDataSchema, true)) {
                                 continue;
@@ -352,6 +358,7 @@ class CheckSchemaCommand extends Command
      * Checks aid stream activity transaction data schema.
      *
      * @return void
+     *
      * @throws \JsonException
      */
     public function checkActivityTransactionDataSchema(): void
