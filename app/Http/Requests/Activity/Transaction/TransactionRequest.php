@@ -28,6 +28,11 @@ class TransactionRequest extends ActivityBaseRequest
     protected array $activityFormField;
 
     /**
+     * @var bool
+     */
+    protected bool $has_country_or_region_defined_in_activity = false;
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -699,6 +704,10 @@ class TransactionRequest extends ActivityBaseRequest
         if (!$fileUpload) {
             $params = $this->route()->parameters();
 
+            if ($activityService->hasRecipientRegionDefinedInActivity($params['id']) || $activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
+                $this->has_country_or_region_defined_in_activity = true;
+            }
+
             if (!$activityService->isElementEmpty($formFields, 'recipientRegionFields')
                 && ($activityService->hasRecipientRegionDefinedInActivity($params['id']) || $activityService->hasRecipientCountryDefinedInActivity($params['id']))) {
                 Validator::extend('already_in_activity', function () {
@@ -722,6 +731,10 @@ class TransactionRequest extends ActivityBaseRequest
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
             }
+        }
+
+        if (!$fileUpload) {
+            $this->getRecipientRegionOrCountryRule($rules, 'recipient_region');
         }
 
         return $rules;
@@ -759,10 +772,6 @@ class TransactionRequest extends ActivityBaseRequest
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
             }
-        }
-
-        if (!$fileUpload) {
-            $this->getRecipientRegionOrCountryRule($rules, 'recipient_region');
         }
 
         return $rules;
@@ -941,7 +950,7 @@ class TransactionRequest extends ActivityBaseRequest
             $rules[$attribute] = 'country_or_region';
         } elseif (!is_variable_null($this->all()['recipient_region']) && !is_variable_null($this->all()['recipient_country'])) {
             $rules[$attribute] = 'country_or_region';
-        } elseif (is_variable_null($this->all()['recipient_region']) && is_variable_null($this->all()['recipient_country'])) {
+        } elseif (!$this->has_country_or_region_defined_in_activity && is_variable_null($this->all()['recipient_region']) && is_variable_null($this->all()['recipient_country'])) {
             $rules[$attribute] = 'country_or_region';
         }
 
