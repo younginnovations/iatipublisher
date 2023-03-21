@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\IATI\Repositories\User\RoleRepository;
 use App\IATI\Services\Activity\ActivityService;
+use App\IATI\Services\Activity\ActivitySnapshotService;
 use App\IATI\Services\Activity\IndicatorService;
 use App\IATI\Services\Activity\PeriodService;
 use App\IATI\Services\Activity\ResultService;
@@ -70,7 +71,8 @@ class MigrateOrganizationCommand extends Command
         protected TransactionService $transactionService,
         protected ResultService $resultService,
         protected IndicatorService $indicatorService,
-        protected PeriodService $periodService
+        protected PeriodService $periodService,
+        protected ActivitySnapshotService $activitySnapshotService
     ) {
         parent::__construct();
     }
@@ -114,6 +116,7 @@ class MigrateOrganizationCommand extends Command
                 $iatiOrganization = $this->organizationService->create(
                     $this->getNewOrganization($aidStreamOrganization)
                 );
+
                 $this->logInfo('Completed organization migration for organization id: ' . $aidstreamOrganizationId);
                 $aidStreamOrganizationSetting = $this->db::connection('aidstream')->table('settings')->where(
                     'organization_id',
@@ -169,6 +172,7 @@ class MigrateOrganizationCommand extends Command
                         );
                         $this->migrateActivityTransactions($aidstreamActivity->id, $iatiActivity->id);
                         $this->migrateActivityResults($iatiActivity, $aidstreamActivity);
+                        $this->migrateActivitySnapshot($iatiActivity, $aidstreamActivity);
                     }
                 }
 
@@ -178,6 +182,35 @@ class MigrateOrganizationCommand extends Command
             $this->databaseManager->rollBack();
             logger()->error($exception);
             $this->error($exception->getMessage());
+        }
+    }
+
+    /**
+     * @param $iatiActivity
+     * @param $aidstreamActivity
+     * @return void
+     */
+    public function migrateActivitySnapshot($iatiActivity, $aidstreamActivity): void
+    {
+        $aidStreamActivitySnapshots = $this->db::connection('aidstream')->table('activity_snapshots')->where(
+            'activity_id',
+            $aidstreamActivity->id
+        )->get();
+
+        if (count($aidStreamActivitySnapshots)) {
+            $iatiActivitySnapshots = [];
+            foreach ($aidStreamActivitySnapshots as $aidActivitySnapshot) {
+                $iatiActivitySnapshots[] = [
+                    'org_id' => $iatiActivity->org_id,
+                    'activity_id' => $iatiActivity->id,
+                    'published_data' => $aidActivitySnapshot->published_data,
+                    'filename' => $aidActivitySnapshot->filename,
+                    'created_at'  => $aidActivitySnapshot->created_at,
+                    'updated_at'  => $aidActivitySnapshot->updated_at,
+                ];
+            }
+            $this->activitySnapshotService->insert($iatiActivitySnapshots);
+            $this->logInfo('Completed migrating activity snapshots for organization id ' . $aidstreamActivity->organization_id);
         }
     }
 
