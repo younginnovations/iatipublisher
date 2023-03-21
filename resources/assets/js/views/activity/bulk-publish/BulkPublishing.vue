@@ -139,8 +139,10 @@ const checkBulkpublishStatus = () => {
     let url = `activities/queue-status?activity_id=${activity.activity_id}&&uuid=${paStorage.value.publishingActivities.job_batch_uuid}`;
 
     axios.get(url).then((response) => {
-      paStorage.value.publishingActivities.status = response.data.message;
+      activities.value[key].status = response.data.message;
+      // paStorage.value.publishingActivities.status = response.data.message;
     });
+    window.location.reload();
   }
 };
 
@@ -149,6 +151,7 @@ const checkBulkpublishStatus = () => {
  */
 const bulkPublishStatus = () => {
   let count = 0;
+  let activityCount = 0;
   intervalID = setInterval(() => {
     axios
       .get(
@@ -177,19 +180,24 @@ const bulkPublishStatus = () => {
         } else {
           completed.value = 'completed';
         }
+
+        if (
+          Object.values(activities.value)[activityCount]['status'] ===
+          'completed'
+        ) {
+          count = 0;
+          activityCount++;
+        }
+        // some code
         if (completed.value === 'processing') {
           count++;
-          if (count > 30) {
+          if (count > 12) {
+            checkBulkpublishStatus();
             clearInterval(intervalID);
           }
         }
       });
   }, 2000);
-
-  if (paStorage.value.publishingActivities.status === 'processing') {
-    console.log('checking satus');
-    checkBulkpublishStatus();
-  }
 };
 
 /**
