@@ -91,4 +91,16 @@ class DocumentService
     {
         return $this->documentRepo->findBy('activity_id', $activity_id)->toArray();
     }
+
+    /**
+     * Inserts multiple documents.
+     *
+     * @param $documents
+     *
+     * @return bool
+     */
+    public function insert($documents): bool
+    {
+        return $this->documentRepo->insert($documents);
+    }
 }
