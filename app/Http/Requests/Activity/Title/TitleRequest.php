@@ -41,7 +41,6 @@ class TitleRequest extends ActivityBaseRequest
     {
         $firstTitleKey = array_key_first($titles) ?? '0';
 
-        // dd($titles, Arr::get($titles, sprintf('%s.narrative', $firstTitleKey),null),empty(Arr::get($titles, sprintf('%s.narrative', $firstTitleKey),null)));
         if (empty(Arr::get($titles, sprintf('%s.narrative', $firstTitleKey), null))) {
             return [sprintf('%s.%s.narrative', $name, $firstTitleKey) => 'required'];
         }
