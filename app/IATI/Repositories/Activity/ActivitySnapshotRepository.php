@@ -44,4 +44,16 @@ class ActivitySnapshotRepository extends Repository
             ]
         );
     }
+
+    /**
+     * Inserts multiple activity snapshots.
+     *
+     * @param $activitySnapshots
+     *
+     * @return bool
+     */
+    public function insert($activitySnapshots): bool
+    {
+        return $this->model->insert($activitySnapshots);
+    }
 }
