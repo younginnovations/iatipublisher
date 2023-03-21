@@ -83,4 +83,16 @@ class ActivitySnapshotService
             $filename
         );
     }
+
+    /**
+     * Inserts multiple Activity snapshots.
+     *
+     * @param $snapshots
+     *
+     * @return bool
+     */
+    public function insert($snapshots): bool
+    {
+        return $this->activitySnapshotRepository->insert($snapshots);
+    }
 }
