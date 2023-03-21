@@ -397,6 +397,40 @@ trait MigrateActivityTrait
         ];
 
     /**
+     * Empty document link template.
+     *
+     * @var array
+     */
+    protected array $emptyDocumentLinkTemplate
+        = [
+            'url'           => null,
+            'format'        => null,
+            'title'         => [
+                [
+                    'narrative' => [
+                        [
+                            'narrative' => null,
+                            'language'  => null,
+                        ],
+                    ],
+                ],
+            ],
+            'description'   => [
+                [
+                    'narrative' => [
+                        [
+                            'narrative' => null,
+                            'language'  => null,
+                        ],
+                    ],
+                ],
+            ],
+            'category'      => [['code' => null]],
+            'language'      => [['language' => 'en']],
+            'document_date' => [['date' => null]],
+        ];
+
+    /**
      * Returns IATI activity data.
      *
      * @param $aidstreamActivity
@@ -1005,11 +1039,11 @@ trait MigrateActivityTrait
             $newDocumentLinks[] = [
                 'url'           => Arr::get($document, 'url', null),
                 'format'        => Arr::get($document, 'format', null),
-                'title'         => Arr::get($document, 'title', null),
-                'description'   => Arr::get($document, 'description', null),
-                'category'      => Arr::get($document, 'category', null),
+                'title'         => Arr::get($document, 'title', $this->emptyDocumentLinkTemplate['title']),
+                'description'   => Arr::get($document, 'description', $this->emptyDocumentLinkTemplate['description']),
+                'category'      => Arr::get($document, 'category', $this->emptyDocumentLinkTemplate['category']),
                 'language'      => $this->getDocumentLinkLanguage(Arr::get($document, 'language', null)),
-                'document_date' => Arr::get($document, 'document_date', null),
+                'document_date' => Arr::get($document, 'document_date', $this->emptyDocumentLinkTemplate['document_date']),
             ];
         }
 
