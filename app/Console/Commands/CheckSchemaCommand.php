@@ -56,6 +56,8 @@ class CheckSchemaCommand extends Command
     }
 
     /**
+     * List of organization_data table column whose schema needs to be checked.
+     *
      * @var array|string[]
      */
     protected array $organizationDataSchema = [
@@ -69,6 +71,8 @@ class CheckSchemaCommand extends Command
     ];
 
     /**
+     * List of aid stream setting table column whose schema needs to be checked.
+     *
      * @var array|string[]
      */
     protected array $settingDataSchema = [
@@ -79,6 +83,8 @@ class CheckSchemaCommand extends Command
     ];
 
     /**
+     * List of aid stream activity data table column whose schema needs to be checked.
+     *
      * @var array|string[]
      */
     protected array $activityDataSchema = [
@@ -107,6 +113,8 @@ class CheckSchemaCommand extends Command
     ];
 
     /**
+     * List of aid stream activity transaction table column whose schema needs to be checked.
+     *
      * @var array|string[]
      */
     protected array $activityTransactionDataSchema = [
@@ -114,6 +122,8 @@ class CheckSchemaCommand extends Command
     ];
 
     /**
+     * List of aidstream base result data table column whose schema needs to be checked.
+     *
      * @var array|string[]
      */
     protected array $baseResultDataSchema = [
@@ -122,6 +132,8 @@ class CheckSchemaCommand extends Command
     ];
 
     /**
+     * List of aid stream result document link table column whose schema needs to be checked.
+     *
      * @var array|string[]
      */
     protected array $resultDocumentLinkDataSchema = [
@@ -132,17 +144,22 @@ class CheckSchemaCommand extends Command
     ];
 
     /**
-     * @var
+     * @var object
      */
-    protected $spreadSheet;
+    protected object $spreadSheet;
 
     /**
+     * Stores all the logs of invalid data.
+     *
      * @var array
      */
     protected array $logStack = [];
 
     /**
+     * Checks aidstream database data schema.
+     *
      * @return void
+     *
      * @throws \JsonException
      * @throws Exception
      */
@@ -161,12 +178,13 @@ class CheckSchemaCommand extends Command
     }
 
     /**
+     * Checks aidstream organization data schema.
+     *
      * @return void
      * @throws \JsonException
      */
     public function checkOrganizationDataSchema(): void
     {
-//        $this->spreadSheet->createSheet();
         $this->spreadSheet->setActiveSheetIndex(0);
         $this->spreadSheet->getActiveSheet()->setTitle('organization_data');
 
@@ -190,7 +208,10 @@ class CheckSchemaCommand extends Command
     }
 
     /**
+     * Checks aid stream setting data schema.
+     *
      * @return void
+     *
      * @throws \JsonException
      */
     public function checkSettingDataSchema(): void
@@ -218,7 +239,10 @@ class CheckSchemaCommand extends Command
     }
 
     /**
+     * Checks aid stream activity data schema.
+     *
      * @return void
+     *
      * @throws \JsonException
      */
     public function checkActivityDataSchema(): void
@@ -246,7 +270,10 @@ class CheckSchemaCommand extends Command
     }
 
     /**
+     * Checks aid stream base result data schema.
+     *
      * @return void
+     *
      * @throws \JsonException
      */
     public function checkBaseResultDataSchema(): void
@@ -286,9 +313,13 @@ class CheckSchemaCommand extends Command
     }
 
         /**
+         * Checks aid stream result document link data schema.
+         *
          * @param $aidStreamBaseResultData
          * @param $organizationId
+         *
          * @return void
+         *
          * @throws \JsonException
          */
         public function checkResultDocumentLinkDataSchema($aidStreamBaseResultData, $organizationId): void
@@ -318,6 +349,8 @@ class CheckSchemaCommand extends Command
         }
 
     /**
+     * Checks aid stream activity transaction data schema.
+     *
      * @return void
      * @throws \JsonException
      */
@@ -333,6 +366,7 @@ class CheckSchemaCommand extends Command
             ->get()->pluck('id')->toArray();
 
         $chunkedActivityId = array_chunk($aidStreamActivityData, 1000);
+
         foreach ($chunkedActivityId as $activityId) {
             $this->db::connection('aidstream')
                 ->table('activity_transactions')
@@ -356,6 +390,8 @@ class CheckSchemaCommand extends Command
     }
 
     /**
+     * Checks json object key with aid stream data.
+     *
      * @throws \JsonException
      */
     public function checkObjectKey($key, $aidStreamData, $template, array $itemData): void
@@ -364,7 +400,6 @@ class CheckSchemaCommand extends Command
         $templateData = $template[0] ?? $template;
         $tableName = $itemData['tableName'];
         $columnName = $itemData['columnName'];
-        $encodedAidStreamData = json_encode($aidStreamData, JSON_THROW_ON_ERROR);
 
         if ($templateData === '""' || empty($templateData)) {
             $this->logStack[] = [
@@ -372,9 +407,9 @@ class CheckSchemaCommand extends Command
                 'columnName' => $columnName,
                 'key' => $key,
                 'missingKeys' => 'Invalid Data',
-//                'json_value' => $encodedAidStreamData
             ];
-//            \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Invalid Data");
+            \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Invalid Data");
+
             return;
         }
 
@@ -387,9 +422,8 @@ class CheckSchemaCommand extends Command
                 'columnName' => $columnName,
                 'key' => $key,
                 'missingKeys' => 'Invalid Data',
-//                'json_value' => $encodedAidStreamData
             ];
-//            \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Invalid Data");
+            \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Invalid Data");
 
             return;
         }
@@ -417,7 +451,6 @@ class CheckSchemaCommand extends Command
                     'columnName' => $columnName,
                     'key' => $key,
                     'missingKeys' => $differentKeys,
-//                      'json_value' => $encodedAidStreamData
                 ];
                 \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Missing keys are $key > ( $differentKeys )\n");
             }
@@ -436,6 +469,8 @@ class CheckSchemaCommand extends Command
     }
 
     /**
+     * Generates Excel file of recorded log stack.
+     *
      * @return void
      */
     public function generateExcelFile(): void
@@ -451,12 +486,10 @@ class CheckSchemaCommand extends Command
             $sheet->setCellValue('A1', 'Table Name');
             $sheet->setCellValue('B1', 'Column Name');
             $sheet->setCellValue('C1', 'Missing Keys');
-//            $sheet->setCellValue('D1', 'Json Value');
             $sheet->getStyle('A1:C1')->getFont()->applyFromArray(['bold' => true]);
             $sheet->setCellValue('A' . $excelRow, $data['tableName']);
             $sheet->setCellValue('B' . $excelRow, $data['columnName']);
             $sheet->setCellValue('C' . $excelRow, $data['key'] . ' > ' . $data['missingKeys']);
-//            $sheet->setCellValue('D'.$excelRow, $data['json_value']);
         }
     }
 }
