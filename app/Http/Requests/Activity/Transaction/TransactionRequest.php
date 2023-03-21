@@ -733,6 +733,10 @@ class TransactionRequest extends ActivityBaseRequest
             }
         }
 
+        if (!$fileUpload) {
+            $this->getRecipientRegionOrCountryRule($rules, 'recipient_region');
+        }
+
         return $rules;
     }
 
@@ -768,10 +772,6 @@ class TransactionRequest extends ActivityBaseRequest
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
             }
-        }
-
-        if (!$fileUpload) {
-            $this->getRecipientRegionOrCountryRule($rules, 'recipient_region');
         }
 
         return $rules;
