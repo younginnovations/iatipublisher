@@ -186,8 +186,11 @@ class MigrateOrganizationCommand extends Command
     }
 
     /**
+     * Migrated aid stream activity snapshot to iati activity snapshot table.
+     *
      * @param $iatiActivity
      * @param $aidstreamActivity
+     *
      * @return void
      */
     public function migrateActivitySnapshot($iatiActivity, $aidstreamActivity): void
@@ -199,6 +202,7 @@ class MigrateOrganizationCommand extends Command
 
         if (count($aidStreamActivitySnapshots)) {
             $iatiActivitySnapshots = [];
+
             foreach ($aidStreamActivitySnapshots as $aidActivitySnapshot) {
                 $iatiActivitySnapshots[] = [
                     'org_id' => $iatiActivity->org_id,
