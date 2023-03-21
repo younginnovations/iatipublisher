@@ -9,6 +9,7 @@ use App\IATI\Services\Activity\IndicatorService;
 use App\IATI\Services\Activity\PeriodService;
 use App\IATI\Services\Activity\ResultService;
 use App\IATI\Services\Activity\TransactionService;
+use App\IATI\Services\Document\DocumentService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Setting\SettingService;
 use App\IATI\Services\User\UserService;
@@ -72,7 +73,8 @@ class MigrateOrganizationCommand extends Command
         protected ResultService $resultService,
         protected IndicatorService $indicatorService,
         protected PeriodService $periodService,
-        protected ActivitySnapshotService $activitySnapshotService
+        protected ActivitySnapshotService $activitySnapshotService,
+        protected DocumentService $documentService
     ) {
         parent::__construct();
     }
@@ -176,6 +178,7 @@ class MigrateOrganizationCommand extends Command
                     }
                 }
 
+                $this->migrateDocuments($aidstreamOrganizationId, $iatiOrganization);
                 $this->databaseManager->commit();
             }
         } catch (\Exception $exception) {
@@ -183,6 +186,96 @@ class MigrateOrganizationCommand extends Command
             logger()->error($exception);
             $this->error($exception->getMessage());
         }
+    }
+
+    /**
+     * Migrates Aid stream document data to iati document table.
+     *
+     * @param $aidstreamOrganizationId
+     * @param $iatiOrganization
+     *
+     * @return void
+     * @throws \JsonException
+     */
+    public function migrateDocuments($aidstreamOrganizationId, $iatiOrganization): void
+    {
+        $aidStreamDocument = $this->db::connection('aidstream')->table('documents')
+                                        ->where('org_id', $aidstreamOrganizationId)
+                                        ->get();
+
+        if (count($aidStreamDocument)) {
+            $iatiDocuments = [];
+
+            foreach ($aidStreamDocument as $aidDocument) {
+                $iatiDocuments[] = [
+                    'activity_id' => null,
+                    'organization_id' => $iatiOrganization->id,
+                    'filename' => $aidDocument->filename,
+                    'extension' => getFileNameExtension($aidDocument->filename),
+                    'document_link' => $this->getDocumentLink($aidDocument->url),
+                    'size' => $aidDocument->file_size,
+                    'created_at' => $aidDocument->created_at,
+                    'updated_at' => $aidDocument->updated_at,
+                ];
+            }
+
+            $this->documentService->insert($iatiDocuments);
+            $this->logInfo('Completed migrating documents for organization id ' . $aidstreamOrganizationId);
+        }
+    }
+
+    /**
+     * Returns json encoded document link format.
+     *
+     * @param $documentUrl
+     *
+     * @return string
+     * @throws \JsonException
+     */
+    public function getDocumentLink($documentUrl): string
+    {
+        $documentLinkFormat = [
+            'url' => $this->replaceDocumentLinkUrl($documentUrl),
+            'format' => '',
+            'title' => [
+                [
+                    'narrative' => [
+                        [
+                            'narrative' => '',
+                            'language'  => '',
+                        ],
+                    ],
+                ],
+            ],
+            'description' => [
+                [
+                    'narrative' => [
+                        [
+                            'narrative' => '',
+                            'language' => '',
+                        ],
+                    ],
+                ],
+            ],
+            'category' => [
+                [
+                    'code' => '',
+                ],
+            ],
+            'language' => [
+                [
+                    'code' => '',
+                ],
+            ],
+            'document_date' => [
+                [
+                    'date' => '',
+                ],
+            ],
+            'document' => [],
+        ];
+
+        return json_encode($documentLinkFormat, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -277,5 +370,20 @@ class MigrateOrganizationCommand extends Command
         $data = $iatiOrganization->toArray();
         $updatedIatiData = $this->populateDefaultFields($data, $defaultFieldValues);
         $iatiOrganization->update($updatedIatiData);
+    }
+
+    /**
+     * replace aid stream url to s3 bucket url.
+     *
+     * @param $url
+     *
+     * @return string
+     */
+    public function replaceDocumentLinkUrl($url): string
+    {
+        $replaceText = ['http://aidstream.org', 'http://www.aidstream.org', 'https://aidstream.org'];
+        $replaceWith = env('AWS_ENDPOINT') . '/' . env('AWS_BUCKET');
+
+        return str_replace($replaceText, $replaceWith, $url);
     }
 }

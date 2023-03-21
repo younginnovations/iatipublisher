@@ -32,4 +32,16 @@ class DocumentRepository extends Repository
     {
         return $this->model->updateOrCreate(['filename' => $filename, 'activity_id' => $activity_id], $data);
     }
+
+    /**
+     * Inserts multiple documents.
+     *
+     * @param $documents
+     *
+     * @return bool
+     */
+    public function insert($documents): bool
+    {
+        return $this->model->insert($documents);
+    }
 }
