@@ -9,6 +9,7 @@ use App\Http\Requests\Activity\Title\TitleRequest;
 use App\XmlImporter\Foundation\Support\Factory\Traits\ErrorValidationRules;
 use App\XmlImporter\Foundation\Support\Factory\Traits\ValidationMessages;
 use App\XmlImporter\Foundation\Support\Factory\Traits\WarningValidationRules;
+use Arr;
 
 /**
  * Class XmlValidator.
@@ -152,8 +153,8 @@ class XmlValidator
         $activity = $this->activity;
         $rules = [];
         $tempRules = [
-            (new TitleRequest())->getErrorsForTitle('title'),
-            (new IdentifierRequest())->getErrorsForIdentifier(true, 'identifier'),
+            (new TitleRequest())->getErrorsForTitle('title', Arr::get($activity, 'title', [])),
+            (new IdentifierRequest())->getErrorsForIdentifier(true, 'iati_identifier'),
         ];
 
         foreach ($tempRules as $index => $tempRule) {
