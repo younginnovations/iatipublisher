@@ -24,7 +24,7 @@ trait MigrateActivityResultsTrait
      *
      * @var array|string[]
      */
-    public array $notNeededKeys = ['id', 'updated_at', 'created_at', 'result_id', 'publication_date'];
+    public array $notNeededKeys = ['id', 'updated_at', 'created_at', 'result_id', 'publication_date', 'custom'];
 
     /**
      * Template of a complete result.
@@ -239,6 +239,8 @@ trait MigrateActivityResultsTrait
         foreach ($resultReferences as $reference) {
             if ($reference->result_id === $baseResult->id) {
                 $this->logInfo("Reference of id: {$reference->id} exists in result of id {$baseResult->id}.");
+                $reference->vocabulary_uri = !empty($reference->url) ? $this->replaceDocumentLinkUrl($reference->url) : null;
+                unset($reference->url);
                 $referencesThatMatchResultId[] = $reference;
             }
         }
@@ -261,6 +263,7 @@ trait MigrateActivityResultsTrait
         foreach ($resultDocumentLinks as $documentLink) {
             if ($documentLink->result_id === $baseResult->id) {
                 $this->logInfo("Document link of id: {$documentLink->id} exists in result of id {$baseResult->id}.");
+                $documentLink->url = $this->resolveDocumentLinks($documentLink->url);
                 $documentLinksThatMatchResultId[] = $documentLink;
             }
         }
