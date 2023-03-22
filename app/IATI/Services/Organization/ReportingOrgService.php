@@ -146,7 +146,7 @@ class ReportingOrgService
     }
 
     /**
-     * Checks if theres changes in ref, type or narrative.
+     * Checks if there's changes in ref, type or narrative.
      *
      * @param object|null $organization
      * @param array $reportingOrg
@@ -159,7 +159,9 @@ class ReportingOrgService
         $reportingOrg = $reportingOrg[0];
 
         return $oldReportingOrg['ref'] !== $reportingOrg['ref']
-            || $oldReportingOrg['type'] !== $reportingOrg['type']
-            || $oldReportingOrg['narrative'] !== $reportingOrg['narrative'];
+            || (!isset($oldReportingOrg['type'])
+            || $oldReportingOrg['type'] !== $reportingOrg['type'])
+            || (!isset($oldReportingOrg['narrative'])
+            || $oldReportingOrg['narrative'] !== $reportingOrg['narrative']);
     }
 }

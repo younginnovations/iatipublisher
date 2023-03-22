@@ -39,10 +39,10 @@ class FillReportingOrgInOrganizationLevel extends Command
             DB::beginTransaction();
             $reportingOrgTemplate = [
                 [
-                    'ref'=>'',
-                    'type'=>'',
-                    'secondary_reporter'=>'',
-                    'narrative'=>[],
+                    'ref'                => null,
+                    'type'               => null,
+                    'secondary_reporter' => null,
+                    'narrative'          => [['narrative'=>null, 'language'=>null]],
                 ],
             ];
             $organizations = app()->make(OrganizationRepository::class)->all();
@@ -99,8 +99,6 @@ class FillReportingOrgInOrganizationLevel extends Command
                     $manipulatedReportingOrg[0]['narrative'][$index]['language'] = $narrative['language'] ?? '';
                 }
             }
-        } else {
-            $manipulatedReportingOrg[0]['narrative'] = [['narrative'=>'', 'language'=>'']];
         }
 
         foreach ($template[0] as $key => $item) {

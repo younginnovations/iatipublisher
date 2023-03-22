@@ -162,19 +162,19 @@ class ReportingOrgRequest extends ActivityBaseRequest
         return $messages;
     }
 
-/**
- * Sets reporting org values in property $reportingOrganisationInOrganisation.
- *
- * @param $reportingOrganisationInOrganisation
- *
- * @return $this
- */
-public function reportingOrganisationInOrganisation($reportingOrganisationInOrganisation):static
-{
-    $this->reportingOrganisationInOrganisation = $reportingOrganisationInOrganisation;
+    /**
+     * Sets reporting org values in property $reportingOrganisationInOrganisation.
+     *
+     * @param $reportingOrganisationInOrganisation
+     *
+     * @return $this
+     */
+    public function reportingOrganisationInOrganisation($reportingOrganisationInOrganisation):static
+    {
+        $this->reportingOrganisationInOrganisation = $reportingOrganisationInOrganisation;
 
-    return $this;
-}
+        return $this;
+    }
 
     /**
      * Returns organization level reporting orgs narratives and languages in respective arrays.

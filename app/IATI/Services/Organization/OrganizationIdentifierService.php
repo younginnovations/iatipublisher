@@ -74,6 +74,7 @@ class OrganizationIdentifierService
 
     /**
      * Updates Organization identifier.
+     * Syncs activity level reporting org if changes are made to organization identifier.
      *
      * @param $id
      * @param $organizationIdentifiers
@@ -95,8 +96,9 @@ class OrganizationIdentifierService
         ];
 
         $organization->fill($organizationIdentifiers);
+        $hasChanged = $organization->isDirty('identifier');
 
-        return $organization->save() && (!$organization->isDirty('identifier') || empty($this->syncActivityReportingOrgFromIdentifier($id)));
+        return $organization->save() && (!$hasChanged || $this->syncActivityReportingOrgFromIdentifier($id));
     }
 
     /**

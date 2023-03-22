@@ -62,7 +62,6 @@ class ReportingOrgRequest extends OrganizationBaseRequest
                 'nullable',
                 'in:0,1',
             ];
-
             $narrativeRules = $this->getWarningForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
 
             foreach ($narrativeRules as $key => $item) {
@@ -86,10 +85,8 @@ class ReportingOrgRequest extends OrganizationBaseRequest
 
         foreach ($formFields as $reportingOrganizationIndex => $reportingOrganization) {
             $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
-
             $messages[$reportingOrganizationForm . '.ref.not_regex'] = 'The @ref format is invalid.';
             $messages[$reportingOrganizationForm . '.ref.must_match'] = 'The @ref of reporting-org must match the organisation-identifier.';
-
             $narrativeMessages = $this->getMessagesForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
 
             foreach ($narrativeMessages as $key => $item) {
