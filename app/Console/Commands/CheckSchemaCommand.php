@@ -145,6 +145,15 @@ class CheckSchemaCommand extends Command
     ];
 
     /**
+     * List of aid stream activity_document_link table column whose schema needs to be checked.
+     *
+     * @var array|string[]
+     */
+    protected array $activityDocumentLinkDataSchema = [
+        'document_link',
+    ];
+
+    /**
      * @var object
      */
     protected object $spreadSheet;
@@ -167,10 +176,10 @@ class CheckSchemaCommand extends Command
     public function checkSchema(): void
     {
         $this->spreadSheet = new Spreadsheet();
-        $this->checkOrganizationDataSchema();
-        $this->checkSettingDataSchema();
-        $this->checkActivityDataSchema();
-        $this->checkBaseResultDataSchema();
+//        $this->checkOrganizationDataSchema();
+//        $this->checkSettingDataSchema();
+//        $this->checkActivityDataSchema();
+//        $this->checkBaseResultDataSchema();
 //        $this->checkActivityTransactionDataSchema();
         $this->generateExcelFile();
         $xlsFile = new Xlsx($this->spreadSheet);
@@ -253,13 +262,15 @@ class CheckSchemaCommand extends Command
     public function checkActivityDataSchema(): void
     {
         $this->spreadSheet->createSheet();
-        $this->spreadSheet->setActiveSheetIndex(2);
+        $this->spreadSheet->setActiveSheetIndex(0);
         $this->spreadSheet->getActiveSheet()->setTitle('activity_data');
         $aidStreamActivityDataTemplate = readJsonFile('DataMigration/Templates/AidStreamActivitySchema.json');
         $aidStreamActivityData = $this->db::connection('aidstream')
             ->table('activity_data')
             ->whereIn('organization_id', $this->organizationIds)
             ->get();
+
+        $aidStreamActivityDataOrganizationIds = $aidStreamActivityData->pluck('organization_id', 'id')->toArray();
 
         foreach ($aidStreamActivityData as $activityData) {
             foreach ($activityData as $key => $data) {
@@ -271,6 +282,47 @@ class CheckSchemaCommand extends Command
                 $itemData = ['tableName' => 'activity_data', 'columnName' => $key, 'rows' => $activityData];
                 $this->checkObjectKey($key, $data, $elementDataTemplate, $itemData);
             }
+        }
+
+        $this->checkActivityDocumentLinkSchema($aidStreamActivityDataOrganizationIds);
+    }
+
+    /**
+     * Checks Schema for activity document link schema.
+     *
+     * @param $aidStreamActivityDataOrganizationIds
+     *
+     * @return void
+     * @throws \JsonException
+     */
+    public function checkActivityDocumentLinkSchema($aidStreamActivityDataOrganizationIds): void
+    {
+        $this->spreadSheet->createSheet();
+        $this->spreadSheet->setActiveSheetIndex(1);
+        $this->spreadSheet->getActiveSheet()->setTitle('activity_document_links');
+        $aidStreamActivityDocumentLinkDataTemplate = readJsonFile('DataMigration/Templates/AidStreamActivityDocumentLinkSchema.json');
+        $chunkedActivityId = array_chunk(array_flip($aidStreamActivityDataOrganizationIds), 1000, true);
+        $organizationId = $aidStreamActivityDataOrganizationIds;
+
+        foreach ($chunkedActivityId as $activityId) {
+            $this->db::connection('aidstream')
+                        ->table('activity_document_links')
+                        ->whereIn('activity_id', $activityId)
+                        ->orderBy('id')
+                        ->chunk(10000, function ($activityDocumentLinks) use ($aidStreamActivityDocumentLinkDataTemplate, $organizationId) {
+                            foreach ($activityDocumentLinks as $documentLink) {
+                                foreach ($documentLink as $key => $data) {
+                                    if (empty($data) || $data === 'null' || $data === '""' || !in_array($key, $this->activityDocumentLinkDataSchema, true)) {
+                                        continue;
+                                    }
+
+                                    $documentLink->organization_id = $organizationId[$documentLink->activity_id];
+                                    $elementDataTemplate = Arr::get($aidStreamActivityDocumentLinkDataTemplate, $key);
+                                    $itemData = ['tableName' => 'activity_document_links', 'columnName' => $key, 'rows' => $documentLink];
+                                    $this->checkObjectKey($key, $data, $elementDataTemplate, $itemData);
+                                }
+                            }
+                        });
         }
     }
 
@@ -417,7 +469,7 @@ class CheckSchemaCommand extends Command
                 'organizationId' => $row->organization_id,
                 'primaryId' => $row->id,
             ];
-            \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Invalid Data");
+//            \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Invalid Data");
 
             return;
         }
@@ -434,7 +486,7 @@ class CheckSchemaCommand extends Command
                 'organizationId' => $row->organization_id,
                 'primaryId' => $row->id,
             ];
-            \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Invalid Data");
+//            \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Invalid Data");
 
             return;
         }
@@ -465,7 +517,7 @@ class CheckSchemaCommand extends Command
                     'organizationId' => $row->organization_id,
                     'primaryId' => $row->id,
                 ];
-                \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Missing keys are $key > ( $differentKeys )\n");
+//                \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Missing keys are $key > ( $differentKeys )\n");
             }
 
             foreach ($aidDatum as $nestedKey => $nestedData) {
