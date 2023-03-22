@@ -30,7 +30,7 @@ class TransactionRequest extends ActivityBaseRequest
     /**
      * @var bool
      */
-    protected bool $has_country_or_region_defined_in_activity = false;
+    protected bool $hasCountryOrRegionDefinedInActivity = false;
 
     /**
      * Get the validation rules that apply to the request.
@@ -705,7 +705,7 @@ class TransactionRequest extends ActivityBaseRequest
             $params = $this->route()->parameters();
 
             if ($activityService->hasRecipientRegionDefinedInActivity($params['id']) || $activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
-                $this->has_country_or_region_defined_in_activity = true;
+                $this->hasCountryOrRegionDefinedInActivity = true;
             }
 
             if (!$activityService->isElementEmpty($formFields, 'recipientRegionFields')
@@ -950,7 +950,7 @@ class TransactionRequest extends ActivityBaseRequest
             $rules[$attribute] = 'country_or_region';
         } elseif (!is_variable_null($this->all()['recipient_region']) && !is_variable_null($this->all()['recipient_country'])) {
             $rules[$attribute] = 'country_or_region';
-        } elseif (!$this->has_country_or_region_defined_in_activity && is_variable_null($this->all()['recipient_region']) && is_variable_null($this->all()['recipient_country'])) {
+        } elseif (!$this->hasCountryOrRegionDefinedInActivity && is_variable_null($this->all()['recipient_region']) && is_variable_null($this->all()['recipient_country'])) {
             $rules[$attribute] = 'country_or_region';
         }
 
