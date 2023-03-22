@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Csv;
 
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;

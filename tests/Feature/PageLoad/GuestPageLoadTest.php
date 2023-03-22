@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\PageLoad;
 
 use Tests\TestCase;
 
+/**
+ * Class GuestPageLoadTest.
+ */
 class GuestPageLoadTest extends TestCase
 {
     /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\PageLoad;
 
 use App\IATI\Models\Organization\Organization;
@@ -8,6 +10,9 @@ use App\IATI\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
+/**
+ * Class OrganizationPageLoadTest.
+ */
 class OrganizationPageLoad extends TestCase
 {
     use RefreshDatabase;
