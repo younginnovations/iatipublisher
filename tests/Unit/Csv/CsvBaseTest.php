@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Csv;
 
 use App\CsvImporter\Entities\Activity\Components\Factory\Validation;
@@ -107,5 +109,14 @@ class CsvBaseTest extends ImportBaseTest
     public function getCompleteData(): void
     {
         $this->completeData = $this->getCsvRows($this->completeCsvFile);
+    }
+
+    /**
+     * @return void
+     */
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        unset($this->csvFile, $this->validation, $this->completeData, $this->user, $this->organization);
     }
 }

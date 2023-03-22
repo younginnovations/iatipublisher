@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit;
 
 use App\IATI\Models\Organization\Organization;
@@ -10,6 +12,9 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
+/**
+ * Class ImportBaseTest.
+ */
 class ImportBaseTest extends TestCase
 {
     use RefreshDatabase;
@@ -51,5 +56,14 @@ class ImportBaseTest extends TestCase
         $activityIdentifier->setAccessible(true);
 
         return $activityIdentifier->invoke($importCsvService);
+    }
+
+    /**
+     * @return void
+     */
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        unset($this->user, $this->organization);
     }
 }

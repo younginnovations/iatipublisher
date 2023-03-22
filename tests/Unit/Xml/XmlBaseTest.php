@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Xml;
 
 use App\XmlImporter\Foundation\Mapper\Components\XmlMapper;
@@ -110,6 +112,6 @@ class XmlBaseTest extends ImportBaseTest
     public function tearDown(): void
     {
         parent::tearDown();
-        unset($this->completeXml, $this->validation);
+        unset($this->completeXml, $this->validation, $this->user, $this->organization);
     }
 }
