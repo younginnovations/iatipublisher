@@ -465,9 +465,9 @@ class ActivityRepository extends Repository
      * @param $id
      * @param $reportingOrg
      *
-     * @return object|int
+     * @return int
      */
-    public function syncReportingOrg($id, $reportingOrg): object|int
+    public function syncReportingOrg($id, $reportingOrg): int
     {
         $activitiesCount = $this->model->where('org_id', $id)->count();
 

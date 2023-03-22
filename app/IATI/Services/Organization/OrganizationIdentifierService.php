@@ -35,6 +35,7 @@ class OrganizationIdentifierService
      * OrganizationIdentifierService constructor.
      *
      * @param OrganizationRepository $organizationRepository
+     * @param ActivityRepository $activityRepository
      * @param BaseFormCreator $baseFormCreator
      */
     public function __construct(
@@ -81,7 +82,6 @@ class OrganizationIdentifierService
      */
     public function update($id, $organizationIdentifiers): bool
     {
-        $organizationService =
         $organization = $this->organizationRepository->find($id);
         $reportingOrg = $organization->reporting_org;
         $reportingOrg[0]['ref'] = $organizationIdentifiers['organization_registration_agency'] . '-' . $organizationIdentifiers['registration_number'];
@@ -95,9 +95,8 @@ class OrganizationIdentifierService
         ];
 
         $organization->fill($organizationIdentifiers);
-        $hasChanged = $organization->isDirty('identifier');
 
-        return $organization->save() && ($hasChanged ? $this->syncActivityReportingOrgFromIdentifier($id) : true);
+        return $organization->save() && (!$organization->isDirty('identifier') || empty($this->syncActivityReportingOrgFromIdentifier($id)));
     }
 
     /**
@@ -106,13 +105,11 @@ class OrganizationIdentifierService
      * @param $id
      *
      * @return Form
+     * @throws \JsonException
      */
     public function formGenerator($id): Form
     {
-        $element = json_decode(
-            file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')),
-            true
-        );
+        $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
         $organization = $this->getOrganizationData($id);
         $model['organisation_identifier'] = $organization['identifier'];
         $model['organization_country'] = $organization['country'];
@@ -142,9 +139,9 @@ class OrganizationIdentifierService
      *
      * @param $id
      *
-     * @return int|object|bool
+     * @return int
      */
-    public function syncActivityReportingOrgFromIdentifier($id): int | object | bool
+    public function syncActivityReportingOrgFromIdentifier($id): int
     {
         $orgReportingOrg = $this->organizationRepository->find($id)->reporting_org[0];
 
