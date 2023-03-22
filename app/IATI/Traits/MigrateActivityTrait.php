@@ -20,25 +20,6 @@ trait MigrateActivityTrait
     protected array $contactInfoReplaceArray = ['organization' => 'organisation'];
 
     /**
-     * Contains key value pair to be replaced.
-     *
-     * @var array
-     */
-    protected array $participatingOrgReplaceArray
-        = [
-            'identifier'        => 'ref',
-            'activity_id'       => 'identifier',
-            'organization_type' => 'type',
-        ];
-
-    /**
-     * Contains values to be removed.
-     *
-     * @var array
-     */
-    protected array $participatingOrgRemoveArray = ['country', 'org_data_id', 'Crs Channel Code', 'is_publisher'];
-
-    /**
      * Contains key value pair to be replaced for each vocabulary.
      *
      * @var array
@@ -60,9 +41,9 @@ trait MigrateActivityTrait
      */
     protected array $recipientRegionRemoveArray
         = [
-            '1'  => ['custom_code', 'region_code_input', 'vocabulary_uri', 'custom_vocabulary_uri'],
-            '2'  => ['region_code', 'region_code_input', 'vocabulary_uri', 'custom_vocabulary_uri'],
-            '99' => ['region_code', 'region_code_input', 'custom_vocabulary_uri'],
+            '1'  => ['custom_code', 'region_code_input', 'vocabulary_uri', 'custom_vocabulary_uri', 'vocabulary-uri'],
+            '2'  => ['region_code', 'region_code_input', 'vocabulary_uri', 'custom_vocabulary_uri', 'vocabulary-uri'],
+            '99' => ['region_code', 'region_code_input', 'custom_vocabulary_uri', 'vocabulary-uri'],
         ];
 
     /**
@@ -313,68 +294,6 @@ trait MigrateActivityTrait
         ];
 
     /**
-     * Contains key value pair to be replaced for particular vocabulary.
-     *
-     * @var array
-     */
-    protected array $defaultAidTypeReplaceArray
-        = [
-            '1' => [
-                'default_aidtype_vocabulary' => 'default_aid_type_vocabulary',
-            ],
-            '2' => [
-                'default_aidtype_vocabulary' => 'default_aid_type_vocabulary',
-            ],
-            '3' => [
-                'default_aidtype_vocabulary' => 'default_aid_type_vocabulary',
-                'default_aid_type_text'      => 'earmarking_modality',
-            ],
-            '4' => [
-                'default_aidtype_vocabulary' => 'default_aid_type_vocabulary',
-            ],
-        ];
-
-    /**
-     * Contains key value pair to be removed for particular vocabulary.
-     *
-     * @var array
-     */
-    protected array $defaultAidTypeRemoveArray
-        = [
-            '1' => [
-                'default_aidtype_vocabulary',
-                'earmarking_category',
-                'cash_and_voucher_modalities',
-                'default_aid_type_text',
-            ],
-            '2' => [
-                'default_aidtype_vocabulary',
-                'default_aid_type',
-                'cash_and_voucher_modalities',
-                'default_aid_type_text',
-            ],
-            '3' => [
-                'default_aidtype_vocabulary',
-                'default_aid_type',
-                'earmarking_category',
-                'cash_and_voucher_modalities',
-                'default_aid_type_text',
-            ],
-            '4' => ['default_aidtype_vocabulary', 'default_aid_type', 'earmarking_category', 'default_aid_type_text'],
-        ];
-
-    /**
-     * Contains key value pair to be replaced.
-     *
-     * @var array
-     */
-    protected array $budgetReplaceArray
-        = [
-            'status' => 'budget_status',
-            'value'  => 'budget_value',
-        ];
-
-    /**
      * Document link language template.
      *
      * @var array
@@ -431,6 +350,57 @@ trait MigrateActivityTrait
         ];
 
     /**
+     * Empty template for narrative.
+     *
+     * @var array
+     */
+    protected array $emptyNarrativeTemplate
+        = [
+            [
+                'narrative' => null,
+                'language'  => null,
+            ],
+        ];
+
+    /**
+     * Returns vocabulary uri array.
+     *
+     * @var array
+     */
+    protected array $vocabularyUriArray
+        = [
+            'region_vocabulary' => 'vocabulary_uri',
+            'sector_vocabulary' => 'vocabulary_uri',
+            'vocabulary'        => 'vocabulary_uri', // Humanitarian Scope and Policy Marker
+        ];
+
+    /**
+     * Empty budget value array.
+     *
+     * @var array
+     */
+    protected array $emptyValueArray
+        = [
+            [
+                'amount'     => null,
+                'currency'   => null,
+                'value_date' => null,
+            ],
+        ];
+
+    /**
+     * Empty period data array.
+     *
+     * @var array
+     */
+    protected array $emptyPeriodDateArray
+        = [
+            [
+                'date' => null,
+            ],
+        ];
+
+    /**
      * Returns IATI activity data.
      *
      * @param $aidstreamActivity
@@ -461,7 +431,9 @@ trait MigrateActivityTrait
             'Activity'
         ) : null;
         $newActivity['status'] = ($aidstreamActivity && $aidstreamActivity->activity_workflow === 3 && $aidstreamActivity->published_to_registry === 1) ? 'published' : 'draft';
-        $newActivity['activity_date'] = $this->getColumnValueArray($aidstreamActivity, 'activity_date');
+        $newActivity['activity_date'] = $aidstreamActivity ? $this->getActivityDateData(
+            $aidstreamActivity->activity_date
+        ) : null;
         $newActivity['contact_info'] = $aidstreamActivity ? $this->getActivityFirstLevelData(
             $aidstreamActivity->contact_info,
             $this->contactInfoReplaceArray
@@ -471,10 +443,8 @@ trait MigrateActivityTrait
             'ActivityScope',
             'Activity'
         ) : null;
-        $newActivity['participating_organization'] = $aidstreamActivity ? $this->getActivityFirstLevelData(
-            $aidstreamActivity->participating_organization,
-            $this->participatingOrgReplaceArray,
-            $this->participatingOrgRemoveArray
+        $newActivity['participating_org'] = $aidstreamActivity ? $this->getActivityParticipatingOrganizationData(
+            $aidstreamActivity->participating_organization
         ) : null;
         $newActivity['recipient_country'] = $this->getColumnValueArray($aidstreamActivity, 'recipient_country');
         $newActivity['recipient_region'] = $aidstreamActivity ? $this->getActivityUpdatedVocabularyData(
@@ -534,10 +504,7 @@ trait MigrateActivityTrait
             'TiedStatus',
             'Activity'
         ) : null;
-        $newActivity['budget'] = $aidstreamActivity ? $this->getActivityFirstLevelData(
-            $aidstreamActivity->budget,
-            $this->budgetReplaceArray,
-        ) : null;
+        $newActivity['budget'] = $aidstreamActivity ? $this->getActivityBudgetData($aidstreamActivity->budget) : null;
         $newActivity['planned_disbursement'] = $aidstreamActivity ? $this->getActivityPlannedDisbursementData(
             $aidstreamActivity->planned_disbursement
         ) : null;
@@ -655,6 +622,7 @@ trait MigrateActivityTrait
      * @param $vocabulary
      * @param $replaceArray
      * @param $removeArray
+     * @param  string  $defaultVocabulary
      *
      * @return array|null
      *
@@ -665,7 +633,7 @@ trait MigrateActivityTrait
         $vocabulary,
         $replaceArray,
         $removeArray,
-        $defaultVocabulary = '1'
+        string $defaultVocabulary = '1'
     ): ?array {
         if (!$object) {
             return null;
@@ -680,6 +648,13 @@ trait MigrateActivityTrait
                     Arr::get($item, $vocabulary)
                 ) === '')) {
                     $item[$vocabulary] = $defaultVocabulary;
+                }
+
+                if (array_key_exists($vocabulary, $this->vocabularyUriArray) &&
+                    (Arr::get($item, $vocabulary, '1') === '99' || Arr::get($item, $vocabulary, '1') === '98') &&
+                    !array_key_exists($this->vocabularyUriArray[$vocabulary], $item)
+                ) {
+                    $item[$this->vocabularyUriArray[$vocabulary]] = null;
                 }
 
                 $newArray[$key] = $this->formatUpdatedVocabularyData(
@@ -708,6 +683,10 @@ trait MigrateActivityTrait
 
         if ($item && count($item)) {
             foreach ($item as $innerKey => $innerItem) {
+                if ($innerKey === 'narrative') {
+                    $innerItem = $this->getNarrativeFromNested($innerItem);
+                }
+
                 if (!in_array($innerKey, $removeArray, true)) {
                     if (array_key_exists($innerKey, $replaceArray)) {
                         $newArray[$replaceArray[$innerKey]] = $innerItem;
@@ -799,7 +778,7 @@ trait MigrateActivityTrait
      */
     public function getLocationAdministrativeData($administratives): array
     {
-        if (count($administratives)) {
+        if ($administratives && count($administratives)) {
             foreach (array_values($administratives) as $key => $administrative) {
                 if (!empty(Arr::get($administrative, 'code', null)) && !array_key_exists(
                     strtoupper(Arr::get($administrative, 'code', null)),
@@ -904,13 +883,30 @@ trait MigrateActivityTrait
         }
 
         if (is_array($defaultAidTypesArray)) {
-            return $this->getActivityUpdatedVocabularyData(
-                $defaultAidTypes,
-                'default_aidtype_vocabulary',
-                $this->defaultAidTypeReplaceArray,
-                $this->defaultAidTypeRemoveArray,
-                '1'
-            );
+            $newDefaultAidTypes = [];
+
+            foreach (array_values($defaultAidTypesArray) as $key => $defaultAidType) {
+                $newDefaultAidTypes[$key] = match (Arr::get($defaultAidType, 'default_aidtype_vocabulary', 1)) {
+                    '2' => [
+                        'default_aid_type_vocabulary' => '2',
+                        'earmarking_category'         => Arr::get($defaultAidType, 'earmarking_category', null),
+                    ],
+                    '3' => [
+                        'default_aid_type_vocabulary' => '3',
+                        'earmarking_modality'         => Arr::get($defaultAidType, 'default_aid_type_text', null),
+                    ],
+                    '4' => [
+                        'default_aid_type_vocabulary' => '4',
+                        'cash_and_voucher_modalities' => Arr::get($defaultAidType, 'cash_and_voucher_modalities', null),
+                    ],
+                    default => [
+                        'default_aid_type_vocabulary' => '1',
+                        'default_aid_type'            => Arr::get($defaultAidType, 'default_aid_type', null),
+                    ],
+                };
+            }
+
+            return count($newDefaultAidTypes) ? $newDefaultAidTypes : null;
         }
 
         if (array_key_exists($defaultAidTypesArray, getCodeList('AidType', 'Activity', false))) {
@@ -947,9 +943,17 @@ trait MigrateActivityTrait
             foreach (array_values($plannedDisbursementsArray) as $key => $plannedDisbursement) {
                 $newPlannedDisbursements[$key] = [
                     'planned_disbursement_type' => Arr::get($plannedDisbursement, 'planned_disbursement_type', null),
-                    'period_start'              => Arr::get($plannedDisbursement, 'period_start', null),
-                    'period_end'                => Arr::get($plannedDisbursement, 'period_end', null),
-                    'value'                     => Arr::get($plannedDisbursement, 'value', null),
+                    'period_start'              => Arr::get(
+                        $plannedDisbursement,
+                        'period_start',
+                        $this->emptyPeriodDateArray
+                    ),
+                    'period_end'                => Arr::get(
+                        $plannedDisbursement,
+                        'period_end',
+                        $this->emptyPeriodDateArray
+                    ),
+                    'value'                     => Arr::get($plannedDisbursement, 'value', $this->emptyValueArray),
                     'provider_org'              => [
                         [
                             'ref'                  => Arr::get($plannedDisbursement, 'provider_org.0.ref', null),
@@ -959,7 +963,11 @@ trait MigrateActivityTrait
                                 null
                             ),
                             'type'                 => Arr::get($plannedDisbursement, 'provider_org.0.type', null),
-                            'narrative'            => Arr::get($plannedDisbursement, 'provider_org.0.narrative', null),
+                            'narrative'            => Arr::get(
+                                $plannedDisbursement,
+                                'provider_org.0.narrative',
+                                $this->emptyNarrativeTemplate
+                            ),
                         ],
                     ],
                     'receiver_org'              => [
@@ -971,7 +979,11 @@ trait MigrateActivityTrait
                                 null
                             ),
                             'type'                 => Arr::get($plannedDisbursement, 'receiver_org.0.type', null),
-                            'narrative'            => Arr::get($plannedDisbursement, 'receiver_org.0.narrative', null),
+                            'narrative'            => Arr::get(
+                                $plannedDisbursement,
+                                'receiver_org.0.narrative',
+                                $this->emptyNarrativeTemplate
+                            ),
                         ],
                     ],
                 ];
@@ -1044,7 +1056,11 @@ trait MigrateActivityTrait
                 'description'   => Arr::get($document, 'description', $this->emptyDocumentLinkTemplate['description']),
                 'category'      => Arr::get($document, 'category', $this->emptyDocumentLinkTemplate['category']),
                 'language'      => $this->getDocumentLinkLanguage(Arr::get($document, 'language', null)),
-                'document_date' => Arr::get($document, 'document_date', $this->emptyDocumentLinkTemplate['document_date']),
+                'document_date' => Arr::get(
+                    $document,
+                    'document_date',
+                    $this->emptyDocumentLinkTemplate['document_date']
+                ),
             ];
         }
 
@@ -1057,6 +1073,8 @@ trait MigrateActivityTrait
      * @param $languages
      *
      * @return array
+     *
+     * @throws \JsonException
      */
     public function getDocumentLinkLanguage($languages): array
     {
@@ -1066,7 +1084,11 @@ trait MigrateActivityTrait
 
         $newLanguages = [];
 
-        if (count($languages)) {
+        if (is_string($languages)) {
+            $languages = json_decode($languages, true, 512, JSON_THROW_ON_ERROR);
+        }
+
+        if ($languages && is_array($languages) && count($languages)) {
             foreach ($languages as $language) {
                 $newLanguages[] = [
                     'code' => Arr::get($language, 'language', null),
@@ -1133,7 +1155,7 @@ trait MigrateActivityTrait
         $newTags = [];
         $tagsArray = json_decode($tags, true, 512, JSON_THROW_ON_ERROR);
 
-        if (count($tagsArray)) {
+        if ($tagsArray && count($tagsArray)) {
             foreach (array_values($tagsArray) as $key => $tag) {
                 $newTags[$key] = $this->getTagData($tag);
             }
@@ -1174,5 +1196,163 @@ trait MigrateActivityTrait
                 'narrative'      => Arr::get($tag, 'narrative', null),
             ],
         };
+    }
+
+    /**
+     * Returns activity participating organization data.
+     *
+     * @param $participatingOrganizations
+     *
+     * @return array|null
+     *
+     * @throws \JsonException
+     */
+    public function getActivityParticipatingOrganizationData($participatingOrganizations): ?array
+    {
+        if (!$participatingOrganizations) {
+            return null;
+        }
+
+        $newParticipatingOrganizations = [];
+        $participatingOrganizationsArray = json_decode($participatingOrganizations, true, 512, JSON_THROW_ON_ERROR);
+
+        if ($participatingOrganizationsArray && count($participatingOrganizationsArray)) {
+            foreach (array_values($participatingOrganizationsArray) as $key => $participatingOrganization) {
+                $newParticipatingOrganizations[$key] = [
+                    'organization_role' => Arr::get($participatingOrganization, 'organization_role', null),
+                    'ref'               => Arr::get($participatingOrganization, 'identifier', null),
+                    'type'              => Arr::get($participatingOrganization, 'organization_type', null),
+                    'identifier'        => Arr::get($participatingOrganization, 'activity_id', null),
+                    'crs_channel_code'  => Arr::get($participatingOrganization, 'crs_channel_code', null),
+                    'narrative'         => Arr::get(
+                        $participatingOrganization,
+                        'narrative',
+                        $this->emptyNarrativeTemplate
+                    ),
+                ];
+            }
+        }
+
+        return count($newParticipatingOrganizations) ? $newParticipatingOrganizations : null;
+    }
+
+    /**
+     * Returns activity budget data.
+     *
+     * @param $budgets
+     *
+     * @return array|null
+     *
+     * @throws \JsonException
+     */
+    public function getActivityBudgetData($budgets): ?array
+    {
+        if (!$budgets) {
+            return null;
+        }
+
+        $newBudgets = [];
+        $budgetsArray = json_decode($budgets, true, 512, JSON_THROW_ON_ERROR);
+
+        if ($budgetsArray && count($budgetsArray)) {
+            foreach (array_values($budgetsArray) as $key => $budget) {
+                $newBudgets[$key] = [
+                    'budget_status' => Arr::get($budget, 'status', null),
+                    'budget_type'   => Arr::get($budget, 'budget_type', null),
+                    'period_start'  => Arr::get($budget, 'period_start', $this->emptyPeriodDateArray),
+                    'period_end'    => Arr::get($budget, 'period_end', $this->emptyPeriodDateArray),
+                    'budget_value'  => Arr::get($budget, 'value', $this->emptyValueArray),
+                ];
+            }
+        }
+
+        return count($newBudgets) ? $newBudgets : null;
+    }
+
+    /**
+     * Returns activity date data.
+     *
+     * @param $dates
+     *
+     * @return array|null
+     *
+     * @throws \JsonException
+     */
+    public function getActivityDateData($dates): ?array
+    {
+        if (!$dates) {
+            return null;
+        }
+
+        $newDates = [];
+        $datesArray = json_decode($dates, true, 512, JSON_THROW_ON_ERROR);
+
+        if ($datesArray && count($datesArray)) {
+            foreach (array_values($datesArray) as $key => $dateArray) {
+                $newDates[$key] = [
+                    'type'      => !is_null(Arr::get($dateArray, 'type', null)) ? (string) Arr::get(
+                        $dateArray,
+                        'type',
+                        null
+                    ) : null,
+                    'date'      => !is_null(Arr::get($dateArray, 'date', null)) ? (string) Arr::get(
+                        $dateArray,
+                        'date',
+                        null
+                    ) : null,
+                    'narrative' => $this->getNarrativeFromNested(Arr::get($dateArray, 'narrative', [])),
+                ];
+            }
+        }
+
+        return count($newDates) ? $newDates : null;
+    }
+
+    /**
+     * Returns narrative for normal and single nested array.
+     *
+     * @param $narratives
+     *
+     * @return array
+     */
+    public function getNarrativeFromNested($narratives): array
+    {
+        if (!count($narratives)) {
+            return $this->emptyNarrativeTemplate;
+        }
+
+        $newNarratives = [];
+
+        foreach ($narratives as $narrative) {
+            if (array_key_exists('narrative', $narrative) && array_key_exists('language', $narrative)) {
+                $newNarratives[] = [
+                    'narrative' => !empty(Arr::get($narrative, 'narrative', null)) ? Arr::get(
+                        $narrative,
+                        'narrative',
+                        null
+                    ) : null,
+                    'language'  => !empty(Arr::get($narrative, 'language', null)) ? Arr::get(
+                        $narrative,
+                        'language',
+                        null
+                    ) : null,
+                ];
+            } elseif (array_key_exists(0, $narrative)) {
+                $newNarratives[] = [
+                    'narrative' => !empty(Arr::get($narrative, '0.narrative', null)) ? Arr::get(
+                        $narrative,
+                        '0.narrative',
+                        null
+                    ) : null,
+                    'language'  => !empty(Arr::get($narrative, '0.language', null)) ? Arr::get(
+                        $narrative,
+                        '0.language',
+                        null
+                    ) : null,
+                ];
+            }
+        }
+
+        return count($newNarratives) ? $newNarratives : $this->emptyNarrativeTemplate;
     }
 }
