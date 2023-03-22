@@ -381,7 +381,7 @@ class MigrateOrganizationCommand extends Command
      */
     public function replaceDocumentLinkUrl($url): string
     {
-        $replaceText = ['http://aidstream.org', 'http://www.aidstream.org', 'https://aidstream.org'];
+        $replaceText = ['http://aidstream.org', 'http://www.aidstream.org', 'https://aidstream.org', 'https://www.aidstream.org'];
         $replaceWith = env('AWS_ENDPOINT') . '/' . env('AWS_BUCKET');
 
         return str_replace($replaceText, $replaceWith, $url);
