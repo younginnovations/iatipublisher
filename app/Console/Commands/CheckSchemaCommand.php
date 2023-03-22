@@ -171,7 +171,7 @@ class CheckSchemaCommand extends Command
         $this->checkSettingDataSchema();
         $this->checkActivityDataSchema();
         $this->checkBaseResultDataSchema();
-        $this->checkActivityTransactionDataSchema();
+//        $this->checkActivityTransactionDataSchema();
         $this->generateExcelFile();
         $xlsFile = new Xlsx($this->spreadSheet);
         $fileName = app_path('DataMigration/remarks.xlsx');
@@ -364,7 +364,7 @@ class CheckSchemaCommand extends Command
     public function checkActivityTransactionDataSchema(): void
     {
         $this->spreadSheet->createSheet();
-        $this->spreadSheet->setActiveSheetIndex(5);
+        $this->spreadSheet->setActiveSheetIndex(0);
         $this->spreadSheet->getActiveSheet()->setTitle('activity_transactions');
         $aidStreamActivityTransactionDataTemplate = readJsonFile('DataMigration/Templates/AidStreamActivityTransactionSchema.json');
         $aidStreamActivityData = $this->db::connection('aidstream')
@@ -414,6 +414,8 @@ class CheckSchemaCommand extends Command
                 'columnName' => $columnName,
                 'key' => $key,
                 'missingKeys' => 'Invalid Data',
+                'organizationId' => $row->organization_id,
+                'primaryId' => $row->id,
             ];
             \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Invalid Data");
 
@@ -429,6 +431,8 @@ class CheckSchemaCommand extends Command
                 'columnName' => $columnName,
                 'key' => $key,
                 'missingKeys' => 'Invalid Data',
+                'organizationId' => $row->organization_id,
+                'primaryId' => $row->id,
             ];
             \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Invalid Data");
 
@@ -458,6 +462,8 @@ class CheckSchemaCommand extends Command
                     'columnName' => $columnName,
                     'key' => $key,
                     'missingKeys' => $differentKeys,
+                    'organizationId' => $row->organization_id,
+                    'primaryId' => $row->id,
                 ];
                 \Log::info("Table: $tableName\n\norganizationId $row->organization_id and row number $row->id in this column ($columnName) \n Missing keys are $key > ( $differentKeys )\n");
             }
@@ -483,7 +489,25 @@ class CheckSchemaCommand extends Command
     public function generateExcelFile(): void
     {
         $stack = $this->logStack;
-        $uniqueStack = array_unique($stack, SORT_REGULAR);
+        $uniqueStack = array_reduce($stack, function ($previous, $current) {
+            $concatenated = false;
+
+            foreach ($previous as &$value) {
+                $result = $this->compareAndConcat($value, $current);
+
+                if ($result !== null) {
+                    $value = $result;
+                    $concatenated = true;
+                    break;
+                }
+            }
+
+            if (!$concatenated) {
+                $previous[] = $current;
+            }
+
+            return $previous;
+        }, []);
 
         foreach ($uniqueStack as $data) {
             $this->spreadSheet->setActiveSheetIndexByName($data['tableName']);
@@ -493,10 +517,39 @@ class CheckSchemaCommand extends Command
             $sheet->setCellValue('A1', 'Table Name');
             $sheet->setCellValue('B1', 'Column Name');
             $sheet->setCellValue('C1', 'Missing Keys');
-            $sheet->getStyle('A1:C1')->getFont()->applyFromArray(['bold' => true]);
+            $sheet->setCellValue('D1', 'Organization Id');
+            $sheet->setCellValue('E1', 'Primary Id');
+            $sheet->getStyle('A1:E1')->getFont()->applyFromArray(['bold' => true]);
             $sheet->setCellValue('A' . $excelRow, $data['tableName']);
             $sheet->setCellValue('B' . $excelRow, $data['columnName']);
             $sheet->setCellValue('C' . $excelRow, $data['key'] . ' > ' . $data['missingKeys']);
+            $sheet->setCellValue('D' . $excelRow, $data['organizationId']);
+            $sheet->setCellValue('E' . $excelRow, $data['primaryId']);
         }
+    }
+
+    /**
+     * Returns Concatenated value.
+     *
+     * @param $previous
+     * @param $current
+     *
+     * @return array|null
+     */
+    public function compareAndConcat($previous, $current): ?array
+    {
+        if (
+            $previous['columnName'] === $current['columnName']
+            && $previous['tableName'] === $current['tableName']
+            && $previous['key'] === $current['key']
+            && $previous['missingKeys'] === $current['missingKeys']
+            && $previous['organizationId'] === $current['organizationId']
+        ) {
+            $previous['primaryId'] .= ', ' . $current['primaryId'];
+
+            return $previous;
+        }
+
+        return null;
     }
 }
