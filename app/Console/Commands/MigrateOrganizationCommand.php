@@ -235,7 +235,7 @@ class MigrateOrganizationCommand extends Command
     public function getDocumentLink($documentUrl): string
     {
         $documentLinkFormat = [
-            'url' => $this->replaceDocumentLinkUrl($documentUrl),
+            'url' => !empty($documentUrl) ? $this->replaceDocumentLinkUrl($documentUrl) : '',
             'format' => '',
             'title' => [
                 [
