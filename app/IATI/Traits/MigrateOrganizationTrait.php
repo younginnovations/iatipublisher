@@ -71,6 +71,16 @@ trait MigrateOrganizationTrait
             $aidstreamOrganizationData,
             'document_link'
         );
+
+        if (!empty($newOrganization['document_link'])) {
+            $newOrganization['document_link'] = array_map(function ($documentLink) {
+                $documentLinkData = $documentLink;
+                $documentLinkData['url'] = !empty($documentLinkData['url']) ? $this->replaceDocumentLinkUrl($documentLinkData['url']) : null;
+
+                return $documentLinkData;
+            }, $newOrganization['document_link']);
+        }
+
         $newOrganization['total_expenditure'] = $aidstreamOrganizationData ? $this->getOrganizationBudget(
             $aidstreamOrganizationData->total_expenditure,
             'total_expenditure',
