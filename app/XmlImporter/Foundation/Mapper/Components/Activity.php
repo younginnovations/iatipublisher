@@ -82,6 +82,7 @@ class Activity
      * @var
      */
     public $orgRef;
+
     /**
      * @var array
      */
@@ -195,7 +196,7 @@ class Activity
     /**
      * @var array
      */
-    protected array $emptyNarrative = [['narrative' => '', 'language' => '']];
+    protected array $emptyNarrative = [['narrative' => null, 'language' => null]];
 
     public function __construct($organizationReportingOrg)
     {
@@ -835,6 +836,7 @@ class Activity
     /**
      * @param array $elementData
      * @param       $template
+     * @param       $orgRef
      *
      * @return array
      */
@@ -985,9 +987,9 @@ class Activity
      *
      * @param $element
      *
-     * @return mixed
+     * @return array
      */
-    private function getReportingOrgNarrative($element): mixed
+    private function getReportingOrgNarrative($element): array
     {
         $narrativesFromXML = $this->narrative($element);
         $narrativesAtOrgLevel = $this->organizationReportingOrg[0]['narrative'];

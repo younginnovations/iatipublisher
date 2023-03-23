@@ -15,9 +15,9 @@ class ReportingOrgRequest extends ActivityBaseRequest
      * Holds organization level reporting org values
      * Only set during import.
      *
-     * @var mixed
+     * @var array|bool
      */
-    protected mixed $reportingOrganisationInOrganisation = '';
+    protected array|bool $reportingOrganisationInOrganisation = false;
 
     /**
      * Get the validation rules that apply to the request.
@@ -59,7 +59,7 @@ class ReportingOrgRequest extends ActivityBaseRequest
         $rules['reporting_org'] = 'size:1';
 
         $reportingOrganizationTypes = implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
-        $organizationReportingOrg = is_array($this->reportingOrganisationInOrganisation) ? $this->reportingOrganisationInOrganisation : auth()->user()->organization->reporting_org;
+        $organizationReportingOrg = $this->reportingOrganisationInOrganisation ?: auth()->user()->organization->reporting_org;
 
         $reportingOrganization = $formFields[0];
         $reportingOrganizationIndex = 0;
@@ -81,7 +81,7 @@ class ReportingOrgRequest extends ActivityBaseRequest
             $organizationReportingOrg[0]['ref'] ? "must_match:{$organizationReportingOrg[0]['ref']}" : '',
         ];
 
-        if (is_array($this->reportingOrganisationInOrganisation)) {
+        if ($this->reportingOrganisationInOrganisation) {
             $narrativeRules = $this->getMessagesForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
 
             list($orgNarratives, $orgLanguages) = $this->getNarrativesAndLanguages($organizationReportingOrg);
@@ -146,7 +146,7 @@ class ReportingOrgRequest extends ActivityBaseRequest
         $messages[$reportingOrganizationForm . '.type.must_match'] = 'The type of reporting-org must match type of reporting-org in organisation';
         $messages[$reportingOrganizationForm . '.type.in:0,1'] = 'The type for reporting organisation is invalid.';
 
-        if (is_array($this->reportingOrganisationInOrganisation)) {
+        if ($this->reportingOrganisationInOrganisation) {
             $narrativeMessages = $this->getMessagesForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
 
             foreach ($reportingOrganization['narrative'] as $index => $narrative) {

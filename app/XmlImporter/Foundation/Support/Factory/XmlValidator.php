@@ -21,9 +21,9 @@ class XmlValidator
     use ValidationMessages;
 
     /**
-     * @var mixed
+     * @var bool|array
      */
-    public $organizationReportingOrg = false;
+    public bool|array $organizationReportingOrg = false;
 
     /**
      * @var

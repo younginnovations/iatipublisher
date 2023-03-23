@@ -33,6 +33,7 @@ class ReportingOrgService
      * ReportingOrgService constructor.
      *
      * @param OrganizationRepository $organizationRepository
+     * @param ActivityRepository $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
     public function __construct(OrganizationRepository $organizationRepository, ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
@@ -83,10 +84,9 @@ class ReportingOrgService
         }
 
         $reportingOrg = array_values($reportingOrg['reporting_org']);
-
         $hasChanged = $this->checkForChange($organization, $reportingOrg);
 
-        return $organization->update(['reporting_org'=>$reportingOrg]) && ($hasChanged ? $this->syncReportingOrg($id) : true);
+        return $organization->update(['reporting_org'=>$reportingOrg]) && (!$hasChanged || $this->syncReportingOrg($id));
     }
 
     /**
@@ -136,9 +136,9 @@ class ReportingOrgService
      *
      * @param $id
      *
-     * @return object|int
+     * @return int
      */
-    protected function syncReportingOrg($id): object | int
+    protected function syncReportingOrg($id): int
     {
         $orgReportingOrg = $this->organizationRepository->find($id)->reporting_org[0];
 
