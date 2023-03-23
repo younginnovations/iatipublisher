@@ -201,8 +201,14 @@
 import axios from 'axios';
 
 function downloadManual(type: string) {
+  let fileName = {
+    activity: 'IATI_Publisher_Activity_Standard.pdf',
+    organization: 'IATI_Publisher_Organisation_Standard.pdf',
+  };
+  let url = window.location.origin + `/Data/Manuals/${fileName[type]}`;
+
   axios({
-    url: `/iati-standard/manual/${type}`,
+    url: url,
     method: 'GET',
     responseType: 'arraybuffer',
   }).then((response) => {
@@ -211,7 +217,7 @@ function downloadManual(type: string) {
     });
     let link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
-    link.download = response.headers['content-disposition'].split('=')[1];
+    link.download = fileName[type];
     link.click();
   });
 }
