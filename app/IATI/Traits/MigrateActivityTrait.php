@@ -886,7 +886,15 @@ trait MigrateActivityTrait
             $newDefaultAidTypes = [];
 
             foreach (array_values($defaultAidTypesArray) as $key => $defaultAidType) {
-                $newDefaultAidTypes[$key] = match (Arr::get($defaultAidType, 'default_aidtype_vocabulary', 1)) {
+                $newDefaultAidTypes[$key] = match ((string) Arr::get(
+                    $defaultAidType,
+                    'default_aidtype_vocabulary',
+                    null
+                )) {
+                    '1' => [
+                        'default_aid_type_vocabulary' => '1',
+                        'default_aid_type'            => Arr::get($defaultAidType, 'default_aid_type', null),
+                    ],
                     '2' => [
                         'default_aid_type_vocabulary' => '2',
                         'earmarking_category'         => Arr::get($defaultAidType, 'earmarking_category', null),
@@ -900,8 +908,8 @@ trait MigrateActivityTrait
                         'cash_and_voucher_modalities' => Arr::get($defaultAidType, 'cash_and_voucher_modalities', null),
                     ],
                     default => [
-                        'default_aid_type_vocabulary' => '1',
-                        'default_aid_type'            => Arr::get($defaultAidType, 'default_aid_type', null),
+                        'default_aid_type_vocabulary' => null,
+                        'default_aid_type'            => null,
                     ],
                 };
             }
@@ -1050,7 +1058,9 @@ trait MigrateActivityTrait
             ) : [];
 
             $newDocumentLinks[] = [
-                'url'           => !empty(Arr::get($document, 'url', null)) ? $this->replaceDocumentLinkUrl(Arr::get($document, 'url', null)) : null,
+                'url'           => !empty(Arr::get($document, 'url', null)) ? $this->replaceDocumentLinkUrl(
+                    Arr::get($document, 'url', null)
+                ) : null,
                 'format'        => Arr::get($document, 'format', null),
                 'title'         => Arr::get($document, 'title', $this->emptyDocumentLinkTemplate['title']),
                 'description'   => Arr::get($document, 'description', $this->emptyDocumentLinkTemplate['description']),
@@ -1173,7 +1183,12 @@ trait MigrateActivityTrait
      */
     public function getTagData($tag): array
     {
-        return match (Arr::get($tag, 'tag_vocabulary', '1')) {
+        return match ((string) Arr::get($tag, 'tag_vocabulary', null)) {
+            '1' => [
+                'tag_vocabulary' => Arr::get($tag, 'vocabulary', '1'),
+                'tag_text'       => Arr::get($tag, 'tag_code', null),
+                'narrative'      => Arr::get($tag, 'narrative', null),
+            ],
             '2' => [
                 'tag_vocabulary' => Arr::get($tag, 'vocabulary', '2'),
                 'goals_tag_code' => Arr::get($tag, 'goals_tag_code', null),
@@ -1191,9 +1206,9 @@ trait MigrateActivityTrait
                 'narrative'      => Arr::get($tag, 'narrative', null),
             ],
             default => [
-                'tag_vocabulary' => Arr::get($tag, 'vocabulary', '1'),
-                'tag_text'       => Arr::get($tag, 'tag_code', null),
-                'narrative'      => Arr::get($tag, 'narrative', null),
+                'tag_vocabulary' => null,
+                'tag_text'       => null,
+                'narrative'      => $this->emptyNarrativeTemplate,
             ],
         };
     }
