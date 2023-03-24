@@ -107,11 +107,16 @@ trait MigrateActivityResultsTrait
         $aidStreamActivityResult = $this->getAidStreamActivityResult($aidstreamActivity->id);
 
         foreach ($aidStreamActivityResult as $result) {
-            $aidStreamResultId = $result['id'];
-            unset($result['id']);
+            list($aidStreamResultId, $created_at, $updated_at) = $this->extractSpecifiedKeys($result, ['id', 'created_at', 'updated_at']);
+            $result = $this->unsetNotNeededKeys($result, ['id', 'created_at', 'updated_at']);
 
             $this->logInfo("Started migrating AidStream Activity Result for activity id: {$aidstreamActivity->id} and result id: {$aidStreamResultId}");
-            $iatiResult = $this->resultService->create(['activity_id'=>$iatiActivity->id, 'result'=>$result]);
+            $iatiResult = $this->resultService->create([
+                'activity_id' => $iatiActivity->id,
+                'result'      => $result,
+                'created_at'  => $created_at,
+                'updated_at'  => $updated_at,
+            ]);
             $this->logInfo("Completed migrating AidStream Activity Result for activity id: {$aidstreamActivity->id} and result id: {$aidStreamResultId}");
             $this->migrateResultIndicator($aidStreamResultId, $iatiResult->id);
         }
@@ -129,6 +134,15 @@ trait MigrateActivityResultsTrait
         $this->logInfo("Started fetching AidStream Activity Results for activity id: {$id}");
 
         $baseResults = $this->getBaseResult($id);
+
+        if ($baseResults->isEmpty()) {
+            $this->logInfo("No result were found for activity id: {$id}");
+
+            return [];
+        }
+
+        $createdAt = $baseResults->pluck('created_at', 'id');
+        $updatedAt = $baseResults->pluck('updated_at', 'id');
         $resultIds = $baseResults->pluck('id');
 
         $this->logInfo("Started fetching AidStream Reference and Document Link for activity id: {$id}");
@@ -137,6 +151,7 @@ trait MigrateActivityResultsTrait
         $resultsDocumentLink = $this->getResultDocumentLink($resultIds);
 
         $returnArr = $this->resolveResult($baseResults->toArray(), $resultsReference->toArray(), $resultsDocumentLink->toArray());
+        $returnArr = $this->mapDates($returnArr, $createdAt, $updatedAt);
 
         $this->logInfo("Completed fetching AidStream Activity Results for activity id: {$id}");
 
@@ -353,5 +368,43 @@ trait MigrateActivityResultsTrait
         }
 
         return $temp;
+    }
+
+    /**
+     * Maps each result to the base results created_at and updated_at.
+     *
+     * @param $resultsArray
+     * @param $createdAt
+     * @param $updatedAt
+     *
+     * @return array
+     */
+    public function mapDates($resultsArray, $createdAt, $updatedAt): array
+    {
+        foreach ($resultsArray as $index => $result) {
+            $resultsArray[$index]['created_at'] = $createdAt[$result['id']];
+            $resultsArray[$index]['updated_at'] = $updatedAt[$result['id']];
+        }
+
+        return $resultsArray;
+    }
+
+    /**
+     * Returns specified keys from source array.
+     *
+     * @param $sourceArray
+     * @param $keysArray
+     *
+     * @return array
+     */
+    public function extractSpecifiedKeys($sourceArray, $keysArray): array
+    {
+        $returnArray = [];
+
+        foreach ($keysArray as $key) {
+            $returnArray[] = $sourceArray[$key];
+        }
+
+        return $returnArray;
     }
 }

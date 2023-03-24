@@ -57,9 +57,11 @@ trait MigrateOrganizationPublishedTrait
             $organizationPublished = new OrganizationPublished();
 
             return $organizationPublished->fill([
-                'filename'=>"{$iatiOrganization->publisher_id}-organisation.xml",
-                'organization_id'=>$iatiOrganization->id,
-                'published_to_registry'=> (bool) $publishedOrganization->published_to_register,
+                'filename'              => "{$iatiOrganization->publisher_id}-organisation.xml",
+                'organization_id'       => $iatiOrganization->id,
+                'published_to_registry' => (bool) $publishedOrganization->published_to_register,
+                'created_at'            => $publishedOrganization->created_at,
+                'updated_at'            => $publishedOrganization->updated_at,
             ])->save();
         }
 

@@ -478,4 +478,16 @@ class ResultService
     {
         return $this->resultRepository->delete($id);
     }
+
+    /**
+     * Inserts multiple results.
+     *
+     * @param $results
+     *
+     * @return bool
+     */
+    public function insert($results): bool
+    {
+        return $this->resultRepository->insert($results);
+    }
 }

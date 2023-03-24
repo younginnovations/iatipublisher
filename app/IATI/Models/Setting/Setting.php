@@ -28,6 +28,8 @@ class Setting extends Model implements Auditable
         'publishing_info',
         'default_values',
         'activity_default_values',
+        'created_at',
+        'updated_at',
     ];
 
     /**
