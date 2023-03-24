@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\XmlImporter\Foundation\Support\Factory;
+namespace App\XlsImporter\Foundation\XlsValidator\Validators;
 
 use App\Http\Requests\Activity\Result\ResultRequest;
+use App\XlsImporter\Foundation\Factory\Validation;
 use App\XlsImporter\Foundation\XlsValidator\ValidatorInterface;
 
 /**
- * Class XmlValidator.
+ * Class XlsValidator.
  */
 class ResultValidator implements ValidatorInterface
 {
@@ -31,7 +32,7 @@ class ResultValidator implements ValidatorInterface
     }
 
     /**
-     * Returns warnings for xml uploaded activity.
+     * Returns warnings for xls uploaded activity.
      *
      * @return array
      */
@@ -52,20 +53,20 @@ class ResultValidator implements ValidatorInterface
     }
 
     /**
-     * Returns error rules for xml uploaded activity.
+     * Returns error rules for xls uploaded activity.
      *
      * @return array
      */
     public function errorRules(): array
     {
-        $rules = (new ResultRequest())->getErrorsForResult($this->result);
+        $rules = (new ResultRequest())->getErrorsForResult($this->result, true);
 
         return $rules;
         // return [];
     }
 
     /**
-     * Returns critical rules for xml uploaded activity.
+     * Returns critical rules for xls uploaded activity.
      * @return array
      */
     public function criticalRules(): array
@@ -80,32 +81,31 @@ class ResultValidator implements ValidatorInterface
      */
     public function messages(): array
     {
-        return (new ResultRequest())->getMessagesForResult($this->result);
+        return (new ResultRequest())->getMessagesForResult($this->result, true);
     }
 
-    public function init($result): void
+    public function init($result): static
     {
         $this->result = $result;
+
+        return $this;
     }
 
     /**
-     * @param bool $isDuplicate
-     * @param bool $isIdentifierValid
-     *
      * @return array
      */
-    public function validateData(bool $isDuplicate, bool $isIdentifierValid): array
+    public function validateData(): array
     {
         $errors = [
-            'critical' => $this->factory->initialize($this->result, $this->criticalRules(), $this->messages())
-                ->passes()
-                ->withErrors(),
+//            'critical' => $this->factory->initialize($this->result, $this->criticalRules(), $this->messages())
+//                ->passes()
+//                ->withErrors(),
             'error' => $this->factory->initialize($this->result, $this->errorRules(), $this->messages())
                 ->passes()
                 ->withErrors(),
-            'warning' => $this->factory->initialize($this->result, $this->rules(), $this->messages())
-                ->passes()
-                ->withErrors(),
+//            'warning' => $this->factory->initialize($this->result, $this->rules(), $this->messages())
+//                ->passes()
+//                ->withErrors(),
         ];
 
         return $errors;

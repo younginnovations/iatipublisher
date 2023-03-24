@@ -19,16 +19,12 @@
         "type": "Activity/DescriptionType.json",
         "narrative language": "Activity/Language.json"
     },
-    "activity_status": {
-        "activity_status": "Activity/ActivityStatus.json"
-    },
+    "activity_status": "Activity/ActivityStatus.json",
     "activity_date": {
         "type": "Activity/ActivityDateType.json",
         "narrative language": "Activity/Language.json"
     },
-    "activity_scope": {
-        "activity_scope": "Activity/ActivityScope.json"
-    },
+    "activity_scope": "Activity/ActivityScope.json",
     "recipient_country": {
         "country_code": "Activity/Country.json",
         "narrative language": "Activity/Language.json"
@@ -58,15 +54,9 @@
         "policy_marker": "Activity/PolicyMarker.json",
         "narrative language": "Activity/Language.json"
     },
-    "collaboration_type": {
-        "collaboration_type": "Activity/CollaborationType.json"
-    },
-    "default_flow_type": {
-        "default_flow_type": "Activity/FlowType.json"
-    },
-    "default_finance_type": {
-        "default_finance_type": "Activity/FinanceType.json"
-    },
+    "collaboration_type": "Activity/CollaborationType.json",
+    "default_flow_type": "Activity/FlowType.json",
+    "default_finance_type": "Activity/FinanceType.json",
     "default_aid_type": {
         "default_aid_type_vocabulary": "Activity/AidTypeVocabulary.json",
         "default_aid_type": "Activity/AidType.json",
@@ -74,9 +64,7 @@
         "earmarking_modality": "Activity/EarmarkingModality.json",
         "cash_and_voucher_modalities": "Activity/CashandVoucherModalities.json"
     },
-    "default_tied_status": {
-        "default_tied_status": "Activity/TiedStatus.json"
-    },
+    "default_tied_status": "Activity/TiedStatus.json",
     "country_budget_items": {
         "country_budget_vocabulary": "Activity/BudgetIdentifierVocabulary.json",
         "budget_item code": "Activity/BudgetIdentifier.json",
@@ -147,24 +135,21 @@
         "budget_value currency": "Activity/Currency.json"
     },
     "result": {
-        "type": "Type",
-        "aggregation_status": "Aggregation-status",
-        "title narrative narrative": "Title Narrative Narrative",
-        "title narrative language": "Title Narrative Language",
-        "description narrative narrative": "Description Narrative Narrative",
-        "description narrative language": "Description Narrative Language",
-        "document_link url": "Document-link Url",
-        "document_link format": "Document-link Format",
-        "document_link title narrative narrative": "Document-link Title Narrative Narrative",
-        "document_link title narrative language": "Document-link Title Narrative Language",
-        "document_link description narrative narrative": "Document-link Description Narrative Narrative",
-        "document_link description narrative language": "Document-link Description Narrative Language",
-        "document_link category code": "Document-link Category Code",
-        "document_link language language": "Document-link Language Language",
-        "document_link document_date date": "Document-link Document_date Date",
-        "reference vocabulary": "Reference Vocabulary",
-        "reference code": "Reference Code",
-        "reference vocabulary_uri": "Reference Vocabulary Uri"
+        "type": "Activity/ResultType.json",
+        "aggregation_status": {
+            "0": "False",
+            "1": "True"
+        },
+        "title narrative language": "Activity/Language.json",
+        "description narrative language": "Activity/Language.json",
+        "reference vocabulary": "Activity/ResultVocabulary.json"
+    },
+    "result_document_link": {
+      "document_link format": "Activity/FileFormat.json",
+      "document_link title narrative language": "Activity/Language.json",
+      "document_link description narrative language": "Activity/Language.json",
+      "document_link category code": "Activity/DocumentCategory.json",
+      "document_link language language": "Activity/Language.json"
     },
     "indicator": {
         "measure": "Activity/IndicatorMeasure.json",
@@ -250,5 +235,8 @@
         "aid_type earmarking_modality": "Activity/EarmarkingModality.json",
         "aid_type cash_and_voucher_modalities": "Activity/CashandVoucherModalities.json",
         "tied_status tied_status_code": "Activity/TiedStatus.json"
-    }
+    },
+    "default_currency": "Activity/Currency.json",
+    "default_language": "Activity/Language.json",
+    "budget_not_provided": "Activity/BudgetNotProvided.json"
 }

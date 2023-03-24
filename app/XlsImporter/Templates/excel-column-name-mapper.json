@@ -1,0 +1,300 @@
+{
+  "Settings": {
+    "default_currency": "B",
+    "default_language": "C",
+    "default_hierarchy": "D",
+    "default_humanitarian": "E",
+    "budget_not_provided": "F",
+    "secondary_reporter": "G"
+  },
+  "Title": {
+    "narrative": "B",
+    "language": "C"
+  },
+  "Description": {
+    "type": "B",
+    "narrative narrative": "C",
+    "narrative language": "D"
+  },
+  "Activity Date": {
+    "type": "B",
+    "date": "C",
+    "narrative narrative": "D",
+    "narrative language": "E"
+  },
+  "Recipient Country": {
+    "country_code": "B",
+    "percentage": "C",
+    "narrative narrative": "D",
+    "narrative language": "E"
+  },
+  "Recipient Region": {
+    "region_vocabulary": "B",
+    "custom_code": "C",
+    "vocabulary_uri": "D",
+    "percentage": "E",
+    "narrative narrative": "F",
+    "narrative language": "G"
+  },
+  "Conditions": {
+    "condition_attached": "B",
+    "condition condition_type": "C",
+    "condition narrative narrative": "D",
+    "condition narrative language": "E"
+  },
+  "Contact Info": {
+    "type": "B",
+    "organisation narrative narrative": "C",
+    "organisation narrative language": "D",
+    "department narrative narrative": "E",
+    "department narrative language": "F",
+    "person_name narrative narrative": "G",
+    "person_name narrative language": "H",
+    "job_title narrative narrative": "I",
+    "job_title narrative language": "J",
+    "telephone telephone": "K",
+    "email email": "L",
+    "website website": "M",
+    "mailing_address narrative narrative": "N",
+    "mailing_address narrative language": "O"
+  },
+  "Planned Disbursement": {
+    "planned_disbursement_type": "B",
+    "period_start date": "C",
+    "period_end date": "D",
+    "value amount": "E",
+    "value currency": "F",
+    "value date": "G",
+    "provider_org ref": "H",
+    "provider_org provider_activity_id": "I",
+    "provider_org type": "J",
+    "provider_org narrative narrative": "K",
+    "provider_org narrative language": "L",
+    "receiver_org ref": "M",
+    "receiver_org receiver_activity_id": "N",
+    "receiver_org type": "O",
+    "receiver_org narrative narrative": "P",
+    "receiver_org narrative language": "Q"
+  },
+  "Participating Org": {
+    "organization_role": "B",
+    "ref": "C",
+    "type": "D",
+    "identifier": "E",
+    "crs_channel_code": "F",
+    "narrative narrative": "G",
+    "narrative language": "H"
+  },
+  "Budget": {
+    "budget_status": "B",
+    "budget_type": "C",
+    "period_start date": "D",
+    "period_end date": "E",
+    "budget_value amount": "F",
+    "budget_value currency": "G",
+    "budget_value value_date": "H"
+  },
+  "Legacy Data": {
+    "legacy_name": "B",
+    "value": "C",
+    "iati_equivalent": "D"
+  },
+  "Humanitarian Scope": {
+    "type": "B",
+    "vocabulary": "C",
+    "code": "D",
+    "vocabulary_uri": "E",
+    "narrative narrative": "F",
+    "narrative language": "G"
+  },
+  "Related Activity": {
+    "activity_identifier": "A",
+    "relationship_type": "C"
+  },
+  "Other Identifier": {
+    "reference": "B",
+    "reference_type": "C",
+    "owner_org ref": "D",
+    "owner_org narrative narrative": "E",
+    "owner_org narrative language": "F"
+  },
+  "Sector": {
+    "sector_vocabulary": "B",
+    "code" : "C",
+    "vocabulary_uri": "D",
+    "percentage": "E",
+    "narrative narrative": "F",
+    "narrative language": "G"
+  },
+  "Country Budget Items": {
+    "country_budget_vocabulary": "B",
+    "budget_item code": "C",
+    "budget_item percentage": "D",
+    "budget_item description narrative narrative": "E",
+    "budget_item description narrative language": "F"
+  },
+  "Location": {
+    "ref": "B",
+    "location_reach code": "C",
+    "location_id vocabulary": "D",
+    "location_id code": "E",
+    "name narrative narrative": "F",
+    "name narrative language": "G",
+    "description narrative narrative": "H",
+    "description narrative language": "I",
+    "activity_description narrative narrative": "J",
+    "activity_description narrative language": "K",
+    "administrative vocabulary": "L",
+    "administrative code": "M",
+    "administrative level": "N",
+    "point srs_name": "O",
+    "point pos latitude": "P",
+    "point pos longitude": "Q",
+    "exactness code": "R",
+    "location_class code": "S",
+    "feature_designation code": "T"
+  },
+  "Transaction": {
+    "reference": "B",
+    "humanitarian": "C",
+    "transaction_type transaction_type_code": "D",
+    "transaction_date date": "E",
+    "value amount": "F",
+    "value date": "G",
+    "value currency": "H",
+    "description narrative narrative": "I",
+    "description narrative language": "J",
+    "provider_organization organization_identifer_code": "K",
+    "provider_organization provider_activity_id": "L",
+    "provider_organization type": "M",
+    "provider_organization narrative narrative": "N",
+    "provider_organization narrative language": "O",
+    "receiver_organization organization_identifier_code": "P",
+    "receiver_organization receiver_activity_id": "Q",
+    "receiver_organization type": "R",
+    "receiver_organization narrative narrative": "S",
+    "receiver_organization narrative language": "T",
+    "disbursement_channel disbursement_channel_code": "U",
+    "sector sdg_target": "V",
+    "sector sector_vocabulary": "W",
+    "sector vocabulary_uri": "X",
+    "sector narrative narrative": "Y",
+    "sector narrative language": "Z",
+    "recipient_country country_code": "AA",
+    "recipient_country narrative narrative": "AB",
+    "recipient_region custom_code": "AC",
+    "recipient_country narrative language": "AD",
+    "recipient_region region_vocabulary": "AE",
+    "recipient_region vocabulary_uri": "AF",
+    "recipient_region narrative narrative": "AG",
+    "recipient_region narrative language": "AH",
+    "flow_type flow_type": "AI",
+    "finance_type finance_type": "AJ",
+    "aid_type cash_and_voucher_modalities": "AK",
+    "aid_type aid_type_vocabulary": "AL",
+    "tied_status tied_status_code": "AM"
+  },
+  "Result": {
+    "type": "B",
+    "aggregation_status": "C",
+    "title narrative narrative": "D",
+    "title narrative language": "E",
+    "description narrative narrative": "F",
+    "description narrative language": "G",
+    "reference vocabulary": "H",
+    "reference code": "I",
+    "reference vocabulary_uri": "J"
+  },
+  "Result Document Link": {
+    "document_link url": "B",
+    "document_link format": "C",
+    "document_link title narrative narrative": "D",
+    "document_link title narrative language": "E",
+    "document_link description narrative narrative": "F",
+    "document_link description narrative language": "G",
+    "document_link category code": "H",
+    "document_link language language": "I",
+    "document_link document_date date": "J"
+  },
+  "Indicator": {
+    "measure": "B",
+    "ascending": "C",
+    "aggregation_status": "D",
+    "title narrative narrative": "E",
+    "title narrative language": "F",
+    "description narrative narrative": "G",
+    "description narrative language": "H",
+    "reference vocabulary": "I",
+    "reference code": "J"
+  },
+  "Indicator Document Link": {
+    "url": "B",
+    "format": "C",
+    "category code": "D",
+    "language code": "E",
+    "document_date date": "F"
+  },
+  "Indicator Baseline": {
+    "year": "B",
+    "date": "C",
+    "value": "D",
+    "comment narrative narrative": "E",
+    "comment narrative language": "F",
+    "dimension name": "G",
+    "dimension value": "H",
+    "location reference": "I"
+  },
+  "Indicator Baseline Document Link": {
+    "url": "B",
+    "format": "C",
+    "title narrative narrative": "D",
+    "title narrative language": "E",
+    "description narrative narrative": "F",
+    "description narrative language": "G",
+    "category code": "H",
+    "language code": "I",
+    "document_date date": "J"
+  },
+  "Period": {
+    "period_start date" : "B",
+    "period_end date" : "C"
+  },
+  "Target": {
+    "value": "B",
+    "comment narrative narrative": "C",
+    "comment narrative language": "D",
+    "dimension name": "E",
+    "dimension value": "F",
+    "location reference": "G"
+  },
+  "Target Document Link": {
+    "url": "B",
+    "format": "C",
+    "title narrative narrative": "D",
+    "title narrative language": "E",
+    "description narrative narrative": "F",
+    "description narrative language": "G",
+    "category code": "H",
+    "language code": "I",
+    "document date date": "J"
+  },
+  "Actual": {
+    "value": "B",
+    "comment narrative narrative": "C",
+    "comment narrative language": "D",
+    "dimension name": "E",
+    "dimension value": "F",
+    "location reference": "G"
+  },
+  "Actual Document Link": {
+    "url": "B",
+    "format": "C",
+    "title narrative narrative": "D",
+    "title narrative language": "E",
+    "description narrative narrative": "F",
+    "description narrative language": "G",
+    "category code": "H",
+    "language code": "I",
+    "document_date date": "J"
+  }
+}

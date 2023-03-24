@@ -81,7 +81,6 @@ class ResultRequest extends ActivityBaseRequest
     public function getErrorsForResult(array $formFields, bool $fileUpload = false, array $indicators = []): array
     {
         $rules = [];
-
         $rules['type'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ResultType', 'Activity', false))));
         $rules['aggregation_status'] = sprintf('nullable|in:0,1');
 

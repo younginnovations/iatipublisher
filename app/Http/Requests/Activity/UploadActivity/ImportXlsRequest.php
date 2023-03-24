@@ -40,6 +40,7 @@ class ImportXlsRequest extends ActivityBaseRequest
     {
         $rules = [];
         $rules['activity'] = 'required|activity_file| max:10000';
+        \Log::info('here');
 
         return $rules;
     }
