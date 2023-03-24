@@ -263,7 +263,7 @@ trait MigrateActivityResultsTrait
         foreach ($resultDocumentLinks as $documentLink) {
             if ($documentLink->result_id === $baseResult->id) {
                 $this->logInfo("Document link of id: {$documentLink->id} exists in result of id {$baseResult->id}.");
-                $documentLink->url = $this->resolveDocumentLinks($documentLink->url);
+                $documentLink->url = $this->replaceDocumentLinkUrl($documentLink->url);
                 $documentLinksThatMatchResultId[] = $documentLink;
             }
         }

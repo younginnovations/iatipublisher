@@ -21,8 +21,8 @@ trait MigrateOrganizationTrait
           [
               'narrative' => [
                  [
-                     'narrative' => '',
-                     'language' => '',
+                     'narrative' => null,
+                     'language' => null,
                  ],
               ],
           ],
@@ -448,14 +448,14 @@ trait MigrateOrganizationTrait
         if ($orgDocumentLinkArray && count($orgDocumentLinkArray)) {
             foreach (array_values($orgDocumentLinkArray) as $key => $array) {
                 $newOrgDocumentLink[$key] = [
-                    'url' => $this->replaceDocumentLinkUrl(Arr::get($array, 'url', '')),
-                    'format' => Arr::get($array, 'format', ''),
+                    'url' => $this->replaceDocumentLinkUrl(Arr::get([], 'url')),
+                    'format' => Arr::get($array, 'format'),
                     'title'  => Arr::get($array, 'title', $this->narrativeDefaultTemplate),
                     'description' => Arr::get($array, 'description', $this->narrativeDefaultTemplate),
-                    'category' => Arr::get($array, 'category', [['code' => '']]),
-                    'language' => Arr::get($array, 'language', [['language' => '']]),
-                    'recipient_country' => Arr::get($array, 'recipient_country', [['code' => '', $this->narrativeDefaultTemplate]]),
-                    'document_date' => Arr::get($array, 'document_date', [['date' => '']]),
+                    'category' => Arr::get($array, 'category', [['code' => null]]),
+                    'language' => Arr::get($array, 'language', [['language' => null]]),
+                    'recipient_country' => Arr::get($array, 'recipient_country', [['code' => null, $this->narrativeDefaultTemplate]]),
+                    'document_date' => Arr::get($array, 'document_date', [['date' => null]]),
                 ];
             }
         }
