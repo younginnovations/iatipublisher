@@ -100,12 +100,14 @@ class ImportXlsController extends Controller
 
             file_put_contents(app_path() . '/XlsImporter/Templates/drop-down-buffer.json', $data);
             // test
+
             $data = file_get_contents(app_path() . '/XlsImporter/Templates/test.json');
             $activityMapper = new Activity();
             $activityMapper->map($data);
             dd('stop');
 
             // period
+
             // $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
             // $periodMapper = new Period();
             // $periodMapper->map($data);
@@ -114,6 +116,15 @@ class ImportXlsController extends Controller
             // $data = file_get_contents(app_path() . '/XlsImporter/Templates/indicator.json');
             // $indicatorMapper = new Indicator();
             // $indicatorMapper->map($data);
+            $resultData = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
+                       $resultMapper = new Result();
+                       $resultMapper->map($resultData);
+
+//            $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
+//            $periodMapper = new Period();
+//            $periodMapper->map($data);
+
+            // $periodMapper
 
             if (!Auth::user()->organization_id) {
                 Session::put('error', 'User is not associated with any organization.');

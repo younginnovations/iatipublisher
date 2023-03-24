@@ -59,6 +59,26 @@ class Activity
         'capital_spend',
     ];
 
+    protected array $specialElements = [
+        'Sector' => 'sector',
+        'Recipient Region' => 'recipient_region',
+        'Tag' => 'tag',
+        'Policy Marker' => 'policy_marker',
+        'Default Aid Type' => 'default_aid_type',
+    ];
+
+    /**
+     * @var array
+     */
+    protected array $defaultValueElements = [
+        'Default Currency' => 'default_currency',
+        'Default Language' => 'default_language',
+        'Default Hierarchy' => 'default_hierarchy',
+        'Default Humanitarian' => 'default_humanitarian',
+        'Budget Not Provided' => 'budget_not_provided',
+        'Secondary Reporter' => 'secondary_reporter',
+    ];
+
     public function map($activityData)
     {
         // logger()->error(json_encode($activityData));
@@ -68,16 +88,16 @@ class Activity
 
         foreach ($activityData as $sheetName => $content) {
             if ($sheetName === 'Settings') {
-                // $this->defaultValues($content);
+                 $this->defaultValues($content);
             }
 
             if ($sheetName === 'Element with single field') {
-                // $this->singleValuedFields($content);
+                 $this->singleValuedFields($content);
             }
 
-            if (in_array($sheetName, array_keys($this->activityElements))) {
-                $this->columnToFieldMapper($this->activityElements[$sheetName], $content);
-            }
+//            if (in_array($sheetName, array_keys($this->activityElements))) {
+//                $this->columnToFieldMapper($this->activityElements[$sheetName], $content);
+//            }
         }
 
         $this->validateActivityElements();
@@ -126,22 +146,82 @@ class Activity
 
     public function defaultValues($data)
     {
+        $dropDownFields = $this->getDropDownFields();
+        $elementActivityIdentifier = null;
+
         foreach ($data as $row) {
             if ($this->checkRowNotEmpty($row)) {
                 $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null) ?? $elementActivityIdentifier;
+
+                foreach ($this->defaultValueElements as $element) {
+                    $fieldValue = $row[$element];
+
+                    if (array_key_exists($element, $dropDownFields)) {
+                        $elementDropDownFields = $dropDownFields[$element];
+                        $fieldValue = $this->mapDropDownValueToKey($row[$element], $elementDropDownFields);
+                    }
+
+                    $this->activities[$elementActivityIdentifier]['default_field_values'][$element] = $fieldValue;
+                }
             } else {
                 break;
             }
+
+            $secondary_reporter = $this->activities[$elementActivityIdentifier]['default_field_values']['secondary_reporter'];
+            $this->activities[$elementActivityIdentifier]['reporting_org'] = $this->getReportingOrganization($secondary_reporter);
         }
+    }
+
+    /**
+     * Returns reporting organization data from organization.
+     *
+     * @param $secondary_reporter
+     *
+     * @return array
+     */
+    public function getReportingOrganization($secondary_reporter): array
+    {
+        $organizationReportingOrg = auth()->user()->organization->reporting_org;
+
+        if (!empty($organizationReportingOrg)) {
+            $organizationReportingOrg[0]['secondary_reporter'] = $secondary_reporter;
+
+            return $organizationReportingOrg;
+        }
+
+        return [
+             [
+                 'ref' => '',
+                 'type' => '',
+                 'secondary_reporter' => $secondary_reporter,
+                 'narrative' => [
+                     [
+                         'narrative' => '',
+                         'language' => '',
+                     ],
+                 ],
+             ],
+         ];
     }
 
     public function singleValuedFields($data)
     {
+
+        $dropDownFields = $this->getDropDownFields();
+        $elementActivityIdentifier = null;
+
         foreach ($data as $row) {
             if ($this->checkRowNotEmpty($row)) {
                 $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null) ?? $elementActivityIdentifier;
+
                 foreach ($this->singleValuedElements as $element) {
-                    $this->activities[$elementActivityIdentifier][$element] = $row[$element];
+                    $fieldValue = $row[$element];
+
+                    if (array_key_exists($element, $dropDownFields)) {
+                        $elementDropDownFields = $dropDownFields[$element];
+                        $fieldValue = $this->mapDropDownValueToKey($row[$element], $elementDropDownFields);
+                    }
+                    $this->activities[$elementActivityIdentifier][$element] = $fieldValue;
                 }
             } else {
                 break;
