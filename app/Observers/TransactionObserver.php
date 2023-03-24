@@ -84,7 +84,10 @@ class TransactionObserver
     public function created(Transaction $transaction): void
     {
         $this->updateActivityElementStatus($transaction);
-        $this->resetActivityStatus($transaction);
+
+        if (!$transaction->migrated_from_aidstream) {
+            $this->resetActivityStatus($transaction);
+        }
     }
 
     /**

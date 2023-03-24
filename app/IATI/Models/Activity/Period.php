@@ -27,6 +27,7 @@ class Period extends Model implements Auditable
     protected $fillable = [
         'indicator_id',
         'period',
+        'migrated_from_aidstream',
     ];
 
     /**

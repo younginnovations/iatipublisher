@@ -15,7 +15,7 @@ trait MigrateOrganizationTrait
     public $tempNarrative;
 
     /**
-     * @var array[]
+     * @var array
      */
     protected array $narrativeDefaultTemplate = [
           [
@@ -27,6 +27,60 @@ trait MigrateOrganizationTrait
               ],
           ],
     ];
+
+    /** Empty organization recipient region org template.
+     *
+     * @var array
+     */
+    protected array $emptyOrganizationRecipientOrgTemplate
+        = [
+            [
+                'ref'       => null,
+                'narrative' => [
+                    [
+                        'narrative' => null,
+                        'language'  => null,
+                    ],
+                ],
+            ],
+        ];
+
+    /**
+     * Empty organization recipient country template.
+     *
+     * @var array
+     */
+    protected array $emptyOrganizationRecipientCountryTemplate
+        = [
+            [
+                'code'      => null,
+                'narrative' => [
+                    [
+                        'narrative' => null,
+                        'language'  => null,
+                    ],
+                ],
+            ],
+        ];
+
+    /**
+     * Empty organization recipient region template.
+     *
+     * @var array
+     */
+    protected array $emptyOrganizationRecipientRegionTemplate
+        = [
+            [
+                'region_vocabulary' => null,
+                'region_code'       => null,
+                'narrative'         => [
+                    [
+                        'narrative' => null,
+                        'language'  => null,
+                    ],
+                ],
+            ],
+        ];
 
     /**
      * Returns required data for creating new IATI organization.
@@ -55,7 +109,10 @@ trait MigrateOrganizationTrait
         );
         $newOrganization['address'] = $aidstreamOrganization->address;
         $newOrganization['telephone'] = $aidstreamOrganization->telephone;
-        $newOrganization['reporting_org'] = $this->getReportingOrgWithCorrectTemplate($aidstreamOrganization->reporting_org, $aidstreamOrganization->secondary_reporter);
+        $newOrganization['reporting_org'] = $this->getReportingOrgWithCorrectTemplate(
+            $aidstreamOrganization->reporting_org,
+            $aidstreamOrganization->secondary_reporter
+        );
 
         $aidstreamOrganizationData = $this->db::connection('aidstream')->table('organization_data')->where(
             'organization_id',
@@ -162,35 +219,43 @@ trait MigrateOrganizationTrait
                 $newOrgBudget[$key] = match ($firstKey) {
                     'total_budget_status' => [
                         'total_budget_status' => Arr::get($array, 'status', null),
-                        'period_start'        => Arr::get($array, 'period_start', null),
-                        'period_end'          => Arr::get($array, 'period_end', null),
-                        'value'               => Arr::get($array, 'value', null),
+                        'period_start'        => Arr::get($array, 'period_start', $this->emptyPeriodDateArray),
+                        'period_end'          => Arr::get($array, 'period_end', $this->emptyPeriodDateArray),
+                        'value'               => Arr::get($array, 'value', $this->emptyValueArray),
                     ],
                     'recipient_org' => [
                         'status'        => Arr::get($array, 'status', null),
-                        'recipient_org' => Arr::get($array, 'recipient_organization', null),
-                        'period_start'  => Arr::get($array, 'period_start', null),
-                        'period_end'    => Arr::get($array, 'period_end', null),
-                        'value'         => Arr::get($array, 'value', null),
+                        'recipient_org' => Arr::get(
+                            $array,
+                            'recipient_organization',
+                            $this->emptyOrganizationRecipientOrgTemplate
+                        ),
+                        'period_start'  => Arr::get($array, 'period_start', $this->emptyPeriodDateArray),
+                        'period_end'    => Arr::get($array, 'period_end', $this->emptyPeriodDateArray),
+                        'value'         => Arr::get($array, 'value', $this->emptyValueArray),
                     ],
                     'recipient_country' => [
-                        'recipient_country' => Arr::get($array, 'recipient_country', null),
-                        'period_start'      => Arr::get($array, 'period_start', null),
-                        'period_end'        => Arr::get($array, 'period_end', null),
-                        'value'             => Arr::get($array, 'value', null),
+                        'recipient_country' => Arr::get(
+                            $array,
+                            'recipient_country',
+                            $this->emptyOrganizationRecipientCountryTemplate
+                        ),
+                        'period_start'      => Arr::get($array, 'period_start', $this->emptyPeriodDateArray),
+                        'period_end'        => Arr::get($array, 'period_end', $this->emptyPeriodDateArray),
+                        'value'             => Arr::get($array, 'value', $this->emptyValueArray),
                     ],
                     default => [
-                        'period_start' => Arr::get($array, 'period_start', null),
-                        'period_end'   => Arr::get($array, 'period_end', null),
-                        'value'        => Arr::get($array, 'value', null),
+                        'period_start' => Arr::get($array, 'period_start', $this->emptyPeriodDateArray),
+                        'period_end'   => Arr::get($array, 'period_end', $this->emptyPeriodDateArray),
+                        'value'        => Arr::get($array, 'value', $this->emptyValueArray),
                     ],
                 };
 
                 foreach (array_values(Arr::get($array, $secondKey, [])) as $innerKey => $innerArray) {
                     $newOrgBudget[$key][$secondKey][$innerKey] = [
                         'ref'       => Arr::get($innerArray, 'reference', null),
-                        'value'     => Arr::get($innerArray, 'value', null),
-                        'narrative' => Arr::get($innerArray, 'narrative', null),
+                        'value'     => Arr::get($innerArray, 'value', $this->emptyValueArray),
+                        'narrative' => Arr::get($innerArray, 'narrative', $this->emptyNarrativeTemplate),
                     ];
                 }
             }
@@ -224,16 +289,16 @@ trait MigrateOrganizationTrait
                     'recipient_region' => $this->getOrganizationRecipientRegionData(
                         Arr::get($array, 'recipient_region', [])
                     ),
-                    'period_start'     => Arr::get($array, 'period_start', null),
-                    'period_end'       => Arr::get($array, 'period_end', null),
-                    'value'            => Arr::get($array, 'value', null),
+                    'period_start'     => Arr::get($array, 'period_start', $this->emptyPeriodDateArray),
+                    'period_end'       => Arr::get($array, 'period_end', $this->emptyPeriodDateArray),
+                    'value'            => Arr::get($array, 'value', $this->emptyValueArray),
                 ];
 
                 foreach (array_values(Arr::get($array, 'budget_line', [])) as $innerKey => $innerArray) {
                     $newRecipientRegionBudget[$key]['budget_line'][$innerKey] = [
                         'ref'       => Arr::get($innerArray, 'reference', null),
-                        'value'     => Arr::get($innerArray, 'value', null),
-                        'narrative' => Arr::get($innerArray, 'narrative', null),
+                        'value'     => Arr::get($innerArray, 'value', $this->emptyValueArray),
+                        'narrative' => Arr::get($innerArray, 'narrative', $this->emptyNarrativeTemplate),
                     ];
                 }
             }
@@ -252,6 +317,10 @@ trait MigrateOrganizationTrait
     public function getOrganizationRecipientRegionData($recipientRegions): array
     {
         $array = [];
+
+        if (count($recipientRegions) === 0) {
+            return $this->emptyOrganizationRecipientRegionTemplate;
+        }
 
         foreach (array_values($recipientRegions) as $key => $recipientRegion) {
             $array[$key]['region_vocabulary'] = Arr::get($recipientRegion, 'vocabulary', null);
@@ -319,7 +388,7 @@ trait MigrateOrganizationTrait
         $reportingOrgTemplate[0]['ref'] = $reportingOrg[0]->reporting_organization_identifier ?? '';
         $reportingOrgTemplate[0]['type'] = $reportingOrg[0]->reporting_organization_type ?? '';
         $reportingOrgTemplate[0]['secondary_reporter'] = $secondaryReporter ?? '';
-        $reportingOrgTemplate[0]['narrative'] = $reportingOrg[0]->narrative ?? [['narrative'=>'', 'language'=>'']];
+        $reportingOrgTemplate[0]['narrative'] = $reportingOrg[0]->narrative ?? [['narrative' => '', 'language' => '']];
 
         return $reportingOrgTemplate;
     }
@@ -352,7 +421,7 @@ trait MigrateOrganizationTrait
     /**
      * Sets $tempNarrative.
      *
-     * @param string $key
+     * @param  string  $key
      * @param $datum
      *
      * @return void
@@ -367,7 +436,7 @@ trait MigrateOrganizationTrait
     /**
      * Sets $tempAmount.
      *
-     * @param string $key
+     * @param  string  $key
      * @param $datum
      *
      * @return void
@@ -382,8 +451,8 @@ trait MigrateOrganizationTrait
     /**
      * Sets default language if language is empty && non-empty narrative['narrative'].
      *
-     * @param array $data
-     * @param string $key
+     * @param  array  $data
+     * @param  string  $key
      * @param $datum
      * @param $defaultValues
      *
@@ -402,8 +471,8 @@ trait MigrateOrganizationTrait
     /**
      * Sets default currency if currency is empty && non-empty amount['amount'].
      *
-     * @param array $data
-     * @param string $key
+     * @param  array  $data
+     * @param  string  $key
      * @param $datum
      * @param $defaultValues
      *

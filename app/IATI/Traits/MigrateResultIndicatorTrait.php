@@ -179,6 +179,7 @@ trait MigrateResultIndicatorTrait
                     $newIatiIndicator = [
                         'result_id'  => $iatiResultId,
                         'indicator'  => $this->getNewIndicatorData($aidstreamIndicator),
+                        'migrated_from_aidstream' => true,
                         'created_at' => $aidstreamIndicator->created_at,
                         'updated_at' => $aidstreamIndicator->updated_at,
                     ];

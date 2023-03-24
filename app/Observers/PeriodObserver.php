@@ -37,7 +37,10 @@ class PeriodObserver
     {
         $resultObserver = new ResultObserver();
         $resultObserver->updateActivityElementStatus($period->indicator->result);
-        $resultObserver->resetActivityStatus($period->indicator->result);
+
+        if (!$period->migrated_from_aidstream) {
+            $resultObserver->resetActivityStatus($period->indicator->result);
+        }
     }
 
     /**
