@@ -434,6 +434,58 @@
         }
     },
     "result": {
+        "elementBase": "type",
+        "elementBasePeer": [
+          "aggregation_status"
+        ],
+        "fieldDependency": {
+          "title narrative narrative": {
+            "parent": "title narrative",
+            "peer": [
+              "title narrative language"
+            ]
+          },
+          "description narrative narrative": {
+            "parent": "description narrative",
+            "peer": [
+              "description narrative language"
+            ]
+          },
+          "document_link url": {
+            "parent": "document_link",
+            "peer": [
+              "document_link format"
+            ]
+          },
+          "document_link title narrative narrative": {
+            "parent": "document_link title narrative",
+            "peer": [
+              "document_link title narrative language"
+            ]
+          },
+          "document_link description narrative narrative": {
+            "parent": "document_link description narrative",
+            "peer": [
+              "document_link description narrative language"
+            ]
+          },
+          "document_link category code": {
+            "parent": "document_link category"
+          },
+          "document_link language code": {
+            "parent": "document_link language"
+          },
+          "document_link document_date date": {
+            "parent": "document_link document_date"
+          },
+          "reference vocabulary": {
+            "parent": "reference",
+            "peer": [
+              "reference code",
+              "reference vocabulary_uri"
+            ]
+          }
+        },
         "type": "Type",
         "aggregation_status": "Aggregation-status",
         "title narrative language": "Title Narrative Language",

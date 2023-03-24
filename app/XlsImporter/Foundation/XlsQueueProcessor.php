@@ -105,11 +105,9 @@ class XlsQueueProcessor
             // awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
 
             // dd($contents);
-            // please do not delete even when the codes are commented
-            // $xlsToArray = new XlsToArray();
-            // Excel::import($xlsToArray, $filePath, 's3');
-            // $data = $xlsToArray->sheetData;
-
+            $xlsToArray = new XlsToArray();
+            Excel::import($xlsToArray, $filePath, 's3');
+            $data = $xlsToArray->sheetData;
             // foreach ($xlsToArray->getSheetNames() as $index => $sheetName) {
             //     $data[$index] = new ExcelSheetImport();
             // }
@@ -119,6 +117,7 @@ class XlsQueueProcessor
             // dd($xlsData)
             $activity = new Activity();
             $activity->map($data);
+
             // $this->->process($xmlData, $userId, $orgId, $orgRef, $dbIatiIdentifiers);
 
             awsUploadFile(

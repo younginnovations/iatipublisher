@@ -12,6 +12,7 @@ use App\IATI\Services\ImportActivityError\ImportActivityErrorService;
 use App\XlsImporter\Foundation\Mapper\Activity;
 use App\XlsImporter\Foundation\Mapper\Indicator;
 use App\XlsImporter\Foundation\Mapper\Period;
+use App\XlsImporter\Foundation\Mapper\Result;
 use Arr;
 use Exception;
 use Illuminate\Contracts\View\Factory;
@@ -125,6 +126,10 @@ class ImportXlsController extends Controller
 //            $periodMapper->map($data);
 
             // $periodMapper
+
+//            $resultData = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
+//            $resultMapper = new Result();
+//            $resultMapper->map($resultData);
 
             if (!Auth::user()->organization_id) {
                 Session::put('error', 'User is not associated with any organization.');
