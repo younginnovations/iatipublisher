@@ -107,10 +107,12 @@ trait MigrateActivityResultsTrait
         $aidStreamActivityResult = $this->getAidStreamActivityResult($aidstreamActivity->id);
 
         foreach ($aidStreamActivityResult as $result) {
-            $this->logInfo("Started migrating AidStream Activity Result for activity id: {$aidstreamActivity->id} and result id: {$result['id']}");
+            $resultId = $result['id'];
+            unset($result['id']);
+            $this->logInfo("Started migrating AidStream Activity Result for activity id: {$aidstreamActivity->id} and result id: {$resultId}");
             $iatiResult = $this->resultService->create(['activity_id'=>$iatiActivity->id, 'result'=>$result]);
-            $this->logInfo("Completed migrating AidStream Activity Result for activity id: {$aidstreamActivity->id} and result id: {$result['id']}");
-            $this->migrateResultIndicator($result['id'], $iatiResult->id);
+            $this->logInfo("Completed migrating AidStream Activity Result for activity id: {$aidstreamActivity->id} and result id: {$resultId}");
+            $this->migrateResultIndicator($resultId, $iatiResult->id);
         }
     }
 
