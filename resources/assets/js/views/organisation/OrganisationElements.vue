@@ -77,6 +77,7 @@
             ? '#' + index
             : '/organisation/' + index
         "
+        :id="'sidebar-' + index.toString()"
       >
         <div class="status_icons absolute top-0 right-0 mt-1 mr-1 inline-flex">
           <svg-vue

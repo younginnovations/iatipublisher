@@ -40,7 +40,7 @@
         <tbody v-if="resultsData.data && resultsData.data.length > 0">
           <tr v-for="(result, t, index) in resultsData.data" :key="index">
             <td
-              class="cursor-pointer"
+              class="result-title-list cursor-pointer"
               @click="handleNavigate(`${activityLink}/result/${result.id}`)"
             >
               <div class="ellipsis relative">
