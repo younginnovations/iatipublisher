@@ -73,7 +73,10 @@ class TransactionObserver
     {
         $this->setTransactionDefaultValues($transaction);
         $this->updateActivityElementStatus($transaction);
-        $this->resetActivityStatus($transaction);
+
+        if (!$transaction->migrated_from_aidstream) {
+            $this->resetActivityStatus($transaction);
+        }
     }
 
     /**

@@ -38,7 +38,10 @@ class IndicatorObserver
         $resultObserver = new ResultObserver();
         $this->setIndicatorDefaultValues($indicator);
         $resultObserver->updateActivityElementStatus($indicator->result);
-        $resultObserver->resetActivityStatus($indicator->result);
+
+        if (!$indicator->migrated_from_aidstream) {
+            $resultObserver->resetActivityStatus($indicator->result);
+        }
     }
 
     /**

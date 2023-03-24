@@ -29,6 +29,7 @@ class Indicator extends Model implements Auditable
     protected $fillable = [
         'result_id',
         'indicator',
+        'migrated_from_aidstream',
     ];
 
     /**

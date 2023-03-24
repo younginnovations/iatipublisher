@@ -56,7 +56,10 @@ class ResultObserver
     {
         $this->setResultDefaultValues($result);
         $this->updateActivityElementStatus($result);
-        $this->resetActivityStatus($result);
+
+        if (!$result->migrated_from_aidstream) {
+            $this->resetActivityStatus($result);
+        }
     }
 
     /**

@@ -26,7 +26,7 @@ trait MigrateUserTrait
             'address'                 => $iatiOrganization->address,
             'organization_id'         => $iatiOrganization->id,
             'is_active'               => true,
-            'email_verified_at'       => $aidstreamUser->verification_created_at,
+            'email_verified_at'       => $aidstreamUser->verified ? ($aidstreamUser->verification_created_at ?: $aidstreamUser->created_at) : null,
             'password'                => $aidstreamUser->password,
             'remember_token'          => null,
             'created_at'              => $aidstreamUser->created_at,

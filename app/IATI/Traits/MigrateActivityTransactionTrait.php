@@ -163,6 +163,7 @@ trait MigrateActivityTransactionTrait
                             $this->getNewTransactionData($aidstreamTransaction->transaction),
                             JSON_THROW_ON_ERROR
                         ),
+                        'migrated_from_aidstream' => true,
                         'created_at'  => $aidstreamTransaction->created_at,
                         'updated_at'  => $aidstreamTransaction->updated_at,
                     ];
