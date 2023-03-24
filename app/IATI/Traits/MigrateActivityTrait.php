@@ -535,6 +535,7 @@ trait MigrateActivityTrait
         $newActivity['updated_by'] = $adminId;
         $newActivity['reporting_org'] = null;
         $newActivity['upload_medium'] = 'manual';
+        $newActivity['migrated_from_aidstream'] = true;
 
         return $newActivity;
     }

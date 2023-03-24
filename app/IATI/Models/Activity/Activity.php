@@ -71,6 +71,8 @@ class Activity extends Model implements Auditable
         'upload_medium',
         'created_by',
         'updated_by',
+        'linked_to_iati',
+        'migrated_from_aidstream',
     ];
 
     /**
