@@ -350,7 +350,6 @@ trait MigrateActivityResultsTrait
             } elseif (is_bool($value) || is_int($value)) {
                 $temp[$key] = (string) $value;
             }
-
         }
 
         return $temp;

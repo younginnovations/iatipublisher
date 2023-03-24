@@ -21,6 +21,7 @@ use App\IATI\Traits\MigrateActivityPublishedTrait;
 use App\IATI\Traits\MigrateActivityResultsTrait;
 use App\IATI\Traits\MigrateActivityTrait;
 use App\IATI\Traits\MigrateActivityTransactionTrait;
+use App\IATI\Traits\MigrateDocumentFileTrait;
 use App\IATI\Traits\MigrateGeneralTrait;
 use App\IATI\Traits\MigrateIndicatorPeriodTrait;
 use App\IATI\Traits\MigrateOrganizationPublishedTrait;
@@ -49,6 +50,7 @@ class MigrateOrganizationCommand extends Command
     use MigrateIndicatorPeriodTrait;
     use MigrateActivityPublishedTrait;
     use MigrateOrganizationPublishedTrait;
+    use MigrateDocumentFileTrait;
 
     /**
      * The name and signature of the console command.
@@ -177,27 +179,33 @@ class MigrateOrganizationCommand extends Command
                     'organization_id',
                     $aidstreamOrganizationId
                 )->orderBy('id')->chunk(2, function ($aidstreamActivities) use ($aidStreamOrganization, $iatiOrganization) {
-
                     if (count($aidstreamActivities)) {
+                        $migratedActivitiesLookupTable = [];
+
                         foreach ($aidstreamActivities as $aidstreamActivity) {
                             $this->logInfo(
                                 'Started activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
                             );
 
                             $iatiActivity = $this->activityService->create($this->getNewActivity($aidstreamActivity, $iatiOrganization));
+                            $migratedActivitiesLookupTable[$aidstreamActivity->id] = $iatiActivity->id;
+
                             $this->logInfo(
                                 'Completed basic activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
                             );
+
                             $this->migrateActivityTransactions($aidstreamActivity->id, $iatiActivity->id);
                             $this->migrateActivityResults($iatiActivity, $aidstreamActivity);
                             $this->migrateActivitySnapshot($iatiActivity, $aidstreamActivity);
                         }
+
+                        $this->migrateActivitiesPublishedFiles($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable);
+                        $this->migrateActivityPublishedTable($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable);
                     }
                 });
 
                 $this->migrateDocuments($aidstreamOrganizationId, $iatiOrganization);
-                $this->migrateActivitiesPublishedFiles($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable);
-                $this->migrateActivityPublishedTable($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable);
+//                $this->migrateDocumentFiles($aidstreamOrganizationId);
                 $this->migrateOrganizationPublishedFile($aidStreamOrganization, $iatiOrganization);
                 $this->migrateOrganizationPublishedTable($aidStreamOrganization, $iatiOrganization);
 

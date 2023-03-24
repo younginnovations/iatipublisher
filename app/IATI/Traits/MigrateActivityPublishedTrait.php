@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\IATI\Traits;
 
 use App\IATI\Models\Activity\ActivityPublished;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * Class MigrateActivityPublishedTrait.
@@ -52,15 +51,17 @@ trait MigrateActivityPublishedTrait
 
         foreach ($aidstreamActivityXmlNameList as $aidstreamId => $aidstreamXmlName) {
             $file = "{$aidstreamActivityXmlFilePath}/{$aidstreamXmlName}";
-            $contents = Storage::disk('s3')->get($file);
+            $contents = awsGetFile($file);
 
-            $iatiXmlFileName = $this->generateIatiXmlFilename($iatiOrganization, $migratedActivitiesLookupTable[$aidstreamId]);
-            $iatiActivityXmlFilenameList[] = $iatiXmlFileName;
-            $destinationPath = "{$iatiActivityFilePath}/{$iatiXmlFileName}";
+            if ($contents) {
+                $iatiXmlFileName = $this->generateIatiXmlFilename($iatiOrganization, $migratedActivitiesLookupTable[$aidstreamId]);
+                $iatiActivityXmlFilenameList[] = $iatiXmlFileName;
+                $destinationPath = "{$iatiActivityFilePath}/{$iatiXmlFileName}";
 
-            Storage::disk('s3')->put($destinationPath, $contents);
-
-            $this->logInfo("Migrated file: {$aidstreamXmlName} as file: {$iatiXmlFileName}.");
+                if (awsUploadFile($destinationPath, $contents)) {
+                    $this->logInfo("Migrated file :{$aidstreamXmlName} as file :{$iatiXmlFileName}.");
+                }
+            }
         }
 
         $this->logInfo("Migrated merged file for Aidstream org: {$aidStreamOrganization->id}.");

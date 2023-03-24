@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\IATI\Traits;
 
 use App\IATI\Models\Organization\OrganizationPublished;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * Class MigrateOrganizationPublishedTrait.
@@ -32,11 +31,11 @@ trait MigrateOrganizationPublishedTrait
             $pathToIatiOrganizationFile = 'organizationXmlFiles';
             $iatiFilename = "{$iatiOrganization->publisher_id}-organisation.xml";
 
-            $contents = Storage::disk('s3')->get("{$pathToAidstreamOrganizationFile}/$aidstreamFilename");
-            if (!$contents) {
-                dd('aaa');
+            $contents = awsGetFile("{$pathToAidstreamOrganizationFile}/$aidstreamFilename");
+
+            if ($contents && awsUploadFile("$pathToIatiOrganizationFile/$iatiFilename", $contents)) {
+                $this->logInfo("Migrated organization file :{$aidstreamFilename} as file :{$iatiFilename}.");
             }
-            Storage::disk('s3')->put("$pathToIatiOrganizationFile/$iatiFilename", $contents);
         }
     }
 
