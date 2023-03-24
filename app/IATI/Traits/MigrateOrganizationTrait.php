@@ -15,6 +15,20 @@ trait MigrateOrganizationTrait
     public $tempNarrative;
 
     /**
+     * @var array[]
+     */
+    protected array $narrativeDefaultTemplate = [
+          [
+              'narrative' => [
+                 [
+                     'narrative' => '',
+                     'language' => '',
+                 ],
+              ],
+          ],
+    ];
+
+    /**
      * Returns required data for creating new IATI organization.
      *
      * @param $aidstreamOrganization
@@ -67,20 +81,9 @@ trait MigrateOrganizationTrait
             'recipient_country',
             'budget_line'
         ) : null;
-        $newOrganization['document_link'] = $this->getColumnValueArray(
-            $aidstreamOrganizationData,
-            'document_link'
-        );
-
-        if (!empty($newOrganization['document_link'])) {
-            $newOrganization['document_link'] = array_map(function ($documentLink) {
-                $documentLinkData = $documentLink;
-                $documentLinkData['url'] = !empty($documentLinkData['url']) ? $this->replaceDocumentLinkUrl($documentLinkData['url']) : null;
-
-                return $documentLinkData;
-            }, $newOrganization['document_link']);
-        }
-
+        $newOrganization['document_link'] = $aidstreamOrganizationData ? $this->getOrganizationDocumentLink(
+            $aidstreamOrganizationData->document_link,
+        ) : null;
         $newOrganization['total_expenditure'] = $aidstreamOrganizationData ? $this->getOrganizationBudget(
             $aidstreamOrganizationData->total_expenditure,
             'total_expenditure',
@@ -424,5 +427,39 @@ trait MigrateOrganizationTrait
         )->where('is_reporting_org', true)->first();
 
         return $aidstreamOrganizationData ? ($aidstreamOrganizationData->status === 3 ? 'published' : 'draft') : 'draft';
+    }
+
+    /**
+     * Gets Organization data compatible to IATI.
+     *
+     * @param $orgDocumentLink
+     *
+     * @return null|array
+     * @throws \JsonException
+     */
+    public function getOrganizationDocumentLink($orgDocumentLink): ?array
+    {
+        if (empty($orgDocumentLink)) {
+            return null;
+        }
+
+        $newOrgDocumentLink = [];
+        $orgDocumentLinkArray = json_decode($orgDocumentLink, true, 512, JSON_THROW_ON_ERROR);
+        if ($orgDocumentLinkArray && count($orgDocumentLinkArray)) {
+            foreach (array_values($orgDocumentLinkArray) as $key => $array) {
+                $newOrgDocumentLink[$key] = [
+                    'url' => $this->replaceDocumentLinkUrl(Arr::get($array, 'url', '')),
+                    'format' => Arr::get($array, 'format', ''),
+                    'title'  => Arr::get($array, 'title', $this->narrativeDefaultTemplate),
+                    'description' => Arr::get($array, 'description', $this->narrativeDefaultTemplate),
+                    'category' => Arr::get($array, 'category', [['code' => '']]),
+                    'language' => Arr::get($array, 'language', [['language' => '']]),
+                    'recipient_country' => Arr::get($array, 'recipient_country', [['code' => '', $this->narrativeDefaultTemplate]]),
+                    'document_date' => Arr::get($array, 'document_date', [['date' => '']]),
+                ];
+            }
+        }
+
+        return count($newOrgDocumentLink) ? $newOrgDocumentLink : null;
     }
 }
