@@ -148,30 +148,30 @@ trait MigrateActivityTransactionTrait
      */
     public function migrateActivityTransactions($aidstreamActivityId, $iatiActivityId): void
     {
-        $aidstreamTransactions = $this->db::connection('aidstream')->table('activity_transactions')->where(
+        $this->db::connection('aidstream')->table('activity_transactions')->where(
             'activity_id',
             $aidstreamActivityId
-        )->get();
+        )->orderBy('id')->chunk(10, function ($aidstreamTransactions) use ($aidstreamActivityId, $iatiActivityId) {
+            if (count($aidstreamTransactions)) {
+                $this->logInfo('Migrating activity transactions for activity id ' . $aidstreamActivityId);
+                $iatiTransactions = [];
 
-        if (count($aidstreamTransactions)) {
-            $this->logInfo('Migrating activity transactions for activity id ' . $aidstreamActivityId);
-            $iatiTransactions = [];
+                foreach ($aidstreamTransactions as $aidstreamTransaction) {
+                    $iatiTransactions[] = [
+                        'activity_id' => $iatiActivityId,
+                        'transaction' => json_encode(
+                            $this->getNewTransactionData($aidstreamTransaction->transaction),
+                            JSON_THROW_ON_ERROR
+                        ),
+                        'created_at'  => $aidstreamTransaction->created_at,
+                        'updated_at'  => $aidstreamTransaction->updated_at,
+                    ];
+                }
 
-            foreach ($aidstreamTransactions as $aidstreamTransaction) {
-                $iatiTransactions[] = [
-                    'activity_id' => $iatiActivityId,
-                    'transaction' => json_encode(
-                        $this->getNewTransactionData($aidstreamTransaction->transaction),
-                        JSON_THROW_ON_ERROR
-                    ),
-                    'created_at'  => $aidstreamTransaction->created_at,
-                    'updated_at'  => $aidstreamTransaction->updated_at,
-                ];
+                $this->transactionService->insert($iatiTransactions);
+                $this->logInfo('Completed migrating activity transactions for activity id ' . $aidstreamActivityId);
             }
-
-            $this->transactionService->insert($iatiTransactions);
-            $this->logInfo('Completed migrating activity transactions for activity id ' . $aidstreamActivityId);
-        }
+        });
     }
 
     /**

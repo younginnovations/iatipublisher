@@ -224,4 +224,16 @@ class OrganizationService
 
         return false;
     }
+
+    /**
+     * Returns organization by publisher id.
+     *
+     * @param $publisher_id
+     *
+     * @return object|null
+     */
+    public function getOrganizationByPublisherId($publisher_id): ?object
+    {
+        return $this->organizationRepo->getOrganizationByPublisherId($publisher_id);
+    }
 }

@@ -135,4 +135,16 @@ class OrganizationRepository extends Repository
     {
         return $this->model->get()->where('name', '!=', null)->pluck('name.0.narrative', 'id');
     }
+
+    /**
+     * Returns organization by publisher id.
+     *
+     * @param $publisherId
+     *
+     * @return object|null
+     */
+    public function getOrganizationByPublisherId($publisherId): ?object
+    {
+        return $this->model->where('publisher_id', $publisherId)->first();
+    }
 }

@@ -169,27 +169,27 @@ trait MigrateResultIndicatorTrait
      */
     public function migrateResultIndicator($aidstreamResultId, $iatiResultId): void
     {
-        $aidstreamIndicators = $this->db::connection('aidstream')->table('activity_result_indicators_new')->where(
+        $this->db::connection('aidstream')->table('activity_result_indicators_new')->where(
             'result_id',
             $aidstreamResultId
-        )->get();
+        )->orderBy('id')->chunk(10, function ($aidstreamIndicators) use ($aidstreamResultId, $iatiResultId) {
+            if (count($aidstreamIndicators)) {
+                foreach ($aidstreamIndicators as $aidstreamIndicator) {
+                    $this->logInfo('Migrating result indicator for result id: ' . $aidstreamResultId) . ' with indicator id: ' . $aidstreamIndicator->id;
+                    $newIatiIndicator = [
+                        'result_id'  => $iatiResultId,
+                        'indicator'  => $this->getNewIndicatorData($aidstreamIndicator),
+                        'created_at' => $aidstreamIndicator->created_at,
+                        'updated_at' => $aidstreamIndicator->updated_at,
+                    ];
 
-        if (count($aidstreamIndicators)) {
-            foreach ($aidstreamIndicators as $aidstreamIndicator) {
-                $this->logInfo('Migrating result indicator for result id: ' . $aidstreamResultId) . ' with indicator id: ' . $aidstreamIndicator->id;
-                $newIatiIndicator = [
-                    'result_id'  => $iatiResultId,
-                    'indicator'  => $this->getNewIndicatorData($aidstreamIndicator),
-                    'created_at' => $aidstreamIndicator->created_at,
-                    'updated_at' => $aidstreamIndicator->updated_at,
-                ];
+                    $iatiIndicator = $this->indicatorService->create($newIatiIndicator);
+                    $this->logInfo('Completed migrating result indicator for result id: ' . $aidstreamResultId . ' with indicator id: ' . $aidstreamIndicator->id);
 
-                $iatiIndicator = $this->indicatorService->create($newIatiIndicator);
-                $this->logInfo('Completed migrating result indicator for result id: ' . $aidstreamResultId . ' with indicator id: ' . $aidstreamIndicator->id);
-
-                $this->migrateIndicatorPeriod($aidstreamIndicator->id, $iatiIndicator->id);
+                    $this->migrateIndicatorPeriod($aidstreamIndicator->id, $iatiIndicator->id);
+                }
             }
-        }
+        });
     }
 
     /**

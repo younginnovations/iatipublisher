@@ -169,26 +169,26 @@ trait MigrateIndicatorPeriodTrait
      */
     public function migrateIndicatorPeriod($aidstreamIndicatorId, $iatiIndicatorId): void
     {
-        $aidstreamPeriods = $this->db::connection('aidstream')->table('indicator_periods')->where(
+        $this->db::connection('aidstream')->table('indicator_periods')->where(
             'indicator_id',
             $aidstreamIndicatorId
-        )->get();
-
-        if (count($aidstreamPeriods)) {
-            foreach ($aidstreamPeriods as $aidstreamPeriod) {
-                $this->logInfo(
-                    'Migrating indicator period for indicator id: ' . $aidstreamIndicatorId . ' and period id: ' . $aidstreamPeriod->id
-                );
-                $newIatiPeriod = [
-                    'indicator_id' => $iatiIndicatorId,
-                    'period'       => $this->getNewPeriodData($aidstreamPeriod),
-                    'created_at'   => $aidstreamPeriod->created_at,
-                    'updated_at'   => $aidstreamPeriod->updated_at,
-                ];
-                $this->periodService->create($newIatiPeriod);
-                $this->logInfo('Completed migrating indicator period for indicator id: ' . $aidstreamIndicatorId . ' and period id: ' . $aidstreamPeriod->id);
+        )->orderBy('id')->chunk(10, function ($aidstreamPeriods) use ($aidstreamIndicatorId, $iatiIndicatorId) {
+            if (count($aidstreamPeriods)) {
+                foreach ($aidstreamPeriods as $aidstreamPeriod) {
+                    $this->logInfo(
+                        'Migrating indicator period for indicator id: ' . $aidstreamIndicatorId . ' and period id: ' . $aidstreamPeriod->id
+                    );
+                    $newIatiPeriod = [
+                        'indicator_id' => $iatiIndicatorId,
+                        'period'       => $this->getNewPeriodData($aidstreamPeriod),
+                        'created_at'   => $aidstreamPeriod->created_at,
+                        'updated_at'   => $aidstreamPeriod->updated_at,
+                    ];
+                    $this->periodService->create($newIatiPeriod);
+                    $this->logInfo('Completed migrating indicator period for indicator id: ' . $aidstreamIndicatorId . ' and period id: ' . $aidstreamPeriod->id);
+                }
             }
-        }
+        });
     }
 
     /**
