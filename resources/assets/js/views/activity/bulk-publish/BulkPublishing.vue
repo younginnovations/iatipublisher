@@ -110,6 +110,7 @@ let intervalID;
  *   Component lifecycle - onMounted
  */
 onMounted(() => {
+  console.log('mounted')
   completed.value = paStorage.value.publishingActivities.status ?? 'processing';
   bulkPublishStatus();
   setTimeout(() => {
