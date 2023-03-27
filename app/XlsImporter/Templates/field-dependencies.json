@@ -478,13 +478,13 @@
             "document_link description narrative language"
           ]
         },
-        "category code": {
+        "document_link category code": {
           "parent": "document_link category"
         },
-        "language code": {
+        "document_link language code": {
           "parent": "document_link language"
         },
-        "document_date date": {
+        "document_link document_date date": {
           "parent": "document_link document_date"
         }
       }

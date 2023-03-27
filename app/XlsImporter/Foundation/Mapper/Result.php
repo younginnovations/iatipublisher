@@ -56,15 +56,23 @@ class Result
 
     public function setActivityAndResultIdentifier($rows)
     {
+        $activityIdentifier = null;
+        $mapper = [];
+
         foreach ($rows as $fieldValue) {
-            if ($this->checkRowNotEmpty($fieldValue)) {
-                $this->activityResultMapper = [
-                    $fieldValue['result_identifier'] => $fieldValue['activity_identifier'],
-                ];
-            } else {
+            if (!$this->checkRowNotEmpty($fieldValue)) {
                 break;
             }
+            if ($this->checkRowNotEmpty($fieldValue)) {
+                $mapper[$fieldValue['result_identifier']] = $activityIdentifier;
+
+                if (!empty($fieldValue['activity_identifier'])) {
+                    $mapper[$fieldValue['result_identifier']] = $fieldValue['activity_identifier'];
+                    $activityIdentifier = $fieldValue['activity_identifier'];
+                }
+            }
         }
+        $this->activityResultMapper = $mapper;
     }
 
     public function getLinearizedActivity()
@@ -107,7 +115,7 @@ class Result
                     )
                 ) {
                     if (!empty($elementData)) {
-                        $this->results[$elementResultIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields)[0];
+                        $this->results[$this->activityResultMapper[$elementResultIdentifier]][$elementResultIdentifier] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields)[0];
                         $elementData = [];
                     }
                     $elementResultIdentifier = Arr::get($row, 'result_identifier', null) ?? $elementResultIdentifier;
@@ -123,8 +131,9 @@ class Result
 
                 $elementData[] = $systemMappedRow;
             } else {
-                $this->results[$elementResultIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields)[0];
-                $this->results[$elementResultIdentifier]['activity_identifier'] = $this->activityResultMapper[$elementResultIdentifier];
+                $this->results[$this->activityResultMapper[$elementResultIdentifier]][$elementResultIdentifier] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields)[0];
+//                $this->results[$elementResultIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields)[0];
+//                $this->results[$elementResultIdentifier]['activity_identifier'] = $this->activityResultMapper[$elementResultIdentifier];
                 break;
             }
         }
@@ -165,8 +174,10 @@ class Result
 
                 $elementData[] = $systemMappedRow;
             } else {
-                $data = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields)[0];
-                $this->resultDocumentLink[$elementResultIdentifier]['document_link'] = [$data['document_link']];
+                $data = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields);
+
+                $this->resultDocumentLink[$elementResultIdentifier] = $data;
+//                $this->resultDocumentLink[$this->activityResultMapper[$elementResultIdentifier]]['document_link'] = [ $data['document_link'] ];
                 break;
             }
         }
@@ -195,7 +206,7 @@ class Result
 
                 if (array_key_exists($fieldName, $fieldDependency)) {
                     $parentKey = $fieldDependency[$fieldName]['parent'];
-                    $peerAttributes = $fieldDependency[$fieldName]['peer'];
+                    $peerAttributes = Arr::get($fieldDependency[$fieldName], 'peer', []);
 
                     if ($fieldValue) {
                         $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) ? 0 : $parentBaseCount[$parentKey] + 1;
@@ -283,13 +294,21 @@ class Result
     {
         $results = $this->results;
         $resultDocumentLink = $this->resultDocumentLink;
-        $combinedResult = array_merge_recursive($results, $resultDocumentLink);
 
-        foreach ($combinedResult as $key => $result) {
-            $combinedResult[$key]['result'] = $result['result'] + ['document_link' => $result['document_link']];
-            unset($combinedResult[$key]['document_link']);
+        $documentLink = [];
+
+        foreach ($resultDocumentLink as $key => $documentLinkData) {
+            $documentLink[$key]['document_link'] = array_column($documentLinkData, 'document_link');
         }
 
-        return $combinedResult;
+        foreach ($results as $activityIdentifier => $resultData) {
+            foreach ($resultData as $resultIdentifier => $result) {
+                if (array_key_exists($resultIdentifier, $documentLink)) {
+                    $results[$activityIdentifier][$resultIdentifier] = $result + $documentLink[$resultIdentifier];
+                }
+            }
+        }
+
+        return $results;
     }
 }
