@@ -32,6 +32,13 @@ class Document extends Model
     ];
 
     /**
+     * @var array
+     */
+    protected $casts = [
+        'document_link' => 'json',
+    ];
+
+    /**
      * Document belongs to activity.
      */
     protected function activity(): BelongsTo
