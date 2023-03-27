@@ -15,6 +15,7 @@ use App\IATI\Services\Activity\ResultService;
 use App\IATI\Services\Activity\TransactionService;
 use App\IATI\Services\Document\DocumentService;
 use App\IATI\Services\Organization\OrganizationService;
+use App\IATI\Services\Publisher\PublisherService;
 use App\IATI\Services\Setting\SettingService;
 use App\IATI\Services\User\UserService;
 use App\IATI\Traits\MigrateActivityPublishedTrait;
@@ -87,6 +88,7 @@ class MigrateOrganizationCommand extends Command
         protected DocumentService $documentService,
         protected ActivityPublishedService $activityPublishedService,
         protected XmlGenerator $xmlGenerator,
+        protected PublisherService $publisherService,
     ) {
         parent::__construct();
     }
@@ -101,14 +103,14 @@ class MigrateOrganizationCommand extends Command
     public function handle(): void
     {
         try {
-//            $aidstreamOrganizationIdString = $this->askValid(
-//                'Please enter the organization ids which you want to migrate separated by comma (Compulsory)',
-//                'aidstreamOrganizationIdString',
-//                ['required']
-//            );
-//
-//            $aidstreamOrganizationIds = explode(',', $aidstreamOrganizationIdString);
-            $aidstreamOrganizationIds = [1397];
+            $aidstreamOrganizationIdString = $this->askValid(
+                'Please enter the organization ids which you want to migrate separated by comma (Compulsory)',
+                'aidstreamOrganizationIdString',
+                ['required']
+            );
+
+            $aidstreamOrganizationIds = explode(',', $aidstreamOrganizationIdString);
+
             // Convert all the values to integer.
             foreach ($aidstreamOrganizationIds as $key => $aidstreamOrganizationId) {
                 $aidstreamOrganizationIds[$key] = (int) $aidstreamOrganizationId;

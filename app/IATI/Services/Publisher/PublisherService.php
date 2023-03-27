@@ -43,16 +43,19 @@ class PublisherService extends RegistryApiHandler
      * @param $registryInfo
      * @param $activityPublished
      * @param $organization
+     * @param  bool  $updatedActivityPublished
      *
      * @return void
+     *
+     * @throws \Exception
      */
-    public function publishFile($registryInfo, $activityPublished, $organization): void
+    public function publishFile($registryInfo, $activityPublished, $organization, bool $updatedActivityPublished = true): void
     {
         $this->setFile($activityPublished);
         $this->init(env('IATI_API_ENDPOINT'), Arr::get($registryInfo, 'api_token', ''))
             ->setPublisher(Arr::get($registryInfo, 'publisher_id', ''));
         $this->searchForPublisher($this->publisherId);
-        $this->publishToRegistry($organization, $activityPublished->filename);
+        $this->publishToRegistry($organization, $activityPublished->filename, $updatedActivityPublished);
     }
 
     /**
@@ -61,16 +64,19 @@ class PublisherService extends RegistryApiHandler
      * @param $registryInfo
      * @param $organizationPublished
      * @param $organization
+     * @param  bool  $updateActivityPublished
      *
      * @return void
+     *
+     * @throws \Exception
      */
-    public function publishOrganizationFile($registryInfo, $organizationPublished, $organization): void
+    public function publishOrganizationFile($registryInfo, $organizationPublished, $organization, bool $updateOrganizationPublished = true): void
     {
         $this->organizationPublished = $organizationPublished;
         $this->init(env('IATI_API_ENDPOINT'), Arr::get($registryInfo, 'api_token', ''))
             ->setPublisher(Arr::get($registryInfo, 'publisher_id', ''));
         $this->searchForPublisher($this->publisherId);
-        $this->publishOrganizationToRegistry($organization, $organizationPublished->filename);
+        $this->publishOrganizationToRegistry($organization, $organizationPublished->filename, $updateOrganizationPublished);
     }
 
     /**
@@ -107,10 +113,13 @@ class PublisherService extends RegistryApiHandler
      *
      * @param $organization
      * @param $filename
+     * @param  bool  $updateActivityPublished
      *
      * @return void
+     *
+     * @throws \Exception
      */
-    protected function publishOrganizationToRegistry($organization, $filename): void
+    protected function publishOrganizationToRegistry($organization, $filename, bool $updateOrganizationPublished = true): void
     {
         $data = $this->generateOrganizationPayload($organization, $filename);
 
@@ -120,15 +129,23 @@ class PublisherService extends RegistryApiHandler
             $this->client->package_create($data);
         }
 
-        $this->organizationPublishedService->updateStatus($this->organizationPublished->id, true);
+        if ($updateOrganizationPublished) {
+            $this->organizationPublishedService->updateStatus($this->organizationPublished->id, true);
+        }
     }
 
     /**
      * Publish File to the IATI Registry.
      *
+     * @param $organization
+     * @param $filename
+     * @param  bool  $updateActivityPublished
+     *
      * @return void
+     *
+     * @throws \Exception
      */
-    protected function publishToRegistry($organization, $filename): void
+    protected function publishToRegistry($organization, $filename, bool $updateActivityPublished = true): void
     {
         $data = $this->generatePayload($organization, $filename);
 
@@ -138,7 +155,9 @@ class PublisherService extends RegistryApiHandler
             $this->client->package_create($data);
         }
 
-        $this->activityPublishedService->updateStatus($this->activityPublished);
+        if ($updateActivityPublished) {
+            $this->activityPublishedService->updateStatus($this->activityPublished);
+        }
     }
 
     /**
