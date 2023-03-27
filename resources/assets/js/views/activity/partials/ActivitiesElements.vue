@@ -77,7 +77,7 @@
           "
           class="elements__item relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 py-2.5 text-n-30"
           :href="getLink(post.has_data, index.toString())"
-          :id="index.toString()"
+          :id="'sidebar-' + index.toString()"
         >
           <div
             class="status_icons absolute top-0 right-0 mt-1 mr-1 inline-flex"
