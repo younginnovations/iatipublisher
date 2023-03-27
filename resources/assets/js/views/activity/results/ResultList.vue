@@ -42,6 +42,7 @@
             <td
               class="cursor-pointer"
               @click="handleNavigate(`${activityLink}/result/${result.id}`)"
+              :id="'result-' + t.toString()"
             >
               <div class="ellipsis relative">
                 <a
