@@ -37,36 +37,35 @@ trait MigrateActivityPublishedTrait
      * @param $migratedActivitiesLookupTable
      *
      * @return void
-     * @throws \DOMException
      */
     public function migrateActivitiesPublishedFiles($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable): void
     {
         $this->logInfo("Started Activity file migration for Aidstream org: {$aidStreamOrganization->id}.");
         $iatiActivityFilePath = 'xml/activityXmlFiles';
-        $iatiMergedFilename = "{$iatiOrganization->publisher_id}-activities.xml";
         $aidstreamActivityXmlFilePath = 'aidstream-xml';
 
         $aidstreamActivityXmlNameList = $this->getAidStreamActivityXmlNames($aidStreamOrganization);
-        $iatiActivityXmlFilenameList = [];
-        $this->logInfo('Found ' . count($aidstreamActivityXmlNameList) . ' activity files to migrate.');
 
-        foreach ($aidstreamActivityXmlNameList as $aidstreamId => $aidstreamXmlName) {
-            $file = "{$aidstreamActivityXmlFilePath}/{$aidstreamXmlName}";
-            $contents = awsGetFile($file);
+        if ($aidstreamActivityXmlNameList) {
+            $this->logInfo('Found ' . count($aidstreamActivityXmlNameList) . ' activity files to migrate.');
 
-            if ($contents && array_key_exists($aidstreamId, $migratedActivitiesLookupTable)) {
-                $iatiXmlFileName = $this->generateIatiXmlFilename($iatiOrganization, $migratedActivitiesLookupTable[$aidstreamId]);
-                $iatiActivityXmlFilenameList[] = $iatiXmlFileName;
-                $destinationPath = "{$iatiActivityFilePath}/{$iatiXmlFileName}";
+            foreach ($aidstreamActivityXmlNameList as $aidstreamId => $aidstreamXmlName) {
+                $file = "{$aidstreamActivityXmlFilePath}/{$aidstreamXmlName}";
+                $contents = awsGetFile($file);
 
-                if (awsUploadFile($destinationPath, $contents)) {
-                    $this->logInfo("Migrated file :{$aidstreamXmlName} as file :{$iatiXmlFileName}.");
+                if ($contents && array_key_exists($aidstreamId, $migratedActivitiesLookupTable)) {
+                    $iatiXmlFileName = $this->generateIatiXmlFilename($iatiOrganization, $migratedActivitiesLookupTable[$aidstreamId]);
+                    $destinationPath = "{$iatiActivityFilePath}/{$iatiXmlFileName}";
+
+                    if (awsUploadFile($destinationPath, $contents)) {
+                        $this->logInfo("Migrated file :{$aidstreamXmlName} as file :{$iatiXmlFileName}.");
+                    }
                 }
             }
+        } else {
+            $this->logInfo("No activity files to migrate for Aidstream org_id {$aidStreamOrganization->id}.");
         }
 
-        $this->logInfo("Migrated merged file for Aidstream org: {$aidStreamOrganization->id}.");
-        $this->xmlGenerator->getMergeXml($iatiActivityXmlFilenameList, $iatiMergedFilename);
         $this->logInfo("Completed Activity file migration for Aidstream org: {$aidStreamOrganization->id}.");
     }
 
@@ -197,6 +196,8 @@ trait MigrateActivityPublishedTrait
     }
 
     /**
+     * Returns the latest activity_published of an organization.
+     *
      * @param $organization
      *
      * @return Collection
@@ -207,5 +208,80 @@ trait MigrateActivityPublishedTrait
             ->where('organization_id', '=', $organization->id)
             ->where('published_to_register', '=', 1)
             ->latest()->get();
+    }
+
+    /**
+     * Return merged activity filename.
+     *
+     * @param $aidstreamOrganization
+     *
+     * @return string|null
+     */
+    public function getAidstreamMergedFileName($aidstreamOrganization): ?string
+    {
+        $activityPublished = $this->db::connection('aidstream')->table('activity_published')
+            ->where('organization_id', $aidstreamOrganization->id)->get();
+
+        if ($activityPublished) {
+            if (count($activityPublished) > 1) {
+                $setting = $this->db::connection('aidstream')->table('settings')->where('organization_id', $aidstreamOrganization->id)?->first();
+                $registryInfo = json_decode($setting->registry_info)[0];
+                $publisherId = $registryInfo->publisher_id;
+
+                return "{$publisherId}-activities.xml";
+            }
+
+            return $activityPublished->first()->filename;
+        }
+
+        return null;
+    }
+
+    /**
+     * Migrate merged file.
+     *
+     * @param $aidStreamOrganization
+     * @param $iatiOrganization
+     *
+     * @throws \DOMException
+     */
+    public function migrateActivityMergedFile($aidStreamOrganization, $iatiOrganization): void
+    {
+        $publishedFiles = $this->getIatiPublishedFilenames($iatiOrganization);
+
+        if ($publishedFiles) {
+            $aidstreamMergedFilePath = 'aidstream-xml';
+            $aidstreamMergedFilename = $this->getAidStreamMergedFilename($aidStreamOrganization);
+
+            $iatiMergedFilename = "{$iatiOrganization->publisher_id}-activities.xml";
+            $iatiMergedFile = "xml/mergedActivityXml/{$iatiMergedFilename}";
+
+            $this->logInfo("Started migration of merged file for Aidstream org: {$aidStreamOrganization->id}.");
+            $existingContents = awsGetFile("{$aidstreamMergedFilePath}/{$aidstreamMergedFilename}");
+
+            if ($existingContents) {
+                awsUploadFile($iatiMergedFile, $existingContents);
+            } else {
+                $this->xmlGenerator->getMergeXml($publishedFiles, $iatiMergedFilename);
+            }
+
+            $this->logInfo("Completed migration of merged file for Aidstream org: {$aidStreamOrganization->id}.");
+        } else {
+            $this->logInfo('No activity file to merge.');
+        }
+    }
+
+    /**
+     * Returns array of published activity filename.
+     *
+     * @param $iatiOrganization
+     *
+     * @return array
+     */
+    public function getIatiPublishedFilenames($iatiOrganization): array
+    {
+        $activityPublished = (new ActivityPublished())->where('organization_id', $iatiOrganization->id)->first();
+
+        return $activityPublished ? $activityPublished->published_activities : [];
     }
 }
