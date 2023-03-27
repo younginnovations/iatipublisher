@@ -58,6 +58,8 @@ class Organization extends Model implements Auditable
         'org_status',
         'updated_by',
         'migrated_from_aidstream',
+        'created_at',
+        'updated_at',
     ];
 
     /**

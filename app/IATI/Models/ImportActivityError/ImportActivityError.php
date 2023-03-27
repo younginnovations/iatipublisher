@@ -22,7 +22,7 @@ class ImportActivityError extends Model
     /**
      * @var array
      */
-    protected $fillable = ['activity_id', 'error'];
+    protected $fillable = ['activity_id', 'error', 'created_at', 'updated_at'];
 
     /**
      * @var array

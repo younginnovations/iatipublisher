@@ -73,6 +73,8 @@ class Activity extends Model implements Auditable
         'updated_by',
         'linked_to_iati',
         'migrated_from_aidstream',
+        'created_at',
+        'updated_at',
     ];
 
     /**
