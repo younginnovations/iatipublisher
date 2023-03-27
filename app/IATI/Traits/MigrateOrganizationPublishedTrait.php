@@ -47,6 +47,8 @@ trait MigrateOrganizationPublishedTrait
      * @param $iatiOrganization
      *
      * @return bool
+     *
+     * @throws \Exception
      */
     public function migrateOrganizationPublishedTable($aidStreamOrganization, $iatiOrganization): bool
     {
@@ -57,13 +59,22 @@ trait MigrateOrganizationPublishedTrait
         if ($publishedOrganization) {
             $organizationPublished = new OrganizationPublished();
 
-            return $organizationPublished->fill([
+            $organizationPublished->fill([
                 'filename'              => "{$iatiOrganization->publisher_id}-organisation.xml",
                 'organization_id'       => $iatiOrganization->id,
                 'published_to_registry' => (bool) $publishedOrganization->published_to_register,
                 'created_at'            => $publishedOrganization->created_at,
                 'updated_at'            => $publishedOrganization->updated_at,
             ])->save();
+
+            //Publish organization IATI Registry
+            if ($organizationPublished->published_to_registry) {
+                $settings = $iatiOrganization->settings;
+                $publishingInfo = $settings ? $settings->publishing_info : [];
+                $this->logInfo("Publishing organization file: {$organizationPublished->filename}.");
+                $this->publisherService->publishOrganizationFile($publishingInfo, $organizationPublished, $iatiOrganization, false);
+                $this->logInfo("Organization file: {$organizationPublished->filename} with updated at: {$organizationPublished->updated_at} published.");
+            }
         }
 
         return true;

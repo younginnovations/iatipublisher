@@ -67,6 +67,12 @@ return [
             'days' => 35,
         ],
 
+        'migration' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/organization_migration.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),

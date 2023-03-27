@@ -73,6 +73,6 @@ trait MigrateGeneralTrait
     public function logInfo($message): void
     {
         $this->info($message);
-        logger()->info($message);
+        logger()->channel('migration')->info($message);
     }
 }

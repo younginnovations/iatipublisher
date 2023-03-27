@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Traits;
 
 use App\IATI\Models\Activity\ActivityPublished;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 /**
@@ -107,19 +108,34 @@ trait MigrateActivityPublishedTrait
     {
         $this->logInfo("Started ActivityPublished table migration for Aidstream org: {$aidStreamOrganization->id}.");
         $publishedActivitiesList = $this->getIatiActivityXmlNames($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable);
-        $generatedFilename = $this->getGeneratedFilename($aidStreamOrganization);
+        $settings = $iatiOrganization->settings;
+        $generatedFilename = $this->getGeneratedFilename($aidStreamOrganization, $settings);
         $latestActivityPublished = $this->getLatestAidstreamActivityPublished($aidStreamOrganization);
-        $activitiesPublished = new ActivityPublished();
-        $this->logInfo("Completed ActivityPublished table migration for Aidstream org: {$aidStreamOrganization->id}.");
 
-        return $activitiesPublished->fill([
-            'published_activities'  => array_values($publishedActivitiesList),
-            'filename'              => $generatedFilename,
-            'published_to_registry' => 1,
-            'organization_id'       => $iatiOrganization->id,
-            'created_at'            => $latestActivityPublished->isNotEmpty() ? $latestActivityPublished[0]->created_at : '',
-            'updated_at'            => $latestActivityPublished->isNotEmpty() ? $latestActivityPublished[0]->updated_at : '',
-        ])->save();
+        if (count($latestActivityPublished)) {
+            $activitiesPublished = new ActivityPublished();
+
+            $activitiesPublished->fill([
+                'published_activities'  => array_values($publishedActivitiesList),
+                'filename'              => $generatedFilename,
+                'published_to_registry' => 1,
+                'organization_id'       => $iatiOrganization->id,
+                'created_at'            => $latestActivityPublished->isNotEmpty() ? $latestActivityPublished[0]->created_at : '',
+                'updated_at'            => $latestActivityPublished->isNotEmpty() ? $latestActivityPublished[0]->updated_at : '',
+            ])->save();
+
+            $this->logInfo("Completed ActivityPublished table migration for Aidstream org: {$aidStreamOrganization->id}.");
+
+            //Publish activity to registry if needed.
+            if ($activitiesPublished && $activitiesPublished->published_to_registry) {
+                $publishingInfo = $settings ? $settings->publishing_info : [];
+                $this->logInfo("Publishing activity file: {$activitiesPublished->filename} for Aidstream org: {$aidStreamOrganization->id}.");
+                $this->publisherService->publishFile($publishingInfo, $activitiesPublished, $iatiOrganization, false);
+                $this->logInfo("Completed publishing activity file: {$activitiesPublished->filename} with updated at {$activitiesPublished->updated_at} for Aidstream org: {$aidStreamOrganization->id}.");
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -185,14 +201,16 @@ trait MigrateActivityPublishedTrait
      * Generates new xml filename for main xml.
      *
      * @param $organization
+     * @param $settings
      *
      * @return string
      */
-    public function getGeneratedFilename($organization): string
+    public function getGeneratedFilename($organization, $settings): string
     {
         $basename = $organization->user_identifier;
+        $publisherId = $settings ? Arr::get($settings->publishing_info, 'publisher_id', $basename) : $basename;
 
-        return "{$basename}-activities.xml";
+        return "{$publisherId}-activities.xml";
     }
 
     /**
