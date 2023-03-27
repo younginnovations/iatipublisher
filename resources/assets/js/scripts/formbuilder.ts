@@ -312,14 +312,14 @@ class FormBuilder {
       allowClear: true,
     });
 
-    $('body').on('change', 'input[id*="[document]"]', function () {
-      const endpoint = $('.endpoint').attr('endpoint') ?? '';
-      const file_name = ($(this).val() ?? '').toString();
-      $(this)
-        .closest('.form-field-group')
-        .find('input[id*="[url]"]')
-        .val(`${endpoint}/${file_name?.split('\\').pop()?.replace(/' '/g, '_')}`);
-    });
+    // $('body').on('change', 'input[id*="[document]"]', function () {
+    //   const endpoint = $('.endpoint').attr('endpoint') ?? '';
+    //   const file_name = ($(this).val() ?? '').toString();
+    //   $(this)
+    //     .closest('.form-field-group')
+    //     .find('input[id*="[url]"]')
+    //     .val(`${endpoint}/${file_name?.split('\\').pop()?.replace(/' '/g, '_')}`);
+    // });
   }
 }
 

@@ -849,14 +849,14 @@ function () {
     (0, jquery_1["default"])('.select2').select2({
       placeholder: 'Select an option',
       allowClear: true
-    });
-    (0, jquery_1["default"])('body').on('change', 'input[id*="[document]"]', function () {
-      var _a, _b, _c;
-
-      var endpoint = (_a = (0, jquery_1["default"])('.endpoint').attr('endpoint')) !== null && _a !== void 0 ? _a : '';
-      var file_name = ((_b = (0, jquery_1["default"])(this).val()) !== null && _b !== void 0 ? _b : '').toString();
-      (0, jquery_1["default"])(this).closest('.form-field-group').find('input[id*="[url]"]').val("".concat(endpoint, "/").concat((_c = file_name === null || file_name === void 0 ? void 0 : file_name.split('\\').pop()) === null || _c === void 0 ? void 0 : _c.replace(/' '/g, '_')));
-    });
+    }); // $('body').on('change', 'input[id*="[document]"]', function () {
+    //   const endpoint = $('.endpoint').attr('endpoint') ?? '';
+    //   const file_name = ($(this).val() ?? '').toString();
+    //   $(this)
+    //     .closest('.form-field-group')
+    //     .find('input[id*="[url]"]')
+    //     .val(`${endpoint}/${file_name?.split('\\').pop()?.replace(/' '/g, '_')}`);
+    // });
   };
 
   return FormBuilder;
