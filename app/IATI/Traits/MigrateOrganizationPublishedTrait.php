@@ -23,6 +23,7 @@ trait MigrateOrganizationPublishedTrait
     {
         $publishedOrganization = $this->db::connection('aidstream')->table('organization_published')
             ->where('organization_id', '=', $aidStreamOrganization->id)
+            ->where('published_to_register', '=', 1)
             ->first();
 
         if ($publishedOrganization) {
