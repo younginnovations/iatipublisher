@@ -204,11 +204,11 @@ class MigrateOrganizationCommand extends Command
 
                     $this->migrateActivitiesPublishedFiles($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable);
                     $this->migrateActivityPublishedTable($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable);
+                    $this->migrateActivityMergedFile($aidStreamOrganization, $iatiOrganization);
                 }
 
                 $this->migrateDocuments($aidstreamOrganizationId, $iatiOrganization);
 //                $this->migrateDocumentFiles($aidstreamOrganizationId);
-                $this->migrateActivityMergedFile($aidStreamOrganization, $iatiOrganization);
                 $this->migrateOrganizationPublishedFile($aidStreamOrganization, $iatiOrganization);
                 $this->migrateOrganizationPublishedTable($aidStreamOrganization, $iatiOrganization);
 

@@ -125,14 +125,6 @@ trait MigrateActivityPublishedTrait
             ])->save();
 
             $this->logInfo("Completed ActivityPublished table migration for Aidstream org: {$aidStreamOrganization->id}.");
-
-            //Publish activity to registry if needed.
-            if ($activitiesPublished && $activitiesPublished->published_to_registry) {
-                $publishingInfo = $settings ? $settings->publishing_info : [];
-                $this->logInfo("Publishing activity file: {$activitiesPublished->filename} for Aidstream org: {$aidStreamOrganization->id}.");
-                $this->publisherService->publishFile($publishingInfo, $activitiesPublished, $iatiOrganization, false);
-                $this->logInfo("Completed publishing activity file: {$activitiesPublished->filename} with updated at {$activitiesPublished->updated_at} for Aidstream org: {$aidStreamOrganization->id}.");
-            }
         }
 
         return true;
@@ -265,7 +257,8 @@ trait MigrateActivityPublishedTrait
      */
     public function migrateActivityMergedFile($aidStreamOrganization, $iatiOrganization): void
     {
-        $publishedFiles = $this->getIatiPublishedFilenames($iatiOrganization);
+        $activityPublished = $this->getIatiActivityPublished($iatiOrganization);
+        $publishedFiles = $activityPublished ? $activityPublished->published_activities : [];
 
         if ($publishedFiles) {
             $aidstreamMergedFilePath = 'aidstream-xml';
@@ -284,22 +277,29 @@ trait MigrateActivityPublishedTrait
             }
 
             $this->logInfo("Completed migration of merged file for Aidstream org: {$aidStreamOrganization->id}.");
+
+            //Publish activity to registry if needed.
+            if ($activityPublished && $activityPublished->published_to_registry) {
+                $settings = $iatiOrganization->settings;
+                $publishingInfo = $settings ? $settings->publishing_info : [];
+                $this->logInfo("Publishing activity file: {$activityPublished->filename} for Aidstream org: {$aidStreamOrganization->id}.");
+                $this->publisherService->publishFile($publishingInfo, $activityPublished, $iatiOrganization, false);
+                $this->logInfo("Completed publishing activity file: {$activityPublished->filename} with updated at {$activityPublished->updated_at} for Aidstream org: {$aidStreamOrganization->id}.");
+            }
         } else {
             $this->logInfo('No activity file to merge.');
         }
     }
 
     /**
-     * Returns array of published activity filename.
+     * Returns the latest activity_published of an organization.
      *
      * @param $iatiOrganization
      *
-     * @return array
+     * @return object
      */
-    public function getIatiPublishedFilenames($iatiOrganization): array
+    public function getIatiActivityPublished($iatiOrganization): object
     {
-        $activityPublished = (new ActivityPublished())->where('organization_id', $iatiOrganization->id)->first();
-
-        return $activityPublished ? $activityPublished->published_activities : [];
+        return (new ActivityPublished())->where('organization_id', $iatiOrganization->id)->first();
     }
 }
