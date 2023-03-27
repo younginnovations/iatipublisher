@@ -97,14 +97,15 @@ trait MigrateActivityResultsTrait
      *
      * @param $iatiActivity
      * @param $aidstreamActivity
+     * @param $iatiOrganization
      *
      * @return void
      *
      * @throws \JsonException
      */
-    public function migrateActivityResults($iatiActivity, $aidstreamActivity): void
+    public function migrateActivityResults($iatiActivity, $aidstreamActivity, $iatiOrganization): void
     {
-        $aidStreamActivityResult = $this->getAidStreamActivityResult($aidstreamActivity->id);
+        $aidStreamActivityResult = $this->getAidStreamActivityResult($aidstreamActivity->id, $iatiOrganization);
 
         foreach ($aidStreamActivityResult as $result) {
             list($aidStreamResultId, $created_at, $updated_at) = $this->extractSpecifiedKeys($result, ['id', 'created_at', 'updated_at']);
@@ -117,8 +118,9 @@ trait MigrateActivityResultsTrait
                 'created_at'  => $created_at,
                 'updated_at'  => $updated_at,
             ]);
+
             $this->logInfo("Completed migrating AidStream Activity Result for activity id: {$aidstreamActivity->id} and result id: {$aidStreamResultId}");
-            $this->migrateResultIndicator($aidStreamResultId, $iatiResult->id);
+            $this->migrateResultIndicator($aidStreamResultId, $iatiResult->id, $iatiOrganization);
         }
     }
 
@@ -126,10 +128,11 @@ trait MigrateActivityResultsTrait
      * Returns activity result for iati.
      *
      * @param $id
+     * @param $iatiOrganization
      *
      * @return array
      */
-    public function getAidStreamActivityResult($id): array
+    public function getAidStreamActivityResult($id, $iatiOrganization): array
     {
         $this->logInfo("Started fetching AidStream Activity Results for activity id: {$id}");
 
@@ -150,7 +153,7 @@ trait MigrateActivityResultsTrait
         $resultsReference = $this->getResultReference($resultIds);
         $resultsDocumentLink = $this->getResultDocumentLink($resultIds);
 
-        $returnArr = $this->resolveResult($baseResults->toArray(), $resultsReference->toArray(), $resultsDocumentLink->toArray());
+        $returnArr = $this->resolveResult($baseResults->toArray(), $resultsReference->toArray(), $resultsDocumentLink->toArray(), $iatiOrganization);
         $returnArr = $this->mapDates($returnArr, $createdAt, $updatedAt);
 
         $this->logInfo("Completed fetching AidStream Activity Results for activity id: {$id}");
@@ -200,10 +203,11 @@ trait MigrateActivityResultsTrait
      * @param $baseResults
      * @param $resultsReferences
      * @param $resultsDocumentLinks
+     * @parram $iatiOrganization
      *
      * @return mixed
      */
-    public function resolveResult($baseResults, $resultsReferences, $resultsDocumentLinks): mixed
+    public function resolveResult($baseResults, $resultsReferences, $resultsDocumentLinks, $iatiOrganization): mixed
     {
         $merged = [];
         $resultIds = [];
@@ -218,8 +222,8 @@ trait MigrateActivityResultsTrait
             }
 
             $resultIds[$index] = $baseResult->id;
-            $merged[$index]['reference'] = $this->resolveResultReferences($baseResult, $resultsReferences);
-            $merged[$index]['document_link'] = $this->resolveDocumentLinks($baseResult, $resultsDocumentLinks);
+            $merged[$index]['reference'] = $this->resolveResultReferences($baseResult, $resultsReferences, $iatiOrganization);
+            $merged[$index]['document_link'] = $this->resolveDocumentLinks($baseResult, $resultsDocumentLinks, $iatiOrganization);
             $merged[$index] = $this->resolveJsonString($merged[$index]);
 
             $merged[$index]['document_link'][0]['document_date'] = [];
@@ -247,17 +251,18 @@ trait MigrateActivityResultsTrait
      *
      * @param $baseResult
      * @param $resultReferences
+     * @param $iatiOrganization
      *
      * @return array
      */
-    public function resolveResultReferences($baseResult, $resultReferences): array
+    public function resolveResultReferences($baseResult, $resultReferences, $iatiOrganization): array
     {
         $referencesThatMatchResultId = [];
 
         foreach ($resultReferences as $reference) {
             if ($reference->result_id === $baseResult->id) {
                 $this->logInfo("Reference of id: {$reference->id} exists in result of id {$baseResult->id}.");
-                $reference->vocabulary_uri = !empty($reference->url) ? $this->replaceDocumentLinkUrl($reference->url) : null;
+                $reference->vocabulary_uri = !empty($reference->url) ? $this->replaceDocumentLinkUrl($reference->url, $iatiOrganization) : null;
                 unset($reference->url);
                 $referencesThatMatchResultId[] = $reference;
             }
@@ -271,17 +276,18 @@ trait MigrateActivityResultsTrait
      *
      * @param $baseResult
      * @param $resultDocumentLinks
+     * @param $iatiOrganization
      *
      * @return array
      */
-    public function resolveDocumentLinks($baseResult, $resultDocumentLinks): array
+    public function resolveDocumentLinks($baseResult, $resultDocumentLinks, $iatiOrganization): array
     {
         $documentLinksThatMatchResultId = [];
 
         foreach ($resultDocumentLinks as $documentLink) {
             if ($documentLink->result_id === $baseResult->id) {
                 $this->logInfo("Document link of id: {$documentLink->id} exists in result of id {$baseResult->id}.");
-                $documentLink->url = $this->replaceDocumentLinkUrl($documentLink->url);
+                $documentLink->url = $this->replaceDocumentLinkUrl($documentLink->url, $iatiOrganization);
                 $documentLinksThatMatchResultId[] = $documentLink;
             }
         }

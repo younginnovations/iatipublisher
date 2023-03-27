@@ -89,7 +89,8 @@ class DocumentLinkService
             $document = Arr::get($documentLink, '0.document', null);
 
             if ($document) {
-                $data['activity_id'] = $id;
+                $data['activity_id'] = null;
+                $data['activities'] = [(int) $id];
                 $data['organization_id'] = $organizationId;
                 $data['filename'] = $document->getClientOriginalName();
                 $data['extension'] = pathinfo($document->getClientOriginalName(), PATHINFO_EXTENSION);

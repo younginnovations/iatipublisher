@@ -22,9 +22,9 @@ class Document extends Model
      */
     protected $fillable = [
         'activity_id',
+        'activities',
         'filename',
         'extension',
-        'document_link',
         'size',
         'organization_id',
         'created_at',
@@ -36,6 +36,7 @@ class Document extends Model
      */
     protected $casts = [
         'document_link' => 'json',
+        'activities' => 'json',
     ];
 
     /**
