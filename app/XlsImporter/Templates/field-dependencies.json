@@ -451,33 +451,6 @@
               "description narrative language"
             ]
           },
-          "document_link url": {
-            "parent": "document_link",
-            "peer": [
-              "document_link format"
-            ]
-          },
-          "document_link title narrative narrative": {
-            "parent": "document_link title narrative",
-            "peer": [
-              "document_link title narrative language"
-            ]
-          },
-          "document_link description narrative narrative": {
-            "parent": "document_link description narrative",
-            "peer": [
-              "document_link description narrative language"
-            ]
-          },
-          "document_link category code": {
-            "parent": "document_link category"
-          },
-          "document_link language code": {
-            "parent": "document_link language"
-          },
-          "document_link document_date date": {
-            "parent": "document_link document_date"
-          },
           "reference vocabulary": {
             "parent": "reference",
             "peer": [
@@ -485,25 +458,36 @@
               "reference vocabulary_uri"
             ]
           }
+        }
+    },
+    "result_document_link": {
+      "elementBase": "document_link url",
+      "elementBasePeer": [
+        "document_link format"
+      ],
+      "fieldDependency": {
+        "document_link title narrative narrative": {
+          "parent": "document_link title narrative",
+          "peer": [
+            "document_link title narrative language"
+          ]
         },
-        "type": "Type",
-        "aggregation_status": "Aggregation-status",
-        "title narrative language": "Title Narrative Language",
-        "title narrative narrative": "Title Narrative Narrative",
-        "description narrative language": "Description Narrative Language",
-        "description narrative narrative": "Description Narrative Narrative",
-        "document_link url": "Document-link Url",
-        "document_link format": "Document-link Format",
-        "document_link title narrative language": "Document-link Title Narrative Language",
-        "document_link title narrative narrative": "Document-link Title Narrative Narrative",
-        "document_link description narrative language": "Document-link Description Narrative Language",
-        "document_link description narrative narrative": "Document-link Description Narrative Narrative",
-        "document_link category code": "Document-link Category Code",
-        "document_link language language": "Document-link Language Language",
-        "document_link document_date date": "Document-link Document_date Date",
-        "reference vocabulary": "Reference Vocabulary",
-        "reference code": "Reference Code",
-        "reference vocabulary_uri": "Reference Vocabulary Uri"
+        "document_link description narrative narrative": {
+          "parent": "document_link description narrative",
+          "peer": [
+            "document_link description narrative language"
+          ]
+        },
+        "category code": {
+          "parent": "document_link category"
+        },
+        "language code": {
+          "parent": "document_link language"
+        },
+        "document_date date": {
+          "parent": "document_link document_date"
+        }
+      }
     },
     "indicator": {
         "elementBase": "measure",

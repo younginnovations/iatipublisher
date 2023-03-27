@@ -135,24 +135,21 @@
         "budget_value currency": "Activity/Currency.json"
     },
     "result": {
-        "type": "Type",
-        "aggregation_status": "Aggregation-status",
-        "title narrative narrative": "Title Narrative Narrative",
-        "title narrative language": "Title Narrative Language",
-        "description narrative narrative": "Description Narrative Narrative",
-        "description narrative language": "Description Narrative Language",
-        "document_link url": "Document-link Url",
-        "document_link format": "Document-link Format",
-        "document_link title narrative narrative": "Document-link Title Narrative Narrative",
-        "document_link title narrative language": "Document-link Title Narrative Language",
-        "document_link description narrative narrative": "Document-link Description Narrative Narrative",
-        "document_link description narrative language": "Document-link Description Narrative Language",
-        "document_link category code": "Document-link Category Code",
-        "document_link language language": "Document-link Language Language",
-        "document_link document_date date": "Document-link Document_date Date",
-        "reference vocabulary": "Reference Vocabulary",
-        "reference code": "Reference Code",
-        "reference vocabulary_uri": "Reference Vocabulary Uri"
+        "type": "Activity/ResultType.json",
+        "aggregation_status": {
+            "0": "False",
+            "1": "True"
+        },
+        "title narrative language": "Activity/Language.json",
+        "description narrative language": "Activity/Language.json",
+        "reference vocabulary": "Activity/ResultVocabulary.json"
+    },
+    "result_document_link": {
+      "document_link format": "Activity/FileFormat.json",
+      "document_link title narrative language": "Activity/Language.json",
+      "document_link description narrative language": "Activity/Language.json",
+      "document_link category code": "Activity/DocumentCategory.json",
+      "document_link language language": "Activity/Language.json"
     },
     "indicator": {
         "measure": "Activity/IndicatorMeasure.json",

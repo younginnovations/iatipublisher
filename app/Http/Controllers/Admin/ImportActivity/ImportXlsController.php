@@ -127,9 +127,9 @@ class ImportXlsController extends Controller
 
             // $periodMapper
 
-//            $resultData = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
-//            $resultMapper = new Result();
-//            $resultMapper->map($resultData);
+            $resultData = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
+            $resultMapper = new Result();
+            $resultMapper->map($resultData);
 
             if (!Auth::user()->organization_id) {
                 Session::put('error', 'User is not associated with any organization.');
