@@ -1,9 +1,10 @@
 {
     "title": {
         "elementBase": "narrative narrative",
-        "fieldDependency": {
-            "narrative narrative": "narrative"
-        }
+        "elementBasePeer": [
+            "narrative language"
+        ],
+        "fieldDependency": {}
     },
     "reporting_org": {
         "elementBase": "ref",
@@ -36,7 +37,12 @@
     "description": {
         "elementBase": "type",
         "fieldDependency": {
-            "narrative narrative": "narrative"
+            "narrative narrative": {
+                "parent": "narrative",
+                "peer": [
+                    "narrative language"
+                ]
+            }
         }
     },
     "activity_status": {
@@ -44,6 +50,9 @@
     },
     "activity_date": {
         "elementBase": "type",
+        "elementBasePeer": [
+            "date"
+        ],
         "fieldDependency": {
             "narrative narrative": {
                 "parent": "narrative",
@@ -59,7 +68,12 @@
     "recipient_country": {
         "elementBase": "country_code",
         "fieldDependency": {
-            "narrative narrative": "narrative"
+            "narrative narrative": {
+                "parent": "narrative",
+                "peer": [
+                    "narrative language"
+                ]
+            }
         }
     },
     "recipient_region": {
@@ -72,16 +86,17 @@
                 ]
             }
         },
-        "codes": {
-            "dependentField": "region_vocabulary",
-            "code": {
-                "default": "region_code",
-                "99": "custom_code"
+        "codeDependency": {
+            "dependentOn": "region_vocabulary",
+            "dependentField": "code",
+            "defaultCodeField": "custom_code",
+            "dependencyRelation": {
+                "1": "region_code"
             }
         }
     },
     "sector": {
-        "elementBase": "sector_vocabular",
+        "elementBase": "sector_vocabulary",
         "fieldDependency": {
             "narrative narrative": {
                 "parent": "narrative",
@@ -90,14 +105,15 @@
                 ]
             }
         },
-        "codes": {
-            "dependentField": "sector_vocabulary",
-            "code": {
-                "code": "Code",
-                "text": "Code",
-                "category_code": "Code",
-                "sdg_goal": "Code",
-                "sdg_target": "Code"
+        "codeDependency": {
+            "dependentOn": "sector_vocabulary",
+            "dependentField": "code",
+            "defaultCodeField": "text",
+            "dependencyRelation": {
+                "1": "code",
+                "2": "category_code",
+                "7": "sdg_goal",
+                "8": "sdg_target"
             }
         }
     },
@@ -111,12 +127,13 @@
                 ]
             }
         },
-        "codes": {
-            "dependentField": "tag_vocabulary",
-            "code": {
-                "goals_tag_code": "Code",
-                "targets_tag_code": "Code",
-                "tag_text": "Code"
+        "codeDependency": {
+            "dependentOn": "tag_vocabulary",
+            "dependentField": "code",
+            "defaultCodeField": "tag_text",
+            "dependencyRelation": {
+                "2": "goal_tag_code",
+                "3": "targets_tag_code"
             }
         }
     },
@@ -130,11 +147,12 @@
                 ]
             }
         },
-        "codes": {
-            "dependentField": "policy_marker_vocabulary",
-            "code": {
-                "policy_marker": "Code",
-                "policy_marker_text": "Code"
+        "codeDependency": {
+            "dependentOn": "policy_marker_vocabulary",
+            "dependentField": "code",
+            "defaultCodeField": "policy_marker_text",
+            "dependencyRelation": {
+                "1": "policy_marker"
             }
         }
     },
@@ -150,13 +168,15 @@
     "default_aid_type": {
         "elementBase": "default_aid_type_vocabulary",
         "fieldDependency": {},
-        "codes": {
-            "dependentField": "default_aid_type_vocabulary",
-            "code": {
-                "default_aid_type": "Code",
-                "earmarking_category": "Code",
-                "earmarking_modality": "Code",
-                "cash_and_voucher_modalities": "Code"
+        "codeDependency": {
+            "dependentOn": "default_aid_type_vocabulary",
+            "dependentField": "code",
+            "defaultCodeField": "default_aid_type",
+            "dependencyRelation": {
+                "1": "default_aid_type",
+                "2": "earmarking_category",
+                "3": "earmarking_modality",
+                "4": "cash_and_voucher_modalities"
             }
         }
     },
@@ -249,25 +269,25 @@
         "elementBase": "type",
         "fieldDependency": {
             "organisation narrative narrative": {
-                "parent": "organisation",
+                "parent": "organisation narrative",
                 "peer": [
                     "organisation narrative language"
                 ]
             },
             "department narrative narrative": {
-                "parent": "department",
+                "parent": "department narrative",
                 "peer": [
                     "department narrative language"
                 ]
             },
             "person_name narrative narrative": {
-                "parent": "person_name",
+                "parent": "person_name narrative",
                 "peer": [
                     "person_name narrative language"
                 ]
             },
             "job_title narrative narrative": {
-                "parent": "job_title",
+                "parent": "job_title narrative",
                 "peer": [
                     "job_title narrative language"
                 ]
@@ -282,7 +302,7 @@
                 "parent": "website"
             },
             "mailing_address narrative narrative": {
-                "parent": "mailing_address",
+                "parent": "mailing_address narrative",
                 "peer": [
                     "mailing_address narrative language"
                 ]
@@ -607,6 +627,32 @@
             },
             "tied_status tied_status_code": {
                 "parent": "tied_status"
+            }
+        },
+        "codeDependency": {
+            "sector": {
+                "dependentOn": "sector_vocabulary",
+                "dependentField": "code",
+                "defaultCodeField": "text",
+                "dependencyRelation": {
+                    "1": "code",
+                    "2": "category_code",
+                    "7": "sdg_goal",
+                    "8": "sdg_target"
+                }
+            },
+            "recipient_region": {
+                "codeDependency": {
+                    "dependentOn": "sector_vocabulary",
+                    "dependentField": "code",
+                    "defaultCodeField": "text",
+                    "dependencyRelation": {
+                        "1": "code",
+                        "99": "category_code",
+                        "7": "sdg_goal",
+                        "8": "sdg_target"
+                    }
+                }
             }
         }
     }

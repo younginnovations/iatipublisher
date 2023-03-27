@@ -1,7 +1,7 @@
 {
     "title": {
-        "narrative language": "narrative_language",
-        "narrative narrative": "narrative_narrative"
+        "narrative narrative": "narrative",
+        "narrative language": "language"
     },
     "reporting_org": {
         "ref": "reference",
@@ -18,8 +18,8 @@
         "reference": "reference",
         "reference_type": "type",
         "owner_org ref": "owner_org_reference",
-        "owner_org narrative narrative": "owner_org_narrative_narrative",
-        "owner_org narrative language": "owner_org_narrative_language"
+        "owner_org narrative narrative": "owner_org_narrative",
+        "owner_org narrative language": "owner_org_language"
     },
     "description": {
         "type": "type",
@@ -31,7 +31,7 @@
     },
     "activity_date": {
         "type": "type",
-        "date": "iso date",
+        "date": "iso_date",
         "narrative narrative": "narrative",
         "narrative language": "language"
     },
@@ -48,19 +48,15 @@
         "region_vocabulary": "vocabulary",
         "region_code": "code",
         "custom_code": "code",
-        "vocabulary_uri": "vocabulary uri",
+        "vocabulary_uri": "vocabulary_uri",
         "percentage": "percentage",
         "narrative narrative": "narrative",
         "narrative language": "language"
     },
     "sector": {
         "sector_vocabulary": "vocabulary",
-        "vocabulary_uri": "vocabulary-uri",
+        "vocabulary_uri": "vocabulary_uri",
         "code": "code",
-        "text": "code",
-        "category_code": "code",
-        "sdg_goal": "code",
-        "sdg_target": "code",
         "percentage": "percentage",
         "narrative narrative": "narrative",
         "narrative language": "language"
@@ -112,7 +108,7 @@
     "humanitarian_scope": {
         "type": "type",
         "vocabulary": "vocabulary",
-        "vocabulary_uri": "vocabulary uri",
+        "vocabulary_uri": "vocabulary_uri",
         "code": "code",
         "narrative narrative": "narrative",
         "narrative language": "language"
@@ -133,7 +129,7 @@
     "legacy_data": {
         "legacy_name": "name",
         "value": "value",
-        "iati_equivalent": "iati-equivalent"
+        "iati_equivalent": "iati_equivalent"
     },
     "document_link": {
         "url": "url",
@@ -157,9 +153,9 @@
         "person_name narrative language": "person_name_language",
         "job_title narrative narrative": "job_title_narrative",
         "job_title narrative language": "job_title_language",
-        "telephone telephone": "telephone_telephone",
-        "email email": "email_email",
-        "website website": "website_website",
+        "telephone telephone": "telephone",
+        "email email": "email",
+        "website website": "website",
         "mailing_address narrative narrative": "mailing_address_narrative",
         "mailing_address narrative language": "mailing_address_language"
     },
@@ -177,7 +173,7 @@
         "administrative vocabulary": "administrative_vocabulary",
         "administrative code": "administrative_code",
         "administrative level": "administrative_level",
-        "point srs_name": "point_srsName",
+        "point srs_name": "point_srs_name",
         "point pos latitude": "point_pos_latitude",
         "point pos longitude": "point_pos_longitude",
         "exactness code": "exactness_code",
@@ -206,8 +202,8 @@
         "organization_role": "role",
         "ref": "reference",
         "type": "type",
-        "identifier": "activity-id",
-        "crs_channel_code": "crs-channel-code",
+        "identifier": "activity_id",
+        "crs_channel_code": "crs_channel_code",
         "narrative narrative": "narrative",
         "narrative language": "language"
     },
@@ -216,7 +212,7 @@
         "budget_type": "type",
         "period_start date": "period_start_iso_date",
         "period_end date": "period_end_iso_date",
-        "budget_value amount": "value_value",
+        "budget_value amount": "value",
         "budget_value currency": "value_currency",
         "budget_value value_date": "value_value_date"
     },

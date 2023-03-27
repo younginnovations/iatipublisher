@@ -26,24 +26,28 @@ class Activity
      * @var array
      */
     protected array $activityElements = [
-        // 'Title' => 'title',
-        // 'Description' => 'description',
-        // 'Activity Date' => 'activity_date',
-        // 'Recipient Country' => 'recipient_country',
-        // 'Humanitarian Scope' => 'humanitarian_scope',
-        // 'Related Activity' => 'related_activity',
-        // 'Conditions' => 'conditions',
-        // 'Legacy Data' => 'legacy_data',
-        // 'Document Link' => 'document_link',
-        // 'Contact Info' => 'contact_info',
+        'Title' => 'title',
         'Other Identifier' => 'other_identifier',
-        // 'Country Budget Items' => 'country_budget_items',
-        // 'Location' => 'location',
-        // 'Planned Disbursement' => 'planned_disbursement',
-        // 'Participating Org' => 'participating_org',
-        // 'Budget' => 'budget',
-        // 'Transaction' => 'transactions',
-
+        'Description' => 'description',
+        'Activity Date' => 'activity_date',
+        'Recipient Country' => 'recipient_country',
+        'Recipient Region' => 'recipient_region',
+        'Sector' => 'sector',
+        'Tag' => 'tag',
+        'Policy Marker' => 'policy_marker',
+        'Default Aid Type' => 'default_aid_type',
+        'Country Budget Items' => 'country_budget_items',
+        'Humanitarian Scope' => 'humanitarian_scope',
+        'Related Activity' => 'related_activity',
+        'Conditions' => 'conditions',
+        'Legacy Data' => 'legacy_data',
+        'Document Link' => 'document_link',
+        'Contact Info' => 'contact_info',
+        'Location' => 'location',
+        'Planned Disbursement' => 'planned_disbursement',
+        'Participating Org' => 'participating_org',
+        'Budget' => 'budget',
+        'Transaction' => 'transactions',
     ];
 
     protected array $singleValuedElements = [
@@ -56,37 +60,28 @@ class Activity
         'capital_spend',
     ];
 
-    protected array $specialElements = [
-        'Sector' => 'sector',
-        'Recipient Region' => 'recipient_region',
-        'Tag' => 'tag',
-        'Policy Marker' => 'policy_marker',
-        'Default Aid Type' => 'default_aid_type',
-    ];
-
     public function map($activityData)
     {
+        // logger()->error(json_encode($activityData));
+        file_put_contents(app_path() . '/XlsImporter/Templates/period.json', json_encode($activityData));
         $activityData = json_decode($activityData, true, 512, 0);
 
         foreach ($activityData as $sheetName => $content) {
+            dump($sheetName);
             if ($sheetName === 'Settings') {
-                $this->defaultValues($content);
+                // $this->defaultValues($content);
             }
 
             if ($sheetName === 'Element with single field') {
-                $this->singleValuedFields($content);
+                // $this->singleValuedFields($content);
             }
 
             if (in_array($sheetName, array_keys($this->activityElements))) {
                 $this->columnToFieldMapper($this->activityElements[$sheetName], $content);
             }
-
-            if (in_array($sheetName, array_keys($this->specialElements))) {
-                // $this->columnToFieldMapper($this->activityElements[$sheetName], $content);
-            }
         }
 
-        dd($this->activities);
+        dd($this->activities, json_encode($this->activities['289289892']['contact_info']));
     }
 
     public function getLinearizedActivity()
@@ -117,7 +112,7 @@ class Activity
     public function defaultValues($data)
     {
         foreach ($data as $row) {
-            if ($this->checkRowEmpty($row)) {
+            if ($this->checkRowNotEmpty($row)) {
                 $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null) ?? $elementActivityIdentifier;
             } else {
                 break;
@@ -128,7 +123,7 @@ class Activity
     public function singleValuedFields($data)
     {
         foreach ($data as $row) {
-            if ($this->checkRowEmpty($row)) {
+            if ($this->checkRowNotEmpty($row)) {
                 $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null) ?? $elementActivityIdentifier;
                 foreach ($this->singleValuedElements as $element) {
                     $this->activities[$elementActivityIdentifier][$element] = $row[$element];
@@ -148,7 +143,6 @@ class Activity
 
     public function columnToFieldMapper($element, $data = [])
     {
-        // dump($element, 'here', $data);
         $elementData = [];
         $columnMapper = $this->getLinearizedActivity();
         $dependency = $this->getDependencies();
@@ -157,8 +151,10 @@ class Activity
         $elementDropDownFields = $dropDownFields[$element];
         $elementActivityIdentifier = null;
 
+        // dd($dependency);
+
         foreach ($data as $row) {
-            if ($this->checkRowEmpty($row)) {
+            if ($this->checkRowNotEmpty($row)) {
                 if (
                     is_null($elementActivityIdentifier) || (
                         Arr::get($row, 'activity_identifier', null) &&
@@ -176,13 +172,8 @@ class Activity
                 $systemMappedRow = [];
 
                 foreach ($row as $fieldName => $fieldValue) {
-                    // $fieldName = strtolower(str_replace(' ', '_', $fieldName));
                     if (!empty($fieldName) && $fieldName !== 'activity_identifier') {
-                        // if ($fieldName === 'activity_identifier') {
-                        //     $systemMappedRow[$fieldName] = $fieldValue;
-                        // } else {
                         $systemMappedRow[$elementMapper[$fieldName]] = $fieldValue;
-                        // }
                     }
                 }
 
@@ -201,7 +192,6 @@ class Activity
             return $value;
         }
 
-        //
         if (is_array($location)) {
             return Arr::get($location, $value, $value);
         }
@@ -218,16 +208,25 @@ class Activity
     {
         $elementData = [];
         $elementBase = $dependency['elementBase'];
-        $elementBasePeer = $dependency['elementBasePeer'];
+        $elementBasePeer = Arr::get($dependency, 'elementBasePeer', []);
         $baseCount = null;
         $fieldDependency = $dependency['fieldDependency'];
         $parentBaseCount = [];
+
+        // variables to map code dependency in elements like sector, recipient region and so on
+        $codeRelation = Arr::get($dependency, 'codeDependency', []);
+        $codeDependencyConditions = Arr::get($codeRelation, 'dependencyRelation', []);
+        $codeDependentOn = Arr::get($codeRelation, 'dependentOn', '');
+        $codeDependentField = Arr::get($codeRelation, 'dependentField', '');
+        $defaultCodeField = Arr::get($codeRelation, 'defaultCodeField', '');
 
         foreach (array_values($fieldDependency) as $dependents) {
             $parentBaseCount[$dependents['parent']] = null;
         }
 
         foreach ($data as $row) {
+            $dependentOnValue = '';
+
             foreach ($row as $fieldName => $fieldValue) {
                 if (($fieldName === $elementBase && $fieldValue)) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
@@ -237,7 +236,7 @@ class Activity
 
                 if (in_array($fieldName, array_keys($fieldDependency))) {
                     $parentKey = $fieldDependency[$fieldName]['parent'];
-                    $peerAttributes = $fieldDependency[$fieldName]['peer'];
+                    $peerAttributes = Arr::get($fieldDependency, "$fieldName.peer", []);
 
                     if ($fieldValue) {
                         $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) ? 0 : $parentBaseCount[$parentKey] + 1;
@@ -246,8 +245,16 @@ class Activity
                     }
                 }
 
+                if ($fieldName === $codeDependentField) {
+                    $fieldName = in_array($dependentOnValue, array_keys($codeDependencyConditions)) ? Arr::get($codeDependencyConditions, $dependentOnValue, $defaultCodeField) : $defaultCodeField;
+                }
+
                 if (in_array($fieldName, array_keys($elementDropDownFields))) {
                     $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields[$fieldName]);
+                }
+
+                if ($fieldName === $codeDependentOn) {
+                    $dependentOnValue = $fieldValue;
                 }
 
                 $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
@@ -293,7 +300,7 @@ class Activity
         return $position;
     }
 
-    public function checkRowEmpty($row)
+    public function checkRowNotEmpty($row)
     {
         if (implode('', array_values($row))) {
             return true;

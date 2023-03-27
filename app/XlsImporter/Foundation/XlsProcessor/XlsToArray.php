@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\XlsImporter\Foundation\XlsProcessor;
 
 use Maatwebsite\Excel\Concerns\ToArray;
+use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Events\BeforeSheet;
 
-class XlsToArray implements ToArray, WithHeadingRow, WithEvents
+class XlsToArray implements ToArray, WithHeadingRow, WithEvents, WithCalculatedFormulas
 {
     public $sheetNames;
     public $sheetData;

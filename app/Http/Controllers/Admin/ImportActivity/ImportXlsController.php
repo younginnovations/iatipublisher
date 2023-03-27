@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\ImportActivity\ImportXlsService;
 use App\IATI\Services\ImportActivityError\ImportActivityErrorService;
 use App\XlsImporter\Foundation\Mapper\Activity;
+use App\XlsImporter\Foundation\Mapper\Period;
 use Arr;
 use Exception;
 use Illuminate\Contracts\View\Factory;
@@ -93,10 +94,17 @@ class ImportXlsController extends Controller
             // dd(json_encode($final));
 
             // $this->getLinearizedElement();
-            $linearizedElement = file_get_contents(app_path() . '/XlsImporter/Templates/linearized-activity.json');
-            $data = file_get_contents(app_path() . '/XlsImporter/Templates/test.json');
-            $activityMapper = new Activity();
-            $activityMapper->map($data);
+
+            // test
+            // $data = file_get_contents(app_path() . '/XlsImporter/Templates/test.json');
+            // $activityMapper = new Activity();
+            // $activityMapper->map($data);
+
+            // $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
+            // $periodMapper = new Period();
+            // $periodMapper->map($data);
+
+            // $periodMapper
 
             // dd($data);
 
