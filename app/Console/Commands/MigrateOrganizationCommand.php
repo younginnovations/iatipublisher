@@ -252,7 +252,7 @@ class MigrateOrganizationCommand extends Command
                     'organization_id' => $iatiOrganization->id,
                     'filename' => $aidDocument->filename,
                     'extension' => getFileNameExtension($aidDocument->filename),
-                    'document_link' => $this->getDocumentLink($aidDocument->url),
+//                    'document_link' => $this->getDocumentLink($aidDocument->url),
                     'size' => $aidDocument->file_size,
                     'created_at' => $aidDocument->created_at,
                     'updated_at' => $aidDocument->updated_at,
