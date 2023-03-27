@@ -13,6 +13,7 @@ use App\IATI\Services\Activity\IndicatorService;
 use App\IATI\Services\Activity\PeriodService;
 use App\IATI\Services\Activity\ResultService;
 use App\IATI\Services\Activity\TransactionService;
+use App\IATI\Services\ApiLog\ApiLogService;
 use App\IATI\Services\Document\DocumentService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Publisher\PublisherService;
@@ -68,6 +69,11 @@ class MigrateOrganizationCommand extends Command
     protected $description = 'Migrates organization, its users and their activities from AidStream to IATI Publisher.';
 
     /**
+     * @var object|null
+     */
+    protected object|null $setting = null;
+
+    /**
      * MigrateOrganizationCommand Constructor.
      *
      * @return void
@@ -89,6 +95,7 @@ class MigrateOrganizationCommand extends Command
         protected ActivityPublishedService $activityPublishedService,
         protected XmlGenerator $xmlGenerator,
         protected PublisherService $publisherService,
+        protected ApiLogService $apiLogService,
     ) {
         parent::__construct();
     }
@@ -146,7 +153,7 @@ class MigrateOrganizationCommand extends Command
 
                 if ($aidStreamOrganizationSetting) {
                     $this->logInfo('Started settings migration for organization id: ' . $aidstreamOrganizationId);
-                    $this->settingService->create(
+                    $this->setting = $this->settingService->create(
                         $this->getNewSetting($aidStreamOrganizationSetting, $iatiOrganization)
                     );
 
@@ -204,13 +211,13 @@ class MigrateOrganizationCommand extends Command
 
                     $this->migrateActivitiesPublishedFiles($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable);
                     $this->migrateActivityPublishedTable($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable);
+                    $this->migrateActivityMergedFile($aidStreamOrganization, $iatiOrganization, $this->setting);
                 }
 
                 $this->migrateDocuments($aidstreamOrganizationId, $iatiOrganization);
 //                $this->migrateDocumentFiles($aidstreamOrganizationId);
-                $this->migrateActivityMergedFile($aidStreamOrganization, $iatiOrganization);
                 $this->migrateOrganizationPublishedFile($aidStreamOrganization, $iatiOrganization);
-                $this->migrateOrganizationPublishedTable($aidStreamOrganization, $iatiOrganization);
+                $this->migrateOrganizationPublishedTable($aidStreamOrganization, $iatiOrganization, $this->setting);
 
                 $this->databaseManager->commit();
             }

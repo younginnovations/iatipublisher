@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\IATI\Traits;
 
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Arr;
 
 /**
@@ -19,7 +22,7 @@ trait MigrateSettingTrait
      *
      * @return array
      *
-     * @throws \JsonException
+     * @throws \JsonException|GuzzleException
      */
     public function getNewSetting($aidstreamOrganizationSetting, $iatiOrganization): array
     {
@@ -46,7 +49,7 @@ trait MigrateSettingTrait
      *
      * @return array|null
      *
-     * @throws \JsonException
+     * @throws \JsonException|GuzzleException
      */
     public function getPublishingInfo($registryInfo, $iatiPublisherId): ?array
     {
@@ -60,16 +63,35 @@ trait MigrateSettingTrait
             return null;
         }
 
-        return [
-            'publisher_id'           => !empty(Arr::get($registryInfoArray, '0.publisher_id', null)) ? Arr::get(
+        $data = [
+            'publisher_id'            => !empty(Arr::get($registryInfoArray, '0.publisher_id', null)) ? Arr::get(
                 $registryInfoArray,
                 '0.publisher_id',
                 null
             ) : $iatiPublisherId,
-            'api_token'              => Arr::get($registryInfoArray, '0.api_id', null),
-            'publisher_verification' => Arr::get($registryInfoArray, '0.publisher_id_status', null) === 'Correct',
-            'token_verification'     => Arr::get($registryInfoArray, '0.api_id_status', null) === 'Correct',
+            'api_token'               => Arr::get($registryInfoArray, '0.api_id', null),
+            'publisher_verification'  => Arr::get($registryInfoArray, '0.publisher_id_status', null) === 'Correct',
+            'token_verification'      => Arr::get($registryInfoArray, '0.api_id_status', null) === 'Correct',
+            'isVerificationRequested' => true,
         ];
+
+        $this->logInfo('Started verifying publisher and token on IATI registry.');
+        $validateSettings = $this->verify($data);
+        $this->logInfo('Finished verifying publisher and token on IATI registry.');
+        unset($data['isVerificationRequested']);
+        $validatedData = $validateSettings->getData();
+
+        if ($validatedData->success === true) {
+            $data['publisher_verification'] = true;
+            $data['token_verification'] = true;
+
+            return $data;
+        }
+
+        $data['publisher_verification'] = !($validatedData->message === 'Error occurred while verify publisher');
+        $data['token_verification'] = false;
+
+        return $data;
     }
 
     /**
@@ -137,5 +159,125 @@ trait MigrateSettingTrait
             ) : '1',
             'budget_not_provided' => Arr::get($aidstreamDefaultValuesArray, '0.budget_not_provided', null),
         ];
+    }
+
+    /**
+     * Store publishing info a valid registration.
+     *
+     * @param $publisherData
+     *
+     * @return JsonResponse
+     *
+     * @throws GuzzleException
+     */
+    public function verify($publisherData): JsonResponse
+    {
+        try {
+            $publisherData['publisher_verification'] = ($this->verifyPublisher($publisherData))['validation'];
+            $publisherData['token_verification'] = ($this->verifyApi($publisherData))['validation'];
+            $message = $publisherData['publisher_verification'] ?
+                ($publisherData['token_verification'] ? 'API token verified successfully' : 'API token incorrect. Please enter valid API token.')
+                : 'API token incorrect. Please make sure that your publisher is approved in IATI Registry.';
+            $success = $publisherData['publisher_verification'] && $publisherData['token_verification'];
+
+            return response()->json(['success' => $success, 'message' => $message, 'data' => $publisherData]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while verify publisher']);
+        }
+    }
+
+    /**
+     * Verify publisher.
+     *
+     * @param  array  $data
+     *
+     * @return array
+     * @throws GuzzleException
+     */
+    public function verifyPublisher(array $data): array
+    {
+        try {
+            $client = new Client(
+                [
+                    'base_uri' => env('IATI_API_ENDPOINT'),
+                    'headers'  => [
+                        'X-CKAN-API-Key' => env('IATI_API_KEY'),
+                    ],
+                ]
+            );
+            $requestOption = [
+                'auth'            => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
+                'query'           => ['id' => $data['publisher_id']],
+                'connect_timeout' => 500,
+            ];
+
+            $res = $client->request('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOption);
+            $this->apiLogService->store(
+                generateApiInfo('GET', env('IATI_API_ENDPOINT') . '/action/organization_show', $requestOption, $res)
+            );
+            $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
+
+            return ['success' => true, 'validation' => (bool) $response];
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return ['success' => 'error', 'message' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Verify publisher.
+     *
+     * @param  array  $data
+     *
+     * @return array
+     * @throws GuzzleException
+     */
+    public function verifyApi(array $data): array
+    {
+        try {
+            if ($data['api_token']) {
+                $client = new Client(
+                    [
+                        'base_uri' => env('IATI_API_ENDPOINT'),
+                        'headers'  => [
+                            'X-CKAN-API-Key' => $data['api_token'],
+                        ],
+                    ]
+                );
+                $requestOptions = [
+                    'auth'            => [env('IATI_USERNAME'), env('IATI_PASSWORD')],
+                    'connect_timeout' => 500,
+                ];
+
+                $res = $client->request(
+                    'GET',
+                    env('IATI_API_ENDPOINT') . '/action/organization_list_for_user',
+                    $requestOptions
+                );
+                $this->apiLogService->store(
+                    generateApiInfo(
+                        'GET',
+                        env('IATI_API_ENDPOINT') . '/action/organization_list_for_user',
+                        $requestOptions,
+                        $res
+                    )
+                );
+                $response = json_decode($res->getBody()->getContents(), false, 512, JSON_THROW_ON_ERROR)->result;
+
+                return [
+                    'success'    => true,
+                    'validation' => in_array($data['publisher_id'], array_column($response, 'name'), true),
+                ];
+            }
+
+            return ['success' => true, 'validation' => false];
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
     }
 }
