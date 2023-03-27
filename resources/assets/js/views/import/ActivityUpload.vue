@@ -178,7 +178,7 @@ function downloadExcel() {
     });
     let link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
-    link.download = 'csv_test.csv';
+    link.download = 'Import_Activity_CSV_Template.csv';
     link.click();
   });
 }
