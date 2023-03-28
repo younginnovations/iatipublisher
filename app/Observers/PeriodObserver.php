@@ -35,12 +35,14 @@ class PeriodObserver
      */
     public function created(Period $period): void
     {
+        $changeUpdatedAt = !$period->migrated_from_aidstream;
+
         $resultObserver = new ResultObserver();
 
-        $this->setPeriodDefaultValues($period);
-        $resultObserver->updateActivityElementStatus($period->indicator->result);
+        $this->setPeriodDefaultValues($period, $changeUpdatedAt);
+        $resultObserver->updateActivityElementStatus($period->indicator->result, $changeUpdatedAt);
 
-        if (!$period->migrated_from_aidstream) {
+        if ($changeUpdatedAt) {
             $resultObserver->resetActivityStatus($period->indicator->result);
         }
     }
@@ -66,15 +68,22 @@ class PeriodObserver
      * Sets default values for language and currency for period.
      *
      * @param $period
+     * @param  bool  $changeUpdatedAt
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function setPeriodDefaultValues($period): void
+    public function setPeriodDefaultValues($period, bool $changeUpdatedAt = true): void
     {
         $periodData = $period->period;
         $updatedData = $this->elementCompleteService->setDefaultValues($periodData, $period->indicator->result->activity);
         $period->period = $updatedData;
+
+        if (!$changeUpdatedAt) {
+            $period->timestamps = false;
+        }
+
         $period->saveQuietly();
     }
 }

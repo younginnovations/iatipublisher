@@ -31,12 +31,14 @@ class TransactionObserver
      * Updates the transactions complete status.
      *
      * @param $transaction
+     * @param  bool  $changeUpdatedAt
      *
      * @return void
-     * @throws \JsonException
+     *
      * @throws BindingResolutionException
+     * @throws \JsonException
      */
-    public function updateActivityElementStatus($transaction): void
+    public function updateActivityElementStatus($transaction, bool $changeUpdatedAt = true): void
     {
         $activityObj = $transaction->activity;
         $elementStatus = $activityObj->element_status;
@@ -58,6 +60,11 @@ class TransactionObserver
         }
 
         $activityObj->element_status = $elementStatus;
+
+        if (!$changeUpdatedAt) {
+            $activityObj->timestamps = false;
+        }
+
         $activityObj->saveQuietly();
     }
 
@@ -71,10 +78,12 @@ class TransactionObserver
      */
     public function created(Transaction $transaction): void
     {
-        $this->setTransactionDefaultValues($transaction);
-        $this->updateActivityElementStatus($transaction);
+        $changeUpdatedAt = !$transaction->migrated_from_aidstream;
 
-        if (!$transaction->migrated_from_aidstream) {
+        $this->setTransactionDefaultValues($transaction, $changeUpdatedAt);
+        $this->updateActivityElementStatus($transaction, $changeUpdatedAt);
+
+        if ($changeUpdatedAt) {
             $this->resetActivityStatus($transaction);
         }
     }
@@ -114,12 +123,19 @@ class TransactionObserver
      * @param $transaction
      *
      * @return void
+     *
+     * @throws \JsonException
      */
-    public function setTransactionDefaultValues($transaction): void
+    public function setTransactionDefaultValues($transaction, bool $changeUpdatedAt = true): void
     {
         $transactionData = $transaction->transaction;
         $updatedData = $this->elementCompleteService->setDefaultValues($transactionData, $transaction->activity);
         $transaction->transaction = $updatedData;
+
+        if (!$changeUpdatedAt) {
+            $transaction->timestamps = false;
+        }
+
         $transaction->saveQuietly();
     }
 

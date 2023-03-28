@@ -29,17 +29,23 @@ class ResultObserver
      * Updates the result complete status.
      *
      * @param $result
+     * @param  bool  $changeUpdatedAt
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function updateActivityElementStatus($result): void
+    public function updateActivityElementStatus($result, bool $changeUpdatedAt = true): void
     {
         $activityObj = $result->activity;
         $elementStatus = $activityObj->element_status;
         $elementStatus['result'] = $this->elementCompleteService->isResultElementCompleted($activityObj);
 
         $activityObj->element_status = $elementStatus;
+
+        if (!$changeUpdatedAt) {
+            $activityObj->timestamps = false;
+        }
 
         $activityObj->saveQuietly();
     }
@@ -54,10 +60,12 @@ class ResultObserver
      */
     public function created(Result $result): void
     {
-        $this->setResultDefaultValues($result);
-        $this->updateActivityElementStatus($result);
+        $changeUpdatedAt = !$result->migrated_from_aidstream;
 
-        if (!$result->migrated_from_aidstream) {
+        $this->setResultDefaultValues($result, $changeUpdatedAt);
+        $this->updateActivityElementStatus($result, $changeUpdatedAt);
+
+        if ($changeUpdatedAt) {
             $this->resetActivityStatus($result);
         }
     }
@@ -95,15 +103,22 @@ class ResultObserver
      * Sets default values for language and currency for result.
      *
      * @param $result
+     * @param  bool  $changeUpdatedAt
      *
      * @return void
+     *
      * @throws \JsonException
      */
-    public function setResultDefaultValues($result): void
+    public function setResultDefaultValues($result, bool $changeUpdatedAt = true): void
     {
         $resultData = $result->result;
         $updatedData = $this->elementCompleteService->setDefaultValues($resultData, $result->activity);
         $result->result = $updatedData;
+
+        if (!$changeUpdatedAt) {
+            $result->timestamps = false;
+        }
+
         $result->saveQuietly();
     }
 }

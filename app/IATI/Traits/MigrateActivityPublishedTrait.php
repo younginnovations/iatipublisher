@@ -26,7 +26,7 @@ trait MigrateActivityPublishedTrait
         $registryInfo = json_decode($aidStreamOrganizationSetting->registry_info)[0];
 
         if ($registryInfo->publisher_id != $iatiOrganization->publisher_id) {
-            $iatiOrganization->updateQuietly(['publisher_id'=>$registryInfo->publisher_id]);
+            $iatiOrganization->updateQuietly(['publisher_id' => $registryInfo->publisher_id]);
         }
     }
 
@@ -39,8 +39,11 @@ trait MigrateActivityPublishedTrait
      *
      * @return void
      */
-    public function migrateActivitiesPublishedFiles($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable): void
-    {
+    public function migrateActivitiesPublishedFiles(
+        $aidStreamOrganization,
+        $iatiOrganization,
+        $migratedActivitiesLookupTable
+    ): void {
         $this->logInfo("Started Activity file migration for Aidstream org: {$aidStreamOrganization->id}.");
         $iatiActivityFilePath = 'xml/activityXmlFiles';
         $aidstreamActivityXmlFilePath = 'aidstream-xml';
@@ -55,7 +58,10 @@ trait MigrateActivityPublishedTrait
                 $contents = awsGetFile($file);
 
                 if ($contents && array_key_exists($aidstreamId, $migratedActivitiesLookupTable)) {
-                    $iatiXmlFileName = $this->generateIatiXmlFilename($iatiOrganization, $migratedActivitiesLookupTable[$aidstreamId]);
+                    $iatiXmlFileName = $this->generateIatiXmlFilename(
+                        $iatiOrganization,
+                        $migratedActivitiesLookupTable[$aidstreamId]
+                    );
                     $destinationPath = "{$iatiActivityFilePath}/{$iatiXmlFileName}";
 
                     if (awsUploadFile($destinationPath, $contents)) {
@@ -104,10 +110,17 @@ trait MigrateActivityPublishedTrait
      *
      * @return bool
      */
-    public function migrateActivityPublishedTable($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable): bool
-    {
+    public function migrateActivityPublishedTable(
+        $aidStreamOrganization,
+        $iatiOrganization,
+        $migratedActivitiesLookupTable
+    ): bool {
         $this->logInfo("Started ActivityPublished table migration for Aidstream org: {$aidStreamOrganization->id}.");
-        $publishedActivitiesList = $this->getIatiActivityXmlNames($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable);
+        $publishedActivitiesList = $this->getIatiActivityXmlNames(
+            $aidStreamOrganization,
+            $iatiOrganization,
+            $migratedActivitiesLookupTable
+        );
         $settings = $iatiOrganization->settings;
         $generatedFilename = $this->getGeneratedFilename($aidStreamOrganization, $settings);
         $latestActivityPublished = $this->getLatestAidstreamActivityPublished($aidStreamOrganization);
@@ -116,15 +129,17 @@ trait MigrateActivityPublishedTrait
             $activitiesPublished = new ActivityPublished();
 
             $activitiesPublished->fill([
-                'published_activities'  => array_values($publishedActivitiesList),
-                'filename'              => $generatedFilename,
+                'published_activities' => array_values($publishedActivitiesList),
+                'filename' => $generatedFilename,
                 'published_to_registry' => 1,
-                'organization_id'       => $iatiOrganization->id,
-                'created_at'            => $latestActivityPublished->isNotEmpty() ? $latestActivityPublished[0]->created_at : '',
-                'updated_at'            => $latestActivityPublished->isNotEmpty() ? $latestActivityPublished[0]->updated_at : '',
+                'organization_id' => $iatiOrganization->id,
+                'created_at' => $latestActivityPublished->isNotEmpty() ? $latestActivityPublished[0]->created_at : '',
+                'updated_at' => $latestActivityPublished->isNotEmpty() ? $latestActivityPublished[0]->updated_at : '',
             ])->save();
 
-            $this->logInfo("Completed ActivityPublished table migration for Aidstream org: {$aidStreamOrganization->id}.");
+            $this->logInfo(
+                "Completed ActivityPublished table migration for Aidstream org: {$aidStreamOrganization->id}."
+            );
         }
 
         return true;
@@ -140,9 +155,9 @@ trait MigrateActivityPublishedTrait
     public function getAidStreamActivityXmlNames($organization): array
     {
         $publishedActivities = $this->db::connection('aidstream')->table('activity_published')
-            ->where('organization_id', '=', $organization->id)
-            ->where('published_to_register', '=', 1)
-            ->get()?->pluck('published_activities');
+                                        ->where('organization_id', '=', $organization->id)
+                                        ->where('published_to_register', '=', 1)
+                                        ->get()?->pluck('published_activities');
 
         $allFileNames = [];
 
@@ -175,14 +190,20 @@ trait MigrateActivityPublishedTrait
      *
      * @return array
      */
-    public function getIatiActivityXmlNames($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable):array
-    {
+    public function getIatiActivityXmlNames(
+        $aidStreamOrganization,
+        $iatiOrganization,
+        $migratedActivitiesLookupTable
+    ): array {
         $returnArray = [];
         $aidstreamActivityXmlNameList = $this->getAidStreamActivityXmlNames($aidStreamOrganization);
 
         foreach ($aidstreamActivityXmlNameList as $aidstreamId => $aidstreamXmlName) {
             if (array_key_exists($aidstreamId, $migratedActivitiesLookupTable)) {
-                $returnArray[] = $this->generateIatiXmlFilename($iatiOrganization, $migratedActivitiesLookupTable[$aidstreamId]);
+                $returnArray[] = $this->generateIatiXmlFilename(
+                    $iatiOrganization,
+                    $migratedActivitiesLookupTable[$aidstreamId]
+                );
             }
         }
 
@@ -215,9 +236,9 @@ trait MigrateActivityPublishedTrait
     public function getLatestAidstreamActivityPublished($organization): Collection
     {
         return $this->db::connection('aidstream')->table('activity_published')
-            ->where('organization_id', '=', $organization->id)
-            ->where('published_to_register', '=', 1)
-            ->latest()->get();
+                        ->where('organization_id', '=', $organization->id)
+                        ->where('published_to_register', '=', 1)
+                        ->latest()->get();
     }
 
     /**
@@ -230,11 +251,14 @@ trait MigrateActivityPublishedTrait
     public function getAidstreamMergedFileName($aidstreamOrganization): ?string
     {
         $activityPublished = $this->db::connection('aidstream')->table('activity_published')
-            ->where('organization_id', $aidstreamOrganization->id)->get();
+                                      ->where('organization_id', $aidstreamOrganization->id)->get();
 
         if ($activityPublished) {
             if (count($activityPublished) > 1) {
-                $setting = $this->db::connection('aidstream')->table('settings')->where('organization_id', $aidstreamOrganization->id)?->first();
+                $setting = $this->db::connection('aidstream')->table('settings')->where(
+                    'organization_id',
+                    $aidstreamOrganization->id
+                )?->first();
                 $registryInfo = json_decode($setting->registry_info)[0];
                 $publisherId = $registryInfo->publisher_id;
 
@@ -252,10 +276,11 @@ trait MigrateActivityPublishedTrait
      *
      * @param $aidStreamOrganization
      * @param $iatiOrganization
+     * @param $setting
      *
      * @throws \DOMException
      */
-    public function migrateActivityMergedFile($aidStreamOrganization, $iatiOrganization): void
+    public function migrateActivityMergedFile($aidStreamOrganization, $iatiOrganization, $setting): void
     {
         $activityPublished = $this->getIatiActivityPublished($iatiOrganization);
         $publishedFiles = $activityPublished ? $activityPublished->published_activities : [];
@@ -279,12 +304,26 @@ trait MigrateActivityPublishedTrait
             $this->logInfo("Completed migration of merged file for Aidstream org: {$aidStreamOrganization->id}.");
 
             //Publish activity to registry if needed.
-            if ($activityPublished && $activityPublished->published_to_registry) {
+            if (
+                $activityPublished &&
+                $activityPublished->published_to_registry &&
+                $setting &&
+                Arr::get($setting->publishing_info, 'publisher_verification', false) &&
+                Arr::get($setting->publishing_info, 'token_verification', false)
+            ) {
                 $settings = $iatiOrganization->settings;
                 $publishingInfo = $settings ? $settings->publishing_info : [];
-                $this->logInfo("Publishing activity file: {$activityPublished->filename} for Aidstream org: {$aidStreamOrganization->id}.");
+                $this->logInfo(
+                    "Publishing activity file: {$activityPublished->filename} for Aidstream org: {$aidStreamOrganization->id}."
+                );
                 $this->publisherService->publishFile($publishingInfo, $activityPublished, $iatiOrganization, false);
-                $this->logInfo("Completed publishing activity file: {$activityPublished->filename} with updated at {$activityPublished->updated_at} for Aidstream org: {$aidStreamOrganization->id}.");
+                $this->logInfo(
+                    "Completed publishing activity file: {$activityPublished->filename} with updated at {$activityPublished->updated_at} for Aidstream org: {$aidStreamOrganization->id}."
+                );
+            } else {
+                $this->logInfo(
+                    "Activity file: {$activityPublished->filename} not published."
+                );
             }
         } else {
             $this->logInfo('No activity file to merge.');
