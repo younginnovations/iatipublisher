@@ -162,17 +162,18 @@ trait MigrateIndicatorPeriodTrait
      *
      * @param $aidstreamIndicatorId
      * @param $iatiIndicatorId
+     * @param $iatiOrganization
      *
      * @return void
      *
      * @throws \JsonException
      */
-    public function migrateIndicatorPeriod($aidstreamIndicatorId, $iatiIndicatorId): void
+    public function migrateIndicatorPeriod($aidstreamIndicatorId, $iatiIndicatorId, $iatiOrganization): void
     {
         $this->db::connection('aidstream')->table('indicator_periods')->where(
             'indicator_id',
             $aidstreamIndicatorId
-        )->orderBy('id')->chunk(10, function ($aidstreamPeriods) use ($aidstreamIndicatorId, $iatiIndicatorId) {
+        )->orderBy('id')->chunk(10, function ($aidstreamPeriods) use ($aidstreamIndicatorId, $iatiIndicatorId, $iatiOrganization) {
             if (count($aidstreamPeriods)) {
                 foreach ($aidstreamPeriods as $aidstreamPeriod) {
                     $this->logInfo(
@@ -180,7 +181,7 @@ trait MigrateIndicatorPeriodTrait
                     );
                     $newIatiPeriod = [
                         'indicator_id' => $iatiIndicatorId,
-                        'period'       => $this->getNewPeriodData($aidstreamPeriod),
+                        'period'       => $this->getNewPeriodData($aidstreamPeriod, $iatiOrganization),
                         'migrated_from_aidstream' => true,
                         'created_at'   => $aidstreamPeriod->created_at,
                         'updated_at'   => $aidstreamPeriod->updated_at,
@@ -196,12 +197,13 @@ trait MigrateIndicatorPeriodTrait
      * Returns new period data.
      *
      * @param $aidstreamPeriod
+     * @param $iatiOrganization
      *
      * @return array
      *
      * @throws \JsonException
      */
-    public function getNewPeriodData($aidstreamPeriod): array
+    public function getNewPeriodData($aidstreamPeriod, $iatiOrganization): array
     {
         $dimensions = $this->getDimensionData(
             $aidstreamPeriod->dimension,
@@ -229,14 +231,16 @@ trait MigrateIndicatorPeriodTrait
                 'period_targets',
                 $this->emptyPeriodTemplate['target'],
                 $dimensions,
-                $locations
+                $locations,
+                $iatiOrganization
             ),
             'actual'      => $this->getNewPeriodTargetActualData(
                 $aidstreamPeriod,
                 'period_actuals',
                 $this->emptyPeriodTemplate['actual'],
                 $dimensions,
-                $locations
+                $locations,
+                $iatiOrganization
             ),
         ];
     }
@@ -249,12 +253,13 @@ trait MigrateIndicatorPeriodTrait
      * @param $emptyTemplate
      * @param $dimensions
      * @param $locations
+     * @param $iatiOrganization
      *
      * @return array
      *
      * @throws \JsonException
      */
-    public function getNewPeriodTargetActualData($aidstreamPeriod, $tableName, $emptyTemplate, $dimensions, $locations): array
+    public function getNewPeriodTargetActualData($aidstreamPeriod, $tableName, $emptyTemplate, $dimensions, $locations, $iatiOrganization): array
     {
         $aidstreamTargetActual = $this->db::connection('aidstream')->table($tableName)->where(
             'period_id',
@@ -279,14 +284,16 @@ trait MigrateIndicatorPeriodTrait
                     'period_target_document_links',
                     'period_target_id',
                     $aidstreamData->id,
-                    $emptyTemplate[0]['document_link']
+                    $emptyTemplate[0]['document_link'],
+                    $iatiOrganization
                 );
             } else {
                 $newData[$key]['document_link'] = $this->getResultIndicatorDocumentLinkData(
                     'period_actual_document_links',
                     'period_actual_id',
                     $aidstreamData->id,
-                    $emptyTemplate[0]['document_link']
+                    $emptyTemplate[0]['document_link'],
+                    $iatiOrganization
                 );
             }
 

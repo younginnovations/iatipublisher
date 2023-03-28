@@ -123,6 +123,8 @@ class MigrateOrganizationCommand extends Command
                 $aidstreamOrganizationIds[$key] = (int) $aidstreamOrganizationId;
             }
 
+            $organizationLookUpTable = [];
+
             foreach ($aidstreamOrganizationIds as $aidstreamOrganizationId) {
                 $this->logInfo('Started organization migration for organization id: ' . $aidstreamOrganizationId);
                 $this->databaseManager->beginTransaction();
@@ -144,6 +146,8 @@ class MigrateOrganizationCommand extends Command
                 $iatiOrganization = $this->organizationService->create(
                     $this->getNewOrganization($aidStreamOrganization)
                 );
+
+                $organizationLookUpTable[$aidStreamOrganization->id] = $iatiOrganization;
 
                 $this->logInfo('Completed organization migration for organization id: ' . $aidstreamOrganizationId);
                 $aidStreamOrganizationSetting = $this->db::connection('aidstream')->table('settings')->where(
@@ -204,7 +208,7 @@ class MigrateOrganizationCommand extends Command
                         );
 
                         $this->migrateActivityTransactions($aidstreamActivity->id, $iatiActivity->id);
-                        $this->migrateActivityResults($iatiActivity, $aidstreamActivity);
+                        $this->migrateActivityResults($iatiActivity, $aidstreamActivity, $iatiOrganization);
                         $this->migrateActivitySnapshot($iatiActivity, $aidstreamActivity);
                     }
 
@@ -220,10 +224,32 @@ class MigrateOrganizationCommand extends Command
 
                 $this->databaseManager->commit();
             }
+
+            $this->updateOrganizationDocumentLinkUrl($organizationLookUpTable);
         } catch (\Exception $exception) {
             $this->databaseManager->rollBack();
             logger()->error($exception);
             $this->error($exception->getMessage());
+        }
+    }
+
+    /**
+     * Updates organization document link.
+     *
+     * @param $organizationLookUpTable
+     *
+     * @return void
+     */
+    public function updateOrganizationDocumentLinkUrl($organizationLookUpTable): void
+    {
+        foreach ($organizationLookUpTable as $orgData) {
+            $documentLink = [];
+            foreach ($orgData->document_link as $data) {
+                $data['url'] = $this->replaceDocumentLinkUrl($data['url'], $orgData->id);
+                $documentLink[] = $data;
+            }
+            $orgData->document_link = $documentLink;
+            $orgData->save();
         }
     }
 
@@ -284,65 +310,12 @@ class MigrateOrganizationCommand extends Command
                 if (!isset($migratedActivitiesLookupTable[$aidActivityId])) {
                     continue;
                 }
+
                 $updatedActivityIds[] = $migratedActivitiesLookupTable[$aidActivityId];
             }
         }
 
         return count($updatedActivityIds) ? json_encode($updatedActivityIds, JSON_THROW_ON_ERROR) : null;
-    }
-
-    /**
-     * Returns json encoded document link format.
-     *
-     * @param $documentUrl
-     *
-     * @return string
-     * @throws \JsonException
-     */
-    public function getDocumentLink($documentUrl): string
-    {
-        $documentLinkFormat = [
-            'url' => !empty($documentUrl) ? $this->replaceDocumentLinkUrl($documentUrl) : '',
-            'format' => '',
-            'title' => [
-                [
-                    'narrative' => [
-                        [
-                            'narrative' => '',
-                            'language'  => '',
-                        ],
-                    ],
-                ],
-            ],
-            'description' => [
-                [
-                    'narrative' => [
-                        [
-                            'narrative' => '',
-                            'language' => '',
-                        ],
-                    ],
-                ],
-            ],
-            'category' => [
-                [
-                    'code' => '',
-                ],
-            ],
-            'language' => [
-                [
-                    'code' => '',
-                ],
-            ],
-            'document_date' => [
-                [
-                    'date' => '',
-                ],
-            ],
-            'document' => [],
-        ];
-
-        return json_encode($documentLinkFormat, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -443,16 +416,23 @@ class MigrateOrganizationCommand extends Command
      * replace aid stream url to s3 bucket url.
      *
      * @param $url
+     * @parram $iatiOrganizationId
      *
      * @return null|string
      */
-    public function replaceDocumentLinkUrl($url): ?string
+    public function replaceDocumentLinkUrl($url, $iatiOrganizationId): ?string
     {
         if ($url) {
-            $replaceText = ['http://aidstream.org', 'http://www.aidstream.org', 'https://aidstream.org', 'https://www.aidstream.org'];
-            $replaceWith = env('AWS_ENDPOINT') . '/' . env('AWS_BUCKET');
+            $parsedUrl = parse_url($url);
 
-            return str_replace($replaceText, $replaceWith, $url);
+            if (isset($parsedUrl['host']) && in_array($parsedUrl['host'], ['www.aidstream.org', 'aidstream.org'])) {
+                $explodedPath = explode('/', $parsedUrl['path']);
+                $fileName = end($explodedPath);
+                $path = '/document_link/' . $iatiOrganizationId . '/' . $fileName;
+                $url = awsUrl($path);
+            }
+
+            return $url;
         }
 
         return null;

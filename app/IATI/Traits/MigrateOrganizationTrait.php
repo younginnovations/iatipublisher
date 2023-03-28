@@ -525,7 +525,9 @@ trait MigrateOrganizationTrait
         if ($orgDocumentLinkArray && count($orgDocumentLinkArray)) {
             foreach (array_values($orgDocumentLinkArray) as $key => $array) {
                 $newOrgDocumentLink[$key] = [
-                    'url' => $this->replaceDocumentLinkUrl(Arr::get([], 'url')),
+
+//                    'url' => $this->replaceDocumentLinkUrl(Arr::get([], 'url')),
+                    'url'   => Arr::get($array, 'url'),
                     'format' => Arr::get($array, 'format'),
                     'title'  => Arr::get($array, 'title', $this->narrativeDefaultTemplate),
                     'description' => Arr::get($array, 'description', $this->narrativeDefaultTemplate),

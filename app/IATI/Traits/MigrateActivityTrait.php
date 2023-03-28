@@ -532,7 +532,8 @@ trait MigrateActivityTrait
             $aidstreamActivity->capital_spend
         ) : null;
         $newActivity['document_link'] = $aidstreamActivity ? $this->getActivityDocumentLinkData(
-            $aidstreamActivity
+            $aidstreamActivity,
+            $iatiOrganization->id
         ) : null;
         $newActivity['related_activity'] = $this->getColumnValueArray($aidstreamActivity, 'related_activity');
         $newActivity['legacy_data'] = $aidstreamActivity ? $this->getActivityFirstLevelData(
@@ -1048,12 +1049,13 @@ trait MigrateActivityTrait
      * Returns activity document link data.
      *
      * @param $aidstreamActivity
+     * @param $iatiOrganizationId
      *
      * @return array|null
      *
      * @throws \JsonException
      */
-    public function getActivityDocumentLinkData($aidstreamActivity): ?array
+    public function getActivityDocumentLinkData($aidstreamActivity, $iatiOrganizationId): ?array
     {
         if (!$aidstreamActivity) {
             return null;
@@ -1080,7 +1082,8 @@ trait MigrateActivityTrait
 
             $newDocumentLinks[] = [
                 'url'           => !empty(Arr::get($document, 'url', null)) ? $this->replaceDocumentLinkUrl(
-                    Arr::get($document, 'url', null)
+                    Arr::get($document, 'url', null),
+                    $iatiOrganizationId
                 ) : null,
                 'format'        => Arr::get($document, 'format', null),
                 'title'         => Arr::get($document, 'title', $this->emptyDocumentLinkTemplate['title']),

@@ -162,23 +162,24 @@ trait MigrateResultIndicatorTrait
      *
      * @param $aidstreamResultId
      * @param $iatiResultId
+     * @param $iatiOrganization
      *
      * @return void
      *
      * @throws \JsonException
      */
-    public function migrateResultIndicator($aidstreamResultId, $iatiResultId): void
+    public function migrateResultIndicator($aidstreamResultId, $iatiResultId, $iatiOrganization): void
     {
         $this->db::connection('aidstream')->table('activity_result_indicators_new')->where(
             'result_id',
             $aidstreamResultId
-        )->orderBy('id')->chunk(10, function ($aidstreamIndicators) use ($aidstreamResultId, $iatiResultId) {
+        )->orderBy('id')->chunk(10, function ($aidstreamIndicators) use ($aidstreamResultId, $iatiResultId, $iatiOrganization) {
             if (count($aidstreamIndicators)) {
                 foreach ($aidstreamIndicators as $aidstreamIndicator) {
                     $this->logInfo('Migrating result indicator for result id: ' . $aidstreamResultId) . ' with indicator id: ' . $aidstreamIndicator->id;
                     $newIatiIndicator = [
                         'result_id'  => $iatiResultId,
-                        'indicator'  => $this->getNewIndicatorData($aidstreamIndicator),
+                        'indicator'  => $this->getNewIndicatorData($aidstreamIndicator, $iatiOrganization),
                         'migrated_from_aidstream' => true,
                         'created_at' => $aidstreamIndicator->created_at,
                         'updated_at' => $aidstreamIndicator->updated_at,
@@ -187,7 +188,7 @@ trait MigrateResultIndicatorTrait
                     $iatiIndicator = $this->indicatorService->create($newIatiIndicator);
                     $this->logInfo('Completed migrating result indicator for result id: ' . $aidstreamResultId . ' with indicator id: ' . $aidstreamIndicator->id);
 
-                    $this->migrateIndicatorPeriod($aidstreamIndicator->id, $iatiIndicator->id);
+                    $this->migrateIndicatorPeriod($aidstreamIndicator->id, $iatiIndicator->id, $iatiOrganization);
                 }
             }
         });
@@ -197,12 +198,13 @@ trait MigrateResultIndicatorTrait
      * Returns indicator data.
      *
      * @param $aidstreamIndicator
+     * @param $iatiOrganization
      *
      * @return array
      *
      * @throws \JsonException
      */
-    public function getNewIndicatorData($aidstreamIndicator): array
+    public function getNewIndicatorData($aidstreamIndicator, $iatiOrganization): array
     {
         $newIndicatorData = [];
         $newIndicatorData['measure'] = !is_null(
@@ -230,7 +232,8 @@ trait MigrateResultIndicatorTrait
             'indicator_document_links',
             'indicator_id',
             $aidstreamIndicator->id,
-            $this->emptyIndicatorTemplate['document_link']
+            $this->emptyIndicatorTemplate['document_link'],
+            $iatiOrganization
         );
         $newIndicatorData['reference'] = $this->getResultIndicatorReferenceData(
             $aidstreamIndicator->id,
@@ -238,7 +241,8 @@ trait MigrateResultIndicatorTrait
         );
         $newIndicatorData['baseline'] = $this->getResultIndicatorBaselineData(
             $aidstreamIndicator->id,
-            $this->emptyIndicatorTemplate['baseline']
+            $this->emptyIndicatorTemplate['baseline'],
+            $iatiOrganization
         );
 
         $newIndicatorData['created_at'] = $aidstreamIndicator->created_at;
@@ -254,12 +258,13 @@ trait MigrateResultIndicatorTrait
      * @param $idColumn
      * @param $id
      * @param $emptyTemplate
+     * @param $iatiOrganization
      *
      * @return array
      *
      * @throws \JsonException
      */
-    public function getResultIndicatorDocumentLinkData($tableName, $idColumn, $id, $emptyTemplate): array
+    public function getResultIndicatorDocumentLinkData($tableName, $idColumn, $id, $emptyTemplate, $iatiOrganization): array
     {
         $aidstreamDocumentLinks = $this->db::connection('aidstream')->table($tableName)->where($idColumn, $id)->get();
 
@@ -271,7 +276,7 @@ trait MigrateResultIndicatorTrait
 
         foreach ($aidstreamDocumentLinks as $documentLink) {
             $newDocumentLinks[] = [
-                'url'           => !empty($documentLink->url) ? $this->replaceDocumentLinkUrl($documentLink->url) : null,
+                'url'           => !empty($documentLink->url) ? $this->replaceDocumentLinkUrl($documentLink->url, $iatiOrganization->id) : null,
                 'format'        => $documentLink->format,
                 'title'         => !is_null($documentLink->title) ? json_decode(
                     $documentLink->title,
@@ -362,12 +367,13 @@ trait MigrateResultIndicatorTrait
      *
      * @param $aidstreamIndicatorId
      * @param $emptyTemplate
+     * @param $iatiOrganization
      *
      * @return array
      *
      * @throws \JsonException
      */
-    public function getResultIndicatorBaselineData($aidstreamIndicatorId, $emptyTemplate): array
+    public function getResultIndicatorBaselineData($aidstreamIndicatorId, $emptyTemplate, $iatiOrganization): array
     {
         $aidstreamBaselines = $this->db::connection('aidstream')->table('indicator_baselines')->where(
             'indicator_id',
@@ -396,7 +402,8 @@ trait MigrateResultIndicatorTrait
                     'baseline_document_links',
                     'baseline_id',
                     $baseline->id,
-                    $emptyTemplate[0]['document_link']
+                    $emptyTemplate[0]['document_link'],
+                    $iatiOrganization
                 ),
                 'location'      => $this->getLocationData($baseline->location, $emptyTemplate[0]['location']),
             ];
