@@ -1,7 +1,7 @@
 {
     "title": {
-        "narrative narrative": "narrative",
-        "narrative language": "language"
+        "narrative": "narrative",
+        "language": "language"
     },
     "reporting_org": {
         "ref": "reference",
@@ -135,8 +135,8 @@
         "url": "url",
         "format": "format",
         "document": "document",
-        "title narrative narrative": "Title_narrative",
-        "title narrative language": "Title_language",
+        "title narrative narrative": "title_narrative",
+        "title narrative language": "title_language",
         "description narrative narrative": "description_narrative",
         "description narrative language": "description_language",
         "category code": "category_code",
@@ -276,37 +276,47 @@
     },
     "period": {
         "period_start date": "period_start_iso_date",
-        "period_end date": "period_end_iso_date",
-        "target value": "target_value",
-        "target comment narrative narrative": "target_comment_narrative",
-        "target comment narrative language": "target_comment_language",
-        "target dimension name": "target_dimension_name",
-        "target dimension value": "target_dimension_value",
-        "target document_link url": "target_document_link_url",
-        "target document_link format": "target_document_link_format",
-        "target document_link title narrative narrative": "target_document_link_title_narrative",
-        "target document_link title narrative language": "target_document_link_title_language",
-        "target document_link description narrative narrative": "target_document_link_description_narrative",
-        "target document_link description narrative language": "target_document_link_description_language",
-        "target document_link category code": "target_document_link_category_code",
-        "target document_link language language": "target_document_link_language_language",
-        "target document_link document_date date": "target_document_link_document_date_date",
-        "target location reference": "target_location_reference",
-        "actual value": "actual_value",
-        "actual comment narrative narrative": "actual_comment_narrative",
-        "actual comment narrative language": "actual_comment_language",
-        "actual dimension name": "actual_dimension_name",
-        "actual dimension value": "actual_dimension_value",
-        "actual document_link url": "actual_document_link_url",
-        "actual document_link format": "actual_document_link_format",
-        "actual document_link title narrative narrative": "actual_document_link_title_narrative",
-        "actual document_link title narrative language": "actual_document_link_title_language",
-        "actual document_link description narrative narrative": "actual_document_link_description_narrative",
-        "actual document_link description narrative language": "actual_document_link_description_language",
-        "actual document_link category code": "actual_document_link_category_code",
-        "actual document_link language language": "actual_document_link_language_language",
-        "actual document_link document_date date": "actual_document_link_document_date_date",
-        "actual location reference": "actual_location_reference"
+        "period_end date": "period_end_iso_date"
+    },
+    "target": {
+        "value": "value",
+        "comment narrative narrative": "comment_narrative",
+        "comment narrative language": "comment_language",
+        "dimension name": "dimension_name",
+        "dimension value": "dimension_value",
+        "location reference": "location_reference"
+    },
+    "target document_link": {
+        "url": "url",
+        "format": "format",
+        "document": "document",
+        "title narrative narrative": "title_narrative",
+        "title narrative language": "title_language",
+        "description narrative narrative": "description_narrative",
+        "description narrative language": "description_language",
+        "category code": "category_code",
+        "language code": "language_code",
+        "document_date date": "document_date_date"
+    },
+    "actual": {
+        "value": "value",
+        "comment narrative narrative": "comment_narrative",
+        "comment narrative language": "comment_language",
+        "dimension name": "dimension_name",
+        "dimension value": "dimension_value",
+        "location reference": "location_reference"
+    },
+    "actual document_link": {
+        "url": "url",
+        "format": "format",
+        "document": "document",
+        "title narrative narrative": "title_narrative",
+        "title narrative language": "title_language",
+        "description narrative narrative": "description_narrative",
+        "description narrative language": "description_language",
+        "category code": "category_code",
+        "language code": "language_code",
+        "document_date date": "document_date_date"
     },
     "transactions": {
         "reference": "reference",

@@ -22,42 +22,81 @@ class Period
     // activities whose identifier is not mentioned on setting
     protected array $periodIdentifier = [];
 
+    protected array $identifiers = [];
+
     /**
      * @var array
      */
     protected array $periodDivisions = [
-        'Period',
-        'Target',
-        'Target Document Link',
-        'Actual',
-        'Actual Document Link',
+        // 'Period' => 'period',
+        'Target' => 'target',
+        // 'Target Document Link' => 'target document_link',
+        'Actual' => 'actual',
+        // 'Actual Document Link' => 'actual document_link',
+    ];
+
+    protected array $elementIdentifiers = [
+        'period' => 'period_identifier',
+        'target' => 'target_identifier',
+        'target document_link' => 'target_identifier',
+        'actual' => 'actual_identifier',
+        'actual document_link' => 'actual_identifier',
     ];
 
     protected array $mappers = [
-       'Period Mapper',
-       'Target Mapper',
-       'Actual Mapper',
+        'Period Mapper' => [
+            'columns' => [
+                'parentIdentifier' => 'indicator_identifier',
+                'number' => 'period_number',
+            ],
+            'concatinator' => '_',
+            'type' => 'period',
+        ],
+        'Target Mapper' => [
+            'columns' => [
+                'parentIdentifier' => 'period_identifier',
+                'number' => 'target_number',
+            ],
+            'concatinator' => '_t-',
+            'type' => 'target',
+        ],
+        'Actual Mapper' => [
+            'columns' => [
+                'parentIdentifier' => 'period_identifier',
+                'number' => 'actual_number',
+            ],
+            'concatinator' => '_a-',
+            'type' => 'actual',
+        ],
     ];
 
-    public function map($activityData)
+    public function map($periodData)
     {
-        // logger()->error(json_encode($activityData));
-        // file_put_contents(app_path() . '/XlsImporter/Templates/period.json', json_encode($activityData));
-        $activityData = json_decode($activityData, true, 512, 0);
+        $periodData = json_decode($periodData, true, 512, 0);
 
-        foreach ($activityData as $sheetName => $content) {
-            dump($sheetName);
-
-            if (in_array($sheetName, $this->mappers)) {
-                $this->mapPeriods($content);
+        foreach ($periodData as $sheetName => $content) {
+            if (in_array($sheetName, array_keys($this->mappers))) {
+                $this->mapPeriods($content, $sheetName);
             }
 
-            // if (in_array($sheetName, array_keys($this->periodDivisions))) {
-            //     $this->columnToFieldMapper($this->activityElements[$sheetName], $content);
-            // }
+            if (in_array($sheetName, array_keys($this->periodDivisions))) {
+                $this->columnToFieldMapper($this->periodDivisions[$sheetName], $content);
+            }
         }
 
-        dd($this->periods);
+        $this->removeUnwantedData();
+        dd($this->periods, $this->identifiers);
+        // dd(json_encode($this->periods), $this->identifiers);
+    }
+
+    public function removeUnwantedData()
+    {
+        foreach ($this->periods as $indicatorIdentifier => $periods) {
+            foreach ($periods as $periodIdentifier => $periodData) {
+                $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['target'] = array_values($periodData['period']['target']);
+                $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['actual'] = array_values($periodData['period']['actual']);
+            }
+        }
     }
 
     public function getLinearizedActivity()
@@ -75,19 +114,25 @@ class Period
         return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/dropdown-fields.json'), true, 512, 0);
     }
 
-    public function getActivityTemplate()
+    public function mapPeriods($data, $sheetName)
     {
-        return json_decode(file_get_contents('app/XlsImporter/Templates/activity-template.json'), true, 512, 0);
-    }
+        $mapperDetails = $this->mappers[$sheetName];
+        $parentIdentifierKey = $mapperDetails['columns']['parentIdentifier'];
+        $numberKey = $mapperDetails['columns']['number'];
+        $parentIdentifierValue = '';
 
-    public function getActivityJsonSchema()
-    {
-        return readElementJsonSchema();
-    }
+        foreach ($data as $index => $row) {
+            if ($this->checkRowNotEmpty($row)) {
+                if ((empty($parentIdentifierValue) || $parentIdentifierValue !== $row[$parentIdentifierKey]) && !empty($row[$parentIdentifierKey])) {
+                    $parentIdentifierValue = $row[$parentIdentifierKey];
+                }
 
-    public function mapPeriods($data)
-    {
-        dump($data);
+                $this->periodIdentifier[$sheetName][$parentIdentifierValue][] = sprintf('%s%s%s', $row[$parentIdentifierKey], $mapperDetails['concatinator'], $row[$numberKey]);
+                $this->identifiers[$mapperDetails['type']][sprintf('%s%s%s', $row[$parentIdentifierKey], $mapperDetails['concatinator'], $row[$numberKey])] = $row[$parentIdentifierKey];
+            } else {
+                break;
+            }
+        }
     }
 
     public function str_replace_first($search, $replace, $subject)
@@ -107,38 +152,90 @@ class Period
         $elementDropDownFields = $dropDownFields[$element];
         $elementActivityIdentifier = null;
 
-        // dd($dependency);
+        $elementIdentifier = $this->elementIdentifiers[$element];
 
         foreach ($data as $row) {
             if ($this->checkRowNotEmpty($row)) {
                 if (
                     is_null($elementActivityIdentifier) || (
-                        Arr::get($row, 'activity_identifier', null) &&
-                        Arr::get($row, 'activity_identifier', null) !== $elementActivityIdentifier
+                        Arr::get($row, $elementIdentifier, null) &&
+                        Arr::get($row, $elementIdentifier, null) !== $elementActivityIdentifier
                     )
                 ) {
                     if (!empty($elementData)) {
-                        $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields);
+                        $this->pushPeriodData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields));
                         $elementData = [];
                     }
 
-                    $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null) ?? $elementActivityIdentifier;
+                    $elementActivityIdentifier = Arr::get($row, $elementIdentifier, null) ?? $elementActivityIdentifier;
                 }
 
                 $systemMappedRow = [];
 
                 foreach ($row as $fieldName => $fieldValue) {
-                    if (!empty($fieldName) && $fieldName !== 'activity_identifier') {
+                    if (!empty($fieldName) && $fieldName !== $elementIdentifier) {
                         $systemMappedRow[$elementMapper[$fieldName]] = $fieldValue;
                     }
                 }
 
                 $elementData[] = $systemMappedRow;
             } else {
-                $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields);
+                $this->pushPeriodData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields));
                 break;
             }
         }
+    }
+
+    protected function pushPeriodData($element, $identifier, $data)
+    {
+        $periodElementFunctions = [
+            'period' => 'pushPeriod',
+            'target' => 'pushPeriodTarget',
+            'actual' => 'pushPeriodActual',
+            'actual document_link' => 'pushActualDocumentLink',
+            'target document_link' => 'pushTargetDocumentLink',
+        ];
+
+        call_user_func([$this, $periodElementFunctions[$element]], $identifier, $data);
+    }
+
+    protected function pushPeriod($identifier, $data): void
+    {
+        $indicatorIdentifier = Arr::get($this->identifiers, "period.$identifier", null);
+
+        $this->periods[$indicatorIdentifier][$identifier]['period'] = $data;
+    }
+
+    protected function pushPeriodTarget($identifier, $data): void
+    {
+        $periodIdentifier = Arr::get($this->identifiers, 'target.' . $identifier, null);
+        $indicatorIdentifier = Arr::get($this->identifiers, "period.$periodIdentifier", null);
+
+        $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['target'][$identifier] = $data;
+    }
+
+    protected function pushPeriodActual($identifier, $data): void
+    {
+        $periodIdentifier = Arr::get($this->identifiers, "actual.$identifier", null);
+        $indicatorIdentifier = Arr::get($this->identifiers, "period.$periodIdentifier", null);
+
+        $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['actual'][$identifier] = $data;
+    }
+
+    protected function pushTargetDocumentLink($identifier, $data): void
+    {
+        $periodIdentifier = Arr::get($this->identifiers, "target.$identifier", null);
+        $indicatorIdentifier = Arr::get($this->identifiers, "period.$periodIdentifier", null);
+
+        $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['target'][$identifier]['document_link'][] = $data;
+    }
+
+    protected function pushActualDocumentLink($identifier, $data): void
+    {
+        $periodIdentifier = Arr::get($this->identifiers, "actual.$identifier", null);
+        $indicatorIdentifier = Arr::get($this->identifiers, "period.$periodIdentifier", null);
+
+        $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['actual'][$identifier]['document_link'][] = $data;
     }
 
     public function mapDropDownValueToKey($value, $location)
@@ -163,64 +260,63 @@ class Period
     public function getElementData($data, $dependency, $elementDropDownFields): array
     {
         $elementData = [];
-        $elementBase = $dependency['elementBase'];
+        $elementBase = Arr::get($dependency, 'elementBase', null);
         $elementBasePeer = Arr::get($dependency, 'elementBasePeer', []);
         $baseCount = null;
         $fieldDependency = $dependency['fieldDependency'];
         $parentBaseCount = [];
 
-        // variables to map code dependency in elements like sector, recipient region and so on
-        $codeRelation = Arr::get($dependency, 'codeDependency', []);
-        $codeDependencyConditions = Arr::get($codeRelation, 'dependencyRelation', []);
-        $codeDependentOn = Arr::get($codeRelation, 'dependentOn', '');
-        $codeDependentField = Arr::get($codeRelation, 'dependentField', '');
-        $defaultCodeField = Arr::get($codeRelation, 'defaultCodeField', '');
+        // dump($elementBase, $elementBasePeer);
 
         foreach (array_values($fieldDependency) as $dependents) {
             $parentBaseCount[$dependents['parent']] = null;
         }
 
-        foreach ($data as $row) {
-            $dependentOnValue = '';
+        // dump($parentBaseCount);
 
+        foreach ($data as $row) {
             foreach ($row as $fieldName => $fieldValue) {
-                if (($fieldName === $elementBase && $fieldValue)) {
+                // dump($baseCount);
+                if ($elementBase && ($fieldName === $elementBase && $fieldValue)) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
-                } elseif ($fieldName === $elementBase && $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)) {
+                } elseif ($elementBase && $fieldName === $elementBase && $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
                 }
 
+                // dump($parentBaseCount);
+                dump($fieldName, $fieldDependency);
+
                 if (in_array($fieldName, array_keys($fieldDependency))) {
                     $parentKey = $fieldDependency[$fieldName]['parent'];
+                    $multiple = Arr::get($fieldDependency[$fieldName], 'multiple', false);
+                    dump($fieldDependency[$fieldName], $multiple);
                     $peerAttributes = Arr::get($fieldDependency, "$fieldName.peer", []);
 
-                    if ($fieldValue) {
+                    if ($fieldValue || $multiple) {
                         $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) ? 0 : $parentBaseCount[$parentKey] + 1;
                     } elseif ($this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
                         $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) ? 0 : $parentBaseCount[$parentKey] + 1;
                     }
                 }
 
-                if ($fieldName === $codeDependentField) {
-                    $fieldName = in_array($dependentOnValue, array_keys($codeDependencyConditions)) ? Arr::get($codeDependencyConditions, $dependentOnValue, $defaultCodeField) : $defaultCodeField;
-                }
-
                 if (in_array($fieldName, array_keys($elementDropDownFields))) {
                     $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields[$fieldName]);
                 }
 
-                if ($fieldName === $codeDependentOn) {
-                    $dependentOnValue = $fieldValue;
-                }
-
                 $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
-                $elementPositionBasedOnParent = empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition;
+                // dump('-------element-----------',$elementPosition);
+
+                $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
+                // dump('------------parent added-----------',$data,$elementPositionBasedOnParent);
 
                 if (!Arr::get($elementData, $elementPositionBasedOnParent, null)) {
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
                 }
             }
         }
+
+        // dump($elementData, $elementBase, $fieldDependency);
+        // dump('elementData ---------------', $elementData);
 
         return $elementData;
     }

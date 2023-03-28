@@ -1,8 +1,8 @@
 {
     "title": {
-        "elementBase": "narrative narrative",
+        "elementBase": "narrative",
         "elementBasePeer": [
-            "narrative language"
+            "language"
         ],
         "fieldDependency": {}
     },
@@ -492,38 +492,105 @@
         "baseline location reference": "Baseline Location Reference"
     },
     "period": {
-        "period_start date": "Period Start Iso Date",
-        "period_end date": "Period End Iso Date",
-        "target value": "Target Value",
-        "target comment narrative language": "Target Comment Narrative Language",
-        "target comment narrative narrative": "Target Comment Narrative Narrative",
-        "target dimension name": "Target Dimension Name",
-        "target dimension value": "Target Dimension Value",
-        "target document_link url": "Target Document_link Url",
-        "target document_link format": "Target Document_link Format",
-        "target document_link title narrative language": "Target Document_link Title Narrative Language",
-        "target document_link title narrative narrative": "Target Document_link Title Narrative Narrative",
-        "target document_link description narrative language": "Target Document_link Description Narrative Language",
-        "target document_link description narrative narrative": "Target Document_link Description Narrative Narrative",
-        "target document_link category code": "Target Document_link Category Code",
-        "target document_link language language": "Target Document_link Language Language",
-        "target document_link document_date date": "Target Document_link Document_date Date",
-        "target location reference": "Target Location Reference",
-        "actual value": "Actual Value",
-        "actual comment narrative language": "Actual Comment Narrative Language",
-        "actual comment narrative narrative": "Actual Comment Narrative Narrative",
-        "actual dimension name": "Actual Dimension Name",
-        "actual dimension value": "Actual Dimension Value",
-        "actual document_link url": "Actual Document_link Url",
-        "actual document_link format": "Actual Document_link Format",
-        "actual document_link title narrative language": "Actual Document_link Title Narrative Language",
-        "actual document_link title narrative narrative": "Actual Document_link Title Narrative Narrative",
-        "actual document_link description narrative language": "Actual Document_link Description Narrative Language",
-        "actual document_link description narrative narrative": "Actual Document_link Description Narrative Narrative",
-        "actual document_link category code": "Actual Document_link Category Code",
-        "actual document_link language language": "Actual Document_link Language Language",
-        "actual document_link document_date date": "Actual Document_link Document_date Date",
-        "actual location reference": "Actual Location Reference"
+        "fieldDependency": {
+            "period_start date": {
+                "parent": "period_start"
+            },
+            "period_end date": {
+                "parent": "period_end"
+            }
+        }
+    },
+    "target": {
+        "fieldDependency": {
+            "comment narrative narrative": {
+                "parent": "comment narrative",
+                "peer": [
+                    "comment narrative language"
+                ]
+            },
+            "dimension name": {
+                "parent": "dimension name",
+                "peer": [
+                    "dimension value"
+                ]
+            },
+            "location reference": {
+                "parent": "location"
+            }
+        }
+    },
+    "target document_link": {
+        "elementBase": "url",
+        "fieldDependency": {
+            "title narrative narrative": {
+                "parent": "title narrative",
+                "peer": [
+                    "title narrative language"
+                ]
+            },
+            "description narrative narrative": {
+                "parent": "description narrative",
+                "peer": [
+                    "description narrative language"
+                ]
+            },
+            "category code": {
+                "parent": "category"
+            },
+            "language code": {
+                "parent": "language"
+            },
+            "document_date date": {
+                "parent": "document_date"
+            }
+        }
+    },
+    "actual": {
+        "fieldDependency": {
+            "comment narrative narrative": {
+                "parent": "comment narrative",
+                "peer": [
+                    "comment narrative language"
+                ]
+            },
+            "dimension name": {
+                "parent": "dimension",
+                "peer": [
+                    "dimension value"
+                ], 
+                "multiple" : true
+            },
+            "location reference": {
+                "parent": "location"
+            }
+        }
+    },
+    "actual document_link": {
+        "elementBase": "url",
+        "fieldDependency": {
+            "title narrative narrative": {
+                "parent": "title narrative",
+                "peer": [
+                    "title narrative language"
+                ]
+            },
+            "description narrative narrative": {
+                "parent": "description narrative",
+                "peer": [
+                    "description narrative language"
+                ]
+            },
+            "category code": {
+                "parent": "category"
+            },
+            "language code": {
+                "parent": "language"
+            },
+            "document_date date": {
+                "parent": "document_date"
+            }
+        }
     },
     "transactions": {
         "elementBase": "reference",

@@ -26,38 +26,6 @@ class Indicator
      * @var array
      */
     protected array $activityElements = [
-        'Title' => 'title',
-        'Other Identifier' => 'other_identifier',
-        'Description' => 'description',
-        'Activity Date' => 'activity_date',
-        'Recipient Country' => 'recipient_country',
-        'Recipient Region' => 'recipient_region',
-        'Sector' => 'sector',
-        'Tag' => 'tag',
-        'Policy Marker' => 'policy_marker',
-        'Default Aid Type' => 'default_aid_type',
-        'Country Budget Items' => 'country_budget_items',
-        'Humanitarian Scope' => 'humanitarian_scope',
-        'Related Activity' => 'related_activity',
-        'Conditions' => 'conditions',
-        'Legacy Data' => 'legacy_data',
-        'Document Link' => 'document_link',
-        'Contact Info' => 'contact_info',
-        'Location' => 'location',
-        'Planned Disbursement' => 'planned_disbursement',
-        'Participating Org' => 'participating_org',
-        'Budget' => 'budget',
-        'Transaction' => 'transactions',
-    ];
-
-    protected array $singleValuedElements = [
-        'activity_status',
-        'activity_scope',
-        'collaboration_type',
-        'default_flow_type',
-        'default_finance_type',
-        'default_tied_status',
-        'capital_spend',
     ];
 
     public function map($activityData)
