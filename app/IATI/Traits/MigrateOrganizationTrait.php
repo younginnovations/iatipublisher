@@ -521,6 +521,7 @@ trait MigrateOrganizationTrait
 
         $newOrgDocumentLink = [];
         $orgDocumentLinkArray = json_decode($orgDocumentLink, true, 512, JSON_THROW_ON_ERROR);
+
         if ($orgDocumentLinkArray && count($orgDocumentLinkArray)) {
             foreach (array_values($orgDocumentLinkArray) as $key => $array) {
                 $newOrgDocumentLink[$key] = [

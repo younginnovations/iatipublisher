@@ -13,9 +13,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('documents', function (Blueprint $table) {
-            if (Schema::hasColumn('documents', 'document_link')) {
-                DB::statement('ALTER table documents DROP COLUMN document_link;');
-            }
+            $table->json('activities')->nullable();
         });
     }
 
@@ -27,9 +25,7 @@ return new class extends Migration {
     public function down()
     {
         Schema::table('documents', function (Blueprint $table) {
-            if (!Schema::hasColumn('documents', 'document_link')) {
-                DB::statement('ALTER TABLE documents ADD COLUMN document_link json DEFAULT NULL');
-            }
+            $table->dropColumn('activities');
         });
     }
 };

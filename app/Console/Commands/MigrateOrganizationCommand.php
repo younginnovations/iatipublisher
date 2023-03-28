@@ -188,10 +188,9 @@ class MigrateOrganizationCommand extends Command
                     'organization_id',
                     $aidstreamOrganizationId
                 )->get();
+                $migratedActivitiesLookupTable = [];
 
                 if (count($aidstreamActivities)) {
-                    $migratedActivitiesLookupTable = [];
-
                     foreach ($aidstreamActivities as $aidstreamActivity) {
                         $this->logInfo(
                             'Started activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
@@ -233,11 +232,12 @@ class MigrateOrganizationCommand extends Command
      *
      * @param $aidstreamOrganizationId
      * @param $iatiOrganization
+     * @param $migratedActivitiesLookupTable
      *
      * @return void
      * @throws \JsonException
      */
-    public function migrateDocuments($aidstreamOrganizationId, $iatiOrganization): void
+    public function migrateDocuments($aidstreamOrganizationId, $iatiOrganization, $migratedActivitiesLookupTable): void
     {
         $aidStreamDocument = $this->db::connection('aidstream')->table('documents')
                                         ->where('org_id', $aidstreamOrganizationId)
@@ -249,10 +249,10 @@ class MigrateOrganizationCommand extends Command
             foreach ($aidStreamDocument as $aidDocument) {
                 $iatiDocuments[] = [
                     'activity_id' => null,
+                    'activities' => $this->fillActivitiesId($aidDocument->activities, $migratedActivitiesLookupTable),
                     'organization_id' => $iatiOrganization->id,
                     'filename' => $aidDocument->filename,
                     'extension' => getFileNameExtension($aidDocument->filename),
-//                    'document_link' => $this->getDocumentLink($aidDocument->url),
                     'size' => $aidDocument->file_size,
                     'created_at' => $aidDocument->created_at,
                     'updated_at' => $aidDocument->updated_at,
@@ -262,6 +262,33 @@ class MigrateOrganizationCommand extends Command
             $this->documentService->insert($iatiDocuments);
             $this->logInfo('Completed migrating documents for organization id ' . $aidstreamOrganizationId);
         }
+    }
+
+    /**
+     * Map new activity id into json format.
+     *
+     * @param $aidStreamActivitiesId
+     * @param $migratedActivitiesLookupTable
+     *
+     * @return string|null
+     * @throws \JsonException
+     */
+    public function fillActivitiesId($aidStreamActivitiesId, $migratedActivitiesLookupTable) : null|string
+    {
+        $aidStreamActivitiesId = !empty($aidStreamActivitiesId) ? json_decode($aidStreamActivitiesId, true, 512, JSON_THROW_ON_ERROR) : null;
+
+        $updatedActivityIds = [];
+
+        if (!empty($aidStreamActivitiesId)) {
+            foreach ($aidStreamActivitiesId as $aidActivityId => $identifier) {
+                if (!isset($migratedActivitiesLookupTable[$aidActivityId])) {
+                    continue;
+                }
+                $updatedActivityIds[] = $migratedActivitiesLookupTable[$aidActivityId];
+            }
+        }
+
+        return count($updatedActivityIds) ? json_encode($updatedActivityIds, JSON_THROW_ON_ERROR) : null;
     }
 
     /**
