@@ -77,19 +77,20 @@ trait MigrateSettingTrait
 
         $this->logInfo('Started verifying publisher and token on IATI registry.');
         $validateSettings = $this->verify($data);
-        $this->logInfo('Finished verifying publisher and token on IATI registry.');
         unset($data['isVerificationRequested']);
         $validatedData = $validateSettings->getData();
 
         if ($validatedData->success === true) {
             $data['publisher_verification'] = true;
             $data['token_verification'] = true;
+            $this->logInfo('Finished verifying publisher and token on IATI registry.');
 
             return $data;
         }
 
-        $data['publisher_verification'] = !($validatedData->message === 'Error occurred while verify publisher');
+        $data['publisher_verification'] = !($validatedData->message === 'Error occurred while verify publisher' || $validatedData->message === 'API token incorrect. Please make sure that your publisher is approved in IATI Registry.');
         $data['token_verification'] = false;
+        $this->logInfo('Publisher and token invalid on IATI registry.');
 
         return $data;
     }
@@ -173,16 +174,21 @@ trait MigrateSettingTrait
     public function verify($publisherData): JsonResponse
     {
         try {
-            $publisherData['publisher_verification'] = ($this->verifyPublisher($publisherData))['validation'];
-            $publisherData['token_verification'] = ($this->verifyApi($publisherData))['validation'];
+            $publisherData['publisher_verification'] = Arr::get(
+                $this->verifyPublisher($publisherData),
+                'validation',
+                false
+            );
+            $publisherData['token_verification'] = Arr::get($this->verifyApi($publisherData), 'validation', false);
             $message = $publisherData['publisher_verification'] ?
                 ($publisherData['token_verification'] ? 'API token verified successfully' : 'API token incorrect. Please enter valid API token.')
                 : 'API token incorrect. Please make sure that your publisher is approved in IATI Registry.';
+
             $success = $publisherData['publisher_verification'] && $publisherData['token_verification'];
 
             return response()->json(['success' => $success, 'message' => $message, 'data' => $publisherData]);
         } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->channel('migration')->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while verify publisher']);
         }
@@ -221,7 +227,7 @@ trait MigrateSettingTrait
 
             return ['success' => true, 'validation' => (bool) $response];
         } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->channel('migration')->error($e->getMessage());
 
             return ['success' => 'error', 'message' => $e->getMessage()];
         }
@@ -275,7 +281,7 @@ trait MigrateSettingTrait
 
             return ['success' => true, 'validation' => false];
         } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->channel('migration')->error($e->getMessage());
 
             return ['success' => false, 'message' => $e->getMessage()];
         }

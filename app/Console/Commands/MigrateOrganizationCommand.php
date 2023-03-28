@@ -230,7 +230,7 @@ class MigrateOrganizationCommand extends Command
             $this->databaseManager->commit();
         } catch (\Exception $exception) {
             $this->databaseManager->rollBack();
-            logger()->error($exception);
+            logger()->channel('migration')->error($exception);
             $this->error($exception->getMessage());
         }
     }

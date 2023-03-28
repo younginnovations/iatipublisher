@@ -25,7 +25,7 @@ trait MigrateActivityPublishedTrait
     {
         $registryInfo = json_decode($aidStreamOrganizationSetting->registry_info)[0];
 
-        if ($registryInfo->publisher_id != $iatiOrganization->publisher_id) {
+        if (($registryInfo->publisher_id != $iatiOrganization->publisher_id) && !empty($registryInfo->publisher_id)) {
             $iatiOrganization->updateQuietly(['publisher_id' => $registryInfo->publisher_id]);
         }
     }
