@@ -93,8 +93,8 @@ class DocumentLinkService
                 $data['organization_id'] = $organizationId;
                 $data['filename'] = $document->getClientOriginalName();
                 $data['extension'] = pathinfo($document->getClientOriginalName(), PATHINFO_EXTENSION);
-                awsUploadFile("/document_link/$organizationId/" . $data['filename'], $document->get());
-                $fileUrl = awsUrl("/document_link/$organizationId/" . $data['filename']);
+                awsUploadFile("/document-link/$organizationId/" . $data['filename'], $document->get());
+                $fileUrl = awsUrl("/document-link/$organizationId/" . $data['filename']);
                 $data['document_link'] = $documentLink;
                 $data['filename'] = $fileUrl;
                 Arr::set($documentLinks, "$index.0.url", $fileUrl);
