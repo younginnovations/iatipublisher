@@ -430,7 +430,7 @@ trait MigrateActivityTrait
      *
      * @throws \JsonException
      */
-    public function getNewActivity($aidstreamActivity, $iatiOrganization): array
+    public function getNewActivity($aidstreamActivity, $iatiOrganization, $aidStreamOrganization): array
     {
         $newActivity = [];
         $newActivity['iati_identifier'] = $aidstreamActivity->identifier ? [
@@ -475,7 +475,9 @@ trait MigrateActivityTrait
             '1'
         ) : null;
         $newActivity['location'] = $aidstreamActivity ? $this->getActivityLocationData(
-            $aidstreamActivity->location
+            $aidstreamActivity,
+            $iatiOrganization,
+            $aidStreamOrganization
         ) : null;
         $newActivity['sector'] = $aidstreamActivity ? $this->getActivityUpdatedVocabularyData(
             $aidstreamActivity->sector,
@@ -485,7 +487,9 @@ trait MigrateActivityTrait
             '1'
         ) : null;
         $newActivity['country_budget_items'] = $aidstreamActivity ? $this->getActivityCountryBudgetItemsData(
-            $aidstreamActivity->country_budget_items
+            $aidstreamActivity,
+            $iatiOrganization,
+            $aidStreamOrganization,
         ) : null;
         $newActivity['humanitarian_scope'] = $aidstreamActivity ? $this->getActivityUpdatedVocabularyData(
             $aidstreamActivity->humanitarian_scope,
@@ -540,7 +544,7 @@ trait MigrateActivityTrait
             $aidstreamActivity->legacy_data,
             $this->legacyDataReplaceArray,
         ) : null;
-        $newActivity['conditions'] = $this->getColumnValueArray($aidstreamActivity, 'conditions');
+        $newActivity['conditions'] = $this->getConditions($this->getColumnValueArray($aidstreamActivity, 'conditions'));
         $newActivity['org_id'] = $iatiOrganization->id;
         $newActivity['default_field_values'] = $aidstreamActivity ? $this->getActivityDefaultFieldValues(
             $aidstreamActivity->default_field_values
@@ -727,14 +731,19 @@ trait MigrateActivityTrait
 
     /**
      * Returns activity location data.
-     * @param $locations
+     *
+     * @param $aidstreamActivity
+     * @param $iatiOrganization
+     * @param $aidstreamOrganization
      *
      * @return array|null
      *
      * @throws \JsonException
      */
-    public function getActivityLocationData($locations): ?array
+    public function getActivityLocationData($aidstreamActivity, $iatiOrganization, $aidstreamOrganization): ?array
     {
+        $locations = $aidstreamActivity->location;
+
         if (!$locations) {
             return null;
         }
@@ -751,7 +760,10 @@ trait MigrateActivityTrait
                 $newLocations[$key]['description'] = Arr::get($locationArray, 'location_description', null);
                 $newLocations[$key]['activity_description'] = Arr::get($locationArray, 'activity_description', null);
                 $newLocations[$key]['administrative'] = $this->getLocationAdministrativeData(
-                    Arr::get($locationArray, 'administrative', null)
+                    Arr::get($locationArray, 'administrative', null),
+                    $aidstreamActivity,
+                    $iatiOrganization,
+                    $aidstreamOrganization,
                 );
                 $newLocations[$key]['point'] = [
                     [
@@ -793,12 +805,15 @@ trait MigrateActivityTrait
      * Since AidStream has open text field and IATI Publisher has select field, we need to check if the code is valid.
      *
      * @param $administratives
+     * @param $aidstreamActivity
+     * @param $iatiOrganization
+     * @param $aidstreamOrganization
      *
      * @return array
      *
      * @throws \JsonException
      */
-    public function getLocationAdministrativeData($administratives): array
+    public function getLocationAdministrativeData($administratives, $aidstreamActivity, $iatiOrganization, $aidstreamOrganization): array
     {
         if ($administratives && count($administratives)) {
             foreach (array_values($administratives) as $key => $administrative) {
@@ -806,8 +821,23 @@ trait MigrateActivityTrait
                     strtoupper(Arr::get($administrative, 'code', null)),
                     getCodeList('Country', 'Activity', false)
                 )) {
+                    $message = "Free-text to select-option mismatch in Aidstream activity id: {$aidstreamActivity->id}, code: " . Arr::get($administrative, 'code', null);
+                    $this->setGeneralError($message)->setDetailedError(
+                        $message,
+                        $aidstreamOrganization->id,
+                        'activity_data',
+                        $aidstreamActivity->id,
+                        $iatiOrganization->id,
+                        '',
+                        'Activity > Local Administrative > Code'
+                    );
+                    $this->logInfo($message);
+
                     unset($administratives[$key]);
-                } elseif (!empty(Arr::get($administrative, 'code', null))) {
+                } elseif (!empty(Arr::get($administrative, 'code', null)) && array_key_exists(
+                    strtoupper(Arr::get($administrative, 'code', null)),
+                    getCodeList('Country', 'Activity', false)
+                )) {
                     $administratives[$key]['code'] = strtoupper(Arr::get($administrative, 'code', null));
                 }
             }
@@ -819,14 +849,18 @@ trait MigrateActivityTrait
     /**
      * Returns country budget items' data.
      *
-     * @param $countryBudgetItems
+     * @param $aidstreamActivity
+     * @param $iatiOrganization
+     * @param $aidstreamOrganization
      *
      * @return array|null
      *
      * @throws \JsonException
      */
-    public function getActivityCountryBudgetItemsData($countryBudgetItems): ?array
+    public function getActivityCountryBudgetItemsData($aidstreamActivity, $iatiOrganization, $aidstreamOrganization): ?array
     {
+        $countryBudgetItems = $aidstreamActivity->country_budget_items;
+
         if (!$countryBudgetItems) {
             return null;
         }
@@ -834,11 +868,21 @@ trait MigrateActivityTrait
         $newCountryBudgetItem = [];
         $countryBudgetItemsArray = json_decode($countryBudgetItems, true, 512, JSON_THROW_ON_ERROR);
 
-        if ($countryBudgetItemsArray && count($countryBudgetItemsArray) && Arr::get(
-            $countryBudgetItemsArray,
-            '0.vocabulary',
-            '1'
-        ) !== '1') {
+        if ($countryBudgetItemsArray && count($countryBudgetItemsArray) &&
+            (string) Arr::get($countryBudgetItemsArray, '0.vocabulary', '1') === '1') {
+            $message = "Aidstream activity id: {$aidstreamActivity->id} has Country budget item vocabulary =  1.";
+            $this->setGeneralError($message)->setDetailedError(
+                $message,
+                $aidstreamOrganization->id,
+                'activity_data',
+                $aidstreamActivity->id,
+                $iatiOrganization->id,
+                '',
+                'Activity > Country budget item > Vocabulary',
+            );
+            $this->logInfo($message);
+        } elseif ($countryBudgetItemsArray && count($countryBudgetItemsArray) &&
+            (string) Arr::get($countryBudgetItemsArray, '0.vocabulary', '1') !== '1') {
             $newCountryBudgetItem = [
                 'country_budget_vocabulary' => Arr::get(
                     $countryBudgetItemsArray,
@@ -846,7 +890,10 @@ trait MigrateActivityTrait
                     null
                 ),
                 'budget_item'               => $this->getBudgetItemsData(
-                    Arr::get($countryBudgetItemsArray, '0.budget_item', null)
+                    Arr::get($countryBudgetItemsArray, '0.budget_item', null),
+                    $aidstreamActivity,
+                    $iatiOrganization,
+                    $aidstreamOrganization,
                 ),
             ];
         }
@@ -858,12 +905,15 @@ trait MigrateActivityTrait
      * Returns budget items array.
      *
      * @param $budgetItems
+     * @param $aidstreamActivity
+     * @param $iatiOrganization
+     * @param $aidstreamOrganization
      *
      * @return array
      *
      * @throws \JsonException
      */
-    public function getBudgetItemsData($budgetItems): array
+    public function getBudgetItemsData($budgetItems, $aidstreamActivity, $iatiOrganization, $aidstreamOrganization): array
     {
         $newBudgetItems = [];
 
@@ -877,6 +927,18 @@ trait MigrateActivityTrait
                     'percentage'  => Arr::get($budgetItem, 'percentage', null),
                     'description' => Arr::get($budgetItem, 'description', null),
                 ];
+            } else {
+                $message = "Aidstream organization id: {$aidstreamOrganization->id} contains Code: '" . Arr::get($budgetItem, 'code_text', null) . "' in CodeList of activity id: {$aidstreamActivity->id}.";
+                $this->setGeneralError($message)->setDetailedError(
+                    $message,
+                    $aidstreamOrganization->id,
+                    'activity_data',
+                    $aidstreamActivity->id,
+                    $iatiOrganization->id,
+                    '',
+                    'Activity > Budget item > Code',
+                );
+                $this->logInfo($message);
             }
         }
 
@@ -1393,5 +1455,24 @@ trait MigrateActivityTrait
         }
 
         return count($newNarratives) ? $newNarratives : $this->emptyNarrativeTemplate;
+    }
+
+    /**
+     * Returns proper condition.
+     *
+     * @param array|null $conditionArray
+     * @return array|null
+     */
+    public function getConditions(?array $conditionArray): ?array
+    {
+        if ($conditionArray) {
+            if (!$conditionArray['condition']) {
+                $conditionArray['condition'] = null;
+            }
+
+            return  $conditionArray;
+        }
+
+        return null;
     }
 }

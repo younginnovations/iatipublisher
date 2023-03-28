@@ -77,8 +77,9 @@ class IndicatorObserver
     {
         if (!$changeUpdatedAt) {
             $indicator->timestamps = false;
+            $indicator->saveQuietly(['touch'=>false]);
+        } else {
+            $indicator->saveQuietly();
         }
-
-        $indicator->saveQuietly();
     }
 }

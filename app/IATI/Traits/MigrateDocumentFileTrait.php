@@ -29,17 +29,30 @@ trait MigrateDocumentFileTrait
             $aidstreamDocumentPath = 'aidstream-documents';
             $iatiDocumentPath = "document-link/{$iatiOrganization->id}";
 
-            foreach ($migratableFiles as $filename) {
+            foreach ($migratableFiles as $documentId => $filename) {
                 $filePath = "{$aidstreamDocumentPath}/{$filename}";
                 $contents = awsGetFile($filePath);
                 $filePath = "{$iatiDocumentPath}/{$filename}";
 
                 if ($contents && awsUploadFile($filePath, $contents)) {
                     $this->logInfo("Migrated Document file :{$filename}.");
+                } else {
+                    $message = "No Document file named: {$filename} found in S3 for Aidstream Organization: {$aidstreamOrganization?->name}";
+                    $this->setGeneralError($message)->setDetailedError(
+                        $message,
+                        $aidstreamOrganization->id,
+                        'documents',
+                        $documentId,
+                        $iatiOrganization->id,
+                        '',
+                        'Document file > migration'
+                    );
+                    $this->logInfo($message . " id: {$aidstreamOrganization->id}.");
                 }
             }
         } else {
-            $this->logInfo('No Document file to migrate.');
+            $message = 'No Document file to migrate.';
+            $this->logInfo($message);
         }
 
         $this->logInfo('Completed migration of Document file.');

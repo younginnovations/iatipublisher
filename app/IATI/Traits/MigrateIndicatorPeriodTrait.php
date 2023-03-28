@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\IATI\Traits;
 
+use App\IATI\Models\Activity\Period;
+
 /**
  * Class MigrateIndicatorPeriodTrait.
  */
@@ -186,7 +188,11 @@ trait MigrateIndicatorPeriodTrait
                         'created_at'   => $aidstreamPeriod->created_at,
                         'updated_at'   => $aidstreamPeriod->updated_at,
                     ];
-                    $this->periodService->create($newIatiPeriod);
+
+                    $iatiPeriod = new Period();
+                    $iatiPeriod->fill($newIatiPeriod);
+                    $iatiPeriod->saveQuietly(['touch'=>false]);
+
                     $this->logInfo('Completed migrating indicator period for indicator id: ' . $aidstreamIndicatorId . ' and period id: ' . $aidstreamPeriod->id);
                 }
             }

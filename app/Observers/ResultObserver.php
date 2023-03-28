@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Observers;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Models\Activity\Result;
 use App\IATI\Services\ElementCompleteService;
 
@@ -45,9 +46,10 @@ class ResultObserver
 
         if (!$changeUpdatedAt) {
             $activityObj->timestamps = false;
+            $activityObj->saveQuietly(['touch'=>false]);
+        } else {
+            $activityObj->saveQuietly();
         }
-
-        $activityObj->saveQuietly();
     }
 
     /**
@@ -113,8 +115,9 @@ class ResultObserver
     {
         if (!$changeUpdatedAt) {
             $result->timestamps = false;
+            $result->saveQuietly(['touch'=>false]);
+        } else {
+            $result->saveQuietly();
         }
-
-        $result->saveQuietly();
     }
 }

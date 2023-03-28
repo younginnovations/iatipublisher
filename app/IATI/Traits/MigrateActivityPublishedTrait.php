@@ -6,6 +6,7 @@ namespace App\IATI\Traits;
 
 use App\Exceptions\PublishException;
 use App\IATI\Models\Activity\ActivityPublished;
+use App\IATI\Models\Organization\Organization;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
@@ -19,15 +20,33 @@ trait MigrateActivityPublishedTrait
      *
      * @param $iatiOrganization
      * @param $aidStreamOrganizationSetting
+     * @param $aidStreamOrganization
      *
      * @return void
      */
-    public function syncPublisherIdInSettingAndOrganizationLevel($iatiOrganization, $aidStreamOrganizationSetting): void
+    public function syncPublisherIdInSettingAndOrganizationLevel($iatiOrganization, $aidStreamOrganizationSetting, $aidStreamOrganization): void
     {
-        $registryInfo = json_decode($aidStreamOrganizationSetting->registry_info)[0];
+        $registryInfo = $aidStreamOrganizationSetting->registry_info;
 
-        if (($registryInfo->publisher_id != $iatiOrganization->publisher_id) && !empty($registryInfo->publisher_id)) {
-            $iatiOrganization->updateQuietly(['publisher_id' => $registryInfo->publisher_id]);
+        if ($registryInfo) {
+            $registryInfo = json_decode($registryInfo)[0];
+
+            if (($registryInfo->publisher_id !== $iatiOrganization->publisher_id) && !empty($registryInfo->publisher_id)) {
+                $iatiOrganization->timestamps = false;
+                $iatiOrganization->updateQuietly(['publisher_id' => $registryInfo->publisher_id], ['touch'=>false]);
+            }
+        } else {
+            $message = "Registry info is null in Settings of Aidstream organization: {$aidStreamOrganization?->name}";
+            $this->setGeneralError($message)->setDetailedError(
+                $message,
+                $aidStreamOrganization->id,
+                'settings',
+                $aidStreamOrganizationSetting->id,
+                $iatiOrganization->id,
+                '',
+                'Settings > registry_info'
+            );
+            $this->logInfo($message);
         }
     }
 
@@ -39,6 +58,7 @@ trait MigrateActivityPublishedTrait
      * @param $migratedActivitiesLookupTable
      *
      * @return void
+     * @throws PublishException
      */
     public function migrateActivitiesPublishedFiles(
         $aidStreamOrganization,
@@ -60,7 +80,7 @@ trait MigrateActivityPublishedTrait
 
                 if ($contents && array_key_exists($aidstreamId, $migratedActivitiesLookupTable)) {
                     $contents = $this->replaceDocumentLinkInXml($contents, $iatiOrganization->id);
-                    $iatiXmlFileName = $this->generateIatiXmlFilename(
+                    $iatiXmlFileName = $this->generateIatiActivityXmlFilename(
                         $iatiOrganization,
                         $migratedActivitiesLookupTable[$aidstreamId]
                     );
@@ -69,10 +89,24 @@ trait MigrateActivityPublishedTrait
                     if (awsUploadFile($destinationPath, $contents)) {
                         $this->logInfo("Migrated file :{$aidstreamXmlName} as file :{$iatiXmlFileName}.");
                     }
+                } else {
+                    $message = "No Activity file named: {$aidstreamXmlName} found in S3 for Aidstream Organization: {$aidStreamOrganization->name}";
+                    $this->setGeneralError($message)->setDetailedError(
+                        $message,
+                        $aidStreamOrganization->id,
+                        'activity_published',
+                        $aidstreamId,
+                        'Activity file > migration',
+                        $iatiOrganization->id,
+                    );
+                    $this->logInfo($message . " id: {$aidStreamOrganization->id}.");
+                    throw new PublishException($iatiOrganization->id, $message);
                 }
             }
         } else {
-            $this->logInfo("No activity files to migrate for Aidstream org_id {$aidStreamOrganization->id}.");
+            $message = "No activity files to migrate for Aidstream org_id {$aidStreamOrganization->id}.";
+
+            $this->logInfo($message);
         }
 
         $this->logInfo("Completed Activity file migration for Aidstream org: {$aidStreamOrganization->id}.");
@@ -86,21 +120,21 @@ trait MigrateActivityPublishedTrait
      *
      * @return string
      */
-    public function generateIatiXmlFilename($iatiOrganization, $id): string
+    public function generateIatiActivityXmlFilename($iatiOrganization, $id): string
     {
         return "{$iatiOrganization->publisher_id}-{$id}.xml";
     }
 
     /**
-     * Returns merged filename for iati organization.
+     * Returns merged filename for an organization.
      *
-     * @param $iatiOrganization
+     * @param $organization
      *
      * @return string
      */
-    public function generateMergedFileName($iatiOrganization): string
+    public function generateMergedFileName($organization): string
     {
-        return "{$iatiOrganization->publisher_id}-activities.xml";
+        return "{$organization->publisher_id}-activities.xml";
     }
 
     /**
@@ -165,9 +199,8 @@ trait MigrateActivityPublishedTrait
 
         if (count($publishedActivities)) {
             foreach ($publishedActivities as $publishedActivity) {
-                $publishedActivity = json_decode($publishedActivity);
-
                 if ($publishedActivity) {
+                    $publishedActivity = json_decode($publishedActivity);
                     foreach ($publishedActivity as $xmlFileName) {
                         $explodedElements = explode('.', $xmlFileName);
                         $basename = $explodedElements[0];
@@ -202,7 +235,7 @@ trait MigrateActivityPublishedTrait
 
         foreach ($aidstreamActivityXmlNameList as $aidstreamId => $aidstreamXmlName) {
             if (array_key_exists($aidstreamId, $migratedActivitiesLookupTable)) {
-                $returnArray[] = $this->generateIatiXmlFilename(
+                $returnArray[] = $this->generateIatiActivityXmlFilename(
                     $iatiOrganization,
                     $migratedActivitiesLookupTable[$aidstreamId]
                 );
@@ -253,8 +286,8 @@ trait MigrateActivityPublishedTrait
      */
     public function getAidstreamMergedFileName($aidstreamOrganization, $activityPublished): ?string
     {
-        if ($activityPublished) {
-            if (count($activityPublished) > 1) {
+        if (count($activityPublished)) {
+            if (count($activityPublished) > 1 || $this->filenameHasSegmentedLastname($activityPublished->first()->filename)) {
                 $setting = $this->db::connection('aidstream')->table('settings')->where(
                     'organization_id',
                     $aidstreamOrganization->id
@@ -316,7 +349,8 @@ trait MigrateActivityPublishedTrait
 
             $this->logInfo("Completed migration of merged file for Aidstream org: {$aidStreamOrganization->id}.");
         } else {
-            $this->logInfo('No activity file to merge.');
+            $message = 'No activity file to merge.';
+            $this->logInfo($message);
         }
 
         return $activityPublished;
@@ -327,11 +361,11 @@ trait MigrateActivityPublishedTrait
      *
      * @param $iatiOrganization
      *
-     * @return object
+     * @return ?object
      */
-    public function getIatiActivityPublished($iatiOrganization): object
+    public function getIatiActivityPublished($iatiOrganization): ?object
     {
-        return (new ActivityPublished())->where('organization_id', $iatiOrganization->id)->first();
+        return (new ActivityPublished())->where('organization_id', $iatiOrganization->id)?->first();
     }
 
     /**
@@ -394,11 +428,35 @@ trait MigrateActivityPublishedTrait
                 );
             }
         } catch (\Exception $exception) {
-            throw new PublishException(
+            $message = "Error while unpublishing segmented files for Aidstream org: {$aidstreamOrganizationId} with error: {$exception->getMessage()}.";
+            $this->setGeneralError($message)->setDetailedError(
+                $message,
+                $aidstreamOrganizationId,
+                'activity_published',
+                '',
+                'Activity file > segmented > unpublishing',
                 $iatiOrganizationId,
-                "Error while unpublishing segmented files for Aidstream org: {$aidstreamOrganizationId} with error: {$exception->getMessage()}."
             );
+
+            throw new PublishException($iatiOrganizationId, $message);
         }
+    }
+
+    /**
+     * Returns true if filename does not end in 'activities'.
+     *
+     * @param $filename
+     *
+     * @return bool
+     */
+    public function filenameHasSegmentedLastname($filename): bool
+    {
+        $explodedElements = explode('.', $filename);
+        $basename = $explodedElements[0];
+        $explodedBasename = explode('-', $basename);
+        $suffix = $explodedBasename[count($explodedBasename) - 1];
+
+        return $suffix !== 'activities';
     }
 
     /**

@@ -99,6 +99,7 @@ class XmlBaseTest extends ImportBaseTest
     {
         $errors = [];
         $xmlValidator = new XmlValidator($this->validation);
+
         foreach ($rows as $row) {
             $errors[] = $xmlValidator->init($row)->validateActivity(false, true);
         }

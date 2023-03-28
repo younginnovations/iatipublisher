@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Traits;
 
+use App\Exceptions\PublishException;
 use App\IATI\Models\Organization\OrganizationPublished;
 
 /**
@@ -18,6 +19,7 @@ trait MigrateOrganizationPublishedTrait
      * @param $iatiOrganization
      *
      * @return void
+     * @throws PublishException
      */
     public function migrateOrganizationPublishedFile($aidStreamOrganization, $iatiOrganization): void
     {
@@ -33,10 +35,27 @@ trait MigrateOrganizationPublishedTrait
             $iatiFilename = "{$iatiOrganization->publisher_id}-organisation.xml";
 
             $contents = awsGetFile("{$pathToAidstreamOrganizationFile}/$aidstreamFilename");
-            $contents = $this->replaceDocumentLinkInXml($contents, $iatiOrganization->id);
 
-            if ($contents && awsUploadFile("$pathToIatiOrganizationFile/$iatiFilename", $contents)) {
-                $this->logInfo("Migrated organization file :{$aidstreamFilename} as file :{$iatiFilename}.");
+            if ($contents) {
+                $contents = $this->replaceDocumentLinkInXml($contents, $iatiOrganization->id);
+                if (awsUploadFile("$pathToIatiOrganizationFile/$iatiFilename", $contents)) {
+                    $this->logInfo("Migrated organization file: {$aidstreamFilename} as file :{$iatiFilename}.");
+                } else {
+                    $message = "Failed to upload organization file: {$aidstreamFilename} as file :{$iatiFilename} to S3.";
+                    $this->setDetailedError(
+                        $message,
+                        $aidStreamOrganization->id,
+                        'organization_published',
+                        $publishedOrganization->id,
+                        $iatiOrganization->id,
+                        '',
+                        'Organization published > Upload xml after replacing document link',
+                    );
+                }
+            } else {
+                $message = "No Organization file named: {$aidstreamFilename} found in S3 for Aidstream Organization: {$aidStreamOrganization->name} id: {$aidStreamOrganization->id} .";
+                $this->logInfo($message);
+                throw new PublishException($iatiOrganization->id, $message);
             }
         }
     }

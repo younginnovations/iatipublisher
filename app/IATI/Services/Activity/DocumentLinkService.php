@@ -85,23 +85,28 @@ class DocumentLinkService
     {
         $organizationId = Auth::user()->organization->id;
 
-        foreach ($documentLinks as $index => $documentLink) {
-            $document = Arr::get($documentLink, '0.document', null);
+        foreach ($documentLinks['document_link'] as $index => $documentLink) {
+            $document = Arr::get($documentLink, 'document', null);
 
             if ($document) {
-                $data['activity_id'] = null;
-                $data['activities'] = [(int) $id];
-                $data['organization_id'] = $organizationId;
-                $data['filename'] = $document->getClientOriginalName();
-                $data['extension'] = pathinfo($document->getClientOriginalName(), PATHINFO_EXTENSION);
-                awsUploadFile("/document-link/$organizationId/" . $data['filename'], $document->get());
-                $fileUrl = awsUrl("/document-link/$organizationId/" . $data['filename']);
-                $data['document_link'] = $documentLink;
-                $data['filename'] = $fileUrl;
-                Arr::set($documentLinks, "$index.0.url", $fileUrl);
-                Arr::forget($documentLinks, "$index.0.document");
-                $this->documentRepository->store($data);
+                $extension = pathinfo($document->getClientOriginalName(), PATHINFO_EXTENSION);
+                $fileName = basename($document->getClientOriginalName(), ".$extension") . time() . '.' . $extension;
+
+                $documentData['activity_id'] = null;
+                $documentData['activities'] = [(int) $id];
+                $documentData['organization_id'] = $organizationId;
+                $documentData['filename'] = $fileName;
+                $documentData['extension'] = $extension;
+                $documentData['document_link'] = $documentLink;
+
+                awsUploadFile("/document-link/$organizationId/" . $fileName, $document->get());
+                $this->documentRepository->store($documentData);
+
+                $documentLink['url'] = awsUrl("/document-link/$organizationId/" . $fileName);
             }
+
+            unset($documentLink['document']);
+            $documentLinks['document_link'][$index] = $documentLink;
         }
 
         return $this->activityRepository->update($id, ['document_link' => $this->sanitizeDocumentLinkData($documentLinks)]);
@@ -119,7 +124,16 @@ class DocumentLinkService
     {
         $element = getElementSchema('document_link');
         $activity = $this->getActivityData($id);
-        $model['document_link'] = $activity['document_link'];
+        $documentLinks = $activity->document_link;
+
+        if ($documentLinks) {
+            foreach ($documentLinks as $index => $documentLink) {
+                unset($documentLink['document']);
+                $documentLinks[$index] = $documentLink;
+            }
+        }
+
+        $model['document_link'] = $documentLinks;
 
         $this->parentCollectionFormCreator->url = route('admin.activity.document-link.update', [$id]);
 

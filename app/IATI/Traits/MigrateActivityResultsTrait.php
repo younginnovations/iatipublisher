@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Traits;
 
+use App\IATI\Models\Activity\Activity;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
@@ -112,11 +113,13 @@ trait MigrateActivityResultsTrait
             $result = $this->unsetNotNeededKeys($result, ['id', 'created_at', 'updated_at']);
 
             $this->logInfo("Started migrating AidStream Activity Result for activity id: {$aidstreamActivity->id} and result id: {$aidStreamResultId}");
+
             $iatiResult = $this->resultService->create([
                 'activity_id' => $iatiActivity->id,
                 'result'      => $result,
                 'created_at'  => $created_at,
                 'updated_at'  => $updated_at,
+                'migrated_from_aidstream'=> true,
             ]);
 
             $this->logInfo("Completed migrating AidStream Activity Result for activity id: {$aidstreamActivity->id} and result id: {$aidStreamResultId}");
