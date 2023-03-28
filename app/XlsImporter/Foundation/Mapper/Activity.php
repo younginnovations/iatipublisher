@@ -160,7 +160,6 @@ class Activity
                         $elementDropDownFields = $dropDownFields[$element];
                         $fieldValue = $this->mapDropDownValueToKey($row[$element], $elementDropDownFields);
                     }
-
                     $this->activities[$elementActivityIdentifier]['default_field_values'][$element] = $fieldValue;
                 }
             } else {
