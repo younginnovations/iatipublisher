@@ -16,6 +16,7 @@ use App\IATI\Services\Activity\TransactionService;
 use App\IATI\Services\ApiLog\ApiLogService;
 use App\IATI\Services\Document\DocumentService;
 use App\IATI\Services\Organization\OrganizationService;
+use App\IATI\Services\OrganizationElementCompleteService;
 use App\IATI\Services\Publisher\PublisherService;
 use App\IATI\Services\Setting\SettingService;
 use App\IATI\Services\User\UserService;
@@ -96,6 +97,7 @@ class MigrateOrganizationCommand extends Command
         protected XmlGenerator $xmlGenerator,
         protected PublisherService $publisherService,
         protected ApiLogService $apiLogService,
+        protected OrganizationElementCompleteService $organizationElementCompleteService,
     ) {
         parent::__construct();
     }
@@ -126,109 +128,130 @@ class MigrateOrganizationCommand extends Command
             $organizationLookUpTable = [];
 
             foreach ($aidstreamOrganizationIds as $aidstreamOrganizationId) {
-                $this->logInfo('Started organization migration for organization id: ' . $aidstreamOrganizationId);
-                $this->databaseManager->beginTransaction();
-                $aidStreamOrganization = $this->db::connection('aidstream')->table('organizations')->where(
-                    'id',
-                    $aidstreamOrganizationId
-                )->first();
+                try {
+                    $this->logInfo('Started organization migration for organization id: ' . $aidstreamOrganizationId);
+                    $this->databaseManager->beginTransaction();
+                    $aidStreamOrganization = $this->db::connection('aidstream')->table('organizations')->where(
+                        'id',
+                        $aidstreamOrganizationId
+                    )->first();
 
-                if (!$aidStreamOrganization) {
-                    $this->error('AidStream organization not found with id: ' . $aidstreamOrganizationId);
-                    continue;
-                }
+                    if (!$aidStreamOrganization) {
+                        $this->error('AidStream organization not found with id: ' . $aidstreamOrganizationId);
+                        continue;
+                    }
 
-                if ($this->organizationService->getOrganizationByPublisherId($aidStreamOrganization->user_identifier)) {
-                    $this->error('Organization already exists with publisher id: ' . $aidStreamOrganization->user_identifier);
-                    continue;
-                }
+                    if ($this->organizationService->getOrganizationByPublisherId($aidStreamOrganization->user_identifier)) {
+                        $this->error(
+                            'Organization already exists with publisher id: ' . $aidStreamOrganization->user_identifier
+                        );
+                        continue;
+                    }
 
-                $iatiOrganization = $this->organizationService->create(
-                    $this->getNewOrganization($aidStreamOrganization)
-                );
-
-                $organizationLookUpTable[$aidStreamOrganization->id] = $iatiOrganization;
-
-                $this->logInfo('Completed organization migration for organization id: ' . $aidstreamOrganizationId);
-                $aidStreamOrganizationSetting = $this->db::connection('aidstream')->table('settings')->where(
-                    'organization_id',
-                    $aidstreamOrganizationId
-                )->first();
-
-                if ($aidStreamOrganizationSetting) {
-                    $this->logInfo('Started settings migration for organization id: ' . $aidstreamOrganizationId);
-                    $this->setting = $this->settingService->create(
-                        $this->getNewSetting($aidStreamOrganizationSetting, $iatiOrganization)
+                    $iatiOrganization = $this->organizationService->create(
+                        $this->getNewOrganization($aidStreamOrganization)
                     );
 
-                    $this->setDefaultValues($iatiOrganization, $aidStreamOrganizationSetting);
-                    $this->syncPublisherIdInSettingAndOrganizationLevel($iatiOrganization, $aidStreamOrganizationSetting);
-                    $this->logInfo('Completed setting migration for organization id: ' . $aidstreamOrganizationId);
-                }
+                    $organizationLookUpTable[$aidStreamOrganization->id] = $iatiOrganization;
 
-                $aidstreamUsers = $this->db::connection('aidstream')->table('users')->where(
-                    'org_id',
-                    $aidstreamOrganizationId
-                )->get();
+                    $this->logInfo('Completed organization migration for organization id: ' . $aidstreamOrganizationId);
+                    $aidStreamOrganizationSetting = $this->db::connection('aidstream')->table('settings')->where(
+                        'organization_id',
+                        $aidstreamOrganizationId
+                    )->first();
 
-                if (count($aidstreamUsers)) {
-                    $mappedUsers = [];
-
-                    foreach ($aidstreamUsers as $aidstreamUser) {
-                        $this->logInfo(
-                            'Started user migration for user id: ' . $aidstreamUser->id . ' of organization: ' . $aidStreamOrganization->name
+                    if ($aidStreamOrganizationSetting) {
+                        $this->logInfo('Started settings migration for organization id: ' . $aidstreamOrganizationId);
+                        $this->setting = $this->settingService->create(
+                            $this->getNewSetting($aidStreamOrganizationSetting, $iatiOrganization)
                         );
-                        $iatiUser = $this->userService->create($this->getNewUser($aidstreamUser, $iatiOrganization));
-                        $mappedUsers[$aidstreamOrganizationId][$aidstreamUser->id] = $iatiUser->id;
-                        $this->logInfo(
-                            'Completed user migration for user id: ' . $aidstreamUser->id . ' of organization: ' . $aidStreamOrganization->name
+
+                        $this->setDefaultValues($iatiOrganization, $aidStreamOrganizationSetting);
+                        $this->updateOrganizationCompleteStatus($iatiOrganization);
+                        $this->syncPublisherIdInSettingAndOrganizationLevel(
+                            $iatiOrganization,
+                            $aidStreamOrganizationSetting
                         );
+                        $this->logInfo('Completed setting migration for organization id: ' . $aidstreamOrganizationId);
                     }
 
-                    $this->updateOrganizationUpdatedBy($aidstreamOrganizationId, $iatiOrganization, $mappedUsers);
-                }
+                    $aidstreamUsers = $this->db::connection('aidstream')->table('users')->where(
+                        'org_id',
+                        $aidstreamOrganizationId
+                    )->get();
 
-                $aidstreamActivities = $this->db::connection('aidstream')->table('activity_data')->where(
-                    'organization_id',
-                    $aidstreamOrganizationId
-                )->get();
-                $migratedActivitiesLookupTable = [];
+                    if (count($aidstreamUsers)) {
+                        $mappedUsers = [];
 
-                if (count($aidstreamActivities)) {
-                    foreach ($aidstreamActivities as $aidstreamActivity) {
-                        $this->logInfo(
-                            'Started activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
-                        );
+                        foreach ($aidstreamUsers as $aidstreamUser) {
+                            $this->logInfo(
+                                'Started user migration for user id: ' . $aidstreamUser->id . ' of organization: ' . $aidStreamOrganization->name
+                            );
+                            $iatiUser = $this->userService->create($this->getNewUser($aidstreamUser, $iatiOrganization));
+                            $mappedUsers[$aidstreamOrganizationId][$aidstreamUser->id] = $iatiUser->id;
+                            $this->logInfo(
+                                'Completed user migration for user id: ' . $aidstreamUser->id . ' of organization: ' . $aidStreamOrganization->name
+                            );
+                        }
 
-                        $iatiActivity = $this->activityService->create($this->getNewActivity($aidstreamActivity, $iatiOrganization));
-                        $migratedActivitiesLookupTable[$aidstreamActivity->id] = $iatiActivity->id;
-
-                        $this->logInfo(
-                            'Completed basic activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
-                        );
-
-                        $this->migrateActivityTransactions($aidstreamActivity->id, $iatiActivity->id);
-                        $this->migrateActivityResults($iatiActivity, $aidstreamActivity, $iatiOrganization);
-                        $this->migrateActivitySnapshot($iatiActivity, $aidstreamActivity);
+                        $this->updateOrganizationUpdatedBy($aidstreamOrganizationId, $iatiOrganization, $mappedUsers);
                     }
 
-                    $this->migrateActivitiesPublishedFiles($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable);
-                    $this->migrateActivityPublishedTable($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable);
-                    $this->migrateActivityMergedFile($aidStreamOrganization, $iatiOrganization, $this->setting);
+                    $aidstreamActivities = $this->db::connection('aidstream')->table('activity_data')->where(
+                        'organization_id',
+                        $aidstreamOrganizationId
+                    )->get();
+                    $migratedActivitiesLookupTable = [];
+
+                    if (count($aidstreamActivities)) {
+                        foreach ($aidstreamActivities as $aidstreamActivity) {
+                            $this->logInfo(
+                                'Started activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
+                            );
+
+                            $iatiActivity = $this->activityService->create(
+                                $this->getNewActivity($aidstreamActivity, $iatiOrganization)
+                            );
+                            $migratedActivitiesLookupTable[$aidstreamActivity->id] = $iatiActivity->id;
+
+                            $this->logInfo(
+                                'Completed basic activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
+                            );
+
+                            $this->migrateActivityTransactions($aidstreamActivity->id, $iatiActivity->id);
+                            $this->migrateActivityResults($iatiActivity, $aidstreamActivity, $iatiOrganization);
+                            $this->migrateActivitySnapshot($iatiActivity, $aidstreamActivity);
+                        }
+
+                        $this->migrateActivitiesPublishedFiles(
+                            $aidStreamOrganization,
+                            $iatiOrganization,
+                            $migratedActivitiesLookupTable
+                        );
+                        $this->migrateActivityPublishedTable(
+                            $aidStreamOrganization,
+                            $iatiOrganization,
+                            $migratedActivitiesLookupTable
+                        );
+                        $this->migrateActivityMergedFile($aidStreamOrganization, $iatiOrganization, $this->setting);
+                    }
+
+                    $this->migrateDocumentFiles($aidStreamOrganization, $iatiOrganization);
+                    $this->migrateDocuments($aidstreamOrganizationId, $iatiOrganization, $migratedActivitiesLookupTable);
+                    $this->migrateOrganizationPublishedFile($aidStreamOrganization, $iatiOrganization);
+                    $this->migrateOrganizationPublishedTable($aidStreamOrganization, $iatiOrganization, $this->setting);
+
+                    $this->databaseManager->commit();
+                } catch (\Exception $exception) {
+                    $this->databaseManager->rollBack();
+                    logger()->channel('migration')->error($exception);
+                    $this->error($exception->getMessage());
                 }
-
-                $this->migrateDocuments($aidstreamOrganizationId, $iatiOrganization);
-                $this->migrateDocumentFiles($aidStreamOrganization, $iatiOrganization);
-                $this->migrateOrganizationPublishedFile($aidStreamOrganization, $iatiOrganization);
-                $this->migrateOrganizationPublishedTable($aidStreamOrganization, $iatiOrganization, $this->setting);
-
-                $this->databaseManager->commit();
             }
 
             $this->updateOrganizationDocumentLinkUrl($organizationLookUpTable);
         } catch (\Exception $exception) {
-            $this->databaseManager->rollBack();
-            logger()->error($exception);
+            logger()->channel('migration')->error($exception);
             $this->error($exception->getMessage());
         }
     }
@@ -244,11 +267,16 @@ class MigrateOrganizationCommand extends Command
     {
         foreach ($organizationLookUpTable as $orgData) {
             $documentLink = [];
-            foreach ($orgData->document_link as $data) {
-                $data['url'] = $this->replaceDocumentLinkUrl($data['url'], $orgData->id);
-                $documentLink[] = $data;
+            $orgDocumentLinks = $orgData->document_link;
+
+            if ($orgDocumentLinks && count($orgDocumentLinks)) {
+                foreach ($orgDocumentLinks as $data) {
+                    $data['url'] = $this->replaceDocumentLinkUrl($data['url'], $orgData->id);
+                    $documentLink[] = $data;
+                }
             }
-            $orgData->document_link = $documentLink;
+
+            $orgData->document_link = count($documentLink) ? $documentLink : null;
             $orgData->save();
         }
     }
@@ -409,7 +437,7 @@ class MigrateOrganizationCommand extends Command
         $defaultFieldValues = $aidStreamOrganizationSetting->default_field_values;
         $data = $iatiOrganization->toArray();
         $updatedIatiData = $this->populateDefaultFields($data, $defaultFieldValues);
-        $iatiOrganization->update($updatedIatiData);
+        $iatiOrganization->updateQuietly($updatedIatiData);
     }
 
     /**
@@ -428,7 +456,7 @@ class MigrateOrganizationCommand extends Command
             if (isset($parsedUrl['host']) && in_array($parsedUrl['host'], ['www.aidstream.org', 'aidstream.org'])) {
                 $explodedPath = explode('/', $parsedUrl['path']);
                 $fileName = end($explodedPath);
-                $path = '/document_link/' . $iatiOrganizationId . '/' . $fileName;
+                $path = '/document-link/' . $iatiOrganizationId . '/' . $fileName;
                 $url = awsUrl($path);
             }
 
@@ -436,5 +464,20 @@ class MigrateOrganizationCommand extends Command
         }
 
         return null;
+    }
+
+    /**
+     * Saves the organization complete status.
+     *
+     * @param $iatiOrganization
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function updateOrganizationCompleteStatus($iatiOrganization): void
+    {
+        $this->setElementStatus($iatiOrganization);
+        $iatiOrganization->saveQuietly();
     }
 }

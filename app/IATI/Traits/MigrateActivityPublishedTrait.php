@@ -25,7 +25,7 @@ trait MigrateActivityPublishedTrait
     {
         $registryInfo = json_decode($aidStreamOrganizationSetting->registry_info)[0];
 
-        if ($registryInfo->publisher_id != $iatiOrganization->publisher_id) {
+        if (($registryInfo->publisher_id != $iatiOrganization->publisher_id) && !empty($registryInfo->publisher_id)) {
             $iatiOrganization->updateQuietly(['publisher_id' => $registryInfo->publisher_id]);
         }
     }
@@ -245,14 +245,12 @@ trait MigrateActivityPublishedTrait
      * Return merged activity filename.
      *
      * @param $aidstreamOrganization
+     * @param $activityPublished
      *
      * @return string|null
      */
-    public function getAidstreamMergedFileName($aidstreamOrganization): ?string
+    public function getAidstreamMergedFileName($aidstreamOrganization, $activityPublished): ?string
     {
-        $activityPublished = $this->db::connection('aidstream')->table('activity_published')
-                                      ->where('organization_id', $aidstreamOrganization->id)->get();
-
         if ($activityPublished) {
             if (count($activityPublished) > 1) {
                 $setting = $this->db::connection('aidstream')->table('settings')->where(
@@ -286,8 +284,10 @@ trait MigrateActivityPublishedTrait
         $publishedFiles = $activityPublished ? $activityPublished->published_activities : [];
 
         if ($publishedFiles) {
+            $aidstreamActivityPublished = $this->db::connection('aidstream')->table('activity_published')
+                                          ->where('organization_id', $aidStreamOrganization->id)->where('published_to_register', 1)->get();
             $aidstreamMergedFilePath = 'aidstream-xml';
-            $aidstreamMergedFilename = $this->getAidStreamMergedFilename($aidStreamOrganization);
+            $aidstreamMergedFilename = $this->getAidStreamMergedFilename($aidStreamOrganization, $aidstreamActivityPublished);
 
             $iatiMergedFilename = "{$iatiOrganization->publisher_id}-activities.xml";
             $iatiMergedFile = "xml/mergedActivityXml/{$iatiMergedFilename}";
@@ -316,10 +316,13 @@ trait MigrateActivityPublishedTrait
                 $this->logInfo(
                     "Publishing activity file: {$activityPublished->filename} for Aidstream org: {$aidStreamOrganization->id}."
                 );
+
                 $this->publisherService->publishFile($publishingInfo, $activityPublished, $iatiOrganization, false);
                 $this->logInfo(
                     "Completed publishing activity file: {$activityPublished->filename} with updated at {$activityPublished->updated_at} for Aidstream org: {$aidStreamOrganization->id}."
                 );
+
+                $this->unpublishSegmentedFiles(Arr::get($setting->publishing_info, 'api_token', null), $aidstreamActivityPublished, $aidStreamOrganization->id);
             } else {
                 $this->logInfo(
                     "Activity file: {$activityPublished->filename} not published."
@@ -340,5 +343,58 @@ trait MigrateActivityPublishedTrait
     public function getIatiActivityPublished($iatiOrganization): object
     {
         return (new ActivityPublished())->where('organization_id', $iatiOrganization->id)->first();
+    }
+
+    /**
+     * Returns array for segmented files.
+     *
+     * @param $aidstreamPublishedFiles
+     *
+     * @return array
+     */
+    public function getSegmentedFiles($aidstreamPublishedFiles): array
+    {
+        $segmentedFiles = [];
+
+        if (!$aidstreamPublishedFiles) {
+            return $segmentedFiles;
+        }
+
+        if (count($aidstreamPublishedFiles)) {
+            foreach ($aidstreamPublishedFiles as $aidstreamPublishedFile) {
+                $explodedElements = explode('.', $aidstreamPublishedFile->filename);
+                $basename = $explodedElements[0];
+                $explodedBasename = explode('-', $basename);
+                $lastName = $explodedBasename[count($explodedBasename) - 1];
+
+                if ($lastName !== 'activities') {
+                    $segmentedFiles[] = $basename;
+                }
+            }
+        }
+
+        return $segmentedFiles;
+    }
+
+    /**
+     * Unpublishes segmented files if present.
+     *
+     * @param $apiToken
+     * @param $aidstreamPublishedFiles
+     * @param $aidstreamOrganizationId
+     *
+     * @return void
+     *
+     * @throws \Exception
+     */
+    public function unpublishSegmentedFiles($apiToken, $aidstreamPublishedFiles, $aidstreamOrganizationId): void
+    {
+        $segmentedFiles = $this->getSegmentedFiles($aidstreamPublishedFiles);
+
+        if (count($segmentedFiles)) {
+            $this->logInfo('Unpublishing segmented files for Aidstream org: ' . $aidstreamOrganizationId . '.');
+            $this->publisherService->unlink($apiToken, $segmentedFiles);
+            $this->logInfo('Completed unpublishing segmented files for Aidstream org: ' . $aidstreamOrganizationId . '.');
+        }
     }
 }
