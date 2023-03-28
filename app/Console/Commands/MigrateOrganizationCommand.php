@@ -16,6 +16,7 @@ use App\IATI\Services\Activity\TransactionService;
 use App\IATI\Services\ApiLog\ApiLogService;
 use App\IATI\Services\Document\DocumentService;
 use App\IATI\Services\Organization\OrganizationService;
+use App\IATI\Services\OrganizationElementCompleteService;
 use App\IATI\Services\Publisher\PublisherService;
 use App\IATI\Services\Setting\SettingService;
 use App\IATI\Services\User\UserService;
@@ -96,6 +97,7 @@ class MigrateOrganizationCommand extends Command
         protected XmlGenerator $xmlGenerator,
         protected PublisherService $publisherService,
         protected ApiLogService $apiLogService,
+        protected OrganizationElementCompleteService $organizationElementCompleteService,
     ) {
         parent::__construct();
     }
@@ -162,6 +164,7 @@ class MigrateOrganizationCommand extends Command
                     );
 
                     $this->setDefaultValues($iatiOrganization, $aidStreamOrganizationSetting);
+                    $this->updateOrganizationCompleteStatus($iatiOrganization);
                     $this->syncPublisherIdInSettingAndOrganizationLevel($iatiOrganization, $aidStreamOrganizationSetting);
                     $this->logInfo('Completed setting migration for organization id: ' . $aidstreamOrganizationId);
                 }
@@ -217,15 +220,14 @@ class MigrateOrganizationCommand extends Command
                     $this->migrateActivityMergedFile($aidStreamOrganization, $iatiOrganization, $this->setting);
                 }
 
-                $this->migrateDocuments($aidstreamOrganizationId, $iatiOrganization);
                 $this->migrateDocumentFiles($aidStreamOrganization, $iatiOrganization);
+                $this->migrateDocuments($aidstreamOrganizationId, $iatiOrganization, $migratedActivitiesLookupTable);
                 $this->migrateOrganizationPublishedFile($aidStreamOrganization, $iatiOrganization);
                 $this->migrateOrganizationPublishedTable($aidStreamOrganization, $iatiOrganization, $this->setting);
-
-                $this->databaseManager->commit();
             }
 
             $this->updateOrganizationDocumentLinkUrl($organizationLookUpTable);
+            $this->databaseManager->commit();
         } catch (\Exception $exception) {
             $this->databaseManager->rollBack();
             logger()->error($exception);
@@ -244,11 +246,16 @@ class MigrateOrganizationCommand extends Command
     {
         foreach ($organizationLookUpTable as $orgData) {
             $documentLink = [];
-            foreach ($orgData->document_link as $data) {
-                $data['url'] = $this->replaceDocumentLinkUrl($data['url'], $orgData->id);
-                $documentLink[] = $data;
+            $orgDocumentLinks = $orgData->document_link;
+
+            if ($orgDocumentLinks && count($orgDocumentLinks)) {
+                foreach ($orgDocumentLinks as $data) {
+                    $data['url'] = $this->replaceDocumentLinkUrl($data['url'], $orgData->id);
+                    $documentLink[] = $data;
+                }
             }
-            $orgData->document_link = $documentLink;
+
+            $orgData->document_link = count($documentLink) ? $documentLink : null;
             $orgData->save();
         }
     }
@@ -409,7 +416,7 @@ class MigrateOrganizationCommand extends Command
         $defaultFieldValues = $aidStreamOrganizationSetting->default_field_values;
         $data = $iatiOrganization->toArray();
         $updatedIatiData = $this->populateDefaultFields($data, $defaultFieldValues);
-        $iatiOrganization->update($updatedIatiData);
+        $iatiOrganization->updateQuietly($updatedIatiData);
     }
 
     /**
@@ -428,7 +435,7 @@ class MigrateOrganizationCommand extends Command
             if (isset($parsedUrl['host']) && in_array($parsedUrl['host'], ['www.aidstream.org', 'aidstream.org'])) {
                 $explodedPath = explode('/', $parsedUrl['path']);
                 $fileName = end($explodedPath);
-                $path = '/document_link/' . $iatiOrganizationId . '/' . $fileName;
+                $path = '/document-link/' . $iatiOrganizationId . '/' . $fileName;
                 $url = awsUrl($path);
             }
 
@@ -436,5 +443,20 @@ class MigrateOrganizationCommand extends Command
         }
 
         return null;
+    }
+
+    /**
+     * Saves the organization complete status.
+     *
+     * @param $iatiOrganization
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function updateOrganizationCompleteStatus($iatiOrganization): void
+    {
+        $this->setElementStatus($iatiOrganization);
+        $iatiOrganization->saveQuietly();
     }
 }

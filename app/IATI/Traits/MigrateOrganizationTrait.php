@@ -368,7 +368,7 @@ trait MigrateOrganizationTrait
                 $iatiOrganization->updated_by = $mappedUsers[$aidstreamOrganizationId][$adminUser->id];
             }
 
-            $iatiOrganization->save();
+            $iatiOrganization->saveQuietly();
         }
     }
 
@@ -540,5 +540,48 @@ trait MigrateOrganizationTrait
         }
 
         return count($newOrgDocumentLink) ? $newOrgDocumentLink : null;
+    }
+
+    /**
+     * Sets the complete status of elements.
+     *
+     * @param      $model
+     * @param bool $isNew
+     *
+     * @return void
+     * @throws \JsonException
+     */
+    public function setElementStatus($model, bool $isNew = false): void
+    {
+        $elementStatus = $model->element_status;
+        $updatedElements = ($isNew) ? $this->getUpdatedElement($model->getAttributes()) : $this->getUpdatedElement($model->getChanges());
+
+        foreach ($updatedElements as $attribute => $value) {
+            $elementStatus[$attribute] = call_user_func([$this->organizationElementCompleteService, dashesToCamelCase('is_' . $attribute . '_element_completed')], $model);
+        }
+
+        $model->element_status = $elementStatus;
+    }
+
+    /**
+     * @param $updatedAttributes
+     *
+     * @return array
+     * @throws \JsonException
+     */
+    public function getUpdatedElement($updatedAttributes): array
+    {
+        $elements = getOrganizationElements();
+        $updatedElements = [];
+
+        $elements[] = 'identifier';
+
+        foreach ($updatedAttributes as $element => $updatedAttribute) {
+            if (in_array($element, $elements, true)) {
+                $updatedElements[$element] = $updatedAttribute;
+            }
+        }
+
+        return $updatedElements;
     }
 }
