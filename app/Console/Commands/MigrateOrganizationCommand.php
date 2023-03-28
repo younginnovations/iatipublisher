@@ -32,6 +32,7 @@ use App\IATI\Traits\MigrateOrganizationTrait;
 use App\IATI\Traits\MigrateResultIndicatorTrait;
 use App\IATI\Traits\MigrateSettingTrait;
 use App\IATI\Traits\MigrateUserTrait;
+use App\IATI\Traits\TrackMigrationErrorTrait;
 use Illuminate\Console\Command;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Facades\DB;
@@ -54,6 +55,7 @@ class MigrateOrganizationCommand extends Command
     use MigrateActivityPublishedTrait;
     use MigrateOrganizationPublishedTrait;
     use MigrateDocumentFileTrait;
+    use TrackMigrationErrorTrait;
 
     /**
      * The name and signature of the console command.
@@ -61,6 +63,13 @@ class MigrateOrganizationCommand extends Command
      * @var string
      */
     protected $signature = 'migrate:organization';
+
+    /**
+     * Error array to track errors.
+     *
+     * @var array $errors
+     */
+    public array $errors = [];
 
     /**
      * The console command description.
@@ -119,6 +128,7 @@ class MigrateOrganizationCommand extends Command
             );
 
             $aidstreamOrganizationIds = explode(',', $aidstreamOrganizationIdString);
+            //initialize or create migration error file.
 
             // Convert all the values to integer.
             foreach ($aidstreamOrganizationIds as $key => $aidstreamOrganizationId) {
@@ -136,14 +146,16 @@ class MigrateOrganizationCommand extends Command
                 )->first();
 
                 if (!$aidStreamOrganization) {
-                    $this->error('AidStream organization not found with id: ' . $aidstreamOrganizationId);
+                    $message = 'AidStream organization not found with id: ' . $aidstreamOrganizationId;
+                    $this->setGeneralError($message, $aidstreamOrganizationId);
+                    $this->error($message);
                     continue;
                 }
 
                 if ($this->organizationService->getOrganizationByPublisherId($aidStreamOrganization->user_identifier)) {
-                    $this->error(
-                        'Organization already exists with publisher id: ' . $aidStreamOrganization->user_identifier
-                    );
+                    $message = 'Organization already exists with publisher id: ' . $aidStreamOrganization->user_identifier;
+                    $this->setGeneralError($message, $aidstreamOrganizationId);
+                    $this->error($message);
                     continue;
                 }
 
@@ -169,7 +181,8 @@ class MigrateOrganizationCommand extends Command
                     $this->updateOrganizationCompleteStatus($iatiOrganization);
                     $this->syncPublisherIdInSettingAndOrganizationLevel(
                         $iatiOrganization,
-                        $aidStreamOrganizationSetting
+                        $aidStreamOrganizationSetting,
+                        $aidStreamOrganization
                     );
                     $this->logInfo('Completed setting migration for organization id: ' . $aidstreamOrganizationId);
                 }
@@ -208,9 +221,7 @@ class MigrateOrganizationCommand extends Command
                             'Started activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
                         );
 
-                        $iatiActivity = $this->activityService->create(
-                            $this->getNewActivity($aidstreamActivity, $iatiOrganization)
-                        );
+                        $iatiActivity = $this->activityService->create($this->getNewActivity($aidstreamActivity, $iatiOrganization, $aidStreamOrganization));
                         $migratedActivitiesLookupTable[$aidstreamActivity->id] = $iatiActivity->id;
 
                         $this->logInfo(
@@ -242,6 +253,7 @@ class MigrateOrganizationCommand extends Command
             }
 
             $this->updateOrganizationDocumentLinkUrl($organizationLookUpTable);
+            $this->trackMigrationErrors($this->errors);
             $this->databaseManager->commit();
         } catch (\Exception $exception) {
             $this->databaseManager->rollBack();

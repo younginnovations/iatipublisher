@@ -18,15 +18,24 @@ trait MigrateActivityPublishedTrait
      *
      * @param $iatiOrganization
      * @param $aidStreamOrganizationSetting
+     * @param $aidstreamOrganization
      *
      * @return void
      */
-    public function syncPublisherIdInSettingAndOrganizationLevel($iatiOrganization, $aidStreamOrganizationSetting): void
+    public function syncPublisherIdInSettingAndOrganizationLevel($iatiOrganization, $aidStreamOrganizationSetting, $aidstreamOrganization): void
     {
-        $registryInfo = json_decode($aidStreamOrganizationSetting->registry_info)[0];
+        $registryInfo = $aidStreamOrganizationSetting->registry_info;
 
-        if (($registryInfo->publisher_id != $iatiOrganization->publisher_id) && !empty($registryInfo->publisher_id)) {
-            $iatiOrganization->updateQuietly(['publisher_id' => $registryInfo->publisher_id]);
+        if ($registryInfo) {
+            $registryInfo = json_decode($registryInfo)[0];
+
+            if (($registryInfo->publisher_id !== $iatiOrganization->publisher_id) && !empty($registryInfo->publisher_id)) {
+                $iatiOrganization->updateQuietly(['publisher_id' => $registryInfo->publisher_id]);
+            }
+        } else {
+            $message = "Registry_info is null in Settings of Aidstream org_id: {$aidstreamOrganization->id}";
+            $this->setTableMigrationError($message, $aidstreamOrganization->id, $iatiOrganization->id, $aidStreamOrganizationSetting->id);
+            $this->logInfo($message);
         }
     }
 
@@ -70,7 +79,9 @@ trait MigrateActivityPublishedTrait
                 }
             }
         } else {
-            $this->logInfo("No activity files to migrate for Aidstream org_id {$aidStreamOrganization->id}.");
+            $message = "No activity files to migrate for Aidstream org_id {$aidStreamOrganization->id}.";
+            $this->setFileMigrationError($message, $aidStreamOrganization->id, $iatiOrganization->id);
+            $this->logInfo($message);
         }
 
         $this->logInfo("Completed Activity file migration for Aidstream org: {$aidStreamOrganization->id}.");
@@ -324,12 +335,14 @@ trait MigrateActivityPublishedTrait
 
                 $this->unpublishSegmentedFiles(Arr::get($setting->publishing_info, 'api_token', null), $aidstreamActivityPublished, $aidStreamOrganization->id);
             } else {
-                $this->logInfo(
-                    "Activity file: {$activityPublished->filename} not published."
-                );
+                $message = "Activity merged file: {$activityPublished->filename} not published.";
+                $this->setFileMigrationError($message, $aidStreamOrganization->id, $iatiOrganization->id, $activityPublished->filename);
+                $this->logInfo($message);
             }
         } else {
-            $this->logInfo('No activity file to merge.');
+            $message = 'No activity file to merge.';
+            $this->setFileMigrationError($message, $aidStreamOrganization->id, $iatiOrganization->id);
+            $this->logInfo($message);
         }
     }
 
@@ -338,11 +351,11 @@ trait MigrateActivityPublishedTrait
      *
      * @param $iatiOrganization
      *
-     * @return object
+     * @return ?object
      */
-    public function getIatiActivityPublished($iatiOrganization): object
+    public function getIatiActivityPublished($iatiOrganization): ?object
     {
-        return (new ActivityPublished())->where('organization_id', $iatiOrganization->id)->first();
+        return (new ActivityPublished())->where('organization_id', $iatiOrganization->id)?->first();
     }
 
     /**
