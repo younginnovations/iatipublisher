@@ -110,7 +110,7 @@ let intervalID;
  *   Component lifecycle - onMounted
  */
 onMounted(() => {
-  console.log('mounted')
+  console.log('mounted');
   completed.value = paStorage.value.publishingActivities.status ?? 'processing';
   bulkPublishStatus();
   setTimeout(() => {
@@ -121,7 +121,7 @@ onMounted(() => {
       supportButton.style.transform = 'translateX(-350px)';
       supportButton.style.opacity = '1';
     }
-  }, 710);
+  }, 720);
 });
 onUnmounted(() => {
   const supportButton: HTMLElement = document.querySelector(
