@@ -33,8 +33,8 @@ trait MigrateActivityPublishedTrait
                 $iatiOrganization->updateQuietly(['publisher_id' => $registryInfo->publisher_id]);
             }
         } else {
-            $message = "Registry_info is null in Settings of Aidstream org_id: {$aidstreamOrganization->id}";
-            $this->setTableMigrationError($message, $aidstreamOrganization->id, $iatiOrganization->id, $aidStreamOrganizationSetting->id);
+            $message = "Registry info is null in Settings of Aidstream org_id: {$aidstreamOrganization->id}";
+            $this->setGeneralError($message, $aidstreamOrganization->id, $iatiOrganization->id, 'Settings', $aidStreamOrganizationSetting->id);
             $this->logInfo($message);
         }
     }
@@ -174,9 +174,8 @@ trait MigrateActivityPublishedTrait
 
         if (count($publishedActivities)) {
             foreach ($publishedActivities as $publishedActivity) {
-                $publishedActivity = json_decode($publishedActivity);
-
                 if ($publishedActivity) {
+                    $publishedActivity = json_decode($publishedActivity);
                     foreach ($publishedActivity as $xmlFileName) {
                         $explodedElements = explode('.', $xmlFileName);
                         $basename = $explodedElements[0];
@@ -256,12 +255,15 @@ trait MigrateActivityPublishedTrait
      * Return merged activity filename.
      *
      * @param $aidstreamOrganization
-     * @param $activityPublished
      *
      * @return string|null
      */
-    public function getAidstreamMergedFileName($aidstreamOrganization, $activityPublished): ?string
+    public function getAidstreamMergedFileName($aidstreamOrganization): ?string
     {
+        $activityPublished = $this->db::connection('aidstream')->table('activity_published')
+                                      ->where('organization_id', $aidstreamOrganization->id)
+                                      ->where('published_to_register', 1)->get();
+
         if ($activityPublished) {
             if (count($activityPublished) > 1) {
                 $setting = $this->db::connection('aidstream')->table('settings')->where(

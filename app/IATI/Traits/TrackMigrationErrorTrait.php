@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\IATI\Traits;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 /*
  * Class TrackMigrationErrorTrait.
@@ -31,20 +34,12 @@ trait TrackMigrationErrorTrait
                 'iati-id'            => '',
             ],
         ],
-        'table-migration-errors' => [
-            [
-                'error-msg'        => '',
-                'aidstream-org-id' => '',
-                'iati-org-id'      => '',
-                'aidstream-id'     => '',
-                'iati-id'          => '',
-            ],
-        ],
         'general-errors'         => [
             [
                 'error-msg'        => '',
                 'aidstream-org-id' => '',
                 'iati-org-id'      => '',
+                'scope'             => '',
                 'aidstream-id'     => '',
                 'iati-id'          => '',
             ],
@@ -66,19 +61,13 @@ trait TrackMigrationErrorTrait
             'aidstream-id'       => 'F',
             'iati-id'            => 'G',
         ],
-        'table-migration-errors' => [
-            'error-msg'        => 'A',
-            'aidstream-org-id' => 'B',
-            'iati-org-id'      => 'C',
-            'aidstream-id'     => 'D',
-            'iati-id'          => 'E',
-        ],
         'general-errors' => [
             'error-msg'        => 'A',
             'aidstream-org-id' => 'B',
             'iati-org-id'      => 'C',
-            'aidstream-id'     => 'D',
-            'iati-id'          => 'E',
+            'scope'            => 'D',
+            'aidstream-id'     => 'E',
+            'iati-id'          => 'F',
         ],
     ];
 
@@ -93,6 +82,8 @@ trait TrackMigrationErrorTrait
      */
     public function trackMigrationErrors(array $errorsArray = []): void
     {
+        $this->createMigrationErrorXlsxIfNotExists();
+
         $spreadsheet = $this->openSpreadSheet();
 
         if (empty($errorsArray)) {
@@ -169,6 +160,7 @@ trait TrackMigrationErrorTrait
      * @param string $message
      * @param int|string $aidstreamOrgId
      * @param int|string $iatiOrgId
+     * @param string $scope
      * @param int|string $aidstreamActivityId
      * @param int|string $iatiActivityId
      *
@@ -178,6 +170,7 @@ trait TrackMigrationErrorTrait
         string $message,
         int | string $aidstreamOrgId = '',
         int | string $iatiOrgId = '',
+        string $scope = '',
         int | string $aidstreamActivityId = '',
         int | string $iatiActivityId = ''
     ): void {
@@ -185,40 +178,14 @@ trait TrackMigrationErrorTrait
             'error-msg'        => $message,
             'aidstream-org-id' => $aidstreamOrgId,
             'iati-org-id'      => $iatiOrgId,
+            'scope'            => $scope,
             'aidstream-id'     => $aidstreamActivityId,
             'iati-id'          => $iatiActivityId,
         ];
     }
 
     /**
-     * Push error into errors['table-migration-errors'] array.
-     *
-     * @param string $message
-     * @param int|string $aidstreamOrgId
-     * @param int|string $iatiOrgId
-     * @param int|string $aidstreamActivityId
-     * @param int|string $iatiActivityId
-     *
-     * @return void
-     */
-    public function setTableMigrationError(
-        string $message,
-        int | string $aidstreamOrgId = '',
-        int | string $iatiOrgId = '',
-        int | string $aidstreamActivityId = '',
-        int | string $iatiActivityId = ''
-    ): void {
-        $this->errors['table-migration-errors'][] = [
-            'error-msg'        => $message,
-            'aidstream-org-id' => $aidstreamOrgId,
-            'iati-org-id'      => $iatiOrgId,
-            'aidstream-id'     => $aidstreamActivityId,
-            'iati-id'          => $iatiActivityId,
-        ];
-    }
-
-    /**
-     * Push error into errors['table-migration-errors'] array.
+     * Push error into errors['file-migration-errors'] array.
      *
      * @param string $message
      * @param int|string $aidstreamOrgId
@@ -248,5 +215,47 @@ trait TrackMigrationErrorTrait
             'aidstream-id'       => $aidstreamActivityId,
             'iati-id'            => $iatiActivityId,
         ];
+    }
+
+    /**
+     * Creates templated xlsx if not exists.
+     */
+    public function createMigrationErrorXlsxIfNotExists(): void
+    {
+        if (!Storage::exists('Migration/Migration-errors.xlsx')) {
+            $filePath = storage_path('app/Migration/Migration-errors.xlsx');
+            $spreadsheet = new Spreadsheet();
+            $styleArray = [
+                'font' => [
+                    'bold' => true,
+                    'size' => 14,
+                ],
+            ];
+
+            foreach ($this->worksheetInfo as $key => $columns) {
+                $worksheet = $spreadsheet->createSheet();
+                $worksheet->setTitle($key);
+                $worksheet->getDefaultColumnDimension()->setWidth(2.5, 'in');
+
+                foreach ($columns as $columnHeader => $columnName) {
+                    $worksheet->getStyle("{$columnName}1")->applyFromArray($styleArray);
+                    $worksheet->setCellValue("{$columnName}1", ucfirst($columnHeader));
+                }
+            }
+
+            //Remove default worksheet.
+            $defaultWorksheet = $spreadsheet->getSheetByName('Worksheet') ?? '';
+            if ($defaultWorksheet) {
+                $sheetIndex = $spreadsheet->getIndex($defaultWorksheet);
+                $spreadsheet->removeSheetByIndex($sheetIndex);
+            }
+
+            if (!File::isDirectory(storage_path('app/Migration'))) {
+                Storage::makeDirectory('Migration');
+            }
+
+            $writer = new Xlsx($spreadsheet);
+            $writer->save($filePath);
+        }
     }
 }

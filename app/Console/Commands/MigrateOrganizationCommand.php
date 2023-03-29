@@ -147,14 +147,14 @@ class MigrateOrganizationCommand extends Command
 
                 if (!$aidStreamOrganization) {
                     $message = 'AidStream organization not found with id: ' . $aidstreamOrganizationId;
-                    $this->setGeneralError($message, $aidstreamOrganizationId);
+                    $this->setGeneralError($message, $aidstreamOrganizationId, '', 'Organization');
                     $this->error($message);
                     continue;
                 }
 
                 if ($this->organizationService->getOrganizationByPublisherId($aidStreamOrganization->user_identifier)) {
                     $message = 'Organization already exists with publisher id: ' . $aidStreamOrganization->user_identifier;
-                    $this->setGeneralError($message, $aidstreamOrganizationId);
+                    $this->setGeneralError($message, $aidstreamOrganizationId, '', 'Organization');
                     $this->error($message);
                     continue;
                 }
@@ -250,10 +250,11 @@ class MigrateOrganizationCommand extends Command
                 $this->migrateDocuments($aidstreamOrganizationId, $iatiOrganization, $migratedActivitiesLookupTable);
                 $this->migrateOrganizationPublishedFile($aidStreamOrganization, $iatiOrganization);
                 $this->migrateOrganizationPublishedTable($aidStreamOrganization, $iatiOrganization, $this->setting);
+                $this->trackMigrationErrors($this->errors);
+                $this->clearErrors();
             }
 
             $this->updateOrganizationDocumentLinkUrl($organizationLookUpTable);
-            $this->trackMigrationErrors($this->errors);
             $this->databaseManager->commit();
         } catch (\Exception $exception) {
             $this->databaseManager->rollBack();
@@ -485,5 +486,16 @@ class MigrateOrganizationCommand extends Command
     {
         $this->setElementStatus($iatiOrganization);
         $iatiOrganization->saveQuietly();
+    }
+
+    /**
+     * Clears error array
+     * Need to clear error array for each org.
+     *
+     * @return void
+     */
+    public function clearErrors(): void
+    {
+        $this->errors = [];
     }
 }

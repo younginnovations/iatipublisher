@@ -488,7 +488,7 @@ trait MigrateActivityTrait
         ) : null;
         $newActivity['country_budget_items'] = $aidstreamActivity ? $this->getActivityCountryBudgetItemsData(
             $aidStreamOrganization,
-            $aidstreamActivity->country_budget_items
+            $aidstreamActivity
         ) : null;
         $newActivity['humanitarian_scope'] = $aidstreamActivity ? $this->getActivityUpdatedVocabularyData(
             $aidstreamActivity->humanitarian_scope,
@@ -820,8 +820,8 @@ trait MigrateActivityTrait
                     strtoupper(Arr::get($administrative, 'code', null)),
                     getCodeList('Country', 'Activity', false)
                 )) {
-                    $message = "Free-text to select option mismatch, value: $administratives[$key].";
-                    $this->setTableMigrationError($message, $aidstreamOrganization->id, $iatiOrganization->id, $aidstreamActivity->id);
+                    $message = 'Free-text to select option mismatch, code: ' . Arr::get($administrative, 'code', null);
+                    $this->setGeneralError($message, $aidstreamOrganization->id, $iatiOrganization->id, 'Location Administrative Data Code', $aidstreamActivity->id);
                     $this->logInfo($message);
 
                     unset($administratives[$key]);
@@ -857,8 +857,8 @@ trait MigrateActivityTrait
 
         if ($countryBudgetItemsArray && count($countryBudgetItemsArray) &&
             (string) Arr::get($countryBudgetItemsArray, '0.vocabulary', '1') === '1') {
-            $message = 'Country budget item vocabulary is : 1';
-            $this->setTableMigrationError($message);
+            $message = "Aidstream organization id: {$aidstreamOrganization->id} has Country budget item vocabulary =  1 in Activity id: {$aidstreamActivity->id}";
+            $this->setGeneralError($message, $aidstreamOrganization->id, '', 'Country budget item vocabulary', $aidstreamActivity->id);
             $this->logInfo($message);
         } elseif ($countryBudgetItemsArray && count($countryBudgetItemsArray) &&
             (string) Arr::get($countryBudgetItemsArray, '0.vocabulary', '1') !== '1') {
@@ -905,8 +905,8 @@ trait MigrateActivityTrait
                     'description' => Arr::get($budgetItem, 'description', null),
                 ];
             } else {
-                $message = "Key '" . Arr::get($budgetItem, 'code_text', null) . "' doesnt exist in CodeList of Aidstream organization id: {$aidstreamOrganization->id} for Aidstream activity id: {$aidstreamActivity->id}.";
-                $this->setGeneralError($message, $aidstreamOrganization->id, '', $aidstreamActivity->id);
+                $message = "Aidstream organization id: {$aidstreamOrganization->id} contains Key: '" . Arr::get($budgetItem, 'code_text', null) . "' in CodeList of activity id: {$aidstreamActivity->id}.";
+                $this->setGeneralError($message, $aidstreamOrganization->id, '', 'Budget Item Key', $aidstreamActivity->id);
                 $this->logInfo($message);
             }
         }
