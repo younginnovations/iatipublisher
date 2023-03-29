@@ -28,11 +28,11 @@ class Period
      * @var array
      */
     protected array $periodDivisions = [
-        // 'Period' => 'period',
+        'Period' => 'period',
         'Target' => 'target',
-        // 'Target Document Link' => 'target document_link',
+        'Target Document Link' => 'target document_link',
         'Actual' => 'actual',
-        // 'Actual Document Link' => 'actual document_link',
+        'Actual Document Link' => 'actual document_link',
     ];
 
     protected array $elementIdentifiers = [
@@ -85,8 +85,8 @@ class Period
         }
 
         $this->removeUnwantedData();
-        dd($this->periods, $this->identifiers);
-        // dd(json_encode($this->periods), $this->identifiers);
+        // dd($this->periods, $this->identifiers);
+        dd(json_encode($this->periods), $this->identifiers);
     }
 
     public function removeUnwantedData()
@@ -127,19 +127,12 @@ class Period
                     $parentIdentifierValue = $row[$parentIdentifierKey];
                 }
 
-                $this->periodIdentifier[$sheetName][$parentIdentifierValue][] = sprintf('%s%s%s', $row[$parentIdentifierKey], $mapperDetails['concatinator'], $row[$numberKey]);
-                $this->identifiers[$mapperDetails['type']][sprintf('%s%s%s', $row[$parentIdentifierKey], $mapperDetails['concatinator'], $row[$numberKey])] = $row[$parentIdentifierKey];
+                $this->periodIdentifier[$sheetName][$parentIdentifierValue][] = sprintf('%s%s%s', $parentIdentifierValue, $mapperDetails['concatinator'], $row[$numberKey]);
+                $this->identifiers[$mapperDetails['type']][sprintf('%s%s%s', $parentIdentifierValue, $mapperDetails['concatinator'], $row[$numberKey])] = $parentIdentifierValue;
             } else {
                 break;
             }
         }
-    }
-
-    public function str_replace_first($search, $replace, $subject)
-    {
-        $search = '/' . preg_quote($search, '/') . '/';
-
-        return preg_replace($search, $replace, $subject, 1);
     }
 
     public function columnToFieldMapper($element, $data = [])
@@ -227,7 +220,7 @@ class Period
         $periodIdentifier = Arr::get($this->identifiers, "target.$identifier", null);
         $indicatorIdentifier = Arr::get($this->identifiers, "period.$periodIdentifier", null);
 
-        $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['target'][$identifier]['document_link'][] = $data;
+        $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['target'][$identifier]['document_link'] = $data;
     }
 
     protected function pushActualDocumentLink($identifier, $data): void
@@ -235,7 +228,7 @@ class Period
         $periodIdentifier = Arr::get($this->identifiers, "actual.$identifier", null);
         $indicatorIdentifier = Arr::get($this->identifiers, "period.$periodIdentifier", null);
 
-        $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['actual'][$identifier]['document_link'][] = $data;
+        $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['actual'][$identifier]['document_link'] = $data;
     }
 
     public function mapDropDownValueToKey($value, $location)
@@ -266,33 +259,23 @@ class Period
         $fieldDependency = $dependency['fieldDependency'];
         $parentBaseCount = [];
 
-        // dump($elementBase, $elementBasePeer);
-
         foreach (array_values($fieldDependency) as $dependents) {
             $parentBaseCount[$dependents['parent']] = null;
         }
 
-        // dump($parentBaseCount);
-
         foreach ($data as $row) {
             foreach ($row as $fieldName => $fieldValue) {
-                // dump($baseCount);
                 if ($elementBase && ($fieldName === $elementBase && $fieldValue)) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
                 } elseif ($elementBase && $fieldName === $elementBase && $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
                 }
 
-                // dump($parentBaseCount);
-                dump($fieldName, $fieldDependency);
-
                 if (in_array($fieldName, array_keys($fieldDependency))) {
                     $parentKey = $fieldDependency[$fieldName]['parent'];
-                    $multiple = Arr::get($fieldDependency[$fieldName], 'multiple', false);
-                    dump($fieldDependency[$fieldName], $multiple);
                     $peerAttributes = Arr::get($fieldDependency, "$fieldName.peer", []);
 
-                    if ($fieldValue || $multiple) {
+                    if ($fieldValue) {
                         $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) ? 0 : $parentBaseCount[$parentKey] + 1;
                     } elseif ($this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
                         $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) ? 0 : $parentBaseCount[$parentKey] + 1;
@@ -304,19 +287,13 @@ class Period
                 }
 
                 $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
-                // dump('-------element-----------',$elementPosition);
-
                 $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
-                // dump('------------parent added-----------',$data,$elementPositionBasedOnParent);
 
                 if (!Arr::get($elementData, $elementPositionBasedOnParent, null)) {
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
                 }
             }
         }
-
-        // dump($elementData, $elementBase, $fieldDependency);
-        // dump('elementData ---------------', $elementData);
 
         return $elementData;
     }

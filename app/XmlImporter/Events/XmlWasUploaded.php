@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\XlsImporter\Events;
+namespace App\XmlImporter\Events;
 
 use App\Events\Event;
 

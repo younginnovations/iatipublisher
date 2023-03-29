@@ -454,42 +454,108 @@
         "reference vocabulary_uri": "Reference Vocabulary Uri"
     },
     "indicator": {
-        "measure": "Measure",
-        "ascending": "Ascending",
-        "aggregation_status": "Aggregation Status",
-        "title narrative language": "Title Narrative Language",
-        "title narrative narrative": "Title Narrative Narrative",
-        "description narrative language": "Description Narrative Language",
-        "description narrative narrative": "Description Narrative Narrative",
-        "document_link url": "Document Link Url",
-        "document_link format": "Document Link Format",
-        "document_link title narrative language": "Document Link Title Narrative Language",
-        "document_link title narrative narrative": "Document Link Title Narrative Narrative",
-        "document_link description narrative language": "Document Link Description Narrative Language",
-        "document_link description narrative narrative": "Document Link Description Narrative Narrative",
-        "document_link category code": "Document Link Category Code",
-        "document_link language language": "Document Link Language Language",
-        "document_link document_date date": "Document Link Document_date Date",
-        "reference vocabulary": "Reference Vocabulary",
-        "reference code": "Reference Code",
-        "reference indicator_uri": "Reference Indicator Uri",
-        "baseline year": "Baseline Year",
-        "baseline date": "Baseline Date",
-        "baseline value": "Baseline Value",
-        "baseline comment narrative language": "Baseline Comment Narrative Language",
-        "baseline comment narrative narrative": "Baseline Comment Narrative Narrative",
-        "baseline dimension name": "Baseline Dimension Name",
-        "baseline dimension value": "Baseline Dimension Value",
-        "baseline document_link url": "Baseline Document_link Url",
-        "baseline document_link format": "Baseline Document_link Format",
-        "baseline document_link title narrative language": "Baseline Document_link Title Narrative Language",
-        "baseline document_link title narrative narrative": "Baseline Document_link Title Narrative Narrative",
-        "baseline document_link description narrative language": "Baseline Document_link Description Narrative Language",
-        "baseline document_link description narrative narrative": "Baseline Document_link Description Narrative Narrative",
-        "baseline document_link category code": "Baseline Document_link Category Code",
-        "baseline document_link language language": "Baseline Document_link Language Language",
-        "baseline document_link document_date date": "Baseline Document_link Document_date Date",
-        "baseline location reference": "Baseline Location Reference"
+        "elementBase": "measure",
+        "elementBasePeer": [
+            "ascending",
+            "aggregation_status"
+        ],
+        "fieldDependency": {
+            "title narrative narrative": {
+                "parent": "title",
+                "peer": [
+                    "title narrative language"
+                ]
+            },
+            "description narrative narrative": {
+                "parent": "description",
+                "peer": [
+                    "description narrative language"
+                ]
+            },
+            "reference vocabulary": {
+                "parent": "reference",
+                "peer": [
+                    "reference code",
+                    "reference indicator_uri"
+                ]
+            }
+        }
+    },
+    "indicator document_link": {
+        "elementBase": "url",
+        "fieldDependency": {
+            "title narrative narrative": {
+                "parent": "title",
+                "peer": [
+                    "title narrative language"
+                ]
+            },
+            "description narrative narrative": {
+                "parent": "description",
+                "peer": [
+                    "description narrative language"
+                ]
+            },
+            "category code": {
+                "parent": "category"
+            },
+            "language code": {
+                "parent": "language"
+            },
+            "document_date date": {
+                "parent": "document_date"
+            }
+        }
+    },
+    "baseline": {
+        "elementBase": "year",
+        "elementBasePeer": [
+            "date",
+            "value"
+        ],
+        "fieldDependency": {
+            "comment narrative narrative": {
+                "parent": "comment",
+                "peer": [
+                    "comment narrative language"
+                ]
+            },
+            "dimension name": {
+                "parent": "dimension",
+                "peer": [
+                    "dimension value"
+                ]
+            },
+            "location reference": {
+                "parent": "location"
+            }
+        }
+    },
+    "baseline document_link": {
+        "elementBase": "url",
+        "fieldDependency": {
+            "title narrative narrative": {
+                "parent": "title",
+                "peer": [
+                    "title narrative language"
+                ]
+            },
+            "description narrative narrative": {
+                "parent": "description",
+                "peer": [
+                    "description narrative language"
+                ]
+            },
+            "category code": {
+                "parent": "category"
+            },
+            "language code": {
+                "parent": "language"
+            },
+            "document_date date": {
+                "parent": "document_date"
+            }
+        }
     },
     "period": {
         "fieldDependency": {
@@ -504,13 +570,13 @@
     "target": {
         "fieldDependency": {
             "comment narrative narrative": {
-                "parent": "comment narrative",
+                "parent": "comment",
                 "peer": [
                     "comment narrative language"
                 ]
             },
             "dimension name": {
-                "parent": "dimension name",
+                "parent": "dimension",
                 "peer": [
                     "dimension value"
                 ]
@@ -524,13 +590,13 @@
         "elementBase": "url",
         "fieldDependency": {
             "title narrative narrative": {
-                "parent": "title narrative",
+                "parent": "title",
                 "peer": [
                     "title narrative language"
                 ]
             },
             "description narrative narrative": {
-                "parent": "description narrative",
+                "parent": "description",
                 "peer": [
                     "description narrative language"
                 ]
@@ -549,7 +615,7 @@
     "actual": {
         "fieldDependency": {
             "comment narrative narrative": {
-                "parent": "comment narrative",
+                "parent": "comment",
                 "peer": [
                     "comment narrative language"
                 ]
@@ -558,8 +624,7 @@
                 "parent": "dimension",
                 "peer": [
                     "dimension value"
-                ], 
-                "multiple" : true
+                ]
             },
             "location reference": {
                 "parent": "location"
@@ -570,13 +635,13 @@
         "elementBase": "url",
         "fieldDependency": {
             "title narrative narrative": {
-                "parent": "title narrative",
+                "parent": "title",
                 "peer": [
                     "title narrative language"
                 ]
             },
             "description narrative narrative": {
-                "parent": "description narrative",
+                "parent": "description",
                 "peer": [
                     "description narrative language"
                 ]

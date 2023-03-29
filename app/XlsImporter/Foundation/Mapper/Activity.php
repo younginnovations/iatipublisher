@@ -63,7 +63,8 @@ class Activity
     public function map($activityData)
     {
         // logger()->error(json_encode($activityData));
-        file_put_contents(app_path() . '/XlsImporter/Templates/period.json', json_encode($activityData));
+        // file_put_contents(app_path() . '/XlsImporter/Templates/period.json', json_encode($activityData));
+        // file_put_contents(app_path() . '/XlsImporter/Templates/indicator.json', json_encode($activityData));
         $activityData = json_decode($activityData, true, 512, 0);
 
         foreach ($activityData as $sheetName => $content) {
@@ -81,7 +82,7 @@ class Activity
             }
         }
 
-        dd($this->activities, json_encode($this->activities['289289892']['contact_info']));
+        // dd($this->activities, json_encode($this->activities['289289892']['contact_info']));
     }
 
     public function getLinearizedActivity()
@@ -132,13 +133,6 @@ class Activity
                 break;
             }
         }
-    }
-
-    public function str_replace_first($search, $replace, $subject)
-    {
-        $search = '/' . preg_quote($search, '/') . '/';
-
-        return preg_replace($search, $replace, $subject, 1);
     }
 
     public function columnToFieldMapper($element, $data = [])

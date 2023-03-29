@@ -14,42 +14,79 @@ class Indicator
     // public string $templatePath = app_path().'XlsImporter/Templates';
 
     //activities whose identifier is mentioned on setting sheet
-    protected array $activities = [];
+    protected array $indicators = [];
 
     //
-    protected array $activitiesIdentifier = [];
+    protected array $indicatorIdentifier = [];
 
     // activities whose identifier is not mentioned on setting
-    protected array $invalidActivities = [];
+    protected array $periodIdentifier = [];
+
+    protected array $identifiers = [];
 
     /**
      * @var array
      */
-    protected array $activityElements = [
+    protected array $indicatorDivision = [
+        'Indicator' => 'indicator',
+        'Indicator Document Link' => 'indicator document_link',
+        'Indicator Baseline' => 'baseline',
+        'Indicator Baseline Document Link' => 'baseline document_link',
     ];
 
-    public function map($activityData)
+    protected array $elementIdentifiers = [
+        'indicator' => 'indicator_identifier',
+        'indicator document_link' => 'indicator_identifier',
+        'baseline' => 'indicator_baseline_identifier',
+        'baseline document_link' => 'indicator_baseline_identifier',
+    ];
+
+    protected array $mappers = [
+        'Indicator Mapper' => [
+            'columns' => [
+                'parentIdentifier' => 'result_identifier',
+                'number' => 'indicator_number',
+            ],
+            'concatinator' => '_',
+            'type' => 'indicator',
+        ],
+        'Indicator Baseline Mapper' => [
+            'columns' => [
+                'parentIdentifier' => 'indicator_identifier',
+                'number' => 'baseline_number',
+            ],
+            'concatinator' => '_b-',
+            'type' => 'baseline',
+        ],
+    ];
+
+    public function map($indicatorData)
     {
-        // logger()->error(json_encode($activityData));
-        file_put_contents(app_path() . '/XlsImporter/Templates/result.json', json_encode($activityData));
-        $activityData = json_decode($activityData, true, 512, 0);
+        $indicatorData = json_decode($indicatorData, true, 512, 0);
 
-        foreach ($activityData as $sheetName => $content) {
+        foreach ($indicatorData as $sheetName => $content) {
             dump($sheetName);
-            if ($sheetName === 'Settings') {
-                // $this->defaultValues($content);
+            if (in_array($sheetName, array_keys($this->mappers))) {
+                $this->mapIndicators($content, $sheetName);
             }
 
-            if ($sheetName === 'Element with single field') {
-                // $this->singleValuedFields($content);
-            }
-
-            if (in_array($sheetName, array_keys($this->activityElements))) {
-                $this->columnToFieldMapper($this->activityElements[$sheetName], $content);
+            if (in_array($sheetName, array_keys($this->indicatorDivision))) {
+                $this->columnToFieldMapper($this->indicatorDivision[$sheetName], $content);
             }
         }
 
-        dd($this->activities, json_encode($this->activities['289289892']['contact_info']));
+        dd($this->identifiers, $this->indicatorIdentifier, $this->indicators);
+        $this->removeUnwantedData();
+        dd('here', json_encode($this->indicators), $this->identifiers);
+    }
+
+    public function removeUnwantedData()
+    {
+        foreach ($this->indicators as $resultIdentifier => $indicators) {
+            foreach ($indicators as $indicatorIdentifier => $indicatorData) {
+                // $this->indicators[$resultIdentifier][$indicatorIdentifier]['baseline'] = array_values($indicatorData['period']['target']);
+            }
+        }
     }
 
     public function getLinearizedActivity()
@@ -67,46 +104,25 @@ class Indicator
         return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/dropdown-fields.json'), true, 512, 0);
     }
 
-    public function getActivityTemplate()
+    public function mapIndicators($data, $sheetName)
     {
-        return json_decode(file_get_contents('app/XlsImporter/Templates/activity-template.json'), true, 512, 0);
-    }
+        $mapperDetails = $this->mappers[$sheetName];
+        $parentIdentifierKey = $mapperDetails['columns']['parentIdentifier'];
+        $numberKey = $mapperDetails['columns']['number'];
+        $parentIdentifierValue = '';
 
-    public function getActivityJsonSchema()
-    {
-        return readElementJsonSchema();
-    }
-
-    public function defaultValues($data)
-    {
-        foreach ($data as $row) {
+        foreach ($data as $index => $row) {
             if ($this->checkRowNotEmpty($row)) {
-                $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null) ?? $elementActivityIdentifier;
-            } else {
-                break;
-            }
-        }
-    }
-
-    public function singleValuedFields($data)
-    {
-        foreach ($data as $row) {
-            if ($this->checkRowNotEmpty($row)) {
-                $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null) ?? $elementActivityIdentifier;
-                foreach ($this->singleValuedElements as $element) {
-                    $this->activities[$elementActivityIdentifier][$element] = $row[$element];
+                if ((empty($parentIdentifierValue) || $parentIdentifierValue !== $row[$parentIdentifierKey]) && !empty($row[$parentIdentifierKey])) {
+                    $parentIdentifierValue = $row[$parentIdentifierKey];
                 }
+
+                $this->indicatorIdentifier[$sheetName][$parentIdentifierValue][] = sprintf('%s%s%s', $parentIdentifierValue, $mapperDetails['concatinator'], $row[$numberKey]);
+                $this->identifiers[$mapperDetails['type']][sprintf('%s%s%s', $parentIdentifierValue, $mapperDetails['concatinator'], $row[$numberKey])] = $parentIdentifierValue;
             } else {
                 break;
             }
         }
-    }
-
-    public function str_replace_first($search, $replace, $subject)
-    {
-        $search = '/' . preg_quote($search, '/') . '/';
-
-        return preg_replace($search, $replace, $subject, 1);
     }
 
     public function columnToFieldMapper($element, $data = [])
@@ -118,39 +134,80 @@ class Indicator
         $elementMapper = array_flip($columnMapper[$element]);
         $elementDropDownFields = $dropDownFields[$element];
         $elementActivityIdentifier = null;
-
-        // dd($dependency);
+        $elementIdentifier = $this->elementIdentifiers[$element];
 
         foreach ($data as $row) {
             if ($this->checkRowNotEmpty($row)) {
                 if (
                     is_null($elementActivityIdentifier) || (
-                        Arr::get($row, 'activity_identifier', null) &&
-                        Arr::get($row, 'activity_identifier', null) !== $elementActivityIdentifier
+                        Arr::get($row, $elementIdentifier, null) &&
+                        Arr::get($row, $elementIdentifier, null) !== $elementActivityIdentifier
                     )
                 ) {
                     if (!empty($elementData)) {
-                        $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields);
+                        $this->pushIndicatorData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields));
                         $elementData = [];
                     }
 
-                    $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null) ?? $elementActivityIdentifier;
+                    $elementActivityIdentifier = Arr::get($row, $elementIdentifier, null) ?? $elementActivityIdentifier;
                 }
 
                 $systemMappedRow = [];
 
                 foreach ($row as $fieldName => $fieldValue) {
-                    if (!empty($fieldName) && $fieldName !== 'activity_identifier') {
+                    if (!empty($fieldName) && $fieldName !== $elementIdentifier) {
                         $systemMappedRow[$elementMapper[$fieldName]] = $fieldValue;
                     }
                 }
 
                 $elementData[] = $systemMappedRow;
             } else {
-                $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields);
+                $this->pushIndicatorData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields));
                 break;
             }
         }
+    }
+
+    protected function pushIndicatorData($element, $identifier, $data)
+    {
+        $periodElementFunctions = [
+            'indicator' => 'pushIndicator',
+            'indicator document_link' => 'pushIndicatorDocumentLink',
+            'baseline' => 'pushIndicatorBaseline',
+            'baseline document_link' => 'pushIndicatorBaselineDocumentLink',
+        ];
+
+        call_user_func([$this, $periodElementFunctions[$element]], $identifier, $data);
+    }
+
+    protected function pushIndicator($identifier, $data): void
+    {
+        $resultIdentifier = Arr::get($this->identifiers, "indicator.$identifier", null);
+
+        $this->indicators[$resultIdentifier][$identifier]['indicator'] = $data[0];
+    }
+
+    protected function pushIndicatorDocumentLink($identifier, $data): void
+    {
+        $resultIdentifier = Arr::get($this->identifiers, "indicator.$identifier", null);
+
+        $this->indicators[$resultIdentifier][$identifier]['indicator']['document_link'] = $data;
+    }
+
+    protected function pushIndicatorBaseline($identifier, $data): void
+    {
+        $indicatorIdentifier = Arr::get($this->identifiers, "baseline.$identifier", null);
+        $resultIdentifier = Arr::get($this->identifiers, "indicator.$indicatorIdentifier", null);
+
+        $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][$identifier] = $data[0];
+    }
+
+    protected function pushIndicatorBaselineDocumentLink($identifier, $data): void
+    {
+        $indicatorIdentifier = Arr::get($this->identifiers, "baseline.$identifier", null);
+        $resultIdentifier = Arr::get($this->identifiers, "indicator.$indicatorIdentifier", null);
+
+        $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][$identifier]['document_link'] = $data;
     }
 
     public function mapDropDownValueToKey($value, $location)
@@ -175,30 +232,21 @@ class Indicator
     public function getElementData($data, $dependency, $elementDropDownFields): array
     {
         $elementData = [];
-        $elementBase = $dependency['elementBase'];
+        $elementBase = Arr::get($dependency, 'elementBase', null);
         $elementBasePeer = Arr::get($dependency, 'elementBasePeer', []);
         $baseCount = null;
         $fieldDependency = $dependency['fieldDependency'];
         $parentBaseCount = [];
-
-        // variables to map code dependency in elements like sector, recipient region and so on
-        $codeRelation = Arr::get($dependency, 'codeDependency', []);
-        $codeDependencyConditions = Arr::get($codeRelation, 'dependencyRelation', []);
-        $codeDependentOn = Arr::get($codeRelation, 'dependentOn', '');
-        $codeDependentField = Arr::get($codeRelation, 'dependentField', '');
-        $defaultCodeField = Arr::get($codeRelation, 'defaultCodeField', '');
 
         foreach (array_values($fieldDependency) as $dependents) {
             $parentBaseCount[$dependents['parent']] = null;
         }
 
         foreach ($data as $row) {
-            $dependentOnValue = '';
-
             foreach ($row as $fieldName => $fieldValue) {
-                if (($fieldName === $elementBase && $fieldValue)) {
+                if ($elementBase && ($fieldName === $elementBase && $fieldValue)) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
-                } elseif ($fieldName === $elementBase && $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)) {
+                } elseif ($elementBase && $fieldName === $elementBase && $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
                 }
 
@@ -213,20 +261,12 @@ class Indicator
                     }
                 }
 
-                if ($fieldName === $codeDependentField) {
-                    $fieldName = in_array($dependentOnValue, array_keys($codeDependencyConditions)) ? Arr::get($codeDependencyConditions, $dependentOnValue, $defaultCodeField) : $defaultCodeField;
-                }
-
                 if (in_array($fieldName, array_keys($elementDropDownFields))) {
                     $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields[$fieldName]);
                 }
 
-                if ($fieldName === $codeDependentOn) {
-                    $dependentOnValue = $fieldValue;
-                }
-
                 $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
-                $elementPositionBasedOnParent = empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition;
+                $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
 
                 if (!Arr::get($elementData, $elementPositionBasedOnParent, null)) {
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);

@@ -100,14 +100,15 @@ class XlsQueueProcessor
             $this->orgRef = $orgRef;
             $this->userId = $userId;
             $this->filename = $filename;
-            $filePath = sprintf('%s/%s/%s/%s', $this->xls_file_storage_path, $this->orgId, $this->userId, $filename);
+            // $filePath = sprintf('%s/%s/%s/%s', $this->xls_file_storage_path, $this->orgId, $this->userId, $filename);
             // $contents = awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_file_storage_path, $this->orgId, $this->userId, $filename));
-            awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
+            // awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
 
             // dd($contents);
-            $xlsToArray = new XlsToArray();
-            Excel::import($xlsToArray, $filePath, 's3');
-            $data = $xlsToArray->sheetData;
+            // please do not delete even when the codes are commented
+            // $xlsToArray = new XlsToArray();
+            // Excel::import($xlsToArray, $filePath, 's3');
+            // $data = $xlsToArray->sheetData;
 
             // foreach ($xlsToArray->getSheetNames() as $index => $sheetName) {
             //     $data[$index] = new ExcelSheetImport();

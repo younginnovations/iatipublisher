@@ -167,42 +167,35 @@
         "reference vocabulary_uri": "Reference Vocabulary Uri"
     },
     "indicator": {
-        "measure": "Measure",
-        "ascending": "Ascending",
-        "aggregation_status": "Aggregation Status",
-        "title narrative narrative": "Title Narrative Narrative",
-        "title narrative language": "Title Narrative Language",
-        "description narrative narrative": "Description Narrative Narrative",
-        "description narrative language": "Description Narrative Language",
-        "document_link url": "Document Link Url",
-        "document_link format": "Document Link Format",
-        "document_link title narrative narrative": "Document Link Title Narrative Narrative",
-        "document_link title narrative language": "Document Link Title Narrative Language",
-        "document_link description narrative narrative": "Document Link Description Narrative Narrative",
-        "document_link description narrative language": "Document Link Description Narrative Language",
-        "document_link category code": "Document Link Category Code",
-        "document_link language language": "Document Link Language Language",
-        "document_link document_date date": "Document Link Document_date Date",
-        "reference vocabulary": "Reference Vocabulary",
-        "reference code": "Reference Code",
-        "reference indicator_uri": "Reference Indicator Uri",
-        "baseline year": "Baseline Year",
-        "baseline date": "Baseline Date",
-        "baseline value": "Baseline Value",
-        "baseline comment narrative narrative": "Baseline Comment Narrative Narrative",
-        "baseline comment narrative language": "Baseline Comment Narrative Language",
-        "baseline dimension name": "Baseline Dimension Name",
-        "baseline dimension value": "Baseline Dimension Value",
-        "baseline document_link url": "Baseline Document_link Url",
-        "baseline document_link format": "Baseline Document_link Format",
-        "baseline document_link title narrative narrative": "Baseline Document_link Title Narrative Narrative",
-        "baseline document_link title narrative language": "Baseline Document_link Title Narrative Language",
-        "baseline document_link description narrative narrative": "Baseline Document_link Description Narrative Narrative",
-        "baseline document_link description narrative language": "Baseline Document_link Description Narrative Language",
-        "baseline document_link category code": "Baseline Document_link Category Code",
-        "baseline document_link language language": "Baseline Document_link Language Language",
-        "baseline document_link document_date date": "Baseline Document_link Document_date Date",
-        "baseline location reference": "Baseline Location Reference"
+        "measure": "Activity/IndicatorMeasure.json",
+        "ascending": {
+            "0": "False",
+            "1": "True"
+          },
+        "aggregation_status": {
+            "0": "False",
+            "1": "True"
+          },
+        "title narrative language": "Activity/Language.json",
+        "description narrative language": "Activity/Language.json",
+        "reference vocabulary": "Activity/IndicatorVocabulary.json"
+    },
+    "indicator document_link": {
+        "format": "Activity/FileFormat.json",
+        "title narrative language": "Activity/Language.json",
+        "description narrative language": "Activity/Language.json",
+        "category code": "Activity/DocumentCategory.json",
+        "language code": "Activity/Language.json"
+    },
+    "baseline": {
+        "comment narrative language": "Activity/Language.json"
+    },
+    "baseline document_link": {
+        "format": "Activity/FileFormat.json",
+        "title narrative language": "Activity/Language.json",
+        "description narrative language": "Activity/Language.json",
+        "category code": "Activity/DocumentCategory.json",
+        "language code": "Activity/Language.json"
     },
     "period": {},
     "target": {
