@@ -85,8 +85,6 @@ class Period
         }
 
         $this->removeUnwantedData();
-        // dd($this->periods, $this->identifiers);
-        dd(json_encode($this->periods), $this->identifiers);
     }
 
     public function removeUnwantedData()

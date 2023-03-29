@@ -68,7 +68,6 @@ class Activity
         $activityData = json_decode($activityData, true, 512, 0);
 
         foreach ($activityData as $sheetName => $content) {
-            dump($sheetName);
             if ($sheetName === 'Settings') {
                 // $this->defaultValues($content);
             }
@@ -81,8 +80,6 @@ class Activity
                 $this->columnToFieldMapper($this->activityElements[$sheetName], $content);
             }
         }
-
-        // dd($this->activities, json_encode($this->activities['289289892']['contact_info']));
     }
 
     public function getLinearizedActivity()
@@ -144,8 +141,6 @@ class Activity
         $elementMapper = array_flip($columnMapper[$element]);
         $elementDropDownFields = $dropDownFields[$element];
         $elementActivityIdentifier = null;
-
-        // dd($dependency);
 
         foreach ($data as $row) {
             if ($this->checkRowNotEmpty($row)) {

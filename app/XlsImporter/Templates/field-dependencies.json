@@ -461,13 +461,13 @@
         ],
         "fieldDependency": {
             "title narrative narrative": {
-                "parent": "title",
+                "parent": "title narrative",
                 "peer": [
                     "title narrative language"
                 ]
             },
             "description narrative narrative": {
-                "parent": "description",
+                "parent": "description narrative",
                 "peer": [
                     "description narrative language"
                 ]

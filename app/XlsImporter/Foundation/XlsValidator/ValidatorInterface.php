@@ -16,7 +16,7 @@ interface ValidatorInterface
      *
      * @return void
      */
-    public function init($data): void;
+    public function init($data): static;
 
     /**
      * Returns warnings for the xls data.

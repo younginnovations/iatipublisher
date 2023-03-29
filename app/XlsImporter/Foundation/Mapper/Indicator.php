@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\XlsImporter\Foundation\Mapper;
 
+use App\XlsImporter\Foundation\XlsValidator\Validators\IndicatorValidator;
 use Illuminate\Support\Arr;
 
 /**
@@ -65,7 +66,6 @@ class Indicator
         $indicatorData = json_decode($indicatorData, true, 512, 0);
 
         foreach ($indicatorData as $sheetName => $content) {
-            dump($sheetName);
             if (in_array($sheetName, array_keys($this->mappers))) {
                 $this->mapIndicators($content, $sheetName);
             }
@@ -75,16 +75,37 @@ class Indicator
             }
         }
 
-        dd($this->identifiers, $this->indicatorIdentifier, $this->indicators);
         $this->removeUnwantedData();
-        dd('here', json_encode($this->indicators), $this->identifiers);
+        $this->validateIndicator();
+    }
+
+    public function validateIndicator()
+    {
+        $indicatorValidator = app(IndicatorValidator::class);
+        $errors = [];
+
+        // $indicatorValidator = new IndicatorValidator($factory);
+
+        foreach ($this->indicators as $resultIdentifier => $indicators) {
+            foreach ($indicators as $indicatorIdentifier => $indicatorData) {
+                // $this->indicators[$resultIdentifier][$indicatorIdentifier]['baseline'] = array_values($indicatorData['baseline']);
+                $errors[] = $indicatorValidator
+                    ->init($indicatorData['indicator'])
+                    ->validateData();
+            }
+        }
+
+        dd($errors, 'stop');
     }
 
     public function removeUnwantedData()
     {
         foreach ($this->indicators as $resultIdentifier => $indicators) {
             foreach ($indicators as $indicatorIdentifier => $indicatorData) {
-                // $this->indicators[$resultIdentifier][$indicatorIdentifier]['baseline'] = array_values($indicatorData['period']['target']);
+                // dump($this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']);
+
+                $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'] = array_values(Arr::get($indicatorData, 'indicator.baseline', []));
+                // dd($this->indicators);
             }
         }
     }

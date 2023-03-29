@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\XmlImporter\Foundation\Support\Factory;
+namespace App\XlsImporter\Foundation\XlsValidator\Validators;
 
 use App\Http\Requests\Activity\Period\PeriodRequest;
 use App\XlsImporter\Foundation\XlsValidator\ValidatorInterface;
+
+// use Validation
 
 /**
  * Class XmlValidator.

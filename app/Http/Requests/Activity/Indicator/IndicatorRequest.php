@@ -60,7 +60,7 @@ class IndicatorRequest extends ActivityBaseRequest
         $tempRules = [
             $this->getWarningForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
             $this->getWarningForNarrative(Arr::get($formFields, 'description', []), 'description.0'),
-            $this->getWarningForDocumentLink(Arr::get($formFields, 'document_link', [])),
+            // $this->getWarningForDocumentLink(Arr::get($formFields, 'document_link', [])),
             $this->getWarningForReference(Arr::get($formFields, 'reference', []), $fileUpload, $result),
             $this->getWarningForBaseline(Arr::get($formFields, 'baseline', [])),
         ];
@@ -91,6 +91,7 @@ class IndicatorRequest extends ActivityBaseRequest
         $rules['ascending'] = sprintf('nullable|in:0,1');
         $rules['aggregation_status'] = sprintf('nullable|in:0,1');
 
+        // dump($formFields);
         $tempRules = [
             $this->getErrorsForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
             $this->getErrorsForNarrative(Arr::get($formFields, 'description', []), 'description.0'),

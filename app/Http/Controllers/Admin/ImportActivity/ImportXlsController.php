@@ -109,10 +109,6 @@ class ImportXlsController extends Controller
             $indicatorMapper = new Indicator();
             $indicatorMapper->map($data);
 
-            // $periodMapper
-
-            // dd($data);
-
             if (!Auth::user()->organization_id) {
                 Session::put('error', 'User is not associated with any organization.');
 

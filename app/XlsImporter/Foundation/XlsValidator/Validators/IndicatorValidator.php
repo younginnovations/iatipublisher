@@ -2,18 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\XmlImporter\Foundation\Support\Factory;
+namespace App\XlsImporter\Foundation\XlsValidator\Validators;
 
 use App\Http\Requests\Activity\Indicator\IndicatorRequest;
+use App\XlsImporter\Foundation\Factory\Validation;
 use App\XlsImporter\Foundation\XlsValidator\ValidatorInterface;
 
 /**
- * Class XmlValidator.
+ * Class IndicatorValidator.
  */
 class IndicatorValidator implements ValidatorInterface
 {
     /**
-     * @var
+     * @var array
      */
     protected $indicator;
 
@@ -49,6 +50,7 @@ class IndicatorValidator implements ValidatorInterface
      */
     public function errorRules(): array
     {
+        // dd('here');
         $rules = (new IndicatorRequest())->getErrorsForIndicator($this->indicator);
 
         return $rules;
@@ -76,9 +78,11 @@ class IndicatorValidator implements ValidatorInterface
     /**
      * Initialize indicator for the class.
      */
-    public function init($indicator): void
+    public function init($indicator): static
     {
         $this->indicator = $indicator;
+
+        return $this;
     }
 
     /**
@@ -89,15 +93,15 @@ class IndicatorValidator implements ValidatorInterface
     public function validateData(): array
     {
         $errors = [
-            'critical' => $this->factory->initialize($this->indicator, $this->criticalRules(), $this->messages())
-                ->passes()
-                ->withErrors(),
+            // 'critical' => $this->factory->initialize($this->indicator, $this->criticalRules(), $this->messages())
+            //     ->passes()
+            //     ->withErrors(),
             'error' => $this->factory->initialize($this->indicator, $this->errorRules(), $this->messages())
                 ->passes()
                 ->withErrors(),
-            'warning' => $this->factory->initialize($this->indicator, $this->rules(), $this->messages())
-                ->passes()
-                ->withErrors(),
+            // 'warning' => $this->factory->initialize($this->indicator, $this->rules(), $this->messages())
+            //     ->passes()
+            //     ->withErrors(),
         ];
 
         return $errors;

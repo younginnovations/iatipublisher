@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\XmlImporter\Foundation\Support\Factory;
+namespace App\XlsImporter\Foundation\Factory;
 
 use App\Xml\Validator\Traits\RegistersValidationRules;
 use Illuminate\Contracts\Translation\Translator;

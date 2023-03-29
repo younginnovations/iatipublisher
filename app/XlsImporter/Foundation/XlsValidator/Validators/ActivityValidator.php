@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\XmlImporter\Foundation\Support\Factory;
+namespace App\XlsImporter\Foundation\Support\Factory;
 
 use App\Http\Requests\Activity\Identifier\IdentifierRequest;
 use App\Http\Requests\Activity\Title\TitleRequest;
