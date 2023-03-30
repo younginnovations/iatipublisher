@@ -337,7 +337,6 @@ class ActivityRow extends Row
                 if ($element === 'reportingOrganization') {
                     $this->$element = app()->makeWith($namespace, [
                         'fields'       => $this->getFields(),
-                        'orgId'        => $this->organizationId,
                         'reportingOrg' => $this->organizationReportingOrg,
                     ]);
                 } else {

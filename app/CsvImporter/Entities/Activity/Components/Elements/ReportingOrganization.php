@@ -26,6 +26,7 @@ class ReportingOrganization extends Element
 
     /**
      * Csv Header for ReportingOrganization element.
+     *
      * @var array
      */
     private array $_csvHeaders = ['reporting_org_secondary_reporter'];

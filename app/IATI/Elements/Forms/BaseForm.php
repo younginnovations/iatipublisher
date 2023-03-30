@@ -86,8 +86,7 @@ class BaseForm extends Form
                         'label'           => false,
                         'element_criteria' => $field['element_criteria'] ?? '',
                         'hover_text'    => isset($field['name']) ? Arr::get($field, 'hover_text', '') : Arr::get($element, 'hover_text', ''),
-                        'help_text' => isset($field['name']) ? Arr::get($field, 'hover_text', '') : Arr::get($element, 'help_text', ''),
-                        'help_text' => isset($field['name']) ? Arr::get($field, 'hover_text', '') : Arr::get($element, 'help_text', ''),
+                        'help_text' => isset($field['name']) ? Arr::get($field, 'help_text', '') : Arr::get($element, 'help_text', ''),
                         'wrapper'         => [
                             'class' => ((Arr::get($element, 'attributes', null) && isset($field['name']) && strtolower(
                                 $field['name']

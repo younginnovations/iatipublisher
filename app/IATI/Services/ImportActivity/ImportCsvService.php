@@ -202,16 +202,6 @@ class ImportCsvService
             $iati_identifier_text = $organizationIdentifier . '-' . Arr::get($activity, 'data.identifier.activity_identifier');
             $activity['data']['identifier']['iati_identifier_text'] = $iati_identifier_text;
 
-            if (count($activity['data']['reporting_organization']) > 1) {
-                $activity['data']['reporting_organization'][0]['secondary_reporter'] = '';
-
-                foreach ($activity['data']['reporting_organization'] as $key => $value) {
-                    if ($key > 0) {
-                        unset($activity['data']['reporting_organization'][$key]);
-                    }
-                }
-            }
-
             if (Arr::get($activity, 'existence', false) && $this->activityRepo->getActivityWithIdentifier($organizationId, Arr::get($activity, 'data.identifier.activity_identifier'))) {
                 $oldActivity = $this->activityRepo->getActivityWithIdentifier($organizationId, Arr::get($activity, 'data.identifier.activity_identifier'));
                 $this->activityRepo->updateActivity($oldActivity->id, Arr::get($activity, 'data'));

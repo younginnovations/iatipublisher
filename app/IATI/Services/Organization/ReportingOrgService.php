@@ -27,7 +27,12 @@ class ReportingOrgService
     /**
      * @var ActivityRepository
      */
-    protected ActivityRepository $activityRepository;
+    protected ActivityRepository        $activityRepository;
+
+    /**
+     * @var ParentCollectionFormCreator
+     */
+    protected ParentCollectionFormCreator $parentCollectionFormCreator;
 
     /**
      * ReportingOrgService constructor.

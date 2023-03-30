@@ -93,7 +93,7 @@ class SubElementForm extends Form
             ) ? $classWithCursorNotAllowed : $options['attr']['class'];
         }
 
-        if ($field['type'] == 'textarea') {
+        if ($field['type'] === 'textarea') {
             $options['attr']['disabled'] = (array_key_exists(
                 'read_only',
                 $field

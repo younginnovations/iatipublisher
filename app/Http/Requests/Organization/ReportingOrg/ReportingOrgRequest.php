@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Requests\Organization\ReportingOrg;
 
 use App\Http\Requests\Organization\OrganizationBaseRequest;
-use AWS\CRT\HTTP\Request;
 
 /**
  * Class ReportingOrgRequest.
