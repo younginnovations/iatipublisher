@@ -211,9 +211,12 @@ class CkanClient
                 } else {
                     session()->put('registry_errors.list', $responseErrors);
                 }
+
+                throw new Exception(json_encode($responseErrors, JSON_THROW_ON_ERROR));
             }
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            throw new Exception($e->getMessage());
         }
 
         $info = curl_getinfo($this->curl_handler);

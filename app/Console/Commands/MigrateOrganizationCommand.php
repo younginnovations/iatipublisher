@@ -141,7 +141,9 @@ class MigrateOrganizationCommand extends Command
                 }
 
                 if ($this->organizationService->getOrganizationByPublisherId($aidStreamOrganization->user_identifier)) {
-                    $this->error('Organization already exists with publisher id: ' . $aidStreamOrganization->user_identifier);
+                    $this->error(
+                        'Organization already exists with publisher id: ' . $aidStreamOrganization->user_identifier
+                    );
                     continue;
                 }
 
@@ -165,7 +167,10 @@ class MigrateOrganizationCommand extends Command
 
                     $this->setDefaultValues($iatiOrganization, $aidStreamOrganizationSetting);
                     $this->updateOrganizationCompleteStatus($iatiOrganization);
-                    $this->syncPublisherIdInSettingAndOrganizationLevel($iatiOrganization, $aidStreamOrganizationSetting);
+                    $this->syncPublisherIdInSettingAndOrganizationLevel(
+                        $iatiOrganization,
+                        $aidStreamOrganizationSetting
+                    );
                     $this->logInfo('Completed setting migration for organization id: ' . $aidstreamOrganizationId);
                 }
 
@@ -203,7 +208,9 @@ class MigrateOrganizationCommand extends Command
                             'Started activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
                         );
 
-                        $iatiActivity = $this->activityService->create($this->getNewActivity($aidstreamActivity, $iatiOrganization));
+                        $iatiActivity = $this->activityService->create(
+                            $this->getNewActivity($aidstreamActivity, $iatiOrganization)
+                        );
                         $migratedActivitiesLookupTable[$aidstreamActivity->id] = $iatiActivity->id;
 
                         $this->logInfo(
@@ -215,8 +222,16 @@ class MigrateOrganizationCommand extends Command
                         $this->migrateActivitySnapshot($iatiActivity, $aidstreamActivity);
                     }
 
-                    $this->migrateActivitiesPublishedFiles($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable);
-                    $this->migrateActivityPublishedTable($aidStreamOrganization, $iatiOrganization, $migratedActivitiesLookupTable);
+                    $this->migrateActivitiesPublishedFiles(
+                        $aidStreamOrganization,
+                        $iatiOrganization,
+                        $migratedActivitiesLookupTable
+                    );
+                    $this->migrateActivityPublishedTable(
+                        $aidStreamOrganization,
+                        $iatiOrganization,
+                        $migratedActivitiesLookupTable
+                    );
                     $this->migrateActivityMergedFile($aidStreamOrganization, $iatiOrganization, $this->setting);
                 }
 

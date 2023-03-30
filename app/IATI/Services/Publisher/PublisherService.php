@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Publisher;
 
+use App\IATI\API\CkanClient;
 use App\IATI\Services\Activity\ActivityPublishedService;
 use App\IATI\Services\Organization\OrganizationPublishedService;
 use App\IATI\Services\Workflow\RegistryApiHandler;
@@ -311,7 +312,7 @@ class PublisherService extends RegistryApiHandler
         $data = [
             'title'        => $title,
             'name'         => $filename,
-            'author_email' => $organization->user->email,
+            'author_email' => $organization->getAdminUser()->email,
             'owner_org'    => $this->publisherId,
             'license_id'   => 'other-open',
             'resources'    => [
@@ -349,7 +350,7 @@ class PublisherService extends RegistryApiHandler
         $data = [
             'title'        => $title,
             'name'         => $filename,
-            'author_email' => $organization->user->email,
+            'author_email' => $organization->getAdminUser()->email,
             'owner_org'    => $this->publisherId,
             'license_id'   => 'other-open',
             'resources'    => [
@@ -405,6 +406,33 @@ class PublisherService extends RegistryApiHandler
             }
 
             throw  $exception;
+        }
+    }
+
+    /**
+     * Unlink files from the IATI Registry.
+     *
+     * @param $apiKey
+     * @param $files
+     *
+     * @return bool
+     *
+     * @throws \Exception
+     */
+    public function unlink($apiKey, $files): bool
+    {
+        try {
+            $api = new CkanClient(env('IATI_API_ENDPOINT'), $apiKey);
+
+            if (count($files)) {
+                foreach ($files as $file) {
+                    $api->package_delete($file);
+                }
+            }
+
+            return true;
+        } catch (\Exception $exception) {
+            throw $exception;
         }
     }
 }
