@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\ReportingOrg;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use Illuminate\Support\Arr;
 
 /**
  * Class ReportingOrgRequest.
@@ -52,6 +53,7 @@ class ReportingOrgRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
+     * @throws \JsonException
      */
     public function getCriticalErrorsForReportingOrganization(array $formFields):array
     {
@@ -60,16 +62,14 @@ class ReportingOrgRequest extends ActivityBaseRequest
 
         $reportingOrganizationTypes = implode(',', array_keys(getCodeList('OrganizationType', 'Organization', false)));
         $organizationReportingOrg = $this->reportingOrganisationInOrganisation ?: auth()->user()->organization->reporting_org;
-
         $reportingOrganization = $formFields[0];
         $reportingOrganizationIndex = 0;
-
         $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
 
         $rules[$reportingOrganizationForm . '.type'] = [
             'nullable',
             sprintf('in:%s', $reportingOrganizationTypes),
-            $organizationReportingOrg[0]['type'] ? "must_match:{$organizationReportingOrg[0]['type']}" : '',
+            $this->reportingOrgKeyExistsAndDoesntMatch('type', $reportingOrganization, $organizationReportingOrg[0]) ? 'must_match' : '',
         ];
         $rules[$reportingOrganizationForm . '.secondary_reporter'] = [
             'nullable',
@@ -78,20 +78,24 @@ class ReportingOrgRequest extends ActivityBaseRequest
         $rules[$reportingOrganizationForm . '.ref'] = [
             'nullable',
             'not_regex:/(&|!|\/|\||\?)/',
-            $organizationReportingOrg[0]['ref'] ? "must_match:{$organizationReportingOrg[0]['ref']}" : '',
+            $this->reportingOrgKeyExistsAndDoesntMatch('ref', $reportingOrganization, $organizationReportingOrg[0]) ? 'must_match' : '',
         ];
 
         if ($this->reportingOrganisationInOrganisation) {
-            $narrativeRules = $this->getMessagesForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
-
+            $narrativeRules = $this->getWarningForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
             list($orgNarratives, $orgLanguages) = $this->getNarrativesAndLanguages($organizationReportingOrg);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
             }
+
             foreach ($reportingOrganization['narrative'] as $index => $narrative) {
-                $rules["$reportingOrganizationForm.narrative.$index.narrative"][] = "must_match:$orgNarratives[$index]";
-                $rules["$reportingOrganizationForm.narrative.$index.language"][] = "must_match:$orgLanguages[$index]";
+                if (!exactlySameIgnoreWhitespace($narrative['narrative'], $orgNarratives[$index])) {
+                    $rules["$reportingOrganizationForm.narrative.$index.narrative"][] = 'must_match';
+                }
+                if (!exactlySameIgnoreWhitespace($narrative['language'], $orgLanguages[$index])) {
+                    $rules["$reportingOrganizationForm.narrative.$index.language"][] = 'must_match';
+                }
             }
         }
 
@@ -104,7 +108,6 @@ class ReportingOrgRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
-     * @throws \JsonException
      */
     public function getErrorsForReportingOrganization(array $formFields): array
     {
@@ -134,10 +137,8 @@ class ReportingOrgRequest extends ActivityBaseRequest
     {
         $messages = [];
         $messages['reporting_org.size'] = 'The reporting organisation should not have multiple values or narratives.';
-
         $reportingOrganization = $formFields[0];
         $reportingOrganizationIndex = 0;
-
         $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
 
         $messages[$reportingOrganizationForm . '.ref.must_match'] = 'The reference of reporting-org must match reference of reporting-org in organisation';
@@ -185,20 +186,37 @@ class ReportingOrgRequest extends ActivityBaseRequest
      */
     private function getNarrativesAndLanguages($reportingOrg): array
     {
-        $narrativeFields = $reportingOrg[0]['narrative'] ?? '';
+        $narrativeFields = Arr::get($reportingOrg[0], 'narrative', '');
 
         if ($narrativeFields) {
             $narratives = [];
             $languages = [];
 
             foreach ($narrativeFields as $index=>$item) {
-                $narratives[] = $item['narrative'];
-                $languages[] = $item['language'];
+                $narratives[] = Arr::get($item, 'narrative', null);
+                $languages[] = Arr::get($item, 'language', null);
             }
 
             return [$narratives, $languages];
         }
 
         return [false, false];
+    }
+
+    /**
+     * Check if specified key has the same value.
+     *
+     * @param string $key
+     * @param mixed $reportingOrganization
+     * @param array $organizationReportingOrg
+     *
+     * @return bool
+     */
+    public function reportingOrgKeyExistsAndDoesntMatch(string $key, mixed $reportingOrganization, array $organizationReportingOrg) :bool
+    {
+        return $organizationReportingOrg[$key] && !exactlySameIgnoreWhitespace(
+            Arr::get($reportingOrganization, $key, ''),
+            Arr::get($organizationReportingOrg, $key, '')
+        );
     }
 }

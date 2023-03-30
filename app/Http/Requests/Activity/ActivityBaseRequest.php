@@ -113,8 +113,8 @@ class ActivityBaseRequest extends FormRequest
 
         Validator::extend(
             'must_match',
-            function ($attribute, $value, $parameters, $validator) {
-                return $value == $parameters[0];
+            function () {
+                return false;
             }
         );
     }
@@ -360,8 +360,8 @@ class ActivityBaseRequest extends FormRequest
     public function getMessagesForNarrative($formFields, $formBase): array
     {
         $messages = [];
-        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The narrative language field must be unique 1.';
-        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = 'The narrative language field must be unique 2.';
+        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The narrative language field must be unique.';
+        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = 'The narrative language field must be unique.';
 
         foreach ($formFields as $narrativeIndex => $narrative) {
             $messages[sprintf(

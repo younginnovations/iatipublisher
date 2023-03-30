@@ -726,8 +726,8 @@ class Validation extends Factory
     {
         $this->extend(
             'must_match',
-            function ($attribute, $value, $parameters, $validator) {
-                return $value == $parameters[0];
+            function () {
+                return false;
             }
         );
     }

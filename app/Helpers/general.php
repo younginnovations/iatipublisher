@@ -1249,3 +1249,18 @@ if (!function_exists('unsetErrorFields')) {
         return $importData;
     }
 }
+
+if (!function_exists('exactlySameIgnoreWhitespace')) {
+    /**
+     * Check if 2 strings are exactly same after removing all whitespaces.
+     *
+     * @param $string1
+     * @param $string2
+     *
+     * @return bool
+     */
+    function exactlySameIgnoreWhitespace($string1, $string2): bool
+    {
+        return preg_replace('/\s+/', '', $string1) === preg_replace('/\s+/', '', $string2);
+    }
+}
