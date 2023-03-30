@@ -60,7 +60,7 @@ class IndicatorRequest extends ActivityBaseRequest
         $tempRules = [
             $this->getWarningForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
             $this->getWarningForNarrative(Arr::get($formFields, 'description', []), 'description.0'),
-            // $this->getWarningForDocumentLink(Arr::get($formFields, 'document_link', [])),
+            $this->getWarningForDocumentLink(Arr::get($formFields, 'document_link', [])),
             $this->getWarningForReference(Arr::get($formFields, 'reference', []), $fileUpload, $result),
             $this->getWarningForBaseline(Arr::get($formFields, 'baseline', [])),
         ];
@@ -91,7 +91,6 @@ class IndicatorRequest extends ActivityBaseRequest
         $rules['ascending'] = sprintf('nullable|in:0,1');
         $rules['aggregation_status'] = sprintf('nullable|in:0,1');
 
-        // dump($formFields);
         $tempRules = [
             $this->getErrorsForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
             $this->getErrorsForNarrative(Arr::get($formFields, 'description', []), 'description.0'),
@@ -290,8 +289,8 @@ class IndicatorRequest extends ActivityBaseRequest
             $baselineForm = sprintf('baseline.%s', $baselineIndex);
             $baselineYearRule = 'nullable|date_format:Y|digits:4';
 
-            if (!empty($baseline['date'])) {
-                $baselineYearRule = sprintf('%s|in:%s', $baselineYearRule, date('Y', strtotime($baseline['date'])));
+            if (!empty($baseline['date']) && dateStrToTime(($baseline['date']))) {
+                $baselineYearRule = sprintf('%s|in:%s', $baselineYearRule, date('Y', dateStrToTime($baseline['date'])));
             }
 
             $rules[sprintf('%s.year', $baselineForm)] = $baselineYearRule;
@@ -309,7 +308,7 @@ class IndicatorRequest extends ActivityBaseRequest
                 $rules[$key] = $item;
             }
 
-            $dcoLinkRules = $this->getErrorsForDocumentLink($baseline['document_link'], $baselineForm);
+            $dcoLinkRules = $this->getErrorsForDocumentLink(Arr::get($baseline, 'document_link', []), $baselineForm);
 
             foreach ($dcoLinkRules as $key => $item) {
                 $rules[$key] = $item;
@@ -345,7 +344,7 @@ class IndicatorRequest extends ActivityBaseRequest
                 $messages[$key] = $item;
             }
 
-            $docLinkMessages = $this->getMessagesForDocumentLink($baseline['document_link'], $baselineForm);
+            $docLinkMessages = $this->getMessagesForDocumentLink(Arr::get($baseline, 'document_link', []), $baselineForm);
 
             foreach ($docLinkMessages as $key => $item) {
                 $messages[$key] = $item;

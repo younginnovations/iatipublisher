@@ -485,13 +485,13 @@
         "elementBase": "url",
         "fieldDependency": {
             "title narrative narrative": {
-                "parent": "title",
+                "parent": "title narrative",
                 "peer": [
                     "title narrative language"
                 ]
             },
             "description narrative narrative": {
-                "parent": "description",
+                "parent": "description narrative",
                 "peer": [
                     "description narrative language"
                 ]
@@ -515,7 +515,7 @@
         ],
         "fieldDependency": {
             "comment narrative narrative": {
-                "parent": "comment",
+                "parent": "comment narrative",
                 "peer": [
                     "comment narrative language"
                 ]
@@ -535,13 +535,13 @@
         "elementBase": "url",
         "fieldDependency": {
             "title narrative narrative": {
-                "parent": "title",
+                "parent": "title narrative",
                 "peer": [
                     "title narrative language"
                 ]
             },
             "description narrative narrative": {
-                "parent": "description",
+                "parent": "description narrative",
                 "peer": [
                     "description narrative language"
                 ]
@@ -570,7 +570,7 @@
     "target": {
         "fieldDependency": {
             "comment narrative narrative": {
-                "parent": "comment",
+                "parent": "comment narrative",
                 "peer": [
                     "comment narrative language"
                 ]
@@ -590,13 +590,13 @@
         "elementBase": "url",
         "fieldDependency": {
             "title narrative narrative": {
-                "parent": "title",
+                "parent": "title narrative",
                 "peer": [
                     "title narrative language"
                 ]
             },
             "description narrative narrative": {
-                "parent": "description",
+                "parent": "description narrative",
                 "peer": [
                     "description narrative language"
                 ]
@@ -615,7 +615,7 @@
     "actual": {
         "fieldDependency": {
             "comment narrative narrative": {
-                "parent": "comment",
+                "parent": "comment narrative",
                 "peer": [
                     "comment narrative language"
                 ]
@@ -635,13 +635,13 @@
         "elementBase": "url",
         "fieldDependency": {
             "title narrative narrative": {
-                "parent": "title",
+                "parent": "title narrative",
                 "peer": [
                     "title narrative language"
                 ]
             },
             "description narrative narrative": {
-                "parent": "description",
+                "parent": "description narrative",
                 "peer": [
                     "description narrative language"
                 ]

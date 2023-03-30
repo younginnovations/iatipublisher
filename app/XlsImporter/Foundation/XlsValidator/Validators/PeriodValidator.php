@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\XlsImporter\Foundation\XlsValidator\Validators;
 
 use App\Http\Requests\Activity\Period\PeriodRequest;
+use App\XlsImporter\Foundation\Factory\Validation;
 use App\XlsImporter\Foundation\XlsValidator\ValidatorInterface;
 
 // use Validation
@@ -39,7 +40,7 @@ class PeriodValidator implements ValidatorInterface
      */
     public function rules(): array
     {
-        $rules = (new PeriodRequest())->getWarningForPeriod($this->period);
+        $rules = (new PeriodRequest())->getWarningForPeriod($this->period, true, []);
 
         // foreach ($this->period as $periodIndex => $period) {
         // $periodBase = sprintf('period.%s', $periodIndex);
@@ -60,7 +61,7 @@ class PeriodValidator implements ValidatorInterface
      */
     public function errorRules(): array
     {
-        $rules = (new PeriodRequest())->getErrorsForPeriod($this->period);
+        $rules = (new PeriodRequest())->getErrorsForPeriod($this->period, true, []);
 
         return $rules;
         // return [];
@@ -82,21 +83,20 @@ class PeriodValidator implements ValidatorInterface
      */
     public function messages(): array
     {
-        return (new PeriodRequest())->getMessagesForPeriod($this->period);
+        return (new PeriodRequest())->getMessagesForPeriod($this->period, true);
     }
 
-    public function init($period): void
+    public function init($period): static
     {
         $this->period = $period;
+
+        return $this;
     }
 
     /**
-     * @param bool $isDuplicate
-     * @param bool $isIdentifierValid
-     *
      * @return array
      */
-    public function validateData(bool $isDuplicate, bool $isIdentifierValid): array
+    public function validateData(): array
     {
         $errors = [
             'critical' => $this->factory->initialize($this->period, $this->criticalRules(), $this->messages())

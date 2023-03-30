@@ -101,13 +101,13 @@ class ImportXlsController extends Controller
             // $activityMapper = new Activity();
             // $activityMapper->map($data);
 
-            // $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
-            // $periodMapper = new Period();
-            // $periodMapper->map($data);
+            $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
+            $periodMapper = new Period();
+            $periodMapper->map($data);
 
-            $data = file_get_contents(app_path() . '/XlsImporter/Templates/indicator.json');
-            $indicatorMapper = new Indicator();
-            $indicatorMapper->map($data);
+            // $data = file_get_contents(app_path() . '/XlsImporter/Templates/indicator.json');
+            // $indicatorMapper = new Indicator();
+            // $indicatorMapper->map($data);
 
             if (!Auth::user()->organization_id) {
                 Session::put('error', 'User is not associated with any organization.');

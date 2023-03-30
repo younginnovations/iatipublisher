@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\XlsImporter\Foundation\Mapper;
 
+use App\IATI\Traits\DataSanitizeTrait;
 use App\XlsImporter\Foundation\XlsValidator\Validators\IndicatorValidator;
 use Illuminate\Support\Arr;
 
@@ -12,7 +13,7 @@ use Illuminate\Support\Arr;
  */
 class Indicator
 {
-    // public string $templatePath = app_path().'XlsImporter/Templates';
+    use DataSanitizeTrait;
 
     //activities whose identifier is mentioned on setting sheet
     protected array $indicators = [];
@@ -82,30 +83,21 @@ class Indicator
     public function validateIndicator()
     {
         $indicatorValidator = app(IndicatorValidator::class);
-        $errors = [];
-
-        // $indicatorValidator = new IndicatorValidator($factory);
 
         foreach ($this->indicators as $resultIdentifier => $indicators) {
             foreach ($indicators as $indicatorIdentifier => $indicatorData) {
-                // $this->indicators[$resultIdentifier][$indicatorIdentifier]['baseline'] = array_values($indicatorData['baseline']);
-                $errors[] = $indicatorValidator
+                $this->indicators[$resultIdentifier][$indicatorIdentifier]['error'] = $indicatorValidator
                     ->init($indicatorData['indicator'])
                     ->validateData();
             }
         }
-
-        dd($errors, 'stop');
     }
 
     public function removeUnwantedData()
     {
         foreach ($this->indicators as $resultIdentifier => $indicators) {
             foreach ($indicators as $indicatorIdentifier => $indicatorData) {
-                // dump($this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']);
-
                 $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'] = array_values(Arr::get($indicatorData, 'indicator.baseline', []));
-                // dd($this->indicators);
             }
         }
     }
@@ -319,6 +311,7 @@ class Indicator
             $expected_position = empty($expected_position) ? $key : "$expected_position $key";
 
             if (in_array($expected_position, array_keys($fieldDependency))) {
+                $key = $key === 'narrative' ? '0.narrative' : $key;
                 $positionValue = $fieldDependency[$expected_position];
                 $position = empty($position) ? $key . '.' . $positionValue : "$position.$key.$positionValue";
             } else {

@@ -22,6 +22,10 @@ class Activity
     // activities whose identifier is not mentioned on setting
     protected array $invalidActivities = [];
 
+    // protected array $elementExcelPosition = [
+    //     'rowNumber' => ''
+    // ]
+
     /**
      * @var array
      */

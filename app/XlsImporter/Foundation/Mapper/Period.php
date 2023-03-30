@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\XlsImporter\Foundation\Mapper;
 
+use App\XlsImporter\Foundation\XlsValidator\Validators\PeriodValidator;
 use Illuminate\Support\Arr;
 
 /**
@@ -75,6 +76,7 @@ class Period
         $periodData = json_decode($periodData, true, 512, 0);
 
         foreach ($periodData as $sheetName => $content) {
+            dump($sheetName);
             if (in_array($sheetName, array_keys($this->mappers))) {
                 $this->mapPeriods($content, $sheetName);
             }
@@ -85,6 +87,7 @@ class Period
         }
 
         $this->removeUnwantedData();
+        $this->validatePeriod();
     }
 
     public function removeUnwantedData()
@@ -93,6 +96,20 @@ class Period
             foreach ($periods as $periodIdentifier => $periodData) {
                 $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['target'] = array_values($periodData['period']['target']);
                 $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['actual'] = array_values($periodData['period']['actual']);
+            }
+        }
+    }
+
+    public function validatePeriod()
+    {
+        $periodValidator = app(PeriodValidator::class);
+
+        foreach ($this->periods as $indicatorIdentifier => $periods) {
+            foreach ($periods as $periodIdentifier => $periodData) {
+                // dd(json_encode($periodData['period']));
+                $this->periods[$indicatorIdentifier][$periodIdentifier]['error'] = $periodValidator
+                    ->init($periodData['period'])
+                    ->validateData();
             }
         }
     }
@@ -317,6 +334,7 @@ class Period
             $expected_position = empty($expected_position) ? $key : "$expected_position $key";
 
             if (in_array($expected_position, array_keys($fieldDependency))) {
+                $key = $key === 'narrative' ? '0.narrative' : $key;
                 $positionValue = $fieldDependency[$expected_position];
                 $position = empty($position) ? $key . '.' . $positionValue : "$position.$key.$positionValue";
             } else {
