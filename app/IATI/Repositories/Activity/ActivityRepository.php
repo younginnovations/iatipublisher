@@ -250,7 +250,17 @@ class ActivityRepository extends Repository
     {
         $data = Arr::get($activity, $type, '');
 
-        return (!is_null($data) && $data !== '' && !is_array($data)) ? $data : null;
+        if ($data !== '' && !is_array($data)) {
+            if (is_string($data) && $type == 'capital_spend') {
+                $data = (float) $data;
+            } elseif (is_string($data)) {
+                $data = (int) $data;
+            }
+
+            return $data;
+        }
+
+        return null;
     }
 
     /**
@@ -313,7 +323,7 @@ class ActivityRepository extends Repository
                 'org_id' => $activityData['organization_id'],
                 'policy_marker' => $this->getActivityElement($activityData, 'policy_marker'),
                 'budget' => $this->getActivityElement($activityData, 'budget'),
-                'activity_scope' => Arr::get($this->getActivityElement($activityData, 'activity_scope'), '0', null),
+                'activity_scope' => $this->getSingleValuedActivityElement($activityData, 'activity_scope'),
                 'default_field_values' => $defaultFieldValues[0] ?? $defaultFieldValues,
                 'contact_info' => $this->getActivityElement($activityData, 'contact_info'),
                 'related_activity' => $this->getActivityElement($activityData, 'related_activity'),
@@ -362,7 +372,7 @@ class ActivityRepository extends Repository
             'org_id' => $activityData['organization_id'],
             'policy_marker' => $this->getActivityElement($activityData, 'policy_marker'),
             'budget' => $this->getActivityElement($activityData, 'budget'),
-            'activity_scope' => Arr::get($this->getActivityElement($activityData, 'activity_scope'), '0', null),
+            'activity_scope' => $this->getSingleValuedActivityElement($activityData, 'activity_scope'),
             'default_field_values' => $defaultFieldValues[0] ?? $defaultFieldValues,
             'contact_info' => $this->getActivityElement($activityData, 'contact_info'),
             'related_activity' => $this->getActivityElement($activityData, 'related_activity'),
