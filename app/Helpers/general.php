@@ -1250,7 +1250,7 @@ if (!function_exists('unsetErrorFields')) {
     }
 }
 
-if (!function_exists('exactlySameIgnoreWhitespace')) {
+if (!function_exists('compareStringIgnoringWhitespace')) {
     /**
      * Check if 2 strings are exactly same after removing all whitespaces.
      *
@@ -1259,7 +1259,7 @@ if (!function_exists('exactlySameIgnoreWhitespace')) {
      *
      * @return bool
      */
-    function exactlySameIgnoreWhitespace(string $string1, string $string2): bool
+    function compareStringIgnoringWhitespace(string $string1, string $string2): bool
     {
         return preg_replace('/\s+/', '', $string1) === preg_replace('/\s+/', '', $string2);
     }

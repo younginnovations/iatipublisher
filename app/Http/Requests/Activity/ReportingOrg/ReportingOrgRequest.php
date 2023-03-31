@@ -90,10 +90,10 @@ class ReportingOrgRequest extends ActivityBaseRequest
             }
 
             foreach ($reportingOrganization['narrative'] as $index => $narrative) {
-                if (!exactlySameIgnoreWhitespace((string) $narrative['narrative'], (string) $orgNarratives[$index])) {
+                if (!compareStringIgnoringWhitespace((string) $narrative['narrative'], (string) $orgNarratives[$index])) {
                     $rules["$reportingOrganizationForm.narrative.$index.narrative"][] = 'must_match';
                 }
-                if (!exactlySameIgnoreWhitespace((string) $narrative['language'], (string) $orgLanguages[$index])) {
+                if (!compareStringIgnoringWhitespace((string) $narrative['language'], (string) $orgLanguages[$index])) {
                     $rules["$reportingOrganizationForm.narrative.$index.language"][] = 'must_match';
                 }
             }
@@ -214,7 +214,7 @@ class ReportingOrgRequest extends ActivityBaseRequest
      */
     public function reportingOrgKeyExistsAndDoesntMatch(string $key, mixed $reportingOrganization, array $organizationReportingOrg) :bool
     {
-        return !exactlySameIgnoreWhitespace(
+        return !compareStringIgnoringWhitespace(
             (string) Arr::get($reportingOrganization, $key, ''),
             (string) Arr::get($organizationReportingOrg, $key, '')
         );

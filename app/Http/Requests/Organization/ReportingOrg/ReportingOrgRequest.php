@@ -51,7 +51,7 @@ class ReportingOrgRequest extends OrganizationBaseRequest
             $rules[$reportingOrganizationForm . '.ref'] = [
                 'nullable',
                 'not_regex:/(&|!|\/|\||\?)/',
-                !exactlySameIgnoreWhitespace((string) $reportingOrganization['ref'], (string) $organisationIdentifier) ? 'must_match' : '',
+                !compareStringIgnoringWhitespace((string) $reportingOrganization['ref'], (string) $organisationIdentifier) ? 'must_match' : '',
             ];
             $rules[$reportingOrganizationForm . '.type'] = [
                 'nullable',
