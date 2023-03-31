@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\XlsImporter\Foundation\Support\Factory;
+namespace App\XlsImporter\Foundation\XlsValidator\Validators;
 
 use App\Http\Requests\Activity\Identifier\IdentifierRequest;
 use App\Http\Requests\Activity\Title\TitleRequest;
+use App\XlsImporter\Foundation\Factory\Validation;
 use App\XlsImporter\Foundation\XlsValidator\ValidatorInterface;
 use App\XmlImporter\Foundation\Support\Factory\Traits\ErrorValidationRules;
 use App\XmlImporter\Foundation\Support\Factory\Traits\ValidationMessages;
@@ -222,9 +223,11 @@ class ActivityValidator implements ValidatorInterface
      *
      * @return void
      */
-    public function init($activity): void
+    public function init($activity): static
     {
         $this->activity = $activity;
+
+        return $this;
     }
 
     /**
@@ -233,7 +236,7 @@ class ActivityValidator implements ValidatorInterface
      *
      * @return array
      */
-    public function validateData(bool $isDuplicate, bool $isIdentifierValid): array
+    public function validateData(): array
     {
         $errors = [
             'critical' => $this->factory->initialize($this->activity, $this->criticalRules(), $this->messages())
@@ -247,13 +250,13 @@ class ActivityValidator implements ValidatorInterface
                 ->withErrors(),
         ];
 
-        if ($isDuplicate) {
-            $errors['critical']['activity_identifier']['activity_identifier.identifier'] = 'The activity has been duplicated.';
-        }
+        // if ($isDuplicate) {
+        //     $errors['critical']['activity_identifier']['activity_identifier.identifier'] = 'The activity has been duplicated.';
+        // }
 
-        if (!$isIdentifierValid) {
-            $errors['critical']['activity_identifier']['activity_identifier.activity_identifier'] = 'The activity is invalid. Please ensure that the activity identifier matches with organization identifier.';
-        }
+        // if (!$isIdentifierValid) {
+        //     $errors['critical']['activity_identifier']['activity_identifier.activity_identifier'] = 'The activity is invalid. Please ensure that the activity identifier matches with organization identifier.';
+        // }
 
         foreach ($errors as $key => $value) {
             if (empty($value)) {

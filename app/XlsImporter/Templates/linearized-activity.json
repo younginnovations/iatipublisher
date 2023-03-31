@@ -46,8 +46,7 @@
     },
     "recipient_region": {
         "region_vocabulary": "vocabulary",
-        "region_code": "code",
-        "custom_code": "code",
+        "code": "code",
         "vocabulary_uri": "vocabulary_uri",
         "percentage": "percentage",
         "narrative narrative": "narrative",
@@ -63,9 +62,7 @@
     },
     "tag": {
         "tag_vocabulary": "vocabulary",
-        "goals_tag_code": "code",
-        "targets_tag_code": "code",
-        "tag_text": "code",
+        "code": "code",
         "vocabulary_uri": "vocabulary uri",
         "narrative narrative": "narrative",
         "narrative language": "language"
@@ -74,8 +71,7 @@
         "policy_marker_vocabulary": "vocabulary",
         "vocabulary_uri": "vocabulary uri",
         "significance": "significance",
-        "policy_marker": "code",
-        "policy_marker_text": "code",
+        "code": "code",
         "narrative narrative": "narrative",
         "narrative language": "language"
     },

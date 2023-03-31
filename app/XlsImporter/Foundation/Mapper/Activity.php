@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\XlsImporter\Foundation\Mapper;
 
+use App\XlsImporter\Foundation\XlsValidator\Validators\ActivityValidator;
 use Illuminate\Support\Arr;
 
 /**
@@ -11,8 +12,6 @@ use Illuminate\Support\Arr;
  */
 class Activity
 {
-    // public string $templatePath = app_path().'XlsImporter/Templates';
-
     //activities whose identifier is mentioned on setting sheet
     protected array $activities = [];
 
@@ -22,36 +21,32 @@ class Activity
     // activities whose identifier is not mentioned on setting
     protected array $invalidActivities = [];
 
-    // protected array $elementExcelPosition = [
-    //     'rowNumber' => ''
-    // ]
-
     /**
      * @var array
      */
     protected array $activityElements = [
-        'Title' => 'title',
-        'Other Identifier' => 'other_identifier',
-        'Description' => 'description',
-        'Activity Date' => 'activity_date',
-        'Recipient Country' => 'recipient_country',
-        'Recipient Region' => 'recipient_region',
-        'Sector' => 'sector',
+        // 'Title' => 'title',
+        // 'Other Identifier' => 'other_identifier',
+        // 'Description' => 'description',
+        // 'Activity Date' => 'activity_date',
+        // 'Recipient Country' => 'recipient_country',
+        // 'Recipient Region' => 'recipient_region',
+        // 'Sector' => 'sector',
         'Tag' => 'tag',
-        'Policy Marker' => 'policy_marker',
-        'Default Aid Type' => 'default_aid_type',
-        'Country Budget Items' => 'country_budget_items',
-        'Humanitarian Scope' => 'humanitarian_scope',
-        'Related Activity' => 'related_activity',
-        'Conditions' => 'conditions',
-        'Legacy Data' => 'legacy_data',
-        'Document Link' => 'document_link',
-        'Contact Info' => 'contact_info',
-        'Location' => 'location',
-        'Planned Disbursement' => 'planned_disbursement',
-        'Participating Org' => 'participating_org',
-        'Budget' => 'budget',
-        'Transaction' => 'transactions',
+        // 'Policy Marker' => 'policy_marker',
+        // 'Default Aid Type' => 'default_aid_type',
+        // 'Country Budget Items' => 'country_budget_items',
+        // 'Humanitarian Scope' => 'humanitarian_scope',
+        // 'Related Activity' => 'related_activity',
+        // 'Conditions' => 'conditions',
+        // 'Legacy Data' => 'legacy_data',
+        // 'Document Link' => 'document_link',
+        // 'Contact Info' => 'contact_info',
+        // 'Location' => 'location',
+        // 'Planned Disbursement' => 'planned_disbursement',
+        // 'Participating Org' => 'participating_org',
+        // 'Budget' => 'budget',
+        // 'Transaction' => 'transactions',
     ];
 
     protected array $singleValuedElements = [
@@ -84,6 +79,24 @@ class Activity
                 $this->columnToFieldMapper($this->activityElements[$sheetName], $content);
             }
         }
+
+        $this->validateActivityElements();
+    }
+
+    public function validateActivityElements()
+    {
+        $activityValidator = app(ActivityValidator::class);
+        $errors = [];
+
+        foreach ($this->activities as $activityIdentifier => $activities) {
+            dump($activities);
+            dump(json_encode($activities));
+            $errors[] = $activityValidator
+                ->init($activities)
+                ->validateData();
+        }
+
+        dd($errors);
     }
 
     public function getLinearizedActivity()
@@ -212,18 +225,19 @@ class Activity
         $codeDependentOn = Arr::get($codeRelation, 'dependentOn', '');
         $codeDependentField = Arr::get($codeRelation, 'dependentField', '');
         $defaultCodeField = Arr::get($codeRelation, 'defaultCodeField', '');
+        $dependentOnValue = '';
 
         foreach (array_values($fieldDependency) as $dependents) {
             $parentBaseCount[$dependents['parent']] = null;
         }
 
         foreach ($data as $row) {
-            $dependentOnValue = '';
-
             foreach ($row as $fieldName => $fieldValue) {
                 if (($fieldName === $elementBase && $fieldValue)) {
+                    $dependentOnValue = '';
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
                 } elseif ($fieldName === $elementBase && $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)) {
+                    $dependentOnValue = '';
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
                 }
 
@@ -238,15 +252,19 @@ class Activity
                     }
                 }
 
+                // dump($fieldName, $codeDependentField);
                 if ($fieldName === $codeDependentField) {
+                    dump('-------------------', $fieldName, 'dependentOnValue', $dependentOnValue, 'dependency', $codeDependencyConditions, 'fieldName', $fieldName);
                     $fieldName = in_array($dependentOnValue, array_keys($codeDependencyConditions)) ? Arr::get($codeDependencyConditions, $dependentOnValue, $defaultCodeField) : $defaultCodeField;
+                    dump($fieldName, '---------');
                 }
 
                 if (in_array($fieldName, array_keys($elementDropDownFields))) {
                     $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields[$fieldName]);
                 }
 
-                if ($fieldName === $codeDependentOn) {
+                // check for non empty.. including zero
+                if ($fieldName === $codeDependentOn && $fieldValue) {
                     $dependentOnValue = $fieldValue;
                 }
 
@@ -283,6 +301,7 @@ class Activity
             $expected_position = empty($expected_position) ? $key : "$expected_position $key";
 
             if (in_array($expected_position, array_keys($fieldDependency))) {
+                // $key = $key === 'narrative' ? '0.narrative' : $key;
                 $positionValue = $fieldDependency[$expected_position];
                 $position = empty($position) ? $key . '.' . $positionValue : "$position.$key.$positionValue";
             } else {

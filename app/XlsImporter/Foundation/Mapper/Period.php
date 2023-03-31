@@ -12,8 +12,6 @@ use Illuminate\Support\Arr;
  */
 class Period
 {
-    // public string $templatePath = app_path().'XlsImporter/Templates';
-
     //activities whose identifier is mentioned on setting sheet
     protected array $periods = [];
 
@@ -76,7 +74,6 @@ class Period
         $periodData = json_decode($periodData, true, 512, 0);
 
         foreach ($periodData as $sheetName => $content) {
-            dump($sheetName);
             if (in_array($sheetName, array_keys($this->mappers))) {
                 $this->mapPeriods($content, $sheetName);
             }
@@ -106,7 +103,6 @@ class Period
 
         foreach ($this->periods as $indicatorIdentifier => $periods) {
             foreach ($periods as $periodIdentifier => $periodData) {
-                // dd(json_encode($periodData['period']));
                 $this->periods[$indicatorIdentifier][$periodIdentifier]['error'] = $periodValidator
                     ->init($periodData['period'])
                     ->validateData();

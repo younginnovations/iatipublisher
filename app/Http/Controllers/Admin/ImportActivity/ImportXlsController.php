@@ -96,15 +96,21 @@ class ImportXlsController extends Controller
 
             // $this->getLinearizedElement();
 
+            $data = json_encode(getCodeList('UNSDG-Targets', 'Activity'));
+
+            file_put_contents(app_path() . '/XlsImporter/Templates/drop-down-buffer.json', $data);
             // test
-            // $data = file_get_contents(app_path() . '/XlsImporter/Templates/test.json');
-            // $activityMapper = new Activity();
-            // $activityMapper->map($data);
+            $data = file_get_contents(app_path() . '/XlsImporter/Templates/test.json');
+            $activityMapper = new Activity();
+            $activityMapper->map($data);
+            dd('stop');
 
-            $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
-            $periodMapper = new Period();
-            $periodMapper->map($data);
+            // period
+            // $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
+            // $periodMapper = new Period();
+            // $periodMapper->map($data);
 
+            // indicator
             // $data = file_get_contents(app_path() . '/XlsImporter/Templates/indicator.json');
             // $indicatorMapper = new Indicator();
             // $indicatorMapper->map($data);
