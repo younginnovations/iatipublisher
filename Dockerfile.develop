@@ -1,6 +1,6 @@
 ARG PHP_EXTS="bcmath pdo_mysql pdo_pgsql pcntl gd"
 ARG PHP_PECL_EXTS="redis"
-ARG MIX_ENCRYPTION_KEY
+ARG MIX_ENCRYPTION_KEY=${MIX_ENCRYPTION_KEY_DEV}
 
 FROM composer:2.1 as composer_base
 
@@ -35,7 +35,7 @@ RUN ./getComposerInfo.sh
 
 FROM node:16 as frontend
 
-ARG MIX_ENCRYPTION_KEY
+ARG MIX_ENCRYPTION_KEY=${MIX_ENCRYPTION_KEY_DEV}
 
 COPY --from=composer_base /opt/apps/laravel-in-kubernetes /opt/apps/laravel-in-kubernetes
 

@@ -56,7 +56,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            MIX_ENCRYPTION_KEY=${{ secrets.MIX_ENCRYPTION_KEY }}
+            MIX_ENCRYPTION_KEY_DEV=${{ secrets.MIX_ENCRYPTION_KEY_DEV }}
 
 
   fpm_server_build_push:
@@ -97,7 +97,7 @@ jobs:
           file: Dockerfile.develop
           target: fpm_server
           build-args: |
-            MIX_ENCRYPTION_KEY=${{ secrets.MIX_ENCRYPTION_KEY }}
+            MIX_ENCRYPTION_KEY_DEV=${{ secrets.MIX_ENCRYPTION_KEY_DEV }}
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/fpm_server:${{ github.sha }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/fpm_server:latest
@@ -148,7 +148,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            MIX_ENCRYPTION_KEY=${{ secrets.MIX_ENCRYPTION_KEY }}
+            MIX_ENCRYPTION_KEY_DEV=${{ secrets.MIX_ENCRYPTION_KEY_DEV }}
 
 
 
@@ -196,7 +196,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            MIX_ENCRYPTION_KEY=${{ secrets.MIX_ENCRYPTION_KEY }}
+            MIX_ENCRYPTION_KEY_DEV=${{ secrets.MIX_ENCRYPTION_KEY_DEV }}
 
 
 
@@ -244,7 +244,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            MIX_ENCRYPTION_KEY=${{ secrets.MIX_ENCRYPTION_KEY }}
+            MIX_ENCRYPTION_KEY_DEV=${{ secrets.MIX_ENCRYPTION_KEY_DEV }}
 
   deploy-development:
     name: development deploy
