@@ -97,7 +97,7 @@ class ImportXlsController extends Controller
 
             // $this->getLinearizedElement();
 
-            $data = json_encode(getCodeList('UNSDG-Targets', 'Activity'));
+            $data = json_encode(getCodeList('CashandVoucherModalities', 'Activity'));
 
             file_put_contents(app_path() . '/XlsImporter/Templates/drop-down-buffer.json', $data);
             // test

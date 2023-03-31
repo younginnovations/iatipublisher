@@ -86,10 +86,7 @@
     },
     "default_aid_type": {
         "default_aid_type_vocabulary": "vocabulary",
-        "default_aid_type": "code",
-        "earmarking_category": "code",
-        "earmarking_modality": "code",
-        "cash_and_voucher_modalities": "code"
+        "code": "code"
     },
     "default_tied_status": {
         "default_tied_status": "code"

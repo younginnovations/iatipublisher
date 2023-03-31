@@ -184,7 +184,6 @@
         "default_tied_status": "Code"
     },
     "country_budget_items": {
-        "elementBase": "country_budget_vocabulary",
         "fieldDependency": {
             "budget_item code": {
                 "parent": "budget_item",
