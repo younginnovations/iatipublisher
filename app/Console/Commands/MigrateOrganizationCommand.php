@@ -125,8 +125,6 @@ class MigrateOrganizationCommand extends Command
                 $aidstreamOrganizationIds[$key] = (int) $aidstreamOrganizationId;
             }
 
-            $organizationLookUpTable = [];
-
             foreach ($aidstreamOrganizationIds as $aidstreamOrganizationId) {
                 try {
                     $this->logInfo('Started organization migration for organization id: ' . $aidstreamOrganizationId);
@@ -151,8 +149,6 @@ class MigrateOrganizationCommand extends Command
                     $iatiOrganization = $this->organizationService->create(
                         $this->getNewOrganization($aidStreamOrganization)
                     );
-
-                    $organizationLookUpTable[$aidStreamOrganization->id] = $iatiOrganization;
 
                     $this->logInfo('Completed organization migration for organization id: ' . $aidstreamOrganizationId);
                     $aidStreamOrganizationSetting = $this->db::connection('aidstream')->table('settings')->where(
@@ -240,6 +236,7 @@ class MigrateOrganizationCommand extends Command
                     $this->migrateDocuments($aidstreamOrganizationId, $iatiOrganization, $migratedActivitiesLookupTable);
                     $this->migrateOrganizationPublishedFile($aidStreamOrganization, $iatiOrganization);
                     $this->migrateOrganizationPublishedTable($aidStreamOrganization, $iatiOrganization, $this->setting);
+                    $this->updateOrganizationDocumentLinkUrl($aidStreamOrganization->id, $iatiOrganization);
 
                     $this->databaseManager->commit();
                 } catch (\Exception $exception) {
@@ -248,8 +245,6 @@ class MigrateOrganizationCommand extends Command
                     $this->error($exception->getMessage());
                 }
             }
-
-            $this->updateOrganizationDocumentLinkUrl($organizationLookUpTable);
         } catch (\Exception $exception) {
             logger()->channel('migration')->error($exception);
             $this->error($exception->getMessage());
@@ -259,25 +254,26 @@ class MigrateOrganizationCommand extends Command
     /**
      * Updates organization document link.
      *
-     * @param $organizationLookUpTable
+     * @param $aidStreamOrganizationId
+     * @param $iatiOrganization
      *
      * @return void
      */
-    public function updateOrganizationDocumentLinkUrl($organizationLookUpTable): void
+    public function updateOrganizationDocumentLinkUrl($aidStreamOrganizationId, $iatiOrganization): void
     {
-        foreach ($organizationLookUpTable as $orgData) {
+        if (!empty($iatiOrganization) && !empty($aidStreamOrganizationId)) {
             $documentLink = [];
-            $orgDocumentLinks = $orgData->document_link;
+            $orgDocumentLinks = $iatiOrganization->document_link;
 
             if ($orgDocumentLinks && count($orgDocumentLinks)) {
                 foreach ($orgDocumentLinks as $data) {
-                    $data['url'] = $this->replaceDocumentLinkUrl($data['url'], $orgData->id);
+                    $data['url'] = $this->replaceDocumentLinkUrl($data['url'], $iatiOrganization->id);
                     $documentLink[] = $data;
                 }
             }
 
-            $orgData->document_link = count($documentLink) ? $documentLink : null;
-            $orgData->save();
+            $iatiOrganization->document_link = count($documentLink) ? $documentLink : null;
+            $iatiOrganization->save();
         }
     }
 
