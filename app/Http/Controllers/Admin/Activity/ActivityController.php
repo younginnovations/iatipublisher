@@ -173,12 +173,14 @@ class ActivityController extends Controller
             $status['transactions'] = $transactions->count() === 0 ? false : Arr::get($status, 'transactions', false);
             $status['result'] = $results->count() === 0 ? false : Arr::get($status, 'result', false);
             $progress = $this->activityService->activityPublishingProgress($activity);
+            $reportingOrgStatus = $activity->organization->element_status['reporting_org'] ?? false;
+            $status['reporting_org'] = $reportingOrgStatus;
             $coreCompleted = isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_element_completed], $activity->element_status));
             $validatorResponse = $this->activityValidatorResponseService->getValidatorResponse($id);
             $importActivityError = $this->importActivityErrorService->getImportActivityError($id);
             $organization_identifier = $activity->organization->identifier;
             $activity->iati_identifier = [
-                'activity_identifier' => $activity->iati_identifier['activity_identifier'],
+                'activity_identifier'  => $activity->iati_identifier['activity_identifier'],
                 'iati_identifier_text' => $activity->organization->identifier . '-' . $activity->iati_identifier['activity_identifier'],
             ];
 

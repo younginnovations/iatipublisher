@@ -6,6 +6,7 @@ namespace App\IATI\Services\Organization;
 
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Models\Organization\Organization;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Traits\OrganizationXmlBaseElements;
 use Illuminate\Database\Eloquent\Model;
@@ -24,14 +25,26 @@ class ReportingOrgService
     protected OrganizationRepository $organizationRepository;
 
     /**
+     * @var ActivityRepository
+     */
+    protected ActivityRepository        $activityRepository;
+
+    /**
+     * @var ParentCollectionFormCreator
+     */
+    protected ParentCollectionFormCreator $parentCollectionFormCreator;
+
+    /**
      * ReportingOrgService constructor.
      *
      * @param OrganizationRepository $organizationRepository
+     * @param ActivityRepository $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(OrganizationRepository $organizationRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(OrganizationRepository $organizationRepository, ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
         $this->organizationRepository = $organizationRepository;
+        $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -69,13 +82,16 @@ class ReportingOrgService
      */
     public function update($id, $reportingOrg): bool
     {
+        $organization = $this->organizationRepository->find($id);
+
         foreach ($reportingOrg['reporting_org'] as $key => $description) {
             $reportingOrg['reporting_org'][$key]['narrative'] = array_values($description['narrative']);
         }
 
         $reportingOrg = array_values($reportingOrg['reporting_org']);
+        $hasChanged = $this->checkForChange($organization, $reportingOrg);
 
-        return $this->organizationRepository->update($id, ['reporting_org' => $reportingOrg]);
+        return $organization->update(['reporting_org'=>$reportingOrg]) && (!$hasChanged || $this->syncReportingOrg($id));
     }
 
     /**
@@ -118,5 +134,39 @@ class ReportingOrgService
         }
 
         return $organizationData;
+    }
+
+    /**
+     * Updates activity->reporting_org when there's change in organisation reporting_org.
+     *
+     * @param $id
+     *
+     * @return int
+     */
+    protected function syncReportingOrg($id): int
+    {
+        $orgReportingOrg = $this->organizationRepository->find($id)->reporting_org[0];
+
+        return $this->activityRepository->syncReportingOrg($id, $orgReportingOrg);
+    }
+
+    /**
+     * Checks if there's changes in ref, type or narrative.
+     *
+     * @param object|null $organization
+     * @param array $reportingOrg
+     *
+     * @return bool
+     */
+    private function checkForChange(?object $organization, array $reportingOrg): bool
+    {
+        $oldReportingOrg = $organization->reporting_org[0];
+        $reportingOrg = $reportingOrg[0];
+
+        return $oldReportingOrg['ref'] !== $reportingOrg['ref']
+            || (!isset($oldReportingOrg['type'])
+            || $oldReportingOrg['type'] !== $reportingOrg['type'])
+            || (!isset($oldReportingOrg['narrative'])
+            || $oldReportingOrg['narrative'] !== $reportingOrg['narrative']);
     }
 }

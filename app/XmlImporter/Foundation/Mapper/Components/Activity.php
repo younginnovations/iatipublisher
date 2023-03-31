@@ -82,6 +82,7 @@ class Activity
      * @var
      */
     public $orgRef;
+
     /**
      * @var array
      */
@@ -190,7 +191,17 @@ class Activity
     /**
      * @var array
      */
-    protected array $emptyNarrative = [['narrative' => '', 'language' => '']];
+    protected array $organizationReportingOrg = [];
+
+    /**
+     * @var array
+     */
+    protected array $emptyNarrative = [['narrative' => null, 'language' => null]];
+
+    public function __construct($organizationReportingOrg)
+    {
+        $this->organizationReportingOrg = $organizationReportingOrg;
+    }
 
     /**
      * @param $element
@@ -253,10 +264,10 @@ class Activity
         }
 
         $this->activity['reporting_org'][0] = $template['reporting_org'];
-        $this->activity['reporting_org'][0]['ref'] = $this->attributes($element, 'ref');
-        $this->activity['reporting_org'][0]['type'] = $this->attributes($element, 'type');
+        $this->activity['reporting_org'][0]['ref'] = $this->getReportingOrgRef($element);
+        $this->activity['reporting_org'][0]['type'] = $this->getReportingOrgType($element);
         $this->activity['reporting_org'][0]['secondary_reporter'] = $this->getSecondaryReporter($element);
-        $this->activity['reporting_org'][0]['narrative'] = $this->narrative($element);
+        $this->activity['reporting_org'][0]['narrative'] = $this->getReportingOrgNarrative($element);
 
         return $this->identifier;
     }
@@ -280,7 +291,7 @@ class Activity
             return '0';
         }
 
-        return '';
+        return $this->organizationReportingOrg[0]['secondary_reporter'] ?? '';
     }
 
     /**
@@ -825,6 +836,7 @@ class Activity
     /**
      * @param array $elementData
      * @param       $template
+     * @param       $orgRef
      *
      * @return array
      */
@@ -944,5 +956,54 @@ class Activity
         }
 
         return $array;
+    }
+
+    /**
+     * Returns org reporting org reference if reporting org reference is empty in xml.
+     *
+     * @param $element
+     *
+     * @return mixed
+     */
+    private function getReportingOrgRef($element): mixed
+    {
+        return empty($this->attributes($element, 'ref')) ? $this->organizationReportingOrg[0]['ref'] : $this->attributes($element, 'ref');
+    }
+
+    /**
+     * Returns org reporting org type if reporting org type is empty in xml.
+     *
+     * @param $element
+     *
+     * @return mixed
+     */
+    private function getReportingOrgType($element): mixed
+    {
+        return empty($this->attributes($element, 'type')) ? $this->organizationReportingOrg[0]['type'] : $this->attributes($element, 'type');
+    }
+
+    /**
+     * Returns org reporting org narrative if reporting org narrative is empty in xml.
+     *
+     * @param $element
+     *
+     * @return array
+     */
+    private function getReportingOrgNarrative($element): array
+    {
+        $narrativesFromXML = $this->narrative($element);
+        $narrativesAtOrgLevel = $this->organizationReportingOrg[0]['narrative'];
+        $narrativesToBeReturned = [];
+
+        foreach ($narrativesAtOrgLevel as $index => $narrative) {
+            if (isset($narrativesFromXML[$index])) {
+                $narrativesToBeReturned[$index]['narrative'] = empty($narrativesFromXML[$index]['narrative']) ? $narrative['narrative'] : $narrativesFromXML[$index]['narrative'];
+                $narrativesToBeReturned[$index]['language'] = empty($narrativesFromXML[$index]['language']) ? $narrative['language'] : $narrativesFromXML[$index]['language'];
+            } else {
+                $narrativesToBeReturned[$index] = $narrativesAtOrgLevel[$index];
+            }
+        }
+
+        return $narrativesToBeReturned;
     }
 }

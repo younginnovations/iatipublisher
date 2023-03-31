@@ -9,6 +9,7 @@ use App\Http\Requests\Activity\ReportingOrg\ReportingOrgRequest;
 use App\IATI\Services\Activity\ReportingOrgService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ReportingOrgController.
@@ -65,12 +66,17 @@ class ReportingOrgController extends Controller
     public function update(ReportingOrgRequest $request, int $id): RedirectResponse
     {
         try {
+            DB::beginTransaction();
+
             if (!$this->reportingOrgService->update($id, $request->all())) {
                 return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating reporting-org.');
             }
 
+            DB::commit();
+
             return redirect()->route('admin.activity.show', $id)->with('success', 'Activity reporting-org updated successfully.');
         } catch (\Exception $e) {
+            DB::rollBack();
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity reporting-org.');

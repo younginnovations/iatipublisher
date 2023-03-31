@@ -9,6 +9,7 @@ use App\IATI\Models\Activity\Activity;
 use App\IATI\Models\Setting\Setting;
 use App\IATI\Repositories\Repository;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 
@@ -249,7 +250,17 @@ class ActivityRepository extends Repository
     {
         $data = Arr::get($activity, $type, '');
 
-        return (!is_null($data) && $data !== '' && !is_array($data)) ? $data : null;
+        if ($data !== '' && !is_array($data)) {
+            if (is_string($data) && $type == 'capital_spend') {
+                $data = (float) $data;
+            } elseif (is_string($data)) {
+                $data = (int) $data;
+            }
+
+            return $data;
+        }
+
+        return null;
     }
 
     /**
@@ -312,7 +323,7 @@ class ActivityRepository extends Repository
                 'org_id' => $activityData['organization_id'],
                 'policy_marker' => $this->getActivityElement($activityData, 'policy_marker'),
                 'budget' => $this->getActivityElement($activityData, 'budget'),
-                'activity_scope' => Arr::get($this->getActivityElement($activityData, 'activity_scope'), '0', null),
+                'activity_scope' => $this->getSingleValuedActivityElement($activityData, 'activity_scope'),
                 'default_field_values' => $defaultFieldValues[0] ?? $defaultFieldValues,
                 'contact_info' => $this->getActivityElement($activityData, 'contact_info'),
                 'related_activity' => $this->getActivityElement($activityData, 'related_activity'),
@@ -361,7 +372,7 @@ class ActivityRepository extends Repository
             'org_id' => $activityData['organization_id'],
             'policy_marker' => $this->getActivityElement($activityData, 'policy_marker'),
             'budget' => $this->getActivityElement($activityData, 'budget'),
-            'activity_scope' => Arr::get($this->getActivityElement($activityData, 'activity_scope'), '0', null),
+            'activity_scope' => $this->getSingleValuedActivityElement($activityData, 'activity_scope'),
             'default_field_values' => $defaultFieldValues[0] ?? $defaultFieldValues,
             'contact_info' => $this->getActivityElement($activityData, 'contact_info'),
             'related_activity' => $this->getActivityElement($activityData, 'related_activity'),
@@ -456,5 +467,44 @@ class ActivityRepository extends Repository
             ->orderBy($orderBy, $direction)
             ->orderBy('id', $direction)
             ->get();
+    }
+
+    /**
+     * Updates ReportingOrg of activity with that of organisation.
+     *
+     * @param $id
+     * @param $reportingOrg
+     *
+     * @return int
+     */
+    public function syncReportingOrg($id, $reportingOrg): int
+    {
+        $activitiesCount = $this->model->where('org_id', $id)->count();
+
+        if ($activitiesCount > 0) {
+            $this->model->where('org_id', $id)->update(['reporting_org->0->ref'=>$reportingOrg['ref'] ?? '']);
+            $this->model->where('org_id', $id)->update(['reporting_org->0->type'=>$reportingOrg['type'] ?? '']);
+
+            return $this->model->where('org_id', $id)->update([
+                'reporting_org->0->narrative'=>$reportingOrg['narrative'] ?? '',
+                'status'=>'draft',
+            ]);
+        }
+
+        return 1;
+    }
+
+    /**
+     * Updates specific key inside reporting_org (json field).
+     *
+     * @param $id
+     * @param $key
+     * @param $data
+     *
+     * @return int
+     */
+    public function updateReportingOrg($id, $key, $data): int
+    {
+        return $this->model->where('id', $id)->update(["reporting_org->0->{$key}"=>$data]);
     }
 }

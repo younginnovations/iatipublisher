@@ -35,6 +35,14 @@ class ActivityTableFaker extends Seeder
                     ],
                 ],
             ],
+            'reporting_org'=>[
+                [
+                    'ref'                => $org->reporting_org[0]['ref'],
+                    'type'               => $org->reporting_org[0]['type'],
+                    'secondary_reporter' => rand(0, 1),
+                    'narrative'          => $org->reporting_org[0]['narrative'],
+                ],
+            ],
             'activity_date'        => [
                 [
                     'date'      => '2016-10-18',

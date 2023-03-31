@@ -97,6 +97,12 @@ class UserService
             'identifier'          => $data['registration_agency'] . '-' . $data['registration_number'],
             'iati_status'         => 'pending',
             'name'                => [['narrative' => $data['publisher_name'], 'language' => null]],
+            'reporting_org'       => [[
+                'ref'                => $data['registration_agency'] . '-' . $data['registration_number'],
+                'type'               => '',
+                'secondary_reporter' => '',
+                'narrative'          => [],
+            ]],
         ]);
 
         $user = $this->userRepo->store([
@@ -133,12 +139,12 @@ class UserService
             'identifier'          => $data['registration_agency'] . '-' . $data['registration_number'],
             'iati_status'         => 'pending',
             'name'                => [['narrative' => $data['publisher_name'], 'language' => null]],
-            'reporting_org'       => $data['source'] ? [[
-                'type' => null,
-                'ref' => null,
+            'reporting_org'       => [[
+                'type' => $data['publisher_type'],
+                'ref' => $data['identifier'],
                 'secondary_reporter' => ($data['source'] === 'secondary_source' ? '1' : '0'),
                 'narrative' => [['narrative' => null, 'language' => null]],
-            ]] : null,
+            ]],
         ]);
 
         $this->settingRepo->store([

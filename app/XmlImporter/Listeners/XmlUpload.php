@@ -9,6 +9,7 @@ use App\XmlImporter\Events\XmlWasUploaded;
 use App\XmlImporter\Foundation\Queue\ImportXml;
 use App\XmlImporter\Foundation\XmlQueueProcessor;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class XmlUpload.
@@ -46,7 +47,7 @@ class XmlUpload
      */
     public function handle(XmlWasUploaded $event): bool
     {
-        $this->dispatch(new ImportXml($event->organizationId, $event->orgRef, $event->userId, $event->filename, $event->iatiIdentifiers));
+        $this->dispatch(new ImportXml($event->organizationId, $event->orgRef, $event->userId, $event->filename, $event->iatiIdentifiers, Auth::user()->organization->reporting_org));
 
         return true;
     }

@@ -17,20 +17,27 @@ class Activity extends Csv
     protected array $activityIdentifiers;
 
     /**
+     * @var array
+     */
+    protected array $organizationReportingOrg;
+
+    /**
      * Activity constructor.
      *
      * @param $rows
      * @param $organizationId
      * @param $userId
      * @param $activityIdentifiers
+     * @param $organizationReportingOrg
      */
-    public function __construct($rows, $organizationId, $userId, $activityIdentifiers)
+    public function __construct($rows, $organizationId, $userId, $activityIdentifiers, $organizationReportingOrg)
     {
         $this->csvRows = $rows;
         $this->organizationId = $organizationId;
         $this->userId = $userId;
         $this->rows = $rows;
         $this->activityIdentifiers = $activityIdentifiers;
+        $this->organizationReportingOrg = $organizationReportingOrg;
     }
 
     /**
@@ -42,7 +49,7 @@ class Activity extends Csv
     public function process(): static
     {
         foreach ($this->getRows() as $row) {
-            $this->initialize($row, $this->activityIdentifiers)
+            $this->initialize($row, $this->activityIdentifiers, $this->organizationReportingOrg)
                  ->process()
                  ->validate()
                  ->validateUnique($this->csvRows)

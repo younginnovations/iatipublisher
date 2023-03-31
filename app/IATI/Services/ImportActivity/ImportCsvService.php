@@ -147,7 +147,7 @@ class ImportCsvService
             Session::put('user_id', Auth::user()->id);
             Session::put('org_id', Auth::user()->organization->id);
 
-            $this->processor->pushIntoQueue($localStorageFile, $filename, $this->getIdentifiers());
+            $this->processor->pushIntoQueue($localStorageFile, $filename, $this->getIdentifiers(), Auth::user()->organization->reporting_org);
         } catch (Exception $e) {
             $this->logger->error(
                 $e->getMessage(),

@@ -109,10 +109,10 @@ class XmlMapper
      * @return void
      * @throws BindingResolutionException
      */
-    public function initComponents(): void
+    public function initComponents($organizationReportingOrg): void
     {
         $this->iatiActivity = [];
-        $this->activity = app()->make(Activity::class);
+        $this->activity = app()->makeWith(Activity::class, ['organizationReportingOrg'  => $organizationReportingOrg]);
         $this->transactionElement = app()->make(Transaction::class);
         $this->resultElement = app()->make(Result::class);
     }
@@ -129,16 +129,23 @@ class XmlMapper
      * @return $this
      * @throws BindingResolutionException
      */
-    public function map(array $activities, $template, $userId, $orgId, $orgRef, $dbIatiIdentifiers): static
+    public function map(array $activities, $template, $userId, $orgId, $orgRef, $dbIatiIdentifiers, $organizationReportingOrg): static
     {
         $xmlActivityIdentifiers = $this->xmlActivityIdentifiers($activities);
-        $xmlQueueWriter = app()->makeWith(XmlQueueWriter::class, ['userId' => $userId, 'orgId' => $orgId, 'orgRef' => $orgRef, 'dbIatiIdentifiers' => $dbIatiIdentifiers, 'xmlActivityIdentifiers' => $xmlActivityIdentifiers]);
+        $xmlQueueWriter = app()->makeWith(XmlQueueWriter::class, [
+            'userId'                   => $userId,
+            'orgId'                    => $orgId,
+            'orgRef'                   => $orgRef,
+            'dbIatiIdentifiers'        => $dbIatiIdentifiers,
+            'organizationReportingOrg' => $organizationReportingOrg,
+            'xmlActivityIdentifiers'   => $xmlActivityIdentifiers,
+        ]);
 
         $totalActivities = count($activities);
         $mappedData = [];
 
         foreach ($activities as $index => $activity) {
-            $this->initComponents();
+            $this->initComponents($organizationReportingOrg);
             $mappedData[$index] = $this->activity->map($this->filter($activity, 'iatiActivity'), $template, $orgRef);
             $mappedData[$index]['default_field_values'] = $this->defaultFieldValues($activity, $template);
             $mappedData[$index]['transactions'] = $this->transactionElement->map($this->filter($activity, 'transaction'), $template);

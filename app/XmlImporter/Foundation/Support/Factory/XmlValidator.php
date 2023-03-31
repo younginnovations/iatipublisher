@@ -9,7 +9,7 @@ use App\Http\Requests\Activity\Title\TitleRequest;
 use App\XmlImporter\Foundation\Support\Factory\Traits\ErrorValidationRules;
 use App\XmlImporter\Foundation\Support\Factory\Traits\ValidationMessages;
 use App\XmlImporter\Foundation\Support\Factory\Traits\WarningValidationRules;
-use Arr;
+use Illuminate\Support\Arr;
 
 /**
  * Class XmlValidator.
@@ -19,6 +19,11 @@ class XmlValidator
     use ErrorValidationRules;
     use WarningValidationRules;
     use ValidationMessages;
+
+    /**
+     * @var bool|array
+     */
+    public bool|array $organizationReportingOrg = false;
 
     /**
      * @var
@@ -80,7 +85,7 @@ class XmlValidator
             $this->warningForCondition($activity),
             $this->warningForTransaction($activity),
             $this->warningForResult($activity),
-            $this->warningForReportingOrganization($activity),
+            $this->warningForReportingOrganization($activity, $this->organizationReportingOrg),
         ];
 
         foreach ($tempRules as $tempRule) {
@@ -132,7 +137,7 @@ class XmlValidator
             $this->errorForCondition($activity),
             $this->errorForTransaction($activity),
             $this->errorForResult($activity),
-            $this->errorForReportingOrganization($activity),
+            $this->errorForReportingOrganization($activity, $this->organizationReportingOrg),
         ];
 
         foreach ($tempRules as $tempRule) {
@@ -146,18 +151,23 @@ class XmlValidator
 
     /**
      * Returns critical rules for xml uploaded activity.
+     *
      * @return array
      */
     public function criticalRules(): array
     {
         $activity = $this->activity;
         $rules = [];
-        $tempRules = [
-            (new TitleRequest())->getErrorsForTitle('title', Arr::get($activity, 'title', [])),
-            (new IdentifierRequest())->getErrorsForIdentifier(true, 'iati_identifier'),
-        ];
+        $reportingOrgRequest = new \App\Http\Requests\Activity\ReportingOrg\ReportingOrgRequest();
+        $reportingOrgRequest->reportingOrganisationInOrganisation($this->organizationReportingOrg);
 
-        foreach ($tempRules as $index => $tempRule) {
+        $tempRules = [
+                (new TitleRequest())->getErrorsForTitle('title'),
+                (new IdentifierRequest())->getErrorsForIdentifier(true, 'identifier'),
+                $reportingOrgRequest->getCriticalErrorsForReportingOrganization(Arr::get($activity, 'reporting_org')),
+            ];
+
+        foreach ($tempRules as $index=>$tempRule) {
             foreach ($tempRule as $key => $rule) {
                 $rules[$key] = $rule;
             }
@@ -207,7 +217,7 @@ class XmlValidator
             $this->messagesForCondition($activity),
             $this->messagesForTransaction($activity),
             $this->messagesForResult($activity),
-            $this->messagesForReportingOrganization($activity),
+            $this->messagesForReportingOrganization($activity, $this->organizationReportingOrg),
         ];
 
         foreach ($tempMessages as $tempMessage) {
@@ -323,6 +333,7 @@ class XmlValidator
      * Sets Organization reporting org.
      *
      * @param $organizationReportingOrg
+     *
      * @return $this
      */
     public function reportingOrganisationInOrganisation($organizationReportingOrg):static

@@ -89,7 +89,7 @@
     <xsd:complexType>
       <xsd:sequence>
         <xsd:element ref="iati-identifier" minOccurs="1" maxOccurs="1" />
-        <xsd:element ref="reporting-org" minOccurs="0" maxOccurs="1" />
+        <xsd:element ref="reporting-org" minOccurs="1" maxOccurs="1" />
         <xsd:element name="title" type="textRequiredType" minOccurs="1" maxOccurs="1">
           <xsd:annotation>
             <xsd:documentation xml:lang="en">

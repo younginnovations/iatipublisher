@@ -535,4 +535,19 @@ class Validation extends Factory
 
         return $errors;
     }
+
+    /**
+     * 'Must match' validation for reporting org.
+     *
+     * @return void
+     */
+    public function mustMatchValidationForReportingOrg(): void
+    {
+        $this->extend(
+            'must_match',
+            function () {
+                return false;
+            }
+        );
+    }
 }

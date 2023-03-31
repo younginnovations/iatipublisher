@@ -15,16 +15,21 @@ use Illuminate\Support\Arr;
 class ReportingOrganization extends Element
 {
     /**
-     * Csv Header for ReportingOrganization element.
      * @var array
      */
-    private array $_csvHeaders
-    = [
-        'reporting_org_reference',
-        'reporting_org_type',
-        'reporting_org_secondary_reporter',
-        'reporting_org_narrative',
-    ];
+    public array $reportingOrg = [];
+
+    /**
+     * @var string|int
+     */
+    public string|int $temp = '';
+
+    /**
+     * Csv Header for ReportingOrganization element.
+     *
+     * @var array
+     */
+    private array $_csvHeaders = ['reporting_org_secondary_reporter'];
 
     /**
      * Index under which the data is stored within the object.
@@ -42,13 +47,15 @@ class ReportingOrganization extends Element
      * ReportingOrganization constructor.
      *
      * @param            $fields
+     * @param            $reportingOrg
      * @param Validation $factory
      */
-    public function __construct($fields, Validation $factory)
+    public function __construct($fields, $reportingOrg, Validation $factory)
     {
+        $this->reportingOrg = $reportingOrg;
         $this->prepare($fields);
         $this->factory = $factory;
-        $this->request = new ReportingOrgRequest();
+        $this->request = (new ReportingOrgRequest())->reportingOrganisationInOrganisation($reportingOrg);
     }
 
     /**
@@ -60,6 +67,8 @@ class ReportingOrganization extends Element
      */
     public function prepare($fields): void
     {
+        $this->data['reporting_org'] = $this->reportingOrg;
+
         foreach ($fields as $key => $values) {
             if (!is_null($values) && array_key_exists($key, array_flip($this->_csvHeaders))) {
                 foreach ($values as $index => $value) {
@@ -81,61 +90,7 @@ class ReportingOrganization extends Element
     public function map($key, $index, $value): void
     {
         if (!(is_null($value) || $value === '')) {
-            $this->setReportingOrganizationReference($key, $index, $value);
-            $this->setReportingOrganizationType($key, $index, $value);
             $this->setSecondaryReporter($key, $index, $value);
-            $this->setReportingOrganizationNarrative($key, $index, $value);
-        }
-    }
-
-    /**
-     * Set reference for reporting organization.
-     *
-     * @param $key
-     * @param $value
-     *
-     * @return void
-     */
-    protected function setReportingOrganizationReference($key, $index, $value): void
-    {
-        if (!isset($this->data['reporting_org'][$index]['ref'])) {
-            $this->data['reporting_org'][$index]['ref'] = '';
-        }
-
-        if ($key === $this->_csvHeaders[0]) {
-            $value = is_null($value) ? '' : trim($value);
-            $this->data['reporting_org'][$index]['ref'] = $value;
-        }
-    }
-
-    /**
-     * Maps reporting organization type.
-     *
-     * @param $key
-     * @param $value
-     *
-     * @return void
-     */
-    protected function setReportingOrganizationType($key, $index, $value): void
-    {
-        if (!isset($this->data['reporting_org'][$index]['type'])) {
-            $this->data['reporting_org'][$index]['type'] = '';
-        }
-
-        if ($key === $this->_csvHeaders[1]) {
-            $value = is_null($value) ? '' : trim($value);
-            $validReportingOrgType = $this->loadCodeList('OrganizationType', 'Organization');
-
-            if ($value) {
-                foreach ($validReportingOrgType as $code => $name) {
-                    if (strcasecmp($value, $name) === 0) {
-                        $value = (string) $code;
-                        break;
-                    }
-                }
-            }
-
-            $this->data['reporting_org'][$index]['type'] = $value;
         }
     }
 
@@ -149,47 +104,8 @@ class ReportingOrganization extends Element
      */
     protected function setSecondaryReporter($key, $index, $value): void
     {
-        if (!isset($this->data['reporting_org'][$index]['secondary_reporter'])) {
-            $this->data['reporting_org'][$index]['secondary_reporter'] = '';
-        }
-
-        if ($key === $this->_csvHeaders[2]) {
-            if ((is_string($value) && (strtolower($value) === 'yes' || strtolower($value) === 'true')) || $value === true) {
-                $value = '1';
-            } elseif ((is_string($value) && (strtolower($value) === 'no' || strtolower($value) === 'false')) || $value === false) {
-                $value = '0';
-            }
-
-            $this->data['reporting_org'][$index]['secondary_reporter'] = $value;
-        }
-    }
-
-    /**
-     * Set narrative for reporting organization.
-     *
-     * @param $key
-     * @param $value
-     *
-     * @return void
-     */
-    protected function setReportingOrganizationNarrative($key, $index, $value): void
-    {
-        if (!isset($this->data['reporting_org'][$index]['narrative'][0]['narrative'])) {
-            $this->data['reporting_org'][$index]['narrative'][0] = [
-                'narrative' => '',
-                'language'  => '',
-            ];
-        }
-
-        if ($key === $this->_csvHeaders[3]) {
-            $value = $value ?: '';
-            $narrative = [
-                'narrative' => $value,
-                'language'  => '',
-            ];
-
-            $this->data['reporting_org'][$index]['narrative'][0] = $narrative;
-        }
+        $this->temp = $value;
+        $this->data['reporting_org'][$index]['secondary_reporter'] = $value;
     }
 
     /**
@@ -204,13 +120,23 @@ class ReportingOrganization extends Element
     }
 
     /**
-     * Critical rules for reporting org.
+     * Error rules for reporting org.
      *
      * @return array
      */
     public function errorRules(): array
     {
         return $this->request->getErrorsForReportingOrganization(Arr::get($this->data, 'reporting_org', []));
+    }
+
+    /**
+     * Critical error rules for reporting org.
+     *
+     * @return array
+     */
+    public function criticalErrors(): array
+    {
+        return $this->request->getCriticalErrorsForReportingOrganization(Arr::get($this->data, 'reporting_org', []));
     }
 
     /**
@@ -237,6 +163,10 @@ class ReportingOrganization extends Element
         $this->errorValidator = $this->factory->sign($this->data())
             ->with($this->errorRules(), $this->messages())
             ->getValidatorInstance();
+        $this->criticalValidator = $this->factory->sign($this->data())
+            ->with($this->criticalErrors(), $this->messages())
+            ->getValidatorInstance();
+
         $this->setValidity();
 
         return $this;

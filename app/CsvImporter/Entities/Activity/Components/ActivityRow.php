@@ -97,6 +97,7 @@ class ActivityRow extends Row
         'contactInfo',
         'otherIdentifier',
         'tag',
+        'reportingOrganization',
         'collaborationType',
         'defaultFlowType',
         'defaultFinanceType',
@@ -110,7 +111,6 @@ class ActivityRow extends Row
         'documentLink',
         'location',
         'plannedDisbursement',
-        'reportingOrganization',
     ];
 
     /**
@@ -160,19 +160,26 @@ class ActivityRow extends Row
     protected array $activityIdentifiers;
 
     /**
+     * @var array
+     */
+    protected array $organizationReportingOrg;
+
+    /**
      * ActivityRow constructor.
      *
      * @param $fields
      * @param $organizationId
      * @param $userId
      * @param $activityIdentifiers
+     * @param $organizationReportingOrg
      */
-    public function __construct($fields, $organizationId, $userId, $activityIdentifiers)
+    public function __construct($fields, $organizationId, $userId, $activityIdentifiers, $organizationReportingOrg)
     {
         $this->fields = $fields;
         $this->stringifyFields();
         $this->organizationId = $organizationId;
         $this->activityIdentifiers = $activityIdentifiers;
+        $this->organizationReportingOrg = $organizationReportingOrg;
         $this->userId = $userId;
         $this->init();
         $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH ', 'CsvImporter/tmp');
@@ -327,7 +334,15 @@ class ActivityRow extends Row
             $namespace = $this->getNamespace($element, self::BASE_NAMESPACE);
 
             if (class_exists($namespace)) {
-                $this->$element = $this->make($namespace, $this->getFields());
+                if ($element === 'reportingOrganization') {
+                    $this->$element = app()->makeWith($namespace, [
+                        'fields'       => $this->getFields(),
+                        'reportingOrg' => $this->organizationReportingOrg,
+                    ]);
+                } else {
+                    $this->$element = $this->make($namespace, $this->getFields());
+                }
+
                 $this->elements[] = $element;
             }
         }

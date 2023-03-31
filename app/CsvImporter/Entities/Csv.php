@@ -45,9 +45,9 @@ abstract class Csv
      *
      * @return ActivityRow
      */
-    protected function initialize($row, $activityIdentifiers): ActivityRow
+    protected function initialize($row, $activityIdentifiers, $organizationReportingOrg): ActivityRow
     {
-        return new ActivityRow($row, $this->organizationId, $this->userId, $activityIdentifiers);
+        return new ActivityRow($row, $this->organizationId, $this->userId, $activityIdentifiers, $organizationReportingOrg);
     }
 
     /**

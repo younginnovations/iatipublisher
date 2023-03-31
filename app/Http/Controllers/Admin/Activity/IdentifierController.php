@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\ActivityIdentifierService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class IdentifierController.
@@ -65,12 +66,17 @@ class IdentifierController extends Controller
     public function update(IdentifierRequest $request, $id): JsonResponse|RedirectResponse
     {
         try {
+            DB::beginTransaction();
+
             if (!$this->identifierService->update($id, $request->except(['_method', '_token']))) {
                 return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating iati-identifier.');
             }
 
+            DB::commit();
+
             return redirect()->route('admin.activity.show', $id)->with('success', 'Iati-identifier updated successfully.');
         } catch (\Exception $e) {
+            DB::rollBack();
             logger()->error($e->getMessage());
 
             return response()->json(

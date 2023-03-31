@@ -6,6 +6,7 @@ namespace App\IATI\Services\Activity;
 
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ActivityRepository;
+use App\IATI\Repositories\Organization\OrganizationRepository;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -650,5 +651,15 @@ class ActivityService
         }
 
         return true;
+    }
+
+    /**
+     * Returns organisation->reporting_org.
+     *
+     * @return mixed
+     */
+    public function getReportingOrg(): mixed
+    {
+        return app(OrganizationRepository::class)->getSpecifiedColumn(auth()->user()->organization->id, 'reporting_org');
     }
 }

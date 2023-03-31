@@ -31,6 +31,19 @@ class OrganizationFactory extends Factory
             'identifier'          => env('IATI_YIPL_IDENTIFIER'),
             'iati_status'         => 'pending',
             'status'              => 'draft',
+            'reporting_org'=>[
+                [
+                    'ref'                => 'NP-SWC-0987',
+                    'type'               => '23',
+                    'secondary_reporter' => '0',
+                    'narrative'          => [
+                        [
+                            'narrative' => 'narrative1',
+                            'language'  => 'en',
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 

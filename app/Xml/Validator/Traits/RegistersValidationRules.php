@@ -27,6 +27,7 @@ trait RegistersValidationRules
         $this->recipientRegionCountryValidation();
         $this->budgetValidation();
         $this->indicatorValidation();
+        $this->mustMatchValidationForReportingOrg();
     }
 
     /**

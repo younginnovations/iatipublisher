@@ -86,6 +86,11 @@ class XmlQueueWriter
     protected $dbIatiIdentifiers;
 
     /**
+     * @var
+     */
+    protected $organizationReportingOrg;
+
+    /**
      * XmlQueueWriter constructor.
      *
      * @param                        $userId
@@ -93,6 +98,7 @@ class XmlQueueWriter
      * @param                        $orgRef
      * @param                        $dbIatiIdentifiers
      * @param                        $xmlActivityIdentifiers
+     * @param                        $organizationReportingOrg
      * @param ActivityRepository     $activityRepo
      * @param TransactionRepository  $transactionRepo
      * @param ResultRepository       $resultRepo
@@ -104,6 +110,7 @@ class XmlQueueWriter
         $orgRef,
         $dbIatiIdentifiers,
         $xmlActivityIdentifiers,
+        $organizationReportingOrg,
         ActivityRepository $activityRepo,
         TransactionRepository $transactionRepo,
         ResultRepository $resultRepo,
@@ -118,6 +125,7 @@ class XmlQueueWriter
         $this->orgRef = $orgRef;
         $this->dbIatiIdentifiers = $dbIatiIdentifiers;
         $this->xmlActivityIdentifiers = $xmlActivityIdentifiers;
+        $this->organizationReportingOrg = $organizationReportingOrg;
         $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH ', 'XmlImporter/tmp');
     }
 
@@ -132,7 +140,7 @@ class XmlQueueWriter
     public function save($mappedActivity): bool
     {
         $activity_identifier = Arr::get($mappedActivity, 'iati_identifier.activity_identifier');
-        $xmlValidator = app(XmlValidator::class);
+        $xmlValidator = (app(XmlValidator::class))->reportingOrganisationInOrganisation($this->organizationReportingOrg);
         $existing = $this->activityAlreadyExists($activity_identifier);
         $duplicate = $this->activityIsDuplicate(Arr::get($mappedActivity, 'iati_identifier.iati_identifier_text'));
         $isIdentifierValid = $this->isIdentifierValid(Arr::get($mappedActivity, 'iati_identifier.iati_identifier_text'));

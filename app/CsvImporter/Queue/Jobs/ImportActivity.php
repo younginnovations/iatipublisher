@@ -54,13 +54,20 @@ class ImportActivity extends Job implements ShouldQueue
     private array $activityIdentifiers;
 
     /**
+     * Current Organizations reporting_org.
+     *
+     * @var array
+     */
+    protected array $organizationReportingOrg;
+
+    /**
      * Create a new job instance.
      *
      * @param CsvProcessor $csvProcessor
      * @param              $filename
      * @param              $activityIdentifiers
      */
-    public function __construct(CsvProcessor $csvProcessor, $filename, $activityIdentifiers)
+    public function __construct(CsvProcessor $csvProcessor, $filename, $activityIdentifiers, $organizationReportingOrg)
     {
         $this->csvProcessor = $csvProcessor;
         $this->organizationId = Session::get('org_id');
@@ -69,6 +76,7 @@ class ImportActivity extends Job implements ShouldQueue
         $this->activityIdentifiers = $activityIdentifiers;
         $this->csv_file_storage_path = env('CSV_FILE_STORAGE_PATH', 'CsvImporter/file');
         $this->csv_data_storage_path = env('CSV_DATA_STORAGE_PATH', 'CsvImporter/tmp');
+        $this->organizationReportingOrg = $organizationReportingOrg;
     }
 
     /**
@@ -81,7 +89,7 @@ class ImportActivity extends Job implements ShouldQueue
     {
         try {
             awsUploadFile(sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, $this->userId, 'status.json'), json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
-            $this->csvProcessor->handle($this->organizationId, $this->userId, $this->activityIdentifiers);
+            $this->csvProcessor->handle($this->organizationId, $this->userId, $this->activityIdentifiers, $this->organizationReportingOrg);
             awsUploadFile(sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, $this->organizationId, $this->userId, 'status.json'), json_encode(['success' => true, 'message' => 'Complete'], JSON_THROW_ON_ERROR));
 
             $this->delete();

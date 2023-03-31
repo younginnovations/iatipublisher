@@ -447,8 +447,11 @@ trait ValidationMessages
      *
      * @return array
      */
-    public function messagesForReportingOrganization(array $activity): array
+    public function messagesForReportingOrganization(array $activity, $organizationReportingOrg): array
     {
-        return (new ReportingOrgRequest())->getMessagesForReportingOrganization(Arr::get($activity, 'reporting_org', []));
+        $reportingOrgRequest = new ReportingOrgRequest();
+        $reportingOrgRequest->reportingOrganisationInOrganisation($organizationReportingOrg);
+
+        return $reportingOrgRequest->getMessagesForReportingOrganization(Arr::get($activity, 'reporting_org', []));
     }
 }

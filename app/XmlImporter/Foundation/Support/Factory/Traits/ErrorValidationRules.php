@@ -437,10 +437,16 @@ trait ErrorValidationRules
     /**
      * Rules for reporting organization.
      *
+     * @param array $activity
+     * @param $organizationReportingOrg
+     *
      * @return array
      */
-    protected function errorForReportingOrganization(array $activity): array
+    protected function errorForReportingOrganization(array $activity, $organizationReportingOrg): array
     {
-        return (new ReportingOrgRequest())->getErrorsForReportingOrganization(Arr::get($activity, 'reporting_org', []));
+        $reportingOrgRequest = new ReportingOrgRequest();
+        $reportingOrgRequest->reportingOrganisationInOrganisation($organizationReportingOrg);
+
+        return $reportingOrgRequest->getErrorsForReportingOrganization(Arr::get($activity, 'reporting_org', []));
     }
 }

@@ -69,17 +69,13 @@ class ReportingOrgService
      * @param $id
      * @param $reportingOrg
      *
-     * @return bool
+     * @return int
      */
-    public function update($id, $reportingOrg): bool
+    public function update($id, $reportingOrg): int
     {
-        foreach ($reportingOrg['reporting_org'] as $key => $description) {
-            $reportingOrg['reporting_org'][$key]['narrative'] = array_values($description['narrative']);
-        }
+        $secondaryReporter = $reportingOrg['reporting_org'][0]['secondary_reporter'];
 
-        $reportingOrg = array_values($reportingOrg['reporting_org']);
-
-        return $this->activityRepository->update($id, ['reporting_org' => $reportingOrg]);
+        return $this->activityRepository->updateReportingOrg($id, 'secondary_reporter', $secondaryReporter);
     }
 
     /**

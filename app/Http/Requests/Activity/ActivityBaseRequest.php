@@ -110,6 +110,13 @@ class ActivityBaseRequest extends FormRequest
                 return !($parameter[1] < $parameter[0]);
             }
         );
+
+        Validator::extend(
+            'must_match',
+            function () {
+                return false;
+            }
+        );
     }
 
     /**
