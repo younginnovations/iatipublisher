@@ -158,8 +158,6 @@ class Validation extends Factory
     protected function parseErrors($index): string
     {
         return Arr::get(explode('.', $index), 0, '');
-
-//        return ucwords(((str_replace('_', ' ', $element))));
     }
 
     /**

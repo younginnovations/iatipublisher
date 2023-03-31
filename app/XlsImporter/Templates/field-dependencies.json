@@ -184,7 +184,6 @@
         "default_tied_status": "Code"
     },
     "country_budget_items": {
-        "elementBase": "country_budget_vocabulary",
         "fieldDependency": {
             "budget_item code": {
                 "parent": "budget_item",
@@ -353,6 +352,12 @@
                     "point pos longitude"
                 ]
             },
+            "point pos latitude" : {
+                "parent" : "point pos",
+                "peer" : [
+                    "point pos longitude"
+                ]
+            },
             "exactness code": {
                 "parent": "exactness"
             },
@@ -374,7 +379,11 @@
                 "parent": "period_end"
             },
             "value amount": {
-                "parent": "value"
+                "parent": "value",
+                "peer" : [
+                    "value currency",
+                    "value value_date"
+                ]
             },
             "provider_org ref": {
                 "parent": "provider_org",
@@ -490,11 +499,6 @@
       }
     },
     "indicator": {
-        "elementBase": "measure",
-        "elementBasePeer": [
-            "ascending",
-            "aggregation_status"
-        ],
         "fieldDependency": {
             "title narrative narrative": {
                 "parent": "title narrative",
@@ -544,11 +548,6 @@
         }
     },
     "baseline": {
-        "elementBase": "year",
-        "elementBasePeer": [
-            "date",
-            "value"
-        ],
         "fieldDependency": {
             "comment narrative narrative": {
                 "parent": "comment narrative",
@@ -748,11 +747,7 @@
                 "parent": "sector",
                 "peer": [
                     "sector vocabulary_uri",
-                    "sector code",
-                    "sector text",
-                    "sector category_code",
-                    "sector sdg_goal",
-                    "sector sdg_target"
+                    "sector code"
                 ]
             },
             "sector narrative narrative": {
@@ -767,8 +762,7 @@
             "recipient_region region_vocabulary": {
                 "parent": "recipient_region",
                 "peer": [
-                    "recipient_region region_code",
-                    "recipient_region custom_code",
+                    "recipient_region code",
                     "recipient_region vocabulary_uri"
                 ]
             },

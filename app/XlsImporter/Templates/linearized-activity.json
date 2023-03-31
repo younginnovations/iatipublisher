@@ -63,13 +63,13 @@
     "tag": {
         "tag_vocabulary": "vocabulary",
         "code": "code",
-        "vocabulary_uri": "vocabulary uri",
+        "vocabulary_uri": "vocabulary_uri",
         "narrative narrative": "narrative",
         "narrative language": "language"
     },
     "policy_marker": {
         "policy_marker_vocabulary": "vocabulary",
-        "vocabulary_uri": "vocabulary uri",
+        "vocabulary_uri": "vocabulary_uri",
         "significance": "significance",
         "code": "code",
         "narrative narrative": "narrative",
@@ -86,10 +86,7 @@
     },
     "default_aid_type": {
         "default_aid_type_vocabulary": "vocabulary",
-        "default_aid_type": "code",
-        "earmarking_category": "code",
-        "earmarking_modality": "code",
-        "cash_and_voucher_modalities": "code"
+        "code": "code"
     },
     "default_tied_status": {
         "default_tied_status": "code"
@@ -182,7 +179,7 @@
         "period_end date": "period_end_iso_date",
         "value amount": "value_value",
         "value currency": "value_currency",
-        "value value_date": "value_value_date",
+        "value value_date": "value_date",
         "provider_org ref": "provider_organisation_reference",
         "provider_org provider_activity_id": "provider_organisation_provider_activity_id",
         "provider_org type": "provider_organisation_type",
@@ -348,18 +345,13 @@
         "sector sector_vocabulary": "sector_vocabulary",
         "sector vocabulary_uri": "sector_vocabulary_uri",
         "sector code": "sector_code",
-        "sector text": "sector_code",
-        "sector category_code": "sector_code",
-        "sector sdg_goal": "sector_code",
-        "sector sdg_target": "sector_code",
         "sector narrative narrative": "sector_narrative",
         "sector narrative language": "sector_language",
         "recipient_country country_code": "recipient_country_code",
         "recipient_country narrative narrative": "recipient_country_narrative",
         "recipient_country narrative language": "recipient_country_language",
         "recipient_region region_vocabulary": "recipient_region_vocabulary",
-        "recipient_region region_code": "recipient_region_code",
-        "recipient_region custom_code": "recipient_region_code",
+        "recipient_region code": "recipient_region_code",
         "recipient_region vocabulary_uri": "recipient_region_vocabulary_uri",
         "recipient_region narrative narrative": "recipient_region_narrative",
         "recipient_region narrative language": "recipient_region_language",

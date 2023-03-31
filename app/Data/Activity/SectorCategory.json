@@ -83,12 +83,6 @@
       "description": "Communications sector policy, planning and programmes; institution capacity building and advice; including postal services development; unspecified communications activities."
     },
     {
-      "code": "230",
-      "name": "ENERGY GENERATION AND SUPPLY",
-      "language": "en",
-      "description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation."
-    },
-    {
       "code": "231",
       "name": "Energy generation, distribution and efficiency \u2013 general",
       "language": "en",
@@ -240,12 +234,6 @@
       "code": "910",
       "name": "ADMINISTRATIVE COSTS OF DONORS",
       "language": "en"
-    },
-    {
-      "code": "920",
-      "name": "SUPPORT TO NON- GOVERNMENTAL ORGANISATIONS (NGOs)",
-      "language": "en",
-      "description": "In the donor country."
     },
     {
       "code": "930",

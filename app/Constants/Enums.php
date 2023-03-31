@@ -62,4 +62,15 @@ abstract class Enums
         'internal',
         'external',
     ];
+
+    const IMPORT_STATUS = [
+        'progress',
+        'completed',
+    ];
+
+    const IMPORT_TYPE = [
+        'xml',
+        'csv',
+        'xls',
+    ];
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Models\Activity;
 
+use Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -40,6 +41,26 @@ class Period extends Model implements Auditable
     ];
 
     protected $touches = ['indicator'];
+
+    /**
+     * Before inbuilt function.
+     *
+     * @return void
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::saving(
+            function ($model) {
+                if (Auth::check()) {
+                    $model->result_code = sprintf('%d%s', auth()->user()->id, time());
+                } else {
+                    $model->result_code = time();
+                }
+            }
+        );
+    }
 
     /**
      * Period belongs to indicator.

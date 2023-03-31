@@ -115,7 +115,7 @@ class ActivityService
         $activity_title = [
             [
                 'narrative' => $input['narrative'],
-                'language'  => $input['language'],
+                'language' => $input['language'],
             ],
         ];
 
@@ -124,12 +124,12 @@ class ActivityService
         $defaultElementStatus['budget'] = $budgetNotProvided === '1' || $defaultElementStatus['budget'];
 
         return $this->activityRepository->store([
-            'iati_identifier'      => $activity_identifier,
-            'title'                => $activity_title,
-            'org_id'               => Auth::user()->organization_id,
-            'element_status'       => $defaultElementStatus,
+            'iati_identifier' => $activity_identifier,
+            'title' => $activity_title,
+            'org_id' => Auth::user()->organization_id,
+            'element_status' => $defaultElementStatus,
             'default_field_values' => $this->getDefaultValues(),
-            'reporting_org'        => Auth::user()->organization->reporting_org,
+            'reporting_org' => Auth::user()->organization->reporting_org,
         ]);
     }
 
@@ -231,10 +231,12 @@ class ActivityService
         $completed_core_element_count = 0;
 
         foreach ($core_elements as $core_element) {
-            if (array_key_exists(
-                $core_element,
-                $activity->element_status
-            ) && $activity->element_status[$core_element]) {
+            if (
+                array_key_exists(
+                    $core_element,
+                    $activity->element_status
+                ) && $activity->element_status[$core_element]
+            ) {
                 $completed_core_element_count++;
             }
         }
@@ -413,10 +415,12 @@ class ActivityService
 
         if (!empty($transactions)) {
             foreach ($transactions as $transaction) {
-                if (!empty($transaction['transaction'])
+                if (
+                    !empty($transaction['transaction'])
                     && array_key_exists('recipient_country', $transaction['transaction'])
                     && !empty($transaction['transaction']['recipient_country'])
-                    && !$this->isElementEmpty($transaction['transaction']['recipient_country'], 'recipientCountryFields')) {
+                    && !$this->isElementEmpty($transaction['transaction']['recipient_country'], 'recipientCountryFields')
+                ) {
                     return true;
                 }
             }
@@ -438,10 +442,12 @@ class ActivityService
 
         if (!empty($transactions)) {
             foreach ($transactions as $transaction) {
-                if (!empty($transaction['transaction'])
+                if (
+                    !empty($transaction['transaction'])
                     && array_key_exists('recipient_region', $transaction['transaction'])
                     && !empty($transaction['transaction']['recipient_region'])
-                    && !$this->isElementEmpty($transaction['transaction']['recipient_region'], 'recipientRegionFields')) {
+                    && !$this->isElementEmpty($transaction['transaction']['recipient_region'], 'recipientRegionFields')
+                ) {
                     return true;
                 }
             }
@@ -463,10 +469,12 @@ class ActivityService
 
         if (!empty($transactions)) {
             foreach ($transactions as $transaction) {
-                if (!empty($transaction['transaction'])
+                if (
+                    !empty($transaction['transaction'])
                     && array_key_exists('sector', $transaction['transaction'])
-                        && !empty($transaction['transaction']['sector'])
-                            && !$this->isElementEmpty($transaction['transaction']['sector'], 'sectorFields')) {
+                    && !empty($transaction['transaction']['sector'])
+                    && !$this->isElementEmpty($transaction['transaction']['sector'], 'sectorFields')
+                ) {
                     return true;
                 }
             }
@@ -498,18 +506,21 @@ class ActivityService
 
                 if (!array_key_exists($getBudgetBudgetType, $array)) {
                     $array[$getBudgetBudgetType] = [
-                        'id'            => $key,
+                        'id' => $key,
                         'budget_status' => $getBudgetBudgetStatus,
-                        'period_start'  => $getBudgetPeriodStartDate,
-                        'period_end'    => $getBudgetPeriodEndDate,
+                        'period_start' => $getBudgetPeriodStartDate,
+                        'period_end' => $getBudgetPeriodEndDate,
                     ];
                 } elseif (
-                    $getBudgetPeriodStartDate === $getArrayPeriodStartDate
-                    || $getBudgetPeriodEndDate === $getArrayPeriodEndDate
-                    || Carbon::parse($getBudgetPeriodStartDate)->betweenIncluded($getArrayPeriodStartDate, $getArrayPeriodEndDate)
-                    || Carbon::parse($getBudgetPeriodEndDate)->betweenIncluded($getArrayPeriodStartDate, $getArrayPeriodEndDate)
+                    isDate($getBudgetPeriodStartDate) && isDate($getBudgetPeriodEndDate) && (
+                        $getBudgetPeriodStartDate === $getArrayPeriodStartDate
+                        || $getBudgetPeriodEndDate === $getArrayPeriodEndDate
+                        || Carbon::parse($getBudgetPeriodStartDate)->betweenIncluded($getArrayPeriodStartDate, $getArrayPeriodEndDate)
+                        || Carbon::parse($getBudgetPeriodEndDate)->betweenIncluded($getArrayPeriodStartDate, $getArrayPeriodEndDate)
+                    )
                 ) {
-                    if (empty($ids) ||
+                    if (
+                        empty($ids) ||
                         !in_array(Arr::get($array, Arr::get($budget, 'budget_type', '1') . '.id'), Arr::get($ids, Arr::get($budget, 'budget_type', '1'), []), true)
                     ) {
                         $ids[Arr::get($budget, 'budget_type', '1')][] = Arr::get(
@@ -573,9 +584,9 @@ class ActivityService
             foreach ($budgets as $key => $budget) {
                 if (Arr::get($budget, 'budget_type', '1') === '1') {
                     $originalBudgets[Arr::get($budget, 'budget_type', '1')][] = [
-                        'id'           => $key,
+                        'id' => $key,
                         'period_start' => Arr::get($budget, 'period_start.0.date', ''),
-                        'period_end'   => Arr::get($budget, 'period_end.0.date', ''),
+                        'period_end' => Arr::get($budget, 'period_end.0.date', ''),
                     ];
                 }
             }
@@ -585,7 +596,8 @@ class ActivityService
                     $valid = false;
 
                     foreach ($originalBudgets[1] as $originalBudget) {
-                        if ($originalBudget['period_start'] === Arr::get($budget, 'period_start.0.date', '') &&
+                        if (
+                            $originalBudget['period_start'] === Arr::get($budget, 'period_start.0.date', '') &&
                             $originalBudget['period_end'] === Arr::get($budget, 'period_end.0.date', '')
                         ) {
                             $valid = true;

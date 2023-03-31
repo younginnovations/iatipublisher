@@ -6,7 +6,7 @@ namespace App\XlsImporter\Foundation;
 
 use App\Exceptions\InvalidTag;
 use App\IATI\Repositories\Activity\ActivityRepository;
-use App\XlsImporter\Foundation\Mapper\Activity;
+use App\XlsImporter\Foundation\Mapper\XlsMapper;
 use App\XlsImporter\Foundation\XlsProcessor\XlsToArray;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\DatabaseManager;
@@ -55,6 +55,11 @@ class XlsQueueProcessor
     private DatabaseManager $databaseManager;
 
     /**
+     * @var XlsMapper
+     */
+    protected XlsMapper $xlsMapper;
+
+    /**
      * @var string
      */
     private string $xls_file_storage_path;
@@ -67,12 +72,13 @@ class XlsQueueProcessor
     /**
      * XlsQueueProcessor constructor.
      *
+     * @param XlsMapper          $xlsMapper
      * @param ActivityRepository $activityRepo
      * @param DatabaseManager    $databaseManager
      */
-    public function __construct(ActivityRepository $activityRepo, DatabaseManager $databaseManager)
+    public function __construct(XlsMapper $xlsMapper, ActivityRepository $activityRepo, DatabaseManager $databaseManager)
     {
-        // $this->xmlProcessor = $xmlProcessor;
+        $this->xlsMapper = $xlsMapper;
         $this->activityRepo = $activityRepo;
         $this->databaseManager = $databaseManager;
         $this->xls_file_storage_path = env('XLS_FILE_STORAGE_PATH ', 'XlsImporter/file');
@@ -95,30 +101,22 @@ class XlsQueueProcessor
     public function import($filename, $orgId, $orgRef, $userId, $dbIatiIdentifiers): bool
     {
         try {
-            // dd('here');
+            logger()->error('here in import');
             $this->orgId = $orgId;
             $this->orgRef = $orgRef;
             $this->userId = $userId;
             $this->filename = $filename;
-            // $filePath = sprintf('%s/%s/%s/%s', $this->xls_file_storage_path, $this->orgId, $this->userId, $filename);
-            // $contents = awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_file_storage_path, $this->orgId, $this->userId, $filename));
-            // awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
+            $filePath = sprintf('%s/%s/%s/%s', $this->xls_file_storage_path, $this->orgId, $this->userId, $filename);
+            $contents = awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_file_storage_path, $this->orgId, $this->userId, $filename));
+            awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
 
-            // dd($contents);
             $xlsToArray = new XlsToArray();
             Excel::import($xlsToArray, $filePath, 's3');
-            $data = $xlsToArray->sheetData;
-            // foreach ($xlsToArray->getSheetNames() as $index => $sheetName) {
-            //     $data[$index] = new ExcelSheetImport();
-            // }
-            // dd($xlsToArray->sheetData);
-            // if ($this->xlsServiceProvider->isValidAgainstSchema($contents)) {
-            // $xlsData =;
-            // dd($xlsData)
-            $activity = new Activity();
-            $activity->map($data);
+            $contents = $xlsToArray->sheetData;
 
-            // $this->->process($xmlData, $userId, $orgId, $orgRef, $dbIatiIdentifiers);
+            $xlsType = 'basic';
+
+            $this->xlsMapper->process($contents, $xlsType, $userId, $orgId, $orgRef, $dbIatiIdentifiers);
 
             awsUploadFile(
                 sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'),
@@ -128,21 +126,21 @@ class XlsQueueProcessor
                 )
             );
 
-            awsUploadFile(
-                sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'schema_error.log'),
-                json_encode(
-                    libxml_get_errors(),
-                    JSON_THROW_ON_ERROR
-                )
-            );
+            // awsUploadFile(
+            //     sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'schema_error.log'),
+            //     json_encode(
+            //         libxml_get_errors(),
+            //         JSON_THROW_ON_ERROR
+            //     )
+            // );
 
-            awsUploadFile(
-                sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $orgId, $userId, 'status.json'),
-                json_encode(
-                    ['success' => false, 'message' => 'Invalid Xls or Header mismatched'],
-                    JSON_THROW_ON_ERROR
-                )
-            );
+            // awsUploadFile(
+            //     sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $orgId, $userId, 'status.json'),
+            //     json_encode(
+            //         ['success' => false, 'message' => 'Invalid Xls or Header mismatched'],
+            //         JSON_THROW_ON_ERROR
+            //     )
+            // );
 
             $this->databaseManager->rollback();
 

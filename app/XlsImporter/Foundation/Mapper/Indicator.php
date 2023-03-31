@@ -4,31 +4,34 @@ declare(strict_types=1);
 
 namespace App\XlsImporter\Foundation\Mapper;
 
-use App\IATI\Traits\DataSanitizeTrait;
+use App\XlsImporter\Foundation\Mapper\Traits\XlsMapperHelper;
 use App\XlsImporter\Foundation\XlsValidator\Validators\IndicatorValidator;
 use Illuminate\Support\Arr;
 
 /**
- * Class Activity.
+ * Class Indicator.
  */
 class Indicator
 {
-    use DataSanitizeTrait;
+    use XlsMapperHelper;
 
-    //activities whose identifier is mentioned on setting sheet
+    //indicators
     protected array $indicators = [];
 
     //
     protected array $indicatorIdentifier = [];
 
-    // activities whose identifier is not mentioned on setting
     protected array $periodIdentifier = [];
+
+    protected array $baselineIndexing = [];
 
     protected array $identifiers = [];
 
     protected int $rowCount = 2;
     protected string $sheetName = '';
+
     protected array $columnTracker = [];
+    protected array $tempColumnTracker = [];
 
     /**
      * @var array
@@ -83,7 +86,7 @@ class Indicator
                 $this->columnToFieldMapper($this->indicatorDivision[$sheetName], $content);
             }
         }
-        $this->removeUnwantedData();
+
         $this->validateIndicator();
     }
 
@@ -93,40 +96,26 @@ class Indicator
 
         foreach ($this->indicators as $resultIdentifier => $indicators) {
             foreach ($indicators as $indicatorIdentifier => $indicatorData) {
-                $this->indicators[$resultIdentifier][$indicatorIdentifier] = $indicatorValidator
+                $errors = $indicatorValidator
                     ->init($indicatorData['indicator'])
                     ->validateData();
+
+                $this->indicators[$resultIdentifier][$indicatorIdentifier]['errors'] = $this->appendExcelColumnAndRowDetail($errors, $this->columnTracker[$resultIdentifier][$indicatorIdentifier]['indicator']);
             }
         }
     }
 
-    public function removeUnwantedData()
+    public function appendExcelColumnAndRowDetail($errors, $fieldPosition): array
     {
-        foreach ($this->indicators as $resultIdentifier => $indicators) {
-            foreach ($indicators as $indicatorIdentifier => $indicatorData) {
-                $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'] = array_values(Arr::get($indicatorData, 'indicator.baseline', []));
+        foreach ($errors as $errorLevel => $errorData) {
+            foreach ($errorData as $element => $error) {
+                foreach ($error as $key => $err) {
+                    $errors[$errorLevel][$element][$key] .= ' ( ' . Arr::get($fieldPosition, $key, 'not found') . ' )';
+                }
             }
         }
-    }
 
-    public function getLinearizedActivity()
-    {
-        return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/linearized-activity.json'), true, 512, 0);
-    }
-
-    public function getDependencies()
-    {
-        return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/field-dependencies.json'), true, 512, 0);
-    }
-
-    public function getDropDownFields()
-    {
-        return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/dropdown-fields.json'), true, 512, 0);
-    }
-
-    public function getExcelColumnNameMapper()
-    {
-        return json_decode(file_get_contents(app_path('/XlsImporter/Templates/excel-column-name-mapper.json')), true, 512, JSON_THROW_ON_ERROR);
+        return $errors;
     }
 
     public function mapIndicators($data, $sheetName)
@@ -170,7 +159,7 @@ class Indicator
                     )
                 ) {
                     if (!empty($elementData)) {
-                        $this->pushIndicatorData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields));
+                        $this->pushIndicatorData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
                         $elementData = [];
                     }
 
@@ -187,82 +176,22 @@ class Indicator
 
                 $elementData[] = $systemMappedRow;
             } else {
-                $this->pushIndicatorData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields));
+                $this->pushIndicatorData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
                 break;
             }
         }
     }
 
-    protected function pushIndicatorData($element, $identifier, $data)
+    public function getElementData($data, $dependency, $elementDropDownFields, $element): array
     {
-        $periodElementFunctions = [
-            'indicator' => 'pushIndicator',
-            'indicator document_link' => 'pushIndicatorDocumentLink',
-            'baseline' => 'pushIndicatorBaseline',
-            'baseline document_link' => 'pushIndicatorBaselineDocumentLink',
-        ];
-
-        call_user_func([$this, $periodElementFunctions[$element]], $identifier, $data);
-    }
-
-    protected function pushIndicator($identifier, $data): void
-    {
-        $resultIdentifier = Arr::get($this->identifiers, "indicator.$identifier", null);
-
-        $this->indicators[$resultIdentifier][$identifier]['indicator'] = $data[0];
-    }
-
-    protected function pushIndicatorDocumentLink($identifier, $data): void
-    {
-        $resultIdentifier = Arr::get($this->identifiers, "indicator.$identifier", null);
-
-        $this->indicators[$resultIdentifier][$identifier]['indicator']['document_link'] = $data;
-    }
-
-    protected function pushIndicatorBaseline($identifier, $data): void
-    {
-        $indicatorIdentifier = Arr::get($this->identifiers, "baseline.$identifier", null);
-        $resultIdentifier = Arr::get($this->identifiers, "indicator.$indicatorIdentifier", null);
-
-        $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][$identifier] = $data[0];
-    }
-
-    protected function pushIndicatorBaselineDocumentLink($identifier, $data): void
-    {
-        $indicatorIdentifier = Arr::get($this->identifiers, "baseline.$identifier", null);
-        $resultIdentifier = Arr::get($this->identifiers, "indicator.$indicatorIdentifier", null);
-
-        $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][$identifier]['document_link'] = $data;
-    }
-
-    public function mapDropDownValueToKey($value, $location)
-    {
-        // should we consider case?
-        if (is_null($value)) {
-            return $value;
-        }
-
-        if (is_array($location)) {
-            return Arr::get($location, $value, $value);
-        }
-
-        $locationArr = explode('/', $location);
-
-        $dropDownValues = array_flip(getCodeList(explode('.', $locationArr[1])[0], $locationArr[0]));
-        $key = Arr::get($dropDownValues, $value, $value);
-
-        return $key;
-    }
-
-    public function getElementData($data, $dependency, $elementDropDownFields): array
-    {
-        $elementData = [];
         $elementBase = Arr::get($dependency, 'elementBase', null);
         $elementBasePeer = Arr::get($dependency, 'elementBasePeer', []);
         $baseCount = null;
         $fieldDependency = $dependency['fieldDependency'];
         $parentBaseCount = [];
         $excelColumnName = $this->getExcelColumnNameMapper();
+        $activityTemplate = $this->getActivityTemplate();
+        $elementData = Arr::get($activityTemplate, $element, []);
 
         foreach (array_values($fieldDependency) as $dependents) {
             $parentBaseCount[$dependents['parent']] = null;
@@ -272,8 +201,10 @@ class Indicator
             foreach ($row as $fieldName => $fieldValue) {
                 if ($elementBase && ($fieldName === $elementBase && $fieldValue)) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
+                    $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
                 } elseif ($elementBase && $fieldName === $elementBase && $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
+                    $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
                 }
 
                 if (in_array($fieldName, array_keys($fieldDependency))) {
@@ -296,7 +227,7 @@ class Indicator
 
                 if (!Arr::get($elementData, $elementPositionBasedOnParent, null)) {
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
-                    $this->columnTracker[$elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
+                    $this->tempColumnTracker[$elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
                 }
             }
             $this->rowCount++;
@@ -305,43 +236,65 @@ class Indicator
         return $elementData;
     }
 
-    public function checkIfPeerAttributesAreNotEmpty(array $peerAttributes, array $rowContent): bool
+    protected function pushIndicatorData($element, $identifier, $data)
     {
-        foreach ($peerAttributes as $attributeName) {
-            if (Arr::get($rowContent, $attributeName, null)) {
-                return true;
-            }
-        }
+        $periodElementFunctions = [
+            'indicator' => 'pushIndicator',
+            'indicator document_link' => 'pushIndicatorDocumentLink',
+            'baseline' => 'pushIndicatorBaseline',
+            'baseline document_link' => 'pushIndicatorBaselineDocumentLink',
+        ];
 
-        return false;
+        call_user_func([$this, $periodElementFunctions[$element]], $identifier, $data);
+        $this->tempColumnTracker = [];
     }
 
-    public function getElementPosition($fieldDependency, $dependencies): string
+    protected function pushIndicator($identifier, $data): void
     {
-        $position = '';
-        $dependency = explode(' ', $dependencies);
-        $expected_position = '';
+        $resultIdentifier = Arr::get($this->identifiers, "indicator.$identifier", null);
 
-        foreach ($dependency as $key) {
-            $expected_position = empty($expected_position) ? $key : "$expected_position $key";
-
-            if (in_array($expected_position, array_keys($fieldDependency))) {
-                $positionValue = $fieldDependency[$expected_position];
-                $position = empty($position) ? $key . '.' . $positionValue : "$position.$key.$positionValue";
-            } else {
-                $position = empty($position) ? "$key" : "$position.$key";
-            }
-        }
-
-        return $position;
+        $this->indicators[$resultIdentifier][$identifier]['indicator'] = $data;
+        $this->columnTracker[$resultIdentifier][$identifier]['indicator'] = $this->tempColumnTracker;
     }
 
-    public function checkRowNotEmpty($row)
+    protected function pushIndicatorDocumentLink($identifier, $data): void
     {
-        if (implode('', array_values($row))) {
-            return true;
+        $resultIdentifier = Arr::get($this->identifiers, "indicator.$identifier", null);
+
+        $this->indicators[$resultIdentifier][$identifier]['indicator']['document_link'] = $data;
+        $this->updateColumnTracker($resultIdentifier, $identifier, 'document_link');
+    }
+
+    protected function pushIndicatorBaseline($identifier, $data): void
+    {
+        $indicatorIdentifier = Arr::get($this->identifiers, "baseline.$identifier", null);
+        $resultIdentifier = Arr::get($this->identifiers, "indicator.$indicatorIdentifier", null);
+
+        if (isset($this->baselineIndexing[$resultIdentifier][$indicatorIdentifier])) {
+            $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][] = $data;
+        } else {
+            $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][0] = $data;
         }
 
-        return false;
+        $currentBaselinePosition = array_key_last($this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline']);
+        $this->baselineIndexing[$resultIdentifier][$indicatorIdentifier][$identifier] = $currentBaselinePosition;
+        $this->updateColumnTracker($resultIdentifier, $indicatorIdentifier, "baseline.$currentBaselinePosition");
+    }
+
+    protected function pushIndicatorBaselineDocumentLink($identifier, $data): void
+    {
+        $indicatorIdentifier = Arr::get($this->identifiers, "baseline.$identifier", null);
+        $resultIdentifier = Arr::get($this->identifiers, "indicator.$indicatorIdentifier", null);
+        $baselineIndex = $this->baselineIndexing[$resultIdentifier][$indicatorIdentifier][$identifier];
+
+        $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][$baselineIndex]['document_link'] = $data;
+        $this->updateColumnTracker($resultIdentifier, $indicatorIdentifier, "baseline.$baselineIndex.document_link");
+    }
+
+    protected function updateColumnTracker($resultIdentifier, $indicatorIdentifier, $keyPrefix)
+    {
+        foreach ($this->tempColumnTracker as $columnPosition => $columnIndex) {
+            $this->columnTracker[$resultIdentifier][$indicatorIdentifier]['indicator']["$keyPrefix.$columnPosition"] = $columnIndex;
+        }
     }
 }

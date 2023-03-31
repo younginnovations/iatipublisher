@@ -447,12 +447,12 @@ class ActivityRepository extends Repository
         $activitiesCount = $this->model->where('org_id', $id)->count();
 
         if ($activitiesCount > 0) {
-            $this->model->where('org_id', $id)->update(['reporting_org->0->ref'=>$reportingOrg['ref'] ?? '']);
-            $this->model->where('org_id', $id)->update(['reporting_org->0->type'=>$reportingOrg['type'] ?? '']);
+            $this->model->where('org_id', $id)->update(['reporting_org->0->ref' => $reportingOrg['ref'] ?? '']);
+            $this->model->where('org_id', $id)->update(['reporting_org->0->type' => $reportingOrg['type'] ?? '']);
 
             return $this->model->where('org_id', $id)->update([
-                'reporting_org->0->narrative'=>$reportingOrg['narrative'] ?? '',
-                'status'=>'draft',
+                'reporting_org->0->narrative' => $reportingOrg['narrative'] ?? '',
+                'status' => 'draft',
             ]);
         }
 
@@ -470,7 +470,7 @@ class ActivityRepository extends Repository
      */
     public function updateReportingOrg($id, $key, $data): int
     {
-        return $this->model->where('id', $id)->update(["reporting_org->0->{$key}"=>$data]);
+        return $this->model->where('id', $id)->update(["reporting_org->0->{$key}" => $data]);
     }
 
     /**
@@ -479,8 +479,27 @@ class ActivityRepository extends Repository
      *
      * @return Collection|array
      */
-    public function getActivitiesByOrgIds(array $orgIds): Collection | array
+    public function getActivitiesByOrgIds(array $orgIds): Collection|array
     {
         return $this->model->whereIn('org_id', $orgIds)->get();
+    }
+
+    /*
+     * Returns activities with result belonging to an organization
+     * 
+     * @param $organizationId
+     * @param $activitiesId
+     * 
+     * @return object
+     */
+    public function getCodesToDownload($organizationId, $activitiesId): object
+    {
+        $query = $this->model->with(['results'])->select('id', 'iati_identifier')->where('org_id', $organizationId);
+
+        if (!empty($activitiesId)) {
+            $query = $query->whereIn('id', $activitiesId);
+        }
+
+        return $query->get();
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\XlsImporter\Foundation\Mapper;
 
+use App\XlsImporter\Foundation\Mapper\Traits\XlsMapperHelper;
 use App\XlsImporter\Foundation\XlsValidator\Validators\ResultValidator;
 use Illuminate\Support\Arr;
 
@@ -12,6 +13,8 @@ use Illuminate\Support\Arr;
  */
 class Result
 {
+    use XlsMapperHelper;
+
     /**
      * @var array
      */
@@ -97,26 +100,6 @@ class Result
         $this->activityResultMapper = $mapper;
     }
 
-    public function getLinearizedActivity()
-    {
-        return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/linearized-activity.json'), true, 512, 0);
-    }
-
-    public function getDropDownFields()
-    {
-        return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/dropdown-fields.json'), true, 512, 0);
-    }
-
-    public function getDependencies()
-    {
-        return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/field-dependencies.json'), true, 512, 0);
-    }
-
-    public function getExcelColumnNameMapper()
-    {
-        return json_decode(file_get_contents(app_path('/XlsImporter/Templates/excel-column-name-mapper.json')), true, 512, JSON_THROW_ON_ERROR);
-    }
-
     /**
      * @param $element
      * @param array $data
@@ -159,8 +142,6 @@ class Result
                 $elementData[] = $systemMappedRow;
             } else {
                 $this->results[$this->activityResultMapper[$elementResultIdentifier]][$elementResultIdentifier] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields)[0];
-//                $this->results[$elementResultIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields)[0];
-//                $this->results[$elementResultIdentifier]['activity_identifier'] = $this->activityResultMapper[$elementResultIdentifier];
                 break;
             }
         }
@@ -204,7 +185,7 @@ class Result
                 $data = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields);
 
                 $this->resultDocumentLink[$elementResultIdentifier] = $data;
-//                $this->resultDocumentLink[$this->activityResultMapper[$elementResultIdentifier]]['document_link'] = [ $data['document_link'] ];
+                //                $this->resultDocumentLink[$this->activityResultMapper[$elementResultIdentifier]]['document_link'] = [ $data['document_link'] ];
                 break;
             }
         }
@@ -260,66 +241,6 @@ class Result
         }
 
         return $elementData;
-    }
-
-    public function checkIfPeerAttributesAreNotEmpty(array $peerAttributes, array $rowContent): bool
-    {
-        foreach ($peerAttributes as $attributeName) {
-            if (Arr::get($rowContent, $attributeName, null)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function getElementPosition($fieldDependency, $dependencies): string
-    {
-        $position = '';
-        $dependency = explode(' ', $dependencies);
-        $expected_position = '';
-
-        foreach ($dependency as $key) {
-            $key = $key === 'narrative' ? '0.narrative' : $key;
-            $expected_position = empty($expected_position) ? $key : "$expected_position $key";
-
-            if (array_key_exists($expected_position, $fieldDependency)) {
-                $positionValue = $fieldDependency[$expected_position];
-                $position = empty($position) ? $key . '.' . $positionValue : "$position.$key.$positionValue";
-            } else {
-                $position = empty($position) ? "$key" : "$position.$key";
-            }
-        }
-
-        return $position;
-    }
-
-    public function mapDropDownValueToKey($value, $location)
-    {
-        // should we consider case?
-        if (is_null($value)) {
-            return $value;
-        }
-
-        //
-        if (is_array($location)) {
-            return Arr::get($location, $value, $value);
-        }
-
-        $locationArr = explode('/', $location);
-        $dropDownValues = array_flip(getCodeList(explode('.', $locationArr[1])[0], $locationArr[0]));
-        $key = Arr::get($dropDownValues, $value, $value);
-
-        return $key;
-    }
-
-    public function checkRowNotEmpty($row)
-    {
-        if (!is_array_value_empty($row)) {
-            return true;
-        }
-
-        return false;
     }
 
     public function combineResultAndDocumentLink()

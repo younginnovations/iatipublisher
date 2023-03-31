@@ -12,7 +12,6 @@ use App\IATI\Services\ImportActivityError\ImportActivityErrorService;
 use App\XlsImporter\Foundation\Mapper\Activity;
 use App\XlsImporter\Foundation\Mapper\Indicator;
 use App\XlsImporter\Foundation\Mapper\Period;
-use App\XlsImporter\Foundation\Mapper\Result;
 use Arr;
 use Exception;
 use Illuminate\Contracts\View\Factory;
@@ -79,7 +78,7 @@ class ImportXlsController extends Controller
     public function index(): View|JsonResponse|RedirectResponse
     {
         try {
-            $elements = readElementJsonSchema();
+            // $elements = readElementJsonSchema();
             // $final = [];
 
             // foreach ($elements as $elementName => $content) {
@@ -97,36 +96,35 @@ class ImportXlsController extends Controller
 
             // $this->getLinearizedElement();
 
-            $data = json_encode(getCodeList('UNSDG-Targets', 'Activity'));
-
-            file_put_contents(app_path() . '/XlsImporter/Templates/drop-down-buffer.json', $data);
+            // $data = getCodeList('FileFormat', 'Activity', false);
+            // $data = json_encode(getCodeList('Region', 'Activity'));
             // test
-            $data = file_get_contents(app_path() . '/XlsImporter/Templates/test.json');
-            $activityMapper = new Activity();
-            $activityMapper->map($data);
-//            dd('stop');
+            // $data = file_get_contents(app_path() . '/XlsImporter/Templates/test.json');
+            // $activityMapper = new Activity();
+            // $activityMapper->map($data);
 
             // period
 
-//             $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
-//             $periodMapper = new Period();
-//             $periodMapper->map($data);
+            // $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
+            // $periodMapper = new Period();
+            // $periodMapper->map($data);
 
             // indicator
-//             $data = file_get_contents(app_path() . '/XlsImporter/Templates/indicator.json');
-//             $indicatorMapper = new Indicator();
-//             $indicatorMapper->map($data);
-//            $resultData = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
+            // $data = file_get_contents(app_path() . '/XlsImporter/Templates/indicator.json');
+            // $indicatorMapper = new Indicator();
+            // $indicatorMapper->map($data);
+            // dd('stop');
+            //            $resultData = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
 //                       $resultMapper = new Result();
 //                       $resultMapper->map($resultData);
 
-//            $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
+            //            $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
 //            $periodMapper = new Period();
 //            $periodMapper->map($data);
 
             // $periodMapper
 
-//            $resultData = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
+            //            $resultData = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
 //            $resultMapper = new Result();
 //            $resultMapper->map($resultData);
 
@@ -187,7 +185,6 @@ class ImportXlsController extends Controller
             // }
 
             // foreach ($subElement as $key => $subElementValue) {
-            //     // dump($content,$key);
             //     if (is_array($subElementValue)) {
             //         foreach ($subElementValue as $k => $v) {
             //             if (isset($content[$key][$k]['type']) && $content[$key][$k]['type'] === 'select') {
@@ -248,7 +245,7 @@ class ImportXlsController extends Controller
     {
         try {
             $file = $request->file('activity');
-            $filetype = 'activity';
+            $filetype = $request->only('type');
             Session::put('import_filetype', $filetype);
 
             if ($this->importXlsService->store($file)) {

@@ -50,7 +50,6 @@ class IndicatorValidator implements ValidatorInterface
      */
     public function errorRules(): array
     {
-        // dd('here');
         $rules = (new IndicatorRequest())->getErrorsForIndicator($this->indicator);
 
         return $rules;

@@ -97,22 +97,6 @@
       "category-name": "Secondary Education"
     },
     {
-      "code": "11321",
-      "name": "Lower secondary education",
-      "language": "en",
-      "description": "Second cycle systematic instruction at junior level.",
-      "category": "113",
-      "category-name": "Secondary Education"
-    },
-    {
-      "code": "11322",
-      "name": "Upper secondary education",
-      "language": "en",
-      "description": "Second cycle systematic instruction at senior level.",
-      "category": "113",
-      "category-name": "Secondary Education"
-    },
-    {
       "code": "11330",
       "name": "Vocational training",
       "language": "en",
@@ -514,15 +498,6 @@
       "category-description": "N.B. Use code 51010 for general budget support."
     },
     {
-      "code": "15120",
-      "name": "Public sector financial management",
-      "language": "en",
-      "description": "Strengthening financial and managerial accountability; public expenditure management; improving financial management systems; tax assessment procedures; budget drafting; field auditing; measures against waste, fraud and corruption.",
-      "category": "151",
-      "category-name": "Government & Civil Society-general",
-      "category-description": "N.B. Use code 51010 for general budget support."
-    },
-    {
       "code": "15121",
       "name": "Foreign affairs",
       "language": "en",
@@ -675,15 +650,6 @@
       "category-description": "N.B. Use code 51010 for general budget support."
     },
     {
-      "code": "15140",
-      "name": "Government administration",
-      "language": "en",
-      "description": "Systems of government including parliament, local government, decentralisation; civil service and civil service reform. Including general services by government (or commissioned by government) not elsewhere specified e.g. police, fire protection; cartography, meteorology, legal metrology, aerial surveys and remote sensing; administrative buildings.",
-      "category": "151",
-      "category-name": "Government & Civil Society-general",
-      "category-description": "N.B. Use code 51010 for general budget support."
-    },
-    {
       "code": "15142",
       "name": "Macroeconomic policy",
       "language": "en",
@@ -777,42 +743,6 @@
       "name": "Human rights",
       "language": "en",
       "description": "Measures to support specialised official human rights institutions and mechanisms at universal, regional, national and local levels in their statutory roles to promote and protect civil and political, economic, social and cultural rights as defined in international conventions and covenants; translation of international human rights commitments into national legislation; reporting and follow-up; human rights dialogue. Human rights defenders and human rights NGOs; human rights advocacy, activism, mobilisation; awareness raising and public human rights education. Human rights programming targeting specific groups, e.g. children, persons with disabilities, migrants, ethnic, religious, linguistic and sexual minorities, indigenous people and those suffering from caste discrimination, victims of trafficking, victims of torture. (Use code 15230 when in the context of a peacekeeping operation and code 15180 for ending violence against women and girls. Use code 15190 for human rights programming for refugees or migrants, including when they are victims of trafficking.Use code 16070 for Fundamental Principles and Rights at Work, i.e. Child Labour, Forced Labour, Non-discrimination in employment and occupation, Freedom of Association and Collective Bargaining.)",
-      "category": "151",
-      "category-name": "Government & Civil Society-general",
-      "category-description": "N.B. Use code 51010 for general budget support."
-    },
-    {
-      "code": "15161",
-      "name": "Elections",
-      "language": "en",
-      "description": "Electoral assistance and monitoring, voters' education [other than in connection with UN peace building (15230)].",
-      "category": "151",
-      "category-name": "Government & Civil Society-general",
-      "category-description": "N.B. Use code 51010 for general budget support."
-    },
-    {
-      "code": "15162",
-      "name": "Human rights",
-      "language": "en",
-      "description": "Monitoring of human rights performance; support for national and regional human rights bodies; protection of ethnic, religious and cultural minorities [other than in connection with un peace building (15230)].",
-      "category": "151",
-      "category-name": "Government & Civil Society-general",
-      "category-description": "N.B. Use code 51010 for general budget support."
-    },
-    {
-      "code": "15163",
-      "name": "Free flow of information",
-      "language": "en",
-      "description": "Uncensored flow of information on public issues, including activities that increase the professionalism, skills and integrity of the print and broadcast media (e.g. training of journalists).",
-      "category": "151",
-      "category-name": "Government & Civil Society-general",
-      "category-description": "N.B. Use code 51010 for general budget support."
-    },
-    {
-      "code": "15164",
-      "name": "Women's equality organisations and institutions",
-      "language": "en",
-      "description": "Support for institutions and organisations (governmental and non-governmental) working for gender equality and women's empowerment.",
       "category": "151",
       "category-name": "Government & Civil Society-general",
       "category-description": "N.B. Use code 51010 for general budget support."
@@ -1237,156 +1167,6 @@
       "description": "Computer hardware and software; internet access; IT training.  When sector cannot be specified.",
       "category": "220",
       "category-name": "Communications"
-    },
-    {
-      "code": "23010",
-      "name": "Energy policy and administrative management",
-      "language": "en",
-      "description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation.",
-      "category": "230",
-      "category-name": "ENERGY GENERATION AND SUPPLY",
-      "category-description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation."
-    },
-    {
-      "code": "23020",
-      "name": "Power generation/non-renewable sources",
-      "language": "en",
-      "description": "Thermal power plants including when heat source cannot be determined; combined gas-coal power plants.",
-      "category": "230",
-      "category-name": "ENERGY GENERATION AND SUPPLY",
-      "category-description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation."
-    },
-    {
-      "code": "23030",
-      "name": "Power generation/renewable sources",
-      "language": "en",
-      "description": "Including policy, planning, development programmes, surveys and incentives. Fuelwood/ charcoal production should be included under forestry (31261).",
-      "category": "230",
-      "category-name": "ENERGY GENERATION AND SUPPLY",
-      "category-description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation."
-    },
-    {
-      "code": "23040",
-      "name": "Electrical transmission/ distribution",
-      "language": "en",
-      "description": "Distribution from power source to end user; transmission lines.",
-      "category": "230",
-      "category-name": "ENERGY GENERATION AND SUPPLY",
-      "category-description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation."
-    },
-    {
-      "code": "23050",
-      "name": "Gas distribution",
-      "language": "en",
-      "description": "Delivery for use by ultimate consumer.",
-      "category": "230",
-      "category-name": "ENERGY GENERATION AND SUPPLY",
-      "category-description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation."
-    },
-    {
-      "code": "23061",
-      "name": "Oil-fired power plants",
-      "language": "en",
-      "description": "Including diesel power plants.",
-      "category": "230",
-      "category-name": "ENERGY GENERATION AND SUPPLY",
-      "category-description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation."
-    },
-    {
-      "code": "23062",
-      "name": "Gas-fired power plants",
-      "language": "en",
-      "category": "230",
-      "category-name": "ENERGY GENERATION AND SUPPLY",
-      "category-description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation."
-    },
-    {
-      "code": "23063",
-      "name": "Coal-fired power plants",
-      "language": "en",
-      "category": "230",
-      "category-name": "ENERGY GENERATION AND SUPPLY",
-      "category-description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation."
-    },
-    {
-      "code": "23064",
-      "name": "Nuclear power plants",
-      "language": "en",
-      "description": "Including nuclear safety.",
-      "category": "230",
-      "category-name": "ENERGY GENERATION AND SUPPLY",
-      "category-description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation."
-    },
-    {
-      "code": "23065",
-      "name": "Hydro-electric power plants",
-      "language": "en",
-      "description": "Including power-generating river barges.",
-      "category": "230",
-      "category-name": "ENERGY GENERATION AND SUPPLY",
-      "category-description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation."
-    },
-    {
-      "code": "23066",
-      "name": "Geothermal energy",
-      "language": "en",
-      "category": "230",
-      "category-name": "ENERGY GENERATION AND SUPPLY",
-      "category-description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation."
-    },
-    {
-      "code": "23067",
-      "name": "Solar energy",
-      "language": "en",
-      "description": "Including photo-voltaic cells, solar thermal applications and solar heating.",
-      "category": "230",
-      "category-name": "ENERGY GENERATION AND SUPPLY",
-      "category-description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation."
-    },
-    {
-      "code": "23068",
-      "name": "Wind power",
-      "language": "en",
-      "description": "Wind energy for water lifting and electric power generation.",
-      "category": "230",
-      "category-name": "ENERGY GENERATION AND SUPPLY",
-      "category-description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation."
-    },
-    {
-      "code": "23069",
-      "name": "Ocean power",
-      "language": "en",
-      "description": "Including ocean thermal energy conversion, tidal and wave power.",
-      "category": "230",
-      "category-name": "ENERGY GENERATION AND SUPPLY",
-      "category-description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation."
-    },
-    {
-      "code": "23070",
-      "name": "Biomass",
-      "language": "en",
-      "description": "Densification technologies and use of biomass for direct power generation including biogas, gas obtained from sugar cane and other plant residues, anaerobic digesters.",
-      "category": "230",
-      "category-name": "ENERGY GENERATION AND SUPPLY",
-      "category-description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation."
-    },
-    {
-      "code": "23081",
-      "name": "Energy education/training",
-      "language": "en",
-      "description": "Applies to all energy sub-sectors; all levels of training.",
-      "category": "230",
-      "category-name": "ENERGY GENERATION AND SUPPLY",
-      "category-description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation."
-    },
-    {
-      "code": "23082",
-      "name": "Energy research",
-      "language": "en",
-      "description": "Including general inventories, surveys.",
-      "category": "230",
-      "category-name": "ENERGY GENERATION AND SUPPLY",
-      "category-description": "Energy sector policy, planning and programmes; aid to energy ministries; institution capacity building and advice; unspecified energy activities including energy conservation."
     },
     {
       "code": "23110",
@@ -2260,15 +2040,6 @@
       "category-description": "Covers activities concerned with conservation, protection or amelioration of the physical environment without sector allocation."
     },
     {
-      "code": "41050",
-      "name": "Flood prevention/control",
-      "language": "en",
-      "description": "Floods from rivers or the sea; including sea water intrusion control and sea level rise related activities.",
-      "category": "410",
-      "category-name": "General Environment Protection",
-      "category-description": "Covers activities concerned with conservation, protection or amelioration of the physical environment without sector allocation."
-    },
-    {
       "code": "41081",
       "name": "Environmental education/training",
       "language": "en",
@@ -2540,15 +2311,6 @@
       "category-description": "This relates to activities during and in the aftermath of an emergency situation.  Longer-term activities to improve the level of infrastructure or social services should be reported under the relevant economic and social sector codes. See also guideline on distinguishing humanitarian from sector-allocable aid."
     },
     {
-      "code": "74010",
-      "name": "Disaster prevention and preparedness",
-      "language": "en",
-      "description": "Disaster risk reduction activities (e.g. developing knowledge, natural risks cartography, legal norms for construction); early warning systems; emergency contingency stocks and contingency planning including preparations for forced displacement.",
-      "category": "740",
-      "category-name": "Disaster Prevention & Preparedness",
-      "category-description": "See code 43060 for disaster risk reduction."
-    },
-    {
       "code": "74020",
       "name": "Multi-hazard response preparedness",
       "language": "en",
@@ -2563,32 +2325,6 @@
       "language": "en",
       "category": "910",
       "category-name": "Administrative Costs of Donors"
-    },
-    {
-      "code": "92010",
-      "name": "Support to national NGOs",
-      "language": "en",
-      "description": "In the donor country.",
-      "category": "920",
-      "category-name": "SUPPORT TO NON- GOVERNMENTAL ORGANISATIONS (NGOs)",
-      "category-description": "In the donor country."
-    },
-    {
-      "code": "92020",
-      "name": "Support to international NGOs",
-      "language": "en",
-      "category": "920",
-      "category-name": "SUPPORT TO NON- GOVERNMENTAL ORGANISATIONS (NGOs)",
-      "category-description": "In the donor country."
-    },
-    {
-      "code": "92030",
-      "name": "Support to local and regional NGOs",
-      "language": "en",
-      "description": "In the recipient country or region.",
-      "category": "920",
-      "category-name": "SUPPORT TO NON- GOVERNMENTAL ORGANISATIONS (NGOs)",
-      "category-description": "In the donor country."
     },
     {
       "code": "93010",
