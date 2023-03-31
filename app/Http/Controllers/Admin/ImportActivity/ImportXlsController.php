@@ -101,13 +101,13 @@ class ImportXlsController extends Controller
 
             file_put_contents(app_path() . '/XlsImporter/Templates/drop-down-buffer.json', $data);
             // test
-
             $data = file_get_contents(app_path() . '/XlsImporter/Templates/test.json');
             $activityMapper = new Activity();
             $activityMapper->map($data);
             dd('stop');
 
             // period
+
 
 //             $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
 //             $periodMapper = new Period();

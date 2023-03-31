@@ -26,6 +26,10 @@ class Indicator
 
     protected array $identifiers = [];
 
+    protected int $rowCount = 2;
+    protected string $sheetName = '';
+    protected array $columnTracker = [];
+
     /**
      * @var array
      */
@@ -64,14 +68,18 @@ class Indicator
 
     public function map($indicatorData)
     {
-        $indicatorData = json_decode($indicatorData, true, 512, 0);
+        $indicatorData = json_decode($indicatorData, true, 512, JSON_THROW_ON_ERROR | 0);
 
         foreach ($indicatorData as $sheetName => $content) {
-            if (in_array($sheetName, array_keys($this->mappers))) {
+            $this->sheetName = $sheetName;
+
+            if (array_key_exists($sheetName, $this->mappers)) {
+                $this->rowCount = 2;
                 $this->mapIndicators($content, $sheetName);
             }
 
-            if (in_array($sheetName, array_keys($this->indicatorDivision))) {
+            if (array_key_exists($sheetName, $this->indicatorDivision)) {
+                $this->rowCount = 2;
                 $this->columnToFieldMapper($this->indicatorDivision[$sheetName], $content);
             }
         }
@@ -86,7 +94,7 @@ class Indicator
 
         foreach ($this->indicators as $resultIdentifier => $indicators) {
             foreach ($indicators as $indicatorIdentifier => $indicatorData) {
-                $this->indicators[$resultIdentifier][$indicatorIdentifier]['error'] = $indicatorValidator
+                $this->indicators[$resultIdentifier][$indicatorIdentifier] = $indicatorValidator
                     ->init($indicatorData['indicator'])
                     ->validateData();
             }
@@ -115,6 +123,11 @@ class Indicator
     public function getDropDownFields()
     {
         return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/dropdown-fields.json'), true, 512, 0);
+    }
+
+    public function getExcelColumnNameMapper()
+    {
+        return json_decode(file_get_contents(app_path('/XlsImporter/Templates/excel-column-name-mapper.json')), true, 512, JSON_THROW_ON_ERROR);
     }
 
     public function mapIndicators($data, $sheetName)
@@ -250,6 +263,7 @@ class Indicator
         $baseCount = null;
         $fieldDependency = $dependency['fieldDependency'];
         $parentBaseCount = [];
+        $excelColumnName = $this->getExcelColumnNameMapper();
 
         foreach (array_values($fieldDependency) as $dependents) {
             $parentBaseCount[$dependents['parent']] = null;
@@ -283,8 +297,10 @@ class Indicator
 
                 if (!Arr::get($elementData, $elementPositionBasedOnParent, null)) {
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
+                    $this->columnTracker[$elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
                 }
             }
+            $this->rowCount++;
         }
 
         return $elementData;

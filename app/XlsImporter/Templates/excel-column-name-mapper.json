@@ -194,6 +194,67 @@
     "aid_type aid_type_vocabulary": "AL",
     "tied_status tied_status_code": "AM"
   },
+  "Result": {
+    "type": "B",
+    "aggregation_status": "C",
+    "title narrative narrative": "D",
+    "title narrative language": "E",
+    "description narrative narrative": "F",
+    "description narrative language": "G",
+    "reference vocabulary": "H",
+    "reference code": "I",
+    "reference vocabulary_uri": "J"
+  },
+  "Result Document Link": {
+    "document_link url": "B",
+    "document_link format": "C",
+    "document_link title narrative narrative": "D",
+    "document_link title narrative language": "E",
+    "document_link description narrative narrative": "F",
+    "document_link description narrative language": "G",
+    "document_link category code": "H",
+    "document_link language language": "I",
+    "document_link document_date date": "J"
+  },
+  "Indicator": {
+    "measure": "B",
+    "ascending": "C",
+    "aggregation_status": "D",
+    "title narrative narrative": "E",
+    "title narrative language": "F",
+    "description narrative narrative": "G",
+    "description narrative language": "H",
+    "reference vocabulary": "I",
+    "reference code": "J"
+  },
+  "Indicator Document Link": {
+    "url": "B",
+    "format": "C",
+    "category code": "D",
+    "language code": "E",
+    "document_date date": "F"
+  },
+  "Indicator Baseline": {
+    "year": "B",
+    "date": "C",
+    "value": "D",
+    "comment narrative narrative": "E",
+    "comment narrative language": "F",
+    "dimension name": "G",
+    "dimension value": "H",
+    "location reference": "I"
+  },
+  "Indicator Baseline Document Link": {
+    "url": "B",
+    "format": "C",
+    "title narrative narrative": "D",
+    "title narrative language": "E",
+    "description narrative narrative": "F",
+    "description narrative language": "G",
+    "category code": "H",
+    "language code": "I",
+    "document_date date": "J"
+  },
   "Period": {
     "period_start date" : "B",
     "period_end date" : "C"

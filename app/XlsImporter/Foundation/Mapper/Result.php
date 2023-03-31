@@ -34,6 +34,10 @@ class Result
      */
     protected array $activityResultMapper = [];
 
+    protected int $rowCount = 2;
+    protected string $sheetName = '';
+    protected array $columnTracker = [];
+
     public function map($data)
     {
         $resultData = json_decode($data, true, 512, JSON_THROW_ON_ERROR | 0);
@@ -44,10 +48,14 @@ class Result
         }
 
         if (isset($resultData['Result'])) {
+            $this->sheetName = 'Result';
+            $this->rowCount = 2;
             $this->columnToFieldMapper($this->resultElements['Result'], $resultData['Result']);
         }
 
         if (isset($resultData['Result Document Link'])) {
+            $this->sheetName = 'Result Document Link';
+            $this->rowCount = 2;
             $this->documentLinkColumnToFieldMapper($this->resultElements['Result Document Link'], $resultData['Result Document Link']);
         }
 
@@ -88,6 +96,11 @@ class Result
     public function getDependencies()
     {
         return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/field-dependencies.json'), true, 512, 0);
+    }
+
+    public function getExcelColumnNameMapper()
+    {
+        return json_decode(file_get_contents(app_path('/XlsImporter/Templates/excel-column-name-mapper.json')), true, 512, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -191,6 +204,7 @@ class Result
         $baseCount = null;
         $fieldDependency = $dependency['fieldDependency'];
         $parentBaseCount = [];
+        $excelColumnName = $this->getExcelColumnNameMapper();
 
         foreach ($fieldDependency as $dependents) {
             $parentBaseCount[$dependents['parent']] = null;
@@ -224,8 +238,10 @@ class Result
 
                 if (!Arr::get($elementData, $elementPositionBasedOnParent, null)) {
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
+                    $this->columnTracker[$elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
                 }
             }
+            $this->rowCount++;
         }
 
         return $elementData;
