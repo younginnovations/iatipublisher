@@ -104,19 +104,18 @@ class ImportXlsController extends Controller
             $data = file_get_contents(app_path() . '/XlsImporter/Templates/test.json');
             $activityMapper = new Activity();
             $activityMapper->map($data);
-            dd('stop');
+//            dd('stop');
 
             // period
-
 
 //             $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
 //             $periodMapper = new Period();
 //             $periodMapper->map($data);
 
             // indicator
-            // $data = file_get_contents(app_path() . '/XlsImporter/Templates/indicator.json');
-            // $indicatorMapper = new Indicator();
-            // $indicatorMapper->map($data);
+//             $data = file_get_contents(app_path() . '/XlsImporter/Templates/indicator.json');
+//             $indicatorMapper = new Indicator();
+//             $indicatorMapper->map($data);
 //            $resultData = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
 //                       $resultMapper = new Result();
 //                       $resultMapper->map($resultData);

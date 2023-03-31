@@ -21,18 +21,19 @@ class Activity
     // activities whose identifier is not mentioned on setting
     protected array $invalidActivities = [];
 
-
     protected int $rowCount = 2;
+
     protected string $sheetName = '';
+
     protected array $columnTracker = [];
 
     /**
      * @var array
      */
     protected array $activityElements = [
-        // 'Title' => 'title',
+         'Title' => 'title',
         // 'Other Identifier' => 'other_identifier',
-        // 'Description' => 'description',
+         'Description' => 'description',
         // 'Activity Date' => 'activity_date',
         // 'Recipient Country' => 'recipient_country',
         // 'Recipient Region' => 'recipient_region',
@@ -109,24 +110,36 @@ class Activity
                 $this->columnToFieldMapper($this->activityElements[$sheetName], $content);
             }
         }
-
+//        dump($this->columnTracker);
         $this->validateActivityElements();
     }
 
     public function validateActivityElements()
     {
         $activityValidator = app(ActivityValidator::class);
-        $errors = [];
 
         foreach ($this->activities as $activityIdentifier => $activities) {
-            dump($activities);
-            dump(json_encode($activities));
-            $errors[] = $activityValidator
+            $errors = $activityValidator
                 ->init($activities)
                 ->validateData();
+            $excelColumnAndRowName = isset($this->columnTracker[$activityIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
+            $this->activities[$activityIdentifier]['error'] = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
+        }
+    }
+
+    public function appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName): array
+    {
+        foreach ($errors as $errorLevel => $errorData) {
+            foreach ($errorData as $element => $error) {
+                foreach ($error as $key => $err) {
+                    if (isset($excelColumnAndRowName[$key])) {
+                        $errors[$errorLevel][$element][$key] .= " ( $excelColumnAndRowName[$key] )";
+                    }
+                }
+            }
         }
 
-        dd($errors);
+        return $errors;
     }
 
     public function getLinearizedActivity()
@@ -257,7 +270,7 @@ class Activity
                     )
                 ) {
                     if (!empty($elementData)) {
-                        $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields);
+                        $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
                         $elementData = [];
                     }
 
@@ -274,7 +287,7 @@ class Activity
 
                 $elementData[] = $systemMappedRow;
             } else {
-                $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields);
+                $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
                 break;
             }
         }
@@ -298,7 +311,7 @@ class Activity
         return Arr::get($dropDownValues, $value, $value);
     }
 
-    public function getElementData($data, $dependency, $elementDropDownFields): array
+    public function getElementData($data, $dependency, $elementDropDownFields, $elementActivityIdentifier, $element): array
     {
         $elementData = [];
         $elementBase = $dependency['elementBase'];
@@ -341,7 +354,7 @@ class Activity
                     }
                 }
 
-                // dump($fieldName, $codeDependentField);
+//                 dump($fieldName, $codeDependentField);
                 if ($fieldName === $codeDependentField) {
                     dump('-------------------', $fieldName, 'dependentOnValue', $dependentOnValue, 'dependency', $codeDependencyConditions, 'fieldName', $fieldName);
                     $fieldName = in_array($dependentOnValue, array_keys($codeDependencyConditions)) ? Arr::get($codeDependencyConditions, $dependentOnValue, $defaultCodeField) : $defaultCodeField;
@@ -362,7 +375,7 @@ class Activity
 
                 if (!Arr::get($elementData, $elementPositionBasedOnParent, null)) {
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
-                    $this->columnTracker[$elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
+                    $this->columnTracker[$elementActivityIdentifier][$element][$element . '.' . $elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
                 }
             }
             $this->rowCount++;

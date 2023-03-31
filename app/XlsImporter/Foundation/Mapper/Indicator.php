@@ -326,7 +326,6 @@ class Indicator
             $expected_position = empty($expected_position) ? $key : "$expected_position $key";
 
             if (in_array($expected_position, array_keys($fieldDependency))) {
-                $key = $key === 'narrative' ? '0.narrative' : $key;
                 $positionValue = $fieldDependency[$expected_position];
                 $position = empty($position) ? $key . '.' . $positionValue : "$position.$key.$positionValue";
             } else {
