@@ -426,7 +426,9 @@ class PublisherService extends RegistryApiHandler
 
             if (count($files)) {
                 foreach ($files as $file) {
-                    $api->package_delete($file);
+                    if ($this->isPackageAvailable($file, $this->apiKey)) {
+                        $api->package_delete($file);
+                    }
                 }
             }
 

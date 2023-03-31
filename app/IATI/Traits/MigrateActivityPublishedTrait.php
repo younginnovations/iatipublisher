@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Traits;
 
+use App\Exceptions\PublishException;
 use App\IATI\Models\Activity\ActivityPublished;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -58,6 +59,7 @@ trait MigrateActivityPublishedTrait
                 $contents = awsGetFile($file);
 
                 if ($contents && array_key_exists($aidstreamId, $migratedActivitiesLookupTable)) {
+                    $contents = $this->replaceDocumentLinkInXml($contents, $iatiOrganization->id);
                     $iatiXmlFileName = $this->generateIatiXmlFilename(
                         $iatiOrganization,
                         $migratedActivitiesLookupTable[$aidstreamId]
@@ -274,20 +276,27 @@ trait MigrateActivityPublishedTrait
      *
      * @param $aidStreamOrganization
      * @param $iatiOrganization
-     * @param $setting
+     *
+     * @return object|null
      *
      * @throws \DOMException
      */
-    public function migrateActivityMergedFile($aidStreamOrganization, $iatiOrganization, $setting): void
+    public function migrateActivityMergedFile($aidStreamOrganization, $iatiOrganization): ?object
     {
         $activityPublished = $this->getIatiActivityPublished($iatiOrganization);
         $publishedFiles = $activityPublished ? $activityPublished->published_activities : [];
 
         if ($publishedFiles) {
             $aidstreamActivityPublished = $this->db::connection('aidstream')->table('activity_published')
-                                          ->where('organization_id', $aidStreamOrganization->id)->where('published_to_register', 1)->get();
+                                                   ->where('organization_id', $aidStreamOrganization->id)->where(
+                                                       'published_to_register',
+                                                       1
+                                                   )->get();
             $aidstreamMergedFilePath = 'aidstream-xml';
-            $aidstreamMergedFilename = $this->getAidStreamMergedFilename($aidStreamOrganization, $aidstreamActivityPublished);
+            $aidstreamMergedFilename = $this->getAidStreamMergedFilename(
+                $aidStreamOrganization,
+                $aidstreamActivityPublished
+            );
 
             $iatiMergedFilename = "{$iatiOrganization->publisher_id}-activities.xml";
             $iatiMergedFile = "xml/mergedActivityXml/{$iatiMergedFilename}";
@@ -296,41 +305,21 @@ trait MigrateActivityPublishedTrait
             $existingContents = awsGetFile("{$aidstreamMergedFilePath}/{$aidstreamMergedFilename}");
 
             if ($existingContents) {
+                $existingContents = $this->replaceDocumentLinkInXml($existingContents, $iatiOrganization->id);
                 awsUploadFile($iatiMergedFile, $existingContents);
             } else {
                 $this->xmlGenerator->getMergeXml($publishedFiles, $iatiMergedFilename);
+                $mergedContents = awsGetFile($iatiMergedFile);
+                $mergedContents = $this->replaceDocumentLinkInXml($mergedContents, $iatiOrganization->id);
+                awsUploadFile($iatiMergedFile, $mergedContents);
             }
 
             $this->logInfo("Completed migration of merged file for Aidstream org: {$aidStreamOrganization->id}.");
-
-            //Publish activity to registry if needed.
-            if (
-                $activityPublished &&
-                $activityPublished->published_to_registry &&
-                $setting &&
-                Arr::get($setting->publishing_info, 'publisher_verification', false) &&
-                Arr::get($setting->publishing_info, 'token_verification', false)
-            ) {
-                $settings = $iatiOrganization->settings;
-                $publishingInfo = $settings ? $settings->publishing_info : [];
-                $this->logInfo(
-                    "Publishing activity file: {$activityPublished->filename} for Aidstream org: {$aidStreamOrganization->id}."
-                );
-
-                $this->publisherService->publishFile($publishingInfo, $activityPublished, $iatiOrganization, false);
-                $this->logInfo(
-                    "Completed publishing activity file: {$activityPublished->filename} with updated at {$activityPublished->updated_at} for Aidstream org: {$aidStreamOrganization->id}."
-                );
-
-                $this->unpublishSegmentedFiles(Arr::get($setting->publishing_info, 'api_token', null), $aidstreamActivityPublished, $aidStreamOrganization->id);
-            } else {
-                $this->logInfo(
-                    "Activity file: {$activityPublished->filename} not published."
-                );
-            }
         } else {
             $this->logInfo('No activity file to merge.');
         }
+
+        return $activityPublished;
     }
 
     /**
@@ -382,19 +371,55 @@ trait MigrateActivityPublishedTrait
      * @param $apiToken
      * @param $aidstreamPublishedFiles
      * @param $aidstreamOrganizationId
+     * @param $iatiOrganizationId
      *
      * @return void
      *
-     * @throws \Exception
+     * @throws PublishException
      */
-    public function unpublishSegmentedFiles($apiToken, $aidstreamPublishedFiles, $aidstreamOrganizationId): void
-    {
-        $segmentedFiles = $this->getSegmentedFiles($aidstreamPublishedFiles);
+    public function unpublishSegmentedFiles(
+        $apiToken,
+        $aidstreamPublishedFiles,
+        $aidstreamOrganizationId,
+        $iatiOrganizationId
+    ): void {
+        try {
+            $segmentedFiles = $this->getSegmentedFiles($aidstreamPublishedFiles);
 
-        if (count($segmentedFiles)) {
-            $this->logInfo('Unpublishing segmented files for Aidstream org: ' . $aidstreamOrganizationId . '.');
-            $this->publisherService->unlink($apiToken, $segmentedFiles);
-            $this->logInfo('Completed unpublishing segmented files for Aidstream org: ' . $aidstreamOrganizationId . '.');
+            if (count($segmentedFiles)) {
+                $this->logInfo('Unpublishing segmented files for Aidstream org: ' . $aidstreamOrganizationId . '.');
+                $this->publisherService->unlink($apiToken, $segmentedFiles);
+                $this->logInfo(
+                    'Completed unpublishing segmented files for Aidstream org: ' . $aidstreamOrganizationId . '.'
+                );
+            }
+        } catch (\Exception $exception) {
+            throw new PublishException(
+                $iatiOrganizationId,
+                "Error while unpublishing segmented files for Aidstream org: {$aidstreamOrganizationId} with error: {$exception->getMessage()}."
+            );
         }
+    }
+
+    /**
+     * Replaces document link in xml.
+     *
+     * @param $contents
+     * @param $iatiOrganizationId
+     *
+     * @return string
+     */
+    public function replaceDocumentLinkInXml($contents, $iatiOrganizationId): string
+    {
+        return str_replace(
+            [
+                'https://www.aidstream.org/files/documents',
+                'https://aidstream.org/files/documents',
+                'http://www.aidstream.org/files/documents',
+                'http://aidstream.org/files/documents',
+            ],
+            awsUrl("document-link/{$iatiOrganizationId}"),
+            $contents
+        );
     }
 }

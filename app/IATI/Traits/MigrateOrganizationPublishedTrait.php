@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\IATI\Traits;
 
 use App\IATI\Models\Organization\OrganizationPublished;
-use Illuminate\Support\Arr;
 
 /**
  * Class MigrateOrganizationPublishedTrait.
@@ -34,6 +33,7 @@ trait MigrateOrganizationPublishedTrait
             $iatiFilename = "{$iatiOrganization->publisher_id}-organisation.xml";
 
             $contents = awsGetFile("{$pathToAidstreamOrganizationFile}/$aidstreamFilename");
+            $contents = $this->replaceDocumentLinkInXml($contents, $iatiOrganization->id);
 
             if ($contents && awsUploadFile("$pathToIatiOrganizationFile/$iatiFilename", $contents)) {
                 $this->logInfo("Migrated organization file :{$aidstreamFilename} as file :{$iatiFilename}.");
@@ -46,13 +46,12 @@ trait MigrateOrganizationPublishedTrait
      *
      * @param $aidStreamOrganization
      * @param $iatiOrganization
-     * @param $setting
      *
-     * @return bool
+     * @return object|null
      *
      * @throws \Exception
      */
-    public function migrateOrganizationPublishedTable($aidStreamOrganization, $iatiOrganization, $setting): bool
+    public function migrateOrganizationPublishedTable($aidStreamOrganization, $iatiOrganization): ?object
     {
         $publishedOrganization = $this->db::connection('aidstream')->table('organization_published')
             ->where('organization_id', $aidStreamOrganization->id)
@@ -69,23 +68,9 @@ trait MigrateOrganizationPublishedTrait
                 'updated_at'            => $publishedOrganization->updated_at,
             ])->save();
 
-            //Publish organization IATI Registry
-            if (
-                $organizationPublished->published_to_registry &&
-                $setting &&
-                Arr::get($setting->publishing_info, 'publisher_verification', false) &&
-                Arr::get($setting->publishing_info, 'token_verification', false)
-            ) {
-                $settings = $iatiOrganization->settings;
-                $publishingInfo = $settings ? $settings->publishing_info : [];
-                $this->logInfo("Publishing organization file: {$organizationPublished->filename}.");
-                $this->publisherService->publishOrganizationFile($publishingInfo, $organizationPublished, $iatiOrganization, false);
-                $this->logInfo("Organization file: {$organizationPublished->filename} with updated at: {$organizationPublished->updated_at} published.");
-            } else {
-                $this->logInfo("Organization file: {$organizationPublished->filename} not published.");
-            }
+            return $organizationPublished;
         }
 
-        return true;
+        return null;
     }
 }

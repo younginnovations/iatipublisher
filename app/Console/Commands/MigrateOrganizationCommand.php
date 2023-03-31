@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use App\Exceptions\PublishException;
 use App\IATI\Elements\Xml\XmlGenerator;
 use App\IATI\Repositories\User\RoleRepository;
 use App\IATI\Services\Activity\ActivityPublishedService;
@@ -34,6 +35,7 @@ use App\IATI\Traits\MigrateSettingTrait;
 use App\IATI\Traits\MigrateUserTrait;
 use Illuminate\Console\Command;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -136,14 +138,20 @@ class MigrateOrganizationCommand extends Command
 
                     if (!$aidStreamOrganization) {
                         $this->error('AidStream organization not found with id: ' . $aidstreamOrganizationId);
-                        continue;
+                        throw new \RuntimeException(
+                            'AidStream organization not found with id: ' . $aidstreamOrganizationId
+                        );
                     }
 
-                    if ($this->organizationService->getOrganizationByPublisherId($aidStreamOrganization->user_identifier)) {
+                    if ($this->organizationService->getOrganizationByPublisherId(
+                        $aidStreamOrganization->user_identifier
+                    )) {
                         $this->error(
                             'Organization already exists with publisher id: ' . $aidStreamOrganization->user_identifier
                         );
-                        continue;
+                        throw new \RuntimeException(
+                            'Organization already exists with publisher id: ' . $aidStreamOrganization->user_identifier
+                        );
                     }
 
                     $iatiOrganization = $this->organizationService->create(
@@ -183,7 +191,9 @@ class MigrateOrganizationCommand extends Command
                             $this->logInfo(
                                 'Started user migration for user id: ' . $aidstreamUser->id . ' of organization: ' . $aidStreamOrganization->name
                             );
-                            $iatiUser = $this->userService->create($this->getNewUser($aidstreamUser, $iatiOrganization));
+                            $iatiUser = $this->userService->create(
+                                $this->getNewUser($aidstreamUser, $iatiOrganization)
+                            );
                             $mappedUsers[$aidstreamOrganizationId][$aidstreamUser->id] = $iatiUser->id;
                             $this->logInfo(
                                 'Completed user migration for user id: ' . $aidstreamUser->id . ' of organization: ' . $aidStreamOrganization->name
@@ -198,6 +208,7 @@ class MigrateOrganizationCommand extends Command
                         $aidstreamOrganizationId
                     )->get();
                     $migratedActivitiesLookupTable = [];
+                    $activityPublished = null;
 
                     if (count($aidstreamActivities)) {
                         foreach ($aidstreamActivities as $aidstreamActivity) {
@@ -229,20 +240,54 @@ class MigrateOrganizationCommand extends Command
                             $iatiOrganization,
                             $migratedActivitiesLookupTable
                         );
-                        $this->migrateActivityMergedFile($aidStreamOrganization, $iatiOrganization, $this->setting);
+                        $activityPublished = $this->migrateActivityMergedFile(
+                            $aidStreamOrganization,
+                            $iatiOrganization,
+                        );
                     }
 
                     $this->migrateDocumentFiles($aidStreamOrganization, $iatiOrganization);
-                    $this->migrateDocuments($aidstreamOrganizationId, $iatiOrganization, $migratedActivitiesLookupTable);
+                    $this->migrateDocuments(
+                        $aidstreamOrganizationId,
+                        $iatiOrganization,
+                        $migratedActivitiesLookupTable
+                    );
                     $this->migrateOrganizationPublishedFile($aidStreamOrganization, $iatiOrganization);
-                    $this->migrateOrganizationPublishedTable($aidStreamOrganization, $iatiOrganization, $this->setting);
+                    $organizationPublished = $this->migrateOrganizationPublishedTable(
+                        $aidStreamOrganization,
+                        $iatiOrganization
+                    );
                     $this->updateOrganizationDocumentLinkUrl($aidStreamOrganization->id, $iatiOrganization);
 
+                    $this->publishFilesToRegistry(
+                        $organizationPublished,
+                        $iatiOrganization,
+                        $aidStreamOrganization,
+                        $activityPublished,
+                        $this->setting
+                    );
+
+                    $this->disableAidstreamOrg($aidstreamOrganizationId);
+
                     $this->databaseManager->commit();
+                } catch (PublishException $publishException) {
+                    logger()->channel('migration')->error($publishException->getMessage());
+                    $this->error($publishException->getMessage());
+
+                    $iatiOrganization = $this->organizationService->getOrganizationData($publishException->getIatiOrganizationId());
+                    $iatiOrganization->updateQuietly([
+                        'org_status' => 'disabled',
+                    ]);
+                    $iatiOrganization->users()->update([
+                        'status' => false,
+                    ]);
+                    $this->databaseManager->commit();
+                    continue;
                 } catch (\Exception $exception) {
                     $this->databaseManager->rollBack();
                     logger()->channel('migration')->error($exception);
                     $this->error($exception->getMessage());
+                    continue;
                 }
             }
         } catch (\Exception $exception) {
@@ -290,22 +335,25 @@ class MigrateOrganizationCommand extends Command
     public function migrateDocuments($aidstreamOrganizationId, $iatiOrganization, $migratedActivitiesLookupTable): void
     {
         $aidStreamDocument = $this->db::connection('aidstream')->table('documents')
-                                        ->where('org_id', $aidstreamOrganizationId)
-                                        ->get();
+                                      ->where('org_id', $aidstreamOrganizationId)
+                                      ->get();
 
         if (count($aidStreamDocument)) {
             $iatiDocuments = [];
 
             foreach ($aidStreamDocument as $aidDocument) {
                 $iatiDocuments[] = [
-                    'activity_id' => null,
-                    'activities' => $this->fillActivitiesId($aidDocument->activities, $migratedActivitiesLookupTable),
+                    'activity_id'     => null,
+                    'activities'      => $this->fillActivitiesId(
+                        $aidDocument->activities,
+                        $migratedActivitiesLookupTable
+                    ),
                     'organization_id' => $iatiOrganization->id,
-                    'filename' => $aidDocument->filename,
-                    'extension' => getFileNameExtension($aidDocument->filename),
-                    'size' => $aidDocument->file_size,
-                    'created_at' => $aidDocument->created_at,
-                    'updated_at' => $aidDocument->updated_at,
+                    'filename'        => $aidDocument->filename,
+                    'extension'       => getFileNameExtension($aidDocument->filename),
+                    'size'            => $aidDocument->file_size,
+                    'created_at'      => $aidDocument->created_at,
+                    'updated_at'      => $aidDocument->updated_at,
                 ];
             }
 
@@ -323,9 +371,14 @@ class MigrateOrganizationCommand extends Command
      * @return string|null
      * @throws \JsonException
      */
-    public function fillActivitiesId($aidStreamActivitiesId, $migratedActivitiesLookupTable) : null|string
+    public function fillActivitiesId($aidStreamActivitiesId, $migratedActivitiesLookupTable): null|string
     {
-        $aidStreamActivitiesId = !empty($aidStreamActivitiesId) ? json_decode($aidStreamActivitiesId, true, 512, JSON_THROW_ON_ERROR) : null;
+        $aidStreamActivitiesId = !empty($aidStreamActivitiesId) ? json_decode(
+            $aidStreamActivitiesId,
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        ) : null;
 
         $updatedActivityIds = [];
 
@@ -362,16 +415,18 @@ class MigrateOrganizationCommand extends Command
 
             foreach ($aidStreamActivitySnapshots as $aidActivitySnapshot) {
                 $iatiActivitySnapshots[] = [
-                    'org_id' => $iatiActivity->org_id,
-                    'activity_id' => $iatiActivity->id,
+                    'org_id'         => $iatiActivity->org_id,
+                    'activity_id'    => $iatiActivity->id,
                     'published_data' => $aidActivitySnapshot->published_data,
-                    'filename' => $aidActivitySnapshot->filename,
-                    'created_at'  => $aidActivitySnapshot->created_at,
-                    'updated_at'  => $aidActivitySnapshot->updated_at,
+                    'filename'       => $aidActivitySnapshot->filename,
+                    'created_at'     => $aidActivitySnapshot->created_at,
+                    'updated_at'     => $aidActivitySnapshot->updated_at,
                 ];
             }
             $this->activitySnapshotService->insert($iatiActivitySnapshots);
-            $this->logInfo('Completed migrating activity snapshots for organization id ' . $aidstreamActivity->organization_id);
+            $this->logInfo(
+                'Completed migrating activity snapshots for organization id ' . $aidstreamActivity->organization_id
+            );
         }
     }
 
@@ -475,5 +530,118 @@ class MigrateOrganizationCommand extends Command
     {
         $this->setElementStatus($iatiOrganization);
         $iatiOrganization->saveQuietly();
+    }
+
+    /**
+     * Publish files to registry.
+     *
+     * @param $organizationPublished
+     * @param $iatiOrganization
+     * @param $aidStreamOrganization
+     * @param $activityPublished
+     * @param $setting
+     *
+     * @return void
+     *
+     * @throws \Exception
+     */
+    public function publishFilesToRegistry(
+        $organizationPublished,
+        $iatiOrganization,
+        $aidStreamOrganization,
+        $activityPublished,
+        $setting
+    ): void {
+        if ($organizationPublished) {
+            //Publish organization IATI Registry
+            if (
+                $organizationPublished->published_to_registry &&
+                $setting &&
+                Arr::get($setting->publishing_info, 'publisher_verification', false) &&
+                Arr::get($setting->publishing_info, 'token_verification', false)
+            ) {
+                $settings = $iatiOrganization->settings;
+                $publishingInfo = $settings ? $settings->publishing_info : [];
+                $this->logInfo("Publishing organization file: {$organizationPublished->filename}.");
+
+                try {
+                    $this->publisherService->publishOrganizationFile(
+                        $publishingInfo,
+                        $organizationPublished,
+                        $iatiOrganization,
+                        false
+                    );
+                    $this->logInfo(
+                        "Organization file: {$organizationPublished->filename} with updated at: {$organizationPublished->updated_at} published."
+                    );
+                } catch (\Exception $exception) {
+                    throw new PublishException(
+                        $aidStreamOrganization->id,
+                        $iatiOrganization->id,
+                        "Organization file: {$organizationPublished->filename} with updated at: {$organizationPublished->updated_at} not published with error: {$exception->getMessage()}."
+                    );
+                }
+            } else {
+                $this->logInfo("Organization file: {$organizationPublished->filename} not published.");
+            }
+        }
+
+        if ($activityPublished) {
+            $aidstreamActivityPublished = $this->db::connection('aidstream')->table('activity_published')
+                                                   ->where('organization_id', $aidStreamOrganization->id)->where(
+                                                       'published_to_register',
+                                                       1
+                                                   )->get();
+
+            //Publish activity to registry if needed.
+            if (
+                $activityPublished->published_to_registry &&
+                $setting &&
+                Arr::get($setting->publishing_info, 'publisher_verification', false) &&
+                Arr::get($setting->publishing_info, 'token_verification', false)
+            ) {
+                $settings = $iatiOrganization->settings;
+                $publishingInfo = $settings ? $settings->publishing_info : [];
+                $this->logInfo(
+                    "Publishing activity file: {$activityPublished->filename} for Aidstream org: {$aidStreamOrganization->id}."
+                );
+
+                try {
+                    $this->publisherService->publishFile($publishingInfo, $activityPublished, $iatiOrganization, false);
+                    $this->logInfo(
+                        "Completed publishing activity file: {$activityPublished->filename} with updated at {$activityPublished->updated_at} for Aidstream org: {$aidStreamOrganization->id}."
+                    );
+                } catch (\Exception $exception) {
+                    throw new PublishException(
+                        $aidStreamOrganization->id,
+                        $iatiOrganization->id,
+                        "Activity file: {$activityPublished->filename} with updated at: {$activityPublished->updated_at} not published with error: {$exception->getMessage()}."
+                    );
+                }
+
+                $this->unpublishSegmentedFiles(
+                    Arr::get($setting->publishing_info, 'api_token', null),
+                    $aidstreamActivityPublished,
+                    $aidStreamOrganization->id,
+                    $iatiOrganization->id
+                );
+            }
+        } else {
+            $this->logInfo(
+                "Activity file: {$activityPublished->filename} not published."
+            );
+        }
+    }
+
+    /**
+     * Disable aidstream organization.
+     *
+     * @param $orgId
+     *
+     * @return void
+     */
+    public function disableAidstreamOrg($orgId): void
+    {
+        $this->db::connection('aidstream')->table('organizations')->where('id', $orgId)->update(['status' => 0]);
     }
 }
