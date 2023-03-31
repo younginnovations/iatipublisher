@@ -83,7 +83,6 @@ class Indicator
                 $this->columnToFieldMapper($this->indicatorDivision[$sheetName], $content);
             }
         }
-
         $this->removeUnwantedData();
         $this->validateIndicator();
     }

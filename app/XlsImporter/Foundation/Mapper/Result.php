@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\XlsImporter\Foundation\Mapper;
 
+use App\XlsImporter\Foundation\XlsValidator\Validators\ResultValidator;
 use Illuminate\Support\Arr;
 
 /**
@@ -59,7 +60,20 @@ class Result
             $this->documentLinkColumnToFieldMapper($this->resultElements['Result Document Link'], $resultData['Result Document Link']);
         }
 
-        $result = $this->combineResultAndDocumentLink();
+        $this->results = $this->combineResultAndDocumentLink();
+        $this->validateResult();
+    }
+
+    public function validateResult()
+    {
+        $resultValidator = app(ResultValidator::class);
+        foreach ($this->results as $activityIdentifier => $results) {
+            foreach ($results as $resultIdentifier => $resultData) {
+                $this->results[$activityIdentifier][$resultIdentifier] = $resultValidator
+                    ->init($resultData)
+                    ->validateData();
+            }
+        }
     }
 
     public function setActivityAndResultIdentifier($rows)
@@ -234,6 +248,7 @@ class Result
                 }
 
                 $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
+
                 $elementPositionBasedOnParent = empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition;
 
                 if (!Arr::get($elementData, $elementPositionBasedOnParent, null)) {
@@ -265,9 +280,10 @@ class Result
         $expected_position = '';
 
         foreach ($dependency as $key) {
+            $key = $key === 'narrative' ? '0.narrative' : $key;
             $expected_position = empty($expected_position) ? $key : "$expected_position $key";
 
-            if (in_array($expected_position, array_keys($fieldDependency))) {
+            if (array_key_exists($expected_position, $fieldDependency)) {
                 $positionValue = $fieldDependency[$expected_position];
                 $position = empty($position) ? $key . '.' . $positionValue : "$position.$key.$positionValue";
             } else {
