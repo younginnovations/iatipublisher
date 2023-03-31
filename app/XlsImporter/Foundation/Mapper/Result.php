@@ -51,7 +51,7 @@ class Result
             $this->documentLinkColumnToFieldMapper($this->resultElements['Result Document Link'], $resultData['Result Document Link']);
         }
 
-        $this->combineResultAndDocumentLink();
+        $result = $this->combineResultAndDocumentLink();
     }
 
     public function setActivityAndResultIdentifier($rows)

@@ -23,6 +23,9 @@ class Period
 
     protected array $identifiers = [];
 
+    protected int $rowCount = 2;
+    protected string $sheetName = '';
+
     /**
      * @var array
      */
@@ -74,11 +77,15 @@ class Period
         $periodData = json_decode($periodData, true, 512, 0);
 
         foreach ($periodData as $sheetName => $content) {
+            $this->sheetName = $sheetName;
+
             if (in_array($sheetName, array_keys($this->mappers))) {
+                $this->rowCount = 2;
                 $this->mapPeriods($content, $sheetName);
             }
 
             if (in_array($sheetName, array_keys($this->periodDivisions))) {
+                $this->rowCount = 2;
                 $this->columnToFieldMapper($this->periodDivisions[$sheetName], $content);
             }
         }
@@ -123,6 +130,11 @@ class Period
     public function getDropDownFields()
     {
         return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/dropdown-fields.json'), true, 512, 0);
+    }
+
+    public function getExcelColumnNameMapper()
+    {
+        return json_decode(file_get_contents(app_path('/XlsImporter/Templates/excel-column-name-mapper.json')), true, 512, JSON_THROW_ON_ERROR);
     }
 
     public function mapPeriods($data, $sheetName)
@@ -263,12 +275,14 @@ class Period
 
     public function getElementData($data, $dependency, $elementDropDownFields): array
     {
+        $columnTracker = [];
         $elementData = [];
         $elementBase = Arr::get($dependency, 'elementBase', null);
         $elementBasePeer = Arr::get($dependency, 'elementBasePeer', []);
         $baseCount = null;
         $fieldDependency = $dependency['fieldDependency'];
         $parentBaseCount = [];
+        $excelColumnName = $this->getExcelColumnNameMapper();
 
         foreach (array_values($fieldDependency) as $dependents) {
             $parentBaseCount[$dependents['parent']] = null;
@@ -302,8 +316,11 @@ class Period
 
                 if (!Arr::get($elementData, $elementPositionBasedOnParent, null)) {
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
+//                    $columnTracker[$elementPositionBasedOnParent] = $this->sheetName.'-'.$fieldName.'-'.$this->rowCount;
+                    $columnTracker[$elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
                 }
             }
+            $this->rowCount++;
         }
 
         return $elementData;
