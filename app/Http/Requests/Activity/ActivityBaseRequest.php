@@ -231,7 +231,7 @@ class ActivityBaseRequest extends FormRequest
         $defaultValues = $this->getActivityDefaultValues();
 
         if (!empty($defaultValues)) {
-            $defaultLanguage = $defaultValues['default_language'];
+            $defaultLanguage = Arr::get($defaultValues, 'default_language', '');
 
             $validator->addReplacer(
                 'unique_default_lang',
