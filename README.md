@@ -93,3 +93,22 @@ The application uses PHPUnit, the built-in testing support of Laravel for unit a
 - Run all tests: `php artisan test`
 - Run specific test class: `php artisan test --filter [Test Class]`
 - Run specific test method from a class : `php artisan test --filter [Test Class]::[Method Name]`
+
+## Generate a Sealed-Secret using kubeseal
+
+### Prerequisites
+Before you begin, you should have the following:
+
+- `kubectl` installed on your local machine
+- `kubeseal` installed on your local machine
+- `secret.yaml` file on your local machine and private.
+- `seal-secret.sh` script that will seal `secret.yaml` file to `sealed-secret.yaml` file using `kubeseal`
+- `seal-secret.sh` and `secret.yaml` must be within a same directory.
+
+Run the below command to generate sealed secret from `secret.yaml` file:
+
+```
+./seal-secret.sh
+```
+
+Note: Make sure to keep the secret.yaml file private, as they contain sensitive information.

@@ -56,7 +56,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            MIX_ENCRYPTION_KEY=${{ secrets.MIX_ENCRYPTION_KEY }}
+            MIX_ENCRYPTION_KEY=${{ secrets.MIX_ENCRYPTION_KEY_STAGING }}
 
 
 
@@ -98,7 +98,7 @@ jobs:
           push: true
           target: fpm_server
           build-args: |
-            MIX_ENCRYPTION_KEY=${{ secrets.MIX_ENCRYPTION_KEY }}
+            MIX_ENCRYPTION_KEY=${{ secrets.MIX_ENCRYPTION_KEY_STAGING }}
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/fpm_server:${{ github.sha }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/fpm_server:latest
@@ -150,7 +150,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            MIX_ENCRYPTION_KEY=${{ secrets.MIX_ENCRYPTION_KEY }}
+            MIX_ENCRYPTION_KEY=${{ secrets.MIX_ENCRYPTION_KEY_STAGING }}
 
 
   cron_build_push:
@@ -197,7 +197,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            MIX_ENCRYPTION_KEY=${{ secrets.MIX_ENCRYPTION_KEY }}
+            MIX_ENCRYPTION_KEY=${{ secrets.MIX_ENCRYPTION_KEY_STAGING }}
 
   horizon_build_push:
     name: horizon image build
@@ -243,7 +243,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            MIX_ENCRYPTION_KEY=${{ secrets.MIX_ENCRYPTION_KEY }}
+            MIX_ENCRYPTION_KEY=${{ secrets.MIX_ENCRYPTION_KEY_STAGING }}
 
   deploy-staging:
     name: staging deploy
