@@ -101,8 +101,13 @@ defineProps({
 });
 
 function downloadManual(type: string) {
+  let fileName = {
+    user: 'IATI_Publisher-User_Manual_v1.0.pdf',
+  };
+  let url = window.location.origin + `/Data/Manuals/${fileName[type]}`;
+
   axios({
-    url: `/iati-standard/manual/${type}`,
+    url: url,
     method: 'GET',
     responseType: 'arraybuffer',
   }).then((response) => {
@@ -111,7 +116,7 @@ function downloadManual(type: string) {
     });
     let link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
-    link.download = response.headers['content-disposition'].split('=')[1];
+    link.download = fileName[type];
     link.click();
   });
 }

@@ -42,5 +42,4 @@ Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logou
 Route::get('/about', [App\Http\Controllers\Web\WebController::class, 'about'])->name('about');
 Route::get('/publishing-checklist', [App\Http\Controllers\Web\WebController::class, 'publishingChecklist'])->name('publishingchecklist');
 Route::get('/iati-standard', [App\Http\Controllers\Web\WebController::class, 'iatiStandard'])->name('iatistandard');
-Route::get('/iati-standard/manual/{type}', [App\Http\Controllers\Web\WebController::class, 'downloadIatiStandardManual'])->name('iatistandard.download');
 Route::get('/support', [App\Http\Controllers\Web\WebController::class, 'support'])->name('support');
