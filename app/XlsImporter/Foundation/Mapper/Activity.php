@@ -31,9 +31,9 @@ class Activity
      * @var array
      */
     protected array $activityElements = [
-         'Title' => 'title',
+        'Title' => 'title',
         // 'Other Identifier' => 'other_identifier',
-         'Description' => 'description',
+        'Description' => 'description',
         // 'Activity Date' => 'activity_date',
         // 'Recipient Country' => 'recipient_country',
         // 'Recipient Region' => 'recipient_region',
@@ -48,8 +48,8 @@ class Activity
         // 'Legacy Data' => 'legacy_data',
         // 'Document Link' => 'document_link',
         // 'Contact Info' => 'contact_info',
-        'Location' => 'location',
-        // 'Planned Disbursement' => 'planned_disbursement',
+        // 'Location' => 'location',
+        'Planned Disbursement' => 'planned_disbursement',
         // 'Participating Org' => 'participating_org',
         // 'Budget' => 'budget',
         // 'Transaction' => 'transactions',
@@ -80,6 +80,7 @@ class Activity
     protected array $enclosedNarrative = [
         'country_budget_items',
         'location',
+
     ];
 
     protected string $elementBeingProcessed = '';
@@ -109,7 +110,7 @@ class Activity
                 $this->columnToFieldMapper($this->activityElements[$sheetName], $content);
             }
         }
-//        dump($this->columnTracker);
+        //        dump($this->columnTracker);
         $this->validateActivityElements();
     }
 
@@ -123,6 +124,7 @@ class Activity
             $errors = $activityValidator
                 ->init($activities)
                 ->validateData();
+            dump($errors);
 
             $excelColumnAndRowName = isset($this->columnTracker[$activityIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
             $this->activities[$activityIdentifier]['error'] = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
@@ -216,18 +218,18 @@ class Activity
         }
 
         return [
-             [
-                 'ref' => '',
-                 'type' => '',
-                 'secondary_reporter' => $secondary_reporter,
-                 'narrative' => [
-                     [
-                         'narrative' => '',
-                         'language' => '',
-                     ],
-                 ],
-             ],
-         ];
+            [
+                'ref' => '',
+                'type' => '',
+                'secondary_reporter' => $secondary_reporter,
+                'narrative' => [
+                    [
+                        'narrative' => '',
+                        'language' => '',
+                    ],
+                ],
+            ],
+        ];
     }
 
     public function singleValuedFields($data)
@@ -357,7 +359,7 @@ class Activity
                     }
                 }
 
-//                 dump($fieldName, $codeDependentField);
+                //                 dump($fieldName, $codeDependentField);
                 if ($fieldName === $codeDependentField) {
                     $fieldName = in_array($dependentOnValue, array_keys($codeDependencyConditions)) ? Arr::get($codeDependencyConditions, $dependentOnValue, $defaultCodeField) : $defaultCodeField;
                 }

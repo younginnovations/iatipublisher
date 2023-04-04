@@ -10,9 +10,6 @@ use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\ImportActivity\ImportXlsService;
 use App\IATI\Services\ImportActivityError\ImportActivityErrorService;
 use App\XlsImporter\Foundation\Mapper\Activity;
-use App\XlsImporter\Foundation\Mapper\Indicator;
-use App\XlsImporter\Foundation\Mapper\Period;
-use App\XlsImporter\Foundation\Mapper\Result;
 use Arr;
 use Exception;
 use Illuminate\Contracts\View\Factory;
@@ -97,14 +94,14 @@ class ImportXlsController extends Controller
 
             // $this->getLinearizedElement();
 
-            $data = json_encode(getCodeList('CashandVoucherModalities', 'Activity'));
+            // $data = json_encode(getCodeList('CashandVoucherModalities', 'Activity'));
 
-            file_put_contents(app_path() . '/XlsImporter/Templates/drop-down-buffer.json', $data);
+            // file_put_contents(app_path() . '/XlsImporter/Templates/drop-down-buffer.json', $data);
             // test
             $data = file_get_contents(app_path() . '/XlsImporter/Templates/test.json');
             $activityMapper = new Activity();
             $activityMapper->map($data);
-//            dd('stop');
+            dd('stop');
 
             // period
 

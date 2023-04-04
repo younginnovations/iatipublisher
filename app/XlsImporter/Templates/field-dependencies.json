@@ -352,6 +352,12 @@
                     "point pos longitude"
                 ]
             },
+            "point pos latitude" : {
+                "parent" : "point pos",
+                "peer" : [
+                    "point pos longitude"
+                ]
+            },
             "exactness code": {
                 "parent": "exactness"
             },
