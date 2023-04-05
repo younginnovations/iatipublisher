@@ -118,7 +118,7 @@ trait ElementCompleteServiceTrait
                 }
             }
 
-            if (!array_key_exists($mandatoryAttribute, $data) || (empty($data[$mandatoryAttribute]))) {
+            if (!array_key_exists($mandatoryAttribute, $data) || (empty($data[$mandatoryAttribute]) && $data[$mandatoryAttribute] !== 0)) {
                 return false;
             }
         }
