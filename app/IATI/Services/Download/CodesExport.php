@@ -4,8 +4,17 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Download;
 
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\FromCollection;
+// use Illuminate\Support\Collection;
+// use Maatwebsite\Excel\Concerns\FromCollection;
+
+// use Maatwebsite\Excel\Concerns\ToArray;
+// use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
+// use Maatwebsite\Excel\Concerns\WithEvents;
+// use Maatwebsite\Excel\Concerns\WithHeadingRow;
+// use Maatwebsite\Excel\Events\BeforeSheet;
+
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
 // use Maatwebsite\Excel\Excel as Generator;
 // use PhpOffice\PhpSpreadsheet\Exception;
@@ -15,14 +24,28 @@ use Maatwebsite\Excel\Concerns\FromCollection;
 /**
  * Class CodesExport.
  */
-class CodesExport implements FromCollection
+class CodesExport implements WithMultipleSheets
 {
-    public function collection()
+    use Exportable;
+
+    protected $data;
+
+    public function __construct($data)
     {
-        // return new Collection
-        return new Collection([
-            [1, 2, 3],
-            [4, 5, 6],
-        ]);
+        $this->data = $data;
+    }
+
+    /**
+     * @return array
+     */
+    public function sheets(): array
+    {
+        $sheets = [];
+
+        foreach ($this->data as $key=>$value) {
+            $sheets[] = new ArrayToXls($key, $value);
+        }
+
+        return $sheets;
     }
 }

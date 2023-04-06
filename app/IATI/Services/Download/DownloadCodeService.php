@@ -4,21 +4,14 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Download;
 
-use App\CsvImporter\Traits\ChecksCsvHeaders;
 use App\IATI\Elements\Xml\XmlGenerator;
 use App\IATI\Repositories\Activity\ActivityRepository;
-use App\IATI\Traits\DownloadActivityComplexElementTrait;
-use App\IATI\Traits\DownloadActivitySimpleElementTrait;
-use App\IATI\Traits\DownloadTransactionTrait;
-use Illuminate\Support\Arr;
 
 /**
- * Class DownloadActivityService.
+ * Class DownloadCodeService.
  */
 class DownloadCodeService
 {
-    use ChecksCsvHeaders, DownloadActivitySimpleElementTrait, DownloadActivityComplexElementTrait, DownloadTransactionTrait;
-
     /**
      * @var ActivityRepository
      */
@@ -26,46 +19,26 @@ class DownloadCodeService
 
     protected $xlsFields = [
         'Result Mapper' => [
-            'Activity Identifier',
-            'Result Code',
-            'Result Identifier',
+            [
+                'Activity Identifier',
+                'Result Code',
+                'Result Identifier',
+            ],
         ],
         'Indicator Mapper' => [
-            'Result Identifier',
-            'Indicator Code',
-            'Indicator Identifier',
+            [
+                'Result Identifier',
+                'Indicator Code',
+                'Indicator Identifier',
+            ],
         ],
         'Period Mapper' => [
-            'Indicator Identifier',
-            'Period Code',
-            'Period Identifier',
+            [
+                'Indicator Identifier',
+                'Period Code',
+                'Period Identifier',
+            ],
         ],
-    ];
-
-    /**
-     * @var array
-     */
-    protected array $multipleElements = [
-        'other_identifier',
-        'title',
-        'description',
-        'activity_date',
-        'contact_info',
-        'participating_org',
-        'recipient_country',
-        'recipient_region',
-        'location',
-        'sector',
-        'humanitarian_scope',
-        'policy_marker',
-        'default_aid_type',
-        'budget',
-        'planned_disbursement',
-        'document_link',
-        'related_activity',
-        'legacy_data',
-        'tag',
-        'transactions',
     ];
 
     /**
@@ -74,7 +47,7 @@ class DownloadCodeService
     protected array $insertedDates = [];
 
     /**
-     * DownloadActivityService Constructor.
+     * DownloadCodeService Constructor.
      *
      * @param ActivityRepository $activityRepository
      * @param XmlGenerator $xmlGenerator
@@ -84,7 +57,6 @@ class DownloadCodeService
         XmlGenerator $xmlGenerator
     ) {
         $this->activityRepository = $activityRepository;
-        $this->xmlGenerator = $xmlGenerator;
     }
 
     /**
@@ -94,9 +66,52 @@ class DownloadCodeService
      *
      * @return object
      */
-    public function getActivitiesToDownload($activityIds): object
+    public function getActivitiesToDownload($activityIds): array
     {
-        return $this->activityRepository->getActivitiesToDownload($activityIds);
+        $activities = $this->activityRepository->getAllActivitiesToDownload(auth()->user()->organization_id, []);
+
+        foreach ($activities as $index => $activity) {
+            // $resultMapperRow
+            // dd($activity);
+            $results = $activity->results;
+            $activityIdentifier = $activity->iati_identifier['activity_identifier'];
+
+            foreach ($results as $resultIndex => $result) {
+                $resultCode = $result->result_code;
+                $resultIdentifier = $activityIdentifier . '_' . $resultCode;
+                $indicators = $result->indicators;
+
+                foreach ($indicators as $indicatorIndex => $indicator) {
+                    $indicatorCode = $result->result_code;
+                    $indicatorIdentifier = $resultIdentifier . '_' . $indicatorCode;
+                    $periods = $indicator->periods;
+
+                    foreach ($periods as $periodIndex => $period) {
+                        $this->xlsFields['Period Mapper'][] = [
+                            $periodIndex === 0 ? $indicatorIdentifier : '',
+                            $period->period_code,
+                            $indicatorIdentifier . '_' . $period->period_code,
+                        ];
+                    }
+
+                    $this->xlsFields['Indicator Mapper'][] = [
+                        $indicatorIndex === 0 ? $resultIdentifier : '',
+                        $indicator->indicator_code,
+                        $resultIdentifier . '_' . $indicator->indicator_code,
+                    ];
+                }
+
+                $this->xlsFields['Result Mapper'][] = [
+                    $resultIndex === 0 ? $activityIdentifier : '',
+                    $result->result_code,
+                    $activityIdentifier . '_' . $result->result_code,
+                ];
+            }
+        }
+
+        // dd($this->xlsFields);
+
+        return $this->xlsFields;
     }
 
     /**
@@ -106,7 +121,7 @@ class DownloadCodeService
      *
      * @return array
      */
-    public function getCsvData($activities): array
+    public function getXlsData($activities): array
     {
         $data = [];
 
@@ -142,85 +157,21 @@ class DownloadCodeService
                 $data[$i][$header] = $this->$function($activityArray, $i);
             }
         }
-
-        return $this->removeEmptyData($data);
     }
 
-    /**
-     * Removes empty data.
-     *
-     * @param $data
-     *
-     * @return array|null
-     */
-    public function removeEmptyData($data): ?array
-    {
-        if (is_array($data) && !empty($data)) {
-            foreach ($data as $key => $datum) {
-                if ($this->isEmpty($datum)) {
-                    unset($data[$key]);
-                }
-            }
-        }
+// /**
+//  * Returns all activities of an organization.
+//  *
+//  * @param $queryParams
+//  *
+//  * @return object
+//  */
+// public function getAllActivitiesToDownload($queryParams): object
+// {
+//     $activities = $this->activityRepository->getAllActivitiesToDownload(auth()->user()->organization_id, $queryParams);
 
-        return $data;
-    }
+//     foreach($activities as $index => $activity){
 
-    /**
-     * Checks if data is empty.
-     *
-     * @param $array
-     *
-     * @return bool
-     */
-    public function isEmpty($array): bool
-    {
-        if (is_array($array) && !empty($array)) {
-            foreach ($array as $data) {
-                if (!empty($data)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Returns count of the highest no of repeated element.
-     *
-     * @param $activityArray
-     *
-     * @return int
-     */
-    public function getElementCount($activityArray): int
-    {
-        $count = 1;
-
-        if (is_array($activityArray) && !empty($activityArray)) {
-            foreach ($activityArray as $key => $arrayItem) {
-                if (is_array($arrayItem) && in_array($key, $this->multipleElements, true) && count($arrayItem) > $count) {
-                    $count = count($arrayItem);
-                } elseif ($key === 'conditions' && count(Arr::get($activityArray, 'conditions.condition', [])) > $count) {
-                    $count = count(Arr::get($activityArray, 'conditions.condition', []));
-                } elseif ($key === 'country_budget_items' && count(Arr::get($activityArray, 'country_budget_items.budget_item', [])) > $count) {
-                    $count = count(Arr::get($activityArray, 'country_budget_items.budget_item', []));
-                }
-            }
-        }
-
-        return $count;
-    }
-
-    /**
-     * Returns all activities of an organization.
-     *
-     * @param $queryParams
-     *
-     * @return object
-     */
-    public function getAllActivitiesToDownload($queryParams): object
-    {
-        return $this->activityRepository->getAllActivitiesToDownload(auth()->user()->organization_id, $queryParams);
-    }
+//     }
+// }
 }

@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Admin\Download;
 use App\Http\Controllers\Controller;
 use App\IATI\Services\Audit\AuditService;
 use App\IATI\Services\Download\CodesExport;
-use App\IATI\Services\Download\DownloadActivityService;
+use App\IATI\Services\Download\DownloadCodeService;
 use App\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,10 +19,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  */
 class DownloadCodesController extends Controller
 {
-    /**
-     * @var DownloadActivityService
-     */
-    protected DownloadActivityService $downloadActivityService;
+    protected DownloadCodeService $downloadCodeService;
 
     /**
      * @var XmlServiceProvider
@@ -37,16 +34,16 @@ class DownloadCodesController extends Controller
     /**
      * DownloadCodesController Constructor.
      *
-     * @param DownloadActivityService $downloadActivityService
+     * @param DownloadCodeService $downloadCodeService
      * @param XmlServiceProvider $xmlServiceProvider
      * @param AuditService $auditService
      */
     public function __construct(
-        DownloadActivityService $downloadActivityService,
+        DownloadCodeService $downloadCodeService,
         XmlServiceProvider $xmlServiceProvider,
         AuditService $auditService
     ) {
-        $this->downloadActivityService = $downloadActivityService;
+        $this->downloadCodeService = $downloadCodeService;
         $this->xmlServiceProvider = $xmlServiceProvider;
         $this->auditService = $auditService;
     }
@@ -61,27 +58,29 @@ class DownloadCodesController extends Controller
     public function downloadCodes(Request $request): BinaryFileResponse|JsonResponse
     {
         try {
-            // $activityIds = ($request->get('activities') && $request->get('activities') !== 'all') ?
-            // json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR) : [];
-            // $filename = $this->downloadActivityService->getOrganizationPublisherId();
+            $activityIds = ($request->get('activities') && $request->get('activities') !== 'all') ?
+            json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR) : [];
+            // $filename = $this->downloadCodeService->getOrganizationPublisherId();
             // $activities =[];
 
             // if (request()->get('activities') === 'all') {
-            //     $activities = $this->downloadActivityService->getAllActivitiesToDownload($this->sanitizeRequest($request));
+            //     $activities = $this->downloadCodeService->getAllActivitiesToDownload($this->sanitizeRequest($request));
             // } elseif (is_array($activityIds) && !empty($activityIds)) {
-            //     $activities = $this->downloadActivityService->getActivitiesToDownload($activityIds);
+            //     $activities = $this->downloadCodeService->getActivitiesToDownload($activityIds);
             // }
 
-            // $excelData = $this->downloadActivityService->getCsvData($activities);
+            // $excelData = $this->downloadCodeService->getCsvData($activities);
             // if (!isset($activities) || !count($activities)) {
             //     return response()->json(['success' => false, 'message' => 'No activities selected.']);
             // }
 
             // $this->auditService->auditEvent($activities, 'download', 'codes');
 
+            $codeData = $this->downloadCodeService->getActivitiesToDownload($activityIds);
+
             $filename = 'test.xls';
 
-            return Excel::download(new CodesExport(), $filename);
+            return Excel::download(new CodesExport($codeData), $filename);
             // return $this->csvGenerator->generateWithHeaders(getTimeStampedText($filename), $excelData);
         } catch (\Exception $e) {
             dd($e);
