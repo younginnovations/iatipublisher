@@ -845,6 +845,37 @@ function dateFormat($format, $date): bool|string
 }
 
 /**
+ * Returns formatted date.
+ *
+ * @param $format
+ * @param $date
+ *
+ * @return false
+ */
+function isDate($date): bool
+{
+    if (is_array($date) || is_bool($date)) {
+        return false;
+    }
+
+    if (is_string($date) && $date !== '') {
+        if ((str_contains($date, '/'))) {
+            $date = str_replace('/', '-', $date);
+        }
+
+        $dateArray = date_parse_from_format('Y-m-d', $date);
+
+        if (checkdate((int) $dateArray['month'], (int) $dateArray['day'], (int) $dateArray['year']) && (bool) strtotime($date)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    return false;
+}
+
+/**
  * Returns strtotime date.
  *
  * @param $date

@@ -179,7 +179,7 @@
         "period_end date": "period_end_iso_date",
         "value amount": "value_value",
         "value currency": "value_currency",
-        "value value_date": "value_value_date",
+        "value value_date": "value_date",
         "provider_org ref": "provider_organisation_reference",
         "provider_org provider_activity_id": "provider_organisation_provider_activity_id",
         "provider_org type": "provider_organisation_type",

@@ -158,7 +158,7 @@ class BudgetRequest extends ActivityBaseRequest
             }
 
             $startDate = Arr::get($budget, 'period_start.0.date', null);
-            $newDate = $startDate ? date('Y-m-d', strtotime($startDate . '+1year')) : '';
+            $newDate = $startDate && isDate($startDate) ? date('Y-m-d', strtotime($startDate . '+1year')) : null;
 
             if ($newDate) {
                 $rules[$budgetForm . '.period_end.0.date'][] = sprintf('before:%s', $newDate);

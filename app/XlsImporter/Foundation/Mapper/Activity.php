@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\XlsImporter\Foundation\Mapper;
 
+use App\IATI\Traits\DataSanitizeTrait;
 use App\XlsImporter\Foundation\XlsValidator\Validators\ActivityValidator;
 use Illuminate\Support\Arr;
 
@@ -12,6 +13,8 @@ use Illuminate\Support\Arr;
  */
 class Activity
 {
+    use DataSanitizeTrait;
+
     //activities whose identifier is mentioned on setting sheet
     protected array $activities = [];
 
@@ -31,9 +34,9 @@ class Activity
      * @var array
      */
     protected array $activityElements = [
-        'Title' => 'title',
+        // 'Title' => 'title',
         // 'Other Identifier' => 'other_identifier',
-        'Description' => 'description',
+        // 'Description' => 'description',
         // 'Activity Date' => 'activity_date',
         // 'Recipient Country' => 'recipient_country',
         // 'Recipient Region' => 'recipient_region',
@@ -49,7 +52,7 @@ class Activity
         // 'Document Link' => 'document_link',
         // 'Contact Info' => 'contact_info',
         // 'Location' => 'location',
-        'Planned Disbursement' => 'planned_disbursement',
+        // 'Planned Disbursement' => 'planned_disbursement',
         // 'Participating Org' => 'participating_org',
         // 'Budget' => 'budget',
         // 'Transaction' => 'transactions',
@@ -124,7 +127,7 @@ class Activity
             $errors = $activityValidator
                 ->init($activities)
                 ->validateData();
-            dump($errors);
+            dump($errors, $activities);
 
             $excelColumnAndRowName = isset($this->columnTracker[$activityIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
             $this->activities[$activityIdentifier]['error'] = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
@@ -188,15 +191,20 @@ class Activity
                         $elementDropDownFields = $dropDownFields[$element];
                         $fieldValue = $this->mapDropDownValueToKey($row[$element], $elementDropDownFields);
                     }
+
                     $this->activities[$elementActivityIdentifier]['default_field_values'][$element] = $fieldValue;
                     $this->columnTracker[$element] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $element) . $this->rowCount;
                 }
             } else {
                 break;
             }
+
             $this->rowCount++;
             $secondary_reporter = $this->activities[$elementActivityIdentifier]['default_field_values']['secondary_reporter'];
             $this->activities[$elementActivityIdentifier]['reporting_org'] = $this->getReportingOrganization($secondary_reporter);
+            $this->activities[$elementActivityIdentifier]['iati_identifier'] = [
+                'activity_identifier' => $elementActivityIdentifier,
+            ];
         }
     }
 
@@ -384,7 +392,7 @@ class Activity
             $this->rowCount++;
         }
 
-        return $elementData;
+        return $this->sanitizeData($elementData);
     }
 
     public function checkIfPeerAttributesAreNotEmpty(array $peerAttributes, array $rowContent): bool

@@ -379,7 +379,11 @@
                 "parent": "period_end"
             },
             "value amount": {
-                "parent": "value"
+                "parent": "value",
+                "peer" : [
+                    "value currency",
+                    "value value_date"
+                ]
             },
             "provider_org ref": {
                 "parent": "provider_org",
