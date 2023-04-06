@@ -113,7 +113,7 @@ class Activity
                 $this->columnToFieldMapper($this->activityElements[$sheetName], $content);
             }
         }
-        //        dump($this->columnTracker);
+
         $this->validateActivityElements();
     }
 
@@ -122,12 +122,9 @@ class Activity
         $activityValidator = app(ActivityValidator::class);
 
         foreach ($this->activities as $activityIdentifier => $activities) {
-            dump(json_encode($activities));
-
             $errors = $activityValidator
                 ->init($activities)
                 ->validateData();
-            dump($errors, $activities);
 
             $excelColumnAndRowName = isset($this->columnTracker[$activityIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
             $this->activities[$activityIdentifier]['error'] = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
@@ -367,7 +364,6 @@ class Activity
                     }
                 }
 
-                //                 dump($fieldName, $codeDependentField);
                 if ($fieldName === $codeDependentField) {
                     $fieldName = in_array($dependentOnValue, array_keys($codeDependencyConditions)) ? Arr::get($codeDependencyConditions, $dependentOnValue, $defaultCodeField) : $defaultCodeField;
                 }

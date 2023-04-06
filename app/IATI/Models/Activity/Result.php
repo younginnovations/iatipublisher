@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Models\Activity;
 
+use Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,20 +30,40 @@ class Result extends Model implements Auditable
      * @var array
      */
     protected $fillable
-    = [
-        'activity_id',
-        'result',
-    ];
+        = [
+            'activity_id',
+            'result',
+        ];
 
     /**
      * @var array
      */
     protected $casts
-    = [
-        'result' => 'json',
-    ];
+        = [
+            'result' => 'json',
+        ];
 
     protected $touches = ['activity'];
+
+    /**
+     * Before inbuilt function.
+     *
+     * @return void
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::saving(
+            function ($model) {
+                if (Auth::check()) {
+                    $model->result_code = sprintf('%d%s', auth()->user()->id, time());
+                } else {
+                    $model->result_code = time();
+                }
+            }
+        );
+    }
 
     /**
      * Result belongs to activity.
@@ -69,7 +90,7 @@ class Result extends Model implements Auditable
      *
      * @return string|null
      */
-    public function getDefaultTitleNarrativeAttribute(): string | null
+    public function getDefaultTitleNarrativeAttribute(): string|null
     {
         $result = $this->result;
         $titles = $result['title'];

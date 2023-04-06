@@ -94,15 +94,8 @@ class ImportXlsController extends Controller
 
             // $this->getLinearizedElement();
 
-            $data = getCodeList('FileFormat', 'Activity', false);
-            logger()->error($data);
-            dd(json_encode($data));
-            $data = json_encode(getCodeList('Region', 'Activity'));
-
-            $data = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/', function ($match) {
-                return mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UTF-16BE');
-            }, $data);
-            file_put_contents(app_path() . '/XlsImporter/Templates/drop-down-buffer.json', $data);
+            // $data = getCodeList('FileFormat', 'Activity', false);
+            // $data = json_encode(getCodeList('Region', 'Activity'));
             // test
             $data = file_get_contents(app_path() . '/XlsImporter/Templates/test.json');
             $activityMapper = new Activity();
@@ -190,7 +183,6 @@ class ImportXlsController extends Controller
             // }
 
             // foreach ($subElement as $key => $subElementValue) {
-            //     // dump($content,$key);
             //     if (is_array($subElementValue)) {
             //         foreach ($subElementValue as $k => $v) {
             //             if (isset($content[$key][$k]['type']) && $content[$key][$k]['type'] === 'select') {

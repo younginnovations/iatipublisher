@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\Download\DownloadActivityController;
+use App\Http\Controllers\Admin\Download\DownloadCodesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,4 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'can:crud_activity'], static function () {
     Route::get('activities/download-csv', [DownloadActivityController::class, 'downloadActivityCsv'])->name('activities.download-csv');
     Route::get('activities/download-xml/{download?}', [DownloadActivityController::class, 'downloadActivityXml'])->name('activities.download-xml');
+    Route::get('activities/download-codes/{download?}', [DownloadCodesController::class, 'downloadCodes'])->name('activities.download-xml');
+    // Route::get('activities/download-codes/{download?}', [DownloadCodesController::class, , 'downloadCodes'])->name('activities.download-codes');
 });

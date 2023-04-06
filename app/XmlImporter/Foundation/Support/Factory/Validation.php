@@ -112,7 +112,6 @@ class Validation extends Factory
     {
         $errors = [];
 
-        dump('hey hey', $this->errors());
         foreach ($this->errors() as $index => $error) {
             $element = $this->parseErrors($index);
             $errors[$element][$index] = Arr::get($error, 0, '');

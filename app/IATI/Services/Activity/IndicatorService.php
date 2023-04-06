@@ -7,6 +7,8 @@ namespace App\IATI\Services\Activity;
 use App\IATI\Elements\Builder\ResultElementFormCreator;
 use App\IATI\Repositories\Activity\IndicatorRepository;
 use App\IATI\Traits\DataSanitizeTrait;
+use Auth;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Kris\LaravelFormBuilder\Form;
@@ -119,6 +121,7 @@ class IndicatorService
     public function create(array $indicatorData): object
     {
         $indicatorData['indicator'] = $this->sanitizeData($indicatorData['indicator']);
+        $indicatorData['indicator_code'] = Auth::user()->id . Carbon::now();
 
         return $this->indicatorRepository->store($indicatorData);
     }
