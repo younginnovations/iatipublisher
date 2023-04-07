@@ -14,6 +14,7 @@ use Illuminate\Support\Arr;
 class ElementCompleteService
 {
     use ElementCompleteServiceTrait;
+
     /**
      * Public variable element.
      *

@@ -2108,7 +2108,7 @@
             "type": "text",
             "placeholder": "Type level",
             "required": false,
-            "criteria": "Type level",
+            "criteria": "",
             "hover_text": "A number defining a subdivision within a hierarchical system of administrative areas. The precise system for defining the particular meaning of each @level value is determined by the @vocabulary being used.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/administrative/'>For more information</a>",
             "help_text": "Within your chosen <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/GeographicVocabulary/'>administrative boundary list</a>, you can provide a number to define a subdivision within a hierarchical system of administrative areas."
           }
@@ -3312,8 +3312,8 @@
             "label": "code",
             "type": "text",
             "placeholder": "Select code",
-            "required": true,
-            "criteria": "mandatory",
+            "required": false,
+            "criteria": "",
             "hover_text": "A code from the codelist identified in vocabulary that identifies a results framework. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/reference/'>For more information</a>",
             "help_text": "If you selected a results framework, then provide the code for the indicator as specified in this results framework."
           },
@@ -3440,7 +3440,7 @@
             "name": "document_link",
             "label": "document link",
             "add_more": true,
-            "element_criteria": "",
+           "element_criteria": "",
             "hover_text": "A link to an online, publicly accessible web page or document expanding on the result. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/'>For more information</a>",
             "help_text": "You may provide more information about the indicator baseline by providing a link to an online, publicly accessible web page or document.",
             "attributes": {
