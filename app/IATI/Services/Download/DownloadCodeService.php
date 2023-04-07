@@ -68,11 +68,9 @@ class DownloadCodeService
      */
     public function getActivitiesToDownload($activityIds): array
     {
-        $activities = $this->activityRepository->getAllActivitiesToDownload(auth()->user()->organization_id, []);
+        $activities = $this->activityRepository->getCodesToDownload(auth()->user()->organization_id, $activityIds);
 
-        foreach ($activities as $index => $activity) {
-            // $resultMapperRow
-            // dd($activity);
+        foreach ($activities as $activity) {
             $results = $activity->results;
             $activityIdentifier = $activity->iati_identifier['activity_identifier'];
 
@@ -109,69 +107,6 @@ class DownloadCodeService
             }
         }
 
-        // dd($this->xlsFields);
-
         return $this->xlsFields;
     }
-
-    /**
-     * Returns formatted csv data for downloading.
-     *
-     * @param $activities
-     *
-     * @return array
-     */
-    public function getXlsData($activities): array
-    {
-        $data = [];
-
-        foreach ($activities as $activity) {
-            $activityArrayData = $this->getActivityArrayData($activity->toArray());
-
-            if (count($activityArrayData)) {
-                foreach ($activityArrayData as $arrayData) {
-                    $data[] = $arrayData;
-                }
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * Returns required data in array format.
-     *
-     * @param $activityArray
-     *
-     * @return array
-     */
-    public function getActivityArrayData($activityArray): array
-    {
-        $data = [];
-        $count = $this->getElementCount($activityArray);
-        $headers = $this->getCsvHeaderArray('Activity', 'other_fields_transaction');
-
-        for ($i = 0; $i < $count; $i++) {
-            foreach ($headers as $header) {
-                $function = 'get' . str_replace([' ', '(', ')'], '', $header);
-                $data[$i][$header] = $this->$function($activityArray, $i);
-            }
-        }
-    }
-
-// /**
-//  * Returns all activities of an organization.
-//  *
-//  * @param $queryParams
-//  *
-//  * @return object
-//  */
-// public function getAllActivitiesToDownload($queryParams): object
-// {
-//     $activities = $this->activityRepository->getAllActivitiesToDownload(auth()->user()->organization_id, $queryParams);
-
-//     foreach($activities as $index => $activity){
-
-//     }
-// }
 }

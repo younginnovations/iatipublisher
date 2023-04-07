@@ -19,4 +19,6 @@ abstract class DBTables
     const RESULT = 'activity_results';
     const INDICATOR = 'activity_result_indicators';
     const PERIOD = 'result_indicator_periods';
+
+    const IMPORT_STATUS = 'import_status';
 }

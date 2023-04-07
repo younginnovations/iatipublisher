@@ -55,7 +55,7 @@ class Activity
         // 'Planned Disbursement' => 'planned_disbursement',
         // 'Participating Org' => 'participating_org',
         // 'Budget' => 'budget',
-        // 'Transaction' => 'transactions',
+        'Transaction' => 'transactions',
     ];
 
     protected array $singleValuedElements = [
@@ -83,7 +83,6 @@ class Activity
     protected array $enclosedNarrative = [
         'country_budget_items',
         'location',
-
     ];
 
     protected string $elementBeingProcessed = '';
@@ -114,7 +113,8 @@ class Activity
             }
         }
 
-        $this->validateActivityElements();
+        // $this->validateActivityElements();
+        dd($this->activities);
     }
 
     public function validateActivityElements()
@@ -163,7 +163,7 @@ class Activity
 
     public function getActivityTemplate()
     {
-        return json_decode(file_get_contents('app/XlsImporter/Templates/activity-template.json'), true, 512, 0);
+        return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/activity-template.json'), true, 512, 0);
     }
 
     public function getActivityJsonSchema()
@@ -272,6 +272,8 @@ class Activity
         $this->elementBeingProcessed = $element;
 
         foreach ($data as $row) {
+            dump($row);
+
             if ($this->checkRowNotEmpty($row)) {
                 if (
                     is_null($elementActivityIdentifier) || (
@@ -330,6 +332,9 @@ class Activity
         $fieldDependency = $dependency['fieldDependency'];
         $parentBaseCount = [];
         $excelColumnName = $this->getExcelColumnNameMapper();
+        $activityTemplate = $this->getActivityTemplate();
+        $elementTemplate = $activityTemplate[$element];
+        // dd($elementTemplate);
 
         // variables to map code dependency in elements like sector, recipient region and so on
         $codeRelation = Arr::get($dependency, 'codeDependency', []);
@@ -348,9 +353,13 @@ class Activity
                 if ($elementBase && ($fieldName === $elementBase && $fieldValue)) {
                     $dependentOnValue = '';
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
+                    $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
+                    $elementData[$baseCount] = $elementTemplate;
                 } elseif ($elementBase && ($fieldName === $elementBase && $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row))) {
                     $dependentOnValue = '';
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
+                    $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
+                    $elementData[$baseCount] = $elementTemplate;
                 }
 
                 if (array_key_exists($fieldName, $fieldDependency)) {
@@ -388,7 +397,7 @@ class Activity
             $this->rowCount++;
         }
 
-        return $this->sanitizeData($elementData);
+        return $elementData;
     }
 
     public function checkIfPeerAttributesAreNotEmpty(array $peerAttributes, array $rowContent): bool
@@ -407,6 +416,7 @@ class Activity
         $position = '';
         $dependency = explode(' ', $dependencies);
         $expected_position = '';
+        // dump($fieldDependency);
 
         foreach ($dependency as $key) {
             $expected_position = empty($expected_position) ? $key : "$expected_position $key";

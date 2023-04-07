@@ -457,4 +457,15 @@ class ActivityRepository extends Repository
             ->orderBy('id', $direction)
             ->get();
     }
+
+    public function getCodesToDownload($organizationId, $activitiesId): object
+    {
+        $query = $this->model->with(['results'])->select('id', 'iati_identifier')->where('org_id', $organizationId);
+
+        if (!empty($activitiesId)) {
+            $query = $query->whereIn('id', $activitiesId);
+        }
+
+        return $query->get();
+    }
 }

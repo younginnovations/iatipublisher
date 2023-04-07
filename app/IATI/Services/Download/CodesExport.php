@@ -28,11 +28,14 @@ class CodesExport implements WithMultipleSheets
 {
     use Exportable;
 
-    protected $data;
+    protected array $data;
 
-    public function __construct($data)
+    protected array $sheetFormats;
+
+    public function __construct($data, $sheetFormats)
     {
         $this->data = $data;
+        $this->sheetFormats = $sheetFormats;
     }
 
     /**
@@ -43,7 +46,7 @@ class CodesExport implements WithMultipleSheets
         $sheets = [];
 
         foreach ($this->data as $key=>$value) {
-            $sheets[] = new ArrayToXls($key, $value);
+            $sheets[] = new ArrayToXls($key, $value, []);
         }
 
         return $sheets;
