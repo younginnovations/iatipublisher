@@ -281,8 +281,8 @@ class OrganizationBaseRequest extends FormRequest
             $messages[$valueForm . '.amount.min'] = 'The amount must not be in negative.';
             $messages[$valueForm . '.value_date.required'] = 'The @value-date field is required.';
             $messages[$valueForm . '.value_date.date'] = 'The @value-date must be date.';
-            $messages[sprintf('%s.value_date.after_or_equal', $valueForm)] = 'The @value-date field must be a between period start and period end';
-            $messages[sprintf('%s.value_date.before_or_equal', $valueForm)] = 'The @value-date field must be a between period start and period end';
+            $messages[sprintf('%s.value_date.after_or_equal', $valueForm)] = 'The @value-date field must be a date between period start and period end';
+            $messages[sprintf('%s.value_date.before_or_equal', $valueForm)] = 'The @value-date field must be a date between period start and period end';
         }
 
         return $messages;
@@ -474,8 +474,8 @@ class OrganizationBaseRequest extends FormRequest
             $messages[sprintf('%s.value.%s.amount.min', $formBase, $budgetLineIndex)] = 'The amount field must not be in negative.';
             $messages[sprintf('%s.value.%s.value_date.date', $formBase, $budgetLineIndex)] = 'The @value-date must be a date.';
             $messages[sprintf('%s.value.%s.value_date.required_with', $formBase, $budgetLineIndex)] = 'The @value-date is required with value,.';
-            $messages[sprintf('%s.value.%s.value_date.after_or_equal', $formBase, $budgetLineIndex)] = 'The @value-date field must be a between period start and period end';
-            $messages[sprintf('%s.value.%s.value_date.before_or_equal', $formBase, $budgetLineIndex)] = 'The @value-date field must be a between period start and period end';
+            $messages[sprintf('%s.value.%s.value_date.after_or_equal', $formBase, $budgetLineIndex)] = 'The @value-date field must be a date between period start and period end';
+            $messages[sprintf('%s.value.%s.value_date.before_or_equal', $formBase, $budgetLineIndex)] = 'The @value-date field must be a date between period start and period end';
         }
 
         return $messages;
