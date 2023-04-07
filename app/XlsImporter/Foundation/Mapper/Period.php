@@ -137,6 +137,11 @@ class Period
         return json_decode(file_get_contents(app_path('/XlsImporter/Templates/excel-column-name-mapper.json')), true, 512, JSON_THROW_ON_ERROR);
     }
 
+    public function getActivityTemplate()
+    {
+        return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/activity-template.json'), true, 512, 0);
+    }
+
     public function mapPeriods($data, $sheetName)
     {
         $mapperDetails = $this->mappers[$sheetName];
@@ -179,7 +184,7 @@ class Period
                     )
                 ) {
                     if (!empty($elementData)) {
-                        $this->pushPeriodData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields));
+                        $this->pushPeriodData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
                         $elementData = [];
                     }
 
@@ -196,7 +201,7 @@ class Period
 
                 $elementData[] = $systemMappedRow;
             } else {
-                $this->pushPeriodData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields));
+                $this->pushPeriodData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
                 break;
             }
         }
@@ -273,16 +278,16 @@ class Period
         return $key;
     }
 
-    public function getElementData($data, $dependency, $elementDropDownFields): array
+    public function getElementData($data, $dependency, $elementDropDownFields, $element): array
     {
-        $columnTracker = [];
-        $elementData = [];
         $elementBase = Arr::get($dependency, 'elementBase', null);
         $elementBasePeer = Arr::get($dependency, 'elementBasePeer', []);
         $baseCount = null;
         $fieldDependency = $dependency['fieldDependency'];
         $parentBaseCount = [];
         $excelColumnName = $this->getExcelColumnNameMapper();
+        $activityTemplate = $this->getActivityTemplate();
+        $elementData = Arr::get($activityTemplate, $element, []);
 
         foreach (array_values($fieldDependency) as $dependents) {
             $parentBaseCount[$dependents['parent']] = null;
@@ -316,7 +321,6 @@ class Period
 
                 if (!Arr::get($elementData, $elementPositionBasedOnParent, null)) {
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
-//                    $columnTracker[$elementPositionBasedOnParent] = $this->sheetName.'-'.$fieldName.'-'.$this->rowCount;
                     $columnTracker[$elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
                 }
             }
@@ -348,7 +352,7 @@ class Period
 
             if (in_array($expected_position, array_keys($fieldDependency))) {
                 $key = $key === 'narrative' ? '0.narrative' : $key;
-                $positionValue = $fieldDependency[$expected_position];
+                $positionValue = $fieldDependency[$expected_position] ?? 0;
                 $position = empty($position) ? $key . '.' . $positionValue : "$position.$key.$positionValue";
             } else {
                 $position = empty($position) ? "$key" : "$position.$key";

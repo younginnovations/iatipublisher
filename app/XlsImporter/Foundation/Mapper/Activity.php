@@ -34,28 +34,28 @@ class Activity
      * @var array
      */
     protected array $activityElements = [
-        // 'Title' => 'title',
-        // 'Other Identifier' => 'other_identifier',
-        // 'Description' => 'description',
-        // 'Activity Date' => 'activity_date',
-        // 'Recipient Country' => 'recipient_country',
-        // 'Recipient Region' => 'recipient_region',
-        // 'Sector' => 'sector',
-        // 'Tag' => 'tag',
-        // 'Policy Marker' => 'policy_marker',
-        // 'Default Aid Type' => 'default_aid_type',
+        'Title' => 'title',
+        'Other Identifier' => 'other_identifier',
+        'Description' => 'description',
+        'Activity Date' => 'activity_date',
+        'Recipient Country' => 'recipient_country',
+        'Recipient Region' => 'recipient_region',
+        'Sector' => 'sector',
+        'Tag' => 'tag',
+        'Policy Marker' => 'policy_marker',
+        'Default Aid Type' => 'default_aid_type',
         // 'Country Budget Items' => 'country_budget_items',
-        // 'Humanitarian Scope' => 'humanitarian_scope',
-        // 'Related Activity' => 'related_activity',
-        // 'Conditions' => 'conditions',
-        // 'Legacy Data' => 'legacy_data',
-        // 'Document Link' => 'document_link',
+        'Humanitarian Scope' => 'humanitarian_scope',
+        'Related Activity' => 'related_activity',
+        'Conditions' => 'conditions',
+        'Legacy Data' => 'legacy_data',
+        'Document Link' => 'document_link',
         // 'Contact Info' => 'contact_info',
-        // 'Location' => 'location',
-        // 'Planned Disbursement' => 'planned_disbursement',
-        // 'Participating Org' => 'participating_org',
-        // 'Budget' => 'budget',
-        'Transaction' => 'transactions',
+        'Location' => 'location',
+        'Planned Disbursement' => 'planned_disbursement',
+        'Participating Org' => 'participating_org',
+        'Budget' => 'budget',
+        // 'Transaction' => 'transactions',
     ];
 
     protected array $singleValuedElements = [
@@ -332,8 +332,7 @@ class Activity
         $fieldDependency = $dependency['fieldDependency'];
         $parentBaseCount = [];
         $excelColumnName = $this->getExcelColumnNameMapper();
-        $activityTemplate = $this->getActivityTemplate();
-        $elementTemplate = $activityTemplate[$element];
+
         // dd($elementTemplate);
 
         // variables to map code dependency in elements like sector, recipient region and so on
@@ -354,12 +353,10 @@ class Activity
                     $dependentOnValue = '';
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
                     $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
-                    $elementData[$baseCount] = $elementTemplate;
                 } elseif ($elementBase && ($fieldName === $elementBase && $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row))) {
                     $dependentOnValue = '';
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
                     $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
-                    $elementData[$baseCount] = $elementTemplate;
                 }
 
                 if (array_key_exists($fieldName, $fieldDependency)) {
@@ -389,7 +386,7 @@ class Activity
                 $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
                 $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
 
-                if (!Arr::get($elementData, $elementPositionBasedOnParent, null)) {
+                if (!Arr::get($elementData, $elementPositionBasedOnParent, null) && !empty($elementPosition)) {
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
                     $this->columnTracker[$elementActivityIdentifier][$element][$element . '.' . $elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
                 }
@@ -416,7 +413,6 @@ class Activity
         $position = '';
         $dependency = explode(' ', $dependencies);
         $expected_position = '';
-        // dump($fieldDependency);
 
         foreach ($dependency as $key) {
             $expected_position = empty($expected_position) ? $key : "$expected_position $key";
@@ -426,7 +422,7 @@ class Activity
                     $key = $key === 'narrative' ? '0.narrative' : $key;
                 }
 
-                $positionValue = $fieldDependency[$expected_position];
+                $positionValue = $fieldDependency[$expected_position] ?? 0;
                 $position = empty($position) ? $key . '.' . $positionValue : "$position.$key.$positionValue";
             } else {
                 $position = empty($position) ? "$key" : "$position.$key";

@@ -633,23 +633,329 @@
           }
         ]
       }
-    ],
-    "indicator": [
+    ]
+  },
+  "indicator": [
+    {
+      "measure": null,
+      "ascending": null,
+      "aggregation_status": null,
+      "title": [
+        {
+          "narrative": [
+            {
+              "narrative": null,
+              "language": null
+            }
+          ]
+        }
+      ],
+      "description": [
+        {
+          "narrative": [
+            {
+              "narrative": null,
+              "language": null
+            }
+          ]
+        }
+      ],
+      "document_link": [
+        {
+          "url": null,
+          "format": null,
+          "title": [
+            {
+              "narrative": [
+                {
+                  "narrative": null,
+                  "language": null
+                }
+              ]
+            }
+          ],
+          "description": [
+            {
+              "narrative": [
+                {
+                  "narrative": null,
+                  "language": null
+                }
+              ]
+            }
+          ],
+          "category": [
+            {
+              "code": null
+            }
+          ],
+          "language": [
+            {
+              "language": null
+            }
+          ],
+          "document_date": [
+            {
+              "date": null
+            }
+          ]
+        }
+      ],
+      "reference": [
+        {
+          "vocabulary": null,
+          "code": null,
+          "indicator_uri": null
+        }
+      ],
+      "baseline": [
+        {
+          "year": null,
+          "date": null,
+          "value": null,
+          "comment": [
+            {
+              "narrative": [
+                {
+                  "narrative": null,
+                  "language": null
+                }
+              ]
+            }
+          ],
+          "document_link": [
+            {
+              "url": null,
+              "format": null,
+              "title": [
+                {
+                  "narrative": [
+                    {
+                      "narrative": null,
+                      "language": null
+                    }
+                  ]
+                }
+              ],
+              "description": [
+                {
+                  "narrative": [
+                    {
+                      "narrative": null,
+                      "language": null
+                    }
+                  ]
+                }
+              ],
+              "category": [
+                {
+                  "code": null
+                }
+              ],
+              "language": [
+                {
+                  "language": null
+                }
+              ],
+              "document_date": [
+                {
+                  "date": null
+                }
+              ]
+            }
+          ],
+          "location": [
+            {
+              "reference": null
+            }
+          ],
+          "dimension": [
+            {
+              "name": null,
+              "value": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "baseline": [
+    {
+      "year": null,
+      "date": null,
+      "value": null,
+      "comment": [
+        {
+          "narrative": [
+            {
+              "narrative": null,
+              "language": null
+            }
+          ]
+        }
+      ],
+      "document_link": [
+        {
+          "url": null,
+          "format": null,
+          "title": [
+            {
+              "narrative": [
+                {
+                  "narrative": null,
+                  "language": null
+                }
+              ]
+            }
+          ],
+          "description": [
+            {
+              "narrative": [
+                {
+                  "narrative": null,
+                  "language": null
+                }
+              ]
+            }
+          ],
+          "category": [
+            {
+              "code": null
+            }
+          ],
+          "language": [
+            {
+              "language": null
+            }
+          ],
+          "document_date": [
+            {
+              "date": null
+            }
+          ]
+        }
+      ],
+      "location": [
+        {
+          "reference": null
+        }
+      ],
+      "dimension": [
+        {
+          "name": null,
+          "value": null
+        }
+      ]
+    }
+  ],
+  "indicator document_link": [
+    {
+      "url": null,
+      "format": null,
+      "title": [
+        {
+          "narrative": [
+            {
+              "narrative": null,
+              "language": null
+            }
+          ]
+        }
+      ],
+      "description": [
+        {
+          "narrative": [
+            {
+              "narrative": null,
+              "language": null
+            }
+          ]
+        }
+      ],
+      "category": [
+        {
+          "code": null
+        }
+      ],
+      "language": [
+        {
+          "language": null
+        }
+      ],
+      "document_date": [
+        {
+          "date": null
+        }
+      ]
+    }
+  ],
+  "baseline document_link": [
+    {
+      "url": null,
+      "format": null,
+      "title": [
+        {
+          "narrative": [
+            {
+              "narrative": null,
+              "language": null
+            }
+          ]
+        }
+      ],
+      "description": [
+        {
+          "narrative": [
+            {
+              "narrative": null,
+              "language": null
+            }
+          ]
+        }
+      ],
+      "category": [
+        {
+          "code": null
+        }
+      ],
+      "language": [
+        {
+          "language": null
+        }
+      ],
+      "document_date": [
+        {
+          "date": null
+        }
+      ]
+    }
+  ],
+  "period": {
+    "period_start": [
       {
-        "measure": null,
-        "ascending": null,
-        "aggregation_status": null,
-        "title": [
+        "date": null
+      }
+    ],
+    "period_end": [
+      {
+        "date": null
+      }
+    ],
+    "target": [
+      {
+        "value": null,
+        "location": [
           {
-            "narrative": [
-              {
-                "narrative": null,
-                "language": null
-              }
-            ]
+            "reference": null
           }
         ],
-        "description": [
+        "dimension": [
+          {
+            "name": null,
+            "value": null
+          }
+        ],
+        "comment": [
           {
             "narrative": [
               {
@@ -699,20 +1005,38 @@
               }
             ]
           }
-        ],
-        "reference": [
+        ]
+      }
+    ],
+    "actual": [
+      {
+        "value": null,
+        "location": [
           {
-            "vocabulary": null,
-            "code": null,
-            "indicator_uri": null
+            "reference": null
           }
         ],
-        "baseline": [
+        "dimension": [
           {
-            "year": null,
-            "date": null,
-            "value": null,
-            "comment": [
+            "name": null,
+            "value": null
+          }
+        ],
+        "comment": [
+          {
+            "narrative": [
+              {
+                "narrative": null,
+                "language": null
+              }
+            ]
+          }
+        ],
+        "document_link": [
+          {
+            "url": null,
+            "format": null,
+            "title": [
               {
                 "narrative": [
                   {
@@ -722,204 +1046,29 @@
                 ]
               }
             ],
-            "document_link": [
+            "description": [
               {
-                "url": null,
-                "format": null,
-                "title": [
+                "narrative": [
                   {
-                    "narrative": [
-                      {
-                        "narrative": null,
-                        "language": null
-                      }
-                    ]
-                  }
-                ],
-                "description": [
-                  {
-                    "narrative": [
-                      {
-                        "narrative": null,
-                        "language": null
-                      }
-                    ]
-                  }
-                ],
-                "category": [
-                  {
-                    "code": null
-                  }
-                ],
-                "language": [
-                  {
+                    "narrative": null,
                     "language": null
                   }
-                ],
-                "document_date": [
-                  {
-                    "date": null
-                  }
                 ]
               }
             ],
-            "location": [
+            "category": [
               {
-                "reference": null
+                "code": null
               }
             ],
-            "dimension": [
+            "language": [
               {
-                "name": null,
-                "value": null
+                "language": null
               }
-            ]
-          }
-        ],
-        "period": [
-          {
-            "period_start": [
+            ],
+            "document_date": [
               {
                 "date": null
-              }
-            ],
-            "period_end": [
-              {
-                "date": null
-              }
-            ],
-            "target": [
-              {
-                "value": null,
-                "location": [
-                  {
-                    "reference": null
-                  }
-                ],
-                "dimension": [
-                  {
-                    "name": null,
-                    "value": null
-                  }
-                ],
-                "comment": [
-                  {
-                    "narrative": [
-                      {
-                        "narrative": null,
-                        "language": null
-                      }
-                    ]
-                  }
-                ],
-                "document_link": [
-                  {
-                    "url": null,
-                    "format": null,
-                    "title": [
-                      {
-                        "narrative": [
-                          {
-                            "narrative": null,
-                            "language": null
-                          }
-                        ]
-                      }
-                    ],
-                    "description": [
-                      {
-                        "narrative": [
-                          {
-                            "narrative": null,
-                            "language": null
-                          }
-                        ]
-                      }
-                    ],
-                    "category": [
-                      {
-                        "code": null
-                      }
-                    ],
-                    "language": [
-                      {
-                        "language": null
-                      }
-                    ],
-                    "document_date": [
-                      {
-                        "date": null
-                      }
-                    ]
-                  }
-                ]
-              }
-            ],
-            "actual": [
-              {
-                "value": null,
-                "location": [
-                  {
-                    "reference": null
-                  }
-                ],
-                "dimension": [
-                  {
-                    "name": null,
-                    "value": null
-                  }
-                ],
-                "comment": [
-                  {
-                    "narrative": [
-                      {
-                        "narrative": null,
-                        "language": null
-                      }
-                    ]
-                  }
-                ],
-                "document_link": [
-                  {
-                    "url": null,
-                    "format": null,
-                    "title": [
-                      {
-                        "narrative": [
-                          {
-                            "narrative": null,
-                            "language": null
-                          }
-                        ]
-                      }
-                    ],
-                    "description": [
-                      {
-                        "narrative": [
-                          {
-                            "narrative": null,
-                            "language": null
-                          }
-                        ]
-                      }
-                    ],
-                    "category": [
-                      {
-                        "code": null
-                      }
-                    ],
-                    "language": [
-                      {
-                        "language": null
-                      }
-                    ],
-                    "document_date": [
-                      {
-                        "date": null
-                      }
-                    ]
-                  }
-                ]
               }
             ]
           }
@@ -927,6 +1076,218 @@
       }
     ]
   },
+  "target": {
+    "value": null,
+    "location": [
+      {
+        "reference": null
+      }
+    ],
+    "dimension": [
+      {
+        "name": null,
+        "value": null
+      }
+    ],
+    "comment": [
+      {
+        "narrative": [
+          {
+            "narrative": null,
+            "language": null
+          }
+        ]
+      }
+    ],
+    "document_link": [
+      {
+        "url": null,
+        "format": null,
+        "title": [
+          {
+            "narrative": [
+              {
+                "narrative": null,
+                "language": null
+              }
+            ]
+          }
+        ],
+        "description": [
+          {
+            "narrative": [
+              {
+                "narrative": null,
+                "language": null
+              }
+            ]
+          }
+        ],
+        "category": [
+          {
+            "code": null
+          }
+        ],
+        "language": [
+          {
+            "language": null
+          }
+        ],
+        "document_date": [
+          {
+            "date": null
+          }
+        ]
+      }
+    ]
+  },
+  "actual": {
+    "value": null,
+    "location": [
+      {
+        "reference": null
+      }
+    ],
+    "dimension": [
+      {
+        "name": null,
+        "value": null
+      }
+    ],
+    "comment": [
+      {
+        "narrative": [
+          {
+            "narrative": null,
+            "language": null
+          }
+        ]
+      }
+    ],
+    "document_link": [
+      {
+        "url": null,
+        "format": null,
+        "title": [
+          {
+            "narrative": [
+              {
+                "narrative": null,
+                "language": null
+              }
+            ]
+          }
+        ],
+        "description": [
+          {
+            "narrative": [
+              {
+                "narrative": null,
+                "language": null
+              }
+            ]
+          }
+        ],
+        "category": [
+          {
+            "code": null
+          }
+        ],
+        "language": [
+          {
+            "language": null
+          }
+        ],
+        "document_date": [
+          {
+            "date": null
+          }
+        ]
+      }
+    ]
+  },
+  "actual document_link": [
+    {
+      "url": null,
+      "format": null,
+      "title": [
+        {
+          "narrative": [
+            {
+              "narrative": null,
+              "language": null
+            }
+          ]
+        }
+      ],
+      "description": [
+        {
+          "narrative": [
+            {
+              "narrative": null,
+              "language": null
+            }
+          ]
+        }
+      ],
+      "category": [
+        {
+          "code": null
+        }
+      ],
+      "language": [
+        {
+          "language": null
+        }
+      ],
+      "document_date": [
+        {
+          "date": null
+        }
+      ]
+    }
+  ],
+  "target document_link": [
+    {
+      "url": null,
+      "format": null,
+      "title": [
+        {
+          "narrative": [
+            {
+              "narrative": null,
+              "language": null
+            }
+          ]
+        }
+      ],
+      "description": [
+        {
+          "narrative": [
+            {
+              "narrative": null,
+              "language": null
+            }
+          ]
+        }
+      ],
+      "category": [
+        {
+          "code": null
+        }
+      ],
+      "language": [
+        {
+          "language": null
+        }
+      ],
+      "document_date": [
+        {
+          "date": null
+        }
+      ]
+    }
+  ],
   "default_field_values": {
     "default_currency": null,
     "default_language": null,

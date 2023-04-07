@@ -800,6 +800,32 @@
             "tied_status tied_status_code": {
                 "parent": "tied_status"
             }
+        },
+        "codeDependency": {
+            "sector": {
+                "dependentOn": "sector_vocabulary",
+                "dependentField": "code",
+                "defaultCodeField": "text",
+                "dependencyRelation": {
+                    "1": "code",
+                    "2": "category_code",
+                    "7": "sdg_goal",
+                    "8": "sdg_target"
+                }
+            },
+            "recipient_region": {
+                "codeDependency": {
+                    "dependentOn": "sector_vocabulary",
+                    "dependentField": "code",
+                    "defaultCodeField": "text",
+                    "dependencyRelation": {
+                        "1": "code",
+                        "99": "category_code",
+                        "7": "sdg_goal",
+                        "8": "sdg_target"
+                    }
+                }
+            }
         }
-       }
+    }
 }

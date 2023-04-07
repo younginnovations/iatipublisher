@@ -24,6 +24,8 @@ class Indicator
     // activities whose identifier is not mentioned on setting
     protected array $periodIdentifier = [];
 
+    protected array $baselineIndexing = [];
+
     protected array $identifiers = [];
 
     protected int $rowCount = 2;
@@ -83,7 +85,7 @@ class Indicator
                 $this->columnToFieldMapper($this->indicatorDivision[$sheetName], $content);
             }
         }
-        $this->removeUnwantedData();
+
         $this->validateIndicator();
     }
 
@@ -129,6 +131,11 @@ class Indicator
         return json_decode(file_get_contents(app_path('/XlsImporter/Templates/excel-column-name-mapper.json')), true, 512, JSON_THROW_ON_ERROR);
     }
 
+    public function getActivityTemplate()
+    {
+        return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/activity-template.json'), true, 512, 0);
+    }
+
     public function mapIndicators($data, $sheetName)
     {
         $mapperDetails = $this->mappers[$sheetName];
@@ -170,7 +177,7 @@ class Indicator
                     )
                 ) {
                     if (!empty($elementData)) {
-                        $this->pushIndicatorData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields));
+                        $this->pushIndicatorData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
                         $elementData = [];
                     }
 
@@ -187,7 +194,7 @@ class Indicator
 
                 $elementData[] = $systemMappedRow;
             } else {
-                $this->pushIndicatorData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields));
+                $this->pushIndicatorData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
                 break;
             }
         }
@@ -224,15 +231,22 @@ class Indicator
         $indicatorIdentifier = Arr::get($this->identifiers, "baseline.$identifier", null);
         $resultIdentifier = Arr::get($this->identifiers, "indicator.$indicatorIdentifier", null);
 
-        $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][$identifier] = $data[0];
+        if (isset($this->baselineIndexing[$resultIdentifier][$indicatorIdentifier])) {
+            $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][] = $data[0];
+        } else {
+            $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][0] = $data[0];
+        }
+
+        $this->baselineIndexing[$resultIdentifier][$indicatorIdentifier][$identifier] = array_key_last($this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline']);
     }
 
     protected function pushIndicatorBaselineDocumentLink($identifier, $data): void
     {
         $indicatorIdentifier = Arr::get($this->identifiers, "baseline.$identifier", null);
         $resultIdentifier = Arr::get($this->identifiers, "indicator.$indicatorIdentifier", null);
+        $baselineIndex = $this->baselineIndexing[$resultIdentifier][$indicatorIdentifier][$identifier];
 
-        $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][$identifier]['document_link'] = $data;
+        $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][$baselineIndex]['document_link'] = $data;
     }
 
     public function mapDropDownValueToKey($value, $location)
@@ -254,15 +268,17 @@ class Indicator
         return $key;
     }
 
-    public function getElementData($data, $dependency, $elementDropDownFields): array
+    public function getElementData($data, $dependency, $elementDropDownFields, $element): array
     {
-        $elementData = [];
         $elementBase = Arr::get($dependency, 'elementBase', null);
         $elementBasePeer = Arr::get($dependency, 'elementBasePeer', []);
         $baseCount = null;
         $fieldDependency = $dependency['fieldDependency'];
         $parentBaseCount = [];
         $excelColumnName = $this->getExcelColumnNameMapper();
+        $activityTemplate = $this->getActivityTemplate();
+        $elementData = Arr::get($activityTemplate, $element, []);
+        // dump($element, $elementData);
 
         foreach (array_values($fieldDependency) as $dependents) {
             $parentBaseCount[$dependents['parent']] = null;
@@ -301,6 +317,7 @@ class Indicator
             }
             $this->rowCount++;
         }
+        // dump('final', $elementData);
 
         return $elementData;
     }
@@ -326,6 +343,7 @@ class Indicator
             $expected_position = empty($expected_position) ? $key : "$expected_position $key";
 
             if (in_array($expected_position, array_keys($fieldDependency))) {
+                $key = $key === 'narrative' ? '0.narrative' : $key;
                 $positionValue = $fieldDependency[$expected_position];
                 $position = empty($position) ? $key . '.' . $positionValue : "$position.$key.$positionValue";
             } else {
