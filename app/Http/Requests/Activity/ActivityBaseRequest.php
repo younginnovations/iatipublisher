@@ -231,7 +231,7 @@ class ActivityBaseRequest extends FormRequest
         $defaultValues = $this->getActivityDefaultValues();
 
         if (!empty($defaultValues)) {
-            $defaultLanguage = $defaultValues['default_language'];
+            $defaultLanguage = Arr::get($defaultValues, 'default_language', '');
 
             $validator->addReplacer(
                 'unique_default_lang',
@@ -686,7 +686,7 @@ class ActivityBaseRequest extends FormRequest
         $rules = [];
         $periodStartFormBase = sprintf('%s.period_start.0.date', $formBase);
         $periodEndFormBase = sprintf('%s.period_end.0.date', $formBase);
-        $betweenRule = sprintf('after:%s|before:%s', $periodStartFormBase, $periodEndFormBase);
+        $betweenRule = sprintf('after_or_equal:%s|before_or_equal:%s', $periodStartFormBase, $periodEndFormBase);
 
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('%s.value.%s', $formBase, $valueIndex);

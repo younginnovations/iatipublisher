@@ -250,7 +250,7 @@ class OrganizationBaseRequest extends FormRequest
         $rules = [];
         $periodStartFormBase = sprintf('%s.period_start.0.date', $formBase);
         $periodEndFormBase = sprintf('%s.period_end.0.date', $formBase);
-        $valueDateRule = sprintf('nullable|date|after:%s|before:%s', $periodStartFormBase, $periodEndFormBase);
+        $valueDateRule = sprintf('nullable|date|after_or_equal:%s|before_or_equal:%s', $periodStartFormBase, $periodEndFormBase);
 
         foreach ($formFields as $valueKey => $valueVal) {
             $valueForm = $formBase . '.value.' . $valueKey;
@@ -281,8 +281,8 @@ class OrganizationBaseRequest extends FormRequest
             $messages[$valueForm . '.amount.min'] = 'The amount must not be in negative.';
             $messages[$valueForm . '.value_date.required'] = 'The @value-date field is required.';
             $messages[$valueForm . '.value_date.date'] = 'The @value-date must be date.';
-            $messages[sprintf('%s.value_date.after', $valueForm)] = 'The @value-date field must be a between period start and period end';
-            $messages[sprintf('%s.value_date.before', $valueForm)] = 'The @value-date field must be a between period start and period end';
+            $messages[sprintf('%s.value_date.after_or_equal', $valueForm)] = 'The @value-date field must be a date between period start and period end';
+            $messages[sprintf('%s.value_date.before_or_equal', $valueForm)] = 'The @value-date field must be a date between period start and period end';
         }
 
         return $messages;
@@ -446,7 +446,7 @@ class OrganizationBaseRequest extends FormRequest
         $rules = [];
         $periodStartFormBase = sprintf('%s.period_start.0.date', $parentFormBase);
         $periodEndFormBase = sprintf('%s.period_end.0.date', $parentFormBase);
-        $valueDateRule = sprintf('nullable|date|after:%s|before:%s', $periodStartFormBase, $periodEndFormBase);
+        $valueDateRule = sprintf('nullable|date|after_or_equal:%s|before_or_equal:%s', $periodStartFormBase, $periodEndFormBase);
 
         foreach ($formField as $budgetLineIndex => $budgetLine) {
             $rules[$formBase . '.value.' . $budgetLineIndex . '.amount'] = 'nullable|numeric|min:0';
@@ -474,8 +474,8 @@ class OrganizationBaseRequest extends FormRequest
             $messages[sprintf('%s.value.%s.amount.min', $formBase, $budgetLineIndex)] = 'The amount field must not be in negative.';
             $messages[sprintf('%s.value.%s.value_date.date', $formBase, $budgetLineIndex)] = 'The @value-date must be a date.';
             $messages[sprintf('%s.value.%s.value_date.required_with', $formBase, $budgetLineIndex)] = 'The @value-date is required with value,.';
-            $messages[sprintf('%s.value.%s.value_date.after', $formBase, $budgetLineIndex)] = 'The @value-date field must be a between period start and period end';
-            $messages[sprintf('%s.value.%s.value_date.before', $formBase, $budgetLineIndex)] = 'The @value-date field must be a between period start and period end';
+            $messages[sprintf('%s.value.%s.value_date.after_or_equal', $formBase, $budgetLineIndex)] = 'The @value-date field must be a date between period start and period end';
+            $messages[sprintf('%s.value.%s.value_date.before_or_equal', $formBase, $budgetLineIndex)] = 'The @value-date field must be a date between period start and period end';
         }
 
         return $messages;

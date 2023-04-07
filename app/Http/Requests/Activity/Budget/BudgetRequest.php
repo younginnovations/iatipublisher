@@ -181,7 +181,7 @@ class BudgetRequest extends ActivityBaseRequest
         $rules = [];
         $periodStartFormBase = sprintf('%s.period_start.0.date', $formBase);
         $periodEndFormBase = sprintf('%s.period_end.0.date', $formBase);
-        $betweenRule = sprintf('after:%s|before:%s', $periodStartFormBase, $periodEndFormBase);
+        $betweenRule = sprintf('after_or_equal:%s|before_or_equal:%s', $periodStartFormBase, $periodEndFormBase);
 
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('%s.budget_value.%s', $formBase, $valueIndex);
@@ -417,8 +417,8 @@ class BudgetRequest extends ActivityBaseRequest
             $messages[sprintf('%s.amount.numeric', $valueForm)] = 'The amount field must be a number.';
             $messages[sprintf('%s.amount.min', $valueForm)] = 'The amount field must not be in negative.';
             $messages[sprintf('%s.value_date.date', $valueForm)] = 'The value-date field must be a valid date.';
-            $messages[sprintf('%s.value_date.after', $valueForm)] = 'The value-date field must be between period start and period end.';
-            $messages[sprintf('%s.value_date.before', $valueForm)] = 'The value-date field must be between period start and period end.';
+            $messages[sprintf('%s.value_date.after_or_equal', $valueForm)] = 'The value-date field must be between period start and period end.';
+            $messages[sprintf('%s.value_date.before_or_equal', $valueForm)] = 'The value-date field must be between period start and period end.';
         }
 
         return $messages;
