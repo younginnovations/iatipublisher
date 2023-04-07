@@ -105,14 +105,14 @@ class ImportXlsController extends Controller
 
             // period
 
-            // $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
-            // $periodMapper = new Period();
-            // $periodMapper->map($data);
+            $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
+            $periodMapper = new Period();
+            $periodMapper->map($data);
 
             // indicator
-            $data = file_get_contents(app_path() . '/XlsImporter/Templates/indicator.json');
-            $indicatorMapper = new Indicator();
-            $indicatorMapper->map($data);
+            // $data = file_get_contents(app_path() . '/XlsImporter/Templates/indicator.json');
+            // $indicatorMapper = new Indicator();
+            // $indicatorMapper->map($data);
             dd('stop');
             //            $resultData = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
 //                       $resultMapper = new Result();

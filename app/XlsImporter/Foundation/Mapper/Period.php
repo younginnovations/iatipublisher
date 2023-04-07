@@ -26,6 +26,12 @@ class Period
     protected int $rowCount = 2;
     protected string $sheetName = '';
 
+    protected array $targetActualIndexing = [];
+    protected array $actualMapping = [];
+
+    protected array $columnTracker = [];
+    protected array $tempColumnTracker = [];
+
     /**
      * @var array
      */
@@ -90,8 +96,9 @@ class Period
             }
         }
 
-        $this->removeUnwantedData();
+        // $this->removeUnwantedData();
         $this->validatePeriod();
+        dd($this->periods, $this->columnTracker);
     }
 
     public function removeUnwantedData()
@@ -113,8 +120,36 @@ class Period
                 $this->periods[$indicatorIdentifier][$periodIdentifier]['error'] = $periodValidator
                     ->init($periodData['period'])
                     ->validateData();
+
+                $errors = $periodValidator
+                    ->init($periodData['period'])
+                    ->validateData();
+
+                // $excelColumnAndRowName = isset($this->columnTracker[$indicatorIdentifier][$periodIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
+                $this->periods[$indicatorIdentifier][$periodIdentifier]['error'] = $this->appendExcelColumnAndRowDetail($errors, $this->columnTracker[$indicatorIdentifier][$periodIdentifier]['period']);
             }
         }
+    }
+
+    public function appendExcelColumnAndRowDetail($errors, $fieldPosition): array
+    {
+        // dump('here', $errors);
+        // dump(Arr::get($fieldPosition,'target.0.document_link.0.document_date.0.date', 'not not'));
+        foreach ($errors as $errorLevel => $errorData) {
+            foreach ($errorData as $element => $error) {
+                dump($element, $error);
+                foreach ($error as $key => $err) {
+                    // if (isset($excelColumnAndRowName[$key])) {
+                    dump($key, $fieldPosition);
+                    $errors[$errorLevel][$element][$key] .= ' ( ' . Arr::get($fieldPosition, $key, 'not found') . ' )';
+                    dump($errors[$errorLevel][$element][$key]);
+                    // }
+                }
+            }
+        }
+        dd($errors, $fieldPosition);
+
+        return $errors;
     }
 
     public function getLinearizedActivity()
@@ -218,6 +253,7 @@ class Period
         ];
 
         call_user_func([$this, $periodElementFunctions[$element]], $identifier, $data);
+        $this->tempColumnTracker = [];
     }
 
     protected function pushPeriod($identifier, $data): void
@@ -225,6 +261,8 @@ class Period
         $indicatorIdentifier = Arr::get($this->identifiers, "period.$identifier", null);
 
         $this->periods[$indicatorIdentifier][$identifier]['period'] = $data;
+        $this->columnTracker[$indicatorIdentifier][$identifier]['period'] = $this->tempColumnTracker;
+        // $this->updateColumnTracker(");
     }
 
     protected function pushPeriodTarget($identifier, $data): void
@@ -232,7 +270,19 @@ class Period
         $periodIdentifier = Arr::get($this->identifiers, 'target.' . $identifier, null);
         $indicatorIdentifier = Arr::get($this->identifiers, "period.$periodIdentifier", null);
 
-        $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['target'][$identifier] = $data;
+        if (isset($this->targetActualIndexing[$indicatorIdentifier][$periodIdentifier]['period']['target'])) {
+            $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['target'][] = $data;
+        } else {
+            $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['target'][0] = $data;
+        }
+        // $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['target'][$identifier] = $data;
+        // $this->targetActualIndexing[$indicatorIdentifier][$periodIdentifier]['period']['target'][$identifier] = $data;
+        // $this->targetActualIndexing[$indicatorIdentifier][$identifier] = array_key_last($this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline']);
+        $currentIdentifierPosition = array_key_last($this->periods[$indicatorIdentifier][$periodIdentifier]['period']['target']);
+        $this->targetActualIndexing[$indicatorIdentifier][$periodIdentifier]['period']['target'][$identifier] = $currentIdentifierPosition;
+        $this->updateColumnTracker($indicatorIdentifier, $periodIdentifier, "target.$currentIdentifierPosition");
+
+        // $this->columnTracker[$indicatorIdentifier][$periodIdentifier]['period']['target'][$currentIdentifierPostition] = $this->tempColumnTracker;
     }
 
     protected function pushPeriodActual($identifier, $data): void
@@ -240,23 +290,51 @@ class Period
         $periodIdentifier = Arr::get($this->identifiers, "actual.$identifier", null);
         $indicatorIdentifier = Arr::get($this->identifiers, "period.$periodIdentifier", null);
 
-        $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['actual'][$identifier] = $data;
+        if (isset($this->targetActualIndexing[$indicatorIdentifier][$periodIdentifier]['period']['actual'])) {
+            $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['actual'][] = $data;
+        } else {
+            $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['actual'][0] = $data;
+        }
+
+        $currentIdentifierPosition = array_key_last($this->periods[$indicatorIdentifier][$periodIdentifier]['period']['actual']);
+        $this->targetActualIndexing[$indicatorIdentifier][$periodIdentifier]['period']['actual'][$identifier] = $currentIdentifierPosition;
+        $this->updateColumnTracker($indicatorIdentifier, $periodIdentifier, "actual.$currentIdentifierPosition");
+
+        // $this->columnTracker[$indicatorIdentifier][$periodIdentifier]['period']['actual'][$currentIdentifierPosition] = $this->tempColumnTracker;
+        // $this->columnTracker[$indicatorIdentifier][$periodIdentifier]['period']['actual'][$currentIdentifierPosition] = $this->tempColumnTracker;
     }
 
     protected function pushTargetDocumentLink($identifier, $data): void
     {
         $periodIdentifier = Arr::get($this->identifiers, "target.$identifier", null);
         $indicatorIdentifier = Arr::get($this->identifiers, "period.$periodIdentifier", null);
+        // dd($this->targetActualIndexing);
+        $targetIndex = $this->targetActualIndexing[$indicatorIdentifier][$periodIdentifier]['period']['target'][$identifier];
 
-        $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['target'][$identifier]['document_link'] = $data;
+        $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['target'][$targetIndex]['document_link'] = $data;
+        $this->updateColumnTracker($indicatorIdentifier, $periodIdentifier, "target.$targetIndex.document_link");
+
+        // $this->columnTracker[$indicatorIdentifier][$periodIdentifier]['period']['target'][$targetIndex]['document_link'] = $this->tempColumnTracker;
     }
 
     protected function pushActualDocumentLink($identifier, $data): void
     {
         $periodIdentifier = Arr::get($this->identifiers, "actual.$identifier", null);
         $indicatorIdentifier = Arr::get($this->identifiers, "period.$periodIdentifier", null);
+        $actualIndex = $this->targetActualIndexing[$indicatorIdentifier][$periodIdentifier]['period']['actual'][$identifier];
+        // dd($actualIndex, $this->targetActualIndexing);
+        $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['actual'][$actualIndex]['document_link'] = $data;
+        $this->updateColumnTracker($indicatorIdentifier, $periodIdentifier, "actual.$actualIndex.document_link");
 
-        $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['actual'][$identifier]['document_link'] = $data;
+        // $this->columnTracker[$indicatorIdentifier][$periodIdentifier]['period']['actual'][$actualIndex]['document_link'] = $this->tempColumnTracker;
+    }
+
+    protected function updateColumnTracker($indicatorIdentifier, $periodIdentifier, $keyPrefix)
+    {
+        foreach ($this->tempColumnTracker as $columnPosition => $columnIndex) {
+            // dump($columnPosition,$columnIndex);
+            $this->columnTracker[$indicatorIdentifier][$periodIdentifier]['period']["$keyPrefix.$columnPosition"] = $columnIndex;
+        }
     }
 
     public function mapDropDownValueToKey($value, $location)
@@ -321,7 +399,8 @@ class Period
 
                 if (!Arr::get($elementData, $elementPositionBasedOnParent, null)) {
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
-                    $columnTracker[$elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
+                    $this->tempColumnTracker[$elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
+                    // dump($this->tempColumnTracker);
                 }
             }
             $this->rowCount++;
