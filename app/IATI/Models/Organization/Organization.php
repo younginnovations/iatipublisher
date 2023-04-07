@@ -177,4 +177,14 @@ class Organization extends Model implements Auditable
 
         return $data;
     }
+
+    /**
+     * Organization has one latest activity.
+     *
+     * @return HasOne
+     */
+    public function recentlyChangedActivity(): HasOne
+    {
+        return $this->hasOne(Activity::class, 'org_id', 'id')->latest('updated_at');
+    }
 }

@@ -7,6 +7,7 @@ namespace App\IATI\Repositories\Activity;
 use App\Constants\Enums;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Repository;
+use Illuminate\Database\Eloquent\Builder;
 use App\IATI\Traits\FillDefaultValuesTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -471,5 +472,16 @@ class ActivityRepository extends Repository
     public function updateReportingOrg($id, $key, $data): int
     {
         return $this->model->where('id', $id)->update(["reporting_org->0->{$key}"=>$data]);
+    }
+
+    /**
+     * Returns the activity with the latest updated_at.
+     *
+     * @param $organizationId
+     * @return Builder|mixed
+     */
+    public function getLatestActivityForOrganization($organizationId): mixed
+    {
+        return $this->model->where('org_id', '=', $organizationId)->orderBy('updated_at', 'desc')->first();
     }
 }

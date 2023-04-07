@@ -96,7 +96,7 @@
               {{ data.all_activities_count }} activities
             </td>
             <td class="text-n-40">
-              {{ dateFormat(data.updated_at, 'DD MMMM, YYYY') }}
+              {{ dateFormat(data.latest_updated_at, 'DD MMMM, YYYY') }}
             </td>
             <td>
               <BtnComponent

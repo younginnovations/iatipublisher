@@ -12,6 +12,7 @@ use App\IATI\Traits\FillDefaultValuesTrait;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class OrganizationRepository.
@@ -85,10 +86,7 @@ class OrganizationRepository extends Repository
         $bindParams = [];
         $adminRoleId = app(Role::class)->getOrganizationAdminId();
 
-        if (array_key_exists(
-            'q',
-            $queryParams
-        ) && !empty($queryParams['q'])) {
+        if (array_key_exists('q', $queryParams) && !empty($queryParams['q'])) {
             $query = $queryParams['q'];
             $innerSql = 'select id, json_array_elements(name) name_array from organizations';
 
@@ -101,18 +99,29 @@ class OrganizationRepository extends Repository
 
         if (array_key_exists('orderBy', $queryParams) && !empty($queryParams['orderBy'])) {
             $orderBy = $queryParams['orderBy'];
+            if ($orderBy === 'updated_at') {
+                $orderBy = 'latest_activities.latest_updated_at';
+            }
 
             if (array_key_exists('direction', $queryParams) && !empty($queryParams['direction'])) {
                 $direction = $queryParams['direction'];
             }
         }
 
-        $organizations = $this->model->withCount('allActivities')
+        $organizations = $this->model->select('organizations.*', 'latest_activities.latest_updated_at')
+            ->withCount('allActivities')
             ->with(['user' => function ($user) use ($adminRoleId) {
                 return $user->where('role_id', $adminRoleId)
                     ->where('status', 1)
                     ->whereNull('deleted_at');
-            }]);
+            }])
+            ->leftJoinSub(function ($query) {
+                $query->select('org_id', DB::raw('MAX(updated_at) as latest_updated_at'))
+                    ->from('activities')
+                    ->groupBy('org_id');
+            }, 'latest_activities', function ($join) {
+                $join->on('organizations.id', '=', 'latest_activities.org_id');
+            });
 
         if (array_key_exists('q', $queryParams) && !empty($queryParams['q'])) {
             $organizations->whereRaw($whereSql, $bindParams)
@@ -122,12 +131,12 @@ class OrganizationRepository extends Repository
         }
 
         if ($orderBy === 'name') {
-            return $organizations->orderByRaw("name->0->>'narrative'" . $direction)
-                ->paginate(10, ['*'], 'organization', $page);
+            $organizations->orderByRaw("name->0->>'narrative'" . $direction);
+        } else {
+            $organizations->orderBy($orderBy, $direction);
         }
 
-        return $organizations->orderBy($orderBy, $direction)
-            ->paginate(10, ['*'], 'organization', $page);
+        return $organizations->paginate(10, ['*'], 'organization', $page);
     }
 
     /**

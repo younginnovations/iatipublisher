@@ -8,6 +8,7 @@ use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -661,5 +662,16 @@ class ActivityService
     public function getReportingOrg(): mixed
     {
         return app(OrganizationRepository::class)->getSpecifiedColumn(auth()->user()->organization->id, 'reporting_org');
+    }
+
+    /**
+     * Returns the activity with the latest updated_at.
+     *
+     * @param $organizationId
+     * @return Builder|mixed
+     */
+    public function getLatestActivityForOrganization($organizationId): mixed
+    {
+        return $this->activityRepository->getLatestActivityForOrganization($organizationId);
     }
 }

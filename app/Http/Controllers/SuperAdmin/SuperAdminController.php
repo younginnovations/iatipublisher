@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
+use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -24,14 +26,15 @@ class SuperAdminController extends Controller
      *
      * @param OrganizationService $organizationService
      * @param UserService $userService
+     * @param ActivityService $activityService
      */
-    public function __construct(public OrganizationService $organizationService, public UserService $userService)
+    public function __construct(public OrganizationService $organizationService, public UserService $userService, public ActivityService $activityService)
     {
         //
     }
 
     /**
-     * Returns superadmin page for viewing all organisations.
+     * Returns super-admin page for viewing all organisations.
      *
      * @return Application|Factory|View|JsonResponse
      */
@@ -63,6 +66,8 @@ class SuperAdminController extends Controller
                 $page,
                 $this->sanitizeRequest($request)
             );
+            logger($organizations);
+//            $organizations = $this->setProperUpdatedAtForListingPage($organizations);//
 
             return response()->json([
                 'success' => true,
@@ -162,5 +167,14 @@ class SuperAdminController extends Controller
 
             return  redirect('listOrganizations')->with('error', 'Failed opening System Version page.');
         }
+    }
+
+    private function setProperUpdatedAtForListingPage(?LengthAwarePaginator $organizations): ?LengthAwarePaginator
+    {
+//        foreach ($organizations as $organization) {
+//            $organization->updated_at = $organization->recentlyChangedActivity->updated_at;
+//        }
+
+        return $organizations;
     }
 }
