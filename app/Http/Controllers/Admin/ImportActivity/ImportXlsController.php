@@ -12,6 +12,7 @@ use App\IATI\Services\ImportActivityError\ImportActivityErrorService;
 use App\XlsImporter\Foundation\Mapper\Activity;
 use App\XlsImporter\Foundation\Mapper\Indicator;
 use App\XlsImporter\Foundation\Mapper\Period;
+use App\XlsImporter\Foundation\Mapper\Result;
 use Arr;
 use Exception;
 use Illuminate\Contracts\View\Factory;
@@ -99,9 +100,10 @@ class ImportXlsController extends Controller
             // $data = getCodeList('FileFormat', 'Activity', false);
             // $data = json_encode(getCodeList('Region', 'Activity'));
             // test
-            // $data = file_get_contents(app_path() . '/XlsImporter/Templates/test.json');
-            // $activityMapper = new Activity();
-            // $activityMapper->map($data);
+            $data = file_get_contents(app_path() . '/XlsImporter/Templates/test.json');
+            $activityMapper = new Activity();
+            $activityMapper->map($data);
+//
 
             // period
 
@@ -110,13 +112,13 @@ class ImportXlsController extends Controller
             // $periodMapper->map($data);
 
             // indicator
-            // $data = file_get_contents(app_path() . '/XlsImporter/Templates/indicator.json');
-            // $indicatorMapper = new Indicator();
-            // $indicatorMapper->map($data);
-            // dd('stop');
-            //            $resultData = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
-//                       $resultMapper = new Result();
-//                       $resultMapper->map($resultData);
+
+//             $data = file_get_contents(app_path() . '/XlsImporter/Templates/indicator.json');
+//             $indicatorMapper = new Indicator();
+//             $indicatorMapper->map($data);
+            $resultData = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
+            $resultMapper = new Result();
+            $resultMapper->map($resultData);
 
             //            $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
 //            $periodMapper = new Period();

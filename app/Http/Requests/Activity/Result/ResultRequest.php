@@ -22,6 +22,7 @@ class ResultRequest extends ActivityBaseRequest
     public function rules(): array
     {
         $data = request()->except(['_token']);
+        dd($data);
         $totalRules = [
             $this->getWarningForResult($data),
             $this->getErrorsForResult($data),

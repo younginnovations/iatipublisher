@@ -43,6 +43,7 @@ trait RegistersValidationRules
                 $languages = [];
                 foreach ((array) $value as $narrative) {
                     $language = $narrative['language'];
+
                     if (in_array($language, $languages, true)) {
                         return false;
                     }

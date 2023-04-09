@@ -155,7 +155,6 @@ class TransactionRequest extends ActivityBaseRequest
     public function getMessagesForTransaction(array $formFields): array
     {
         $messages = [];
-
         $messages['transaction_type.0.transaction_type_code.in'] = 'The transaction type is invalid.';
         $messages['flow_type.0.flow_type.in'] = 'The transaction flow type code is invalid.';
         $messages['finance_type.0.finance_type.in'] = 'The transaction finance type code is invalid.';
