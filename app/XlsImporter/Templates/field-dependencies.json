@@ -490,7 +490,7 @@
         "document_link category code": {
           "parent": "document_link category"
         },
-        "document_link language code": {
+        "document_link language language": {
           "parent": "document_link language"
         },
         "document_link document_date date": {

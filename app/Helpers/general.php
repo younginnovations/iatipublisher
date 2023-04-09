@@ -1280,3 +1280,26 @@ if (!function_exists('unsetErrorFields')) {
         return $importData;
     }
 }
+
+/**
+ * Function that groups an array of associative arrays by some key.
+ *
+ * @param {String} $key Property to sort by.
+ * @param {Array} $data Array that stores multiple associative arrays.
+ */
+function group_by($key, $data)
+{
+    $result = [];
+
+    foreach ($data as $val) {
+        if (array_key_exists($key, $val)) {
+            foreach ($val as $keyValue => $value) {
+            }
+            $result[$val[$key]] = $val;
+        } else {
+            $result[''] = $val;
+        }
+    }
+
+    return $result;
+}

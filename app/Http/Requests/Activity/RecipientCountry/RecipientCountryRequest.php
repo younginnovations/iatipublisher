@@ -194,7 +194,6 @@ class RecipientCountryRequest extends ActivityBaseRequest
             $messages[$recipientCountryForm . '.percentage.sum_exceeded'] = 'The sum of recipient country percentage cannot be greater than 100';
             $messages[$recipientCountryForm . '.percentage.min'] = 'The recipient country percentage must be at least 0.';
             $messages[$recipientCountryForm . '.percentage.region_percentage_complete'] = 'Recipient Region’s percentage is already 100%. The sum of the percentages of Recipient Country and Recipient Region must be 100%.';
-
             $narrativeMessages = $this->getMessagesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
 
             foreach ($narrativeMessages as $key => $item) {
