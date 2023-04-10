@@ -12,46 +12,9 @@
             <div class="inline-flex min-h-[48px] grow items-center">
               <h4 class="ellipsis__title relative mr-4 font-bold">
                 <span class="ellipsis__title overflow-hidden">
-                  Import Activity
+                  Import Activities from .XLS
                 </span>
               </h4>
-              <div class="tooltip-btn">
-                <button class="">
-                  <svg-vue icon="question-mark" />
-                  <span>What is an activity?</span>
-                </button>
-                <div class="tooltip-btn__content z-[1]">
-                  <div class="content">
-                    <div
-                      class="mb-1.5 text-caption-c1 font-bold text-bluecoral"
-                    >
-                      What is an activity?
-                    </div>
-                    <p>
-                      You need to provide data about your organisation's
-                      development and humanitarian 'activities'. The unit of
-                      work described by an 'activity' is determined by the
-                      organisation that is publishing the data. For example, an
-                      activity could be a donor government providing US$ 50
-                      million to a recipient country's government to implement
-                      basic education over 5 years. Or an activity could be an
-                      NGO spending US$ 500,000 to deliver clean drinking water
-                      to 1000 households over 6 months.
-                      <br />
-                      Therefore your organisation will need to determine how it
-                      will divide its work internally into activities. Read the
-                      <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href="/publishing-checklist"
-                        class="text-bluecoral"
-                        ><b>Publishing Checklist</b></a
-                      >
-                      for more information.
-                    </p>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -70,48 +33,90 @@
     <div
       class="mx-10 flex min-h-[65vh] w-[500px] items-start justify-center rounded-lg border border-n-20 bg-white md:w-[calc(100%_-_80px)]"
     >
-      <div class="mt-24 max-w-[95%] rounded-lg border border-n-30">
-        <div>
-          <p
-            class="border-b border-n-30 p-4 text-sm font-bold uppercase text-n-50"
-          >
-            Import .XLS file
-          </p>
-          <div class="p-6">
-            <div class="mb-4 rounded border border-n-30 px-4 py-3">
-              <input
-                ref="file"
-                type="file"
-                class="min-w-[480px] cursor-pointer p-0 text-sm file:cursor-pointer file:rounded-full file:border file:border-solid file:border-spring-50 file:bg-white file:px-4 file:py-0.5 file:text-spring-50 file:outline-none"
-              />
-            </div>
-            <span v-if="error" class="error">{{ error }}</span>
-            <div
-              class="flex w-[280px] flex-col items-start gap-4 md:w-[400px] md:flex-row md:items-end lg:w-auto lg:justify-between"
-            >
-              <BtnComponent
-                class="!border-red !border"
-                type="primary"
-                text="Upload file"
-                icon="upload-file"
-                @click="uploadFile"
-              />
-              <div class="flex items-center space-x-2.5">
-                <button class="relative text-sm text-bluecoral">
-                  <svg-vue :icon="'download'" class="mr-1" />
-                  <span @click="downloadExcel"
-                    >Download .XLS activity Template</span
+      <div>
+        <h6 class="my-8 text-center text-2xl font-bold text-bluecoral">
+          Please select one to proceed
+        </h6>
+        <div class="my-8 flex space-x-6">
+          <div class="h-[175] w-[300px] rounded border-2 border-n-30 p-4">
+            <label>
+              <div class="mb-2 flex items-center justify-between">
+                <div class="flex items-center space-x-1">
+                  <svg-vue icon="export" />
+                  <span class="font-bold text-bluecoral"
+                    >Basic Activity Elements</span
                   >
-                </button>
-                <HoverText
-                  hover-text="This template contains all the elements that you have to fill as per the IATI Standard before uploading in IATI Publisher. Please make sure that you follow the structure and format of the template."
-                  name=""
-                  class="hover-text import-activity"
-                  position="right"
-                  :show-iati-reference="true"
-                />
+                </div>
+                <input type="radio" name="product" />
               </div>
-            </div>
+              <p class="text-xs text-n-40">
+                Download the template 'All elements except result.xls. Fill the
+                data for multiple activities except for 'Result' element and
+                upload the XLS file to add the activity data in the publisher.
+              </p>
+            </label>
+          </div>
+          <div class="w-[300px]">
+            <label>
+              <input type="radio" name="product" />
+
+              <div>
+                <div class="panel-heading">Product B</div>
+                <div class="panel-body">Product specific content</div>
+              </div>
+            </label>
+          </div>
+          <div class="w-[300px]">
+            <label>
+              <input type="radio" name="product" />
+
+              <div>
+                <div class="panel-heading">Product C</div>
+                <div class="panel-body">Product specific content</div>
+              </div>
+            </label>
+          </div>
+        </div>
+        <div class="flex space-x-4">
+          <div class="mb-4 h-10 rounded border border-n-30 px-4 py-2">
+            <input
+              ref="file"
+              type="file"
+              class="min-w-[480px] cursor-pointer p-0 text-sm file:cursor-pointer file:rounded-full file:border file:border-solid file:border-spring-50 file:bg-white file:px-4 file:py-0.5 file:text-spring-50 file:outline-none"
+            />
+          </div>
+          <BtnComponent
+            class="!border-red h-10 !border"
+            type="primary"
+            text="Upload file"
+            icon="upload-file"
+            @click="uploadFile"
+          />
+        </div>
+        <span v-if="error" class="error">{{ error }}</span>
+        <p class="mt-10 text-center text-n-50">
+          Please make sure to read the instructions before beginning this
+          process.
+        </p>
+        <div class="mt-4 flex items-center justify-center gap-4 space-x-6">
+          <div class="flex items-center space-x-1 text-bluecoral">
+            <span class="mx-1.5">Read our import manual</span>
+            <svg-vue class="mr-1" icon="export" />
+          </div>
+          <span class="text-n-20">|</span>
+          <div class="flex items-center space-x-2.5">
+            <button class="relative text-sm text-bluecoral">
+              <span @click="downloadExcel"
+                >Download .XLS activity Template</span
+              >
+            </button>
+            <HoverText
+              hover-text="This template contains all the elements that you have to fill as per the IATI Standard before uploading in IATI Publisher. Please make sure that you follow the structure and format of the template."
+              name=""
+              class="hover-text import-activity"
+              position="right"
+              :show-iati-reference="true"
+            />
           </div>
         </div>
       </div>
