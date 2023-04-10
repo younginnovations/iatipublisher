@@ -635,219 +635,215 @@
       }
     ]
   },
-  "indicator": [
-    {
-      "measure": null,
-      "ascending": null,
-      "aggregation_status": null,
-      "title": [
-        {
-          "narrative": [
-            {
-              "narrative": null,
-              "language": null
-            }
-          ]
-        }
-      ],
-      "description": [
-        {
-          "narrative": [
-            {
-              "narrative": null,
-              "language": null
-            }
-          ]
-        }
-      ],
-      "document_link": [
-        {
-          "url": null,
-          "format": null,
-          "title": [
-            {
-              "narrative": [
-                {
-                  "narrative": null,
-                  "language": null
-                }
-              ]
-            }
-          ],
-          "description": [
-            {
-              "narrative": [
-                {
-                  "narrative": null,
-                  "language": null
-                }
-              ]
-            }
-          ],
-          "category": [
-            {
-              "code": null
-            }
-          ],
-          "language": [
-            {
-              "language": null
-            }
-          ],
-          "document_date": [
-            {
-              "date": null
-            }
-          ]
-        }
-      ],
-      "reference": [
-        {
-          "vocabulary": null,
-          "code": null,
-          "indicator_uri": null
-        }
-      ],
-      "baseline": [
-        {
-          "year": null,
-          "date": null,
-          "value": null,
-          "comment": [
-            {
-              "narrative": [
-                {
-                  "narrative": null,
-                  "language": null
-                }
-              ]
-            }
-          ],
-          "document_link": [
-            {
-              "url": null,
-              "format": null,
-              "title": [
-                {
-                  "narrative": [
-                    {
-                      "narrative": null,
-                      "language": null
-                    }
-                  ]
-                }
-              ],
-              "description": [
-                {
-                  "narrative": [
-                    {
-                      "narrative": null,
-                      "language": null
-                    }
-                  ]
-                }
-              ],
-              "category": [
-                {
-                  "code": null
-                }
-              ],
-              "language": [
-                {
-                  "language": null
-                }
-              ],
-              "document_date": [
-                {
-                  "date": null
-                }
-              ]
-            }
-          ],
-          "location": [
-            {
-              "reference": null
-            }
-          ],
-          "dimension": [
-            {
-              "name": null,
-              "value": null
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "baseline": [
-    {
-      "year": null,
-      "date": null,
-      "value": null,
-      "comment": [
-        {
-          "narrative": [
-            {
-              "narrative": null,
-              "language": null
-            }
-          ]
-        }
-      ],
-      "document_link": [
-        {
-          "url": null,
-          "format": null,
-          "title": [
-            {
-              "narrative": [
-                {
-                  "narrative": null,
-                  "language": null
-                }
-              ]
-            }
-          ],
-          "description": [
-            {
-              "narrative": [
-                {
-                  "narrative": null,
-                  "language": null
-                }
-              ]
-            }
-          ],
-          "category": [
-            {
-              "code": null
-            }
-          ],
-          "language": [
-            {
-              "language": null
-            }
-          ],
-          "document_date": [
-            {
-              "date": null
-            }
-          ]
-        }
-      ],
-      "location": [
-        {
-          "reference": null
-        }
-      ],
-      "dimension": [
-        {
-          "name": null,
-          "value": null
-        }
-      ]
-    }
-  ],
+  "indicator": {
+    "measure": null,
+    "ascending": null,
+    "aggregation_status": null,
+    "title": [
+      {
+        "narrative": [
+          {
+            "narrative": null,
+            "language": null
+          }
+        ]
+      }
+    ],
+    "description": [
+      {
+        "narrative": [
+          {
+            "narrative": null,
+            "language": null
+          }
+        ]
+      }
+    ],
+    "document_link": [
+      {
+        "url": null,
+        "format": null,
+        "title": [
+          {
+            "narrative": [
+              {
+                "narrative": null,
+                "language": null
+              }
+            ]
+          }
+        ],
+        "description": [
+          {
+            "narrative": [
+              {
+                "narrative": null,
+                "language": null
+              }
+            ]
+          }
+        ],
+        "category": [
+          {
+            "code": null
+          }
+        ],
+        "language": [
+          {
+            "language": null
+          }
+        ],
+        "document_date": [
+          {
+            "date": null
+          }
+        ]
+      }
+    ],
+    "reference": [
+      {
+        "vocabulary": null,
+        "code": null,
+        "indicator_uri": null
+      }
+    ],
+    "baseline": [
+      {
+        "year": null,
+        "date": null,
+        "value": null,
+        "comment": [
+          {
+            "narrative": [
+              {
+                "narrative": null,
+                "language": null
+              }
+            ]
+          }
+        ],
+        "document_link": [
+          {
+            "url": null,
+            "format": null,
+            "title": [
+              {
+                "narrative": [
+                  {
+                    "narrative": null,
+                    "language": null
+                  }
+                ]
+              }
+            ],
+            "description": [
+              {
+                "narrative": [
+                  {
+                    "narrative": null,
+                    "language": null
+                  }
+                ]
+              }
+            ],
+            "category": [
+              {
+                "code": null
+              }
+            ],
+            "language": [
+              {
+                "language": null
+              }
+            ],
+            "document_date": [
+              {
+                "date": null
+              }
+            ]
+          }
+        ],
+        "location": [
+          {
+            "reference": null
+          }
+        ],
+        "dimension": [
+          {
+            "name": null,
+            "value": null
+          }
+        ]
+      }
+    ]
+  },
+  "baseline": {
+    "year": null,
+    "date": null,
+    "value": null,
+    "comment": [
+      {
+        "narrative": [
+          {
+            "narrative": null,
+            "language": null
+          }
+        ]
+      }
+    ],
+    "document_link": [
+      {
+        "url": null,
+        "format": null,
+        "title": [
+          {
+            "narrative": [
+              {
+                "narrative": null,
+                "language": null
+              }
+            ]
+          }
+        ],
+        "description": [
+          {
+            "narrative": [
+              {
+                "narrative": null,
+                "language": null
+              }
+            ]
+          }
+        ],
+        "category": [
+          {
+            "code": null
+          }
+        ],
+        "language": [
+          {
+            "language": null
+          }
+        ],
+        "document_date": [
+          {
+            "date": null
+          }
+        ]
+      }
+    ],
+    "location": [
+      {
+        "reference": null
+      }
+    ],
+    "dimension": [
+      {
+        "name": null,
+        "value": null
+      }
+    ]
+  },
   "indicator document_link": [
     {
       "url": null,

@@ -68,8 +68,6 @@ class TitleRequest extends ActivityBaseRequest
             }
         }
 
-        // dd($rules);
-
         return $rules;
     }
 

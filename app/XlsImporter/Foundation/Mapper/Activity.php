@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\XlsImporter\Foundation\Mapper;
 
-use App\IATI\Traits\DataSanitizeTrait;
+use App\XlsImporter\Foundation\Mapper\Traits\XlsMapperHelper;
 use App\XlsImporter\Foundation\XlsValidator\Validators\ActivityValidator;
 use Illuminate\Support\Arr;
 
@@ -13,16 +13,15 @@ use Illuminate\Support\Arr;
  */
 class Activity
 {
-    use DataSanitizeTrait;
+    use XlsMapperHelper {
+        getElementPosition as getElementPosition;
+    }
 
     //activities whose identifier is mentioned on setting sheet
     protected array $activities = [];
 
     //
     protected array $activitiesIdentifier = [];
-
-    // activities whose identifier is not mentioned on setting
-    protected array $invalidActivities = [];
 
     protected int $rowCount = 2;
 
@@ -89,32 +88,48 @@ class Activity
 
     public function map($activityData)
     {
-        // logger()->error(json_encode($activityData));
-        // file_put_contents(app_path() . '/XlsImporter/Templates/period.json', json_encode($activityData));
-        // file_put_contents(app_path() . '/XlsImporter/Templates/indicator.json', json_encode($activityData));
-        $activityData = json_decode($activityData, true, 512, 0);
+        logger()->error('inside activity mapper');
+        // $activityData = json_decode($activityData, true, 512, 0);
 
         foreach ($activityData as $sheetName => $content) {
             $this->sheetName = $sheetName;
+            $this->rowCount = 2;
 
             if ($sheetName === 'Settings') {
-                $this->rowCount = 2;
                 $this->defaultValues($content);
             }
 
             if ($sheetName === 'Element with single field') {
-                $this->rowCount = 2;
                 $this->singleValuedFields($content);
             }
 
             if (in_array($sheetName, array_keys($this->activityElements))) {
-                $this->rowCount = 2;
                 $this->columnToFieldMapper($this->activityElements[$sheetName], $content);
             }
         }
 
-        // $this->validateActivityElements();
-        dd($this->activities);
+        $this->validateActivityElements();
+    }
+
+    /**
+     * Append data into the file containing previous data.
+     *
+     * @param $destinationFilePath
+     *
+     * @return string
+     * @throws \JsonException
+     */
+    protected function appendDataIntoFile($destinationFilePath): string
+    {
+        $currentContents = json_decode($destinationFilePath, true, 512, JSON_THROW_ON_ERROR);
+        $content = '';
+
+        if ($currentContents) {
+            $currentContents[] = ['data' => $this->data(), 'errors' => $this->errors(), 'status' => 'processed', 'existence' => $this->existence];
+            $content = json_encode($currentContents, JSON_THROW_ON_ERROR);
+        }
+
+        return $content;
     }
 
     public function validateActivityElements()
@@ -146,31 +161,6 @@ class Activity
         return $errors;
     }
 
-    public function getLinearizedActivity()
-    {
-        return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/linearized-activity.json'), true, 512, 0);
-    }
-
-    public function getDependencies()
-    {
-        return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/field-dependencies.json'), true, 512, 0);
-    }
-
-    public function getDropDownFields()
-    {
-        return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/dropdown-fields.json'), true, 512, 0);
-    }
-
-    public function getActivityTemplate()
-    {
-        return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/activity-template.json'), true, 512, 0);
-    }
-
-    public function getActivityJsonSchema()
-    {
-        return readElementJsonSchema();
-    }
-
     public function defaultValues($data)
     {
         $dropDownFields = $this->getDropDownFields();
@@ -198,44 +188,44 @@ class Activity
 
             $this->rowCount++;
             $secondary_reporter = $this->activities[$elementActivityIdentifier]['default_field_values']['secondary_reporter'];
-            $this->activities[$elementActivityIdentifier]['reporting_org'] = $this->getReportingOrganization($secondary_reporter);
+            // $this->activities[$elementActivityIdentifier]['reporting_org'] = $this->getReportingOrganization($secondary_reporter);
             $this->activities[$elementActivityIdentifier]['iati_identifier'] = [
                 'activity_identifier' => $elementActivityIdentifier,
             ];
         }
     }
 
-    /**
-     * Returns reporting organization data from organization.
-     *
-     * @param $secondary_reporter
-     *
-     * @return array
-     */
-    public function getReportingOrganization($secondary_reporter): array
-    {
-        $organizationReportingOrg = auth()->user()->organization->reporting_org;
+    // /**
+    //  * Returns reporting organization data from organization.
+    //  *
+    //  * @param $secondary_reporter
+    //  *
+    //  * @return array
+    //  */
+    // public function getReportingOrganization($secondary_reporter): array
+    // {
+    //     $organizationReportingOrg = auth()->user()->organization->reporting_org;
 
-        if (!empty($organizationReportingOrg)) {
-            $organizationReportingOrg[0]['secondary_reporter'] = $secondary_reporter;
+    //     if (!empty($organizationReportingOrg)) {
+    //         $organizationReportingOrg[0]['secondary_reporter'] = $secondary_reporter;
 
-            return $organizationReportingOrg;
-        }
+    //         return $organizationReportingOrg;
+    //     }
 
-        return [
-            [
-                'ref' => '',
-                'type' => '',
-                'secondary_reporter' => $secondary_reporter,
-                'narrative' => [
-                    [
-                        'narrative' => '',
-                        'language' => '',
-                    ],
-                ],
-            ],
-        ];
-    }
+    //     return [
+    //         [
+    //             'ref' => '',
+    //             'type' => '',
+    //             'secondary_reporter' => $secondary_reporter,
+    //             'narrative' => [
+    //                 [
+    //                     'narrative' => '',
+    //                     'language' => '',
+    //                 ],
+    //             ],
+    //         ],
+    //     ];
+    // }
 
     public function singleValuedFields($data)
     {
@@ -272,8 +262,6 @@ class Activity
         $this->elementBeingProcessed = $element;
 
         foreach ($data as $row) {
-            dump($row);
-
             if ($this->checkRowNotEmpty($row)) {
                 if (
                     is_null($elementActivityIdentifier) || (
@@ -293,6 +281,7 @@ class Activity
 
                 foreach ($row as $fieldName => $fieldValue) {
                     if (!empty($fieldName) && $fieldName !== 'activity_identifier') {
+                        dump($element, $elementMapper, $fieldName);
                         $systemMappedRow[$elementMapper[$fieldName]] = $fieldValue;
                     }
                 }
@@ -305,24 +294,6 @@ class Activity
         }
     }
 
-    public function mapDropDownValueToKey($value, $location)
-    {
-        // should we consider case?
-        if (is_null($value)) {
-            return $value;
-        }
-
-        if (is_array($location)) {
-            return Arr::get($location, $value, $value);
-        }
-
-        $locationArr = explode('/', $location);
-
-        $dropDownValues = array_flip(getCodeList(explode('.', $locationArr[1])[0], $locationArr[0]));
-
-        return Arr::get($dropDownValues, $value, $value);
-    }
-
     public function getElementData($data, $dependency, $elementDropDownFields, $elementActivityIdentifier, $element): array
     {
         $elementData = [];
@@ -332,8 +303,6 @@ class Activity
         $fieldDependency = $dependency['fieldDependency'];
         $parentBaseCount = [];
         $excelColumnName = $this->getExcelColumnNameMapper();
-
-        // dd($elementTemplate);
 
         // variables to map code dependency in elements like sector, recipient region and so on
         $codeRelation = Arr::get($dependency, 'codeDependency', []);
@@ -397,18 +366,7 @@ class Activity
         return $elementData;
     }
 
-    public function checkIfPeerAttributesAreNotEmpty(array $peerAttributes, array $rowContent): bool
-    {
-        foreach ($peerAttributes as $attributeName) {
-            if (Arr::get($rowContent, $attributeName, null)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function getElementPosition($fieldDependency, $dependencies): string
+    public function getActivityElementPosition($fieldDependency, $dependencies): string
     {
         $position = '';
         $dependency = explode(' ', $dependencies);
@@ -430,19 +388,5 @@ class Activity
         }
 
         return $position;
-    }
-
-    public function getExcelColumnNameMapper()
-    {
-        return json_decode(file_get_contents(app_path('/XlsImporter/Templates/excel-column-name-mapper.json')), true, 512, JSON_THROW_ON_ERROR);
-    }
-
-    public function checkRowNotEmpty($row)
-    {
-        if (implode('', array_values($row))) {
-            return true;
-        }
-
-        return false;
     }
 }

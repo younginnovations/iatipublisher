@@ -63,13 +63,13 @@
     "tag": {
         "tag_vocabulary": "vocabulary",
         "code": "code",
-        "vocabulary_uri": "vocabulary uri",
+        "vocabulary_uri": "vocabulary_uri",
         "narrative narrative": "narrative",
         "narrative language": "language"
     },
     "policy_marker": {
         "policy_marker_vocabulary": "vocabulary",
-        "vocabulary_uri": "vocabulary uri",
+        "vocabulary_uri": "vocabulary_uri",
         "significance": "significance",
         "code": "code",
         "narrative narrative": "narrative",

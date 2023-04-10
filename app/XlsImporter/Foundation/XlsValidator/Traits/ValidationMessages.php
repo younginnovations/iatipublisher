@@ -230,7 +230,6 @@ trait ValidationMessages
     public function messagesForCountryBudgetItems(array $activity): array
     {
         $countryBudgetItems = Arr::get($activity, 'country_budget_items', []);
-        // dd(Arr::get($countryBudgetItems, key($countryBudgetItems, []));
         $tempMessages = (new CountryBudgetItemRequest())->getMessagesForCountryBudgetItem(Arr::get($countryBudgetItems, key($countryBudgetItems), []));
         $messages = [];
 

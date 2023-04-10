@@ -499,11 +499,6 @@
       }
     },
     "indicator": {
-        "elementBase": "measure",
-        "elementBasePeer": [
-            "ascending",
-            "aggregation_status"
-        ],
         "fieldDependency": {
             "title narrative narrative": {
                 "parent": "title narrative",
@@ -553,11 +548,6 @@
         }
     },
     "baseline": {
-        "elementBase": "year",
-        "elementBasePeer": [
-            "date",
-            "value"
-        ],
         "fieldDependency": {
             "comment narrative narrative": {
                 "parent": "comment narrative",
