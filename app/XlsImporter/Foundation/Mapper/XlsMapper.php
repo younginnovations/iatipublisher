@@ -54,8 +54,11 @@ class XlsMapper
         ];
         $mapper = $xlsMapperTypes[$xlsType];
         logger()->error("$mapper decided");
+        $xls_data_storage_path = 'XlsImporter/tmp';
+        $destinationFilePath = sprintf('%s/%s/%s/%s', $xls_data_storage_path, $orgId, $userId, 'valid.json');
+        logger()->error("path: $destinationFilePath");
 
-        App::make($mapper)->map($xlsData);
+        App::make($mapper)->map($xlsData, $destinationFilePath);
 
         return $this;
     }

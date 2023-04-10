@@ -213,3 +213,6 @@ textarea.form__input {
 .user-checklist:checked ~ .ticked-svg {
   opacity: 1;
 }
+input[type='radio'] {
+  accent-color: #155366;
+}

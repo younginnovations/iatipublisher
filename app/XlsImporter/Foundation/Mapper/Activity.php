@@ -86,9 +86,12 @@ class Activity
 
     protected string $elementBeingProcessed = '';
 
-    public function map($activityData)
+    protected string $destinationFilePath = '';
+
+    public function map($activityData, $destinationFilePath)
     {
         logger()->error('inside activity mapper');
+        $this->destinationFilePath = $destinationFilePath;
         // $activityData = json_decode($activityData, true, 512, 0);
 
         foreach ($activityData as $sheetName => $content) {
@@ -111,27 +114,6 @@ class Activity
         $this->validateActivityElements();
     }
 
-    /**
-     * Append data into the file containing previous data.
-     *
-     * @param $destinationFilePath
-     *
-     * @return string
-     * @throws \JsonException
-     */
-    protected function appendDataIntoFile($destinationFilePath): string
-    {
-        $currentContents = json_decode($destinationFilePath, true, 512, JSON_THROW_ON_ERROR);
-        $content = '';
-
-        if ($currentContents) {
-            $currentContents[] = ['data' => $this->data(), 'errors' => $this->errors(), 'status' => 'processed', 'existence' => $this->existence];
-            $content = json_encode($currentContents, JSON_THROW_ON_ERROR);
-        }
-
-        return $content;
-    }
-
     public function validateActivityElements()
     {
         $activityValidator = app(ActivityValidator::class);
@@ -142,23 +124,9 @@ class Activity
                 ->validateData();
 
             $excelColumnAndRowName = isset($this->columnTracker[$activityIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
-            $this->activities[$activityIdentifier]['error'] = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
+            $error = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
+            $this->storeValidatedData($activities, $error);
         }
-    }
-
-    public function appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName): array
-    {
-        foreach ($errors as $errorLevel => $errorData) {
-            foreach ($errorData as $element => $error) {
-                foreach ($error as $key => $err) {
-                    if (isset($excelColumnAndRowName[$key])) {
-                        $errors[$errorLevel][$element][$key] .= " ( $excelColumnAndRowName[$key] )";
-                    }
-                }
-            }
-        }
-
-        return $errors;
     }
 
     public function defaultValues($data)
@@ -352,7 +320,7 @@ class Activity
                     $dependentOnValue = $fieldValue;
                 }
 
-                $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
+                $elementPosition = $this->getActivityElementPosition($parentBaseCount, $fieldName);
                 $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
 
                 if (!Arr::get($elementData, $elementPositionBasedOnParent, null) && !empty($elementPosition)) {
