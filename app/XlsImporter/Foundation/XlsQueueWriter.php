@@ -90,14 +90,8 @@ class XlsQueueWriter
         $dbIatiIdentifiers,
         $xmlActivityIdentifiers,
         ActivityRepository $activityRepo,
-        TransactionRepository $transactionRepo,
-        ResultRepository $resultRepo,
-        DocumentLinkRepository $documentLinkRepo
     ) {
         $this->activityRepo = $activityRepo;
-        $this->transactionRepo = $transactionRepo;
-        $this->resultRepo = $resultRepo;
-        $this->documentLinkRepo = $documentLinkRepo;
         $this->userId = $userId;
         $this->orgId = $orgId;
         $this->orgRef = $orgRef;
@@ -106,67 +100,67 @@ class XlsQueueWriter
         $this->xml_data_storage_path = env('XML_DATA_STORAGE_PATH ', 'XmlImporter/tmp');
     }
 
-    /**
-     * Store mapped activity in database.
-     *
-     * @param $mappedActivity
-     *
-     * @return bool
-     * @throws \JsonException
-     */
-    public function save($mappedActivity): bool
-    {
-        $activity_identifier = Arr::get($mappedActivity, 'iati_identifier.activity_identifier');
-        $xmlValidator = app(XmlValidator::class);
-        $existing = $this->activityAlreadyExists($activity_identifier);
-        $duplicate = $this->activityIsDuplicate(Arr::get($mappedActivity, 'iati_identifier.iati_identifier_text'));
-        $isIdentifierValid = $this->isIdentifierValid(Arr::get($mappedActivity, 'iati_identifier.iati_identifier_text'));
+    // /**
+    //  * Store mapped activity in database.
+    //  *
+    //  * @param $mappedActivity
+    //  *
+    //  * @return bool
+    //  * @throws \JsonException
+    //  */
+    // public function save($mappedActivity): bool
+    // {
+    //     $activity_identifier = Arr::get($mappedActivity, 'iati_identifier.activity_identifier');
+    //     $xmlValidator = app(XmlValidator::class);
+    //     $existing = $this->activityAlreadyExists($activity_identifier);
+    //     $duplicate = $this->activityIsDuplicate(Arr::get($mappedActivity, 'iati_identifier.iati_identifier_text'));
+    //     $isIdentifierValid = $this->isIdentifierValid(Arr::get($mappedActivity, 'iati_identifier.iati_identifier_text'));
 
-        $errors = $xmlValidator
-            ->init($mappedActivity)
-            ->validateActivity($duplicate, $isIdentifierValid);
+    //     $errors = $xmlValidator
+    //         ->init($mappedActivity)
+    //         ->validateActivity($duplicate, $isIdentifierValid);
 
-        $mappedActivity['org_id'] = $this->orgId;
-        $this->success++;
+    //     $mappedActivity['org_id'] = $this->orgId;
+    //     $this->success++;
 
-        $this->appendDataIntoFile($mappedActivity, $errors, $existing);
+    //     $this->appendDataIntoFile($mappedActivity, $errors, $existing);
 
-        return true;
-    }
+    //     return true;
+    // }
 
-    /**
-     * @param $identifier
-     *
-     * @return bool
-     */
-    public function activityAlreadyExists($identifier): bool
-    {
-        return in_array($identifier, $this->dbIatiIdentifiers, true);
-    }
+    // /**
+    //  * @param $identifier
+    //  *
+    //  * @return bool
+    //  */
+    // public function activityAlreadyExists($identifier): bool
+    // {
+    //     return in_array($identifier, $this->dbIatiIdentifiers, true);
+    // }
 
-    /**
-     * Checks if xml contains duplicate activity.
-     *
-     * @param $identifier
-     *
-     * @return bool
-     */
-    public function activityIsDuplicate($identifier): bool
-    {
-        return Arr::get($this->xmlActivityIdentifiers, $identifier, 0) > 1 ? true : false;
-    }
+    // /**
+    //  * Checks if xml contains duplicate activity.
+    //  *
+    //  * @param $identifier
+    //  *
+    //  * @return bool
+    //  */
+    // public function activityIsDuplicate($identifier): bool
+    // {
+    //     return Arr::get($this->xmlActivityIdentifiers, $identifier, 0) > 1 ? true : false;
+    // }
 
-    /**
-     * Checks if activity identifier is valid for the organization.
-     *
-     * @param $identifier
-     *
-     * @return bool
-     */
-    public function isIdentifierValid($identifier): bool
-    {
-        return str_starts_with($identifier, $this->orgRef . '-');
-    }
+    // /**
+    //  * Checks if activity identifier is valid for the organization.
+    //  *
+    //  * @param $identifier
+    //  *
+    //  * @return bool
+    //  */
+    // public function isIdentifierValid($identifier): bool
+    // {
+    //     return str_starts_with($identifier, $this->orgRef . '-');
+    // }
 
     /**iI
      * Append data into the file containing previous data.

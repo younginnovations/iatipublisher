@@ -140,4 +140,45 @@ trait XlsMapperHelper
 
         return $position;
     }
+
+    /**
+     * Stores validated data to valid.json file.
+     *
+     * @param $processedXlsData
+     * @param $errors
+     *
+     * @return void
+     */
+    public function storeValidatedData($processedXlsData, $errors): void
+    {
+        $fileData = awsGetFile($this->destinationFilePath);
+        $currentContents = $fileData ? json_decode(awsGetFile($this->destinationFilePath), true, 512, JSON_THROW_ON_ERROR) : [];
+        $currentContents[] = ['data' => $processedXlsData, 'errors' => $errors, 'status' => 'processed'];
+        $content = json_encode($currentContents, JSON_THROW_ON_ERROR);
+
+        awsUploadFile($this->destinationFilePath, $content);
+    }
+
+    /**
+     * Appends the cell position of data on error message.
+     *
+     * @param $errors
+     * @param $excelColumnAndRowName
+     *
+     * @return array
+     */
+    public function appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName): array
+    {
+        foreach ($errors as $errorLevel => $errorData) {
+            foreach ($errorData as $element => $error) {
+                foreach ($error as $key => $err) {
+                    if (isset($excelColumnAndRowName[$key])) {
+                        $errors[$errorLevel][$element][$key] .= " ( $excelColumnAndRowName[$key] )";
+                    }
+                }
+            }
+        }
+
+        return $errors;
+    }
 }

@@ -15,10 +15,13 @@ class Indicator
 {
     use XlsMapperHelper;
 
-    //indicators
+    /**
+     * array containing all indicator data.
+     *
+     * @var array
+     */
     protected array $indicators = [];
 
-    //
     protected array $indicatorIdentifier = [];
 
     protected array $periodIdentifier = [];
@@ -28,12 +31,31 @@ class Indicator
     protected array $identifiers = [];
 
     protected int $rowCount = 2;
+
+    /**
+     * Name of the sheet that is currently being processed.
+     *
+     * @var string
+     */
     protected string $sheetName = '';
 
+    /**
+     * column Tracker for all the elements.
+     *
+     * @var array
+     */
     protected array $columnTracker = [];
+
+    /**
+     * Temporary column tracker for each element group.
+     *
+     * @var array
+     */
     protected array $tempColumnTracker = [];
 
     /**
+     * Division of indicator data based on sheet names.
+     *
      * @var array
      */
     protected array $indicatorDivision = [
@@ -43,6 +65,11 @@ class Indicator
         'Indicator Baseline Document Link' => 'baseline document_link',
     ];
 
+    /**
+     * Identifier column for each indicator data sheet.
+     *
+     * @var array
+     */
     protected array $elementIdentifiers = [
         'indicator' => 'indicator_identifier',
         'indicator document_link' => 'indicator_identifier',
@@ -50,6 +77,11 @@ class Indicator
         'baseline document_link' => 'indicator_baseline_identifier',
     ];
 
+    /**
+     * Mapper sheets and their details.
+     *
+     * @var array
+     */
     protected array $mappers = [
         'Indicator Mapper' => [
             'columns' => [
@@ -69,28 +101,39 @@ class Indicator
         ],
     ];
 
-    public function map($indicatorData)
+    /**
+     * Maps sheet data based on their type and validates them.
+     *
+     * @param $indicatorData
+     *
+     * @return void
+     */
+    public function map($indicatorData): void
     {
         $indicatorData = json_decode($indicatorData, true, 512, JSON_THROW_ON_ERROR | 0);
 
         foreach ($indicatorData as $sheetName => $content) {
             $this->sheetName = $sheetName;
+            $this->rowCount = 2;
 
             if (array_key_exists($sheetName, $this->mappers)) {
-                $this->rowCount = 2;
-                $this->mapIndicators($content, $sheetName);
+                $this->mapMapperSheets($content, $sheetName);
             }
 
             if (array_key_exists($sheetName, $this->indicatorDivision)) {
-                $this->rowCount = 2;
-                $this->columnToFieldMapper($this->indicatorDivision[$sheetName], $content);
+                $this->mapIndicatorDataSheets($this->indicatorDivision[$sheetName], $content);
             }
         }
 
         $this->validateIndicator();
     }
 
-    public function validateIndicator()
+    /**
+     * Validates indicator data and store them to valid.json file.
+     *
+     * @return void
+     */
+    public function validateIndicator(): void
     {
         $indicatorValidator = app(IndicatorValidator::class);
 
@@ -100,25 +143,19 @@ class Indicator
                     ->init($indicatorData['indicator'])
                     ->validateData();
 
-                $this->indicators[$resultIdentifier][$indicatorIdentifier]['errors'] = $this->appendExcelColumnAndRowDetail($errors, $this->columnTracker[$resultIdentifier][$indicatorIdentifier]['indicator']);
+                $error = $this->appendExcelColumnAndRowDetail($errors, $this->columnTracker[$resultIdentifier][$indicatorIdentifier]['indicator']);
+
+                $this->storeValidatedData($indicatorData, $error);
             }
         }
     }
 
-    public function appendExcelColumnAndRowDetail($errors, $fieldPosition): array
-    {
-        foreach ($errors as $errorLevel => $errorData) {
-            foreach ($errorData as $element => $error) {
-                foreach ($error as $key => $err) {
-                    $errors[$errorLevel][$element][$key] .= ' ( ' . Arr::get($fieldPosition, $key, 'not found') . ' )';
-                }
-            }
-        }
-
-        return $errors;
-    }
-
-    public function mapIndicators($data, $sheetName)
+    /**
+     * Map mapper sheets and store them in $identifiers.
+     *
+     * @return void
+     */
+    public function mapMapperSheets($data, $sheetName): void
     {
         $mapperDetails = $this->mappers[$sheetName];
         $parentIdentifierKey = $mapperDetails['columns']['parentIdentifier'];
@@ -139,7 +176,15 @@ class Indicator
         }
     }
 
-    public function columnToFieldMapper($element, $data = [])
+    /**
+     * Map indicator data sheets and store them in $indicators.
+     *
+     * @param $element
+     * @param $data
+     *
+     * @return void
+     */
+    public function mapIndicatorDataSheets($element, $data = []): void
     {
         $elementData = [];
         $columnMapper = $this->getLinearizedActivity();
@@ -159,7 +204,7 @@ class Indicator
                     )
                 ) {
                     if (!empty($elementData)) {
-                        $this->pushIndicatorData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
+                        $this->pushIndicatorData($element, $elementActivityIdentifier, $this->convertGroupedDataToSystemData($elementData, $dependency[$element], $elementDropDownFields, $element));
                         $elementData = [];
                     }
 
@@ -176,13 +221,13 @@ class Indicator
 
                 $elementData[] = $systemMappedRow;
             } else {
-                $this->pushIndicatorData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
+                $this->pushIndicatorData($element, $elementActivityIdentifier, $this->convertGroupedDataToSystemData($elementData, $dependency[$element], $elementDropDownFields, $element));
                 break;
             }
         }
     }
 
-    public function getElementData($data, $dependency, $elementDropDownFields, $element): array
+    public function convertGroupedDataToSystemData($data, $dependency, $elementDropDownFields, $element): array
     {
         $elementBase = Arr::get($dependency, 'elementBase', null);
         $elementBasePeer = Arr::get($dependency, 'elementBasePeer', []);

@@ -72,9 +72,10 @@ class Result
         $resultValidator = app(ResultValidator::class);
         foreach ($this->results as $activityIdentifier => $results) {
             foreach ($results as $resultIdentifier => $resultData) {
-                $this->results[$activityIdentifier][$resultIdentifier] = $resultValidator
+                $errors = $resultValidator
                     ->init($resultData)
                     ->validateData();
+                $this->storeValidatedData($resultData, $errors);
             }
         }
     }

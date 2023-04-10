@@ -108,31 +108,13 @@ class Period
 
         foreach ($this->periods as $indicatorIdentifier => $periods) {
             foreach ($periods as $periodIdentifier => $periodData) {
-                // $this->periods[$indicatorIdentifier][$periodIdentifier]['error'] = $periodValidator
-                //     ->init($periodData['period'])
-                //     ->validateData();
-
                 $errors = $periodValidator
                     ->init($periodData['period'])
                     ->validateData();
-
-                // $excelColumnAndRowName = isset($this->columnTracker[$indicatorIdentifier][$periodIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
-                $this->periods[$indicatorIdentifier][$periodIdentifier]['error'] = $this->appendExcelColumnAndRowDetail($errors, $this->columnTracker[$indicatorIdentifier][$periodIdentifier]['period']);
+                $columnAppendedError = $this->appendExcelColumnAndRowDetail($errors, $this->columnTracker[$indicatorIdentifier][$periodIdentifier]['period']);
+                $this->storeValidatedData($periodData, $columnAppendedError);
             }
         }
-    }
-
-    public function appendExcelColumnAndRowDetail($errors, $fieldPosition): array
-    {
-        foreach ($errors as $errorLevel => $errorData) {
-            foreach ($errorData as $element => $error) {
-                foreach ($error as $key => $err) {
-                    $errors[$errorLevel][$element][$key] .= ' ( ' . Arr::get($fieldPosition, $key, 'not found') . ' )';
-                }
-            }
-        }
-
-        return $errors;
     }
 
     public function mapPeriods($data, $sheetName)
