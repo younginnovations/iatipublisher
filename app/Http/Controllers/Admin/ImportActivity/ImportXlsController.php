@@ -277,12 +277,8 @@ class ImportXlsController extends Controller
             $filetype = Session::get('import_filetype');
 
             if ($activities) {
-                if ($filetype === 'xml') {
-                    $this->importXlsService->create($activities);
-                } else {
-                    $this->importXlsService->create($activities);
-                    $this->importXlsService->endImport();
-                }
+                $this->importXlsService->create($activities);
+                $this->importXlsService->endImport();
             }
 
             $this->db->commit();
@@ -297,6 +293,19 @@ class ImportXlsController extends Controller
             logger()->error($e->getMessage());
 
             return redirect()->back()->withResponse(['success' => false, 'message' => 'Error has occurred while importing activity.']);
+        }
+    }
+
+    public function checkImportInProgress(): JsonResponse
+    {
+        try {
+            $status = $this->importXlsService->getImportStatus();
+
+            return response()->json(['success' => true, 'message' => 'Import status accessed successfully', 'status' => $status]);
+        } catch (Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error has occured while trying to check import status']);
         }
     }
 
@@ -362,28 +371,25 @@ class ImportXlsController extends Controller
     public function checkStatus(): JsonResponse
     {
         try {
-            $filetype = Session::get('import_filetype');
+            $status = $this->importXlsService->getImportStatus();
+            // $filetype = Session::get('import_filetype');
 
-            if (!$filetype) {
+            if (empty($status)) {
                 Session::put('error', 'Please upload xls file to import activity.');
 
                 return response()->json(['status' => 'error', 'message' => 'Please upload xls file to import activity.']);
             }
 
-            $result = $this->importXlsService->getAwsCsvData('status.json');
-            $data = $this->importXlsService->getAwsCsvData('valid.json');
+            $result = $this->importXlsService->getAwsXlsData('status.json');
 
             $status = strcasecmp($result->message, 'Complete') === 0;
 
-            if (!$data) {
-                Session::put('error', 'Error has occurred while importing activities.');
-            }
-
-            return response()->json(['status' => $status, 'data' => $data]);
+            return response()->json(['success' => true, 'data'=>$result]);
         } catch (Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
     }
 

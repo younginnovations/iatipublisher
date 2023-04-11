@@ -9,16 +9,13 @@ use App\IATI\Repositories\Activity\IndicatorRepository;
 use App\IATI\Repositories\Activity\PeriodRepository;
 use App\IATI\Repositories\Activity\ResultRepository;
 use App\IATI\Repositories\Activity\TransactionRepository;
-use App\IATI\Repositories\ImportActivityError\ImportActivityErrorRepository;
+use App\IATI\Repositories\Import\ImportActivityErrorRepository;
+use App\IATI\Repositories\Import\ImportStatusRepository;
 use App\XlsImporter\Events\XlsWasUploaded;
-use App\XmlImporter\Foundation\XmlProcessor;
 use Exception;
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Storage;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -35,21 +32,6 @@ class ImportXlsService
      * Temporary Xml data storage location.
      */
     public string $xls_data_storage_path;
-
-    /**
-     * @var XmlProcessor
-     */
-    protected XmlProcessor $xmlProcessor;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected LoggerInterface $logger;
-
-    /**
-     * @var Filesystem
-     */
-    protected Filesystem $filesystem;
 
     /**
      * @var ActivityRepository
@@ -82,6 +64,11 @@ class ImportXlsService
     protected ImportActivityErrorRepository $importActivityErrorRepo;
 
     /**
+     * @var ImportStatusRepository
+     */
+    protected ImportStatusRepository $importStatusRepo;
+
+    /**
      * XmlImportManager constructor.
      *
      * @param ActivityRepository    $activityRepository
@@ -90,9 +77,7 @@ class ImportXlsService
      * @param PeriodRepository      $periodRepository
      * @param IndicatorRepository   $indicatorRepository
      * @param ImportActivityErrorRepository  $importActivityErrorRepo
-     * @param XmlProcessor          $xmlProcessor
-     * @param LoggerInterface       $logger
-     * @param Filesystem            $filesystem
+     * @param ImportStatusRepository  $importStatusRepo
      * @param XmlService            $xmlService
      */
     public function __construct(
@@ -102,18 +87,14 @@ class ImportXlsService
         PeriodRepository $periodRepository,
         IndicatorRepository $indicatorRepository,
         ImportActivityErrorRepository $importActivityErrorRepo,
-        XmlProcessor $xmlProcessor,
-        LoggerInterface $logger,
-        Filesystem $filesystem,
+        ImportStatusRepository $importStatusRepo
     ) {
-        $this->xmlProcessor = $xmlProcessor;
-        $this->logger = $logger;
-        $this->filesystem = $filesystem;
         $this->transactionRepository = $transactionRepository;
         $this->activityRepository = $activityRepository;
         $this->resultRepository = $resultRepository;
         $this->indicatorRepository = $indicatorRepository;
         $this->importActivityErrorRepo = $importActivityErrorRepo;
+        $this->importStatusRepo = $importStatusRepo;
         $this->periodRepository = $periodRepository;
         $this->xls_file_storage_path = env('XLS_FILE_STORAGE_PATH', 'XlsImporter/file');
         $this->xls_data_storage_path = env('XLS_DATA_STORAGE_PATH', 'XlsImporter/tmp');
@@ -133,7 +114,7 @@ class ImportXlsService
 
             return awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_file_storage_path, Auth::user()->organization_id, Auth::user()->id, $file->getClientOriginalName()), $file->getContent());
         } catch (Exception $exception) {
-            $this->logger->error(
+            logger()->error(
                 sprintf('Error uploading Xls file due to %s', $exception->getMessage()),
                 [
                     'trace' => $exception->getTraceAsString(),
@@ -288,8 +269,10 @@ class ImportXlsService
     {
         awsDeleteDirectory(sprintf('%s/%s/%s', $this->xls_data_storage_path, $orgId, $userId));
         awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $orgId, $userId, 'status.json'), json_encode(['success' => true, 'message' => 'Started'], JSON_THROW_ON_ERROR));
+        $status = $this->importStatusRepo->storeStatus($orgId, $userId, 'xls');
 
         $this->fireXmlUploadEvent($filename, $userId, $orgId);
+        $this->importStatusRepo->update($status->id, ['status' => 'completed']);
     }
 
     /**
@@ -327,7 +310,7 @@ class ImportXlsService
 
             return false;
         } catch (Exception $exception) {
-            $this->logger->error(
+            logger()->error(
                 sprintf('Error due to %s', $exception->getMessage()),
                 [
                     'trace' => $exception->getTraceAsString(),
@@ -350,5 +333,39 @@ class ImportXlsService
     protected function dbIatiIdentifiers($org_id): array
     {
         return Arr::flatten($this->activityRepository->getActivityIdentifiers($org_id)->toArray());
+    }
+
+    /**
+     * Returns import status.
+     *
+     * @return array
+     */
+    public function getImportStatus(): array
+    {
+        return $this->importStatusRepo->getImportStatus(Auth::user()->organization->id);
+    }
+
+    public function getAwsXlsData($filename)
+    {
+        try {
+            $contents = awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, Auth::user()->organization_id, Auth::user()->id, $filename));
+
+            if ($contents) {
+                return json_decode($contents, false, 512, JSON_THROW_ON_ERROR);
+            }
+
+            return false;
+        } catch (Exception $exception) {
+            $this->logger->error(
+                sprintf('Error due to %s', $exception->getMessage()),
+                [
+                    'trace' => $exception->getTraceAsString(),
+                    'user_id' => auth()->user()->id,
+                    'filename' => $filename,
+                ]
+            );
+
+            return null;
+        }
     }
 }

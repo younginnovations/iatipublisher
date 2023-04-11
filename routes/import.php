@@ -25,5 +25,7 @@ Route::group(['middleware' => ['can:crud_activity']], static function () {
 
     Route::get('/import/xls', [ImportXlsController::class, 'index'])->name('import.xls.index');
     Route::post('/import/xls', [ImportXlsController::class, 'store'])->name('import.xls');
+    Route::get('/import/xls/progress_status', [ImportXlsController::class, 'checkImportInProgress'])->name('import.xls.progress_status');
+    Route::get('/import/xls/status', [ImportXlsController::class, 'checkStatus'])->name('import.xls.status');
     Route::get('/import/download/xls', [ImportActivityController::class, 'downloadXlsTemplate'])->name('import.template.xls');
 });

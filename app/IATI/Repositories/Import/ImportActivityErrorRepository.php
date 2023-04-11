@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\IATI\Repositories\ImportActivityError;
+namespace App\IATI\Repositories\Import;
 
-use App\IATI\Models\ImportActivityError\ImportActivityError;
+use App\IATI\Models\Import\ImportActivityError;
 use App\IATI\Repositories\Repository;
 use Illuminate\Database\Eloquent\Model;
 

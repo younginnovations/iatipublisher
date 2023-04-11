@@ -53,6 +53,14 @@ class Indicator
      */
     protected array $tempColumnTracker = [];
 
+    protected string $destinationFilePath = '';
+
+    public function initMapper($destinationFilePath)
+    {
+        dump('here');
+        $this->destinationFilePath = $destinationFilePath;
+    }
+
     /**
      * Division of indicator data based on sheet names.
      *
@@ -227,6 +235,16 @@ class Indicator
         }
     }
 
+    /**
+     * Convert grouped indicator data to system data.
+     *
+     * @param $data
+     * @param $dependency
+     * @param $elementDropDownFields
+     * @param $element
+     *
+     * @return array
+     */
     public function convertGroupedDataToSystemData($data, $dependency, $elementDropDownFields, $element): array
     {
         $elementBase = Arr::get($dependency, 'elementBase', null);
@@ -244,11 +262,10 @@ class Indicator
 
         foreach ($data as $row) {
             foreach ($row as $fieldName => $fieldValue) {
-                if ($elementBase && ($fieldName === $elementBase && $fieldValue)) {
+                //
+                if ($elementBase && $fieldName === $elementBase && ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row))) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
-                    $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
-                } elseif ($elementBase && $fieldName === $elementBase && $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)) {
-                    $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
+                    // empty count of child elements
                     $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
                 }
 
@@ -256,18 +273,18 @@ class Indicator
                     $parentKey = $fieldDependency[$fieldName]['parent'];
                     $peerAttributes = Arr::get($fieldDependency, "$fieldName.peer", []);
 
-                    if ($fieldValue) {
-                        $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) ? 0 : $parentBaseCount[$parentKey] + 1;
-                    } elseif ($this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
+                    if ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
                         $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) ? 0 : $parentBaseCount[$parentKey] + 1;
                     }
                 }
 
+                // checking and mapping select fields
                 if (in_array($fieldName, array_keys($elementDropDownFields))) {
                     $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields[$fieldName]);
                 }
 
                 $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
+                // map element position from parent
                 $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
 
                 if (!Arr::get($elementData, $elementPositionBasedOnParent, null)) {
@@ -281,7 +298,16 @@ class Indicator
         return $elementData;
     }
 
-    protected function pushIndicatorData($element, $identifier, $data)
+    /**
+     * Add indicator data to their respective position within $indicators variable.
+     *
+     * @param $element
+     * @param $identifier
+     * @param $data
+     *
+     * @return void
+     */
+    protected function pushIndicatorData($element, $identifier, $data): void
     {
         $periodElementFunctions = [
             'indicator' => 'pushIndicator',

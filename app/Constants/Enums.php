@@ -64,7 +64,7 @@ abstract class Enums
     ];
 
     const IMPORT_STATUS = [
-        'progress',
+        'processing',
         'completed',
     ];
 
@@ -72,5 +72,12 @@ abstract class Enums
         'xml',
         'csv',
         'xls',
+    ];
+
+    const IMPORT_TEMPLATE_TYPE = [
+        'activity',
+        'result',
+        'indicator',
+        'period',
     ];
 }

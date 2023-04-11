@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\XlsImporter\Foundation\Mapper;
 
-use App;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
 /**
@@ -28,11 +27,6 @@ class XlsMapper
     protected array $xlsData = [];
 
     /**
-     * @var array
-     */
-    public array $mappedXlsxlsData;
-
-    /**
      * Map raw xls Data into system compatible json data for import.
      *
      * @param array $xlsData
@@ -53,12 +47,14 @@ class XlsMapper
             'indicator' => Indicator::class,
         ];
         $mapper = $xlsMapperTypes[$xlsType];
-        logger()->error("$mapper decided");
-        $xls_data_storage_path = 'XlsImporter/tmp';
-        $destinationFilePath = sprintf('%s/%s/%s/%s', $xls_data_storage_path, $orgId, $userId, 'valid.json');
-        logger()->error("path: $destinationFilePath");
 
-        App::make($mapper)->map($xlsData, $destinationFilePath);
+        $xls_data_storage_path = 'XlsImporter/tmp';
+        $validatedDataFilePath = sprintf('%s/%s/%s/%s', $xls_data_storage_path, $orgId, $userId, 'valid.json');
+        $statusFilePath = sprintf('%s/%s/%s/%s', $xls_data_storage_path, $orgId, $userId, 'status.json');
+
+        $xlsMapper = new $mapper();
+        $xlsMapper->initMapper($validatedDataFilePath, $statusFilePath);
+        $xlsMapper->map($xlsData)->validateAndStoreData();
 
         return $this;
     }

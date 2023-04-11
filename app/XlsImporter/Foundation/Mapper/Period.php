@@ -34,6 +34,13 @@ class Period
 
     protected array $columnTracker = [];
     protected array $tempColumnTracker = [];
+    protected string $destinationFilePath = '';
+
+    public function initMapper($destinationFilePath)
+    {
+        dump('here');
+        $this->destinationFilePath = $destinationFilePath;
+    }
 
     /**
      * @var array

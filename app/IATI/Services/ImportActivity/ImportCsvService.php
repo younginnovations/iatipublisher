@@ -8,7 +8,7 @@ use App\CsvImporter\Events\ActivityCsvWasUploaded;
 use App\CsvImporter\Queue\Processor;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Activity\TransactionRepository;
-use App\IATI\Repositories\ImportActivityError\ImportActivityErrorRepository;
+use App\IATI\Repositories\Import\ImportActivityErrorRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\Imports\CsvToArray;
 use Exception;

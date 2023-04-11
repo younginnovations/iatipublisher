@@ -118,13 +118,13 @@ class XlsQueueProcessor
 
             $this->xlsMapper->process($contents, $xlsType, $userId, $orgId, $orgRef, $dbIatiIdentifiers);
 
-            awsUploadFile(
-                sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'),
-                json_encode(
-                    ['success' => true, 'message' => 'Complete'],
-                    JSON_THROW_ON_ERROR
-                )
-            );
+            // awsUploadFile(
+            //     sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'),
+            //     json_encode(
+            //         ['success' => true, 'message' => 'Complete'],
+            //         JSON_THROW_ON_ERROR
+            //     )
+            // );
 
             // awsUploadFile(
             //     sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'schema_error.log'),
