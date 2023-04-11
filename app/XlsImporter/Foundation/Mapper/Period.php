@@ -38,7 +38,6 @@ class Period
 
     public function initMapper($destinationFilePath)
     {
-        dump('here');
         $this->destinationFilePath = $destinationFilePath;
     }
 

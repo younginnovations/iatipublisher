@@ -134,10 +134,10 @@ class Activity
 
             $excelColumnAndRowName = isset($this->columnTracker[$activityIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
             $error = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
-            $this->storeValidatedData($activities, $error, $this->totalCount, $this->processedCount);
+            $this->storeValidatedData($activities, $error);
         }
 
-        $this->updateStatus($this->totalCount, $this->processedCount);
+        $this->updateStatus();
     }
 
     public function defaultValues($data)
@@ -260,7 +260,6 @@ class Activity
 
                 foreach ($row as $fieldName => $fieldValue) {
                     if (!empty($fieldName) && $fieldName !== 'activity_identifier') {
-                        dump($element, $elementMapper, $fieldName);
                         $systemMappedRow[$elementMapper[$fieldName]] = $fieldValue;
                     }
                 }

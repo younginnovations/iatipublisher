@@ -151,7 +151,7 @@ trait XlsMapperHelper
      *
      * @return void
      */
-    public function storeValidatedData($processedXlsData, $errors, $totalCount, $processedCount): void
+    public function storeValidatedData($processedXlsData, $errors): void
     {
         $fileData = awsGetFile($this->validatedDataFilePath);
         $currentContents = $fileData ? json_decode(awsGetFile($this->validatedDataFilePath), true, 512, JSON_THROW_ON_ERROR) : [];
@@ -160,8 +160,8 @@ trait XlsMapperHelper
         $status = json_encode([
             'success' => true,
             'message' => 'Processing',
-            'total_count' =>$totalCount,
-            'processed_count' =>$processedCount,
+            'total_count' =>$this->totalCount,
+            'processed_count' =>$this->processedCount,
         ]);
 
         awsUploadFile($this->validatedDataFilePath, $content);
@@ -172,7 +172,7 @@ trait XlsMapperHelper
     {
         $status = json_encode([
             'success' => true,
-            'message' => 'Processing',
+            'message' => 'Complete',
             'total_count' =>$this->totalCount,
             'processed_count' =>$this->processedCount,
         ]);

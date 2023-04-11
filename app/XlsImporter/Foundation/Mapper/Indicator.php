@@ -57,7 +57,6 @@ class Indicator
 
     public function initMapper($destinationFilePath)
     {
-        dump('here');
         $this->destinationFilePath = $destinationFilePath;
     }
 
