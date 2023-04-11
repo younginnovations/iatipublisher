@@ -20,6 +20,8 @@ class Result
      */
     protected array $results = [];
 
+    protected string $destinationFilePath = '';
+
     /**
      * @var array
      */
@@ -41,6 +43,11 @@ class Result
     protected int $rowCount = 2;
     protected string $sheetName = '';
     protected array $columnTracker = [];
+
+    public function initMapper($destinationFilePath)
+    {
+        $this->destinationFilePath = $destinationFilePath;
+    }
 
     public function map($data)
     {

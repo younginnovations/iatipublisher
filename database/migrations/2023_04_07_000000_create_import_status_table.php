@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->integer('organization_id');
             $table->enum('status', Enums::IMPORT_STATUS);
             $table->enum('type', Enums::IMPORT_TYPE);
+            $table->enum('template', Enums::IMPORT_TEMPLATE_TYPE);
             $table->integer('user_id');
             $table->timestamps();
         });
@@ -27,7 +28,7 @@ return new class extends Migration {
             DBTables::IMPORT_STATUS,
             function ($table) {
                 $table->foreign('organization_id')->references('id')->on(DBTables::ORGANIZATIONS);
-                $table->foreign('user_id')->references('id')->on(DBTables::IMPORT_STATUS);
+                $table->foreign('user_id')->references('id')->on(DBTables::USERS);
             }
         );
     }
@@ -42,10 +43,10 @@ return new class extends Migration {
         Schema::table(
             DBTables::IMPORT_STATUS,
             function ($table) {
-                $table->dropForeign('users_organization_id_foreign');
-                $table->dropForeign('users_organization_id_foreign');
+                $table->dropForeign('import_status_organization_id_foreign');
+                $table->dropForeign('import_status_user_id_foreign');
             }
         );
-        Schema::dropIfExists(DBTables::USERS);
+        Schema::dropIfExists(DBTables::IMPORT_STATUS);
     }
 };

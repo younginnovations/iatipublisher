@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\ImportActivityError;
 
-use App\IATI\Repositories\ImportActivityError\ImportActivityErrorRepository;
+use App\IATI\Repositories\Import\ImportActivityErrorRepository;
 use Illuminate\Database\Eloquent\Model;
 
 /**

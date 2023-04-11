@@ -20,6 +20,10 @@ class Activity
     //activities whose identifier is mentioned on setting sheet
     protected array $activities = [];
 
+    protected int $totalCount = 0;
+
+    protected int $processedCount = 0;
+
     //
     protected array $activitiesIdentifier = [];
 
@@ -86,14 +90,17 @@ class Activity
 
     protected string $elementBeingProcessed = '';
 
-    protected string $destinationFilePath = '';
+    protected string $statusFilePath = '';
+    protected string $validatedDataFilePath = '';
 
-    public function map($activityData, $destinationFilePath)
+    public function initMapper($validatedDataFilePath, $statusFilePath)
     {
-        logger()->error('inside activity mapper');
-        $this->destinationFilePath = $destinationFilePath;
-        // $activityData = json_decode($activityData, true, 512, 0);
+        $this->validatedDataFilePath = $validatedDataFilePath;
+        $this->statusFilePath = $statusFilePath;
+    }
 
+    public function map($activityData): static
+    {
         foreach ($activityData as $sheetName => $content) {
             $this->sheetName = $sheetName;
             $this->rowCount = 2;
@@ -111,22 +118,26 @@ class Activity
             }
         }
 
-        $this->validateActivityElements();
+        return $this;
     }
 
-    public function validateActivityElements()
+    public function validateAndStoreData()
     {
         $activityValidator = app(ActivityValidator::class);
+        $this->totalCount = count($this->activities);
 
         foreach ($this->activities as $activityIdentifier => $activities) {
             $errors = $activityValidator
                 ->init($activities)
                 ->validateData();
+            $this->processedCount++;
 
             $excelColumnAndRowName = isset($this->columnTracker[$activityIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
             $error = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
             $this->storeValidatedData($activities, $error);
         }
+
+        $this->updateStatus();
     }
 
     public function defaultValues($data)
@@ -249,7 +260,6 @@ class Activity
 
                 foreach ($row as $fieldName => $fieldValue) {
                     if (!empty($fieldName) && $fieldName !== 'activity_identifier') {
-                        dump($element, $elementMapper, $fieldName);
                         $systemMappedRow[$elementMapper[$fieldName]] = $fieldValue;
                     }
                 }
