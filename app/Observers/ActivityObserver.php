@@ -63,7 +63,7 @@ class ActivityObserver
             $elementStatus[$attribute] = call_user_func([$this->elementCompleteService, dashesToCamelCase('is_' . $attribute . '_element_completed')], $model);
         }
 
-        $model->element_status = $elementStatus;
+        $model->setAttribute('element_status', $elementStatus);
     }
 
     /**
@@ -118,11 +118,11 @@ class ActivityObserver
     /**
      * Removes activity fields that do not require setting default value.
      *
-     * @param $activityElement
+     * @param $activityElements
      *
      * @return array
      */
-    public function removeElements($activityElements)
+    public function removeElements($activityElements): array
     {
         $ignorableElements = [
             'updated_at',

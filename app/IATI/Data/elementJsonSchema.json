@@ -607,7 +607,7 @@
         "help_text": "Select the sector which the activity is targeting or supporting. You can choose more than one sector.",
         "parent": {
           "name": "sector_vocabulary",
-          "value": ["3", "4", "5", "6", "9", "10", "99", "98"]
+          "value": ["3", "4", "5", "6", "9", "10", "11", "12", "99", "98"]
         }
       },
       "category_code": {
