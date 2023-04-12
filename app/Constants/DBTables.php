@@ -21,4 +21,6 @@ abstract class DBTables
     const PERIOD = 'result_indicator_periods';
 
     const IMPORT_STATUS = 'import_status';
+
+    const DOWNLOAD_STATUS = 'download_status';
 }

@@ -6,6 +6,7 @@ namespace App\IATI\Models\User;
 
 use App\IATI\Models\Organization\Organization;
 use App\Mail\NewUserEmail;
+use App\Mail\XlsDownloadMail;
 use Database\Factories\IATI\Models\User\UserFactory;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -18,6 +19,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 use Laravel\Sanctum\HasApiTokens;
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -162,6 +164,24 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
         ];
 
         Mail::to($user->email)->send(new NewUserEmail($user, $mailDetails));
+    }
+
+    /**
+     * @param $email
+     * @param $username
+     * @param $userId
+     *
+     * @return void
+     */
+    public static function sendXlsDownloadLink($email, $username, $userId): void
+    {
+        $mailDetails = [
+            'greeting' => 'Hello ' . $username,
+            'message' => 'Your Xls Files are ready for download.
+             Please click the button below to download the xls files.',
+            'url' => URL::temporarySignedRoute('admin.activities.download-xls', now()->addMinutes(10), ['userId' => $userId]),
+        ];
+        Mail::to($email)->send(new XlsDownloadMail($mailDetails));
     }
 
     /**

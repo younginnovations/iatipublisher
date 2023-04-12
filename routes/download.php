@@ -18,4 +18,9 @@ Route::group(['middleware' => 'can:crud_activity'], static function () {
     Route::get('activities/download-csv', [DownloadActivityController::class, 'downloadActivityCsv'])->name('activities.download-csv');
     Route::get('activities/download-xml/{download?}', [DownloadActivityController::class, 'downloadActivityXml'])->name('activities.download-xml');
     Route::get('activities/download-codes/{download?}', [DownloadCodesController::class, 'downloadCodes'])->name('activities.download-codes');
+    Route::get('activities/prepare-xls', [DownloadActivityController::class, 'prepareActivityXls'])->name('activities.prepare-xls');
+    Route::get('activities/download-xls/{userId}', [DownloadActivityController::class, 'downloadActivityXls'])->name('activities.download-xls');
+    Route::get('/activities/download-xls-progress-status', [DownloadActivityController::class, 'xlsDownloadInProgressStatus'])->name('activities.xls.download-status');
+    Route::get('/activities/cancel-xls-download', [DownloadActivityController::class, 'cancelXlsDownload'])->name('activities.xls.download-cancel');
+    // Route::get('activities/download-codes/{download?}', [DownloadCodesController::class, , 'downloadCodes'])->name('activities.download-codes');
 });

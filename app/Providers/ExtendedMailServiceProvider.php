@@ -20,8 +20,8 @@ class ExtendedMailServiceProvider extends MailServiceProvider
      */
     public function boot(): void
     {
-        if (!App::environment(['production', 'staging'])) {
-            Mail::fake();
-        }
+//        if (!App::environment(['production', 'staging'])) {
+//            Mail::fake();
+//        }
     }
 }

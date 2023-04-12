@@ -37,6 +37,14 @@
             >Download XML</a
           >
         </li>
+        <li>
+          <a
+            href="#"
+            :class="liClass"
+            @click="downloadXls(store.state.selectedActivities.length)"
+            >Download XLS</a
+          >
+        </li>
       </ul>
     </div>
     <Modal
@@ -240,6 +248,45 @@ export default defineComponent({
       });
     };
 
+    const downloadXls = (countActivities) => {
+      let queryParameters = window.location.href.split('?');
+      let addQueryParams = '';
+
+      if (queryParameters.length === 2) {
+        addQueryParams = '&' + queryParameters[1];
+      }
+
+      let apiUrl = '/activities/prepare-xls?activities=all' + addQueryParams;
+
+      if (countActivities > 0) {
+        const activities = store.state.selectedActivities.join(',');
+        apiUrl = `/activities/prepare-xls?activities=[${activities}]`;
+      }
+
+      axios.get(apiUrl).then((res) => {
+        if (res.data.success == false) {
+          if (res.data.xml_error === true) {
+            showErrorpopup.value = true;
+            message.value = res.data.message;
+          } else {
+            toastVisibility.value = true;
+            toastMessage.value = res.data.message;
+            toastmessageType.value = res.data.success;
+            setTimeout(() => (toastVisibility.value = false), 15000);
+          }
+        } else {
+          const response = res.data;
+          let blob = new Blob([response], {
+            type: 'application/xml',
+          });
+          let link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = res.headers['content-disposition'].split('=')[1];
+          link.click();
+        }
+      });
+    };
+
     const downloadCsv = (countActivities) => {
       let queryParameters = window.location.href.split('?');
       let addQueryParams = '';
@@ -294,6 +341,7 @@ export default defineComponent({
       downloadErrorxml,
       message,
       downloadError,
+      downloadXls,
     };
   },
 });

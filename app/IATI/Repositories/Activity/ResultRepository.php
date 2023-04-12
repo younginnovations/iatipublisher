@@ -140,4 +140,16 @@ class ResultRepository extends Repository
     {
         return $this->model->insert($results);
     }
+
+    /*
+     * get result with indicator from an array of result ids.
+     *
+     * @param array $resultIds
+     *
+     * @return mixed
+     */
+    public function getResultsWithIndicatorQueryToDownload(array $resultIds): mixed
+    {
+        return $this->model->has('indicators')->with('indicators')->whereIn('id', $resultIds);
+    }
 }

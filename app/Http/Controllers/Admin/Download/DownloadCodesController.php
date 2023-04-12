@@ -56,6 +56,7 @@ class DownloadCodesController extends Controller
                 json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR) : [];
 
             $codeData = $this->downloadCodeService->getActivitiesToDownload($activityIds);
+
             $filename = 'codes.xls';
 
             return Excel::download(new CodesExport($codeData, []), $filename, \Maatwebsite\Excel\Excel::XLSX);

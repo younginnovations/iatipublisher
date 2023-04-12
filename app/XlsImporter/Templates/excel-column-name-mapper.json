@@ -1,5 +1,16 @@
 {
+  "Element with single field": {
+    "activity_identifier": "A",
+    "activity_status": "B",
+    "activity_scope": "C",
+    "collaboration_type": "D",
+    "default_flow_type": "E",
+    "default_finance_type": "F",
+    "default_tied_status": "G",
+    "capital_spend": "H"
+  },
   "Settings": {
+    "activity_identifier": "A",
     "default_currency": "B",
     "default_language": "C",
     "hierarchy": "D",
@@ -17,41 +28,48 @@
     "capital_spend": "H"
   },
   "Title": {
+    "activity_identifier": "A",
     "narrative": "B",
     "language": "C"
   },
   "Description": {
+    "activity_identifier": "A",
     "type": "B",
     "narrative narrative": "C",
     "narrative language": "D"
   },
   "Activity Date": {
+    "activity_identifier": "A",
     "type": "B",
     "date": "C",
     "narrative narrative": "D",
     "narrative language": "E"
   },
   "Recipient Country": {
+    "activity_identifier": "A",
     "country_code": "B",
     "percentage": "C",
     "narrative narrative": "D",
     "narrative language": "E"
   },
   "Recipient Region": {
+    "activity_identifier": "A",
     "region_vocabulary": "B",
-    "custom_code": "C",
+    "recipient_region region_code": "C",
     "vocabulary_uri": "D",
     "percentage": "E",
     "narrative narrative": "F",
     "narrative language": "G"
   },
   "Conditions": {
+    "activity_identifier": "A",
     "condition_attached": "B",
     "condition condition_type": "C",
     "condition narrative narrative": "D",
     "condition narrative language": "E"
   },
   "Contact Info": {
+    "activity_identifier": "A",
     "type": "B",
     "organisation narrative narrative": "C",
     "organisation narrative language": "D",
@@ -68,6 +86,7 @@
     "mailing_address narrative language": "O"
   },
   "Planned Disbursement": {
+    "activity_identifier": "A",
     "planned_disbursement_type": "B",
     "period_start date": "C",
     "period_end date": "D",
@@ -86,6 +105,7 @@
     "receiver_org narrative language": "Q"
   },
   "Participating Org": {
+    "activity_identifier": "A",
     "organization_role": "B",
     "ref": "C",
     "type": "D",
@@ -95,6 +115,7 @@
     "narrative language": "H"
   },
   "Budget": {
+    "activity_identifier": "A",
     "budget_status": "B",
     "budget_type": "C",
     "period_start date": "D",
@@ -104,6 +125,7 @@
     "budget_value value_date": "H"
   },
   "Legacy Data": {
+    "activity_identifier": "A",
     "legacy_name": "B",
     "value": "C",
     "iati_equivalent": "D"
@@ -120,6 +142,7 @@
     "document_date date": "J"
   },
   "Humanitarian Scope": {
+    "activity_identifier": "A",
     "type": "B",
     "vocabulary": "C",
     "code": "D",
@@ -129,9 +152,11 @@
   },
   "Related Activity": {
     "activity_identifier": "A",
+    "reference": "B",
     "relationship_type": "C"
   },
   "Other Identifier": {
+    "activity_identifier": "A",
     "reference": "B",
     "reference_type": "C",
     "owner_org ref": "D",
@@ -147,6 +172,7 @@
     "cash_and_voucher_modalities": "C"
   },
   "Sector": {
+    "activity_identifier": "A",
     "sector_vocabulary": "B",
     "code": "C",
     "vocabulary_uri": "D",
@@ -155,13 +181,15 @@
     "narrative language": "G"
   },
   "Tag": {
+    "activity_identifier": "A",
     "tag_vocabulary": "B",
-    "code": "C",
+    "tag code": "C",
     "vocabulary_uri": "D",
     "narrative narrative": "E",
     "narrative language": "F"
   },
   "Policy Marker": {
+    "activity_identifier": "A",
     "policy_marker_vocabulary": "B",
     "code": "C",
     "policy_marker": "C",
@@ -170,7 +198,25 @@
     "narrative narrative": "F",
     "narrative language": "G"
   },
+  "Default Aid Type": {
+    "activity_identifier": "A",
+    "default_aid_type_vocabulary": "B",
+    "default_aid_type code": "C"
+  },
+  "Document Link": {
+    "activity_identifier": "A",
+    "url": "B",
+    "format": "C",
+    "title narrative narrative": "D",
+    "title narrative language": "E",
+    "description narrative narrative": "F",
+    "description narrative language": "G",
+    "category code": "H",
+    "language code": "I",
+    "document_date date": "J"
+  },
   "Country Budget Items": {
+    "activity_identifier": "A",
     "country_budget_vocabulary": "B",
     "budget_item code": "C",
     "budget_item percentage": "D",
@@ -178,6 +224,7 @@
     "budget_item description narrative language": "F"
   },
   "Location": {
+    "activity_identifier": "A",
     "ref": "B",
     "location_reach code": "C",
     "location_id vocabulary": "D",
@@ -199,6 +246,7 @@
     "feature_designation code": "T"
   },
   "Transaction": {
+    "activity_identifier": "A",
     "reference": "B",
     "humanitarian": "C",
     "transaction_type transaction_type_code": "D",
@@ -239,6 +287,7 @@
     "tied_status tied_status_code": "AM"
   },
   "Result": {
+    "result_identifier": "A",
     "type": "B",
     "aggregation_status": "C",
     "title narrative narrative": "D",
@@ -255,6 +304,7 @@
     "result_identifier": "C"
   },
   "Result Document Link": {
+    "result_identifier": "A",
     "url": "B",
     "format": "C",
     "title narrative narrative": "D",
@@ -266,6 +316,7 @@
     "document_date date": "J"
   },
   "Indicator": {
+    "indicator_identifier": "A",
     "measure": "B",
     "ascending": "C",
     "aggregation_status": "D",
@@ -274,7 +325,8 @@
     "description narrative narrative": "G",
     "description narrative language": "H",
     "reference vocabulary": "I",
-    "reference code": "J"
+    "reference code": "J",
+    "reference indicator_uri": "K"
   },
   "Indicator Document Link": {
     "url": "B",
@@ -309,6 +361,7 @@
     "indicator_baseline_identifier": "C"
   },
   "Indicator Baseline": {
+    "indicator_baseline_identifier": "A",
     "year": "B",
     "date": "C",
     "value": "D",
@@ -319,6 +372,7 @@
     "location reference": "I"
   },
   "Indicator Baseline Document Link": {
+    "indicator_baseline_identifier": "A",
     "url": "B",
     "format": "C",
     "title narrative narrative": "D",
@@ -326,7 +380,7 @@
     "description narrative narrative": "F",
     "description narrative language": "G",
     "category code": "H",
-    "language code": "I",
+    "language language": "I",
     "document_date date": "J"
   },
   "Period Mapper": {
@@ -345,10 +399,12 @@
     "actual_identifier": "C"
   },
   "Period": {
-    "period_start date": "B",
-    "period_end date": "C"
+    "period_identifier": "A",
+    "period_start date" : "B",
+    "period_end date" : "C"
   },
   "Target": {
+    "target_identifier" : "A",
     "value": "B",
     "comment narrative narrative": "C",
     "comment narrative language": "D",
@@ -357,6 +413,7 @@
     "location reference": "G"
   },
   "Target Document Link": {
+    "target_identifier" : "A",
     "url": "B",
     "format": "C",
     "title narrative narrative": "D",
@@ -368,6 +425,7 @@
     "document date date": "J"
   },
   "Actual": {
+    "actual_identifier": "A",
     "value": "B",
     "comment narrative narrative": "C",
     "comment narrative language": "D",
@@ -376,6 +434,7 @@
     "location reference": "G"
   },
   "Actual Document Link": {
+    "actual_identifier": "A",
     "url": "B",
     "format": "C",
     "title narrative narrative": "D",

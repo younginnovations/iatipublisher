@@ -1,5 +1,6 @@
 {
     "title": {
+        "activity_identifier": true,
         "language": "Activity/Language.json"
     },
     "reporting_org": {
@@ -12,29 +13,36 @@
     },
     "iati_identifier": {},
     "other_identifier": {
+        "activity_identifier": true,
         "reference_type": "Activity/OtherIdentifierType.json",
         "owner_org narrative language": "Activity/Language.json"
     },
     "description": {
+        "activity_identifier": true,
         "type": "Activity/DescriptionType.json",
         "narrative language": "Activity/Language.json"
     },
     "activity_status": "Activity/ActivityStatus.json",
     "activity_date": {
+        "activity_identifier": true,
         "type": "Activity/ActivityDateType.json",
         "narrative language": "Activity/Language.json"
     },
     "activity_scope": "Activity/ActivityScope.json",
     "recipient_country": {
+        "activity_identifier": true,
         "country_code": "Activity/Country.json",
         "narrative language": "Activity/Language.json"
     },
     "recipient_region": {
+        "activity_identifier": true,
         "region_vocabulary": "Activity/RegionVocabulary.json",
+        "recipient_region region_code": "Activity/Region.json",
         "region_code": "Activity/Region.json",
         "narrative language": "Activity/Language.json"
     },
     "sector": {
+        "activity_identifier": true,
         "sector_vocabulary": "Activity/SectorVocabulary.json",
         "code": "Activity/SectorCode.json",
         "category_code": "Activity/SectorCategory.json",
@@ -43,14 +51,18 @@
         "narrative language": "Activity/Language.json"
     },
     "tag": {
+        "activity_identifier": true,
         "tag_vocabulary": "Activity/TagVocabulary.json",
+        "tag code": "Activity/UNSDG-Goals.json",
         "goals_tag_code": "Activity/UNSDG-Goals.json",
         "targets_tag_code": "Activity/UNSDG-Targets.json",
         "narrative language": "Activity/Language.json"
     },
     "policy_marker": {
+        "activity_identifier": true,
         "policy_marker_vocabulary": "Activity/PolicyMarkerVocabulary.json",
         "significance": "Activity/PolicySignificance.json",
+        "policy_marker code": "Activity/PolicyMarker.json",
         "policy_marker": "Activity/PolicyMarker.json",
         "narrative language": "Activity/Language.json"
     },
@@ -58,6 +70,7 @@
     "default_flow_type": "Activity/FlowType.json",
     "default_finance_type": "Activity/FinanceType.json",
     "default_aid_type": {
+        "activity_identifier": true,
         "default_aid_type_vocabulary": "Activity/AidTypeVocabulary.json",
         "code": "Activity/AidType.json",
         "default_aid_type": "Activity/AidType.json",
@@ -67,20 +80,24 @@
     },
     "default_tied_status": "Activity/TiedStatus.json",
     "country_budget_items": {
+        "activity_identifier": true,
         "country_budget_vocabulary": "Activity/BudgetIdentifierVocabulary.json",
         "budget_item code": "Activity/BudgetIdentifier.json",
         "budget_item description narrative language": "Activity/Language.json"
     },
     "humanitarian_scope": {
+        "activity_identifier": true,
         "type": "Activity/HumanitarianScopeType.json",
         "vocabulary": "Activity/HumanitarianScopeVocabulary.json",
         "narrative language": "Activity/Language.json"
     },
     "capital_spend": {},
     "related_activity": {
+        "activity_identifier": true,
         "relationship_type": "Activity/RelatedActivityType.json"
     },
     "conditions": {
+        "activity_identifier": true,
         "condition_attached": {
             "0": false,
             "1": true
@@ -92,6 +109,7 @@
         "activity_identifier": true
     },
     "document_link": {
+        "activity_identifier": true,
         "format": "Activity/FileFormat.json",
         "title narrative language": "Activity/Language.json",
         "description narrative language": "Activity/Language.json",
@@ -99,6 +117,7 @@
         "language code": "Activity/Language.json"
     },
     "contact_info": {
+        "activity_identifier": true,
         "type": "Activity/ContactType.json",
         "organisation narrative language": "Activity/Language.json",
         "department narrative language": "Activity/Language.json",
@@ -107,6 +126,7 @@
         "mailing_address narrative language": "Activity/Language.json"
     },
     "location": {
+        "activity_identifier": true,
         "location_reach code": "Activity/GeographicLocationReach.json",
         "location_id vocabulary": "Activity/GeographicVocabulary.json",
         "name narrative language": "Activity/Language.json",
@@ -119,6 +139,7 @@
         "feature_designation code": "Activity/LocationType.json"
     },
     "planned_disbursement": {
+        "activity_identifier": true,
         "planned_disbursement_type": "Activity/BudgetType.json",
         "value currency": "Activity/Currency.json",
         "provider_org type": "Organization/OrganizationType.json",
@@ -127,17 +148,24 @@
         "receiver_org narrative language": "Activity/Language.json"
     },
     "participating_org": {
+        "activity_identifier": true,
         "organization_role": "Organization/OrganisationRole.json",
         "type": "Organization/OrganizationType.json",
         "crs_channel_code": "Activity/CRSChannelCode.json",
         "narrative language": "Activity/Language.json"
     },
     "budget": {
+        "activity_identifier": true,
         "budget_status": "Activity/BudgetStatus.json",
         "budget_type": "Activity/BudgetType.json",
         "budget_value currency": "Activity/Currency.json"
     },
+    "result_mapper": {
+        "activity_identifier": true,
+        "result_identifier": true
+    },
     "result": {
+        "result_identifier": true,
         "type": "Activity/ResultType.json",
         "aggregation_status": {
             "0": false,
@@ -176,6 +204,7 @@
         "language language": "Activity/Language.json"
     },
     "indicator": {
+        "indicator_identifier": true,
         "measure": "Activity/IndicatorMeasure.json",
         "ascending": {
             "0": false,
@@ -190,11 +219,13 @@
         "reference vocabulary": "Activity/IndicatorVocabulary.json"
     },
     "indicator document_link": {
+        "indicator_identifier": true,
         "format": "Activity/FileFormat.json",
         "title narrative language": "Activity/Language.json",
         "description narrative language": "Activity/Language.json",
         "category code": "Activity/DocumentCategory.json",
-        "language language": "Activity/Language.json"
+        "language language": "Activity/Language.json",
+        "language code": "Activity/Language.json"
     },
     "period_mapper": {
         "indicator_identifier": true,
@@ -212,9 +243,11 @@
         "period_identifier": true
     },
     "target": {
+        "target_identifier": true,
         "comment narrative language": "Activity/Language.json"
     },
     "target document_link": {
+        "target_identifier": true,
         "format": "Activity/FileFormat.json",
         "title narrative language": "Activity/Language.json",
         "description narrative language": "Activity/Language.json",
@@ -222,9 +255,11 @@
         "language language": "Activity/Language.json"
     },
     "actual": {
+        "actual_identifier": true,
         "comment narrative language": "Activity/Language.json"
     },
     "actual document_link": {
+        "actual_identifier": true,
         "format": "Activity/FileFormat.json",
         "title narrative language": "Activity/Language.json",
         "description narrative language": "Activity/Language.json",
@@ -232,6 +267,7 @@
         "language language": "Activity/Language.json"
     },
     "transactions": {
+        "activity_identifier": true,
         "humanitarian": {
             "0": false,
             "1": true
