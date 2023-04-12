@@ -172,6 +172,9 @@ trait FillDefaultValuesTrait
         $defaultFieldValues = false;
 
         switch ($calledForModel) {
+            case get_class(new Activity()):
+                $defaultFieldValues = $this->model->find($id)->default_field_values;
+                break;
             case get_class(new Result):
             case get_class(new Transaction):
                 $defaultFieldValues = ($this->model->find($id))->activity->default_field_values;
