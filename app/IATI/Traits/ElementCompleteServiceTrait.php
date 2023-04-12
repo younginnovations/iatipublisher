@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\IATI\Traits;
 
+use Illuminate\Support\Arr;
+
 /**
  * Class ElementCompleteServiceTrait.
  */
@@ -90,6 +92,121 @@ trait ElementCompleteServiceTrait
     }
 
     /**
+     * Checks if Element's dependent_attributes contain specified mandatory attribute.
+     *
+     * @param $schema
+     * @param $mandatoryAttribute
+     * @return bool
+     */
+    public function checkIfDependentAttributesExistAndContainsSpecifiedMandatoryAttribute($schema, $mandatoryAttribute): bool
+    {
+        return array_key_exists('dependent_attributes', $schema) && array_key_exists($mandatoryAttribute, $schema['dependent_attributes']);
+    }
+
+    /**
+     * Checks if Element's dependent_attributes's attribute has a sub-element.
+     *
+     * @param $schema
+     * @param $mandatoryAttribute
+     * @return bool
+     */
+    public function checkIfDependentMandatoryAttributeContainsSubelement($schema, $mandatoryAttribute): bool
+    {
+        return array_key_exists('sub_element', $schema['dependent_attributes'][$mandatoryAttribute])
+            && !empty($schema['dependent_attributes'][$mandatoryAttribute]['sub_element']);
+    }
+
+    /**
+     * Returns Dependent Mandatory Attribute's sub-elements's attribute schema.
+     *
+     * @param $schema
+     * @param $mandatoryAttribute
+     * @return mixed
+     */
+    protected function getAttributeSchemaOfDependentMandatoryAttributeSubelement($schema, $mandatoryAttribute): mixed
+    {
+        return $schema['sub_elements'][$schema['dependent_attributes'][$mandatoryAttribute]['sub_element']]['attributes'];
+    }
+
+    /**
+     * Checks if child field is set when parent is set.
+     *
+     * @param $data
+     * @param $mandatoryAttribute
+     * @return bool
+     */
+    protected function isIncompleteWhenParentFieldIsSet($data, $mandatoryAttribute): bool
+    {
+        if (is_string($data)) {
+            return false;
+        }
+
+        $keyDoesntExists = !array_key_exists($mandatoryAttribute, $data);
+        $valueIsEmpty = empty($data[$mandatoryAttribute]);
+        $valueNotZero = isset($data[$mandatoryAttribute]) && $data[$mandatoryAttribute] !== 0;
+
+        return $keyDoesntExists || ($valueIsEmpty && $valueNotZero);
+    }
+
+    /**
+     * Checks if child field is set when parent is not set.
+     *
+     * @param $data
+     * @param $schema
+     * @return bool
+     */
+    protected function isIncompleteWhenParentFieldIsNotSet($data, $schema): bool
+    {
+        if (is_string($data)) {
+            if (empty($data)) {
+                return true;
+            }
+
+            return false;
+        }
+
+        $defaultAttribute = Arr::get($schema, 'default_attribute', false);
+        $doesChildHaveDefaultField = $defaultAttribute && array_key_exists($defaultAttribute, $data);
+        $isChildDefaultFieldEmpty = $defaultAttribute && empty($data[$schema['default_attribute']]);
+
+        return $doesChildHaveDefaultField && $isChildDefaultFieldEmpty;
+    }
+
+    /**
+     * Checks if PARENT field is broken when dealing with parents that have dependent child
+     * Example for broken case:
+     * User selects xyz_vocabulary >> selects proper code,
+     * THEN clears xyz_vocabulary from UI, still retaining code in the form,
+     * Proceeds to save. This is a broken case.
+     * (happens in some cases only).
+     *
+     * @param $data
+     * @param $schema
+     * @param $mandatoryAttribute
+     * @param $parentName
+     * @param $mandatoryAttributes
+     * @return bool
+     */
+    protected function brokenParentChildRelationShip($data, $schema, $mandatoryAttribute, $parentName, $mandatoryAttributes): bool
+    {
+        $defaultAttribute = Arr::get($schema, 'default_attribute', false);
+
+        if ($defaultAttribute && $mandatoryAttribute !== $defaultAttribute) {
+            foreach ($data as $key => $datum) {
+                if ($key === $mandatoryAttribute) {
+                    if (isset($data[$parentName]) && $data[$parentName] && isset($data[$mandatoryAttribute]) && $data[$mandatoryAttribute]) {
+                        return false;
+                    }
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Checks if Attribute data is completed.
      *
      * @param $mandatoryAttributes
@@ -100,33 +217,47 @@ trait ElementCompleteServiceTrait
     public function checkAttributeDataStatus($mandatoryAttributes, $data, $schema): bool
     {
         foreach ($mandatoryAttributes as $mandatoryAttribute) {
-            if (array_key_exists('dependent_attributes', $schema) && array_key_exists($mandatoryAttribute, $schema['dependent_attributes'])) {
-                $parentLevel = $schema['attributes'];
+            if ($this->checkIfDependentAttributesExistAndContainsSpecifiedMandatoryAttribute($schema, $mandatoryAttribute)) {
+                $parentLevelAttributes = $schema['attributes'];
 
-                if (
-                    array_key_exists('sub_element', $schema['dependent_attributes'][$mandatoryAttribute])
-                    && !empty($schema['dependent_attributes'][$mandatoryAttribute]['sub_element'])
-                ) {
-                    $parentLevel = $schema['sub_elements'][$schema['dependent_attributes'][$mandatoryAttribute]['sub_element']]['attributes'];
+                if ($this->checkIfDependentMandatoryAttributeContainsSubelement($schema, $mandatoryAttribute)) {
+                    $parentLevelAttributes = $this->getAttributeSchemaOfDependentMandatoryAttributeSubelement($schema, $mandatoryAttribute);
                 }
 
-                $parent = $parentLevel[$mandatoryAttribute]['parent'];
+                $parentArray = $parentLevelAttributes[$mandatoryAttribute]['parent'];
+                $parentName = $parentArray['name'];
+                $possibleValuesAllowedInParent = $parentArray['value'];
+                $parentDataFromForm = false;
+
+                if (is_array($data)) {
+                    $parentDataFromForm = $data[$parentName] ?? false;
+                }
 
                 /*checks if parent attribute have specific value for child attribute to be relevant*/
-                if (!in_array($data[$parent['name']], $parent['value'], true)) {
+                if ($parentDataFromForm && !in_array($parentDataFromForm, $possibleValuesAllowedInParent, true)) {
+                    if ($this->brokenParentChildRelationShip($data, $schema, $mandatoryAttribute, $parentName, $mandatoryAttributes)) {
+                        return false;
+                    }
+
                     continue;
                 }
             }
 
-            if (!array_key_exists($mandatoryAttribute, $data)|| (empty($data[$mandatoryAttribute]) && $data[$mandatoryAttribute] !== 0)) {
+            if ($this->isIncompleteWhenParentFieldIsSet($data, $mandatoryAttribute)) {
                 return false;
             }
+        }
+
+        if ($this->isIncompleteWhenParentFieldIsNotSet($data, $schema)) {
+            return false;
         }
 
         return true;
     }
 
     /**
+     * Returns mandatory fields.
+     *
      * @param       $fields
      * @param array $mandatoryFields
      *
@@ -397,7 +528,7 @@ trait ElementCompleteServiceTrait
     }
 
     /**
-     * Sets Amoount.
+     * Sets Amount.
      *
      * @param string $key
      * @param $datum

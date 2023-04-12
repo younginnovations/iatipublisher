@@ -555,6 +555,7 @@
       "sdg_goal": {},
       "sdg_target": {}
     },
+    "default_attribute": "text",
     "attributes": {
       "sector_vocabulary": {
         "name": "sector_vocabulary",
@@ -709,6 +710,7 @@
       "tag_text": {},
       "vocabulary_uri": {}
     },
+    "default_attribute": "tag_text",
     "attributes": {
       "tag_vocabulary": {
         "name": "tag_vocabulary",
@@ -826,6 +828,7 @@
       "policy_marker": {},
       "policy_marker_text": {}
     },
+    "default_attribute": "policy_marker_text",
     "attributes": {
       "policy_marker_vocabulary": {
         "name": "policy_marker_vocabulary",
@@ -1240,7 +1243,7 @@
         "name": "code",
         "label": "code",
         "type": "text",
-        "placeholder": "Select code",
+        "placeholder": "Type code",
         "required": true,
         "criteria": "mandatory",
         "hover_text": "A code for the event or action from the vocabulary specified.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/humanitarian-scope/'>For more information</a>",
@@ -2011,8 +2014,8 @@
             "label": "narrative",
             "type": "textarea",
             "placeholder": "Type narrative here",
-            "required": false,
-            "criteria": "",
+            "required": true,
+            "criteria": "mandatory",
             "add_more": true,
             "attr": {
               "row": 4

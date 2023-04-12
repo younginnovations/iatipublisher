@@ -40,34 +40,34 @@ class TransactionObserver
      */
     public function updateActivityElementStatus($transaction): void
     {
-        $activityObj                        = $transaction->activity;
-        $elementStatus                      = $activityObj->element_status;
-        $elementStatus['transactions']      = $this->elementCompleteService->isTransactionsElementCompleted($transaction->activity);
-        $isSectorFilledInActivityLevel      = !is_array_value_empty($activityObj->sector);
-        $isSectorCompletedInActivityLevel   = Arr::get($elementStatus, 'sector', false);
-        $transactionService                 = app()->make(TransactionService::class);
-        $isSectorFilledInTransactionLevel   = $transactionService->checkIfTransactionHasElementDefined($activityObj, 'sector');
+        $activityObj = $transaction->activity;
+        $elementStatus = $activityObj->element_status;
+        $elementStatus['transactions'] = $this->elementCompleteService->isTransactionsElementCompleted($transaction->activity);
+        $isSectorFilledInActivityLevel = !is_array_value_empty($activityObj->sector);
+        $isSectorCompletedInActivityLevel = Arr::get($elementStatus, 'sector', false);
+        $transactionService = app()->make(TransactionService::class);
+        $isSectorFilledInTransactionLevel = $transactionService->checkIfTransactionHasElementDefined($activityObj, 'sector');
         $isSectorCompleteInTransactionLevel = $this->elementCompleteService->isSectorElementCompleted(new Activity(['sector' => $transaction->transaction]));
 
         switch([
             $isSectorFilledInActivityLevel,
             $isSectorCompletedInActivityLevel,
             $isSectorFilledInTransactionLevel,
-            $isSectorCompleteInTransactionLevel
-        ]){
-            case [0,0,1,1]:
-            case [0,1,1,1]:
-            case [1,0,1,1]:
-            case [1,1,0,0]:
-            case [1,1,0,1]:
-            case [1,1,1,0]:
-            case [1,1,1,1]:
+            $isSectorCompleteInTransactionLevel,
+        ]) {
+            case [0, 0, 1, 1]:
+            case [0, 1, 1, 1]:
+            case [1, 0, 1, 1]:
+            case [1, 1, 0, 0]:
+            case [1, 1, 0, 1]:
+            case [1, 1, 1, 0]:
+            case [1, 1, 1, 1]:
                 $elementStatus['sector'] = true;
                 break;
             default:
                 $elementStatus['sector'] = false;
                 break;
-    }
+        }
 
         if (is_array_value_empty($transaction->transaction['recipient_region']) || is_array_value_empty($transaction->transaction['recipient_country'])) {
             $elementStatus['recipient_region'] = true;

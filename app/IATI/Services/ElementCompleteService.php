@@ -536,6 +536,10 @@ class ElementCompleteService
     {
         $this->element = 'conditions';
 
+        if ($activity->conditions['condition_attached'] == 0) {
+            return true;
+        }
+
         return $this->isLevelTwoSingleDimensionElementCompleted($activity->conditions);
     }
 

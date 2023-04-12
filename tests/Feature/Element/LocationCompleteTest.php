@@ -514,7 +514,7 @@ class LocationCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
     }
 
     /**
@@ -532,7 +532,7 @@ class LocationCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
     }
 
     /**
@@ -1076,7 +1076,7 @@ class LocationCompleteTest extends ElementCompleteTest
     }
 
     /**
-     * Sub element feature_designation attirbute code empty test.
+     * Sub element feature_designation attribute code empty test.
      *
      * @return void
      * @throws \JsonException
@@ -1094,7 +1094,7 @@ class LocationCompleteTest extends ElementCompleteTest
     }
 
     /**
-     * Location element compelete test.
+     * Location element complete test.
      *
      * @return void
      * @throws \JsonException
