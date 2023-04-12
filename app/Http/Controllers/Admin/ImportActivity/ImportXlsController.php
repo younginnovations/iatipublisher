@@ -73,6 +73,63 @@ class ImportXlsController extends Controller
     public function index(): View|JsonResponse|RedirectResponse
     {
         try {
+            // dd(awsHasFile('XlsImporter/tmp/1/2/status.json'));
+            // $elements = readElementJsonSchema();
+            // $final = [];
+
+            // foreach ($elements as $elementName => $content) {
+            //     $attributes = $this->getAttributes(Arr::get($content, 'attributes', []));
+            //     $subElements = $this->getSubElements(Arr::get($content, 'sub_elements', []));
+
+            //     foreach ($subElements as $key => $value) {
+            //         $attributes[$key] = $value;
+            //     }
+
+            //     $final[$elementName] = $attributes;
+            // }
+
+            // dd(json_encode($final));
+
+            // $this->getLinearizedElement();
+
+            // $data = getCodeList('FileFormat', 'Activity', false);
+            // $data = json_encode(getCodeList('Region', 'Activity'));
+            // test
+//             $data = file_get_contents(app_path() . '/XlsImporter/Templates/test.json');
+//             $activityMapper = new Activity();
+//             $activityMapper->map($data);
+            // $org_id = Auth::user()->organization->id;
+            // $xlsType = "indicator";
+            // dd($this->importXlsService->dbIatiIdentifiers($org_id, $xlsType));
+
+            // period
+
+            // $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
+            // $data = json_decode($data, true, 512, 0);
+            // $periodMapper = new Period();
+            // $periodMapper->map($data);
+
+            // indicator
+
+            // $data = file_get_contents(app_path() . '/XlsImporter/Templates/indicator.json');
+            // $data = json_decode($data, true, 512, 0);
+            // $indicatorMapper = new Indicator();
+            // $indicatorMapper->map($data);
+            $data = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
+            $data = json_decode($data, true, 512, 0);
+            $resultMapper = new Result();
+            $resultMapper->map($data);
+
+            //            $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
+//            $periodMapper = new Period();
+//            $periodMapper->map($data);
+
+            // $periodMapper
+
+            //            $resultData = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
+//            $resultMapper = new Result();
+//            $resultMapper->map($resultData);
+
             if (!Auth::user()->organization_id) {
                 Session::put('error', 'User is not associated with any organization.');
 

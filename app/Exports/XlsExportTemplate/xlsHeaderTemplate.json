@@ -1,0 +1,955 @@
+{
+  "settings": {
+    "activity_identifier": "activity_identifier",
+    "default_currency": "default_currency",
+    "default_language": "default_language",
+    "hierarchy": "hierarchy",
+    "humanitarian": "humanitarian",
+    "budget_not_provided": "budget_not_provided",
+    "secondary_reporter": "secondary_reporter"
+  },
+  "element_with_single_field": {
+    "activity_identifier": "activity_identifier",
+    "activity_status": {
+      "index": "activity_status",
+      "color_code": "f6b26b"
+    },
+    "activity_scope": {
+      "index": "activity_scope",
+      "color_code": "f6b26b"
+    },
+    "collaboration_type": {
+      "index": "collaboration_type",
+      "color_code": "f6b26b"
+    },
+    "default_flow_type": {
+      "index": "default_flow_type",
+      "color_code": "f6b26b"
+    },
+    "default_finance_type": {
+      "index": "default_finance_type",
+      "color_code": "f6b26b"
+    },
+    "default_tied_status": {
+      "index": "default_tied_status",
+      "color_code": "f6b26b"
+    },
+    "capital_spend": {
+      "index": "capital_spend",
+      "color_code": "f6b26b"
+    }
+  },
+  "title": {
+    "activity_identifier": "activity_identifier",
+    "narrative": {
+      "index": "narrative",
+      "color_code": "d9d9d9"
+    },
+    "language": "language"
+  },
+  "reporting_org": {
+    "ref": "reference",
+    "type": "type",
+    "secondary_reporter": "secondary reporter",
+    "narrative narrative": "narrative_narrative",
+    "narrative language": "narrative_language"
+  },
+  "iati_identifier": {
+    "activity_identifier": "activity-identifier",
+    "iati_identifier_text": "iati identifier"
+  },
+  "other_identifier": {
+    "activity_identifier": "activity_identifier",
+    "reference": {
+      "index": "reference"
+    },
+    "reference_type": {
+      "index": "type"
+    },
+    "owner_org ref": {
+      "index": "owner_org_reference",
+      "color_code": "f6b26b"
+    },
+    "owner_org narrative narrative": {
+      "index" : "owner_org_narrative",
+      "color_code": "6fa8dc"
+    },
+    "owner_org narrative language": {
+      "index": "owner_org_language",
+      "color_code": "f6b26b"
+    }
+  },
+  "description": {
+    "activity_identifier": "activity_identifier",
+    "type": {
+      "index": "type",
+      "color_code": "f6b26b"
+    },
+    "narrative narrative": {
+      "index": "narrative",
+      "color_code": "d9d9d9"
+    },
+    "narrative language": {
+      "index": "language",
+      "color_code": "f6b26b"
+    }
+  },
+  "activity_status": {
+    "activity_status": "code"
+  },
+  "activity_date": {
+    "activity_identifier": "activity_identifier",
+    "type": {
+      "index": "type",
+      "color_code": "f6b26b"
+    },
+    "date": "iso_date",
+    "narrative narrative": {
+      "index": "narrative",
+      "color_code": "d9d9d9"
+    },
+    "narrative language": {
+      "index": "language",
+      "color_code": "f6b26b"
+    }
+  },
+  "activity_scope": {
+    "activity_scope": "code"
+  },
+  "recipient_country": {
+    "activity_identifier": "activity_identifier",
+    "country_code": "code",
+    "percentage": {
+      "index": "percentage",
+      "color_code": "f6b26b"
+    },
+    "narrative narrative": {
+      "index": "narrative",
+      "color_code": "d9d9d9"
+    },
+    "narrative language": {
+      "index": "language",
+      "color_code": "f6b26b"
+    }
+  },
+  "recipient_region": {
+    "activity_identifier": "activity_identifier",
+    "region_vocabulary": "vocabulary",
+    "code": {
+      "index": "code",
+      "color_code": "f6b26b"
+    },
+    "vocabulary_uri": {
+      "index": "vocabulary_uri",
+      "color_code": "f6b26b"
+    },
+    "percentage": {
+      "index": "percentage",
+      "color_code": "f6b26b"
+    },
+    "narrative narrative": {
+      "index": "narrative",
+      "color_code": "d9d9d9"
+    },
+    "narrative language": {
+      "index": "language",
+      "color_code": "f6b26b"
+    }
+  },
+  "sector": {
+    "activity_identifier": "activity_identifier",
+    "sector_vocabulary": {
+      "index": "vocabulary",
+      "color_code": "f6b26b"
+    },
+    "code": "code",
+    "vocabulary_uri": {
+      "index": "vocabulary_uri",
+      "color_code": "f6b26b"
+    },
+    "percentage": {
+      "index": "percentage",
+      "color_code": "f6b26b"
+    },
+    "narrative narrative": {
+      "index": "narrative",
+      "color_code": "6fa8dc"
+    },
+    "narrative language": {
+      "index": "language",
+      "color_code": "f6b26b"
+    }
+  },
+  "tag": {
+    "activity_identifier": "activity_identifier",
+    "tag_vocabulary": {
+      "index": "vocabulary",
+      "color_code": "f6b26b"
+    },
+    "code": "code",
+    "vocabulary_uri": {
+      "index": "vocabulary_uri",
+      "color_code": "f6b26b"
+    },
+    "narrative narrative": {
+      "index": "narrative",
+      "color_code": "6fa8dc"
+    },
+    "narrative language": {
+      "index": "language",
+      "color_code": "f6b26b"
+    }
+  },
+  "policy_marker": {
+    "activity_identifier": "activity_identifier",
+    "policy_marker_vocabulary": {
+      "index": "vocabulary",
+      "color_code": "f6b26b"
+    },
+    "code": "code",
+    "vocabulary_uri": {
+      "index": "vocabulary_uri",
+      "color_code": "f6b26b"
+    },
+    "significance": {
+      "index": "significance",
+      "color_code": "f6b26b"
+    },
+    "narrative narrative": {
+      "index": "narrative",
+      "color_code": "6fa8dc"
+    },
+    "narrative language": {
+      "index": "language",
+      "color_code": "f6b26b"
+    }
+  },
+  "collaboration_type": {
+    "collaboration_type": "code"
+  },
+  "default_flow_type": {
+    "default_flow_type": "code"
+  },
+  "default_finance_type": {
+    "default_finance_type": "code"
+  },
+  "default_aid_type": {
+    "activity_identifier": "activity_identifier",
+    "default_aid_type_vocabulary": {
+      "index": "vocabulary",
+      "color_code": "f6b26b"
+    },
+    "code": "code"
+  },
+  "default_tied_status": {
+    "default_tied_status": "code"
+  },
+  "country_budget_items": {
+    "activity_identifier": "activity_identifier",
+    "country_budget_vocabulary": "vocabulary",
+    "budget_item code": "budget_item_code",
+    "budget_item percentage": {
+      "index": "budget_item_percentage",
+      "color_code": "f6b26b"
+    },
+    "budget_item description narrative narrative": {
+      "index": "budget_item_description_narrative",
+      "color_code": "d9d9d9 "
+    },
+    "budget_item description narrative language": {
+      "index": "budget_item_description_language",
+      "color_code": "f6b26b"
+    }
+  },
+  "humanitarian_scope": {
+    "activity_identifier": "activity_identifier",
+    "type": "type",
+    "vocabulary": "vocabulary",
+    "vocabulary_uri": {
+      "index": "vocabulary_uri",
+      "color_code": "f6b26b"
+    },
+    "code": {
+      "index": "code",
+      "color_code": "f6b26b"
+    },
+    "narrative narrative": {
+      "index": "narrative",
+      "color_code": "d9d9d9 "
+    },
+    "narrative language": {
+      "index": "language",
+      "color_code": "f6b26b"
+    }
+  },
+  "capital_spend": {
+    "capital_spend": "percentage"
+  },
+  "related_activity": {
+    "activity_identifier": "activity_identifier",
+    "reference": "reference",
+    "relationship_type": "type"
+  },
+  "conditions": {
+    "activity_identifier": "activity_identifier",
+    "condition_attached": "attached",
+    "condition condition_type": {
+      "index": "condition_type",
+      "color_code": "f6b26b"
+    },
+    "condition narrative narrative": {
+      "index": "condition_narrative",
+      "color_code": "d9d9d9 "
+    },
+    "condition narrative language": {
+      "index": "condition_language",
+      "color_code": "f6b26b"
+    }
+  },
+  "legacy_data": {
+    "activity_identifier": "activity_identifier",
+    "legacy_name": "name",
+    "value": {
+      "index": "value",
+      "color_code": "f6b26b"
+    },
+    "iati_equivalent": {
+      "index": "iati_equivalent",
+      "color_code": "d9d9d9 "
+    }
+  },
+  "document_link": {
+    "activity_identifier": "activity_identifier",
+    "url": "url",
+    "format": "format",
+    "title narrative narrative": {
+      "index": "title_narrative",
+      "color_code": "d9d9d9 "
+    },
+    "title narrative language": {
+      "index": "title_language",
+      "color_code": "f6b26b"
+    },
+    "description narrative narrative": {
+      "index": "description_narrative",
+      "color_code": "d9d9d9 "
+    },
+    "description narrative language": {
+      "index": "description_language",
+      "color_code": "f6b26b"
+    },
+    "category code": "category_code",
+    "language code": {
+      "index": "language_code",
+      "color_code": "f6b26b"
+    },
+    "document_date date": "document_date_date"
+  },
+  "contact_info": {
+    "activity_identifier": "activity_identifier",
+    "type": "type",
+    "organisation narrative narrative": {
+      "index": "organisation_narrative",
+      "color_code": "d9d9d9 "
+    },
+    "organisation narrative language": {
+      "index": "organisation_language",
+      "color_code": "f6b26b"
+    },
+    "department narrative narrative": {
+      "index": "department_narrative",
+      "color_code": "d9d9d9 "
+    },
+    "department narrative language": {
+      "index": "department_language",
+      "color_code": "f6b26b"
+    },
+    "person_name narrative narrative": {
+      "index": "person_name_narrative",
+      "color_code": "d9d9d9 "
+    },
+    "person_name narrative language": {
+      "index": "person_name_language",
+      "color_code": "f6b26b"
+    },
+    "job_title narrative narrative": {
+      "index": "job_title_narrative",
+      "color_code": "d9d9d9 "
+    },
+    "job_title narrative language": {
+      "index": "job_title_language",
+      "color_code": "f6b26b"
+    },
+    "telephone telephone": "telephone",
+    "email email": "email",
+    "website website": "website",
+    "mailing_address narrative narrative": "mailing_address_narrative",
+    "mailing_address narrative language": {
+      "index": "mailing_address_language",
+      "color_code": "f6b26b"
+    }
+  },
+  "location": {
+    "activity_identifier": "activity_identifier",
+    "ref": {
+      "index": "reference",
+      "color_code": "f6b26b"
+    },
+    "location_reach code": "location_reach_code",
+    "location_id vocabulary": "location_id_vocabulary",
+    "location_id code": "location_id_code",
+    "name narrative narrative": {
+      "index": "name_narrative",
+      "color_code": "d9d9d9 "
+    },
+    "name narrative language": {
+      "index": "name_language",
+      "color_code": "f6b26b"
+    },
+    "description narrative narrative": {
+      "index": "description_narrative",
+      "color_code": "d9d9d9 "
+    },
+    "description narrative language": {
+      "index": "description_language",
+      "color_code": "f6b26b"
+    },
+    "activity_description narrative narrative": {
+      "index": "activity_description_narrative",
+      "color_code": "d9d9d9 "
+    },
+    "activity_description narrative language": {
+      "index": "activity_description_language",
+      "color_code": "f6b26b"
+    },
+    "administrative vocabulary": "administrative_vocabulary",
+    "administrative code": "administrative_code",
+    "administrative level": {
+      "index": "administrative_level",
+      "color_code": "f6b26b"
+    },
+    "point srs_name": "point_srs_name",
+    "point pos latitude": "point_pos_latitude",
+    "point pos longitude": "point_pos_longitude",
+    "exactness code": "exactness_code",
+    "location_class code": "location_class_code",
+    "feature_designation code": "feature_designation_code"
+  },
+  "planned_disbursement": {
+    "activity_identifier": "activity_identifier",
+    "planned_disbursement_type": "type",
+    "period_start date": {
+      "index": "period_start_iso_date",
+      "color_code": "d9d9d9 "
+    },
+    "period_end date": {
+      "index": "period_end_iso_date",
+      "color_code": "f6b26b"
+    },
+    "value amount": {
+      "index": "value_value",
+      "color_code": "d9d9d9 "
+    },
+    "value currency": {
+      "index": "value_currency",
+      "color_code": "f6b26b"
+    },
+    "value value_date": {
+      "index": "value_date",
+      "color_code": "d9d9d9 "
+    },
+    "provider_org ref": {
+      "index": "provider_organisation_reference",
+      "color_code": "f6b26b"
+    },
+    "provider_org provider_activity_id": {
+      "index": "provider_organisation_provider_activity_id",
+      "color_code": "d9d9d9 "
+    },
+    "provider_org type": {
+      "index": "provider_organisation_type",
+      "color_code": "f6b26b"
+    },
+    "provider_org narrative narrative": {
+      "index": "provider_organisation_narrative",
+      "color_code": "d9d9d9 "
+    },
+    "provider_org narrative language": {
+      "index": "provider_organisation_language",
+      "color_code": "f6b26b"
+    },
+    "receiver_org ref": {
+      "index": "receiver_organisation_reference",
+      "color_code": "f6b26b"
+    },
+    "receiver_org receiver_activity_id": {
+      "index": "receiver_organisation_receiver_activity_id",
+      "color_code": "d9d9d9 "
+    },
+    "receiver_org type": {
+      "index": "receiver_organisation_type",
+      "color_code": "f6b26b"
+    },
+    "receiver_org narrative narrative": {
+      "index": "receiver_organisation_narrative",
+      "color_code": "d9d9d9 "
+    },
+    "receiver_org narrative language": {
+      "index": "receiver_organisation_language",
+      "color_code": "f6b26b"
+    }
+  },
+  "participating_org": {
+    "activity_identifier": "activity_identifier",
+    "organization_role": "role",
+    "ref": "reference",
+    "type": {
+      "index": "type",
+      "color_code": "f6b26b"
+    },
+    "identifier": {
+      "index": "activity_id",
+      "color_code": "d9d9d9 "
+    },
+    "crs_channel_code": {
+      "index": "crs_channel_code",
+      "color_code": "f6b26b"
+    },
+    "narrative narrative": {
+      "index": "narrative",
+      "color_code": "d9d9d9 "
+    },
+    "narrative language": {
+      "index": "language",
+      "color_code": "f6b26b"
+    }
+  },
+  "budget": {
+    "activity_identifier": "activity_identifier",
+    "budget_status": "status",
+    "budget_type": "type",
+    "period_start date": {
+      "index": "period_start_iso_date",
+      "color_code": "f6b26b"
+    },
+    "period_end date": {
+      "index": "period_end_iso_date",
+      "color_code": "d9d9d9 "
+    },
+    "budget_value amount": {
+      "index": "value",
+      "color_code": "f6b26b"
+    },
+    "budget_value currency": {
+      "index": "value_currency",
+      "color_code": "d9d9d9 "
+    },
+    "budget_value value_date": {
+      "index": "value_value_date",
+      "color_code": "f6b26b"
+    }
+  },
+  "result_mapper": {
+    "activity_identifier": "activity_identifier",
+    "result_code": "result_code",
+    "result_identifier": "result_identifier"
+  },
+  "result": {
+    "result_identifier": "result_identifier",
+    "type": "type",
+    "aggregation_status": {
+      "index": "aggregation_status",
+      "color_code": "f6b26b"
+    },
+    "title narrative narrative": {
+      "index": "title_narrative",
+      "color_code": "d9d9d9"
+    },
+    "title narrative language": {
+      "index": "title_language",
+      "color_code": "f6b26b"
+    },
+    "description narrative narrative": {
+      "index": "description_narrative",
+      "color_code": "d9d9d9"
+    },
+    "description narrative language": {
+      "index": "description_narrative",
+      "color_code": "f6b26b"
+    },
+    "reference vocabulary": "reference_vocabulary",
+    "reference code": "reference_code",
+    "reference vocabulary_uri": {
+      "index": "reference_vocabulary_uri",
+      "color_code": "f6b26b"
+    }
+  },
+  "result document_link": {
+    "result_identifier": "result_identifier",
+    "url": "url",
+    "format": "format",
+    "title narrative narrative": {
+      "index": "title_narrative",
+      "color_code": "d9d9d9"
+    },
+    "title narrative language": {
+      "index": "title_language",
+      "color_code": "f6b26b"
+    },
+    "description narrative narrative": {
+      "index": "description_narrative",
+      "color_code": "f6b26b"
+    },
+    "description narrative language": "description_language",
+    "category code": "category_code",
+    "language language": "language_code",
+    "document_date date": "document_date_date"
+  },
+  "indicator": {
+    "indicator_identifier": "indicator_identifier",
+    "measure": "measure",
+    "ascending": {
+      "index": "ascending",
+      "color_code": "f6b26b"
+    },
+    "aggregation_status": {
+      "index": "aggregation_status",
+      "color_code": "f6b26b"
+    },
+    "title narrative narrative": {
+      "index": "title_narrative",
+      "color_code": "d9d9d9"
+    },
+    "title narrative language": {
+      "index": "title_language",
+      "color_code": "f6b26b"
+    },
+    "description narrative narrative": {
+      "index": "description_narrative",
+      "color_code": "d9d9d9"
+    },
+    "description narrative language": {
+      "index": "description_language",
+      "color_code": "f6b26b"
+    },
+    "reference vocabulary": "reference_vocabulary",
+    "reference code": "reference_code",
+    "reference indicator_uri": "reference_indicator_uri"
+  },
+  "indicator document_link": {
+    "indicator_identifier": "indicator_identifier",
+    "url": "url",
+    "format": "format",
+    "title narrative narrative": {
+      "index": "title_narrative",
+      "color_code": "d9d9d9"
+    },
+    "title narrative language": {
+      "index": "title_language",
+      "color_code": "f6b26b"
+    },
+    "description narrative narrative": {
+      "index": "description_narrative",
+      "color_code": "d9d9d9"
+    },
+    "description narrative language": {
+      "index": "description_language",
+      "color_code": "f6b26b"
+    },
+    "category code": "category_code",
+    "language code": "language_code",
+    "document_date date": "document_date_date"
+  },
+  "baseline": {
+    "indicator_baseline_identifier": "indicator_baseline_identifier",
+    "year": "year",
+    "date": {
+      "index": "date",
+      "color_code": "f6b26b"
+    },
+    "value": {
+      "index": "value",
+      "color_code": "f6b26b"
+    },
+    "comment narrative narrative": {
+      "index": "comment_narrative",
+      "color_code": "d9d9d9"
+    },
+    "comment narrative language": {
+      "index": "comment_language",
+      "color_code": "f6b26b"
+    },
+    "dimension name": {
+      "index": "dimension_name",
+      "color_code": "f6b26b"
+    },
+    "dimension value": {
+      "index": "dimension_value",
+      "color_code": "f6b26b"
+    },
+    "location reference": "location_reference"
+  },
+  "baseline document_link": {
+    "indicator_baseline_identifier": "indicator_baseline_identifier",
+    "url": "url",
+    "format": "format",
+    "title narrative narrative": {
+      "index": "title_narrative",
+      "color_code": "d9d9d9"
+    },
+    "title narrative language": {
+      "index": "title_language",
+      "color_code": "6fa8dc"
+    },
+    "description narrative narrative": {
+      "index": "description_narrative",
+      "color_code": "d9d9d9"
+    },
+    "description narrative language": {
+      "index": "description_language",
+      "color_code": "6fa8dc"
+    },
+    "category code": "category_code",
+    "language code": "language_code",
+    "document_date date": "document_date_date"
+  },
+  "period": {
+    "period_identifier": "period_identifier",
+    "period_start date": "period_start_iso_date",
+    "period_end date": "period_end_iso_date"
+  },
+  "target": {
+    "target_identifier": "target_identifier",
+    "value": "value",
+    "comment narrative narrative": {
+      "index": "comment_narrative",
+      "color_code": "d9d9d9"
+    },
+    "comment narrative language": {
+      "index": "comment_language",
+      "color_code": "f6b26b"
+    },
+    "dimension name": {
+      "index": "dimension_name",
+      "color_code": "f6b26b"
+    },
+    "dimension value": {
+      "index": "dimension_value",
+      "color_code": "f6b26b"
+    },
+    "location reference": "location_reference"
+  },
+  "target document_link": {
+    "target_identifier": "target_identifier",
+    "url": "url",
+    "format": "format",
+    "title narrative narrative": {
+      "index": "title_narrative",
+      "color_code": "d9d9d9"
+    },
+    "title narrative language": {
+      "index": "title_language",
+      "color_code": "f6b26b"
+    },
+    "description narrative narrative": {
+      "index": "description_narrative",
+      "color_code": "d9d9d9"
+    },
+    "description narrative language": {
+      "index": "description_language",
+      "color_code": "f6b26b"
+    },
+    "category code": "category_code",
+    "language code": "language_code",
+    "document_date date": "document_date_date"
+  },
+  "actual": {
+    "actual_identifier": "actual_identifier",
+    "value": {
+      "index": "value",
+      "color_code": "f6b26b"
+    },
+    "comment narrative narrative": {
+      "index": "comment_narrative",
+      "color_code": "d9d9d9"
+    },
+    "comment narrative language": {
+      "index": "comment_language",
+      "color_code": "f6b26b"
+    },
+    "dimension name": {
+      "index": "dimension_name",
+      "color_code": "f6b26b"
+    },
+    "dimension value": {
+      "index": "dimension_value",
+      "color_code": "f6b26b"
+    },
+    "location reference": "location_reference"
+  },
+  "actual document_link": {
+    "actual_identifier": "actual_identifier",
+    "url": "url",
+    "format": "format",
+    "title narrative narrative": {
+      "index": "title_narrative",
+      "color_code": "d9d9d9"
+    },
+    "title narrative language": {
+      "index": "title_language",
+      "color_code": "f6b26b"
+    },
+    "description narrative narrative": {
+      "index": "description_narrative",
+      "color_code": "d9d9d9"
+    },
+    "description narrative language": {
+      "index": "description_language",
+      "color_code": "f6b26b"
+    },
+    "category code": "category_code",
+    "language code": "language_code",
+    "document_date date": "document_date_date"
+  },
+  "transactions": {
+    "activity_identifier": "activity_identifier",
+    "reference": {
+      "index": "reference",
+      "color_code": "f6b26b"
+    },
+    "humanitarian": {
+      "index": "humanitarian",
+      "color_code": "f6b26b"
+    },
+    "transaction_type transaction_type_code": "transaction_type_code",
+    "transaction_date date": "transaction_date_date",
+    "value amount": "value_value",
+    "value date": "value_value_date",
+    "value currency": "value_currency",
+    "description narrative narrative": {
+      "index": "description_narrative",
+      "color_code": "d9d9d9"
+    },
+    "description narrative language": {
+      "index": "description_language",
+      "color_code": "f6b26b"
+    },
+    "provider_organization organization_identifer_code": {
+      "index": "provider_organisation_reference",
+      "color_code": "f6b26b"
+    },
+    "provider_organization provider_activity_id": {
+      "index": "provider_organisation_provider_activity_id",
+      "color_code": "f6b26b"
+    },
+    "provider_organization type": {
+      "index": "provider_organisation_type",
+      "color_code": "f6b26b"
+    },
+    "provider_organization narrative narrative": {
+      "index": "provider_organisation_narrative",
+      "color_code": "6fa8dc"
+    },
+    "provider_organization narrative language": {
+      "index": "provider_organisation_language",
+      "color_code": "f6b26b"
+    },
+    "receiver_organization organization_identifier_code": {
+      "index": "receiver_organisation_reference",
+      "color_code": "f6b26b"
+    },
+    "receiver_organization receiver_activity_id": {
+      "index": "receiver_organisation_receiver_activity_id",
+      "color_code": "f6b26b"
+    },
+    "receiver_organization type": {
+      "index": "receiver_organisation_type",
+      "color_code": "f6b26b"
+    },
+    "receiver_organization narrative narrative": {
+      "index": "receiver_organisation_narrative",
+      "color_code": "6fa8dc"
+    },
+    "receiver_organization narrative language": {
+      "index": "receiver_organisation_language",
+      "color_code": "f6b26b"
+    },
+    "disbursement_channel disbursement_channel_code": "disbursement_channel_code",
+    "sector sector_vocabulary": {
+      "index": "sector_vocabulary",
+      "color_code": "f6b26b"
+    },
+    "sector vocabulary_uri": {
+      "index": "sector_vocabulary_uri",
+      "color_code": "f6b26b"
+    },
+    "sector code": "sector_code",
+    "sector narrative narrative": {
+      "index": "sector_narrative",
+      "color_code": "6fa8dc"
+    },
+    "sector narrative language": {
+      "index": "sector_language",
+      "color_code": "f6b26b"
+    },
+    "recipient_country country_code": "recipient_country_code",
+    "recipient_country narrative narrative": {
+      "index": "recipient_country_narrative",
+      "color_code": "6fa8dc"
+    },
+    "recipient_country narrative language": {
+      "index": "recipient_country_language",
+      "color_code": "f6b26b"
+    },
+    "recipient_region region_vocabulary": {
+      "index": "recipient_region_vocabulary",
+      "color_code": "f6b26b"
+    },
+    "recipient_region code": "recipient_region_code",
+    "recipient_region vocabulary_uri": {
+      "index": "recipient_region_vocabulary_uri",
+      "color_code": "f6b26b"
+    },
+    "recipient_region narrative narrative": {
+      "index": "recipient_region_narrative",
+      "color_code": "6fa8dc"
+    },
+    "recipient_region narrative language": {
+      "index": "recipient_region_language",
+      "color_code": "f6b26b"
+    },
+    "flow_type flow_type": "flow_type_code",
+    "finance_type finance_type": "finance_type_code",
+    "aid_type aid_type_vocabulary": {
+      "index": "aid_type_vocabulary",
+      "color_code": "f6b26b"
+    },
+    "aid_type aid_type_code": "aid_type_code",
+    "tied_status tied_status_code": "tied_status_code"
+  },
+  "indicator_mapper": {
+    "result_identifier": "result_identifier",
+    "indicator_code": "indicator_number",
+    "indicator_identifier": "indicator_identifier"
+  },
+  "indicator_baseline_mapper": {
+    "indicator_identifier": "indicator_identifier",
+    "baseline_number": "baseline_number",
+    "indicator_baseline_identifier": "indicator_baseline_identifier"
+  },
+  "period_mapper": {
+    "indicator_identifier": "indicator_identifier",
+    "period_code": "period_number",
+    "period_identifier": "period_identifier"
+  },
+  "target_mapper": {
+    "period_identifier": "period_identifier",
+    "target_number": "target_number",
+    "target_identifier": "target_identifier"
+  },
+  "actual_mapper": {
+    "period_identifier": "period_identifier",
+    "actual_number": "actual_number",
+    "actual_identifier": "actual_identifier"
+  }
+}

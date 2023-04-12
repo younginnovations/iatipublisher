@@ -1335,6 +1335,18 @@ function group_by($key, $data)
             $result[''] = $val;
         }
     }
+}
 
-    return $result;
+if (!function_exists('generateRandomCharacters')) {
+    /**
+     * Function to generate random characters mix of digit and alphabets.
+     *
+     * @param $length
+     *
+     * @return string
+     */
+    function generateRandomCharacters($length): string
+    {
+        return substr(str_shuffle('0123456789abcdefghilkmnopqrstuvwxyz'), 0, $length);
+    }
 }

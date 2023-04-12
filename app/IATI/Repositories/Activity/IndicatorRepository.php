@@ -62,4 +62,18 @@ class IndicatorRepository extends Repository
     {
         return $this->model->where(['result_id'=>$resultId, 'id'=>$id])->first();
     }
+
+    /**
+     * Returns Indicators with periods.
+     *
+     * @param $indicatorIds
+     *
+     * @return mixed
+     */
+    public function getIndicatorWithPeriodsQueryToDownload($indicatorIds): mixed
+    {
+        return $this->model->with('periods')
+                            ->has('periods')
+                            ->whereIn('id', $indicatorIds);
+    }
 }
