@@ -73,8 +73,6 @@ class TitleService
      */
     public function update($id, $activityTitle): bool
     {
-        logger(['title'=>$activityTitle['narrative']]);
-
         return $this->activityRepository->update($id, ['title'=>$activityTitle['narrative']]);
     }
 

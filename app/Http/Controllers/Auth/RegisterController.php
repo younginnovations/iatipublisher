@@ -198,7 +198,7 @@ class RegisterController extends Controller
 
             return $user;
         } catch (\Exception $e) {
-            logger()->error($e);
+            logger()->error($e->getMessage());
         }
     }
 

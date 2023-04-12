@@ -50,7 +50,7 @@ class ApiLogController extends Controller
         try {
             return response()->json(['success' => true, 'message' => $this->apiLog->getAllApiLogs()]);
         } catch (Exception $e) {
-            logger()->error($e);
+            logger()->error($e->getMessage());
 
             return response()->json([
                'success' => false,
