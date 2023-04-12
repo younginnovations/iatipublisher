@@ -134,7 +134,6 @@ trait FillDefaultValuesTrait
         return $this->model->create($data);
     }
 
-
     /**
      * Overriding base Repository class's update method.
      * Modified to populate default field values on update.
@@ -149,9 +148,9 @@ trait FillDefaultValuesTrait
     public function update($id, $data): bool
     {
         $defaultValuesFromActivity = $this->getDefaultValuesFromActivity($id, $this->getModel());
-        $orgId                     = auth()->user()->organization->id;
+        $orgId = auth()->user()->organization->id;
         $defaultValuesFromSettings = Setting::where('organization_id', $orgId)->first()?->default_values ?? [];
-        $defaultValues             = $defaultValuesFromActivity ?? $defaultValuesFromSettings;
+        $defaultValues = $defaultValuesFromActivity ?? $defaultValuesFromSettings;
 
         if (!empty($defaultValues)) {
             $data = $this->populateDefaultFields($data, $defaultValues);
@@ -178,11 +177,11 @@ trait FillDefaultValuesTrait
                 $defaultFieldValues = ($this->model->find($id))->activity->default_field_values;
                 break;
             case get_class(new Indicator):
-                $indicator          = $this->model->find($id);
+                $indicator = $this->model->find($id);
                 $defaultFieldValues = $indicator->result->activity->default_field_values;
                 break;
             case get_class(new Period):
-                $period             = $this->model->find($id);
+                $period = $this->model->find($id);
                 $defaultFieldValues = $period->indicator->result->activity->default_field_values;
         }
 

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\IATI\Repositories\Activity;
 
 use App\IATI\Models\Activity\Result;
-use App\IATI\Models\Setting\Setting;
 use App\IATI\Repositories\Repository;
 use App\IATI\Traits\FillDefaultValuesTrait;
 use Illuminate\Database\Eloquent\Collection;

@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Repositories\Activity;
 
 use App\IATI\Models\Activity\Period;
-use App\IATI\Models\Setting\Setting;
 use App\IATI\Repositories\Repository;
-use App\IATI\Traits\ElementCompleteServiceTrait;
 use App\IATI\Traits\FillDefaultValuesTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;

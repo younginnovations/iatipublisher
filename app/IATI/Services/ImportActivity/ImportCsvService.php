@@ -248,7 +248,7 @@ class ImportCsvService
             $this->transactionRepo->store([
                 'transaction' => $transaction,
                 'activity_id' => $activityId,
-                'default_field_values'=>$defaultValues
+                'default_field_values'=>$defaultValues,
             ]);
         }
     }

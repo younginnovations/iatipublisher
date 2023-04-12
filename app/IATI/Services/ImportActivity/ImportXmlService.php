@@ -268,7 +268,7 @@ class ImportXmlService
                     $savedResult = $this->resultRepository->store([
                         'activity_id' => $activityId,
                         'result' => $result,
-                        'default_field_values'=>$defaultValues
+                        'default_field_values'=>$defaultValues,
                     ]);
 
                     foreach ($indicators as $indicator) {
@@ -280,7 +280,7 @@ class ImportXmlService
                         $savedIndicator = $this->indicatorRepository->store([
                             'result_id' => $savedResult['id'],
                             'indicator' => $indicator,
-                            'default_field_values'=>$defaultValues
+                            'default_field_values'=>$defaultValues,
                         ]);
 
                         if (!empty($periods)) {
