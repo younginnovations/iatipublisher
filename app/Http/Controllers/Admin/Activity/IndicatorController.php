@@ -160,9 +160,11 @@ class IndicatorController extends Controller
     {
         try {
             $indicatorData = $request->except(['_token']);
+            $result    = $this->resultService->getResult($resultId);
             $indicator = $this->indicatorService->create([
                 'result_id' => $resultId,
                 'indicator' => $indicatorData,
+                'default_field_values'=>$result->activity->default_field_values
             ]);
 
             return redirect()->route('admin.result.indicator.show', [$resultId, $indicator['id']])->with(

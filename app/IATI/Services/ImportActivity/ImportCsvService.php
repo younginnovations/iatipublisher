@@ -238,15 +238,18 @@ class ImportCsvService
      *
      * @param $transactions
      * @param $activityId
+     * @param $defaultValues
      *
      * @return void
      */
     public function createTransaction($transactions, $activityId, $defaultValues): void
     {
-        $transactions = $transactions ? $this->populateDefaultFields($transactions, $defaultValues) : $transactions;
-
         foreach ($transactions as $transaction) {
-            $this->transactionRepo->store(['transaction' => $transaction, 'activity_id' => $activityId]);
+            $this->transactionRepo->store([
+                'transaction' => $transaction,
+                'activity_id' => $activityId,
+                'default_field_values'=>$defaultValues
+            ]);
         }
     }
 

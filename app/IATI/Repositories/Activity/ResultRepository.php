@@ -141,28 +141,4 @@ class ResultRepository extends Repository
 
         return false;
     }
-
-    /**
-     * Overriding base Repository class's update method.
-     * Modified to populate default field values on update.
-     *
-     * @param $id
-     * @param $data
-     *
-     * @inheritDoc
-     *
-     * @return bool
-     */
-    public function update($id, $data): bool
-    {
-        $defaultValuesFromActivity = $this->getDefaultValuesFromActivity($id, 'result');
-        $orgId = auth()->user()->organization->id;
-        $defaultValuesFromSettings = Setting::where('organization_id', $orgId)->first()?->default_values ?? [];
-        $defaultValues = $defaultValuesFromActivity ?? $defaultValuesFromSettings;
-        if (!empty($defaultValues)) {
-            $data = $this->populateDefaultFields($data, $defaultValues);
-        }
-
-        return $this->model->find($id)->update($data);
-    }
 }

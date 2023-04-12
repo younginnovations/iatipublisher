@@ -512,47 +512,4 @@ class ActivityRepository extends Repository
     {
         return $this->model->where('id', $id)->update(["reporting_org->0->{$key}"=>$data]);
     }
-
-    /**
-     * Overriding base Repository class's store method.
-     * Modified to populate default field values on save.
-     *
-     * @param array $data
-     *
-     * @inheritDoc
-     *
-     * @return Model
-     */
-    public function store(array $data): Model
-    {
-        $defaultFieldValues = $data['default_field_values'];
-        $data = $this->populateDefaultFields($data, $defaultFieldValues);
-
-        return $this->model->create($data);
-    }
-
-    /**
-     * Overriding base Repository class's update method.
-     * Modified to populate default field values on update.
-     *
-     * @param $id
-     * @param $data
-     *
-     * @inheritDoc
-     *
-     * @return bool
-     */
-    public function update($id, $data): bool
-    {
-        $defaultValuesFromActivity = $this->getDefaultValuesFromActivity($id);
-        $orgId = auth()->user()->organization->id;
-        $defaultValuesFromSettings = Setting::where('organization_id', $orgId)->first()?->default_values ?? [];
-        $defaultValues = $defaultValuesFromActivity ?? $defaultValuesFromSettings;
-
-        if (!empty($defaultValues)) {
-            $data = $this->populateDefaultFields($data, $defaultValues);
-        }
-
-        return $this->model->find($id)->update($data);
-    }
 }
