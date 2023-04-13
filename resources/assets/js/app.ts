@@ -347,6 +347,7 @@ window.onload = () => {
     const supportButton: HTMLElement = document.querySelector(
       '#launcher'
     ) as HTMLElement;
+
     if (supportButton !== null) {
       supportButton.style.display = 'none';
     }
@@ -355,6 +356,7 @@ window.onload = () => {
     const supportButton: HTMLElement = document.querySelector(
       '#launcher'
     ) as HTMLElement;
+
     if (supportButton !== null) {
       supportButton.style.display = 'block';
       supportButton.style.border = '2px solid rgb(21, 83, 102)';

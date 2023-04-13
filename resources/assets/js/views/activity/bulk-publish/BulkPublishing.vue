@@ -110,14 +110,13 @@ let intervalID;
  *   Component lifecycle - onMounted
  */
 onMounted(() => {
-  console.log('mounted');
   completed.value = paStorage.value.publishingActivities.status ?? 'processing';
   bulkPublishStatus();
   setTimeout(() => {
     const supportButton: HTMLElement = document.querySelector(
       '#launcher'
     ) as HTMLElement;
-    if (supportButton !== null) {
+    if (supportButton !== null && Object.keys(activities).length > 0) {
       supportButton.style.transform = 'translateX(-350px)';
       supportButton.style.opacity = '1';
     }
