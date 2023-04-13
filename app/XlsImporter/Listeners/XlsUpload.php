@@ -46,7 +46,7 @@ class XlsUpload
      */
     public function handle(XlsWasUploaded $event): bool
     {
-        $this->dispatch(new ImportXls($event->organizationId, $event->orgRef, $event->userId, $event->filename, $event->iatiIdentifiers));
+        $this->dispatch(new ImportXls($event->organizationId, $event->orgRef, $event->userId, $event->filename, $event->iatiIdentifiers, $event->xlsType));
 
         return true;
     }

@@ -61,7 +61,6 @@ class Result
         $resultData['Result'][1]['result_identifier'] = '289289892-result1';
         $resultData['Result Mapper'][0]['result_identifier'] = '289289892-result1';
         $resultData['Result'][3]['result_identifier'] = 'activity-1-result-2';
-        dd($resultData);
         if (isset($resultData['Result Mapper'])) {
             $this->setActivityAndResultIdentifier($resultData['Result Mapper']);
         }
@@ -80,7 +79,6 @@ class Result
 
         $this->results = $this->combineResultAndDocumentLink();
         $this->validateResult();
-        dd($this->results);
     }
 
     public function validateResult()

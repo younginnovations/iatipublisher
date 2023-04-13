@@ -247,16 +247,17 @@ class ImportXlsController extends Controller
     {
         try {
             $file = $request->file('activity');
-            $filetype = $request->only('type');
-            Session::put('import_filetype', $filetype);
+            $xlsType = $request->get('xlsType');
 
             if ($this->importXlsService->store($file)) {
                 $user = Auth::user();
-                $this->importXlsService->startImport($file->getClientOriginalName(), $user->id, $user->organization_id);
+                $this->importXlsService->startImport($file->getClientOriginalName(), $user->id, $user->organization_id, $xlsType);
             }
 
-            return response()->json(['success' => true, 'message' => 'Uploaded successfully', 'type' => $filetype]);
+            return response()->json(['success' => true, 'message' => 'Uploaded successfully']);
         } catch (Exception $e) {
+            // dd($e);
+            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while rendering activity import page.']);

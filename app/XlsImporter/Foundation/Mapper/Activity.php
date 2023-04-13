@@ -82,7 +82,7 @@ class Activity
         'Planned Disbursement' => 'planned_disbursement',
         'Participating Org' => 'participating_org',
         'Budget' => 'budget',
-        'Transaction' => 'transactions',
+        // 'Transaction' => 'transactions',
     ];
 
     protected array $singleValuedElements = [
@@ -111,6 +111,8 @@ class Activity
         'country_budget_items',
         'location',
         'contact_info',
+        'document_link',
+        'transaction',
     ];
 
     protected string $elementBeingProcessed = '';
@@ -142,6 +144,9 @@ class Activity
                 $this->columnToFieldMapper($this->activityElements[$sheetName], $content);
             }
         }
+        // $this->validateAndStoreData();
+        // dd($this->activities);
+        // logger(json_encode($this->activities));
 
         return $this;
     }
@@ -151,15 +156,17 @@ class Activity
         $activityValidator = app(ActivityValidator::class);
         $this->totalCount = count($this->activities);
 
-        foreach ($this->activities as $activityIdentifier => $activities) {
+        foreach ($this->activities as $activityIdentifier => $activity) {
             $errors = $activityValidator
-                ->init($activities)
+                ->init($activity)
                 ->validateData();
             $this->processedCount++;
 
             $excelColumnAndRowName = isset($this->columnTracker[$activityIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
             $error = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
-            $this->storeValidatedData($activities, $error);
+            // dump($error);
+            // logger()->error(json_encode($activity));
+            $this->storeValidatedData($activity, $error);
         }
 
         $this->updateStatus();
@@ -241,6 +248,7 @@ class Activity
     {
         $dropDownFields = $this->getDropDownFields();
         $elementActivityIdentifier = null;
+
         foreach ($data as $row) {
             if ($this->checkRowNotEmpty($row)) {
                 $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null) ?? $elementActivityIdentifier;
@@ -301,9 +309,16 @@ class Activity
                 if (in_array($elementActivityIdentifier, $this->activitiesIdentifier)) {
                     $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
                 }
-                // $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
+                $elementData = [];
                 break;
             }
+        }
+
+        if (!empty($elementData)) {
+            if (in_array($elementActivityIdentifier, $this->activitiesIdentifier)) {
+                $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
+            }
+            $elementData = [];
         }
     }
 
@@ -331,7 +346,6 @@ class Activity
                 if ($elementBase && ($fieldName === $elementBase && ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)))) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
                     $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
-                    // dump($element, $dependentOn, $dependentOnValue, 'test', array_fill_keys(array_values($dependentOn), null));
                     $dependentOnValue = array_fill_keys(array_values($dependentOn), null);
                 }
 
@@ -344,7 +358,7 @@ class Activity
                         $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) || !$parentAddMore ? 0 : $parentBaseCount[$parentKey] + 1;
                     }
                 }
-                // dump('----------------',$fieldName);
+
                 if (!empty($dependentOn) && in_array($fieldName, array_keys($dependentOn), false)) {
                     $dependentOnFieldName = $dependentOn[$fieldName];
                     $dependentOnFieldValue = $dependentOnValue[$dependentOnFieldName];
@@ -365,13 +379,11 @@ class Activity
 
                 $elementPosition = $this->getActivityElementPosition($parentBaseCount, $fieldName);
                 $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
-                // dump($elementPositionBasedOnParent);
 
                 if (!Arr::get($elementData, $elementPositionBasedOnParent, null) && !empty($elementPosition)) {
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
                     $this->columnTracker[$elementActivityIdentifier][$element][$element . '.' . $elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
                 }
-                // dump($elementData);
             }
             $this->rowCount++;
         }

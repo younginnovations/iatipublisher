@@ -35,24 +35,32 @@ class XlsWasUploaded extends Event
     public $orgRef;
 
     /**
-     * @var
+     * @var array
      */
-    public $iatiIdentifiers;
+    public array $iatiIdentifiers;
+
+    /**
+     * @var string
+     */
+    public string $xlsType;
 
     /**
      * XlsWasUploaded constructor.
+     *
      * @param $filename
      * @param $userId
      * @param $organizationId
      * @param $orgRef
      * @param $iatiIdentifiers
+     * @param $xlsType
      */
-    public function __construct($filename, $userId, $organizationId, $orgRef, $iatiIdentifiers)
+    public function __construct($filename, $userId, $organizationId, $orgRef, $iatiIdentifiers, $xlsType)
     {
         $this->filename = $filename;
         $this->userId = $userId;
         $this->organizationId = $organizationId;
         $this->orgRef = $orgRef;
         $this->iatiIdentifiers = $iatiIdentifiers;
+        $this->xlsType = $xlsType;
     }
 }

@@ -239,14 +239,8 @@ trait WarningValidationRules
     public function warningForCountryBudgetItems(array $activity): array
     {
         $countryBudgetItems = Arr::get($activity, 'country_budget_items', []);
-        $rules = [];
-        $tempRules = (new CountryBudgetItemRequest())->getWarningForCountryBudgetItem(Arr::get($countryBudgetItems, key($countryBudgetItems), []));
 
-        foreach ($tempRules as $idx => $rule) {
-            $rules['country_budget_items.0.' . $idx] = $rule;
-        }
-
-        return $rules;
+        return (new CountryBudgetItemRequest())->getWarningForCountryBudgetItem(Arr::get($countryBudgetItems, key($countryBudgetItems), []));
     }
 
     /**

@@ -136,11 +136,9 @@ class ImportXlsService
      */
     public function create($activities): bool
     {
-        // dd('here');
         $userId = Auth::user()->id;
         $organizationId = Auth::user()->organization->id;
         $contents = json_decode(awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $organizationId, $userId, 'valid.json')), false, 512, 0);
-        // dd($contents);
 
         foreach ($activities as $value) {
             $activity = unsetErrorFields($contents[$value]);
@@ -150,7 +148,7 @@ class ImportXlsService
             if (Arr::get($activity, 'existence', false) || $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'))) {
                 $oldActivity = $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'));
 
-                $this->activityRepository->importXmlActivities($oldActivity->id, $activityData);
+                $this->activityRepository->update($oldActivity->id, $activityData);
                 $this->transactionRepository->deleteTransaction($oldActivity->id);
                 $this->resultRepository->deleteResult($oldActivity->id);
                 $this->saveTransactions(Arr::get($activityData, 'transactions'), $oldActivity->id);
@@ -162,7 +160,9 @@ class ImportXlsService
                     $this->importActivityErrorRepo->deleteImportError($oldActivity->id);
                 }
             } else {
-                $storeActivity = $this->activityRepository->importXmlActivities(null, $activityData);
+                $activityData['org_id'] = $organizationId;
+                dd($activityData);
+                $storeActivity = $this->activityRepository->store($activityData);
 
                 $this->saveTransactions(Arr::get($activityData, 'transactions'), $storeActivity->id);
                 $this->saveResults(Arr::get($activityData, 'result'), $storeActivity->id);
@@ -265,17 +265,18 @@ class ImportXlsService
      * @param $filename
      * @param $userId
      * @param $orgId
+     * @param $xlsType
      *
      * @return void
      * @throws \JsonException
      */
-    public function startImport($filename, $userId, $orgId): void
+    public function startImport($filename, $userId, $orgId, $xlsType): void
     {
         awsDeleteDirectory(sprintf('%s/%s/%s', $this->xls_data_storage_path, $orgId, $userId));
         awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $orgId, $userId, 'status.json'), json_encode(['success' => true, 'message' => 'Started'], JSON_THROW_ON_ERROR));
-        $status = $this->importStatusRepo->storeStatus($orgId, $userId, 'xls');
+        $status = $this->importStatusRepo->storeStatus($orgId, $userId, 'xls', $xlsType);
 
-        $this->fireXmlUploadEvent($filename, $userId, $orgId);
+        $this->fireXmlUploadEvent($filename, $userId, $orgId, $xlsType);
         $this->importStatusRepo->update($status->id, ['status' => 'completed']);
     }
 
@@ -285,25 +286,27 @@ class ImportXlsService
      * @param $filename
      * @param $userId
      * @param $organizationId
+     * @param $xlsType
      *
      * @return void
      */
-    protected function fireXmlUploadEvent($filename, $userId, $organizationId): void
+    protected function fireXmlUploadEvent($filename, $userId, $organizationId, $xlsType): void
     {
-        $iatiIdentifiers = $this->dbIatiIdentifiers($organizationId);
+        $iatiIdentifiers = $this->dbIatiIdentifiers($organizationId, $xlsType);
         $orgRef = Auth::user()->organization->identifier;
 
-        Event::dispatch(new XlsWasUploaded($filename, $userId, $organizationId, $orgRef, $iatiIdentifiers));
+        Event::dispatch(new XlsWasUploaded($filename, $userId, $organizationId, $orgRef, $iatiIdentifiers, $xlsType));
     }
 
     /**
-     * Returns array of iati identifiers present in the activities of the organisation.
+     * Returns array of iati identifiers and codes present in the activities, result, indicator and period of the organisation.
      *
      * @param $org_id
+     * @param $xlsType
      *
      * @return array
      */
-    protected function dbIatiIdentifiers($org_id): array
+    protected function dbIatiIdentifiers($org_id, $xlsType): array
     {
         return Arr::flatten($this->activityRepository->getActivityIdentifiers($org_id)->toArray());
     }

@@ -217,14 +217,8 @@ trait ErrorValidationRules
     public function errorForCountryBudgetItem(array $activity): array
     {
         $countryBudgetItems = Arr::get($activity, 'country_budget_items', []);
-        $rules = [];
-        $tempRules = (new CountryBudgetItemRequest())->getErrorsForCountryBudgetItem(Arr::get($countryBudgetItems, key($countryBudgetItems), []));
 
-        foreach ($tempRules as $idx => $rule) {
-            $rules['country_budget_items.0.' . $idx] = $rule;
-        }
-
-        return $rules;
+        return (new CountryBudgetItemRequest())->getErrorsForCountryBudgetItem($countryBudgetItems);
     }
 
     /**

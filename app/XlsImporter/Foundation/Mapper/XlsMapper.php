@@ -41,7 +41,7 @@ class XlsMapper
     public function process(array $xlsData, string $xlsType, $userId, $orgId, $orgRef, $dbIatiIdentifiers): static
     {
         $xlsMapperTypes = [
-            'basic' => Activity::class,
+            'activity' => Activity::class,
             'result' => Result::class,
             'period' => Period::class,
             'indicator' => Indicator::class,
