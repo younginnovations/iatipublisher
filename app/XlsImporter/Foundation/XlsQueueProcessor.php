@@ -113,6 +113,7 @@ class XlsQueueProcessor
             $xlsToArray = new XlsToArray();
             Excel::import($xlsToArray, $filePath, 's3');
             $contents = $xlsToArray->sheetData;
+            file_put_contents(app_path() . '/XlsImporter/Templates/test.json', json_encode($contents));
 
             $xlsType = 'basic';
 

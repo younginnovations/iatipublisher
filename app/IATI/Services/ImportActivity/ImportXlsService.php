@@ -126,51 +126,55 @@ class ImportXlsService
         }
     }
 
-    // /**
-    //  * Create Valid activities.
-    //  *
-    //  * @param $activities
-    //  *
-    //  * @return bool
-    //  * @throws \JsonException
-    //  */
-    // public function create($activities): bool
-    // {
-    //     $contents = $this->loadJsonFile('valid.json');
+    /**
+     * Create Valid activities.
+     *
+     * @param $activities
+     *
+     * @return bool
+     * @throws \JsonException
+     */
+    public function create($activities): bool
+    {
+        // dd('here');
+        $userId = Auth::user()->id;
+        $organizationId = Auth::user()->organization->id;
+        $contents = json_decode(awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $organizationId, $userId, 'valid.json')), false, 512, 0);
+        // dd($contents);
 
-    //     foreach ($activities as $value) {
-    //         $activity = unsetErrorFields($contents[$value]);
-    //         $activityData = Arr::get($activity, 'data', []);
-    //         $organizationId = Auth::user()->organization->id;
+        foreach ($activities as $value) {
+            $activity = unsetErrorFields($contents[$value]);
+            $activityData = Arr::get($activity, 'data', []);
+            $organizationId = Auth::user()->organization->id;
 
-    //         if (Arr::get($activity, 'existence', false) && $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'))) {
-    //             $oldActivity = $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'));
+            if (Arr::get($activity, 'existence', false) || $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'))) {
+                $oldActivity = $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'));
 
-    //             $this->activityRepository->importXmlActivities($oldActivity->id, $activityData);
-    //             $this->transactionRepository->deleteTransaction($oldActivity->id);
-    //             $this->resultRepository->deleteResult($oldActivity->id);
-    //             $this->saveTransactions(Arr::get($activityData, 'transactions'), $oldActivity->id);
-    //             $this->saveResults(Arr::get($activityData, 'result'), $oldActivity->id);
+                $this->activityRepository->importXmlActivities($oldActivity->id, $activityData);
+                $this->transactionRepository->deleteTransaction($oldActivity->id);
+                $this->resultRepository->deleteResult($oldActivity->id);
+                $this->saveTransactions(Arr::get($activityData, 'transactions'), $oldActivity->id);
+                $this->saveResults(Arr::get($activityData, 'result'), $oldActivity->id);
 
-    //             if (!empty($activity['errors'])) {
-    //                 $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $activity['errors']);
-    //             } else {
-    //                 $this->importActivityErrorRepo->deleteImportError($oldActivity->id);
-    //             }
-    //         } else {
-    //             $storeActivity = $this->activityRepository->importXmlActivities(null, $activityData);
+                if (!empty($activity['errors'])) {
+                    $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $activity['errors']);
+                } else {
+                    $this->importActivityErrorRepo->deleteImportError($oldActivity->id);
+                }
+            } else {
+                $storeActivity = $this->activityRepository->importXmlActivities(null, $activityData);
 
-    //             $this->saveTransactions(Arr::get($activityData, 'transactions'), $storeActivity->id);
-    //             $this->saveResults(Arr::get($activityData, 'result'), $storeActivity->id);
+                $this->saveTransactions(Arr::get($activityData, 'transactions'), $storeActivity->id);
+                $this->saveResults(Arr::get($activityData, 'result'), $storeActivity->id);
 
-    //             if (!empty($activity['errors'])) {
-    //                 $this->importActivityErrorRepo->updateOrCreateError($storeActivity->id, $activity['errors']);
-    //             }
-    //         }
-    //     }
+                if (!empty($activity['errors'])) {
+                    $this->importActivityErrorRepo->updateOrCreateError($storeActivity->id, $activity['errors']);
+                }
+            }
+        }
 
-    //     return true;
-    // }
+        return true;
+    }
 
     /**
      * Save transaction of mapped activity in database.
@@ -293,37 +297,6 @@ class ImportXlsService
     }
 
     /**
-     * Load a json file with a specific filename.
-     *
-     * @param $filename
-     *
-     * @return mixed|null
-     */
-    public function loadJsonFile($filename): mixed
-    {
-        try {
-            $contents = awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, Auth::user()->organization_id, Auth::user()->id, $filename));
-
-            if ($contents) {
-                return json_decode($contents, false, 512, JSON_THROW_ON_ERROR);
-            }
-
-            return false;
-        } catch (Exception $exception) {
-            logger()->error(
-                sprintf('Error due to %s', $exception->getMessage()),
-                [
-                    'trace' => $exception->getTraceAsString(),
-                    'user_id' => auth()->user()->id,
-                    'filename' => $filename,
-                ]
-            );
-
-            return null;
-        }
-    }
-
-    /**
      * Returns array of iati identifiers present in the activities of the organisation.
      *
      * @param $org_id
@@ -342,7 +315,17 @@ class ImportXlsService
      */
     public function getImportStatus(): array
     {
-        return $this->importStatusRepo->getImportStatus(Auth::user()->organization->id);
+        return $this->importStatusRepo->getImportStatus(Auth::user()->organization->id, Auth::user()->id);
+    }
+
+    /**
+     * Deletes import status.
+     *
+     * @return bool
+     */
+    public function deleteImportStatus(): bool
+    {
+        return $this->importStatusRepo->deleteImportStatus(Auth::user()->organization->id, Auth::user()->id);
     }
 
     public function getAwsXlsData($filename)
@@ -356,7 +339,7 @@ class ImportXlsService
 
             return false;
         } catch (Exception $exception) {
-            $this->logger->error(
+            logger()->error(
                 sprintf('Error due to %s', $exception->getMessage()),
                 [
                     'trace' => $exception->getTraceAsString(),

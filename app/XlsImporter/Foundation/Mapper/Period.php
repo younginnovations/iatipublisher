@@ -34,11 +34,13 @@ class Period
 
     protected array $columnTracker = [];
     protected array $tempColumnTracker = [];
-    protected string $destinationFilePath = '';
+    protected string $statusFilePath = '';
+    protected string $validatedDataFilePath = '';
 
-    public function initMapper($destinationFilePath)
+    public function initMapper($validatedDataFilePath, $statusFilePath)
     {
-        $this->destinationFilePath = $destinationFilePath;
+        $this->validatedDataFilePath = $validatedDataFilePath;
+        $this->statusFilePath = $statusFilePath;
     }
 
     /**
@@ -106,6 +108,7 @@ class Period
         }
 
         $this->validatePeriod();
+        dd($this->periods, $this->periodIdentifier);
     }
 
     public function validatePeriod()
@@ -118,7 +121,7 @@ class Period
                     ->init($periodData['period'])
                     ->validateData();
                 $columnAppendedError = $this->appendExcelColumnAndRowDetail($errors, $this->columnTracker[$indicatorIdentifier][$periodIdentifier]['period']);
-                $this->storeValidatedData($periodData, $columnAppendedError);
+                // $this->storeValidatedData($periodData, $columnAppendedError);
             }
         }
     }

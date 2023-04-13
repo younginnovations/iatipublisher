@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\IATI\Models\Activity;
 
-use Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -56,11 +55,7 @@ class Result extends Model implements Auditable
 
         static::saving(
             function ($model) {
-                if (Auth::check()) {
-                    $model->result_code = sprintf('%d%s', auth()->user()->id, time());
-                } else {
-                    $model->result_code = time();
-                }
+                $model->result_code = sprintf('%d%s', $model->id, time());
             }
         );
     }

@@ -8,6 +8,7 @@
     },
     "reporting_org": {
         "elementBase": "ref",
+        "add_more": false,
         "fieldDependency": {
             "narrative narrative": "narrative"
         }
@@ -24,6 +25,7 @@
         "fieldDependency": {
             "owner_org ref": {
                 "parent": "owner_org",
+                "add_more": false,
                 "peer": []
             },
             "owner_org narrative narrative": {
@@ -87,11 +89,16 @@
             }
         },
         "codeDependency": {
-            "dependentOn": "region_vocabulary",
-            "dependentField": "code",
-            "defaultCodeField": "custom_code",
-            "dependencyRelation": {
-                "1": "region_code"
+            "dependentOn": {
+                "code": "region_vocabulary"
+            },
+            "dependencyCondition": {
+                "region_vocabulary": {
+                    "defaultCodeField": "custom_code",
+                    "dependencyRelation": {
+                        "1": "region_code"
+                    }
+                }
             }
         }
     },
@@ -106,14 +113,19 @@
             }
         },
         "codeDependency": {
-            "dependentOn": "sector_vocabulary",
-            "dependentField": "code",
-            "defaultCodeField": "text",
-            "dependencyRelation": {
-                "1": "code",
-                "2": "category_code",
-                "7": "sdg_goal",
-                "8": "sdg_target"
+            "dependentOn": {
+                "code": "sector_vocabulary"
+            },
+            "dependencyCondition": {
+                "sector_vocabulary": {
+                    "defaultCodeField": "text",
+                    "dependencyRelation": {
+                        "1": "code",
+                        "2": "category_code",
+                        "7": "sdg_goal",
+                        "8": "sdg_target"
+                    }
+                }
             }
         }
     },
@@ -128,12 +140,17 @@
             }
         },
         "codeDependency": {
-            "dependentOn": "tag_vocabulary",
-            "dependentField": "code",
-            "defaultCodeField": "tag_text",
-            "dependencyRelation": {
-                "2": "goal_tag_code",
-                "3": "targets_tag_code"
+            "dependentOn": {
+                "code": "tag_vocabulary"
+            },
+            "dependencyCondition": {
+                "tag_vocabulary": {
+                    "defaultCodeField": "tag_text",
+                    "dependencyRelation": {
+                        "2": "goal_tag_code",
+                        "3": "targets_tag_code"
+                    }
+                }
             }
         }
     },
@@ -148,11 +165,16 @@
             }
         },
         "codeDependency": {
-            "dependentOn": "policy_marker_vocabulary",
-            "dependentField": "code",
-            "defaultCodeField": "policy_marker_text",
-            "dependencyRelation": {
-                "1": "policy_marker"
+            "dependentOn": {
+                "code": "policy_marker_vocabulary"
+            },
+            "dependencyCondition": {
+                "policy_marker_vocabulary": {
+                    "defaultCodeField": "policy_marker_text",
+                    "dependencyRelation": {
+                        "1": "policy_marker"
+                    }
+                }
             }
         }
     },
@@ -169,14 +191,19 @@
         "elementBase": "default_aid_type_vocabulary",
         "fieldDependency": {},
         "codeDependency": {
-            "dependentOn": "default_aid_type_vocabulary",
-            "dependentField": "code",
-            "defaultCodeField": "default_aid_type",
-            "dependencyRelation": {
-                "1": "default_aid_type",
-                "2": "earmarking_category",
-                "3": "earmarking_modality",
-                "4": "cash_and_voucher_modalities"
+            "dependentOn": {
+                "code": "default_aid_type_vocabulary"
+            },
+            "dependencyCondition": {
+                "default_aid_type_vocabulary": {
+                    "defaultCodeField": "default_aid_type",
+                    "dependencyRelation": {
+                        "1": "default_aid_type",
+                        "2": "earmarking_category",
+                        "3": "earmarking_modality",
+                        "4": "cash_and_voucher_modalities"
+                    }
+                }
             }
         }
     },
@@ -215,10 +242,12 @@
     },
     "related_activity": {
         "elementBase": "activity_identifier",
+        "elementBasePeer": [
+            "relationship_type"
+        ],
         "fieldDependency": {}
     },
     "conditions": {
-        "elementBase": "condition_attached",
         "fieldDependency": {
             "condition condition_type": {
                 "parent": "condition",
@@ -236,10 +265,17 @@
     },
     "legacy_data": {
         "elementBase": "legacy_name",
+        "elementBasePeer": [
+            "value",
+            "iati-equivalent"
+        ],
         "fieldDependency": {}
     },
     "document_link": {
         "elementBase": "url",
+        "elementBasePeer": [
+            "format"
+        ],
         "fieldDependency": {
             "title narrative narrative": {
                 "parent": "title narrative",
@@ -260,7 +296,8 @@
                 "parent": "language"
             },
             "document_date date": {
-                "parent": "document_date"
+                "parent": "document_date",
+                "add_more": false
             }
         }
     },
@@ -312,7 +349,8 @@
         "elementBase": "ref",
         "fieldDependency": {
             "location_reach code": {
-                "parent": "location_reach"
+                "parent": "location_reach",
+                "add_more": false
             },
             "location_id vocabulary": {
                 "parent": "location_id",
@@ -340,6 +378,7 @@
             },
             "administrative vocabulary": {
                 "parent": "administrative",
+                "add_more": false,
                 "peer": [
                     "administrative code",
                     "administrative level"
@@ -347,25 +386,30 @@
             },
             "point srs_name": {
                 "parent": "point",
+                "add_more": false,
                 "peer": [
                     "point pos latitude",
                     "point pos longitude"
                 ]
             },
-            "point pos latitude" : {
-                "parent" : "point pos",
-                "peer" : [
+            "point pos latitude": {
+                "parent": "point pos",
+                "add_more": false,
+                "peer": [
                     "point pos longitude"
                 ]
             },
             "exactness code": {
-                "parent": "exactness"
+                "parent": "exactness",
+                "add_more": false
             },
             "location_class code": {
-                "parent": "location_class"
+                "parent": "location_class",
+                "add_more": false
             },
             "feature_designation code": {
-                "parent": "feature_designation"
+                "parent": "feature_designation",
+                "add_more": false
             }
         }
     },
@@ -373,20 +417,24 @@
         "elementBase": "planned_disbursement_type",
         "fieldDependency": {
             "period_start date": {
-                "parent": "period_start"
+                "parent": "period_start",
+                "add_more": false
             },
             "period_end date": {
-                "parent": "period_end"
+                "parent": "period_end",
+                "add_more": false
             },
             "value amount": {
                 "parent": "value",
-                "peer" : [
+                "add_more": false,
+                "peer": [
                     "value currency",
                     "value value_date"
                 ]
             },
             "provider_org ref": {
                 "parent": "provider_org",
+                "add_more": false,
                 "peer": [
                     "provider_org provider_activity_id",
                     "provider_org type"
@@ -400,6 +448,7 @@
             },
             "receiver_org ref": {
                 "parent": "receiver_org",
+                "add_more": false,
                 "peer": [
                     "receiver_org receiver_activity_id",
                     "receiver_org type"
@@ -428,13 +477,16 @@
         "elementBase": "budget_status",
         "fieldDependency": {
             "period_start date": {
-                "parent": "period_start"
+                "parent": "period_start",
+                "add_more": false
             },
             "period_end date": {
-                "parent": "period_end"
+                "parent": "period_end",
+                "add_more": false
             },
             "budget_value amount": {
                 "parent": "budget_value",
+                "add_more": false,
                 "peer": [
                     "budget_value currency",
                     "budget_value value_date"
@@ -445,58 +497,59 @@
     "result": {
         "elementBase": "type",
         "elementBasePeer": [
-          "aggregation_status"
+            "aggregation_status"
         ],
         "fieldDependency": {
-          "title narrative narrative": {
-            "parent": "title narrative",
-            "peer": [
-              "title narrative language"
-            ]
-          },
-          "description narrative narrative": {
-            "parent": "description narrative",
-            "peer": [
-              "description narrative language"
-            ]
-          },
-          "reference vocabulary": {
-            "parent": "reference",
-            "peer": [
-              "reference code",
-              "reference vocabulary_uri"
-            ]
-          }
+            "title narrative narrative": {
+                "parent": "title narrative",
+                "peer": [
+                    "title narrative language"
+                ]
+            },
+            "description narrative narrative": {
+                "parent": "description narrative",
+                "peer": [
+                    "description narrative language"
+                ]
+            },
+            "reference vocabulary": {
+                "parent": "reference",
+                "peer": [
+                    "reference code",
+                    "reference vocabulary_uri"
+                ]
+            }
         }
     },
     "result_document_link": {
-      "elementBase": "document_link url",
-      "elementBasePeer": [
-        "document_link format"
-      ],
-      "fieldDependency": {
-        "document_link title narrative narrative": {
-          "parent": "document_link title narrative",
-          "peer": [
-            "document_link title narrative language"
-          ]
-        },
-        "document_link description narrative narrative": {
-          "parent": "document_link description narrative",
-          "peer": [
-            "document_link description narrative language"
-          ]
-        },
-        "document_link category code": {
-          "parent": "document_link category"
-        },
-        "document_link language language": {
-          "parent": "document_link language"
-        },
-        "document_link document_date date": {
-          "parent": "document_link document_date"
+        "elementBase": "document_link url",
+        "elementBasePeer": [
+            "document_link format"
+        ],
+        "fieldDependency": {
+            "document_link title narrative narrative": {
+                "parent": "document_link title narrative",
+                "peer": [
+                    "document_link title narrative language"
+                ]
+            },
+            "document_link description narrative narrative": {
+                "parent": "document_link description narrative",
+                "peer": [
+                    "document_link description narrative language"
+                ]
+            },
+            "document_link category code": {
+                "parent": "document_link category"
+            },
+            "document_link language language": {
+                "parent": "document_link language"
+            },
+            "document_link document_date date": {
+                "parent": "document_link document_date",
+                "add_more": false
+            }
         }
-      }
     },
     "indicator": {
         "fieldDependency": {
@@ -523,6 +576,9 @@
     },
     "indicator document_link": {
         "elementBase": "url",
+        "elementBasePeer": [
+            "format"
+        ],
         "fieldDependency": {
             "title narrative narrative": {
                 "parent": "title narrative",
@@ -543,7 +599,8 @@
                 "parent": "language"
             },
             "document_date date": {
-                "parent": "document_date"
+                "parent": "document_date",
+                "add_more": false
             }
         }
     },
@@ -588,17 +645,20 @@
                 "parent": "language"
             },
             "document_date date": {
-                "parent": "document_date"
+                "parent": "document_date",
+                "add_more": false
             }
         }
     },
     "period": {
         "fieldDependency": {
             "period_start date": {
-                "parent": "period_start"
+                "parent": "period_start",
+                "add_more": false
             },
             "period_end date": {
-                "parent": "period_end"
+                "parent": "period_end",
+                "add_more": false
             }
         }
     },
@@ -643,7 +703,8 @@
                 "parent": "language"
             },
             "document_date date": {
-                "parent": "document_date"
+                "parent": "document_date",
+                "add_more": false
             }
         }
     },
@@ -668,6 +729,9 @@
     },
     "actual document_link": {
         "elementBase": "url",
+        "elementBasePeer": [
+            "format"
+        ],
         "fieldDependency": {
             "title narrative narrative": {
                 "parent": "title narrative",
@@ -688,21 +752,26 @@
                 "parent": "language"
             },
             "document_date date": {
-                "parent": "document_date"
+                "parent": "document_date",
+                "add_more": false
             }
         }
     },
     "transactions": {
         "elementBase": "reference",
+        "multipleCodeDependency": true,
         "fieldDependency": {
             "transaction_type transaction_type_code": {
-                "parent": "transaction_type"
+                "parent": "transaction_type",
+                "add_more": false
             },
             "transaction_date date": {
-                "parent": "transaction_date"
+                "parent": "transaction_date",
+                "add_more": false
             },
             "value amount": {
                 "parent": "value",
+                "add_more": false,
                 "peer": [
                     "value currency",
                     "value value_date"
@@ -716,6 +785,7 @@
             },
             "provider_organization organization_identifier_code": {
                 "parent": "provider_organization",
+                "add_more": false,
                 "peer": [
                     "provider_organization provider_activity_id",
                     "provider_organization type"
@@ -729,6 +799,7 @@
             },
             "receiver_organization organization_identifier_code": {
                 "parent": "receiver_organization",
+                "add_more": false,
                 "peer": [
                     "receiver_organization receiver_activity_id",
                     "receiver_organization type"
@@ -741,7 +812,8 @@
                 ]
             },
             "disbursement_channel disbursement_channel_code": {
-                "parent": "disbursement_channel"
+                "parent": "disbursement_channel",
+                "add_more": false
             },
             "sector sector_vocabulary": {
                 "parent": "sector",
@@ -757,7 +829,14 @@
                 ]
             },
             "recipient_country country_code": {
-                "parent": "receipient_country"
+                "parent": "receipient_country",
+                "add_more": false
+            },
+            "recipient_country narrative narrative": {
+                "parent": "recipient_country narrative",
+                "peer": [
+                    "recipient_country narrative language"
+                ]
             },
             "recipient_region region_vocabulary": {
                 "parent": "recipient_region",
@@ -773,10 +852,12 @@
                 ]
             },
             "flow_type flow_type": {
-                "parent": "flow_type"
+                "parent": "flow_type",
+                "add_more": false
             },
             "finance_type finance_type": {
-                "parent": "finance_type"
+                "parent": "finance_type",
+                "add_more": false
             },
             "aid_type aid_type_vocabulary": {
                 "parent": "aid_type",
@@ -788,31 +869,29 @@
                 ]
             },
             "tied_status tied_status_code": {
-                "parent": "tied_status"
+                "parent": "tied_status",
+                "add_more": false
             }
         },
         "codeDependency": {
-            "sector": {
-                "dependentOn": "sector_vocabulary",
-                "dependentField": "code",
-                "defaultCodeField": "text",
-                "dependencyRelation": {
-                    "1": "code",
-                    "2": "category_code",
-                    "7": "sdg_goal",
-                    "8": "sdg_target"
-                }
+            "dependentOn": {
+                "sector code": "sector sector_vocabulary",
+                "recipient_region code": "recipient_region region_vocabulary"
             },
-            "recipient_region": {
-                "codeDependency": {
-                    "dependentOn": "sector_vocabulary",
-                    "dependentField": "code",
-                    "defaultCodeField": "text",
+            "dependencyCondition": {
+                "sector sector_vocabulary": {
+                    "defaultCodeField": "sector text",
                     "dependencyRelation": {
                         "1": "code",
-                        "99": "category_code",
+                        "2": "category_code",
                         "7": "sdg_goal",
                         "8": "sdg_target"
+                    }
+                },
+                "recipient_region region_vocabulary": {
+                    "defaultCodeField": "custom_code",
+                    "dependencyRelation": {
+                        "1": "region_code"
                     }
                 }
             }

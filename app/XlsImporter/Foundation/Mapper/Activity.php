@@ -20,45 +20,69 @@ class Activity
     //activities whose identifier is mentioned on setting sheet
     protected array $activities = [];
 
+    /**
+     * total number of activities.
+     */
     protected int $totalCount = 0;
 
+    /**
+     * total number of processed count.
+     */
     protected int $processedCount = 0;
 
-    //
+    /**
+     * @var array
+     */
     protected array $activitiesIdentifier = [];
 
+    /**
+     * @var array
+     */
+    protected array $duplicateIdentifiers = [];
+
+    /**
+     * @var int
+     */
     protected int $rowCount = 2;
 
+    /**
+     * name of sheet currently being processed.
+     *
+     * @var string
+     */
     protected string $sheetName = '';
 
+    /**
+     * @var array
+     */
     protected array $columnTracker = [];
 
     /**
      * @var array
      */
     protected array $activityElements = [
-         'Title' => 'title',
-         'Other Identifier' => 'other_identifier',
-         'Description' => 'description',
-         'Activity Date' => 'activity_date',
-         'Recipient Country' => 'recipient_country',
-         'Recipient Region' => 'recipient_region',
-         'Sector' => 'sector',
-         'Tag' => 'tag',
-         'Policy Marker' => 'policy_marker',
-         'Default Aid Type' => 'default_aid_type',
-//         'Country Budget Items' => 'country_budget_items',
-         'Humanitarian Scope' => 'humanitarian_scope',
-         'Related Activity' => 'related_activity',
-         'Conditions' => 'conditions',
-         'Legacy Data' => 'legacy_data',
-         'Document Link' => 'document_link',
-         'Contact Info' => 'contact_info',
-         'Location' => 'location',
-         'Planned Disbursement' => 'planned_disbursement',
-         'Participating Org' => 'participating_org',
-         'Budget' => 'budget',
-//         'Transaction' => 'transactions',
+        'Title' => 'title',
+        'Other Identifier' => 'other_identifier',
+        'Description' => 'description',
+        'Activity Date' => 'activity_date',
+        'Recipient Country' => 'recipient_country',
+        'Recipient Region' => 'recipient_region',
+        'Sector' => 'sector',
+        'Tag' => 'tag',
+        'Policy Marker' => 'policy_marker',
+        'Default Aid Type' => 'default_aid_type',
+        'Country Budget Items' => 'country_budget_items',
+        'Humanitarian Scope' => 'humanitarian_scope',
+        'Related Activity' => 'related_activity',
+        'Conditions' => 'conditions',
+        'Legacy Data' => 'legacy_data',
+        'Document Link' => 'document_link',
+        'Contact Info' => 'contact_info',
+        'Location' => 'location',
+        'Planned Disbursement' => 'planned_disbursement',
+        'Participating Org' => 'participating_org',
+        'Budget' => 'budget',
+        'Transaction' => 'transactions',
     ];
 
     protected array $singleValuedElements = [
@@ -122,7 +146,7 @@ class Activity
         return $this;
     }
 
-    public function validateAndStoreData()
+    public function validateAndStoreData(): void
     {
         $activityValidator = app(ActivityValidator::class);
         $this->totalCount = count($this->activities);
@@ -141,7 +165,7 @@ class Activity
         $this->updateStatus();
     }
 
-    public function defaultValues($data)
+    public function defaultValues($data): void
     {
         $dropDownFields = $this->getDropDownFields();
         $excelColumnName = $this->getExcelColumnNameMapper();
@@ -150,6 +174,12 @@ class Activity
         foreach ($data as $row) {
             if ($this->checkRowNotEmpty($row)) {
                 $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null) ?? $elementActivityIdentifier;
+
+                if (in_array($elementActivityIdentifier, $this->activitiesIdentifier)) {
+                    $this->duplicateIdentifiers[] = $elementActivityIdentifier;
+                } else {
+                    $this->activitiesIdentifier[] = $elementActivityIdentifier;
+                }
 
                 foreach ($this->defaultValueElements as $element) {
                     $fieldValue = $row[$element];
@@ -250,14 +280,15 @@ class Activity
                     )
                 ) {
                     if (!empty($elementData)) {
-                        $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
+                        if (in_array($elementActivityIdentifier, $this->activitiesIdentifier)) {
+                            $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
+                        }
+
                         $elementData = [];
                     }
 
                     $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null) ?? $elementActivityIdentifier;
                 }
-
-                $systemMappedRow = [];
 
                 foreach ($row as $fieldName => $fieldValue) {
                     if (!empty($fieldName) && $fieldName !== 'activity_identifier') {
@@ -267,7 +298,10 @@ class Activity
 
                 $elementData[] = $systemMappedRow;
             } else {
-                $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
+                if (in_array($elementActivityIdentifier, $this->activitiesIdentifier)) {
+                    $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
+                }
+                // $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
                 break;
             }
         }
@@ -284,12 +318,9 @@ class Activity
         $excelColumnName = $this->getExcelColumnNameMapper();
 
         // variables to map code dependency in elements like sector, recipient region and so on
-        $codeRelation = Arr::get($dependency, 'codeDependency', []);
-        $codeDependencyConditions = Arr::get($codeRelation, 'dependencyRelation', []);
-        $codeDependentOn = Arr::get($codeRelation, 'dependentOn', '');
-        $codeDependentField = Arr::get($codeRelation, 'dependentField', '');
-        $defaultCodeField = Arr::get($codeRelation, 'defaultCodeField', '');
-        $dependentOnValue = '';
+        $codeDependencyCondition = Arr::get($dependency, 'codeDependency.dependencyCondition', []);
+        $dependentOn = Arr::get($dependency, 'codeDependency.dependentOn', []);
+        $dependentOnValue = array_fill_keys(array_values($dependentOn), null);
 
         foreach (array_values($fieldDependency) as $dependents) {
             $parentBaseCount[$dependents['parent']] = null;
@@ -297,29 +328,30 @@ class Activity
 
         foreach ($data as $row) {
             foreach ($row as $fieldName => $fieldValue) {
-                if ($elementBase && ($fieldName === $elementBase && $fieldValue)) {
-                    $dependentOnValue = '';
+                if ($elementBase && ($fieldName === $elementBase && ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)))) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
                     $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
-                } elseif ($elementBase && ($fieldName === $elementBase && $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row))) {
-                    $dependentOnValue = '';
-                    $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
-                    $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
+                    // dump($element, $dependentOn, $dependentOnValue, 'test', array_fill_keys(array_values($dependentOn), null));
+                    $dependentOnValue = array_fill_keys(array_values($dependentOn), null);
                 }
 
                 if (array_key_exists($fieldName, $fieldDependency)) {
                     $parentKey = $fieldDependency[$fieldName]['parent'];
                     $peerAttributes = Arr::get($fieldDependency, "$fieldName.peer", []);
+                    $parentAddMore = Arr::get($fieldDependency, "$fieldName.add_more", true);
 
-                    if ($fieldValue) {
-                        $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) ? 0 : $parentBaseCount[$parentKey] + 1;
-                    } elseif ($this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
-                        $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) ? 0 : $parentBaseCount[$parentKey] + 1;
+                    if ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
+                        $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) || !$parentAddMore ? 0 : $parentBaseCount[$parentKey] + 1;
                     }
                 }
+                // dump('----------------',$fieldName);
+                if (!empty($dependentOn) && in_array($fieldName, array_keys($dependentOn), false)) {
+                    $dependentOnFieldName = $dependentOn[$fieldName];
+                    $dependentOnFieldValue = $dependentOnValue[$dependentOnFieldName];
+                    $dependencyCondition = $codeDependencyCondition[$dependentOnFieldName];
+                    $defaultField = $dependencyCondition['defaultCodeField'];
 
-                if ($fieldName === $codeDependentField) {
-                    $fieldName = in_array($dependentOnValue, array_keys($codeDependencyConditions)) ? Arr::get($codeDependencyConditions, $dependentOnValue, $defaultCodeField) : $defaultCodeField;
+                    $fieldName = $dependentOnFieldValue ? Arr::get($dependencyCondition, "dependencyRelation.$dependentOnFieldValue", $defaultField) : $fieldName;
                 }
 
                 if (array_key_exists($fieldName, $elementDropDownFields)) {
@@ -327,17 +359,19 @@ class Activity
                 }
 
                 // check for non empty.. including zero
-                if ($fieldName === $codeDependentOn && $fieldValue) {
-                    $dependentOnValue = $fieldValue;
+                if (in_array($fieldName, array_keys($dependentOnValue), false) && $fieldValue) {
+                    $dependentOnValue[$fieldName] = $fieldValue;
                 }
 
                 $elementPosition = $this->getActivityElementPosition($parentBaseCount, $fieldName);
                 $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
+                // dump($elementPositionBasedOnParent);
 
                 if (!Arr::get($elementData, $elementPositionBasedOnParent, null) && !empty($elementPosition)) {
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
                     $this->columnTracker[$elementActivityIdentifier][$element][$element . '.' . $elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
                 }
+                // dump($elementData);
             }
             $this->rowCount++;
         }

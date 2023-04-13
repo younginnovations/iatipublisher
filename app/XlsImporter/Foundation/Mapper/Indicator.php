@@ -52,12 +52,13 @@ class Indicator
      * @var array
      */
     protected array $tempColumnTracker = [];
+    protected string $statusFilePath = '';
+    protected string $validatedDataFilePath = '';
 
-    protected string $destinationFilePath = '';
-
-    public function initMapper($destinationFilePath)
+    public function initMapper($validatedDataFilePath, $statusFilePath)
     {
-        $this->destinationFilePath = $destinationFilePath;
+        $this->validatedDataFilePath = $validatedDataFilePath;
+        $this->statusFilePath = $statusFilePath;
     }
 
     /**
