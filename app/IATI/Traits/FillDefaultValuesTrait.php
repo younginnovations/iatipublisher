@@ -127,8 +127,7 @@ trait FillDefaultValuesTrait
      */
     public function store(array $data): Model
     {
-        logger('store ma');
-        $defaultFieldValues = $data['default_field_values'];
+        $defaultFieldValues = $this->resolveDefaultValues($data, '');
         $data = $this->populateDefaultFields($data, $defaultFieldValues);
 
         return $this->model->create($data);
@@ -147,8 +146,7 @@ trait FillDefaultValuesTrait
      */
     public function update($id, $data): bool
     {
-        logger('eta pugo');
-        $defaultValues = $this->resolveDefaultValues($id, $data);
+        $defaultValues = $this->resolveDefaultValues($data, $id);
         if (!empty($defaultValues)) {
             $data = $this->populateDefaultFields($data, $defaultValues);
         }
@@ -159,12 +157,12 @@ trait FillDefaultValuesTrait
     /**
      * Set Default values for the imported csv activities.
      *
-     * @param $id
+     * @param string $id
      * @param $data
      *
      * @return array
      */
-    protected function resolveDefaultValues($id, $data): array
+    protected function resolveDefaultValues($data, string $id = ''): array
     {
         $defaultValueTemplate = [
             'default_currency'    => '',
@@ -175,10 +173,10 @@ trait FillDefaultValuesTrait
         ];
 
         $defaultValuesFromImport = isset($data['default_field_values']) && !empty($data['default_field_values'])
-            ? $data['default_field_values'][0]
+            ? ($data['default_field_values'][0] ?? $data['default_field_values'])
             : [];
 
-        $defaultValuesFromExistingActivity = $this->getDefaultValuesFromActivity($id, $this->getModel());
+        $defaultValuesFromExistingActivity = $id ? $this->getDefaultValuesFromActivity($id, $this->getModel()) : [];
         $setting = auth()->user()->organization->settings ?? [];
         $defaultValuesFromSettings = [];
 

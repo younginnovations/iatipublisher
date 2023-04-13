@@ -1,13 +1,24 @@
 <?php
 
 //
-//namespace Tests\Feature;
+//
+//namespace Tests\Unit;
 //
 //use App\IATI\Repositories\Activity\ActivityRepository;
+//use Tests\Feature\voidx;
 //use Tests\TestCase;
 //
 //class DefaultValuesTest extends TestCase
 //{
+//    public array $sampleDefaultValue = [
+//        'default_currency'    => 'USD',
+//        'default_language'    => 'am',
+//        'hierarchy'           => '2',
+//        'budget_not_provided' => '',
+//        'humanitarian'        => '',
+//    ];
+//
+//
 //    public array $activityAllFilled =  [
 //        "id" => 76,
 //        "iati_identifier" => [
@@ -1619,7 +1630,7 @@
 //    public array $activityTemplate = [];
 //    public array $resultsTemplate = [];
 //    public array $transactionsTemplate = [];
-//    public array $testableElements = ['title', 'contact_info', 'result', 'transaction'];
+//    public array $testableElements = ['title', 'description', 'contact_info', 'result', 'transaction'];
 //
 //    /**
 //     * A basic feature test example.
@@ -1629,7 +1640,16 @@
 //    public function test_default_value_in_title()
 //    {
 //        $activityRepository = app()->make(ActivityRepository::class);
-//        $response = $this->get('/');
+//        $newActivity = [
+//            'title' => $this->activityAllFilled['title'],
+//            'iati_identifier' => $this->activityAllFilled['iati_identifier'],
+//            'default_field_values' => $this->sampleDefaultValue,
+//            'org_id' => 1,
+//            'created_by'=> 1
+//        ];
+//
+//        $createdActivity = $activityRepository->store($newActivity);
+//        dd($createdActivity);
 //
 //        $response->assertStatus(200);
 //    }
