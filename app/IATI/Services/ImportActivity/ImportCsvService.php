@@ -394,6 +394,7 @@ class ImportCsvService
     protected function getIdentifiers(): array
     {
         $org_id = Auth::user()->organization_id;
+        $activities = $this->activityRepo->getActivityIdentifiers($org_id)->toArray();
 
         return Arr::flatten($this->activityRepo->getActivityIdentifiers($org_id)->toArray());
     }

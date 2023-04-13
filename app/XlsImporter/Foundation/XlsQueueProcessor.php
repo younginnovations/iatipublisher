@@ -98,7 +98,7 @@ class XlsQueueProcessor
      * @throws ParseException
      * @throws \Throwable
      */
-    public function import($filename, $orgId, $orgRef, $userId, $dbIatiIdentifiers): bool
+    public function import($filename, $orgId, $orgRef, $userId, $dbIatiIdentifiers, $xlsType): bool
     {
         try {
             logger()->error('here in import');
@@ -113,8 +113,7 @@ class XlsQueueProcessor
             $xlsToArray = new XlsToArray();
             Excel::import($xlsToArray, $filePath, 's3');
             $contents = $xlsToArray->sheetData;
-
-            $xlsType = 'basic';
+            file_put_contents(app_path() . '/XlsImporter/Templates/test.json', json_encode($contents));
 
             $this->xlsMapper->process($contents, $xlsType, $userId, $orgId, $orgRef, $dbIatiIdentifiers);
 

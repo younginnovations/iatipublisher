@@ -34,11 +34,19 @@ class Period
 
     protected array $columnTracker = [];
     protected array $tempColumnTracker = [];
-    protected string $destinationFilePath = '';
+    protected string $statusFilePath = '';
+    protected string $validatedDataFilePath = '';
 
-    public function initMapper($destinationFilePath)
+    protected array $existingIdentifier = [];
+
+    protected int $totalCount = 0;
+    protected int $processedCount = 0;
+
+    public function initMapper($validatedDataFilePath, $statusFilePath, $existingIdentifier)
     {
-        $this->destinationFilePath = $destinationFilePath;
+        $this->validatedDataFilePath = $validatedDataFilePath;
+        $this->statusFilePath = $statusFilePath;
+        $this->existingIdentifier = $existingIdentifier;
     }
 
     /**
@@ -87,38 +95,40 @@ class Period
         ],
     ];
 
-    public function map($periodData)
+    public function map($periodData): static
     {
-        $periodData = json_decode($periodData, true, 512, 0);
-
         foreach ($periodData as $sheetName => $content) {
             $this->sheetName = $sheetName;
+            $this->rowCount = 2;
 
             if (in_array($sheetName, array_keys($this->mappers))) {
-                $this->rowCount = 2;
                 $this->mapPeriods($content, $sheetName);
             }
 
             if (in_array($sheetName, array_keys($this->periodDivisions))) {
-                $this->rowCount = 2;
                 $this->columnToFieldMapper($this->periodDivisions[$sheetName], $content);
             }
         }
 
-        $this->validatePeriod();
+        return $this;
     }
 
-    public function validatePeriod()
+    public function validateAndStoreData()
     {
         $periodValidator = app(PeriodValidator::class);
+        logger()->error('startt validatinggg');
+        logger()->error(json_encode($this->periods));
 
         foreach ($this->periods as $indicatorIdentifier => $periods) {
             foreach ($periods as $periodIdentifier => $periodData) {
+                logger()->error('fetchedddd period');
                 $errors = $periodValidator
                     ->init($periodData['period'])
                     ->validateData();
                 $columnAppendedError = $this->appendExcelColumnAndRowDetail($errors, $this->columnTracker[$indicatorIdentifier][$periodIdentifier]['period']);
-                $this->storeValidatedData($periodData, $columnAppendedError);
+                $existingId = Arr::get($this->existingIdentifier, sprintf('%s_%s', $indicatorIdentifier, $periodIdentifier), false);
+                $this->processedCount++;
+                $this->storeValidatedData($periodData['period'], $columnAppendedError, $existingId, $indicatorIdentifier);
             }
         }
     }
@@ -142,6 +152,8 @@ class Period
                 break;
             }
         }
+
+        $this->totalCount = count($this->identifiers['period']);
     }
 
     public function columnToFieldMapper($element, $data = [])
@@ -153,6 +165,7 @@ class Period
         $elementMapper = array_flip($columnMapper[$element]);
         $elementDropDownFields = $dropDownFields[$element];
         $elementActivityIdentifier = null;
+        // dump($dependency, 'element',$element);
 
         $elementIdentifier = $this->elementIdentifiers[$element];
 
@@ -182,8 +195,13 @@ class Period
 
                 $elementData[] = $systemMappedRow;
             } else {
-                $this->pushPeriodData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
+                // $this->pushPeriodData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
                 break;
+            }
+
+            if (!empty($elementData)) {
+                $this->pushPeriodData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
+                $elementData = [];
             }
         }
     }
@@ -257,6 +275,7 @@ class Period
     protected function pushPeriod($identifier, $data): void
     {
         $indicatorIdentifier = Arr::get($this->identifiers, "period.$identifier", null);
+        dump('pushing period');
 
         $this->periods[$indicatorIdentifier][$identifier]['period'] = $data;
         $this->columnTracker[$indicatorIdentifier][$identifier]['period'] = $this->tempColumnTracker;

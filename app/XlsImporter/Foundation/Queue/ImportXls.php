@@ -31,6 +31,11 @@ class ImportXls extends Job
     protected $iatiIdentifiers;
 
     /**
+     * @var
+     */
+    protected $xlsType;
+
+    /**
      * ImportXls constructor.
      *
      * @param $organizationId
@@ -38,14 +43,16 @@ class ImportXls extends Job
      * @param $userId
      * @param $filename
      * @param $iatiIdentifiers
+     * @param $xlsType
      */
-    public function __construct($organizationId, $orgRef, $userId, $filename, $iatiIdentifiers)
+    public function __construct($organizationId, $orgRef, $userId, $filename, $iatiIdentifiers, $xlsType)
     {
         $this->organizationId = $organizationId;
         $this->orgRef = $orgRef;
         $this->filename = $filename;
         $this->userId = $userId;
         $this->iatiIdentifiers = $iatiIdentifiers;
+        $this->xlsType = $xlsType;
     }
 
     /**
@@ -55,7 +62,7 @@ class ImportXls extends Job
     {
         try {
             $xlsImportQueue = app()->make(XlsQueueProcessor::class);
-            $xlsImportQueue->import($this->filename, $this->organizationId, $this->orgRef, $this->userId, $this->iatiIdentifiers);
+            $xlsImportQueue->import($this->filename, $this->organizationId, $this->orgRef, $this->userId, $this->iatiIdentifiers, $this->xlsType);
 
             $this->delete();
         } catch (\Exception $e) {

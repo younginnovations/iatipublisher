@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\XmlImporter\Foundation\Support\Factory\Traits;
+namespace App\XlsImporter\Foundation\XlsValidator\Traits;
 
 use App\Http\Requests\Activity\Budget\BudgetRequest;
 use App\Http\Requests\Activity\CapitalSpend\CapitalSpendRequest;
@@ -230,14 +230,9 @@ trait ValidationMessages
     public function messagesForCountryBudgetItems(array $activity): array
     {
         $countryBudgetItems = Arr::get($activity, 'country_budget_items', []);
-        $tempMessages = (new CountryBudgetItemRequest())->getMessagesForCountryBudgetItem(Arr::get($countryBudgetItems, key($countryBudgetItems), []));
-        $messages = [];
+        logger()->error(json_encode($countryBudgetItems));
 
-        foreach ($tempMessages as $idx => $message) {
-            $messages['country_budget_items.0.' . $idx] = $message;
-        }
-
-        return $messages;
+        return (new CountryBudgetItemRequest())->getMessagesForCountryBudgetItem($countryBudgetItems);
     }
 
     /**

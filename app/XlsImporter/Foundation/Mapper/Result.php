@@ -22,23 +22,19 @@ class Result
 
     protected string $destinationFilePath = '';
 
+    protected array $resultIdentifier = [];
+    protected array $identifiers = [];
+
     /**
      * @var array
      */
     protected array $resultDocumentLink = [];
 
-    /**
-     * @var array|string[]
-     */
-    protected array $resultElements = [
-        'Result' => 'result',
-        'Result Document Link' => 'result_document_link',
-    ];
+    protected int $totalCount = 0;
+    protected int $processedCount = 0;
 
-    protected array $enclosedNarrative = [
-        'result',
-        'result_document_link',
-    ];
+    protected array $columnTracker = [];
+    protected array $tempColumnTracker = [];
 
     /**
      * @var array
@@ -47,43 +43,98 @@ class Result
 
     protected int $rowCount = 2;
     protected string $sheetName = '';
-    protected array $columnTracker = [];
     protected string $elementBeingProcessed = '';
 
-    public function initMapper($destinationFilePath)
+    protected string $statusFilePath = '';
+    protected string $validatedDataFilePath = '';
+
+    protected array $existingIdentifier = [];
+
+    /**
+     * Division of indicator data based on sheet names.
+     *
+     * @var array
+     */
+    protected array $resultDivision = [
+        'Result' => 'result',
+        'Result Document Link' => 'result_document_link',
+    ];
+
+    /**
+     * Identifier column for each indicator data sheet.
+     *
+     * @var array
+     */
+    protected array $elementIdentifiers = [
+        'result' => 'result_identifier',
+        'result_document_link' => 'result_identifier',
+    ];
+
+    // /**
+    //  * Mapper sheets and their details.
+    //  *
+    //  * @var array
+    //  */
+    // protected array $mappers = [
+    //     'Result Mapper' => [
+    //         'columns' => [
+    //             'parentIdentifier' => 'activity_identifier',
+    //             'number' => 'result_number',
+    //         ],
+    //         'concatinator' => '_',
+    //         'type' => 'result',
+    //     ],
+    // ];
+
+    public function initMapper($validatedDataFilePath, $statusFilePath, $existingIdentifier)
     {
-        $this->destinationFilePath = $destinationFilePath;
+        $this->validatedDataFilePath = $validatedDataFilePath;
+        $this->statusFilePath = $statusFilePath;
+        $this->existingIdentifier = $existingIdentifier;
     }
 
-    public function map($data)
+    public function map($resultData)
     {
-        $resultData = json_decode($data, true, 512, JSON_THROW_ON_ERROR | 0);
-        $resultData['Result'][1]['result_identifier'] = '289289892-result1';
-        $resultData['Result Mapper'][0]['result_identifier'] = '289289892-result1';
-        $resultData['Result'][3]['result_identifier'] = 'activity-1-result-2';
-        dd($resultData);
-        if (isset($resultData['Result Mapper'])) {
-            $this->setActivityAndResultIdentifier($resultData['Result Mapper']);
-        }
-
-        if (isset($resultData['Result'])) {
-            $this->sheetName = 'Result';
+        foreach ($resultData as $sheetName => $content) {
+            $this->sheetName = $sheetName;
             $this->rowCount = 2;
-            $this->columnToFieldMapper($this->resultElements['Result'], $resultData['Result']);
-        }
 
-        if (isset($resultData['Result Document Link'])) {
-            $this->sheetName = 'Result Document Link';
-            $this->rowCount = 2;
-            $this->documentLinkColumnToFieldMapper($this->resultElements['Result Document Link'], $resultData['Result Document Link']);
-        }
+            if ($sheetName === 'Result Mapper') {
+                $this->mapMapperSheets($content, $sheetName);
+            }
 
-        $this->results = $this->combineResultAndDocumentLink();
-        $this->validateResult();
+            if (array_key_exists($sheetName, $this->resultDivision)) {
+                $this->columnToFieldMapper($this->resultDivision[$sheetName], $content);
+            }
+        }
         dd($this->results);
+
+        return $this;
     }
 
-    public function validateResult()
+    /**
+     * Map mapper sheets and store them in $identifiers.
+     *
+     * @return void
+     */
+    public function mapMapperSheets($data, $sheetName): void
+    {
+        $parentIdentifierValue = '';
+
+        foreach ($data as $index => $row) {
+            if ($this->checkRowNotEmpty($row)) {
+                if ((empty($parentIdentifierValue) || $parentIdentifierValue !== $row['activity_identifier']) && !empty($row['activity_identifier'])) {
+                    $parentIdentifierValue = $row['activity_identifier'];
+                }
+                $this->resultIdentifier[$sheetName][$parentIdentifierValue][] = sprintf('%s_%s', $parentIdentifierValue, $row['result_number']);
+                $this->identifiers[sprintf('%s_%s', $parentIdentifierValue, $row['result_number'])] = $parentIdentifierValue;
+            } else {
+                break;
+            }
+        }
+    }
+
+    public function validateAndStoreData()
     {
         $errors = [];
         $resultValidator = app(ResultValidator::class);
@@ -94,168 +145,90 @@ class Result
                     ->init($resultData)
                     ->validateData();
                 $excelColumnAndRowName = isset($this->columnTracker[$activityIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
-                $this->results[$activityIdentifier][$resultIdentifier]['error'] = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
+                $columnAppendedError = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
+                $existingId = Arr::get($this->existingIdentifier, sprintf('%s_%s', $activityIdentifier, $resultIdentifier), false);
+                $this->processedCount++;
+                $this->storeValidatedData($resultData, $columnAppendedError, $existingId, $activityIdentifier);
             }
         }
-//        dd($this->columnTracker);
     }
 
-    public function appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName): array
-    {
-        foreach ($errors as $errorLevel => $errorData) {
-            foreach ($errorData as $element => $error) {
-                foreach ($error as $key => $err) {
-                    if (isset($excelColumnAndRowName[$key])) {
-                        $errors[$errorLevel][$element][$key] .= " ( $excelColumnAndRowName[$key] )";
-                    }
-                }
-            }
-        }
-
-        return $errors;
-    }
-
-    public function setActivityAndResultIdentifier($rows)
-    {
-        $activityIdentifier = null;
-        $mapper = [];
-
-        foreach ($rows as $fieldValue) {
-            if (!$this->checkRowNotEmpty($fieldValue)) {
-                break;
-            }
-            if ($this->checkRowNotEmpty($fieldValue)) {
-                $mapper[$fieldValue['result_identifier']] = $activityIdentifier;
-
-                if (!empty($fieldValue['activity_identifier'])) {
-                    $mapper[$fieldValue['result_identifier']] = $fieldValue['activity_identifier'];
-                    $activityIdentifier = $fieldValue['activity_identifier'];
-                }
-            }
-        }
-        $this->activityResultMapper = $mapper;
-    }
-
-    /**
-     * @param $element
-     * @param array $data
-     *
-     * @return void
-     */
-    public function columnToFieldMapper($element, array $data = [])
+    public function columnToFieldMapper($element, $data = [])
     {
         $elementData = [];
         $columnMapper = $this->getLinearizedActivity();
-        $dropDownFields = $this->getDropDownFields();
         $dependency = $this->getDependencies();
+        $dropDownFields = $this->getDropDownFields();
         $elementMapper = array_flip($columnMapper[$element]);
         $elementDropDownFields = $dropDownFields[$element];
-        $elementResultIdentifier = null;
+        $elementActivityIdentifier = null;
+        // dump($dependency, 'element',$element);
+
+        $elementIdentifier = $this->elementIdentifiers[$element];
 
         foreach ($data as $row) {
             if ($this->checkRowNotEmpty($row)) {
                 if (
-                    is_null($elementResultIdentifier) || (
-                        Arr::get($row, 'result_identifier', null) &&
-                        Arr::get($row, 'result_identifier', null) !== $elementResultIdentifier
+                    is_null($elementActivityIdentifier) || (
+                        Arr::get($row, $elementIdentifier, null) &&
+                        Arr::get($row, $elementIdentifier, null) !== $elementActivityIdentifier
                     )
                 ) {
                     if (!empty($elementData)) {
-                        $this->results[$this->activityResultMapper[$elementResultIdentifier]][$elementResultIdentifier] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementResultIdentifier, $element)[0];
+                        $this->appendResultData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
                         $elementData = [];
                     }
-                    $elementResultIdentifier = Arr::get($row, 'result_identifier', null) ?? $elementResultIdentifier;
+
+                    $elementActivityIdentifier = Arr::get($row, $elementIdentifier, null) ?? $elementActivityIdentifier;
                 }
 
                 $systemMappedRow = [];
 
                 foreach ($row as $fieldName => $fieldValue) {
-                    if (!empty($fieldName) && $fieldName !== 'result_identifier') {
+                    if (!empty($fieldName) && $fieldName !== $elementIdentifier) {
                         $systemMappedRow[$elementMapper[$fieldName]] = $fieldValue;
                     }
                 }
 
                 $elementData[] = $systemMappedRow;
             } else {
-                $this->results[$this->activityResultMapper[$elementResultIdentifier]][$elementResultIdentifier] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementResultIdentifier, $element)[0];
-//                $this->results[$elementResultIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields)[0];
-//                $this->results[$elementResultIdentifier]['activity_identifier'] = $this->activityResultMapper[$elementResultIdentifier];
+                // $this->appendResultData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
                 break;
+            }
+
+            if (!empty($elementData)) {
+                $this->appendResultData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
+                $elementData = [];
             }
         }
     }
 
-    public function documentLinkColumnToFieldMapper($element, array $data = [])
+    public function getElementData($data, $dependency, $elementDropDownFields, $element): array
     {
-        $elementData = [];
-        $columnMapper = $this->getLinearizedActivity();
-        $dropDownFields = $this->getDropDownFields();
-        $dependency = $this->getDependencies();
-        $elementMapper = array_flip($columnMapper[$element]);
-        $elementDropDownFields = $dropDownFields[$element];
-        $elementResultIdentifier = null;
-
-        foreach ($data as $row) {
-            if ($this->checkRowNotEmpty($row)) {
-                if (
-                    is_null($elementResultIdentifier) || (
-                        Arr::get($row, 'result_identifier', null) &&
-                        Arr::get($row, 'result_identifier', null) !== $elementResultIdentifier
-                    )
-                ) {
-                    if (!empty($elementData)) {
-                        $this->resultDocumentLink[$elementResultIdentifier] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementResultIdentifier, $element);
-                        $elementData = [];
-                    }
-                    $elementResultIdentifier = Arr::get($row, 'result_identifier', null) ?? $elementResultIdentifier;
-                }
-
-                $systemMappedRow = [];
-
-                foreach ($row as $fieldName => $fieldValue) {
-                    if (!empty($fieldName) && $fieldName !== 'result_identifier') {
-                        $systemMappedRow[$elementMapper[$fieldName]] = $fieldValue;
-                    }
-                }
-
-                $elementData[] = $systemMappedRow;
-            } else {
-                $data = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementResultIdentifier, $element);
-
-                $this->resultDocumentLink[$elementResultIdentifier] = $data;
-                //                $this->resultDocumentLink[$this->activityResultMapper[$elementResultIdentifier]]['document_link'] = [ $data['document_link'] ];
-                break;
-            }
-        }
-    }
-
-    public function getElementData($data, $dependency, $elementDropDownFields, $elementResultIdentifier, $element): array
-    {
-        $elementData = [];
-        $elementBase = $dependency['elementBase'];
-        $elementBasePeer = $dependency['elementBasePeer'];
+        $elementBase = Arr::get($dependency, 'elementBase', null);
+        $elementBasePeer = Arr::get($dependency, 'elementBasePeer', []);
         $baseCount = null;
         $fieldDependency = $dependency['fieldDependency'];
         $parentBaseCount = [];
         $excelColumnName = $this->getExcelColumnNameMapper();
+        $activityTemplate = $this->getActivityTemplate();
+        $elementData = Arr::get($activityTemplate, $element, []);
 
-        foreach ($fieldDependency as $dependents) {
+        foreach (array_values($fieldDependency) as $dependents) {
             $parentBaseCount[$dependents['parent']] = null;
         }
 
         foreach ($data as $row) {
             foreach ($row as $fieldName => $fieldValue) {
-                if (($fieldName === $elementBase && $fieldValue)) {
+                if ($elementBase && ($fieldName === $elementBase && $fieldValue)) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
-                    $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
-                } elseif ($fieldName === $elementBase && $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)) {
+                } elseif ($elementBase && $fieldName === $elementBase && $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
-                    $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
                 }
 
-                if (array_key_exists($fieldName, $fieldDependency)) {
+                if (in_array($fieldName, array_keys($fieldDependency))) {
                     $parentKey = $fieldDependency[$fieldName]['parent'];
-                    $peerAttributes = Arr::get($fieldDependency[$fieldName], 'peer', []);
+                    $peerAttributes = Arr::get($fieldDependency, "$fieldName.peer", []);
 
                     if ($fieldValue) {
                         $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) ? 0 : $parentBaseCount[$parentKey] + 1;
@@ -264,16 +237,16 @@ class Result
                     }
                 }
 
-                if (array_key_exists($fieldName, $elementDropDownFields)) {
+                if (in_array($fieldName, array_keys($elementDropDownFields))) {
                     $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields[$fieldName]);
                 }
 
                 $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
-                $elementPositionBasedOnParent = empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition;
+                $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
 
                 if (!Arr::get($elementData, $elementPositionBasedOnParent, null)) {
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
-                    $this->columnTracker[$this->activityResultMapper[$elementResultIdentifier]][$elementResultIdentifier][$element][$elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
+                    $this->tempColumnTracker[$elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
                 }
             }
             $this->rowCount++;
@@ -282,85 +255,48 @@ class Result
         return $elementData;
     }
 
-    public function checkIfPeerAttributesAreNotEmpty(array $peerAttributes, array $rowContent): bool
+    protected function appendResultData($element, $identifier, $data)
     {
-        foreach ($peerAttributes as $attributeName) {
-            if (Arr::get($rowContent, $attributeName, null)) {
-                return true;
-            }
-        }
+        $periodElementFunctions = [
+            'result' => 'appendResult',
+            'result_document_link' => 'appendResultDocumentLink',
+        ];
 
-        return false;
+        call_user_func([$this, $periodElementFunctions[$element]], $identifier, $data);
+        $this->tempColumnTracker = [];
     }
 
-    public function getElementPosition($fieldDependency, $dependencies): string
+    protected function appendResult($identifier, $data): void
     {
-        $position = '';
-        $dependency = explode(' ', $dependencies);
-        $expected_position = '';
+        $activityIdentifier = Arr::get($this->identifiers, "activity.$identifier", null);
 
-        foreach ($dependency as $key) {
-            $expected_position = empty($expected_position) ? $key : "$expected_position $key";
-
-            if (in_array($expected_position, array_keys($fieldDependency))) {
-                $key = $key === 'narrative' ? '0.narrative' : $key;
-                $positionValue = $fieldDependency[$expected_position];
-                $position = empty($position) ? $key . '.' . $positionValue : "$position.$key.$positionValue";
-            } else {
-                $position = empty($position) ? "$key" : "$position.$key";
-            }
-        }
-
-        return $position;
+        $this->results[$activityIdentifier][$identifier]['results'] = $data;
+        $this->columnTracker[$activityIdentifier][$identifier]['results'] = $this->tempColumnTracker;
     }
 
-    public function mapDropDownValueToKey($value, $location)
+    protected function appendResultDocumentLink($identifier, $data): void
     {
-        // should we consider case?
-        if (is_null($value)) {
-            return $value;
-        }
+        $activityIdentifier = Arr::get($this->identifiers, "activity.$identifier", null);
+        $this->results[$activityIdentifier][$identifier]['results']['document_link'] = $data;
 
-        //
-        if (is_array($location)) {
-            return Arr::get($location, $value, $value);
-        }
-
-        $locationArr = explode('/', $location);
-        $dropDownValues = array_flip(getCodeList(explode('.', $locationArr[1])[0], $locationArr[0]));
-        $key = Arr::get($dropDownValues, $value, $value);
-
-        return $key;
+        $this->updateColumnTracker($activityIdentifier, $identifier, 'results.document_link');
     }
 
-    public function checkRowNotEmpty($row)
+    protected function updateColumnTracker($activityIdentifier, $identifier, $keyPrefix)
     {
-        if (!is_array_value_empty($row)) {
-            return true;
+        foreach ($this->tempColumnTracker as $columnPosition => $columnIndex) {
+            $this->columnTracker[$activityIdentifier][$identifier]["$keyPrefix.$columnPosition"] = $columnIndex;
         }
-
-        return false;
     }
 
-    public function combineResultAndDocumentLink()
-    {
-        $results = $this->results;
-        $resultDocumentLink = $this->resultDocumentLink;
+// public function checkIfPeerAttributesAreNotEmpty(array $peerAttributes, array $rowContent): bool
+// {
+//     foreach ($peerAttributes as $attributeName) {
+//         if (Arr::get($rowContent, $attributeName, null)) {
+//             return true;
+//         }
+//     }
 
-        $documentLink = [];
-
-        foreach ($resultDocumentLink as $key => $documentLinkData) {
-            $documentLink[$key]['document_link'] = array_column($documentLinkData, 'document_link');
-        }
-
-        foreach ($results as $activityIdentifier => $resultData) {
-            foreach ($resultData as $resultIdentifier => $result) {
-                if (array_key_exists($resultIdentifier, $documentLink)) {
-                    $results[$activityIdentifier][$resultIdentifier] = $result + $documentLink[$resultIdentifier];
-                }
-            }
-        }
-
-        return $results;
-    }
+//     return false;
+// }
 }

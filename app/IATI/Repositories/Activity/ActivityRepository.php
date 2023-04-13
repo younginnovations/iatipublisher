@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
+use Auth;
 
 /**
  * Class ActivityRepository.
@@ -152,7 +153,7 @@ class ActivityRepository extends Repository
      */
     public function getActivityIdentifiers($orgId): Collection|array
     {
-        return $this->model->where('org_id', $orgId)->get('iati_identifier->activity_identifier');
+        return $this->model->where('org_id', $orgId)->get(['id', 'iati_identifier->activity_identifier as identifier']);
     }
 
     /**
@@ -199,7 +200,7 @@ class ActivityRepository extends Repository
             'other_identifier' => $this->getActivityElement($mappedActivity, 'other_identifier'),
             'legacy_data' => $this->getActivityElement($mappedActivity, 'legacy_data'),
             'tag' => $this->getActivityElement($mappedActivity, 'tag'),
-            'org_id' => $mappedActivity['org_id'],
+            'org_id' => Auth::user()->organization->id,
             'policy_marker' => $this->getActivityElement($mappedActivity, 'policy_marker'),
             'budget' => $this->getActivityElement($mappedActivity, 'budget'),
             'activity_scope' => $this->getSingleValuedActivityElement($mappedActivity, 'activity_scope'),

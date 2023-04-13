@@ -41,19 +41,26 @@ class XlsMapper
     public function process(array $xlsData, string $xlsType, $userId, $orgId, $orgRef, $dbIatiIdentifiers): static
     {
         $xlsMapperTypes = [
-            'basic' => Activity::class,
+            'activity' => Activity::class,
             'result' => Result::class,
             'period' => Period::class,
             'indicator' => Indicator::class,
         ];
         $mapper = $xlsMapperTypes[$xlsType];
+        logger()->error($xlsType);
+        logger()->error($mapper);
 
         $xls_data_storage_path = 'XlsImporter/tmp';
         $validatedDataFilePath = sprintf('%s/%s/%s/%s', $xls_data_storage_path, $orgId, $userId, 'valid.json');
         $statusFilePath = sprintf('%s/%s/%s/%s', $xls_data_storage_path, $orgId, $userId, 'status.json');
 
         $xlsMapper = new $mapper();
-        $xlsMapper->initMapper($validatedDataFilePath, $statusFilePath);
+        $xlsMapper->initMapper($validatedDataFilePath, $statusFilePath, $dbIatiIdentifiers);
+
+        if ($xlsType === 'activity') {
+            $xlsMapper->fillOrganizationReportingOrg($orgRef);
+        }
+
         $xlsMapper->map($xlsData)->validateAndStoreData();
 
         return $this;

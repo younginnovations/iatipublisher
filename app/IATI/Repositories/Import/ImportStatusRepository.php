@@ -27,26 +27,28 @@ class ImportStatusRepository extends Repository
      * Returns import status.
      *
      * @param $organizationId
+     * @param $userId
      *
      * @return array
      */
-    public function getImportStatus($organizationId): array
+    public function getImportStatus($organizationId, $userId): array
     {
-        $status = $this->model->where('organization_id', $organizationId)->first();
+        $status = $this->model->where('organization_id', $organizationId)->where('user_id', $userId)->first();
 
         return $status ? $status->toArray() : [];
     }
 
     /**
-     * Delete import status for organization with $organizationId.
+     * Delete import status for organization with $organizationId and $userId.
      *
      * @param $organizationId
+     * @param $userId
      *
      * @return bool
      */
-    public function deleteImportError($organizationId): bool
+    public function deleteImportStatus($organizationId, $userId): bool
     {
-        return (bool) $this->model->where('organization_id', $organizationId)->delete();
+        return (bool) $this->model->where('organization_id', $organizationId)->where('user_id', $userId)->delete();
     }
 
     /**
