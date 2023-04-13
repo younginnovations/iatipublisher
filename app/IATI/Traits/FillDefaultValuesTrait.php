@@ -7,7 +7,6 @@ use App\IATI\Models\Activity\Indicator;
 use App\IATI\Models\Activity\Period;
 use App\IATI\Models\Activity\Result;
 use App\IATI\Models\Activity\Transaction;
-use App\IATI\Models\Setting\Setting;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
@@ -128,6 +127,7 @@ trait FillDefaultValuesTrait
      */
     public function store(array $data): Model
     {
+        logger('store ma');
         $defaultFieldValues = $data['default_field_values'];
         $data = $this->populateDefaultFields($data, $defaultFieldValues);
 
@@ -147,16 +147,54 @@ trait FillDefaultValuesTrait
      */
     public function update($id, $data): bool
     {
-        $defaultValuesFromActivity = $this->getDefaultValuesFromActivity($id, $this->getModel());
-        $orgId = auth()->user()->organization->id;
-        $defaultValuesFromSettings = Setting::where('organization_id', $orgId)->first()?->default_values ?? [];
-        $defaultValues = $defaultValuesFromActivity ?? $defaultValuesFromSettings;
-
+        logger('eta pugo');
+        $defaultValues = $this->resolveDefaultValues($id, $data);
         if (!empty($defaultValues)) {
             $data = $this->populateDefaultFields($data, $defaultValues);
         }
 
         return $this->model->find($id)->update($data);
+    }
+
+    /**
+     * Set Default values for the imported csv activities.
+     *
+     * @param $id
+     * @param $data
+     *
+     * @return array
+     */
+    protected function resolveDefaultValues($id, $data): array
+    {
+        $defaultValueTemplate = [
+            'default_currency'    => '',
+            'default_language'    => '',
+            'hierarchy'           => '',
+            'budget_not_provided' => '',
+            'humanitarian'        => '',
+        ];
+
+        $defaultValuesFromImport = isset($data['default_field_values']) && !empty($data['default_field_values'])
+            ? $data['default_field_values'][0]
+            : [];
+
+        $defaultValuesFromExistingActivity = $this->getDefaultValuesFromActivity($id, $this->getModel());
+        $setting = auth()->user()->organization->settings ?? [];
+        $defaultValuesFromSettings = [];
+
+        if ($setting) {
+            $defaultValuesFromSettings = array_merge(Arr::get($setting, 'default_values', []), Arr::get($setting, 'activity_default_values', []));
+        }
+
+        foreach ($defaultValueTemplate as $key => $value) {
+            $defaultValueTemplate[$key] = $this->getPriorityValue(
+                $defaultValuesFromImport[$key] ?? '',
+                $defaultValuesFromExistingActivity[$key] ?? '',
+                $defaultValuesFromSettings[$key] ?? ''
+            );
+        }
+
+        return $defaultValueTemplate;
     }
 
     /**
@@ -167,9 +205,9 @@ trait FillDefaultValuesTrait
      *
      * @return mixed
      */
-    public function getDefaultValuesFromActivity(int|string $id, string $calledForModel): mixed
+    protected function getDefaultValuesFromActivity(int|string $id, string $calledForModel): mixed
     {
-        $defaultFieldValues = false;
+        $defaultFieldValues = [];
 
         switch ($calledForModel) {
             case get_class(new Activity()):
@@ -189,5 +227,24 @@ trait FillDefaultValuesTrait
         }
 
         return $defaultFieldValues;
+    }
+
+    /**
+     * Returns the first non-empty value from the params
+     * Returns empty if all values in param are empty.
+     *
+     * @param ...$values
+     *
+     * @return mixed|string
+     */
+    protected function getPriorityValue(...$values): mixed
+    {
+        foreach ($values as $value) {
+            if ($value) {
+                return $value;
+            }
+        }
+
+        return '';
     }
 }
