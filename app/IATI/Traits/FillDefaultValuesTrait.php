@@ -129,6 +129,7 @@ trait FillDefaultValuesTrait
     {
         $defaultFieldValues = $this->resolveDefaultValues($data, '');
         $data = $this->populateDefaultFields($data, $defaultFieldValues);
+        $data['default_field_values'] = $defaultFieldValues;
 
         return $this->model->create($data);
     }
@@ -146,10 +147,9 @@ trait FillDefaultValuesTrait
      */
     public function update($id, $data): bool
     {
-        $defaultValues = $this->resolveDefaultValues($data, $id);
-        if (!empty($defaultValues)) {
-            $data = $this->populateDefaultFields($data, $defaultValues);
-        }
+        $defaultFieldValues = $this->resolveDefaultValues($data, $id);
+        $data = $this->populateDefaultFields($data, $defaultFieldValues);
+        $data['default_field_values'] = $defaultFieldValues;
 
         return $this->model->find($id)->update($data);
     }
