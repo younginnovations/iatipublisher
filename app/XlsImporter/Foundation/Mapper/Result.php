@@ -70,21 +70,21 @@ class Result
         'result_document_link' => 'result_identifier',
     ];
 
-    /**
-     * Mapper sheets and their details.
-     *
-     * @var array
-     */
-    protected array $mappers = [
-        'Result Mapper' => [
-            'columns' => [
-                'parentIdentifier' => 'result_identifier',
-                'number' => 'result_number',
-            ],
-            'concatinator' => '_',
-            'type' => 'result',
-        ],
-    ];
+    // /**
+    //  * Mapper sheets and their details.
+    //  *
+    //  * @var array
+    //  */
+    // protected array $mappers = [
+    //     'Result Mapper' => [
+    //         'columns' => [
+    //             'parentIdentifier' => 'activity_identifier',
+    //             'number' => 'result_number',
+    //         ],
+    //         'concatinator' => '_',
+    //         'type' => 'result',
+    //     ],
+    // ];
 
     public function initMapper($validatedDataFilePath, $statusFilePath, $existingIdentifier)
     {
@@ -99,7 +99,7 @@ class Result
             $this->sheetName = $sheetName;
             $this->rowCount = 2;
 
-            if (array_key_exists($sheetName, $this->mappers)) {
+            if ($sheetName === 'Result Mapper') {
                 $this->mapMapperSheets($content, $sheetName);
             }
 
@@ -107,7 +107,7 @@ class Result
                 $this->columnToFieldMapper($this->resultDivision[$sheetName], $content);
             }
         }
-        dd($this->results, $this->identifiers);
+        dd($this->results);
 
         return $this;
     }
@@ -119,26 +119,22 @@ class Result
      */
     public function mapMapperSheets($data, $sheetName): void
     {
-        $mapperDetails = $this->mappers[$sheetName];
-        $parentIdentifierKey = $mapperDetails['columns']['parentIdentifier'];
-        $numberKey = $mapperDetails['columns']['number'];
         $parentIdentifierValue = '';
 
         foreach ($data as $index => $row) {
             if ($this->checkRowNotEmpty($row)) {
-                if ((empty($parentIdentifierValue) || $parentIdentifierValue !== $row[$parentIdentifierKey]) && !empty($row[$parentIdentifierKey])) {
-                    $parentIdentifierValue = $row[$parentIdentifierKey];
+                if ((empty($parentIdentifierValue) || $parentIdentifierValue !== $row['activity_identifier']) && !empty($row['activity_identifier'])) {
+                    $parentIdentifierValue = $row['activity_identifier'];
                 }
-
-                $this->resultIdentifier[$sheetName][$parentIdentifierValue][] = sprintf('%s%s%s', $parentIdentifierValue, $mapperDetails['concatinator'], $row[$numberKey]);
-                $this->identifiers[$mapperDetails['type']][sprintf('%s%s%s', $parentIdentifierValue, $mapperDetails['concatinator'], $row[$numberKey])] = $parentIdentifierValue;
+                $this->resultIdentifier[$sheetName][$parentIdentifierValue][] = sprintf('%s_%s', $parentIdentifierValue, $row['result_number']);
+                $this->identifiers[sprintf('%s_%s', $parentIdentifierValue, $row['result_number'])] = $parentIdentifierValue;
             } else {
                 break;
             }
         }
     }
 
-    public function validateResult()
+    public function validateAndStoreData()
     {
         $errors = [];
         $resultValidator = app(ResultValidator::class);
@@ -293,14 +289,14 @@ class Result
         }
     }
 
-    // public function checkIfPeerAttributesAreNotEmpty(array $peerAttributes, array $rowContent): bool
-    // {
-    //     foreach ($peerAttributes as $attributeName) {
-    //         if (Arr::get($rowContent, $attributeName, null)) {
-    //             return true;
-    //         }
-    //     }
+// public function checkIfPeerAttributesAreNotEmpty(array $peerAttributes, array $rowContent): bool
+// {
+//     foreach ($peerAttributes as $attributeName) {
+//         if (Arr::get($rowContent, $attributeName, null)) {
+//             return true;
+//         }
+//     }
 
-    //     return false;
-    // }
+//     return false;
+// }
 }
