@@ -127,7 +127,7 @@ trait FillDefaultValuesTrait
      */
     public function store(array $data): Model
     {
-        $defaultFieldValues = $this->resolveDefaultValues($data, '');
+        $defaultFieldValues = $this->resolveDefaultValues($data);
         $data = $this->populateDefaultFields($data, $defaultFieldValues);
         $data['default_field_values'] = $defaultFieldValues;
 
@@ -147,7 +147,7 @@ trait FillDefaultValuesTrait
      */
     public function update($id, $data): bool
     {
-        $defaultFieldValues = $this->resolveDefaultValues($data, $id);
+        $defaultFieldValues = $this->resolveDefaultValues($data);
         $data = $this->populateDefaultFields($data, $defaultFieldValues);
         $data['default_field_values'] = $defaultFieldValues;
 
@@ -162,7 +162,7 @@ trait FillDefaultValuesTrait
      *
      * @return array
      */
-    protected function resolveDefaultValues($data, string $id = ''): array
+    protected function resolveDefaultValues($data): array
     {
         $defaultValueTemplate = [
             'default_currency'    => '',
@@ -176,7 +176,6 @@ trait FillDefaultValuesTrait
             ? ($data['default_field_values'][0] ?? $data['default_field_values'])
             : [];
 
-        $defaultValuesFromExistingActivity = $id ? $this->getDefaultValuesFromActivity($id, $this->getModel()) : [];
         $setting = auth()->user()->organization->settings ?? [];
         $defaultValuesFromSettings = [];
 
@@ -187,7 +186,6 @@ trait FillDefaultValuesTrait
         foreach ($defaultValueTemplate as $key => $value) {
             $defaultValueTemplate[$key] = $this->getPriorityValue(
                 $defaultValuesFromImport[$key] ?? '',
-                $defaultValuesFromExistingActivity[$key] ?? '',
                 $defaultValuesFromSettings[$key] ?? ''
             );
         }
