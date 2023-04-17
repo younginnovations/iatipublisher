@@ -99,14 +99,13 @@ class Period
     {
         foreach ($periodData as $sheetName => $content) {
             $this->sheetName = $sheetName;
+            $this->rowCount = 2;
 
             if (in_array($sheetName, array_keys($this->mappers))) {
-                $this->rowCount = 2;
                 $this->mapPeriods($content, $sheetName);
             }
 
             if (in_array($sheetName, array_keys($this->periodDivisions))) {
-                $this->rowCount = 2;
                 $this->columnToFieldMapper($this->periodDivisions[$sheetName], $content);
             }
         }
@@ -196,7 +195,7 @@ class Period
 
                 $elementData[] = $systemMappedRow;
             } else {
-                $this->pushPeriodData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
+                // $this->pushPeriodData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
                 break;
             }
 
@@ -216,7 +215,6 @@ class Period
             'actual document_link' => 'pushActualDocumentLink',
             'target document_link' => 'pushTargetDocumentLink',
         ];
-        // dump($element, $identifier);
 
         call_user_func([$this, $periodElementFunctions[$element]], $identifier, $data);
         $this->tempColumnTracker = [];
@@ -224,7 +222,6 @@ class Period
 
     public function getElementData($data, $dependency, $elementDropDownFields, $element): array
     {
-        // dump($element, $data);
         $elementBase = Arr::get($dependency, 'elementBase', null);
         $elementBasePeer = Arr::get($dependency, 'elementBasePeer', []);
         $baseCount = null;

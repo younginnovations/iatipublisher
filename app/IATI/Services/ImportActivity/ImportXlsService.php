@@ -202,7 +202,7 @@ class ImportXlsService
                 if ($existenceId) {
                     $this->indicatorRepository->update($existenceId, ['indicator' => $indicatorData]);
                 } else {
-                    dd($identifiers, $parentIdentifier);
+                    // dd($identifiers, $parentIdentifier);
                     $this->indicatorRepository->store(['indicator' => $indicatorData, 'result_id' => $identifiers[$parentIdentifier]]);
                 }
             }

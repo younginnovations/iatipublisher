@@ -121,12 +121,20 @@ class Activity
 
     protected string $statusFilePath = '';
     protected string $validatedDataFilePath = '';
+    protected string $organizationReportingOrg = [];
 
     public function initMapper($validatedDataFilePath, $statusFilePath, $existingIdentifier)
     {
         $this->validatedDataFilePath = $validatedDataFilePath;
         $this->statusFilePath = $statusFilePath;
         $this->existingIdentifier = $existingIdentifier;
+    }
+
+    public function fillOrganizationReportingOrg($organizationReportingOrg = []):static
+    {
+        $this->organizationReportingOrg = $organizationReportingOrg;
+
+        return $this;
     }
 
     public function map($activityData): static
@@ -204,44 +212,43 @@ class Activity
 
             $this->rowCount++;
             $secondary_reporter = $this->activities[$elementActivityIdentifier]['default_field_values']['secondary_reporter'];
-            // $this->activities[$elementActivityIdentifier]['reporting_org'] = $this->getReportingOrganization($secondary_reporter);
+            $this->activities[$elementActivityIdentifier]['reporting_org'] = $this->getReportingOrganization($secondary_reporter);
             $this->activities[$elementActivityIdentifier]['iati_identifier'] = [
                 'activity_identifier' => $elementActivityIdentifier,
             ];
         }
     }
 
-    // /**
-    //  * Returns reporting organization data from organization.
-    //  *
-    //  * @param $secondary_reporter
-    //  *
-    //  * @return array
-    //  */
-    // public function getReportingOrganization($secondary_reporter): array
-    // {
-    //     $organizationReportingOrg = auth()->user()->organization->reporting_org;
+    /**
+     * Returns reporting organization data from organization.
+     *
+     * @param $secondary_reporter
+     *
+     * @return array
+     */
+    public function getReportingOrganization($secondary_reporter): array
+    {
+        if (!empty($this->organizationReportingOrg)) {
+            $activityRef = $this->organizationReportingOrg;
+            $activityRef[0]['secondary_reporter'] = $secondary_reporter;
 
-    //     if (!empty($organizationReportingOrg)) {
-    //         $organizationReportingOrg[0]['secondary_reporter'] = $secondary_reporter;
+            return $activityRef;
+        }
 
-    //         return $organizationReportingOrg;
-    //     }
-
-    //     return [
-    //         [
-    //             'ref' => '',
-    //             'type' => '',
-    //             'secondary_reporter' => $secondary_reporter,
-    //             'narrative' => [
-    //                 [
-    //                     'narrative' => '',
-    //                     'language' => '',
-    //                 ],
-    //             ],
-    //         ],
-    //     ];
-    // }
+        return [
+            [
+                'ref' => '',
+                'type' => '',
+                'secondary_reporter' => $secondary_reporter,
+                'narrative' => [
+                    [
+                        'narrative' => '',
+                        'language' => '',
+                    ],
+                ],
+            ],
+        ];
+    }
 
     public function singleValuedFields($data)
     {

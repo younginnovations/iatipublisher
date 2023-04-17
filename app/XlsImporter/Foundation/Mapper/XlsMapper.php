@@ -56,6 +56,11 @@ class XlsMapper
 
         $xlsMapper = new $mapper();
         $xlsMapper->initMapper($validatedDataFilePath, $statusFilePath, $dbIatiIdentifiers);
+
+        if ($xlsType === 'activity') {
+            $xlsMapper->fillOrganizationReportingOrg($orgRef);
+        }
+
         $xlsMapper->map($xlsData)->validateAndStoreData();
 
         return $this;

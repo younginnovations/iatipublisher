@@ -116,12 +116,14 @@ class ImportXlsController extends Controller
             // indicator
 
             // $data = file_get_contents(app_path() . '/XlsImporter/Templates/indicator.json');
+            // $data = json_decode($data, true, 512, 0);
             // $indicatorMapper = new Indicator();
             // $indicatorMapper->map($data);
-            // dd('stop');
-            //            $resultData = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
-//                       $resultMapper = new Result();
-//                       $resultMapper->map($resultData);
+            $data = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
+            $data = json_decode($data, true, 512, 0);
+            $resultMapper = new Result();
+            $resultMapper->map($data);
+            dd('stop');
 
             //            $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
 //            $periodMapper = new Period();
@@ -339,7 +341,7 @@ class ImportXlsController extends Controller
 
             $status = strcasecmp($result->message, 'Complete') === 0;
 
-            return response()->json(['success' => true, 'data'=>$result]);
+            return response()->json(['success' => true, 'data' => $result]);
         } catch (Exception $e) {
             dd($e);
             logger()->error($e->getMessage());

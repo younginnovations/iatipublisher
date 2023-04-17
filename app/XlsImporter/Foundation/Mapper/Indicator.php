@@ -124,8 +124,6 @@ class Indicator
      */
     public function map($indicatorData): static
     {
-        // $indicatorData = json_decode($indicatorData, true, 512, JSON_THROW_ON_ERROR | 0);
-
         foreach ($indicatorData as $sheetName => $content) {
             $this->sheetName = $sheetName;
             $this->rowCount = 2;
@@ -138,8 +136,8 @@ class Indicator
                 $this->mapIndicatorDataSheets($this->indicatorDivision[$sheetName], $content);
             }
         }
+        // dump($this->identifiers, $this->indicators);
 
-        // $this->validateIndicator();
         return $this;
     }
 
@@ -161,6 +159,7 @@ class Indicator
                 $error = $this->appendExcelColumnAndRowDetail($errors, $this->columnTracker[$resultIdentifier][$indicatorIdentifier]['indicator']);
                 $existingId = Arr::get($this->existingIdentifier, sprintf('%s_%s', $resultIdentifier, $indicatorIdentifier), false);
                 $this->processedCount++;
+                dump('processed, resultIdentifier: ', $resultIdentifier);
 
                 $this->storeValidatedData($indicatorData['indicator'], $error, $existingId, $resultIdentifier);
             }
@@ -336,8 +335,9 @@ class Indicator
 
     protected function pushIndicator($identifier, $data): void
     {
+        dump($identifier);
         $resultIdentifier = Arr::get($this->identifiers, "indicator.$identifier", null);
-
+        dump($resultIdentifier);
         $this->indicators[$resultIdentifier][$identifier]['indicator'] = $data;
         $this->columnTracker[$resultIdentifier][$identifier]['indicator'] = $this->tempColumnTracker;
     }

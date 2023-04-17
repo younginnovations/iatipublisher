@@ -495,10 +495,6 @@
         }
     },
     "result": {
-        "elementBase": "type",
-        "elementBasePeer": [
-            "aggregation_status"
-        ],
         "fieldDependency": {
             "title narrative narrative": {
                 "parent": "title narrative",
