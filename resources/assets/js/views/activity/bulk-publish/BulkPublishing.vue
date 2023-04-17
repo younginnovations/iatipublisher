@@ -56,7 +56,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, reactive, watch, inject } from 'vue';
+import { onMounted, ref, reactive, watch, inject, onUnmounted } from 'vue';
 import axios from 'axios';
 import { detailStore } from 'Store/activities/show';
 
@@ -112,20 +112,38 @@ let intervalID;
 onMounted(() => {
   completed.value = paStorage.value.publishingActivities.status ?? 'processing';
   bulkPublishStatus();
+  setTimeout(() => {
+    const supportButton: HTMLElement = document.querySelector(
+      '#launcher'
+    ) as HTMLElement;
+
+    if (supportButton !== null && Object.keys(activities).length > 0) {
+      supportButton.style.transform = 'translateX(-350px)';
+      supportButton.style.opacity = '1';
+    }
+  }, 720);
 });
+onUnmounted(() => {
+  const supportButton: HTMLElement = document.querySelector(
+    '#launcher'
+  ) as HTMLElement;
 
-// watching change in value of completed
-watch(completed, async (newValue) => {
-  if (newValue === 'completed') {
-    clearInterval(intervalID);
-
-    // resetting local storage
-    // paStorage.value.publishingActivities = {} as paElements;
-
-    // check for failed publish
-    failedActivities(paStorage.value.publishingActivities.activities);
+  if (supportButton !== null) {
+    supportButton.style.transform = 'translateX(0px)';
   }
-});
+}),
+  // watching change in value of completed
+  watch(completed, async (newValue) => {
+    if (newValue === 'completed') {
+      clearInterval(intervalID);
+
+      // resetting local storage
+      // paStorage.value.publishingActivities = {} as paElements;
+
+      // check for failed publish
+      failedActivities(paStorage.value.publishingActivities.activities);
+    }
+  });
 watch(
   () => store.state.isLoading,
   (value) => {
@@ -144,6 +162,7 @@ const bulkPublishStatus = () => {
       )
       .then((res) => {
         const response = res.data;
+
         if ('data' in response) {
           activities.value = response.data.activities;
           completed.value = response.data.status;

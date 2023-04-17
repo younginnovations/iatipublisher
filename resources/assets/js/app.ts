@@ -342,6 +342,27 @@ const stickySidebar = (
     }
   }
 };
+window.onload = () => {
+  setTimeout(() => {
+    const supportButton: HTMLElement = document.querySelector(
+      '#launcher'
+    ) as HTMLElement;
+
+    if (supportButton !== null) {
+      supportButton.style.display = 'none';
+    }
+  }, 200);
+  setTimeout(() => {
+    const supportButton: HTMLElement = document.querySelector(
+      '#launcher'
+    ) as HTMLElement;
+
+    if (supportButton !== null) {
+      supportButton.style.display = 'block';
+      supportButton.style.border = '2px solid rgb(21, 83, 102)';
+    }
+  }, 200);
+};
 
 // custom directive
 app.directive('sticky-component', {
