@@ -823,6 +823,11 @@
       "code": "ZWL",
       "name": "Zimbabwe Dollar",
       "language": "en"
+    },
+    {
+      "code": "VED",
+      "name": "Bolivar Soberano",
+      "language": "en"
     }
   ]
 }
