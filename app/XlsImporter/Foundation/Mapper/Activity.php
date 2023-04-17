@@ -35,6 +35,8 @@ class Activity
      */
     protected array $activitiesIdentifier = [];
 
+    protected array $existingIdentifier = [];
+
     /**
      * @var array
      */
@@ -120,10 +122,11 @@ class Activity
     protected string $statusFilePath = '';
     protected string $validatedDataFilePath = '';
 
-    public function initMapper($validatedDataFilePath, $statusFilePath)
+    public function initMapper($validatedDataFilePath, $statusFilePath, $existingIdentifier)
     {
         $this->validatedDataFilePath = $validatedDataFilePath;
         $this->statusFilePath = $statusFilePath;
+        $this->existingIdentifier = $existingIdentifier;
     }
 
     public function map($activityData): static
@@ -144,9 +147,6 @@ class Activity
                 $this->columnToFieldMapper($this->activityElements[$sheetName], $content);
             }
         }
-        // $this->validateAndStoreData();
-        // dd($this->activities);
-        // logger(json_encode($this->activities));
 
         return $this;
     }
@@ -164,9 +164,8 @@ class Activity
 
             $excelColumnAndRowName = isset($this->columnTracker[$activityIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
             $error = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
-            // dump($error);
-            // logger()->error(json_encode($activity));
-            $this->storeValidatedData($activity, $error);
+
+            $this->storeValidatedData($activity, $error, in_array($activityIdentifier, $this->existingIdentifier, false));
         }
 
         $this->updateStatus();

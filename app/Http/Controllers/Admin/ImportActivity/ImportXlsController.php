@@ -99,14 +99,17 @@ class ImportXlsController extends Controller
             // $data = getCodeList('FileFormat', 'Activity', false);
             // $data = json_encode(getCodeList('Region', 'Activity'));
             // test
-            $data = file_get_contents(app_path() . '/XlsImporter/Templates/test.json');
-            $data = json_decode($data, true, 512, 0);
-            $activityMapper = new Activity();
-            $activityMapper->map($data);
+            // $data = file_get_contents(app_path() . '/XlsImporter/Templates/test.json');
+            // $activityMapper = new Activity();
+            // $activityMapper->map($data);
+            // $org_id = Auth::user()->organization->id;
+            // $xlsType = "indicator";
+            // dd($this->importXlsService->dbIatiIdentifiers($org_id, $xlsType));
 
             // period
 
             // $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
+            // $data = json_decode($data, true, 512, 0);
             // $periodMapper = new Period();
             // $periodMapper->map($data);
 
@@ -275,14 +278,20 @@ class ImportXlsController extends Controller
     public function importValidatedActivities(Request $request): mixed
     {
         try {
+            // $this->importXlsService->deleteImportStatus();
             $this->db->beginTransaction();
+            $status = $this->importXlsService->getImportStatus();
+
+            // dd($status);
+            $xlsType = $status['template'];
+
             $activities = json_decode($request->query('activities'));
 
             if ($activities) {
-                $this->importXlsService->create($activities);
+                $this->importXlsService->create($activities, $xlsType);
             }
 
-            $this->importXlsService->deleteImportStatus();
+            // $this->importXlsService->deleteImportStatus();
 
             $this->db->commit();
 

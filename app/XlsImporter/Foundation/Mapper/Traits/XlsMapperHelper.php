@@ -146,35 +146,35 @@ trait XlsMapperHelper
      *
      * @param $processedXlsData
      * @param $errors
-     * @param $totalCount
-     * @param $processedCount
+     * @param $existingIdentifier
      *
      * @return void
      */
-    public function storeValidatedData($processedXlsData, $errors): void
+    public function storeValidatedData($processedXlsData, $errors, $existingIdentifier = false, $parentIdentifier = null): void
     {
+        logger()->error('validatingggg');
         $fileData = awsGetFile($this->validatedDataFilePath);
         $currentContents = $fileData ? json_decode(awsGetFile($this->validatedDataFilePath), true, 512, JSON_THROW_ON_ERROR) : [];
-        $currentContents[] = ['data' => $processedXlsData, 'errors' => $errors, 'status' => 'processed'];
+        $currentContents[] = ['data' => $processedXlsData, 'errors' => $errors, 'existing' => $existingIdentifier, 'parentIdentifier' => $parentIdentifier, 'status' => 'processed'];
         $content = json_encode($currentContents, JSON_THROW_ON_ERROR);
         $status = json_encode([
             'success' => true,
             'message' => 'Processing',
-            'total_count' =>$this->totalCount,
-            'processed_count' =>$this->processedCount,
+            'total_count' => $this->totalCount,
+            'processed_count' => $this->processedCount,
         ]);
 
         awsUploadFile($this->validatedDataFilePath, $content);
         awsUploadFile($this->statusFilePath, $status);
     }
 
-    public function updateStatus():void
+    public function updateStatus(): void
     {
         $status = json_encode([
             'success' => true,
             'message' => 'Complete',
-            'total_count' =>$this->totalCount,
-            'processed_count' =>$this->processedCount,
+            'total_count' => $this->totalCount,
+            'processed_count' => $this->processedCount,
         ]);
 
         awsUploadFile($this->statusFilePath, $status);

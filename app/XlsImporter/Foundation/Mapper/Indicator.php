@@ -55,10 +55,16 @@ class Indicator
     protected string $statusFilePath = '';
     protected string $validatedDataFilePath = '';
 
-    public function initMapper($validatedDataFilePath, $statusFilePath)
+    protected array $existingIdentifier = [];
+
+    protected int $totalCount = 0;
+    protected int $processedCount = 0;
+
+    public function initMapper($validatedDataFilePath, $statusFilePath, $existingIdentifier)
     {
         $this->validatedDataFilePath = $validatedDataFilePath;
         $this->statusFilePath = $statusFilePath;
+        $this->existingIdentifier = $existingIdentifier;
     }
 
     /**
@@ -114,11 +120,11 @@ class Indicator
      *
      * @param $indicatorData
      *
-     * @return void
+     * @return static
      */
-    public function map($indicatorData): void
+    public function map($indicatorData): static
     {
-        $indicatorData = json_decode($indicatorData, true, 512, JSON_THROW_ON_ERROR | 0);
+        // $indicatorData = json_decode($indicatorData, true, 512, JSON_THROW_ON_ERROR | 0);
 
         foreach ($indicatorData as $sheetName => $content) {
             $this->sheetName = $sheetName;
@@ -133,7 +139,8 @@ class Indicator
             }
         }
 
-        $this->validateIndicator();
+        // $this->validateIndicator();
+        return $this;
     }
 
     /**
@@ -141,7 +148,7 @@ class Indicator
      *
      * @return void
      */
-    public function validateIndicator(): void
+    public function validateAndStoreData(): void
     {
         $indicatorValidator = app(IndicatorValidator::class);
 
@@ -152,8 +159,10 @@ class Indicator
                     ->validateData();
 
                 $error = $this->appendExcelColumnAndRowDetail($errors, $this->columnTracker[$resultIdentifier][$indicatorIdentifier]['indicator']);
+                $existingId = Arr::get($this->existingIdentifier, sprintf('%s_%s', $resultIdentifier, $indicatorIdentifier), false);
+                $this->processedCount++;
 
-                $this->storeValidatedData($indicatorData, $error);
+                $this->storeValidatedData($indicatorData['indicator'], $error, $existingId, $resultIdentifier);
             }
         }
     }
@@ -232,6 +241,11 @@ class Indicator
                 $this->pushIndicatorData($element, $elementActivityIdentifier, $this->convertGroupedDataToSystemData($elementData, $dependency[$element], $elementDropDownFields, $element));
                 break;
             }
+        }
+
+        if (!empty($elementData)) {
+            $this->pushIndicatorData($element, $elementActivityIdentifier, $this->convertGroupedDataToSystemData($elementData, $dependency[$element], $elementDropDownFields, $element));
+            $elementData = [];
         }
     }
 

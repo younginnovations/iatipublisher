@@ -150,7 +150,7 @@ class ActivityRepository extends Repository
      */
     public function getActivityIdentifiers($orgId): Collection|array
     {
-        return $this->model->where('org_id', $orgId)->get('iati_identifier->activity_identifier');
+        return $this->model->where('org_id', $orgId)->get(['id', 'iati_identifier->activity_identifier as identifier']);
     }
 
     /**

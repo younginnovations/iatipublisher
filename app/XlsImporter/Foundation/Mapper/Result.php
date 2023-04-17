@@ -27,6 +27,9 @@ class Result
      */
     protected array $resultDocumentLink = [];
 
+    protected int $totalCount = 0;
+    protected int $processedCount = 0;
+
     /**
      * @var array|string[]
      */
@@ -50,9 +53,16 @@ class Result
     protected array $columnTracker = [];
     protected string $elementBeingProcessed = '';
 
-    public function initMapper($destinationFilePath)
+    protected string $statusFilePath = '';
+    protected string $validatedDataFilePath = '';
+
+    protected array $existingIdentifier = [];
+
+    public function initMapper($validatedDataFilePath, $statusFilePath, $existingIdentifier)
     {
-        $this->destinationFilePath = $destinationFilePath;
+        $this->validatedDataFilePath = $validatedDataFilePath;
+        $this->statusFilePath = $statusFilePath;
+        $this->existingIdentifier = $existingIdentifier;
     }
 
     public function map($data)
@@ -92,10 +102,12 @@ class Result
                     ->init($resultData)
                     ->validateData();
                 $excelColumnAndRowName = isset($this->columnTracker[$activityIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
-                $this->results[$activityIdentifier][$resultIdentifier]['error'] = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
+                $columnAppendedError = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
+                $existingId = Arr::get($this->existingIdentifier, sprintf('%s_%s', $activityIdentifier, $resultIdentifier), false);
+                $this->processedCount++;
+                $this->storeValidatedData($resultData, $columnAppendedError, $existingId, $activityIdentifier);
             }
         }
-//        dd($this->columnTracker);
     }
 
     public function appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName): array
@@ -176,7 +188,7 @@ class Result
                 $elementData[] = $systemMappedRow;
             } else {
                 $this->results[$this->activityResultMapper[$elementResultIdentifier]][$elementResultIdentifier] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementResultIdentifier, $element)[0];
-//                $this->results[$elementResultIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields)[0];
+                //                $this->results[$elementResultIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields)[0];
 //                $this->results[$elementResultIdentifier]['activity_identifier'] = $this->activityResultMapper[$elementResultIdentifier];
                 break;
             }

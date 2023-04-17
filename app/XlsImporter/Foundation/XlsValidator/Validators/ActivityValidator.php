@@ -7,10 +7,10 @@ namespace App\XlsImporter\Foundation\XlsValidator\Validators;
 use App\Http\Requests\Activity\Identifier\IdentifierRequest;
 use App\Http\Requests\Activity\Title\TitleRequest;
 use App\XlsImporter\Foundation\Factory\Validation;
+use App\XlsImporter\Foundation\XlsValidator\Traits\ErrorValidationRules;
+use App\XlsImporter\Foundation\XlsValidator\Traits\ValidationMessages;
+use App\XlsImporter\Foundation\XlsValidator\Traits\WarningValidationRules;
 use App\XlsImporter\Foundation\XlsValidator\ValidatorInterface;
-use App\XmlImporter\Foundation\Support\Factory\Traits\ErrorValidationRules;
-use App\XmlImporter\Foundation\Support\Factory\Traits\ValidationMessages;
-use App\XmlImporter\Foundation\Support\Factory\Traits\WarningValidationRules;
 use Arr;
 
 /**

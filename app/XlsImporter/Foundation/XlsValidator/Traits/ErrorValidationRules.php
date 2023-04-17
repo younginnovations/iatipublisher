@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\XmlImporter\Foundation\Support\Factory\Traits;
+namespace App\XlsImporter\Foundation\XlsValidator\Traits;
 
 use App\Http\Requests\Activity\Budget\BudgetRequest;
 use App\Http\Requests\Activity\CapitalSpend\CapitalSpendRequest;

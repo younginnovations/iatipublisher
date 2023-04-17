@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\XmlImporter\Foundation\Support\Factory\Traits;
+namespace App\XlsImporter\Foundation\XlsValidator\Traits;
 
 use App\Http\Requests\Activity\Budget\BudgetRequest;
 use App\Http\Requests\Activity\CapitalSpend\CapitalSpendRequest;
@@ -240,7 +240,7 @@ trait WarningValidationRules
     {
         $countryBudgetItems = Arr::get($activity, 'country_budget_items', []);
 
-        return (new CountryBudgetItemRequest())->getWarningForCountryBudgetItem(Arr::get($countryBudgetItems, key($countryBudgetItems), []));
+        return (new CountryBudgetItemRequest())->getWarningForCountryBudgetItem($countryBudgetItems);
     }
 
     /**

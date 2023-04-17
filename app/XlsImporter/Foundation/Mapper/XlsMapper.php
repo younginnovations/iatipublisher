@@ -47,13 +47,15 @@ class XlsMapper
             'indicator' => Indicator::class,
         ];
         $mapper = $xlsMapperTypes[$xlsType];
+        logger()->error($xlsType);
+        logger()->error($mapper);
 
         $xls_data_storage_path = 'XlsImporter/tmp';
         $validatedDataFilePath = sprintf('%s/%s/%s/%s', $xls_data_storage_path, $orgId, $userId, 'valid.json');
         $statusFilePath = sprintf('%s/%s/%s/%s', $xls_data_storage_path, $orgId, $userId, 'status.json');
 
         $xlsMapper = new $mapper();
-        $xlsMapper->initMapper($validatedDataFilePath, $statusFilePath);
+        $xlsMapper->initMapper($validatedDataFilePath, $statusFilePath, $dbIatiIdentifiers);
         $xlsMapper->map($xlsData)->validateAndStoreData();
 
         return $this;
