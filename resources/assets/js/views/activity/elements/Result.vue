@@ -96,7 +96,10 @@
                                   currentLanguage
                                 ) === 'Untitled'
                                   ? 'Missing'
-                                  : types.languages[currentLanguage]
+                                  : types.languages[
+                                      result?.result?.description?.[0]
+                                        ?.narrative?.[0]?.language ?? 'en'
+                                    ]
                               }})
                             </div>
                             <div class="w-[500px] max-w-full">
