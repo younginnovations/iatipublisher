@@ -121,7 +121,7 @@ class Activity
 
     protected string $statusFilePath = '';
     protected string $validatedDataFilePath = '';
-    protected string $organizationReportingOrg = [];
+    // protected string $organizationReportingOrg = [];
 
     public function initMapper($validatedDataFilePath, $statusFilePath, $existingIdentifier)
     {
@@ -132,7 +132,7 @@ class Activity
 
     public function fillOrganizationReportingOrg($organizationReportingOrg = []):static
     {
-        $this->organizationReportingOrg = $organizationReportingOrg;
+        // $this->organizationReportingOrg = $organizationReportingOrg;
 
         return $this;
     }
@@ -212,7 +212,7 @@ class Activity
 
             $this->rowCount++;
             $secondary_reporter = $this->activities[$elementActivityIdentifier]['default_field_values']['secondary_reporter'];
-            $this->activities[$elementActivityIdentifier]['reporting_org'] = $this->getReportingOrganization($secondary_reporter);
+            // $this->activities[$elementActivityIdentifier]['reporting_org'] = $this->getReportingOrganization($secondary_reporter);
             $this->activities[$elementActivityIdentifier]['iati_identifier'] = [
                 'activity_identifier' => $elementActivityIdentifier,
             ];
