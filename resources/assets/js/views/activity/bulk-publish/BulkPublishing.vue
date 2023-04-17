@@ -116,6 +116,7 @@ onMounted(() => {
     const supportButton: HTMLElement = document.querySelector(
       '#launcher'
     ) as HTMLElement;
+
     if (supportButton !== null && Object.keys(activities).length > 0) {
       supportButton.style.transform = 'translateX(-350px)';
       supportButton.style.opacity = '1';
@@ -126,6 +127,7 @@ onUnmounted(() => {
   const supportButton: HTMLElement = document.querySelector(
     '#launcher'
   ) as HTMLElement;
+
   if (supportButton !== null) {
     supportButton.style.transform = 'translateX(0px)';
   }
@@ -160,6 +162,7 @@ const bulkPublishStatus = () => {
       )
       .then((res) => {
         const response = res.data;
+
         if ('data' in response) {
           activities.value = response.data.activities;
           completed.value = response.data.status;

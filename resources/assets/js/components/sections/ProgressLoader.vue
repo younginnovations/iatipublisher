@@ -35,6 +35,7 @@ onMounted(() => {
   const supportButton: HTMLElement = document.querySelector(
     '#launcher'
   ) as HTMLElement;
+
   if (supportButton !== null) {
     supportButton.style.display = 'none';
   }

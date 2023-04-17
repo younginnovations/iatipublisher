@@ -75,8 +75,7 @@
         window.zESettings = {
             webWidget: {
                 color: { theme: '#FFFFFF',
-                launcherText: '#155366'},
-               
+                launcherText: '#155366'},             
                
                 contactForm: {
                     attachments: true,
