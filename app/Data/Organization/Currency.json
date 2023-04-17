@@ -125,7 +125,7 @@
       "language": "en"
     },
     {
-      "code": "BYR",
+      "code": "BYN",
       "name": "Belarussian Ruble",
       "language": "en"
     },
@@ -217,11 +217,6 @@
     {
       "code": "DZD",
       "name": "Algerian Dinar",
-      "language": "en"
-    },
-    {
-      "code": "EEK",
-      "name": "Kroon",
       "language": "en"
     },
     {
@@ -435,16 +430,6 @@
       "language": "en"
     },
     {
-      "code": "LTL",
-      "name": "Lithuanian Litas",
-      "language": "en"
-    },
-    {
-      "code": "LVL",
-      "name": "Latvian Lats",
-      "language": "en"
-    },
-    {
       "code": "LYD",
       "name": "Libyan Dinar",
       "language": "en"
@@ -485,7 +470,7 @@
       "language": "en"
     },
     {
-      "code": "MRO",
+      "code": "MRU",
       "name": "Ouguiya",
       "language": "en"
     },
@@ -675,7 +660,7 @@
       "language": "en"
     },
     {
-      "code": "STD",
+      "code": "STN",
       "name": "Dobra",
       "language": "en"
     },
@@ -760,11 +745,6 @@
       "language": "en"
     },
     {
-      "code": "USS",
-      "name": "US Dollar (Same day)",
-      "language": "en"
-    },
-    {
       "code": "UYI",
       "name": "Uruguay Peso en Unidades Indexadas",
       "language": "en"
@@ -777,11 +757,6 @@
     {
       "code": "UZS",
       "name": "Uzbekistan Sum",
-      "language": "en"
-    },
-    {
-      "code": "VEF",
-      "name": "Bolivar",
       "language": "en"
     },
     {
@@ -840,7 +815,7 @@
       "language": "en"
     },
     {
-      "code": "ZMK",
+      "code": "ZMW",
       "name": "Zambian Kwacha",
       "language": "en"
     },
