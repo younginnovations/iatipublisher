@@ -92,7 +92,20 @@ export default defineComponent({
       type: false,
     });
 
+    const checkXlsstatus = () => {
+      console.log('checkstatus');
+      axios.get('import/xls/progress_status').then((res) => {
+        console.log(!!res.data.status);
+        if (res.data.status) {
+          axios.get('/import/xls/status').then((res) => {
+            console.log(res.data);
+          });
+        }
+      });
+    };
+
     onMounted(() => {
+      checkXlsstatus();
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
