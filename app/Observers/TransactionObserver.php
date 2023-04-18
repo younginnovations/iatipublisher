@@ -71,7 +71,6 @@ class TransactionObserver
      */
     public function created(Transaction $transaction): void
     {
-        $this->setTransactionDefaultValues($transaction);
         $this->updateActivityElementStatus($transaction);
         $this->resetActivityStatus($transaction);
     }
@@ -88,7 +87,6 @@ class TransactionObserver
     {
         $this->updateActivityElementStatus($transaction);
         $this->resetActivityStatus($transaction);
-        $this->setTransactionDefaultValues($transaction);
     }
 
     /**
@@ -103,21 +101,6 @@ class TransactionObserver
         $activityObject = $transaction->activity;
         $activityObject->status = 'draft';
         $activityObject->saveQuietly();
-    }
-
-    /**
-     * Sets default values for language and currency for transaction.
-     *
-     * @param $transaction
-     *
-     * @return void
-     */
-    public function setTransactionDefaultValues($transaction): void
-    {
-        $transactionData = $transaction->transaction;
-        $updatedData = $this->elementCompleteService->setDefaultValues($transactionData, $transaction->activity);
-        $transaction->transaction = $updatedData;
-        $transaction->saveQuietly();
     }
 
     /**

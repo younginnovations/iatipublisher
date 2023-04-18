@@ -186,6 +186,7 @@ class ImportXmlService
             $activity = unsetErrorFields($contents[$value]);
             $activityData = Arr::get($activity, 'data', []);
             $organizationId = Auth::user()->organization->id;
+            $defaultFieldValues = Arr::get($activityData, 'default_field_values.0', []);
 
             if (Arr::get($activity, 'existence', false) && $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'))) {
                 $oldActivity = $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'));
@@ -193,8 +194,8 @@ class ImportXmlService
                 $this->activityRepository->importXmlActivities($oldActivity->id, $activityData);
                 $this->transactionRepository->deleteTransaction($oldActivity->id);
                 $this->resultRepository->deleteResult($oldActivity->id);
-                $this->saveTransactions(Arr::get($activityData, 'transactions'), $oldActivity->id, Arr::get($activityData, 'default_field_values.0', []));
-                $this->saveResults(Arr::get($activityData, 'result'), $oldActivity->id, Arr::get($activityData, 'default_field_values.0', []));
+                $this->saveTransactions(Arr::get($activityData, 'transactions'), $oldActivity->id, $defaultFieldValues);
+                $this->saveResults(Arr::get($activityData, 'result'), $oldActivity->id, $defaultFieldValues);
 
                 if (!empty($activity['errors'])) {
                     $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $activity['errors']);

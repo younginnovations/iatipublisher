@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\IATI\Traits;
 
 use App\IATI\Models\Activity\Activity;
@@ -10,6 +12,9 @@ use App\IATI\Models\Activity\Transaction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
+/**
+ * Class FillDefaultValuesTrait.
+ */
 trait FillDefaultValuesTrait
 {
     /**
@@ -157,7 +162,6 @@ trait FillDefaultValuesTrait
     /**
      * Set Default values for the imported csv activities.
      *
-     * @param string $id
      * @param $data
      *
      * @return array
@@ -171,9 +175,10 @@ trait FillDefaultValuesTrait
             'budget_not_provided' => '',
             'humanitarian'        => '',
         ];
+        $defaultValueFromData = Arr::get($data, 'default_field_values', []);
 
-        $defaultValuesFromImport = isset($data['default_field_values']) && !empty($data['default_field_values'])
-            ? ($data['default_field_values'][0] ?? $data['default_field_values'])
+        $defaultValuesFromImport = !empty($defaultValueFromData)
+            ? ($defaultValueFromData[0] ?? $defaultValueFromData)
             : [];
 
         $setting = auth()->user()->organization->settings ?? [];
@@ -227,13 +232,13 @@ trait FillDefaultValuesTrait
 
     /**
      * Returns the first non-empty value from the params
-     * Returns empty if all values in param are empty.
+     * Returns empty string if all values in param are empty.
      *
      * @param ...$values
      *
-     * @return mixed|string
+     * @return string
      */
-    protected function getPriorityValue(...$values): mixed
+    protected function getPriorityValue(...$values): string
     {
         foreach ($values as $value) {
             if ($value) {

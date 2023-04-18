@@ -36,7 +36,6 @@ class IndicatorObserver
     public function created(Indicator $indicator): void
     {
         $resultObserver = new ResultObserver();
-        $this->setIndicatorDefaultValues($indicator);
         $resultObserver->updateActivityElementStatus($indicator->result);
         $resultObserver->resetActivityStatus($indicator->result);
     }
@@ -52,25 +51,7 @@ class IndicatorObserver
     public function updated(Indicator $indicator): void
     {
         $resultObserver = new ResultObserver();
-
-        $this->setIndicatorDefaultValues($indicator);
         $resultObserver->updateActivityElementStatus($indicator->result);
         $resultObserver->resetActivityStatus($indicator->result);
-    }
-
-    /**
-     * Sets default values for language and currency for indicator.
-     *
-     * @param $indicator
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function setIndicatorDefaultValues($indicator): void
-    {
-        $indicatorData = $indicator->indicator;
-        $updatedData = $this->elementCompleteService->setDefaultValues($indicatorData, $indicator->result->activity);
-        $indicator->indicator = $updatedData;
-        $indicator->saveQuietly();
     }
 }

@@ -168,6 +168,8 @@ class ActivityRepository extends Repository
     }
 
     /**
+     * Create activity from xml data.
+     *
      * @param      $activity_id
      * @param array $mappedActivity
      *
@@ -213,8 +215,6 @@ class ActivityRepository extends Repository
             'reporting_org' => $this->getActivityElement($mappedActivity, 'reporting_org'),
             'upload_medium' => Enums::UPLOAD_TYPE['xml'],
         ];
-
-        $data['default_field_values']['default_language'] = strtolower($data['default_field_values']['default_language'] ?? '');
 
         if ($activity_id) {
             return $this->update($activity_id, $data);
