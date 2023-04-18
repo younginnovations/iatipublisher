@@ -53,13 +53,11 @@ class ActivityDefaultService
             ],
         ];
 
-        if (isset($data['budget_not_provided'])) {
-            if ($data['budget_not_provided'] === '1') {
-                $activity = $this->activityRepository->find($activityId);
-                $elementStatus['element_status'] = $activity->element_status;
-                $elementStatus['element_status']['budget'] = true;
-                $defaultFieldValues = array_merge($defaultFieldValues, $elementStatus);
-            }
+        if (isset($data['budget_not_provided']) && $data['budget_not_provided'] === '1') {
+            $activity = $this->activityRepository->find($activityId);
+            $elementStatus = $activity->element_status;
+            $elementStatus['budget'] = true;
+            $defaultFieldValues['element_status'] = $elementStatus['element_status'];
         }
 
         return $this->activityRepository->update($activityId, $defaultFieldValues);

@@ -189,7 +189,7 @@ trait FillDefaultValuesTrait
         }
 
         foreach ($defaultValueTemplate as $key => $value) {
-            $defaultValueTemplate[$key] = $this->getPriorityValue(
+            $defaultValueTemplate[$key] = $this->getDefaultValueBasedOnPriority(
                 $defaultValuesFromImport[$key] ?? '',
                 $defaultValuesFromSettings[$key] ?? ''
             );
@@ -238,7 +238,7 @@ trait FillDefaultValuesTrait
      *
      * @return string
      */
-    protected function getPriorityValue(...$values): string
+    protected function getDefaultValueBasedOnPriority(...$values): string
     {
         foreach ($values as $value) {
             if ($value) {

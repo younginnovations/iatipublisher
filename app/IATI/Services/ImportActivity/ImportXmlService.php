@@ -205,8 +205,8 @@ class ImportXmlService
             } else {
                 $storeActivity = $this->activityRepository->importXmlActivities(null, $activityData);
 
-                $this->saveTransactions(Arr::get($activityData, 'transactions'), $storeActivity->id, Arr::get($activityData, 'default_field_values.0', []));
-                $this->saveResults(Arr::get($activityData, 'result'), $storeActivity->id, Arr::get($activityData, 'default_field_values.0', []));
+                $this->saveTransactions(Arr::get($activityData, 'transactions'), $storeActivity->id, $defaultFieldValues);
+                $this->saveResults(Arr::get($activityData, 'result'), $storeActivity->id, $defaultFieldValues);
 
                 if (!empty($activity['errors'])) {
                     $this->importActivityErrorRepo->updateOrCreateError($storeActivity->id, $activity['errors']);
