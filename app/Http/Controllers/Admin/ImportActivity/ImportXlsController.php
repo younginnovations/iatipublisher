@@ -78,6 +78,7 @@ class ImportXlsController extends Controller
     public function index(): View|JsonResponse|RedirectResponse
     {
         try {
+            // dd(awsHasFile('XlsImporter/tmp/1/2/status.json'));
             // $elements = readElementJsonSchema();
             // $final = [];
 
@@ -119,11 +120,11 @@ class ImportXlsController extends Controller
             // $data = json_decode($data, true, 512, 0);
             // $indicatorMapper = new Indicator();
             // $indicatorMapper->map($data);
-            // $data = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
-            // $data = json_decode($data, true, 512, 0);
-            // $resultMapper = new Result();
-            // $resultMapper->map($data);
-            // dd('stop');
+            $data = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
+            $data = json_decode($data, true, 512, 0);
+            $resultMapper = new Result();
+            $resultMapper->map($data);
+            dd('stop');
 
             //            $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
 //            $periodMapper = new Period();
@@ -150,97 +151,6 @@ class ImportXlsController extends Controller
         }
     }
 
-    // public function getAttributes($attributes, $parentName = '', $parentLabel = '')
-    // {
-    //     $attributeMapper = [];
-
-    //     foreach ($attributes as $attributeName => $attributeContent) {
-    //         // if (isset($attributeContent[$attributeName]['type']) && $attributeContent[$attributeName]['type'] === 'select') {
-    //         //     $attributeMapper[(!empty($parentName) ? $parentName . ' ' : '') . $attributeName] = $attributeContent[$attributeName]['choices'];
-    //         // }
-    //         $attributeMapper[(!empty($parentName) ? $parentName . ' ' : '') . $attributeName] = (!empty($parentLabel) ? $parentLabel . ' ' : '') . Arr::get($attributeContent, 'label', $attributeName);
-    //     }
-
-    //     return $attributeMapper;
-    // }
-
-    // public function getSubElements($subElements)
-    // {
-    //     $mappedSubElements = [];
-
-    //     foreach ($subElements as $name => $content) {
-    //         $label = Arr::get($content, 'label', $name);
-    //         $attribute = $this->getAttributes(Arr::get($content, 'attributes', []), $name, $label);
-
-    //         // for generation of select field
-    //         // $fileName = '';
-    //         // if(isset($content['type']) && $content['type'] === 'select'){
-    //         //     $fileName  = $content['choices'];
-    //         // }
-
-    //         // if ($name === 'narrative') {
-    //         //     $subElement = [
-    //         //         'narrative' => 'Narrative',
-    //         //         'language' => 'Language',
-    //         //     ];
-    //         // } else {
-    //         //     $subElement = $this->getSubElements(Arr::get($content, 'sub_elements', []));
-    //         // }
-
-    //         // foreach ($attribute as $key => $value) {
-    //         //     $mappedSubElements[$key] = $value;
-    //         // }
-
-    //         // foreach ($subElement as $key => $subElementValue) {
-    //         //     if (is_array($subElementValue)) {
-    //         //         foreach ($subElementValue as $k => $v) {
-    //         //             if (isset($content[$key][$k]['type']) && $content[$key][$k]['type'] === 'select') {
-    //         //                 $mappedSubElements[($name . ' ') . $k] = $content[$key][$k]['choices'];
-    //         //             } else {
-    //         //                 $mappedSubElements[($name . ' ') . $k] = $label . '_' . $v;
-    //         //             }
-    //         //             // $mappedSubElements[($name . ' ') . $k] = $label . '_' . $v;
-    //         //             // }
-    //         //         }
-    //         //     } else {
-    //         //         if (isset($content[$key]['type']) && $content[$key]['type'] === 'select') {
-    //         //             $mappedSubElements[($name . ' ') . $key] = $content[$key]['choices'];
-    //         //         } else {
-    //         //             $mappedSubElements[($name . ' ') . $key] = $label . '_' . $key;
-    //         //         }
-    //         //         // if (!empty($fileName)) {
-    //         //         // }
-    //         //     }
-    //         // }
-
-    //         // to generate column name in correspondence to parent.. equivalent to one used in excel file
-    //         if ($name === 'narrative') {
-    //             $subElement = [
-    //                 'narrative' => 'Narrative',
-    //                 'language' => 'Language',
-    //             ];
-    //         } else {
-    //             $subElement = $this->getSubElements(Arr::get($content, 'sub_elements', []));
-    //         }
-
-    //         foreach ($attribute as $key => $value) {
-    //             $mappedSubElements[$key] = str_replace('-', '_', str_replace(' ', '_', $value));
-    //         }
-
-    //         foreach ($subElement as $key => $subElementValue) {
-    //             if (is_array($subElementValue)) {
-    //                 foreach ($subElementValue as $k => $v) {
-    //                     $mappedSubElements[($name . ' ') . $k] = str_replace('-', '_', str_replace(' ', '_', $label . '_' . $v));
-    //                 }
-    //             } else {
-    //                 $mappedSubElements[($name . ' ') . $key] = str_replace('-', '_', str_replace(' ', '_', $label . '_' . $key));
-    //             }
-    //         }
-    //     }
-
-    //     return $mappedSubElements;
-    // }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -261,7 +171,6 @@ class ImportXlsController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Uploaded successfully']);
         } catch (Exception $e) {
-            // dd($e);
             logger()->error($e);
             logger()->error($e->getMessage());
 

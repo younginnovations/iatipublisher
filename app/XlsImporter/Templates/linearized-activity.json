@@ -220,16 +220,16 @@
         "reference code": "reference_code",
         "reference vocabulary_uri": "reference_vocabulary_uri"
     },
-    "result_document_link": {
-      "document_link url": "url",
-      "document_link format": "format",
-      "document_link title narrative narrative": "title_narrative",
-      "document_link title narrative language": "title_language",
-      "document_link description narrative narrative": "description_narrative",
-      "document_link description narrative language": "description_language",
-      "document_link category code": "category_code",
-      "document_link language language": "language_code",
-      "document_link document_date date": "document_date_date"
+    "result document_link": {
+      "url": "url",
+      "format": "format",
+      "title narrative narrative": "title_narrative",
+      "title narrative language": "title_language",
+      "description narrative narrative": "description_narrative",
+      "description narrative language": "description_language",
+      "category code": "category_code",
+      "language language": "language_code",
+      "document_date date": "document_date_date"
     },
     "indicator": {
         "measure": "measure",

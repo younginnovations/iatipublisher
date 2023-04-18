@@ -57,7 +57,7 @@ class Result
      */
     protected array $resultDivision = [
         'Result' => 'result',
-        'Result Document Link' => 'result_document_link',
+        'Result Document Link' => 'result document_link',
     ];
 
     /**
@@ -67,24 +67,8 @@ class Result
      */
     protected array $elementIdentifiers = [
         'result' => 'result_identifier',
-        'result_document_link' => 'result_identifier',
+        'result document_link' => 'result_identifier',
     ];
-
-    // /**
-    //  * Mapper sheets and their details.
-    //  *
-    //  * @var array
-    //  */
-    // protected array $mappers = [
-    //     'Result Mapper' => [
-    //         'columns' => [
-    //             'parentIdentifier' => 'activity_identifier',
-    //             'number' => 'result_number',
-    //         ],
-    //         'concatinator' => '_',
-    //         'type' => 'result',
-    //     ],
-    // ];
 
     public function initMapper($validatedDataFilePath, $statusFilePath, $existingIdentifier)
     {
@@ -100,14 +84,13 @@ class Result
             $this->rowCount = 2;
 
             if ($sheetName === 'Result Mapper') {
-                $this->mapMapperSheets($content, $sheetName);
+                $this->mapResultMapperSheets($content, $sheetName);
             }
 
             if (array_key_exists($sheetName, $this->resultDivision)) {
                 $this->columnToFieldMapper($this->resultDivision[$sheetName], $content);
             }
         }
-        dd($this->results);
 
         return $this;
     }
@@ -117,7 +100,7 @@ class Result
      *
      * @return void
      */
-    public function mapMapperSheets($data, $sheetName): void
+    public function mapResultMapperSheets($data, $sheetName): void
     {
         $parentIdentifierValue = '';
 
@@ -142,13 +125,13 @@ class Result
         foreach ($this->results as $activityIdentifier => $results) {
             foreach ($results as $resultIdentifier => $resultData) {
                 $errors[$resultIdentifier] = $resultValidator
-                    ->init($resultData)
+                    ->init($resultData['results'])
                     ->validateData();
                 $excelColumnAndRowName = isset($this->columnTracker[$activityIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
                 $columnAppendedError = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
                 $existingId = Arr::get($this->existingIdentifier, sprintf('%s_%s', $activityIdentifier, $resultIdentifier), false);
                 $this->processedCount++;
-                $this->storeValidatedData($resultData, $columnAppendedError, $existingId, $activityIdentifier);
+                $this->storeValidatedData($resultData['results'], $columnAppendedError, $existingId, $activityIdentifier);
             }
         }
     }
@@ -162,8 +145,6 @@ class Result
         $elementMapper = array_flip($columnMapper[$element]);
         $elementDropDownFields = $dropDownFields[$element];
         $elementActivityIdentifier = null;
-        // dump($dependency, 'element',$element);
-
         $elementIdentifier = $this->elementIdentifiers[$element];
 
         foreach ($data as $row) {
@@ -192,14 +173,12 @@ class Result
 
                 $elementData[] = $systemMappedRow;
             } else {
-                // $this->appendResultData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
                 break;
             }
-
-            if (!empty($elementData)) {
-                $this->appendResultData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
-                $elementData = [];
-            }
+        }
+        if (!empty($elementData)) {
+            $this->appendResultData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
+            $elementData = [];
         }
     }
 
@@ -220,9 +199,7 @@ class Result
 
         foreach ($data as $row) {
             foreach ($row as $fieldName => $fieldValue) {
-                if ($elementBase && ($fieldName === $elementBase && $fieldValue)) {
-                    $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
-                } elseif ($elementBase && $fieldName === $elementBase && $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)) {
+                if ($elementBase && ($fieldName === $elementBase && ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)))) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
                 }
 
@@ -230,9 +207,7 @@ class Result
                     $parentKey = $fieldDependency[$fieldName]['parent'];
                     $peerAttributes = Arr::get($fieldDependency, "$fieldName.peer", []);
 
-                    if ($fieldValue) {
-                        $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) ? 0 : $parentBaseCount[$parentKey] + 1;
-                    } elseif ($this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
+                    if ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
                         $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) ? 0 : $parentBaseCount[$parentKey] + 1;
                     }
                 }
@@ -259,7 +234,7 @@ class Result
     {
         $periodElementFunctions = [
             'result' => 'appendResult',
-            'result_document_link' => 'appendResultDocumentLink',
+            'result document_link' => 'appendResultDocumentLink',
         ];
 
         call_user_func([$this, $periodElementFunctions[$element]], $identifier, $data);
@@ -268,7 +243,7 @@ class Result
 
     protected function appendResult($identifier, $data): void
     {
-        $activityIdentifier = Arr::get($this->identifiers, "activity.$identifier", null);
+        $activityIdentifier = Arr::get($this->identifiers, "$identifier", null);
 
         $this->results[$activityIdentifier][$identifier]['results'] = $data;
         $this->columnTracker[$activityIdentifier][$identifier]['results'] = $this->tempColumnTracker;
@@ -276,7 +251,7 @@ class Result
 
     protected function appendResultDocumentLink($identifier, $data): void
     {
-        $activityIdentifier = Arr::get($this->identifiers, "activity.$identifier", null);
+        $activityIdentifier = Arr::get($this->identifiers, "$identifier", null);
         $this->results[$activityIdentifier][$identifier]['results']['document_link'] = $data;
 
         $this->updateColumnTracker($activityIdentifier, $identifier, 'results.document_link');
@@ -288,15 +263,4 @@ class Result
             $this->columnTracker[$activityIdentifier][$identifier]["$keyPrefix.$columnPosition"] = $columnIndex;
         }
     }
-
-// public function checkIfPeerAttributesAreNotEmpty(array $peerAttributes, array $rowContent): bool
-// {
-//     foreach ($peerAttributes as $attributeName) {
-//         if (Arr::get($rowContent, $attributeName, null)) {
-//             return true;
-//         }
-//     }
-
-//     return false;
-// }
 }

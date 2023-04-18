@@ -165,7 +165,6 @@ class Period
         $elementMapper = array_flip($columnMapper[$element]);
         $elementDropDownFields = $dropDownFields[$element];
         $elementActivityIdentifier = null;
-        // dump($dependency, 'element',$element);
 
         $elementIdentifier = $this->elementIdentifiers[$element];
 
@@ -275,7 +274,6 @@ class Period
     protected function pushPeriod($identifier, $data): void
     {
         $indicatorIdentifier = Arr::get($this->identifiers, "period.$identifier", null);
-        dump('pushing period');
 
         $this->periods[$indicatorIdentifier][$identifier]['period'] = $data;
         $this->columnTracker[$indicatorIdentifier][$identifier]['period'] = $this->tempColumnTracker;

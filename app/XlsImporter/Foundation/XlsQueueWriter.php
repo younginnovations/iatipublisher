@@ -2,14 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\XmlImporter\Foundation;
+namespace App\XlsImporter\Foundation;
 
 use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Activity\DocumentLinkRepository;
 use App\IATI\Repositories\Activity\ResultRepository;
 use App\IATI\Repositories\Activity\TransactionRepository;
-use App\XmlImporter\Foundation\Support\Factory\XmlValidator;
-use Illuminate\Support\Arr;
 
 /**
  * Class XlsQueueWriter.

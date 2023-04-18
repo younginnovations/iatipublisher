@@ -592,47 +592,49 @@
           }
         ]
       }
+    ],
+    "document_link": [
+      {
+        "url": null,
+        "format": null,
+        "title": [
+          {
+            "narrative": [
+              {
+                "narrative": null,
+                "language": null
+              }
+            ]
+          }
+        ],
+        "category": [
+          {
+            "code": null
+          }
+        ],
+        "description": [
+          {
+            "narrative": [
+              {
+                "narrative": null,
+                "language": null
+              }
+            ]
+          }
+        ],
+        "language": [
+          {
+            "language": null
+          }
+        ],
+        "document_date": [
+          {
+            "date": null
+          }
+        ]
+      }
     ]
   },
-  "result_document_link": [{
-    "url": null,
-    "format": null,
-    "title": [
-      {
-        "narrative": [
-          {
-            "narrative": null,
-            "language": null
-          }
-        ]
-      }
-    ],
-    "category": [
-      {
-        "code": null
-      }
-    ],
-    "description": [
-      {
-        "narrative": [
-          {
-            "narrative": null,
-            "language": null
-          }
-        ]
-      }
-    ],
-    "language": [
-      {
-        "language": null
-      }
-    ],
-    "document_date": [
-      {
-        "date": null
-      }
-    ]
-  }],
   "indicator": {
     "measure": null,
     "ascending": null,
