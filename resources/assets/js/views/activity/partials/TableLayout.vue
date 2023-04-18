@@ -6,7 +6,7 @@
           <th id="title" scope="col">
             <span>Activity Title</span>
           </th>
-          <th id="status" scope="col">
+          <th id="publishing-progress" scope="col">
             <span class="">Publishing Progress</span>
           </th>
           <th id="date" scope="col">
