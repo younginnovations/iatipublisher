@@ -144,12 +144,12 @@
         "description narrative language": "Activity/Language.json",
         "reference vocabulary": "Activity/ResultVocabulary.json"
     },
-    "result_document_link": {
-      "document_link format": "Activity/FileFormat.json",
-      "document_link title narrative language": "Activity/Language.json",
-      "document_link description narrative language": "Activity/Language.json",
-      "document_link category code": "Activity/DocumentCategory.json",
-      "document_link language language": "Activity/Language.json"
+    "result document_link": {
+      "format": "Activity/FileFormat.json",
+      "title narrative language": "Activity/Language.json",
+      "description narrative language": "Activity/Language.json",
+      "category code": "Activity/DocumentCategory.json",
+      "language language": "Activity/Language.json"
     },
     "indicator": {
         "measure": "Activity/IndicatorMeasure.json",

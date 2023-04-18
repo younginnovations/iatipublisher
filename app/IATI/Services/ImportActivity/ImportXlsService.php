@@ -137,10 +137,6 @@ class ImportXlsService
      */
     public function create($activities, $xlsType): bool
     {
-        $userId = Auth::user()->id;
-        $organizationId = Auth::user()->organization->id;
-        $contents = json_decode(awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $organizationId, $userId, 'valid.json')), false, 512, 0);
-
         if ($xlsType === 'activitites') {
             foreach ($activities as $value) {
                 $activity = unsetErrorFields($contents[$value]);
@@ -174,54 +170,8 @@ class ImportXlsService
                 }
             }
         } elseif ($xlsType === 'result') {
-            $identifiers = $this->dbIatiIdentifiers($organizationId, 'activity');
-
-            foreach ($activities as $value) {
-                $activity = unsetErrorFields($contents[$value]);
-                $resultData = Arr::get($activity, 'data', []);
-                $organizationId = Auth::user()->organization->id;
-                $existenceId = Arr::get($activity, 'existence', false);
-                $parentIdentifier = Arr::get($activity, 'parentIdentifier', false);
-
-                if ($existenceId) {
-                    $this->resultRepository->update($existenceId, ['indicator' => $resultData]);
-                } else {
-                    $this->resultRepository->store(['indicator' => $resultData, 'activity_id' => $identifiers[$parentIdentifier]]);
-                }
-            }
         } elseif ($xlsType === 'indicator') {
-            $identifiers = $this->dbIatiIdentifiers($organizationId, 'result');
-
-            foreach ($activities as $value) {
-                $activity = unsetErrorFields($contents[$value]);
-                $indicatorData = Arr::get($activity, 'data', []);
-                $organizationId = Auth::user()->organization->id;
-                $existenceId = Arr::get($activity, 'existence', false);
-                $parentIdentifier = Arr::get($activity, 'parentIdentifier', false);
-
-                if ($existenceId) {
-                    $this->indicatorRepository->update($existenceId, ['indicator' => $indicatorData]);
-                } else {
-                    // dd($identifiers, $parentIdentifier);
-                    $this->indicatorRepository->store(['indicator' => $indicatorData, 'result_id' => $identifiers[$parentIdentifier]]);
-                }
-            }
         } elseif ($xlsType === 'period') {
-            $identifiers = $this->dbIatiIdentifiers($organizationId, 'indicator');
-
-            foreach ($activities as $value) {
-                $activity = unsetErrorFields($contents[$value]);
-                $periodData = Arr::get($activity, 'data', []);
-                $organizationId = Auth::user()->organization->id;
-                $existenceId = Arr::get($activity, 'existence', false);
-                $parentIdentifier = Arr::get($activity, 'parentIdentifier', false);
-
-                if ($existenceId) {
-                    $this->periodRepository->update($existenceId, ['period' => $periodData]);
-                } else {
-                    $this->periodRepository->store(['period' => $periodData, 'indicator_id' => $identifiers[$parentIdentifier]]);
-                }
-            }
         }
 
         return true;
@@ -261,55 +211,133 @@ class ImportXlsService
      *
      * @return $this
      */
-    protected function saveResults($results, $activityId): static
+    protected function saveActivities($activities): static
     {
-        if ($results) {
-            $resultWithoutIndicator = [];
+        $organizationId = Auth::user()->organization->id;
+        $userId = Auth::user()->id;
+        $identifiers = $this->dbIatiIdentifiers($organizationId, 'activity');
+        $contents = json_decode(awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $organizationId, $userId, 'valid.json')), false, 512, 0);
 
-            foreach ($results as $result) {
-                $result = (array) $result;
-                $indicators = Arr::get($result, 'indicator', []);
-                unset($result['indicator']);
+        foreach ($activities as $value) {
+            $activity = unsetErrorFields($contents[$value]);
+            $activityData = Arr::get($activity, 'data', []);
+            $organizationId = Auth::user()->organization->id;
+            $existingId = Arr::get($activity, 'existence', false);
 
-                if (!empty($indicators)) {
-                    $savedResult = $this->resultRepository->store([
-                        'activity_id' => $activityId,
-                        'result' => $result,
-                    ]);
+            if ($existingId && $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'))) {
+                $this->activityRepository->update($existingId, $activityData);
+                $this->transactionRepository->deleteTransaction($existingId);
+                $this->saveTransactions(Arr::get($activityData, 'transactions'), $existingId);
 
-                    foreach ($indicators as $indicator) {
-                        $indicator = (array) $indicator;
-                        $periods = Arr::get($indicator, 'period', []);
-                        $tempPeriod = [];
-                        unset($indicator['period']);
-
-                        $savedIndicator = $this->indicatorRepository->store([
-                            'result_id' => $savedResult['id'],
-                            'indicator' => $indicator,
-                        ]);
-
-                        if (!empty($periods)) {
-                            foreach ($periods as $period) {
-                                $tempPeriod[] = [
-                                    'period' => $period,
-                                ];
-                            }
-
-                            $savedIndicator->periods()->createMany($tempPeriod);
-                        }
-                    }
+                if (!empty($activity['errors'])) {
+                    $this->importActivityErrorRepo->updateOrCreateError($existingId, $activity['errors']);
                 } else {
-                    $resultWithoutIndicator[] = [
-                        'activity_id' => $activityId,
-                        'result' => json_encode($result),
-                    ];
+                    $this->importActivityErrorRepo->deleteImportError($existingId);
+                }
+            } else {
+                $activityData['org_id'] = $organizationId;
+                $storeActivity = $this->activityRepository->store($activityData);
+                $this->saveTransactions(Arr::get($activityData, 'transactions'), $storeActivity->id);
+
+                if (!empty($activity['errors'])) {
+                    $this->importActivityErrorRepo->updateOrCreateError($storeActivity->id, $activity['errors']);
                 }
             }
-
-            $this->resultRepository->upsert($resultWithoutIndicator, 'id');
         }
 
         return $this;
+    }
+
+    /**
+     * Save result of mapped activity in database.
+     *
+     * @param $results
+     * @param $activityId
+     *
+     * @return $this
+     */
+    protected function saveResults($results): static
+    {
+        $organizationId = Auth::user()->organization->id;
+        $userId = Auth::user()->id;
+        $identifiers = $this->dbIatiIdentifiers($organizationId, 'activity');
+        $contents = json_decode(awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $organizationId, $userId, 'valid.json')), false, 512, 0);
+
+        foreach ($results as $value) {
+            $activity = unsetErrorFields($contents[$value]);
+            $resultData = Arr::get($activity, 'data', []);
+            $organizationId = Auth::user()->organization->id;
+            $existenceId = Arr::get($activity, 'existence', false);
+            $parentIdentifier = Arr::get($activity, 'parentIdentifier', false);
+
+            if ($existenceId) {
+                $this->resultRepository->update($existenceId, ['result' => $resultData]);
+            } else {
+                $this->resultRepository->store(['result' => $resultData, 'activity_id' => $identifiers[$parentIdentifier]]);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Save indicator of mapped activity in database.
+     *
+     * @param $results
+     * @param $activityId
+     *
+     * @return $this
+     */
+    protected function saveIndicator($indicators): void
+    {
+        $organizationId = Auth::user()->organization->id;
+        $userId = Auth::user()->id;
+        $identifiers = $this->dbIatiIdentifiers($organizationId, 'result');
+        $contents = json_decode(awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $organizationId, $userId, 'valid.json')), false, 512, 0);
+
+        foreach ($indicators as $value) {
+            $activity = unsetErrorFields($contents[$value]);
+            $indicatorData = Arr::get($activity, 'data', []);
+            $organizationId = Auth::user()->organization->id;
+            $existenceId = Arr::get($activity, 'existence', false);
+            $parentIdentifier = Arr::get($activity, 'parentIdentifier', false);
+
+            if ($existenceId) {
+                $this->indicatorRepository->update($existenceId, ['indicator' => $indicatorData]);
+            } else {
+                // dd($identifiers, $parentIdentifier);
+                $this->indicatorRepository->store(['indicator' => $indicatorData, 'result_id' => $identifiers[$parentIdentifier]]);
+            }
+        }
+    }
+
+    /**
+     * Save period of mapped activity in database.
+     *
+     * @param $periods
+     *
+     * @return $this
+     */
+    protected function savePeriod($periods): void
+    {
+        $organizationId = Auth::user()->organization->id;
+        $userId = Auth::user()->id;
+        $identifiers = $this->dbIatiIdentifiers($organizationId, 'indicator');
+        $contents = json_decode(awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $organizationId, $userId, 'valid.json')), false, 512, 0);
+
+        foreach ($periods as $value) {
+            $activity = unsetErrorFields($contents[$value]);
+            $periodData = Arr::get($activity, 'data', []);
+            $organizationId = Auth::user()->organization->id;
+            $existenceId = Arr::get($activity, 'existence', false);
+            $parentIdentifier = Arr::get($activity, 'parentIdentifier', false);
+
+            if ($existenceId) {
+                $this->periodRepository->update($existenceId, ['period' => $periodData]);
+            } else {
+                $this->periodRepository->store(['period' => $periodData, 'indicator_id' => $identifiers[$parentIdentifier]]);
+            }
+        }
     }
 
     /**

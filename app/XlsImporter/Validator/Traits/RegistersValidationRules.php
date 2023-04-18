@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Xml\Validator\Traits;
+namespace App\XlsImporter\Validator\Traits;
 
 use Carbon\Carbon;
 use Illuminate\Support\Arr;

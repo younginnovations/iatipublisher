@@ -517,32 +517,32 @@
             }
         }
     },
-    "result_document_link": {
-        "elementBase": "document_link url",
+    "result document_link": {
+        "elementBase": "url",
         "elementBasePeer": [
-            "document_link format"
+            "format"
         ],
         "fieldDependency": {
-            "document_link title narrative narrative": {
-                "parent": "document_link title narrative",
+            "title narrative narrative": {
+                "parent": "title narrative",
                 "peer": [
-                    "document_link title narrative language"
+                    "title narrative language"
                 ]
             },
-            "document_link description narrative narrative": {
-                "parent": "document_link description narrative",
+            "description narrative narrative": {
+                "parent": "description narrative",
                 "peer": [
-                    "document_link description narrative language"
+                    "description narrative language"
                 ]
             },
-            "document_link category code": {
-                "parent": "document_link category"
+            "category code": {
+                "parent": "category"
             },
-            "document_link language language": {
-                "parent": "document_link language"
+            "language code": {
+                "parent": "language"
             },
-            "document_link document_date date": {
-                "parent": "document_link document_date",
+            "document_date date": {
+                "parent": "document_date",
                 "add_more": false
             }
         }
