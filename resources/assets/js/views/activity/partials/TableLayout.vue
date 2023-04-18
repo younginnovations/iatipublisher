@@ -6,6 +6,9 @@
           <th id="title" scope="col">
             <span>Activity Title</span>
           </th>
+          <th id="status" scope="col">
+            <span class="">Publishing Progress</span>
+          </th>
           <th id="date" scope="col">
             <a
               class="text-n-50 transition duration-500 hover:text-spring-50"
@@ -69,6 +72,24 @@
                       : 'Untitled'
                   }}</span>
                 </div>
+              </div>
+            </div>
+          </td>
+
+          <td class="text-n-40">
+            <div class="progress-bar-parent flex">
+              <div class="progress-bar-wrapper">
+                <div class="progress-bar-container bg-spring-10">
+                  <div
+                    class="progress-bar-fill bg-spring-50"
+                    :style="{ width: datum['progressPercentage'] + '%' }"
+                  ></div>
+                </div>
+              </div>
+              <div class="progress-bar-number">
+                <span class="text-xs font-semibold text-spring-50"
+                  >{{ datum['progressPercentage'] }}%</span
+                >
               </div>
             </div>
           </td>
@@ -235,5 +256,29 @@ const sortByDateUrl = () => {
   position: relative;
   width: 100%;
   margin: auto;
+}
+
+/*For progress bar in activities listing page
+ *
+ */
+.progress-bar-parent {
+  display: flex;
+  align-items: center;
+}
+.progress-bar-wrapper {
+  width: 76%;
+  height: 5px;
+}
+.progress-bar-container {
+  height: 100%;
+  border-radius: 12px;
+}
+.progress-bar-fill {
+  height: 100%;
+  border-radius: inherit;
+}
+.progress-bar-number {
+  padding-left: 8px;
+  width: 24%;
 }
 </style>
