@@ -274,7 +274,11 @@ const file = ref(),
 
 function uploadFile() {
   loader.value = true;
-  loaderText.value = 'Uploading .csv/.xml file';
+  loaderText.value = 'Uploading .xls file';
+  setTimeout(() => {
+    window.location.href = '/activities';
+    loader.value = false;
+  }, 2000);
   let activity = file.value.files.length ? file.value.files[0] : '';
   let xlsType = uploadType;
   const config = {

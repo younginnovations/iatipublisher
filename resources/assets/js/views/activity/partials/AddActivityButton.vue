@@ -26,6 +26,11 @@
               >Import activities from .csv/.xml</a
             >
           </li>
+          <li>
+            <a id="import-xls" href="/import/xls" :class="liClass"
+              >Import activities from .XLS</a
+            >
+          </li>
         </ul>
       </div>
     </button>

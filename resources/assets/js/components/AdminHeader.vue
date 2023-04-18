@@ -112,6 +112,14 @@
                         >Import activities from .csv/.xml</a
                       >
                     </li>
+                    <li>
+                      <a
+                        id="header-import-xls"
+                        href="/import/xls"
+                        :class="liClass"
+                        >Import activities from .XLS</a
+                      >
+                    </li>
                   </ul>
                 </div>
               </span>
@@ -185,6 +193,11 @@
                 <li>
                   <a href="/import" :class="liClass"
                     >Import activities from .csv/.xml</a
+                  >
+                </li>
+                <li>
+                  <a id="header-import-xls" href="/import/xls" :class="liClass"
+                    >Import activities from .XLS</a
                   >
                 </li>
               </ul>
