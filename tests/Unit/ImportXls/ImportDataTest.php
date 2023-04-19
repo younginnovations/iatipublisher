@@ -19,7 +19,7 @@ class ImportDataTest extends TestCase
      */
     public function test_validate_processed_data_against_actual_data(): void
     {
-        $filePath = 'tests/Unit/TestFiles/Csv/complete.csv';
+        $filePath = 'tests/Unit/TestFiles/Xls/activity.json';
         $actualData = file_get_contents($filePath);
         $xlsToArray = new XlsToArray();
         Excel::import($xlsToArray, $filePath);

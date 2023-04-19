@@ -126,6 +126,7 @@ class ImportXlsController extends Controller
             // $resultMapper->map($data);
             // dd('stop');
             // $test = \App\IATI\Models\Activity\Activity::where('id', 26)->first();
+            // $test = \App\IATI\Models\Activity\Result::where('id', 26)->first();
             // dd($test->toArray());
             // dd(json_encode($test, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_OBJECT_AS_ARRAY|JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK, 512));
             // dd(json_encode(json_decode(json_encode($test), true, 512)));

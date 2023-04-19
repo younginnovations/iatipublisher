@@ -55,7 +55,7 @@ class Result extends Model implements Auditable
 
         static::saving(
             function ($model) {
-                $model->result_code = sprintf('%d%s', $model->id, time());
+                $model->result_code = $model->result_code ?? sprintf('%d%s', $model->id, time());
             }
         );
     }
