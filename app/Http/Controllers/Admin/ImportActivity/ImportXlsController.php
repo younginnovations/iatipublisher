@@ -120,10 +120,17 @@ class ImportXlsController extends Controller
             // $data = json_decode($data, true, 512, 0);
             // $indicatorMapper = new Indicator();
             // $indicatorMapper->map($data);
-            $data = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
-            $data = json_decode($data, true, 512, 0);
-            $resultMapper = new Result();
-            $resultMapper->map($data);
+            // $data = file_get_contents(app_path('/XlsImporter/Templates/result.json'));
+            // $data = json_decode($data, true, 512, 0);
+            // $resultMapper = new Result();
+            // $resultMapper->map($data);
+            // dd('stop');
+            // $test = \App\IATI\Models\Activity\Activity::where('id', 26)->first();
+            // dd($test->toArray());
+            // dd(json_encode($test, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_OBJECT_AS_ARRAY|JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK, 512));
+            // dd(json_encode(json_decode(json_encode($test), true, 512)));
+            // file_put_contents(app_path() . '/XlsImporter/Templates/activity_test.json', json_encode($test->toArray()));
+            // dd($test);
 
             //            $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
 //            $periodMapper = new Period();
