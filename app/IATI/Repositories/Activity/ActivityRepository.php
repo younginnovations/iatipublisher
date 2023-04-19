@@ -6,8 +6,8 @@ namespace App\IATI\Repositories\Activity;
 
 use App\Constants\Enums;
 use App\IATI\Models\Activity\Activity;
-use App\IATI\Models\Setting\Setting;
 use App\IATI\Repositories\Repository;
+use App\IATI\Traits\FillDefaultValuesTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -18,6 +18,8 @@ use Illuminate\Support\Arr;
  */
 class ActivityRepository extends Repository
 {
+    use FillDefaultValuesTrait;
+
     /**
      * Returns activity model.
      *
@@ -166,6 +168,8 @@ class ActivityRepository extends Repository
     }
 
     /**
+     * Create activity from xml data.
+     *
      * @param      $activity_id
      * @param array $mappedActivity
      *
@@ -174,7 +178,6 @@ class ActivityRepository extends Repository
      */
     public function importXmlActivities($activity_id, array $mappedActivity): mixed
     {
-        $defaultFieldValues = $this->setDefaultFieldValues($mappedActivity['default_field_values'], $mappedActivity['org_id']);
         $mappedActivity = json_decode(json_encode($mappedActivity, JSON_THROW_ON_ERROR | 512), true, 512, JSON_THROW_ON_ERROR);
 
         $data = [
@@ -208,16 +211,16 @@ class ActivityRepository extends Repository
             'default_tied_status' => $this->getSingleValuedActivityElement($mappedActivity, 'default_tied_status'),
             'contact_info' => $this->getActivityElement($mappedActivity, 'contact_info'),
             'related_activity' => $this->getActivityElement($mappedActivity, 'related_activity'),
-            'default_field_values' => $defaultFieldValues[0] ?? $defaultFieldValues,
+            'default_field_values' => $mappedActivity['default_field_values'],
             'reporting_org' => $this->getActivityElement($mappedActivity, 'reporting_org'),
             'upload_medium' => Enums::UPLOAD_TYPE['xml'],
         ];
 
         if ($activity_id) {
-            return $this->model->find($activity_id)->update($data);
+            return $this->update($activity_id, $data);
         }
 
-        return $this->model->create($data);
+        return $this->store($data);
     }
 
     /**
@@ -264,52 +267,15 @@ class ActivityRepository extends Repository
     }
 
     /**
-     * Set Default values for the imported csv activities.
-     *
-     * @param $defaultFieldValues
-     * @param $organizationId
-     *
-     * @return mixed
-     */
-    protected function setDefaultFieldValues($defaultFieldValues, $organizationId): mixed
-    {
-        $setting = Setting::where('organization_id', $organizationId)->first();
-
-        if ($setting) {
-            $settings = $setting->toArray();
-            $settingsDefaultFieldValues = $settings ? [Arr::get($settings, 'default_values', [])] + [Arr::get($settings, 'activity_default_values', [])] : [];
-
-            foreach ($defaultFieldValues as $index => $value) {
-                $settingsDefaultFieldValues[0]['default_currency'] = ((Arr::get((array) $value, 'default_currency')) === '')
-                    ? Arr::get($settingsDefaultFieldValues, '0.default_currency', null) : (Arr::get((array) $value, 'default_currency', null));
-                $settingsDefaultFieldValues[0]['default_language'] = ((Arr::get((array) $value, 'default_language')) === '')
-                    ? Arr::get($settingsDefaultFieldValues, '0.default_language', null) : Arr::get((array) $value, 'default_language', null);
-                $settingsDefaultFieldValues[0]['hierarchy'] = ((Arr::get((array) $value, 'hierarchy')) === '')
-                    ? Arr::get($settingsDefaultFieldValues, '0.hierarchy', null) : (Arr::get((array) $value, 'hierarchy', null));
-                $settingsDefaultFieldValues[0]['humanitarian'] = ((Arr::get((array) $value, 'humanitarian')) === '')
-                    ? Arr::get($settingsDefaultFieldValues, '0.humanitarian', null) : Arr::get((array) $value, 'humanitarian', null);
-                $settingsDefaultFieldValues[0]['budget_not_provided'] = ((Arr::get((array) $value, 'budget_not_provided')) === '')
-                    ? Arr::get($settingsDefaultFieldValues, '0.budget_not_provided', null) : (Arr::get((array) $value, 'budget_not_provided', null));
-            }
-
-            return $settingsDefaultFieldValues;
-        }
-
-        return $defaultFieldValues;
-    }
-
-    /**
      * Create Activity from the csv data.
      *
      * @param $activityData
      *
-     * @return Activity
+     * @return Model
      */
-    public function createActivity($activityData): Activity
+    public function createActivity($activityData): Model
     {
-        $defaultFieldValues = $this->setDefaultFieldValues($activityData['default_field_values'], $activityData['organization_id']);
-
-        return $this->model->create(
+        return $this->store(
             [
                 'iati_identifier' => $activityData['identifier'],
                 'title' => $this->getActivityElement($activityData, 'title'),
@@ -324,7 +290,7 @@ class ActivityRepository extends Repository
                 'policy_marker' => $this->getActivityElement($activityData, 'policy_marker'),
                 'budget' => $this->getActivityElement($activityData, 'budget'),
                 'activity_scope' => $this->getSingleValuedActivityElement($activityData, 'activity_scope'),
-                'default_field_values' => $defaultFieldValues[0] ?? $defaultFieldValues,
+                'default_field_values' => $activityData['default_field_values'] ?? [],
                 'contact_info' => $this->getActivityElement($activityData, 'contact_info'),
                 'related_activity' => $this->getActivityElement($activityData, 'related_activity'),
                 'other_identifier' => $this->getActivityElement($activityData, 'other_identifier'),
@@ -358,7 +324,6 @@ class ActivityRepository extends Repository
      */
     public function updateActivity($id, array $activityData): bool
     {
-        $defaultFieldValues = $this->setDefaultFieldValues($activityData['default_field_values'], $activityData['organization_id']);
         $activity = [
             'iati_identifier' => $activityData['identifier'],
             'title' => $this->getActivityElement($activityData, 'title'),
@@ -373,7 +338,7 @@ class ActivityRepository extends Repository
             'policy_marker' => $this->getActivityElement($activityData, 'policy_marker'),
             'budget' => $this->getActivityElement($activityData, 'budget'),
             'activity_scope' => $this->getSingleValuedActivityElement($activityData, 'activity_scope'),
-            'default_field_values' => $defaultFieldValues[0] ?? $defaultFieldValues,
+            'default_field_values' => $activityData['default_field_values'] ?? [],
             'contact_info' => $this->getActivityElement($activityData, 'contact_info'),
             'related_activity' => $this->getActivityElement($activityData, 'related_activity'),
             'other_identifier' => $this->getActivityElement($activityData, 'other_identifier'),
@@ -394,7 +359,7 @@ class ActivityRepository extends Repository
             'reporting_org' => $this->getActivityElement($activityData, 'reporting_organization'),
         ];
 
-        return $this->model->find($id)->update($activity);
+        return $this->update($id, $activity);
     }
 
     /**

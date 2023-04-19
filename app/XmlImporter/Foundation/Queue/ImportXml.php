@@ -61,7 +61,7 @@ class ImportXml extends Job
 
             $this->delete();
         } catch (\Exception $e) {
-            logger()->error($e);
+            logger()->error($e->getMessage());
             awsUploadFile('error.log', $e->getMessage());
             $this->delete();
         }

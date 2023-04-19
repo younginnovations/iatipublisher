@@ -8,7 +8,6 @@ return  [
     'AI' => 'Anguilla',
     'AL' => 'Albania',
     'AM' => 'Armenia',
-    'AN' => 'NETHERLAND ANTILLES',
     'AO' => 'Angola',
     'AQ' => 'Antarctica',
     'AR' => 'Argentina',

@@ -6,6 +6,7 @@ namespace App\IATI\Repositories\Activity;
 
 use App\IATI\Models\Activity\Period;
 use App\IATI\Repositories\Repository;
+use App\IATI\Traits\FillDefaultValuesTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -14,6 +15,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class PeriodRepository extends Repository
 {
+    use FillDefaultValuesTrait;
+
     /**
      * @return string
      */

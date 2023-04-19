@@ -854,69 +854,6 @@ class ElementCompleteService
     }
 
     /**
-     * Sets default values of language and currency where required.
-     *
-     * @param $data
-     * @param $activity
-     *
-     * @return mixed
-     * @throws \JsonException
-     */
-    public function setDefaultValues(&$data, $activity): mixed
-    {
-        if (is_string($data)) {
-            $data = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
-        }
-
-        if ($data) {
-            foreach ($data as $key => &$datum) {
-                if (is_array($datum)) {
-                    $this->setDefaultValues($datum, $activity);
-                }
-
-                $this->setTempNarrative((string) $key, $datum);
-                $this->setTempAmount((string) $key, $datum);
-                $this->updateLanguage($data, (string) $key, $datum, $activity);
-                $this->updateCurrency($data, (string) $key, $datum, $activity);
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * Assigns language to $data['language'] variable.
-     *
-     * @param array $data
-     * @param string $key
-     * @param $datum
-     * @param $activity
-     * @return void
-     */
-    public function updateLanguage(array &$data, string $key, $datum, $activity): void
-    {
-        if ($key === 'language' && empty($datum) && !empty($this->tempNarrative)) {
-            $data['language'] = Arr::get($activity->default_field_values, 'default_language', null);
-        }
-    }
-
-    /**
-     * Assigns currency to $data['currency'] variable.
-     *
-     * @param array $data
-     * @param string $key
-     * @param $datum
-     * @param $activity
-     * @return void
-     */
-    public function updateCurrency(array &$data, string $key, $datum, $activity): void
-    {
-        if ($key === 'currency' && empty($datum) && !empty($this->tempAmount)) {
-            $data['currency'] = Arr::get($activity->default_field_values, 'default_currency', null);
-        }
-    }
-
-    /**
      * Checks if recipient Region is completed.
      *
      * @param $activity

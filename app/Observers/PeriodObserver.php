@@ -36,8 +36,6 @@ class PeriodObserver
     public function created(Period $period): void
     {
         $resultObserver = new ResultObserver();
-
-        $this->setPeriodDefaultValues($period);
         $resultObserver->updateActivityElementStatus($period->indicator->result);
         $resultObserver->resetActivityStatus($period->indicator->result);
     }
@@ -53,25 +51,7 @@ class PeriodObserver
     public function updated(Period $period): void
     {
         $resultObserver = new ResultObserver();
-
-        $this->setPeriodDefaultValues($period);
         $resultObserver->updateActivityElementStatus($period->indicator->result);
         $resultObserver->resetActivityStatus($period->indicator->result);
-    }
-
-    /**
-     * Sets default values for language and currency for period.
-     *
-     * @param $period
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function setPeriodDefaultValues($period): void
-    {
-        $periodData = $period->period;
-        $updatedData = $this->elementCompleteService->setDefaultValues($periodData, $period->indicator->result->activity);
-        $period->period = $updatedData;
-        $period->saveQuietly();
     }
 }

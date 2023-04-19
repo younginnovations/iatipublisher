@@ -10,6 +10,7 @@ use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Activity\TransactionRepository;
 use App\IATI\Repositories\ImportActivityError\ImportActivityErrorRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
+use App\IATI\Traits\FillDefaultValuesTrait;
 use App\Imports\CsvToArray;
 use Exception;
 use Illuminate\Filesystem\Filesystem;
@@ -29,6 +30,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class ImportCsvService
 {
+    use FillDefaultValuesTrait;
+
     /**
      * Directory where the validated Csv data is written before import.
      */
@@ -208,7 +211,7 @@ class ImportCsvService
                 $this->transactionRepo->deleteTransaction($oldActivity->id);
 
                 if (array_key_exists('transaction', $activity['data'])) {
-                    $this->createTransaction(Arr::get($activity['data'], 'transaction', []), $oldActivity->id);
+                    $this->createTransaction(Arr::get($activity['data'], 'transaction', []), $oldActivity->id, Arr::get($activity['data'], 'default_field_values.0', []));
                 }
 
                 if (!empty($activity['errors'])) {
@@ -220,7 +223,7 @@ class ImportCsvService
                 $createdActivity = $this->activityRepo->createActivity(Arr::get($activity, 'data'));
 
                 if (array_key_exists('transaction', $activity['data'])) {
-                    $this->createTransaction(Arr::get($activity['data'], 'transaction', []), $createdActivity->id);
+                    $this->createTransaction(Arr::get($activity['data'], 'transaction', []), $createdActivity->id, Arr::get($activity['data'], 'default_field_values.0', []));
                 }
 
                 if (!empty($activity['errors'])) {
@@ -235,13 +238,18 @@ class ImportCsvService
      *
      * @param $transactions
      * @param $activityId
+     * @param $defaultValues
      *
      * @return void
      */
-    public function createTransaction($transactions, $activityId): void
+    public function createTransaction($transactions, $activityId, $defaultValues): void
     {
         foreach ($transactions as $transaction) {
-            $this->transactionRepo->store(['transaction' => $transaction, 'activity_id' => $activityId]);
+            $this->transactionRepo->store([
+                'transaction' => $transaction,
+                'activity_id' => $activityId,
+                'default_field_values'=>$defaultValues,
+            ]);
         }
     }
 

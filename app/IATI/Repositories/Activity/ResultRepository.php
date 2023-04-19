@@ -6,6 +6,7 @@ namespace App\IATI\Repositories\Activity;
 
 use App\IATI\Models\Activity\Result;
 use App\IATI\Repositories\Repository;
+use App\IATI\Traits\FillDefaultValuesTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -15,6 +16,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class ResultRepository extends Repository
 {
+    use FillDefaultValuesTrait;
+
     /**
      * @return string
      */

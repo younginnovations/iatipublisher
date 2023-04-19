@@ -6,6 +6,7 @@ namespace App\IATI\Repositories\Activity;
 
 use App\IATI\Models\Activity\Transaction;
 use App\IATI\Repositories\Repository;
+use App\IATI\Traits\FillDefaultValuesTrait;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 /**
@@ -13,6 +14,8 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
  */
 class TransactionRepository extends Repository
 {
+    use FillDefaultValuesTrait;
+
     /**
      * @return string
      */

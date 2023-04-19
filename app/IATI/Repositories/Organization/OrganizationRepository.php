@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\IATI\Repositories\Organization;
 
 use App\IATI\Models\Organization\Organization;
+use App\IATI\Models\Setting\Setting;
 use App\IATI\Models\User\Role;
 use App\IATI\Repositories\Repository;
+use App\IATI\Traits\FillDefaultValuesTrait;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -16,6 +18,8 @@ use Illuminate\Support\Collection;
  */
 class OrganizationRepository extends Repository
 {
+    use FillDefaultValuesTrait;
+
     /**
      * Return Organization model.
      *
@@ -134,5 +138,30 @@ class OrganizationRepository extends Repository
     public function pluckAllOrganizations(): Collection
     {
         return $this->model->get()->where('name', '!=', null)->pluck('name.0.narrative', 'id');
+    }
+
+    /**
+     * Override base repository update method.
+     *
+     * @param $data
+     *
+     * @inheritDoc
+     *
+     * @return Model|void
+     */
+    public function update($id, array $data): bool
+    {
+        $orgId = auth()->user()->organization->id;
+        $defaultValues = Setting::where('organization_id', $orgId)->first()?->default_values ?? [];
+
+        if (!empty($defaultValues)) {
+            $data = $this->populateDefaultFields($data, $defaultValues);
+        }
+
+        if (isset($data['name'])) {
+            $data['name'] = $data['name']['narrative'];
+        }
+
+        return $this->model->find($id)->update($data);
     }
 }
