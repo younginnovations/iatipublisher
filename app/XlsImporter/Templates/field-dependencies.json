@@ -464,6 +464,12 @@
     },
     "participating_org": {
         "elementBase": "organization_role",
+        "elementBasePeer": [
+            "ref",
+            "type",
+            "identifier",
+            "crs_channel_code"
+        ],
         "fieldDependency": {
             "narrative narrative": {
                 "parent": "narrative",

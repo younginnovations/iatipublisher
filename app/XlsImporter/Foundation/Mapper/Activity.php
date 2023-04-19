@@ -130,7 +130,7 @@ class Activity
         $this->existingIdentifier = $existingIdentifier;
     }
 
-    public function fillOrganizationReportingOrg($organizationReportingOrg = []):static
+    public function fillOrganizationReportingOrg($organizationReportingOrg = []): static
     {
         // $this->organizationReportingOrg = $organizationReportingOrg;
 
@@ -271,6 +271,7 @@ class Activity
                         $elementDropDownFields = $dropDownFields[$element];
                         $fieldValue = $this->mapDropDownValueToKey($row[$element], $elementDropDownFields);
                     }
+
                     $this->activities[$elementActivityIdentifier][$element] = $fieldValue;
                 }
             } else {
@@ -310,7 +311,7 @@ class Activity
                 }
 
                 foreach ($row as $fieldName => $fieldValue) {
-                    if (!empty($fieldName) && $fieldName !== 'activity_identifier') {
+                    if (!empty($fieldName) && $fieldName !== 'activity_identifier' && isset($elementMapper[$fieldName])) {
                         $systemMappedRow[$elementMapper[$fieldName]] = $fieldValue;
                     }
                 }
@@ -392,6 +393,7 @@ class Activity
                 $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
 
                 if (!Arr::get($elementData, $elementPositionBasedOnParent, null) && !empty($elementPosition)) {
+                    $fieldValue = $fieldValue ? (string) $fieldValue : null;
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
                     $this->columnTracker[$elementActivityIdentifier][$element][$element . '.' . $elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
                 }

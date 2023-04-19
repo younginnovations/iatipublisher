@@ -198,7 +198,7 @@
                 {
                     "narrative": [
                         {
-                            "narrative": "narative 1",
+                            "narrative": "narrative 1",
                             "language": "ab"
                         },
                         {
@@ -231,7 +231,7 @@
         },
         {
             "organization_role": null,
-            "ref": "ref2",
+            "ref": "ref 2",
             "type": null,
             "identifier": "3",
             "crs_channel_code": null,
