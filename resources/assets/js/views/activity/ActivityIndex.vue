@@ -25,10 +25,10 @@
       </div>
     </div>
     <xlsLoader
+      v-if="xlsData"
       :total-count="totalCount"
       :processed-count="processedCount"
       :activity-name="activityName"
-      v-if="xlsData"
     />
   </div>
 </template>
@@ -109,7 +109,7 @@ export default defineComponent({
       let count = 0;
       console.log('checkstatus');
 
-      axios.get('import/xls/progress_status').then((res) => {
+      axios.get('/import/xls/progress_status').then((res) => {
         console.log(res.data, 'templete');
         activityName.value = res?.data?.status?.template;
         xlsData.value = !!res.data.status;
