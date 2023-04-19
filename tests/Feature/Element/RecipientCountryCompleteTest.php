@@ -91,19 +91,6 @@ class RecipientCountryCompleteTest extends ElementCompleteTest
     }
 
     /**
-     * Attribute country_code no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_recipient_country_attribute_no_country_code(): void
-    {
-        $recipient_countryData = json_decode('[{"percentage":"100","narrative":[{"narrative":"recipient-country1-narrative1","language":"aa"}]}]', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_one_multi_dimensional_element_incomplete($this->element, $recipient_countryData);
-    }
-
-    /**
      * Recipient Country element complete test.
      *
      * @return void

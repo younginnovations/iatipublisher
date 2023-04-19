@@ -78,45 +78,6 @@ class ConditionCompleteTest extends ElementCompleteTest
     }
 
     /**
-     * Attribute condition_attached no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_condition_attribute_no_condition_attached_key(): void
-    {
-        $humanitarian_scopeData = json_decode('{"condition":[{"condition_type":"1","narrative":[{"narrative":"asdads","language":"ab"}]}]}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_two_single_dimensional_element_incomplete($this->element, $humanitarian_scopeData);
-    }
-
-    /**
-     * Sub element condition no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_condition_sub_element_no_condition_key(): void
-    {
-        $humanitarian_scopeData = json_decode('{"condition_attached":""}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_two_single_dimensional_element_incomplete($this->element, $humanitarian_scopeData);
-    }
-
-    /**
-     * Sub element condition empty test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_condition_sub_element_empty_condition(): void
-    {
-        $humanitarian_scopeData = json_decode('{"condition_attached":"1","condition":""}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_two_single_dimensional_element_incomplete($this->element, $humanitarian_scopeData);
-    }
-
-    /**
      * Sub element condition empty array test.
      *
      * @return void
@@ -138,19 +99,6 @@ class ConditionCompleteTest extends ElementCompleteTest
     public function test_condition_sub_element_empty_condition_json_array(): void
     {
         $humanitarian_scopeData = json_decode('{"condition_attached":"1","condition":[{}]}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_two_single_dimensional_element_incomplete($this->element, $humanitarian_scopeData);
-    }
-
-    /**
-     * Sub element condition attribute condition_type no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_condition_sub_element_condition_attribute_no_condition_type_key(): void
-    {
-        $humanitarian_scopeData = json_decode('{"condition_attached":"1","condition":[{"narrative":[{"narrative":"asdads","language":"ab"}]}]}', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_two_single_dimensional_element_incomplete($this->element, $humanitarian_scopeData);
     }

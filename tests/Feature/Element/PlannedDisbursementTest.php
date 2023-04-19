@@ -438,60 +438,6 @@ class PlannedDisbursementTest extends ElementCompleteTest
     }
 
     /**
-     * Sub element value attribute amount no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_planned_disbursement_sub_element_value_attribute_no_amount_key(): void
-    {
-        $actualData = json_decode(
-            '[{"planned_disbursement_type":"1","period_start":[{"date":"2022-07-19"}],"period_end":[{"date":"2022-07-27"}],"value":[{"currency":"AOA","value_date":"2022-07-30"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element value attribute currency no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_planned_disbursement_sub_element_value_attribute_no_currency_key(): void
-    {
-        $actualData = json_decode(
-            '[{"planned_disbursement_type":"1","period_start":[{"date":"2022-07-19"}],"period_end":[{"date":"2022-07-27"}],"value":[{"amount":"1111","value_date":"2022-07-30"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element value attribute value_date no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_planned_disbursement_sub_element_value_attribute_no_value_date_key(): void
-    {
-        $actualData = json_decode(
-            '[{"planned_disbursement_type":"1","period_start":[{"date":"2022-07-19"}],"period_end":[{"date":"2022-07-27"}],"value":[{"amount":"1111","currency":"AOA"}],"provider_org":[{"ref":"provider-org-ref","provider_activity_id":"123123123","type":"11","narrative":[{"narrative":"asdasdasdads","language":"ab"}]}],"receiver_org":[{"ref":"receiver-org-ref","provider_activity_id":"5555","type":"23","narrative":[{"narrative":"asdasdadasdasd","language":"af"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
      * Planned Disbursement element complete test.
      *
      * @return void

@@ -129,7 +129,7 @@ trait ElementCompleteServiceTrait
     }
 
     /**
-     * Checks if child field is set when parent is set.
+     * Checks if child field is set + not empty + non zero when parent is set.
      *
      * @param $data
      * @param $mandatoryAttribute
@@ -140,12 +140,9 @@ trait ElementCompleteServiceTrait
         if (is_string($data)) {
             return false;
         }
+        $keyExists = array_key_exists($mandatoryAttribute, $data);
 
-        $keyDoesntExists = !array_key_exists($mandatoryAttribute, $data);
-        $valueIsEmpty = empty($data[$mandatoryAttribute]);
-        $valueNotZero = isset($data[$mandatoryAttribute]) && $data[$mandatoryAttribute] !== 0;
-
-        return $keyDoesntExists || ($valueIsEmpty && $valueNotZero);
+        return $keyExists && empty($data[$mandatoryAttribute]) && $data[$mandatoryAttribute] !== 0;
     }
 
     /**

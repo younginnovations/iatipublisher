@@ -50,19 +50,6 @@ class RelatedActivityCompleteTest extends ElementCompleteTest
     }
 
     /**
-     * Attribute activity_identifier no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_related_activity_attribute_no_activity_identifier_key(): void
-    {
-        $related_activityData = json_decode('[{"relationship_type":"123"}]', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_one_multi_dimensional_element_incomplete($this->element, $related_activityData);
-    }
-
-    /**
      * Attribute activity_identifier empty test.
      *
      * @return void
@@ -71,19 +58,6 @@ class RelatedActivityCompleteTest extends ElementCompleteTest
     public function test_related_activity_attribute_empty_activity_identifier(): void
     {
         $related_activityData = json_decode('[{"activity_identifier":"","relationship_type":"123"}]', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_one_multi_dimensional_element_incomplete($this->element, $related_activityData);
-    }
-
-    /**
-     * Attribute relationship_type no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_related_activity_attribute_no_relationship_type_key(): void
-    {
-        $related_activityData = json_decode('[{"activity_identifier":"123"}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $related_activityData);
     }

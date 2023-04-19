@@ -529,7 +529,7 @@ export class DynamicField {
       sector_vocabulary.on('select2:clear', (e) => {
         const target = e.target as HTMLElement;
 
-        this.hideSectorField($(target), '1');
+        this.hideSectorField($(target), '');
       });
     }
   }
