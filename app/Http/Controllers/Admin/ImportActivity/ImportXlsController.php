@@ -97,10 +97,11 @@ class ImportXlsController extends Controller
 
             // $this->getLinearizedElement();
 
-            // $data = getCodeList('FileFormat', 'Activity', false);
-            // $data = json_encode(getCodeList('Region', 'Activity'));
+            // $data = getCodeList('Budget', 'Activity', false);
+            $data = json_encode(getCodeList('BudgetIdentifier', 'Activity'));
             // test
-            // $data = file_get_contents(app_path() . '/XlsImporter/Templates/test.json');
+            file_put_contents(app_path() . '/XlsImporter/Templates/test.json', $data);
+            dd('stop');
             // $activityMapper = new Activity();
             // $activityMapper->map($data);
             // $org_id = Auth::user()->organization->id;

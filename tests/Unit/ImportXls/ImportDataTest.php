@@ -19,11 +19,14 @@ class ImportDataTest extends TestCase
      */
     public function test_validate_processed_data_against_actual_data(): void
     {
-        $filePath = 'tests/Unit/TestFiles/Xls/activity.json';
-        $actualData = file_get_contents($filePath);
+        $systemDataFilePath = 'tests/Unit/TestFiles/Xls/SystemData/activity.json';
+        $xlsfilePath = 'tests/Unit/TestFiles/Xls/XlsData/Activity.xlsx';
+        $actualData = file_get_contents($systemDataFilePath);
         $xlsToArray = new XlsToArray();
-        Excel::import($xlsToArray, $filePath);
+        Excel::import($xlsToArray, $xlsfilePath);
         $xlsData = $xlsToArray->sheetData;
+        file_put_contents('tests/Unit/TestFiles/Xls/xlsData.json', json_encode($xlsData));
+        dd('stop');
 
         $xlsMapper = new Activity();
         // $xlsMapper->initMapper($validatedDataFilePath, $statusFilePath, $dbIatiIdentifiers);
@@ -33,7 +36,8 @@ class ImportDataTest extends TestCase
         // }
 
         $xlsMapper->map($xlsData);
-        // $processedData = json_encode();
-        $this->assertEquals($actualData, $actualData);
+        $processedData = json_encode($xlsMapper->getActivityData());
+        file_put_contents('tests/Unit/TestFiles/Xls/activity-processed.json', $processedData);
+        $this->assertEquals($actualData, $processedData);
     }
 }

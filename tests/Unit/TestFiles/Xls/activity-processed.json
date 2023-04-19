@@ -1,0 +1,960 @@
+{
+    "default_field_values": {
+        "default_currency": "HUF",
+        "default_language": "en",
+        "default_hierarchy": 1,
+        "default_humanitarian": true,
+        "budget_not_provided": 2,
+        "secondary_reporter": false
+    },
+    "iati_identifier": {
+        "activity_identifier": "123-234"
+    },
+    "title": [
+        {
+            "narrative": "import test activity",
+            "language": "ab"
+        },
+        {
+            "narrative": "import test activity 2",
+            "language": "ae"
+        }
+    ],
+    "description": [
+        {
+            "type": 1,
+            "narrative": [
+                {
+                    "narrative": "nar 1",
+                    "language": "ab"
+                },
+                {
+                    "narrative": "nar 2",
+                    "language": "am"
+                }
+            ]
+        },
+        {
+            "type": 2,
+            "narrative": [
+                {
+                    "narrative": "nar 1",
+                    "language": "af"
+                },
+                {
+                    "narrative": "nar 2",
+                    "language": "ak"
+                }
+            ]
+        }
+    ],
+    "activity_date": [
+        {
+            "type": 2,
+            "date": 45030,
+            "narrative": [
+                {
+                    "narrative": "nar 1",
+                    "language": "ak"
+                },
+                {
+                    "narrative": "nar 2",
+                    "language": "ee"
+                }
+            ]
+        },
+        {
+            "type": 3,
+            "date": null,
+            "narrative": [
+                {
+                    "narrative": "nar 1",
+                    "language": "af"
+                },
+                {
+                    "narrative": "nar 2",
+                    "language": "ae"
+                }
+            ]
+        }
+    ],
+    "recipient_country": [
+        {
+            "country_code": "AF",
+            "percentage": 50,
+            "narrative": [
+                {
+                    "narrative": "nar 1",
+                    "language": "ab"
+                },
+                {
+                    "narrative": "nar 2",
+                    "language": "am"
+                }
+            ]
+        },
+        {
+            "country_code": "AD",
+            "percentage": 50,
+            "narrative": [
+                {
+                    "narrative": "nar 1",
+                    "language": "aa"
+                },
+                {
+                    "narrative": "nar 2",
+                    "language": "ak"
+                }
+            ]
+        }
+    ],
+    "conditions": {
+        "condition_attached": "False",
+        "condition": [
+            {
+                "condition_type": 2,
+                "narrative": [
+                    {
+                        "narrative": "nar 1",
+                        "language": "ca"
+                    },
+                    {
+                        "narrative": "nar 2",
+                        "language": "fr"
+                    }
+                ]
+            },
+            {
+                "condition_type": 3,
+                "narrative": {
+                    "2": {
+                        "narrative": "nar 1",
+                        "language": "en"
+                    }
+                }
+            }
+        ]
+    },
+    "contact_info": [
+        {
+            "type": 2,
+            "organisation": [
+                {
+                    "narrative": [
+                        {
+                            "narrative": "nar 1",
+                            "language": "ak"
+                        },
+                        {
+                            "narrative": "nar 2",
+                            "language": "aa"
+                        }
+                    ]
+                }
+            ],
+            "department": [
+                {
+                    "narrative": [
+                        {
+                            "narrative": "nar 1",
+                            "language": "am"
+                        },
+                        {
+                            "narrative": "nar 2",
+                            "language": "af"
+                        }
+                    ]
+                }
+            ],
+            "person_name": [
+                {
+                    "narrative": [
+                        {
+                            "narrative": "pname 1",
+                            "language": "af"
+                        },
+                        {
+                            "narrative": "pname 2",
+                            "language": "it"
+                        }
+                    ]
+                }
+            ],
+            "job_title": [
+                {
+                    "narrative": [
+                        {
+                            "narrative": "jtitile 1",
+                            "language": "ak"
+                        },
+                        {
+                            "narrative": "jtitile 2",
+                            "language": "ga"
+                        }
+                    ]
+                }
+            ],
+            "telephone": [
+                {
+                    "telephone": 546543346466
+                },
+                {
+                    "telephone": 546543346467
+                }
+            ],
+            "email": [
+                {
+                    "email": "test@gmail.com"
+                },
+                {
+                    "email": "test2@gmail.com"
+                }
+            ],
+            "website": [
+                {
+                    "website": "http:\/\/localhost:8000\/activity\/24\/contact_info"
+                },
+                {
+                    "website": "http:\/\/localhost:8000\/activity\/24\/contact_info2"
+                }
+            ],
+            "mailing_address": [
+                {
+                    "narrative": [
+                        {
+                            "narrative": "narrative 1",
+                            "language": "ab"
+                        },
+                        {
+                            "narrative": "narrative 2",
+                            "language": "ae"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "planned_disbursement": [
+        {
+            "planned_disbursement_type": 2,
+            "period_start": [
+                {
+                    "date": 45017
+                }
+            ],
+            "period_end": [
+                {
+                    "date": 45010
+                }
+            ],
+            "value": [
+                {
+                    "amount": 5654534,
+                    "currency": "AOA",
+                    "value_date": 45030
+                }
+            ],
+            "provider_org": [
+                {
+                    "ref": "provider",
+                    "provider_activity_id": 657,
+                    "type": 11,
+                    "narrative": [
+                        {
+                            "narrative": "nar 1",
+                            "language": "ak"
+                        },
+                        {
+                            "narrative": "nar 2",
+                            "language": "en"
+                        }
+                    ]
+                }
+            ],
+            "receiver_org": [
+                {
+                    "ref": "receiver",
+                    "receiver_activity_id": 56,
+                    "type": 21,
+                    "narrative": [
+                        {
+                            "narrative": "nar 1",
+                            "language": "ae"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "participating_org": [
+        {
+            "organization_role": 2,
+            "ref": "ref 1",
+            "type": 11,
+            "identifier": 12,
+            "crs_channel_code": 11001,
+            "narrative": [
+                {
+                    "narrative": "nar 1",
+                    "language": "ab"
+                },
+                {
+                    "narrative": "nar 2",
+                    "language": "ae"
+                }
+            ]
+        }
+    ],
+    "budget": [
+        {
+            "budget_status": 2,
+            "budget_type": 1,
+            "period_start": [
+                {
+                    "date": 44502
+                }
+            ],
+            "period_end": [
+                {
+                    "date": 44865
+                }
+            ],
+            "budget_value": [
+                {
+                    "amount": 452895,
+                    "currency": "GBP",
+                    "value_date": 44503
+                }
+            ]
+        },
+        {
+            "budget_status": 2,
+            "budget_type": 1,
+            "period_start": [
+                {
+                    "date": null
+                }
+            ],
+            "period_end": [
+                {
+                    "date": null
+                }
+            ],
+            "budget_value": [
+                {
+                    "amount": 120000,
+                    "currency": "USD",
+                    "value_date": null
+                }
+            ]
+        }
+    ],
+    "legacy_data": [
+        {
+            "legacy_name": "legacy name 1",
+            "value": null,
+            "iati_equivalent": null
+        },
+        {
+            "legacy_name": "legacy name 2",
+            "value": null,
+            "iati_equivalent": "\n"
+        },
+        {
+            "legacy_name": null,
+            "value": 3845879,
+            "iati_equivalent": null
+        },
+        {
+            "legacy_name": "name 2",
+            "value": 667,
+            "iati_equivalent": "equiv"
+        }
+    ],
+    "humanitarian_scope": [
+        {
+            "type": 1,
+            "vocabulary": "2-1",
+            "code": "code",
+            "vocabulary_uri": null,
+            "narrative": [
+                {
+                    "narrative": "nar 1",
+                    "language": "ab"
+                },
+                {
+                    "narrative": "nar 2",
+                    "language": "ak"
+                }
+            ]
+        },
+        {
+            "type": 2,
+            "vocabulary": 99,
+            "code": 34,
+            "vocabulary_uri": "http:\/\/localhost:8000\/activity\/24\/humanitarian_scope",
+            "narrative": [
+                {
+                    "narrative": "nar 1",
+                    "language": "hy"
+                },
+                {
+                    "narrative": "nar 2",
+                    "language": "mk"
+                }
+            ]
+        }
+    ],
+    "related_activity": [
+        {
+            "activity_identifier": "ref 1",
+            "relationship_type": 4
+        },
+        {
+            "activity_identifier": "ref 2",
+            "relationship_type": 2
+        }
+    ],
+    "other_identifier": [
+        {
+            "reference": "ref 1",
+            "reference_type": "A2",
+            "owner_org": [
+                {
+                    "ref": "owner ref 1",
+                    "narrative": [
+                        {
+                            "narrative": "nar 1",
+                            "language": "ae"
+                        },
+                        {
+                            "narrative": "nar 2",
+                            "language": "ak"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "reference": "ref 2",
+            "reference_type": "B1",
+            "owner_org": [
+                {
+                    "ref": "owner ref 2",
+                    "narrative": [
+                        {
+                            "narrative": "nar 1",
+                            "language": "ab"
+                        },
+                        {
+                            "narrative": "nar 2",
+                            "language": "ae"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "sector": [
+        {
+            "sector_vocabulary": 1,
+            "code": 11120,
+            "vocabulary_uri": null,
+            "percentage": 100,
+            "narrative": [
+                {
+                    "narrative": "nar 1",
+                    "language": "aa"
+                },
+                {
+                    "narrative": "nar 2",
+                    "language": "ab"
+                }
+            ]
+        },
+        {
+            "sector_vocabulary": "2 - OECD DAC CRS Purpose Codes  (3 digit)",
+            "text": "113 - Secondary education",
+            "vocabulary_uri": null,
+            "percentage": 100,
+            "narrative": [
+                {
+                    "narrative": "nar 3",
+                    "language": "aa"
+                },
+                {
+                    "narrative": "nar 4",
+                    "language": "ae"
+                }
+            ]
+        },
+        {
+            "sector_vocabulary": "7 - SDG Goal  ",
+            "text": "2 - Goal 2. End hunger, achieve food security and improved nutrition and promote sustainable agriculture",
+            "vocabulary_uri": null,
+            "percentage": 100,
+            "narrative": [
+                {
+                    "narrative": "nar 1",
+                    "language": "af"
+                },
+                {
+                    "narrative": "nar 2",
+                    "language": "it"
+                }
+            ]
+        },
+        {
+            "sector_vocabulary": "8 - SDG Target  ",
+            "text": "1.2 - By 2030, reduce at least by half the proportion of men, women and children of all ages living in poverty in all its dimensions according to national definitions",
+            "vocabulary_uri": null,
+            "percentage": 100,
+            "narrative": [
+                {
+                    "narrative": "nar 1",
+                    "language": "eo"
+                },
+                {
+                    "narrative": "nar 2",
+                    "language": "mh"
+                }
+            ]
+        },
+        {
+            "sector_vocabulary": "99 - Reporting Organisation  ",
+            "text": 123456,
+            "vocabulary_uri": "http:\/\/localhost:8000\/activity\/26\/sector",
+            "percentage": 100,
+            "narrative": [
+                {
+                    "narrative": "nar 1",
+                    "language": "af"
+                },
+                {
+                    "narrative": "nar 2",
+                    "language": "gv"
+                }
+            ]
+        }
+    ],
+    "tag": [
+        {
+            "tag_vocabulary": 2,
+            "goal_tag_code": "3 - Goal 3. Ensure healthy lives and promote well-being for all at all ages",
+            "vocabulary_uri": null,
+            "narrative": [
+                {
+                    "narrative": "nar 1",
+                    "language": "az"
+                },
+                {
+                    "narrative": "nar 2",
+                    "language": "en"
+                }
+            ]
+        },
+        {
+            "tag_vocabulary": 99,
+            "tag_text": "99 vocab",
+            "vocabulary_uri": "http:\/\/localhost:8000\/activity\/26\/tag",
+            "narrative": [
+                {
+                    "narrative": "nar 1",
+                    "language": "ab"
+                },
+                {
+                    "narrative": "nar 2",
+                    "language": "co"
+                }
+            ]
+        },
+        {
+            "tag_vocabulary": 3,
+            "targets_tag_code": "1.2",
+            "vocabulary_uri": null,
+            "narrative": [
+                {
+                    "narrative": "nar 1",
+                    "language": "hu"
+                },
+                {
+                    "narrative": "nar 2",
+                    "language": "kw"
+                }
+            ]
+        },
+        {
+            "tag_vocabulary": 1,
+            "tag_text": "vocab 1",
+            "vocabulary_uri": null,
+            "narrative": [
+                {
+                    "narrative": "nar 1",
+                    "language": "en"
+                }
+            ]
+        }
+    ],
+    "policy_marker": [
+        {
+            "policy_marker_vocabulary": 1,
+            "policy_marker": 2,
+            "vocabulary_uri": null,
+            "significance": 0,
+            "narrative": [
+                {
+                    "narrative": "nar 1",
+                    "language": "af"
+                }
+            ]
+        },
+        {
+            "policy_marker_vocabulary": 99,
+            "policy_marker_text": 678,
+            "vocabulary_uri": "http:\/\/localhost:8000\/activity\/24\/policy_marker",
+            "significance": 3,
+            "narrative": [
+                {
+                    "narrative": "nar 3",
+                    "language": "ae"
+                },
+                {
+                    "narrative": "nar 4",
+                    "language": "ce"
+                }
+            ]
+        }
+    ],
+    "default_aid_type": [
+        {
+            "default_aid_type_vocabulary": 2,
+            "earmarking_category": 4
+        },
+        {
+            "default_aid_type_vocabulary": 1,
+            "default_aid_type": "B032"
+        },
+        {
+            "default_aid_type_vocabulary": 3,
+            "earmarking_modality": "F"
+        },
+        {
+            "default_aid_type_vocabulary": 4,
+            "cash_and_voucher_modalities": 2
+        }
+    ],
+    "document_link": [
+        {
+            "url": "https:\/\/minio-stage.yipl.com.np:9000\/document_link\/1\/test.backup",
+            "format": "application\/3gpp-ims+xml",
+            "title": [
+                {
+                    "narrative": [
+                        {
+                            "narrative": "nar 1",
+                            "language": "ae"
+                        },
+                        {
+                            "narrative": "nar 2",
+                            "language": "fa"
+                        }
+                    ]
+                }
+            ],
+            "description": [
+                {
+                    "narrative": [
+                        {
+                            "narrative": "nar 1",
+                            "language": "id"
+                        },
+                        {
+                            "narrative": "nar 2",
+                            "language": "he"
+                        }
+                    ]
+                }
+            ],
+            "category": [
+                {
+                    "code": "A01"
+                },
+                {
+                    "code": "A03"
+                }
+            ],
+            "language": [
+                {
+                    "code": "ab"
+                },
+                {
+                    "code": "bm"
+                }
+            ],
+            "document_date": [
+                {
+                    "date": 45029
+                }
+            ]
+        },
+        {
+            "url": "https:\/\/localhost:8001\/activity\/9\/document_link",
+            "format": "application\/activemessage",
+            "title": [
+                {
+                    "narrative": [
+                        {
+                            "narrative": "nar 1",
+                            "language": "en"
+                        }
+                    ]
+                }
+            ],
+            "description": [
+                {
+                    "narrative": [
+                        {
+                            "narrative": "nar 2",
+                            "language": "en"
+                        }
+                    ]
+                }
+            ],
+            "category": [
+                {
+                    "code": "A01"
+                },
+                {
+                    "code": "A05"
+                }
+            ],
+            "language": [
+                {
+                    "code": "ae"
+                }
+            ],
+            "document_date": [
+                {
+                    "date": 45022
+                }
+            ]
+        }
+    ],
+    "country_budget_items": {
+        "country_budget_vocabulary": 3,
+        "budget_item": [
+            {
+                "code": "1.3.2",
+                "percentage": 50,
+                "description": [
+                    {
+                        "narrative": [
+                            {
+                                "narrative": "nar 1",
+                                "language": "ak"
+                            },
+                            {
+                                "narrative": "nar 2",
+                                "language": "dz"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "code": "2.1.5",
+                "percentage": 50,
+                "description": [
+                    {
+                        "narrative": {
+                            "2": {
+                                "narrative": "nar 1",
+                                "language": "fr"
+                            },
+                            "3": {
+                                "narrative": "nar 2",
+                                "language": "hz"
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "location": [
+        {
+            "ref": "ref 1",
+            "location_reach": [
+                {
+                    "code": 2
+                }
+            ],
+            "location_id": [
+                {
+                    "vocabulary": "A1",
+                    "code": 234
+                },
+                {
+                    "vocabulary": "A4",
+                    "code": "vocab code 2"
+                }
+            ],
+            "name": [
+                {
+                    "narrative": [
+                        {
+                            "narrative": "name 1",
+                            "language": "ab"
+                        },
+                        {
+                            "narrative": "naem 2",
+                            "language": "dz"
+                        }
+                    ]
+                }
+            ],
+            "description": [
+                {
+                    "narrative": [
+                        {
+                            "narrative": "des 1",
+                            "language": "ak"
+                        },
+                        {
+                            "narrative": "des 2",
+                            "language": "ho"
+                        }
+                    ]
+                }
+            ],
+            "activity_description": [
+                {
+                    "narrative": [
+                        {
+                            "narrative": "nar 1",
+                            "language": "ab"
+                        },
+                        {
+                            "narrative": "nar 2",
+                            "language": "am"
+                        }
+                    ]
+                }
+            ],
+            "administrative": [
+                {
+                    "vocabulary": "A2",
+                    "code": "CL",
+                    "level": 124
+                }
+            ],
+            "point": [
+                {
+                    "srs_name": "http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326",
+                    "pos": [
+                        {
+                            "latitude": 56,
+                            "longitude": 27
+                        }
+                    ]
+                }
+            ],
+            "exactness": [
+                {
+                    "code": 1
+                }
+            ],
+            "location_class": [
+                {
+                    "code": 3
+                }
+            ],
+            "feature_designation": [
+                {
+                    "code": "CMPQ"
+                }
+            ]
+        },
+        {
+            "ref": "ref 2",
+            "location_reach": [
+                {
+                    "code": null
+                }
+            ],
+            "location_id": [
+                {
+                    "vocabulary": null,
+                    "code": null
+                }
+            ],
+            "name": [
+                {
+                    "narrative": [
+                        {
+                            "narrative": null,
+                            "language": null
+                        }
+                    ]
+                }
+            ],
+            "description": [
+                {
+                    "narrative": [
+                        {
+                            "narrative": null,
+                            "language": null
+                        }
+                    ]
+                }
+            ],
+            "activity_description": [
+                {
+                    "narrative": [
+                        {
+                            "narrative": "des 1",
+                            "language": "ab"
+                        },
+                        {
+                            "narrative": "des 2",
+                            "language": "ae"
+                        }
+                    ]
+                }
+            ],
+            "administrative": [
+                {
+                    "vocabulary": null,
+                    "code": null,
+                    "level": null
+                }
+            ],
+            "point": [
+                {
+                    "srs_name": null,
+                    "pos": [
+                        {
+                            "latitude": null,
+                            "longitude": null
+                        }
+                    ]
+                }
+            ],
+            "exactness": [
+                {
+                    "code": null
+                }
+            ],
+            "location_class": [
+                {
+                    "code": null
+                }
+            ],
+            "feature_designation": [
+                {
+                    "code": null
+                }
+            ]
+        }
+    ]
+}

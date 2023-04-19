@@ -25,6 +25,7 @@ class XlsToArray implements ToArray, WithHeadingRow, WithEvents, WithCalculatedF
 
     public function array(array $array)
     {
+        // logger()->error($this->sheetNames, $this->sheetData);
         $this->sheetData[$this->sheetNames[count($this->sheetNames) - 1]] = $array;
     }
 

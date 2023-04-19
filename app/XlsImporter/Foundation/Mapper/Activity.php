@@ -137,6 +137,11 @@ class Activity
         return $this;
     }
 
+    public function getActivityData(): array
+    {
+        return $this->activities[array_key_first($this->activities)];
+    }
+
     public function map($activityData): static
     {
         foreach ($activityData as $sheetName => $content) {
