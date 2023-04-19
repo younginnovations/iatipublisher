@@ -124,7 +124,6 @@ class ImportXlsController extends Controller
             $data = json_decode($data, true, 512, 0);
             $resultMapper = new Result();
             $resultMapper->map($data);
-            dd('stop');
 
             //            $data = file_get_contents(app_path() . '/XlsImporter/Templates/period.json');
 //            $periodMapper = new Period();

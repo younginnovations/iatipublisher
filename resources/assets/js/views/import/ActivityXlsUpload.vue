@@ -275,10 +275,7 @@ const file = ref(),
 function uploadFile() {
   loader.value = true;
   loaderText.value = 'Uploading .xls file';
-  setTimeout(() => {
-    window.location.href = '/activities';
-    loader.value = false;
-  }, 2000);
+
   let activity = file.value.files.length ? file.value.files[0] : '';
   let xlsType = uploadType;
   const config = {
@@ -295,10 +292,10 @@ function uploadFile() {
   axios
     .post('/import/xls', data, config)
     .then((res) => {
+      loader.value = false;
+      window.location.href = '/activities';
       if (file.value.files.length && res?.data?.success) {
-        setTimeout(() => {
-          window.location.href = '/import/list';
-        }, 5000);
+        loader.value = false;
       } else {
         error.value = Object.values(res.data.errors).join(' ');
         loader.value = false;
@@ -307,6 +304,10 @@ function uploadFile() {
     .catch(() => {
       error.value = 'Error has occured while uploading file.';
       loader.value = false;
+    })
+    .finally(() => {
+      loader.value = false;
+      window.location.href = '/activities';
     });
 }
 </script>

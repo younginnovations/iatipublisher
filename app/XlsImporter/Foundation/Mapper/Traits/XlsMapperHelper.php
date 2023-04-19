@@ -164,6 +164,8 @@ trait XlsMapperHelper
             'processed_count' => $this->processedCount,
         ]);
 
+        dump('processing');
+
         awsUploadFile($this->validatedDataFilePath, $content);
         awsUploadFile($this->statusFilePath, $status);
     }

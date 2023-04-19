@@ -24,6 +24,12 @@
         </div>
       </div>
     </div>
+    <xlsLoader
+      :total-count="totalCount"
+      :processed-count="processedCount"
+      :activity-name="activityName"
+      v-if="xlsData"
+    />
   </div>
 </template>
 
@@ -31,7 +37,7 @@
 import { defineComponent, onMounted, provide, reactive, ref, watch } from 'vue';
 import { watchIgnorable } from '@vueuse/core';
 import axios from 'axios';
-
+import xlsLoader from 'Components/XlsLoader.vue';
 import EmptyActivity from './partials/EmptyActivity.vue';
 import TableLayout from './partials/TableLayout.vue';
 import Pagination from 'Components/TablePagination.vue';
@@ -48,6 +54,7 @@ export default defineComponent({
     TableLayout,
     Loader,
     ErrorMessage,
+    xlsLoader,
   },
   props: {
     toast: {
@@ -61,6 +68,12 @@ export default defineComponent({
     }
     const activities = reactive({}) as ActivitiesInterface;
     const isLoading = ref(true);
+    const activityName = ref('');
+
+    const xlsData = ref(false);
+    const totalCount = ref();
+    const processedCount = ref();
+
     const tableLoader = ref(true);
     const currentURL = window.location.href;
     let endpoint = '';
@@ -93,13 +106,26 @@ export default defineComponent({
     });
 
     const checkXlsstatus = () => {
+      let count = 0;
       console.log('checkstatus');
+
       axios.get('import/xls/progress_status').then((res) => {
-        console.log(!!res.data.status);
+        console.log(res.data, 'templete');
+        activityName.value = res?.data?.status?.template;
+        xlsData.value = !!res.data.status;
+
         if (res.data.status) {
-          axios.get('/import/xls/status').then((res) => {
-            console.log(res.data);
-          });
+          const checkStatus = setInterval(function () {
+            axios.get('/import/xls/status').then((res) => {
+              console.log(res.data, count);
+              totalCount.value = res.data.data.total_count;
+              processedCount.value = res.data.data.processed_count;
+            });
+            count++;
+            if (count > 20) {
+              clearInterval(checkStatus);
+            }
+          }, 2000);
         }
       });
     };
@@ -202,6 +228,10 @@ export default defineComponent({
       refreshToastMsg,
       errorData,
       tableLoader,
+      xlsData,
+      activityName,
+      processedCount,
+      totalCount,
     };
   },
 });
