@@ -249,6 +249,12 @@
         </div>
       </div>
     </div>
+    <xlsLoader
+      v-if="xlsData"
+      :total-count="totalCount"
+      :processed-count="processedCount"
+      :activity-name="activityName"
+    />
   </div>
   <Loader
     v-if="loader"
@@ -258,15 +264,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import HoverText from 'Components/HoverText.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 import axios from 'axios';
+import xlsLoader from 'Components/XlsLoader.vue';
 
 const uploadType = ref();
 const showDownloadDropdown = ref(false);
+const activityName = ref('');
 
+const xlsData = ref(false);
+const totalCount = ref();
+const processedCount = ref();
 const file = ref(),
   error = ref(''),
   loader = ref(false),
@@ -310,6 +321,34 @@ function uploadFile() {
       window.location.href = '/activities';
     });
 }
+const checkXlsstatus = () => {
+  let count = 0;
+  console.log('checkstatus');
+
+  axios.get('/import/xls/progress_status').then((res) => {
+    console.log(res.data, 'templete');
+    activityName.value = res?.data?.status?.template;
+    xlsData.value = !!res.data.status;
+
+    if (res.data.status) {
+      const checkStatus = setInterval(function () {
+        axios.get('/import/xls/status').then((res) => {
+          console.log(res.data, count);
+          totalCount.value = res.data.data.total_count;
+          processedCount.value = res.data.data.processed_count;
+        });
+        count++;
+        if (count > 20) {
+          clearInterval(checkStatus);
+        }
+      }, 2000);
+    }
+  });
+};
+onMounted(() => {
+  checkXlsstatus();
+  console.log(xlsData.value, 'xls data');
+});
 </script>
 
 <style lang="scss"></style>
