@@ -297,4 +297,26 @@ class ImportXlsController extends Controller
             return response()->json(['success' => false, 'message' => 'Error has occurred while trying to delete import status.']);
         }
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return View|JsonResponse|RedirectResponse
+     */
+    public function show(): View|JsonResponse|RedirectResponse
+    {
+        try {
+            $status = $this->importXlsService->getImportStatus();
+            $importData = $this->importXlsService->getAwsXlsData('valid.json');
+
+            return view(
+                'admin.import.xls.list',
+                compact('status', 'importData')
+            );
+        } catch (Exception $e) {
+            logger()->error($e->getMessage());
+
+            return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while opening import listing page.');
+        }
+    }
 }
