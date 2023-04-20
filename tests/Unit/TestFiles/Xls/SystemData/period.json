@@ -1,979 +1,294 @@
 {
-    "iati_identifier": {
-        "activity_identifier": "123-234"
-    },
-    "other_identifier": [
-        {
-            "reference": "ref 1",
-            "reference_type": "A2",
-            "owner_org": [
-                {
-                    "ref": "owner ref 1",
-                    "narrative": [
-                        {
-                            "narrative": "nar 1",
-                            "language": "ae"
-                        },
-                        {
-                            "narrative": "nar 2",
-                            "language": "ak"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "reference": "ref 2",
-            "reference_type": "B1",
-            "owner_org": [
-                {
-                    "ref": "owner ref 2",
-                    "narrative": [
-                        {
-                            "narrative": "nar 1",
-                            "language": "ab"
-                        },
-                        {
-                            "narrative": "nar 2",
-                            "language": "ae"
-                        }
-                    ]
-                }
-            ]
-        }
-    ],
-    "title": [
-        {
-            "narrative": "import test activity",
-            "language": "ab"
-        },
-        {
-            "narrative": "import test activity 2",
-            "language": "ae"
-        }
-    ],
-    "description": [
-        {
-            "type": "1",
-            "narrative": [
-                {
-                    "narrative": "nar 1",
-                    "language": "ab"
-                },
-                {
-                    "narrative": "nar 2",
-                    "language": "am"
-                }
-            ]
-        },
-        {
-            "type": "2",
-            "narrative": [
-                {
-                    "narrative": "nar 1",
-                    "language": "af"
-                },
-                {
-                    "narrative": "nar 2",
-                    "language": "ak"
-                }
-            ]
-        }
-    ],
-    "activity_status": 5,
-    "status": "draft",
-    "activity_date": [
-        {
-            "type": "2",
-            "date": "2023-04-14",
-            "narrative": [
-                {
-                    "narrative": "nar 1",
-                    "language": "ak"
-                },
-                {
-                    "narrative": "nar 2",
-                    "language": "ee"
-                }
-            ]
-        },
-        {
-            "type": "3",
-            "date": null,
-            "narrative": [
-                {
-                    "narrative": "nar 1",
-                    "language": "af"
-                },
-                {
-                    "narrative": "nar 2",
-                    "language": "ae"
-                }
-            ]
-        }
-    ],
-    "contact_info": [
-        {
-            "type": "2",
-            "organisation": [
-                {
-                    "narrative": [
-                        {
-                            "narrative": "nar 1",
-                            "language": "ak"
-                        },
-                        {
-                            "narrative": "nar 2",
-                            "language": "aa"
-                        }
-                    ]
-                }
-            ],
-            "department": [
-                {
-                    "narrative": [
-                        {
-                            "narrative": "nar 1",
-                            "language": "am"
-                        },
-                        {
-                            "narrative": "nar 2",
-                            "language": "af"
-                        }
-                    ]
-                }
-            ],
-            "person_name": [
-                {
-                    "narrative": [
-                        {
-                            "narrative": "pname 1",
-                            "language": "af"
-                        },
-                        {
-                            "narrative": "pname 2",
-                            "language": "it"
-                        }
-                    ]
-                }
-            ],
-            "job_title": [
-                {
-                    "narrative": [
-                        {
-                            "narrative": "jtitle 1",
-                            "language": "ak"
-                        },
-                        {
-                            "narrative": "jtitle 2",
-                            "language": "ga"
-                        }
-                    ]
-                }
-            ],
-            "telephone": [
-                {
-                    "telephone": "546543346466"
-                },
-                {
-                    "telephone": "546543346467"
-                }
-            ],
-            "email": [
-                {
-                    "email": "sthsharon9@gmail.com"
-                },
-                {
-                    "email": "sriza054@gmail.com"
-                }
-            ],
-            "website": [
-                {
-                    "website": "http:\/\/localhost:8000\/activity\/24\/contact_info"
-                },
-                {
-                    "website": "http:\/\/localhost:8000\/activity\/24\/contact_info2"
-                }
-            ],
-            "mailing_address": [
-                {
-                    "narrative": [
-                        {
-                            "narrative": "narative 1",
-                            "language": "ab"
-                        },
-                        {
-                            "narrative": "narrative 2",
-                            "language": "ae"
-                        }
-                    ]
-                }
-            ]
-        }
-    ],
-    "activity_scope": 3,
-    "participating_org": [
-        {
-            "organization_role": "2",
-            "ref": "ref 1",
-            "type": "11",
-            "identifier": "12",
-            "crs_channel_code": "11001",
-            "narrative": [
-                {
-                    "narrative": "nar 1",
-                    "language": "ab"
-                },
-                {
-                    "narrative": "nar 2",
-                    "language": "ae"
-                }
-            ]
-        },
-        {
-            "organization_role": null,
-            "ref": "ref2",
-            "type": null,
-            "identifier": "3",
-            "crs_channel_code": null,
-            "narrative": [
-                {
-                    "narrative": null,
-                    "language": null
-                }
-            ]
-        }
-    ],
-    "recipient_country": [
-        {
-            "country_code": "AF",
-            "percentage": "50",
-            "narrative": [
-                {
-                    "narrative": "nar 1",
-                    "language": "ab"
-                },
-                {
-                    "narrative": "nar 2",
-                    "language": "am"
-                }
-            ]
-        },
-        {
-            "country_code": "AD",
-            "percentage": "50",
-            "narrative": [
-                {
-                    "narrative": "nar 1",
-                    "language": "aa"
-                },
-                {
-                    "narrative": "nar 2",
-                    "language": "ak"
-                }
-            ]
-        }
-    ],
-    "recipient_region": null,
-    "location": [
-        {
-            "ref": "ref 1",
-            "location_reach": [
-                {
-                    "code": "2"
-                }
-            ],
-            "location_id": [
-                {
-                    "vocabulary": "A1",
-                    "code": "234"
-                },
-                {
-                    "vocabulary": "A4",
-                    "code": "vocab code 2"
-                }
-            ],
-            "name": [
-                {
-                    "narrative": [
-                        {
-                            "narrative": "name 1",
-                            "language": "ab"
-                        },
-                        {
-                            "narrative": "naem 2",
-                            "language": "dz"
-                        }
-                    ]
-                }
-            ],
-            "description": [
-                {
-                    "narrative": [
-                        {
-                            "narrative": "des 1",
-                            "language": "ak"
-                        },
-                        {
-                            "narrative": "des 2",
-                            "language": "ho"
-                        }
-                    ]
-                }
-            ],
-            "activity_description": [
-                {
-                    "narrative": [
-                        {
-                            "narrative": "nar 1",
-                            "language": "ab"
-                        },
-                        {
-                            "narrative": "nar 2",
-                            "language": "am"
-                        }
-                    ]
-                }
-            ],
-            "administrative": [
-                {
-                    "vocabulary": "A2",
-                    "code": "CL",
-                    "level": "124"
-                }
-            ],
-            "point": [
-                {
-                    "srs_name": "http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326",
-                    "pos": [
-                        {
-                            "latitude": "56",
-                            "longitude": "27"
-                        }
-                    ]
-                }
-            ],
-            "exactness": [
-                {
-                    "code": "1"
-                }
-            ],
-            "location_class": [
-                {
-                    "code": "3"
-                }
-            ],
-            "feature_designation": [
-                {
-                    "code": "CMPQ"
-                }
-            ]
-        },
-        {
-            "ref": "ref 2",
-            "location_reach": [
-                {
-                    "code": null
-                }
-            ],
-            "location_id": [
-                {
-                    "vocabulary": null,
-                    "code": null
-                }
-            ],
-            "name": [
-                {
-                    "narrative": [
-                        {
-                            "narrative": null,
-                            "language": null
-                        }
-                    ]
-                }
-            ],
-            "description": [
-                {
-                    "narrative": [
-                        {
-                            "narrative": null,
-                            "language": null
-                        }
-                    ]
-                }
-            ],
-            "activity_description": [
-                {
-                    "narrative": [
-                        {
-                            "narrative": "des 1",
-                            "language": "ab"
-                        },
-                        {
-                            "narrative": "des 2",
-                            "language": "ae"
-                        }
-                    ]
-                }
-            ],
-            "administrative": [
-                {
-                    "vocabulary": null,
-                    "code": null,
-                    "level": null
-                }
-            ],
-            "point": [
-                {
-                    "srs_name": null,
-                    "pos": [
-                        {
-                            "latitude": null,
-                            "longitude": null
-                        }
-                    ]
-                }
-            ],
-            "exactness": [
-                {
-                    "code": null
-                }
-            ],
-            "location_class": [
-                {
-                    "code": null
-                }
-            ],
-            "feature_designation": [
-                {
-                    "code": null
-                }
-            ]
-        }
-    ],
-    "sector": [
-        {
-            "sector_vocabulary": "1",
-            "code": "11220",
-            "percentage": "100",
-            "narrative": [
-                {
-                    "narrative": "nar 1",
-                    "language": "aa"
-                },
-                {
-                    "narrative": "nar 2",
-                    "language": "ab"
-                }
-            ]
-        },
-        {
-            "sector_vocabulary": "2",
-            "category_code": "113",
-            "percentage": "100",
-            "narrative": [
-                {
-                    "narrative": "nar 3",
-                    "language": "aa"
-                },
-                {
-                    "narrative": "nar 4",
-                    "language": "ae"
-                }
-            ]
-        },
-        {
-            "sector_vocabulary": "7",
-            "sdg_goal": "2",
-            "percentage": "100",
-            "narrative": [
-                {
-                    "narrative": "nar 1",
-                    "language": "af"
-                },
-                {
-                    "narrative": "nar 2",
-                    "language": "it"
-                }
-            ]
-        },
-        {
-            "sector_vocabulary": "8",
-            "sdg_target": "1.2",
-            "percentage": "100",
-            "narrative": [
-                {
-                    "narrative": "nar 1",
-                    "language": "eo"
-                },
-                {
-                    "narrative": "nar 2",
-                    "language": "mh"
-                }
-            ]
-        },
-        {
-            "sector_vocabulary": "99",
-            "vocabulary_uri": "http:\/\/localhost:8000\/activity\/26\/sector",
-            "text": "12354",
-            "percentage": "100",
-            "narrative": [
-                {
-                    "narrative": "nar 1",
-                    "language": "af"
-                },
-                {
-                    "narrative": "nar 2",
-                    "language": "gv"
-                }
-            ]
-        }
-    ],
-    "country_budget_items": {
-        "country_budget_vocabulary": "3",
-        "budget_item": [
+    "period1": {
+        "period_start": [
             {
-                "code": "1.3.2",
-                "percentage": "50",
-                "description": [
+                "date": "2022-01-01"
+            }
+        ],
+        "period_end": [
+            {
+                "date": "2022-12-31"
+            }
+        ],
+        "target": [
+            {
+                "value": "1",
+                "comment": [
                     {
                         "narrative": [
                             {
-                                "narrative": "nar 1",
-                                "language": "ak"
-                            },
-                            {
-                                "narrative": "nar 2",
-                                "language": "dz"
+                                "narrative": null,
+                                "language": null
                             }
                         ]
                     }
+                ],
+                "dimension": [
+                    {
+                        "name": null,
+                        "value": null
+                    }
+                ],
+                "document_link": [
+                    {
+                        "url": null,
+                        "format": null,
+                        "title": [
+                            {
+                                "narrative": [
+                                    {
+                                        "narrative": null,
+                                        "language": null
+                                    }
+                                ]
+                            }
+                        ],
+                        "description": [
+                            {
+                                "narrative": [
+                                    {
+                                        "narrative": null,
+                                        "language": null
+                                    }
+                                ]
+                            }
+                        ],
+                        "category": [
+                            {
+                                "code": null
+                            }
+                        ],
+                        "language": [
+                            {
+                                "language": null
+                            }
+                        ],
+                        "document_date": [
+                            {
+                                "date": null
+                            }
+                        ]
+                    }
+                ],
+                "location": [
+                    {
+                        "reference": "ab"
+                    }
                 ]
-            },
+            }
+        ],
+        "actual": [
             {
-                "code": "2.1.5",
-                "percentage": "50",
-                "description": [
+                "value": "1",
+                "comment": [
                     {
                         "narrative": [
                             {
-                                "narrative": "nar 1",
-                                "language": "fr"
-                            },
-                            {
-                                "narrative": "nar 2",
-                                "language": "hz"
+                                "narrative": null,
+                                "language": null
                             }
                         ]
+                    }
+                ],
+                "dimension": [
+                    {
+                        "name": null,
+                        "value": null
+                    }
+                ],
+                "document_link": [
+                    {
+                        "url": "https://localhost:9000/document_link/1/file.pdf",
+                        "format": null,
+                        "title": [
+                            {
+                                "narrative": [
+                                    {
+                                        "narrative": "doc title",
+                                        "language": null
+                                    }
+                                ]
+                            }
+                        ],
+                        "description": [
+                            {
+                                "narrative": [
+                                    {
+                                        "narrative": null,
+                                        "language": null
+                                    }
+                                ]
+                            }
+                        ],
+                        "category": [
+                            {
+                                "code": null
+                            }
+                        ],
+                        "language": [
+                            {
+                                "language": null
+                            }
+                        ],
+                        "document_date": [
+                            {
+                                "date": null
+                            }
+                        ]
+                    }
+                ],
+                "location": [
+                    {
+                        "reference": null
                     }
                 ]
             }
         ]
     },
-    "humanitarian_scope": [
-        {
-            "type": "1",
-            "vocabulary": "2-1",
-            "code": "code",
-            "narrative": [
-                {
-                    "narrative": "nar 1",
-                    "language": "ab"
-                },
-                {
-                    "narrative": "nar 2",
-                    "language": "ak"
-                }
-            ]
-        },
-        {
-            "type": "2",
-            "vocabulary": "99",
-            "vocabulary_uri": "http:\/\/localhost:8000\/activity\/24\/humanitarian_scope",
-            "code": "34",
-            "narrative": [
-                {
-                    "narrative": "nar 1",
-                    "language": "hy"
-                },
-                {
-                    "narrative": "nar 2",
-                    "language": "mk"
-                }
-            ]
-        }
-    ],
-    "policy_marker": [
-        {
-            "policy_marker_vocabulary": "1",
-            "significance": "0",
-            "policy_marker": "2",
-            "narrative": [
-                {
-                    "narrative": "nar 1",
-                    "language": "af"
-                },
-                {
-                    "narrative": null,
-                    "language": null
-                }
-            ]
-        },
-        {
-            "policy_marker_vocabulary": "99",
-            "vocabulary_uri": "http:\/\/localhost:8000\/activity\/24\/policy_marker",
-            "significance": "3",
-            "policy_marker_text": "678",
-            "narrative": [
-                {
-                    "narrative": "nar 3",
-                    "language": "ae"
-                },
-                {
-                    "narrative": "nar 4",
-                    "language": "ce"
-                }
-            ]
-        }
-    ],
-    "collaboration_type": 3,
-    "default_flow_type": 22,
-    "default_finance_type": 3,
-    "default_aid_type": [
-        {
-            "default_aid_type_vocabulary": "2",
-            "earmarking_category": "4"
-        },
-        {
-            "default_aid_type_vocabulary": "1",
-            "default_aid_type": "B032"
-        },
-        {
-            "default_aid_type_vocabulary": "3",
-            "earmarking_modality": "F"
-        },
-        {
-            "default_aid_type_vocabulary": "4",
-            "cash_and_voucher_modalities": "2"
-        }
-    ],
-    "default_tied_status": 3,
-    "budget": [
-        {
-            "budget_status": "2",
-            "budget_type": "1",
-            "period_start": [
-                {
-                    "date": "2021-11-02"
-                }
-            ],
-            "period_end": [
-                {
-                    "date": "2022-10-31"
-                }
-            ],
-            "budget_value": [
-                {
-                    "amount": "452895",
-                    "currency": "GBP",
-                    "value_date": "2021-11-03"
-                }
-            ]
-        },
-        {
-            "budget_status": "2",
-            "budget_type": "1",
-            "period_start": [
-                {
-                    "date": null
-                }
-            ],
-            "period_end": [
-                {
-                    "date": null
-                }
-            ],
-            "budget_value": [
-                {
-                    "amount": "120000",
-                    "currency": "USD",
-                    "value_date": null
-                }
-            ]
-        }
-    ],
-    "planned_disbursement": [
-        {
-            "planned_disbursement_type": "2",
-            "period_start": [
-                {
-                    "date": "2023-04-01"
-                }
-            ],
-            "period_end": [
-                {
-                    "date": "2023-04-25"
-                }
-            ],
-            "value": [
-                {
-                    "amount": "5654534",
-                    "currency": "AOA",
-                    "value_date": "2023-04-14"
-                }
-            ],
-            "provider_org": [
-                {
-                    "ref": "provider",
-                    "provider_activity_id": "657",
-                    "type": "11",
-                    "narrative": [
-                        {
-                            "narrative": "nar 1",
-                            "language": "ak"
-                        },
-                        {
-                            "narrative": "nar 2",
-                            "language": "en"
-                        }
-                    ]
-                }
-            ],
-            "receiver_org": [
-                {
-                    "ref": "receiver",
-                    "receiver_activity_id": "56",
-                    "type": "21",
-                    "narrative": [
-                        {
-                            "narrative": "nar 1",
-                            "language": "ae"
-                        }
-                    ]
-                }
-            ]
-        }
-    ],
-    "capital_spend": 0,
-    "document_link": [
-        {
-            "url": "https:\/\/minio-stage.yipl.com.np:9000\/document_link\/1\/uahep_prod422.backup",
-            "format": "application\/3gpp-ims+xml",
-            "title": [
-                {
-                    "narrative": [
-                        {
-                            "narrative": "nar 1",
-                            "language": "ae"
-                        },
-                        {
-                            "narrative": "nar 2",
-                            "language": "fa"
-                        }
-                    ]
-                }
-            ],
-            "description": [
-                {
-                    "narrative": [
-                        {
-                            "narrative": "nar 1",
-                            "language": "id"
-                        },
-                        {
-                            "narrative": "nar 2",
-                            "language": "he"
-                        }
-                    ]
-                }
-            ],
-            "category": [
-                {
-                    "code": "A01"
-                },
-                {
-                    "code": "A03"
-                }
-            ],
-            "language": [
-                {
-                    "code": "ab"
-                },
-                {
-                    "code": "bm"
-                }
-            ],
-            "document_date": [
-                {
-                    "date": "2023-04-13"
-                }
-            ]
-        },
-        {
-            "url": "http:\/\/localhost:8001\/activity\/9\/document_link",
-            "format": "application\/activemessage",
-            "title": [
-                {
-                    "narrative": [
-                        {
-                            "narrative": "nar 1",
-                            "language": "en"
-                        }
-                    ]
-                }
-            ],
-            "description": [
-                {
-                    "narrative": [
-                        {
-                            "narrative": "nar 2",
-                            "language": "en"
-                        }
-                    ]
-                }
-            ],
-            "category": [
-                {
-                    "code": "A01"
-                },
-                {
-                    "code": "A05"
-                }
-            ],
-            "language": [
-                {
-                    "code": "ae"
-                }
-            ],
-            "document_date": [
-                {
-                    "date": "2023-04-06"
-                }
-            ]
-        }
-    ],
-    "related_activity": [
-        {
-            "activity_identifier": "ref 1",
-            "relationship_type": "4"
-        },
-        {
-            "activity_identifier": "ref 2",
-            "relationship_type": "2"
-        }
-    ],
-    "legacy_data": [
-        {
-            "legacy_name": "legacy name 1",
-            "value": null,
-            "iati_equivalent": null
-        },
-        {
-            "legacy_name": "legacy name 2",
-            "value": null,
-            "iati_equivalent": null
-        },
-        {
-            "legacy_name": null,
-            "value": "3845879",
-            "iati_equivalent": null
-        },
-        {
-            "legacy_name": "name 2",
-            "value": "667",
-            "iati_equivalent": "equiv"
-        }
-    ],
-    "conditions": {
-        "condition_attached": "0",
-        "condition": [
+    "period2": {
+        "period_start": [
             {
-                "condition_type": "2",
-                "narrative": [
+                "date": "2022-01-01"
+            }
+        ],
+        "period_end": [
+            {
+                "date": "2022-12-31"
+            }
+        ],
+        "target": [
+            {
+                "value": "0",
+                "comment": [
                     {
-                        "narrative": "nar 1",
-                        "language": "ca"
-                    },
+                        "narrative": [
+                            {
+                                "narrative": null,
+                                "language": null
+                            }
+                        ]
+                    }
+                ],
+                "dimension": [
                     {
-                        "narrative": "nar 2",
-                        "language": "fr"
+                        "name": null,
+                        "value": null
+                    }
+                ],
+                "document_link": [
+                    {
+                        "url": null,
+                        "format": null,
+                        "title": [
+                            {
+                                "narrative": [
+                                    {
+                                        "narrative": null,
+                                        "language": null
+                                    }
+                                ]
+                            }
+                        ],
+                        "description": [
+                            {
+                                "narrative": [
+                                    {
+                                        "narrative": null,
+                                        "language": null
+                                    }
+                                ]
+                            }
+                        ],
+                        "category": [
+                            {
+                                "code": null
+                            }
+                        ],
+                        "language": [
+                            {
+                                "language": null
+                            }
+                        ],
+                        "document_date": [
+                            {
+                                "date": null
+                            }
+                        ]
+                    }
+                ],
+                "location": [
+                    {
+                        "reference": null
                     }
                 ]
-            },
+            }
+        ],
+        "actual": [
             {
-                "condition_type": "3",
-                "narrative": [
+                "value": "1",
+                "comment": [
                     {
-                        "narrative": "nar 3",
-                        "language": "en"
+                        "narrative": [
+                            {
+                                "narrative": null,
+                                "language": null
+                            }
+                        ]
+                    }
+                ],
+                "dimension": [
+                    {
+                        "name": null,
+                        "value": null
+                    }
+                ],
+                "document_link": [
+                    {
+                        "url": null,
+                        "format": null,
+                        "title": [
+                            {
+                                "narrative": [
+                                    {
+                                        "narrative": null,
+                                        "language": null
+                                    }
+                                ]
+                            }
+                        ],
+                        "description": [
+                            {
+                                "narrative": [
+                                    {
+                                        "narrative": null,
+                                        "language": null
+                                    }
+                                ]
+                            }
+                        ],
+                        "category": [
+                            {
+                                "code": null
+                            }
+                        ],
+                        "language": [
+                            {
+                                "language": null
+                            }
+                        ],
+                        "document_date": [
+                            {
+                                "date": null
+                            }
+                        ]
+                    }
+                ],
+                "location": [
+                    {
+                        "reference": null
                     }
                 ]
             }
         ]
-    },
-    "org_id": 1,
-    "default_field_values": {
-        "default_currency": "USD",
-        "default_language": "en",
-        "hierarchy": "2",
-        "budget_not_provided": "test",
-        "humanitarian": "no"
-    },
-    "linked_to_iati": false,
-    "tag": [
-        {
-            "tag_vocabulary": "2",
-            "goals_tag_code": "3",
-            "narrative": [
-                {
-                    "narrative": "nar 1",
-                    "language": "az"
-                },
-                {
-                    "narrative": "nar 2",
-                    "language": "en"
-                }
-            ]
-        },
-        {
-            "tag_vocabulary": "99",
-            "tag_text": "99 vocab",
-            "vocabulary_uri": "http:\/\/localhost:8000\/activity\/26\/tag",
-            "narrative": [
-                {
-                    "narrative": "nar 1",
-                    "language": "ab"
-                },
-                {
-                    "narrative": "nar 2",
-                    "language": "co"
-                }
-            ]
-        },
-        {
-            "tag_vocabulary": "3",
-            "targets_tag_code": "1.2",
-            "narrative": [
-                {
-                    "narrative": "nar 1",
-                    "language": "hu"
-                },
-                {
-                    "narrative": "nar 2",
-                    "language": "kw"
-                }
-            ]
-        },
-        {
-            "tag_vocabulary": "1",
-            "tag_text": "vocab 1",
-            "narrative": [
-                {
-                    "narrative": "nar 1",
-                    "language": "en"
-                }
-            ]
-        }
-    ],
-    "reporting_org": null
+    }
 }

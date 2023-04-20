@@ -32,7 +32,7 @@
         ],
         "document_link": [
             {
-                "url": "https:\/\/minio-stage.yipl.com.np:9000\/document_link\/1\/uahep_prod422.backup",
+                "url": "https:\/\/minio-stage.yipl.com.np:9000\/document_link\/1\/test.backup",
                 "format": "application\/A2L",
                 "title": [
                     {
@@ -177,7 +177,7 @@
         ],
         "document_link": [
             {
-                "url": "https:\/\/minio-stage.yipl.com.np:9000\/document_link\/1\/uahep_prod422.backup",
+                "url": "https:\/\/minio-stage.yipl.com.np:9000\/document_link\/1\/test2.backup",
                 "format": "application\/A2L",
                 "title": [
                     {

@@ -158,6 +158,7 @@ class Activity
 
             if (in_array($sheetName, array_keys($this->activityElements))) {
                 $this->columnToFieldMapper($this->activityElements[$sheetName], $content);
+                // dd('stop');
             }
         }
 
@@ -352,6 +353,7 @@ class Activity
         foreach (array_values($fieldDependency) as $dependents) {
             $parentBaseCount[$dependents['parent']] = null;
         }
+        // dump($element,'parentbasecount',$parentBaseCount);
 
         foreach ($data as $row) {
             foreach ($row as $fieldName => $fieldValue) {
@@ -359,15 +361,21 @@ class Activity
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
                     $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
                     $dependentOnValue = array_fill_keys(array_values($dependentOn), null);
+                    // dump($parentBaseCount);
                 }
 
                 if (array_key_exists($fieldName, $fieldDependency)) {
                     $parentKey = $fieldDependency[$fieldName]['parent'];
                     $peerAttributes = Arr::get($fieldDependency, "$fieldName.peer", []);
+                    $children = Arr::get($fieldDependency, "$fieldName.children", []);
                     $parentAddMore = Arr::get($fieldDependency, "$fieldName.add_more", true);
 
                     if ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
                         $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) || !$parentAddMore ? 0 : $parentBaseCount[$parentKey] + 1;
+
+                        foreach ($children as $child) {
+                            $parentBaseCount[$child] = null;
+                        }
                     }
                 }
 

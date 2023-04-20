@@ -97,10 +97,10 @@ class ImportXlsController extends Controller
 
             // $this->getLinearizedElement();
 
-            // $data = getCodeList('Budget', 'Activity', false);
-            // $data = json_encode(getCodeList('BudgetIdentifier', 'Activity'));
+            // $data = getCodeList('Sect', 'Activity', false);
+            $data = json_encode(getCodeList('SectorVocabulary', 'Activity'));
             // test
-            // file_put_contents(app_path() . '/XlsImporter/Templates/test.json', $data);
+            file_put_contents(app_path() . '/XlsImporter/Templates/test.json', $data);
             // dd('stop');
             // $activityMapper = new Activity();
             // $activityMapper->map($data);

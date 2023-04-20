@@ -453,7 +453,7 @@
     "sector": [
         {
             "sector_vocabulary": "1",
-            "code": "11220",
+            "code": "11120",
             "percentage": "100",
             "narrative": [
                 {
@@ -514,7 +514,7 @@
         {
             "sector_vocabulary": "99",
             "vocabulary_uri": "http:\/\/localhost:8000\/activity\/26\/sector",
-            "text": "12354",
+            "text": "12345",
             "percentage": "100",
             "narrative": [
                 {

@@ -216,6 +216,9 @@
                 "parent": "budget_item",
                 "peer": [
                     "budget_item percentage"
+                ],
+                "children" : [
+                    "budget_item description narrative"
                 ]
             },
             "budget_item description narrative narrative": {

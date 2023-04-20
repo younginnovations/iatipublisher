@@ -40,9 +40,11 @@ class ImportDataTest extends TestCase
         foreach ($actualData as $key => $value) {
             $elementData = Arr::get($processedData, $key, []);
             // $value = Arr::dot($value);
-            dump('testing ' . $key, $elementData, $value);
+            // dump('testing ' . $key, $elementData, $value);
+            dump('testing ' . $key);
 
             if (is_array($value) && is_array($elementData)) {
+                dump(Arr::dot($value), Arr::dot($elementData));
                 $difference = array_diff_assoc(Arr::dot($value), Arr::dot($elementData));
                 dump('difference', $difference);
                 $this->assertTrue(empty($difference));
