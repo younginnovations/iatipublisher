@@ -1,46 +1,69 @@
 <template>
-  <div class="fixed right-10 bottom-0 z-10 flex h-[80px]">
-    <div class="rounded-t-lg bg-eggshell p-6">
-      <div class="mb-3 flex h-1 w-full justify-start rounded-full bg-spring-10">
-        <div
-          :style="{ width: percentageWidth + '%' }"
-          class="h-full rounded-full bg-spring-50"
-        ></div>
-      </div>
-      <div class="flex justify-between space-x-5">
-        <p
-          v-if="totalCount === processedCount && totalCount !== 0"
-          class="text-sm text-n-40"
-        >
-          {{ currentActivity }} file upload complete
-        </p>
-        <p v-else class="text-sm text-n-40">
-          Uploading
-          <span v-if="totalCount">
-            {{ `${processedCount}  /  ${totalCount}` }}</span
-          >
-          '{{ currentActivity }}'
-        </p>
-        <spinnerLoader
-          v-if="processedCount !== totalCount || totalCount === 0"
-        />
-        <button v-else class="text-xs font-bold uppercase text-spring-50">
-          Proceed
-        </button>
-      </div>
-    </div>
-    <button
-      v-if="totalCount === processedCount && totalCount !== 0"
-      class="absolute right-0 translate-x-4 -translate-y-2 rounded-full bg-white p-[1px]"
+  <div class="h-[80px] rounded-t-lg bg-eggshell p-6">
+    <div
+      v-if="!xlsFailed"
+      class="mb-3 flex h-1 w-full justify-start rounded-full bg-spring-10"
     >
-      <svg-vue icon="cross-icon" />
-    </button>
+      <div
+        :style="{ width: percentageWidth + '%' }"
+        class="h-full rounded-full bg-spring-50"
+      ></div>
+    </div>
+    <div v-if="xlsFailed" class="flex justify-between space-x-5">
+      <p class="text-sm text-n-40">failed to upload {{ currentActivity }}</p>
+      <button
+        class="text-xs font-bold uppercase text-crimson-50 hover:text-spring-50"
+        @click="retry"
+      >
+        Retry
+      </button>
+    </div>
+    <div v-else class="flex justify-between space-x-5">
+      <p
+        v-if="totalCount === processedCount && totalCount !== 0"
+        class="text-sm text-n-40"
+      >
+        {{ currentActivity }} file upload complete
+      </p>
+      <p v-else class="text-sm text-n-40">
+        Uploading
+        <span v-if="totalCount">
+          {{ `${processedCount}  /  ${totalCount}` }}</span
+        >
+        '{{ currentActivity }}'
+      </p>
+      <spinnerLoader v-if="processedCount !== totalCount || totalCount === 0" />
+      <a
+        v-else
+        href="/import/xls/list"
+        class="text-xs font-bold uppercase text-spring-50 hover:text-spring-50"
+      >
+        Proceed
+      </a>
+    </div>
   </div>
+  <button
+    v-if="totalCount === processedCount && totalCount !== 0"
+    class="absolute right-0 bottom-[80px] translate-x-4 rounded-full bg-white p-[1px]"
+    @click="$emit('close')"
+  >
+    <svg-vue icon="cross-icon" />
+  </button>
 </template>
 <script setup lang="ts">
-import { defineProps, onMounted, ref, computed, onUnmounted } from 'vue';
+import {
+  defineProps,
+  onMounted,
+  defineEmits,
+  ref,
+  computed,
+  onUnmounted,
+} from 'vue';
 import spinnerLoader from './spinnerLoader.vue';
+import axios from 'axios';
+
 const currentActivity = ref(null);
+defineEmits(['close']);
 
 const props = defineProps({
   activityName: {
@@ -54,6 +77,10 @@ const props = defineProps({
   processedCount: {
     type: Number,
     default: 0,
+  },
+  xlsFailed: {
+    type: Boolean,
+    default: false,
   },
 });
 const mapActivityName = (name) => {
@@ -71,8 +98,14 @@ const mapActivityName = (name) => {
   }
 };
 
+const retry = () => {
+  axios.delete(`/import/xls`);
+  window.location.href = '/import/xls';
+};
+
 onMounted(() => {
   currentActivity.value = mapActivityName(props.activityName);
+  console.log(';moun');
   setTimeout(() => {
     const supportButton: HTMLElement = document.querySelector(
       '#launcher'

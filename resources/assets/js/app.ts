@@ -37,6 +37,7 @@ import SidebarHelpBlock from './views/activity/partials/SidebarHelpBlock.vue';
 import ActivityUpload from './views/import/ActivityUpload.vue';
 import ActivityXlsUpload from './views/import/ActivityXlsUpload.vue';
 import ImportList from './views/import/ImportList.vue';
+import XlsList from './views/import/XlsList.vue';
 
 /**
  * Setting page
@@ -133,7 +134,8 @@ app
 app
   .component('ActivityUpload', ActivityUpload)
   .component('ActivityXlsUpload', ActivityXlsUpload)
-  .component('ImportList', ImportList);
+  .component('ImportList', ImportList)
+  .component('XlsList', XlsList);
 
 /*
  * Setting page

@@ -49,7 +49,7 @@ class XlsToArray implements ToArray, WithHeadingRow, WithEvents, WithCalculatedF
 
     public function map($row): array
     {
-        $row = $this->formatDates($row);
+        // $row = $this->formatDates($row);
 
         return $row;
     }

@@ -2,14 +2,14 @@
   <div class="listing__page bg-paper pt-4 pb-[71px]">
     <div class="page-title mb-4 w-screen px-10">
       <div class="flex items-end gap-4">
-        <div class="title basis-6/12">
-          <div class="inline-flex w-[500px] items-center md:w-[600px]">
+        <div class="title">
+          <div class="flex items-center">
             <div class="mr-3">
               <a href="/activities">
                 <svg-vue icon="arrow-short-left" />
               </a>
             </div>
-            <div class="inline-flex min-h-[48px] grow items-center">
+            <div class="flex min-h-[48px] w-full grow items-center">
               <h4 class="ellipsis__title relative mr-4 font-bold">
                 <span class="ellipsis__title overflow-hidden">
                   Import Activities from .XLS
@@ -18,16 +18,12 @@
             </div>
           </div>
         </div>
-        <!-- <div class="actions flex grow justify-end">
-          <div class="inline-flex justify-center">
-            <BtnComponent
-              class="mr-3.5"
-              type="primary"
-              text="Import (5/10)"
-              icon="download-file"
-            />
-          </div>
-        </div> -->
+        <Toast
+          v-if="toastVisibility"
+          class="toast -bottom-24 ml-auto"
+          :message="toastMessage"
+          :type="toastType"
+        />
       </div>
     </div>
     <div
@@ -249,11 +245,13 @@
         </div>
       </div>
     </div>
-    <xlsLoader
+    <XlsUploadIndicator
       v-if="xlsData"
       :total-count="totalCount"
       :processed-count="processedCount"
+      :xls-failed="xlsFailed"
       :activity-name="activityName"
+      :xls-data="xlsData"
     />
   </div>
   <Loader
@@ -261,6 +259,51 @@
     :text="loaderText"
     :class="{ 'animate-loader': loader }"
   />
+  <Modal :modal-active="xlsData" width="583">
+    <div>
+      <div class="mb-6 flex items-center space-x-1">
+        <svg-vue class="text-crimson-40" icon="warning-fill" />
+        <h6 class="text-sm font-bold">Upload in progess</h6>
+      </div>
+      <div class="rounded-sm bg-rose p-4">
+        <p
+          v-if="totalCount === processedCount && totalCount !== 0"
+          class="text-sm text-n-50"
+        >
+          You have recently uploaded 'Basic Activity Elements', either proceed
+          to add/update or cancel to start new import.
+        </p>
+
+        <p v-else class="text-sm text-n-50">
+          We are in the process of uploading 'All Elements except Result' XLS
+          file. We ask for your patience while we complete the upload.
+        </p>
+      </div>
+      <div class="mt-6 flex items-center justify-end space-x-4">
+        <button
+          @click="cancelImport"
+          class="text-xs font-bold uppercase text-n-40"
+        >
+          Cancel upload
+        </button>
+
+        <a
+          v-if="totalCount === processedCount && totalCount !== 0"
+          class="w-[158px] rounded-sm bg-bluecoral py-3 text-center text-xs font-bold uppercase text-white hover:text-white"
+          href="/import/xls/list"
+        >
+          Proceed to Import
+        </a>
+        <a
+          v-else
+          class="rounded-sm bg-bluecoral px-10 py-3 text-xs font-bold uppercase text-white hover:text-white"
+          href="/activities"
+        >
+          go back
+        </a>
+      </div>
+    </div>
+  </Modal>
 </template>
 
 <script setup lang="ts">
@@ -269,15 +312,21 @@ import BtnComponent from 'Components/ButtonComponent.vue';
 import HoverText from 'Components/HoverText.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 import axios from 'axios';
-import xlsLoader from 'Components/XlsLoader.vue';
+import XlsUploadIndicator from 'Components/XlsUploadIndicator.vue';
+import Modal from 'Components/PopupModal.vue';
+import Toast from 'Components/ToastMessage.vue';
 
 const uploadType = ref();
 const showDownloadDropdown = ref(false);
 const activityName = ref('');
+const toastMessage = ref('');
+const toastType = ref(false);
+const xlsFailed = ref(false);
 
+const toastVisibility = ref(false);
 const xlsData = ref(false);
-const totalCount = ref();
-const processedCount = ref();
+const totalCount = ref(0);
+const processedCount = ref(0);
 const file = ref(),
   error = ref(''),
   loader = ref(false),
@@ -297,7 +346,6 @@ function uploadFile() {
   let data = new FormData();
   data.append('activity', activity);
   data.append('xlsType', xlsType.value as any);
-  console.log(data, 'data');
   error.value = '';
 
   axios
@@ -321,19 +369,27 @@ function uploadFile() {
       window.location.href = '/activities';
     });
 }
+const cancelImport = () => {
+  axios.delete(`/import/xls`).then((res) => {
+    xlsData.value = false;
+    const response = res.data;
+    toastVisibility.value = true;
+    setTimeout(() => (toastVisibility.value = false), 15000);
+    toastMessage.value = response.message;
+    toastType.value = response.success;
+  });
+};
 const checkXlsstatus = () => {
   let count = 0;
-  console.log('checkstatus');
 
   axios.get('/import/xls/progress_status').then((res) => {
-    console.log(res.data, 'templete');
     activityName.value = res?.data?.status?.template;
-    xlsData.value = !!res.data.status;
+    xlsData.value = Object.keys(res.data.status).length > 0;
+    xlsFailed.value = !res.data.success;
 
     if (res.data.status) {
       const checkStatus = setInterval(function () {
         axios.get('/import/xls/status').then((res) => {
-          console.log(res.data, count);
           totalCount.value = res.data.data.total_count;
           processedCount.value = res.data.data.processed_count;
         });
@@ -347,7 +403,6 @@ const checkXlsstatus = () => {
 };
 onMounted(() => {
   checkXlsstatus();
-  console.log(xlsData.value, 'xls data');
 });
 </script>
 

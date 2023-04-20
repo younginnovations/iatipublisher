@@ -68,6 +68,7 @@ class ImportXls extends Job
         } catch (\Exception $e) {
             logger()->error($e);
             awsUploadFile('error.log', $e->getMessage());
+            awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $orgId, $userId, 'status.json'), json_encode(['success' => false, 'message' => 'Error has occurred while importing the file.'], JSON_THROW_ON_ERROR));
             $this->delete();
         }
     }

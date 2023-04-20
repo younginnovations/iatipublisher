@@ -1,53 +1,28 @@
 <template>
-  <div
-    id="publishing_activities"
-    :class="isLoading && 'hidden'"
-    class="z-50 w-[366px]"
-  >
+  <div v-if="!xlsData" id="publishing_activities" :class="isLoading && 'hidden'" class="z-50 w-[366px]">
     <div class="bulk-head flex items-center justify-between bg-eggshell p-4">
       <div class="grow text-sm font-bold leading-normal">
         Publishing {{ activities && Object.keys(activities).length }} activities
       </div>
       <div class="flex shrink-0">
-        <div
-          v-if="hasFailedActivities.ids.length > 0"
-          class="retry flex cursor-pointer items-center text-crimson-50"
-          @click="retryPublishing"
-        >
+        <div v-if="hasFailedActivities.ids.length > 0" class="retry flex cursor-pointer items-center text-crimson-50"
+          @click="retryPublishing">
           <svg-vue class="mr-1" icon="redo" />
           <span class="text-xs uppercase">Retry</span>
         </div>
         <div v-else class="minus cursor-pointer" @click="toggleWindow"></div>
-        <div
-          v-if="completed === 'completed'"
-          class="cross cursor-pointer"
-          @click="closeWindow"
-        ></div>
+        <div v-if="completed === 'completed'" class="cross cursor-pointer" @click="closeWindow"></div>
       </div>
     </div>
-    <div
-      class="bulk-activities max-h-[240px] overflow-y-auto overflow-x-hidden bg-white transition-all duration-500"
-    >
+    <div class="bulk-activities max-h-[240px] overflow-y-auto overflow-x-hidden bg-white transition-all duration-500">
       <div>
-        <div
-          v-for="(value, name, index) in activities"
-          :key="index"
-          class="item flex px-4 py-3"
-        >
+        <div v-for="(value, name, index) in activities" :key="index" class="item flex px-4 py-3">
           <div class="activity-title grow pr-2 text-sm leading-normal">
             {{ value['activity_title'] }}
           </div>
           <div class="shrink-0 text-xl">
-            <svg-vue
-              v-if="value['status'] === 'completed'"
-              class="text-spring-50"
-              icon="tick"
-            />
-            <svg-vue
-              v-else-if="value['status'] === 'failed'"
-              class="text-crimson-50"
-              icon="times-circle"
-            />
+            <svg-vue v-if="value['status'] === 'completed'" class="text-spring-50" icon="tick" />
+            <svg-vue v-else-if="value['status'] === 'failed'" class="text-crimson-50" icon="times-circle" />
             <span v-else class="rolling"></span>
           </div>
         </div>
@@ -69,6 +44,7 @@ import axios from 'axios';
 import { detailStore } from 'Store/activities/show';
 const emit = defineEmits(['close']);
 const store = detailStore();
+const xlsData = ref(false);
 
 const isLoading = ref(false);
 
@@ -120,6 +96,7 @@ let intervalID;
 onMounted(() => {
   completed.value = paStorage.value.publishingActivities.status ?? 'processing';
   bulkPublishStatus();
+
   if (!(activities.value && Object.keys(activities.value).length > 0)) {
     closeWindow();
   }
@@ -144,7 +121,21 @@ onMounted(() => {
       clearInterval(checkSupportButton);
     }
   }, 10);
+  
+  checkXlsstatus();
 });
+
+setTimeout(() => {
+  const supportButton: HTMLElement = document.querySelector(
+    '#launcher'
+  ) as HTMLElement;
+
+  if (supportButton !== null && Object.keys(activities).length > 0) {
+    supportButton.style.transform = 'translateX(-350px)';
+    supportButton.style.opacity = '1';
+  }
+}, 720);
+
 onUnmounted(() => {
   const supportButton: HTMLElement = document.querySelector(
     '#launcher'
@@ -154,19 +145,28 @@ onUnmounted(() => {
     supportButton.style.transform = 'translateX(0px)';
     supportButton.style.transform = 'translateY(-20px)';
   }
-}),
-  // watching change in value of completed
-  watch(completed, async (newValue) => {
-    if (newValue === 'completed') {
-      clearInterval(intervalID);
+});
 
-      // resetting local storage
-      // paStorage.value.publishingActivities = {} as paElements;
+const checkXlsstatus = () => {
+  axios.get('/import/xls/progress_status').then((res) => {
+    xlsData.value = Object.keys(res.data.status).length > 0;
 
-      // check for failed publish
-      failedActivities(paStorage.value.publishingActivities.activities);
-    }
+    console.log(res.data.status, 'from bulkpublish');
   });
+};
+
+// watching change in value of completed
+watch(completed, async (newValue) => {
+  if (newValue === 'completed') {
+    clearInterval(intervalID);
+
+    // resetting local storage
+    // paStorage.value.publishingActivities = {} as paElements;
+
+    // check for failed publish
+    failedActivities(paStorage.value.publishingActivities.activities);
+  }
+});
 watch(
   () => store.state.isLoading,
   (value) => {
@@ -338,6 +338,7 @@ const retryPublishing = () => {
 <style lang="scss" scoped>
 .minus {
   @apply flex h-3 w-3 items-center;
+
   &:before {
     content: '';
     @apply block h-0.5 w-3 rounded-xl bg-blue-50;

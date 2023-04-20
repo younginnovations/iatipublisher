@@ -194,14 +194,15 @@ class ImportXlsController extends Controller
 
             // dd($status);
             $xlsType = $status['template'];
-
-            $activities = json_decode($request->query('activities'));
+            $activities = $request->query('activities');
 
             if ($activities) {
+                $activities = json_decode($request->query('activities'));
+
                 $this->importXlsService->create($activities, $xlsType);
             }
 
-            // $this->importXlsService->deleteImportStatus();
+            $this->importXlsService->deleteImportStatus();
 
             $this->db->commit();
 

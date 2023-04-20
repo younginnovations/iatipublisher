@@ -24,11 +24,13 @@
         </div>
       </div>
     </div>
-    <xlsLoader
+    <XlsUploadIndicator
       v-if="xlsData"
       :total-count="totalCount"
       :processed-count="processedCount"
+      :xls-failed="xlsFailed"
       :activity-name="activityName"
+      :xls-data="xlsData"
     />
   </div>
 </template>
@@ -37,7 +39,7 @@
 import { defineComponent, onMounted, provide, reactive, ref, watch } from 'vue';
 import { watchIgnorable } from '@vueuse/core';
 import axios from 'axios';
-import xlsLoader from 'Components/XlsLoader.vue';
+import XlsUploadIndicator from 'Components/XlsUploadIndicator.vue';
 import EmptyActivity from './partials/EmptyActivity.vue';
 import TableLayout from './partials/TableLayout.vue';
 import Pagination from 'Components/TablePagination.vue';
@@ -54,7 +56,7 @@ export default defineComponent({
     TableLayout,
     Loader,
     ErrorMessage,
-    xlsLoader,
+    XlsUploadIndicator,
   },
   props: {
     toast: {
@@ -71,9 +73,11 @@ export default defineComponent({
     const activityName = ref('');
 
     const xlsData = ref(false);
+    const xlsFailed = ref(false);
+
     const totalCount = ref();
     const processedCount = ref();
-
+    const showXlsStatus = ref(true);
     const tableLoader = ref(true);
     const currentURL = window.location.href;
     let endpoint = '';
@@ -112,14 +116,14 @@ export default defineComponent({
       axios.get('/import/xls/progress_status').then((res) => {
         console.log(res.data, 'templete');
         activityName.value = res?.data?.status?.template;
-        xlsData.value = !!res.data.status;
+        xlsData.value = Object.keys(res.data.status).length > 0;
+        xlsFailed.value = !res.data.success;
 
         if (res.data.status) {
           const checkStatus = setInterval(function () {
             axios.get('/import/xls/status').then((res) => {
-              console.log(res.data, count);
-              totalCount.value = res.data.data.total_count;
-              processedCount.value = res.data.data.processed_count;
+              totalCount.value = res.data.data?.total_count;
+              processedCount.value = res.data.data?.processed_count;
             });
             count++;
             if (count > 20) {
@@ -232,6 +236,8 @@ export default defineComponent({
       activityName,
       processedCount,
       totalCount,
+      showXlsStatus,
+      xlsFailed,
     };
   },
 });
