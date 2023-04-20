@@ -140,9 +140,10 @@ trait ElementCompleteServiceTrait
         if (is_string($data)) {
             return false;
         }
+
         $keyExists = array_key_exists($mandatoryAttribute, $data);
 
-        return $keyExists && empty($data[$mandatoryAttribute]) && $data[$mandatoryAttribute] !== 0;
+        return $keyExists && empty($data[$mandatoryAttribute]) && !$this->isZero($data[$mandatoryAttribute]);
     }
 
     /**
@@ -536,5 +537,16 @@ trait ElementCompleteServiceTrait
         if ($key === 'amount') {
             $this->tempAmount = $datum;
         }
+    }
+
+    /**
+     * Checks if variable is zero.
+     *
+     * @param $variable
+     * @return bool
+     */
+    public function isZero($variable): bool
+    {
+        return $variable === 0 || $variable === '0';
     }
 }

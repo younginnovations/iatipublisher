@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\IATI\Services\Activity\ActivityService;
+use App\IATI\Services\ElementCompleteService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Response;
@@ -23,10 +24,12 @@ class ActivityController extends Controller
 
     /**
      * @param ActivityService $activityService
+     * @param ElementCompleteService $elementCompleteService
      */
-    public function __construct(ActivityService $activityService)
+    public function __construct(ActivityService $activityService, ElementCompleteService $elementCompleteService)
     {
         $this->activityService = $activityService;
+        $this->elementCompleteService = $elementCompleteService;
     }
 
     /**
@@ -41,6 +44,10 @@ class ActivityController extends Controller
     {
         try {
             if (!$this->activityService->deleteElement($id, $element)) {
+                if ($element === 'recipient_country' || $element === 'recipient_region') {
+                    $this->activityService->refreshElementStatus($id);
+                }
+
                 return response(['status' => false, 'message' => 'Error has occurred while deleting activity element.']);
             }
 

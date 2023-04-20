@@ -536,7 +536,7 @@ class ElementCompleteService
     {
         $this->element = 'conditions';
 
-        if ($activity->conditions['condition_attached'] == 0) {
+        if (isset($activity->conditions) && Arr::get($activity->conditions, 'condition_attached') === '0') {
             return true;
         }
 
