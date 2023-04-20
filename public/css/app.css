@@ -3579,7 +3579,7 @@ svg {
   height: auto;
 }
 
-.button, 
+.button,
 button {
   display: flex;
   cursor: pointer;
@@ -4355,7 +4355,7 @@ textarea.form__input {
   line-height: 1.25rem;
   line-height: 1.625;
 }
-.iati-list-table tr.already-published td, 
+.iati-list-table tr.already-published td,
 .iati-list-table tr.already-published th.check-column {
   padding-top: 2.75rem;
 }
@@ -4556,9 +4556,7 @@ td {
 }
 @media only screen and (min-width: 1102px) {
   .progress-bar-number {
-    width: -webkit-fit-content;
-    width: -moz-fit-content;
-    width: fit-content;
+    width: 10%;
     padding-left: 8px;
   }
 }
@@ -4684,8 +4682,8 @@ form .form-field-label .required {
   --tw-text-opacity: 1;
   color: rgba(var(--salmon-50), var(--tw-text-opacity));
 }
-form input[type=text], 
-form input[type=date], 
+form input[type=text],
+form input[type=date],
 form textarea {
   margin-top: 0px;
   height: 3rem;
@@ -4711,16 +4709,16 @@ form input[type=text]::-moz-placeholder, form input[type=date]::-moz-placeholder
   --tw-text-opacity: 1;
   color: rgba(var(--n-40), var(--tw-text-opacity));
 }
-form input[type=text]::placeholder, 
-form input[type=date]::placeholder, 
+form input[type=text]::placeholder,
+form input[type=date]::placeholder,
 form textarea::placeholder {
   font-size: 0.875rem;
   line-height: 1.25rem;
   --tw-text-opacity: 1;
   color: rgba(var(--n-40), var(--tw-text-opacity));
 }
-form input[type=text]:focus, 
-form input[type=date]:focus, 
+form input[type=text]:focus,
+form input[type=date]:focus,
 form textarea:focus {
   border-width: 1px;
   --tw-border-opacity: 1;
@@ -4732,13 +4730,13 @@ form input[type=text]:focus::-moz-placeholder, form input[type=date]:focus::-moz
   --tw-text-opacity: 1;
   color: rgba(var(--n-50), var(--tw-text-opacity));
 }
-form input[type=text]:focus::placeholder, 
-form input[type=date]:focus::placeholder, 
+form input[type=text]:focus::placeholder,
+form input[type=date]:focus::placeholder,
 form textarea:focus::placeholder {
   --tw-text-opacity: 1;
   color: rgba(var(--n-50), var(--tw-text-opacity));
 }
-form input[type=text], 
+form input[type=text],
 form input[type=date] {
   height: 3rem;
 }
@@ -4839,7 +4837,7 @@ form .add_more i {
 form .subelement.border-l > label {
   border-left: 0;
 }
-form .subelement .subelement, 
+form .subelement .subelement,
 form .subelement .subelement + button {
   margin-left: 1.5rem;
 }
@@ -4849,7 +4847,7 @@ form .subelement .wrapped-child-body {
 form .subelement .wrapped-child-body > .delete-parent {
   display: block;
 }
-form .subelement > .multi-form:only-of-type > .delete-parent, 
+form .subelement > .multi-form:only-of-type > .delete-parent,
 form .subelement .wrapped-child-body:only-of-type > .delete-parent {
   display: none;
 }
@@ -5085,7 +5083,7 @@ aside .progress .help__text {
   --tw-text-opacity: 1;
   color: rgba(var(--n-40), var(--tw-text-opacity));
 }
-.pagination a, 
+.pagination a,
 .pagination .pagination-dots {
   display: flex;
   border-top-width: 1px;
@@ -5102,7 +5100,7 @@ form .subelement.pagination a > label, form .subelement
 .pagination .pagination-dots > label {
   border-left: 0;
 }
-.pagination a:not(.prev-btn), 
+.pagination a:not(.prev-btn),
 .pagination .pagination-dots:not(.prev-btn) {
   border-left-width: 1px;
   --tw-border-opacity: 1;
@@ -5112,8 +5110,8 @@ form .subelement.pagination a:not(.prev-btn) > label, form .subelement
 .pagination .pagination-dots:not(.prev-btn) > label {
   border-left: 0;
 }
-.pagination a.prev-btn,  .pagination a.next-btn, 
-.pagination .pagination-dots.prev-btn, 
+.pagination a.prev-btn,  .pagination a.next-btn,
+.pagination .pagination-dots.prev-btn,
 .pagination .pagination-dots.next-btn {
   display: flex;
   align-items: center;
@@ -5121,33 +5119,33 @@ form .subelement.pagination a:not(.prev-btn) > label, form .subelement
   --tw-bg-opacity: 1;
   background-color: rgba(var(--n-10), var(--tw-bg-opacity));
 }
-.pagination a.prev-btn svg,  .pagination a.next-btn svg, 
-.pagination .pagination-dots.prev-btn svg, 
+.pagination a.prev-btn svg,  .pagination a.next-btn svg,
+.pagination .pagination-dots.prev-btn svg,
 .pagination .pagination-dots.next-btn svg {
   font-size: 0.75rem;
   line-height: 1rem;
 }
-.pagination a.prev-btn, 
+.pagination a.prev-btn,
 .pagination .pagination-dots.prev-btn {
   border-top-left-radius: 0.25rem;
   border-bottom-left-radius: 0.25rem;
 }
-.pagination a.next-btn, 
+.pagination a.next-btn,
 .pagination .pagination-dots.next-btn {
   border-bottom-right-radius: 0.25rem;
   border-top-right-radius: 0.25rem;
   border-right-width: 1px;
 }
-.pagination a.prev-btn svg, 
+.pagination a.prev-btn svg,
 .pagination .pagination-dots.prev-btn svg {
   margin-right: 0.25rem;
 }
-.pagination a.next-btn svg, 
+.pagination a.next-btn svg,
 .pagination .pagination-dots.next-btn svg {
   margin-left: 0.25rem;
 }
-.pagination a:hover,  .pagination a.current, 
-.pagination .pagination-dots:hover, 
+.pagination a:hover,  .pagination a.current,
+.pagination .pagination-dots:hover,
 .pagination .pagination-dots.current {
   --tw-bg-opacity: 1;
   background-color: rgba(var(--bluecoral), var(--tw-bg-opacity));
