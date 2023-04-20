@@ -147,7 +147,7 @@
                 "tag_vocabulary": {
                     "defaultCodeField": "tag_text",
                     "dependencyRelation": {
-                        "2": "goal_tag_code",
+                        "2": "goals_tag_code",
                         "3": "targets_tag_code"
                     }
                 }
@@ -256,6 +256,9 @@
                 "parent": "condition",
                 "peer": [
                     "condition condition_type"
+                ],
+                "children" : [
+                    "condition narrative"
                 ]
             },
             "condition narrative narrative": {
@@ -547,7 +550,7 @@
             "category code": {
                 "parent": "category"
             },
-            "language code": {
+            "language language": {
                 "parent": "language"
             },
             "document_date date": {
@@ -600,7 +603,7 @@
             "category code": {
                 "parent": "category"
             },
-            "language code": {
+            "language language": {
                 "parent": "language"
             },
             "document_date date": {
@@ -630,6 +633,7 @@
     },
     "baseline document_link": {
         "elementBase": "url",
+        "peer" : "format",
         "fieldDependency": {
             "title narrative narrative": {
                 "parent": "title narrative",
@@ -646,7 +650,7 @@
             "category code": {
                 "parent": "category"
             },
-            "language code": {
+            "language language": {
                 "parent": "language"
             },
             "document_date date": {

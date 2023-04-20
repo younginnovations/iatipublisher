@@ -69,18 +69,25 @@ trait XlsMapperHelper
     public function mapDropDownValueToKey($value, $location): mixed
     {
         // should we consider case(capital and lower)?
+        // dump('start', $value);
         if (is_null($value)) {
             return $value;
         }
 
         if (is_array($location)) {
-            return Arr::get($location, $value, $value);
+            if (is_bool($value)) {
+                // dump('end half: '. (int)$value);
+                return (int) $value;
+            }
+
+            return Arr::get(array_flip($location), $value, $value);
         }
 
         $locationArr = explode('/', $location);
 
         $dropDownValues = array_flip(getCodeList(explode('.', $locationArr[1])[0], $locationArr[0]));
         $key = Arr::get($dropDownValues, $value, $value);
+        // dump('end', $key);
 
         return $key;
     }

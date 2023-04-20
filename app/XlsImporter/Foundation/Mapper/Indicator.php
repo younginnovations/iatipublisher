@@ -76,7 +76,7 @@ class Indicator
         'Indicator' => 'indicator',
         'Indicator Document Link' => 'indicator document_link',
         'Indicator Baseline' => 'baseline',
-        'Indicator Baseline Document Link' => 'baseline document_link',
+        'Baseline Document Link' => 'baseline document_link',
     ];
 
     /**
@@ -116,7 +116,7 @@ class Indicator
     ];
 
     /**
-     * Maps sheet data based on their type and validates them.
+     * Maps sheet data based on their type and validates them.Result.
      *
      * @param $indicatorData
      *
@@ -138,6 +138,19 @@ class Indicator
         }
 
         return $this;
+    }
+
+    public function getIndicatorData(): array
+    {
+        $indicatorTestData = [];
+
+        foreach ($this->indicators as $resultIdentifier => $indicators) {
+            foreach ($indicators as $indicatorIdentifier => $indicatorData) {
+                $indicatorTestData[$indicatorIdentifier] = $indicatorData['indicator'];
+            }
+        }
+
+        return $indicatorTestData;
     }
 
     /**
@@ -227,15 +240,12 @@ class Indicator
 
                 $systemMappedRow = [];
 
-                foreach ($row as $fieldName => $fieldValue) {
-                    if (!empty($fieldName) && $fieldName !== $elementIdentifier) {
-                        $systemMappedRow[$elementMapper[$fieldName]] = $fieldValue;
-                    }
+                foreach ($elementMapper as $xlsColumnName => $systemName) {
+                    $systemMappedRow[$systemName] = $row[$xlsColumnName];
                 }
 
                 $elementData[] = $systemMappedRow;
             } else {
-                $this->pushIndicatorData($element, $elementActivityIdentifier, $this->convertGroupedDataToSystemData($elementData, $dependency[$element], $elementDropDownFields, $element));
                 break;
             }
         }
@@ -273,8 +283,7 @@ class Indicator
 
         foreach ($data as $row) {
             foreach ($row as $fieldName => $fieldValue) {
-                //
-                if ($elementBase && $fieldName === $elementBase && ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row))) {
+                if ($elementBase && $fieldName === $elementBase && ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row) || ($this->checkIfPeerAttributesAreNotEmpty(array_keys($row), $row) && is_null($baseCount)))) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
                     // empty count of child elements
                     $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
@@ -291,15 +300,20 @@ class Indicator
 
                 // checking and mapping select fields
                 if (in_array($fieldName, array_keys($elementDropDownFields))) {
+                    dump('------------start------------ "' . $fieldName . $fieldValue);
                     $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields[$fieldName]);
+                    dump('end :' . $fieldValue);
                 }
 
                 $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
+                // dump($elementPosition);
                 // map element position from parent
                 $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
-
-                if (!Arr::get($elementData, $elementPositionBasedOnParent, null)) {
+                // dump($elementPositionBasedOnParent, $baseCount);
+                if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null))) {
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
+
+                    // if($fieldName === 'ascending')
                     $this->tempColumnTracker[$elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
                 }
             }

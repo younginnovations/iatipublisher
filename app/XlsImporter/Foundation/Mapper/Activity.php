@@ -101,12 +101,11 @@ class Activity
      * @var array
      */
     protected array $defaultValueElements = [
-        'Default Currency' => 'default_currency',
-        'Default Language' => 'default_language',
-        'Default Hierarchy' => 'default_hierarchy',
-        'Default Humanitarian' => 'default_humanitarian',
-        'Budget Not Provided' => 'budget_not_provided',
-        'Secondary Reporter' => 'secondary_reporter',
+        'default_currency',
+        'default_language',
+        'hierarchy',
+        'humanitarian',
+        'budget_not_provided',
     ];
 
     protected array $enclosedNarrative = [
@@ -161,6 +160,7 @@ class Activity
                 // dd('stop');
             }
         }
+        // dd('stop', $this->activities);
 
         return $this;
     }
@@ -192,7 +192,13 @@ class Activity
         $elementActivityIdentifier = null;
 
         foreach ($data as $row) {
+            $secondary_reporter = '';
             if ($this->checkRowNotEmpty($row)) {
+                // dd($row);
+                $secondary_reporter = $row['secondary_reporter'];
+
+                unset($row['secondary_reporter']);
+
                 $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null) ?? $elementActivityIdentifier;
 
                 if (in_array($elementActivityIdentifier, $this->activitiesIdentifier)) {
@@ -204,12 +210,13 @@ class Activity
                 foreach ($this->defaultValueElements as $element) {
                     $fieldValue = $row[$element];
 
-                    if (array_key_exists($element, $dropDownFields)) {
-                        $elementDropDownFields = $dropDownFields[$element];
+                    if (array_key_exists($element, $dropDownFields['default_field_values'])) {
+                        $elementDropDownFields = $dropDownFields['default_field_values'][$element];
+                        // dd($elementDropDownFields);
                         $fieldValue = $this->mapDropDownValueToKey($row[$element], $elementDropDownFields);
                     }
 
-                    $this->activities[$elementActivityIdentifier]['default_field_values'][$element] = $fieldValue;
+                    $this->activities[$elementActivityIdentifier]['default_field_values'][$element] = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
                     $this->columnTracker[$element] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $element) . $this->rowCount;
                 }
             } else {
@@ -217,8 +224,8 @@ class Activity
             }
 
             $this->rowCount++;
-            $secondary_reporter = $this->activities[$elementActivityIdentifier]['default_field_values']['secondary_reporter'];
-            // $this->activities[$elementActivityIdentifier]['reporting_org'] = $this->getReportingOrganization($secondary_reporter);
+            $this->activities[$elementActivityIdentifier]['reporting_org'] = $this->getReportingOrganization($secondary_reporter);
+            // dd($this->getReportingOrganization($secondary_reporter));
             $this->activities[$elementActivityIdentifier]['iati_identifier'] = [
                 'activity_identifier' => $elementActivityIdentifier,
             ];
@@ -311,10 +318,8 @@ class Activity
                     $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null) ?? $elementActivityIdentifier;
                 }
 
-                foreach ($row as $fieldName => $fieldValue) {
-                    if (!empty($fieldName) && $fieldName !== 'activity_identifier' && isset($elementMapper[$fieldName])) {
-                        $systemMappedRow[$elementMapper[$fieldName]] = $fieldValue;
-                    }
+                foreach ($elementMapper as $xlsColumnName => $systemName) {
+                    $systemMappedRow[$systemName] = $row[$xlsColumnName];
                 }
 
                 $elementData[] = $systemMappedRow;
@@ -399,13 +404,14 @@ class Activity
 
                 $elementPosition = $this->getActivityElementPosition($parentBaseCount, $fieldName);
                 $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
-
-                if (!Arr::get($elementData, $elementPositionBasedOnParent, null) && !empty($elementPosition)) {
-                    $fieldValue = $fieldValue ? (string) $fieldValue : null;
+                if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null)) && !empty($elementPosition)) {
+                    $fieldValue = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
                     $this->columnTracker[$elementActivityIdentifier][$element][$element . '.' . $elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
                 }
             }
+
+            // dd($elementData);
             $this->rowCount++;
         }
 

@@ -127,7 +127,6 @@
     "document_link": {
         "url": "url",
         "format": "format",
-        "document": "document",
         "title narrative narrative": "title_narrative",
         "title narrative language": "title_language",
         "description narrative narrative": "description_narrative",
@@ -246,13 +245,12 @@
     "indicator document_link": {
         "url": "url",
         "format": "format",
-        "document": "document",
         "title narrative narrative": "title_narrative",
         "title narrative language": "title_language",
         "description narrative narrative": "description_narrative",
         "description narrative language": "description_language",
         "category code": "category_code",
-        "language code": "language_code",
+        "language language": "language_code",
         "document_date date": "document_date_date"
     },
     "baseline": {
@@ -268,13 +266,12 @@
     "baseline document_link": {
         "url": "url",
         "format": "format",
-        "document": "document",
         "title narrative narrative": "title_narrative",
         "title narrative language": "title_language",
         "description narrative narrative": "description_narrative",
         "description narrative language": "description_language",
         "category code": "category_code",
-        "language code": "language_code",
+        "language language": "language_code",
         "document_date date": "document_date_date"
     },
     "period": {
@@ -292,7 +289,6 @@
     "target document_link": {
         "url": "url",
         "format": "format",
-        "document": "document",
         "title narrative narrative": "title_narrative",
         "title narrative language": "title_language",
         "description narrative narrative": "description_narrative",
@@ -312,7 +308,6 @@
     "actual document_link": {
         "url": "url",
         "format": "format",
-        "document": "document",
         "title narrative narrative": "title_narrative",
         "title narrative language": "title_language",
         "description narrative narrative": "description_narrative",

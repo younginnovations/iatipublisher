@@ -805,7 +805,7 @@
             ]
         },
         {
-            "url": "http:\/\/localhost:8001\/activity\/9\/document_link",
+            "url": "https:\/\/localhost:8001\/activity\/9\/document_link",
             "format": "application\/activemessage",
             "title": [
                 {
@@ -899,22 +899,20 @@
                 "condition_type": "3",
                 "narrative": [
                     {
-                        "narrative": "nar 3",
+                        "narrative": "nar 1",
                         "language": "en"
                     }
                 ]
             }
         ]
     },
-    "org_id": 1,
     "default_field_values": {
-        "default_currency": "USD",
+        "default_currency": "HUF",
         "default_language": "en",
         "hierarchy": "2",
-        "budget_not_provided": "test",
-        "humanitarian": "no"
+        "humanitarian": "0",
+        "budget_not_provided": "1"
     },
-    "linked_to_iati": false,
     "tag": [
         {
             "tag_vocabulary": "2",
@@ -970,5 +968,15 @@
             ]
         }
     ],
-    "reporting_org": null
+    "reporting_org": [
+        {
+            "ref": "",
+            "type": "",
+            "secondary_reporter": false,
+            "narrative": [{
+                "narrative": "",
+                "language": ""
+            }]
+        }
+    ]
 }

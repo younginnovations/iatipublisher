@@ -113,6 +113,19 @@ class Period
         return $this;
     }
 
+    public function getPeriodData(): array
+    {
+        $periodTestData = [];
+
+        foreach ($this->periods as $indicatorIdentifier => $periods) {
+            foreach ($periods as $periodIdentifier => $periodData) {
+                $periodTestData[$periodIdentifier] = $periodData;
+            }
+        }
+
+        return $periodTestData;
+    }
+
     public function validateAndStoreData()
     {
         $periodValidator = app(PeriodValidator::class);
@@ -186,15 +199,12 @@ class Period
 
                 $systemMappedRow = [];
 
-                foreach ($row as $fieldName => $fieldValue) {
-                    if (!empty($fieldName) && $fieldName !== $elementIdentifier) {
-                        $systemMappedRow[$elementMapper[$fieldName]] = $fieldValue;
-                    }
+                foreach ($elementMapper as $xlsColumnName => $systemName) {
+                    $systemMappedRow[$systemName] = $row[$xlsColumnName];
                 }
 
                 $elementData[] = $systemMappedRow;
             } else {
-                // $this->pushPeriodData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
                 break;
             }
 
@@ -260,7 +270,7 @@ class Period
                 $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
                 $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
 
-                if (!Arr::get($elementData, $elementPositionBasedOnParent, null)) {
+                if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null))) {
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
                     $this->tempColumnTracker[$elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
                 }

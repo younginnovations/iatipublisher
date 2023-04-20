@@ -25,7 +25,6 @@ class XlsToArray implements ToArray, WithHeadingRow, WithEvents, WithCalculatedF
 
     public function array(array $array)
     {
-        // dump($this->sheetData, $this->sheetNames, count($this->sheetNames));
         $this->sheetData[$this->sheetNames[count($this->sheetNames) - 1]] = $array;
     }
 
@@ -63,9 +62,14 @@ class XlsToArray implements ToArray, WithHeadingRow, WithEvents, WithCalculatedF
             if (in_array($key, $dateElements)) {
                 if (is_string($value) && !str_contains($value, "'")) {
                     $array = explode(' ', $value);
+                    $timestamp = dateStrToTime($array[0]);
 
-                    if ((date('m/d/Y', strtotime($array[0])) === $array[0]) || (date('Y-m-d', strtotime($array[0])) === $array[0])) {
-                        $value = 25569 + (strtotime($value) / 86400);
+                    if ($timestamp) {
+                        if ((date('m/d/Y', dateStrToTime($array[0])) === $array[0]) || (date('Y-m-d', dateStrToTime($array[0])) === $array[0])) {
+                            $value = 25569 + (strtotime($value) / 86400);
+                        }
+                    } else {
+                        continue;
                     }
                 }
 

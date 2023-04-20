@@ -77,6 +77,27 @@ class Result
         $this->existingIdentifier = $existingIdentifier;
     }
 
+    public function getResultData(): array
+    {
+        $resultTestData = [];
+
+        foreach ($this->results as $activityIdentifier => $results) {
+            foreach ($results as $resultIdentifier => $resultData) {
+                $resultTestData[$resultIdentifier] = $resultData['results'];
+                // $errors[$resultIdentifier] = $resultValidator
+                // ->init($resultData['results'])
+                // ->validateData();
+                // $excelColumnAndRowName = isset($this->columnTracker[$activityIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
+                // $columnAppendedError = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
+                // $existingId = Arr::get($this->existingIdentifier, sprintf('%s_%s', $activityIdentifier, $resultIdentifier), false);
+                // $this->processedCount++;
+                // $this->storeValidatedData($resultData['results'], $columnAppendedError, $existingId, $activityIdentifier);
+            }
+        }
+
+        return $resultTestData;
+    }
+
     public function map($resultData)
     {
         foreach ($resultData as $sheetName => $content) {
@@ -165,10 +186,8 @@ class Result
 
                 $systemMappedRow = [];
 
-                foreach ($row as $fieldName => $fieldValue) {
-                    if (!empty($fieldName) && $fieldName !== $elementIdentifier) {
-                        $systemMappedRow[$elementMapper[$fieldName]] = $fieldValue;
-                    }
+                foreach ($elementMapper as $xlsColumnName => $systemName) {
+                    $systemMappedRow[$systemName] = $row[$xlsColumnName];
                 }
 
                 $elementData[] = $systemMappedRow;
@@ -201,6 +220,7 @@ class Result
             foreach ($row as $fieldName => $fieldValue) {
                 if ($elementBase && ($fieldName === $elementBase && ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)))) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
+                    $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
                 }
 
                 if (in_array($fieldName, array_keys($fieldDependency))) {
@@ -219,7 +239,7 @@ class Result
                 $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
                 $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
 
-                if (!Arr::get($elementData, $elementPositionBasedOnParent, null)) {
+                if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null))) {
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
                     $this->tempColumnTracker[$elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
                 }
