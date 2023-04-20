@@ -6,8 +6,8 @@
           <th id="title" scope="col">
             <span>Activity Title</span>
           </th>
-          <th id="publishing-progress" scope="col">
-            <span class="">Publishing Progress</span>
+          <th id="publishing-progress" scope="col" class="progress-bar-header">
+            <div class="w-50 ms-0">Publishing Progress</div>
           </th>
           <th id="date" scope="col">
             <a
@@ -77,7 +77,7 @@
           </td>
 
           <td class="text-n-40">
-            <div class="progress-bar-parent flex">
+            <div class="progress-bar-parent">
               <div class="progress-bar-wrapper">
                 <div class="progress-bar-container bg-spring-10">
                   <div
@@ -256,29 +256,5 @@ const sortByDateUrl = () => {
   position: relative;
   width: 100%;
   margin: auto;
-}
-
-/*For progress bar in activities listing page
- *
- */
-.progress-bar-parent {
-  display: flex;
-  align-items: center;
-}
-.progress-bar-wrapper {
-  width: 76%;
-  height: 5px;
-}
-.progress-bar-container {
-  height: 100%;
-  border-radius: 12px;
-}
-.progress-bar-fill {
-  height: 100%;
-  border-radius: inherit;
-}
-.progress-bar-number {
-  padding-left: 8px;
-  width: 24%;
 }
 </style>
