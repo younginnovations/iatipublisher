@@ -242,7 +242,7 @@ trait FillDefaultValuesTrait
     {
         foreach ($values as $value) {
             if ($value) {
-                return $value;
+                return (string) $value;
             }
         }
 
