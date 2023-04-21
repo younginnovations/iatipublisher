@@ -44,11 +44,11 @@ class ActivityController extends Controller
     {
         try {
             if (!$this->activityService->deleteElement($id, $element)) {
-                if ($element === 'recipient_country' || $element === 'recipient_region') {
-                    $this->activityService->refreshElementStatus($id);
-                }
-
                 return response(['status' => false, 'message' => 'Error has occurred while deleting activity element.']);
+            }
+
+            if ($element === 'recipient_country' || $element === 'recipient_region') {
+                $this->activityService->refreshElementStatus($id);
             }
 
             $message = sprintf('The %s element deleted successfully.', str_replace('_', '-', $element));
