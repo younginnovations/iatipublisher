@@ -22,6 +22,10 @@ data:
   DB_SSLMODE: 'require'
   DB_SSLROOTCERT: '/opt/apps/laravel-in-kubernetes/ca-certificate.crt'
 
+  AIDSTREAM_DB_HOST: "35.224.230.223"
+  AIDSTREAM_DB_PORT: "5432"
+  AIDSTREAM_DB_DATABASE: "aidstreamstage"
+
   BROADCAST_DRIVER: "log"
   CACHE_DRIVER: "redis"
   FILESYSTEM_DISK: "s3"
