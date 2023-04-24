@@ -158,7 +158,7 @@ class MigrateOrganizationCommand extends Command
                             $aidstreamOrganizationId
                         );
                         $this->error($message);
-                        $timestamp = Carbon::now()->format('y-m-d-h-m-i');
+                        $timestamp = Carbon::now()->format('y-m-d-H-i-s');
                         awsUploadFile("Migration/Migration-errors-{$aidstreamOrganizationId}-{$timestamp}.json", json_encode($this->errors));
 //                        $this->trackMigrationErrors($this->errors);
                         $this->clearErrors();
@@ -167,7 +167,8 @@ class MigrateOrganizationCommand extends Command
                         );
                     }
 
-                    $existingAidstreamOrganization = $this->organizationService->getOrganizationByPublisherId($aidStreamOrganization->user_identifier);
+                    $existingAidstreamOrganization = $this->organizationService->getOrganizationByPublisherId(strtolower($aidStreamOrganization->user_identifier));
+
                     if ($existingAidstreamOrganization) {
                         $message = "Organization with publisher name {$existingAidstreamOrganization->publisher_name} already exists.";
                         $this->setGeneralError($message)->setDetailedError(
@@ -176,7 +177,7 @@ class MigrateOrganizationCommand extends Command
                             'organization_data',
                             $aidstreamOrganizationId
                         );
-                        $timestamp = Carbon::now()->format('y-m-d-h-m-i');
+                        $timestamp = Carbon::now()->format('y-m-d-H-i-s');
                         awsUploadFile("Migration/Migration-errors-{$aidstreamOrganizationId}-{$timestamp}.json", json_encode($this->errors));
 //                        $this->trackMigrationErrors($this->errors);
                         $this->clearErrors();
@@ -201,7 +202,6 @@ class MigrateOrganizationCommand extends Command
                             $this->getNewSetting($aidStreamOrganizationSetting, $iatiOrganization)
                         );
 
-//                        dd($aidStreamOrganizationSetting, $this->setting, $iatiOrganization );
                         $this->setDefaultValues($iatiOrganization, $aidStreamOrganizationSetting);
                         $this->updateOrganizationCompleteStatus($iatiOrganization);
                         $this->syncPublisherIdInSettingAndOrganizationLevel(
@@ -293,7 +293,7 @@ class MigrateOrganizationCommand extends Command
                         $iatiOrganization
                     );
                     $this->updateOrganizationDocumentLinkUrl($aidStreamOrganization->id, $iatiOrganization);
-                    $timestamp = Carbon::now()->format('y-m-d-h-m-i');
+                    $timestamp = Carbon::now()->format('y-m-d-H-i-s');
                     awsUploadFile("Migration/Migration-errors-{$aidStreamOrganization->id}-{$timestamp}.json", json_encode($this->errors));
 //                    $this->trackMigrationErrors($this->errors);
                     $this->clearErrors();
@@ -640,7 +640,7 @@ class MigrateOrganizationCommand extends Command
                                 $organizationPublished->id,
                             );
                             $this->logInfo($message);
-                            $timestamp = Carbon::now()->format('y-m-d-h-m-i');
+                            $timestamp = Carbon::now()->format('y-m-d-H-i-s');
                             awsUploadFile("Migration/Migration-errors-{$aidStreamOrganization->id}-{$timestamp}.json", json_encode($this->errors));
 
                             throw new PublishException($iatiOrganization->id, $message);
@@ -655,7 +655,7 @@ class MigrateOrganizationCommand extends Command
                             $iatiOrganization->id
                         );
                         $this->logInfo($message);
-                        $timestamp = Carbon::now()->format('y-m-d-h-m-i');
+                        $timestamp = Carbon::now()->format('y-m-d-H-i-s');
                         awsUploadFile("Migration/Migration-errors-{$aidStreamOrganization->id}-{$timestamp}.json", json_encode($this->errors));
 
                         throw new PublishException($iatiOrganization->id, $message);
