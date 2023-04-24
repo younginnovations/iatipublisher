@@ -65,42 +65,6 @@ class OtherIndentifierCompleteTest extends ElementCompleteTest
     }
 
     /**
-     * Attribute reference_key no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_other_identifier_attribute_no_reference_key(): void
-    {
-        $actualData = json_decode(
-            '[{"reference_type":"A1","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Attribute reference_type no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_other_identifier_attribute_no_reference_type_key(): void
-    {
-        $actualData = json_decode(
-            '[{"reference":"1","owner_org":[{"ref":"OwnerOrg Ref-1","narrative":[{"narrative":"","language":"aa"},{"narrative":"asdsasdasd","language":"ab"}]},{"ref":"OwnerOrg Ref-2","narrative":[{"narrative":"asdasd","language":"af"}]}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
      * Attribute reference and reference_type empty test.
      *
      * @return void

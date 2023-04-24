@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Observers;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Models\Activity\Transaction;
 use App\IATI\Services\Activity\TransactionService;
 use App\IATI\Services\ElementCompleteService;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Support\Arr;
 
 /**
  * Class TransactionObserver.
@@ -41,15 +43,25 @@ class TransactionObserver
         $activityObj = $transaction->activity;
         $elementStatus = $activityObj->element_status;
         $elementStatus['transactions'] = $this->elementCompleteService->isTransactionsElementCompleted($transaction->activity);
-
-        if (!is_array_value_empty($transaction->transaction['sector'])) {
-            $elementStatus['sector'] = true;
-        }
-
+        $isSectorFilledInActivityLevel = !is_array_value_empty($activityObj->sector);
+        $isSectorCompletedInActivityLevel = Arr::get($elementStatus, 'sector', false);
         $transactionService = app()->make(TransactionService::class);
+        $isSectorFilledInTransactionLevel = $transactionService->checkIfTransactionHasElementDefined($activityObj, 'sector');
+        $isSectorCompleteInTransactionLevel = $this->elementCompleteService->isSectorElementCompleted(new Activity(['sector' => $transaction->transaction]));
 
-        if (is_array_value_empty($transaction->transaction['sector']) && !$transactionService->checkIfTransactionHasElementDefined($activityObj, 'sector')) {
-            $elementStatus['sector'] = false;
+        switch([
+            $isSectorFilledInActivityLevel,
+            $isSectorCompletedInActivityLevel,
+            $isSectorFilledInTransactionLevel,
+            $isSectorCompleteInTransactionLevel,
+        ]) {
+            case [0, 0, 1, 1]:
+            case [1, 1, 0, 0]:
+                $elementStatus['sector'] = true;
+                break;
+            default:
+                $elementStatus['sector'] = false;
+                break;
         }
 
         if (is_array_value_empty($transaction->transaction['recipient_region']) || is_array_value_empty($transaction->transaction['recipient_country'])) {

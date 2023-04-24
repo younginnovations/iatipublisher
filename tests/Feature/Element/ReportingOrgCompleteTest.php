@@ -52,24 +52,6 @@ class ReportingOrgCompleteTest extends ElementCompleteTest
     }
 
     /**
-     * Attribute ref no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_reporting_org_attribute_no_ref_key(): void
-    {
-        $actualData = json_decode(
-            '[{"type":"10","secondary_reporter":"1","narrative":[{"narrative":"ref 1 narrative 1","language":"aa"}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_one_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
      * Attribute ref empty test.
      *
      * @return void
@@ -79,24 +61,6 @@ class ReportingOrgCompleteTest extends ElementCompleteTest
     {
         $actualData = json_decode(
             '[{"ref":"","type":"10","secondary_reporter":"1","narrative":[{"narrative":"ref 1 narrative 1","language":"aa"}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_one_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Attribute type no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_reporting_org_attribute_no_type_key(): void
-    {
-        $actualData = json_decode(
-            '[{"ref":"123","secondary_reporter":"1","narrative":[{"narrative":"ref 1 narrative 1","language":"aa"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR

@@ -6,6 +6,7 @@ namespace App\IATI\Services;
 
 use App\IATI\Services\Activity\RecipientRegionService;
 use App\IATI\Traits\ElementCompleteServiceTrait;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
 /**
@@ -14,6 +15,7 @@ use Illuminate\Support\Arr;
 class ElementCompleteService
 {
     use ElementCompleteServiceTrait;
+
     /**
      * Public variable element.
      *
@@ -535,6 +537,10 @@ class ElementCompleteService
     {
         $this->element = 'conditions';
 
+        if (isset($activity->conditions) && Arr::get($activity->conditions, 'condition_attached') === '0') {
+            return true;
+        }
+
         return $this->isLevelTwoSingleDimensionElementCompleted($activity->conditions);
     }
 
@@ -923,5 +929,43 @@ class ElementCompleteService
         }
 
         return $countryStatus;
+    }
+
+    /**
+     * Refresh element_status of activity.
+     *
+     * @param $activity
+     *
+     * @return void
+     * @throws BindingResolutionException
+     */
+    public function refreshElementStatus($activity): void
+    {
+        $skippables = [
+            'id',
+            'org_id',
+            'status',
+            'created_at',
+            'updated_at',
+            'created_by',
+            'updated_by',
+            'upload_medium',
+            'linked_to_iati',
+            'element_status',
+            'default_field_values',
+            'migrated_from_aidstream',
+        ];
+
+        $elementStatus = [];
+        $attributes = $activity->getAttributes();
+
+        foreach ($attributes as $attribute => $value) {
+            if (!in_array($attribute, $skippables)) {
+                $elementStatus[$attribute] = call_user_func([$this, dashesToCamelCase('is_' . $attribute . '_element_completed')], $activity);
+            }
+        }
+
+        $activity->element_status = $elementStatus;
+        $activity->updateQuietly(['touch'=>false]);
     }
 }

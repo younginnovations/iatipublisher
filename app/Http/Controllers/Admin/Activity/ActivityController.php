@@ -71,7 +71,7 @@ class ActivityController extends Controller
      * @param ResultService                    $resultService
      * @param TransactionService               $transactionService
      * @param ActivityValidatorResponseService $activityValidatorResponseService
-     * @param ImportActivityErrorService       $mportActivityErrorService
+     * @param ImportActivityErrorService       $importActivityErrorService
      * @param OrganizationService              $organizationService
      */
     public function __construct(
@@ -172,10 +172,10 @@ class ActivityController extends Controller
             $status = $activity->element_status;
             $status['transactions'] = $transactions->count() === 0 ? false : Arr::get($status, 'transactions', false);
             $status['result'] = $results->count() === 0 ? false : Arr::get($status, 'result', false);
+            $status['reporting_org'] = $activity->organization->element_status['reporting_org'] ?? false;
+            $activity->element_status = $status;
             $progress = $this->activityService->activityPublishingProgress($activity);
-            $reportingOrgStatus = $activity->organization->element_status['reporting_org'] ?? false;
-            $status['reporting_org'] = $reportingOrgStatus;
-            $coreCompleted = isCoreElementCompleted(array_merge(['reporting_org' => $activity->organization->reporting_org_element_completed], $activity->element_status));
+            $coreCompleted = $activity->element_status;
             $validatorResponse = $this->activityValidatorResponseService->getValidatorResponse($id);
             $importActivityError = $this->importActivityErrorService->getImportActivityError($id);
             $organization_identifier = $activity->organization->identifier;

@@ -57,19 +57,6 @@ class CountryBudgetItemTest extends ElementCompleteTest
     }
 
     /**
-     * Attribute no country_budget_vocabulary key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_country_budget_items_attribute_no_country_budget_vocabulary_key(): void
-    {
-        $actualData = json_decode('{"budget_item":[{"code":"12","percentage":"50","description":[{"narrative":[{"narrative":"asdas","language":"aa"}]}]}]}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
      * Attribute country_budget_vocabulary empty test.
      *
      * @return void
@@ -122,24 +109,6 @@ class CountryBudgetItemTest extends ElementCompleteTest
     public function test_country_budget_items_sub_element_empty_budget_item_json_array(): void
     {
         $actualData = json_decode('{"country_budget_vocabulary":"2","budget_item":[{}]}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element budget_item attribute no code key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_country_budget_items_sub_element_budget_item_attribute_no_code_key(): void
-    {
-        $actualData = json_decode(
-            '{"country_budget_vocabulary":"2","budget_item":[{"percentage":"50","description":[{"narrative":[{"narrative":"asdas","language":"aa"}]}]}]}',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
 
         $this->test_level_three_single_dimensional_element_incomplete($this->element, $actualData);
     }

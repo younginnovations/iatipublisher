@@ -114,24 +114,6 @@ class ParticipatingOrgCompleteTest extends ElementCompleteTest
     }
 
     /**
-     * Attribute organization_role no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_participating_org_attribute_no_organization_role_key(): void
-    {
-        $participating_orgData = json_decode(
-            '[{"ref":"1","type":"10","identifier":"1231231","crs_channel_code":"10000","narrative":[{"narrative":"participating-org1-narrative1","language":"ab"}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_one_multi_dimensional_element_incomplete($this->element, $participating_orgData);
-    }
-
-    /**
      * Participating Org element complete test.
      *
      * @return void

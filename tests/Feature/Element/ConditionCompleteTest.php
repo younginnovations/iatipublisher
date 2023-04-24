@@ -4,11 +4,18 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Element;
 
+use App\IATI\Models\Organization\Organization;
+use App\IATI\Models\User\Role;
+use App\IATI\Models\User\User;
+use App\IATI\Services\ElementCompleteService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
 /**
  * Class ConditionCompleteTest.
  */
 class ConditionCompleteTest extends ElementCompleteTest
 {
+    use RefreshDatabase;
     /**
      * Element conditions.
      *
@@ -78,45 +85,6 @@ class ConditionCompleteTest extends ElementCompleteTest
     }
 
     /**
-     * Attribute condition_attached no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_condition_attribute_no_condition_attached_key(): void
-    {
-        $humanitarian_scopeData = json_decode('{"condition":[{"condition_type":"1","narrative":[{"narrative":"asdads","language":"ab"}]}]}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_two_single_dimensional_element_incomplete($this->element, $humanitarian_scopeData);
-    }
-
-    /**
-     * Sub element condition no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_condition_sub_element_no_condition_key(): void
-    {
-        $humanitarian_scopeData = json_decode('{"condition_attached":""}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_two_single_dimensional_element_incomplete($this->element, $humanitarian_scopeData);
-    }
-
-    /**
-     * Sub element condition empty test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_condition_sub_element_empty_condition(): void
-    {
-        $humanitarian_scopeData = json_decode('{"condition_attached":"1","condition":""}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_two_single_dimensional_element_incomplete($this->element, $humanitarian_scopeData);
-    }
-
-    /**
      * Sub element condition empty array test.
      *
      * @return void
@@ -125,32 +93,6 @@ class ConditionCompleteTest extends ElementCompleteTest
     public function test_condition_sub_element_empty_condition_array(): void
     {
         $humanitarian_scopeData = json_decode('{"condition_attached":"1","condition":[]}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_two_single_dimensional_element_incomplete($this->element, $humanitarian_scopeData);
-    }
-
-    /**
-     * Sub element condition empty json array test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_condition_sub_element_empty_condition_json_array(): void
-    {
-        $humanitarian_scopeData = json_decode('{"condition_attached":"1","condition":[{}]}', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_two_single_dimensional_element_incomplete($this->element, $humanitarian_scopeData);
-    }
-
-    /**
-     * Sub element condition attribute condition_type no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_condition_sub_element_condition_attribute_no_condition_type_key(): void
-    {
-        $humanitarian_scopeData = json_decode('{"condition_attached":"1","condition":[{"narrative":[{"narrative":"asdads","language":"ab"}]}]}', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_two_single_dimensional_element_incomplete($this->element, $humanitarian_scopeData);
     }
@@ -166,6 +108,67 @@ class ConditionCompleteTest extends ElementCompleteTest
         $humanitarian_scopeData = json_decode('{"condition_attached":"1","condition":[{"condition_type":"","narrative":[{"narrative":"asdads","language":"ab"}]}]}', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_two_single_dimensional_element_incomplete($this->element, $humanitarian_scopeData);
+    }
+
+    /**
+     * Sub element condition empty json array test.
+     *
+     * @return void
+     * @throws \JsonException
+     */
+    public function test_condition_when_it_is_saved_with_condition_attached_0_and_remaining_is_empty()
+    {
+        $role = Role::factory()->create();
+        $org = Organization::factory()->has(User::factory(['role_id' => $role->id]))->create();
+        $activity = \App\IATI\Models\Activity\Activity::factory()->create([
+            'org_id' => $org->id,
+            'created_by' => $org->user->id,
+            'updated_by' => $org->user->id,
+        ]);
+        $conditions = json_decode('{"condition_attached":"0","condition":[{}]}', true, 512, JSON_THROW_ON_ERROR);
+        $activity->conditions = $conditions;
+
+        $elementCompleteService = app()->make(ElementCompleteService::class);
+        $elementCompleteService->isConditionsElementCompleted($activity);
+    }
+
+    /**
+     * Test completeness when condition_attached is 0 and all sub-elements are filled.
+     *
+     * @return void
+     * @throws \JsonException
+     */
+    public function test_condition_when_it_is_saved_with_condition_attached_0_and_remaining_is_filled()
+    {
+        $data = json_decode('{"condition_attached":"0","condition":[{"condition_type":"1","narrative":[{"narrative":"asdads","language":"ab"}]},{"condition_type":"2","narrative":[{"narrative":"asdasdadad","language":"aa"}]}]}', true, 512, JSON_THROW_ON_ERROR);
+
+        $this->test_level_two_single_dimensional_element_complete($this->element, $data);
+    }
+
+    /**
+     * Sub element condition empty json array test.
+     *
+     * @return void
+     * @throws \JsonException
+     */
+    public function test_condition_when_it_is_saved_with_condition_attached_1_and_remaining_is_empty()
+    {
+        $data = json_decode('{"condition_attached":"1","condition":[{}]}', true, 512, JSON_THROW_ON_ERROR);
+
+        $this->test_level_two_single_dimensional_element_incomplete($this->element, $data);
+    }
+
+    /**
+     * Test condition is incomplete when saving all null.
+     *
+     * @return void
+     * @throws \JsonException
+     */
+    public function test_condition_when_it_is_saved_without_selecting_condition_attached()
+    {
+        $data = json_decode('{"condition_attached":null,"condition":[{"condition_type":null,"narrative":[{"narrative":null,"language":null}]}]}', true, 512, JSON_THROW_ON_ERROR);
+
+        $this->test_level_two_single_dimensional_element_incomplete($this->element, $data);
     }
 
     /**

@@ -158,24 +158,6 @@ class LocationCompleteTest extends ElementCompleteTest
     }
 
     /**
-     * Sub element location_id attribute vocabulary no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_location_sub_element_location_id_no_attribute_vocabulary_key(): void
-    {
-        $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
      * Sub element location_id attribute code empty test.
      *
      * @return void
@@ -185,24 +167,6 @@ class LocationCompleteTest extends ElementCompleteTest
     {
         $actualData = json_decode(
             '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":""}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element location_id attribute code no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_location_sub_element_location_id_no_attribute_code_key(): void
-    {
-        $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"srs_name":"http:\/\/www.opengis.net\/def\/crs\/EPSG\/0\/4326","pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -514,7 +478,7 @@ class LocationCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
     }
 
     /**
@@ -532,7 +496,7 @@ class LocationCompleteTest extends ElementCompleteTest
             JSON_THROW_ON_ERROR
         );
 
-        $this->test_level_two_multi_dimensional_element_complete($this->element, $actualData);
+        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
     }
 
     /**
@@ -761,24 +725,6 @@ class LocationCompleteTest extends ElementCompleteTest
     {
         $actualData = json_decode(
             '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        );
-
-        $this->test_level_two_multi_dimensional_element_incomplete($this->element, $actualData);
-    }
-
-    /**
-     * Sub element point attribute srs_name no key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_location_sub_element_point_no_attribute_srs_name_key(): void
-    {
-        $actualData = json_decode(
-            '[{"ref":"ref 1","location_reach":[{"code":"1"}],"location_id":[{"vocabulary":"A2","code":"vocab code"}],"name":[{"narrative":[{"narrative":"name 1","language":"aa"}]}],"description":[{"narrative":[{"narrative":"description 1","language":"aa"}]}],"activity_description":[{"narrative":[{"narrative":"activity description 1","language":"ab"}]}],"administrative":[{"vocabulary":"A2","code":"DZ","level":"1236"}],"point":[{"pos":[{"latitude":"56","longitude":"27"}]}],"exactness":[{"code":"1"}],"location_class":[{"code":"2"}],"feature_designation":[{"code":"CMPQ"}]}]',
             true,
             512,
             JSON_THROW_ON_ERROR
@@ -1076,7 +1022,7 @@ class LocationCompleteTest extends ElementCompleteTest
     }
 
     /**
-     * Sub element feature_designation attirbute code empty test.
+     * Sub element feature_designation attribute code empty test.
      *
      * @return void
      * @throws \JsonException
@@ -1094,7 +1040,7 @@ class LocationCompleteTest extends ElementCompleteTest
     }
 
     /**
-     * Location element compelete test.
+     * Location element complete test.
      *
      * @return void
      * @throws \JsonException

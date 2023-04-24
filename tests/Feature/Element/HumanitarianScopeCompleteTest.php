@@ -96,35 +96,35 @@ class HumanitarianScopeCompleteTest extends ElementCompleteTest
      * @return void
      * @throws \JsonException
      */
-    public function test_humanitarian_scope_attribute_no_type_and_vocabulary_key(): void
+    public function test_humanitarian_scope_attribute_empty_type_and_vocabulary(): void
     {
-        $humanitarian_scopeData = json_decode('[{"code":"123","narrative":[{"narrative":"asd","language":"aa"}]}]', true, 512, JSON_THROW_ON_ERROR);
+        $humanitarian_scopeData = json_decode('[{"type":"","vocabulary":"","vocabulary_uri":"","code":"123456","narrative":[{"narrative":"narrative","language":"ae"}]},{"type":"2","vocabulary":"1-2","vocabulary_uri":"","code":"123456","narrative":[{"narrative":"narrative *","language":"ae"}]},{"type":"1","vocabulary":"2-1","vocabulary_uri":"","code":"12345","narrative":[{"narrative":"narrative","language":"ae"}]}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $humanitarian_scopeData);
     }
 
     /**
-     * Attribute type no key test.
+     * Attribute type empty test.
      *
      * @return void
      * @throws \JsonException
      */
-    public function test_humanitarian_scope_attribute_no_type_key(): void
+    public function test_humanitarian_scope_attribute_empty_type(): void
     {
-        $humanitarian_scopeData = json_decode('[{"vocabulary":"1-2","code":"123","narrative":[{"narrative":"asd","language":"aa"}]}]', true, 512, JSON_THROW_ON_ERROR);
+        $humanitarian_scopeData = json_decode('[{"type":"", "vocabulary":"1-2","code":"123","narrative":[{"narrative":"asd","language":"aa"}]}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $humanitarian_scopeData);
     }
 
     /**
-     * Attribute type no key test.
+     * Attribute type empty test.
      *
      * @return void
      * @throws \JsonException
      */
-    public function test_humanitarian_scope_attribute_no_vocabulary_key(): void
+    public function test_humanitarian_scope_attribute_empty_vocabulary(): void
     {
-        $humanitarian_scopeData = json_decode('[{"type":"1","code":"123","narrative":[{"narrative":"asd","language":"aa"}]}]', true, 512, JSON_THROW_ON_ERROR);
+        $humanitarian_scopeData = json_decode('[{"type":"1", "vocabulary":"","code":"123","narrative":[{"narrative":"asd","language":"aa"}]}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $humanitarian_scopeData);
     }
@@ -143,19 +143,6 @@ class HumanitarianScopeCompleteTest extends ElementCompleteTest
     }
 
     /**
-     * Attribute code no key for vocabulary 1-2 test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_humanitarian_scope_attribute_no_code_key_for_vocab_1_2(): void
-    {
-        $humanitarian_scopeData = json_decode('[{"type":"1","vocabulary":"1-2","narrative":[{"narrative":"asd","language":"aa"}]}]', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_one_multi_dimensional_element_incomplete($this->element, $humanitarian_scopeData);
-    }
-
-    /**
      * Attribute code empty for vocabulary 2-1 test.
      *
      * @return void
@@ -164,19 +151,6 @@ class HumanitarianScopeCompleteTest extends ElementCompleteTest
     public function test_humanitarian_scope_attribute_empty_code_for_vocab_2_1(): void
     {
         $humanitarian_scopeData = json_decode('[{"type":"1","vocabulary":"2-1","code":"","narrative":[{"narrative":"asd","language":"aa"}]}]', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_one_multi_dimensional_element_incomplete($this->element, $humanitarian_scopeData);
-    }
-
-    /**
-     * Attribute code no key for vocabulary 2-1 test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_humanitarian_scope_attribute_no_code_key_for_vocab_2_1(): void
-    {
-        $humanitarian_scopeData = json_decode('[{"type":"1","vocabulary":"2-1","narrative":[{"narrative":"asd","language":"aa"}]}]', true, 512, JSON_THROW_ON_ERROR);
 
         $this->test_level_one_multi_dimensional_element_incomplete($this->element, $humanitarian_scopeData);
     }

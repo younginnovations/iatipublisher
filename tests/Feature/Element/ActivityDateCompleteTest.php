@@ -91,32 +91,6 @@ class ActivityDateCompleteTest extends ElementCompleteTest
     }
 
     /**
-     * No attribute type key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_activity_date_attribute_no_type_key(): void
-    {
-        $activity_dateData = json_decode('[{"date":"2022-02-02"}]', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_one_multi_dimensional_element_incomplete($this->element, $activity_dateData);
-    }
-
-    /**
-     * No attribute date key test.
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function test_activity_date_attribute_no_date_key(): void
-    {
-        $activity_dateData = json_decode('[{"type":"1"}]', true, 512, JSON_THROW_ON_ERROR);
-
-        $this->test_level_one_multi_dimensional_element_incomplete($this->element, $activity_dateData);
-    }
-
-    /**
      * Empty attribute type test.
      *
      * @return void

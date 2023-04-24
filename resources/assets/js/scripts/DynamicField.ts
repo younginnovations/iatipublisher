@@ -438,8 +438,7 @@ export class DynamicField {
 
       policymaker_vocabulary.on('select2:clear', (e) => {
         const target = e.target as HTMLElement;
-
-        this.hidePolicyMakerField($(target), '1');
+        this.hidePolicyMakerField($(target), '99');
       });
     }
   }
@@ -472,6 +471,7 @@ export class DynamicField {
           .hide();
         break;
       case '99':
+      default:
         index
           .closest('.form-field-group')
           .find(case2_show)
@@ -481,22 +481,6 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(case2)
-          .val('')
-          .trigger('change')
-          .hide().attr('disabled', 'disabled')
-          .closest('.form-field')
-          .hide();
-        break;
-      default:
-        index
-          .closest('.form-field-group')
-          .find(case1_show)
-          .show().removeAttr('disabled')
-          .closest('.form-field')
-          .show();
-        index
-          .closest('.form-field-group')
-          .find(case1)
           .val('')
           .trigger('change')
           .hide().attr('disabled', 'disabled')
@@ -529,7 +513,7 @@ export class DynamicField {
       sector_vocabulary.on('select2:clear', (e) => {
         const target = e.target as HTMLElement;
 
-        this.hideSectorField($(target), '1');
+        this.hideSectorField($(target), '');
       });
     }
   }
@@ -697,7 +681,7 @@ export class DynamicField {
       region_vocabulary.on('select2:clear', (e) => {
         const target = e.target as HTMLElement;
 
-        this.hideRecipientRegionField($(target), '1');
+        this.hideRecipientRegionField($(target), '');
       });
     }
   }
@@ -819,7 +803,7 @@ export class DynamicField {
       tag_vocabulary.on('select2:clear', (e) => {
         const target = e.target as HTMLElement;
 
-        this.hideTagField($(target), '1');
+        this.hideTagField($(target), '');
       });
     }
   }
