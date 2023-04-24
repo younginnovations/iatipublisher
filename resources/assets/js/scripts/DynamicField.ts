@@ -438,8 +438,7 @@ export class DynamicField {
 
       policymaker_vocabulary.on('select2:clear', (e) => {
         const target = e.target as HTMLElement;
-
-        this.hidePolicyMakerField($(target), '');
+        this.hidePolicyMakerField($(target), '99');
       });
     }
   }
@@ -448,7 +447,6 @@ export class DynamicField {
    * Hides Policy Marker Form Fields
    */
   public hidePolicyMakerField(index: JQuery, value: string) {
-    console.log(value);
     const case1_show = 'select[id*="[policy_marker]"]',
       case2_show =
         'input[id*="[policy_marker_text]"],input[id*="[vocabulary_uri]"]',
@@ -473,6 +471,7 @@ export class DynamicField {
           .hide();
         break;
       case '99':
+      default:
         index
           .closest('.form-field-group')
           .find(case2_show)
@@ -482,22 +481,6 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(case2)
-          .val('')
-          .trigger('change')
-          .hide().attr('disabled', 'disabled')
-          .closest('.form-field')
-          .hide();
-        break;
-      default:
-        index
-          .closest('.form-field-group')
-          .find(case1_show)
-          .show().removeAttr('disabled')
-          .closest('.form-field')
-          .show();
-        index
-          .closest('.form-field-group')
-          .find(case1)
           .val('')
           .trigger('change')
           .hide().attr('disabled', 'disabled')
