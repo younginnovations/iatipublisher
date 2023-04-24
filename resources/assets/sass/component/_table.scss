@@ -209,3 +209,53 @@ td {
     }
   }
 }
+
+/*For progress bar in activities listing page
+ *
+ */
+.border-this {
+  border: 1px solid black;
+}
+.progress-bar-header {
+  text-align: center;
+
+  @media only screen and (min-width: 1102px) {
+    text-align: end;
+  }
+}
+.progress-bar-parent {
+  display: flex;
+  align-items: center;
+
+  @media only screen and (min-width: 1102px) {
+    width: auto;
+    justify-content: flex-end;
+  }
+}
+.progress-bar-wrapper {
+  height: 5px;
+  width: 0;
+  display: none;
+
+  @media only screen and (min-width: 1102px) {
+    display: inline;
+    width: 100px;
+  }
+}
+.progress-bar-container {
+  height: 100%;
+  border-radius: 12px;
+}
+.progress-bar-fill {
+  height: 100%;
+  border-radius: inherit;
+}
+.progress-bar-number {
+  width: 100%;
+  text-align: center;
+
+  @media only screen and (min-width: 1102px) {
+    width: 10%;
+    padding-left: 8px;
+  }
+}

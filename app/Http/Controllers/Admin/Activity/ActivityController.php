@@ -16,9 +16,11 @@ use App\IATI\Services\Validator\ActivityValidatorResponseService;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -284,6 +286,8 @@ class ActivityController extends Controller
     }
 
     /**
+     * Returns paginated activities for vue component.
+     *
      * @param Request $request
      * @param int     $page
      *
@@ -293,6 +297,7 @@ class ActivityController extends Controller
     {
         try {
             $activities = $this->activityService->getPaginatedActivities($page, $this->sanitizeRequest($request));
+            $activities = $this->attachProgressPercentage($activities);
 
             return response()->json([
                 'success' => true,
@@ -390,5 +395,20 @@ class ActivityController extends Controller
             'transactionType' => getCodeList('TransactionType', 'Activity', false),
             'crsChannelCode' => getCodeList('CRSChannelCode', 'Activity', false),
         ];
+    }
+
+    /**
+     * Attaches progress percentage to each activity.
+     *
+     * @param Collection|LengthAwarePaginator $activities
+     * @return Collection|LengthAwarePaginator
+     */
+    protected function attachProgressPercentage(Collection|LengthAwarePaginator $activities): Collection|LengthAwarePaginator
+    {
+        foreach ($activities as $activity) {
+            $activity->progressPercentage = $this->activityService->activityPublishingProgress($activity);
+        }
+
+        return $activities;
     }
 }

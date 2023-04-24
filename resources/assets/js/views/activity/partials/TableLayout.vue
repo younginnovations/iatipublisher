@@ -6,6 +6,9 @@
           <th id="title" scope="col">
             <span>Activity Title</span>
           </th>
+          <th id="publishing-progress" scope="col" class="progress-bar-header">
+            <div class="w-50 ms-0">Publishing Progress</div>
+          </th>
           <th id="date" scope="col">
             <a
               class="text-n-50 transition duration-500 hover:text-spring-50"
@@ -69,6 +72,24 @@
                       : 'Untitled'
                   }}</span>
                 </div>
+              </div>
+            </div>
+          </td>
+
+          <td class="text-n-40">
+            <div class="progress-bar-parent">
+              <div class="progress-bar-wrapper">
+                <div class="progress-bar-container bg-spring-10">
+                  <div
+                    class="progress-bar-fill bg-spring-50"
+                    :style="{ width: datum['progressPercentage'] + '%' }"
+                  ></div>
+                </div>
+              </div>
+              <div class="progress-bar-number">
+                <span class="text-xs font-semibold text-spring-50"
+                  >{{ datum['progressPercentage'] }}%</span
+                >
               </div>
             </div>
           </td>
