@@ -439,7 +439,7 @@ export class DynamicField {
       policymaker_vocabulary.on('select2:clear', (e) => {
         const target = e.target as HTMLElement;
 
-        this.hidePolicyMakerField($(target), '1');
+        this.hidePolicyMakerField($(target), '');
       });
     }
   }
@@ -448,6 +448,7 @@ export class DynamicField {
    * Hides Policy Marker Form Fields
    */
   public hidePolicyMakerField(index: JQuery, value: string) {
+    console.log(value);
     const case1_show = 'select[id*="[policy_marker]"]',
       case2_show =
         'input[id*="[policy_marker_text]"],input[id*="[vocabulary_uri]"]',
@@ -697,7 +698,7 @@ export class DynamicField {
       region_vocabulary.on('select2:clear', (e) => {
         const target = e.target as HTMLElement;
 
-        this.hideRecipientRegionField($(target), '1');
+        this.hideRecipientRegionField($(target), '');
       });
     }
   }
@@ -819,7 +820,7 @@ export class DynamicField {
       tag_vocabulary.on('select2:clear', (e) => {
         const target = e.target as HTMLElement;
 
-        this.hideTagField($(target), '1');
+        this.hideTagField($(target), '');
       });
     }
   }

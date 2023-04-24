@@ -23,6 +23,11 @@ class ActivityController extends Controller
     private ActivityService $activityService;
 
     /**
+     * @var ElementCompleteService
+     */
+    private ElementCompleteService $elementCompleteService;
+
+    /**
      * @param ActivityService $activityService
      * @param ElementCompleteService $elementCompleteService
      */
@@ -48,7 +53,7 @@ class ActivityController extends Controller
             }
 
             if ($element === 'recipient_country' || $element === 'recipient_region') {
-                $this->activityService->refreshElementStatus($id);
+                $this->elementCompleteService->refreshElementStatus($this->activityService->getActivity($id));
             }
 
             $message = sprintf('The %s element deleted successfully.', str_replace('_', '-', $element));

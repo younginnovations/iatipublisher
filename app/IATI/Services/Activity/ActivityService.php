@@ -7,9 +7,7 @@ namespace App\IATI\Services\Activity;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
-use App\IATI\Services\ElementCompleteService;
 use Carbon\Carbon;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -663,45 +661,5 @@ class ActivityService
     public function getReportingOrg(): mixed
     {
         return app(OrganizationRepository::class)->getSpecifiedColumn(auth()->user()->organization->id, 'reporting_org');
-    }
-
-    /**
-     * Refresh element_status of activity.
-     *
-     * @param $id
-     *
-     * @return void
-     * @throws BindingResolutionException
-     */
-    public function refreshElementStatus($id): void
-    {
-        $skippables = [
-            'id',
-            'org_id',
-            'status',
-            'created_at',
-            'updated_at',
-            'created_by',
-            'updated_by',
-            'upload_medium',
-            'linked_to_iati',
-            'element_status',
-            'default_field_values',
-            'migrated_from_aidstream',
-        ];
-
-        $elementStatus = [];
-        $activity = $this->getActivity($id);
-        $attributes = $activity->getAttributes();
-        $elementCompleteService = app()->make(ElementCompleteService::class);
-
-        foreach ($attributes as $attribute => $value) {
-            if (!in_array($attribute, $skippables)) {
-                $elementStatus[$attribute] = call_user_func([$elementCompleteService, dashesToCamelCase('is_' . $attribute . '_element_completed')], $activity);
-            }
-        }
-
-        $activity->element_status = $elementStatus;
-        $activity->updateQuietly(['touch'=>false]);
     }
 }

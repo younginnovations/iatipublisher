@@ -56,12 +56,7 @@ class TransactionObserver
             $isSectorCompleteInTransactionLevel,
         ]) {
             case [0, 0, 1, 1]:
-            case [0, 1, 1, 1]:
-            case [1, 0, 1, 1]:
             case [1, 1, 0, 0]:
-            case [1, 1, 0, 1]:
-            case [1, 1, 1, 0]:
-            case [1, 1, 1, 1]:
                 $elementStatus['sector'] = true;
                 break;
             default:

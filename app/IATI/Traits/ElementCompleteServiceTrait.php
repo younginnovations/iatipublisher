@@ -143,7 +143,7 @@ trait ElementCompleteServiceTrait
 
         $keyExists = array_key_exists($mandatoryAttribute, $data);
 
-        return $keyExists && empty($data[$mandatoryAttribute]) && !$this->isZero($data[$mandatoryAttribute]);
+        return $keyExists && empty($data[$mandatoryAttribute]) && !($data[$mandatoryAttribute] === 0 || $data[$mandatoryAttribute] === '0');
     }
 
     /**
@@ -233,10 +233,6 @@ trait ElementCompleteServiceTrait
 
                 /*checks if parent attribute have specific value for child attribute to be relevant*/
                 if ($parentDataFromForm && !in_array($parentDataFromForm, $possibleValuesAllowedInParent, true)) {
-                    if ($this->brokenParentChildRelationShip($data, $schema, $mandatoryAttribute, $parentName, $mandatoryAttributes)) {
-                        return false;
-                    }
-
                     continue;
                 }
             }
@@ -537,16 +533,5 @@ trait ElementCompleteServiceTrait
         if ($key === 'amount') {
             $this->tempAmount = $datum;
         }
-    }
-
-    /**
-     * Checks if variable is zero.
-     *
-     * @param $variable
-     * @return bool
-     */
-    public function isZero($variable): bool
-    {
-        return $variable === 0 || $variable === '0';
     }
 }
