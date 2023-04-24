@@ -208,6 +208,7 @@ class AuditService
      * Returns auditable id.
      *
      * @param $event
+     *
      * @return ?int
      */
     public function getAuditableId($event): ?int
@@ -226,6 +227,7 @@ class AuditService
      * Sets auditable id.
      *
      * @param int $auditableId
+     *
      * @return $this
      */
     public function setAuditableId(int $auditableId): static
@@ -284,7 +286,8 @@ class AuditService
      * Recursively Encrypt an array.
      *
      * @param $item
-     * @return mixed|string
+     *
+     * @return mixed
      */
     private function recursivelyEncrypt($item): mixed
     {

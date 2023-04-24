@@ -38,6 +38,7 @@ trait MigrateOrganizationPublishedTrait
 
             if ($contents) {
                 $contents = $this->replaceDocumentLinkInXml($contents, $iatiOrganization->id);
+
                 if (awsUploadFile("$pathToIatiOrganizationFile/$iatiFilename", $contents)) {
                     $this->logInfo("Migrated organization file: {$aidstreamFilename} as file :{$iatiFilename}.");
                 } else {

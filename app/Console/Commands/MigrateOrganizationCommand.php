@@ -160,7 +160,6 @@ class MigrateOrganizationCommand extends Command
                         $this->error($message);
                         $timestamp = Carbon::now()->format('y-m-d-H-i-s');
                         awsUploadFile("Migration/Migration-errors-{$aidstreamOrganizationId}-{$timestamp}.json", json_encode($this->errors));
-//                        $this->trackMigrationErrors($this->errors);
                         $this->clearErrors();
                         throw new \RuntimeException(
                             $message
@@ -179,7 +178,6 @@ class MigrateOrganizationCommand extends Command
                         );
                         $timestamp = Carbon::now()->format('y-m-d-H-i-s');
                         awsUploadFile("Migration/Migration-errors-{$aidstreamOrganizationId}-{$timestamp}.json", json_encode($this->errors));
-//                        $this->trackMigrationErrors($this->errors);
                         $this->clearErrors();
                         throw new \RuntimeException(
                             $message
@@ -295,7 +293,6 @@ class MigrateOrganizationCommand extends Command
                     $this->updateOrganizationDocumentLinkUrl($aidStreamOrganization->id, $iatiOrganization);
                     $timestamp = Carbon::now()->format('y-m-d-H-i-s');
                     awsUploadFile("Migration/Migration-errors-{$aidStreamOrganization->id}-{$timestamp}.json", json_encode($this->errors));
-//                    $this->trackMigrationErrors($this->errors);
                     $this->clearErrors();
 
                     $this->publishFilesToRegistry(
@@ -381,6 +378,7 @@ class MigrateOrganizationCommand extends Command
 
         if (count($aidStreamDocument)) {
             $iatiDocuments = [];
+
             foreach ($aidStreamDocument as $aidDocument) {
                 $iatiDocuments[] = [
                     'activity_id'     => null,
@@ -530,6 +528,7 @@ class MigrateOrganizationCommand extends Command
     private function setDefaultValues($iatiElement, $aidStreamOrganizationSetting): void
     {
         $defaultFieldValues = $aidStreamOrganizationSetting->default_field_values;
+
         if ($defaultFieldValues) {
             $data = $iatiElement->toArray();
             $updatedIatiData = $this->populateDefaultFields($data, $defaultFieldValues);

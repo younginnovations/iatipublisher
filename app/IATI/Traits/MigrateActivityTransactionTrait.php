@@ -312,7 +312,7 @@ trait MigrateActivityTransactionTrait
                     '0.region_code_input',
                     null
                 )
-            ) ? Arr::get($recipientRegion, '0.custom_code', null) : Arr::get($recipientRegion, '0.region_code', null);
+            ) ? Arr::get($recipientRegion, '0.region_code', null) : Arr::get($recipientRegion, '0.custom_code', null);
 
             if ($vocabulary === '99') {
                 $newRecipientRegion[0]['vocabulary_uri'] = Arr::get(

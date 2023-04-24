@@ -35,7 +35,6 @@ class Document extends Model
      * @var array
      */
     protected $casts = [
-        'document_link' => 'json',
         'activities' => 'json',
     ];
 

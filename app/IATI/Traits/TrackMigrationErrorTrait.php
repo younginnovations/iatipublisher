@@ -225,6 +225,7 @@ trait TrackMigrationErrorTrait
 
             //Remove default worksheet.
             $defaultWorksheet = $spreadsheet->getSheetByName('Worksheet') ?? '';
+
             if ($defaultWorksheet) {
                 $sheetIndex = $spreadsheet->getIndex($defaultWorksheet);
                 $spreadsheet->removeSheetByIndex($sheetIndex);

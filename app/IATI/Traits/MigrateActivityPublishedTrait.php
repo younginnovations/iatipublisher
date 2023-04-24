@@ -58,6 +58,7 @@ trait MigrateActivityPublishedTrait
      * @param $migratedActivitiesLookupTable
      *
      * @return void
+     *
      * @throws PublishException
      */
     public function migrateActivitiesPublishedFiles(
@@ -88,6 +89,8 @@ trait MigrateActivityPublishedTrait
 
                     if (awsUploadFile($destinationPath, $contents)) {
                         $this->logInfo("Migrated file :{$aidstreamXmlName} as file :{$iatiXmlFileName}.");
+                    } else {
+                        $this->logInfo("Failed uploading file:{$aidstreamXmlName} to S3.");
                     }
                 } else {
                     $message = "No Activity file named: {$aidstreamXmlName} found in S3 for Aidstream Organization: {$aidStreamOrganization->name}";
@@ -201,9 +204,10 @@ trait MigrateActivityPublishedTrait
             foreach ($publishedActivities as $publishedActivity) {
                 if ($publishedActivity) {
                     $publishedActivity = json_decode($publishedActivity);
+
                     foreach ($publishedActivity as $xmlFileName) {
                         $explodedElements = explode('.', $xmlFileName);
-                        $basename = $explodedElements[0];
+                        $basename = Arr::get($explodedElements, 0, '');
                         $explodedBasename = explode('-', $basename);
                         $id = $explodedBasename[count($explodedBasename) - 1];
 

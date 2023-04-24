@@ -593,7 +593,7 @@ trait MigrateActivityTrait
                     $newOtherIdentifiers[$key]['owner_org'][$innerKey]['narrative'] = Arr::get(
                         $ownerOrg,
                         'narrative',
-                        null
+                        $this->emptyNarrativeTemplate
                     );
                 }
             }
@@ -756,9 +756,9 @@ trait MigrateActivityTrait
                 $newLocations[$key]['ref'] = $this->locationReferenceValue(Arr::get($locationArray, 'reference', null));
                 $newLocations[$key]['location_reach'] = Arr::get($locationArray, 'location_reach', null);
                 $newLocations[$key]['location_id'] = Arr::get($locationArray, 'location_id', null);
-                $newLocations[$key]['name'] = Arr::get($locationArray, 'name', null);
-                $newLocations[$key]['description'] = Arr::get($locationArray, 'location_description', null);
-                $newLocations[$key]['activity_description'] = Arr::get($locationArray, 'activity_description', null);
+                $newLocations[$key]['name'] = Arr::get($locationArray, 'name', $this->emptyNarrativeTemplate);
+                $newLocations[$key]['description'] = Arr::get($locationArray, 'location_description', $this->emptyNarrativeTemplate);
+                $newLocations[$key]['activity_description'] = Arr::get($locationArray, 'activity_description', $this->emptyNarrativeTemplate);
                 $newLocations[$key]['administrative'] = $this->getLocationAdministrativeData(
                     Arr::get($locationArray, 'administrative', null),
                     $aidstreamActivity,
@@ -925,7 +925,7 @@ trait MigrateActivityTrait
                 $newBudgetItems[$key] = [
                     'code'        => Arr::get($budgetItem, 'code_text', null),
                     'percentage'  => Arr::get($budgetItem, 'percentage', null),
-                    'description' => Arr::get($budgetItem, 'description', null),
+                    'description' => Arr::get($budgetItem, 'description', $this->emptyNarrativeTemplate),
                 ];
             } else {
                 $message = "Aidstream organization id: {$aidstreamOrganization->id} contains Code: '" . Arr::get($budgetItem, 'code_text', null) . "' in CodeList of activity id: {$aidstreamActivity->id}.";
@@ -1273,23 +1273,23 @@ trait MigrateActivityTrait
             '1' => [
                 'tag_vocabulary' => Arr::get($tag, 'vocabulary', '1'),
                 'tag_text'       => Arr::get($tag, 'tag_code', null),
-                'narrative'      => Arr::get($tag, 'narrative', null),
+                'narrative'      => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
             ],
             '2' => [
                 'tag_vocabulary' => Arr::get($tag, 'vocabulary', '2'),
                 'goals_tag_code' => Arr::get($tag, 'goals_tag_code', null),
-                'narrative'      => Arr::get($tag, 'narrative', null),
+                'narrative'      => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
             ],
             '3' => [
                 'tag_vocabulary'   => Arr::get($tag, 'vocabulary', '3'),
                 'targets_tag_code' => Arr::get($tag, 'targets_tag_code', null),
-                'narrative'        => Arr::get($tag, 'narrative', null),
+                'narrative'        => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
             ],
             '99' => [
                 'tag_vocabulary' => Arr::get($tag, 'vocabulary', '99'),
                 'tag_text'       => Arr::get($tag, 'tag_text', null),
                 'vocabulary_uri' => Arr::get($tag, 'vocabulary_uri', null),
-                'narrative'      => Arr::get($tag, 'narrative', null),
+                'narrative'      => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
             ],
             default => [
                 'tag_vocabulary' => null,

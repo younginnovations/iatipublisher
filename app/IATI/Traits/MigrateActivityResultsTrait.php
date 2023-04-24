@@ -316,6 +316,7 @@ trait MigrateActivityResultsTrait
                     $arr[$key] = $this->resolveJsonString($value);
                 } elseif (is_string($value)) {
                     $decoded = json_decode($value, true);
+
                     if (is_array($decoded)) {
                         $arr[$key] = $this->resolveJsonString($decoded);
                     } else {
