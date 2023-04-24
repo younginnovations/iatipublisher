@@ -6,6 +6,7 @@ namespace App\Console\Commands;
 
 use App\Exceptions\PublishException;
 use App\IATI\Elements\Xml\XmlGenerator;
+use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\User\RoleRepository;
 use App\IATI\Services\Activity\ActivityPublishedService;
 use App\IATI\Services\Activity\ActivityService;
@@ -22,6 +23,7 @@ use App\IATI\Services\OrganizationElementCompleteService;
 use App\IATI\Services\Publisher\PublisherService;
 use App\IATI\Services\Setting\SettingService;
 use App\IATI\Services\User\UserService;
+use App\IATI\Traits\FillDefaultValuesTrait;
 use App\IATI\Traits\MigrateActivityPublishedTrait;
 use App\IATI\Traits\MigrateActivityResultsTrait;
 use App\IATI\Traits\MigrateActivityTrait;
@@ -38,6 +40,7 @@ use App\IATI\Traits\TrackMigrationErrorTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -200,7 +203,7 @@ class MigrateOrganizationCommand extends Command
                             $this->getNewSetting($aidStreamOrganizationSetting, $iatiOrganization)
                         );
 
-                        $this->setDefaultValues($iatiOrganization, $aidStreamOrganizationSetting);
+                        $this->setDefaultValues($iatiOrganization, $aidStreamOrganizationSetting, false);
                         $this->updateOrganizationCompleteStatus($iatiOrganization);
                         $this->syncPublisherIdInSettingAndOrganizationLevel(
                             $iatiOrganization,
@@ -522,12 +525,18 @@ class MigrateOrganizationCommand extends Command
      *
      * @param $iatiElement
      * @param $aidStreamOrganizationSetting
-     *
+     * @param bool $activityLevel
      * @return void
+     * @throws BindingResolutionException
      */
-    private function setDefaultValues($iatiElement, $aidStreamOrganizationSetting): void
+    private function setDefaultValues($iatiElement, $aidStreamOrganizationSetting, $activityLevel = true): void
     {
         $defaultFieldValues = $aidStreamOrganizationSetting->default_field_values;
+
+        if($activityLevel){
+            $activityRepository = app()->make(ActivityRepository::class);
+            $defaultFieldValues = $activityRepository->resolveDefaultValues($iatiElement);
+        }
 
         if ($defaultFieldValues) {
             $data = $iatiElement->toArray();

@@ -172,7 +172,7 @@ trait FillDefaultValuesTrait
      *
      * @return array
      */
-    protected function resolveDefaultValues($data): array
+    public function resolveDefaultValues($data): array
     {
         $defaultValueTemplate = [
             'default_currency' => '',
@@ -187,7 +187,7 @@ trait FillDefaultValuesTrait
             ? ($defaultValueFromData[0] ?? $defaultValueFromData)
             : [];
 
-        $setting = auth()->user()->organization->settings ?? [];
+        $setting = auth()?->user()?->organization->settings ?? [];
         $defaultValuesFromSettings = [];
 
         if ($setting) {
