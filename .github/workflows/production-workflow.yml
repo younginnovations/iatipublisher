@@ -11,6 +11,32 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Cleanup
+        run: |
+          gh extension install actions/gh-actions-cache
+
+          REPO=${{ github.repository }}
+          BRANCH="refs/pull/${{ github.event.pull_request.number }}/merge"
+
+          echo "Fetching list of cache key"
+          cacheKeysForPR=$(gh actions-cache list -R $REPO -B $BRANCH | cut -f 1 )
+
+          ## Setting this to not fail the workflow while deleting cache keys.
+          set +e
+          echo "Deleting caches..."
+          for cacheKey in $cacheKeysForPR
+          do
+              gh actions-cache delete $cacheKey -R $REPO -B $BRANCH --confirm
+          done
+          echo "Done"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   cli_build_push:
     name: cli image build
@@ -57,8 +83,6 @@ jobs:
           cache-to: type=gha,mode=max
           build-args: |
             MIX_ENCRYPTION_KEY=${{ secrets.MIX_ENCRYPTION_KEY_PRODUCTION }}
-
-
 
   fpm_server_build_push:
     name: fpm_server image build
@@ -151,7 +175,6 @@ jobs:
           cache-to: type=gha,mode=max
           build-args: |
             MIX_ENCRYPTION_KEY=${{ secrets.MIX_ENCRYPTION_KEY_PRODUCTION }}
-
 
   cron_build_push:
     name: cron image build
@@ -251,7 +274,14 @@ jobs:
     environment:
       name: production
       url: https://publisher.iatistandard.org
-    needs: [cli_build_push, fpm_server_build_push, web_server_build_push, cron_build_push, horizon_build_push]
+    needs:
+      [
+        cli_build_push,
+        fpm_server_build_push,
+        web_server_build_push,
+        cron_build_push,
+        horizon_build_push,
+      ]
     permissions:
       contents: write
       packages: write
@@ -279,4 +309,4 @@ jobs:
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 bac71d66-3ef4-4e8f-919f-f6dedfccff40
 
       - name: Deploy to DigitalOcean Kubernetes
-        run:  kubectl apply -k packages/production
+        run: kubectl apply -k packages/production
