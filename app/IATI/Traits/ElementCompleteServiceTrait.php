@@ -171,40 +171,6 @@ trait ElementCompleteServiceTrait
     }
 
     /**
-     * Checks if PARENT field is broken when dealing with parents that have dependent child
-     * Example for broken case:
-     * User selects xyz_vocabulary >> selects proper code,
-     * THEN clears xyz_vocabulary from UI, still retaining code in the form,
-     * Proceeds to save. This is a broken case.
-     * (happens in some cases only).
-     *
-     * @param $data
-     * @param $schema
-     * @param $mandatoryAttribute
-     * @param $parentName
-     * @param $mandatoryAttributes
-     * @return bool
-     */
-    protected function brokenParentChildRelationShip($data, $schema, $mandatoryAttribute, $parentName, $mandatoryAttributes): bool
-    {
-        $defaultAttribute = Arr::get($schema, 'default_attribute', false);
-
-        if ($defaultAttribute && $mandatoryAttribute !== $defaultAttribute) {
-            foreach ($data as $key => $datum) {
-                if ($key === $mandatoryAttribute) {
-                    if (isset($data[$parentName]) && $data[$parentName] && isset($data[$mandatoryAttribute]) && $data[$mandatoryAttribute]) {
-                        return false;
-                    }
-
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Checks if Attribute data is completed.
      *
      * @param $mandatoryAttributes
