@@ -75,22 +75,22 @@ trait MigrateSettingTrait
             'isVerificationRequested' => true,
         ];
 
-        $this->logInfo('Started verifying publisher and token on IATI registry.');
-        $validateSettings = $this->verify($data);
-        unset($data['isVerificationRequested']);
-        $validatedData = $validateSettings->getData();
-
-        if ($validatedData->success === true) {
-            $data['publisher_verification'] = true;
-            $data['token_verification'] = true;
-            $this->logInfo('Finished verifying publisher and token on IATI registry.');
-
-            return $data;
-        }
-
-        $data['publisher_verification'] = !($validatedData->message === 'Error occurred while verify publisher' || $validatedData->message === 'API token incorrect. Please make sure that your publisher is approved in IATI Registry.');
-        $data['token_verification'] = false;
-        $this->logInfo('Publisher and token invalid on IATI registry.');
+//        $this->logInfo('Started verifying publisher and token on IATI registry.');
+//        $validateSettings = $this->verify($data);
+//        unset($data['isVerificationRequested']);
+//        $validatedData = $validateSettings->getData();
+//
+//        if ($validatedData->success === true) {
+//            $data['publisher_verification'] = true;
+//            $data['token_verification'] = true;
+//            $this->logInfo('Finished verifying publisher and token on IATI registry.');
+//
+//            return $data;
+//        }
+//
+//        $data['publisher_verification'] = !($validatedData->message === 'Error occurred while verify publisher' || $validatedData->message === 'API token incorrect. Please make sure that your publisher is approved in IATI Registry.');
+//        $data['token_verification'] = false;
+//        $this->logInfo('Publisher and token invalid on IATI registry.');
 
         return $data;
     }
