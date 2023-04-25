@@ -7,7 +7,9 @@ namespace App\IATI\Services\Activity;
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ActivityRepository;
+use App\IATI\Repositories\Document\DocumentRepository;
 use App\IATI\Traits\XmlBaseElement;
+use Auth;
 use Illuminate\Support\Arr;
 use Kris\LaravelFormBuilder\Form;
 
@@ -29,14 +31,20 @@ class DocumentLinkService
     protected ParentCollectionFormCreator $parentCollectionFormCreator;
 
     /**
+     * @var DocumentRepository
+     */
+    protected DocumentRepository $documentRepository;
+
+    /**
      * DocumentLinkService constructor.
      *
      * @param ActivityRepository          $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      */
-    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
+    public function __construct(ActivityRepository $activityRepository, DocumentRepository $documentRepository, ParentCollectionFormCreator $parentCollectionFormCreator)
     {
         $this->activityRepository = $activityRepository;
+        $this->documentRepository = $documentRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
     }
 
@@ -73,9 +81,35 @@ class DocumentLinkService
      * @return bool
      * @throws \JsonException
      */
-    public function update($id, $documentLink): bool
+    public function update($id, $documentLinks): bool
     {
-        return $this->activityRepository->update($id, ['document_link' => $this->sanitizeDocumentLinkData($documentLink)]);
+        $organizationId = Auth::user()->organization->id;
+
+        foreach ($documentLinks['document_link'] as $index => $documentLink) {
+            $document = Arr::get($documentLink, 'document', null);
+
+            if ($document) {
+                $extension = pathinfo($document->getClientOriginalName(), PATHINFO_EXTENSION);
+                $fileName = basename($document->getClientOriginalName(), ".$extension") . time() . '.' . $extension;
+
+                $documentData['activity_id'] = null;
+                $documentData['activities'] = [(int) $id];
+                $documentData['organization_id'] = $organizationId;
+                $documentData['filename'] = $fileName;
+                $documentData['extension'] = $extension;
+                $documentData['document_link'] = $documentLink;
+
+                awsUploadFile("/document-link/$organizationId/" . $fileName, $document->get());
+                $this->documentRepository->store($documentData);
+
+                $documentLink['url'] = awsUrl("/document-link/$organizationId/" . $fileName);
+            }
+
+            unset($documentLink['document']);
+            $documentLinks['document_link'][$index] = $documentLink;
+        }
+
+        return $this->activityRepository->update($id, ['document_link' => $this->sanitizeDocumentLinkData($documentLinks)]);
     }
 
     /**
@@ -90,20 +124,16 @@ class DocumentLinkService
     {
         $element = getElementSchema('document_link');
         $activity = $this->getActivityData($id);
-        $model['document_link'] = $this->getDocumentLinkData($id) ?: [];
-        $documentLinks = $activity->documentLinks()->orderBy('updated_at', 'desc')->get()->toArray();
+        $documentLinks = $activity->document_link;
 
-        foreach ($model['document_link'] as $key => $document) {
-            foreach ($documentLinks as $findIndex => $file) {
-                unset($document['document']);
-                $document_link = json_decode($file['document_link'], true, 512, JSON_THROW_ON_ERROR);
-                unset($document_link['document']);
-
-                if (json_encode($document, JSON_THROW_ON_ERROR) === json_encode($document_link, JSON_THROW_ON_ERROR)) {
-                    $model['document_link'][$key]['document'] = '';
-                }
+        if ($documentLinks) {
+            foreach ($documentLinks as $index => $documentLink) {
+                unset($documentLink['document']);
+                $documentLinks[$index] = $documentLink;
             }
         }
+
+        $model['document_link'] = $documentLinks;
 
         $this->parentCollectionFormCreator->url = route('admin.activity.document-link.update', [$id]);
 
@@ -142,18 +172,18 @@ class DocumentLinkService
 
                 $activityData[] = [
                     '@attributes' => [
-                        'url'    => Arr::get($documentLink, 'url', null),
+                        'url' => Arr::get($documentLink, 'url', null),
                         'format' => Arr::get($documentLink, 'format', null),
                     ],
-                    'title'       => [
+                    'title' => [
                         'narrative' => $this->buildNarrative(Arr::get($documentLink, 'title.0.narrative', [])),
                     ],
                     'description' => [
                         'narrative' => $this->buildNarrative(Arr::get($documentLink, 'description.0.narrative', [])),
                     ],
-                    'category'    => $categories,
+                    'category' => $categories,
 
-                    'language'      => $languages,
+                    'language' => $languages,
                     'document-date' => [
                         '@attributes' => [
                             'iso-date' => Arr::get($documentLink, 'document_date.0.date', null),

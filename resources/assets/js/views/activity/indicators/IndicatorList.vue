@@ -39,7 +39,7 @@
         <tbody v-if="indicatorsData.data && indicatorsData.data.length > 0">
           <tr v-for="(indicator, t, index) in indicatorsData.data" :key="index">
             <td
-              class="cursor-pointer"
+              class="indicator-title-list cursor-pointer"
               @click="
                 handleNavigate(
                   `/result/${indicator.result_id}/indicator/${indicator.id}`

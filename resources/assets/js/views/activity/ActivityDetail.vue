@@ -615,17 +615,19 @@ export default defineComponent({
      * Finding current language - activity title
      */
     let pageTitle = '';
-    const found = activityProps.title.find((e: { language: string }) => {
-      const currentLanguage =
-        activityProps.default_field_values?.default_language;
-      return e.language === currentLanguage;
-    });
+    const found = activityProps.title
+      ? activityProps.title.find((e: { language: string }) => {
+          const currentLanguage =
+            activityProps.default_field_values?.default_language;
+          return e.language === currentLanguage;
+        })
+      : false;
 
     // callback if language not available in data
     if (found) {
       pageTitle = found.narrative;
     } else {
-      pageTitle = activityProps.title[0].narrative;
+      pageTitle = activityProps?.title?.[0]?.narrative ?? '';
     }
 
     function formatTitle(title: string) {

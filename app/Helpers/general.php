@@ -731,7 +731,7 @@ if (!function_exists('getNonArrayElements')) {
      */
     function getNonArrayElements(): array
     {
-        return ['activity_status', 'activity_scope', 'default_flow_type', 'default_finance_type', 'default_tied_status', 'capital_spend', 'collaboration_type', 'identifier', 'org_id', 'default_field_values', 'updated_at', 'created_at', 'id', 'iati_identifier', 'element_status'];
+        return ['activity_status', 'activity_scope', 'default_flow_type', 'default_finance_type', 'default_tied_status', 'capital_spend', 'collaboration_type', 'identifier', 'org_id', 'default_field_values', 'updated_at', 'created_at', 'id', 'iati_identifier', 'element_status', 'updated_by'];
     }
 }
 
@@ -1262,5 +1262,25 @@ if (!function_exists('compareStringIgnoringWhitespace')) {
     function compareStringIgnoringWhitespace(string $string1, string $string2): bool
     {
         return preg_replace('/\s+/', '', $string1) === preg_replace('/\s+/', '', $string2);
+    }
+}
+
+if (!function_exists('getFileNameExtension')) {
+    /**
+     * Get extension from filename.
+     *
+     * @param $fileName
+     *
+     * @return string|null
+     */
+    function getFileNameExtension($fileName): ?string
+    {
+        if (empty($fileName)) {
+            return null;
+        }
+
+        $explodedFileName = explode('.', $fileName);
+
+        return $explodedFileName[1] ?? null;
     }
 }

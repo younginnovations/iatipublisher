@@ -43,12 +43,15 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
         'address',
         'organization_id',
         'is_active',
-        'is_email_verified',
+        'email_verified_at',
         'password',
         'role_id',
         'status',
         'language_preference',
         'registration',
+        'migrated_from_aidstream',
+        'created_at',
+        'updated_at',
     ];
 
     /**

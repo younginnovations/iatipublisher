@@ -32,15 +32,18 @@ class Result extends Model implements Auditable
     = [
         'activity_id',
         'result',
+        'migrated_from_aidstream',
+        'created_at',
+        'updated_at',
     ];
 
     /**
      * @var array
      */
     protected $casts
-    = [
-        'result' => 'json',
-    ];
+        = [
+            'result' => 'json',
+        ];
 
     protected $touches = ['activity'];
 
@@ -69,7 +72,7 @@ class Result extends Model implements Auditable
      *
      * @return string|null
      */
-    public function getDefaultTitleNarrativeAttribute(): string | null
+    public function getDefaultTitleNarrativeAttribute(): string|null
     {
         $result = $this->result;
         $titles = $result['title'];
@@ -80,7 +83,12 @@ class Result extends Model implements Auditable
                     $narratives = $title['narrative'];
 
                     foreach ($narratives as $narrative) {
-                        if (array_key_exists('language', $narrative) && !empty($narrative['language']) && $narrative['language'] === getDefaultLanguage($this->activity->default_field_values)) {
+                        if (array_key_exists(
+                            'language',
+                            $narrative
+                        ) && !empty($narrative['language']) && $narrative['language'] === getDefaultLanguage(
+                            $this->activity->default_field_values
+                        )) {
                             return $narrative['narrative'];
                         }
                     }

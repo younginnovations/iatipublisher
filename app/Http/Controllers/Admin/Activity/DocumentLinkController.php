@@ -7,7 +7,6 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\DocumentLink\DocumentLinkRequest;
 use App\IATI\Services\Activity\DocumentLinkService;
-use App\IATI\Services\Document\DocumentService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Http\JsonResponse;
@@ -25,11 +24,6 @@ class DocumentLinkController extends Controller
     protected DocumentLinkService $documentLinkService;
 
     /**
-     * @var DocumentService
-     */
-    protected DocumentService $documentService;
-
-    /**
      * @var DatabaseManager
      */
     protected DatabaseManager $db;
@@ -38,16 +32,13 @@ class DocumentLinkController extends Controller
      * DocumentLinkControllerConstructor.
      *
      * @param DocumentLinkService $documentLinkService
-     * @param DocumentService     $documentService
      * @param DatabaseManager     $db
      */
     public function __construct(
         DocumentLinkService $documentLinkService,
-        DocumentService $documentService,
         DatabaseManager $db
     ) {
         $this->documentLinkService = $documentLinkService;
-        $this->documentService = $documentService;
         $this->db = $db;
     }
 
@@ -89,8 +80,6 @@ class DocumentLinkController extends Controller
             $this->db->beginTransaction();
             $documentLink = $request->except(['_token', '_method']);
             $this->documentLinkService->update($id, $documentLink);
-            $this->documentService->update($documentLink, $this->documentLinkService->getActivityData($id));
-
             $this->db->commit();
 
             return redirect()->route('admin.activity.show', $id)->with('success', 'Document-link updated successfully.');

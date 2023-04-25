@@ -140,4 +140,16 @@ class ResultRepository extends Repository
 
         return false;
     }
+
+    /**
+     * Inserts multiple results.
+     *
+     * @param $results
+     *
+     * @return bool
+     */
+    public function insert($results): bool
+    {
+        return $this->model->insert($results);
+    }
 }

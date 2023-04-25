@@ -30,6 +30,8 @@ class OrganizationPublished extends Model
       'publish_status',
       'filename',
       'published_to_registry',
+      'created_at',
+      'updated_at',
     ];
 
     /**

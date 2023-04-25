@@ -69,6 +69,12 @@ class Activity extends Model implements Auditable
         'element_status',
         'reporting_org',
         'upload_medium',
+        'created_by',
+        'updated_by',
+        'linked_to_iati',
+        'migrated_from_aidstream',
+        'created_at',
+        'updated_at',
     ];
 
     /**

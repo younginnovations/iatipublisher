@@ -33,12 +33,14 @@ class TransactionObserver
      * Updates the transactions complete status.
      *
      * @param $transaction
+     * @param  bool  $changeUpdatedAt
      *
      * @return void
-     * @throws \JsonException
+     *
      * @throws BindingResolutionException
+     * @throws \JsonException
      */
-    public function updateActivityElementStatus($transaction): void
+    public function updateActivityElementStatus($transaction, bool $changeUpdatedAt = true): void
     {
         $activityObj = $transaction->activity;
         $elementStatus = $activityObj->element_status;
@@ -70,6 +72,11 @@ class TransactionObserver
         }
 
         $activityObj->element_status = $elementStatus;
+
+        if (!$changeUpdatedAt) {
+            $activityObj->timestamps = false;
+        }
+
         $activityObj->saveQuietly();
     }
 
@@ -83,8 +90,14 @@ class TransactionObserver
      */
     public function created(Transaction $transaction): void
     {
-        $this->updateActivityElementStatus($transaction);
-        $this->resetActivityStatus($transaction);
+        $changeUpdatedAt = !$transaction->migrated_from_aidstream;
+
+        $this->setTransactionDefaultValues($transaction, $changeUpdatedAt);
+        $this->updateActivityElementStatus($transaction, $changeUpdatedAt);
+
+        if ($changeUpdatedAt) {
+            $this->resetActivityStatus($transaction);
+        }
     }
 
     /**
@@ -99,6 +112,7 @@ class TransactionObserver
     {
         $this->updateActivityElementStatus($transaction);
         $this->resetActivityStatus($transaction);
+        $this->setTransactionDefaultValues($transaction);
     }
 
     /**
@@ -113,6 +127,24 @@ class TransactionObserver
         $activityObject = $transaction->activity;
         $activityObject->status = 'draft';
         $activityObject->saveQuietly();
+    }
+
+    /**
+     * Sets default values for language and currency for transaction.
+     *
+     * @param $transaction
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function setTransactionDefaultValues($transaction, bool $changeUpdatedAt = true): void
+    {
+        if (!$changeUpdatedAt) {
+            $transaction->timestamps = false;
+        }
+
+        $transaction->saveQuietly();
     }
 
     /**

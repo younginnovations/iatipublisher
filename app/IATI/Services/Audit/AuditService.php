@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Audit;
 
+use App\IATI\Models\Organization\Organization;
+use App\IATI\Models\User\User;
 use App\IATI\Repositories\Audit\AuditRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +20,11 @@ class AuditService
      * @var AuditRepository
      */
     protected AuditRepository $auditRepository;
+
+    /**
+     * @var ?int
+     */
+    protected ?int $auditableId = null;
 
     /**
      * AuditService constructor.
@@ -52,13 +59,13 @@ class AuditService
      *
      * @return array
      */
-    public function populateColumn(object|array|string|null $auditables, string $event): array
+    public function populateColumn(mixed $auditables, string $event): array
     {
         $row = [];
         $row['user_type'] = $this->getUserType();
-        $row['user_id'] = $this->getUserId();
+        $row['user_id'] = $this->getUserId($event);
         $row['auditable_type'] = $event === 'signin' ? 'App\\IATI\\Models\\User\\User' : $this->getAuditableType($auditables);
-        $row['auditable_id'] = $event === 'signin' ? auth()->user()->id : null;
+        $row['auditable_id'] = $this->getAuditableId($event);
         $row['event'] = $event;
         $row['url'] = request()->getUri();
         $row['ip_address'] = request()->getClientIp();
@@ -102,11 +109,17 @@ class AuditService
     /**
      * Return user_id.
      * example: 2, 3, 4...
+     * 1 in-case of migration event.
      *
+     * @param string $event
      * @return int|string
      */
-    public function getUserId(): int | string
+    public function getUserId(string $event = ''): int | string
     {
+        if ($event && str_contains($event, 'migrated')) {
+            return 1;
+        }
+
         return Auth::id();
     }
 
@@ -189,5 +202,103 @@ class AuditService
         }
 
         return json_encode($auditables);
+    }
+
+    /**
+     * Returns auditable id.
+     *
+     * @param $event
+     *
+     * @return ?int
+     */
+    public function getAuditableId($event): ?int
+    {
+        switch ($event) {
+            case 'signin':
+                return $this->getUserId();
+            case str_contains($event, 'migrated'):
+                return  $this->auditableId;
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Sets auditable id.
+     *
+     * @param int $auditableId
+     *
+     * @return $this
+     */
+    public function setAuditableId(int $auditableId): static
+    {
+        $this->auditableId = $auditableId;
+
+        return $this;
+    }
+
+    /**
+     * Audit migration event.
+     *
+     * @param $element
+     * @param $event
+     *
+     * @return AuditService
+     */
+    public function auditMigrationEvent($element, $event): static
+    {
+        $row = [];
+        $row['user_type'] = $this->getUserType();
+        $row['user_id'] = $this->getUserId($event);
+        $row['auditable_type'] = get_class($element);
+        $row['auditable_id'] = $this->getAuditableId($event);
+        $row['event'] = $event;
+        $row['url'] = request()->getUri();
+        $row['ip_address'] = request()->getClientIp();
+        $row['user_agent'] = request()->userAgent();
+        $row['created_at'] = now();
+        $row['updated_at'] = now();
+        $row['new_values'] = $this->encryptAuditableItemIfUserOrOrganization($element->toArray(), $row['auditable_type']);
+
+        $this->auditRepository->insertRows($row);
+
+        return  $this;
+    }
+
+    /**
+     * Returns plain text auditableItem or encrypted if auditableItem is User or Org.
+     *
+     * @param array $auditableItem
+     * @param string $auditableType
+     *
+     * @return string|bool
+     */
+    public function encryptAuditableItemIfUserOrOrganization(array $auditableItem, string $auditableType): string|bool
+    {
+        if ($auditableType === get_class(new User) || $auditableType === get_class(new Organization)) {
+            $auditableItem = $this->recursivelyEncrypt($auditableItem);
+        }
+
+        return json_encode($auditableItem);
+    }
+
+    /**
+     * Recursively Encrypt an array.
+     *
+     * @param $item
+     *
+     * @return mixed
+     */
+    private function recursivelyEncrypt($item): mixed
+    {
+        if (is_array($item)) {
+            foreach ($item as $key => $value) {
+                $item[$key] = $this->recursivelyEncrypt($value);
+            }
+        } elseif (is_string($item)) {
+            $item = Crypt::encryptString($item);
+        }
+
+        return $item;
     }
 }

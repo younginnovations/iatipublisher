@@ -81,7 +81,11 @@ class OrganizationObserver
     public function created(Organization $organization): void
     {
         $this->setElementStatus($organization, true);
-        $this->resetOrganizationStatus($organization);
+
+        if (!$organization->migrated_from_aidstream) {
+            $this->resetOrganizationStatus($organization);
+        }
+
         $organization->saveQuietly();
     }
 
@@ -106,7 +110,11 @@ class OrganizationObserver
 
         $this->setElementStatus($organization);
         $this->resetOrganizationStatus($organization);
-        $organization->updated_by = Auth::user()->id;
+
+        if (auth()->check()) {
+            $organization->updated_by = Auth::user()->id;
+        }
+
         $organization->saveQuietly();
     }
 

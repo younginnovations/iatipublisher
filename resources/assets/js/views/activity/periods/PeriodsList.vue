@@ -39,7 +39,7 @@
           >
             <td>
               <a
-                class="text-sm font-bold leading-relaxed text-n-50"
+                class="period-list text-sm font-bold leading-relaxed text-n-50"
                 :href="`${periodLink}/${pe.id}`"
               >
                 {{

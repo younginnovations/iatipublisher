@@ -7,7 +7,7 @@
             <span>Activity Title</span>
           </th>
           <th id="publishing-progress" scope="col" class="progress-bar-header">
-            <div class="w-50 ms-0">Publishing Progress</div>
+            <div class="">Publishing Progress</div>
           </th>
           <th id="date" scope="col">
             <a

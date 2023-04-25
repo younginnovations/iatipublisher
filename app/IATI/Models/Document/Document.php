@@ -22,10 +22,20 @@ class Document extends Model
      */
     protected $fillable = [
         'activity_id',
+        'activities',
         'filename',
         'extension',
-        'document_link',
         'size',
+        'organization_id',
+        'created_at',
+        'updated_at',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'activities' => 'json',
     ];
 
     /**

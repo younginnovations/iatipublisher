@@ -77,11 +77,18 @@ class ActivityObserver
     public function created(Activity $activity): void
     {
         $this->setElementStatus($activity, true);
-        $this->resetActivityStatus($activity);
+
+        if (!$activity->migrated_from_aidstream) {
+            $this->resetActivityStatus($activity);
+        }
 
         if (Auth::check()) {
             $activity->created_by = Auth::user()->id;
             $activity->updated_by = Auth::user()->id;
+        }
+
+        if ($activity->migrated_from_aidstream) {
+            $activity->timestamps = false;
         }
 
         $activity->saveQuietly();

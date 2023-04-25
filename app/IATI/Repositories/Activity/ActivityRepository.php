@@ -217,7 +217,7 @@ class ActivityRepository extends Repository
         ];
 
         if ($activity_id) {
-            return $this->update($activity_id, $data);
+            return $this->update($activity_id, $data, true);
         }
 
         return $this->store($data);
@@ -359,7 +359,7 @@ class ActivityRepository extends Repository
             'reporting_org' => $this->getActivityElement($activityData, 'reporting_organization'),
         ];
 
-        return $this->update($id, $activity);
+        return $this->update($id, $activity, true);
     }
 
     /**

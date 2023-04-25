@@ -164,4 +164,16 @@ class OrganizationRepository extends Repository
 
         return $this->model->find($id)->update($data);
     }
+
+    /**
+     * Returns organization by publisher id.
+     *
+     * @param $publisherId
+     *
+     * @return object|null
+     */
+    public function getOrganizationByPublisherId($publisherId): ?object
+    {
+        return $this->model->where('publisher_id', $publisherId)->first();
+    }
 }

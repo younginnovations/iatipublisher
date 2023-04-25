@@ -57,7 +57,7 @@ class ActivityDefaultService
             $activity = $this->activityRepository->find($activityId);
             $elementStatus = $activity->element_status;
             $elementStatus['budget'] = true;
-            $defaultFieldValues['element_status'] = $elementStatus['element_status'];
+            $defaultFieldValues['element_status'] = $elementStatus;
         }
 
         return $this->activityRepository->update($activityId, $defaultFieldValues);

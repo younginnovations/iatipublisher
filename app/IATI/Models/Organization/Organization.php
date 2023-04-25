@@ -7,6 +7,7 @@ namespace App\IATI\Models\Organization;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Models\Activity\ActivityPublished;
 use App\IATI\Models\Setting\Setting;
+use App\IATI\Models\User\Role;
 use App\IATI\Models\User\User;
 use App\IATI\Services\ElementCompleteService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -55,6 +56,11 @@ class Organization extends Model implements Auditable
         'organisation_identifier',
         'name',
         'element_status',
+        'org_status',
+        'updated_by',
+        'migrated_from_aidstream',
+        'created_at',
+        'updated_at',
     ];
 
     /**
@@ -176,5 +182,27 @@ class Organization extends Model implements Auditable
         }
 
         return $data;
+    }
+
+    /**
+     * Returns the admin user of the organization.
+     *
+     * @return object
+     */
+    public function getAdminUser(): object
+    {
+        $adminId = app(Role::class)->getOrganizationAdminId();
+
+        return $this->users()->where('role_id', $adminId)->first();
+    }
+
+    /**
+     * Organization has many users.
+     *
+     * @return HasMany
+     */
+    public function users(): HasMany
+    {
+        return $this->hasMany(User::class, 'organization_id', 'id');
     }
 }

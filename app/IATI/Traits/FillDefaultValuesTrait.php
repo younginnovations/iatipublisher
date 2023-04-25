@@ -40,7 +40,7 @@ trait FillDefaultValuesTrait
      *
      * @return array
      */
-    public function populateDefaultFields(&$data, $defaultValues):array
+    public function populateDefaultFields(&$data, $defaultValues): array
     {
         foreach ($data as $key => &$datum) {
             if (is_array($datum)) {
@@ -145,16 +145,22 @@ trait FillDefaultValuesTrait
      *
      * @param $id
      * @param $data
+     * @param $refillDefaultValues
      *
      * @inheritDoc
      *
      * @return bool
      */
-    public function update($id, $data): bool
+    public function update($id, $data, $refillDefaultValues = false): bool
     {
-        $defaultFieldValues = $this->resolveDefaultValues($data);
+        $defaultFieldValues = $this->model->find($id)->default_field_values;
+
+        if ($refillDefaultValues) {
+            $defaultFieldValues = $this->resolveDefaultValues($data);
+            $data['default_field_values'] = $defaultFieldValues;
+        }
+
         $data = $this->populateDefaultFields($data, $defaultFieldValues);
-        $data['default_field_values'] = $defaultFieldValues;
 
         return $this->model->find($id)->update($data);
     }
@@ -166,14 +172,14 @@ trait FillDefaultValuesTrait
      *
      * @return array
      */
-    protected function resolveDefaultValues($data): array
+    public function resolveDefaultValues($data): array
     {
         $defaultValueTemplate = [
-            'default_currency'    => '',
-            'default_language'    => '',
-            'hierarchy'           => '',
+            'default_currency' => '',
+            'default_language' => '',
+            'hierarchy' => '',
             'budget_not_provided' => '',
-            'humanitarian'        => '',
+            'humanitarian' => '',
         ];
         $defaultValueFromData = Arr::get($data, 'default_field_values', []);
 
@@ -181,7 +187,7 @@ trait FillDefaultValuesTrait
             ? ($defaultValueFromData[0] ?? $defaultValueFromData)
             : [];
 
-        $setting = auth()->user()->organization->settings ?? [];
+        $setting = auth()?->user()?->organization->settings ?? [];
         $defaultValuesFromSettings = [];
 
         if ($setting) {

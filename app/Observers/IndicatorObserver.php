@@ -35,9 +35,15 @@ class IndicatorObserver
      */
     public function created(Indicator $indicator): void
     {
+        $changeUpdatedAt = !$indicator->migrated_from_aidstream;
+
         $resultObserver = new ResultObserver();
-        $resultObserver->updateActivityElementStatus($indicator->result);
-        $resultObserver->resetActivityStatus($indicator->result);
+        $this->setIndicatorDefaultValues($indicator, $changeUpdatedAt);
+        $resultObserver->updateActivityElementStatus($indicator->result, $changeUpdatedAt);
+
+        if ($changeUpdatedAt) {
+            $resultObserver->resetActivityStatus($indicator->result);
+        }
     }
 
     /**
@@ -51,7 +57,29 @@ class IndicatorObserver
     public function updated(Indicator $indicator): void
     {
         $resultObserver = new ResultObserver();
+
+        $this->setIndicatorDefaultValues($indicator);
         $resultObserver->updateActivityElementStatus($indicator->result);
         $resultObserver->resetActivityStatus($indicator->result);
+    }
+
+    /**
+     * Sets default values for language and currency for indicator.
+     *
+     * @param $indicator
+     * @param  bool  $changeUpdatedAt
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function setIndicatorDefaultValues($indicator, bool $changeUpdatedAt = true): void
+    {
+        if (!$changeUpdatedAt) {
+            $indicator->timestamps = false;
+            $indicator->saveQuietly(['touch'=>false]);
+        } else {
+            $indicator->saveQuietly();
+        }
     }
 }
