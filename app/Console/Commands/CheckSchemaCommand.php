@@ -371,42 +371,42 @@ class CheckSchemaCommand extends Command
         }
     }
 
-        /**
-         * Checks aid stream result document link data schema.
-         *
-         * @param $aidStreamBaseResultData
-         * @param $organizationId
-         *
-         * @return void
-         *
-         * @throws \JsonException
-         */
-        public function checkResultDocumentLinkDataSchema($aidStreamBaseResultData, $organizationId): void
-        {
-            $this->spreadSheet->createSheet();
-            $this->spreadSheet->setActiveSheetIndex(4);
-            $this->spreadSheet->getActiveSheet()->setTitle('result_document_links');
-            $aidStreamResultDocumentLinkDataTemplate = readJsonFile('DataMigration/Templates/AidStreamResultDocumentLinkSchema.json');
-            $this->db::connection('aidstream')
-                ->table('result_document_links')
-                ->whereIn('result_id', $aidStreamBaseResultData->pluck('id')->toArray())
-                ->orderBy('id')
-                ->chunk(50, function ($aidStreamResultDocumentLinkData) use ($aidStreamResultDocumentLinkDataTemplate) {
-                    foreach ($aidStreamResultDocumentLinkData as $documentLinkData) {
-                        $documentLinkData->organization_id = 1;
+    /**
+     * Checks aid stream result document link data schema.
+     *
+     * @param $aidStreamBaseResultData
+     * @param $organizationId
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function checkResultDocumentLinkDataSchema($aidStreamBaseResultData, $organizationId): void
+    {
+        $this->spreadSheet->createSheet();
+        $this->spreadSheet->setActiveSheetIndex(4);
+        $this->spreadSheet->getActiveSheet()->setTitle('result_document_links');
+        $aidStreamResultDocumentLinkDataTemplate = readJsonFile('DataMigration/Templates/AidStreamResultDocumentLinkSchema.json');
+        $this->db::connection('aidstream')
+            ->table('result_document_links')
+            ->whereIn('result_id', $aidStreamBaseResultData->pluck('id')->toArray())
+            ->orderBy('id')
+            ->chunk(50, function ($aidStreamResultDocumentLinkData) use ($aidStreamResultDocumentLinkDataTemplate) {
+                foreach ($aidStreamResultDocumentLinkData as $documentLinkData) {
+                    $documentLinkData->organization_id = 1;
 
-                        foreach ($documentLinkData as $documentKey => $documentData) {
-                            if (empty($documentData) || $documentData === 'null' || $documentData === '""' || !in_array($documentKey, $this->resultDocumentLinkDataSchema, true)) {
-                                continue;
-                            }
-
-                            $elementDataTemplate = Arr::get($aidStreamResultDocumentLinkDataTemplate, $documentKey);
-                            $itemData = ['tableName' => 'result_document_link', 'columnName' => $documentKey, 'rows' => $documentLinkData];
-                            $this->checkObjectKey($documentKey, $documentData, $elementDataTemplate, $itemData);
+                    foreach ($documentLinkData as $documentKey => $documentData) {
+                        if (empty($documentData) || $documentData === 'null' || $documentData === '""' || !in_array($documentKey, $this->resultDocumentLinkDataSchema, true)) {
+                            continue;
                         }
+
+                        $elementDataTemplate = Arr::get($aidStreamResultDocumentLinkDataTemplate, $documentKey);
+                        $itemData = ['tableName' => 'result_document_link', 'columnName' => $documentKey, 'rows' => $documentLinkData];
+                        $this->checkObjectKey($documentKey, $documentData, $elementDataTemplate, $itemData);
                     }
-                });
-        }
+                }
+            });
+    }
 
     /**
      * Checks aid stream activity transaction data schema.
