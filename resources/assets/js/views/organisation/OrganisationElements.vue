@@ -70,6 +70,7 @@
     <div class="elements__listing grid grid-cols-2 gap-2">
       <a
         v-for="(post, index) in filteredElements"
+        :id="'sidebar-' + index.toString()"
         :key="String(index)"
         class="elements__item relative flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-n-40 px-[3px] py-2.5 text-n-30"
         :href="
@@ -77,7 +78,6 @@
             ? '#' + index
             : '/organisation/' + index
         "
-        :id="'sidebar-' + index.toString()"
       >
         <div class="status_icons absolute top-0 right-0 mt-1 mr-1 inline-flex">
           <svg-vue
