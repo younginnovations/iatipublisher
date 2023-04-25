@@ -6,7 +6,6 @@ namespace App\Console\Commands;
 
 use App\Exceptions\PublishException;
 use App\IATI\Elements\Xml\XmlGenerator;
-use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\User\RoleRepository;
 use App\IATI\Services\Activity\ActivityPublishedService;
 use App\IATI\Services\Activity\ActivityService;
@@ -531,8 +530,8 @@ class MigrateOrganizationCommand extends Command
         $defaultFieldValues = $aidStreamOrganizationSetting->default_field_values;
 
         if ($activityLevel) {
-            $activityRepository = app()->make(ActivityRepository::class);
-            $defaultFieldValues = $activityRepository->resolveDefaultValues($iatiElement);
+            $defaultFieldValues = $iatiElement->default_field_values ? [$iatiElement->default_field_values]: $defaultFieldValues;
+            $defaultFieldValues = json_encode($defaultFieldValues);
         }
 
         if ($defaultFieldValues) {
