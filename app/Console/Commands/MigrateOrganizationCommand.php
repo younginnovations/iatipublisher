@@ -530,7 +530,7 @@ class MigrateOrganizationCommand extends Command
         $defaultFieldValues = $aidStreamOrganizationSetting->default_field_values;
 
         if ($activityLevel) {
-            $defaultFieldValues = $iatiElement->default_field_values ? [$iatiElement->default_field_values]: $defaultFieldValues;
+            $defaultFieldValues = $iatiElement->default_field_values ? [$iatiElement->default_field_values] : $defaultFieldValues;
             $defaultFieldValues = json_encode($defaultFieldValues);
         }
 
@@ -611,6 +611,40 @@ class MigrateOrganizationCommand extends Command
                         if (Arr::get($setting->publishing_info, 'token_verification', false)) {
                             $settings = $iatiOrganization->settings;
                             $publishingInfo = $settings ? $settings->publishing_info : [];
+
+                            $this->logInfo('Searching to un-publish AidStream organization file.');
+                            $aidstreamOrganizationPublished = $this->db::connection('aidstream')->table('organization_published')->where(
+                                'organization_id',
+                                $aidStreamOrganization->id
+                            )->first();
+
+                            if ($aidstreamOrganizationPublished) {
+                                $this->logInfo("Starting to un-publish AidStream organization file {$aidstreamOrganizationPublished->filename}.");
+
+                                try {
+                                    $this->publisherService->unPublishOrganizationFile(
+                                        $publishingInfo,
+                                        $aidstreamOrganizationPublished,
+                                        false
+                                    );
+
+                                    $this->logInfo('AidStream organization file un-published.');
+                                } catch (Exception $exception) {
+                                    $message = "Organization file: {$aidstreamOrganizationPublished->filename} not published with error: {$exception->getMessage()}.";
+                                    $this->setGeneralError($message)->setDetailedError(
+                                        $message,
+                                        $aidStreamOrganization->id,
+                                        'organization_published',
+                                        $organizationPublished->id,
+                                    );
+                                    $this->logInfo($message);
+
+                                    throw new PublishException($iatiOrganization->id, $message);
+                                }
+                            } else {
+                                $this->logInfo('No AidStream organization published data to un-publish.');
+                            }
+
                             $this->logInfo("Publishing organization file: {$organizationPublished->filename}.");
 
                             try {
