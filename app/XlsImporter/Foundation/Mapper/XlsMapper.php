@@ -38,7 +38,7 @@ class XlsMapper
      * @return $this
      * @throws BindingResolutionException
      */
-    public function process(array $xlsData, string $xlsType, $userId, $orgId, $orgRef, $dbIatiIdentifiers): static
+    public function process(array $xlsData, string $xlsType, $userId, $orgId, $reportingOrg, $dbIatiIdentifiers): static
     {
         $xlsMapperTypes = [
             'activity' => Activity::class,
@@ -47,8 +47,6 @@ class XlsMapper
             'indicator' => Indicator::class,
         ];
         $mapper = $xlsMapperTypes[$xlsType];
-        logger()->error($xlsType);
-        logger()->error($mapper);
 
         $xls_data_storage_path = 'XlsImporter/tmp';
         $validatedDataFilePath = sprintf('%s/%s/%s/%s', $xls_data_storage_path, $orgId, $userId, 'valid.json');
@@ -58,7 +56,7 @@ class XlsMapper
         $xlsMapper->initMapper($validatedDataFilePath, $statusFilePath, $dbIatiIdentifiers);
 
         if ($xlsType === 'activity') {
-            $xlsMapper->fillOrganizationReportingOrg($orgRef);
+            $xlsMapper->fillOrganizationReportingOrg($reportingOrg);
         }
 
         $xlsMapper->map($xlsData)->validateAndStoreData();

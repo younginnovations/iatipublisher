@@ -5,8 +5,8 @@
     "reporting_org": {
         "type": "Organization/OrganizationType.json",
         "secondary_reporter": {
-            "1": "True",
-            "0": "False"
+            "1": true,
+            "0": false
         },
         "narrative language": "Activity/Language.json"
     },
@@ -81,8 +81,8 @@
     },
     "conditions": {
         "condition_attached": {
-            "0": "False",
-            "1": "True"
+            "0": false,
+            "1": true
         },
         "condition condition_type": "Activity/ConditionType.json",
         "condition narrative language": "Activity/Language.json"
@@ -137,8 +137,8 @@
     "result": {
         "type": "Activity/ResultType.json",
         "aggregation_status": {
-            "0": "False",
-            "1": "True"
+            "0": false,
+            "1": true
         },
         "title narrative language": "Activity/Language.json",
         "description narrative language": "Activity/Language.json",
@@ -154,12 +154,12 @@
     "indicator": {
         "measure": "Activity/IndicatorMeasure.json",
         "ascending": {
-            "0": "False",
-            "1": "True"
+            "0": false,
+            "1": true
           },
         "aggregation_status": {
-            "0": "False",
-            "1": "True"
+            "0": false,
+            "1": true
           },
         "title narrative language": "Activity/Language.json",
         "description narrative language": "Activity/Language.json",
@@ -170,7 +170,7 @@
         "title narrative language": "Activity/Language.json",
         "description narrative language": "Activity/Language.json",
         "category code": "Activity/DocumentCategory.json",
-        "language code": "Activity/Language.json"
+        "language language": "Activity/Language.json"
     },
     "baseline": {
         "comment narrative language": "Activity/Language.json"
@@ -180,7 +180,7 @@
         "title narrative language": "Activity/Language.json",
         "description narrative language": "Activity/Language.json",
         "category code": "Activity/DocumentCategory.json",
-        "language code": "Activity/Language.json"
+        "language language": "Activity/Language.json"
     },
     "period": {},
     "target": {
@@ -205,8 +205,8 @@
     },
     "transactions": {
         "humanitarian": {
-            "0": "False",
-            "1": "True"
+            "0": false,
+            "1": true
         },
         "transaction_type transaction_type_code": "Activity/TransactionType.json",
         "value currency": "Activity/Currency.json",
@@ -236,7 +236,13 @@
         "aid_type cash_and_voucher_modalities": "Activity/CashandVoucherModalities.json",
         "tied_status tied_status_code": "Activity/TiedStatus.json"
     },
-    "default_currency": "Activity/Currency.json",
-    "default_language": "Activity/Language.json",
-    "budget_not_provided": "Activity/BudgetNotProvided.json"
+    "default_field_values" : {
+        "default_currency": "Activity/Currency.json",
+        "default_language": "Activity/Language.json",
+        "humanitarian": {
+            "0":false,
+            "1":true
+        },
+        "budget_not_provided": "Activity/BudgetNotProvided.json"
+}
 }

@@ -1,0 +1,54 @@
+{
+  "activity": {
+    "Instructions": "required",
+    "Settings": "required",
+    "Options": "required",
+    "Title": "optional",
+    "Description": "optional",
+    "Activity Date": "optional",
+    "Recipient Country": "optional",
+    "Recipient Region": "optional",
+    "Condition": "optional",
+    "Contact Info": "optional",
+    "Planned Disbursement": "optional",
+    "Participating Org": "optional",
+    "Budget": "optional",
+    "Legacy Data": "optional",
+    "Humanitarian Scope": "optional",
+    "Related Activity": "optional",
+    "Other Identifier": "optional",
+    "Sector": "optional",
+    "Country Budget Items": "optional",
+    "Location": "optional",
+    "Transaction": "optional"
+  },
+  "result": {
+    "Instructions": "required",
+    "Result Mapper": "required",
+    "Result": "required",
+    "Result Document Link": "required",
+    "Options": "required"
+  },
+  "indicator": {
+    "Instructions": "required",
+    "Indicator Mapper": "required",
+    "Indicator Baseline Mapper": "required",
+    "Indicator": "required",
+    "Indicator Document Link": "required",
+    "Indicator Baseline": "required",
+    "Baseline Document Link": "required",
+    "Options": "required"
+  },
+  "period": {
+    "Instructions": "required",
+    "Period Mapper": "required",
+    "Target Mapper": "required",
+    "Actual Mapper": "required",
+    "Period": "required",
+    "Target": "required",
+    "Target Document Link": "required",
+    "Actual": "required",
+    "Actual Document Link": "required",
+    "Options": "required"
+  }
+}

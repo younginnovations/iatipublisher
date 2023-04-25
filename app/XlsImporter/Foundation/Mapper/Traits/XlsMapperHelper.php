@@ -74,7 +74,11 @@ trait XlsMapperHelper
         }
 
         if (is_array($location)) {
-            return Arr::get($location, $value, $value);
+            if (is_bool($value)) {
+                return (int) $value;
+            }
+
+            return Arr::get(array_flip($location), $value, $value);
         }
 
         $locationArr = explode('/', $location);
@@ -164,8 +168,6 @@ trait XlsMapperHelper
             'processed_count' => $this->processedCount,
         ]);
 
-        dump('processing');
-
         awsUploadFile($this->validatedDataFilePath, $content);
         awsUploadFile($this->statusFilePath, $status);
     }
@@ -196,7 +198,7 @@ trait XlsMapperHelper
             foreach ($errorData as $element => $error) {
                 foreach ($error as $key => $err) {
                     if (isset($excelColumnAndRowName[$key])) {
-                        $errors[$errorLevel][$element][$key] .= " ( $excelColumnAndRowName[$key] )";
+                        $errors[$errorLevel][$element][$key] = 'Error detected on ' . $excelColumnAndRowName[$key]['sheet'] . ' sheet, cell ' . $excelColumnAndRowName[$key]['cell'] . ':' . $errors[$errorLevel][$element][$key];
                     }
                 }
             }

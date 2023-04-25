@@ -16,7 +16,7 @@ class ImportXls extends Job
     /**
      * @var
      */
-    protected $orgRef;
+    protected $reportingOrg;
     /**
      * @var
      */
@@ -36,23 +36,35 @@ class ImportXls extends Job
     protected $xlsType;
 
     /**
+     * @var string
+     */
+    private string $xls_file_storage_path;
+
+    /**
+     * @var string
+     */
+    private string $xls_data_storage_path;
+
+    /**
      * ImportXls constructor.
      *
      * @param $organizationId
-     * @param $orgRef
+     * @param $reportingOrg
      * @param $userId
      * @param $filename
      * @param $iatiIdentifiers
      * @param $xlsType
      */
-    public function __construct($organizationId, $orgRef, $userId, $filename, $iatiIdentifiers, $xlsType)
+    public function __construct($organizationId, $reportingOrg, $userId, $filename, $iatiIdentifiers, $xlsType)
     {
         $this->organizationId = $organizationId;
-        $this->orgRef = $orgRef;
+        $this->reportingOrg = $reportingOrg;
         $this->filename = $filename;
         $this->userId = $userId;
         $this->iatiIdentifiers = $iatiIdentifiers;
         $this->xlsType = $xlsType;
+        $this->xls_file_storage_path = env('XLS_FILE_STORAGE_PATH ', 'XlsImporter/file');
+        $this->xls_data_storage_path = env('XLS_DATA_STORAGE_PATH ', 'XlsImporter/tmp');
     }
 
     /**
@@ -62,13 +74,12 @@ class ImportXls extends Job
     {
         try {
             $xlsImportQueue = app()->make(XlsQueueProcessor::class);
-            $xlsImportQueue->import($this->filename, $this->organizationId, $this->orgRef, $this->userId, $this->iatiIdentifiers, $this->xlsType);
+            $xlsImportQueue->import($this->filename, $this->organizationId, $this->reportingOrg, $this->userId, $this->iatiIdentifiers, $this->xlsType);
 
             $this->delete();
         } catch (\Exception $e) {
-            logger()->error($e);
             awsUploadFile('error.log', $e->getMessage());
-            awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $orgId, $userId, 'status.json'), json_encode(['success' => false, 'message' => 'Error has occurred while importing the file.'], JSON_THROW_ON_ERROR));
+            awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->organizationId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => 'Error has occurred while importing the file.'], JSON_THROW_ON_ERROR));
             $this->delete();
         }
     }

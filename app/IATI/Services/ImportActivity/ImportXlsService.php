@@ -135,43 +135,16 @@ class ImportXlsService
      * @return bool
      * @throws \JsonException
      */
-    public function create($activities, $xlsType): bool
+    public function create($activities, $xlsType = 'activity'): bool
     {
-        if ($xlsType === 'activitites') {
-            foreach ($activities as $value) {
-                $activity = unsetErrorFields($contents[$value]);
-                $activityData = Arr::get($activity, 'data', []);
-                $organizationId = Auth::user()->organization->id;
-
-                if (Arr::get($activity, 'existence', false) || $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'))) {
-                    $oldActivity = $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'));
-
-                    $this->activityRepository->update($oldActivity->id, $activityData);
-                    $this->transactionRepository->deleteTransaction($oldActivity->id);
-                    $this->resultRepository->deleteResult($oldActivity->id);
-                    $this->saveTransactions(Arr::get($activityData, 'transactions'), $oldActivity->id);
-                    $this->saveResults(Arr::get($activityData, 'result'), $oldActivity->id);
-
-                    if (!empty($activity['errors'])) {
-                        $this->importActivityErrorRepo->updateOrCreateError($oldActivity->id, $activity['errors']);
-                    } else {
-                        $this->importActivityErrorRepo->deleteImportError($oldActivity->id);
-                    }
-                } else {
-                    $activityData['org_id'] = $organizationId;
-                    $storeActivity = $this->activityRepository->store($activityData);
-
-                    $this->saveTransactions(Arr::get($activityData, 'transactions'), $storeActivity->id);
-                    $this->saveResults(Arr::get($activityData, 'result'), $storeActivity->id);
-
-                    if (!empty($activity['errors'])) {
-                        $this->importActivityErrorRepo->updateOrCreateError($storeActivity->id, $activity['errors']);
-                    }
-                }
-            }
+        if ($xlsType === 'activity') {
+            $this->saveActivities($activities);
         } elseif ($xlsType === 'result') {
+            $this->saveResults($activities);
         } elseif ($xlsType === 'indicator') {
+            $this->saveIndicator($activities);
         } elseif ($xlsType === 'period') {
+            $this->savePeriod($activities);
         }
 
         return true;
@@ -211,11 +184,10 @@ class ImportXlsService
      *
      * @return $this
      */
-    protected function saveActivities($activities): static
+    protected function saveActivities($activities): void
     {
         $organizationId = Auth::user()->organization->id;
         $userId = Auth::user()->id;
-        $identifiers = $this->dbIatiIdentifiers($organizationId, 'activity');
         $contents = json_decode(awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $organizationId, $userId, 'valid.json')), false, 512, 0);
 
         foreach ($activities as $value) {
@@ -244,19 +216,16 @@ class ImportXlsService
                 }
             }
         }
-
-        return $this;
     }
 
     /**
      * Save result of mapped activity in database.
      *
      * @param $results
-     * @param $activityId
      *
-     * @return $this
+     * @return bool
      */
-    protected function saveResults($results): static
+    protected function saveResults($results): bool
     {
         $organizationId = Auth::user()->organization->id;
         $userId = Auth::user()->id;
@@ -271,22 +240,21 @@ class ImportXlsService
             $parentIdentifier = Arr::get($activity, 'parentIdentifier', false);
 
             if ($existenceId) {
-                $this->resultRepository->update($existenceId, ['result' => $resultData]);
+                $this->resultRepository->update($existenceId, ['result_code' => 'code', 'result' => $resultData]);
             } else {
-                $this->resultRepository->store(['result' => $resultData, 'activity_id' => $identifiers[$parentIdentifier]]);
+                $this->resultRepository->store(['result' => $resultData, 'result_code' => 'code', 'activity_id' => $identifiers[$parentIdentifier]]);
             }
         }
 
-        return $this;
+        return true;
     }
 
     /**
      * Save indicator of mapped activity in database.
      *
      * @param $results
-     * @param $activityId
      *
-     * @return $this
+     * @return void
      */
     protected function saveIndicator($indicators): void
     {
@@ -305,8 +273,8 @@ class ImportXlsService
             if ($existenceId) {
                 $this->indicatorRepository->update($existenceId, ['indicator' => $indicatorData]);
             } else {
-                // dd($identifiers, $parentIdentifier);
-                $this->indicatorRepository->store(['indicator' => $indicatorData, 'result_id' => $identifiers[$parentIdentifier]]);
+                // dd($identifiers);
+                $this->indicatorRepository->store(['indicator' => $indicatorData, 'result_id' => $identifiers['result'][$parentIdentifier]]);
             }
         }
     }
@@ -335,7 +303,7 @@ class ImportXlsService
             if ($existenceId) {
                 $this->periodRepository->update($existenceId, ['period' => $periodData]);
             } else {
-                $this->periodRepository->store(['period' => $periodData, 'indicator_id' => $identifiers[$parentIdentifier]]);
+                $this->periodRepository->store(['period' => $periodData, 'indicator_id' => $identifiers['indicator'][$parentIdentifier]]);
             }
         }
     }
@@ -372,9 +340,9 @@ class ImportXlsService
     protected function fireXmlUploadEvent($filename, $userId, $organizationId, $xlsType): void
     {
         $iatiIdentifiers = $this->dbIatiIdentifiers($organizationId, $xlsType);
-        $orgRef = Auth::user()->organization->identifier;
+        $reporting_org = Auth::user()->organization->reporting_org;
 
-        Event::dispatch(new XlsWasUploaded($filename, $userId, $organizationId, $orgRef, $iatiIdentifiers, $xlsType));
+        Event::dispatch(new XlsWasUploaded($filename, $userId, $organizationId, $reporting_org, $iatiIdentifiers, $xlsType));
     }
 
     /**
@@ -394,13 +362,16 @@ class ImportXlsService
                 $identifier = $this->getActivityIdentifier($org_id, $type);
                 break;
             case 'result':
-                $identifier = $this->getResultIdentifier($org_id, $type);
+                $identifier['parent'] = $this->getActivityIdentifier($org_id, $type);
+                $identifier['result'] = $this->getResultIdentifier($org_id, $type);
                 break;
             case 'indicator':
-                $identifier = $this->getIndicatorIdentifier($org_id, $type);
+                $identifier['parent'] = $this->getResultIdentifier($org_id, $type);
+                $identifier['indicator'] = $this->getIndicatorIdentifier($org_id, $type);
                 break;
             case 'period':
-                $identifier = $this->getPeriodIdentifier($org_id, $type);
+                $identifier['parent'] = $this->getIndicatorIdentifier($org_id, $type);
+                $identifier['period'] = $this->getPeriodIdentifier($org_id, $type);
                 break;
         }
 

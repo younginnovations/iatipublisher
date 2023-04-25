@@ -49,7 +49,7 @@ class XlsToArray implements ToArray, WithHeadingRow, WithEvents, WithCalculatedF
 
     public function map($row): array
     {
-        // $row = $this->formatDates($row);
+        $row = $this->formatDates($row);
 
         return $row;
     }
@@ -62,13 +62,18 @@ class XlsToArray implements ToArray, WithHeadingRow, WithEvents, WithCalculatedF
             if (in_array($key, $dateElements)) {
                 if (is_string($value) && !str_contains($value, "'")) {
                     $array = explode(' ', $value);
+                    $timestamp = dateStrToTime($array[0]);
 
-                    if ((date('m/d/Y', strtotime($array[0])) === $array[0]) || (date('Y-m-d', strtotime($array[0])) === $array[0])) {
-                        $value = 25569 + (strtotime($value) / 86400);
+                    if ($timestamp) {
+                        if ((date('m/d/Y', dateStrToTime($array[0])) === $array[0]) || (date('Y-m-d', dateStrToTime($array[0])) === $array[0])) {
+                            $value = 25569 + (strtotime($value) / 86400);
+                        }
+                    } else {
+                        continue;
                     }
                 }
 
-                $row[$key] = $value ? Date::excelToDateTimeObject($value)->format('Y-m-d') : null;
+                $row[$key] = $value && !is_string($value) ? Date::excelToDateTimeObject($value)->format('Y-m-d') : null;
             }
         }
 

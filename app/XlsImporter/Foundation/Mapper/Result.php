@@ -49,6 +49,7 @@ class Result
     protected string $validatedDataFilePath = '';
 
     protected array $existingIdentifier = [];
+    protected array $duplicateIdentifiers = [];
 
     /**
      * Division of indicator data based on sheet names.
@@ -77,7 +78,21 @@ class Result
         $this->existingIdentifier = $existingIdentifier;
     }
 
-    public function map($resultData)
+    public function getResultData(): array
+    {
+        $resultTestData = [];
+        $errors = [];
+
+        foreach ($this->results as $activityIdentifier => $results) {
+            foreach ($results as $resultIdentifier => $resultData) {
+                $resultTestData[$resultIdentifier] = $resultData['results'];
+            }
+        }
+
+        return $resultTestData;
+    }
+
+    public function map($resultData): static
     {
         foreach ($resultData as $sheetName => $content) {
             $this->sheetName = $sheetName;
@@ -121,6 +136,7 @@ class Result
     {
         $errors = [];
         $resultValidator = app(ResultValidator::class);
+        $this->totalCount = count($this->identifiers);
 
         foreach ($this->results as $activityIdentifier => $results) {
             foreach ($results as $resultIdentifier => $resultData) {
@@ -129,11 +145,22 @@ class Result
                     ->validateData();
                 $excelColumnAndRowName = isset($this->columnTracker[$activityIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
                 $columnAppendedError = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
-                $existingId = Arr::get($this->existingIdentifier, sprintf('%s_%s', $activityIdentifier, $resultIdentifier), false);
+                $existingId = Arr::get($this->existingIdentifier['result'], sprintf('%s_%s', $activityIdentifier, $resultIdentifier), false);
+
+                if (!in_array($activityIdentifier, array_keys($this->existingIdentifier['parent']))) {
+                    $columnAppendedError['critical']['activity_identifier']['activity_identifier'] = "The activity identifier doesn't exist in the system";
+                }
+
+                if (in_array($resultIdentifier, $this->duplicateIdentifiers)) {
+                    $columnAppendedError['critical']['result_identifier']['result_identifier'] = 'The result identifier has been duplicated';
+                }
+
                 $this->processedCount++;
                 $this->storeValidatedData($resultData['results'], $columnAppendedError, $existingId, $activityIdentifier);
             }
         }
+
+        $this->updateStatus();
     }
 
     public function columnToFieldMapper($element, $data = [])
@@ -165,10 +192,8 @@ class Result
 
                 $systemMappedRow = [];
 
-                foreach ($row as $fieldName => $fieldValue) {
-                    if (!empty($fieldName) && $fieldName !== $elementIdentifier) {
-                        $systemMappedRow[$elementMapper[$fieldName]] = $fieldValue;
-                    }
+                foreach ($elementMapper as $xlsColumnName => $systemName) {
+                    $systemMappedRow[$systemName] = $row[$xlsColumnName];
                 }
 
                 $elementData[] = $systemMappedRow;
@@ -201,6 +226,7 @@ class Result
             foreach ($row as $fieldName => $fieldValue) {
                 if ($elementBase && ($fieldName === $elementBase && ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)))) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
+                    $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
                 }
 
                 if (in_array($fieldName, array_keys($fieldDependency))) {
@@ -219,9 +245,10 @@ class Result
                 $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
                 $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
 
-                if (!Arr::get($elementData, $elementPositionBasedOnParent, null)) {
+                if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null))) {
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
-                    $this->tempColumnTracker[$elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
+                    $this->tempColumnTracker[$elementPositionBasedOnParent]['sheet'] = $this->sheetName;
+                    $this->tempColumnTracker[$elementPositionBasedOnParent]['cell'] = Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
                 }
             }
             $this->rowCount++;
@@ -246,6 +273,7 @@ class Result
         $activityIdentifier = Arr::get($this->identifiers, "$identifier", null);
 
         $this->results[$activityIdentifier][$identifier]['results'] = $data;
+        $this->totalCount++;
         $this->columnTracker[$activityIdentifier][$identifier]['results'] = $this->tempColumnTracker;
     }
 

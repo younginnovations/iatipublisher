@@ -25,7 +25,7 @@ Route::group(['middleware' => ['can:crud_activity']], static function () {
 
     Route::get('/import/xls', [ImportXlsController::class, 'index'])->name('import.xls.index');
     Route::post('/import/xls', [ImportXlsController::class, 'store'])->name('import.xls');
-    Route::post('/import/xls/activity', [ImportXlsController::class, 'importValidatedActivities'])->name('import.activity.xls');
+    Route::get('/import/xls/activity', [ImportXlsController::class, 'importValidatedActivities'])->name('import.activity.xls');
     Route::get('/import/xls/progress_status', [ImportXlsController::class, 'checkImportInProgress'])->name('import.xls.progress_status');
     Route::get('/import/xls/status', [ImportXlsController::class, 'checkStatus'])->name('import.xls.status');
     Route::get('/import/xls/list', [ImportXlsController::class, 'show'])->name('import.xls.list');

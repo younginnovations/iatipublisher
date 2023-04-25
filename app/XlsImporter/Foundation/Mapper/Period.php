@@ -38,6 +38,7 @@ class Period
     protected string $validatedDataFilePath = '';
 
     protected array $existingIdentifier = [];
+    protected array $duplicateIdentifier = [];
 
     protected int $totalCount = 0;
     protected int $processedCount = 0;
@@ -113,24 +114,41 @@ class Period
         return $this;
     }
 
-    public function validateAndStoreData()
+    public function getPeriodData(): array
     {
-        $periodValidator = app(PeriodValidator::class);
-        logger()->error('startt validatinggg');
-        logger()->error(json_encode($this->periods));
+        $periodTestData = [];
 
         foreach ($this->periods as $indicatorIdentifier => $periods) {
             foreach ($periods as $periodIdentifier => $periodData) {
-                logger()->error('fetchedddd period');
+                $periodTestData[$periodIdentifier] = $periodData['period'];
+            }
+        }
+
+        return $periodTestData;
+    }
+
+    public function validateAndStoreData()
+    {
+        $periodValidator = app(PeriodValidator::class);
+
+        foreach ($this->periods as $indicatorIdentifier => $periods) {
+            foreach ($periods as $periodIdentifier => $periodData) {
                 $errors = $periodValidator
                     ->init($periodData['period'])
                     ->validateData();
                 $columnAppendedError = $this->appendExcelColumnAndRowDetail($errors, $this->columnTracker[$indicatorIdentifier][$periodIdentifier]['period']);
-                $existingId = Arr::get($this->existingIdentifier, sprintf('%s_%s', $indicatorIdentifier, $periodIdentifier), false);
+                $existingId = Arr::get($this->existingIdentifier['period'], sprintf('%s_%s', $indicatorIdentifier, $periodIdentifier), false);
+
+                if (!in_array($indicatorIdentifier, array_keys($this->existingIdentifier['parent']))) {
+                    $columnAppendedError['critical']['indicator_identifier'][] = 'The indicator identifier doesn\'t exist in the system';
+                }
+
                 $this->processedCount++;
                 $this->storeValidatedData($periodData['period'], $columnAppendedError, $existingId, $indicatorIdentifier);
             }
         }
+
+        $this->updateStatus();
     }
 
     public function mapPeriods($data, $sheetName)
@@ -186,15 +204,12 @@ class Period
 
                 $systemMappedRow = [];
 
-                foreach ($row as $fieldName => $fieldValue) {
-                    if (!empty($fieldName) && $fieldName !== $elementIdentifier) {
-                        $systemMappedRow[$elementMapper[$fieldName]] = $fieldValue;
-                    }
+                foreach ($elementMapper as $xlsColumnName => $systemName) {
+                    $systemMappedRow[$systemName] = $row[$xlsColumnName];
                 }
 
                 $elementData[] = $systemMappedRow;
             } else {
-                // $this->pushPeriodData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
                 break;
             }
 
@@ -236,10 +251,9 @@ class Period
 
         foreach ($data as $row) {
             foreach ($row as $fieldName => $fieldValue) {
-                if ($elementBase && ($fieldName === $elementBase && $fieldValue)) {
+                if ($elementBase && $fieldName === $elementBase && ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row) || ($this->checkIfPeerAttributesAreNotEmpty(array_keys($row), $row) && is_null($baseCount)))) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
-                } elseif ($elementBase && $fieldName === $elementBase && $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)) {
-                    $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
+                    $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
                 }
 
                 if (in_array($fieldName, array_keys($fieldDependency))) {
@@ -260,9 +274,10 @@ class Period
                 $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
                 $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
 
-                if (!Arr::get($elementData, $elementPositionBasedOnParent, null)) {
+                if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null))) {
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
-                    $this->tempColumnTracker[$elementPositionBasedOnParent] = $this->sheetName . '!' . Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
+                    $this->tempColumnTracker[$elementPositionBasedOnParent]['sheet'] = $this->sheetName;
+                    $this->tempColumnTracker[$elementPositionBasedOnParent]['cell'] = Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
                 }
             }
             $this->rowCount++;

@@ -111,7 +111,7 @@
     "activity_identifier": "A",
     "relationship_type": "C"
   },
-  "Other Identifier": {
+  "Other_identifier": {
     "reference": "B",
     "reference_type": "C",
     "owner_org ref": "D",
@@ -205,6 +205,11 @@
     "reference code": "I",
     "reference vocabulary_uri": "J"
   },
+  "Result Mapper" : {
+    "activity_identifier": "A",
+    "result_number": "B",
+    "result_identifier": "C"
+  },
   "Result Document Link": {
     "document_link url": "B",
     "document_link format": "C",
@@ -226,6 +231,16 @@
     "description narrative language": "H",
     "reference vocabulary": "I",
     "reference code": "J"
+  },
+  "Indicator Mapper" : {
+    "result_identifier": "A",
+    "indicator_number": "B",
+    "indicator_identifier": "C"
+  },
+  "Indicator Baseline Mapper" : {
+    "indicator_identifier": "A",
+    "baseline_number": "B",
+    "baseline_identifier": "C"
   },
   "Indicator Document Link": {
     "url": "B",
@@ -254,6 +269,21 @@
     "category code": "H",
     "language code": "I",
     "document_date date": "J"
+  },
+  "Period Mapper" : {
+    "indicator_identifier": "A",
+    "period_number": "B",
+    "period_identifier": "C"
+  },
+  "Target Mapper" : {
+    "period_identifier": "A",
+    "target_number": "B",
+    "target_identifier": "C"
+  },
+  "Actual Mapper" : {
+    "period_identifier": "A",
+    "actual_number": "B",
+    "actual_identifier": "C"
   },
   "Period": {
     "period_start date" : "B",
