@@ -23,7 +23,6 @@ use App\IATI\Services\OrganizationElementCompleteService;
 use App\IATI\Services\Publisher\PublisherService;
 use App\IATI\Services\Setting\SettingService;
 use App\IATI\Services\User\UserService;
-use App\IATI\Traits\FillDefaultValuesTrait;
 use App\IATI\Traits\MigrateActivityPublishedTrait;
 use App\IATI\Traits\MigrateActivityResultsTrait;
 use App\IATI\Traits\MigrateActivityTrait;
@@ -294,8 +293,6 @@ class MigrateOrganizationCommand extends Command
                         $iatiOrganization
                     );
                     $this->updateOrganizationDocumentLinkUrl($aidStreamOrganization->id, $iatiOrganization);
-                    $timestamp = Carbon::now()->format('y-m-d-H-i-s');
-                    awsUploadFile("Migration/Migration-errors-{$aidStreamOrganization->id}-{$timestamp}.json", json_encode($this->errors));
                     $this->clearErrors();
 
                     $this->publishFilesToRegistry(
@@ -533,7 +530,7 @@ class MigrateOrganizationCommand extends Command
     {
         $defaultFieldValues = $aidStreamOrganizationSetting->default_field_values;
 
-        if($activityLevel){
+        if ($activityLevel) {
             $activityRepository = app()->make(ActivityRepository::class);
             $defaultFieldValues = $activityRepository->resolveDefaultValues($iatiElement);
         }
