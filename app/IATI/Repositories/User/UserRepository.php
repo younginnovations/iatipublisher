@@ -81,6 +81,39 @@ class UserRepository extends Repository
     }
 
     /**
+     * Returns paginated User count of organizations.
+     *
+     * @param $page
+     * @param $queryParam
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getUserCountByOrganization($page, $queryParam):LengthAwarePaginator
+    {
+        $query = $this->model::query()
+            ->join('organizations', 'organizations.id', '=', 'users.organization_id')
+            ->selectRaw('organizations.id as organization_id,
+                organizations.publisher_name,
+                count(Case when users.role_id = 3 and users.organization_id = organizations.id then 1 end) as admin_user_count,
+                count(Case when users.role_id = 4 and users.organization_id = organizations.id then 1 end) as general_user_count,
+                count(Case when users.status = true and users.organization_id = organizations.id then 1 end) as active_user_count,
+                count(Case when users.status = false and users.organization_id = organizations.id then 1 end) as deactivated_user_count,
+                count(organizations.id) as total_user_count')
+            ->groupBy('organizations.id', 'organizations.publisher_name');
+
+        $direction = Arr::get($queryParam, 'direction', 'asc');
+        $orderBy = Arr::get($queryParam, 'order_by', 'name');
+
+        if ($orderBy === 'name') {
+            $query->orderBy('organizations.publisher_name', $direction);
+        } else {
+            $query->orderBy($orderBy, $direction);
+        }
+
+        return $query->paginate(10, ['*'], 'user', $page);
+    }
+
+    /**
      * Download csv with user data.
      *
      * @param $queryParams
@@ -145,5 +178,31 @@ class UserRepository extends Repository
         }
 
         return $query->whereNull('deleted_at')->orderBy($orderBy, $direction)->orderBy('users.id', $direction);
+    }
+
+    /**
+     * Returns user count for user dashboard.
+     *
+     * @return Collection
+     */
+    public function getUserCounts(): Collection
+    {
+        $query = User::query()
+            ->selectRaw('role_id, status, COUNT(*) as count')
+            ->groupBy(['role_id', 'status']);
+
+        return $query->get();
+    }
+
+    /**
+     * Returns count of users registered today.
+     *
+     * @param $countOnly
+     *
+     * @return mixed
+     */
+    public function getUsersCreatedToday($countOnly): mixed
+    {
+        return $this->model->registeredToday($countOnly)->count();
     }
 }

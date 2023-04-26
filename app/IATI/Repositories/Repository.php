@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\IATI\Repositories;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class Repository.
@@ -186,5 +188,41 @@ abstract class Repository implements RepositoryInterface
     public function insertGetId($data): array
     {
         return $this->model->insertGetId($data, 'id');
+    }
+
+    /**
+     * Returns count of data grouped by day/date.
+     *
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     *
+     * @return array
+     */
+    public function getDataInRangeGroupedByDay(Carbon $startDate, Carbon $endDate): array
+    {
+        return $this->model->select(DB::raw('DATE(created_at) as date_string, COUNT(*) as count_value'))
+            ->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate)
+            ->groupBy(DB::raw('DATE(created_at)'))
+            ->pluck('count_value', 'date_string')
+            ->toArray();
+    }
+
+    /**
+     * Returns count of data grouped by month.
+     *
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     *
+     * @return array
+     */
+    public function getDataInRangeGroupedByMonth(Carbon $startDate, Carbon $endDate): array
+    {
+        return $this->model
+            ->select(DB::raw('DATE_TRUNC(\'month\', created_at) AS month_string, COUNT(*) AS count_value'))
+            ->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate)
+            ->groupBy('month_string')
+            ->pluck('count_value', 'month_string')->toArray();
     }
 }

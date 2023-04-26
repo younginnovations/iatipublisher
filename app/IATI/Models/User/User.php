@@ -7,6 +7,7 @@ namespace App\IATI\Models\User;
 use App\IATI\Models\Organization\Organization;
 use App\IATI\Services\Download\DownloadXlsService;
 use App\Mail\NewUserEmail;
+use Carbon\Carbon;
 use App\Mail\XlsDownloadMail;
 use Database\Factories\IATI\Models\User\UserFactory;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -231,4 +232,71 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
 
         return $data;
     }
+
+//    public function scopeRegisteredToday($query)
+//    {
+//        return $query->whereDate('created_at', Carbon::today());
+//    }
+//
+//
+//
+//    public function scopeRegisteredThisWeek($query)
+//    {
+//        $date        = Carbon::now();
+//        $startOfWeek = $date->startOfWeek(0)->format('Y-m-d');
+//        $endOfWeek   = $date->endOfWeek(6)->format('Y-m-d');
+//
+//        $query->selectRaw("TO_CHAR(created_at, 'YYYY-MM-DD') AS date_string, COUNT(*) AS count_value")
+//            ->whereDate('created_at', '>=' ,$startOfWeek)
+//            ->whereDate('created_at', '<=' ,$endOfWeek)
+//            ->groupBy('date_string');
+//
+//        return $query;
+//    }
+//
+//    public function scopeRegisteredThisMonth($query)
+//    {
+//        $date = Carbon::now();
+//        $startOfMonth = $date->startOfMonth()->format('Y-m-d');
+//        $endOfMonth = $date->endOfMonth()->format('Y-m-d');
+//
+//        $query->selectRaw("TO_CHAR(created_at, 'YYYY-MM-DD') AS date_string, COUNT(*) AS count_value")
+//            ->whereDate('created_at', '>=', $startOfMonth)
+//            ->whereDate('created_at', '<=', $endOfMonth)
+//            ->groupBy('date_string');
+//
+//        return $query;
+//    }
+//
+//    public function scopeRegisteredThisYear($query)
+//    {
+//        $query->selectRaw("TO_CHAR(created_at, 'YYYY-MM') AS date_string, COUNT(*) AS count_value")
+//            ->whereYear('created_at', Carbon::now()->year)
+//            ->groupBy('date_string');
+//
+//        return $query;
+//    }
+//    public function scopeRegisteredLast7Days($query)
+//    {
+//        return $query->whereDate('created_at', '>=', Carbon::now()->subDays(7))
+//            ->groupBy('created_at');
+//    }
+//
+//    public function scopeRegisteredLast6Months($query)
+//    {
+//        $currentDate = Carbon::now();
+//        $weekStartDate = $currentDate->startOfWeek();
+//        $weekEndDate = $currentDate->today();
+//        return $query->whereBetween('created_at', [$weekStartDate, $weekEndDate]);
+//    }
+//
+//    public function scopeRegisteredLast12Months($query)
+//    {
+//        return $query->whereDate('created_at', '>=', Carbon::now()->subMonths(12))
+//            ->groupBy('MONTH(created_at)');
+//    }
+//
+//    public function scopeRegisteredInDateRange($query, $startDate, $endDate, $interval = 'Y')
+//    {
+//    }
 }

@@ -646,6 +646,11 @@ class UserService
         return $this->userRepo->getPaginatedUsers($page, $queryParams);
     }
 
+    public function getUserCountByOrganization(int $page, array $queryParams)
+    {
+        return $this->userRepo->getUserCountByOrganization($page, $queryParams);
+    }
+
     /**
      * Toggle status of user with id.
      *
