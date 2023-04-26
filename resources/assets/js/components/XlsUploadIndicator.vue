@@ -7,7 +7,7 @@
       :processed-count="processedCount"
       :xls-failed="xlsFailed"
       :activity-name="activityName"
-      @close="showXlsStatus = false"
+      @close="closeXls"
     />
   </div>
 </template>
@@ -15,6 +15,8 @@
 import XlsLoader from './XlsLoader.vue';
 import BulkpublishWithXls from './BulkpublishWithXls.vue';
 import { defineProps, ref } from 'vue';
+import axios from 'axios';
+
 const showXlsStatus = ref(true);
 
 defineProps({
@@ -38,4 +40,8 @@ defineProps({
     type: Boolean,
   },
 });
+const closeXls = () => {
+  showXlsStatus.value = false;
+  axios.delete(`/import/xls`);
+};
 </script>

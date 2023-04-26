@@ -126,7 +126,7 @@ class ImportXlsController extends Controller
         try {
             $this->db->beginTransaction();
             $status = $this->importXlsService->getImportStatus();
-            $activities = $request->get('activites');
+            $activities = $request->get('activities');
 
             if (empty($status)) {
                 return response()->json(['success' => false, 'message' => 'Please ensure that you have uploaded xls file.']);
@@ -141,9 +141,12 @@ class ImportXlsController extends Controller
             $this->importXlsService->deleteImportStatus();
 
             $this->db->commit();
+            Session::put('success', 'Imported successfully.');
 
             return response()->json(['success' => true, 'message' => 'Imported successfully']);
         } catch (Exception $e) {
+            Session::put('error', 'Error occurred while importing activity');
+
             logger()->error($e);
 
             return redirect()->back()->withResponse(['success' => false, 'message' => 'Error has occurred while importing activity.']);

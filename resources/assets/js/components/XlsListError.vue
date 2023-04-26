@@ -5,7 +5,7 @@
         :class="countErrors(index) > 0 && 'font-bold'"
         class="text-sm uppercase text-n-50"
       >
-        {{ activity.data.title[0].narrative }}
+        {{ title }}
       </span>
       <span
         v-if="countErrors(index) > 0"
@@ -70,7 +70,10 @@
         </div>
       </div>
       <div
-        v-if="Object.keys(activity['errors']).indexOf('error') !== -1"
+        v-if="
+          activity['errors'] &&
+          Object.keys(activity['errors']).indexOf('error') !== -1
+        "
         :style="`width: ${width - 70}px;`"
         class="error-container mt-2 cursor-pointer"
         @click="errorAccordionToggle"
@@ -119,7 +122,10 @@
         </div>
       </div>
       <div
-        v-if="Object.keys(activity['errors']).indexOf('warning') !== -1"
+        v-if="
+          activity['errors'] &&
+          Object.keys(activity['errors']).indexOf('warning') !== -1
+        "
         :style="`width: ${width - 70}px;`"
         class="warning-container my-2 cursor-pointer border-none bg-eggshell"
         @click="warningAccordionToggle"
@@ -169,7 +175,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, onMounted, onUpdated, ref, reactive } from 'vue';
+import {
+  defineProps,
+  onMounted,
+  onUpdated,
+  computed,
+  ref,
+  reactive,
+} from 'vue';
 const showErrors = ref(false);
 const showCritical = ref(false);
 const criticalToggle = ref(false);
@@ -177,6 +190,10 @@ const showError = ref(false);
 const errorToggle = ref(false);
 const warningToggle = ref(false);
 const showWarning = ref(false);
+
+onMounted(() => {
+  console.log(props.importData, 'import data');
+});
 
 const props = defineProps({
   // Number with a default value
@@ -194,26 +211,60 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  status: {
+    type: String,
+    required: true,
+  },
 });
 
 const errorLength = (currentError) => {
   let count = 0;
 
-  // if (Object.keys(props.activity).indexOf('errors') !== -1) {
-  Object.values(props.activity['errors'][currentError]).map((item) => {
-    count += Object.keys(item as object).length;
-  });
-  // }
+  props?.activity &&
+    props.activity['errors'] &&
+    props.activity['errors'][currentError] &&
+    Object.values(props.activity['errors'][currentError])?.map((item) => {
+      count += Object.keys(item as object).length;
+    });
 
   return count;
 };
+const title = computed(() => {
+  switch (props.status['template']) {
+    case 'activity':
+      return props.activity.data.title
+        ? props.activity.data.title[0].narrative
+        : 'Untitled';
+
+    case 'result':
+      return props.activity.data.title
+        ? props.activity.data.title[0].narrative[0]['narrative']
+        : 'Untitled';
+    case 'period':
+      return (
+        (props.activity.data.period_start &&
+          props.activity.data.period_start[0].date) +
+        ' - ' +
+        (props.activity.data.period_end &&
+          props.activity.data.period_end[0].date)
+      );
+    case 'indicator':
+      return props.activity.data.title
+        ? props.activity.data.title[0].narrative[0]['narrative']
+        : 'Untitled';
+    default:
+      return 'ss';
+  }
+});
+
 const countErrors = (activityIndex) => {
   let count = 0;
   for (const type in props.importData[activityIndex]['errors']) {
     for (const index in props.importData[activityIndex]['errors'][type]) {
-      count += Object.keys(
-        props.importData[activityIndex]['errors'][type][index]
-      ).length;
+      count +=
+        props.importData[activityIndex] &&
+        Object.keys(props.importData[activityIndex]['errors'][type][index])
+          .length;
     }
   }
 

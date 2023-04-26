@@ -1,7 +1,9 @@
 <template>
   <div class="py-8 px-10">
     <div class="flex flex-wrap justify-between">
-      <h6 class="text-3xl font-bold text-n-50">Add/Update All Activities</h6>
+      <h6 class="text-3xl font-bold text-n-50">
+        Add/Update All <span class="capitalize">{{ status.template }}</span>
+      </h6>
       <div class="flex flex-wrap justify-end gap-3">
         <Toast
           v-if="toastVisibility"
@@ -17,6 +19,7 @@
           <span>cancel this import</span>
         </button>
         <button
+          :class="selectedActivities.length === 0 && ' cursor-not-allowed'"
           class="rounded bg-bluecoral px-4 py-3 text-xs font-bold uppercase text-n-0"
           @click="addActivities"
         >
@@ -27,12 +30,13 @@
       </div>
     </div>
     <p class="mt-4 text-sm text-n-40">
-      Select from the list below to add activities to the publisher. Make your
-      selection and follow the on-screen prompts to successfully add/update your
-      selected activities
+      Select from the list below to add {{ status.template }} to the publisher.
+      Make your selection and follow the on-screen prompts to successfully
+      add/update your selected {{ status.template }}
       <b>
-        Please note that you must re-upload any unselected activities, and if
-        the import is canceled, you will need to upload them again.</b
+        Please note that you must re-upload any unselected
+        {{ status.template }}, and if the import is canceled, you will need to
+        upload them again.</b
       >
     </p>
     <div class="iati-list-table upload-list-table mt-4">
@@ -40,7 +44,7 @@
         <thead>
           <tr class="bg-n-10">
             <th id="title" scope="col">
-              <span>Activity Title</span>
+              <span>{{ status.template }} Title</span>
             </th>
             <th id="status" scope="col">
               <span class="block text-left">Status</span>
@@ -62,7 +66,10 @@
             ref="tableRow"
             :key="index"
             :class="{
-              'upload-error': Object.keys(activity['errors']).length > 0,
+              'upload-error':
+                activity &&
+                activity['errors'] &&
+                Object.keys(activity['errors']).length > 0,
             }"
           >
             <td class="title" :class="countErrors(index) > 0 && 'xls-error'">
@@ -71,28 +78,8 @@
                 :activity="activity"
                 :index="index"
                 :import-data="importData"
+                :status="status"
               />
-              <!-- <div>
-                <span
-                  :class="countErrors(index) > 0 && 'font-bold'"
-                  class="text-sm uppercase text-n-50"
-                >
-                  {{ activity.data.title[0].narrative }}
-                </span>
-                <span
-                  v-if="countErrors(index) > 0"
-                  class="ml-4 inline-flex cursor-pointer items-center space-x-2 text-crimson-50"
-                  @click="
-                    () => {
-                      showErrors[index] = !showErrors[index];
-                    }
-                  "
-                >
-                  <span>show {{ countErrors(index) }} error</span>
-                  <svg-vue class="text-[6px]" icon="dropdown-arrow" />
-                </span>
-              </div>
-              <div v-if="showErrors" class="mt-5 py-2 px-7 outline">asdasd</div> -->
             </td>
             <td :class="countErrors(index) > 0 && ' xls-error'">
               <span class="text-sm text-n-40">{{
@@ -117,14 +104,19 @@
       </table>
     </div>
   </div>
+  <Loader
+    v-if="loader"
+    :text="loaderText"
+    :class="{ 'animate-loader': loader }"
+  />
   <Modal :modal-active="showCriticalErrorModel" width="583">
     <div class="mb-6 flex items-center space-x-1">
       <svg-vue class="text-crimson-40" icon="warning-fill" />
       <h6 class="text-sm font-bold">Critical Errors Detected</h6>
     </div>
     <div class="mb-6 rounded-sm bg-rose p-4 text-sm text-n-50">
-      Some of the activities contain critical errors and thus, cannot be
-      uploaded to IATI Publisher. Please review the errors and follow the
+      Some of the {{ status.template }} contain critical errors and thus, cannot
+      be uploaded to IATI Publisher. Please review the errors and follow the
       instructions provided in the user manual.
     </div>
     <button
@@ -148,10 +140,13 @@ import {
   onUnmounted,
   onUpdated,
 } from 'vue';
+import Loader from 'Components/sections/ProgressLoader.vue';
 
 const selectAll = ref(false);
 const tableRow = ref({});
 const showCriticalErrorModel = ref(false);
+const loader = ref(false),
+  loaderText = ref('Adding activities');
 
 const selectedCount = ref(0);
 const activitiesLength = ref(0);
@@ -188,8 +183,9 @@ onMounted(() => {
   getDimensions();
   window.addEventListener('resize', getDimensions);
   checkCriticalError();
-
   activitiesLength.value = props.importData.length;
+  loaderText.value = `adding ${props.status.template}`;
+  console.log(props.importData, props.status, 'onm');
 });
 
 const cancelImport = () => {
@@ -227,8 +223,15 @@ const countErrors = (activityIndex) => {
   return count;
 };
 const addActivities = () => {
-  console.log('add activities', selectedActivities.value);
-  axios.post(`/import/xls/activity`, { activites: selectedActivities.value });
+  if (selectedActivities.value.length > 0) {
+    loader.value = true;
+
+    axios
+      .post(`/import/xls/activity`, { activities: selectedActivities.value })
+      .then(() => {
+        window.location.href = '/activities';
+      });
+  }
 };
 const errorLength = (errorType, activityIndex) => {
   let count = 0;

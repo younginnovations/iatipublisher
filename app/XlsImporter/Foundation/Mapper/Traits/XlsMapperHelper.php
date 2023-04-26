@@ -167,7 +167,7 @@ trait XlsMapperHelper
             'total_count' => $this->totalCount,
             'processed_count' => $this->processedCount,
         ]);
-
+        dump($status);
         awsUploadFile($this->validatedDataFilePath, $content);
         awsUploadFile($this->statusFilePath, $status);
     }
@@ -179,7 +179,9 @@ trait XlsMapperHelper
             'message' => 'Complete',
             'total_count' => $this->totalCount,
             'processed_count' => $this->processedCount,
+
         ]);
+        dump($status);
 
         awsUploadFile($this->statusFilePath, $status);
     }

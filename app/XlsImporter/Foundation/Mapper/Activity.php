@@ -131,7 +131,7 @@ class Activity
 
     public function fillOrganizationReportingOrg($organizationReportingOrg = []): static
     {
-        $this->organizationReportingOrg = $organizationReportingOrg;
+        $this->organizationReportingOrg = $organizationReportingOrg ?? [];
 
         return $this;
     }

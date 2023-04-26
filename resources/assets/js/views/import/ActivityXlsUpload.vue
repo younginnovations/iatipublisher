@@ -351,21 +351,16 @@ function uploadFile() {
   axios
     .post('/import/xls', data, config)
     .then((res) => {
-      loader.value = false;
-      window.location.href = '/activities';
       if (file.value.files.length && res?.data?.success) {
-        loader.value = false;
+        loader.value = true;
       } else {
         error.value = Object.values(res.data.errors).join(' ');
-        loader.value = false;
       }
     })
     .catch(() => {
       error.value = 'Error has occured while uploading file.';
-      loader.value = false;
     })
     .finally(() => {
-      loader.value = false;
       window.location.href = '/activities';
     });
 }
@@ -380,24 +375,21 @@ const cancelImport = () => {
   });
 };
 const checkXlsstatus = () => {
-  let count = 0;
-
   axios.get('/import/xls/progress_status').then((res) => {
     activityName.value = res?.data?.status?.template;
     xlsData.value = Object.keys(res.data.status).length > 0;
-    xlsFailed.value = !res.data.success;
-
-    if (res.data.status) {
+    console.log(Object.keys(res.data.status).length, 'status');
+    if (Object.keys(res.data.status).length > 0) {
       const checkStatus = setInterval(function () {
         axios.get('/import/xls/status').then((res) => {
-          totalCount.value = res.data.data.total_count;
-          processedCount.value = res.data.data.processed_count;
+          totalCount.value = res.data.data?.total_count;
+          processedCount.value = res.data.data?.processed_count;
+          xlsFailed.value = !res.data.data?.success;
         });
-        count++;
-        if (count > 20) {
+        if (!res.data?.success || res.data?.data?.message === 'Completed') {
           clearInterval(checkStatus);
         }
-      }, 2000);
+      }, 2500);
     }
   });
 };

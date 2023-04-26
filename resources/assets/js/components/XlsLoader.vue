@@ -88,11 +88,11 @@ const mapActivityName = (name) => {
     case 'activity':
       return 'Basic Activity Elements';
     case 'period':
-      return 'Basic Activity Elements';
-    case 'indocator':
-      return 'Basic Activity Elements';
+      return 'Period';
+    case 'indicator':
+      return 'Indicators except Period';
     case 'result':
-      return 'Basic Activity Elements';
+      return 'Result except Indicators and Period';
     default:
       return name;
   }
