@@ -240,44 +240,45 @@ class RecipientRegionRequest extends ActivityBaseRequest
     {
         $allottedRegionPercent = $this->allottedRegionPercent;
         $groupedPercentRegion = $this->groupedPercentRegion;
+        $groupedPercentRegionVocabulary = $groupedPercentRegion[$recipientRegion['region_vocabulary']];
         $activityService = app()->make(ActivityService::class);
 
         if ($allottedRegionPercent !== 100.0) {
-            if ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['count'] > 1) {
-                if ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] !== $allottedRegionPercent) {
+            if ($groupedPercentRegionVocabulary['count'] > 1) {
+                if ($groupedPercentRegionVocabulary['total'] !== $allottedRegionPercent) {
                     $rules[$recipientRegionForm . '.percentage'][] = 'nullable';
                     $rules[$recipientRegionForm . '.percentage'][] = 'allocated_region_total_mismatch';
                 }
-            } elseif ($allottedRegionPercent === 0.0 && $groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] > $allottedRegionPercent) {
+            } elseif ($allottedRegionPercent === 0.0 && $groupedPercentRegionVocabulary['total'] > $allottedRegionPercent) {
                 $rules[$recipientRegionForm . '.percentage'][] = 'country_percentage_complete';
             } elseif ($allottedRegionPercent !== 0.0) {
                 $rules[$recipientRegionForm . '.percentage'][] = 'in:' . $allottedRegionPercent;
             } else {
                 $rules[$recipientRegionForm . '.percentage'][] = 'nullable';
             }
-        } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] > 100.0) {
+        } elseif ($groupedPercentRegionVocabulary['total'] > 100.0 && ($groupedPercentRegionVocabulary['total'] - 100.0) > 0.00001) {
             $rules[$recipientRegionForm . '.percentage'][] = 'sum_greater_than';
-        } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] !== $groupedPercentRegion[array_key_first($groupedPercentRegion)]['total']) {
+        } elseif ($groupedPercentRegionVocabulary['total'] !== $groupedPercentRegion[array_key_first($groupedPercentRegion)]['total']) {
             $rules[$recipientRegionForm . '.percentage'][] = 'percentage_within_vocabulary';
         }
 
         if (!$fileUpload) {
             $params = $this->route()->parameters();
 
-            if ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] === 0.0 && !$activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
+            if ($groupedPercentRegionVocabulary['total'] === 0.0 && !$activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
                 $rules[$recipientRegionForm . '.percentage'][] = 'nullable';
-            } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] < $allottedRegionPercent && $activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
-                if ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] !== $groupedPercentRegion[array_key_first($groupedPercentRegion)]['total']) {
+            } elseif ($groupedPercentRegionVocabulary['total'] < $allottedRegionPercent && $activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
+                if ($groupedPercentRegionVocabulary['total'] !== $groupedPercentRegion[array_key_first($groupedPercentRegion)]['total']) {
                     $rules[$recipientRegionForm . '.percentage'] = 'percentage_within_vocabulary';
                 } else {
                     $rules[$recipientRegionForm . '.percentage'] = 'single_allocated_region_total_mismatch';
                 }
             }
-        } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] === 0.0 && is_array_values_null($recipientCountries)) {
+        } elseif ($groupedPercentRegionVocabulary['total'] === 0.0 && is_array_values_null($recipientCountries)) {
             $rules[$recipientRegionForm . '.percentage'][] = 'nullable';
-        } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] !== $groupedPercentRegion[array_key_first($groupedPercentRegion)]['total']) {
+        } elseif ($groupedPercentRegionVocabulary['total'] !== $groupedPercentRegion[array_key_first($groupedPercentRegion)]['total']) {
             $rules[$recipientRegionForm . '.percentage'][] = 'percentage_within_vocabulary';
-        } elseif ($groupedPercentRegion[$recipientRegion['region_vocabulary']]['total'] < $allottedRegionPercent && !is_array_values_null($recipientCountries)) {
+        } elseif ($groupedPercentRegionVocabulary['total'] < $allottedRegionPercent && !is_array_values_null($recipientCountries)) {
             $rules[$recipientRegionForm . '.percentage'] = 'allocated_region_total_mismatch';
         }
 

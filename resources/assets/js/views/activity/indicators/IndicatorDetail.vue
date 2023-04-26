@@ -22,7 +22,7 @@
     </div>
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      title="Indicator Detail"
+      :title="`${indicatorTitle} - Indicator Detail`"
       :back-link="`${indicatorLink}`"
     >
       <div class="flex justify-end">
@@ -343,13 +343,20 @@ export default defineComponent({
     provide('parentData', parentData);
 
     const activityId = activity.value.id,
-      activityTitle = activity.value.title,
       activityLink = `/activity/${activityId}`,
       resultId = indicator.value.result_id,
-      resultTitled = getActivityTitle(resultTitle.value[0].narrative, 'en'),
+      defaultLanguage = activity.value.default_field_values?.language,
+      activityTitle = getActivityTitle(activity.value.title, defaultLanguage),
+      resultTitled = getActivityTitle(
+        resultTitle.value[0].narrative,
+        defaultLanguage
+      ),
       resultLink = `${activityLink}/result/${resultId}`,
       indicatorLink = `/result/${resultId}/indicator`,
-      indicatorTitle = getActivityTitle(indicatorData.title[0].narrative, 'en');
+      indicatorTitle = getActivityTitle(
+        indicatorData.title[0].narrative,
+        defaultLanguage
+      );
 
     const calcWidth = (event) => {
       screenWidth.value = event.target.innerWidth;
@@ -370,7 +377,7 @@ export default defineComponent({
         link: '/activities',
       },
       {
-        title: getActivityTitle(activityTitle, 'en'),
+        title: activityTitle,
         link: activityLink,
       },
       {

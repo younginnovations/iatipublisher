@@ -52,6 +52,7 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
         'migrated_from_aidstream',
         'created_at',
         'updated_at',
+        'last_logged_in',
     ];
 
     /**

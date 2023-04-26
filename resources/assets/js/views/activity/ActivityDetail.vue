@@ -367,6 +367,7 @@ import DeleteButton from 'Components/buttons/DeleteButton.vue';
 import Errors from 'Components/sections/StickyErrors.vue';
 import Toast from 'Components/ToastMessage.vue';
 import ErrorPopUp from 'Components/ErrorPopUp.vue';
+import getActivityTitle from 'Composable/title';
 
 // Activity Components
 import Elements from 'Activity/partials/ActivitiesElements.vue';
@@ -614,21 +615,10 @@ export default defineComponent({
     /**
      * Finding current language - activity title
      */
-    let pageTitle = '';
-    const found = activityProps.title
-      ? activityProps.title.find((e: { language: string }) => {
-          const currentLanguage =
-            activityProps.default_field_values?.default_language;
-          return e.language === currentLanguage;
-        })
-      : false;
-
-    // callback if language not available in data
-    if (found) {
-      pageTitle = found.narrative;
-    } else {
-      pageTitle = activityProps?.title?.[0]?.narrative ?? '';
-    }
+    let pageTitle = getActivityTitle(
+      activityProps.title,
+      activityProps.default_field_values?.default_language
+    );
 
     function formatTitle(title: string) {
       return title.replace(/_/gi, ' ');
