@@ -476,7 +476,7 @@ trait MigrateActivityTransactionTrait
      *
      * @return string
      */
-    public function getAidTypeCode($aidTypeCode, $key): string
+    public function getAidTypeCode($aidTypeCode, $key): ?string
     {
         if (!is_array($aidTypeCode)) {
             return $aidTypeCode;

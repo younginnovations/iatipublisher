@@ -425,6 +425,10 @@ trait MigrateActivityTrait
             ],
         ];
 
+    public bool $hasCustomVocab = false;
+
+    public string $customVocabUrl = '';
+
     /**
      * Returns IATI activity data.
      *
@@ -676,6 +680,8 @@ trait MigrateActivityTrait
 
         if ($array && count($array)) {
             foreach (array_values($array) as $key => $item) {
+                $this->hasCustomVocab = false;
+
                 if (is_null(Arr::get($item, $vocabulary)) || (is_string(Arr::get($item, $vocabulary)) && trim(
                     Arr::get($item, $vocabulary)
                 ) === '')) {
@@ -683,10 +689,15 @@ trait MigrateActivityTrait
                 }
 
                 if (array_key_exists($vocabulary, $this->vocabularyUriArray) &&
-                    (Arr::get($item, $vocabulary, '1') === '99' || Arr::get($item, $vocabulary, '1') === '98') &&
-                    !array_key_exists($this->vocabularyUriArray[$vocabulary], $item)
+                    (Arr::get($item, $vocabulary, '1') == '99' || Arr::get($item, $vocabulary, '1') == '98')
                 ) {
-                    $item[$this->vocabularyUriArray[$vocabulary]] = null;
+                    if (!array_key_exists($this->vocabularyUriArray[$vocabulary], $item)) {
+                        $item[$this->vocabularyUriArray[$vocabulary]] = null;
+                    }
+
+                    if (Arr::get($item, 'custom_code', false) && Arr::get($item, 'use_my_custom_vocab', false)) {
+                        $this->hasCustomVocab = true;
+                    }
                 }
 
                 $newArray[$key] = $this->formatUpdatedVocabularyData(
@@ -694,6 +705,11 @@ trait MigrateActivityTrait
                     Arr::get($replaceArray, Arr::get($item, $vocabulary, null), []),
                     Arr::get($removeArray, Arr::get($item, $vocabulary, null), []),
                 );
+
+                if ($this->hasCustomVocab) {
+                    $newArray[$key] = $this->resolveCustomVocabularyArray($item, $vocabulary, $object);
+                    dd($newArray);
+                }
             }
         }
 
