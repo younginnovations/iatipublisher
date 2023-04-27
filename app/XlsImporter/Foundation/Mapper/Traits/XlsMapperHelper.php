@@ -154,12 +154,11 @@ trait XlsMapperHelper
      *
      * @return void
      */
-    public function storeValidatedData($processedXlsData, $errors, $existingIdentifier = false, $parentIdentifier = null): void
+    public function storeValidatedData($processedXlsData, $errors, $existingIdentifier = false, $parentIdentifier = null, $code = null): void
     {
-        logger()->error('validatingggg');
         $fileData = awsGetFile($this->validatedDataFilePath);
         $currentContents = $fileData ? json_decode(awsGetFile($this->validatedDataFilePath), true, 512, JSON_THROW_ON_ERROR) : [];
-        $currentContents[] = ['data' => $processedXlsData, 'errors' => $errors, 'existing' => $existingIdentifier, 'parentIdentifier' => $parentIdentifier, 'status' => 'processed'];
+        $currentContents[] = ['data' => $processedXlsData, 'errors' => $errors, 'existing' => $existingIdentifier, 'parentIdentifier' => $parentIdentifier, 'code' => $code, 'status' => 'processed'];
         $content = json_encode($currentContents, JSON_THROW_ON_ERROR);
         $status = json_encode([
             'success' => true,
@@ -167,7 +166,7 @@ trait XlsMapperHelper
             'total_count' => $this->totalCount,
             'processed_count' => $this->processedCount,
         ]);
-        dump($status);
+
         awsUploadFile($this->validatedDataFilePath, $content);
         awsUploadFile($this->statusFilePath, $status);
     }
@@ -181,7 +180,6 @@ trait XlsMapperHelper
             'processed_count' => $this->processedCount,
 
         ]);
-        dump($status);
 
         awsUploadFile($this->statusFilePath, $status);
     }
@@ -197,12 +195,16 @@ trait XlsMapperHelper
     public function appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName): array
     {
         foreach ($errors as $errorLevel => $errorData) {
-            foreach ($errorData as $element => $error) {
-                foreach ($error as $key => $err) {
-                    if (isset($excelColumnAndRowName[$key])) {
-                        $errors[$errorLevel][$element][$key] = 'Error detected on ' . $excelColumnAndRowName[$key]['sheet'] . ' sheet, cell ' . $excelColumnAndRowName[$key]['cell'] . ':' . $errors[$errorLevel][$element][$key];
+            if (count($errorData)) {
+                foreach ($errorData as $element => $error) {
+                    foreach ($error as $key => $err) {
+                        if (isset($excelColumnAndRowName[$key])) {
+                            $errors[$errorLevel][$element][$key] = 'Error detected on ' . $excelColumnAndRowName[$key]['sheet'] . ' sheet, cell ' . $excelColumnAndRowName[$key]['cell'] . ':' . $errors[$errorLevel][$element][$key];
+                        }
                     }
                 }
+            } else {
+                unset($errors[$errorLevel]);
             }
         }
 

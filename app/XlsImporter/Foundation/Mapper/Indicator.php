@@ -169,7 +169,7 @@ class Indicator
                     ->validateData();
 
                 $error = $this->appendExcelColumnAndRowDetail($errors, $this->columnTracker[$resultIdentifier][$indicatorIdentifier]['indicator']);
-                $existingId = Arr::get($this->existingIdentifier, sprintf('%s_%s', $resultIdentifier, $indicatorIdentifier), false);
+                $existingId = Arr::get($this->existingIdentifier, sprintf('indicator.%s', $indicatorIdentifier), false);
 
                 if (!in_array($resultIdentifier, array_keys($this->existingIdentifier['parent']))) {
                     $error['critical']['result_identifier']['result_identifier'] = 'The result identifier doesn\'t exist in the system';
@@ -177,7 +177,7 @@ class Indicator
 
                 $this->processedCount++;
 
-                $this->storeValidatedData($indicatorData['indicator'], $error, $existingId, $resultIdentifier);
+                $this->storeValidatedData($indicatorData['indicator'], $error, $existingId, $resultIdentifier, str_replace($resultIdentifier . '_', '', $indicatorIdentifier));
             }
         }
 

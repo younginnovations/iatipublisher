@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Models\Activity;
 
+use Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -32,6 +33,7 @@ class Indicator extends Model implements Auditable
         'created_at',
         'updated_at',
         'migrated_from_aidstream',
+        'indicator_code',
     ];
 
     /**
@@ -55,7 +57,9 @@ class Indicator extends Model implements Auditable
 
         static::saving(
             function ($model) {
-                $model->indicator_code = sprintf('%d%s', $model->id, time());
+                if (!$model->indicator_code) {
+                    $model->indicator_code = Auth::user() ? sprintf('%d%s', Auth::user()->id, time()) : sprintf('%d%s', $model->id, time());
+                }
             }
         );
     }

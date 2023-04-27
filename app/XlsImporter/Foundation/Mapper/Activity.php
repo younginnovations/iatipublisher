@@ -215,11 +215,11 @@ class Activity
                 }
 
                 foreach ($this->defaultValueElements as $element) {
-                    $fieldValue = $row[$element];
+                    $fieldValue = Arr::get($row, $element, null);
 
                     if (array_key_exists($element, $dropDownFields['default_field_values'])) {
                         $elementDropDownFields = $dropDownFields['default_field_values'][$element];
-                        $fieldValue = $this->mapDropDownValueToKey($row[$element], $elementDropDownFields);
+                        $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields);
                     }
 
                     $this->activities[$elementActivityIdentifier]['default_field_values'][$element] = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;

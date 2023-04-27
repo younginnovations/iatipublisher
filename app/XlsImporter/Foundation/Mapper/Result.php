@@ -136,7 +136,6 @@ class Result
     {
         $errors = [];
         $resultValidator = app(ResultValidator::class);
-        $this->totalCount = count($this->identifiers);
 
         foreach ($this->results as $activityIdentifier => $results) {
             foreach ($results as $resultIdentifier => $resultData) {
@@ -145,7 +144,7 @@ class Result
                     ->validateData();
                 $excelColumnAndRowName = isset($this->columnTracker[$activityIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
                 $columnAppendedError = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
-                $existingId = Arr::get($this->existingIdentifier['result'], sprintf('%s_%s', $activityIdentifier, $resultIdentifier), false);
+                $existingId = Arr::get($this->existingIdentifier, sprintf('result.%s', $resultIdentifier), false);
 
                 if (!in_array($activityIdentifier, array_keys($this->existingIdentifier['parent']))) {
                     $columnAppendedError['critical']['activity_identifier']['activity_identifier'] = "The activity identifier doesn't exist in the system";
@@ -156,7 +155,7 @@ class Result
                 }
 
                 $this->processedCount++;
-                $this->storeValidatedData($resultData['results'], $columnAppendedError, $existingId, $activityIdentifier);
+                $this->storeValidatedData($resultData['results'], $columnAppendedError, $existingId, $activityIdentifier, str_replace($activityIdentifier . '_', '', $resultIdentifier));
             }
         }
 
@@ -271,10 +270,9 @@ class Result
     protected function appendResult($identifier, $data): void
     {
         $activityIdentifier = Arr::get($this->identifiers, "$identifier", null);
-
         $this->results[$activityIdentifier][$identifier]['results'] = $data;
-        $this->totalCount++;
         $this->columnTracker[$activityIdentifier][$identifier]['results'] = $this->tempColumnTracker;
+        $this->totalCount++;
     }
 
     protected function appendResultDocumentLink($identifier, $data): void

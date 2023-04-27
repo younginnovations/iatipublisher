@@ -22,11 +22,10 @@ class ImportXlsRequest extends ActivityBaseRequest
         Validator::extend(
             'activity_file',
             function ($attribute, $value, $parameters, $validator) {
-                // $mimes = ['application/excel', 'application/vnd.ms-excel', 'application/msexcel', 'application/xls','application/x-dos_ms_excel', 'application/x-xls', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet (xlsx)'];
-                // $fileMime = $value->getClientMimeType();
+                $mimes = ['application/excel', 'application/ods', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/msexcel', 'application/xls', 'application/x-dos_ms_excel', 'application/x-xls', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet (xlsx)'];
+                $fileMime = $value->getClientMimeType();
 
-                // return in_array($fileMime, $mimes, true);
-                return true;
+                return in_array($fileMime, $mimes, true);
             }
         );
     }
@@ -38,11 +37,7 @@ class ImportXlsRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        $rules = [];
-        $rules['activity'] = 'required|activity_file| max:10000';
-        \Log::info('here');
-
-        return $rules;
+        return ['activity' => 'required|activity_file| max:10000', 'xlsType' => 'required'];
     }
 
     /**

@@ -36,6 +36,7 @@ class Result extends Model implements Auditable
         'migrated_from_aidstream',
         'created_at',
         'updated_at',
+        'result_code',
     ];
 
     /**

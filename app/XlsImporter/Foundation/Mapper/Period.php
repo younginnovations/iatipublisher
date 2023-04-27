@@ -137,14 +137,15 @@ class Period
                     ->init($periodData['period'])
                     ->validateData();
                 $columnAppendedError = $this->appendExcelColumnAndRowDetail($errors, $this->columnTracker[$indicatorIdentifier][$periodIdentifier]['period']);
-                $existingId = Arr::get($this->existingIdentifier['period'], sprintf('%s_%s', $indicatorIdentifier, $periodIdentifier), false);
+                $existingId = Arr::get($this->existingIdentifier, sprintf('period.%s', $periodIdentifier), false);
+                dump($this->existingIdentifier);
 
                 if (!in_array($indicatorIdentifier, array_keys($this->existingIdentifier['parent']))) {
                     $columnAppendedError['critical']['indicator_identifier'][] = 'The indicator identifier doesn\'t exist in the system';
                 }
 
                 $this->processedCount++;
-                $this->storeValidatedData($periodData['period'], $columnAppendedError, $existingId, $indicatorIdentifier);
+                $this->storeValidatedData($periodData['period'], $columnAppendedError, $existingId, $indicatorIdentifier, str_replace($indicatorIdentifier . '_', '', $periodIdentifier));
             }
         }
 
@@ -170,8 +171,6 @@ class Period
                 break;
             }
         }
-
-        $this->totalCount = count($this->identifiers['period']);
     }
 
     public function columnToFieldMapper($element, $data = [])
@@ -292,6 +291,7 @@ class Period
 
         $this->periods[$indicatorIdentifier][$identifier]['period'] = $data;
         $this->columnTracker[$indicatorIdentifier][$identifier]['period'] = $this->tempColumnTracker;
+        $this->totalCount++;
     }
 
     protected function pushPeriodTarget($identifier, $data): void

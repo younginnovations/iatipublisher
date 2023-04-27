@@ -158,7 +158,6 @@ class XlsQueueProcessor
 
     public function checkSheetNames($sheetNames, $sheets)
     {
-        dump($sheetNames, $sheets);
         foreach ($sheets as $sheetName => $type) {
             if (!in_array($sheetName, $sheetNames) && $type === 'required') {
                 return false;
@@ -176,7 +175,6 @@ class XlsQueueProcessor
 
     public function checkColumnHeader($dataHeader, $actualHeader)
     {
-        dump($actualHeader, $dataHeader);
         if (count(array_diff($actualHeader, $dataHeader)) || count(array_diff($actualHeader, $dataHeader))) {
             return false;
         }

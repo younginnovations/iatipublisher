@@ -194,7 +194,7 @@ class ImportXlsService
             $activity = unsetErrorFields($contents[$value]);
             $activityData = Arr::get($activity, 'data', []);
             $organizationId = Auth::user()->organization->id;
-            $existingId = Arr::get($activity, 'existence', false);
+            $existingId = Arr::get($activity, 'existing', false);
 
             if ($existingId && $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'))) {
                 $this->activityRepository->update($existingId, $activityData);
@@ -236,13 +236,14 @@ class ImportXlsService
             $activity = unsetErrorFields($contents[$value]);
             $resultData = Arr::get($activity, 'data', []);
             $organizationId = Auth::user()->organization->id;
-            $existenceId = Arr::get($activity, 'existence', false);
+            $existenceId = Arr::get($activity, 'existing', false);
             $parentIdentifier = Arr::get($activity, 'parentIdentifier', false);
+            $code = Arr::get($activity, 'code', false);
 
             if ($existenceId) {
-                $this->resultRepository->update($existenceId, ['result_code' => 'code', 'result' => $resultData]);
+                $this->resultRepository->update($existenceId, ['result_code' => $code, 'result' => $resultData]);
             } else {
-                $this->resultRepository->store(['result' => $resultData, 'result_code' => 'code', 'activity_id' => $identifiers[$parentIdentifier]]);
+                $this->resultRepository->store(['result' => $resultData, 'result_code' => $code, 'activity_id' => $identifiers[$parentIdentifier]]);
             }
         }
 
@@ -267,14 +268,14 @@ class ImportXlsService
             $activity = unsetErrorFields($contents[$value]);
             $indicatorData = Arr::get($activity, 'data', []);
             $organizationId = Auth::user()->organization->id;
-            $existenceId = Arr::get($activity, 'existence', false);
+            $existenceId = Arr::get($activity, 'existing', false);
             $parentIdentifier = Arr::get($activity, 'parentIdentifier', false);
+            $code = Arr::get($activity, 'code', false);
 
             if ($existenceId) {
                 $this->indicatorRepository->update($existenceId, ['indicator' => $indicatorData]);
             } else {
-                // dd($identifiers);
-                $this->indicatorRepository->store(['indicator' => $indicatorData, 'result_id' => $identifiers['result'][$parentIdentifier]]);
+                $this->indicatorRepository->store(['indicator' => $indicatorData, 'indicator_code' => $code, 'result_id' => $identifiers['result'][$parentIdentifier]]);
             }
         }
     }
@@ -297,13 +298,14 @@ class ImportXlsService
             $activity = unsetErrorFields($contents[$value]);
             $periodData = Arr::get($activity, 'data', []);
             $organizationId = Auth::user()->organization->id;
-            $existenceId = Arr::get($activity, 'existence', false);
+            $existenceId = Arr::get($activity, 'existing', false);
             $parentIdentifier = Arr::get($activity, 'parentIdentifier', false);
+            $code = Arr::get($activity, 'code', false);
 
             if ($existenceId) {
                 $this->periodRepository->update($existenceId, ['period' => $periodData]);
             } else {
-                $this->periodRepository->store(['period' => $periodData, 'indicator_id' => $identifiers['indicator'][$parentIdentifier]]);
+                $this->periodRepository->store(['period' => $periodData, 'period_code' => $code, 'indicator_id' => $identifiers['indicator'][$parentIdentifier]]);
             }
         }
     }
@@ -473,7 +475,7 @@ class ImportXlsService
                     $periods = $indicator->periods;
 
                     foreach ($periods as $period) {
-                        $identifier[sprintf('%s_%s_%s_%s', $activity->identifier, $result->result_code, $indicator->indicator_code, $period->period_code)] = $indicator->id;
+                        $identifier[sprintf('%s_%s_%s_%s', $activity->identifier, $result->result_code, $indicator->indicator_code, $period->period_code)] = $period->id;
                     }
                 }
             }
