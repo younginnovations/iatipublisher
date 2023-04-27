@@ -7,6 +7,7 @@ namespace App\IATI\Traits;
 use App\Exceptions\PublishException;
 use App\IATI\Models\Activity\ActivityPublished;
 use App\IATI\Models\Organization\Organization;
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
@@ -483,5 +484,45 @@ trait MigrateActivityPublishedTrait
             awsUrl("document-link/{$iatiOrganizationId}"),
             $contents
         );
+    }
+
+    /**
+     * @param $aidStreamOrganization
+     * @param $iatiOrganization
+     * @param $activityPublished
+     *
+     * @return void
+     *
+     * @throws PublishException
+     */
+    private function tryPublishingActivityFile($aidStreamOrganization, $iatiOrganization, $activityPublished): void
+    {
+        $settings = $iatiOrganization->settings;
+        $publishingInfo = $settings ? $settings->publishing_info : [];
+        $this->logInfo("Publishing activity file: {$activityPublished->filename} for Aidstream org: {$aidStreamOrganization->id}.");
+
+        try {
+            $this->publisherService->publishFile(
+                $publishingInfo,
+                $activityPublished,
+                $iatiOrganization,
+                false
+            );
+            $this->logInfo(
+                "Completed publishing activity file: {$activityPublished->filename} with updated at {$activityPublished->updated_at} for Aidstream org: {$aidStreamOrganization->id}."
+            );
+        } catch (Exception $exception) {
+            $message = "Activity file: {$activityPublished->filename} with updated at: {$activityPublished->updated_at} not published with error: {$exception->getMessage()}.";
+            $this->setGeneralError($message)->setDetailedError(
+                $message,
+                $aidStreamOrganization->id,
+                'activity_published',
+                $activityPublished->id,
+                $iatiOrganization->id
+            );
+            $this->logInfo($message);
+
+            throw new PublishException($iatiOrganization->id, $message);
+        }
     }
 }
