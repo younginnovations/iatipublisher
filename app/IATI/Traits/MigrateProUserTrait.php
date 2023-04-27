@@ -111,18 +111,14 @@ trait MigrateProUserTrait
                 $aidStreamKey = $key;
 
                 if (array_key_exists($key, $vocabularyMap)) {
-                    $aidStreamKey = $vocabularyMap[$key];
+                    $aidStreamKey = Arr::get($vocabularyMap, $key);
                 }
-
-                $returnArr[$key] = Arr::get($item, $aidStreamKey, $value);
 
                 if (array_key_exists($key, $vocabularyCodeMap)) {
                     $aidStreamKey = Arr::get($vocabularyCodeMap, $key);
-                    $customVocabId = Arr::get($item, $aidStreamKey, false);
-                    if ($customVocabId) {
-                        $returnArr[$key] = $this->getProUserCustomVocabArrayValue($customVocabId, 'code');
-                    }
                 }
+
+                $returnArr[$key] = Arr::get($item, $aidStreamKey, $value);
 
                 if ($key === 'vocabulary_uri') {
                     $returnArr[$key] = $this->customVocabUrl;

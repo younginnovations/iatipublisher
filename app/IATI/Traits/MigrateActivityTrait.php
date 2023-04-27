@@ -1324,12 +1324,7 @@ trait MigrateActivityTrait
                 ];
 
                 if (Arr::get($tag, 'use_my_custom_vocab', false)) {
-                    $customVocabId = Arr::get($tag, 'tag_text', false);
-
-                    if ($customVocabId) {
-                        $returnArr['tag_text'] = $this->getProUserCustomVocabArrayValue($customVocabId, 'code');
-                        $returnArr['vocabulary_uri'] = $this->getCustomVocabularyUrl();
-                    }
+                    $returnArr['vocabulary_uri'] = $this->getCustomVocabularyUrl();
                 }
 
                 return $returnArr;

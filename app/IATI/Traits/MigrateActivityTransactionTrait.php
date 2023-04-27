@@ -332,11 +332,7 @@ trait MigrateActivityTransactionTrait
                     null
                 );
                 if (Arr::get($recipientRegion, '0.custom', false)) {
-                    $id = Arr::get($recipientRegion, '0.custom_code', false);
-                    if ($id) {
-                        $newRecipientRegion[0]['custom_code'] = $this->getProUserCustomVocabArrayValue($id, 'code');
-                        $newRecipientRegion[0]['vocabulary_uri'] = $this->getCustomVocabularyUrl();
-                    }
+                    $newRecipientRegion[0]['vocabulary_uri'] = $this->getCustomVocabularyUrl();
                 }
             }
         }
