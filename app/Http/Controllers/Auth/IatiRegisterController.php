@@ -101,7 +101,7 @@ class IatiRegisterController extends Controller
                 'description',
             ]);
             $publisherCheck = $this->userService->checkPublisher($postData['publisher_id'], false);
-            $identifierCheck = $this->userService->checkIATIIdentifier($postData['identifier'], false);
+            $identifierCheck = $this->userService->checkIATIIdentifier($postData['identifier']);
 
             if (!empty($publisherCheck) || !empty($identifierCheck)) {
                 return response()->json([
@@ -204,7 +204,7 @@ class IatiRegisterController extends Controller
             );
 
             $publisherCheck = $this->userService->checkPublisher($postData['publisher_id'], false);
-            $identifierCheck = $this->userService->checkIATIIdentifier($postData['identifier'], false);
+            $identifierCheck = $this->userService->checkIATIIdentifier($postData['identifier']);
             $userCheck = $this->userService->checkUser($postData, false);
 
             if (!empty($publisherCheck) || !empty($userCheck) || !empty($identifierCheck)) {

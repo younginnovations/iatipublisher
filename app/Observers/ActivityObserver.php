@@ -77,6 +77,7 @@ class ActivityObserver
     public function created(Activity $activity): void
     {
         $this->setElementStatus($activity, true);
+        $activity->complete_percentage = $this->elementCompleteService->calculateCompletePercentage($activity->element_status);
 
         if (!$activity->migrated_from_aidstream) {
             $this->resetActivityStatus($activity);
@@ -107,6 +108,7 @@ class ActivityObserver
         $this->setElementStatus($activity);
         $this->resetActivityStatus($activity);
         $activity->updated_by = Auth::user()->id;
+        $activity->complete_percentage = $this->elementCompleteService->calculateCompletePercentage($activity->element_status);
         $activity->saveQuietly();
     }
 

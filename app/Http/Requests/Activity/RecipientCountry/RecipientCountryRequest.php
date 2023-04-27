@@ -147,7 +147,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
                 $rules[$key] = $item;
             }
 
-            if ($totalCountryPercent > 100.0) {
+            if ($totalCountryPercent > 100.0 && ($totalCountryPercent - 100.0) > 0.000001) {
                 $rules[$recipientCountryForm . '.percentage'][] = 'sum_exceeded';
             }
 
@@ -163,8 +163,8 @@ class RecipientCountryRequest extends ActivityBaseRequest
 
                 if ($allottedCountryPercent === 0.0) {
                     $rules[$recipientCountryForm . '.percentage'][] = $totalCountryPercent > 0.0
-                                                                    ? 'region_percentage_complete'
-                                                                    : 'nullable';
+                        ? 'region_percentage_complete'
+                        : 'nullable';
                 } elseif ($totalCountryPercent !== $allottedCountryPercent && $allottedCountryPercent !== 100.0) {
                     $rules[$recipientCountryForm . '.percentage'][] = 'allocated_country_percent';
                 }

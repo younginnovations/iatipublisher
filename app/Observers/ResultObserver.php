@@ -43,6 +43,7 @@ class ResultObserver
         $elementStatus['result'] = $this->elementCompleteService->isResultElementCompleted($activityObj);
 
         $activityObj->element_status = $elementStatus;
+        $activityObj->complete_percentage = $this->elementCompleteService->calculateCompletePercentage($activityObj->element_status);
 
         if (!$changeUpdatedAt) {
             $activityObj->timestamps = false;

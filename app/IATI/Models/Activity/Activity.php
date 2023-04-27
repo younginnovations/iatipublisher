@@ -73,6 +73,7 @@ class Activity extends Model implements Auditable
         'updated_by',
         'linked_to_iati',
         'migrated_from_aidstream',
+        'complete_percentage',
         'created_at',
         'updated_at',
     ];
@@ -113,6 +114,7 @@ class Activity extends Model implements Auditable
         'reporting_org'        => 'json',
         'element_status'       => 'json',
         'linked_to_iati'       => 'boolean',
+        'complete_percentage'  => 'float',
     ];
 
     /**
@@ -209,9 +211,9 @@ class Activity extends Model implements Auditable
     /**
      * Returns default title.
      *
-     * @return string
+     * @return ?string
      */
-    public function getDefaultTitleNarrativeAttribute(): string
+    public function getDefaultTitleNarrativeAttribute(): ?string
     {
         $titles = $this->title;
 
@@ -222,10 +224,10 @@ class Activity extends Model implements Auditable
                 }
             }
 
-            return array_key_exists('narrative', $titles[0]) ? (string) $titles[0]['narrative'] : '';
+            return array_key_exists('narrative', $titles[0]) ? (string) $titles[0]['narrative'] : 'Untitled';
         }
 
-        return '';
+        return 'Untitled';
     }
 
     /**

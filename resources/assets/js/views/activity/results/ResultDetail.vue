@@ -248,7 +248,8 @@ export default defineComponent({
       activityTitle = activity.value.title,
       activityLink = `/activity/${activityId}`,
       resultTitle = getActivityTitle(resultsData.title[0].narrative, 'en'),
-      resultLink = `${activityLink}/result/${result.value.id}`;
+      resultLink = `${activityLink}/result/${result.value.id}`,
+      defaultLanguage = activity.value.default_field_values?.language;
     const handleScroll = () => {
       positionY.value = window.scrollY;
     };
@@ -267,7 +268,7 @@ export default defineComponent({
         link: '/activities',
       },
       {
-        title: getActivityTitle(activityTitle, 'en'),
+        title: getActivityTitle(activityTitle, defaultLanguage),
         link: activityLink,
       },
       {

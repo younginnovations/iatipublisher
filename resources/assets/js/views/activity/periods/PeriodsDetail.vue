@@ -215,13 +215,20 @@ export default defineComponent({
 
     //titles
     const activityId = activity.value.id,
-      activityTitle = getActivityTitle(activity.value.title, 'en'),
+      defaultLanguage = activity.value.default_field_values?.default_language,
+      activityTitle = getActivityTitle(activity.value.title, defaultLanguage),
       activityLink = `/activity/${activityId}`,
       resultId = parentData.value.result.id,
-      resultTitle = getActivityTitle(parentData.value.result.title, 'en'),
+      resultTitle = getActivityTitle(
+        parentData.value.result.title,
+        defaultLanguage
+      ),
       resultLink = `${activityLink}/result/${resultId}`,
       indicatorId = parentData.value.indicator.id,
-      indicatorTitle = getActivityTitle(parentData.value.indicator.title, 'en'),
+      indicatorTitle = getActivityTitle(
+        parentData.value.indicator.title,
+        defaultLanguage
+      ),
       indicatorLink = `/result/${resultId}/indicator/${indicatorId}`,
       periodLink = `/indicator/${indicatorId}/period`;
 

@@ -954,6 +954,7 @@ class ElementCompleteService
             'element_status',
             'default_field_values',
             'migrated_from_aidstream',
+            'complete_percentage',
         ];
 
         $elementStatus = [];
@@ -966,6 +967,33 @@ class ElementCompleteService
         }
 
         $activity->element_status = $elementStatus;
-        $activity->updateQuietly(['touch'=>false]);
+        $activity->complete_percentage = $this->calculateCompletePercentage($activity->element_status);
+        $activity->updateQuietly(['touch' => false, 'timestamp' => false]);
+    }
+
+    /**
+     * Calculate element complete percentage for an activity.
+     *
+     * @param $element_status
+     *
+     * @return float
+     */
+    public function calculateCompletePercentage($element_status): float
+    {
+        $core_elements = getCoreElements();
+        $completed_core_element_count = 0;
+
+        foreach ($core_elements as $core_element) {
+            if (
+                array_key_exists(
+                    $core_element,
+                    $element_status
+                ) && $element_status[$core_element]
+            ) {
+                $completed_core_element_count++;
+            }
+        }
+
+        return ($completed_core_element_count / count($core_elements)) * 100;
     }
 }

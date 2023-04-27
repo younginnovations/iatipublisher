@@ -30,7 +30,7 @@ class UserRequest extends FormRequest
         $role = Auth::user()->role->role;
 
         $rules = [
-            'username'              => ['required', 'max:255', 'string', 'regex:/^[a-z]([0-9a-z-_])*$/', 'unique:users,username'],
+            'username'              => ['required', 'max:255', 'string', 'unique:users,username'],
             'full_name'             => ['required', 'string', 'max:255'],
             'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'max:255', 'unique:users,email'],
             'status'                => ['required'],

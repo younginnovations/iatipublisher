@@ -22,7 +22,11 @@
     </div>
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      :title="`${transactionData.reference ?? 'Untitled'} - Transaction detail`"
+      :title="`${
+        transactionData.reference && transactionData.reference !== ''
+          ? transactionData.reference
+          : 'Untitled'
+      } - Transaction detail`"
       :back-link="`${activityLink}/transaction`"
     >
       <div class="flex items-center space-x-3">

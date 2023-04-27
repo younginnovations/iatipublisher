@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\IATI\Models\User\Role;
 use App\IATI\Services\Audit\AuditService;
+use App\IATI\Services\User\UserService;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
@@ -47,13 +48,20 @@ class LoginController extends Controller
     protected AuditService $auditService;
 
     /**
+     * @var UserService
+     */
+    protected UserService $userService;
+
+    /**
      * Create a new controller instance.
      *
      * @param AuditService $auditService
+     * @param UserService $userService
      */
-    public function __construct(AuditService $auditService)
+    public function __construct(AuditService $auditService, UserService $userService)
     {
         $this->auditService = $auditService;
+        $this->userService = $userService;
 
         $this->middleware('guest')->except('logout');
     }
@@ -79,7 +87,7 @@ class LoginController extends Controller
     {
         $request->validate([
             $this->username() => 'required|string',
-            'password'        => 'required|string',
+            'password' => 'required|string',
         ]);
     }
 
@@ -157,6 +165,7 @@ class LoginController extends Controller
                 }
 
                 $this->auditService->auditEvent(Auth::user(), 'signin', '');
+                $this->userService->update(Auth::user()->id, ['last_logged_in' => now()]);
 
                 return $this->sendLoginResponse($request);
             }

@@ -82,13 +82,13 @@
                 <div class="progress-bar-container bg-spring-10">
                   <div
                     class="progress-bar-fill bg-spring-50"
-                    :style="{ width: datum['progressPercentage'] + '%' }"
+                    :style="{ width: datum['complete_percentage'] + '%' }"
                   ></div>
                 </div>
               </div>
               <div class="progress-bar-number">
                 <span class="text-xs font-semibold text-spring-50"
-                  >{{ datum['progressPercentage'] }}%</span
+                  >{{ datum['complete_percentage'] }}%</span
                 >
               </div>
             </div>
