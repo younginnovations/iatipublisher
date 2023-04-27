@@ -123,7 +123,9 @@ onMounted(() => {
   if (!(activities.value && Object.keys(activities.value).length > 0)) {
     closeWindow();
   }
-  setTimeout(() => {
+
+  //check constantly in a inter for when support button enters the dom
+  const checkSupportButton = setInterval(() => {
     const supportButton: HTMLElement = document.querySelector(
       '#launcher'
     ) as HTMLElement;
@@ -133,10 +135,17 @@ onMounted(() => {
       activities.value &&
       Object.keys(activities.value).length > 0
     ) {
-      supportButton.style.transform = 'translateX(-350px)';
-      supportButton.style.opacity = '1';
+      supportButton.style.transform = 'translate(-350px ,-20px)';
+
+      supportButton.style.opacity = '0';
+      setTimeout(() => {
+        supportButton.style.opacity = '1';
+      }, 300);
+      console.log('yes');
+      clearInterval(checkSupportButton);
     }
-  }, 720);
+    console.log('no');
+  }, 10);
 });
 onUnmounted(() => {
   const supportButton: HTMLElement = document.querySelector(
@@ -145,6 +154,7 @@ onUnmounted(() => {
 
   if (supportButton !== null) {
     supportButton.style.transform = 'translateX(0px)';
+    supportButton.style.transform = 'translateY(-20px)';
   }
 }),
   // watching change in value of completed
@@ -189,6 +199,8 @@ const bulkPublishStatus = () => {
           paStorage.value.publishingActivities.message = response.data.message;
 
           if (completed.value === 'completed') {
+            clearInterval(intervalID);
+
             failedActivities(paStorage.value.publishingActivities.activities);
             refreshToastMsg.visibility = true;
             setTimeout(() => {
@@ -220,6 +232,16 @@ const toggleWindow = (e: Event) => {
         target.style.cssText = `height: 0px; overflow: hidden;`;
       }, 100);
       open.value = false;
+      setTimeout(() => {
+        const supportButton: HTMLElement = document.querySelector(
+          '#launcher'
+        ) as HTMLElement;
+
+        if (supportButton !== null) {
+          supportButton.style.transform = 'translateX(0px)';
+          supportButton.style.transform = 'translateY(-20px)';
+        }
+      }, 400);
     }
   } else {
     if (target != null) {
@@ -228,6 +250,19 @@ const toggleWindow = (e: Event) => {
       setTimeout(function () {
         target.style.cssText = `height: auto;`;
       }, 600);
+      const supportButton: HTMLElement = document.querySelector(
+        '#launcher'
+      ) as HTMLElement;
+
+      if (
+        supportButton !== null &&
+        activities.value &&
+        Object.keys(activities.value).length > 0
+      ) {
+        supportButton.style.transform = 'translate(-350px ,-20px)';
+
+        supportButton.style.opacity = '1';
+      }
 
       open.value = true;
     }

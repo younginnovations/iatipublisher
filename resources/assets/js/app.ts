@@ -382,16 +382,9 @@ const stickySidebar = (
   }
 };
 window.onload = () => {
-  setTimeout(() => {
-    const supportButton: HTMLElement = document.querySelector(
-      '#launcher'
-    ) as HTMLElement;
+  //check constantly in a inter for when support button enters the dom
 
-    if (supportButton !== null) {
-      supportButton.style.display = 'none';
-    }
-  }, 200);
-  setTimeout(() => {
+  const checkSupportButton = setInterval(() => {
     const supportButton: HTMLElement = document.querySelector(
       '#launcher'
     ) as HTMLElement;
@@ -399,8 +392,9 @@ window.onload = () => {
     if (supportButton !== null) {
       supportButton.style.display = 'block';
       supportButton.style.border = '2px solid rgb(21, 83, 102)';
+      clearInterval(checkSupportButton);
     }
-  }, 200);
+  }, 10);
 };
 
 // custom directive
