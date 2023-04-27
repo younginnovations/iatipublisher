@@ -80,18 +80,22 @@ trait MigrateActivityPublishedTrait
                 $file = "{$aidstreamActivityXmlFilePath}/{$aidstreamXmlName}";
                 $contents = awsGetFile($file);
 
-                if ($contents && array_key_exists($aidstreamId, $migratedActivitiesLookupTable)) {
-                    $contents = $this->replaceDocumentLinkInXml($contents, $iatiOrganization->id);
-                    $iatiXmlFileName = $this->generateIatiActivityXmlFilename(
-                        $iatiOrganization,
-                        $migratedActivitiesLookupTable[$aidstreamId]
-                    );
-                    $destinationPath = "{$iatiActivityFilePath}/{$iatiXmlFileName}";
+                if ($contents) {
+                    if (array_key_exists($aidstreamId, $migratedActivitiesLookupTable)) {
+                        $contents = $this->replaceDocumentLinkInXml($contents, $iatiOrganization->id);
+                        $iatiXmlFileName = $this->generateIatiActivityXmlFilename(
+                            $iatiOrganization,
+                            $migratedActivitiesLookupTable[$aidstreamId]
+                        );
+                        $destinationPath = "{$iatiActivityFilePath}/{$iatiXmlFileName}";
 
-                    if (awsUploadFile($destinationPath, $contents)) {
-                        $this->logInfo("Migrated file :{$aidstreamXmlName} as file :{$iatiXmlFileName}.");
+                        if (awsUploadFile($destinationPath, $contents)) {
+                            $this->logInfo("Migrated file :{$aidstreamXmlName} as file :{$iatiXmlFileName}.");
+                        } else {
+                            $this->logInfo("Failed uploading file:{$aidstreamXmlName} to S3.");
+                        }
                     } else {
-                        $this->logInfo("Failed uploading file:{$aidstreamXmlName} to S3.");
+                        $this->logInfo("Activity with Id {$aidstreamId} not present on the look up variable.");
                     }
                 } else {
                     $message = "No Activity file named: {$aidstreamXmlName} found in S3 for Aidstream Organization: {$aidStreamOrganization->name}";
@@ -168,14 +172,26 @@ trait MigrateActivityPublishedTrait
         if (count($latestActivityPublished)) {
             $activitiesPublished = new ActivityPublished();
 
-            $activitiesPublished->fill([
-                'published_activities' => array_values($publishedActivitiesList),
-                'filename' => $generatedFilename,
-                'published_to_registry' => 1,
-                'organization_id' => $iatiOrganization->id,
-                'created_at' => $latestActivityPublished->isNotEmpty() ? $latestActivityPublished[0]->created_at : '',
-                'updated_at' => $latestActivityPublished->isNotEmpty() ? $latestActivityPublished[0]->updated_at : '',
-            ])->save();
+            $publishedRows = $iatiOrganization->activities;
+
+            if ($publishedRows && count($publishedRows)) {
+                $publishedData = $publishedRows->first();
+
+                $newPublishedActivities = array_merge($publishedData->published_activities, $publishedActivitiesList);
+
+                $publishedData->published_activities = array_values($newPublishedActivities);
+                $publishedData->timestamps = false;
+                $publishedData->saveQuietly();
+            } else {
+                $activitiesPublished->fill([
+                    'published_activities' => array_values($publishedActivitiesList),
+                    'filename' => $generatedFilename,
+                    'published_to_registry' => 1,
+                    'organization_id' => $iatiOrganization->id,
+                    'created_at' => $latestActivityPublished->isNotEmpty() ? $latestActivityPublished[0]->created_at : '',
+                    'updated_at' => $latestActivityPublished->isNotEmpty() ? $latestActivityPublished[0]->updated_at : '',
+                ])->save();
+            }
 
             $this->logInfo(
                 "Completed ActivityPublished table migration for Aidstream org: {$aidStreamOrganization->id}."
@@ -314,12 +330,13 @@ trait MigrateActivityPublishedTrait
      *
      * @param $aidStreamOrganization
      * @param $iatiOrganization
+     * @param  bool  $merge
      *
      * @return object|null
      *
      * @throws \DOMException
      */
-    public function migrateActivityMergedFile($aidStreamOrganization, $iatiOrganization): ?object
+    public function migrateActivityMergedFile($aidStreamOrganization, $iatiOrganization, bool $merge = false): ?object
     {
         $activityPublished = $this->getIatiActivityPublished($iatiOrganization);
         $publishedFiles = $activityPublished ? $activityPublished->published_activities : [];
@@ -342,7 +359,7 @@ trait MigrateActivityPublishedTrait
             $this->logInfo("Started migration of merged file for Aidstream org: {$aidStreamOrganization->id}.");
             $existingContents = awsGetFile("{$aidstreamMergedFilePath}/{$aidstreamMergedFilename}");
 
-            if ($existingContents) {
+            if ($existingContents && !$merge) {
                 $existingContents = $this->replaceDocumentLinkInXml($existingContents, $iatiOrganization->id);
                 awsUploadFile($iatiMergedFile, $existingContents);
             } else {
@@ -487,6 +504,8 @@ trait MigrateActivityPublishedTrait
     }
 
     /**
+     * Publishes activity file.
+     *
      * @param $aidStreamOrganization
      * @param $iatiOrganization
      * @param $activityPublished

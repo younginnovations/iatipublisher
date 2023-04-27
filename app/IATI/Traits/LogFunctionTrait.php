@@ -15,9 +15,15 @@ trait LogFunctionTrait
     /**
      * Log Activity Not Published Because Of Token Verification.
      *
+     * @param $aidStreamOrganization
+     * @param $iatiOrganization
+     * @param $activityPublished
+     *
+     * @return void
+     *
      * @throws PublishException
      */
-    private function logActivityNotPublishedBecauseOfTokenVerification($aidStreamOrganization, $iatiOrganization, $activityPublished)
+    private function logActivityNotPublishedBecauseOfTokenVerification($aidStreamOrganization, $iatiOrganization, $activityPublished): void
     {
         $message = "Activity file: {$activityPublished->filename} of Organization: {$aidStreamOrganization?->name} not published because 'token_verification' is not valid.";
         $this->setGeneralError($message)->setDetailedError(
@@ -35,9 +41,15 @@ trait LogFunctionTrait
     /**
      * Log Activity Not Published Because Of Publisher Verification.
      *
+     * @param $aidStreamOrganization
+     * @param $iatiOrganization
+     * @param $activityPublished
+     *
+     * @return void
+     *
      * @throws PublishException
      */
-    private function logActivityNotPublishedBecauseOfPublisherVerification($aidStreamOrganization, $iatiOrganization, $activityPublished)
+    private function logActivityNotPublishedBecauseOfPublisherVerification($aidStreamOrganization, $iatiOrganization, $activityPublished): void
     {
         $message = "Activity file: {$activityPublished->filename} of Organization: {$aidStreamOrganization?->name} not published because 'publisher_verification' is not valid.";
         $this->setGeneralError($message)->setDetailedError(
@@ -55,9 +67,15 @@ trait LogFunctionTrait
     /**
      * Log Activity Not Published Because Organization Setting Not Valid.
      *
+     * @param $aidStreamOrganization
+     * @param $iatiOrganization
+     * @param $activityPublished
+     *
+     * @return void
+     *
      * @throws PublishException
      */
-    private function logActivityNotPublishedBecauseOrganizationSettingNotValid($aidStreamOrganization, $iatiOrganization, $activityPublished)
+    private function logActivityNotPublishedBecauseOrganizationSettingNotValid($aidStreamOrganization, $iatiOrganization, $activityPublished): void
     {
         $message = "Activity file: {$activityPublished->filename} of Organization : {$aidStreamOrganization?->name} not published because 'organization setting' is not valid. ";
         $this->setGeneralError($message)->setDetailedError(
@@ -103,11 +121,11 @@ trait LogFunctionTrait
      * @param $iatiOrganization
      * @param $organizationPublished
      *
-     * @return mixed
+     * @return void
      *
      * @throws PublishException
      */
-    private function logOrganizationNotPublishedBecauseTokenVerification($aidStreamOrganization, $iatiOrganization, $organizationPublished): mixed
+    private function logOrganizationNotPublishedBecauseTokenVerification($aidStreamOrganization, $iatiOrganization, $organizationPublished): void
     {
         $message = "Organization file: {$organizationPublished->filename} not published because 'token_verification' is not valid.'";
         $this->setGeneralError($message)->setDetailedError(
@@ -130,11 +148,11 @@ trait LogFunctionTrait
      * @param $iatiOrganization
      * @param $organizationPublished
      *
-     * @return mixed
+     * @return void
      *
      * @throws PublishException
      */
-    private function logOrganizationNotPublishedBecausePublisherVerification($aidStreamOrganization, $iatiOrganization, $organizationPublished): mixed
+    private function logOrganizationNotPublishedBecausePublisherVerification($aidStreamOrganization, $iatiOrganization, $organizationPublished): void
     {
         $message = "Organization file: {$organizationPublished->filename} not published because 'publisher_verification' is not valid.'";
         $this->setGeneralError($message)->setDetailedError(
@@ -154,9 +172,16 @@ trait LogFunctionTrait
     /**
      * Log Organization Not Published Because Organization Setting Is Not Valid.
      *
+     * @param $aidStreamOrganization
+     * @param $iatiOrganization
+     * @param $organizationPublished
+     * @param $setting
+     *
+     * @return void
+     *
      * @throws PublishException
      */
-    private function logOrganizationNotPublishedBecauseOrganizationSettingIsNotValid($aidStreamOrganization, $iatiOrganization, $organizationPublished, $setting)
+    private function logOrganizationNotPublishedBecauseOrganizationSettingIsNotValid($aidStreamOrganization, $iatiOrganization, $organizationPublished, $setting): void
     {
         $message = "Organization file: {$organizationPublished->filename} not published because 'organization setting' is not valid.'";
         $this->setGeneralError($message)->setDetailedError(

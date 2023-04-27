@@ -286,4 +286,78 @@ trait MigrateSettingTrait
             return ['success' => false, 'message' => $e->getMessage()];
         }
     }
+
+    /**
+     * Returns publisher_id from settings table.
+     *
+     * @param $aidStreamOrganizationSetting
+     * @param $userIdentifier
+     *
+     * @return string
+     *
+     * @throws \JsonException
+     */
+    public function getSettingsPublisherId($aidStreamOrganizationSetting, $userIdentifier): string
+    {
+        $registryInfo = $aidStreamOrganizationSetting->registry_info;
+
+        if ($registryInfo) {
+            $registryInfo = json_decode($registryInfo, true, 512, JSON_THROW_ON_ERROR)[0];
+
+            return Arr::get($registryInfo, 'publisher_id', $userIdentifier);
+        }
+
+        return $userIdentifier;
+    }
+
+    /**
+     * Updates settings if needed.
+     *
+     * @param $iatiOrganization
+     * @param $aidstreamSettings
+     *
+     * @return object|null
+     *
+     * @throws GuzzleException
+     *
+     * @throws \JsonException
+     */
+    public function updateSettingsIfNeeded($iatiOrganization, $aidstreamSettings): ?object
+    {
+        $iatiSettings = $iatiOrganization->settings;
+
+        if (!$iatiSettings && $aidstreamSettings) {
+            $this->logInfo("Started creating settings for organization: {$iatiOrganization->id}.");
+            $this->settingService->create(
+                $this->getNewSetting($aidstreamSettings, $iatiOrganization)
+            );
+            $this->logInfo("Finished creating settings for organization: {$iatiOrganization->id}.");
+        } elseif ($iatiSettings && $aidstreamSettings) {
+            if (
+                empty(Arr::get($iatiSettings->publishing_info, 'publisher_id', null)) ||
+                empty(Arr::get($iatiSettings->publishing_info, 'api_token', null)) ||
+                !Arr::get($iatiSettings->publishing_info, 'publisher_verification', false) ||
+                !Arr::get($iatiSettings->publishing_info, 'token_verification', false)
+            ) {
+                $newPublishingInfo = $this->getPublishingInfo($aidstreamSettings->registry_info, $iatiOrganization->publisher_id);
+
+                if (
+                    $newPublishingInfo &&
+                    !empty(Arr::get($newPublishingInfo, 'publisher_id', null)) &&
+                    !empty(Arr::get($newPublishingInfo, 'api_token', null)) &&
+                    Arr::get($newPublishingInfo, 'publisher_verification', false) &&
+                    Arr::get($newPublishingInfo, 'token_verification', false)
+                ) {
+                    $this->logInfo("Started updating settings for organization: {$iatiOrganization->id}.");
+                    $iatiSettings->timestamps = false;
+                    $iatiSettings->updateQuietly([
+                        'publishing_info' => $newPublishingInfo,
+                    ]);
+                    $this->logInfo("Finished updating settings for organization: {$iatiOrganization->id}.");
+                }
+            }
+        }
+
+        return $iatiOrganization->refresh()->settings;
+    }
 }

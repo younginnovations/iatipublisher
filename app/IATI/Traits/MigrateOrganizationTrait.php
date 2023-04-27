@@ -595,4 +595,22 @@ trait MigrateOrganizationTrait
 
         return $updatedElements;
     }
+
+    /**
+     * Updates the created_at and updated_at of the IATI model.
+     *
+     * @param $aidstreamModel
+     * @param $iatiModel
+     *
+     * @return object
+     */
+    public function updateOnlyDates($aidstreamModel, $iatiModel): object
+    {
+        $iatiModel->updateQuietly([
+            'created_at' => $aidstreamModel->created_at,
+            'updated_at' => $aidstreamModel->updated_at,
+        ]);
+
+        return $iatiModel->refresh();
+    }
 }

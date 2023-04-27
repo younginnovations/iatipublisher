@@ -108,6 +108,7 @@ trait MigrateDocumentFileTrait
      * @param $migratedActivitiesLookupTable
      *
      * @return void
+     *
      * @throws \JsonException
      */
     public function migrateDocuments($aidstreamOrganizationId, $iatiOrganization, $migratedActivitiesLookupTable): void
@@ -147,6 +148,7 @@ trait MigrateDocumentFileTrait
      * @param $migratedActivitiesLookupTable
      *
      * @return string|null
+     *
      * @throws \JsonException
      */
     public function fillActivitiesId($aidStreamActivitiesId, $migratedActivitiesLookupTable): null|string
@@ -162,7 +164,7 @@ trait MigrateDocumentFileTrait
 
         if (!empty($aidStreamActivitiesId)) {
             if (is_string($aidStreamActivitiesId)) {
-                $aidStreamActivitiesId = json_decode($aidStreamActivitiesId, true);
+                $aidStreamActivitiesId = json_decode($aidStreamActivitiesId, true, 512, JSON_THROW_ON_ERROR);
             }
 
             foreach ($aidStreamActivitiesId as $aidActivityId => $identifier) {
@@ -182,8 +184,8 @@ trait MigrateDocumentFileTrait
      *
      * @param $url
      * @param $iatiOrganizationId
+     *
      * @return null|string
-     * @parram $iatiOrganizationId
      */
     public function replaceDocumentLinkUrl($url, $iatiOrganizationId): ?string
     {
