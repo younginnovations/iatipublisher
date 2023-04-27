@@ -482,6 +482,7 @@ trait MigrateActivityTrait
             'region_vocabulary',
             $this->recipientRegionReplaceArray,
             $this->recipientRegionRemoveArray,
+            'recipient_region',
             '1'
         ) : null;
         $newActivity['location'] = $aidstreamActivity ? $this->getActivityLocationData(
@@ -494,6 +495,7 @@ trait MigrateActivityTrait
             'sector_vocabulary',
             $this->sectorReplaceArray,
             $this->sectorRemoveArray,
+            'sector',
             '1'
         ) : null;
         $newActivity['country_budget_items'] = $aidstreamActivity ? $this->getActivityCountryBudgetItemsData(
@@ -506,6 +508,7 @@ trait MigrateActivityTrait
             'vocabulary',
             [],
             $this->humanitarianScopeRemoveArray,
+            'humanitarian_scope',
             '1-2'
         ) : null;
         $newActivity['policy_marker'] = $aidstreamActivity ? $this->getActivityUpdatedVocabularyData(
@@ -513,6 +516,7 @@ trait MigrateActivityTrait
             'vocabulary',
             $this->policyMarkerReplaceArray,
             $this->policyMarkerRemoveArray,
+            'policy_marker',
             '1'
         ) : null;
         $newActivity['collaboration_type'] = $aidstreamActivity ? $this->getIntSelectValue(
@@ -658,7 +662,8 @@ trait MigrateActivityTrait
      * @param $vocabulary
      * @param $replaceArray
      * @param $removeArray
-     * @param  string  $defaultVocabulary
+     * @param $elementName
+     * @param string $defaultVocabulary
      *
      * @return array|null
      *
@@ -669,6 +674,7 @@ trait MigrateActivityTrait
         $vocabulary,
         $replaceArray,
         $removeArray,
+        $elementName,
         string $defaultVocabulary = '1'
     ): ?array {
         if (!$object) {
@@ -707,8 +713,7 @@ trait MigrateActivityTrait
                 );
 
                 if ($this->hasCustomVocab) {
-                    $newArray[$key] = $this->resolveCustomVocabularyArray($item, $vocabulary, $object);
-                    dd($newArray);
+                    $newArray[$key] = $this->resolveCustomVocabularyArray($item, $vocabulary, $elementName);
                 }
             }
         }
@@ -1291,34 +1296,50 @@ trait MigrateActivityTrait
      */
     public function getTagData($tag): array
     {
-        return match ((string) Arr::get($tag, 'tag_vocabulary', null)) {
-            '1' => [
-                'tag_vocabulary' => Arr::get($tag, 'vocabulary', '1'),
-                'tag_text'       => Arr::get($tag, 'tag_code', null),
-                'narrative'      => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
-            ],
-            '2' => [
-                'tag_vocabulary' => Arr::get($tag, 'vocabulary', '2'),
-                'goals_tag_code' => Arr::get($tag, 'goals_tag_code', null),
-                'narrative'      => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
-            ],
-            '3' => [
-                'tag_vocabulary'   => Arr::get($tag, 'vocabulary', '3'),
-                'targets_tag_code' => Arr::get($tag, 'targets_tag_code', null),
-                'narrative'        => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
-            ],
-            '99' => [
-                'tag_vocabulary' => Arr::get($tag, 'vocabulary', '99'),
-                'tag_text'       => Arr::get($tag, 'tag_text', null),
-                'vocabulary_uri' => Arr::get($tag, 'vocabulary_uri', null),
-                'narrative'      => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
-            ],
-            default => [
-                'tag_vocabulary' => null,
-                'tag_text'       => null,
-                'narrative'      => $this->emptyNarrativeTemplate,
-            ],
-        };
+        switch ((string) Arr::get($tag, 'tag_vocabulary', null)) {
+            case '1':
+                return [
+                    'tag_vocabulary' => Arr::get($tag, 'vocabulary', '1'),
+                    'tag_text' => Arr::get($tag, 'tag_code', null),
+                    'narrative' => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
+                ];
+            case '2':
+                return [
+                    'tag_vocabulary' => Arr::get($tag, 'vocabulary', '2'),
+                    'goals_tag_code' => Arr::get($tag, 'goals_tag_code', null),
+                    'narrative' => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
+                ];
+            case '3':
+                return [
+                    'tag_vocabulary' => Arr::get($tag, 'vocabulary', '3'),
+                    'targets_tag_code' => Arr::get($tag, 'targets_tag_code', null),
+                    'narrative' => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
+                ];
+            case '99':
+                $returnArr = [
+                    'tag_vocabulary' => Arr::get($tag, 'vocabulary', '99'),
+                    'tag_text'       => Arr::get($tag, 'tag_text', null),
+                    'vocabulary_uri' => Arr::get($tag, 'vocabulary_uri', null),
+                    'narrative'      => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
+                ];
+
+                if (Arr::get($tag, 'use_my_custom_vocab', false)) {
+                    $customVocabId = Arr::get($tag, 'tag_text', false);
+
+                    if ($customVocabId) {
+                        $returnArr['tag_text'] = $this->getProUserCustomVocabArrayValue($customVocabId, 'code');
+                        $returnArr['vocabulary_uri'] = $this->getCustomVocabularyUrl();
+                    }
+                }
+
+                return $returnArr;
+            default:
+                return [
+                    'tag_vocabulary' => null,
+                    'tag_text'       => null,
+                    'narrative'      => $this->emptyNarrativeTemplate,
+                ];
+        }
     }
 
     /**

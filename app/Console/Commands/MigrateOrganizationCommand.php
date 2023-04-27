@@ -32,6 +32,7 @@ use App\IATI\Traits\MigrateGeneralTrait;
 use App\IATI\Traits\MigrateIndicatorPeriodTrait;
 use App\IATI\Traits\MigrateOrganizationPublishedTrait;
 use App\IATI\Traits\MigrateOrganizationTrait;
+use App\IATI\Traits\MigrateProUserTrait;
 use App\IATI\Traits\MigrateResultIndicatorTrait;
 use App\IATI\Traits\MigrateSettingTrait;
 use App\IATI\Traits\MigrateUserTrait;
@@ -192,7 +193,7 @@ class MigrateOrganizationCommand extends Command
                         $this->getNewOrganization($aidStreamOrganization)
                     );
 
-                    $this->migrateCustomVocabulary($aidStreamOrganization);
+                    $this->migrateCustomVocabularyCsvFileToS3($aidStreamOrganization);
 
                     $this->logInfo('Completed organization migration for organization id: ' . $aidstreamOrganizationId);
                     $aidStreamOrganizationSetting = $this->db::connection('aidstream')->table('settings')->where(
@@ -398,7 +399,7 @@ class MigrateOrganizationCommand extends Command
      * @param $aidStreamOrganization
      * @param $activityPublished
      * @param $setting
-     * @param  bool  $publishOrganization
+     * @param bool  $publishOrganization
      *
      * @return void
      *
@@ -557,195 +558,5 @@ class MigrateOrganizationCommand extends Command
         }
 
         return true;
-    }
-
-    public function resolveCustomVocabularyArray(mixed $item, $vocabulary, $object): array
-    {
-        //Iati key => Aidstream key
-        $conversionMap = [
-            'region_vocabulary'=>['custom_code'=>'custom_code'],
-            'sector_vocabulary'=>['text'=>'custom_code'],
-            'vocabulary'=>[
-                'humanitarian_',
-            ],
-        ];
-
-        $returnArr = [];
-        $templatesFor99 = [
-            'region_vocabulary'=>['region_vocabulary'=>'', 'custom_code'=>'', 'narrative'=>['narrative'=>'', 'language'=>''], 'percentage'=>'', 'vocabulary_uri'=>''],
-            'sector_vocabulary'=>['sector_vocabulary'=>'', 'text'=>'', 'narrative'=>['narrative'=>'', 'language'=>''], 'percentage'=>'', 'vocabulary_uri'=>''],
-            'vocabulary'=>[],
-        ];
-
-        if ($item) {
-            switch ($vocabulary) {
-                case 'region_vocabulary':
-                case 'sector_vocabulary':
-                    foreach ($templatesFor99[$vocabulary] as $key => $value) {
-                        $aidStreamKey = $key;
-
-                        if (array_key_exists($key, $conversionMap[$vocabulary])) {
-                            $aidStreamKey = Arr::get($conversionMap[$vocabulary], $key);
-                        }
-
-                        $returnArr[$key] = Arr::get($item, $aidStreamKey, '');
-
-                        if ($key === 'vocabulary_uri') {
-                            $returnArr[$key] = $this->customVocabUrl;
-                        }
-                    }
-                    break;
-                case 'vocabulary':
-                    $filename = strtolower($this->currentAidstreamOrganizationBeingProcessed->user_identifier);
-                    $customVocabContents = awsGetFile("custom-vocabulary/{$filename}.csv");
-                    $element = $this->determineElementKey($item, $customVocabContents);
-
-                    break;
-            }
-        }
-
-        return $returnArr;
-    }
-
-//    private function generateCsvFileUrl(mixed $item, $vocabulary, $aidstreamOrganization): string
-//    {
-//        $directory = "custom-vocabulary";
-//        $filename = "{$aidstreamOrganization->user_identifier}.csv";
-//        $existingContents = awsGetFile("{$directory}/{$filename}")??false;
-//        $newCsvData = $this->generateCsvData($item, $vocabulary, $aidstreamOrganization);
-//
-//        if($existingContents){
-//            $newCsvData = $existingContents.$newCsvData;
-//        }
-//
-//        awsUploadFile("{$directory}/{$filename}", $newCsvData);
-//
-//        return awsUrl("{$directory}/{$filename}");
-//
-////        $directory = 'custom-vocabulary';
-////        $fileName = "{$aidstreamOrganization->user_identifier}.json";
-////        $existingContents = awsGetFile("{$directory}/{$fileName}") ?? false;
-////
-////        $newContent = [
-////            'vocabulary_type' => $vocabulary,
-////            'code'            => $item['custom_code'],
-////            'description'     => $this->db::connection('aidstream')->table('custom_vocab_new')
-////                ->where('org_id', $aidstreamOrganization->id)
-////                ->where('code', $item['custom_code'])
-////                ->first()
-////                ->description
-////        ];
-////
-////        if($existingContents){
-////            $existingContents =  json_decode($existingContents);
-////            $existingContents[] = $newContent;
-////        }else{
-////            $existingContents = [$newContent];
-////        }
-////
-////        awsUploadFile("{$directory}/{$fileName}", json_encode($existingContents));
-////
-////        return awsUrl("{$directory}/{$fileName}");
-//    }
-
-//    private function generateCsvData($item, $vocabulary, $aidstreamOrganization): string
-//    {
-//        $csv  = '';
-//        $data = [
-//            ['vocabulary_type', $vocabulary],
-//            ['code'           , $item['custom_code']],
-//            ['description'    , $this->db::connection('aidstream')->table('custom_vocab_new')
-//                ->where('org_id', $aidstreamOrganization->id)
-//                ->where('code', $item['custom_code'])
-//                ->first()
-//                ->description]
-//        ];
-//
-//        for ($i = 0; $i < count($data); $i++) {
-//            $row = implode(',', $data[$i]);
-//            $csv = $csv . $row . "\n";
-//        }
-//
-//        return $csv;
-//    }
-
-    public function migrateCustomVocabulary($aidStreamOrganization): void
-    {
-        $this->currentAidstreamOrganizationBeingProcessed = $aidStreamOrganization;
-
-        $customVocabCollection = $this->db::connection('aidstream')->table('custom_vocab_new')->where('org_id', $aidStreamOrganization->id)?->get() ?? false;
-        if ($customVocabCollection) {
-            $csvData = $this->generateCsvData($customVocabCollection);
-            $filename = strtolower($aidStreamOrganization->user_identifier);
-            $filepath = "custom-vocabulary/{$filename}.csv";
-
-            if (awsUploadFile($filepath, $csvData)) {
-                $this->hasCustomVocab = true;
-                $this->customVocabUrl = awsUrl($filepath);
-                $this->logInfo('Successfully migrated custom vocabulary csv.');
-            } else {
-                $message = "Failed migrating Custom Vocabulary csv file of Aidstream organization: {$aidStreamOrganization->name}";
-                $this->setGeneralError($message)->setDetailedError($message, $aidStreamOrganization->id, 'custom_vocab_new');
-            }
-        } else {
-            $this->logInfo('No custom vocab to migrate.');
-        }
-    }
-
-    public function generateCsvData($customVocabCollection): string
-    {
-        $csv = '';
-        $data = [];
-
-        $header = ['vocabulary_type', 'code', 'description'];
-        $data[] = $header;
-
-        foreach ($customVocabCollection as $customVocab) {
-            $row = [
-                $customVocab->vocabulary_type,
-                $customVocab->code,
-                $customVocab->description,
-            ];
-            $data[] = $row;
-        }
-
-        foreach ($data as $row) {
-            $csv = $csv . implode(',', $row) . "\n";
-        }
-
-        return $csv;
-    }
-
-    private function determineElementKey(mixed $item, $csvString)
-    {
-        $csvInArrayForm = $this->getArrayFromCsvString($csvString);
-        $customCode = $item['custom_code'];
-        $flippedCodeSubArray = array_flip(Arr::get($csvInArrayForm, 'code'));
-        $index = Arr::get($flippedCodeSubArray, $customCode, 99);
-
-        return Arr::get($csvInArrayForm['vocabulary_type'], $index, '');
-    }
-
-    public function getArrayFromCsvString($csvString): array
-    {
-        $csvToArrayValue = [];
-
-        if ($csvString) {
-            $initialExplode = explode("\n", $csvString);
-            $headerRow = Arr::get($initialExplode, 0);
-            $iterations = count($initialExplode) - 1;
-
-            $headers = explode(',', $headerRow);
-
-            for ($i = 1; $i < $iterations; $i++) {
-                $dataArray = explode(',', Arr::get($initialExplode, $i, []));
-
-                foreach ($headers as $index => $header) {
-                    $csvToArrayValue[$header][] = Arr::get($dataArray, $index, '');
-                }
-            }
-        }
-
-        return $csvToArrayValue;
     }
 }

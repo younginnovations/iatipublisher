@@ -330,7 +330,7 @@ trait MigrateActivityPublishedTrait
      *
      * @param $aidStreamOrganization
      * @param $iatiOrganization
-     * @param  bool  $merge
+     * @param bool  $merge
      *
      * @return object|null
      *

@@ -206,7 +206,7 @@ trait MigrateActivityResultsTrait
      * @param $baseResults
      * @param $resultsReferences
      * @param $resultsDocumentLinks
-     * @parram $iatiOrganization
+     * @param $iatiOrganization
      *
      * @return mixed
      */
@@ -264,8 +264,16 @@ trait MigrateActivityResultsTrait
 
         foreach ($resultReferences as $reference) {
             if ($reference->result_id === $baseResult->id) {
-                $this->logInfo("Reference of id: {$reference->id} exists in result of id {$baseResult->id}.");
-                $reference->vocabulary_uri = !empty($reference->url) ? $this->replaceDocumentLinkUrl($reference->url, $iatiOrganization->id) : null;
+                if ($reference->custom) {
+                    $this->logInfo("Found custom vocab for reference (id: {$reference->id}) in result id: {$baseResult->id}");
+                    $customVocabId = $reference->code;
+                    $reference->code = $this->getProUserCustomVocabArrayValue($customVocabId, 'code');
+                    $reference->vocab_uri = $this->getCustomVocabularyUrl();
+                    unset($reference->custom);
+                } else {
+                    $this->logInfo("Reference of id: {$reference->id} exists in result of id {$baseResult->id}.");
+                    $reference->vocabulary_uri = !empty($reference->url) ? $this->replaceDocumentLinkUrl($reference->url, $iatiOrganization) : null;
+                }
                 unset($reference->url);
                 $referencesThatMatchResultId[] = $reference;
             }

@@ -356,6 +356,11 @@ trait MigrateResultIndicatorTrait
 
             if ($reference->vocabulary === '99') {
                 $newReferences[$key]['indicator_uri'] = $reference->url;
+
+                if ($reference->custom) {
+                    $newReferences[$key]['code'] = $this->getProUserCustomVocabArrayValue($reference->code, 'code');
+                    $newReferences[$key]['indicator_uri'] = $this->getCustomVocabularyUrl();
+                }
             }
         }
 
