@@ -120,10 +120,14 @@ export default defineComponent({
               totalCount.value = res.data.data?.total_count;
               processedCount.value = res.data.data?.processed_count;
               xlsFailed.value = !res.data.data?.success;
+
+              if (
+                !res.data?.data?.success ||
+                res.data?.data?.message === 'Complete'
+              ) {
+                clearInterval(checkStatus);
+              }
             });
-            if (!res.data?.success || res.data?.data?.message === 'Completed') {
-              clearInterval(checkStatus);
-            }
           }, 2500);
         }
       });

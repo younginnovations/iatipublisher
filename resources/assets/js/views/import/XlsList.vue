@@ -184,7 +184,7 @@ onMounted(() => {
   window.addEventListener('resize', getDimensions);
   checkCriticalError();
   activitiesLength.value = props.importData.length;
-  loaderText.value = `adding ${props.status.template}`;
+  loaderText.value = `Adding ${props.status.template}`;
   console.log(props.importData, props.status, 'onm');
 });
 
@@ -249,6 +249,7 @@ function selectAllActivities() {
   selectAll.value = !selectAll.value;
   selectedCount.value = 0;
   selectedActivities.value.length = 0;
+  console.log(props.importData, 'from selectall');
   Object.keys(props.importData).forEach((activity_id) => {
     let index = selectedActivities.value.indexOf(activity_id);
     if (
@@ -258,6 +259,7 @@ function selectAllActivities() {
     ) {
       if (selectAll.value) {
         selectedActivities.value.push(activity_id);
+        console.log(activity_id, 'acivity id');
         selectedCount.value = selectedCount.value + 1;
       } else {
         selectedActivities.value.splice(index, 1);

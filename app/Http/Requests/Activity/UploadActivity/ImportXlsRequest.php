@@ -22,7 +22,7 @@ class ImportXlsRequest extends ActivityBaseRequest
         Validator::extend(
             'activity_file',
             function ($attribute, $value, $parameters, $validator) {
-                $mimes = ['application/excel', 'application/ods', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/msexcel', 'application/xls', 'application/x-dos_ms_excel', 'application/x-xls', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet (xlsx)'];
+                $mimes = ['application/excel', 'application/ods', 'application/vnd.ms-excel', 'application/vnd.oasis.opendocument.spreadsheet', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/msexcel', 'application/xls', 'application/x-dos_ms_excel', 'application/x-xls', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet (xlsx)'];
                 $fileMime = $value->getClientMimeType();
 
                 return in_array($fileMime, $mimes, true);

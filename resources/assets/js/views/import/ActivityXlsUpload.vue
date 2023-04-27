@@ -270,13 +270,13 @@
           v-if="totalCount === processedCount && totalCount !== 0"
           class="text-sm text-n-50"
         >
-          You have recently uploaded 'Basic Activity Elements', either proceed
-          to add/update or cancel to start new import.
+          You have recently uploaded '{{ currentActivity }}', either proceed to
+          add/update or cancel to start new import.
         </p>
 
         <p v-else class="text-sm text-n-50">
-          We are in the process of uploading 'All Elements except Result' XLS
-          file. We ask for your patience while we complete the upload.
+          We are in the process of uploading '{{ currentActivity }}' XLS file.
+          We ask for your patience while we complete the upload.
         </p>
       </div>
       <div class="mt-6 flex items-center justify-end space-x-4">
@@ -322,7 +322,7 @@ const activityName = ref('');
 const toastMessage = ref('');
 const toastType = ref(false);
 const xlsFailed = ref(false);
-
+const currentActivity = ref('');
 const toastVisibility = ref(false);
 const xlsData = ref(false);
 const totalCount = ref(0);
@@ -331,7 +331,20 @@ const file = ref(),
   error = ref(''),
   loader = ref(false),
   loaderText = ref('Please Wait');
-
+const mapActivityName = (name) => {
+  switch (name) {
+    case 'activity':
+      return 'Basic Activity Elements';
+    case 'period':
+      return 'Period';
+    case 'indicator':
+      return 'Indicators except Period';
+    case 'result':
+      return 'Result except Indicators and Period';
+    default:
+      return name;
+  }
+};
 function uploadFile() {
   loader.value = true;
   loaderText.value = 'Uploading .xls file';
@@ -352,16 +365,13 @@ function uploadFile() {
     .post('/import/xls', data, config)
     .then((res) => {
       if (file.value.files.length && res?.data?.success) {
-        loader.value = true;
+        window.location.href = '/activities';
       } else {
         error.value = Object.values(res.data.errors).join(' ');
       }
     })
     .catch(() => {
       error.value = 'Error has occured while uploading file.';
-    })
-    .finally(() => {
-      window.location.href = '/activities';
     });
 }
 const cancelImport = () => {
@@ -377,6 +387,7 @@ const cancelImport = () => {
 const checkXlsstatus = () => {
   axios.get('/import/xls/progress_status').then((res) => {
     activityName.value = res?.data?.status?.template;
+    currentActivity.value = mapActivityName(activityName.value);
     xlsData.value = Object.keys(res.data.status).length > 0;
     console.log(Object.keys(res.data.status).length, 'status');
     if (Object.keys(res.data.status).length > 0) {
@@ -385,10 +396,14 @@ const checkXlsstatus = () => {
           totalCount.value = res.data.data?.total_count;
           processedCount.value = res.data.data?.processed_count;
           xlsFailed.value = !res.data.data?.success;
+
+          if (
+            !res.data?.data?.success ||
+            res.data?.data?.message === 'Complete'
+          ) {
+            clearInterval(checkStatus);
+          }
         });
-        if (!res.data?.success || res.data?.data?.message === 'Completed') {
-          clearInterval(checkStatus);
-        }
       }, 2500);
     }
   });
