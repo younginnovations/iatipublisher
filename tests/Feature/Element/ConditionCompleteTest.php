@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Element;
 
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Models\Organization\Organization;
 use App\IATI\Models\User\Role;
 use App\IATI\Models\User\User;
 use App\IATI\Services\ElementCompleteService;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /**
@@ -114,13 +116,15 @@ class ConditionCompleteTest extends ElementCompleteTest
      * Sub element condition empty json array test.
      *
      * @return void
+     *
+     * @throws BindingResolutionException
      * @throws \JsonException
      */
     public function test_condition_when_it_is_saved_with_condition_attached_0_and_remaining_is_empty()
     {
         $role = Role::factory()->create();
         $org = Organization::factory()->has(User::factory(['role_id' => $role->id]))->create();
-        $activity = \App\IATI\Models\Activity\Activity::factory()->create([
+        $activity = Activity::factory()->create([
             'org_id' => $org->id,
             'created_by' => $org->user->id,
             'updated_by' => $org->user->id,

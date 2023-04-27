@@ -63,6 +63,7 @@ class MigrateOrganizationCommand extends Command
     use MigrateOrganizationPublishedTrait;
     use MigrateDocumentFileTrait;
     use TrackMigrationErrorTrait;
+    use MigrateProUserTrait;
     use LogFunctionTrait;
 
     /**
@@ -91,6 +92,9 @@ class MigrateOrganizationCommand extends Command
      */
     protected object|null $setting = null;
 
+    /**
+     * @var
+     */
     public mixed $currentAidstreamOrganizationBeingProcessed = '';
 
     /**
