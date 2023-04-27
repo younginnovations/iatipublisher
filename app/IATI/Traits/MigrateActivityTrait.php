@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\IATI\Traits;
 
 use App\IATI\Models\User\Role;
+use App\IATI\Repositories\Activity\ActivityRepository;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
 /**
@@ -1475,5 +1477,82 @@ trait MigrateActivityTrait
         }
 
         return null;
+    }
+
+    /**
+     * Migrated aid stream activity snapshot to iati activity snapshot table.
+     *
+     * @param $iatiActivity
+     * @param $aidstreamActivity
+     *
+     * @return void
+     */
+    public function migrateActivitySnapshot($iatiActivity, $aidstreamActivity): void
+    {
+        $aidStreamActivitySnapshots = $this->db::connection('aidstream')->table('activity_snapshots')->where(
+            'activity_id',
+            $aidstreamActivity->id
+        )->get();
+
+        if (count($aidStreamActivitySnapshots)) {
+            $iatiActivitySnapshots = [];
+
+            foreach ($aidStreamActivitySnapshots as $aidActivitySnapshot) {
+                $iatiActivitySnapshots[] = [
+                    'org_id'         => $iatiActivity->org_id,
+                    'activity_id'    => $iatiActivity->id,
+                    'published_data' => $aidActivitySnapshot->published_data,
+                    'filename'       => $aidActivitySnapshot->filename,
+                    'created_at'     => $aidActivitySnapshot->created_at,
+                    'updated_at'     => $aidActivitySnapshot->updated_at,
+                ];
+            }
+            $this->activitySnapshotService->insert($iatiActivitySnapshots);
+            $this->logInfo(
+                'Completed migrating activity snapshots for organization id ' . $aidstreamActivity->organization_id
+            );
+        }
+    }
+
+    /**
+     * Set default values where empty.
+     *
+     * @param $iatiElement
+     * @param $aidStreamOrganizationSetting
+     * @param bool $activityLevel
+     * @return void
+     * @throws BindingResolutionException
+     */
+    private function setDefaultValues($iatiElement, $aidStreamOrganizationSetting, $activityLevel = true): void
+    {
+        $defaultFieldValues = $aidStreamOrganizationSetting->default_field_values;
+
+        if ($activityLevel) {
+            $activityRepository = app()->make(ActivityRepository::class);
+            $defaultFieldValues = $activityRepository->resolveDefaultValues($iatiElement);
+        }
+
+        if ($defaultFieldValues) {
+            $data = $iatiElement->toArray();
+            $updatedIatiData = $this->populateDefaultFields($data, $defaultFieldValues);
+            $iatiElement->timestamps = false;
+            $iatiElement->updateQuietly($updatedIatiData, ['touch'=>false]);
+        }
+    }
+
+    /**
+     * Saves the organization complete status.
+     *
+     * @param $iatiOrganization
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function updateOrganizationCompleteStatus($iatiOrganization): void
+    {
+        $this->setElementStatus($iatiOrganization);
+        $iatiOrganization->timestamps = false;
+        $iatiOrganization->saveQuietly(['touch'=>false]);
     }
 }

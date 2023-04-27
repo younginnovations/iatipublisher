@@ -22,6 +22,7 @@ use App\IATI\Services\OrganizationElementCompleteService;
 use App\IATI\Services\Publisher\PublisherService;
 use App\IATI\Services\Setting\SettingService;
 use App\IATI\Services\User\UserService;
+use App\IATI\Traits\LogFunctionTrait;
 use App\IATI\Traits\MigrateActivityPublishedTrait;
 use App\IATI\Traits\MigrateActivityResultsTrait;
 use App\IATI\Traits\MigrateActivityTrait;
@@ -38,7 +39,6 @@ use App\IATI\Traits\TrackMigrationErrorTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -62,6 +62,7 @@ class MigrateOrganizationCommand extends Command
     use MigrateOrganizationPublishedTrait;
     use MigrateDocumentFileTrait;
     use TrackMigrationErrorTrait;
+    use LogFunctionTrait;
 
     /**
      * The name and signature of the console command.
@@ -333,145 +334,6 @@ class MigrateOrganizationCommand extends Command
     }
 
     /**
-     * Updates organization document link.
-     *
-     * @param $aidStreamOrganizationId
-     * @param $iatiOrganization
-     *
-     * @return void
-     */
-    public function updateOrganizationDocumentLinkUrl($aidStreamOrganizationId, $iatiOrganization): void
-    {
-        if (!empty($iatiOrganization) && !empty($aidStreamOrganizationId)) {
-            $documentLink = [];
-            $orgDocumentLinks = $iatiOrganization->document_link;
-
-            if ($orgDocumentLinks && count($orgDocumentLinks)) {
-                foreach ($orgDocumentLinks as $data) {
-                    $data['url'] = $this->replaceDocumentLinkUrl($data['url'], $iatiOrganization->id);
-                    $documentLink[] = $data;
-                }
-            }
-
-            $iatiOrganization->document_link = count($documentLink) ? $documentLink : null;
-            $iatiOrganization->timestamps = false;
-            $iatiOrganization->saveQuietly(['touch'=>false]);
-        }
-    }
-
-    /**
-     * Migrates Aid stream document data to iati document table.
-     *
-     * @param $aidstreamOrganizationId
-     * @param $iatiOrganization
-     * @param $migratedActivitiesLookupTable
-     *
-     * @return void
-     * @throws \JsonException
-     */
-    public function migrateDocuments($aidstreamOrganizationId, $iatiOrganization, $migratedActivitiesLookupTable): void
-    {
-        $aidStreamDocument = $this->db::connection('aidstream')->table('documents')
-                                      ->where('org_id', $aidstreamOrganizationId)
-                                      ->get();
-
-        if (count($aidStreamDocument)) {
-            $iatiDocuments = [];
-
-            foreach ($aidStreamDocument as $aidDocument) {
-                $iatiDocuments[] = [
-                    'activity_id'     => null,
-                    'activities'      => $this->fillActivitiesId(
-                        $aidDocument->activities,
-                        $migratedActivitiesLookupTable
-                    ),
-                    'organization_id' => $iatiOrganization->id,
-                    'filename'        => $aidDocument->filename,
-                    'extension'       => getFileNameExtension($aidDocument->filename),
-                    'size'            => $aidDocument->file_size,
-                    'created_at'      => $aidDocument->created_at,
-                    'updated_at'      => $aidDocument->updated_at,
-                ];
-            }
-
-            $this->documentService->insert($iatiDocuments);
-            $this->logInfo('Completed migrating documents for organization id ' . $aidstreamOrganizationId);
-        }
-    }
-
-    /**
-     * Map new activity id into json format.
-     *
-     * @param $aidStreamActivitiesId
-     * @param $migratedActivitiesLookupTable
-     *
-     * @return string|null
-     * @throws \JsonException
-     */
-    public function fillActivitiesId($aidStreamActivitiesId, $migratedActivitiesLookupTable): null|string
-    {
-        $aidStreamActivitiesId = !empty($aidStreamActivitiesId) ? json_decode(
-            $aidStreamActivitiesId,
-            true,
-            512,
-            JSON_THROW_ON_ERROR
-        ) : null;
-
-        $updatedActivityIds = [];
-
-        if (!empty($aidStreamActivitiesId)) {
-            if (is_string($aidStreamActivitiesId)) {
-                $aidStreamActivitiesId = json_decode($aidStreamActivitiesId, true);
-            }
-
-            foreach ($aidStreamActivitiesId as $aidActivityId => $identifier) {
-                if (!isset($migratedActivitiesLookupTable[$aidActivityId])) {
-                    continue;
-                }
-
-                $updatedActivityIds[] = $migratedActivitiesLookupTable[$aidActivityId];
-            }
-        }
-
-        return count($updatedActivityIds) ? json_encode($updatedActivityIds, JSON_THROW_ON_ERROR) : null;
-    }
-
-    /**
-     * Migrated aid stream activity snapshot to iati activity snapshot table.
-     *
-     * @param $iatiActivity
-     * @param $aidstreamActivity
-     *
-     * @return void
-     */
-    public function migrateActivitySnapshot($iatiActivity, $aidstreamActivity): void
-    {
-        $aidStreamActivitySnapshots = $this->db::connection('aidstream')->table('activity_snapshots')->where(
-            'activity_id',
-            $aidstreamActivity->id
-        )->get();
-
-        if (count($aidStreamActivitySnapshots)) {
-            $iatiActivitySnapshots = [];
-
-            foreach ($aidStreamActivitySnapshots as $aidActivitySnapshot) {
-                $iatiActivitySnapshots[] = [
-                    'org_id'         => $iatiActivity->org_id,
-                    'activity_id'    => $iatiActivity->id,
-                    'published_data' => $aidActivitySnapshot->published_data,
-                    'filename'       => $aidActivitySnapshot->filename,
-                    'created_at'     => $aidActivitySnapshot->created_at,
-                    'updated_at'     => $aidActivitySnapshot->updated_at,
-                ];
-            }
-            $this->activitySnapshotService->insert($iatiActivitySnapshots);
-            $this->logInfo(
-                'Completed migrating activity snapshots for organization id ' . $aidstreamActivity->organization_id
-            );
-        }
-    }
-
-    /**
      * Ask input from user and return value.
      *
      * @param $question
@@ -514,74 +376,6 @@ class MigrateOrganizationCommand extends Command
         return $validator->fails()
             ? $validator->errors()->first($fieldName)
             : null;
-    }
-
-    /**
-     * Set default values where empty.
-     *
-     * @param $iatiElement
-     * @param $aidStreamOrganizationSetting
-     * @param bool $activityLevel
-     * @return void
-     * @throws BindingResolutionException
-     */
-    private function setDefaultValues($iatiElement, $aidStreamOrganizationSetting, $activityLevel = true): void
-    {
-        $defaultFieldValues = $aidStreamOrganizationSetting->default_field_values;
-
-        if ($activityLevel) {
-            $defaultFieldValues = $iatiElement->default_field_values ? [$iatiElement->default_field_values] : $defaultFieldValues;
-            $defaultFieldValues = json_encode($defaultFieldValues);
-        }
-
-        if ($defaultFieldValues) {
-            $data = $iatiElement->toArray();
-            $updatedIatiData = $this->populateDefaultFields($data, $defaultFieldValues);
-            $iatiElement->timestamps = false;
-            $iatiElement->updateQuietly($updatedIatiData, ['touch'=>false]);
-        }
-    }
-
-    /**
-     * replace aid stream url to s3 bucket url.
-     *
-     * @param $url
-     * @param $iatiOrganizationId
-     * @return null|string
-     * @parram $iatiOrganizationId
-     */
-    public function replaceDocumentLinkUrl($url, $iatiOrganizationId): ?string
-    {
-        if ($url) {
-            $parsedUrl = parse_url($url);
-
-            if (isset($parsedUrl['host']) && in_array($parsedUrl['host'], ['www.aidstream.org', 'aidstream.org'])) {
-                $explodedPath = explode('/', $parsedUrl['path']);
-                $fileName = end($explodedPath);
-                $path = '/document-link/' . $iatiOrganizationId . '/' . $fileName;
-                $url = awsUrl($path);
-            }
-
-            return $url;
-        }
-
-        return null;
-    }
-
-    /**
-     * Saves the organization complete status.
-     *
-     * @param $iatiOrganization
-     *
-     * @return void
-     *
-     * @throws \JsonException
-     */
-    public function updateOrganizationCompleteStatus($iatiOrganization): void
-    {
-        $this->setElementStatus($iatiOrganization);
-        $iatiOrganization->timestamps = false;
-        $iatiOrganization->saveQuietly(['touch'=>false]);
     }
 
     /**
@@ -670,59 +464,16 @@ class MigrateOrganizationCommand extends Command
                                 throw new PublishException($iatiOrganization->id, $message);
                             }
                         } else {
-                            $message = "Organization file: {$organizationPublished->filename} not published because 'token_verification' is not valid.'";
-                            $this->setGeneralError($message)->setDetailedError(
-                                $message,
-                                $aidStreamOrganization->id,
-                                'organization_published',
-                                $organizationPublished->id,
-                            );
-                            $this->logInfo($message);
-                            $timestamp = Carbon::now()->format('y-m-d-H-i-s');
-                            awsUploadFile("Migration/Migration-errors-{$aidStreamOrganization->id}-{$timestamp}.json", json_encode($this->errors));
-
-                            throw new PublishException($iatiOrganization->id, $message);
+                            $this->logOrganizationNotPublishedBecauseTokenVerification($aidStreamOrganization, $iatiOrganization, $organizationPublished);
                         }
                     } else {
-                        $message = "Organization file: {$organizationPublished->filename} not published because 'publisher_verification' is not valid.'";
-                        $this->setGeneralError($message)->setDetailedError(
-                            $message,
-                            $aidStreamOrganization->id,
-                            'organization_published',
-                            $organizationPublished->id,
-                            $iatiOrganization->id
-                        );
-                        $this->logInfo($message);
-                        $timestamp = Carbon::now()->format('y-m-d-H-i-s');
-                        awsUploadFile("Migration/Migration-errors-{$aidStreamOrganization->id}-{$timestamp}.json", json_encode($this->errors));
-
-                        throw new PublishException($iatiOrganization->id, $message);
+                        $this->logOrganizationNotPublishedBecausePublisherVerification($aidStreamOrganization, $iatiOrganization, $organizationPublished);
                     }
                 } else {
-                    $message = "Organization file: {$organizationPublished->filename} not published because 'organization setting' is not valid.'";
-                    $this->setGeneralError($message)->setDetailedError(
-                        $message,
-                        $aidStreamOrganization->id,
-                        'settings',
-                        $setting->id,
-                        $iatiOrganization->id
-                    );
-                    $this->logInfo($message);
-
-                    throw new PublishException($iatiOrganization->id, $message);
+                    $this->logOrganizationNotPublishedBecauseOrganizationSettingIsNotValid($aidStreamOrganization, $iatiOrganization, $organizationPublished, $setting);
                 }
             } else {
-                $message = "Organization file: {$organizationPublished->filename} not published as 'published to registry' is false.";
-                $this->setGeneralError($message)->setDetailedError(
-                    $message,
-                    $aidStreamOrganization->id,
-                    'organization_published',
-                    $organizationPublished->id,
-                    $iatiOrganization->id,
-                    '',
-                    'Organization file > publishing'
-                );
-                $this->logInfo($message);
+                $this->logOrganizationNotPublishedBecausePublishedToRegistryIsFalse($aidStreamOrganization, $iatiOrganization, $organizationPublished);
             }
         }
 
@@ -738,35 +489,7 @@ class MigrateOrganizationCommand extends Command
                 if ($setting) {
                     if (Arr::get($setting->publishing_info, 'publisher_verification', false)) {
                         if (Arr::get($setting->publishing_info, 'token_verification', false)) {
-                            $settings = $iatiOrganization->settings;
-                            $publishingInfo = $settings ? $settings->publishing_info : [];
-                            $this->logInfo(
-                                "Publishing activity file: {$activityPublished->filename} for Aidstream org: {$aidStreamOrganization->id}."
-                            );
-
-                            try {
-                                $this->publisherService->publishFile(
-                                    $publishingInfo,
-                                    $activityPublished,
-                                    $iatiOrganization,
-                                    false
-                                );
-                                $this->logInfo(
-                                    "Completed publishing activity file: {$activityPublished->filename} with updated at {$activityPublished->updated_at} for Aidstream org: {$aidStreamOrganization->id}."
-                                );
-                            } catch (Exception $exception) {
-                                $message = "Activity file: {$activityPublished->filename} with updated at: {$activityPublished->updated_at} not published with error: {$exception->getMessage()}.";
-                                $this->setGeneralError($message)->setDetailedError(
-                                    $message,
-                                    $aidStreamOrganization->id,
-                                    'activity_published',
-                                    $activityPublished->id,
-                                    $iatiOrganization->id
-                                );
-                                $this->logInfo($message);
-
-                                throw new PublishException($iatiOrganization->id, $message);
-                            }
+                            $this->tryPublishingActivityFile($aidStreamOrganization, $iatiOrganization, $activityPublished);
                             $this->unpublishSegmentedFiles(
                                 Arr::get($setting->publishing_info, 'api_token', null),
                                 $aidstreamActivityPublished,
@@ -774,79 +497,17 @@ class MigrateOrganizationCommand extends Command
                                 $iatiOrganization->id
                             );
                         } else {
-                            $message = "Activity file: {$activityPublished->filename} of Organization: {$aidStreamOrganization?->name} not published because 'token_verification' is not valid.";
-                            $this->setGeneralError($message)->setDetailedError(
-                                $message,
-                                $aidStreamOrganization->id,
-                                'activity_published',
-                                $activityPublished->id,
-                                $iatiOrganization->id,
-                            );
-                            $this->logInfo($message);
-
-                            throw new PublishException($iatiOrganization->id, $message);
+                            $this->logActivityNotPublishedBecauseOfTokenVerification($aidStreamOrganization, $iatiOrganization, $activityPublished);
                         }
                     } else {
-                        $message = "Activity file: {$activityPublished->filename} of Organization: {$aidStreamOrganization?->name} not published because 'publisher_verification' is not valid.";
-                        $this->setGeneralError($message)->setDetailedError(
-                            $message,
-                            $aidStreamOrganization->id,
-                            'activity_published',
-                            $activityPublished->id,
-                            $iatiOrganization->id,
-                        );
-                        $this->logInfo($message);
-
-                        throw new PublishException($iatiOrganization->id, $message);
+                        $this->logActivityNotPublishedBecauseOfPublisherVerification($aidStreamOrganization, $iatiOrganization, $activityPublished);
                     }
                 } else {
-                    $message = "Activity file: {$activityPublished->filename} of Organization : {$aidStreamOrganization?->name} not published because 'organization setting' is not valid. ";
-                    $this->setGeneralError($message)->setDetailedError(
-                        $message,
-                        $aidStreamOrganization->id,
-                        'activity_published',
-                        $activityPublished->id,
-                        $iatiOrganization->id,
-                    );
-                    $this->logInfo($message);
-                    throw new PublishException($iatiOrganization->id, $message);
+                    $this->logActivityNotPublishedBecauseOrganizationSettingNotValid($aidStreamOrganization, $iatiOrganization, $activityPublished);
                 }
             } else {
-                $message = "Activity file: {$activityPublished->filename} of Organization: {$aidStreamOrganization?->name} not published as 'published to registry' is false.";
-                $this->setGeneralError($message)->setDetailedError(
-                    $message,
-                    $aidStreamOrganization->id,
-                    'activity_published',
-                    $activityPublished->id,
-                    $iatiOrganization->id,
-                    '',
-                    'Activity file > publishing'
-                );
-                $this->logInfo($message);
+                $this->logActivityNotPublishedBecausePublishedToRegistryIsFalse($aidStreamOrganization, $iatiOrganization, $activityPublished);
             }
         }
-    }
-
-    /**
-     * Clears error array
-     * Need to clear error array for each org.
-     *
-     * @return void
-     */
-    public function clearErrors(): void
-    {
-        $this->errors = [];
-    }
-
-    /**
-     * Disable aidstream organization.
-     *
-     * @param $orgId
-     *
-     * @return void
-     */
-    public function disableAidstreamOrg($orgId): void
-    {
-        $this->db::connection('aidstream')->table('organizations')->where('id', $orgId)->update(['status' => 0]);
     }
 }

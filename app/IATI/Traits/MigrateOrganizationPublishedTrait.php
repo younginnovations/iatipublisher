@@ -93,4 +93,16 @@ trait MigrateOrganizationPublishedTrait
 
         return null;
     }
+
+    /**
+     * Disable aidstream organization.
+     *
+     * @param $orgId
+     *
+     * @return void
+     */
+    public function disableAidstreamOrg($orgId): void
+    {
+        $this->db::connection('aidstream')->table('organizations')->where('id', $orgId)->update(['status' => 0]);
+    }
 }

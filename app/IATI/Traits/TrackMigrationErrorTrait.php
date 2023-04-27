@@ -239,4 +239,15 @@ trait TrackMigrationErrorTrait
             $writer->save($filePath);
         }
     }
+
+    /**
+     * Clears error array
+     * Need to clear error array for each org.
+     *
+     * @return void
+     */
+    public function clearErrors(): void
+    {
+        $this->errors = [];
+    }
 }
