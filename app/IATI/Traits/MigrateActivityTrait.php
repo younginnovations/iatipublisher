@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\IATI\Traits;
 
+use App\Exceptions\PublishException;
 use App\IATI\Models\User\Role;
 use App\IATI\Repositories\Activity\ActivityRepository;
+use DOMException;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
+use JsonException;
 
 /**
  * Class MigrateActivityTrait.
@@ -431,7 +434,7 @@ trait MigrateActivityTrait
      *
      * @return array
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getNewActivity($aidstreamActivity, $iatiOrganization, $aidStreamOrganization): array
     {
@@ -575,7 +578,7 @@ trait MigrateActivityTrait
      *
      * @return array|null
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getActivityOtherIdentifier($aidstreamOtherIdentifiers): ?array
     {
@@ -613,7 +616,7 @@ trait MigrateActivityTrait
      * @param  array  $removeArray
      * @return array|null
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getActivityFirstLevelData($object, $replaceArray, array $removeArray = []): ?array
     {
@@ -655,7 +658,7 @@ trait MigrateActivityTrait
      *
      * @return array|null
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getActivityUpdatedVocabularyData(
         $object,
@@ -741,7 +744,7 @@ trait MigrateActivityTrait
      *
      * @return array|null
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getActivityLocationData($aidstreamActivity, $iatiOrganization, $aidstreamOrganization): ?array
     {
@@ -814,7 +817,7 @@ trait MigrateActivityTrait
      *
      * @return array
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getLocationAdministrativeData($administratives, $aidstreamActivity, $iatiOrganization, $aidstreamOrganization): array
     {
@@ -858,7 +861,7 @@ trait MigrateActivityTrait
      *
      * @return array|null
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getActivityCountryBudgetItemsData($aidstreamActivity, $iatiOrganization, $aidstreamOrganization): ?array
     {
@@ -914,7 +917,7 @@ trait MigrateActivityTrait
      *
      * @return array
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getBudgetItemsData($budgetItems, $aidstreamActivity, $iatiOrganization, $aidstreamOrganization): array
     {
@@ -955,7 +958,7 @@ trait MigrateActivityTrait
      *
      * @return array|null
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getActivityDefaultAidTypeData($defaultAidTypes): ?array
     {
@@ -1023,7 +1026,7 @@ trait MigrateActivityTrait
      *
      * @return array|null
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getActivityPlannedDisbursementData($plannedDisbursements): ?array
     {
@@ -1095,7 +1098,7 @@ trait MigrateActivityTrait
      *
      * @return float|null
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getActivityCapitalSpendData($capitalSpend): ?float
     {
@@ -1118,7 +1121,7 @@ trait MigrateActivityTrait
      *
      * @return array|null
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getActivityDocumentLinkData($aidstreamActivity, $iatiOrganizationId): ?array
     {
@@ -1173,7 +1176,7 @@ trait MigrateActivityTrait
      *
      * @return array
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getDocumentLinkLanguage($languages): array
     {
@@ -1205,7 +1208,7 @@ trait MigrateActivityTrait
      *
      * @return array|null
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getActivityDefaultFieldValues($defaultValues): ?array
     {
@@ -1243,7 +1246,7 @@ trait MigrateActivityTrait
      *
      * @return array|null
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getActivityTagData($tags): ?array
     {
@@ -1309,7 +1312,7 @@ trait MigrateActivityTrait
      *
      * @return array|null
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getActivityParticipatingOrganizationData($participatingOrganizations): ?array
     {
@@ -1347,7 +1350,7 @@ trait MigrateActivityTrait
      *
      * @return array|null
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getActivityBudgetData($budgets): ?array
     {
@@ -1380,7 +1383,7 @@ trait MigrateActivityTrait
      *
      * @return array|null
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getActivityDateData($dates): ?array
     {
@@ -1547,12 +1550,112 @@ trait MigrateActivityTrait
      *
      * @return void
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function updateOrganizationCompleteStatus($iatiOrganization): void
     {
         $this->setElementStatus($iatiOrganization);
         $iatiOrganization->timestamps = false;
         $iatiOrganization->saveQuietly(['touch'=>false]);
+    }
+
+    /**
+     * Migrates AidStream activities if needed.
+     *
+     * @param $iatiOrganization
+     * @param $aidstreamActivities
+     * @param $aidStreamOrganization
+     * @param $aidStreamOrganizationSetting
+     *
+     * @return object|null
+     *
+     * @throws BindingResolutionException
+     *
+     * @throws JsonException|DOMException|PublishException
+     */
+    public function migrateActivitiesAndOthersIfNeeded($iatiOrganization, $aidstreamActivities, $aidStreamOrganization, $aidStreamOrganizationSetting): ?object
+    {
+        $migratedActivitiesLookupTable = [];
+        $iatiActivities = $iatiOrganization->allActivities->pluck('iati_identifier.activity_identifier')->toArray();
+        $activityPublished = null;
+
+        if (count($aidstreamActivities)) {
+            foreach ($aidstreamActivities as $aidstreamActivity) {
+                $aidstreamIdentifier = $this->getActivityIdentifier($aidstreamActivity->identifier);
+
+                if (!is_null($aidstreamIdentifier) && !in_array($aidstreamIdentifier, $iatiActivities, true)) {
+                    $this->logInfo(
+                        'Started activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
+                    );
+                    $iatiActivity = $this->activityService->create(
+                        $this->getNewActivity($aidstreamActivity, $iatiOrganization, $aidStreamOrganization)
+                    );
+                    $this->auditService->setAuditableId($iatiActivity->id)->auditMigrationEvent(
+                        $iatiActivity,
+                        'migrated-activity'
+                    );
+                    $migratedActivitiesLookupTable[$aidstreamActivity->id] = $iatiActivity->id;
+                    $this->logInfo(
+                        'Completed basic activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
+                    );
+
+                    $this->migrateActivityTransactions($aidstreamActivity->id, $iatiActivity->id);
+                    $this->migrateActivityResults($iatiActivity, $aidstreamActivity, $iatiOrganization);
+                    $this->setDefaultValues($iatiActivity, $aidStreamOrganizationSetting);
+                    $this->migrateActivitySnapshot($iatiActivity, $aidstreamActivity);
+                }
+            }
+
+            if (!empty($migratedActivitiesLookupTable)) {
+                $this->migrateActivitiesPublishedFiles(
+                    $aidStreamOrganization,
+                    $iatiOrganization,
+                    $migratedActivitiesLookupTable
+                );
+                $this->migrateActivityPublishedTable(
+                    $aidStreamOrganization,
+                    $iatiOrganization,
+                    $migratedActivitiesLookupTable
+                );
+                $activityPublished = $this->migrateActivityMergedFile(
+                    $aidStreamOrganization,
+                    $iatiOrganization,
+                    true
+                );
+            }
+        }
+
+        $this->migrateDocumentFiles($aidStreamOrganization, $iatiOrganization);
+        $this->migrateDocuments(
+            $aidStreamOrganization->id,
+            $iatiOrganization,
+            $migratedActivitiesLookupTable
+        );
+
+        return $activityPublished;
+    }
+
+    /**
+     * Returns AidStream activity identifier.
+     *
+     * @param $identifier
+     *
+     * @return string|null
+     *
+     * @throws JsonException
+     */
+    public function getActivityIdentifier($identifier): ?string
+    {
+        if (!$identifier) {
+            return null;
+        }
+
+        $identifierArray = json_decode($identifier, true, 512, JSON_THROW_ON_ERROR);
+
+        if (!$identifierArray || !is_array($identifierArray)) {
+            return null;
+        }
+
+        return Arr::get($identifierArray, 'activity_identifier', null);
     }
 }

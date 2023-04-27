@@ -196,6 +196,8 @@ class MigrateOrganizationCommand extends Command
                         $aidstreamOrganizationId
                     )->first();
 
+                    $this->setting = null;
+
                     if ($aidStreamOrganizationSetting) {
                         $this->logInfo('Started settings migration for organization id: ' . $aidstreamOrganizationId);
                         $this->setting = $this->settingService->create(
@@ -293,7 +295,6 @@ class MigrateOrganizationCommand extends Command
                         $iatiOrganization
                     );
                     $this->updateOrganizationDocumentLinkUrl($aidStreamOrganization->id, $iatiOrganization);
-                    $this->clearErrors();
 
                     $this->publishFilesToRegistry(
                         $organizationPublished,
@@ -307,6 +308,7 @@ class MigrateOrganizationCommand extends Command
                     $this->auditService->setAuditableId($iatiOrganization->id)->auditMigrationEvent($iatiOrganization, 'migrated-organization');
 
                     $this->databaseManager->commit();
+                    $this->clearErrors();
                 } catch (PublishException $publishException) {
                     logger()->channel('migration')->error($publishException->getMessage());
                     $this->error($publishException->getMessage());
@@ -386,19 +388,21 @@ class MigrateOrganizationCommand extends Command
      * @param $aidStreamOrganization
      * @param $activityPublished
      * @param $setting
+     * @param  bool  $publishOrganization
      *
      * @return void
      *
-     * @throws Exception
+     * @throws PublishException
      */
     public function publishFilesToRegistry(
         $organizationPublished,
         $iatiOrganization,
         $aidStreamOrganization,
         $activityPublished,
-        $setting
+        $setting,
+        bool $publishOrganization = true
     ): void {
-        if ($organizationPublished) {
+        if ($organizationPublished && $publishOrganization) {
             if ($organizationPublished->published_to_registry) {
                 if ($setting) {
                     if (Arr::get($setting->publishing_info, 'publisher_verification', false)) {

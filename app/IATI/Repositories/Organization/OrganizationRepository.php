@@ -174,6 +174,6 @@ class OrganizationRepository extends Repository
      */
     public function getOrganizationByPublisherId($publisherId): ?object
     {
-        return $this->model->where('publisher_id', $publisherId)->first();
+        return $this->model->where('publisher_id', $publisherId)->with(['settings', 'users', 'activities'])->first();
     }
 }

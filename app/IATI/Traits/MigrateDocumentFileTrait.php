@@ -162,7 +162,7 @@ trait MigrateDocumentFileTrait
 
         if (!empty($aidStreamActivitiesId)) {
             if (is_string($aidStreamActivitiesId)) {
-                $aidStreamActivitiesId = json_decode($aidStreamActivitiesId, true);
+                $aidStreamActivitiesId = json_decode($aidStreamActivitiesId, true, 512, JSON_THROW_ON_ERROR);
             }
 
             foreach ($aidStreamActivitiesId as $aidActivityId => $identifier) {

@@ -57,4 +57,35 @@ trait MigrateUserTrait
 
         return $this->roleRepository->getGeneralUserId();
     }
+
+    /**
+     * Migrates users from AidStream to IATI Publisher if needed.
+     *
+     * @param $iatiOrganization
+     * @param $aidstreamUsers
+     * @param $aidStreamOrganization
+     *
+     * @return void
+     */
+    public function migrateUsersIfNeeded($iatiOrganization, $aidstreamUsers, $aidStreamOrganization): void
+    {
+        $iatiUsers = $iatiOrganization->usersIncludingDeleted->pluck('email')->toArray() ?? [];
+
+        if (count($aidstreamUsers)) {
+            foreach ($aidstreamUsers as $aidstreamUser) {
+                if (!in_array($aidstreamUser->email, $iatiUsers, true)) {
+                    $this->logInfo(
+                        'Started user migration for user id: ' . $aidstreamUser->id . ' of organization: ' . $aidStreamOrganization->name
+                    );
+                    $iatiUser = $this->userService->create(
+                        $this->getNewUser($aidstreamUser, $iatiOrganization)
+                    );
+                    $this->auditService->setAuditableId($iatiUser->id)->auditMigrationEvent($iatiUser, 'migrated-user');
+                    $this->logInfo(
+                        'Completed user migration for user id: ' . $aidstreamUser->id . ' of organization: ' . $aidStreamOrganization->name
+                    );
+                }
+            }
+        }
+    }
 }
