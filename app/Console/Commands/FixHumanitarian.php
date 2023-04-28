@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Validator;
 use PHPUnit\Exception;
 use Throwable;
 
-/*
- * Class Fix Humanitarian
+/**
+ * Class Fix Humanitarian.
  */
 class FixHumanitarian extends Command
 {
@@ -30,6 +30,10 @@ class FixHumanitarian extends Command
      */
     protected $description = 'Command description';
 
+    /**
+     * @param  DB  $db
+     * @param  DatabaseManager  $databaseManager
+     */
     public function __construct(
         protected DB $db,
         protected DatabaseManager $databaseManager
@@ -73,7 +77,7 @@ class FixHumanitarian extends Command
                ->whereIn(DB::raw($concatQuery), array_values($iatiIdentifierTextArray))
                ->update(['activities.default_field_values->humanitarian'=> '0']);
 
-            $this->info("Complete updating humanitarian value.");
+            $this->info('Complete updating humanitarian value.');
 
             $this->databaseManager->commit();
         } catch(Exception $e) {
@@ -129,7 +133,7 @@ class FixHumanitarian extends Command
     }
 
     /**
-     * Return array of id of activities where default_field_values->humanitarian = no
+     * Return array of id of activities where default_field_values->humanitarian = no.
      *
      * @param $activityDefaultValuesJsonArray
      *
@@ -153,7 +157,7 @@ class FixHumanitarian extends Command
     }
 
     /**
-     * Returns IatiIdentifierText of needed activities
+     * Returns IatiIdentifierText of needed activities.
      *
      * @param $activityIdWhereHumanitarianIsZero
      * @param $activityIdentifiersJsonArray
