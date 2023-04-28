@@ -29,7 +29,7 @@ trait MigrateProUserTrait
     public function getCustomVocabularyUrl(): string
     {
         $filename = strtolower($this->currentAidstreamOrganizationBeingProcessed->user_identifier);
-        $filepath = "custom-vocabulary/${filename}.csv";
+        $filepath = "custom-vocabulary/{$filename}.csv";
 
         return awsUrl($filepath);
     }

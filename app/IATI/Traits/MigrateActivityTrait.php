@@ -425,8 +425,14 @@ trait MigrateActivityTrait
             ],
         ];
 
+    /**
+     * @var bool
+     */
     public bool $hasCustomVocab = false;
 
+    /**
+     * @var string
+     */
     public string $customVocabUrl = '';
 
     /**
