@@ -961,8 +961,10 @@ class ElementCompleteService
         $attributes = $activity->getAttributes();
 
         foreach ($attributes as $attribute => $value) {
-            if (!in_array($attribute, $skippables)) {
-                $elementStatus[$attribute] = call_user_func([$this, dashesToCamelCase('is_' . $attribute . '_element_completed')], $activity);
+            $attributeMethod = dashesToCamelCase('is_' . $attribute . '_element_completed');
+
+            if (!in_array($attribute, $skippables) && is_callable([$this, $attributeMethod])) {
+                $elementStatus[$attribute] = call_user_func([$this, $attributeMethod], $activity);
             }
         }
 

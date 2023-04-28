@@ -247,7 +247,7 @@ trait FillDefaultValuesTrait
     protected function getDefaultValueBasedOnPriority(...$values): string
     {
         foreach ($values as $value) {
-            if ($value) {
+            if ($value || is_numeric($value)) {
                 return (string) $value;
             }
         }
