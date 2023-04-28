@@ -75,6 +75,7 @@ class FixRegionIssues extends Command
             $aidstreamOrganizationIdentifierArray =  $this->getAidstreamOrganizationIdentifier($aidstreamOrganizationIds);
             $recipientCountryBudgetArray = $aidstreamOrganizationDataCollectionArray->pluck('recipient_country_budget', 'organization_id');
             $recipientRegionBudgetArray = $aidstreamOrganizationDataCollectionArray->pluck('recipient_region_budget', 'organization_id');
+            $aidstreamOrganizationIdentifierArray = array_map('strtolower', $aidstreamOrganizationIdentifierArray);
 
             $iatiOrganizations = Organization::whereIn('publisher_id', $aidstreamOrganizationIdentifierArray)->get();
             $iatiOrganizationIdArray  =  $iatiOrganizations->pluck('id', 'publisher_id');
@@ -88,8 +89,6 @@ class FixRegionIssues extends Command
                 $defaultFieldValues = json_encode(
                     [
                         $iatiOrganization->settings->default_values
-                        +
-                        $iatiOrganization->settings->activity_default_values
                     ]
                 );
 
