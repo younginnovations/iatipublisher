@@ -242,6 +242,7 @@ trait MigrateOrganizationTrait
                         'value'         => Arr::get($array, 'value', $this->emptyValueArray),
                     ],
                     'recipient_country' => [
+                        'status'            => Arr::get($array, 'status', null),
                         'recipient_country' => Arr::get(
                             $array,
                             'recipient_country',
@@ -290,6 +291,7 @@ trait MigrateOrganizationTrait
         $recipientRegionBudgetArray = json_decode($recipientRegionBudget, true, 512, JSON_THROW_ON_ERROR);
 
         if ($recipientRegionBudgetArray && count($recipientRegionBudgetArray)) {
+//            dd(json_encode($recipientRegionBudgetArray));
             foreach (array_values($recipientRegionBudgetArray) as $key => $array) {
                 $newRecipientRegionBudget[$key] = [
                     'status'           => Arr::get($array, 'status', null),
@@ -341,6 +343,8 @@ trait MigrateOrganizationTrait
                     $array[$key]['vocabulary_uri'] = Arr::get($recipientRegion, 'vocabulary_uri', null);
                 }
             }
+
+            $array[$key]['narrative'] = Arr::get($recipientRegion, 'narrative', $this->emptyNarrativeTemplate);
         }
 
         return $array;
