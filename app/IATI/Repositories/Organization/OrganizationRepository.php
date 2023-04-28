@@ -9,7 +9,9 @@ use App\IATI\Models\Setting\Setting;
 use App\IATI\Models\User\Role;
 use App\IATI\Repositories\Repository;
 use App\IATI\Traits\FillDefaultValuesTrait;
+use DB;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -85,10 +87,12 @@ class OrganizationRepository extends Repository
         $bindParams = [];
         $adminRoleId = app(Role::class)->getOrganizationAdminId();
 
-        if (array_key_exists(
-            'q',
-            $queryParams
-        ) && !empty($queryParams['q'])) {
+        if (
+            array_key_exists(
+                'q',
+                $queryParams
+            ) && !empty($queryParams['q'])
+        ) {
             $query = $queryParams['q'];
             $innerSql = 'select id, json_array_elements(name) name_array from organizations';
 
@@ -108,11 +112,13 @@ class OrganizationRepository extends Repository
         }
 
         $organizations = $this->model->withCount('allActivities')
-            ->with(['user' => function ($user) use ($adminRoleId) {
-                return $user->where('role_id', $adminRoleId)
-                    ->where('status', 1)
-                    ->whereNull('deleted_at');
-            }]);
+            ->with([
+                'user' => function ($user) use ($adminRoleId) {
+                    return $user->where('role_id', $adminRoleId)
+                        ->where('status', 1)
+                        ->whereNull('deleted_at');
+                },
+            ]);
 
         if (array_key_exists('q', $queryParams) && !empty($queryParams['q'])) {
             $organizations->whereRaw($whereSql, $bindParams)
@@ -187,5 +193,44 @@ class OrganizationRepository extends Repository
     public function getOrganizationByPublisherIds(array $publisherIds): Collection | array
     {
         return $this->model->whereIn('publisher_id', $publisherIds)->get();
+    }
+
+    /**
+     * Applies filter to the publisher query.
+     *
+     * @param $queryParams
+     */
+    protected function filterPublisher($query, $queryParams): Builder
+    {
+        // if (!$queryParams['startDate']) {
+        //     $query->where('created')
+        // }
+
+        return $query;
+    }
+
+    public function getPublisherStats($queryParams): array
+    {
+        // dd($this->model->latest('created_at')->get());
+        return [
+            'totalCount' => $this->model->count(),
+            'lastRegisteredPublisher' => $this->model->select('id', 'created_at', 'name')->latest('created_at')->get(),
+            // 'inActivePublisher' => $this->model->where();
+        ];
+    }
+
+    public function getPublisherBy($queryParams): array
+    {
+        $query = $this->model->select(DB::raw('count(*) as type_count, publisher_type'))->groupBy('publisher_type')->get()->toArray();
+
+        // if ($queryParams) {
+        //     $query = $this->filterPublisher($query, $queryParams);
+        // }
+
+        dump($query);
+
+        return [
+
+        ];
     }
 }

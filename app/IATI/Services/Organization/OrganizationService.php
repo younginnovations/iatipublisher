@@ -251,7 +251,27 @@ class OrganizationService
         return $this->organizationRepo->getOrganizationByPublisherIds($publisherIds);
     }
 
+    /**
+     * Returns array containing publisher stats.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     */
     public function getPublisherStats($queryParams): array
     {
+        return $this->organizationRepo->getPublisherStats($queryParams);
+    }
+
+    /**
+     * Returns array containing publisher type.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     */
+    public function getPublisherByType($queryParams): array
+    {
+        return $this->organizationRepo->getPublisherByType($queryParams);
     }
 }

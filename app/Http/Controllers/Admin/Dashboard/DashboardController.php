@@ -59,7 +59,140 @@ class DashboardController extends Controller
         return $queryParams;
     }
 
+    /**
+     * Returns json data containing publisher stats.
+     *
+     * @param $request
+     *
+     * @return JsonResponse
+     */
     public function publisherStats(Request $request): JsonResponse
+    {
+        try {
+            $params = $this->getQueryParams($request);
+            $publisherStat = $this->organizationService->getPublisherStats($params);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Publisher stats fetched successfully',
+                'data' => $publisherStat,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
+        }
+    }
+
+    /**
+     * Returns json data containing publisher stats.
+     *
+     * @param $request
+     *
+     * @return JsonResponse
+     */
+    public function publisherRegistrationCount(Request $request): JsonResponse
+    {
+        try {
+            $params = $this->getQueryParams($request);
+            $publisherStat = $this->organizationService->getPublisherStats($params);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Publisher stats fetched successfully',
+                'data' => $publisherStat,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
+        }
+    }
+
+    /**
+     * Returns json data containing publisher stats.
+     *
+     * @param $request
+     *
+     * @return JsonResponse
+     */
+    public function publisherRegistrationType(Request $request): JsonResponse
+    {
+        try {
+            $params = $this->getQueryParams($request);
+            $publisherStat = $this->organizationService->getPublisherStats($params);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Publisher stats fetched successfully',
+                'data' => $publisherStat,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
+        }
+    }
+
+    /**
+     * Returns json data containing publisher stats.
+     *
+     * @param $request
+     *
+     * @return JsonResponse
+     */
+    public function publisherGroupedByCountry(Request $request): JsonResponse
+    {
+        try {
+            $params = $this->getQueryParams($request);
+            $publisherStat = $this->organizationService->getPublisherStats($params);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Publisher stats fetched successfully',
+                'data' => $publisherStat,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
+        }
+    }
+
+    /**
+     * Returns json data containing publisher stats.
+     *
+     * @param $request
+     *
+     * @return JsonResponse
+     */
+    public function publisherGroupedByType(Request $request): JsonResponse
+    {
+        try {
+            $params = $this->getQueryParams($request);
+            $publisherStat = $this->organizationService->getPublisherBy($params);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Publisher stats fetched successfully',
+                'data' => $publisherStat,
+            ]);
+        } catch (\Exception $e) {
+            dd($e);
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
+        }
+    }
+
+    /**
+     * Returns json data containing publisher stats.
+     *
+     * @param $request
+     *
+     * @return JsonResponse
+     */
+    public function publisherGroupedBySetupCompleteness(Request $request): JsonResponse
     {
         try {
             $params = $this->getQueryParams($request);
