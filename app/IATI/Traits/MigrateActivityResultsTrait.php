@@ -265,7 +265,7 @@ trait MigrateActivityResultsTrait
         foreach ($resultReferences as $reference) {
             if ($reference->result_id === $baseResult->id) {
                 $this->logInfo("Reference of id: {$reference->id} exists in result of id {$baseResult->id}.");
-                $reference->vocabulary_uri = !empty($reference->url) ? $this->replaceDocumentLinkUrl($reference->url, $iatiOrganization) : null;
+                $reference->vocabulary_uri = !empty($reference->url) ? $this->replaceDocumentLinkUrl($reference->url, $iatiOrganization->id) : null;
                 unset($reference->url);
                 $referencesThatMatchResultId[] = $reference;
             }
@@ -290,7 +290,7 @@ trait MigrateActivityResultsTrait
         foreach ($resultDocumentLinks as $documentLink) {
             if ($documentLink->result_id === $baseResult->id) {
                 $this->logInfo("Document link of id: {$documentLink->id} exists in result of id {$baseResult->id}.");
-                $documentLink->url = $this->replaceDocumentLinkUrl($documentLink->url, $iatiOrganization);
+                $documentLink->url = $this->replaceDocumentLinkUrl($documentLink->url, $iatiOrganization->id);
                 $documentLinksThatMatchResultId[] = $documentLink;
             }
         }
