@@ -1,5 +1,12 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <organisation-list></organisation-list>
+    <organisation-list
+            :countries='{{json_encode($country)}}'
+            :setup-completeness='{{json_encode($setupCompleteness)}}'
+            :registration-types='{{json_encode($registrationType)}}'
+            :publisher-types='{{json_encode($publisherType)}}'
+            :data-licenses='{{json_encode($dataLicense)}}'
+    >
+    </organisation-list>
 @endsection

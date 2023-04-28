@@ -126,7 +126,7 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
     /**
      * @return BelongsTo
      */
-    protected function organization(): BelongsTo
+    public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class, 'organization_id');
     }

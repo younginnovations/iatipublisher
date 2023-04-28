@@ -76,6 +76,11 @@
 svg {
   height: 1em;
 }
+.chart-wrapper {
+  svg {
+    height: auto;
+  }
+}
 
 .vrp__wrapper {
   p {

@@ -578,7 +578,17 @@ if (!function_exists('getTableConfig')) {
     {
         $tableConfig = [
             'activity' => ['orderBy' => ['updated_at'], 'direction' => ['asc', 'desc']],
-            'organisation' => ['orderBy' => ['updated_at', 'all_activities_count', 'name'], 'direction' => ['asc', 'desc']],
+            'organisation' => [
+                'orderBy'   => ['updated_at', 'all_activities_count', 'name', 'registered_on', 'publisher_type', 'data_license', 'country'],
+                'direction' => ['asc', 'desc'],
+                'filters'=>[
+                    'country'          => 'multiple',
+                    'completeness'     => 'single',
+                    'registrationType' => 'single',
+                    'publisherType'    => 'multiple',
+                    'dataLicense'      => 'multiple',
+                ],
+            ],
             'user' => ['orderBy' => ['username', 'publisher_name', 'created_at'], 'direction' => ['asc', 'desc']],
             'audit' => ['orderBy' => ['user_id', 'user_type', 'event', 'auditable_type', 'created_at'], 'direction' => ['asc', 'desc']],
         ];

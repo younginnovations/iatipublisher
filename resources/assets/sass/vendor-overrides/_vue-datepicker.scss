@@ -1,0 +1,102 @@
+.dp__input {
+  border: none !important;
+  background: transparent !important;
+  color: black !important;
+  padding: 0 8px !important;
+  font-size: 15px !important;
+  font-family: inherit !important;
+}
+
+.dp__input::placeholder {
+  font-size: 15px !important;
+  font-family: inherit !important;
+  color: black !important;
+}
+
+.dp__input_icon {
+  display: none !important;
+}
+
+.dp__clear_icon {
+  display: none !important;
+}
+.dp__input_readonly {
+  font-family: Arial, sans-serif !important;
+}
+.dp__calendar_header_item {
+  font-weight: lighter !important;
+  color: rgba(var(--n-40)) !important;
+}
+
+.dp__calendar_item * {
+  margin-left: 0;
+  margin-right: 0;
+}
+.dp__cell_inner {
+  color: rgba(var(--n-40)) !important;
+  height: 40px !important;
+  width: 40px !important;
+}
+
+.dp__overlay_cell:hover {
+  background: rgba(var(--spring-10)) !important;
+}
+
+.dp__overlay_cell_active {
+  background: rgba(var(--spring-50)) !important;
+}
+
+.dp__calendar_row {
+  gap: 0 !important;
+}
+
+.dp__today {
+  border-radius: 50% !important;
+  border: 1px solid rgba(var(--spring-50)) !important;
+  background: transparent !important;
+  color: var(--n-40) !important;
+}
+
+.dp__range_end {
+  background: rgba(var(--spring-10)) !important;
+  color: white !important;
+  border-radius: 0 50% 50% 0 !important;
+  border: 0 !important;
+}
+
+.dp__range_start {
+  background: rgba(var(--spring-10)) !important;
+  color: white !important;
+  border-radius: 50% 0 0 40% !important;
+}
+
+.dp__range_between {
+  background: rgba(var(--spring-10)) !important;
+  color: white !important;
+}
+
+.dp__preset_ranges {
+  color: rgba(var(--n-50)) !important;
+  text-transform: uppercase !important;
+  min-width: 150px !important;
+}
+.dp__preset_range {
+  color: rgba(var(--n-50)) !important;
+  padding-left: 8px !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  margin: 4px auto !important;
+}
+
+.dp__preset_range:hover {
+  background: rgba(var(--spring-10)) !important;
+  color: white !important;
+}
+
+.font-spring {
+  color: var(--spring-50) !important;
+}
+
+.font-neutral {
+  color: var(--n-50) !important;
+}
