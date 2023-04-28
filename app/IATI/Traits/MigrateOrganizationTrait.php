@@ -242,6 +242,7 @@ trait MigrateOrganizationTrait
                         'value'         => Arr::get($array, 'value', $this->emptyValueArray),
                     ],
                     'recipient_country' => [
+                        'status'            => Arr::get($array, 'status', null),
                         'recipient_country' => Arr::get(
                             $array,
                             'recipient_country',
@@ -341,6 +342,8 @@ trait MigrateOrganizationTrait
                     $array[$key]['vocabulary_uri'] = Arr::get($recipientRegion, 'vocabulary_uri', null);
                 }
             }
+
+            $array[$key]['narrative'] = Arr::get($recipientRegion, 'narrative', $this->emptyNarrativeTemplate);
         }
 
         return $array;
