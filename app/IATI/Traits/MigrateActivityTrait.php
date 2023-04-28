@@ -365,7 +365,7 @@ trait MigrateActivityTrait
                 ],
             ],
             'category'      => [['code' => null]],
-            'language'      => [['language' => 'en']],
+            'language'      => [['language' => null]],
             'document_date' => [['date' => null]],
         ];
 
@@ -425,6 +425,7 @@ trait MigrateActivityTrait
      *
      * @param $aidstreamActivity
      * @param $iatiOrganization
+     * @param $aidStreamOrganization
      *
      * @return array
      *

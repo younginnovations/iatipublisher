@@ -98,7 +98,10 @@ trait FillDefaultValuesTrait
      */
     public function setLanguage(array &$data, string $key, $datum, $defaultValues): void
     {
-        if ($key === 'language' && empty($datum) && !empty($this->tempNarrative) && in_array('narrative', array_keys($data))) {
+        if ($key === 'language' && empty($datum) && !empty($this->tempNarrative) && array_key_exists(
+            'narrative',
+            $data
+        )) {
             $data['language'] = Arr::get($defaultValues, 'default_language', null);
         }
     }

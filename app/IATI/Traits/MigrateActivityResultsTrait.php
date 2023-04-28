@@ -80,7 +80,7 @@ trait MigrateActivityResultsTrait
                     ],
                 ],
                 'category'      => [['code' => null]],
-                'language'      => [['language' => 'en']],
+                'language'      => [['language' => null]],
                 'document_date' => [['date' => null]],
             ],
         ],
