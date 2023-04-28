@@ -6,6 +6,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Database\DatabaseManager;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use PHPUnit\Exception;
@@ -144,10 +145,9 @@ class FixHumanitarian extends Command
         $returnArray = [];
 
         foreach ($activityDefaultValuesJsonArray as $id => $item) {
-            $item = $item ? json_decode($item) : false;
+            $item = $item ? json_decode($item, true) : false;
             if ($item) {
-                $item = $item[0];
-                if ($item?->humanitarian || is_numeric($item?->humanitarian)) {
+                if (Arr::get($item, '0.humanitarian', false) === 0 || Arr::get($item, '0.humanitarian', false) === '0') {
                     $returnArray[] = $id;
                 }
             }
