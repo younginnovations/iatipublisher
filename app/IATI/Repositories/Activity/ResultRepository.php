@@ -52,18 +52,6 @@ class ResultRepository extends Repository
     }
 
     /**
-     * Create a new ActivityResult.
-     *
-     * @param array $resultData
-     *
-     * @return Model
-     */
-    public function create(array $resultData): Model
-    {
-        return $this->model->create($resultData);
-    }
-
-    /**
      * Returns specific result of specific activity.
      *
      * @param int $activityId
