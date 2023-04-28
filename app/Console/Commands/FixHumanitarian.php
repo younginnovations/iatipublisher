@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -9,6 +11,9 @@ use Illuminate\Support\Facades\Validator;
 use PHPUnit\Exception;
 use Throwable;
 
+/*
+ * Class Fix Humanitarian
+ */
 class FixHumanitarian extends Command
 {
     /**
@@ -68,6 +73,8 @@ class FixHumanitarian extends Command
                ->whereIn(DB::raw($concatQuery), array_values($iatiIdentifierTextArray))
                ->update(['activities.default_field_values->humanitarian'=> '0']);
 
+            $this->info("Complete updating humanitarian value.");
+
             $this->databaseManager->commit();
         } catch(Exception $e) {
             $this->databaseManager->rollBack();
@@ -121,6 +128,13 @@ class FixHumanitarian extends Command
             : null;
     }
 
+    /**
+     * Return array of id of activities where default_field_values->humanitarian = no
+     *
+     * @param $activityDefaultValuesJsonArray
+     *
+     * @return array
+     */
     private function getActivityWithHumanitarianIsZero($activityDefaultValuesJsonArray): array
     {
         $returnArray = [];
@@ -138,6 +152,14 @@ class FixHumanitarian extends Command
         return $returnArray;
     }
 
+    /**
+     * Returns IatiIdentifierText of needed activities
+     *
+     * @param $activityIdWhereHumanitarianIsZero
+     * @param $activityIdentifiersJsonArray
+     *
+     * @return array
+     */
     private function getIatiIdentifierTextArray($activityIdWhereHumanitarianIsZero, $activityIdentifiersJsonArray): array
     {
         $returnArr = [];
