@@ -72,11 +72,11 @@ class OrganizationService
             foreach ($orgReportingOrg as $OrgReportingOrg) {
                 $organizationData[] = [
                     '@attributes' => [
-                        'type'               => Arr::get($OrgReportingOrg, 'type', null),
-                        'ref'                => Arr::get($OrgReportingOrg, 'ref', null),
+                        'type' => Arr::get($OrgReportingOrg, 'type', null),
+                        'ref' => Arr::get($OrgReportingOrg, 'ref', null),
                         'secondary-reporter' => Arr::get($OrgReportingOrg, 'secondary_reporter', null),
                     ],
-                    'narrative'   => $this->buildNarrative(Arr::get($OrgReportingOrg, 'narrative', [])),
+                    'narrative' => $this->buildNarrative(Arr::get($OrgReportingOrg, 'narrative', [])),
                 ];
             }
         }
@@ -135,10 +135,12 @@ class OrganizationService
         $completed_mandatory_element_count = 0;
 
         foreach ($mandatory_elements as $mandatory_element) {
-            if (array_key_exists(
-                $mandatory_element,
-                $organization->element_status
-            ) && $organization->element_status[$mandatory_element]) {
+            if (
+                array_key_exists(
+                    $mandatory_element,
+                    $organization->element_status
+                ) && $organization->element_status[$mandatory_element]
+            ) {
                 $completed_mandatory_element_count++;
             }
         }
@@ -155,13 +157,13 @@ class OrganizationService
     public function getOrganizationTypes(): array
     {
         return [
-            'budgetType'       => getCodeList('BudgetStatus', 'Activity', false),
-            'languages'        => getCodeList('Language', 'Organization', false),
+            'budgetType' => getCodeList('BudgetStatus', 'Activity', false),
+            'languages' => getCodeList('Language', 'Organization', false),
             'documentCategory' => getCodeList('DocumentCategory', 'Activity', false),
             'organizationType' => getCodeList('OrganizationType', 'Organization', false),
-            'country'          => getCodeList('Country', 'Organization', false),
+            'country' => getCodeList('Country', 'Organization', false),
             'regionVocabulary' => getCodeList('RegionVocabulary', 'Activity', false),
-            'region'           => getCodeList('Region', 'Activity', false),
+            'region' => getCodeList('Region', 'Activity', false),
         ];
     }
 
@@ -200,7 +202,7 @@ class OrganizationService
         $clientConfig = ['base_uri' => env('IATI_API_ENDPOINT')];
         $requestConfig = [
             'http_errors' => false,
-            'query'       => ['id' => $publisher_id ?? ''],
+            'query' => ['id' => $publisher_id ?? ''],
         ];
         $clientConfig['headers']['X-CKAN-API-Key'] = env('IATI_API_KEY');
 
@@ -244,8 +246,12 @@ class OrganizationService
      *
      * @return array|Collection
      */
-    public function getOrganizationByPublisherIds(array $publisherIds): array | Collection
+    public function getOrganizationByPublisherIds(array $publisherIds): array|Collection
     {
         return $this->organizationRepo->getOrganizationByPublisherIds($publisherIds);
+    }
+
+    public function getPublisherStats($queryParams): array
+    {
     }
 }
