@@ -6,13 +6,13 @@ namespace App\Console\Commands;
 
 use App\IATI\Models\Organization\Organization;
 use App\IATI\Traits\MigrateActivityTrait;
+use App\IATI\Traits\MigrateOrganizationTrait;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\IATI\Traits\MigrateOrganizationTrait;
 
 /*
  * Class FixRegionIssues.
@@ -72,37 +72,37 @@ class FixRegionIssues extends Command
                 ->where('is_reporting_org', true)
                 ->get();
 
-            $aidstreamOrganizationIdentifierArray =  $this->getAidstreamOrganizationIdentifier($aidstreamOrganizationIds);
+            $aidstreamOrganizationIdentifierArray = $this->getAidstreamOrganizationIdentifier($aidstreamOrganizationIds);
             $recipientCountryBudgetArray = $aidstreamOrganizationDataCollectionArray->pluck('recipient_country_budget', 'organization_id');
             $recipientRegionBudgetArray = $aidstreamOrganizationDataCollectionArray->pluck('recipient_region_budget', 'organization_id');
             $aidstreamOrganizationIdentifierArray = array_map('strtolower', $aidstreamOrganizationIdentifierArray);
 
             $iatiOrganizations = Organization::whereIn('publisher_id', $aidstreamOrganizationIdentifierArray)->get();
-            $iatiOrganizationIdArray  =  $iatiOrganizations->pluck('id', 'publisher_id');
+            $iatiOrganizationIdArray = $iatiOrganizations->pluck('id', 'publisher_id');
 
             $idMap = $this->mapOrganizationIds($aidstreamOrganizationIdentifierArray, $iatiOrganizationIdArray);
 
             $flippedMap = array_flip($idMap);
 
-            foreach ($iatiOrganizations as $iatiOrganization){
-                $key =  Arr::get($flippedMap, $iatiOrganization->id, false);
+            foreach ($iatiOrganizations as $iatiOrganization) {
+                $key = Arr::get($flippedMap, $iatiOrganization->id, false);
                 $defaultFieldValues = json_encode(
                     [
-                        $iatiOrganization->settings->default_values
+                        $iatiOrganization->settings->default_values,
                     ]
                 );
 
-                if($key){
+                if ($key) {
                     $recipientCountryBudgetData = $this->getOrganizationBudget($recipientCountryBudgetArray[$key], 'recipient_country', 'budget_line');
                     $recipientCountryBudgetData = $this->populateDefaultFields($recipientCountryBudgetData, $defaultFieldValues);
-                    $recipientRegionBudgetData  = $this->getOrganizationRecipientRegionBudget($recipientRegionBudgetArray[$key]);
-                    $recipientRegionBudgetData  = $this->populateDefaultFields($recipientRegionBudgetData, $defaultFieldValues);
+                    $recipientRegionBudgetData = $this->getOrganizationRecipientRegionBudget($recipientRegionBudgetArray[$key]);
+                    $recipientRegionBudgetData = $this->populateDefaultFields($recipientRegionBudgetData, $defaultFieldValues);
 
-
+                    $iatiOrganization->timestamps = false;
                     $iatiOrganization->updateQuietly(
                         [
                             'recipient_country_budget'=> $recipientCountryBudgetData,
-                            'recipient_region_budget'=>$recipientRegionBudgetData
+                            'recipient_region_budget'=>$recipientRegionBudgetData,
                         ],
                         ['touch'=>false]
                     );
@@ -111,7 +111,7 @@ class FixRegionIssues extends Command
 
             $this->databaseManager->commit();
 
-            info("Completed updating organization.");
+            info('Completed updating organization.');
         } catch(Exception $e) {
             $this->databaseManager->rollBack();
 
@@ -165,22 +165,23 @@ class FixRegionIssues extends Command
     }
 
     /**
-     * Returns array of [organizationId => organizationIdentifier]
+     * Returns array of [organizationId => organizationIdentifier].
      *
      * @param $aidstreamOrganizationIds
      *
      * @return array
      */
-    private function getAidstreamOrganizationIdentifier($aidstreamOrganizationIds): array {
+    private function getAidstreamOrganizationIdentifier($aidstreamOrganizationIds): array
+    {
         $returnArr = [];
         $aidStreamSettings = $this->db::connection('aidstream')->table('settings')
             ->whereIn('organization_id', $aidstreamOrganizationIds)
             ->get();
 
-        if($aidStreamSettings){
+        if ($aidStreamSettings) {
             foreach ($aidStreamSettings as $aidStreamSetting) {
-                if(in_array($aidStreamSetting->organization_id, $aidstreamOrganizationIds)){
-                    $registryInfo = $aidStreamSetting->registry_info? json_decode($aidStreamSetting->registry_info): false;
+                if (in_array($aidStreamSetting->organization_id, $aidstreamOrganizationIds)) {
+                    $registryInfo = $aidStreamSetting->registry_info ? json_decode($aidStreamSetting->registry_info) : false;
                     $organizationIdentifier = $registryInfo[0]?->publisher_id;
                     $returnArr[$aidStreamSetting->organization_id] = $organizationIdentifier;
                 }
@@ -192,7 +193,7 @@ class FixRegionIssues extends Command
 
     /**
      * Returns mapped array of ids
-     * [aidstreamOrgId => iatiOrgId]
+     * [aidstreamOrgId => iatiOrgId].
      *
      * @param array $aidstreamOrganizationIdentifierArray
      * @param $iatiOrganizationIdArray
@@ -203,7 +204,7 @@ class FixRegionIssues extends Command
     {
         $returnArr = [];
 
-        foreach ($aidstreamOrganizationIdentifierArray as $aidstreamId=>$identifier){
+        foreach ($aidstreamOrganizationIdentifierArray as $aidstreamId=>$identifier) {
             $returnArr[$aidstreamId] = Arr::get($iatiOrganizationIdArray, $identifier, '');
         }
 

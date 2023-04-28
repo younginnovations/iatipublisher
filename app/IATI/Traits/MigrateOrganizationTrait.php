@@ -291,7 +291,6 @@ trait MigrateOrganizationTrait
         $recipientRegionBudgetArray = json_decode($recipientRegionBudget, true, 512, JSON_THROW_ON_ERROR);
 
         if ($recipientRegionBudgetArray && count($recipientRegionBudgetArray)) {
-//            dd(json_encode($recipientRegionBudgetArray));
             foreach (array_values($recipientRegionBudgetArray) as $key => $array) {
                 $newRecipientRegionBudget[$key] = [
                     'status'           => Arr::get($array, 'status', null),
