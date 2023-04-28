@@ -467,7 +467,10 @@ trait MigrateOrganizationTrait
      */
     public function setLanguage(array &$data, string $key, $datum, $defaultValues): void
     {
-        if ($key === 'language' && empty($datum) && !empty($this->tempNarrative)) {
+        if ($key === 'language' && empty($datum) && !empty($this->tempNarrative) && array_key_exists(
+            'narrative',
+            $data
+        )) {
             $defaultValues = json_decode($defaultValues);
             $defaultValues = $defaultValues[0];
             $defaultLanguage = $defaultValues?->default_language ?? '';
