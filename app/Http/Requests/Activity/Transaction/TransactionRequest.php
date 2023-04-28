@@ -855,7 +855,7 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('recipient_country.%s', $recipientCountryIndex);
-            $narrativeRules = $this->getWarningForNarrative($recipientCountry['narrative'], $recipientCountryForm);
+            $narrativeRules = $this->getWarningForNarrative(Arr::get($recipientCountry, 'narrative', []), $recipientCountryForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -890,7 +890,7 @@ class TransactionRequest extends ActivityBaseRequest
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('recipient_country.%s', $recipientCountryIndex);
             $rules[sprintf('%s.country_code', $recipientCountryForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Country', 'Activity', false)));
-            $narrativeRules = $this->getErrorsForNarrative($recipientCountry['narrative'], $recipientCountryForm);
+            $narrativeRules = $this->getErrorsForNarrative(Arr::get($recipientCountry, 'narrative', []), $recipientCountryForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -921,7 +921,7 @@ class TransactionRequest extends ActivityBaseRequest
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('recipient_country.%s', $recipientCountryIndex);
             $messages[sprintf('%s.country_code.in', $recipientCountryForm)] = 'The transaction recipient country code is invalid.';
-            $narrativeMessages = $this->getMessagesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
+            $narrativeMessages = $this->getMessagesForNarrative(Arr::get($recipientCountry, 'narrative', []), $recipientCountryForm);
 
             foreach ($narrativeMessages as $key => $item) {
                 $messages[$key] = $item;

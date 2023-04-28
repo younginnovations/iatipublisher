@@ -132,7 +132,7 @@ class ActivityValidator implements ValidatorInterface
             $this->errorForLegacyData($activity),
             $this->errorForCondition($activity),
             $this->errorForTransaction($activity),
-            $this->errorForReportingOrganization($activity),
+            // $this->errorForReportingOrganization($activity),
         ];
 
         foreach ($tempRules as $tempRule) {
@@ -206,7 +206,7 @@ class ActivityValidator implements ValidatorInterface
             $this->messagesForLegacyData($activity),
             $this->messagesForCondition($activity),
             $this->messagesForTransaction($activity),
-            $this->messagesForReportingOrganization($activity),
+            // $this->messagesForReportingOrganization($activity),
         ];
 
         foreach ($tempMessages as $tempMessage) {

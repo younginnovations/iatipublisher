@@ -84,7 +84,7 @@ class Activity
         'Planned Disbursement' => 'planned_disbursement',
         'Participating Org' => 'participating_org',
         'Budget' => 'budget',
-        // 'Transaction' => 'transactions',
+        'Transaction' => 'transactions',
     ];
 
     protected array $singleValuedElements = [
@@ -113,7 +113,7 @@ class Activity
         'location',
         'contact_info',
         'document_link',
-        'transaction',
+        'transactions',
     ];
 
     protected string $elementBeingProcessed = '';
@@ -322,7 +322,8 @@ class Activity
                 }
 
                 foreach ($elementMapper as $xlsColumnName => $systemName) {
-                    $systemMappedRow[$systemName] = $row[$xlsColumnName];
+                    dump($element, $xlsColumnName, $systemName, $row);
+                    $systemMappedRow[$systemName] = Arr::get($row, $xlsColumnName, null);
                 }
 
                 $elementData[] = $systemMappedRow;
@@ -422,13 +423,19 @@ class Activity
         $position = '';
         $dependency = explode(' ', $dependencies);
         $expected_position = '';
+        $transactionNarrative = [
+            'description narrative',
+            'title narrative',
+        ];
 
         foreach ($dependency as $key) {
             $expected_position = empty($expected_position) ? $key : "$expected_position $key";
 
             if (in_array($expected_position, array_keys($fieldDependency))) {
                 if (in_array($this->elementBeingProcessed, $this->enclosedNarrative)) {
-                    $key = $key === 'narrative' ? '0.narrative' : $key;
+                    if ($this->elementBeingProcessed !== 'transactions' || in_array($expected_position, $transactionNarrative)) {
+                        $key = $key === 'narrative' ? '0.narrative' : $key;
+                    }
                 }
 
                 $positionValue = $fieldDependency[$expected_position] ?? 0;
