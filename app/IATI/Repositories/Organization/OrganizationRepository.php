@@ -9,11 +9,12 @@ use App\IATI\Models\Setting\Setting;
 use App\IATI\Models\User\Role;
 use App\IATI\Repositories\Repository;
 use App\IATI\Traits\FillDefaultValuesTrait;
-use DB;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class OrganizationRepository.
@@ -111,14 +112,18 @@ class OrganizationRepository extends Repository
             }
         }
 
-        $organizations = $this->model->withCount('allActivities')
+        $organizations = $this->model
+            ->withCount('allActivities')
             ->with([
                 'user' => function ($user) use ($adminRoleId) {
                     return $user->where('role_id', $adminRoleId)
                         ->where('status', 1)
                         ->whereNull('deleted_at');
                 },
-            ]);
+            ])
+            ->with('latestUpdatedActivity')
+            ->with('latestLoggedInUser')
+            ->with('settings');
 
         if (array_key_exists('q', $queryParams) && !empty($queryParams['q'])) {
             $organizations->whereRaw($whereSql, $bindParams)
@@ -127,10 +132,22 @@ class OrganizationRepository extends Repository
                 });
         }
 
+        if (Arr::get($queryParams, 'start_date', false) && Arr::get($queryParams, 'end_date', false)) {
+            $organizations
+                ->whereDate(Arr::get($queryParams, 'date_column', 'created_at'), '>=', $queryParams['start_date'])
+                ->whereDate(Arr::get($queryParams, 'date_column', 'created_at'), '<=', $queryParams['end_date']);
+        }
+
+        if (Arr::get($queryParams, 'filters', false)) {
+            $organizations = $this->applyFilters($organizations, Arr::get($queryParams, 'filters'));
+        }
+
         if ($orderBy === 'name') {
             return $organizations->orderByRaw("name->0->>'narrative'" . $direction)
                 ->paginate(10, ['*'], 'organization', $page);
         }
+
+        $orderBy = ($orderBy === 'registered_on') ? 'created_at' : $orderBy;
 
         return $organizations->orderBy($orderBy, $direction)
             ->paginate(10, ['*'], 'organization', $page);
@@ -334,9 +351,93 @@ class OrganizationRepository extends Repository
         dd($this->model->select(DB::raw("name->0->>'narrative' as organization,
         identifier,
         publisher_type,
-         country, 
-         organizations.created_at, 
-         organizations.updated_at 
+         country,
+         organizations.created_at,
+         organizations.updated_at
          "))->join('settings', 'organizations.id', 'settings.organization_id')->get()->toArray());
+    }
+
+    /**
+     * Applies filters to organization listing page.
+     *
+     * @param mixed $organizations
+     * @param mixed $filters
+     *
+     * @return mixed
+     */
+    private function applyFilters(mixed $organizations, mixed $filters): mixed
+    {
+        $tableConfig = getTableConfig('organisation');
+        $filterMode = $tableConfig['filters'];
+        $queryMap = $this->getCompletenessMap();
+        $filterColumnMap = [
+            'country'          => 'country',
+            'registrationType' => 'registration_type',
+            'publisherType'    => 'publisher_type',
+            'dataLicense'      => 'data_license',
+        ];
+
+        foreach ($filters as $filterName=>$filterValue) {
+            if ($filterName !== 'completeness') {
+                if (Arr::get($filterMode, $filterName) === 'single') {
+                    $organizations->where($filterColumnMap[$filterName], $filterValue);
+                } else {
+                    $organizations->whereIn($filterColumnMap[$filterName], $filterValue);
+                }
+            } else {
+                // Review this  agian @momik
+//                $organizations->whereHas('settings', function ($query) use ($queryMap, $filterValue) {
+//                    return $query->whereRaw($queryMap[$filterValue]);
+//                });
+                $organizations->leftJoin('settings', 'settings.organization_id', 'organizations.id')->whereRaw($queryMap[$filterValue]);
+            }
+        }
+
+        return $organizations;
+    }
+
+    /**
+     * Returns where conditions for querying completeness based data.
+     *
+     * @return string[]
+     */
+    private function getCompletenessMap(): array
+    {
+        return [
+            'Publisher with complete setup'                             => "
+                    CAST(settings.publishing_info->>'publisher_verification' as bool) = true and
+                    settings.publishing_info->>'publisher_id' notnull and
+                    CAST(settings.publishing_info->>'token_verification' as bool) = true and
+                    settings.publishing_info->>'api_token' notnull
+                ",
+            'Publisher setting not completed'                           => "
+                    CAST(settings.publishing_info->>'publisher_verification' as bool) = false or
+                    settings.publishing_info->>'publisher_id' isnull  or
+                    CAST(settings.publishing_info->>'token_verification' as bool) = false or
+                    settings.publishing_info->>'api_token' isnull
+                ",
+            'Default values not completed'                              => "
+                    settings.default_values->>'default_currency' isnull or
+                    settings.default_values->>'default_language' isnull or
+                    settings.activity_default_values->>'hierarchy' isnull or
+                    settings.activity_default_values->>'humanitarian' isnull or
+                    settings.activity_default_values->>'budget_not_provided' isnull
+                ",
+            'Both publishing settings and default values not completed' => "
+                    (
+                        CAST(settings.publishing_info->>'publisher_verification' as bool) = false or
+                        settings.publishing_info->>'publisher_id' isnull  or
+                        CAST(settings.publishing_info->>'token_verification' as bool) = false or
+                        settings.publishing_info->>'api_token' isnull
+                    ) and
+                    (
+                        settings.default_values->>'default_currency' isnull or
+                        settings.default_values->>'default_language' isnull or
+                        settings.activity_default_values->>'hierarchy' isnull or
+                        settings.activity_default_values->>'humanitarian' isnull or
+                        settings.activity_default_values->>'budget_not_provided' isnull
+                    )
+                ",
+        ];
     }
 }

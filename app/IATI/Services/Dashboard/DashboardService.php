@@ -7,8 +7,8 @@ namespace App\IATI\Services\Dashboard;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Repositories\User\UserRepository;
+use App\IATI\Traits\DateRangeResolverTrait;
 use Carbon\Carbon;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 /**
@@ -16,6 +16,8 @@ use Illuminate\Support\Collection;
  */
 class DashboardService
 {
+    use DateRangeResolverTrait;
+
     /**
      * @var OrganizationRepository
      */
@@ -121,216 +123,26 @@ class DashboardService
     }
 
     /**
-     * Returns count of users registered today.
-     *
-     * @return array
-     */
-    public function getUsersRegisteredToday(): array
-    {
-        return ['user_count' => $this->userRepo->getUsersCreatedToday()];
-    }
-
-    /**
-     * Returns count of users registered this week, grouped by day, formatted to named days [sunday, monday...].
-     *
-     * @return array
-     */
-    public function getUsersRegisteredThisWeek(): array
-    {
-        $carbon = new Carbon();
-        $startDate = $carbon->now()->startOfWeek(0);
-        $endDate = $carbon->now()->endOfWeek(6);
-        $results = $this->userRepo->getDataInRangeGroupedByDay($startDate, $endDate);
-
-        if ($results) {
-            $formattedResults = [];
-            $currentDate = $startDate;
-
-            while ($currentDate <= $endDate) {
-                $dateString = $currentDate->format('Y-m-d');
-                $formattedDate = strtolower($carbon->parse($dateString)->format('l'));
-                $formattedResults[$formattedDate] = Arr::get($results, $dateString, 0);
-                $currentDate->addDay();
-            }
-
-            return $formattedResults;
-        }
-
-        return [];
-    }
-
-    /**
-     * Returns count of users registered this week, grouped by days.
-     *
-     * @return array
-     */
-    public function getUsersRegisteredThisMonth(): array
-    {
-        $carbon = new Carbon();
-        $startDate = $carbon->now()->startOfMonth();
-        $endDate = $carbon->now()->endOfMonth();
-        $results = $this->userRepo->getDataInRangeGroupedByDay($startDate, $endDate);
-
-        if ($results) {
-            return $this->fillMissingDaysToData($startDate, $endDate, $results);
-        }
-
-        return [];
-    }
-
-    /**
-     * Returns count of users registered in [{today - 7 days} to today], grouped by day.
-     *
-     * @return array
-     */
-    public function getUsersRegisteredLast7Days(): array
-    {
-        $carbon = new Carbon();
-        $startDate = $carbon->now()->subDays(6);
-        $endDate = $carbon->now()->today()->endOfDay();
-        $results = $this->userRepo->getDataInRangeGroupedByDay($startDate, $endDate);
-
-        if ($results) {
-            $formattedResults = [];
-            $currentDate = $startDate;
-
-            while ($currentDate <= $endDate) {
-                $dateString = $currentDate->format('Y-m-d');
-                $formattedResults[$dateString] = Arr::get($results, $dateString, 0);
-                $currentDate->addDay();
-            }
-
-            return $formattedResults;
-        }
-
-        return [];
-    }
-
-    /**
-     * Returns count of users registered this year, [Jan - today] grouped by month.
-     *
-     * @return array
-     */
-    public function getUsersRegisteredThisYear(): array
-    {
-        $carbon = new Carbon();
-        $startDate = $carbon->now()->startOfYear();
-        $endDate = $carbon->now()->endOfYear();
-        $results = $this->userRepo->getDataInRangeGroupedByMonth($startDate, $endDate);
-
-        if ($results) {
-            return $this->fillMissingMonthToData($startDate, $endDate, $results);
-        }
-
-        return [];
-    }
-
-    /**
-     * Returns count of users registered in [{current month - 6 months} to current month], grouped by month.
-     *
-     * @return array
-     */
-    public function getUsersRegisteredLast6Months(): array
-    {
-        $carbon = new Carbon();
-        $startDate = $carbon->now()->startOfMonth()->subMonth(6);
-        $endDate = $carbon->now()->endOfMonth()->today();
-        $results = $this->userRepo->getDataInRangeGroupedByMonth($startDate, $endDate);
-
-        if ($results) {
-            return $this->fillMissingMonthToData($startDate, $endDate, $results);
-        }
-
-        return [];
-    }
-
-    /**
-     * Returns count of users registered in [{current month - 12 months} to current month], grouped by month.
-     *
-     * @return array
-     */
-    public function getUsersRegisteredLast12Months(): array
-    {
-        $carbon = new Carbon();
-        $startDate = $carbon->now()->startOfMonth()->subMonth(12);
-        $endDate = $carbon->now()->endOfMonth()->today();
-        $results = $this->userRepo->getDataInRangeGroupedByMonth($startDate, $endDate);
-
-        if ($results) {
-            return $this->fillMissingMonthToData($startDate, $endDate, $results);
-        }
-
-        return [];
-    }
-
-    /**
      * Returns data in range, grouped by (if param).
      *
      * @param $startDate
      * @param $endDate
      * @param string|false $groupBy
+     * @param string $activeColumn
      *
      * @return Collection|array
      */
-    public function getDataInRange($startDate, $endDate, bool|string $groupBy = false): Collection|array
+    public function getDataCountInRange($startDate, $endDate, bool|string $groupBy = false, string $activeColumn = 'created_at'): Collection|array
     {
         if ($groupBy) {
             if ($groupBy === 'days') {
-                return $this->userRepo->getDataInRangeGroupedByDay($startDate, $endDate);
+                return $this->userRepo->getDataCountInRangeGroupedByDay($startDate, $endDate, $activeColumn);
             }
 
-            return $this->userRepo->getDataInRangeGroupedByMonth($startDate, $endDate);
+            return $this->userRepo->getDataCountInRangeGroupedByMonth($startDate, $endDate, $activeColumn);
         }
 
-        return $this->userRepo->getBasicUserDataInRange($startDate, $endDate);
-    }
-
-    /**
-     * Returns formatted data in such a way that there is no missing month between date-range.
-     * Sets count to 0 for months that were not pulled from db.
-     *
-     * @param $startDate
-     * @param $endDate
-     * @param $results
-     *
-     * @return array
-     */
-    public function fillMissingMonthToData($startDate, $endDate, $results): array
-    {
-        $formattedResults = [];
-        $currentDate = $startDate;
-
-        while ($currentDate <= $endDate) {
-            $monthStringComplete = $currentDate->format('Y-m-d H:i:s');
-            $monthString = $currentDate->format('Y-m-d');
-            $formattedResults[$monthString] = Arr::get($results, $monthStringComplete, 0);
-            $currentDate->addMonth();
-        }
-
-        return $formattedResults;
-    }
-
-    /**
-     * Returns formatted data in such a way that there is no missing date between date-range.
-     * Sets count to 0 for days that were not pulled from db.
-     *
-     * @param Carbon $startDate
-     * @param Carbon $endDate
-     * @param array $results
-     * @return array
-     */
-    public function fillMissingDaysToData(Carbon $startDate, Carbon $endDate, array $results): array
-    {
-        $formattedResults = [];
-        $currentDate = $startDate;
-
-        while ($currentDate <= $endDate) {
-            $dateString = $currentDate->format('Y-m-d');
-            $formattedResults[$dateString] = Arr::get($results, $dateString, 0);
-            $currentDate->addDay();
-        }
-
-        return $formattedResults;
+        return $this->userRepo->getBasicUserDataInRange($startDate, $endDate, $activeColumn);
     }
 
     /**
@@ -339,17 +151,11 @@ class DashboardService
      * @param Carbon $startDate
      * @param Carbon $endDate
      *
-     * @return array
+     * @return array|Collection
      */
-    public function getUserDataForReportDownload(Carbon $startDate, Carbon $endDate): array
+    public function getUserDataForReportDownload(Carbon $startDate, Carbon $endDate): array|Collection
     {
-        $users = $this->getDataInRange($startDate, $endDate);
-
-        if (count($users)) {
-            return $users->toArray();
-        }
-
-        return [];
+        return $this->getDataCountInRange($startDate, $endDate);
     }
 
     public function getActivityCount($queryParams)

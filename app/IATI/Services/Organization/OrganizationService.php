@@ -174,10 +174,14 @@ class OrganizationService
      * @param $request
      *
      * @return null|LengthAwarePaginator
+     *
+     * @throws \JsonException
      */
     public function getPaginatedOrganizations($page, $request): ?LengthAwarePaginator
     {
-        return $this->organizationRepo->getPaginatedOrganizations($page, $request);
+        $rawPaginatedData = $this->organizationRepo->getPaginatedOrganizations($page, $request);
+
+        return $this->resolvePaginatedOrganizationData($rawPaginatedData);
     }
 
     /**
@@ -280,5 +284,27 @@ class OrganizationService
     {
         return $this->organizationRepo->getPublisherBySetup($queryParams);
     }
-}
 
+    /**
+     * @param LengthAwarePaginator|null $rawPaginatedData
+     *
+     *
+     * @return LengthAwarePaginator|null
+     *
+     * @throws \JsonException
+     */
+    private function resolvePaginatedOrganizationData(?LengthAwarePaginator $rawPaginatedData): ?LengthAwarePaginator
+    {
+        $publisherTypeList = getCodeList('OrganizationType', 'Organization');
+        $dataLicenseList = getCodeList('DataLicense', 'Activity', false);
+        $countryList = getCodeList('Country', 'Activity', false);
+
+        foreach ($rawPaginatedData as $organization) {
+            $organization->publisher_type = Arr::get($publisherTypeList, $organization->publisher_type, 'Missing');
+            $organization->data_license = $organization->data_license ? Arr::get($dataLicenseList, $organization->data_license, 'Missing') : 'Missing';
+            $organization->country = Arr::get($countryList, $organization->country, 'Missing');
+        }
+
+        return $rawPaginatedData;
+    }
+}

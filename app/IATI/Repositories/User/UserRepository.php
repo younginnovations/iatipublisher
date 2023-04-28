@@ -178,6 +178,12 @@ class UserRepository extends Repository
             }
         }
 
+        if (Arr::get($queryParams, 'start_date', false) && Arr::get($queryParams, 'end_date', false)) {
+            $query
+                ->whereDate(Arr::get($queryParams, 'event_type', 'created_at'), '>=', $queryParams['start_date'])
+                ->whereDate(Arr::get($queryParams, 'event_type', 'created_at'), '<=', $queryParams['end_date']);
+        }
+
         return $query->whereNull('deleted_at')->orderBy($orderBy, $direction)->orderBy('users.id', $direction);
     }
 
@@ -196,30 +202,21 @@ class UserRepository extends Repository
     }
 
     /**
-     * Returns count of users registered today.
-     *
-     * @return mixed
-     */
-    public function getUsersCreatedToday(): mixed
-    {
-        return $this->model->registeredToday()->count();
-    }
-
-    /**
      * Get data in range.
      *
      * @param Carbon $startDate
      * @param Carbon $endDate
+     * @param string $column
      *
      * @return Collection|array
      */
-    public function getBasicUserDataInRange(Carbon $startDate, Carbon $endDate): Collection|array
+    public function getBasicUserDataInRange(Carbon $startDate, Carbon $endDate, string $column): Collection|array
     {
         return $this->model
             ->join('roles', 'users.role_id', '=', 'roles.id')
             ->join('organizations', 'users.organization_id', '=', 'organizations.id')
-            ->whereDate('users.created_at', '>=', $startDate)
-            ->whereDate('users.created_at', '<=', $endDate)
+            ->whereDate("users.{$column}", '>=', $startDate)
+            ->whereDate("users.{$column}", '<=', $endDate)
             ->whereNot('users.role_id', '1')
             ->get([
                 'users.username',

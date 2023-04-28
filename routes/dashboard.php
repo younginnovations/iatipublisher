@@ -15,18 +15,15 @@ use Illuminate\Support\Facades\Route;
 */
 Route::group([], static function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'index'])->name('dashboard');
-
     Route::get('/dashboard/user/stats', [DashboardController::class, 'getUserCounts'])->name('getUserCounts');
-    Route::get('/dashboard/user/paginated-organization-users/{page?}', [DashboardController::class, 'getUserCountByOrganization'])->name('getUserCountByOrganization');
-    Route::get('/dashboard/user/registered-today', [DashboardController::class, 'getUsersRegisteredToday'])->name('getUsersRegisteredToday');
-    Route::get('/dashboard/user/registered-this-week', [DashboardController::class, 'getUsersRegisteredThisWeek'])->name('getUsersRegisteredThisWeek');
-    Route::get('/dashboard/user/registered-this-month', [DashboardController::class, 'getUsersRegisteredThisMonth'])->name('getUsersRegisteredThisMonth');
-    Route::get('/dashboard/user/registered-this-year', [DashboardController::class, 'getUsersRegisteredThisYear'])->name('getUsersRegisteredThisYear');
-    Route::get('/dashboard/user/registered-last-7-days', [DashboardController::class, 'getUsersRegisteredLast7Days'])->name('getUsersRegisteredLast7Days');
-    Route::get('/dashboard/user/registered-last-6-months', [DashboardController::class, 'getUsersRegisteredLast6Months'])->name('getUsersRegisteredLast6Months');
-    Route::get('/dashboard/user/registered-last-12-months', [DashboardController::class, 'getUsersRegisteredLast12Months'])->name('getUsersRegisteredLast12Months');
-    Route::get('/dashboard/user/date-range', [DashboardController::class, 'getDataInCustomRange'])->name('getDataInCustomRange');
+    Route::get('/dashboard/user/paginated-organization-users', [DashboardController::class, 'getUserCountByOrganization'])->name('getUserCountByOrganization');
     Route::get('/dashboard/user/download-report', [DashboardController::class, 'downloadUserReport'])->name('downloadUserReport');
+    Route::get('/dashboard/user/date-range', [DashboardController::class, 'getDataInDateRange'])->name('getDataInCustomRange');
+    /*
+     * Example
+     * dashboard/user/date-range?fixed=this_year <- Valid params for fixed are :today, this_week, this_month, this_year , last_N_UNITS (example, last_7_days, last_7_month, last_2_years)
+     * dashboard/user/date-range?start_date=2021-01-23&end_date=2023-02-03
+     */
 
     // api for publisher data
     Route::get('/dashboard/publisher/type', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherGroupedByType'])->name('dashboard.publisher.type');

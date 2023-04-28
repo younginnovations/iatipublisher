@@ -195,14 +195,15 @@ abstract class Repository implements RepositoryInterface
      *
      * @param Carbon $startDate
      * @param Carbon $endDate
+     * @param string $column
      *
      * @return array
      */
-    public function getDataInRangeGroupedByDay(Carbon $startDate, Carbon $endDate): array
+    public function getDataCountInRangeGroupedByDay(Carbon $startDate, Carbon $endDate, string $column): array
     {
         return $this->model->select(DB::raw('DATE(created_at) as date_string, COUNT(*) as count_value'))
-            ->whereDate('created_at', '>=', $startDate)
-            ->whereDate('created_at', '<=', $endDate)
+            ->whereDate($column, '>=', $startDate)
+            ->whereDate($column, '<=', $endDate)
             ->groupBy(DB::raw('DATE(created_at)'))
             ->pluck('count_value', 'date_string')
             ->toArray();
@@ -213,15 +214,16 @@ abstract class Repository implements RepositoryInterface
      *
      * @param Carbon $startDate
      * @param Carbon $endDate
+     * @param string $column
      *
      * @return array
      */
-    public function getDataInRangeGroupedByMonth(Carbon $startDate, Carbon $endDate): array
+    public function getDataCountInRangeGroupedByMonth(Carbon $startDate, Carbon $endDate, string $column): array
     {
         return $this->model
             ->select(DB::raw('DATE_TRUNC(\'month\', created_at) AS month_string, COUNT(*) AS count_value'))
-            ->whereDate('created_at', '>=', $startDate)
-            ->whereDate('created_at', '<=', $endDate)
+            ->whereDate($column, '>=', $startDate)
+            ->whereDate($column, '<=', $endDate)
             ->groupBy('month_string')
             ->pluck('count_value', 'month_string')->toArray();
     }

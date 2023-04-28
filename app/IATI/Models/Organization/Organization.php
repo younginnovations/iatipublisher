@@ -217,13 +217,13 @@ class Organization extends Model implements Auditable
     }
 
     /**
-     * Organization has many users.
+     * Organization has one latest updated activity.
      *
-    //  * @return HasMany
+     * @return HasOne
      */
-    public function lastUpdatedActivity()
+    public function latestUpdatedActivity(): HasOne
     {
-        return $this->hasOne(Activity::class)->ofMany('updated_at', 'max');
+        return $this->hasOne(Activity::class, 'org_id')->ofMany('updated_at', 'max');
     }
 
     /**
@@ -234,5 +234,10 @@ class Organization extends Model implements Auditable
     public function usersIncludingDeleted(): HasMany
     {
         return $this->hasMany(User::class, 'organization_id', 'id')->withTrashed();
+    }
+
+    public function recentlyChangeActivity()
+    {
+        return $this->hasOne(Activity::class)->latest('updated_at');
     }
 }

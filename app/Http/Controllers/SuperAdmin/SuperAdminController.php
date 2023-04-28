@@ -4,21 +4,26 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\SuperAdmin;
 
+use App\Constants\Enums;
 use App\Http\Controllers\Controller;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
+use App\IATI\Traits\DateRangeResolverTrait;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 /**
  * Class SuperAdminController.
  */
 class SuperAdminController extends Controller
 {
+    use DateRangeResolverTrait;
+
     /**
      * SuperAdminController Constructor.
      *
@@ -31,14 +36,25 @@ class SuperAdminController extends Controller
     }
 
     /**
-     * Returns superadmin page for viewing all organisations.
+     * Returns super-admin page for viewing all organisations.
      *
      * @return Application|Factory|View|JsonResponse
      */
     public function listOrganizations(): View | Factory | JsonResponse | Application
     {
         try {
-            return view('superadmin.organisationsList');
+            $country = getCodeList('Country', 'Activity', false);
+            $setupCompleteness = [
+                'Publisher with complete setup',
+                'Publisher setting not completed',
+                'Default values not completed',
+                'Both publishing settings and default values not completed',
+            ];
+            $registrationType = Enums::ORGANIZATION_REGISTRATION_METHOD;
+            $publisherType = getCodeList('OrganizationType', 'Organization');
+            $dataLicense = getCodeList('DataLicense', 'Activity', false);
+
+            return view('superadmin.organisationsList', compact('country', 'setupCompleteness', 'registrationType', 'publisherType', 'dataLicense'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
@@ -82,6 +98,8 @@ class SuperAdminController extends Controller
      * @param $request
      *
      * @return array
+     *
+     * @throws \JsonException
      */
     public function sanitizeRequest($request): array
     {
@@ -94,9 +112,32 @@ class SuperAdminController extends Controller
 
         if (in_array($request->get('orderBy'), $tableConfig['orderBy'], true)) {
             $queryParams['orderBy'] = $request->get('orderBy');
-
             if (in_array($request->get('direction'), $tableConfig['direction'], true)) {
                 $queryParams['direction'] = $request->get('direction');
+            }
+        }
+
+        list($fixed, $startDateString, $endDateString, $column) = $this->resolveDateRangeFromRequest($request);
+        $queryParams['date_column'] = $column;
+
+        if ($fixed) {
+            list($queryParams['start_date'], $queryParams['end_date']) = $this->resolveFixedRangeParams($fixed);
+        } elseif ($startDateString && $endDateString) {
+            list($queryParams['start_date'], $queryParams['end_date']) = $this->resolveCustomRangeParams($startDateString, $endDateString);
+        }
+
+        if (arraysHaveCommonKey($request->toArray(), $tableConfig['filters'])) {
+            foreach ($tableConfig['filters'] as $filterKey => $filterMode) {
+                $value = Arr::get($request, $filterKey, false);
+
+                if ($value) {
+                    if (in_array($filterKey, ['publisherType', 'dataLicense', 'country'])) {
+                        $exploded = explode(',', $value);
+                        $queryParams['filters'][$filterKey] = $exploded;
+                    } else {
+                        $queryParams['filters'][$filterKey] = $value;
+                    }
+                }
             }
         }
 
@@ -104,7 +145,7 @@ class SuperAdminController extends Controller
     }
 
     /**
-     * Allows superadmin to masquerade as a user of an organization.
+     * Allows super-admin to masquerade as a user of an organization.
      *
      * @param $userId
      *
