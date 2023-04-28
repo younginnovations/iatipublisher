@@ -122,7 +122,7 @@ class ResultService
     {
         $resultData['result'] = $this->sanitizeData($resultData['result']);
 
-        return $this->resultRepository->create($resultData);
+        return $this->resultRepository->store($resultData);
     }
 
     /**

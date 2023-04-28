@@ -48,8 +48,8 @@ trait FillDefaultValuesTrait
             }
 
             $this->setTempNarrative((string) $key, $datum);
-            $this->setTempAmount((string) $key, $datum);
             $this->setLanguage($data, (string) $key, $datum, $defaultValues);
+            $this->setTempAmount((string) $key, $datum);
             $this->setCurrency($data, (string) $key, $datum, $defaultValues);
         }
 
@@ -98,7 +98,7 @@ trait FillDefaultValuesTrait
      */
     public function setLanguage(array &$data, string $key, $datum, $defaultValues): void
     {
-        if ($key === 'language' && empty($datum) && !empty($this->tempNarrative)) {
+        if ($key === 'language' && empty($datum) && !empty($this->tempNarrative) && in_array('narrative', array_keys($data))) {
             $data['language'] = Arr::get($defaultValues, 'default_language', null);
         }
     }
@@ -217,7 +217,7 @@ trait FillDefaultValuesTrait
         $defaultFieldValues = [];
 
         switch ($calledForModel) {
-            case get_class(new Activity()):
+            case get_class(new Activity):
                 $defaultFieldValues = $this->model->find($id)->default_field_values;
                 break;
             case get_class(new Result):
