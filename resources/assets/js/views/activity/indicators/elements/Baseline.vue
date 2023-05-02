@@ -63,10 +63,14 @@
               <div>
                 <div class="description">
                   {{ com.narrative ? com.narrative : 'Missing' }}
-                  (Language:
-                  {{
-                    com.language ? baseType.language[com.language] : 'Missing'
-                  }})
+                  <span class="text-n-30">
+                    (Language:
+                    {{
+                      com.language
+                        ? baseType.language[com.language]
+                        : 'Missing'
+                    }})</span
+                  >
                 </div>
               </div>
             </div>

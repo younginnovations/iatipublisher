@@ -53,7 +53,9 @@
               <div>
                 <!-- title -->
                 <div class="category flex">
-                  <div class="mr-4">
+                  <div
+                    class="mr-4 max-w-[500px] overflow-x-hidden text-ellipsis whitespace-nowrap"
+                  >
                     {{
                       getActivityTitle(result.result.title[0].narrative, 'en')
                     }}
@@ -98,7 +100,8 @@
                                   ? 'Missing'
                                   : types.languages[
                                       result?.result?.description?.[0]
-                                        ?.narrative?.[0]?.language ?? 'en'
+                                        ?.narrative?.[0]?.language ??
+                                        defaultLanguage
                                     ]
                               }})
                             </div>
@@ -355,6 +358,11 @@ export default defineComponent({
       required: true,
     },
     tooltip: {
+      type: String,
+      required: false,
+      default: '',
+    },
+    defaultLanguage: {
       type: String,
       required: false,
       default: '',

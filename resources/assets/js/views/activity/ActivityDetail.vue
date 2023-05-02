@@ -262,8 +262,8 @@
             >
               <svg-vue class="mr-0.5 text-base" icon="setting"></svg-vue>
               <span class="whitespace-nowrap"
-                >Override this activity's default values</span
-              >
+                >Override this activity's default values
+              </span>
             </a>
           </div>
           <div
@@ -301,10 +301,10 @@
                 <template v-if="name.toString() !== 'result'">
                   <ActivityElement
                     v-if="
-                      (typeof element.content === 'object'
-                        ? Object.keys(element.content).length > 0
-                        : element.content) ||
-                      typeof element.content === 'number'
+                      (typeof (element as any).content === 'object'
+                        ? Object.keys((element as any).content).length > 0
+                        : (element as any).content) ||
+                      typeof (element as any).content === 'number'
                     "
                     :id="key"
                     :data="element"
@@ -313,25 +313,28 @@
                     :activity-id="activity.id"
                     :width="'full'"
                     :completed="status[name] ?? false"
-                    :tooltip="element.hover_text"
+                    :tooltip="(element as any).hover_text"
                     class="elements-card"
                   />
                 </template>
                 <template v-else>
                   <Result
                     v-if="
-                      (typeof element.content === 'object'
-                        ? Object.keys(element.content).length > 0
-                        : element.content) ||
-                      typeof element.content === 'number'
+                      (typeof (element as any).content === 'object'
+                        ? Object.keys((element as any).content).length > 0
+                        : (element as any).content) ||
+                      typeof (element as any).content === 'number'
                     "
                     :id="key"
                     :data="element"
                     :types="types"
+                    :default-language="
+                      activityProps.default_field_values.default_language
+                    "
                     :title="String(name)"
                     :activity-id="activity.id"
                     :completed="status[name] ?? false"
-                    :tooltip="element.hover_text"
+                    :tooltip="(element as any).hover_text"
                   />
                 </template>
               </template>

@@ -26,7 +26,7 @@
 
         <template v-else-if="elementName === 'aggregation_status'">
           <span class="text-sm capitalize">{{
-            parseInt(data) ? 'True' : data ? 'False' : 'Missing'
+            parseInt(data as string) ? 'True' : data ? 'False' : 'Missing'
           }}</span>
         </template>
 

@@ -36,7 +36,7 @@
             </td>
           </tr>
           <tr>
-            <td>Provider Activity ID</td>
+            <td>Reciver Activity ID</td>
             <td>
               <div class="text-sm">
                 {{ PoData[0].receiver_activity_id ?? 'Missing' }}

@@ -11,14 +11,18 @@
         <tbody>
           <tr>
             <td>Code</td>
-            <td>{{ ref.code }}</td>
+            <td>{{ ref.code ? ref.code : 'Missing' }}</td>
           </tr>
           <tr>
             <td>Vocabulary URI</td>
             <td>
-              <a target="_blank" :href="ref.vocabulary_uri">{{
-                ref.vocabulary_uri
-              }}</a>
+              <a
+                v-if="ref.vocabulary_uri"
+                target="_blank"
+                :href="ref.vocabulary_uri"
+                >{{ ref.vocabulary_uri }}</a
+              >
+              <span v-else>Missing</span>
             </td>
           </tr>
         </tbody>

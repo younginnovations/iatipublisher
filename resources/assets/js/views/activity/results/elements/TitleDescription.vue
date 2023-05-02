@@ -7,8 +7,10 @@
       'mb-4': i !== Object.keys(tdData[0].narrative).length - 1,
     }"
   >
-    <div class="language mb-1.5">(Language: {{ type[post.language] }})</div>
-    <div class="max-w-[887px] text-sm">
+    <div class="language mb-1.5">
+      (Language: {{ type[post.language] ? type[post.language] : 'Missing' }})
+    </div>
+    <div class="w-[800px] max-w-[80%] overflow-x-hidden text-ellipsis text-sm">
       {{ post.narrative }}
     </div>
   </div>
