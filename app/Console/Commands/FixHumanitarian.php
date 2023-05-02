@@ -76,7 +76,7 @@ class FixHumanitarian extends Command
             DB::table('activities')->select(['activities.id'])
                ->leftJoin('organizations as org', 'activities.org_id', '=', 'org.id')
                ->whereIn(DB::raw($concatQuery), array_values($iatiIdentifierTextArray))
-               ->update(['activities.default_field_values->humanitarian'=> '0']);
+               ->update(['activities.default_field_values->humanitarian'=> '0', 'updated_at' => DB::raw('updated_at')]);
 
             $this->info('Complete updating humanitarian value.');
 
