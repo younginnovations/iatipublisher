@@ -111,7 +111,7 @@ class FixRegionIssues extends Command
 
             $this->databaseManager->commit();
 
-            info('Completed updating organization.');
+            $this->info('Completed updating organization.');
         } catch(Exception $e) {
             $this->databaseManager->rollBack();
 
