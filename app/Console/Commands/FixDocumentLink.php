@@ -15,6 +15,9 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+/*
+ * Class FixDocumentLink
+ */
 class FixDocumentLink extends Command
 {
     use MigrateOrganizationTrait;
@@ -70,10 +73,13 @@ class FixDocumentLink extends Command
      */
     public int $brokenCount = 0;
 
-    public function __construct(
-        protected DB $db,
-        protected DatabaseManager $databaseManager
-    ) {
+    /**
+     * Constructor
+     *
+     * @param DB $db
+     * @param DatabaseManager $databaseManager
+     */
+    public function __construct(protected DB $db, protected DatabaseManager $databaseManager) {
         parent::__construct();
     }
 
@@ -240,10 +246,10 @@ class FixDocumentLink extends Command
      */
     private function fixResultDocumentLink(mixed $results): void
     {
-        foreach ($results as $singleResult) {
+        foreach ($results as $result) {
             $isBroken = false;
             $newArray = [];
-            $resultField = $singleResult->result;
+            $resultField = $result->result;
 
             if ($resultField) {
                 $documentLinks = Arr::get($resultField, 'document_link', false);
@@ -264,10 +270,10 @@ class FixDocumentLink extends Command
             }
 
             if ($isBroken) {
-                $singleResult->timestamps = false;
-                $tempResult = $singleResult->result;
+                $result->timestamps = false;
+                $tempResult = $result->result;
                 $tempResult['document_link'] = $newArray;
-                $singleResult->updateQuietly(['result' => $tempResult], ['touch' => false]);
+                $result->updateQuietly(['result' => $tempResult], ['touch' => false]);
             }
         }
     }
