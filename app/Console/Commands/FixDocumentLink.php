@@ -66,9 +66,9 @@ class FixDocumentLink extends Command
     ];
 
     /**
-     * @var
+     * @var int
      */
-    public $brokenCount = 0;
+    public int $brokenCount = 0;
 
     public function __construct(
         protected DB $db,
@@ -177,7 +177,7 @@ class FixDocumentLink extends Command
      */
     private function getAidstreamOrganizationIdentifier($aidstreamOrganizationIds): array
     {
-        $returnArr = [];
+        $aidstreamOrganizationsArray = [];
         $aidStreamSettings = $this->db::connection('aidstream')->table('settings')
             ->whereIn('organization_id', $aidstreamOrganizationIds)
             ->get();
@@ -187,12 +187,12 @@ class FixDocumentLink extends Command
                 if (in_array($aidStreamSetting->organization_id, $aidstreamOrganizationIds)) {
                     $registryInfo = $aidStreamSetting->registry_info ? json_decode($aidStreamSetting->registry_info) : false;
                     $organizationIdentifier = $registryInfo[0]?->publisher_id;
-                    $returnArr[$aidStreamSetting->organization_id] = $organizationIdentifier;
+                    $aidstreamOrganizationsArray[$aidStreamSetting->organization_id] = $organizationIdentifier;
                 }
             }
         }
 
-        return $returnArr;
+        return $aidstreamOrganizationsArray;
     }
 
     /**
@@ -206,13 +206,13 @@ class FixDocumentLink extends Command
      */
     private function mapOrganizationIds(array $aidstreamOrganizationIdentifierArray, $iatiOrganizationIdArray): array
     {
-        $returnArr = [];
+        $mappedOrganizationsIdArray = [];
 
         foreach ($aidstreamOrganizationIdentifierArray as $aidstreamId=>$identifier) {
-            $returnArr[$aidstreamId] = Arr::get($iatiOrganizationIdArray, $identifier, '');
+            $mappedOrganizationsIdArray[$aidstreamId] = Arr::get($iatiOrganizationIdArray, $identifier, '');
         }
 
-        return $returnArr;
+        return $mappedOrganizationsIdArray;
     }
 
     /**
