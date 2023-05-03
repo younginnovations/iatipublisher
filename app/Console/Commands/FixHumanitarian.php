@@ -65,11 +65,15 @@ class FixHumanitarian extends Command
 
             $this->databaseManager->beginTransaction();
 
+            $aidstreamOrganizationIdentifierIds = $this->db::connection('aidstream')->table('organizations')
+                ->select(DB::raw("CONCAT(registration_agency, '-', registration_number) as organization_identifier"), 'id')
+                ->whereIn('id', $aidstreamOrganizationIds)
+                ->get();
             $aidStreamActivities = $this->db::connection('aidstream')->table('activity_data')->whereIn('organization_id', $aidstreamOrganizationIds)->get();
-            $aidStreamActivityIdentifiersJsonArray = $aidStreamActivities->pluck('identifier', 'id');
+
             $aidStreamActivityDefaultValuesJsonArray = $aidStreamActivities->pluck('default_field_values', 'id');
             $aidStreamActivityIdWhereHumanitarianIsZero = $this->getActivityWithHumanitarianIsZero($aidStreamActivityDefaultValuesJsonArray);
-            $iatiIdentifierTextArray = $this->getIatiIdentifierTextArray($aidStreamActivityIdWhereHumanitarianIsZero, $aidStreamActivityIdentifiersJsonArray);
+            $iatiIdentifierTextArray = $this->getIatiIdentifierTextArray($aidStreamActivityIdWhereHumanitarianIsZero, $aidStreamActivities, $aidstreamOrganizationIdentifierIds);
 
             $concatQuery = "CONCAT(org.identifier, '-', activities.iati_identifier->>'activity_identifier')";
 
@@ -160,23 +164,30 @@ class FixHumanitarian extends Command
      * Returns IatiIdentifierText of needed activities.
      *
      * @param $activityIdWhereHumanitarianIsZero
-     * @param $activityIdentifiersJsonArray
+     * @param $aidStreamActivities
+     * @param $aidstreamOrganizationIdentifierIds
      *
      * @return array
      */
-    private function getIatiIdentifierTextArray($activityIdWhereHumanitarianIsZero, $activityIdentifiersJsonArray): array
+    private function getIatiIdentifierTextArray($activityIdWhereHumanitarianIsZero, $aidStreamActivities, $aidstreamOrganizationIdentifierIds): array
     {
-        $returnArr = [];
+        $returnableActivityIdentifiers = [];
 
         foreach ($activityIdWhereHumanitarianIsZero as $aidstreamActivityId) {
-            $activityIdentifierJson = $activityIdentifiersJsonArray[$aidstreamActivityId];
-            $activityIdentifierJson = json_decode($activityIdentifierJson);
+            $activity = $aidStreamActivities->firstWhere('id', $aidstreamActivityId) ?? false;
 
-            if ($activityIdentifierJson && ($activityIdentifierJson->iati_identifier_text ?? false)) {
-                $returnArr[] = $activityIdentifierJson->iati_identifier_text;
+            if ($activity) {
+                $organizationId = $activity->organization_id ?? 0;
+                $organizationIdentifierJson = $aidstreamOrganizationIdentifierIds->firstWhere('id', $organizationId) ?? false;
+                $activityIdentifierJson = $activity->identifier ?? false;
+
+                if ($organizationIdentifierJson && $activityIdentifierJson) {
+                    $activityIdentifierJson = json_decode($activityIdentifierJson);
+                    $returnableActivityIdentifiers[] = $organizationIdentifierJson->organization_identifier . '-' . $activityIdentifierJson->activity_identifier;
+                }
             }
         }
 
-        return $returnArr;
+        return $returnableActivityIdentifiers;
     }
 }

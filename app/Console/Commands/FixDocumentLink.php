@@ -74,12 +74,13 @@ class FixDocumentLink extends Command
     public int $brokenCount = 0;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param DB $db
      * @param DatabaseManager $databaseManager
      */
-    public function __construct(protected DB $db, protected DatabaseManager $databaseManager) {
+    public function __construct(protected DB $db, protected DatabaseManager $databaseManager)
+    {
         parent::__construct();
     }
 

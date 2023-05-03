@@ -94,9 +94,9 @@ class FixRegionIssues extends Command
 
                 if ($key) {
                     $recipientCountryBudgetData = $this->getOrganizationBudget($recipientCountryBudgetArray[$key], 'recipient_country', 'budget_line');
-                    $recipientCountryBudgetData = $this->populateDefaultFields($recipientCountryBudgetData, $defaultFieldValues);
+                    $recipientCountryBudgetData = $recipientCountryBudgetData ? $this->populateDefaultFields($recipientCountryBudgetData, $defaultFieldValues) : $recipientCountryBudgetData;
                     $recipientRegionBudgetData = $this->getOrganizationRecipientRegionBudget($recipientRegionBudgetArray[$key]);
-                    $recipientRegionBudgetData = $this->populateDefaultFields($recipientRegionBudgetData, $defaultFieldValues);
+                    $recipientRegionBudgetData = $recipientRegionBudgetData ? $this->populateDefaultFields($recipientRegionBudgetData, $defaultFieldValues) : $recipientRegionBudgetData;
 
                     $iatiOrganization->timestamps = false;
                     $iatiOrganization->updateQuietly(
