@@ -33,7 +33,11 @@
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  {{
+                    narrative.narrative !== null && narrative.narrative !== ''
+                      ? narrative.narrative
+                      : 'Missing'
+                  }}
                 </div>
               </div>
             </td>
@@ -58,7 +62,11 @@
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  {{
+                    narrative.narrative !== null && narrative.narrative !== ''
+                      ? narrative.narrative
+                      : 'Missing'
+                  }}
                 </div>
               </div>
             </td>
@@ -84,7 +92,11 @@
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  {{
+                    narrative.narrative !== null && narrative.narrative !== ''
+                      ? narrative.narrative
+                      : 'Missing'
+                  }}
                 </div>
               </div>
             </td>
@@ -109,7 +121,11 @@
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  {{
+                    narrative.narrative !== null && narrative.narrative !== ''
+                      ? narrative.narrative
+                      : 'Missing'
+                  }}
                 </div>
               </div>
             </td>
@@ -126,7 +142,11 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ email_value.email ?? 'Missing' }}
+                  {{
+                    email_value.email !== null && email_value.email !== ''
+                      ? email_value.email
+                      : 'Missing'
+                  }}
                 </div>
               </div>
             </td>
@@ -143,7 +163,11 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ tel.telephone ?? 'Missing' }}
+                  {{
+                    tel.telephone !== null && tel.telephone !== ''
+                      ? tel.telephone
+                      : 'Missing'
+                  }}
                 </div>
               </div>
             </td>
@@ -160,7 +184,11 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ w.website ?? 'Missing' }}
+                  {{
+                    w.website !== null && w.website !== ''
+                      ? w.website
+                      : 'Missing'
+                  }}
                 </div>
               </div>
             </td>
@@ -189,7 +217,11 @@
                     }})
                   </div>
                   <div class="w-[500px] max-w-full">
-                    {{ narrative.narrative ?? 'Not Available' }}
+                    {{
+                      narrative.narrative !== null && narrative.narrative !== ''
+                        ? narrative.narrative
+                        : 'Missing'
+                    }}
                   </div>
                 </div>
               </div>
