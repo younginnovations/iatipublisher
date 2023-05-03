@@ -99,7 +99,7 @@ class DashboardController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Publisher stats fetched successfully',
+                'message' => 'Publisher registration count fetched successfully',
                 'data' => $publisherStat,
             ]);
         } catch (\Exception $e) {
@@ -120,7 +120,7 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->organizationService->getPublisherStats($params);
+            $publisherStat = $this->organizationService->getPublisherBy($params, 'registration_type');
 
             return response()->json([
                 'success' => true,
@@ -145,11 +145,11 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->organizationService->getPublisherStats($params);
+            $publisherStat = $this->organizationService->getPublisherBy($params, 'country');
 
             return response()->json([
                 'success' => true,
-                'message' => 'Publisher stats fetched successfully',
+                'message' => 'Publisher grouped by country fetched successfully',
                 'data' => $publisherStat,
             ]);
         } catch (\Exception $e) {
@@ -170,18 +170,17 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->organizationService->getPublisherBy($params);
+            $publisherStat = $this->organizationService->getPublisherBy($params, 'publisher_type');
 
             return response()->json([
                 'success' => true,
-                'message' => 'Publisher stats fetched successfully',
+                'message' => 'Publisher grouped by type fetched successfully',
                 'data' => $publisherStat,
             ]);
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher grouped by type.']);
         }
     }
 
@@ -196,11 +195,11 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->organizationService->getPublisherStats($params);
+            $publisherStat = $this->organizationService->getPublisherBy($params, 'data');
 
             return response()->json([
                 'success' => true,
-                'message' => 'Publisher stats fetched successfully',
+                'message' => 'Publisher grouped by setup completeness fetched successfully',
                 'data' => $publisherStat,
             ]);
         } catch (\Exception $e) {

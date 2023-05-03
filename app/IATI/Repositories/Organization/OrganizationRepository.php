@@ -219,18 +219,16 @@ class OrganizationRepository extends Repository
         ];
     }
 
-    public function getPublisherBy($queryParams): array
+    public function getPublisherBy($queryParams, $type): array
     {
-        $query = $this->model->select(DB::raw('count(*) as type_count, publisher_type'))->groupBy('publisher_type')->get()->toArray();
+        $query = $this->model->select(DB::raw('count(*) as count, ' . $type));
 
-        // if ($queryParams) {
-        //     $query = $this->filterPublisher($query, $queryParams);
-        // }
-
-        dump($query);
+        if ($queryParams) {
+            $query = $this->filterPublisher($query, $queryParams);
+        }
 
         return [
-
+            $type => $query->groupBy($type)->pluck('count', $type),
         ];
     }
 }

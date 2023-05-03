@@ -267,11 +267,12 @@ class OrganizationService
      * Returns array containing publisher type.
      *
      * @param $queryParams
+     * @param $type
      *
      * @return array
      */
-    public function getPublisherByType($queryParams): array
+    public function getPublisherBy($queryParams, $type): array
     {
-        return $this->organizationRepo->getPublisherByType($queryParams);
+        return $this->organizationRepo->getPublisherBy($queryParams, $type);
     }
 }
