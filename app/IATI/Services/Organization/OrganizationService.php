@@ -275,4 +275,9 @@ class OrganizationService
     {
         return $this->organizationRepo->getPublisherBy($queryParams, $type);
     }
+
+    public function getPublisherBySetup($queryParams): array
+    {
+        return $this->organizationRepo->getPublisherBySetup($queryParams);
+    }
 }

@@ -231,4 +231,25 @@ class OrganizationRepository extends Repository
             $type => $query->groupBy($type)->pluck('count', $type),
         ];
     }
+
+    public function getPublisherBySetup($queryParams): array
+    {
+        // $query = $this->model->select('id', 'settings')->with('settings')->whereHas('settings.api')->get();
+        // $completed = $this->model->select('publisher_name','id')->whereHas('settings', function (Builder $q){
+        //     $q->whereJsonContains('publishing_info->',[])->whereJsonContains('default_values')->orWhereNull('activity_default_values');
+        // })->count();
+
+        // $incompleteCategorization = $this->model->whereDoesntHave('settings')->orWhereHas('settings', function (Builder $q) {
+        //     $q->whereNull('publishing_info');
+        // })->get();
+
+        // dd($completed, $incompleteCategorization);
+
+        // if ($queryParams) {
+        //     $query = $this->filterPublisher($query, $queryParams);
+        // }
+
+        // return [
+        // ];
+    }
 }

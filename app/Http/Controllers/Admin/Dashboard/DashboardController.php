@@ -195,7 +195,7 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->organizationService->getPublisherBy($params, 'data');
+            $publisherStat = $this->organizationService->getPublisherBySetup($params);
 
             return response()->json([
                 'success' => true,
