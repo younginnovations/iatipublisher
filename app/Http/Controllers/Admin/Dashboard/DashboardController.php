@@ -95,7 +95,7 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->organizationService->getPublisherStats($params);
+            $publisherStat = $this->organizationService->getPublisherGroupedByDate($params, 'created_at');
 
             return response()->json([
                 'success' => true,
@@ -203,6 +203,137 @@ class DashboardController extends Controller
                 'data' => $publisherStat,
             ]);
         } catch (\Exception $e) {
+            dd($e);
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
+        }
+    }
+
+    /**
+     * Returns json data containing publisher stats.
+     *
+     * @param $request
+     *
+     * @return JsonResponse
+     */
+    public function activityStats(Request $request): JsonResponse
+    {
+        try {
+            $params = $this->getQueryParams($request);
+            $publisherStat = $this->activityService->getActivityStats($params);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Publisher grouped by setup completeness fetched successfully',
+                'data' => $publisherStat,
+            ]);
+        } catch (\Exception $e) {
+            dd($e);
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
+        }
+    }
+
+    /**
+     * Returns json data containing publisher stats.
+     *
+     * @param $request
+     *
+     * @return JsonResponse
+     */
+    public function activityCount(Request $request): JsonResponse
+    {
+        try {
+            $params = $this->getQueryParams($request);
+            $publisherStat = $this->activityService->getActivityCount($params);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Publisher grouped by setup completeness fetched successfully',
+                'data' => $publisherStat,
+            ]);
+        } catch (\Exception $e) {
+            dd($e);
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
+        }
+    }
+
+    /**
+     * Returns json data containing publisher stats.
+     *
+     * @param $request
+     *
+     * @return JsonResponse
+     */
+    public function activityStatus(Request $request): JsonResponse
+    {
+        try {
+            $params = $this->getQueryParams($request);
+            $publisherStat = $this->activityService->getActivityStatus($params);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Publisher grouped by setup completeness fetched successfully',
+                'data' => $publisherStat,
+            ]);
+        } catch (\Exception $e) {
+            dd($e);
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
+        }
+    }
+
+    /**
+     * Returns json data containing publisher stats.
+     *
+     * @param $request
+     *
+     * @return JsonResponse
+     */
+    public function activityMethod(Request $request): JsonResponse
+    {
+        try {
+            $params = $this->getQueryParams($request);
+            $publisherStat = $this->activityService->getActivityMethod($params);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Publisher grouped by setup completeness fetched successfully',
+                'data' => $publisherStat,
+            ]);
+        } catch (\Exception $e) {
+            dd($e);
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
+        }
+    }
+
+    /**
+     * Returns json data containing publisher stats.
+     *
+     * @param $request
+     *
+     * @return JsonResponse
+     */
+    public function activityCompleteness(Request $request): JsonResponse
+    {
+        try {
+            $params = $this->getQueryParams($request);
+            $publisherStat = $this->activityService->getActivityCompleteness($params);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Publisher grouped by setup completeness fetched successfully',
+                'data' => $publisherStat,
+            ]);
+        } catch (\Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);

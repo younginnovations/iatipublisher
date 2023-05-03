@@ -281,3 +281,4 @@ class OrganizationService
         return $this->organizationRepo->getPublisherBySetup($queryParams);
     }
 }
+

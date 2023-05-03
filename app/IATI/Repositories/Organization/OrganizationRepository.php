@@ -211,11 +211,15 @@ class OrganizationRepository extends Repository
 
     public function getPublisherStats($queryParams): array
     {
-        // dd($this->model->latest('created_at')->get());
         return [
             'totalCount' => $this->model->count(),
             'lastRegisteredPublisher' => $this->model->select('id', 'created_at', 'name')->latest('created_at')->get(),
-            // 'inActivePublisher' => $this->model->where();
+            'inActivePublisher' => $this->model->with('latestLoggedInUser')
+                ->whereHas('latestLoggedInUser', function (Builder $q) {
+                    $q->where('last_logged_in', '<', '2023-05-03 04:14:12');
+                })
+                ->orDoesntHave('latestLoggedInUser')
+                ->count(),
         ];
     }
 
@@ -234,22 +238,99 @@ class OrganizationRepository extends Repository
 
     public function getPublisherBySetup($queryParams): array
     {
-        // $query = $this->model->select('id', 'settings')->with('settings')->whereHas('settings.api')->get();
-        // $completed = $this->model->select('publisher_name','id')->whereHas('settings', function (Builder $q){
-        //     $q->whereJsonContains('publishing_info->',[])->whereJsonContains('default_values')->orWhereNull('activity_default_values');
-        // })->count();
+        // need code refactor and optimization
+        $completedSetting = $this->model->select('publisher_name', 'id')->whereHas('settings', function (Builder $q) {
+            $q->whereJsonContains('publishing_info->publisher_verification', true)
+                ->whereJsonContains('publishing_info->token_verification', true)
+                ->whereNotNull('default_values->default_currency')
+                ->whereJsonDoesntContain('default_values->default_currency', '')
+                ->whereJsonDoesntContain('default_values->default_language', '')
+                ->whereNotNull('default_values->default_language')
+                ->whereJsonDoesntContain('default_values->default_language', '')
+                ->whereNotNull('default_values->default_language')
+                ->whereJsonDoesntContain('default_values->default_language', '')
+                ->whereNotNull('default_values->default_language')
+                ->whereJsonDoesntContain('default_values->default_language', '')
+                ->whereNotNull('default_values->default_language');
+        })->pluck('id');
 
-        // $incompleteCategorization = $this->model->whereDoesntHave('settings')->orWhereHas('settings', function (Builder $q) {
-        //     $q->whereNull('publishing_info');
-        // })->get();
+        $incompletePublisherSetting = $this->model->select('id')->with('settings')->whereNotIn('id', $completedSetting)->whereHas('settings', function (Builder $q) {
+            $q->whereJsonContains('publishing_info->publisher_verification', false)
+                ->orWhereJsonContains('publishing_info->token_verification', false)
+                ->orWhereNull('publishing_info');
+        })->count();
+        $incompleteDefaultValues = $this->model->select('id')->with('settings')->whereNotIn('id', $completedSetting)->whereHas('settings', function (Builder $q) {
+            $q->whereNull('default_values->default_currency')
+                ->orwhereNull('default_values->default_language')
+                ->orwhereNull('default_values')
+                ->orwhereNull('activity_default_values')
+                ->orwhereNull('activity_default_values->token_verification')
+                ->orwhereNull('activity_default_values->token_verification');
+        })->count();
+        $incompleteBothSettings = $this->model->select('id')->with('settings')->whereNotIn('id', $completedSetting)->whereHas('settings', function (Builder $q) {
+            $q->whereNull('default_values->default_currency')
+                ->orwhereNull('default_values->default_language')
+                ->orwhereNull('default_values')
+                ->orwhereNull('activity_default_values')
+                ->orwhereNull('activity_default_values->token_verification')
+                ->orwhereNull('activity_default_values->token_verification')
+                ->WhereJsonContains('publishing_info->publisher_verification', false)
+                ->orWhereJsonContains('publishing_info->token_verification', false)
+                ->WhereNull('publishing_info');
+        })->count();
+        $incompleteCount = $this->model->select('id')->whereNotIn('id', $completedSetting)->count();
 
-        // dd($completed, $incompleteCategorization);
+        if ($queryParams) {
+        }
+
+        return [
+            'completeSetup' => [
+                'count' => $completedSetting->count(),
+                'types' => [],
+            ],
+            'incompleteSetup' => [
+                'count' => $incompleteCount,
+                'types' => [
+                    'publisher' => $incompletePublisherSetting,
+                    'defaultValue' => $incompleteDefaultValues,
+                    'both' => $incompleteBothSettings,
+                ],
+            ],
+        ];
+    }
+
+    public function getPublisherGroupedByDate($queryParams, $type)
+    {
+        $query = $this->model->all();
+        $queryType = 'day';
+
+        $formats = [
+            'day' => 'Y-m-d',
+            'month' => 'Y-m',
+        ];
 
         // if ($queryParams) {
         //     $query = $this->filterPublisher($query, $queryParams);
         // }
 
-        // return [
-        // ];
+        return [
+            $type => $query->groupBy(
+                function ($q) use ($formats, $queryType) {
+                    return $q->created_at->format($formats[$queryType]);
+                }
+            ),
+        ];
+    }
+
+    public function getLastUpdatedPublisher($queryParams)
+    {
+        return [
+            // 'lastUpdatedPublisher' => $this->model->with('lastUpdatedPublisher')->
+        ];
+    }
+
+    public function publisherWithoutActivity()
+    {
+        return $this->model->doesntHave('activities')->count();
     }
 }

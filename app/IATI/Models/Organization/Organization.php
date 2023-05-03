@@ -207,6 +207,16 @@ class Organization extends Model implements Auditable
     }
 
     /**
+     * Organization has many users.
+     *
+    //  * @return HasMany
+     */
+    public function latestLoggedInUser()
+    {
+        return $this->hasOne(User::class)->ofMany('last_logged_in', 'max');
+    }
+
+    /**
      * Returns the users of the organization including deleted users.
      *
      * @return HasMany

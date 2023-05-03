@@ -23,4 +23,10 @@ Route::group([], static function () {
     Route::get('/dashboard/publisher/registration-type', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherType'])->name('dashboard');
     Route::get('/dashboard/publisher/setup', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherGroupedBySetupCompleteness'])->name('dashboard');
     Route::get('/dashboard/publisher/registration-count', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherRegistrationCount'])->name('dashboard');
+
+    Route::get('/dashboard/activity/stats', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'activityStats'])->name('dashboard');
+    Route::get('/dashboard/activity/activity-count', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'activityCount'])->name('dashboard');
+    Route::get('/dashboard/activity/status', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'activityStatus'])->name('dashboard');
+    Route::get('/dashboard/activity/method', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'activityMethod'])->name('dashboard');
+    Route::get('/dashboard/activity/completeness', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'activityCompleteness'])->name('dashboard');
 });
