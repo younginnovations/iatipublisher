@@ -28,13 +28,13 @@
                   <div class="language mb-1.5">
                     (
                     {{
-                      sd.language
+                      !isEmpty(sd.language)
                         ? `Language: ${type.languages[sd.language]}`
                         : 'Language Missing'
                     }})
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? 'Narrative Missing' }}
+                    {{ !isEmpty(sd.narrative) ? sd.narrative : 'Narrative Missing' }}
                   </div>
                 </div>
               </td>
@@ -48,6 +48,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import isEmpty from '../../../../composable/helper';
 
 export default defineComponent({
   name: 'TransactionRecipientCountry',
@@ -77,5 +78,6 @@ export default defineComponent({
     const type = inject('types') as TypesInterface;
     return { country, type };
   },
+  methods: { isEmpty },
 });
 </script>

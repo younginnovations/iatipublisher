@@ -28,7 +28,7 @@
         <tr class="multiline">
           <td>Narrative</td>
           <td>
-            <div v-if="item.narrative" class="flex flex-col">
+            <div v-if="!isEmpty(item.narrative)" class="flex flex-col">
               <span v-if="item.language" class="language top">
                 (Language: {{ types.languages[item.language] }})
               </span>
@@ -48,6 +48,7 @@
 import { defineComponent, inject } from 'vue';
 
 import moment from 'moment';
+import isEmpty from 'Composable/helper';
 
 export default defineComponent({
   name: 'ActivityDate',
@@ -71,5 +72,6 @@ export default defineComponent({
 
     return { types, formatDate };
   },
+  methods: { isEmpty },
 });
 </script>

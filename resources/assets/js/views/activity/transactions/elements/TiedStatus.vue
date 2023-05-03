@@ -1,7 +1,7 @@
 <template>
   <div class="text-sm">
     {{
-      tsData[0].tied_status_code
+      !isEmpty(tsData[0].tied_status_code)
         ? type.tiedStatusType[tsData[0].tied_status_code]
         : 'Tied Status Code Missing'
     }}
@@ -10,6 +10,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import isEmpty from '../../../../composable/helper';
 
 export default defineComponent({
   name: 'TransactionTiedStatus',
@@ -30,5 +31,6 @@ export default defineComponent({
     const type = inject('types');
     return { tsData, type };
   },
+  methods: { isEmpty },
 });
 </script>

@@ -10,7 +10,9 @@
     >
       <div class="category">
         <span>{{
-          type.aidTypeVocabulary[at.aid_type_vocabulary] ?? 'Missing'
+          !isEmpty(type.aidTypeVocabulary[at.aid_type_vocabulary])
+            ? type.aidTypeVocabulary[at.aid_type_vocabulary]
+            : 'Missing'
         }}</span>
       </div>
       <div clas="ml-4">
@@ -19,20 +21,20 @@
             <td>Code</td>
             <td>
               <div class="text-sm">
-                <span v-if="at.aid_type_code">
+                <span v-if="!isEmpty(at.aid_type_code)">
                   {{ type.aidType[at.aid_type_code] }}
                 </span>
-                <span v-else-if="at.cash_and_voucher_modalities">
+                <span v-else-if="!isEmpty(at.cash_and_voucher_modalities)">
                   {{
                     type.cashAndVoucherModalities[
                       at.cash_and_voucher_modalities
                     ]
                   }}
                 </span>
-                <span v-else-if="at.earmarking_category">
+                <span v-else-if="!isEmpty(at.earmarking_category)">
                   {{ type.earMarkingCategory[at.earmarking_category] }}
                 </span>
-                <span v-else-if="at.earmarking_modality">
+                <span v-else-if="!isEmpty(at.earmarking_modality)">
                   {{ type.earMarkingModality[at.earmarking_modality] }}
                 </span>
                 <span v-else> Missing </span>
@@ -47,6 +49,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import isEmpty from '../../../../composable/helper';
 
 export default defineComponent({
   name: 'TransactionAidType',
@@ -83,5 +86,6 @@ export default defineComponent({
       type,
     };
   },
+  methods: { isEmpty },
 });
 </script>

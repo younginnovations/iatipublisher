@@ -83,7 +83,7 @@
           <TiedStatus :data="elementData" />
         </template>
         <template v-else>
-          <div class="text-sm">{{ data ?? 'Missing' }}</div>
+          <div class="text-sm">{{ !isEmpty(data) ? data : 'Missing' }}</div>
         </template>
       </div>
     </div>
@@ -110,6 +110,7 @@ import {
   FinanceType,
   TiedStatus,
 } from './elements/Index';
+import isEmpty from "../../../composable/helper";
 
 export default defineComponent({
   name: 'ActivityElement',
@@ -182,5 +183,6 @@ export default defineComponent({
       dateFormat,
     };
   },
+    methods: {isEmpty},
 });
 </script>

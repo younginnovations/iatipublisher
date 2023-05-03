@@ -1,7 +1,7 @@
 <template>
   <div class="text-sm">
     {{
-      financeData[0].finance_type
+      !isEmpty(financeData[0].finance_type)
         ? type.financeType[financeData[0].finance_type]
         : 'Finance Type Missing'
     }}
@@ -10,6 +10,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import isEmpty from "../../../../composable/helper";
 
 export default defineComponent({
   name: 'TransactionFinanceType',
@@ -31,5 +32,6 @@ export default defineComponent({
 
     return { financeData, type };
   },
+    methods: {isEmpty},
 });
 </script>

@@ -6,14 +6,14 @@
     :class="{ 'mb-4': Number(key) !== data.length - 1 }"
   >
     <div class="category">
-      <span v-if="participating_org.organization_role">{{
+      <span v-if="!isEmpty(participating_org.organization_role)">{{
         types.organisationRole[participating_org.organization_role]
       }}</span>
       <span v-else class="italic">Organization Role Missing</span>
     </div>
 
     <div class="mb-4 text-sm">
-      <span v-if="participating_org.narrative['0'].narrative">{{
+      <span v-if="!isEmpty(participating_org.narrative['0'].narrative)">{{
         participating_org.narrative['0'].narrative
       }}</span>
       <span v-else class="italic">Narrative Missing</span>
@@ -29,7 +29,7 @@
               :key="i"
               class="flex flex-col"
             >
-              <div v-if="narrative.narrative" class="flex flex-col">
+              <div v-if="!isEmpty(narrative.narrative)" class="flex flex-col">
                 <span v-if="narrative.language" class="language top"
                   >(Language: {{ types.languages[narrative.language] }})</span
                 >
@@ -43,21 +43,21 @@
         </tr>
         <tr>
           <td>Organisation Type</td>
-          <td v-if="participating_org.type">
+          <td v-if="!isEmpty(participating_org.type)">
             {{ types.organizationType[participating_org.type] }}
           </td>
           <td v-else class="italic">Missing</td>
         </tr>
         <tr>
           <td>Organisation Role</td>
-          <td v-if="participating_org.organization_role">
+          <td v-if="!isEmpty(participating_org.organization_role)">
             {{ types.organisationRole[participating_org.organization_role] }}
           </td>
           <td v-else class="italic">Missing</td>
         </tr>
         <tr>
           <td>Ref</td>
-          <td v-if="participating_org.ref">
+          <td v-if="!isEmpty(participating_org.ref)">
             {{ participating_org.ref }}
           </td>
           <td v-else class="italic">Missing</td>
@@ -66,14 +66,14 @@
           <td>Activity Id</td>
           <td>
             <div>
-              <span v-if="participating_org.identifier">{{
+              <span v-if="!isEmpty(participating_org.identifier)">{{
                 participating_org.identifier
               }}</span>
               <span v-else class="italic">Missing</span>
             </div>
           </td>
         </tr>
-        <tr v-if="participating_org.crs_channel_code">
+        <tr v-if="!isEmpty(participating_org.crs_channel_code)">
           <td>CRS Channel Code</td>
           <td>
             {{ types.crsChannelCode[participating_org.crs_channel_code] }}
@@ -86,6 +86,7 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
+import isEmpty from 'Composable/helper';
 
 export default defineComponent({
   name: 'ActivityParticipatingOrg',
@@ -106,5 +107,6 @@ export default defineComponent({
 
     return { types };
   },
+  methods: { isEmpty },
 });
 </script>

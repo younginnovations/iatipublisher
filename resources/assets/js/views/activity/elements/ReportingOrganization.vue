@@ -11,9 +11,9 @@
     <div class="elements-detail mb-4">
       <div class="category">
         <span>{{
-          reporting_org.type
-            ? types?.organizationType[reporting_org.type]
-            : 'Type Missing'
+          isEmpty(reporting_org.type)
+            ? 'Type Missing'
+            : types?.organizationType[reporting_org.type]
         }}</span>
       </div>
       <table>
@@ -21,7 +21,11 @@
           <tr>
             <td>Reference</td>
             <td>
-              {{ reporting_org.ref ?? 'Reference Missing' }}
+              {{
+                isEmpty(reporting_org.ref)
+                  ? 'Reference Missing'
+                  : reporting_org.ref
+              }}
             </td>
           </tr>
           <tr>
@@ -49,13 +53,17 @@
               >
                 <div class="language mb-1.5">
                   ({{
-                    narrative.language
-                      ? `Language: ${types?.languages[narrative.language]}`
-                      : 'Language : Missing'
+                    isEmpty(narrative.language)
+                      ? 'Language : Missing'
+                      : `Language: ${types?.languages[narrative.language]}`
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Narrative Missing' }}
+                  {{
+                    isEmpty(narrative.narrative)
+                      ? 'Narrative Missing'
+                      : narrative.narrative
+                  }}
                 </div>
               </div>
             </td>
@@ -68,6 +76,7 @@
 
 <script setup lang="ts">
 import { defineProps, inject } from 'vue';
+import isEmpty from '../../../composable/helper';
 
 defineProps({
   data: { type: Object, required: true },

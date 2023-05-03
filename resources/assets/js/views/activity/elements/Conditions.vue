@@ -14,7 +14,7 @@
         :class="{ 'mb-4': Number(key) !== data.condition.length - 1 }"
       >
         <div class="mb-2 text-sm font-bold">
-          <div v-if="post.condition_type">
+          <div v-if="!isEmpty(post.condition_type)">
             {{ types.conditionType[post.condition_type] }}
           </div>
           <span v-else class="italic">Type Missing</span>
@@ -29,7 +29,7 @@
             >
               <td>Narrative</td>
               <td>
-                <div v-if="item.narrative" class="flex flex-col">
+                <div v-if="!isEmpty(item.narrative)" class="flex flex-col">
                   <span v-if="item.language" class="language top"
                     >(Language: {{ types.languages[item.language] }})</span
                   >
@@ -51,6 +51,7 @@
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
 import dateFormat from 'Composable/dateFormat';
+import isEmpty from 'Composable/helper';
 
 export default defineComponent({
   name: 'ActivityConditions',
@@ -70,5 +71,6 @@ export default defineComponent({
 
     return { types, dateFormat };
   },
+  methods: { isEmpty },
 });
 </script>

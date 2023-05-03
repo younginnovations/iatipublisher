@@ -7,9 +7,15 @@
   >
     <div class="mb-4 inline-flex text-sm font-bold">
       {{
-        types.transactionType[
-          trans.transaction.transaction_type[0].transaction_type_code
-        ] ?? 'Transaction type missing'
+        isEmpty(
+          types.transactionType[
+            trans.transaction.transaction_type[0].transaction_type_code
+          ]
+        )
+          ? 'Transaction type missing'
+          : types.transactionType[
+              trans.transaction.transaction_type[0].transaction_type_code
+            ]
       }}
       <div class="ml-2">
         <Btn
@@ -24,7 +30,11 @@
         class="description text-sm"
         :class="{ 'mb-4': Number(t) !== trans.transaction.value.length - 1 }"
       >
-        {{ val.amount ? Number(val.amount).toLocaleString() : 'Value missing' }}
+        {{
+          isEmpty(val.amount)
+            ? 'Value missing'
+            : Number(val.amount).toLocaleString()
+        }}
         {{ val.currency }}
         {{
           dateFormat(val.date, 'MMMM DD, YYYY')
@@ -40,6 +50,7 @@
 import { defineComponent, inject } from 'vue';
 import dateFormat from 'Composable/dateFormat';
 import Btn from 'Components/buttons/Link.vue';
+import isEmpty from '../../../composable/helper';
 
 export default defineComponent({
   name: 'ActivityTransactions',
@@ -62,5 +73,6 @@ export default defineComponent({
 
     return { types, dateFormat };
   },
+  methods: { isEmpty },
 });
 </script>

@@ -7,14 +7,14 @@
             <td><span class="category flex">Actual Value</span></td>
             <td>
               <div :class="elementSpacing">
-                {{ tValue.value ?? 'Missing' }}
+                {{ !isEmpty(tValue.value) ? tValue.value : 'Missing' }}
               </div>
 
               <div class="flex" :class="elementSpacing">
                 <div>Location Reference:&nbsp;</div>
                 <div>
                   {{
-                    getLocation(tValue.location)
+                    !isEmpty(getLocation(tValue.location))
                       ? getLocation(tValue.location)
                       : 'Missing'
                   }}
@@ -29,7 +29,9 @@
                     :key="d"
                     class="dimension"
                   >
-                    {{ dim.name ?? 'Missing' }} ({{ dim.value ?? 'Missing' }})
+                    {{ !isEmpty(dim.name) ? dim.name : 'Missing' }} ({{
+                      !isEmpty(dim.value) ? dim.value : 'Missing'
+                    }})
                   </div>
                 </div>
               </div>
@@ -47,13 +49,15 @@
                   >
                     <div>
                       <span>
-                        {{ com.narrative ? com.narrative : 'Missing' }}
+                        {{
+                          !isEmpty(com.narrative) ? com.narrative : 'Missing'
+                        }}
                         &nbsp;
                       </span>
                       <span>
                         (Language:
                         {{
-                          com.language
+                          !isEmpty(com.language)
                             ? dlType.language[com.language]
                             : 'Missing'
                         }})
@@ -89,6 +93,7 @@ import { DocumentLink } from 'Activity/indicators/elements/Index';
 
 //composable
 import getLocation from 'Composable/utils';
+import isEmpty from '../../../../composable/helper';
 
 export default defineComponent({
   name: 'ActualValue',
@@ -117,5 +122,6 @@ export default defineComponent({
       dlType,
     };
   },
+  methods: { isEmpty },
 });
 </script>

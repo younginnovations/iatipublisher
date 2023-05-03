@@ -9,7 +9,7 @@
               <div class="">
                 <div class="category flex">
                   {{
-                    getActivityTitle(post.title[0].narrative, 'en')
+                    !isEmpty(getActivityTitle(post.title[0].narrative, 'en'))
                       ? getActivityTitle(post.title[0].narrative, 'en')
                       : 'Missing'
                   }}
@@ -31,13 +31,17 @@
                             <div class="language mb-1">
                               (Language:
                               {{
-                                na.language
+                                !isEmpty(na.language)
                                   ? type.language[na.language]
                                   : 'Missing'
                               }})
                             </div>
                             <div class="description text-xs">
-                              {{ na.narrative ?? 'Missing' }}
+                              {{
+                                !isEmpty(na.narrative)
+                                  ? na.narrative
+                                  : 'Missing'
+                              }}
                             </div>
                           </div>
                         </td>
@@ -46,16 +50,21 @@
                       <tr>
                         <td>Document Link</td>
                         <td>
-                          <a v-if="post.url" target="_blank" :href="post.url">{{
-                            post.url
-                          }}</a>
+                          <a
+                            v-if="!isEmpty(post.url)"
+                            target="_blank"
+                            :href="post.url"
+                            >{{ post.url }}</a
+                          >
                           <span v-else>Missing</span>
                         </td>
                       </tr>
 
                       <tr>
                         <td>Format</td>
-                        <td>{{ post.format ?? 'Missing' }}</td>
+                        <td>
+                          {{ !isEmpty(post.format) ? post.format : 'Missing' }}
+                        </td>
                       </tr>
 
                       <tr>
@@ -73,13 +82,17 @@
                             <div class="language mb-1">
                               (Language:
                               {{
-                                na.language
+                                !isEmpty(na.language)
                                   ? type.language[na.language]
                                   : 'Missing'
                               }})
                             </div>
                             <div class="description text-xs">
-                              {{ na.narrative ?? 'Missing' }}
+                              {{
+                                !isEmpty(na.narrative)
+                                  ? na.narrative
+                                  : 'Missing'
+                              }}
                             </div>
                           </div>
                         </td>
@@ -95,7 +108,7 @@
                             :class="{ 'mb-1': post.category.length - 1 != c }"
                           >
                             {{
-                              cat.code
+                              !isEmpty(cat.code)
                                 ? type.documentCategory[cat.code]
                                 : 'Missing'
                             }}
@@ -108,7 +121,7 @@
                         <td>
                           <div class="text-xs">
                             {{
-                              post.language[0].language
+                              !isEmpty(post.language[0].language)
                                 ? post.language
                                     .map(
                                       (entry) => type.language[entry.language]
@@ -124,7 +137,11 @@
                         <td>Document Date</td>
                         <td>
                           <div class="text-xs">
-                            {{ post.document_date[0].date ?? 'Missing' }}
+                            {{
+                              !isEmpty(post.document_date[0].date)
+                                ? post.document_date[0].date
+                                : 'Missing'
+                            }}
                           </div>
                         </td>
                       </tr>
@@ -145,6 +162,7 @@ import { defineComponent, toRefs } from 'vue';
 
 //composable
 import getActivityTitle from 'Composable/title';
+import isEmpty from '../../../../composable/helper';
 
 export default defineComponent({
   name: 'IndicatorDocumentLink',
@@ -202,5 +220,6 @@ export default defineComponent({
 
     return { dlData, getActivityTitle };
   },
+  methods: { isEmpty },
 });
 </script>

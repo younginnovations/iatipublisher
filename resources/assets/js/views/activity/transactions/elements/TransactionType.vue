@@ -1,6 +1,6 @@
 <template>
   {{
-    code[0].transaction_type_code
+    !isEmpty(code[0].transaction_type_code)
       ? type.transactionType[code[0].transaction_type_code]
       : 'Code Missing'
   }}
@@ -8,6 +8,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import isEmpty from "../../../../composable/helper";
 
 export default defineComponent({
   name: 'TransactionType',
@@ -29,5 +30,6 @@ export default defineComponent({
     const type = inject('types');
     return { code, type };
   },
+    methods: {isEmpty},
 });
 </script>

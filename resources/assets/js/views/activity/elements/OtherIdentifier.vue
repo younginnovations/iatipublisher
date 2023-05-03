@@ -6,13 +6,15 @@
       :class="{ 'mb-4': key !== Object.keys(data.content).length - 1 }"
     >
       <div class="category">
-        <span v-if="identifier.reference_type">{{
+        <span v-if="!isEmpty(identifier.reference_type)">{{
           types.otherIdentifierType[identifier.reference_type]
         }}</span>
         <span v-else class="italic">Type Missing</span>
       </div>
       <div class="text-sm">
-        <span v-if="identifier.reference">{{ identifier.reference }}</span>
+        <span v-if="!isEmpty(identifier.reference)">{{
+          identifier.reference
+        }}</span>
         <span v-else class="italic">Reference Missing</span>
       </div>
       <div>
@@ -26,7 +28,7 @@
               <tbody>
                 <tr>
                   <td>Owner Organisation Reference</td>
-                  <td v-if="post.ref">{{ post.ref }}</td>
+                  <td v-if="!isEmpty(post.ref)">{{ post.ref }}</td>
                   <td v-else class="italic">Missing</td>
                 </tr>
                 <tr>
@@ -38,7 +40,7 @@
                       class="item"
                       :class="{ 'mb-2': k != post.narrative.length - 1 }"
                     >
-                      <div v-if="n.narrative" class="flex flex-col">
+                      <div v-if="!isEmpty(n.narrative)" class="flex flex-col">
                         <span v-if="n.language" class="language top"
                           >(Language: {{ types.languages[n.language] }})</span
                         >
@@ -61,6 +63,7 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
+import isEmpty from 'Composable/helper';
 
 export default defineComponent({
   name: 'OtherIdentifier',
@@ -78,5 +81,6 @@ export default defineComponent({
     const types = inject('types') as Types;
     return { types };
   },
+  methods: { isEmpty },
 });
 </script>

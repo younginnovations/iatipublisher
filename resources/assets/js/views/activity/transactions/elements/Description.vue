@@ -9,7 +9,7 @@
   >
     <div class="language mb-1.5">
       ({{
-        post.language
+        !isEmpty(post.language)
           ? `Language: ${type.languages[post.language]}`
           : 'Language Missing'
       }})
@@ -22,6 +22,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import isEmpty from '../../../../composable/helper';
 
 export default defineComponent({
   name: 'TransactionDescription',
@@ -51,5 +52,6 @@ export default defineComponent({
     const type = inject('types');
     return { tdData, type };
   },
+  methods: { isEmpty },
 });
 </script>

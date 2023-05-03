@@ -11,7 +11,7 @@
       :class="{ 'mb-0': i !== post.location_reach.length - 1 }"
     >
       <div class="category">
-        <span v-if="item.code">
+        <span v-if="!isEmpty(item.code)">
           {{ types.geographicLocationReach[item.code] }}
         </span>
         <span v-else class="italic">Location Reach Missing</span>
@@ -28,7 +28,10 @@
         class="text-sm"
         :class="{ 'mb-4': j !== item.narrative.length - 1 }"
       >
-        <div v-if="narrative.narrative" class="flex flex-col-reverse space-x-1">
+        <div
+          v-if="!isEmpty(narrative.narrative)"
+          class="flex flex-col-reverse space-x-1"
+        >
           <span>{{ narrative.narrative }}</span>
           <span v-if="narrative.language" class="italic text-n-30"
             >(Language: {{ types.languages[narrative.language] }})</span
@@ -42,7 +45,7 @@
         <tr>
           <td>Reference</td>
           <td class="text-sm">
-            <span v-if="post.ref">{{ post.ref }}</span>
+            <span v-if="!isEmpty(post.ref)">{{ post.ref }}</span>
             <span v-else class="italic">Missing</span>
           </td>
         </tr>
@@ -60,13 +63,13 @@
             <td>
               <div class="flex space-x-1">
                 <div class="value">
-                  <span v-if="item.vocabulary"
+                  <span v-if="!isEmpty(item.vocabulary)"
                     >{{ types.geographicVocabulary[item.vocabulary] }},
                   </span>
                   <span v-else class="italic">(Vocabulary Missing)</span>
                 </div>
                 <div>
-                  <span v-if="item.code">code {{ item.code }}</span>
+                  <span v-if="!isEmpty(item.code)">code {{ item.code }}</span>
                   <span v-else class="italic">(Missing)</span>
                 </div>
               </div>
@@ -88,7 +91,7 @@
             <tr class="multiline">
               <td>Description</td>
               <td>
-                <div v-if="narrative.narrative" class="flex flex-col">
+                <div v-if="!isEmpty(narrative.narrative)" class="flex flex-col">
                   <span v-if="narrative.language" class="language top"
                     >(Language: {{ types.languages[narrative.language] }})</span
                   >
@@ -114,7 +117,7 @@
             <tr class="multiline">
               <td>Activity Description</td>
               <td>
-                <div v-if="narrative.narrative" class="flex flex-col">
+                <div v-if="!isEmpty(narrative.narrative)" class="flex flex-col">
                   <span v-if="narrative.language" class="language top"
                     >(Language: {{ types.languages[narrative.language] }})</span
                   >
@@ -137,20 +140,22 @@
             <td>
               <div class="flex">
                 <div>
-                  <span v-if="item.vocabulary"
+                  <span v-if="!isEmpty(item.vocabulary)"
                     >Vocabulary -
                     {{ types.geographicVocabulary[item.vocabulary] }}
                   </span>
                   <span v-else class="italic">(Vocabulary Missing)</span>
                 </div>
                 <div>
-                  <span v-if="item.code"
+                  <span v-if="!isEmpty(item.code)"
                     >, code {{ types.country[item.code] }}</span
                   >
                   <span v-else class="ml-1 italic"> (Code Missing)</span>
                 </div>
                 <div>
-                  <span v-if="item.level">, level {{ item.level }}</span>
+                  <span v-if="!isEmpty(item.level)"
+                    >, level {{ item.level }}</span
+                  >
                   <span v-else class="ml-1 italic"> (Level Missing)</span>
                 </div>
               </div>
@@ -170,17 +175,19 @@
             <td>
               <div class="flex space-x-1">
                 <div>
-                  <span v-if="item.srs_name">({{ item.srs_name }})</span>
+                  <span v-if="!isEmpty(item.srs_name)"
+                    >({{ item.srs_name }})</span
+                  >
                   <span v-else class="italic"> (SRS Name Missing)</span>
                 </div>
                 <div>
-                  <span v-if="item.pos[0].latitude">
+                  <span v-if="!isEmpty(item.pos[0].latitude)">
                     latitude {{ item.pos[0].latitude }},
                   </span>
                   <span v-else class="italic"> (Latitude Missing)</span>
                 </div>
                 <div>
-                  <span v-if="item.pos[0].longitude"
+                  <span v-if="!isEmpty(item.pos[0].longitude)"
                     >longitude {{ item.pos[0].longitude }}</span
                   >
                   <span v-else class="italic"> (Longitude Missing)</span>
@@ -199,7 +206,7 @@
           <tr>
             <td>Exactness</td>
             <td>
-              <span v-if="item.code">{{
+              <span v-if="!isEmpty(item.code)">{{
                 types.geographicExactness[item.code]
               }}</span>
               <span v-else class="italic">Missing</span>
@@ -216,7 +223,7 @@
           <tr>
             <td>Location Class</td>
             <td>
-              <span v-if="item.code">{{
+              <span v-if="!isEmpty(item.code)">{{
                 types.geographicLocationClass[item.code]
               }}</span>
               <span v-else class="italic">Missing</span>
@@ -233,7 +240,9 @@
           <tr>
             <td>Feature Designation</td>
             <td>
-              <span v-if="item.code">{{ types.locationType[item.code] }}</span>
+              <span v-if="!isEmpty(item.code)">{{
+                types.locationType[item.code]
+              }}</span>
               <span v-else class="italic">Missing</span>
             </td>
           </tr>
@@ -245,6 +254,7 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
+import isEmpty from 'Composable/helper';
 
 export default defineComponent({
   name: 'ActivityLocation',
@@ -268,5 +278,6 @@ export default defineComponent({
     const types = inject('types') as Types;
     return { types };
   },
+  methods: { isEmpty },
 });
 </script>

@@ -6,7 +6,7 @@
       }"
     >
       {{
-        value[0].amount
+        !isEmpty(value[0].amount)
           ? Number(value[0].amount).toLocaleString()
           : 'Amount Missing'
       }}
@@ -14,13 +14,16 @@
     <span v-if="value[0].amount" class="mb-5">{{ value[0].currency }}</span>
   </div>
   <div v-if="value[0].amount" class="text-sm">
-    {{ value[0].date ? `valued at ${dateFormat(value[0].date)}` : '' }}
+    {{
+      !isEmpty(value[0].date) ? `valued at ${dateFormat(value[0].date)}` : ''
+    }}
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
 import dateFormat from './../../../../composable/dateFormat';
+import isEmpty from "../../../../composable/helper";
 
 export default defineComponent({
   name: 'TransactionValue',
@@ -40,5 +43,6 @@ export default defineComponent({
     const value = data.value as ArrayObject;
     return { value, dateFormat };
   },
+    methods: {isEmpty},
 });
 </script>

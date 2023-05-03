@@ -18,11 +18,13 @@
               <td>Code</td>
               <td>
                 <span v-if="cou.region_vocabulary === '1'">{{
-                  cou.region_code
+                  !isEmpty(cou.region_code)
                     ? type.regionCode[cou.region_code]
                     : 'Code Missing'
                 }}</span>
-                <span v-else>{{ cou.custom_code ?? 'Code Missing' }}</span>
+                <span v-else>{{
+                  !isEmpty(cou.custom_code) ? cou.custom_code : 'Code Missing'
+                }}</span>
               </td>
             </tr>
             <tr v-if="cou.vocabulary_uri">
@@ -47,13 +49,17 @@
                   <div class="language mb-1.5">
                     (
                     {{
-                      sd.language
+                      !isEmpty(sd.language)
                         ? `Language: ${type.languages[sd.language]}`
                         : 'Language Missing'
                     }})
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? 'Narrative Missing' }}
+                    {{
+                      !isEmpty(sd.narrative)
+                        ? sd.narrative
+                        : 'Narrative Missing'
+                    }}
                   </div>
                 </div>
               </td>
@@ -67,6 +73,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import isEmpty from '../../../../composable/helper';
 
 export default defineComponent({
   name: 'TransactionRecipientRegion',
@@ -99,5 +106,6 @@ export default defineComponent({
     const type = inject('types') as TypesInterface;
     return { country, type };
   },
+  methods: { isEmpty },
 });
 </script>

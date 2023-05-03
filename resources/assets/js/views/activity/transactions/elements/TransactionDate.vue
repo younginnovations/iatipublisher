@@ -1,10 +1,11 @@
 <template>
-  {{ date[0].date ? dateFormat(date[0].date) : 'Date Missing' }}
+  {{ !isEmpty(date[0].date) ? dateFormat(date[0].date) : 'Date Missing' }}
 </template>
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
 import dateFormat from './../../../../composable/dateFormat';
+import isEmpty from '../../../../composable/helper';
 
 export default defineComponent({
   name: 'TransactionDate',
@@ -24,5 +25,6 @@ export default defineComponent({
     const date = data.value as ArrayObject;
     return { date, dateFormat };
   },
+  methods: { isEmpty },
 });
 </script>

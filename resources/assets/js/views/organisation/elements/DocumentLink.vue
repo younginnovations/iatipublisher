@@ -9,7 +9,11 @@
   >
     <div class="elements-detail">
       <div class="category flex">
-        <a v-if="document_link.url" :href="document_link.url" target="_blank">
+        <a
+          v-if="!isEmpty(document_link.url)"
+          :href="document_link.url"
+          target="_blank"
+        >
           {{ document_link.url }}
         </a>
         <span v-else class="italic">URL Missing</span>
@@ -30,12 +34,15 @@
                 >
                   <span v-if="narrative.language" class="language">
                     ({{
-                      narrative.language
+                      !isEmpty(narrative.language)
                         ? `Language: ${types?.languages[narrative.language]}`
                         : 'Language : Missing'
                     }})
                   </span>
-                  <div v-if="narrative.narrative" class="flex flex-col">
+                  <div
+                    v-if="!isEmpty(narrative.narrative)"
+                    class="flex flex-col"
+                  >
                     <span>
                       {{ narrative.narrative }}
                     </span>
@@ -58,13 +65,17 @@
                 >
                   <div class="language mb-1.5">
                     ({{
-                      narrative.language
+                      !isEmpty(narrative.language)
                         ? `Language: ${types?.languages[narrative.language]}`
                         : 'Language : Missing'
                     }})
                   </div>
                   <div class="w-[500px] max-w-full">
-                    {{ narrative.narrative ?? 'Narrative Missing' }}
+                    {{
+                      !isEmpty(narrative.narrative)
+                        ? narrative.narrative
+                        : 'Narrative Missing'
+                    }}
                   </div>
                 </div>
               </td>
@@ -78,9 +89,11 @@
                 >
                   <span>
                     {{
-                      document_link.language
-                        .map((entry) => types.languages[entry.language])
-                        .join(', ') === ''
+                      isEmpty(
+                        document_link.language
+                          .map((entry) => types.languages[entry.language])
+                          .join(', ')
+                      )
                         ? 'Language Missing'
                         : document_link.language
                             .map((entry) => types.languages[entry.language])
@@ -92,7 +105,7 @@
             </tr>
             <tr>
               <td>Format</td>
-              <td v-if="document_link.format">
+              <td v-if="!isEmpty(document_link.format)">
                 {{ document_link.format }}
               </td>
               <td v-else class="italic">Missing</td>
@@ -108,7 +121,7 @@
                     'mb-1.5': i != document_link.category.length - 1,
                   }"
                 >
-                  <span v-if="category.code">
+                  <span v-if="!isEmpty(category.code)">
                     {{
                       category.code
                         ? types?.documentCategory[category.code]
@@ -126,7 +139,7 @@
                   v-for="(document_date, i) in document_link.document_date"
                   :key="i"
                 >
-                  <span v-if="document_date.date">
+                  <span v-if="!isEmpty(document_date.date)">
                     {{ formatDate(document_date.date) }}
                   </span>
                   <span v-else class="italic">Missing</span>
@@ -144,7 +157,7 @@
                 >
                   <div class="mb-1.5 text-xs">
                     {{
-                      recipient_country.code
+                      !isEmpty(recipient_country.code)
                         ? `${types?.country[recipient_country.code]}`
                         : 'Missing'
                     }}
@@ -159,13 +172,17 @@
                   >
                     <div class="language mb-1.5">
                       ({{
-                        narrative.language
+                        !isEmpty(narrative.language)
                           ? `Language: ${types?.languages[narrative.language]} `
                           : 'Language : Missing'
                       }})
                     </div>
                     <div class="w-[500px] max-w-full">
-                      {{ narrative.narrative ?? 'Narrative Missing' }}
+                      {{
+                        !isEmpty(narrative.narrative)
+                          ? narrative.narrative
+                          : 'Narrative Missing'
+                      }}
                     </div>
                   </div>
                 </div>
@@ -181,6 +198,7 @@
 <script setup lang="ts">
 import { defineProps, inject } from 'vue';
 import moment from 'moment';
+import isEmpty from '../../../composable/helper';
 
 defineProps({
   content: { type: Object, required: true },
@@ -197,6 +215,6 @@ interface TypesInterface {
 const types = inject('orgTypes') as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format('LL') : 'Date Missing';
+  return isEmpty(date) ? moment(date).format('LL') : 'Date Missing';
 }
 </script>

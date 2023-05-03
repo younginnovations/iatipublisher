@@ -1,9 +1,12 @@
 <template>
-  <div class="text-sm">{{ type[typeData] ?? 'Missing' }}</div>
+  <div class="text-sm">
+    {{ isEmpty(type[typeData]) ? 'Missing' : type[typeData] }}
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import isEmpty from '../../../../composable/helper';
 
 export default defineComponent({
   name: 'ResultType',
@@ -22,5 +25,6 @@ export default defineComponent({
     const typeData = data.value;
     return { typeData };
   },
+  methods: { isEmpty },
 });
 </script>

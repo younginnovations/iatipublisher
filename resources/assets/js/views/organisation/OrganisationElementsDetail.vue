@@ -76,7 +76,7 @@
         <!-- name -->
         <div v-if="title == 'name'">
           <div v-for="(post, i) in data.content" :key="i" class="title-content">
-            <div v-if="post.narrative" class="flex flex-col">
+            <div v-if="!isEmpty(post.narrative)" class="flex flex-col">
               <span v-if="post.language" class="language mb-1.5">
                 (Language: {{ types?.languages[post.language] }})
               </span>
@@ -138,6 +138,7 @@ import {
   TotalExpenditure,
   DocumentLink,
 } from 'Organisation/elements/Index';
+import isEmpty from 'Composable/helper';
 
 const props = defineProps({
   data: {

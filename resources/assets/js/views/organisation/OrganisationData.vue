@@ -32,15 +32,19 @@
                     <span
                       class="breadcrumb__title last overflow-hidden text-n-30"
                       >{{
-                        organization.name
-                          ? organization.name['0'].narrative ?? 'Untitled'
+                        !isEmpty(organization.name)
+                          ? !isEmpty(organization.name['0'].narrative)
+                            ? organization.name['0'].narrative
+                            : 'Untitled'
                           : 'Untitled'
                       }}</span
                     >
                     <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
                       {{
-                        organization.name
-                          ? organization.name['0'].narrative ?? 'Untitled'
+                        !isEmpty(organization.name)
+                          ? !isEmpty(organization.name['0'].narrative)
+                            ? organization.name['0'].narrative
+                            : 'Untitled'
                           : 'Untitled'
                       }}
                     </span>
@@ -60,15 +64,19 @@
                     class="ellipsis__title max-w-[400px] overflow-hidden text-ellipsis whitespace-nowrap"
                   >
                     {{
-                      organization.name
-                        ? organization.name['0'].narrative ?? 'Untitled'
+                      !isEmpty(organization.name)
+                        ? !isEmpty(organization.name['0'].narrative)
+                          ? organization.name['0'].narrative
+                          : 'Untitled'
                         : 'Untitled'
                     }}
                   </span>
                   <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
                     {{
-                      organization.name
-                        ? organization.name['0'].narrative ?? 'Untitled'
+                      !isEmpty(organization.name)
+                        ? !isEmpty(organization.name['0'].narrative)
+                          ? organization.name['0'].narrative
+                          : 'Untitled'
                         : 'Untitled'
                     }}
                   </span>
@@ -307,6 +315,7 @@ import PublishUnpublish from 'Components/sections/OrganizationPublishUnpublishBu
 import { useToggle } from '@vueuse/core';
 import { watchIgnorable } from '@vueuse/core';
 import ErrorPopUp from 'Components/ErrorPopUp.vue';
+import isEmpty from '../../composable/helper';
 
 export default defineComponent({
   name: 'OrganisationData',
@@ -542,6 +551,7 @@ export default defineComponent({
       istopVisible,
     };
   },
+  methods: { isEmpty },
 });
 </script>
 

@@ -84,9 +84,13 @@
           </tr>
           <tr v-for="data in organisationData.data.data" v-else :key="data.id">
             <td>
-              <div v-if="data.name" class="ellipsis relative">
+              <div v-if="!isEmpty(data.name)" class="ellipsis relative">
                 <span class="ellipsis overflow-hidden">
-                  {{ data?.name[0]?.narrative ?? 'Name Missing' }}
+                  {{
+                    !isEmpty(data?.name[0]?.narrative)
+                      ? data?.name[0]?.narrative
+                      : 'Name Missing'
+                  }}
                 </span>
               </div>
               <div v-else>Name Missing</div>
@@ -128,6 +132,7 @@ import dateFormat from 'Composable/dateFormat';
 
 import BtnComponent from 'Components/ButtonComponent.vue';
 import Pagination from 'Components/TablePagination.vue';
+import isEmpty from '../../../composable/helper';
 
 // inject
 interface ToastInterface {

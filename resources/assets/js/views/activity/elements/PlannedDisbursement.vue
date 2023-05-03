@@ -7,7 +7,11 @@
   >
     <div class="category">
       <span>
-        {{ types.budgetType[post.planned_disbursement_type] ?? 'Type Missing' }}
+        {{
+          isEmpty(types.budgetType[post.planned_disbursement_type])
+            ? 'Type Missing'
+            : types.budgetType[post.planned_disbursement_type]
+        }}
       </span>
     </div>
 
@@ -21,11 +25,11 @@
             <td>Value Amount</td>
             <td>
               {{
-                post.value[0].amount
-                  ? Number(post.value[0].amount).toLocaleString() +
+                isEmpty(post.value[0].amount)
+                  ? 'Missing'
+                  : Number(post.value[0].amount).toLocaleString() +
                     ' ' +
                     types.currency[post.value[0].currency]
-                  : 'Missing'
               }}
             </td>
           </tr>
@@ -33,9 +37,9 @@
             <td>Value Date</td>
             <td>
               {{
-                post.value[0].value_date
-                  ? formatDate(post.value[0].value_date)
-                  : 'Missing'
+                isEmpty(post.value[0].value_date)
+                  ? 'Missing'
+                  : formatDate(post.value[0].value_date)
               }}
             </td>
           </tr>
@@ -44,9 +48,9 @@
             <td>
               <span>
                 {{
-                  post.period_start[0].date
-                    ? formatDate(post.period_start[0].date)
-                    : 'Date Missing'
+                  isEmpty(post.period_start[0].date)
+                    ? 'Date Missing'
+                    : formatDate(post.period_start[0].date)
                 }}
               </span>
             </td>
@@ -56,9 +60,9 @@
             <td>
               <span>
                 {{
-                  post.period_end[0].date
-                    ? formatDate(post.period_end[0].date)
-                    : 'Date Missing'
+                  isEmpty(post.period_end[0].date)
+                    ? 'Date Missing'
+                    : formatDate(post.period_end[0].date)
                 }}
               </span>
             </td>
@@ -76,22 +80,30 @@
             <td>Type</td>
             <td>
               {{
-                post.provider_org[0].type
-                  ? types.organizationType[post.provider_org[0].type]
-                  : 'Missing'
+                isEmpty(post.provider_org[0].type)
+                  ? 'Missing'
+                  : types.organizationType[post.provider_org[0].type]
               }}
             </td>
           </tr>
           <tr>
             <td>Provider Activity ID</td>
             <td>
-              {{ post.provider_org[0].provider_activity_id ?? 'Missing' }}
+              {{
+                isEmpty(post.provider_org[0].provider_activity_id)
+                  ? 'Missing'
+                  : post.provider_org[0].provider_activity_id
+              }}
             </td>
           </tr>
           <tr>
             <td>Reference</td>
             <td>
-              {{ post.provider_org[0].ref ?? 'Missing' }}
+              {{
+                isEmpty(post.provider_org[0].ref)
+                  ? 'Missing'
+                  : post.provider_org[0].ref
+              }}
             </td>
           </tr>
           <tr>
@@ -108,13 +120,17 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : 'Missing'
+                    isEmpty(narrative.language)
+                      ? 'Missing'
+                      : types.languages[narrative.language]
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  {{
+                    isEmpty(narrative.narrative)
+                      ? 'Missing'
+                      : narrative.narrative
+                  }}
                 </div>
               </div>
             </td>
@@ -132,22 +148,30 @@
             <td>Type</td>
             <td>
               {{
-                post.receiver_org[0].type
-                  ? types.organizationType[post.receiver_org[0].type]
-                  : 'Missing'
+                isEmpty(post.receiver_org[0].type)
+                  ? 'Missing'
+                  : types.organizationType[post.receiver_org[0].type]
               }}
             </td>
           </tr>
           <tr>
             <td>Receiver Activity ID</td>
             <td>
-              {{ post.receiver_org[0].receiver_activity_id ?? 'Missing' }}
+              {{
+                isEmpty(post.receiver_org[0].receiver_activity_id)
+                  ? 'Missing'
+                  : post.receiver_org[0].receiver_activity_id
+              }}
             </td>
           </tr>
           <tr>
             <td>Reference</td>
             <td>
-              {{ post.receiver_org[0].ref ?? 'Missing' }}
+              {{
+                isEmpty(post.receiver_org[0].ref)
+                  ? 'Missing'
+                  : post.receiver_org[0].ref
+              }}
             </td>
           </tr>
           <tr>
@@ -164,13 +188,17 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : 'Missing'
+                    isEmpty(narrative.language)
+                      ? 'Missing'
+                      : types.languages[narrative.language]
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  {{
+                    isEmpty(narrative.narrative)
+                      ? 'Missing'
+                      : narrative.narrative
+                  }}
                 </div>
               </div>
             </td>
@@ -184,6 +212,7 @@
 <script setup lang="ts">
 import { defineProps, inject } from 'vue';
 import moment from 'moment';
+import isEmpty from '../../../composable/helper';
 
 defineProps({
   data: {
