@@ -57,4 +57,89 @@ trait MigrateUserTrait
 
         return $this->roleRepository->getGeneralUserId();
     }
+
+    /**
+     * Migrates users from AidStream to IATI Publisher if needed.
+     *
+     * @param $iatiOrganization
+     * @param $aidstreamUsers
+     * @param $aidStreamOrganization
+     *
+     * @return void
+     */
+    public function migrateUsersIfNeeded($iatiOrganization, $aidstreamUsers, $aidStreamOrganization): void
+    {
+        $iatiUsers = $iatiOrganization->usersIncludingDeleted;
+        $iatiNonDeletedUsers = $iatiOrganization->users;
+
+        $iatiEmails = ($iatiUsers && count($iatiUsers)) ? $iatiUsers->pluck('email')->toArray() : [];
+        $iatiNonDeletedEmails = ($iatiNonDeletedUsers && count($iatiNonDeletedUsers)) ? $iatiNonDeletedUsers->pluck('email')->toArray() : [];
+        $iatiUsernames = ($iatiUsers && count($iatiUsers)) ? $iatiUsers->pluck('username')->toArray() : [];
+        $iatiNonDeletedUsernames = ($iatiNonDeletedUsers && count($iatiNonDeletedUsers)) ? $iatiNonDeletedUsers->pluck('username')->toArray() : [];
+
+        if (count($aidstreamUsers)) {
+            foreach ($aidstreamUsers as $aidstreamUser) {
+                if (!in_array($aidstreamUser->email, $iatiEmails, true) && !in_array($aidstreamUser->username, $iatiUsernames, true)) {
+                    $this->logInfo(
+                        'Started user migration for user id: ' . $aidstreamUser->id . ' of organization: ' . $aidStreamOrganization->name
+                    );
+                    $iatiUser = $this->userService->create(
+                        $this->getNewUser($aidstreamUser, $iatiOrganization)
+                    );
+                    $this->auditService->setAuditableId($iatiUser->id)->auditMigrationEvent($iatiUser, 'migrated-user');
+                    $this->logInfo(
+                        'Completed user migration for user id: ' . $aidstreamUser->id . ' of organization: ' . $aidStreamOrganization->name
+                    );
+                } elseif (in_array($aidstreamUser->email, $iatiEmails, true) && in_array($aidstreamUser->username, $iatiUsernames, true)) {
+                    if (in_array($aidstreamUser->email, $iatiNonDeletedEmails, true)) {
+                        if (in_array($aidstreamUser->username, $iatiNonDeletedUsernames, true)) {
+                            $message = "User with email {$aidstreamUser->email} and username {$aidstreamUser->username} already exists in IATI Publisher so not migrated.";
+                        } else {
+                            $message = "User with email {$aidstreamUser->email} and username {$aidstreamUser->username} (with soft deleted username) already exists in IATI Publisher so not migrated.";
+                        }
+                    } elseif (in_array($aidstreamUser->username, $iatiNonDeletedUsernames, true)) {
+                        $message = "User with email {$aidstreamUser->email} (with soft deleted email) and username {$aidstreamUser->username} already exists in IATI Publisher so not migrated.";
+                    } else {
+                        $message = "User with email {$aidstreamUser->email} (with soft deleted email) and username {$aidstreamUser->username} (with soft deleted username) already exists in IATI Publisher so not migrated.";
+                    }
+
+                    $this->setGeneralError($message)->setDetailedError(
+                        $message,
+                        $aidStreamOrganization->id,
+                        'users',
+                        $aidstreamUser->id,
+                        $iatiOrganization->id
+                    );
+                } elseif (in_array($aidstreamUser->email, $iatiEmails, true)) {
+                    if (in_array($aidstreamUser->email, $iatiNonDeletedEmails, true)) {
+                        $message = "User with email {$aidstreamUser->email} (with soft deleted email) already exists in IATI Publisher so not migrated.";
+                    } else {
+                        $message = "User with email {$aidstreamUser->email} already exists in IATI Publisher so not migrated.";
+                    }
+
+                    $this->setGeneralError($message)->setDetailedError(
+                        $message,
+                        $aidStreamOrganization->id,
+                        'users',
+                        $aidstreamUser->id,
+                        $iatiOrganization->id
+                    );
+                } elseif (in_array($aidstreamUser->username, $iatiUsernames, true)) {
+                    if (in_array($aidstreamUser->email, $iatiNonDeletedEmails, true)) {
+                        $message = "User with username {$aidstreamUser->username} already exists in IATI Publisher so not migrated.";
+                    } else {
+                        $message = "User with username {$aidstreamUser->username} (with soft deleted username) already exists in IATI Publisher so not migrated.";
+                    }
+
+                    $this->setGeneralError($message)->setDetailedError(
+                        $message,
+                        $aidStreamOrganization->id,
+                        'users',
+                        $aidstreamUser->id,
+                        $iatiOrganization->id
+                    );
+                }
+            }
+        }
+    }
 }
