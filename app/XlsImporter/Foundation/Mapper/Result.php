@@ -139,12 +139,18 @@ class Result
 
         foreach ($this->results as $activityIdentifier => $results) {
             foreach ($results as $resultIdentifier => $resultData) {
-                $errors[$resultIdentifier] = $resultValidator
-                    ->init($resultData['results'])
+                $errors = $resultValidator
+                    ->init(
+                        [
+                            'result' => $resultData['results'],
+                            'resultId' => Arr::get($this->existingIdentifier, sprintf('result.%s', $resultIdentifier), null),
+                        ]
+                    )
                     ->validateData();
+
+                $existingId = Arr::get($this->existingIdentifier, sprintf('result.%s', $resultIdentifier), false);
                 $excelColumnAndRowName = isset($this->columnTracker[$activityIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
                 $columnAppendedError = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
-                $existingId = Arr::get($this->existingIdentifier, sprintf('result.%s', $resultIdentifier), false);
 
                 if (!in_array($activityIdentifier, array_keys($this->existingIdentifier['parent']))) {
                     $columnAppendedError['critical']['activity_identifier']['activity_identifier'] = "The activity identifier doesn't exist in the system";

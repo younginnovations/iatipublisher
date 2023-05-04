@@ -164,14 +164,20 @@ class Indicator
 
         foreach ($this->indicators as $resultIdentifier => $indicators) {
             foreach ($indicators as $indicatorIdentifier => $indicatorData) {
+                $parentId = Arr::get($this->existingIdentifier['parent'], $resultIdentifier, null);
                 $errors = $indicatorValidator
-                    ->init($indicatorData['indicator'])
+                    ->init(
+                        [
+                            'indicator' => $indicatorData['indicator'],
+                            'resultId' => $parentId,
+                        ]
+                    )
                     ->validateData();
 
                 $error = $this->appendExcelColumnAndRowDetail($errors, $this->columnTracker[$resultIdentifier][$indicatorIdentifier]['indicator']);
                 $existingId = Arr::get($this->existingIdentifier, sprintf('indicator.%s', $indicatorIdentifier), false);
 
-                if (!in_array($resultIdentifier, array_keys($this->existingIdentifier['parent']))) {
+                if (!$parentId) {
                     $error['critical']['result_identifier']['result_identifier'] = 'The result identifier doesn\'t exist in the system';
                 }
 

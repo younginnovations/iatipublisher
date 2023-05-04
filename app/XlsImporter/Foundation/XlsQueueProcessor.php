@@ -134,7 +134,50 @@ class XlsQueueProcessor
     public function checkXlsFile($content, $xlsType)
     {
         $sheets = Arr::get($this->getXlsSheets(), $xlsType, []);
-        $excelColumns = Arr::get($this->getXlsHeaders(), $xlsType, []);
+        $excelColumns = $this->getXlsHeaders();
+        $activityElements = [
+            'Title' => 'title',
+            'Other Identifier' => 'other_identifier',
+            'Description' => 'description',
+            'Activity Date' => 'activity_date',
+            'Recipient Country' => 'recipient_country',
+            'Recipient Region' => 'recipient_region',
+            'Sector' => 'sector',
+            'Tag' => 'tag',
+            'Policy Marker' => 'policy_marker',
+            'Default Aid Type' => 'default_aid_type',
+            'Country Budget Items' => 'country_budget_items',
+            'Humanitarian Scope' => 'humanitarian_scope',
+            'Related Activity' => 'related_activity',
+            'Conditions' => 'conditions',
+            'Legacy Data' => 'legacy_data',
+            'Document Link' => 'document_link',
+            'Contact Info' => 'contact_info',
+            'Location' => 'location',
+            'Planned Disbursement' => 'planned_disbursement',
+            'Participating Org' => 'participating_org',
+            'Budget' => 'budget',
+            'Transaction' => 'transactions',
+            'Settings' => 'settings',
+            'Element with single field' => 'element with single field',
+            'Result Mapper' => 'result_mapper',
+            'Result' => 'result',
+            'Result Document Link' => 'result_document_link',
+            'Indicator Mapper' => 'indicator_mapper',
+            'Indicator Baseline Mapper' => 'indicator_baseline_mapper',
+            'Indicator' => 'indicator',
+            'Indicator Document Link' => 'indicator_document_link',
+            'Indicator Baseline' => 'indicator_baseline',
+            'Baseline Document Link' => 'baseline_document_link',
+            'Period Mapper' => 'period_mapper',
+            'Target Mapper' => 'target_mapper',
+            'Actual Mapper' => 'actual_mapper',
+            'Period' => 'period',
+            'Target' => 'target',
+            'Target Document Link' => 'target_document_link',
+            'Actual' => 'actual',
+            'Actual Document Link' => 'actual_document_link',
+        ];
 
         if (!$this->checkSheetNames(array_keys($content), $sheets)) {
             awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => 'Sheet missing in xls file.'], JSON_THROW_ON_ERROR));
@@ -142,14 +185,18 @@ class XlsQueueProcessor
             return false;
         }
 
-        foreach ($content as $sheetName=>$data) {
-            $dataHeader = array_keys(Arr::get($data, '0', []));
-            $actualHeader = array_keys(Arr::get($excelColumns, $sheetName, []));
+        foreach ($content as $sheetName => $data) {
+            dump($sheetName);
 
-            if (!$this->checkColumnHeader($dataHeader, $actualHeader) && !in_array($sheetName, ['Instructions', 'Options'])) {
-                awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => 'Header mismatch in xls file.'], JSON_THROW_ON_ERROR));
+            if (!in_array($sheetName, ['Instructions', 'Options'])) {
+                $dataHeader = array_keys(Arr::get($data, '0', []));
+                $actualHeader = array_values(Arr::get($excelColumns, $activityElements[$sheetName], []));
 
-                return false;
+                if (!$this->checkColumnHeader($dataHeader, $actualHeader)) {
+                    awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => 'Header mismatch in xls file.'], JSON_THROW_ON_ERROR));
+
+                    return false;
+                }
             }
         }
 
@@ -175,7 +222,9 @@ class XlsQueueProcessor
 
     public function checkColumnHeader($dataHeader, $actualHeader)
     {
-        if (count(array_diff($actualHeader, $dataHeader)) || count(array_diff($actualHeader, $dataHeader))) {
+        dump($dataHeader, $actualHeader, count(array_diff($actualHeader, $dataHeader)), count(array_diff($dataHeader, $actualHeader)));
+        dump('------------------------------');
+        if (count(array_diff($actualHeader, $dataHeader))) {
             return false;
         }
 
@@ -199,6 +248,6 @@ class XlsQueueProcessor
      */
     public function getXlsHeaders(): array
     {
-        return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/excel-column-name-mapper.json'), true, 512, 0);
+        return json_decode(file_get_contents(app_path() . '/XlsImporter/Templates/linearized-activity.json'), true, 512, 0);
     }
 }

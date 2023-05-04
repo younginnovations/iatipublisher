@@ -19,6 +19,11 @@ class IndicatorValidator implements ValidatorInterface
     protected $indicator;
 
     /**
+     * @var
+     */
+    protected $resultId;
+
+    /**
      * @var Validation
      */
     protected $factory;
@@ -29,49 +34,6 @@ class IndicatorValidator implements ValidatorInterface
     public function __construct(Validation $factory)
     {
         $this->factory = $factory;
-    }
-
-    /**
-     * Returns warnings for xml uploaded indicator.
-     *
-     * @return array
-     */
-    public function rules(): array
-    {
-        $rules = (new IndicatorRequest())->getWarningForIndicator($this->indicator);
-
-        return $rules;
-    }
-
-    /**
-     * Returns error rules for xml uploaded indicator.
-     *
-     * @return array
-     */
-    public function errorRules(): array
-    {
-        $rules = (new IndicatorRequest())->getErrorsForIndicator($this->indicator);
-
-        return $rules;
-    }
-
-    /**
-     * Returns critical rules for xml uploaded indicator.
-     * @return array
-     */
-    public function criticalRules(): array
-    {
-        return [];
-    }
-
-    /**
-     * Returns the required messages for the failed validation rules of indicator.
-     *
-     * @return array
-     */
-    public function messages(): array
-    {
-        return (new IndicatorRequest())->getMessagesForIndicator($this->indicator);
     }
 
     /**
@@ -107,58 +69,45 @@ class IndicatorValidator implements ValidatorInterface
     }
 
     /**
-     * Create base rule for multilevel elements.
-     *
-     * @param $baseRules
-     * @param $element
-     * @param $data
-     * @param $indexRequired
+     * Returns warnings for xml uploaded indicator.
      *
      * @return array
      */
-    public function getBaseRules($baseRules, $element, $data, $indexRequired = true): array
+    public function rules(): array
     {
-        $rules = [];
-
-        if (!empty($data)) {
-            foreach ($data as $idx => $value) {
-                foreach ($baseRules as $elementName => $baseRule) {
-                    $fieldName = $indexRequired ? $element . '.' . $idx . '.' . $elementName : $element . '.' . $elementName;
-                    $rules[$fieldName] = $baseRule;
-                }
-            }
-        }
+        $rules = (new IndicatorRequest())->getWarningForIndicator($this->indicator, true, [], $this->resultId);
 
         return $rules;
     }
 
     /**
-     * Create base messages for multilevel elements.
-     *
-     * @param $baseRules
-     * @param $element
-     * @param $data
-     * @param $indexRequired
+     * Returns error rules for xml uploaded indicator.
      *
      * @return array
      */
-    public function getBaseMessages($baseMessages, $element, $data, $indexRequired = true): array
+    public function errorRules(): array
     {
-        $messages = [];
+        $rules = (new IndicatorRequest())->getErrorsForIndicator($this->indicator, true);
 
-        if (is_array($data)) {
-            foreach ($data as $idx => $value) {
-                foreach ($baseMessages as $elementName => $baseMessage) {
-                    $fieldName = $indexRequired ? $element . '.' . $idx . '.' . $elementName : $element . '.' . $elementName;
-                    $messages[$fieldName] = $baseMessage;
-                }
-            }
-        } else {
-            foreach ($baseMessages as $elementName => $baseMessage) {
-                $messages[$element . '.' . $elementName] = $baseMessage;
-            }
-        }
+        return $rules;
+    }
 
-        return $messages;
+    /**
+     * Returns critical rules for xml uploaded indicator.
+     * @return array
+     */
+    public function criticalRules(): array
+    {
+        return [];
+    }
+
+    /**
+     * Returns the required messages for the failed validation rules of indicator.
+     *
+     * @return array
+     */
+    public function messages(): array
+    {
+        return (new IndicatorRequest())->getMessagesForIndicator($this->indicator);
     }
 }

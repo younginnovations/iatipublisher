@@ -28,36 +28,36 @@ class Validation extends Factory
      * @var array
      */
     protected array $elementLinks = [
-        'Other Identifier'           => 'activity.other-identifier.index',
-        'Title'                      => 'activity.title.index',
-        'Description'                => 'activity.description.index',
-        'Activity Status'            => 'activity.activity-status.index',
-        'Activity Date'              => 'activity.activity-date.index',
-        'Contact Info'               => 'activity.contact-info.index',
-        'Activity Scope'             => 'activity.activity-scope.index',
+        'Other Identifier' => 'activity.other-identifier.index',
+        'Title' => 'activity.title.index',
+        'Description' => 'activity.description.index',
+        'Activity Status' => 'activity.activity-status.index',
+        'Activity Date' => 'activity.activity-date.index',
+        'Contact Info' => 'activity.contact-info.index',
+        'Activity Scope' => 'activity.activity-scope.index',
         'Participating Organization' => 'activity.participating-organization.index',
-        'Recipient Country'          => 'activity.recipient-country.index',
-        'Recipient Region'           => 'activity.recipient-region.index',
-        'Location'                   => 'activity.location.index',
-        'SectorCode'                 => 'activity.sector.index',
-        'Tag'                        => 'activity.tag.index',
-        'Country Budget Items'       => 'activity.country-budget-items.index',
-        'Humanitarian Scope'         => 'activity.humanitarian-scope.index',
-        'Policy Marker'              => 'activity.policy-marker.index',
-        'Collaboration Type'         => 'activity.collaboration_type.index',
-        'Default Flow Type'          => 'activity.default-flow-type.index',
-        'Default Finance Type'       => 'activity.default-finance-type.index',
-        'Default Aid Type'           => 'activity.default-aid-type.index',
-        'Default Tied Status'        => 'activity.default-tied-status.index',
-        'Budget'                     => 'activity.budget.index',
-        'Planned Disbursement'       => 'activity.planned-disbursement.index',
-        'Capital Spend'              => 'activity.capital-spend.index',
-        'Related Activity'           => 'activity.related-activity.index',
-        'Legacy Data'                => 'activity.legacy-data.index',
-        'Conditions'                 => 'activity.condition.index',
-        'Document Links'             => 'activity.document-link.edit',
-        'Transaction'                => 'activity.transaction.edit',
-        'Results'                    => 'activity.result.edit',
+        'Recipient Country' => 'activity.recipient-country.index',
+        'Recipient Region' => 'activity.recipient-region.index',
+        'Location' => 'activity.location.index',
+        'SectorCode' => 'activity.sector.index',
+        'Tag' => 'activity.tag.index',
+        'Country Budget Items' => 'activity.country-budget-items.index',
+        'Humanitarian Scope' => 'activity.humanitarian-scope.index',
+        'Policy Marker' => 'activity.policy-marker.index',
+        'Collaboration Type' => 'activity.collaboration_type.index',
+        'Default Flow Type' => 'activity.default-flow-type.index',
+        'Default Finance Type' => 'activity.default-finance-type.index',
+        'Default Aid Type' => 'activity.default-aid-type.index',
+        'Default Tied Status' => 'activity.default-tied-status.index',
+        'Budget' => 'activity.budget.index',
+        'Planned Disbursement' => 'activity.planned-disbursement.index',
+        'Capital Spend' => 'activity.capital-spend.index',
+        'Related Activity' => 'activity.related-activity.index',
+        'Legacy Data' => 'activity.legacy-data.index',
+        'Conditions' => 'activity.condition.index',
+        'Document Links' => 'activity.document-link.edit',
+        'Transaction' => 'activity.transaction.edit',
+        'Results' => 'activity.result.edit',
     ];
 
     /**
@@ -136,7 +136,7 @@ class Validation extends Factory
      *
      * @return array
      */
-    public function withErrors(): array
+    public function withErrors($isActivity = false): array
     {
         $errors = [];
 
@@ -388,7 +388,7 @@ class Validation extends Factory
                             'validation.required_with',
                             [
                                 'attribute' => trans('elementForm.sector_code'),
-                                'values'    => trans('elementForm.narrative'),
+                                'values' => trans('elementForm.narrative'),
                             ]
                         );
                     }
@@ -397,7 +397,7 @@ class Validation extends Factory
                             'validation.required_with',
                             [
                                 'attribute' => trans('elementForm.sector_code'),
-                                'values'    => trans('elementForm.narrative'),
+                                'values' => trans('elementForm.narrative'),
                             ]
                         );
                     }

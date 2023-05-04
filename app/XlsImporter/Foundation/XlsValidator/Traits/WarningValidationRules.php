@@ -30,7 +30,6 @@ use App\Http\Requests\Activity\PolicyMarker\PolicyMarkerRequest;
 use App\Http\Requests\Activity\RecipientCountry\RecipientCountryRequest;
 use App\Http\Requests\Activity\RecipientRegion\RecipientRegionRequest;
 use App\Http\Requests\Activity\RelatedActivity\RelatedActivityRequest;
-use App\Http\Requests\Activity\ReportingOrg\ReportingOrgRequest;
 use App\Http\Requests\Activity\Result\ResultRequest;
 use App\Http\Requests\Activity\Scope\ScopeRequest;
 use App\Http\Requests\Activity\Sector\SectorRequest;
@@ -470,15 +469,5 @@ trait WarningValidationRules
     protected function warningForDefaultAidType(array $activity): array
     {
         return (new DefaultAidTypeRequest())->getWarningForDefaultAidType();
-    }
-
-    /**
-     * Rules for reporting organization.
-     *
-     * @return array
-     */
-    protected function warningForReportingOrganization(array $activity): array
-    {
-        return (new ReportingOrgRequest())->getWarningForReportingOrganization(Arr::get($activity, 'reporting_org', []));
     }
 }

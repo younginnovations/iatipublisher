@@ -220,15 +220,15 @@
         "reference vocabulary_uri": "reference_vocabulary_uri"
     },
     "result document_link": {
-      "url": "url",
-      "format": "format",
-      "title narrative narrative": "title_narrative",
-      "title narrative language": "title_language",
-      "description narrative narrative": "description_narrative",
-      "description narrative language": "description_language",
-      "category code": "category_code",
-      "language language": "language_code",
-      "document_date date": "document_date_date"
+        "url": "url",
+        "format": "format",
+        "title narrative narrative": "title_narrative",
+        "title narrative language": "title_language",
+        "description narrative narrative": "description_narrative",
+        "description narrative language": "description_language",
+        "category code": "category_code",
+        "language language": "language_code",
+        "document_date date": "document_date_date"
     },
     "indicator": {
         "measure": "measure",
@@ -354,9 +354,53 @@
         "finance_type finance_type": "finance_type_code",
         "aid_type aid_type_vocabulary": "aid_type_vocabulary",
         "aid_type aid_type_code": "aid_type_code",
-        "aid_type earmarking_category": "aid_type_code",
-        "aid_type earmarking_modality": "aid_type_code",
-        "aid_type cash_and_voucher_modalities": "aid_type_code",
         "tied_status tied_status_code": "tied_status_code"
+    },
+    "period_mapper": {
+        "indicator_identifier": "indicator_identifier",
+        "period_number": "period_number",
+        "period_identifier": "period_identifier"
+    },
+    "target_mapper": {
+        "period_identifier": "period_identifier",
+        "target_number": "target_number",
+        "target_identifier": "target_identifier"
+    },
+    "actual_mapper": {
+        "period_identifier": "period_identifier",
+        "actual_number": "actual_number",
+        "actual_identifier": "actual_identifier"
+    },
+    "indicator_mapper": {
+        "result_identifier": "result_identifier",
+        "indicator_number": "indicator_number",
+        "indicator_identifier": "indicator_identifier"
+    },
+    "indicator_baseline_mapper": {
+        "indicator_identifier": "indicator_identifier",
+        "baseline_number": "baseline_number",
+        "baseline_identifier": "baseline_identifier"
+    },
+    "result_mapper": {
+        "activity_identifier": "activity_identifier",
+        "result_number": "result_number",
+        "result_identifier": "result_identifier"
+    },
+    "settings": {
+        "default_currency": "default_currency",
+        "default_language": "default_language",
+        "hierarchy": "hierarchy",
+        "humanitarian": "humanitarian",
+        "secondary_reporter": "secondary_reporter",
+        "budget_not_provided": "budget_not_provided"
+    },
+    "element with single field": {
+        "activity_status": "activity_status",
+        "activity_scope": "activity_scope",
+        "collaboration_type": "collaboration_type",
+        "default_flow_type": "default_flow_type",
+        "default_finance_type": "default_finance_type",
+        "default_tied_status": "default_tied_status",
+        "capital_spend": "capital_spend"
     }
 }

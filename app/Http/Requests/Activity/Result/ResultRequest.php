@@ -50,7 +50,7 @@ class ResultRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getWarningForResult(array $formFields, bool $fileUpload = false, array $indicators = []): array
+    public function getWarningForResult(array $formFields, bool $fileUpload, array $indicators, $resultId): array
     {
         $rules = [];
 
@@ -58,7 +58,7 @@ class ResultRequest extends ActivityBaseRequest
             $this->getWarningForNarrative($formFields['title'][0]['narrative'], 'title.0'),
             $this->getWarningForNarrative($formFields['description'][0]['narrative'], 'description.0'),
             $this->getWarningForDocumentLink($formFields['document_link']),
-            $this->getWarningForReferences($formFields['reference'], $fileUpload, $indicators),
+            $this->getWarningForReferences($formFields['reference'], $fileUpload, $indicators, $resultId),
         ];
 
         foreach ($tempRules as $key => $tempRule) {
@@ -108,7 +108,7 @@ class ResultRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getMessagesForResult(array $formFields, bool $fileUpload = false): array
+    public function getMessagesForResult(array $formFields, bool $fileUpload = false, $resultId = null): array
     {
         $messages = [];
 
@@ -116,7 +116,7 @@ class ResultRequest extends ActivityBaseRequest
             $this->getMessagesForNarrative($formFields['title'][0]['narrative'], 'title.0'),
             $this->getMessagesForNarrative($formFields['description'][0]['narrative'], 'description.0'),
             $this->getMessagesForDocumentLink($formFields['document_link']),
-            $this->getMessagesForReferences($formFields['reference'], $fileUpload),
+            $this->getMessagesForReferences($formFields['reference'], $fileUpload, $resultId),
         ];
 
         foreach ($tempMessages as $key => $tempMessage) {
@@ -135,21 +135,21 @@ class ResultRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getWarningForReferences($formFields, $fileUpload = false, array $indicators = []): array
+    protected function getWarningForReferences($formFields, $fileUpload = false, array $indicators = [], int $resultId = null): array
     {
         Validator::extendImplicit(
             'indicator_ref_code_present',
-            function () {
-                $params = $this->route()->parameters();
+            function () use ($resultId) {
+                $resultId = Arr::get($this->route()->parameters(), 'resultId');
 
-                return !app()->make(ResultService::class)->indicatorHasRefCode($params['resultId']);
+                return !app()->make(ResultService::class)->indicatorHasRefCode($resultId);
             }
         );
 
         $rules = [];
 
         if ($fileUpload) {
-            $hasResultId = false;
+            $hasResultId = (bool) $resultId;
         } else {
             $params = $this->route()->parameters();
             $hasResultId = array_key_exists('resultId', $params);
@@ -169,7 +169,7 @@ class ResultRequest extends ActivityBaseRequest
                         }
                     }
 
-                    $rules[sprintf('%s.code', $referenceForm)] = 'indicator_ref_code_present:' . !$hasCode;
+                    $rules[sprintf('%s.code', $referenceForm)] = 'indicator_ref_code_present:' . $resultId ? !app()->make(ResultService::class)->indicatorHasRefCode($resultId) : !$hasCode;
                 } else {
                     $rules[sprintf('%s.code', $referenceForm)] = 'indicator_ref_code_present';
                 }
@@ -204,12 +204,12 @@ class ResultRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getMessagesForReferences($formFields, $fileUpload = false): array
+    protected function getMessagesForReferences($formFields, $fileUpload = false, $resultId = null): array
     {
         $messages = [];
 
         if ($fileUpload) {
-            $hasResultId = true;
+            $hasResultId = (bool) $resultId;
         } else {
             $params = $this->route()->parameters();
             $hasResultId = array_key_exists('resultId', $params);

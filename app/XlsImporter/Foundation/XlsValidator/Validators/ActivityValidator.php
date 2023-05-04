@@ -81,7 +81,6 @@ class ActivityValidator implements ValidatorInterface
             $this->warningForLegacyData($activity),
             $this->warningForCondition($activity),
             $this->warningForTransaction($activity),
-            $this->warningForReportingOrganization($activity),
         ];
 
         foreach ($tempRules as $tempRule) {
@@ -132,7 +131,6 @@ class ActivityValidator implements ValidatorInterface
             $this->errorForLegacyData($activity),
             $this->errorForCondition($activity),
             $this->errorForTransaction($activity),
-            // $this->errorForReportingOrganization($activity),
         ];
 
         foreach ($tempRules as $tempRule) {
@@ -206,7 +204,6 @@ class ActivityValidator implements ValidatorInterface
             $this->messagesForLegacyData($activity),
             $this->messagesForCondition($activity),
             $this->messagesForTransaction($activity),
-            // $this->messagesForReportingOrganization($activity),
         ];
 
         foreach ($tempMessages as $tempMessage) {
@@ -249,14 +246,6 @@ class ActivityValidator implements ValidatorInterface
                 ->passes()
                 ->withErrors(),
         ];
-
-        // if ($isDuplicate) {
-        //     $errors['critical']['activity_identifier']['activity_identifier.identifier'] = 'The activity has been duplicated.';
-        // }
-
-        // if (!$isIdentifierValid) {
-        //     $errors['critical']['activity_identifier']['activity_identifier.activity_identifier'] = 'The activity is invalid. Please ensure that the activity identifier matches with organization identifier.';
-        // }
 
         foreach ($errors as $key => $value) {
             if (empty($value)) {
@@ -321,18 +310,5 @@ class ActivityValidator implements ValidatorInterface
         }
 
         return $messages;
-    }
-
-    /**
-     * Sets Organization reporting org.
-     *
-     * @param $organizationReportingOrg
-     * @return $this
-     */
-    public function reportingOrganisationInOrganisation($organizationReportingOrg):static
-    {
-        $this->organizationReportingOrg = $organizationReportingOrg;
-
-        return $this;
     }
 }

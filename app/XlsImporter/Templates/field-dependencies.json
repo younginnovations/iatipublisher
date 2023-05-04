@@ -838,7 +838,10 @@
                 ]
             },
             "recipient_country country_code": {
-                "parent": "receipient_country",
+                "parent": "recipient_country",
+                "peer" : [
+                    "recipient_country narrative narrative"
+                ],
                 "add_more": false
             },
             "recipient_country narrative narrative": {
@@ -885,24 +888,35 @@
         "codeDependency": {
             "dependentOn": {
                 "sector code": "sector sector_vocabulary",
-                "recipient_region code": "recipient_region region_vocabulary"
+                "recipient_region code": "recipient_region region_vocabulary",
+                "aid_type aid_type_code": "aid_type aid_type_vocabulary"
             },
             "dependencyCondition": {
                 "sector sector_vocabulary": {
                     "defaultCodeField": "sector text",
                     "dependencyRelation": {
-                        "1": "code",
-                        "2": "category_code",
-                        "7": "sdg_goal",
-                        "8": "sdg_target"
+                        "1": "sector code",
+                        "2": "sector category_code",
+                        "7": "sector sdg_goal",
+                        "8": "sector sdg_target"
                     }
                 },
                 "recipient_region region_vocabulary": {
-                    "defaultCodeField": "custom_code",
+                    "defaultCodeField": "recipient_region custom_code",
                     "dependencyRelation": {
-                        "1": "region_code"
+                        "1": "recipient_region region_code"
+                    }
+                },
+                "aid_type aid_type_vocabulary": {
+                    "defaultCodeField": "aid_type default_aid_type",
+                    "dependencyRelation": {
+                        "1": "aid_type default_aid_type",
+                        "2": "aid_type earmarking_category",
+                        "3": "aid_type earmarking_modality",
+                        "4": "aid_type cash_and_voucher_modalities"
                     }
                 }
+                
             }
         }
     }

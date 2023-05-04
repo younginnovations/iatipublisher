@@ -29,7 +29,6 @@ use App\Http\Requests\Activity\PolicyMarker\PolicyMarkerRequest;
 use App\Http\Requests\Activity\RecipientCountry\RecipientCountryRequest;
 use App\Http\Requests\Activity\RecipientRegion\RecipientRegionRequest;
 use App\Http\Requests\Activity\RelatedActivity\RelatedActivityRequest;
-use App\Http\Requests\Activity\ReportingOrg\ReportingOrgRequest;
 use App\Http\Requests\Activity\Result\ResultRequest;
 use App\Http\Requests\Activity\Scope\ScopeRequest;
 use App\Http\Requests\Activity\Sector\SectorRequest;
@@ -434,15 +433,5 @@ trait ValidationMessages
     protected function messagesForDefaultAidType(array $activity): array
     {
         return (new DefaultAidTypeRequest())->getMessagesForDefaultAidType(Arr::get($activity, 'default_aid_type', []));
-    }
-
-    /**
-     * Messages for reporting organization.
-     *
-     * @return array
-     */
-    public function messagesForReportingOrganization(array $activity): array
-    {
-        return (new ReportingOrgRequest())->getMessagesForReportingOrganization(Arr::get($activity, 'reporting_org', []));
     }
 }

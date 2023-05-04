@@ -48,15 +48,15 @@ class PeriodRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    public function getWarningForPeriod(array $formFields, bool $fileUpload = false, array $indicator = [], $periodBase = []): array
+    public function getWarningForPeriod(array $formFields, bool $fileUpload = false, array $indicator = [], $periodBase = [], $indicatorId = null): array
     {
         $rules = [];
 
         $tempRules = [
-            $this->getWarningForResultPeriodStart($formFields['period_start'], 'period_start'),
-            $this->getWarningForResultPeriodEnd($formFields['period_end'], 'period_end', $periodBase),
-            $this->getWarningForTarget($formFields['target'], 'target', $fileUpload, $indicator),
-            $this->getWarningForTarget($formFields['actual'], 'actual', $fileUpload, $indicator),
+            $this->getWarningForIndicatorPeriodStart($formFields['period_start'], 'period_start'),
+            $this->getWarningForIndicatorPeriodEnd($formFields['period_end'], 'period_end', $periodBase),
+            $this->getWarningForTarget($formFields['target'], 'target', $fileUpload, $indicator, $indicatorId),
+            $this->getWarningForTarget($formFields['actual'], 'actual', $fileUpload, $indicator, $indicatorId),
         ];
 
         foreach ($tempRules as $index => $tempRule) {
@@ -103,14 +103,14 @@ class PeriodRequest extends ActivityBaseRequest
      * @return array
      * @throws BindingResolutionException
      */
-    public function getMessagesForPeriod(array $formFields, bool $fileUpload = false, array $indicator = []): array
+    public function getMessagesForPeriod(array $formFields, bool $fileUpload = false, array $indicator = [], $indicatorId = null): array
     {
         $messages = [];
         $tempMessages = [
             $this->getMessagesForResultPeriod($formFields['period_start'], 'period_start'),
             $this->getMessagesForResultPeriod($formFields['period_end'], 'period_end'),
-            $this->getMessagesForTarget($formFields['target'], 'target', $fileUpload, $indicator),
-            $this->getMessagesForTarget($formFields['actual'], 'actual', $fileUpload, $indicator),
+            $this->getMessagesForTarget($formFields['target'], 'target', $fileUpload, $indicator, $indicatorId),
+            $this->getMessagesForTarget($formFields['actual'], 'actual', $fileUpload, $indicator, $indicatorId),
         ];
 
         foreach ($tempMessages as $index => $tempMessage) {
@@ -130,7 +130,7 @@ class PeriodRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getWarningForResultPeriodStart($formFields, $periodType): array
+    protected function getWarningForIndicatorPeriodStart($formFields, $periodType): array
     {
         $rules = [];
 
@@ -168,7 +168,7 @@ class PeriodRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getWarningForResultPeriodEnd($formFields, $periodType, $periodBase): array
+    protected function getWarningForIndicatorPeriodEnd($formFields, $periodType, $periodBase): array
     {
         $rules = [];
 
@@ -249,23 +249,26 @@ class PeriodRequest extends ActivityBaseRequest
      *
      * @param $formFields
      * @param $valueType
+     * @param $fileUpload
+     * @param $indicator
+     * @param $indicatorId
      *
      * @return array
      * @throws BindingResolutionException
      */
-    protected function getWarningForTarget($formFields, $valueType, $fileUpload, $indicator): array
+    protected function getWarningForTarget($formFields, $valueType, $fileUpload, $indicator, $indicatorId): array
     {
         $rules = [];
+        $indicatorService = app()->make(IndicatorService::class);
 
         if ($fileUpload) {
-            $measure = Arr::get($indicator, 'measure');
+            $measure = $indicatorId ? $indicatorService->getIndicatorMeasureType($indicatorId) : Arr::get($indicator, 'measure');
             $indicatorMeasureType = [
                 'qualitative' => $measure === '5',
                 'non_qualitative' => in_array($measure, ['1', '2', '3', '4']),
             ];
         } else {
             $params = $this->route()->parameters();
-            $indicatorService = app()->make(IndicatorService::class);
             $indicatorMeasureType = $indicatorService->getIndicatorMeasureType($params['id']);
         }
 
@@ -301,6 +304,8 @@ class PeriodRequest extends ActivityBaseRequest
      *
      * @param $formFields
      * @param $valueType
+     * @param $fileUpload
+     * @param $indicator
      *
      * @return array
      * @throws BindingResolutionException
@@ -331,23 +336,26 @@ class PeriodRequest extends ActivityBaseRequest
      *
      * @param $formFields
      * @param $valueType
+     * @param $fileUpload
+     * @param $indicator
+     * @param $indicatorId
      *
      * @return array
      * @throws BindingResolutionException
      */
-    protected function getMessagesForTarget($formFields, $valueType, $fileUpload, $indicator): array
+    protected function getMessagesForTarget($formFields, $valueType, $fileUpload, $indicator, $indicatorId): array
     {
         $messages = [];
+        $indicatorService = app()->make(IndicatorService::class);
 
         if ($fileUpload) {
-            $measure = Arr::get($indicator, 'measure');
+            $measure = $indicatorId ? $indicatorService->getIndicatorMeasureType($indicatorId) : Arr::get($indicator, 'measure');
             $indicatorMeasureType = [
                 'qualitative' => $measure === '5',
                 'non_qualitative' => in_array($measure, ['1', '2', '3', '4']),
             ];
         } else {
             $params = $this->route()->parameters();
-            $indicatorService = app()->make(IndicatorService::class);
             $indicatorMeasureType = $indicatorService->getIndicatorMeasureType($params['id']);
         }
 

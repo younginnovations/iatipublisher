@@ -133,14 +133,14 @@ class Period
 
         foreach ($this->periods as $indicatorIdentifier => $periods) {
             foreach ($periods as $periodIdentifier => $periodData) {
+                $parentId = Arr::get($this->existingIdentifier['parent'], null);
                 $errors = $periodValidator
-                    ->init($periodData['period'])
+                    ->init(['period' => $periodData['period'], 'indicatorId' => $parentId])
                     ->validateData();
                 $columnAppendedError = $this->appendExcelColumnAndRowDetail($errors, $this->columnTracker[$indicatorIdentifier][$periodIdentifier]['period']);
                 $existingId = Arr::get($this->existingIdentifier, sprintf('period.%s', $periodIdentifier), false);
-                dump($this->existingIdentifier);
 
-                if (!in_array($indicatorIdentifier, array_keys($this->existingIdentifier['parent']))) {
+                if (!$parentId) {
                     $columnAppendedError['critical']['indicator_identifier'][] = 'The indicator identifier doesn\'t exist in the system';
                 }
 

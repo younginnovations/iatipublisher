@@ -21,6 +21,11 @@ class PeriodValidator implements ValidatorInterface
     protected $period;
 
     /**
+     * @var
+     */
+    protected $indicatorId;
+
+    /**
      * @var Validation
      */
     protected $factory;
@@ -40,16 +45,7 @@ class PeriodValidator implements ValidatorInterface
      */
     public function rules(): array
     {
-        $rules = (new PeriodRequest())->getWarningForPeriod($this->period, true, []);
-
-        // foreach ($this->period as $periodIndex => $period) {
-        // $periodBase = sprintf('period.%s', $periodIndex);
-        // $tempRules = (new PeriodRequest())->getWarningForPeriod($this->period, true, []);
-
-        // foreach ($tempRules as $idx => $rule) {
-            //     $rules[$periodBase . '.' . $idx] = $rule;
-        // }
-        // }
+        $rules = (new PeriodRequest())->getWarningForPeriod($this->period, true, [], [], $this->indicatorId);
 
         return $rules;
     }
@@ -64,7 +60,6 @@ class PeriodValidator implements ValidatorInterface
         $rules = (new PeriodRequest())->getErrorsForPeriod($this->period, true, []);
 
         return $rules;
-        // return [];
     }
 
     /**
@@ -83,12 +78,13 @@ class PeriodValidator implements ValidatorInterface
      */
     public function messages(): array
     {
-        return (new PeriodRequest())->getMessagesForPeriod($this->period, true);
+        return (new PeriodRequest())->getMessagesForPeriod($this->period, true, [], $this->indicatorId);
     }
 
     public function init($period): static
     {
-        $this->period = $period;
+        $this->period = $period['period'];
+        $this->indicatorId = $period['indicatorId'];
 
         return $this;
     }
@@ -111,61 +107,5 @@ class PeriodValidator implements ValidatorInterface
         ];
 
         return $errors;
-    }
-
-    /**
-     * Create base rule for multilevel elements.
-     *
-     * @param $baseRules
-     * @param $element
-     * @param $data
-     * @param $indexRequired
-     *
-     * @return array
-     */
-    public function getBaseRules($baseRules, $element, $data, $indexRequired = true): array
-    {
-        $rules = [];
-
-        if (!empty($data)) {
-            foreach ($data as $idx => $value) {
-                foreach ($baseRules as $elementName => $baseRule) {
-                    $fieldName = $indexRequired ? $element . '.' . $idx . '.' . $elementName : $element . '.' . $elementName;
-                    $rules[$fieldName] = $baseRule;
-                }
-            }
-        }
-
-        return $rules;
-    }
-
-    /**
-     * Create base messages for multilevel elements.
-     *
-     * @param $baseRules
-     * @param $element
-     * @param $data
-     * @param $indexRequired
-     *
-     * @return array
-     */
-    public function getBaseMessages($baseMessages, $element, $data, $indexRequired = true): array
-    {
-        $messages = [];
-
-        if (is_array($data)) {
-            foreach ($data as $idx => $value) {
-                foreach ($baseMessages as $elementName => $baseMessage) {
-                    $fieldName = $indexRequired ? $element . '.' . $idx . '.' . $elementName : $element . '.' . $elementName;
-                    $messages[$fieldName] = $baseMessage;
-                }
-            }
-        } else {
-            foreach ($baseMessages as $elementName => $baseMessage) {
-                $messages[$element . '.' . $elementName] = $baseMessage;
-            }
-        }
-
-        return $messages;
     }
 }

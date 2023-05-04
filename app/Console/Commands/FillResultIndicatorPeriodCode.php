@@ -32,9 +32,27 @@ class FillResultIndicatorPeriodCode extends Command
         try {
             DB::beginTransaction();
 
-            Result::whereNull('result_code')->get()->each->save();
-            Indicator::whereNull('indicator_code')->get()->each->save();
-            Period::whereNull('period_code')->get()->each->save();
+            $results = Result::whereNull('result_code')->get();
+            $indicators = Indicator::whereNull('indicator_code')->get();
+            $periods = Period::whereNull('period_code')->get();
+
+            foreach ($results as $result) {
+                $result->result_code = $result->id . time();
+                $result->timestamps = false;
+                $result->saveQuietly(['touch' => false]);
+            }
+
+            foreach ($indicators as $indicator) {
+                $indicator->indicator_code = $indicator->id . time();
+                $indicator->timestamps = false;
+                $indicator->saveQuietly(['touch' => false]);
+            }
+
+            foreach ($periods as $period) {
+                $period->period_code = $period->id . time();
+                $period->timestamps = false;
+                $period->saveQuietly(['touch' => false]);
+            }
 
             DB::commit();
         } catch (\Exception $e) {

@@ -176,7 +176,6 @@ class Activity
 
             $excelColumnAndRowName = isset($this->columnTracker[$activityIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
             $error = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
-            // $existingId = in_array($activityIdentifier, array_keys($this->existingIdentifier, false);
             $existingId = Arr::get($this->existingIdentifier, $activityIdentifier, false);
 
             if (in_array($activityIdentifier, array_keys($this->duplicateIdentifiers))) {
@@ -322,7 +321,6 @@ class Activity
                 }
 
                 foreach ($elementMapper as $xlsColumnName => $systemName) {
-                    dump($element, $xlsColumnName, $systemName, $row);
                     $systemMappedRow[$systemName] = Arr::get($row, $xlsColumnName, null);
                 }
 
@@ -390,7 +388,7 @@ class Activity
                     $dependencyCondition = $codeDependencyCondition[$dependentOnFieldName];
                     $defaultField = $dependencyCondition['defaultCodeField'];
 
-                    $fieldName = $dependentOnFieldValue ? Arr::get($dependencyCondition, "dependencyRelation.$dependentOnFieldValue", $defaultField) : $fieldName;
+                    $fieldName = $dependentOnFieldValue ? Arr::get($dependencyCondition, "dependencyRelation.$dependentOnFieldValue", $defaultField) : $defaultField;
                 }
 
                 if (array_key_exists($fieldName, $elementDropDownFields)) {

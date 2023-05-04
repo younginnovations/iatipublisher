@@ -40,15 +40,13 @@
     "Options": "required"
   },
   "period": {
-    "Instructions": "required",
-    "Period Mapper": "required",
-    "Target Mapper": "required",
-    "Actual Mapper": "required",
-    "Period": "required",
-    "Target": "required",
-    "Target Document Link": "required",
-    "Actual": "required",
-    "Actual Document Link": "required",
-    "Options": "required"
+    "Period Mapper": "period_mapper",
+    "Target Mapper": "target_mapper",
+    "Actual Mapper": "actual_mapper",
+    "Period": "period",
+    "Target": "target",
+    "Target Document Link": "target_document_link",
+    "Actual": "actual",
+    "Actual Document Link": "actual_document_link"
   }
 }

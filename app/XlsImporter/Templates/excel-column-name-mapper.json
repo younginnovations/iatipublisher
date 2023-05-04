@@ -2,8 +2,8 @@
   "Settings": {
     "default_currency": "B",
     "default_language": "C",
-    "default_hierarchy": "D",
-    "default_humanitarian": "E",
+    "hierarchy": "D",
+    "humanitarian": "E",
     "budget_not_provided": "F",
     "secondary_reporter": "G"
   },
@@ -120,7 +120,7 @@
   },
   "Sector": {
     "sector_vocabulary": "B",
-    "code" : "C",
+    "code": "C",
     "vocabulary_uri": "D",
     "percentage": "E",
     "narrative narrative": "F",
@@ -205,7 +205,7 @@
     "reference code": "I",
     "reference vocabulary_uri": "J"
   },
-  "Result Mapper" : {
+  "Result Mapper": {
     "activity_identifier": "A",
     "result_number": "B",
     "result_identifier": "C"
@@ -232,12 +232,12 @@
     "reference vocabulary": "I",
     "reference code": "J"
   },
-  "Indicator Mapper" : {
+  "Indicator Mapper": {
     "result_identifier": "A",
     "indicator_number": "B",
     "indicator_identifier": "C"
   },
-  "Indicator Baseline Mapper" : {
+  "Indicator Baseline Mapper": {
     "indicator_identifier": "A",
     "baseline_number": "B",
     "baseline_identifier": "C"
@@ -270,24 +270,24 @@
     "language code": "I",
     "document_date date": "J"
   },
-  "Period Mapper" : {
+  "Period Mapper": {
     "indicator_identifier": "A",
     "period_number": "B",
     "period_identifier": "C"
   },
-  "Target Mapper" : {
+  "Target Mapper": {
     "period_identifier": "A",
     "target_number": "B",
     "target_identifier": "C"
   },
-  "Actual Mapper" : {
+  "Actual Mapper": {
     "period_identifier": "A",
     "actual_number": "B",
     "actual_identifier": "C"
   },
   "Period": {
-    "period_start date" : "B",
-    "period_end date" : "C"
+    "period_start date": "B",
+    "period_end date": "C"
   },
   "Target": {
     "value": "B",
