@@ -322,15 +322,21 @@ class OrganizationRepository extends Repository
         ];
     }
 
-    public function getLastUpdatedPublisher($queryParams)
-    {
-        return [
-            // 'lastUpdatedPublisher' => $this->model->with('lastUpdatedPublisher')->
-        ];
-    }
-
     public function publisherWithoutActivity()
     {
-        return $this->model->doesntHave('activities')->count();
+        return $this->model->doesntHave('allActivities')->count();
+    }
+
+    public function getOrganizationDashboardDownload(): array
+    {
+        // case when linked_to_iati and activities.status='draft' then 'published recently' else activities.status end as case,
+        // upload_medium,
+        dd($this->model->select(DB::raw("name->0->>'narrative' as organization,
+        identifier,
+        publisher_type,
+         country, 
+         organizations.created_at, 
+         organizations.updated_at 
+         "))->join('settings', 'organizations.id', 'settings.organization_id')->get()->toArray());
     }
 }

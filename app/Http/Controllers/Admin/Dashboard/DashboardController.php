@@ -14,7 +14,6 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use PHPUnit\Exception;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
@@ -22,9 +21,9 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  */
 class DashboardController extends Controller
 {
-    protected ActivityService $activityService;
+    protected DashboardService $dashboardService;
 
-    protected OrganizationService $organizationService;
+    protected CsvGenerator $csvGenerator;
 
     /**
      * @var UserService
@@ -87,7 +86,7 @@ class DashboardController extends Controller
                 'message' => 'User count fetched successfully',
                 'data' => $this->dashboardService->getUserCounts(),
             ]);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
@@ -138,7 +137,7 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->organizationService->getPublisherStats($params);
+            $publisherStat = $this->dashboardService->getPublisherStats($params);
 
             return response()->json([
                 'success' => true,
@@ -163,7 +162,7 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->organizationService->getPublisherGroupedByDate($params, 'created_at');
+            $publisherStat = $this->dashboardService->getPublisherGroupedByDate($params, 'created_at');
 
             return response()->json([
                 'success' => true,
@@ -188,7 +187,7 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->organizationService->getPublisherBy($params, 'registration_type');
+            $publisherStat = $this->dashboardService->getPublisherBy($params, 'registration_type');
 
             return response()->json([
                 'success' => true,
@@ -213,7 +212,7 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->organizationService->getPublisherBy($params, 'country');
+            $publisherStat = $this->dashboardService->getPublisherBy($params, 'country');
 
             return response()->json([
                 'success' => true,
@@ -238,7 +237,7 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->organizationService->getPublisherBy($params, 'publisher_type');
+            $publisherStat = $this->dashboardService->getPublisherBy($params, 'publisher_type');
 
             return response()->json([
                 'success' => true,
@@ -263,7 +262,7 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->organizationService->getPublisherBySetup($params);
+            $publisherStat = $this->dashboardService->getPublisherBySetup($params);
 
             return response()->json([
                 'success' => true,
@@ -289,17 +288,18 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->activityService->getActivityStats($params);
+            $publisherStat = $this->dashboardService->getActivityStats($params);
+            dd($publisherStat);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Publisher grouped by setup completeness fetched successfully',
+                'message' => 'Activity stats fetched successfully',
                 'data' => $publisherStat,
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the activity stats.']);
         }
     }
 
@@ -314,7 +314,7 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->activityService->getActivityCount($params);
+            $publisherStat = $this->dashboardService->getActivityCount($params);
 
             return response()->json([
                 'success' => true,
@@ -340,7 +340,7 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->activityService->getActivityStatus($params);
+            $publisherStat = $this->dashboardService->getActivityStatus($params);
 
             return response()->json([
                 'success' => true,
@@ -366,7 +366,7 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->activityService->getActivityMethod($params);
+            $publisherStat = $this->dashboardService->getActivityBy($params, 'upload_medium');
 
             return response()->json([
                 'success' => true,
@@ -392,12 +392,12 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->activityService->getActivityCompleteness($params);
+            $publisherStat = $this->dashboardService->getActivityCompleteness($params);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Publisher grouped by setup completeness fetched successfully',
-                'data'    => $publisherStat,
+                'data' => $publisherStat,
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
@@ -417,7 +417,7 @@ class DashboardController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => "Today's user stats fetched successfully.",
-                'data'    => $this->dashboardService->getUsersRegisteredToday(),
+                'data' => $this->dashboardService->getUsersRegisteredToday(),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
@@ -437,7 +437,7 @@ class DashboardController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'User count of this week fetched successfully.',
-                'data'    => $this->dashboardService->getUsersRegisteredThisWeek(),
+                'data' => $this->dashboardService->getUsersRegisteredThisWeek(),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
@@ -457,7 +457,7 @@ class DashboardController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'User count of this month fetched successfully.',
-                'data'    => $this->dashboardService->getUsersRegisteredThisMonth(),
+                'data' => $this->dashboardService->getUsersRegisteredThisMonth(),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
@@ -477,7 +477,7 @@ class DashboardController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'User count of this year fetched successfully.',
-                'data'    => $this->dashboardService->getUsersRegisteredThisYear(),
+                'data' => $this->dashboardService->getUsersRegisteredThisYear(),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
@@ -497,7 +497,7 @@ class DashboardController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'User count of last 7 days fetched successfully.',
-                'data'    => $this->dashboardService->getUsersRegisteredLast7Days(),
+                'data' => $this->dashboardService->getUsersRegisteredLast7Days(),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
@@ -517,7 +517,7 @@ class DashboardController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'User count of last 6 months fetched successfully',
-                'data'    => $this->dashboardService->getUsersRegisteredLast6Months(),
+                'data' => $this->dashboardService->getUsersRegisteredLast6Months(),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
@@ -537,7 +537,7 @@ class DashboardController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'User count of last 12 months fetched successfully',
-                'data'    => $this->dashboardService->getUsersRegisteredLast12Months(),
+                'data' => $this->dashboardService->getUsersRegisteredLast12Months(),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
@@ -581,7 +581,7 @@ class DashboardController extends Controller
                 return response()->json([
                     'success' => true,
                     'message' => 'User count in date range fetched successfully',
-                    'data'    => $results,
+                    'data' => $results,
                 ]);
             }
 
@@ -589,7 +589,7 @@ class DashboardController extends Controller
                 'success' => false,
                 'message' => 'Invalid date range.',
             ]);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching user count in custom-range.']);
@@ -626,6 +626,62 @@ class DashboardController extends Controller
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the paginated users.']);
+        }
+    }
+
+    /*
+     * Downloads selected activities in csv format.
+     *
+     * @param Request $request
+     *
+     * @return BinaryFileResponse|JsonResponse
+     */
+    public function downloadActivity(Request $request): BinaryFileResponse|JsonResponse
+    {
+        try {
+            $headers = ['identifier', 'title', 'organization_name', 'status', 'medium', 'complete_percentage', 'created_at', 'updated_at'];
+
+            $activities = $this->dashboardService->getAllActivitiesToDownload();
+
+            // $this->auditService->auditEvent($activipublisherties, 'download', 'csv');
+
+            return $this->csvGenerator->generateWithHeaders(getTimeStampedText('activities'), $activities, $headers);
+        } catch (\Exception $e) {
+            dd($e);
+            logger()->error($e->getMessage());
+            // $this->auditService->auditEvent(null, 'download', 'csv');
+
+            return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity csv.']);
+        }
+    }
+
+    /**
+     * Download summary of organization in csv format.
+     *
+     * @param Request $request
+     *
+     * @return BinaryFileResponse|JsonResponse
+     */
+    public function downloadOrganization(Request $request): BinaryFileResponse|JsonResponse
+    {
+        try {
+            $headers = ['organization', 'organization_name', 'publisher_id', 'country', 'status', 'medium', 'created_at', 'updated_at'];
+
+            $organizations = $this->dashboardService->getOrganizationToDownload();
+
+            // if (!isset($activities) || !count($activities)) {
+            //     return response()->json(['success' => false, 'message' => 'No activities selected.']);
+            // }
+
+            // $this->auditService->auditEvent($activities, 'download', 'csv');
+
+            return $this->csvGenerator->generateWithHeaders(getTimeStampedText('organizations'), $organizations, $headers);
+        } catch (\Exception $e) {
+            dd($e);
+            logger()->error($e->getMessage());
+            // $this->auditService->auditEvent(null, 'download', 'csv');
+
+            return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity csv.']);
         }
     }
 }

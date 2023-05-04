@@ -10,6 +10,7 @@ use App\IATI\Repositories\Repository;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Traits\FillDefaultValuesTrait;
 use Auth;
+use DB;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -616,5 +617,74 @@ class ActivityRepository extends Repository
     public function getActivitityWithRelationsById($activityId): ?Model
     {
         return $this->model->with('results.indicators.periods', 'transactions')->where('id', $activityId)->first();
+    }
+
+    /*
+     * Updates specific key inside reporting_org (json field).
+     */
+    public function getLastUpdatedActivity()
+    {
+        return $this->model->select('id', 'org_id')->latest('updated_at')->first();
+    }
+
+    public function getActivityCount($queryParams)
+    {
+        $query = $this->model;
+        $queryType = 'day';
+
+        $formats = [
+            'day' => 'Y-m-d',
+            'month' => 'Y-m',
+        ];
+
+        // if ($queryParams) {
+        //     $query = $this->filterPublisher($query, $queryParams);
+        // }
+
+        return
+            $query->all()->groupBy(
+                function ($q) use ($formats, $queryType) {
+                    return $q->created_at->format($formats[$queryType]);
+                }
+            )->map(fn ($d) => count($d));
+    }
+
+    public function getActivityBy($queryParams, $type): array
+    {
+        $query = $this->model->select(DB::raw('count(*) as count, ' . $type));
+
+        // if ($queryParams) {
+        //     $query = $this->filterPublisher($query, $queryParams);
+        // }
+
+        return [
+            $type => $query->groupBy($type)->pluck('count', $type),
+        ];
+    }
+
+    public function getActivityStatus($queryParams): array
+    {
+        return $this->model->select(DB::raw('count(*) as count,status,linked_to_iati'))->groupBy('status', 'linked_to_iati')->get()->toArray();
+    }
+
+    public function getCompleteStatus($queryParams): array
+    {
+        return [
+            'complete' => $this->model->select(DB::raw('count(*) as count,status,linked_to_iati,complete_percentage'))->where('complete_percentage', 100)->groupBy('status', 'linked_to_iati', 'complete_percentage')->get()->toArray(),
+            'incomplete' => $this->model->select(DB::raw('count(*) as count,status,linked_to_iati,complete_percentage'))->where('complete_percentage', '<>', 100)->groupBy('status', 'linked_to_iati', 'complete_percentage')->get()->toArray(),
+        ];
+    }
+
+    public function getActivitiesDashboardDownload(): array
+    {
+        return $this->model->select(DB::raw("(iati_identifier->>'activity_identifier') as identifier,
+        title->0->>'narrative' as activity_title,
+        name->0->>'narrative' as organization,
+         case when linked_to_iati and activities.status='draft' then 'published recently' else activities.status end as case,
+         upload_medium,
+         complete_percentage,
+         activities.created_at,
+         activities.updated_at
+         "))->join('organizations', 'organizations.id', 'activities.org_id')->get()->toArray();
     }
 }

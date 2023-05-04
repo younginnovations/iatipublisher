@@ -63,7 +63,6 @@ class Activity extends Model implements Auditable
         'conditions',
         'org_id',
         'default_field_values',
-        'is_published',
         'tag',
         'reporting_org',
         'element_status',

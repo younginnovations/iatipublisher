@@ -84,7 +84,7 @@ class DashboardService
     {
         return [
             'totalCount' => $this->activityRepo->all()->count(),
-            'lastUpdatedPublisher' => $this->organizationRepo->getLastUpdatedPublisher(),
+            'lastUpdatedPublisher' => ($this->activityRepo->getLastUpdatedActivity())->organization->toArray(),
             'publisherWithoutActivity' => $this->organizationRepo->publisherWithoutActivity(),
         ];
     }
@@ -100,8 +100,8 @@ class DashboardService
 
         $userCounts = [
             'general_users_count' => ['active' => 0, 'disabled' => 0],
-            'admin_users_count'   => ['active' => 0, 'disabled' => 0],
-            'iati_admins_count'   => ['active' => 0, 'disabled' => 0],
+            'admin_users_count' => ['active' => 0, 'disabled' => 0],
+            'iati_admins_count' => ['active' => 0, 'disabled' => 0],
         ];
 
         foreach ($results as $result) {
@@ -127,7 +127,7 @@ class DashboardService
      */
     public function getUsersRegisteredToday(): array
     {
-        return ['user_count'=>$this->userRepo->getUsersCreatedToday()];
+        return ['user_count' => $this->userRepo->getUsersCreatedToday()];
     }
 
     /**
@@ -350,5 +350,38 @@ class DashboardService
         }
 
         return [];
+    }
+
+    public function getActivityCount($queryParams)
+    {
+        return $this->activityRepo->getActivityCount($queryParams);
+    }
+
+    public function getActivityStatus($queryParams)
+    {
+        return $this->activityRepo->getActivityStatus($queryParams);
+    }
+
+    /**
+     * Returns array containing publisher type.
+     *
+     * @param $queryParams
+     * @param $type
+     *
+     * @return array
+     */
+    public function getActivityBy($queryParams, $type): array
+    {
+        return $this->activityRepo->getActivityBy($queryParams, $type);
+    }
+
+    public function getAllActivitiesToDownload(): array
+    {
+        return $this->activityRepo->getActivitiesDashboardDownload();
+    }
+
+    public function getOrganizationToDownload(): array
+    {
+        return $this->organizationRepo->getOrganizationDashboardDownload();
     }
 }

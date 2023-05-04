@@ -104,7 +104,7 @@ class Organization extends Model implements Auditable
      */
     public function activities(): HasMany
     {
-        return $this->hasMany(ActivityPublished::class, 'organization_id', 'id');
+        return $this->hasMany(ActivityPublished::class, 'org_id', 'id');
     }
 
     /**
@@ -214,6 +214,16 @@ class Organization extends Model implements Auditable
     public function latestLoggedInUser()
     {
         return $this->hasOne(User::class)->ofMany('last_logged_in', 'max');
+    }
+
+    /**
+     * Organization has many users.
+     *
+    //  * @return HasMany
+     */
+    public function lastUpdatedActivity()
+    {
+        return $this->hasOne(Activity::class)->ofMany('updated_at', 'max');
     }
 
     /**
