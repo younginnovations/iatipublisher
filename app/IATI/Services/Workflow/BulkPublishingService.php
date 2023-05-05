@@ -310,10 +310,6 @@ class BulkPublishingService
             $response['message'] = 'Bulk publishing processing.';
         }
 
-        // if (!$processing) {
-        //     $this->publishingStatusService->deleteStatuses($publishStatus);
-        // }
-
         return $response;
     }
 

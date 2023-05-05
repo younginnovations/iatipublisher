@@ -393,11 +393,6 @@ const verifyCoreElements = () => {
  */
 let validationErrors = ref({});
 onMounted(() => {
-  console.log(
-    showBulkpublish.value ||
-      (pa.value.publishingActivities &&
-        Object.keys(pa.value.publishingActivities).length > 0)
-  );
   axios
     .get(
       `activities/bulk-publish-status?organization_id=${pa.value.publishingActivities.organization_id}&&uuid=${pa.value.publishingActivities.job_batch_uuid}`

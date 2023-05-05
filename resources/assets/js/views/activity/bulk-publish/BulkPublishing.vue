@@ -141,10 +141,8 @@ onMounted(() => {
       setTimeout(() => {
         supportButton.style.opacity = '1';
       }, 300);
-      console.log('yes');
       clearInterval(checkSupportButton);
     }
-    console.log('no');
   }, 10);
 });
 onUnmounted(() => {
