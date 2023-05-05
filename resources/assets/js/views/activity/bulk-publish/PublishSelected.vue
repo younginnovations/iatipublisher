@@ -443,10 +443,10 @@ provide('selectedActivities', selectedActivities);
 // local storage for publishing
 interface paType {
   publishingActivities: {
-    organization_id?: any;
-    job_batch_uuid?: any;
-    activities?: any;
-    status?: any;
+    organization_id?: string;
+    job_batch_uuid?: string;
+    activities?: object;
+    status?: string;
     message?: string;
   };
 }
