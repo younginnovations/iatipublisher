@@ -142,24 +142,28 @@
             </label>
           </div>
         </div>
-        <div class="flex justify-center space-x-4">
-          <div class="mb-4 h-10 rounded border border-n-30 px-4 py-2">
-            <input
-              ref="file"
-              type="file"
-              class="file:-none min-w-[480px] cursor-pointer p-0 text-sm file:cursor-pointer file:rounded-full file:border file:border-solid file:border-spring-50 file:bg-white file:px-4 file:py-0.5 file:text-spring-50"
+        <div>
+          <div class="flex justify-center space-x-4">
+            <div class="mb-4 h-10 rounded border border-n-30 px-4 py-2">
+              <input
+                ref="file"
+                type="file"
+                class="file:-none min-w-[480px] cursor-pointer p-0 text-sm file:cursor-pointer file:rounded-full file:border file:border-solid file:border-spring-50 file:bg-white file:px-4 file:py-0.5 file:text-spring-50"
+              />
+            </div>
+            <BtnComponent
+              class="!border-red h-10 !border"
+              type="primary"
+              text="Upload file"
+              icon="upload-file"
+              @click="uploadFile"
             />
           </div>
-          <BtnComponent
-            class="!border-red h-10 !border"
-            type="primary"
-            text="Upload file"
-            icon="upload-file"
-            @click="uploadFile"
-          />
+          <div v-if="error" class="error mx-auto max-w-[700px] px-6">
+            {{ error }}
+          </div>
         </div>
-        <span v-if="error" class="error">{{ error }}</span>
-        <p class="mt-10 text-center text-n-50">
+        <p class="mt-6 text-n-50">
           Please make sure to read the instructions before beginning this
           process.
         </p>
@@ -263,9 +267,20 @@
     <div>
       <div class="mb-6 flex items-center space-x-1">
         <svg-vue class="text-crimson-40" icon="warning-fill" />
-        <h6 class="text-sm font-bold">Upload in progess</h6>
+        <h6 class="text-sm font-bold">
+          {{
+            xlsFailed
+              ? `${currentActivity} upload failed:`
+              : 'Upload in progess'
+          }}
+        </h6>
       </div>
-      <div class="rounded-sm bg-rose p-4">
+      <div v-if="xlsFailed" class="rounded-sm bg-rose p-4">
+        <p class="text-sm text-n-50">
+          {{ xlsFailedMessage }}
+        </p>
+      </div>
+      <div v-else class="rounded-sm bg-rose p-4">
         <p
           v-if="totalCount === processedCount && totalCount !== 0"
           class="text-sm text-n-50"
@@ -279,10 +294,13 @@
           We ask for your patience while we complete the upload.
         </p>
       </div>
-      <div class="mt-6 flex items-center justify-end space-x-4">
+      <div
+        v-if="!xlsFailed"
+        class="mt-6 flex items-center justify-end space-x-4"
+      >
         <button
-          @click="cancelImport"
           class="text-xs font-bold uppercase text-n-40"
+          @click="cancelImport"
         >
           Cancel upload
         </button>
@@ -302,12 +320,20 @@
           go back
         </a>
       </div>
+      <div v-else class="mt-6 flex items-center justify-end space-x-4">
+        <button
+          class="text-xs font-bold uppercase text-crimson-50"
+          @click="xlsData = false"
+        >
+          Retry
+        </button>
+      </div>
     </div>
   </Modal>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, provide } from 'vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import HoverText from 'Components/HoverText.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
@@ -316,6 +342,7 @@ import XlsUploadIndicator from 'Components/XlsUploadIndicator.vue';
 import Modal from 'Components/PopupModal.vue';
 import Toast from 'Components/ToastMessage.vue';
 
+const xlsFailedMessage = ref('');
 const uploadType = ref();
 const showDownloadDropdown = ref(false);
 const activityName = ref('');
@@ -368,6 +395,7 @@ function uploadFile() {
         window.location.href = '/activities';
       } else {
         error.value = Object.values(res.data.errors).join(' ');
+        loader.value = false;
       }
     })
     .catch(() => {
@@ -396,7 +424,7 @@ const checkXlsstatus = () => {
           totalCount.value = res.data.data?.total_count;
           processedCount.value = res.data.data?.processed_count;
           xlsFailed.value = !res.data.data?.success;
-
+          xlsFailedMessage.value = res.data.data?.message;
           if (
             !res.data?.data?.success ||
             res.data?.data?.message === 'Complete'
@@ -411,6 +439,7 @@ const checkXlsstatus = () => {
 onMounted(() => {
   checkXlsstatus();
 });
+provide('xlsFailedMessage', xlsFailedMessage);
 </script>
 
 <style lang="scss"></style>

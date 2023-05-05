@@ -10,7 +10,13 @@
       ></div>
     </div>
     <div v-if="xlsFailed" class="flex justify-between space-x-5">
-      <p class="text-sm text-n-40">failed to upload {{ currentActivity }}</p>
+      <div>
+        <p class="text-sm font-bold text-crimson-50">
+          {{ currentActivity }} upload failed:
+        </p>
+
+        <p class="text-sm text-crimson-50">{{ xlsFailedMessage }}</p>
+      </div>
       <button
         class="text-xs font-bold uppercase text-crimson-50 hover:text-spring-50"
         @click="retry"
@@ -55,6 +61,8 @@ import {
   defineProps,
   onMounted,
   defineEmits,
+  onUpdated,
+  inject,
   ref,
   computed,
   onUnmounted,
@@ -78,6 +86,7 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+
   xlsFailed: {
     type: Boolean,
     default: false,
@@ -116,6 +125,10 @@ onMounted(() => {
     }
   }, 500);
 });
+onUpdated(() => {
+  console.log(xlsFailedMessage);
+});
+
 onUnmounted(() => {
   const supportButton: HTMLElement = document.querySelector(
     '#launcher'
@@ -133,4 +146,6 @@ const percentageWidth = computed(() => {
     return 0;
   }
 });
+
+const xlsFailedMessage = inject('xlsFailedMessage');
 </script>

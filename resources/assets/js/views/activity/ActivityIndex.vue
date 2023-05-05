@@ -74,6 +74,7 @@ export default defineComponent({
 
     const xlsData = ref(false);
     const xlsFailed = ref(false);
+    const xlsFailedMessage = ref('');
 
     const totalCount = ref();
     const processedCount = ref();
@@ -120,6 +121,7 @@ export default defineComponent({
               totalCount.value = res.data.data?.total_count;
               processedCount.value = res.data.data?.processed_count;
               xlsFailed.value = !res.data.data?.success;
+              xlsFailedMessage.value = res.data.data?.message;
 
               if (
                 !res.data?.data?.success ||
@@ -218,6 +220,7 @@ export default defineComponent({
     provide('toastData', toastData);
     provide('errorData', errorData);
     provide('refreshToastMsg', refreshToastMsg);
+    provide('xlsFailedMessage', xlsFailedMessage);
 
     return {
       activities,
@@ -237,6 +240,7 @@ export default defineComponent({
       totalCount,
       showXlsStatus,
       xlsFailed,
+      xlsFailedMessage,
     };
   },
 });
