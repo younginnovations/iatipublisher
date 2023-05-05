@@ -1651,9 +1651,9 @@ trait MigrateActivityTrait
                         'Completed basic activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
                     );
 
+                    $this->setDefaultValues($iatiActivity, $aidStreamOrganizationSetting);
                     $this->migrateActivityTransactions($aidstreamActivity, $iatiActivity);
                     $this->migrateActivityResults($iatiActivity, $aidstreamActivity, $iatiOrganization);
-                    $this->setDefaultValues($iatiActivity, $aidStreamOrganizationSetting);
                     $this->migrateActivitySnapshot($iatiActivity, $aidstreamActivity);
                 } else {
                     $message = "Activity with id {$aidstreamActivity->id} and identifier {$aidstreamIdentifier} already exists so not migrated.";
@@ -1727,7 +1727,7 @@ trait MigrateActivityTrait
      *
      * @return bool
      */
-    private function checkIfKeysAreNull($element): bool
+    public function checkIfKeysAreNull($element): bool
     {
         foreach ($element as $value) {
             if (is_array($value)) {

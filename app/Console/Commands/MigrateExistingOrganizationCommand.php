@@ -51,6 +51,7 @@ class MigrateExistingOrganizationCommand extends MigrateOrganizationCommand
 
             foreach ($aidstreamOrganizationIds as $aidstreamOrganizationId) {
                 try {
+                    $this->resetCustomVocabTracking('organization');
                     $this->logInfo('Started organization migration for organization id: ' . $aidstreamOrganizationId);
                     $this->databaseManager->beginTransaction();
                     $aidStreamOrganization = $this->db::connection('aidstream')->table('organizations')->where(
@@ -60,12 +61,13 @@ class MigrateExistingOrganizationCommand extends MigrateOrganizationCommand
 
                     if (!$aidStreamOrganization) {
                         $message = 'AidStream organization not found with id: ' . $aidstreamOrganizationId;
-                        $this->setGeneralError($message)->setDetailedError(
-                            $message,
-                            $aidstreamOrganizationId,
-                            'organization_data',
-                            $aidstreamOrganizationId
-                        );
+                        $this->setGeneralError($message)
+                             ->setDetailedError(
+                                 $message,
+                                 $aidstreamOrganizationId,
+                                 'organization_data',
+                                 $aidstreamOrganizationId
+                                );
                         $this->error($message);
                         $timestamp = Carbon::now()->format('y-m-d-H-i-s');
                         awsUploadFile(
@@ -78,6 +80,8 @@ class MigrateExistingOrganizationCommand extends MigrateOrganizationCommand
                             $message
                         );
                     }
+
+                    $this->currentAidstreamOrganizationBeingProcessed = $aidStreamOrganization;
 
                     $aidStreamOrganizationSetting = $this->db::connection('aidstream')->table('settings')->where(
                         'organization_id',
@@ -204,6 +208,11 @@ class MigrateExistingOrganizationCommand extends MigrateOrganizationCommand
                         'status' => false,
                     ]);
                     $this->databaseManager->commit();
+
+                    if (!$this->checkIfKeysAreNull($this->customVocabCurrentlyUsedByOrganization)) {
+                        $this->checkForCustomVocabularyMismatchInFile($this->customVocabCurrentlyUsedByOrganization);
+                    }
+
                     continue;
                 } catch (\Exception $exception) {
                     $this->databaseManager->rollBack();
@@ -216,5 +225,29 @@ class MigrateExistingOrganizationCommand extends MigrateOrganizationCommand
             logger()->channel('migration')->error($exception);
             $this->error($exception->getMessage());
         }
+    }
+
+    /**
+     * Returns true if all keys are null.
+     *
+     * @param $element
+     *
+     * @return bool
+     */
+    public function checkIfKeysAreNull($element): bool
+    {
+        foreach ($element as $value) {
+            if (is_array($value)) {
+                if (!$this->checkIfKeysAreNull($value)) {
+                    return false;
+                }
+            } else {
+                if (!empty($value) && !is_null($value)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

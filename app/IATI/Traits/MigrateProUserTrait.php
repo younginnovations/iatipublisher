@@ -33,7 +33,6 @@ trait MigrateProUserTrait
      */
     public function getCustomVocabularyUrl(): string
     {
-        $this->logInfo($this->currentAidstreamOrganizationBeingProcessed);
         $filename = strtolower($this->currentAidstreamOrganizationBeingProcessed->user_identifier);
         $filepath = "custom-vocabulary/{$filename}.csv";
 

@@ -319,6 +319,7 @@ class MigrateOrganizationCommand extends Command
                     $this->auditService->setAuditableId($iatiOrganization->id)->auditMigrationEvent($iatiOrganization, 'migrated-organization');
 
                     $this->databaseManager->commit();
+
                     if (!$this->checkIfKeysAreNull($this->customVocabCurrentlyUsedByOrganization)) {
                         $this->checkForCustomVocabularyMismatchInFile($this->customVocabCurrentlyUsedByOrganization);
                     }
