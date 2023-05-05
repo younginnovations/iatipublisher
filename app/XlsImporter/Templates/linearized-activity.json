@@ -379,7 +379,7 @@
     "indicator_baseline_mapper": {
         "indicator_identifier": "indicator_identifier",
         "baseline_number": "baseline_number",
-        "baseline_identifier": "baseline_identifier"
+        "indicator_baseline_identifier": "indicator_baseline_identifier"
     },
     "result_mapper": {
         "activity_identifier": "activity_identifier",

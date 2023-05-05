@@ -213,10 +213,6 @@ class XlsQueueProcessor
             unset($sheetNames[$sheetName]);
         }
 
-        // if (count($sheetNames)) {
-        //     return false;
-        // }
-
         return true;
     }
 

@@ -240,7 +240,7 @@
   "Indicator Baseline Mapper": {
     "indicator_identifier": "A",
     "baseline_number": "B",
-    "baseline_identifier": "C"
+    "indicator_baseline_identifier": "C"
   },
   "Indicator Document Link": {
     "url": "B",

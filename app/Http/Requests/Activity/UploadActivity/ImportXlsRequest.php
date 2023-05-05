@@ -48,7 +48,7 @@ class ImportXlsRequest extends ActivityBaseRequest
     public function messages(): array
     {
         $messages['activity.required'] = 'The xls file must be uploaded';
-        $messages['activity.activity_file'] = 'The file must be of either oof xls format.';
+        $messages['activity.activity_file'] = 'The file must be of xls format.';
         $messages['activity.max'] = 'The file shouldn\'t be greater than 10MB.';
 
         return $messages;
