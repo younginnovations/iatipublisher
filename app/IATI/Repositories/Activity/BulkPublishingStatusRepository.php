@@ -143,4 +143,16 @@ class BulkPublishingStatusRepository extends Repository
             ->orWhere('status', '=', 'processing')
             ->update(['status' => 'failed']);
     }
+
+    /**
+     * Delete all the bulk publishing status belonging to $organizationId.
+     *
+     * @param $organizationId
+     *
+     * @return bool
+     */
+    public function deleteBulkPublishingStatus($organizationId): bool
+    {
+        return (bool) $this->model->where('organization_id', $organizationId)->delete();
+    }
 }

@@ -228,27 +228,22 @@ class BulkPublishingController extends Controller
     {
         try {
             $organizationId = Auth::user()->organization_id;
-            $uuid = $this->publishingStatusService->getPublishingUuid($organizationId);
 
-            if ($organizationId && $uuid) {
-                $publishStatus = $this->publishingStatusService->getActivityPublishingStatus($organizationId, $uuid);
+            $publishStatus = $this->publishingStatusService->getActivityPublishingStatus($organizationId);
 
-                if ($publishStatus && count($publishStatus)) {
-                    $response = $this->bulkPublishingService->getPublishingResponse($publishStatus);
+            if ($publishStatus && count($publishStatus)) {
+                $response = $this->bulkPublishingService->getPublishingResponse($publishStatus);
 
-                    return response()->json(['success' => true, 'message' => $response['message'], 'data' => $response]);
-                }
-
-                return response()->json(['success' => true, 'message' => 'No bulk publishing in process.']);
+                return response()->json(['success' => true, 'message' => $response['message'], 'data' => $response, 'publishing' => true]);
             }
 
-            return response()->json(['success' => false, 'message' => 'Insufficient data.']);
+            return response()->json(['success' => false, 'message' => 'No bulk publishing in progress', 'publishing' => false]);
         } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Status generation failed.']);
         } catch (NotFoundExceptionInterface | ContainerExceptionInterface $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Request error']);
         }
@@ -312,11 +307,35 @@ class BulkPublishingController extends Controller
                 ]);
             }
 
-            return response()->json(['success' => true, 'message' => 'Activity is ready to be published.']);
+            return response()->json(['success' => true, 'message' => 'Activity is ready to be published.', 'status' => 'completed']);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while checking activity.']);
+        }
+    }
+
+    /**
+     * Checks if activity with publishing in bulk publish status is published or draft in activities table
+     * Updates it and returns msg.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function clearBulkPublishStatus(): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+            $this->publishingStatusService->deleteBulkPublishingStatus(Auth::user()->organization->id);
+            DB::commit();
+
+            return response()->json(['success' => true, 'message' => 'Bulk publishing status successfully deleted.']);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+            DB::rollBack();
+
+            return response()->json(['success' => false, 'message' => 'Failed to delete bulk publishing status']);
         }
     }
 }

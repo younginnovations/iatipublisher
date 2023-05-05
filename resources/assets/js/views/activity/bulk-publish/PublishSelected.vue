@@ -208,7 +208,20 @@
       :text="loaderText"
       :class="{ 'animate-loader': loader }"
     />
-    <BulkPublishing v-if="Object.keys(pa.publishingActivities).length > 0" />
+
+    <BulkPublishing
+      v-if="
+        showBulkpublish ||
+        (pa.publishingActivities &&
+          Object.keys(pa.publishingActivities).length > 0)
+      "
+      :published="published"
+      @close="
+        {
+          showBulkpublish = false;
+        }
+      "
+    />
   </div>
 </template>
 
@@ -219,6 +232,7 @@ import {
   reactive,
   Ref,
   computed,
+  onMounted,
   provide,
   inject,
 } from 'vue';
@@ -251,6 +265,10 @@ let [publishAlertValue, publishAlertToggle] = useToggle();
 // state for step of the flow
 const bulkPublishStep = ref(1);
 const bulkPublishStatus = reactive({});
+const showBulkpublish = ref(false);
+const startPublish = ref(false);
+
+const published = ref(false);
 
 // display/hide validator loader
 const loader = ref(false);
@@ -374,7 +392,18 @@ const verifyCoreElements = () => {
  * Validating Activities
  */
 let validationErrors = ref({});
-
+onMounted(() => {
+  axios
+    .get(
+      `activities/bulk-publish-status?organization_id=${pa.value.publishingActivities.organization_id}&&uuid=${pa.value.publishingActivities.job_batch_uuid}`
+    )
+    .then((res) => {
+      pa.value.publishingActivities.activities = res.data?.data?.activities;
+      pa.value.publishingActivities.status = res?.data?.data?.status;
+      pa.value.publishingActivities.message = res?.data?.data?.message;
+      showBulkpublish.value = res.data.publishing;
+    });
+});
 const validateActivities = () => {
   loader.value = true;
   loaderText.value = 'Validating Activity';
@@ -407,7 +436,16 @@ let selectedActivities: Ref<number[]> = ref([]);
 provide('selectedActivities', selectedActivities);
 
 // local storage for publishing
-const pa = useStorage('vue-use-local-storage', {
+interface paType {
+  publishingActivities: {
+    organization_id?: string;
+    job_batch_uuid?: string;
+    activities?: object;
+    status?: string;
+    message?: string;
+  };
+}
+const pa: Ref<paType> = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
 });
 
@@ -421,6 +459,7 @@ const startBulkPublish = () => {
       `activities/start-bulk-publish?activities=[${selectedActivities.value}]`
     )
     .then((res) => {
+      startPublish.value = true;
       const response = res.data;
       if (response.success) {
         bulkPublishStep.value = 1;
@@ -441,6 +480,7 @@ const startBulkPublish = () => {
 
       setTimeout(() => {
         loader.value = false;
+        published.value = true;
       }, 1000);
     });
 };
@@ -499,4 +539,5 @@ const publishAfterCancel = () => {
 
 provide('paStorage', pa);
 provide('bulkPublishStatus', bulkPublishStatus);
+provide('startPublish', startPublish);
 </script>

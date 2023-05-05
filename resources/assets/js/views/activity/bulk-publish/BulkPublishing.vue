@@ -6,7 +6,7 @@
   >
     <div class="bulk-head flex items-center justify-between bg-eggshell p-4">
       <div class="grow text-sm font-bold leading-normal">
-        Publishing {{ Object.keys(activities).length }} activities
+        Publishing {{ activities && Object.keys(activities).length }} activities
       </div>
       <div class="flex shrink-0">
         <div
@@ -56,10 +56,18 @@
   </div>
 </template>
 <script setup lang="ts">
-import { onMounted, ref, reactive, watch, inject, onUnmounted } from 'vue';
+import {
+  onMounted,
+  ref,
+  reactive,
+  watch,
+  inject,
+  onUnmounted,
+  defineEmits,
+} from 'vue';
 import axios from 'axios';
 import { detailStore } from 'Store/activities/show';
-
+const emit = defineEmits(['close']);
 const store = detailStore();
 
 const isLoading = ref(false);
@@ -112,16 +120,30 @@ let intervalID;
 onMounted(() => {
   completed.value = paStorage.value.publishingActivities.status ?? 'processing';
   bulkPublishStatus();
-  setTimeout(() => {
+  if (!(activities.value && Object.keys(activities.value).length > 0)) {
+    closeWindow();
+  }
+
+  //check constantly in a inter for when support button enters the dom
+  const checkSupportButton = setInterval(() => {
     const supportButton: HTMLElement = document.querySelector(
       '#launcher'
     ) as HTMLElement;
 
-    if (supportButton !== null && Object.keys(activities).length > 0) {
-      supportButton.style.transform = 'translateX(-350px)';
-      supportButton.style.opacity = '1';
+    if (
+      supportButton !== null &&
+      activities.value &&
+      Object.keys(activities.value).length > 0
+    ) {
+      supportButton.style.transform = 'translate(-350px ,-20px)';
+
+      supportButton.style.opacity = '0';
+      setTimeout(() => {
+        supportButton.style.opacity = '1';
+      }, 300);
+      clearInterval(checkSupportButton);
     }
-  }, 720);
+  }, 10);
 });
 onUnmounted(() => {
   const supportButton: HTMLElement = document.querySelector(
@@ -130,6 +152,7 @@ onUnmounted(() => {
 
   if (supportButton !== null) {
     supportButton.style.transform = 'translateX(0px)';
+    supportButton.style.transform = 'translateY(-20px)';
   }
 }),
   // watching change in value of completed
@@ -174,6 +197,8 @@ const bulkPublishStatus = () => {
           paStorage.value.publishingActivities.message = response.data.message;
 
           if (completed.value === 'completed') {
+            clearInterval(intervalID);
+
             failedActivities(paStorage.value.publishingActivities.activities);
             refreshToastMsg.visibility = true;
             setTimeout(() => {
@@ -205,6 +230,16 @@ const toggleWindow = (e: Event) => {
         target.style.cssText = `height: 0px; overflow: hidden;`;
       }, 100);
       open.value = false;
+      setTimeout(() => {
+        const supportButton: HTMLElement = document.querySelector(
+          '#launcher'
+        ) as HTMLElement;
+
+        if (supportButton !== null) {
+          supportButton.style.transform = 'translateX(0px)';
+          supportButton.style.transform = 'translateY(-20px)';
+        }
+      }, 400);
     }
   } else {
     if (target != null) {
@@ -213,6 +248,19 @@ const toggleWindow = (e: Event) => {
       setTimeout(function () {
         target.style.cssText = `height: auto;`;
       }, 600);
+      const supportButton: HTMLElement = document.querySelector(
+        '#launcher'
+      ) as HTMLElement;
+
+      if (
+        supportButton !== null &&
+        activities.value &&
+        Object.keys(activities.value).length > 0
+      ) {
+        supportButton.style.transform = 'translate(-350px ,-20px)';
+
+        supportButton.style.opacity = '1';
+      }
 
       open.value = true;
     }
@@ -224,6 +272,8 @@ const toggleWindow = (e: Event) => {
  */
 const closeWindow = () => {
   paStorage.value.publishingActivities = {} as paElements;
+  emit('close');
+  axios.delete(`activities/delete-bulk-publish-status`);
 };
 
 /**
@@ -232,17 +282,17 @@ const closeWindow = () => {
 
 const failedActivities = (nestedObject: actElements) => {
   const failedActivitiesID = [] as number[];
-  const asArrayData = Object.entries(nestedObject);
+  const asArrayData = nestedObject && Object.entries(nestedObject);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const filtered = asArrayData.filter(([key, value]) => {
-    if (Object.values(value).indexOf('failed') > -1) {
+  const filtered = asArrayData?.filter(([key, value]) => {
+    if (value && Object.values(value).indexOf('failed') > -1) {
       failedActivitiesID.push(value.activity_id);
       return key;
     }
   });
 
-  const failedActivitiesData = Object.fromEntries(filtered);
+  const failedActivitiesData = filtered && Object.fromEntries(filtered);
 
   if (failedActivitiesID.length > 0) {
     hasFailedActivities.status = true;
