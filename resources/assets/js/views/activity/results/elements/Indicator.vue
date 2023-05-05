@@ -98,10 +98,19 @@
                               }"
                             >
                               <div class="language mb-1">
-                                (Language: {{ type.language[title.language] }})
+                                (Language:
+                                {{
+                                  isEmpty(type.language[title.language])
+                                    ? 'Missing'
+                                    : type.language[title.language]
+                                }})
                               </div>
                               <div class="description text-xs">
-                                {{ title.narrative }}
+                                {{
+                                  isEmpty(title.narrative)
+                                    ? 'Title Missing'
+                                    : title.narrative
+                                }}
                               </div>
                             </div>
                           </template>
@@ -140,10 +149,19 @@
                             >
                               <div class="language mb-1">
                                 (Language:
-                                {{ type.language[description.language] }})
+                                {{
+                                  isEmpty(description.language) ||
+                                  isEmpty(type.language[description.language])
+                                    ? 'Missing'
+                                    : type.language[description.language]
+                                }})
                               </div>
                               <div class="description text-xs">
-                                {{ description.narrative }}
+                                {{
+                                  isEmpty(description.narrative)
+                                    ? 'Missing'
+                                    : description.narrative
+                                }}
                               </div>
                             </div>
                           </template>

@@ -19,7 +19,7 @@ function getActivityTitle(
       }
     }
   
-    // default title return if language does not exists in data
+    // default title return if language does not exist in data
     title = data['0'].narrative && data['0'].narrative !== '' ? data['0'].narrative : 'Untitled';
   }
   return title;

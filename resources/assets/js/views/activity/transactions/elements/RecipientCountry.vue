@@ -34,7 +34,11 @@
                     }})
                   </div>
                   <div class="text-sm">
-                    {{ !isEmpty(sd.narrative) ? sd.narrative : 'Narrative Missing' }}
+                    {{
+                      !isEmpty(sd.narrative)
+                        ? sd.narrative
+                        : 'Narrative Missing'
+                    }}
                   </div>
                 </div>
               </td>

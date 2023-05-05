@@ -23,7 +23,7 @@
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
 import dateFormat from './../../../../composable/dateFormat';
-import isEmpty from "../../../../composable/helper";
+import isEmpty from '../../../../composable/helper';
 
 export default defineComponent({
   name: 'TransactionValue',
@@ -43,6 +43,6 @@ export default defineComponent({
     const value = data.value as ArrayObject;
     return { value, dateFormat };
   },
-    methods: {isEmpty},
+  methods: { isEmpty },
 });
 </script>

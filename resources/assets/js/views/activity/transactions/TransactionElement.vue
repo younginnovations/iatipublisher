@@ -110,7 +110,7 @@ import {
   FinanceType,
   TiedStatus,
 } from './elements/Index';
-import isEmpty from "../../../composable/helper";
+import isEmpty from '../../../composable/helper';
 
 export default defineComponent({
   name: 'ActivityElement',
@@ -183,6 +183,6 @@ export default defineComponent({
       dateFormat,
     };
   },
-    methods: {isEmpty},
+  methods: { isEmpty },
 });
 </script>

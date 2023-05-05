@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
-import isEmpty from "../../../../composable/helper";
+import isEmpty from '../../../../composable/helper';
 
 export default defineComponent({
   name: 'TransactionFinanceType',
@@ -32,6 +32,6 @@ export default defineComponent({
 
     return { financeData, type };
   },
-    methods: {isEmpty},
+  methods: { isEmpty },
 });
 </script>

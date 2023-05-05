@@ -20,7 +20,11 @@
           <tr>
             <td>Reference</td>
             <td>
-              {{ !isEmpty(reporting_org.ref) ? reporting_org.ref : 'Reference Missing' }}
+              {{
+                !isEmpty(reporting_org.ref)
+                  ? reporting_org.ref
+                  : 'Reference Missing'
+              }}
             </td>
           </tr>
           <tr>

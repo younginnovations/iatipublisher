@@ -14,10 +14,18 @@
                   <template v-for="(na, n) in post.title[0].narrative" :key="n">
                     <div class="title-content mb-1.5">
                       <div class="language mb-1">
-                        (Language: {{ type.language[na.language] }})
+                        (Language:
+                        {{
+                          isEmpty(na.language) ||
+                          isEmpty(type.language[na.language])
+                            ? 'Missing'
+                            : type.language[na.language]
+                        }})
                       </div>
                       <div class="description text-xs">
-                        {{ na.narrative }}
+                        {{
+                          isEmpty(na.narrative) ? 'Title Missing' : na.narrative
+                        }}
                       </div>
                     </div>
                   </template>
@@ -33,7 +41,7 @@
 
               <tr v-if="post.format">
                 <td>Format</td>
-                <td>{{ post.format }}</td>
+                <td>{{ isEmpty(post.format) ? 'Missing' : post.format }}</td>
               </tr>
 
               <tr>
@@ -45,10 +53,20 @@
                   >
                     <div class="description-content mb-1.5">
                       <div class="language mb-1">
-                        (Language: {{ type.language[na.language] }})
+                        (Language:
+                        {{
+                          isEmpty(na.language) ||
+                          isEmpty(type.language[na.language])
+                            ? 'Missing'
+                            : type.language[na.language]
+                        }})
                       </div>
                       <div class="description text-xs">
-                        {{ na.narrative }}
+                        {{
+                          isEmpty(na.narrative)
+                            ? 'Narrative Missing'
+                            : na.narrative
+                        }}
                       </div>
                     </div>
                   </template>
@@ -60,7 +78,12 @@
                 <td>
                   <template v-for="(cat, c) in post.category" :key="c">
                     <div class="mb-1 text-xs">
-                      {{ type.documentCategory[cat.code] }}
+                      {{
+                        isEmpty(cat.code) ||
+                        isEmpty(type.documentCategory[cat.code])
+                          ? 'Missing'
+                          : type.documentCategory[cat.code]
+                      }}
                     </div>
                   </template>
                 </td>
@@ -71,9 +94,15 @@
                 <td>
                   <div class="text-xs">
                     {{
-                      post.language
-                        .map((entry) => type.language[entry.language])
-                        .join(', ')
+                      isEmpty(
+                        post.language
+                          .map((entry) => type.language[entry.language])
+                          .join(', ')
+                      )
+                        ? 'Missing'
+                        : post.language
+                            .map((entry) => type.language[entry.language])
+                            .join(', ')
                     }}
                   </div>
                 </td>
@@ -83,7 +112,11 @@
                 <td>Document Date</td>
                 <td>
                   <div class="text-xs">
-                    {{ post.document_date[0].date }}
+                    {{
+                      isEmpty(post.document_date[0].date)
+                        ? 'Missing'
+                        : post.document_date[0].date
+                    }}
                   </div>
                 </td>
               </tr>
@@ -97,6 +130,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import isEmpty from '../../../../composable/helper';
 
 export default defineComponent({
   name: 'ResultDocumentLink',
@@ -117,5 +151,6 @@ export default defineComponent({
 
     return { dlData };
   },
+  methods: { isEmpty },
 });
 </script>
