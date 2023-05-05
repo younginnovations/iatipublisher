@@ -22,6 +22,16 @@ trait MigrateProUserTrait
     public array $proUserCustomVocabArray = [];
 
     /**
+     * @var array
+     */
+    public array $customVocabCurrentlyUsedByOrganization = [];
+
+    /**
+     * @var array
+     */
+    public array $customVocabCurrentlyUsedByActivity = [];
+
+    /**
      * Returns aws url of custom vocab csv.
      *
      * @return string
@@ -35,13 +45,14 @@ trait MigrateProUserTrait
     }
 
     /**
-     * @param mixed $item
+     * @param $item
      * @param $vocabulary
      * @param $elementName
+     * @param bool $onlyCustomCode
      *
-     * @return array
+     * @return mixed
      */
-    public function resolveCustomVocabularyArray(mixed $item, $vocabulary, $elementName): array
+    public function resolveCustomVocabularyArray($item, $vocabulary, $elementName, bool $onlyCustomCode = false): mixed
     {
         $returnArr = [];
 
@@ -123,6 +134,13 @@ trait MigrateProUserTrait
                 if ($key === 'vocabulary_uri') {
                     $returnArr[$key] = $this->customVocabUrl;
                 }
+            }
+
+            if ($onlyCustomCode) {
+                $plainArray = array_values(array_flip($vocabularyCodeMap));
+                $key = Arr::get($plainArray, 0, false);
+
+                return $key ? Arr::get($returnArr, $key, null) : null;
             }
         }
 
@@ -212,6 +230,8 @@ trait MigrateProUserTrait
      */
     public function setProUserCustomVocabArray($customVocabCollection): void
     {
+        $this->proUserCustomVocabArray = [];
+
         foreach ($customVocabCollection as $customVocab) {
             $this->proUserCustomVocabArray[$customVocab->id]['code'] = $customVocab->code;
             $this->proUserCustomVocabArray[$customVocab->id]['description'] = $customVocab->description;
@@ -230,5 +250,73 @@ trait MigrateProUserTrait
     public function getProUserCustomVocabArrayValue($id, $key): string
     {
         return Arr::get($this->proUserCustomVocabArray, "{$id}.{$key}", '');
+    }
+
+    /**
+     * Clears custom vocab tracking arrays.
+     *
+     * @param $level
+     *
+     * @return void
+     */
+    public function resetCustomVocabTracking($level): void
+    {
+        if ($level === 'organization') {
+            $this->customVocabCurrentlyUsedByOrganization = [];
+        } else {
+            $this->customVocabCurrentlyUsedByActivity = [];
+        }
+    }
+
+    /**
+     * Track error if elements use custom vocab deleted by organization.
+     *
+     * @param array $customVocabCurrentlyUsedByOrganization
+     *
+     * @return void
+     */
+    public function checkForCustomVocabularyMismatchInFile(array $customVocabCurrentlyUsedByOrganization): void
+    {
+        $allCodesArray = $this->extractOnlyCode($this->proUserCustomVocabArray);
+
+        foreach ($customVocabCurrentlyUsedByOrganization as $activityId => $elementCodeArray) {
+            foreach ($elementCodeArray as $elementName => $valueArray) {
+                foreach ($valueArray as $value) {
+                    if (!in_array($value, $allCodesArray)) {
+                        $message = "Organization: '{$this->currentAidstreamOrganizationBeingProcessed->name}' no longer uses custom code: {$value}. This will affect : {$elementName}";
+                        $this->setGeneralError($message)
+                            ->setDetailedError(
+                                $message,
+                                $this->currentAidstreamOrganizationBeingProcessed->id,
+                                'Activity',
+                                $activityId,
+                                '',
+                                '',
+                                $elementName
+                            );
+
+                        $this->info("[!!IMPORTANT!!] {$message}");
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns array of custom codes.
+     *
+     * @param array $proUserCustomVocabArray
+     *
+     * @return array
+     */
+    public function extractOnlyCode(array $proUserCustomVocabArray): array
+    {
+        $codeArray = [];
+
+        foreach ($proUserCustomVocabArray as $index => $element) {
+            $codeArray[] = Arr::get($element, 'code', false);
+        }
+
+        return $codeArray;
     }
 }

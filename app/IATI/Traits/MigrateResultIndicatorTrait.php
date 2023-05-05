@@ -360,6 +360,7 @@ trait MigrateResultIndicatorTrait
                 if ($reference->custom) {
                     $newReferences[$key]['code'] = $this->getProUserCustomVocabArrayValue($reference->code, 'code');
                     $newReferences[$key]['indicator_uri'] = $this->getCustomVocabularyUrl();
+                    $this->customVocabCurrentlyUsedByActivity['result_indicator'][] = $newReferences[$key];
                 }
             }
         }

@@ -431,6 +431,11 @@ trait MigrateActivityTrait
     public bool $hasCustomVocab = false;
 
     /**
+     * @var bool
+     */
+    public bool $activityUsesCustomVocab = false;
+
+    /**
      * @var string
      */
     public string $customVocabUrl = '';
@@ -449,6 +454,7 @@ trait MigrateActivityTrait
     public function getNewActivity($aidstreamActivity, $iatiOrganization, $aidStreamOrganization): array
     {
         $newActivity = [];
+        $this->activityUsesCustomVocab = false;
         $newActivity['iati_identifier'] = $aidstreamActivity->identifier ? [
             'activity_identifier' => Arr::get(
                 json_decode($aidstreamActivity->identifier, true, 512, JSON_THROW_ON_ERROR),
@@ -582,6 +588,11 @@ trait MigrateActivityTrait
         $newActivity['upload_medium'] = 'manual';
         $newActivity['migrated_from_aidstream'] = true;
 
+        if ($this->activityUsesCustomVocab) {
+            $this->customVocabCurrentlyUsedByOrganization[$aidstreamActivity->id] = $this->customVocabCurrentlyUsedByActivity;
+            $this->resetCustomVocabTracking('activity');
+        }
+
         return $newActivity;
     }
 
@@ -709,6 +720,7 @@ trait MigrateActivityTrait
 
                     if (Arr::get($item, 'custom_code', false) && Arr::get($item, 'use_my_custom_vocab', false)) {
                         $this->hasCustomVocab = true;
+                        $this->activityUsesCustomVocab = true;
                     }
                 }
 
@@ -720,6 +732,7 @@ trait MigrateActivityTrait
 
                 if ($this->hasCustomVocab) {
                     $newArray[$key] = $this->resolveCustomVocabularyArray($item, $vocabulary, $elementName);
+                    $this->customVocabCurrentlyUsedByActivity[$elementName][] = $this->resolveCustomVocabularyArray($item, $vocabulary, $elementName, true);
                 }
             }
         }
@@ -1331,6 +1344,7 @@ trait MigrateActivityTrait
 
                 if (Arr::get($tag, 'use_my_custom_vocab', false)) {
                     $returnArr['vocabulary_uri'] = $this->getCustomVocabularyUrl();
+                    $this->customVocabCurrentlyUsedByActivity['tag'][] = $returnArr['tag_text'];
                 }
 
                 return $returnArr;
@@ -1704,5 +1718,29 @@ trait MigrateActivityTrait
         }
 
         return Arr::get($identifierArray, 'activity_identifier', null);
+    }
+
+    /**
+     * Returns true if all keys are null.
+     *
+     * @param $element
+     *
+     * @return bool
+     */
+    private function checkIfKeysAreNull($element): bool
+    {
+        foreach ($element as $value) {
+            if (is_array($value)) {
+                if (!$this->checkIfKeysAreNull($value)) {
+                    return false;
+                }
+            } else {
+                if (!empty($value) && !is_null($value)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

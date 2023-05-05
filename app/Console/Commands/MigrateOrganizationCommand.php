@@ -151,6 +151,8 @@ class MigrateOrganizationCommand extends Command
 
             foreach ($aidstreamOrganizationIds as $aidstreamOrganizationId) {
                 try {
+                    $this->resetCustomVocabTracking('organization');
+
                     $this->logInfo('Started organization migration for organization id: ' . $aidstreamOrganizationId);
                     $this->databaseManager->beginTransaction();
                     $aidStreamOrganization = $this->db::connection('aidstream')->table('organizations')->where(
@@ -317,6 +319,9 @@ class MigrateOrganizationCommand extends Command
                     $this->auditService->setAuditableId($iatiOrganization->id)->auditMigrationEvent($iatiOrganization, 'migrated-organization');
 
                     $this->databaseManager->commit();
+                    if (!$this->checkIfKeysAreNull($this->customVocabCurrentlyUsedByOrganization)) {
+                        $this->checkForCustomVocabularyMismatchInFile($this->customVocabCurrentlyUsedByOrganization);
+                    }
 
                     if ($this->hasErrors()) {
                         $timestamp = Carbon::now()->format('y-m-d-H-i-s');
@@ -538,29 +543,5 @@ class MigrateOrganizationCommand extends Command
     protected function hasErrors(): bool
     {
         return !$this->checkIfKeysAreNull($this->errors);
-    }
-
-    /**
-     * Returns true if all keys are null.
-     *
-     * @param $parameters
-     *
-     * @return bool
-     */
-    protected function checkIfKeysAreNull($parameters): bool
-    {
-        foreach ($parameters as $value) {
-            if (is_array($value)) {
-                if (!$this->checkIfKeysAreNull($value)) {
-                    return false;
-                }
-            } else {
-                if (!is_null($value) && !empty($value)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 }

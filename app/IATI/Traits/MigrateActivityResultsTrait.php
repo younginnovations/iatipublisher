@@ -268,6 +268,7 @@ trait MigrateActivityResultsTrait
                     $this->logInfo("Found custom vocab for reference (id: {$reference->id}) in result id: {$baseResult->id}");
                     $customVocabId = $reference->code;
                     $reference->code = $this->getProUserCustomVocabArrayValue($customVocabId, 'code');
+                    $this->customVocabCurrentlyUsedByActivity['result_reference'][] = $reference->code;
                     $reference->vocabulary_uri = $this->getCustomVocabularyUrl();
                     unset($reference->custom);
                 } else {
