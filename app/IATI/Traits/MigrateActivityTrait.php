@@ -1344,6 +1344,7 @@ trait MigrateActivityTrait
 
                 if (Arr::get($tag, 'use_my_custom_vocab', false)) {
                     $returnArr['vocabulary_uri'] = $this->getCustomVocabularyUrl();
+                    $returnArr['tag_text'] = Arr::get($tag, 'custom_code', null);
                     $this->customVocabCurrentlyUsedByActivity['tag'][] = $returnArr['tag_text'];
                 }
 
