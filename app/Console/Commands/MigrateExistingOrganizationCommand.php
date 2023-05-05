@@ -188,6 +188,10 @@ class MigrateExistingOrganizationCommand extends MigrateOrganizationCommand
 
                     $this->databaseManager->commit();
 
+                    if (!$this->checkIfKeysAreNull($this->customVocabCurrentlyUsedByOrganization)) {
+                        $this->checkForCustomVocabularyMismatchInFile($this->customVocabCurrentlyUsedByOrganization);
+                    }
+
                     if ($this->hasErrors()) {
                         $timestamp = Carbon::now()->format('y-m-d-H-i-s');
                         awsUploadFile("Migration/Migration-errors-{$aidstreamOrganizationId}-{$timestamp}.json", json_encode($this->errors));
@@ -208,10 +212,6 @@ class MigrateExistingOrganizationCommand extends MigrateOrganizationCommand
                         'status' => false,
                     ]);
                     $this->databaseManager->commit();
-
-                    if (!$this->checkIfKeysAreNull($this->customVocabCurrentlyUsedByOrganization)) {
-                        $this->checkForCustomVocabularyMismatchInFile($this->customVocabCurrentlyUsedByOrganization);
-                    }
 
                     continue;
                 } catch (\Exception $exception) {
