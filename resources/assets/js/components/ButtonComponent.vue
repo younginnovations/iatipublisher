@@ -1,12 +1,16 @@
 <template>
-  <button class="button relative text-n-40" :class="btnType">
+  <button
+    :disabled="activityLength"
+    class="button relative text-n-40"
+    :class="activityLength ? ` ${btnType} !cursor-not-allowed` : btnType"
+  >
     <svg-vue v-if="icon" :icon="icon" />
     <span v-if="text">{{ text }}</span>
   </button>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, inject } from 'vue';
 
 export default defineComponent({
   name: 'ButtonComponent',
@@ -16,6 +20,7 @@ export default defineComponent({
       type: String,
       required: true,
     },
+
     icon: {
       type: String,
       required: false,
@@ -43,7 +48,9 @@ export default defineComponent({
     } else {
       btnType = 'font-bold';
     }
-    return { btnType };
+    const activityLength = inject('activityLength');
+
+    return { btnType, activityLength };
   },
 });
 </script>

@@ -156,6 +156,7 @@
               type="primary"
               text="Upload file"
               icon="upload-file"
+              :activity-length="activityLength"
               @click="uploadFile"
             />
           </div>
@@ -333,7 +334,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, provide } from 'vue';
+import { ref, onMounted, provide, computed } from 'vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import HoverText from 'Components/HoverText.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
@@ -372,11 +373,18 @@ const mapActivityName = (name) => {
       return name;
   }
 };
+const activityLength = computed(() => {
+  return !uploadType?.value?.length;
+});
+
 function uploadFile() {
+  console.log(uploadType.value.length, 'length');
+
   loader.value = true;
   loaderText.value = 'Uploading .xls file';
 
   let activity = file.value.files.length ? file.value.files[0] : '';
+
   let xlsType = uploadType;
   const config = {
     headers: {
@@ -440,6 +448,7 @@ onMounted(() => {
   checkXlsstatus();
 });
 provide('xlsFailedMessage', xlsFailedMessage);
+provide('activityLength', activityLength);
 </script>
 
 <style lang="scss"></style>
