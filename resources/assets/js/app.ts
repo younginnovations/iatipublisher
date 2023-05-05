@@ -233,120 +233,168 @@ const stickySidebar = (
   lastScrollTop =
     currentWindowsScrollPosition <= 0 ? 0 : currentWindowsScrollPosition;
 
+  function scrollDownStickyBottom() {
+    stickyElement.style.cssText = `position : absolute;  width:280px; bottom: 16px`;
+    affixType = 'sticky-bound';
+  }
+
+  function scrollDownStickyTop() {
+    stickyElement.style.cssText = `position: relative; transform: translate3d(0, ${
+      stickyCurrentTop - elScrollTop
+    }px, 0);`;
+    affixType = 'sticky-translate';
+  }
+
+  function scrollDownStickyTranslate() {
+    {
+      (window.scrollY,
+      window.scrollY +
+        document.documentElement.clientHeight +
+        476 -
+        document.documentElement.scrollHeight >
+        0)
+        ? window.scrollY +
+          document.documentElement.clientHeight +
+          476 -
+          document.documentElement.scrollHeight
+        : 16;
+    }
+    stickyElement.style.cssText = `position: fixed; top: auto; left: ${elScrollLeft}; bottom:${
+      (window.scrollY,
+      window.scrollY +
+        document.documentElement.clientHeight +
+        476 -
+        document.documentElement.scrollHeight >
+        16)
+        ? window.scrollY +
+          document.documentElement.clientHeight +
+          476 -
+          document.documentElement.scrollHeight
+        : 16
+    }px; width: ${elWidth}px`;
+
+    affixType = 'sticky-bottom';
+  }
+
+  function scrollDownFixedTop() {
+    el.style.cssText = `position: fixed; top:0px`;
+    affixType = 'sticky-translate';
+  }
+
+  function scrollDownStickyNone() {
+    if (targetScrollPosition <= currentWindowsScrollPosition) {
+      if (viewportHeight + window.scrollY + 450 >= document.body.offsetHeight) {
+        el.style.cssText = `position: sticky; top:0px`;
+      } else {
+        stickyElement.style.cssText = `position: fixed; top: auto; left: ${elScrollLeft}; bottom: 0; width: ${elWidth}px`;
+      }
+      affixType = 'sticky-bottom';
+    }
+  }
+
+  function scrollDownStickyBound() {
+    if (elParentBottom && elParentBottom < stickyCurrentBottom) {
+      stickyElement.style.cssText = `position : absolute;  width:280px; bottom: 16px`;
+      affixType = 'sticky-bound';
+    }
+  }
+
   function handleScrollDown() {
     switch (affixType) {
       case 'sticky-top':
-        stickyElement.style.cssText = `position: relative; transform: translate3d(0, ${
-          stickyCurrentTop - elScrollTop
-        }px, 0);`;
-        affixType = 'sticky-translate';
-
+        scrollDownStickyTop();
         break;
 
       case 'sticky-bottom':
         if (elParentBottom && elParentBottom < stickyCurrentBottom) {
-          stickyElement.style.cssText = `position : absolute;  width:280px; bottom: 16px`;
-          affixType = 'sticky-bound';
+          scrollDownStickyBottom();
         }
 
         break;
 
       case 'sticky-translate':
         if (stickyCurrentBottom <= viewportHeight) {
-          {
-            (window.scrollY,
-            window.scrollY +
-              document.documentElement.clientHeight +
-              476 -
-              document.documentElement.scrollHeight >
-              0)
-              ? window.scrollY +
-                document.documentElement.clientHeight +
-                476 -
-                document.documentElement.scrollHeight
-              : 16;
-          }
-          stickyElement.style.cssText = `position: fixed; top: auto; left: ${elScrollLeft}; bottom:${
-            (window.scrollY,
-            window.scrollY +
-              document.documentElement.clientHeight +
-              476 -
-              document.documentElement.scrollHeight >
-              16)
-              ? window.scrollY +
-                document.documentElement.clientHeight +
-                476 -
-                document.documentElement.scrollHeight
-              : 16
-          }px; width: ${elWidth}px`;
-
-          affixType = 'sticky-bottom';
+          scrollDownStickyTranslate();
         }
         break;
       case 'fixed-top':
-        el.style.cssText = `position: fixed; top:0px`;
-        affixType = 'sticky-translate';
+        scrollDownFixedTop();
         break;
 
       case 'sticky-none':
-        if (targetScrollPosition <= currentWindowsScrollPosition) {
-          if (
-            viewportHeight + window.scrollY + 450 >=
-            document.body.offsetHeight
-          ) {
-            el.style.cssText = `position: sticky; top:0px`;
-          } else {
-            stickyElement.style.cssText = `position: fixed; top: auto; left: ${elScrollLeft}; bottom: 0; width: ${elWidth}px`;
-          }
-          affixType = 'sticky-bottom';
-        }
+        scrollDownStickyNone();
         break;
 
       case 'sticky-bound':
-        if (elParentBottom && elParentBottom < stickyCurrentBottom) {
-          stickyElement.style.cssText = `position : absolute;  width:280px; bottom: 16px`;
-          affixType = 'sticky-bound';
-        }
+        scrollDownStickyBound();
+        break;
+    }
+  }
+
+  function scrollUpStickyTop() {
+    if (elScrollTop >= 0) {
+      stickyElement.style.cssText = `position: relative;  `;
+      affixType = 'sticky-none';
+    } else {
+      stickyElement.style.cssText = `position: fixed; top: auto; bottom:${
+        (window.scrollY,
+        window.scrollY +
+          document.documentElement.clientHeight +
+          476 -
+          document.documentElement.scrollHeight >
+          16)
+          ? window.scrollY +
+            document.documentElement.clientHeight +
+            476 -
+            document.documentElement.scrollHeight
+          : 16
+      }px; left: ${elScrollLeft}; width: ${elWidth}px `;
+    }
+  }
+
+  function scrollUpStickyBottom() {
+    stickyElement.style.cssText = `position: fixed; top: 0px; left: ${elScrollLeft}; width: ${elWidth}px `;
+    affixType = 'sticky-bound';
+  }
+
+  function scrollUpFixedTop() {
+    el.style.cssText = `position: fixed; top:0px`;
+    affixType = 'sticky-translate';
+  }
+
+  function scrollUpStickyTranslate() {
+    if (stickyCurrentTop >= 0) {
+      stickyElement.style.cssText = `position: fixed; top: 0px; left: ${elScrollLeft}; width: ${elWidth}px`;
+      affixType = 'sticky-top';
+    }
+  }
+
+  function scrollUpStickyBound() {
+    if (stickyCurrentTop >= 0 && currentWindowsScrollPosition != 0) {
+      stickyElement.style.cssText = `position:fixed; top: 0; left: ${elScrollLeft}; width: ${elWidth}px`;
+      affixType = 'sticky-top';
+    }
+    if (stickyCurrentTop >= 0 && currentWindowsScrollPosition == 0) {
+      stickyElement.style.cssText = ` top: 0; left: ${elScrollLeft}; width: ${elWidth}px`;
+      affixType = 'sticky-top';
     }
   }
 
   function handleScrollUp() {
     switch (affixType) {
       case 'sticky-top':
-        if (elScrollTop >= 0) {
-          stickyElement.style.cssText = `position: relative;  `;
-          affixType = 'sticky-none';
-        } else {
-          stickyElement.style.cssText = `position: fixed; top: auto; bottom:${
-            (window.scrollY,
-            window.scrollY +
-              document.documentElement.clientHeight +
-              476 -
-              document.documentElement.scrollHeight >
-              16)
-              ? window.scrollY +
-                document.documentElement.clientHeight +
-                476 -
-                document.documentElement.scrollHeight
-              : 16
-          }px; left: ${elScrollLeft}; width: ${elWidth}px `;
-        }
+        scrollUpStickyTop();
         break;
 
       case 'sticky-bottom':
-        stickyElement.style.cssText = `position: fixed; top: 0px; left: ${elScrollLeft}; width: ${elWidth}px `;
-        affixType = 'sticky-bound';
+        scrollUpStickyBottom();
         break;
       case 'fixed-top':
-        el.style.cssText = `position: fixed; top:0px`;
-        affixType = 'sticky-translate';
+        scrollUpFixedTop();
         break;
 
       case 'sticky-translate':
-        if (stickyCurrentTop >= 0) {
-          stickyElement.style.cssText = `position: fixed; top: 0px; left: ${elScrollLeft}; width: ${elWidth}px`;
-          affixType = 'sticky-top';
-        }
+        scrollUpStickyTranslate();
         break;
 
       case 'sticky-none':
@@ -354,14 +402,7 @@ const stickySidebar = (
         break;
 
       case 'sticky-bound':
-        if (stickyCurrentTop >= 0 && currentWindowsScrollPosition != 0) {
-          stickyElement.style.cssText = `position:fixed; top: 0; left: ${elScrollLeft}; width: ${elWidth}px`;
-          affixType = 'sticky-top';
-        }
-        if (stickyCurrentTop >= 0 && currentWindowsScrollPosition == 0) {
-          stickyElement.style.cssText = ` top: 0; left: ${elScrollLeft}; width: ${elWidth}px`;
-          affixType = 'sticky-top';
-        }
+        scrollUpStickyBound();
         break;
     }
   }
