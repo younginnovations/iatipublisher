@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\IATI\Models\Organization\Organization;
+use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Traits\MigrateActivityTrait;
 use App\IATI\Traits\MigrateOrganizationTrait;
 use Exception;
@@ -13,6 +13,7 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Throwable;
 
 /*
  * Class FixRegionIssues.
@@ -38,7 +39,8 @@ class FixRegionIssues extends Command
 
     public function __construct(
         protected DB $db,
-        protected DatabaseManager $databaseManager
+        protected DatabaseManager $databaseManager,
+        protected OrganizationService $organizationService
     ) {
         parent::__construct();
     }
@@ -47,7 +49,8 @@ class FixRegionIssues extends Command
      * Execute the console command.
      *
      * @return void
-     * @throws Throwable|\Throwable
+     *
+     * @throws Throwable
      */
     public function handle(): void
     {
@@ -77,7 +80,7 @@ class FixRegionIssues extends Command
             $recipientRegionBudgetArray = $aidstreamOrganizationDataCollectionArray->pluck('recipient_region_budget', 'organization_id');
             $aidstreamOrganizationIdentifierArray = array_map('strtolower', $aidstreamOrganizationIdentifierArray);
 
-            $iatiOrganizations = Organization::whereIn('publisher_id', $aidstreamOrganizationIdentifierArray)->get();
+            $iatiOrganizations = $this->organizationService->getOrganizationByPublisherIds($aidstreamOrganizationIdentifierArray);
             $iatiOrganizationIdArray = $iatiOrganizations->pluck('id', 'publisher_id');
 
             $idMap = $this->mapOrganizationIds($aidstreamOrganizationIdentifierArray, $iatiOrganizationIdArray);

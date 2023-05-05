@@ -1599,7 +1599,7 @@ trait MigrateActivityTrait
                         'Completed basic activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
                     );
 
-                    $this->migrateActivityTransactions($aidstreamActivity->id, $iatiActivity->id);
+                    $this->migrateActivityTransactions($aidstreamActivity, $iatiActivity);
                     $this->migrateActivityResults($iatiActivity, $aidstreamActivity, $iatiOrganization);
                     $this->setDefaultValues($iatiActivity, $aidStreamOrganizationSetting);
                     $this->migrateActivitySnapshot($iatiActivity, $aidstreamActivity);
