@@ -1,28 +1,54 @@
 <template>
-  <div v-if="!xlsData" id="publishing_activities" :class="isLoading && 'hidden'" class="z-50 w-[366px]">
+  <div
+    v-if="!xlsData"
+    id="publishing_activities"
+    :class="isLoading && 'hidden'"
+    class="z-50 w-[366px]"
+  >
     <div class="bulk-head flex items-center justify-between bg-eggshell p-4">
       <div class="grow text-sm font-bold leading-normal">
         Publishing {{ activities && Object.keys(activities).length }} activities
       </div>
       <div class="flex shrink-0">
-        <div v-if="hasFailedActivities.ids.length > 0" class="retry flex cursor-pointer items-center text-crimson-50"
-          @click="retryPublishing">
+        <div
+          v-if="hasFailedActivities.ids.length > 0"
+          class="retry flex cursor-pointer items-center text-crimson-50"
+          @click="retryPublishing"
+        >
           <svg-vue class="mr-1" icon="redo" />
           <span class="text-xs uppercase">Retry</span>
         </div>
         <div v-else class="minus cursor-pointer" @click="toggleWindow"></div>
-        <div v-if="completed === 'completed'" class="cross cursor-pointer" @click="closeWindow"></div>
+        <div
+          v-if="completed === 'completed'"
+          class="cross cursor-pointer"
+          @click="closeWindow"
+        ></div>
       </div>
     </div>
-    <div class="bulk-activities max-h-[240px] overflow-y-auto overflow-x-hidden bg-white transition-all duration-500">
+    <div
+      class="bulk-activities max-h-[240px] overflow-y-auto overflow-x-hidden bg-white transition-all duration-500"
+    >
       <div>
-        <div v-for="(value, name, index) in activities" :key="index" class="item flex px-4 py-3">
+        <div
+          v-for="(value, name, index) in activities"
+          :key="index"
+          class="item flex px-4 py-3"
+        >
           <div class="activity-title grow pr-2 text-sm leading-normal">
             {{ value['activity_title'] }}
           </div>
           <div class="shrink-0 text-xl">
-            <svg-vue v-if="value['status'] === 'completed'" class="text-spring-50" icon="tick" />
-            <svg-vue v-else-if="value['status'] === 'failed'" class="text-crimson-50" icon="times-circle" />
+            <svg-vue
+              v-if="value['status'] === 'completed'"
+              class="text-spring-50"
+              icon="tick"
+            />
+            <svg-vue
+              v-else-if="value['status'] === 'failed'"
+              class="text-crimson-50"
+              icon="times-circle"
+            />
             <span v-else class="rolling"></span>
           </div>
         </div>

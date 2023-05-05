@@ -26,6 +26,9 @@
             <th id="transaction_type" scope="col">
               <span>Title</span>
             </th>
+            <th id="transaction_type" scope="col">
+              <span>Result Code</span>
+            </th>
             <th id="transaction_value" scope="col" width="190px">
               <span>RESULT TYPE</span>
             </th>
@@ -57,6 +60,7 @@
                 </div>
               </div>
             </td>
+            <td>{{ result.result_code }}</td>
             <td
               class="cursor-pointer"
               @click="handleNavigate(`${activityLink}/result/${result.id}`)"
@@ -166,7 +170,9 @@ export default defineComponent({
 
     interface ResultsInterface {
       last_page: number;
+
       data: {
+        result_code: string;
         id: number;
         result: {
           title: {
@@ -208,6 +214,7 @@ export default defineComponent({
         const response = res.data;
         Object.assign(resultsData, response.data);
         isEmpty.value = response.data.data.length ? false : true;
+        console.log(resultsData.data, 'for code');
       });
 
       if (props.toast.message !== '') {

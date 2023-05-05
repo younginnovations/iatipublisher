@@ -37,6 +37,9 @@
         </a>
       </div>
     </PageTitle>
+    <div class="-mt-6 mb-8 ml-[26px] text-n-40">
+      Result code: {{ result.result_code }}
+    </div>
     <div
       class="sidebar-open-icon"
       @click="

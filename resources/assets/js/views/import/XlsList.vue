@@ -43,7 +43,14 @@
       <table>
         <thead>
           <tr class="bg-n-10">
-            <th id="title" scope="col">
+            <th id="title" class="flex items-center space-x-1" scope="col">
+              <span class="cursor-pointer" @click="sort">
+                <svg-vue
+                  :class="sortOrder === 'descending' ? ' rotate-180' : ''"
+                  icon="sort-icon"
+                  class="pt-1 text-[5px]"
+                />
+              </span>
               <span>{{ status.template }} Title</span>
             </th>
             <th id="status" scope="col">
@@ -143,6 +150,8 @@ import {
 import Loader from 'Components/sections/ProgressLoader.vue';
 
 const selectAll = ref(false);
+const sortOrder = ref('asceding');
+
 const tableRow = ref({});
 const showCriticalErrorModel = ref(false);
 const loader = ref(false),
@@ -173,6 +182,64 @@ onUpdated(() => {
 const getDimensions = async () => {
   await nextTick();
   tableWidth.value = tableRow?.value['0'].clientWidth;
+};
+
+const sort = () => {
+  if (sortOrder.value === 'ascending') {
+    sortOrder.value = 'descending';
+  } else {
+    sortOrder.value = 'ascending';
+  }
+  let sortedData = props.importData;
+  switch (props.status['template']) {
+    case 'activity':
+      sortedData.sort((a, b) =>
+        a.data.title &&
+        a.data.title[0].narrative.toString().toLowerCase() < b.data.title &&
+        b.data.title[0].narrative.toString().toLowerCase()
+          ? 1
+          : -1
+      );
+      break;
+
+    case 'result':
+      sortedData.sort((a, b) =>
+        a.data.title &&
+        a.data.title[0].narrative[0]['narrative'].toString().toLowerCase() <
+          b.data.title &&
+        b.data.title[0].narrative[0]['narrative'].toString().toLowerCase()
+          ? 1
+          : -1
+      );
+
+      break;
+    case 'period':
+      sortedData.sort((a, b) =>
+        a.data.title &&
+        a.data.title[0].narrative[0]['narrative'].toString().toLowerCase() <
+          b.data.title &&
+        b.data.title[0].narrative[0]['narrative'].toString().toLowerCase()
+          ? 1
+          : -1
+      );
+
+      break;
+    case 'indicator':
+      sortedData.sort((a, b) =>
+        a.data.title &&
+        a.data.title[0].narrative[0]['narrative'].toString().toLowerCase() <
+          b.data.title &&
+        b.data.title[0].narrative[0]['narrative'].toString().toLowerCase()
+          ? 1
+          : -1
+      );
+
+      break;
+    default:
+      break;
+  }
+
+  console.log(props.importData, 'sort', sortedData);
 };
 
 onUnmounted(() => {

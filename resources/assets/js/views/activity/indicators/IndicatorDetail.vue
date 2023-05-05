@@ -51,6 +51,9 @@
         />
       </div>
     </PageTitle>
+    <div class="-mt-6 mb-8 ml-[26px] text-n-40">
+      Indicator code: {{ indicator.result_code }}
+    </div>
     <div
       class="sidebar-open-icon"
       @click="
@@ -393,6 +396,7 @@ export default defineComponent({
     };
 
     onMounted(() => {
+      console.log(props);
       window.addEventListener('resize', calcWidth);
       window.addEventListener('scroll', handleScroll);
 

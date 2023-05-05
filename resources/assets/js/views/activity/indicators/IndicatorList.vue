@@ -25,6 +25,9 @@
             <th id="title" scope="col">
               <span>Title</span>
             </th>
+            <th id="code" scope="col" width="190px">
+              <span>Indicator code</span>
+            </th>
             <th id="measure" scope="col" width="190px">
               <span>Measure</span>
             </th>
@@ -68,6 +71,7 @@
                 </div>
               </div>
             </td>
+            <td>{{ indicators[0].indicator_code }}</td>
             <td
               class="cursor-pointer"
               @click="
