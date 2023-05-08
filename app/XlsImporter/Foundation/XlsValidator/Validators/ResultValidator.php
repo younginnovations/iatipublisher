@@ -50,15 +50,15 @@ class ResultValidator implements ValidatorInterface
     public function validateData(): array
     {
         $errors = [
-            // 'critical' => $this->factory->initialize($this->result, $this->criticalRules(), $this->messages())
-            //     ->passes()
-            //     ->withErrors(),
+            'critical' => $this->factory->initialize($this->result, $this->criticalRules(), $this->messages())
+                ->passes()
+                ->withErrors(),
             'error' => $this->factory->initialize($this->result, $this->errorRules(), $this->messages())
                 ->passes()
                 ->withErrors(),
-            // 'warning' => $this->factory->initialize($this->result, $this->rules(), $this->messages())
-            //     ->passes()
-            //     ->withErrors(),
+            'warning' => $this->factory->initialize($this->result, $this->rules(), $this->messages())
+                ->passes()
+                ->withErrors(),
         ];
 
         return $errors;

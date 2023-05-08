@@ -57,6 +57,32 @@ trait ErrorValidationRules
      *
      * @return array
      */
+    protected function errorForDefaultValues(): array
+    {
+        return [
+            'default_field_values.default_currency' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Currency', 'Activity', false)))),
+            'default_field_values.default_language' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Language', 'Activity', false)))),
+            'default_field_values.hierarchy' => 'sometimes|nullable|integer|min:1|lte:4',
+            'default_field_values.budget_not_provided' => sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('BudgetNotProvided', 'Activity', false)))),
+            'default_field_values.humanitarian' => sprintf('nullable|in:0,1'),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    protected function errorForReportingOrg(): array
+    {
+        return [
+            'reporting_org.0.secondary_reporter' => sprintf('nullable|in:0,1'),
+        ];
+    }
+
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
     protected function errorForActivityScope(array $activity): array
     {
         return (new ScopeRequest())->getErrorsForActivityScope(Arr::get($activity, 'activity_scope'));

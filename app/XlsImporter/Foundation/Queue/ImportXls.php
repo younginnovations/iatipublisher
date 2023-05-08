@@ -6,8 +6,10 @@ namespace App\XlsImporter\Foundation\Queue;
 
 use App\Jobs\Job;
 use App\XlsImporter\Foundation\XlsQueueProcessor;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Throwable;
 
-class ImportXls extends Job
+class ImportXls extends Job implements ShouldQueue
 {
     /**
      * @var
@@ -78,9 +80,20 @@ class ImportXls extends Job
 
             $this->delete();
         } catch (\Exception $e) {
+            logger()->error($e);
             awsUploadFile('error.log', $e->getMessage());
             awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->organizationId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => 'Error has occurred while importing the file.'], JSON_THROW_ON_ERROR));
             $this->delete();
         }
+    }
+
+    /**
+     * Handle a job failure.
+     */
+    public function failed(Throwable $exception): void
+    {
+        awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->organizationId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => 'Failed to import xls file. Please check your file for correctness before importing again.'], JSON_THROW_ON_ERROR));
+
+        // Send user notification of failure, etc...
     }
 }

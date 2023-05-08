@@ -77,8 +77,13 @@ trait XlsMapperHelper
             if (is_bool($value)) {
                 return (int) $value;
             }
+            foreach ($location as $locationIndex=>$locationValue) {
+                if ($locationValue === $value) {
+                    return $locationIndex;
+                }
+            }
 
-            return Arr::get(array_flip($location), $value, $value);
+            return $value;
         }
 
         $locationArr = explode('/', $location);

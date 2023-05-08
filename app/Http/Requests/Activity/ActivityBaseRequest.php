@@ -436,7 +436,7 @@ class ActivityBaseRequest extends FormRequest
         $rules = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
-            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = ['date', 'date_greater_than:1900'];
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = ['nullable', 'date', 'date_greater_than:1900'];
             $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = sprintf(
                 'after:%s',
                 $formBase . '.period_start.' . $periodEndKey . '.date'
@@ -572,7 +572,7 @@ class ActivityBaseRequest extends FormRequest
         $rules = [];
 
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
-            $rules[sprintf('%s.document_date.%s.date', $formIndex, $documentCategoryIndex)] = 'date_greater_than:1900';
+            $rules[sprintf('%s.document_date.%s.date', $formIndex, $documentCategoryIndex)] = ['nullable', 'date_greater_than:1900'];
         }
 
         return $rules;
@@ -685,7 +685,7 @@ class ActivityBaseRequest extends FormRequest
         $rules = [];
         $periodStartFormBase = sprintf('%s.period_start.0.date', $formBase);
         $periodEndFormBase = sprintf('%s.period_end.0.date', $formBase);
-        $betweenRule = sprintf('after_or_equal:%s|before_or_equal:%s', $periodStartFormBase, $periodEndFormBase);
+        $betweenRule = sprintf('nullable|after_or_equal:%s|before_or_equal:%s', $periodStartFormBase, $periodEndFormBase);
 
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('%s.value.%s', $formBase, $valueIndex);

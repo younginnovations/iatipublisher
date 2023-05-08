@@ -175,14 +175,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import {
-  defineProps,
-  onMounted,
-  onUpdated,
-  computed,
-  ref,
-  reactive,
-} from 'vue';
+import { defineProps, onMounted, computed, ref } from 'vue';
 const showErrors = ref(false);
 const showCritical = ref(false);
 const criticalToggle = ref(false);
@@ -238,7 +231,7 @@ const title = computed(() => {
 
     case 'result':
       return props.activity.data.title
-        ? props.activity.data.title[0].narrative[0]['narrative']
+        ? props.activity.data.title[0].narrative[0]['narrative'] ?? 'Untitled'
         : 'Untitled';
     case 'period':
       return (
@@ -250,10 +243,10 @@ const title = computed(() => {
       );
     case 'indicator':
       return props.activity.data.title
-        ? props.activity.data.title[0].narrative[0]['narrative']
+        ? props.activity.data.title[0].narrative[0]['narrative'] ?? 'Untitled'
         : 'Untitled';
     default:
-      return 'ss';
+      return 'Untitled';
   }
 });
 
@@ -418,6 +411,7 @@ const errorAccordionToggle = (e: Event) => {
   margin-bottom: 18px;
   background-color: none;
 }
+
 .error-dropdown-container p {
   color: black;
 }

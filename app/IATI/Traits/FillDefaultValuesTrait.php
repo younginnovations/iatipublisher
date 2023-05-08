@@ -98,10 +98,12 @@ trait FillDefaultValuesTrait
      */
     public function setLanguage(array &$data, string $key, $datum, $defaultValues): void
     {
-        if ($key === 'language' && empty($datum) && !empty($this->tempNarrative) && array_key_exists(
-            'narrative',
-            $data
-        )) {
+        if (
+            $key === 'language' && empty($datum) && !empty($this->tempNarrative) && array_key_exists(
+                'narrative',
+                $data
+            )
+        ) {
             $data['language'] = Arr::get($defaultValues, 'default_language', null);
         }
     }
@@ -156,7 +158,7 @@ trait FillDefaultValuesTrait
      */
     public function update($id, $data, $refillDefaultValues = false): bool
     {
-        $defaultFieldValues = $this->model->find($id)->default_field_values;
+        $defaultFieldValues = $this->getDefaultValuesFromActivity($id, $this->getModel());
 
         if ($refillDefaultValues) {
             $defaultFieldValues = $this->resolveDefaultValues($data);

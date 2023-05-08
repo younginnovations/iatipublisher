@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Xml;
+namespace Tests\Unit\ImportXls;
 
 use App\XlsImporter\Foundation\Mapper\Period;
 use App\XlsImporter\Foundation\XlsProcessor\XlsToArray;
@@ -34,9 +34,6 @@ class ImportPeriodTest extends TestCase
 
         foreach ($actualData as $key => $value) {
             $elementData = Arr::get($processedData, $key, []);
-            // $value = Arr::dot($value);
-            // dump('testing ' . $key, $elementData, $value);
-            dump('testing ' . $key);
 
             if (is_array($value) && is_array($elementData)) {
                 dump(Arr::dot($value), Arr::dot($elementData));
@@ -44,9 +41,7 @@ class ImportPeriodTest extends TestCase
                 $difference2 = array_diff_assoc(Arr::dot($elementData), Arr::dot($value));
                 dump('difference', $difference1);
                 dump('difference', $difference2);
-            // $this->assertTrue(empty($difference));
             } elseif ($elementData !== $value && !(empty($value) && empty($elementData))) {
-                // dump($value, $elementData, empty($value) && empty($elementData), empty($value), empty($elementData));
                 $this->assertTrue(false);
             }
         }

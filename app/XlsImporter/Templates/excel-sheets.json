@@ -2,6 +2,7 @@
   "activity": {
     "Instructions": "required",
     "Settings": "required",
+    "Element with single field" : "optional",
     "Options": "required",
     "Title": "optional",
     "Description": "optional",
@@ -18,8 +19,13 @@
     "Related Activity": "optional",
     "Other Identifier": "optional",
     "Sector": "optional",
+    "Tag" : "optional",
+    "Policy Marker":"optional",
+    "Conditions" : "optional",
+    "Default Aid Type" : "optional",
     "Country Budget Items": "optional",
     "Location": "optional",
+    "Document Link":"optional",
     "Transaction": "optional"
   },
   "result": {
@@ -40,13 +46,15 @@
     "Options": "required"
   },
   "period": {
-    "Period Mapper": "period_mapper",
-    "Target Mapper": "target_mapper",
-    "Actual Mapper": "actual_mapper",
-    "Period": "period",
-    "Target": "target",
-    "Target Document Link": "target_document_link",
-    "Actual": "actual",
-    "Actual Document Link": "actual_document_link"
+    "Instructions": "required",
+    "Period Mapper": "required",
+    "Target Mapper": "required",
+    "Actual Mapper": "required",
+    "Period": "required",
+    "Target": "required",
+    "Target Document Link": "required",
+    "Actual": "required",
+    "Actual Document Link": "required",
+    "Options" : "required"
   }
 }

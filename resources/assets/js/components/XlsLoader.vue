@@ -86,7 +86,6 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
-
   xlsFailed: {
     type: Boolean,
     default: false,

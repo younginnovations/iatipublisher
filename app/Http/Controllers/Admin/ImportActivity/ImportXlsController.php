@@ -186,7 +186,6 @@ class ImportXlsController extends Controller
 
             return response()->json(['success' => true, 'data' => $result]);
         } catch (Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => $e->getMessage()]);

@@ -127,6 +127,7 @@ export default defineComponent({
                 !res.data?.data?.success ||
                 res.data?.data?.message === 'Complete'
               ) {
+                totalCount.value = processedCount.value;
                 clearInterval(checkStatus);
               }
             });

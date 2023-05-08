@@ -124,6 +124,7 @@ class TransactionRequest extends ActivityBaseRequest
         $rules['aid_type.0.earmarking_modality'] = 'nullable|in:' . implode(',', array_keys(getCodeList('EarmarkingModality', 'Activity', false)));
         $rules['aid_type.0.cash_and_voucher_modalities'] = 'nullable|in:' . implode(',', array_keys(getCodeList('CashandVoucherModalities', 'Activity', false)));
         $rules['tied_status.0.tied_status_code'] = 'nullable|in:' . implode(',', array_keys(getCodeList('TiedStatus', 'Activity', false)));
+        $rules['disbursement_channel.0.disbursement_channel_code'] = 'nullable|in:' . implode(',', array_keys(getCodeList('DisbursementChannel', 'Activity', false)));
 
         $tempRules = [
             $this->getCriticalTransactionDateRules($formFields['transaction_date']),
@@ -197,7 +198,7 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $dateIndex => $date) {
             $dateForm = sprintf('transaction_date.%s', $dateIndex);
-            $rules[sprintf('%s.date', $dateForm)] = 'before:tomorrow';
+            $rules[sprintf('%s.date', $dateForm)] = 'nullable|before:tomorrow';
         }
 
         return $rules;
@@ -276,7 +277,7 @@ class TransactionRequest extends ActivityBaseRequest
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('value.%s', $valueIndex);
             $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric';
-            $rules[sprintf('%s.date', $valueForm)] = 'date';
+            $rules[sprintf('%s.date', $valueForm)] = 'nullable|date';
             $rules[sprintf('%s.currency', $valueForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Currency', 'Activity'))));
         }
 

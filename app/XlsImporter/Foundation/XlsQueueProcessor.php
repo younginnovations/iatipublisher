@@ -116,8 +116,6 @@ class XlsQueueProcessor
                 return false;
             }
 
-            file_put_contents(app_path() . '/XlsImporter/Templates/test.json', json_encode($contents));
-
             $this->xlsMapper->process($contents, $xlsType, $userId, $orgId, $reportingOrg, $dbIatiIdentifiers);
 
             $this->databaseManager->rollback();
@@ -133,7 +131,7 @@ class XlsQueueProcessor
 
     public function checkXlsFile($content, $xlsType)
     {
-        $sheets = Arr::get($this->getXlsSheets(), $xlsType, []);
+        $systemSheets = Arr::get($this->getXlsSheets(), $xlsType, []);
         $excelColumns = $this->getXlsHeaders();
         $activityElements = [
             'Title' => 'title',
@@ -179,21 +177,17 @@ class XlsQueueProcessor
             'Actual Document Link' => 'actual_document_link',
         ];
 
-        if (!$this->checkSheetNames(array_keys($content), $sheets)) {
-            awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => 'Sheet missing in xls file.'], JSON_THROW_ON_ERROR));
-
+        if (!$this->checkSheetNames(array_keys($content), $systemSheets)) {
             return false;
         }
 
         foreach ($content as $sheetName => $data) {
-            dump($sheetName);
-
-            if (!in_array($sheetName, ['Instructions', 'Options'])) {
+            if (!in_array($sheetName, ['Instructions', 'Options']) && count($data) > 0) {
                 $dataHeader = array_keys(Arr::get($data, '0', []));
                 $actualHeader = array_values(Arr::get($excelColumns, $activityElements[$sheetName], []));
 
                 if (!$this->checkColumnHeader($dataHeader, $actualHeader)) {
-                    awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => 'Header mismatch in xls file.'], JSON_THROW_ON_ERROR));
+                    awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => 'Header mismatch in ' . $sheetName . ' sheet of xls file.'], JSON_THROW_ON_ERROR));
 
                     return false;
                 }
@@ -203,14 +197,43 @@ class XlsQueueProcessor
         return true;
     }
 
-    public function checkSheetNames($sheetNames, $sheets)
+    public function checkSheetNames($xlsSheetNames, $systemSheets)
     {
-        foreach ($sheets as $sheetName => $type) {
-            if (!in_array($sheetName, $sheetNames) && $type === 'required') {
+        foreach ($systemSheets as $sheetName => $type) {
+            if (!in_array($sheetName, $xlsSheetNames) && $type === 'required') {
+                awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => $sheetName . ' sheet missing in xls file.'], JSON_THROW_ON_ERROR));
+
                 return false;
             }
 
-            unset($sheetNames[$sheetName]);
+            $xlsSheetNames = array_diff($xlsSheetNames, [$sheetName]);
+        }
+
+        if (count($xlsSheetNames)) {
+            awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => 'Unnecessary sheet is present in the xls file:' . implode(',', $xlsSheetNames)], JSON_THROW_ON_ERROR));
+
+            return false;
+        }
+
+        return true;
+    }
+
+    public function checkFileEmpty($xlsSheetNames, $systemSheets)
+    {
+        foreach ($systemSheets as $sheetName => $type) {
+            if (!in_array($sheetName, $xlsSheetNames) && $type === 'required') {
+                awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => $sheetName . ' sheet missing in xls file.'], JSON_THROW_ON_ERROR));
+
+                return false;
+            }
+
+            $xlsSheetNames = array_diff($xlsSheetNames, [$sheetName]);
+        }
+
+        if (count($xlsSheetNames)) {
+            awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => 'Unnecessary sheet is present in the xls file:' . implode(',', $xlsSheetNames)], JSON_THROW_ON_ERROR));
+
+            return false;
         }
 
         return true;
@@ -218,8 +241,6 @@ class XlsQueueProcessor
 
     public function checkColumnHeader($dataHeader, $actualHeader)
     {
-        dump($dataHeader, $actualHeader, count(array_diff($actualHeader, $dataHeader)), count(array_diff($dataHeader, $actualHeader)));
-        dump('------------------------------');
         if (count(array_diff($actualHeader, $dataHeader))) {
             return false;
         }

@@ -68,10 +68,9 @@
 </template>
 <script setup lang="ts">
 import { useStorage } from '@vueuse/core';
-import { onMounted, watch, computed, ref, provide } from 'vue';
+import { onMounted, watch, computed, ref } from 'vue';
 import { useStore } from 'Store/activities/index';
 const store = useStore();
-import BulkPublishing from 'Activity/bulk-publish/BulkPublishing.vue';
 const pa = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
 });

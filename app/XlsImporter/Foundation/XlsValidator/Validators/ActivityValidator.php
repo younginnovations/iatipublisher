@@ -104,6 +104,8 @@ class ActivityValidator implements ValidatorInterface
 
         $tempRules = [
             $this->errorForActivityStatus($activity),
+            $this->errorForDefaultValues(),
+            $this->errorForReportingOrg(),
             $this->errorForActivityScope($activity),
             $this->errorForCollaborationType($activity),
             $this->errorForDefaultFlowType($activity),

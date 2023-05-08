@@ -345,7 +345,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'period_start_end:' . $diff . ',90';
+            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'nullable|period_start_end:' . $diff . ',90';
         }
 
         return $rules;

@@ -50,7 +50,7 @@ class ResultRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getWarningForResult(array $formFields, bool $fileUpload, array $indicators, $resultId): array
+    public function getWarningForResult(array $formFields, bool $fileUpload = false, array $indicators = [], $resultId = null): array
     {
         $rules = [];
 
@@ -58,7 +58,7 @@ class ResultRequest extends ActivityBaseRequest
             $this->getWarningForNarrative($formFields['title'][0]['narrative'], 'title.0'),
             $this->getWarningForNarrative($formFields['description'][0]['narrative'], 'description.0'),
             $this->getWarningForDocumentLink($formFields['document_link']),
-            $this->getWarningForReferences($formFields['reference'], $fileUpload, $indicators, $resultId),
+            // $this->getWarningForReferences($formFields['reference'], $fileUpload, $indicators, $resultId),
         ];
 
         foreach ($tempRules as $key => $tempRule) {
@@ -86,10 +86,10 @@ class ResultRequest extends ActivityBaseRequest
         $rules['aggregation_status'] = sprintf('nullable|in:0,1');
 
         $tempRules = [
-            $this->getErrorsForNarrative($formFields['title'][0]['narrative'], 'title.0'),
-            $this->getErrorsForNarrative($formFields['description'][0]['narrative'], 'description.0'),
-            $this->getErrorsForDocumentLink($formFields['document_link']),
-            $this->getErrorsForReferences($formFields['reference'], $fileUpload, $indicators),
+            $this->getErrorsForNarrative(Arr::get($formFields, 'title.0.narrative', []), 'title.0'),
+            $this->getErrorsForNarrative(Arr::get($formFields, 'description.0.narrative', []), 'description.0'),
+            $this->getErrorsForDocumentLink(Arr::get($formFields, 'document_link')),
+            $this->getErrorsForReferences(Arr::get($formFields, 'reference', []), $fileUpload, $indicators),
         ];
 
         foreach ($tempRules as $key => $tempRule) {
@@ -113,10 +113,10 @@ class ResultRequest extends ActivityBaseRequest
         $messages = [];
 
         $tempMessages = [
-            $this->getMessagesForNarrative($formFields['title'][0]['narrative'], 'title.0'),
-            $this->getMessagesForNarrative($formFields['description'][0]['narrative'], 'description.0'),
-            $this->getMessagesForDocumentLink($formFields['document_link']),
-            $this->getMessagesForReferences($formFields['reference'], $fileUpload, $resultId),
+            $this->getMessagesForNarrative(Arr::get($formFields, 'title.0.narrative', []), 'title.0'),
+            $this->getMessagesForNarrative(Arr::get($formFields, 'description.0.narrative', []), 'description.0'),
+            $this->getMessagesForDocumentLink(Arr::get($formFields, 'document_link', [])),
+            $this->getMessagesForReferences(Arr::get($formFields, 'reference', []), $fileUpload, $resultId),
         ];
 
         foreach ($tempMessages as $key => $tempMessage) {
@@ -169,9 +169,9 @@ class ResultRequest extends ActivityBaseRequest
                         }
                     }
 
-                    $rules[sprintf('%s.code', $referenceForm)] = 'indicator_ref_code_present:' . $resultId ? !app()->make(ResultService::class)->indicatorHasRefCode($resultId) : !$hasCode;
+                    $rules[sprintf('%s.code', $referenceForm)][] = 'indicator_ref_code_present:' . $resultId ? !app()->make(ResultService::class)->indicatorHasRefCode($resultId) : !$hasCode;
                 } else {
-                    $rules[sprintf('%s.code', $referenceForm)] = 'indicator_ref_code_present';
+                    $rules[sprintf('%s.code', $referenceForm)][] = 'indicator_ref_code_present';
                 }
             }
         }
@@ -188,6 +188,8 @@ class ResultRequest extends ActivityBaseRequest
      */
     protected function getErrorsForReferences($formFields, $fileUpload = false, array $indicators = []): array
     {
+        $rules = [];
+
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
             $rules[sprintf('%s.vocabulary_uri', $referenceForm)] = 'nullable|url';

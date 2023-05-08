@@ -179,11 +179,11 @@ class Activity
             $existingId = Arr::get($this->existingIdentifier, $activityIdentifier, false);
 
             if (in_array($activityIdentifier, array_keys($this->duplicateIdentifiers))) {
-                $error['critical']['iati_identifier'][] = 'The activity identifier has been duplicated';
+                $error['critical']['iati_identifier']['iati_identifier'] = 'The activity identifier has been duplicated on sheet: ' . implode(', ', $this->duplicateIdentifiers[$activityIdentifier]);
             }
 
             if (!in_array($activityIdentifier, $this->activitiesIdentifier)) {
-                $error['critical']['iati_identifier'][] = 'The activity identifier has not been mentioned on setting sheet.';
+                $error['critical']['iati_identifier']['settings'] = 'The activity identifier has not been mentioned on setting sheet.';
             }
 
             $this->storeValidatedData($activity, $error, $existingId);
@@ -201,14 +201,17 @@ class Activity
         foreach ($data as $row) {
             $secondary_reporter = '';
             if ($this->checkRowNotEmpty($row)) {
-                $secondary_reporter = $row['secondary_reporter'];
+                if (empty(Arr::get($row, 'activity_identifier', null))) {
+                    continue;
+                }
 
+                $secondary_reporter = $row['secondary_reporter'];
                 unset($row['secondary_reporter']);
 
                 $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null) ?? $elementActivityIdentifier;
 
                 if (in_array($elementActivityIdentifier, $this->activitiesIdentifier)) {
-                    $this->duplicateIdentifiers[] = $elementActivityIdentifier;
+                    $this->duplicateIdentifiers[$elementActivityIdentifier][] = 'Settings';
                 } else {
                     $this->activitiesIdentifier[] = $elementActivityIdentifier;
                 }
@@ -246,6 +249,8 @@ class Activity
      */
     public function getReportingOrganization($secondary_reporter): array
     {
+        $secondary_reporter = is_bool($secondary_reporter) ? (int) $secondary_reporter : $secondary_reporter;
+
         if (!empty($this->organizationReportingOrg)) {
             $activityRef = $this->organizationReportingOrg;
             $activityRef[0]['secondary_reporter'] = $secondary_reporter;
@@ -313,6 +318,7 @@ class Activity
                     )
                 ) {
                     if (!empty($elementData)) {
+                        $this->checkDuplicateIdentifier($elementActivityIdentifier, $element);
                         $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
                         $elementData = [];
                     }
@@ -326,17 +332,25 @@ class Activity
 
                 $elementData[] = $systemMappedRow;
             } else {
-                $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
-                $elementData = [];
                 break;
             }
         }
 
         if (!empty($elementData)) {
             if (in_array($elementActivityIdentifier, $this->activitiesIdentifier)) {
+                $this->checkDuplicateIdentifier($elementActivityIdentifier, $element);
                 $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
             }
             $elementData = [];
+        }
+    }
+
+    public function checkDuplicateIdentifier($elementActivityIdentifier, $element)
+    {
+        if (in_array($element, array_keys(Arr::get($this->activities, $elementActivityIdentifier, [])))) {
+            if (!in_array($element, Arr::get($this->duplicateIdentifiers, $elementActivityIdentifier, []))) {
+                $this->duplicateIdentifiers[$elementActivityIdentifier][] = $element;
+            }
         }
     }
 
@@ -353,7 +367,13 @@ class Activity
         // variables to map code dependency in elements like sector, recipient region and so on
         $codeDependencyCondition = Arr::get($dependency, 'codeDependency.dependencyCondition', []);
         $dependentOn = Arr::get($dependency, 'codeDependency.dependentOn', []);
-        $dependentOnValue = array_fill_keys(array_values($dependentOn), null);
+        $dependentOnValue = [];
+
+        foreach (array_values($dependentOn) as $dependency) {
+            foreach (array_values($dependency) as $dependentVocab) {
+                $dependentOnValue[$dependentVocab] = null;
+            }
+        }
 
         foreach (array_values($fieldDependency) as $dependents) {
             $parentBaseCount[$dependents['parent']] = null;
@@ -364,7 +384,7 @@ class Activity
                 if ($elementBase && ($fieldName === $elementBase && ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)))) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
                     $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
-                    $dependentOnValue = array_fill_keys(array_values($dependentOn), null);
+                    $dependentOnValue = array_fill_keys(array_keys($dependentOnValue), null);
                 }
 
                 if (array_key_exists($fieldName, $fieldDependency)) {
@@ -382,13 +402,25 @@ class Activity
                     }
                 }
 
-                if (!empty($dependentOn) && in_array($fieldName, array_keys($dependentOn), false)) {
-                    $dependentOnFieldName = $dependentOn[$fieldName];
-                    $dependentOnFieldValue = $dependentOnValue[$dependentOnFieldName];
-                    $dependencyCondition = $codeDependencyCondition[$dependentOnFieldName];
-                    $defaultField = $dependencyCondition['defaultCodeField'];
+                if (!empty($dependentOn)) {
+                    if (in_array($fieldName, array_keys(Arr::get($dependentOn, 'codes', [])))) {
+                        $dependentOnFieldName = $dependentOn['codes'][$fieldName];
+                        $dependentOnFieldValue = $dependentOnValue[$dependentOnFieldName];
+                        $dependencyCondition = $codeDependencyCondition[$dependentOnFieldName];
+                        $defaultField = $dependencyCondition['defaultCodeField'];
 
-                    $fieldName = $dependentOnFieldValue ? Arr::get($dependencyCondition, "dependencyRelation.$dependentOnFieldValue", $defaultField) : $defaultField;
+                        $fieldName = $dependentOnFieldValue ? Arr::get($dependencyCondition, "dependencyRelation.$dependentOnFieldValue", $defaultField) : $defaultField;
+                    }
+
+                    if (in_array($fieldName, array_keys(Arr::get($dependentOn, 'uri', [])))) {
+                        $dependentOnFieldName = $dependentOn['uri'][$fieldName];
+                        $dependentOnFieldValue = $dependentOnValue[$dependentOnFieldName];
+                        $uriDependencyCondition = $codeDependencyCondition[$dependentOnFieldName]['vocabularyUri'];
+
+                        if (!in_array($dependentOnFieldValue, $uriDependencyCondition)) {
+                            continue;
+                        }
+                    }
                 }
 
                 if (array_key_exists($fieldName, $elementDropDownFields)) {
@@ -402,6 +434,7 @@ class Activity
 
                 $elementPosition = $this->getActivityElementPosition($parentBaseCount, $fieldName);
                 $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
+
                 if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null)) && !empty($elementPosition)) {
                     $fieldValue = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);

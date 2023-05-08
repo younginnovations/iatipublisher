@@ -168,7 +168,7 @@ class Indicator
                 $errors = $indicatorValidator
                     ->init(
                         [
-                            'indicator' => $indicatorData['indicator'],
+                            'indicator' => $indicatorData['indicator'] ?? [],
                             'resultId' => $parentId,
                         ]
                     )
@@ -321,6 +321,7 @@ class Indicator
                 $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
 
                 if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null))) {
+                    $fieldValue = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
                     $this->tempColumnTracker[$elementPositionBasedOnParent]['sheet'] = $this->sheetName;
                     $this->tempColumnTracker[$elementPositionBasedOnParent]['cell'] = Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
@@ -365,6 +366,7 @@ class Indicator
     protected function pushIndicatorDocumentLink($identifier, $data): void
     {
         $resultIdentifier = Arr::get($this->identifiers, "indicator.$identifier", null);
+        $this->checkIfIndicatorExists($resultIdentifier, $identifier);
 
         $this->indicators[$resultIdentifier][$identifier]['indicator']['document_link'] = $data;
         $this->updateColumnTracker($resultIdentifier, $identifier, 'document_link');
@@ -374,6 +376,7 @@ class Indicator
     {
         $indicatorIdentifier = Arr::get($this->identifiers, "baseline.$identifier", null);
         $resultIdentifier = Arr::get($this->identifiers, "indicator.$indicatorIdentifier", null);
+        $this->checkIfIndicatorExists($resultIdentifier, $indicatorIdentifier);
 
         if (isset($this->baselineIndexing[$resultIdentifier][$indicatorIdentifier])) {
             $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][] = $data;
@@ -391,6 +394,7 @@ class Indicator
         $indicatorIdentifier = Arr::get($this->identifiers, "baseline.$identifier", null);
         $resultIdentifier = Arr::get($this->identifiers, "indicator.$indicatorIdentifier", null);
         $baselineIndex = $this->baselineIndexing[$resultIdentifier][$indicatorIdentifier][$identifier];
+        $this->checkIfIndicatorExists($resultIdentifier, $indicatorIdentifier);
 
         $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][$baselineIndex]['document_link'] = $data;
         $this->updateColumnTracker($resultIdentifier, $indicatorIdentifier, "baseline.$baselineIndex.document_link");
@@ -400,6 +404,15 @@ class Indicator
     {
         foreach ($this->tempColumnTracker as $columnPosition => $columnIndex) {
             $this->columnTracker[$resultIdentifier][$indicatorIdentifier]['indicator']["$keyPrefix.$columnPosition"] = $columnIndex;
+        }
+    }
+
+    protected function checkIfIndicatorExists($resultIdentifier, $indicatorIdentifier)
+    {
+        if (!isset($this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator'])) {
+            $activityTemplate = $this->getActivityTemplate();
+            $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator'] = $activityTemplate['indicator'];
+            $this->totalCount++;
         }
     }
 }

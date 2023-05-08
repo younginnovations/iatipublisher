@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Xml;
+namespace Tests\Unit\ImportXls;
 
 use App\XlsImporter\Foundation\Mapper\Activity;
 use App\XlsImporter\Foundation\XlsProcessor\XlsToArray;
@@ -39,22 +39,13 @@ class ImportActivityTest extends TestCase
 
         foreach ($actualData as $key => $value) {
             $elementData = Arr::get($processedData, $key, []);
-            // $value = Arr::dot($value);
-            // dump('testing ' . $key, $elementData, $value);
-            dump('testing ' . $key);
 
             if (is_array($value) && is_array($elementData)) {
-                dump(Arr::dot($value), Arr::dot($elementData));
                 $difference1 = array_diff_assoc(Arr::dot($value), Arr::dot($elementData));
                 $difference2 = array_diff_assoc(Arr::dot($elementData), Arr::dot($value));
-                dump('difference1', $difference1);
-                dump('---------------------');
-                dump('difference2', $difference2);
-                dump('---------------------');
                 $this->assertTrue(empty($difference1));
                 $this->assertTrue(empty($difference2));
             } elseif ($elementData !== $value && !(empty($value) && empty($elementData))) {
-                // dump($value, $elementData, empty($value) && empty($elementData), empty($value), empty($elementData));
                 $this->assertTrue(false);
             }
         }

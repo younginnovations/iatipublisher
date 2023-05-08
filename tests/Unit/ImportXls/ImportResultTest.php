@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Xml;
+namespace Tests\Unit\ImportXls;
 
 use App\XlsImporter\Foundation\Mapper\Result;
 use App\XlsImporter\Foundation\XlsProcessor\XlsToArray;
@@ -36,8 +36,6 @@ class ImportResultTest extends TestCase
             if (is_array($value) && is_array($elementData)) {
                 $difference1 = array_diff_assoc(Arr::dot($value), Arr::dot($elementData));
                 $difference2 = array_diff_assoc(Arr::dot($value), Arr::dot($elementData));
-                dump('difference:', $difference1);
-                dump('difference:', $difference1);
                 $this->assertTrue(empty($difference1));
                 $this->assertTrue(empty($difference2));
             } elseif ($elementData !== $value && !(empty($value) && empty($elementData))) {

@@ -58,7 +58,7 @@ class DownloadCodesController extends Controller
             $codeData = $this->downloadCodeService->getActivitiesToDownload($activityIds);
             $filename = 'codes.xls';
 
-            return Excel::download(new CodesExport($codeData, []), $filename);
+            return Excel::download(new CodesExport($codeData, []), $filename, \Maatwebsite\Excel\Excel::XLSX);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
             $this->auditService->auditEvent(null, 'download', 'codes');

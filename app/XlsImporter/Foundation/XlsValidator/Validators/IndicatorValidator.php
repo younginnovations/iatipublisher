@@ -41,7 +41,8 @@ class IndicatorValidator implements ValidatorInterface
      */
     public function init($indicator): static
     {
-        $this->indicator = $indicator;
+        $this->indicator = $indicator['indicator'];
+        $this->resultId = $indicator['resultId'];
 
         return $this;
     }

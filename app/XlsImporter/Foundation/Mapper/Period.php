@@ -133,7 +133,7 @@ class Period
 
         foreach ($this->periods as $indicatorIdentifier => $periods) {
             foreach ($periods as $periodIdentifier => $periodData) {
-                $parentId = Arr::get($this->existingIdentifier['parent'], null);
+                $parentId = Arr::get($this->existingIdentifier['parent'], $indicatorIdentifier, null);
                 $errors = $periodValidator
                     ->init(['period' => $periodData['period'], 'indicatorId' => $parentId])
                     ->validateData();
@@ -141,7 +141,7 @@ class Period
                 $existingId = Arr::get($this->existingIdentifier, sprintf('period.%s', $periodIdentifier), false);
 
                 if (!$parentId) {
-                    $columnAppendedError['critical']['indicator_identifier'][] = 'The indicator identifier doesn\'t exist in the system';
+                    $columnAppendedError['critical']['indicator_identifier']['indicator_identifier'] = "The indicator identifier $indicatorIdentifier doesn\'t exist in the system";
                 }
 
                 $this->processedCount++;
@@ -274,6 +274,7 @@ class Period
                 $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
 
                 if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null))) {
+                    $fieldValue = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
                     $this->tempColumnTracker[$elementPositionBasedOnParent]['sheet'] = $this->sheetName;
                     $this->tempColumnTracker[$elementPositionBasedOnParent]['cell'] = Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
@@ -298,6 +299,7 @@ class Period
     {
         $periodIdentifier = Arr::get($this->identifiers, 'target.' . $identifier, null);
         $indicatorIdentifier = Arr::get($this->identifiers, "period.$periodIdentifier", null);
+        $this->checkIfPeriodExists($indicatorIdentifier, $periodIdentifier);
 
         if (isset($this->targetActualIndexing[$indicatorIdentifier][$periodIdentifier]['period']['target'])) {
             $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['target'][] = $data;
@@ -314,6 +316,7 @@ class Period
     {
         $periodIdentifier = Arr::get($this->identifiers, "actual.$identifier", null);
         $indicatorIdentifier = Arr::get($this->identifiers, "period.$periodIdentifier", null);
+        $this->checkIfPeriodExists($indicatorIdentifier, $periodIdentifier);
 
         if (isset($this->targetActualIndexing[$indicatorIdentifier][$periodIdentifier]['period']['actual'])) {
             $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['actual'][] = $data;
@@ -330,7 +333,8 @@ class Period
     {
         $periodIdentifier = Arr::get($this->identifiers, "target.$identifier", null);
         $indicatorIdentifier = Arr::get($this->identifiers, "period.$periodIdentifier", null);
-        $targetIndex = $this->targetActualIndexing[$indicatorIdentifier][$periodIdentifier]['period']['target'][$identifier];
+        $this->checkIfPeriodExists($indicatorIdentifier, $periodIdentifier);
+        $targetIndex = Arr::get($this->targetActualIndexing, "$indicatorIdentifier.$periodIdentifier.period.target.$identifier", 0);
 
         $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['target'][$targetIndex]['document_link'] = $data;
         $this->updateColumnTracker($indicatorIdentifier, $periodIdentifier, "target.$targetIndex.document_link");
@@ -340,7 +344,9 @@ class Period
     {
         $periodIdentifier = Arr::get($this->identifiers, "actual.$identifier", null);
         $indicatorIdentifier = Arr::get($this->identifiers, "period.$periodIdentifier", null);
-        $actualIndex = $this->targetActualIndexing[$indicatorIdentifier][$periodIdentifier]['period']['actual'][$identifier];
+        $this->checkIfPeriodExists($indicatorIdentifier, $periodIdentifier);
+        $actualIndex = Arr::get($this->targetActualIndexing, "$indicatorIdentifier.$periodIdentifier.period.actual.$identifier", 0);
+
         $this->periods[$indicatorIdentifier][$periodIdentifier]['period']['actual'][$actualIndex]['document_link'] = $data;
         $this->updateColumnTracker($indicatorIdentifier, $periodIdentifier, "actual.$actualIndex.document_link");
     }
@@ -349,6 +355,15 @@ class Period
     {
         foreach ($this->tempColumnTracker as $columnPosition => $columnIndex) {
             $this->columnTracker[$indicatorIdentifier][$periodIdentifier]['period']["$keyPrefix.$columnPosition"] = $columnIndex;
+        }
+    }
+
+    protected function checkIfPeriodExists($indicatorIdentifier, $periodIdentifier)
+    {
+        if (!isset($this->periods[$indicatorIdentifier][$periodIdentifier]['period'])) {
+            $activityTemplate = $this->getActivityTemplate();
+            $this->periods[$indicatorIdentifier][$periodIdentifier]['period'] = $activityTemplate['period'];
+            $this->totalCount++;
         }
     }
 }

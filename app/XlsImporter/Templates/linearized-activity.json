@@ -326,7 +326,7 @@
         "value currency": "value_currency",
         "description narrative narrative": "description_narrative",
         "description narrative language": "description_language",
-        "provider_organization organization_identifer_code": "provider_organisation_reference",
+        "provider_organization organization_identifier_code": "provider_organisation_reference",
         "provider_organization provider_activity_id": "provider_organisation_provider_activity_id",
         "provider_organization type": "provider_organisation_type",
         "provider_organization narrative narrative": "provider_organisation_narrative",

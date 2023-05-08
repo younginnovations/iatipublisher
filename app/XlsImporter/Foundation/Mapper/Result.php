@@ -124,6 +124,7 @@ class Result
                 if ((empty($parentIdentifierValue) || $parentIdentifierValue !== $row['activity_identifier']) && !empty($row['activity_identifier'])) {
                     $parentIdentifierValue = $row['activity_identifier'];
                 }
+
                 $this->resultIdentifier[$sheetName][$parentIdentifierValue][] = sprintf('%s_%s', $parentIdentifierValue, $row['result_number']);
                 $this->identifiers[sprintf('%s_%s', $parentIdentifierValue, $row['result_number'])] = $parentIdentifierValue;
             } else {
@@ -132,7 +133,7 @@ class Result
         }
     }
 
-    public function validateAndStoreData()
+    public function validateAndStoreData(): void
     {
         $errors = [];
         $resultValidator = app(ResultValidator::class);
@@ -168,7 +169,7 @@ class Result
         $this->updateStatus();
     }
 
-    public function columnToFieldMapper($element, $data = [])
+    public function columnToFieldMapper($element, $data = []): void
     {
         $elementData = [];
         $columnMapper = $this->getLinearizedActivity();
@@ -206,6 +207,7 @@ class Result
                 break;
             }
         }
+
         if (!empty($elementData)) {
             $this->appendResultData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
             $elementData = [];
@@ -251,6 +253,7 @@ class Result
                 $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
 
                 if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null))) {
+                    $fieldValue = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
                     $this->tempColumnTracker[$elementPositionBasedOnParent]['sheet'] = $this->sheetName;
                     $this->tempColumnTracker[$elementPositionBasedOnParent]['cell'] = Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
@@ -284,6 +287,13 @@ class Result
     protected function appendResultDocumentLink($identifier, $data): void
     {
         $activityIdentifier = Arr::get($this->identifiers, "$identifier", null);
+
+        if (!isset($this->results[$activityIdentifier][$identifier]['results'])) {
+            $activityTemplate = $this->getActivityTemplate();
+            $this->results[$activityIdentifier][$identifier]['results'] = $activityTemplate['result'];
+            $this->totalCount++;
+        }
+
         $this->results[$activityIdentifier][$identifier]['results']['document_link'] = $data;
 
         $this->updateColumnTracker($activityIdentifier, $identifier, 'results.document_link');
