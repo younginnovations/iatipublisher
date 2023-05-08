@@ -490,7 +490,8 @@ watch(
   () => {
     store.dispatch(
       'updateBulkPublishLength',
-      Object.keys(pa.value.publishingActivities['activities']).length
+      Object.keys(pa?.value?.publishingActivities?.activities as string[])
+        .length
     );
   },
   { deep: true }
