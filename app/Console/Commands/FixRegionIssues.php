@@ -6,6 +6,7 @@ namespace App\Console\Commands;
 
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Traits\MigrateActivityTrait;
+use App\IATI\Traits\MigrateGeneralTrait;
 use App\IATI\Traits\MigrateOrganizationTrait;
 use Exception;
 use Illuminate\Console\Command;
@@ -22,6 +23,7 @@ class FixRegionIssues extends Command
 {
     use MigrateOrganizationTrait;
     use MigrateActivityTrait;
+    use MigrateGeneralTrait;
 
     /**
      * The name and signature of the console command.
@@ -117,8 +119,8 @@ class FixRegionIssues extends Command
             $this->info('Completed updating organization.');
         } catch(Exception $e) {
             $this->databaseManager->rollBack();
-
-            logger()->error($e->getMessage());
+            logger()->error($e);
+            $this->logInfo($e->getMessage());
         }
     }
 

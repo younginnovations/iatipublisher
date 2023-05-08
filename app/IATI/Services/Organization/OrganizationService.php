@@ -243,9 +243,9 @@ class OrganizationService
      *
      * @param array $publisherIds
      *
-     * @return Builder|Model|mixed|object|null
+     * @return array|Collection
      */
-    public function getOrganizationByPublisherIds(array $publisherIds): mixed
+    public function getOrganizationByPublisherIds(array $publisherIds): array | Collection
     {
         return $this->organizationRepo->getOrganizationByPublisherIds($publisherIds);
     }

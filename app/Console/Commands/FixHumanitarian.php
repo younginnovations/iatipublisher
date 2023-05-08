@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use App\IATI\Traits\MigrateGeneralTrait;
 use Illuminate\Console\Command;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Arr;
@@ -17,6 +18,8 @@ use Throwable;
  */
 class FixHumanitarian extends Command
 {
+    use MigrateGeneralTrait;
+
     /**
      * The name and signature of the console command.
      *
@@ -83,8 +86,8 @@ class FixHumanitarian extends Command
             $this->databaseManager->commit();
         } catch(Exception $e) {
             $this->databaseManager->rollBack();
-
-            logger()->error($e->getMessage());
+            logger()->error($e);
+            $this->infoLog($e->getMessage());
         }
     }
 

@@ -8,6 +8,7 @@ use App\IATI\Models\Activity\Activity;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Traits\MigrateActivityTrait;
+use App\IATI\Traits\MigrateGeneralTrait;
 use App\IATI\Traits\MigrateOrganizationTrait;
 use Exception;
 use Illuminate\Console\Command;
@@ -23,6 +24,7 @@ class FixDocumentLink extends Command
 {
     use MigrateOrganizationTrait;
     use MigrateActivityTrait;
+    use MigrateGeneralTrait;
 
     /**
      * The name and signature of the console command.
@@ -131,7 +133,8 @@ class FixDocumentLink extends Command
             $this->databaseManager->commit();
             $this->info("Completed fixing {$this->brokenCount} result document link");
         } catch(Exception $e) {
-            logger($e->getMessage());
+            logger()->error($e);
+            $this->logInfo($e->getMessage());
             $this->databaseManager->rollBack();
         }
 

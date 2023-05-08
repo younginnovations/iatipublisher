@@ -6,6 +6,7 @@ namespace App\Console\Commands;
 
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Organization\OrganizationService;
+use App\IATI\Traits\MigrateGeneralTrait;
 use App\IATI\Traits\MigrateOrganizationTrait;
 use Illuminate\Console\Command;
 use Illuminate\Database\DatabaseManager;
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Validator;
 class FixTransaction extends Command
 {
     use MigrateOrganizationTrait;
+    use MigrateGeneralTrait;
 
     /**
      * The name and signature of the console command.
@@ -91,7 +93,8 @@ class FixTransaction extends Command
             $this->databaseManager->commit();
             $this->info('Completed fixing transactions.');
         } catch(\Exception $e) {
-            logger($e->getMessage());
+            logger()->error($e);
+            $this->logInfo($e->getMessage());
             $this->databaseManager->rollBack();
         }
 
@@ -185,15 +188,13 @@ class FixTransaction extends Command
 
         if ($aidStreamSettings) {
             foreach ($aidStreamSettings as $aidStreamSetting) {
-                if (in_array($aidStreamSetting->organization_id, $aidstreamOrganizationIds)) {
-                    $registryInfo = $aidStreamSetting->registry_info ? json_decode($aidStreamSetting->registry_info) : false;
+                $registryInfo = $aidStreamSetting->registry_info ? json_decode($aidStreamSetting->registry_info) : false;
 
-                    if ($registryInfo) {
-                        $organizationIdentifier = $registryInfo[0]?->publisher_id;
-                        $aidstreamOrganizationsArray[$aidStreamSetting->organization_id] = $organizationIdentifier;
-                    } else {
-                        $aidstreamOrganizationsArray[$aidStreamSetting->organization_id] = strtolower($userIdentifierArray[$aidStreamSetting->organization_id]);
-                    }
+                if ($registryInfo) {
+                    $organizationIdentifier = $registryInfo[0]?->publisher_id;
+                    $aidstreamOrganizationsArray[$aidStreamSetting->organization_id] = $organizationIdentifier;
+                } else {
+                    $aidstreamOrganizationsArray[$aidStreamSetting->organization_id] = strtolower($userIdentifierArray[$aidStreamSetting->organization_id]);
                 }
             }
         }
