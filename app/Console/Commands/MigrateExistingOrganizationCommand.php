@@ -81,8 +81,6 @@ class MigrateExistingOrganizationCommand extends MigrateOrganizationCommand
                         );
                     }
 
-                    $this->currentAidstreamOrganizationBeingProcessed = $aidStreamOrganization;
-
                     $aidStreamOrganizationSetting = $this->db::connection('aidstream')->table('settings')->where(
                         'organization_id',
                         $aidstreamOrganizationId
@@ -120,6 +118,8 @@ class MigrateExistingOrganizationCommand extends MigrateOrganizationCommand
                             $message
                         );
                     }
+
+                    $this->migrateCustomVocabularyCsvFileToS3($aidStreamOrganization);
 
                     $this->logInfo(
                         "Started organization dates update for organization id: {$aidstreamOrganizationId}."
