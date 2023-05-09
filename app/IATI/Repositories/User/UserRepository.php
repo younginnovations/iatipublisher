@@ -6,6 +6,7 @@ namespace App\IATI\Repositories\User;
 
 use App\IATI\Models\User\User;
 use App\IATI\Repositories\Repository;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -202,5 +203,32 @@ class UserRepository extends Repository
     public function getUsersCreatedToday(): mixed
     {
         return $this->model->registeredToday()->count();
+    }
+
+    /**
+     * Get data in range.
+     *
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     *
+     * @return Collection|array
+     */
+    public function getBasicUserDataInRange(Carbon $startDate, Carbon $endDate): Collection|array
+    {
+        return $this->model
+            ->join('roles', 'users.role_id', '=', 'roles.id')
+            ->join('organizations', 'users.organization_id', '=', 'organizations.id')
+            ->whereDate('users.created_at', '>=', $startDate)
+            ->whereDate('users.created_at', '<=', $endDate)
+            ->whereNot('users.role_id', '1')
+            ->get([
+                'users.username',
+                'organizations.name->0->narrative as publisher_name',
+                'users.email',
+                'users.created_at',
+                'users.last_logged_in',
+                'roles.role',
+                'users.status',
+            ]);
     }
 }

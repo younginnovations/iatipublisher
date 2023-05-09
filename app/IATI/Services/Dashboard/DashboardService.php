@@ -9,6 +9,7 @@ use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Repositories\User\UserRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 /**
  * Class OrganizationService.
@@ -263,21 +264,25 @@ class DashboardService
     }
 
     /**
-     * Returns data in range, grouped by param.
+     * Returns data in range, grouped by (if param).
      *
      * @param $startDate
      * @param $endDate
-     * @param string $groupBy
+     * @param string|false $groupBy
      *
-     * @return array
+     * @return Collection|array
      */
-    public function getDataInRange($startDate, $endDate, string $groupBy = 'days'): array
+    public function getDataInRange($startDate, $endDate, bool|string $groupBy = false): Collection|array
     {
-        if ($groupBy !== 'days') {
+        if ($groupBy) {
+            if ($groupBy === 'days') {
+                return $this->userRepo->getDataInRangeGroupedByDay($startDate, $endDate);
+            }
+
             return $this->userRepo->getDataInRangeGroupedByMonth($startDate, $endDate);
         }
 
-        return $this->userRepo->getDataInRangeGroupedByDay($startDate, $endDate);
+        return $this->userRepo->getBasicUserDataInRange($startDate, $endDate);
     }
 
     /**
@@ -326,5 +331,24 @@ class DashboardService
         }
 
         return $formattedResults;
+    }
+
+    /**
+     * Returns user data for report download.
+     *
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     *
+     * @return array
+     */
+    public function getUserDataForReportDownload(Carbon $startDate, Carbon $endDate): array
+    {
+        $users = $this->getDataInRange($startDate, $endDate);
+
+        if (count($users)) {
+            return $users->toArray();
+        }
+
+        return [];
     }
 }

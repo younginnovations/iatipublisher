@@ -26,6 +26,7 @@ Route::group([], static function () {
     Route::get('/dashboard/user/registered-last-6-months', [DashboardController::class, 'getUsersRegisteredLast6Months'])->name('getUsersRegisteredLast6Months');
     Route::get('/dashboard/user/registered-last-12-months', [DashboardController::class, 'getUsersRegisteredLast12Months'])->name('getUsersRegisteredLast12Months');
     Route::get('/dashboard/user/date-range', [DashboardController::class, 'getDataInCustomRange'])->name('getDataInCustomRange');
+    Route::get('/dashboard/user/download-report', [DashboardController::class, 'downloadUserReport'])->name('downloadUserReport');
 
     // api for publisher data
     Route::get('/dashboard/publisher/type', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherGroupedByType'])->name('dashboard');

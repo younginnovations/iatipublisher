@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin\Dashboard;
 use App\Http\Controllers\Controller;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Dashboard\DashboardService;
+use App\IATI\Services\Download\CsvGenerator;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
 use Carbon\Carbon;
@@ -14,6 +15,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use PHPUnit\Exception;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Class DashboardController.
@@ -24,8 +26,20 @@ class DashboardController extends Controller
 
     protected OrganizationService $organizationService;
 
+    /**
+     * @var UserService
+     */
     protected UserService $userService;
+
+    /**
+     * @var DashboardService
+     */
     protected DashboardService $dashboardService;
+
+    /**
+     * @var CsvGenerator
+     */
+    protected CsvGenerator $csvGenerator;
 
     /**
      * ActivityController Constructor.
@@ -34,17 +48,20 @@ class DashboardController extends Controller
      * @param OrganizationService $organizationService
      * @param UserService $userService
      * @param DashboardService $dashboardService
+     * @param CsvGenerator $csvGenerator
      */
     public function __construct(
         ActivityService $activityService,
         OrganizationService $organizationService,
         UserService $userService,
-        DashboardService $dashboardService
+        DashboardService $dashboardService,
+        CsvGenerator $csvGenerator
     ) {
         $this->activityService = $activityService;
         $this->organizationService = $organizationService;
         $this->userService = $userService;
         $this->dashboardService = $dashboardService;
+        $this->csvGenerator = $csvGenerator;
     }
 
     /**
@@ -138,7 +155,7 @@ class DashboardController extends Controller
     /**
      * Returns json data containing publisher stats.
      *
-     * @param $request
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -163,7 +180,7 @@ class DashboardController extends Controller
     /**
      * Returns json data containing publisher stats.
      *
-     * @param $request
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -188,7 +205,7 @@ class DashboardController extends Controller
     /**
      * Returns json data containing publisher stats.
      *
-     * @param $request
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -238,7 +255,7 @@ class DashboardController extends Controller
     /**
      * Returns json data containing publisher stats.
      *
-     * @param $request
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -264,7 +281,7 @@ class DashboardController extends Controller
     /**
      * Returns json data containing publisher stats.
      *
-     * @param $request
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -280,7 +297,6 @@ class DashboardController extends Controller
                 'data' => $publisherStat,
             ]);
         } catch (\Exception $e) {
-            dd($e->getMessage());
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
@@ -392,8 +408,6 @@ class DashboardController extends Controller
 
     /**
      * Returns count of users registered today.
-     *
-     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -560,7 +574,7 @@ class DashboardController extends Controller
                     $unformattedResults = $this->dashboardService->getDataInRange($startDate, $endDate, 'months');
                     $results = $this->dashboardService->fillMissingMonthToData($startDate->startOfMonth(), $endDate->startOfMonth(), $unformattedResults);
                 } else {
-                    $unformattedResults = $this->dashboardService->getDataInRange($startDate, $endDate);
+                    $unformattedResults = $this->dashboardService->getDataInRange($startDate, $endDate, 'days');
                     $results = $this->dashboardService->fillMissingDaysToData($startDate, $endDate, $unformattedResults);
                 }
 
@@ -579,6 +593,39 @@ class DashboardController extends Controller
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching user count in custom-range.']);
+        }
+    }
+
+    /**
+     * Download user report csv.
+     *
+     * @param Request $request
+     * @param int $page
+     *
+     * @return BinaryFileResponse|JsonResponse
+     */
+    public function downloadUserReport(Request $request, int $page = 1): BinaryFileResponse|JsonResponse
+    {
+        try {
+            $queryParams = $this->getQueryParams($request);
+            $startDateString = Arr::get($queryParams, 'startDate', false);
+            $endDateString = Arr::get($queryParams, 'endDate', false);
+
+            if ($startDateString && $endDateString) {
+                $carbon = new Carbon();
+                $startDate = $carbon->parse($startDateString);
+                $endDate = $carbon->parse($endDateString);
+                $userData = $this->dashboardService->getUserDataForReportDownload($startDate, $endDate);
+                $headers = ['Username', 'Organization', 'Email', 'Created Date', 'Last Logged in', 'Role', 'Status'];
+
+                return $this->csvGenerator->generateWithHeaders(getTimeStampedText('users_report'), $userData, $headers);
+            }
+
+            return response()->json(['success' => false, 'message' => 'Invalid date range.']);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the paginated users.']);
         }
     }
 }
