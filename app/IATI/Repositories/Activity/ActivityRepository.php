@@ -472,4 +472,15 @@ class ActivityRepository extends Repository
     {
         return $this->model->where('id', $id)->update(["reporting_org->0->{$key}"=>$data]);
     }
+
+    /**
+     * Returns activities by org ids
+     * @param array $orgIds
+     *
+     * @return Collection|array
+     */
+    public function getActivitiesByOrgIds(array $orgIds): Collection | array
+    {
+        return $this->model->whereIn('org_id', $orgIds)->get();
+    }
 }

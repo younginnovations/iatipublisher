@@ -139,19 +139,22 @@ trait MigrateActivityTransactionTrait
     /**
      * Migrates activity transactions from AidStream to IATI Publisher.
      *
-     * @param $aidstreamActivityId
-     * @param $iatiActivityId
+     * @param $aidstreamActivity
+     * @param $iatiActivity
      *
      * @return void
      *
      * @throws \JsonException
      */
-    public function migrateActivityTransactions($aidstreamActivityId, $iatiActivityId): void
+    public function migrateActivityTransactions($aidstreamActivity, $iatiActivity): void
     {
+        $aidstreamActivityId = $aidstreamActivity->id;
+        $iatiActivityId = $iatiActivity->id;
+
         $this->db::connection('aidstream')->table('activity_transactions')->where(
             'activity_id',
             $aidstreamActivityId
-        )->orderBy('id')->chunk(10, function ($aidstreamTransactions) use ($aidstreamActivityId, $iatiActivityId) {
+        )->orderBy('id')->chunk(10, function ($aidstreamTransactions) use ($aidstreamActivityId, $iatiActivityId, $iatiActivity) {
             if (count($aidstreamTransactions)) {
                 $this->logInfo('Migrating activity transactions for activity id ' . $aidstreamActivityId);
                 $iatiTransactions = [];
@@ -167,6 +170,14 @@ trait MigrateActivityTransactionTrait
                         'created_at'  => $aidstreamTransaction->created_at,
                         'updated_at'  => $aidstreamTransaction->updated_at,
                     ];
+                }
+
+                $defaultValues = json_encode([$iatiActivity->default_field_values]);
+
+                foreach ($iatiTransactions as $index => $iatiTransaction) {
+                    $tempTransactionField = json_decode($iatiTransaction['transaction'], true);
+                    $iatiTransaction['transaction'] = json_encode($this->populateDefaultFields($tempTransactionField, $defaultValues));
+                    $iatiTransactions[$index] = $iatiTransaction;
                 }
 
                 $this->transactionService->insert($iatiTransactions);

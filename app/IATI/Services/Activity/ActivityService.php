@@ -674,4 +674,16 @@ class ActivityService
     {
         return app(OrganizationRepository::class)->getSpecifiedColumn(auth()->user()->organization->id, 'reporting_org');
     }
+
+    /**
+     * Returns activities by organization ids
+     *
+     * @param array $idMap
+     *
+     * @return array|Collection
+     */
+    public function getActivitiesByOrgIds(array $idMap): Collection | array
+    {
+        return $this->activityRepository->getActivitiesByOrgIds($idMap);
+    }
 }

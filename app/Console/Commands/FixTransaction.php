@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\IATI\Models\Activity\Activity;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Organization\OrganizationService;
-use App\IATI\Traits\MigrateActivityTrait;
 use App\IATI\Traits\MigrateGeneralTrait;
 use App\IATI\Traits\MigrateOrganizationTrait;
-use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Arr;
@@ -18,12 +15,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 /*
- * Class FixDocumentLink
+ * Class FixTransaction
  */
-class FixDocumentLink extends Command
+class FixTransaction extends Command
 {
     use MigrateOrganizationTrait;
-    use MigrateActivityTrait;
     use MigrateGeneralTrait;
 
     /**
@@ -31,63 +27,27 @@ class FixDocumentLink extends Command
      *
      * @var string
      */
-    protected $signature = 'command:FixDocumentLink';
+    protected $signature = 'command:FixTransaction';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'This command fixes issue #1196 task no.5';
-
-    /**
-     * @var array
-     */
-    public $documentLinkTemplate = [
-        'url'           => null,
-        'format'        => null,
-        'title'         => [
-            [
-                'narrative' => [
-                    [
-                        'narrative' => null,
-                        'language'  => null,
-                    ],
-                ],
-            ],
-        ],
-        'description'   => [
-            [
-                'narrative' => [
-                    [
-                        'narrative' => null,
-                        'language'  => null,
-                    ],
-                ],
-            ],
-        ],
-        'category'      => [['code'     => null]],
-        'language'      => [['language' => null]],
-        'document_date' => [['date'     => null]],
-    ];
-
-    /**
-     * @var int
-     */
-    public int $brokenCount = 0;
+    protected $description = 'Command description';
 
     /**
      * Constructor.
      *
      * @param DB $db
      * @param DatabaseManager $databaseManager
-     * @param OrganizationService $organizationService
      * @param ActivityService $activityService
+     * @param OrganizationService $organizationService
      */
     public function __construct(protected DB $db,
         protected DatabaseManager $databaseManager,
-        protected OrganizationService $organizationService,
-        protected ActivityService $activityService
+        protected ActivityService $activityService,
+        protected OrganizationService $organizationService
     )
     {
         parent::__construct();
@@ -100,7 +60,7 @@ class FixDocumentLink extends Command
      *
      * @throws \Throwable
      */
-    public function handle(): int
+    public function handle()
     {
         try {
             $aidstreamOrganizationIdString = $this->askValid(
@@ -127,18 +87,40 @@ class FixDocumentLink extends Command
             $activities = $this->activityService->getActivitiesByOrgIds($idMap);
 
             foreach ($activities as $activity) {
-                $this->fixActivityResultDocumentLink($activity);
+                $this->fixAllTransaction($activity);
             }
 
             $this->databaseManager->commit();
-            $this->info("Completed fixing {$this->brokenCount} result document link");
-        } catch(Exception $e) {
+            $this->info('Completed fixing transactions.');
+        } catch(\Exception $e) {
             logger()->error($e);
             $this->logInfo($e->getMessage());
             $this->databaseManager->rollBack();
         }
 
         return 0;
+    }
+
+    /**
+     * Populate default values from activity and update transaction.
+     *
+     * @param $activity
+     *
+     * @return void
+     */
+    private function fixAllTransaction($activity): void
+    {
+        if ($activity->default_field_values) {
+            $defaultValues = json_encode([$activity->default_field_values]);
+            $transactions = $activity->transactions ?? [];
+
+            foreach ($transactions as $transaction) {
+                $tempTransaction = $transaction->transaction;
+                $tempTransaction = $this->populateDefaultFields($tempTransaction, $defaultValues);
+                $transaction->timestamps = false;
+                $transaction->updateQuietly(['transaction'=>$tempTransaction], ['touch'=>false]);
+            }
+        }
     }
 
     /**
@@ -200,12 +182,19 @@ class FixDocumentLink extends Command
             ->whereIn('organization_id', $aidstreamOrganizationIds)
             ->get();
 
+        $userIdentifierArray = $this->db::connection('aidstream')->table('organizations')
+            ->whereIn('id', $aidstreamOrganizationIds)
+            ->get()->pluck('user_identifier', 'id');
+
         if ($aidStreamSettings) {
             foreach ($aidStreamSettings as $aidStreamSetting) {
-                if (in_array($aidStreamSetting->organization_id, $aidstreamOrganizationIds)) {
-                    $registryInfo = $aidStreamSetting->registry_info ? json_decode($aidStreamSetting->registry_info) : false;
+                $registryInfo = $aidStreamSetting->registry_info ? json_decode($aidStreamSetting->registry_info) : false;
+
+                if ($registryInfo) {
                     $organizationIdentifier = $registryInfo[0]?->publisher_id;
                     $aidstreamOrganizationsArray[$aidStreamSetting->organization_id] = $organizationIdentifier;
+                } else {
+                    $aidstreamOrganizationsArray[$aidStreamSetting->organization_id] = strtolower($userIdentifierArray[$aidStreamSetting->organization_id]);
                 }
             }
         }
@@ -231,86 +220,5 @@ class FixDocumentLink extends Command
         }
 
         return $mappedOrganizationsIdArray;
-    }
-
-    /**
-     * Fix activity >> result >> document_links.
-     *
-     * @param Activity $activity
-     *
-     * @return void
-     */
-    private function fixActivityResultDocumentLink(Activity $activity): void
-    {
-        $results = $activity?->results;
-
-        if (count($results)) {
-            $this->fixResultDocumentLink($results);
-        }
-    }
-
-    /**
-     * Fixes result document_links if there is any broken document_link.
-     *
-     * @param mixed $results
-     *
-     * @return void
-     */
-    private function fixResultDocumentLink(mixed $results): void
-    {
-        foreach ($results as $result) {
-            $isBroken = false;
-            $newArray = [];
-            $resultField = $result->result;
-
-            if ($resultField) {
-                $documentLinks = Arr::get($resultField, 'document_link', false);
-
-                if ($documentLinks) {
-                    foreach ($documentLinks as $index => $documentLink) {
-                        $newArray[$index] = $documentLink;
-                        $tempDocumentLink = $documentLink;
-                        unset($tempDocumentLink['language']);
-
-                        if ($this->checkIfKeysAreNull($tempDocumentLink)) {
-                            $this->brokenCount++;
-                            $isBroken = true;
-                            $newArray[$index] = $this->documentLinkTemplate;
-                        }
-                    }
-                }
-            }
-
-            if ($isBroken) {
-                $result->timestamps = false;
-                $tempResult = $result->result;
-                $tempResult['document_link'] = $newArray;
-                $result->updateQuietly(['result' => $tempResult], ['touch' => false]);
-            }
-        }
-    }
-
-    /**
-     * Returns true if all keys are null.
-     *
-     * @param mixed $tempDocumentLink
-     *
-     * @return bool
-     */
-    private function checkIfKeysAreNull(mixed $tempDocumentLink): bool
-    {
-        foreach ($tempDocumentLink as $value) {
-            if (is_array($value)) {
-                if (!$this->checkIfKeysAreNull($value)) {
-                    return false;
-                }
-            } else {
-                if (!empty($value) && !is_null($value)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 }

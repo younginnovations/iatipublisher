@@ -10,6 +10,7 @@ use App\IATI\Models\User\Role;
 use App\IATI\Repositories\Repository;
 use App\IATI\Traits\FillDefaultValuesTrait;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -175,5 +176,17 @@ class OrganizationRepository extends Repository
     public function getOrganizationByPublisherId($publisherId): ?object
     {
         return $this->model->where('publisher_id', $publisherId)->with(['settings', 'users', 'activities'])->first();
+    }
+
+    /**
+     * Returns Organizations by publisher ids
+     *
+     * @param array $publisherIds
+     *
+     * @return array|Collection
+     */
+    public function getOrganizationByPublisherIds(array $publisherIds): Collection | array
+    {
+        return $this->model->whereIn('publisher_id', $publisherIds)->get();
     }
 }

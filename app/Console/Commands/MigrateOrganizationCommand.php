@@ -261,9 +261,9 @@ class MigrateOrganizationCommand extends Command
                                 'Completed basic activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
                             );
 
-                            $this->migrateActivityTransactions($aidstreamActivity->id, $iatiActivity->id);
-                            $this->migrateActivityResults($iatiActivity, $aidstreamActivity, $iatiOrganization);
                             $this->setDefaultValues($iatiActivity, $aidStreamOrganizationSetting);
+                            $this->migrateActivityTransactions($aidstreamActivity, $iatiActivity);
+                            $this->migrateActivityResults($iatiActivity, $aidstreamActivity, $iatiOrganization);
                             $this->migrateActivitySnapshot($iatiActivity, $aidstreamActivity);
                         }
 
