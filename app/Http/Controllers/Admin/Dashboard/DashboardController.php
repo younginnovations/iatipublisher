@@ -9,8 +9,10 @@ use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Dashboard\DashboardService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use PHPUnit\Exception;
 
 /**
@@ -395,15 +397,13 @@ class DashboardController extends Controller
      *
      * @return JsonResponse
      */
-    public function getUsersRegisteredToday(Request $request): JsonResponse
+    public function getUsersRegisteredToday(): JsonResponse
     {
         try {
-            $countOnly = $request->get('count_only', true);
-
             return response()->json([
                 'success' => true,
-                'message' => "Today's user stats fetched successfully",
-                'data'    => $this->dashboardService->getUsersRegisteredToday($countOnly),
+                'message' => "Today's user stats fetched successfully.",
+                'data'    => $this->dashboardService->getUsersRegisteredToday(),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
@@ -422,13 +422,13 @@ class DashboardController extends Controller
         try {
             return response()->json([
                 'success' => true,
-                'message' => "Today's user stats fetched successfully",
+                'message' => 'User count of this week fetched successfully.',
                 'data'    => $this->dashboardService->getUsersRegisteredThisWeek(),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => "Error occurred while fetching the today's user count."]);
+            return response()->json(['success' => false, 'message' => "Error occurred while fetching this week's user count."]);
         }
     }
 
@@ -442,13 +442,13 @@ class DashboardController extends Controller
         try {
             return response()->json([
                 'success' => true,
-                'message' => "Today's user stats fetched successfully",
+                'message' => 'User count of this month fetched successfully.',
                 'data'    => $this->dashboardService->getUsersRegisteredThisMonth(),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => "Error occurred while fetching the today's user count."]);
+            return response()->json(['success' => false, 'message' => "Error occurred while fetching this month's user count."]);
         }
     }
 
@@ -462,13 +462,13 @@ class DashboardController extends Controller
         try {
             return response()->json([
                 'success' => true,
-                'message' => "Today's user stats fetched successfully",
+                'message' => 'User count of this year fetched successfully.',
                 'data'    => $this->dashboardService->getUsersRegisteredThisYear(),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json($e->getMessage());
+            return response()->json(['success' => false, 'message' => "Error occurred while fetching this year's user count."]);
         }
     }
 
@@ -482,13 +482,13 @@ class DashboardController extends Controller
         try {
             return response()->json([
                 'success' => true,
-                'message' => "Today's user stats fetched successfully",
+                'message' => 'User count of last 7 days fetched successfully.',
                 'data'    => $this->dashboardService->getUsersRegisteredLast7Days(),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json($e->getMessage());
+            return response()->json(['success' => false, 'message' => "Error occurred while fetching last 7 day's user count."]);
         }
     }
 
@@ -502,13 +502,13 @@ class DashboardController extends Controller
         try {
             return response()->json([
                 'success' => true,
-                'message' => "Today's user stats fetched successfully",
+                'message' => 'User count of last 6 months fetched successfully',
                 'data'    => $this->dashboardService->getUsersRegisteredLast6Months(),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json($e->getMessage());
+            return response()->json(['success' => false, 'message' => "Error occurred while fetching last 6 month's user count."]);
         }
     }
 
@@ -522,13 +522,13 @@ class DashboardController extends Controller
         try {
             return response()->json([
                 'success' => true,
-                'message' => "Today's user stats fetched successfully",
+                'message' => 'User count of last 12 months fetched successfully',
                 'data'    => $this->dashboardService->getUsersRegisteredLast12Months(),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json($e->getMessage());
+            return response()->json(['success' => false, 'message' => "Error occurred while fetching last 12 month's user count."]);
         }
     }
 
@@ -542,20 +542,43 @@ class DashboardController extends Controller
     public function getDataInCustomRange(Request $request): JsonResponse
     {
         try {
-            $startDate = $request->query('startDate') ?? false;
-            $endDate = $request->query('endDate') ?? false;
+            $queryParams = $this->getQueryParams($request);
+            $startDateString = Arr::get($queryParams, 'startDate', false);
+            $endDateString = Arr::get($queryParams, 'endDate', false);
 
-            if ($startDate && $endDate) {
+            if ($startDateString && $endDateString) {
+                $carbon = new Carbon();
+                $startDate = $carbon->parse($startDateString);
+                $endDate = $carbon->parse($endDateString);
+                $interval = $startDate->diff($carbon->parse($endDate));
+                $intervalYear = $interval->y;
+                $intervalMonth = $interval->m;
+
+                $results = [];
+
+                if ($intervalYear || $intervalMonth > 1) {
+                    $unformattedResults = $this->dashboardService->getDataInRange($startDate, $endDate, 'months');
+                    $results = $this->dashboardService->fillMissingMonthToData($startDate->startOfMonth(), $endDate->startOfMonth(), $unformattedResults);
+                } else {
+                    $unformattedResults = $this->dashboardService->getDataInRange($startDate, $endDate);
+                    $results = $this->dashboardService->fillMissingDaysToData($startDate, $endDate, $unformattedResults);
+                }
+
                 return response()->json([
                     'success' => true,
-                    'message' => "Today's user stats fetched successfully",
-                    'data'    => $this->dashboardService->getDataInFreeRange(),
+                    'message' => 'User count in date range fetched successfully',
+                    'data'    => $results,
                 ]);
             }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid date range.',
+            ]);
         } catch(\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json($e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching user count in custom-range.']);
         }
     }
 }

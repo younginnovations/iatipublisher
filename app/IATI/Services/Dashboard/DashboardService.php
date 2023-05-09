@@ -121,19 +121,12 @@ class DashboardService
 
     /**
      * Returns count of users registered today.
-     * @param $countOnly
      *
-     * @return array|mixed
+     * @return array
      */
-    public function getUsersRegisteredToday($countOnly): mixed
+    public function getUsersRegisteredToday(): array
     {
-        $data = $this->userRepo->getUsersCreatedToday($countOnly);
-
-        if ($countOnly) {
-            return ['user_count'=>$data];
-        }
-
-        return  $data;
+        return ['user_count'=>$this->userRepo->getUsersCreatedToday()];
     }
 
     /**
@@ -178,16 +171,7 @@ class DashboardService
         $results = $this->userRepo->getDataInRangeGroupedByDay($startDate, $endDate);
 
         if ($results) {
-            $formattedResults = [];
-            $currentDate = $startDate;
-
-            while ($currentDate <= $endDate) {
-                $dateString = $currentDate->format('Y-m-d');
-                $formattedResults[$dateString] = Arr::get($results, $dateString, 0);
-                $currentDate->addDay();
-            }
-
-            return $formattedResults;
+            return $this->fillMissingDaysToData($startDate, $endDate, $results);
         }
 
         return [];
@@ -231,10 +215,10 @@ class DashboardService
         $carbon = new Carbon();
         $startDate = $carbon->now()->startOfYear();
         $endDate = $carbon->now()->endOfYear();
-        $results = $this->getDataRegisteredInAYear($startDate, $endDate);
+        $results = $this->userRepo->getDataInRangeGroupedByMonth($startDate, $endDate);
 
         if ($results) {
-            return $this->formatMonthlyData($startDate, $endDate, $results);
+            return $this->fillMissingMonthToData($startDate, $endDate, $results);
         }
 
         return [];
@@ -253,7 +237,7 @@ class DashboardService
         $results = $this->userRepo->getDataInRangeGroupedByMonth($startDate, $endDate);
 
         if ($results) {
-            return $this->formatMonthlyData($startDate, $endDate, $results);
+            return $this->fillMissingMonthToData($startDate, $endDate, $results);
         }
 
         return [];
@@ -272,30 +256,33 @@ class DashboardService
         $results = $this->userRepo->getDataInRangeGroupedByMonth($startDate, $endDate);
 
         if ($results) {
-            return $this->formatMonthlyData($startDate, $endDate, $results);
+            return $this->fillMissingMonthToData($startDate, $endDate, $results);
         }
 
         return [];
     }
 
     /**
-     * Utility function,
-     * Use encase u want monthly grouped data between $startDate and $endDate
-     * Example, for monthly data from 2019 to 2023, u could iterate over date and get monthly counts for each year.
+     * Returns data in range, grouped by param.
      *
      * @param $startDate
      * @param $endDate
+     * @param string $groupBy
      *
      * @return array
      */
-    public function getDataRegisteredInAYear($startDate, $endDate): array
+    public function getDataInRange($startDate, $endDate, string $groupBy = 'days'): array
     {
-        return $this->userRepo->getDataInRangeGroupedByMonth($startDate, $endDate);
+        if ($groupBy !== 'days') {
+            return $this->userRepo->getDataInRangeGroupedByMonth($startDate, $endDate);
+        }
+
+        return $this->userRepo->getDataInRangeGroupedByDay($startDate, $endDate);
     }
 
     /**
-     * Returns formatted data in such a way that there is no missing month from data.
-     * Sets count to 0 for months that are not pulled from db.
+     * Returns formatted data in such a way that there is no missing month between date-range.
+     * Sets count to 0 for months that were not pulled from db.
      *
      * @param $startDate
      * @param $endDate
@@ -303,7 +290,7 @@ class DashboardService
      *
      * @return array
      */
-    public function formatMonthlyData($startDate, $endDate, $results): array
+    public function fillMissingMonthToData($startDate, $endDate, $results): array
     {
         $formattedResults = [];
         $currentDate = $startDate;
@@ -318,7 +305,26 @@ class DashboardService
         return $formattedResults;
     }
 
-    public function getDataInFreeRange()
+    /**
+     * Returns formatted data in such a way that there is no missing date between date-range.
+     * Sets count to 0 for days that were not pulled from db.
+     *
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     * @param array $results
+     * @return array
+     */
+    public function fillMissingDaysToData(Carbon $startDate, Carbon $endDate, array $results): array
     {
+        $formattedResults = [];
+        $currentDate = $startDate;
+
+        while ($currentDate <= $endDate) {
+            $dateString = $currentDate->format('Y-m-d');
+            $formattedResults[$dateString] = Arr::get($results, $dateString, 0);
+            $currentDate->addDay();
+        }
+
+        return $formattedResults;
     }
 }

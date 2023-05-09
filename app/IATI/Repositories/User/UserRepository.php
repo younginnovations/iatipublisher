@@ -197,12 +197,10 @@ class UserRepository extends Repository
     /**
      * Returns count of users registered today.
      *
-     * @param $countOnly
-     *
      * @return mixed
      */
-    public function getUsersCreatedToday($countOnly): mixed
+    public function getUsersCreatedToday(): mixed
     {
-        return $this->model->registeredToday($countOnly)->count();
+        return $this->model->registeredToday()->count();
     }
 }
