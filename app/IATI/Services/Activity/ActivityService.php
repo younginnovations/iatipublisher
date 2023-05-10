@@ -676,7 +676,7 @@ class ActivityService
     }
 
     /**
-     * Returns activities by organization ids
+     * Returns activities by organization ids.
      *
      * @param array $idMap
      *

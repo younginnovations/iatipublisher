@@ -84,12 +84,12 @@ class FixDocumentLink extends Command
      * @param OrganizationService $organizationService
      * @param ActivityService $activityService
      */
-    public function __construct(protected DB $db,
+    public function __construct(
+        protected DB $db,
         protected DatabaseManager $databaseManager,
         protected OrganizationService $organizationService,
         protected ActivityService $activityService
-    )
-    {
+    ) {
         parent::__construct();
     }
 

@@ -474,7 +474,7 @@ class ActivityRepository extends Repository
     }
 
     /**
-     * Returns activities by org ids
+     * Returns activities by org ids.
      * @param array $orgIds
      *
      * @return Collection|array

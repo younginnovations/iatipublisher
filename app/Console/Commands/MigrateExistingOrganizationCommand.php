@@ -67,7 +67,7 @@ class MigrateExistingOrganizationCommand extends MigrateOrganizationCommand
                                  $aidstreamOrganizationId,
                                  'organization_data',
                                  $aidstreamOrganizationId
-                                );
+                             );
                         $this->error($message);
                         $timestamp = Carbon::now()->format('y-m-d-H-i-s');
                         awsUploadFile(
@@ -225,29 +225,5 @@ class MigrateExistingOrganizationCommand extends MigrateOrganizationCommand
             logger()->channel('migration')->error($exception);
             $this->error($exception->getMessage());
         }
-    }
-
-    /**
-     * Returns true if all keys are null.
-     *
-     * @param $element
-     *
-     * @return bool
-     */
-    public function checkIfKeysAreNull($element): bool
-    {
-        foreach ($element as $value) {
-            if (is_array($value)) {
-                if (!$this->checkIfKeysAreNull($value)) {
-                    return false;
-                }
-            } else {
-                if (!empty($value) && !is_null($value)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 }

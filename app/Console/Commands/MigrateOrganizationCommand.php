@@ -93,9 +93,9 @@ class MigrateOrganizationCommand extends Command
     protected object|null $setting = null;
 
     /**
-     * @var
+     * @var string|object
      */
-    public mixed $currentAidstreamOrganizationBeingProcessed = '';
+    public string|object $currentAidstreamOrganizationBeingProcessed = '';
 
     /**
      * MigrateOrganizationCommand Constructor.

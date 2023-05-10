@@ -1736,7 +1736,7 @@ trait MigrateActivityTrait
                     return false;
                 }
             } else {
-                if (!empty($value) && !is_null($value)) {
+                if ($value !== '' && !is_null($value)) {
                     return false;
                 }
             }

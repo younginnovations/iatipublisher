@@ -10,7 +10,6 @@ use App\IATI\Models\User\Role;
 use App\IATI\Repositories\Repository;
 use App\IATI\Traits\FillDefaultValuesTrait;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -179,7 +178,7 @@ class OrganizationRepository extends Repository
     }
 
     /**
-     * Returns Organizations by publisher ids
+     * Returns Organizations by publisher ids.
      *
      * @param array $publisherIds
      *
