@@ -14,18 +14,20 @@
       <p v-else class="text-sm text-n-40">Download Ready</p>
 
       <spinnerLoader v-if="fileCount != 4" />
-      <div
+      <button
         v-else
         class="text-xs font-bold uppercase text-spring-50 hover:text-spring-50"
+        @click="downloadFile"
       >
         download
-      </div>
+      </button>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import { inject, computed, onMounted, onUnmounted } from 'vue';
 import spinnerLoader from './spinnerLoader.vue';
+import axios from 'axios';
 
 onMounted(() => {
   const supportButton: HTMLElement = document.querySelector(
@@ -36,6 +38,12 @@ onMounted(() => {
     supportButton.style.transform = 'translatey(-50px)';
   }
 });
+const downloadFile = () => {
+  console.log('download file');
+  axios.get(`activities/download-xls`).then((res) => {
+    console.log(res.data);
+  });
+};
 
 onUnmounted(() => {
   const supportButton: HTMLElement = document.querySelector(

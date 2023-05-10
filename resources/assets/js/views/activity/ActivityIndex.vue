@@ -144,8 +144,9 @@ export default defineComponent({
         axios.get('/activities/download-xls-progress-status').then((res) => {
           console.log(res.data);
           downloading.value = !!res.data.status;
+          console.log(res.data.status);
           fileCount.value = res.data.file_count;
-          if (res.data.status === 'completed') {
+          if (res.data.status === 'completed' || !res.data.status) {
             clearInterval(checkDownload);
           }
         });
