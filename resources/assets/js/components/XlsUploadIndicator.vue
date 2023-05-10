@@ -11,12 +11,14 @@
       :completed="completed"
       @close="closeXls"
     />
+    <ActivityDownload v-if="downloading" />
   </div>
 </template>
 <script setup lang="ts">
+import ActivityDownload from './ActivityDownload.vue';
 import XlsLoader from './XlsLoader.vue';
 import BulkpublishWithXls from './BulkpublishWithXls.vue';
-import { defineProps, ref } from 'vue';
+import { defineProps, ref, inject } from 'vue';
 import axios from 'axios';
 
 const showXlsStatus = ref(true);
@@ -53,4 +55,6 @@ const closeXls = () => {
   showXlsStatus.value = false;
   axios.delete(`/import/xls`);
 };
+const downloading = inject('downloading');
+const fileCount = inject('fileCount');
 </script>
