@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="!xlsData"
+    v-if="!xlsData && !downloading"
     id="publishing_activities"
     :class="isLoading && 'hidden'"
     class="z-50 w-[366px]"
@@ -71,6 +71,7 @@ import { detailStore } from 'Store/activities/show';
 const emit = defineEmits(['close']);
 const store = detailStore();
 const xlsData = ref(false);
+const downloading = ref(false);
 
 const isLoading = ref(false);
 
@@ -149,6 +150,7 @@ onMounted(() => {
   }, 10);
 
   checkXlsstatus();
+  checkDownloadStatus();
 });
 
 setTimeout(() => {
@@ -181,6 +183,16 @@ const checkXlsstatus = () => {
   axios.get('/import/xls/progress_status').then((res) => {
     xlsData.value = Object.keys(res.data.status).length > 0;
   });
+};
+const checkDownloadStatus = () => {
+  const checkDownload = setInterval(function () {
+    axios.get('/activities/download-xls-progress-status').then((res) => {
+      downloading.value = !!res.data.status;
+      if (res.data.status === 'completed') {
+        clearInterval(checkDownload);
+      }
+    });
+  }, 1000);
 };
 
 // watching change in value of completed

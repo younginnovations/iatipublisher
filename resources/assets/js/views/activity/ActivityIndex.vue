@@ -25,7 +25,7 @@
       </div>
     </div>
     <XlsUploadIndicator
-      v-if="xlsData"
+      v-if="xlsData || downloading"
       :total-count="totalCount"
       :processed-count="processedCount"
       :xls-failed="xlsFailed"
@@ -72,8 +72,11 @@ export default defineComponent({
     const activities = reactive({}) as ActivitiesInterface;
     const isLoading = ref(true);
     const activityName = ref('');
+    const fileCount = ref(0);
 
     const xlsData = ref(false);
+    const downloading = ref(false);
+
     const xlsFailed = ref(false);
     const xlsFailedMessage = ref('');
     const processing = ref();
@@ -147,6 +150,16 @@ export default defineComponent({
       axios.get('/import/xls/progress_status').then((res) => {
         activityName.value = res?.data?.status?.template;
         xlsData.value = Object.keys(res.data.status).length > 0;
+        if (Object.keys(res.data.status).length > 0) {
+          const checkStatus = setInterval(function () {
+            axios.get('/import/xls/status').then((res) => {
+              totalCount.value = res.data.data?.total_count;
+              processedCount.value = res.data.data?.processed_count;
+              xlsFailed.value = !res.data.data?.success;
+              xlsFailedMessage.value = res.data.data?.message;
+            });
+          });
+        }
 
         if (res?.data?.status?.status === 'completed') {
           importCompleted.value = true;
@@ -158,17 +171,26 @@ export default defineComponent({
         }
       });
     };
-
+    const checkDownloadStatus = () => {
+      const checkDownload = setInterval(function () {
+        axios.get('/activities/download-xls-progress-status').then((res) => {
+          downloading.value = !!res.data.status;
+          fileCount.value = res.data.file_count;
+          if (res.data.status === 'completed') {
+            clearInterval(checkDownload);
+          }
+        });
+      }, 1000);
+    };
     onMounted(() => {
       checkXlsstatus();
-
+      checkDownloadStatus();
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
         toastData.message = props.toast.message;
       }
     });
-
     onMounted(async () => {
       tableLoader.value = true;
       axios.get(endpoint).then((res) => {
@@ -248,6 +270,8 @@ export default defineComponent({
     provide('xlsFailedMessage', xlsFailedMessage);
     provide('completed', importCompleted);
     provide('processing', processing);
+    provide('downloading', downloading);
+    provide('fileCount', fileCount);
 
     return {
       activities,
@@ -269,6 +293,7 @@ export default defineComponent({
       xlsFailed,
       xlsFailedMessage,
       importCompleted,
+      downloading,
     };
   },
 });
