@@ -151,7 +151,9 @@
           </p>
         </div>
         <div class="flex justify-end space-x-5">
-          <button class="ghost-btn">cancel download</button>
+          <button class="ghost-btn" @click="cancelDownload">
+            cancel download
+          </button>
           <button class="primary-btn" @click="downloadingInProcess = false">
             go back
           </button>
@@ -245,13 +247,21 @@ export default defineComponent({
       isLoading.value = true;
       axios.get('/activities/download-xls-progress-status').then((res) => {
         if (res.data.status) {
+          isLoading.value = false;
           downloadingInProcess.value = true;
         } else {
+          isLoading.value = false;
           downloadingBackgroundMessage.value = true;
         }
-        isLoading.value = false;
       });
     };
+
+    const cancelDownload = () => {
+      console.log('cancel download');
+      downloadingInProcess.value = false;
+      axios.get('/activities/cancel-xls-download');
+    };
+
     const downloadErrorxml = (countActivities) => {
       showErrorpopup.value = false;
       let queryParameters = window.location.href.split('?');
@@ -327,6 +337,8 @@ export default defineComponent({
     };
 
     const downloadXls = (countActivities) => {
+      isLoading.value = true;
+      downloadingBackgroundMessage.value = false;
       let queryParameters = window.location.href?.split('?');
       let addQueryParams = '';
       if (queryParameters.length === 2) {
@@ -340,28 +352,7 @@ export default defineComponent({
         apiUrl = `/activities/prepare-xls?activities=[${activities}]`;
       }
 
-      axios.get(apiUrl).then((res) => {
-        if (res.data.success == false) {
-          if (res.data.xml_error === true) {
-            showErrorpopup.value = true;
-            message.value = res.data.message;
-          } else {
-            toastVisibility.value = true;
-            toastMessage.value = res.data.message;
-            toastmessageType.value = res.data.success;
-            setTimeout(() => (toastVisibility.value = false), 15000);
-          }
-        } else {
-          const response = res.data;
-          let blob = new Blob([response], {
-            type: 'application/xml',
-          });
-          let link = document.createElement('a');
-          link.href = window.URL.createObjectURL(blob);
-          link.download = res.headers['content-disposition']?.split('=')[1];
-          link.click();
-        }
-      });
+      axios.get(apiUrl).finally(() => (isLoading.value = false));
     };
 
     const downloadCsv = (countActivities) => {
@@ -423,6 +414,7 @@ export default defineComponent({
       downloadXls,
       downloadingInProcess,
       isLoading,
+      cancelDownload,
     };
   },
 });

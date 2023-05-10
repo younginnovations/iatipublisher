@@ -174,13 +174,14 @@ export default defineComponent({
     const checkDownloadStatus = () => {
       const checkDownload = setInterval(function () {
         axios.get('/activities/download-xls-progress-status').then((res) => {
+          console.log(res.data);
           downloading.value = !!res.data.status;
           fileCount.value = res.data.file_count;
           if (res.data.status === 'completed') {
             clearInterval(checkDownload);
           }
         });
-      }, 1000);
+      }, 3000);
     };
     onMounted(() => {
       checkXlsstatus();
@@ -271,7 +272,7 @@ export default defineComponent({
     provide('completed', importCompleted);
     provide('processing', processing);
     provide('downloading', downloading);
-    provide('fileCount', fileCount);
+    provide('fileCount', fileCount.value);
 
     return {
       activities,
