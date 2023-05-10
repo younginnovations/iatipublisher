@@ -179,8 +179,10 @@ class DownloadActivityController extends Controller
      *
      * @return bool|int
      */
-    public function downloadActivityXls(Request $request, $userId): bool|int
+    public function downloadActivityXls(Request $request): bool|int
     {
+        $userId = auth()->user()->id;
+
         if (!$request->hasValidSignature()) {
             $this->downloadXlsService->deleteDownloadStatus($userId);
             abort(403);

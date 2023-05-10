@@ -142,7 +142,7 @@
     },
     "location_class code": {
       "index": "BE",
-      "max_row": "4"
+      "max_row": "6"
     },
     "feature_designation code": {
       "index": "AY",
@@ -311,6 +311,10 @@
     "sector sector_vocabulary": {
       "index": "AO",
       "max_row": "16"
+    },
+    "sector code": {
+      "index" : "AI",
+      "max_row": "524"
     },
     "sector narrative language": {
       "index": "S",

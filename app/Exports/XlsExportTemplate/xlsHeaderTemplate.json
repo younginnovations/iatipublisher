@@ -834,7 +834,7 @@
       "index": "description_language",
       "color_code": "f6b26b"
     },
-    "provider_organization organization_identifer_code": {
+    "provider_organization organization_identifier_code": {
       "index": "provider_organisation_reference",
       "color_code": "f6b26b"
     },
@@ -905,7 +905,7 @@
       "index": "recipient_region_vocabulary",
       "color_code": "f6b26b"
     },
-    "recipient_region code": "recipient_region_code",
+    "recipient_region region_code": "recipient_region_code",
     "recipient_region vocabulary_uri": {
       "index": "recipient_region_vocabulary_uri",
       "color_code": "f6b26b"

@@ -71,10 +71,7 @@ trait XlsDownloadTrait
                                                                     : 0;
 
                 $latestKey = $this->arrayLevelCount[$mainKey][$combinedHeader];
-//                if($headers === 'language')
-//                {
-//                    dd($dropdownList[$columnKey], $headers, $keyPart);
-//                }
+
                 if (isset($dropdownList[$columnKey][$headers . ' ' . $keyPart])) {
                     $value = $this->populateValueFromDropdown($value, $dropdownList[$columnKey][$headers . ' ' . $keyPart]);
                 }
