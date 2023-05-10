@@ -1722,7 +1722,7 @@ trait MigrateActivityTrait
     }
 
     /**
-     * Returns true if all keys are null.
+     * Returns true if all keys are null or empty.
      *
      * @param $element
      *

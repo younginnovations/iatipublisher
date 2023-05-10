@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Validator;
 use Throwable;
 use function PHPUnit\Framework\isNull;
 
+/*
+ * Class FixIndicative
+ */
 class FixIndicative extends Command
 {
     use MigrateOrganizationTrait;
@@ -35,6 +38,13 @@ class FixIndicative extends Command
      */
     protected $description = 'Adds indicative to recipient country budget >> status for migrated organizations';
 
+    /**
+     * Constructor.
+     *
+     * @param DB $db
+     * @param DatabaseManager $databaseManager
+     * @param OrganizationService $organizationService
+     */
     public function __construct(
         protected DB $db,
         protected DatabaseManager $databaseManager,
@@ -137,32 +147,5 @@ class FixIndicative extends Command
         return $validator->fails()
             ? $validator->errors()->first($fieldName)
             : null;
-    }
-
-    /**
-     * Returns array of [organizationId => organizationIdentifier].
-     *
-     * @param $aidstreamOrganizationIds
-     *
-     * @return array
-     */
-    private function getAidstreamOrganizationIdentifier($aidstreamOrganizationIds): array
-    {
-        $returnArr = [];
-        $aidStreamSettings = $this->db::connection('aidstream')->table('settings')
-            ->whereIn('organization_id', $aidstreamOrganizationIds)
-            ->get();
-
-        if ($aidStreamSettings) {
-            foreach ($aidStreamSettings as $aidStreamSetting) {
-                if (in_array($aidStreamSetting->organization_id, $aidstreamOrganizationIds)) {
-                    $registryInfo = $aidStreamSetting->registry_info ? json_decode($aidStreamSetting->registry_info) : false;
-                    $organizationIdentifier = $registryInfo[0]?->publisher_id;
-                    $returnArr[$aidStreamSetting->organization_id] = $organizationIdentifier;
-                }
-            }
-        }
-
-        return $returnArr;
     }
 }
