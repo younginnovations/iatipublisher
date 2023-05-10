@@ -25,5 +25,6 @@ class DownloadStatus extends Model
         'file_count',
         'user_id',
         'type',
+        'url',
     ];
 }

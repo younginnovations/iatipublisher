@@ -166,11 +166,13 @@ class ActivityExport implements WithMultipleSheets
             'Activity Identifier' => array_keys($data['Settings']['Activity Identifier']),
         ];
 
+        $sheets[] = new OptionExport('instructions', 'Instructions');
+
         foreach ($data as $key => $datum) {
             $sheets[] = new XlsExport(Arr::collapse($datum), $key, $xlsHeaders[$this->sheets[$key]], 'activity');
         }
 
-        $sheets[] = new OptionExport('activity_options');
+        $sheets[] = new OptionExport('activity_options', 'Options');
         $sheets[] = new IdentifierExport($identifiers);
 
         return $sheets;

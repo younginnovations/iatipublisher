@@ -151,6 +151,7 @@ class DownloadActivityController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
             $this->downloadXlsService->deleteDownloadStatus(auth()->user()->id);
+            $this->cancelXlsDownload();
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity Xls.']);
         }
@@ -204,9 +205,9 @@ class DownloadActivityController extends Controller
     public function xlsDownloadInProgressStatus(): JsonResponse
     {
         try {
-            [$status, $fileCount] = $this->downloadXlsService->getDownloadStatus();
+            [$status, $fileCount, $url] = $this->downloadXlsService->getDownloadStatus();
 
-            return response()->json(['success' => true, 'message' => 'Download status accessed successfully', 'status' => $status, 'file_count' => $fileCount]);
+            return response()->json(['success' => true, 'message' => 'Download status accessed successfully', 'status' => $status, 'file_count' => $fileCount, 'url' => $url ?? null]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

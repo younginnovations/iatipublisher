@@ -112,10 +112,12 @@ class ResultExport implements WithMultipleSheets
             'Activity Identifier' => isset($data['Result Mapper']['Activity Identifier']) ? array_keys($data['Result Mapper']['Activity Identifier']) : [],
         ];
 
+        $sheets[] = new OptionExport('instructions', 'Instructions');
+
         foreach ($data as $key => $datum) {
             $sheets[] = new XlsExport(Arr::collapse($datum), $key, $xlsHeaders[$this->sheets[$key]], 'result');
         }
-        $sheets[] = new OptionExport('result_options');
+        $sheets[] = new OptionExport('result_options', 'Options');
         $sheets[] = new IdentifierExport($identifiers);
 
         return $sheets;

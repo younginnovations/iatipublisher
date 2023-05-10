@@ -35,7 +35,12 @@ class XlsDownloadStatusRepository extends Repository
     {
         $status = $this->model->where('user_id', $userId)->where('type', $fileType)->first();
 
-        return [$status->status ?? null, $status->file_count ?? 0];
+        return [$status->status ?? null, $status->file_count ?? 0, $status->url ?? null];
+    }
+
+    public function getDownloadStatusObject($userId, $fileType)
+    {
+        return $this->model->where('user_id', $userId)->where('type', $fileType)->first();
     }
 
     /**
