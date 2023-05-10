@@ -124,9 +124,6 @@ class XlsExport implements FromView, WithTitle, WithEvents, ShouldAutoSize
                             $newString = $newString === 'element with single_field' ? 'element_with_single_field' : $newString;
                             $location = Arr::get($dropdownFields, $newString . '.' . $columnName);
                         }
-                        if ($columnName === 'recipient_region code') {
-                            dd($location, $dropdownFields, $newString . '.' . $columnName);
-                        }
 
                         if (!empty($location)) {
                             if (isset($newString) && $newString . '.' . $columnName === 'activity_date.type') {
