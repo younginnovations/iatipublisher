@@ -863,7 +863,9 @@ class ElementCompleteService
      * Checks if recipient Region is completed.
      *
      * @param $activity
+     *
      * @return bool
+     *
      * @throws \JsonException
      */
     public function checkIfRecipientRegionElementCompleted($activity): bool

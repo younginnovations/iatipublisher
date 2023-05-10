@@ -44,12 +44,12 @@ class FixTransaction extends Command
      * @param ActivityService $activityService
      * @param OrganizationService $organizationService
      */
-    public function __construct(protected DB $db,
+    public function __construct(
+        protected DB $db,
         protected DatabaseManager $databaseManager,
         protected ActivityService $activityService,
         protected OrganizationService $organizationService
-    )
-    {
+    ) {
         parent::__construct();
     }
 

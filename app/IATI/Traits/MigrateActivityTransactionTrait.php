@@ -331,6 +331,10 @@ trait MigrateActivityTransactionTrait
                     '0.vocabulary_uri',
                     null
                 );
+                if (Arr::get($recipientRegion, '0.custom', false)) {
+                    $newRecipientRegion[0]['vocabulary_uri'] = $this->getCustomVocabularyUrl();
+                    $this->customVocabCurrentlyUsedByActivity['region'][] = $newRecipientRegion[0]['region_code'];
+                }
             }
         }
 
@@ -474,9 +478,9 @@ trait MigrateActivityTransactionTrait
      *
      * @param $key
      *
-     * @return string
+     * @return string|null
      */
-    public function getAidTypeCode($aidTypeCode, $key): string
+    public function getAidTypeCode($aidTypeCode, $key): ?string
     {
         if (!is_array($aidTypeCode)) {
             return $aidTypeCode;

@@ -51,6 +51,7 @@ class MigrateExistingOrganizationCommand extends MigrateOrganizationCommand
 
             foreach ($aidstreamOrganizationIds as $aidstreamOrganizationId) {
                 try {
+                    $this->resetCustomVocabTracking('organization');
                     $this->logInfo('Started organization migration for organization id: ' . $aidstreamOrganizationId);
                     $this->databaseManager->beginTransaction();
                     $aidStreamOrganization = $this->db::connection('aidstream')->table('organizations')->where(
@@ -60,12 +61,13 @@ class MigrateExistingOrganizationCommand extends MigrateOrganizationCommand
 
                     if (!$aidStreamOrganization) {
                         $message = 'AidStream organization not found with id: ' . $aidstreamOrganizationId;
-                        $this->setGeneralError($message)->setDetailedError(
-                            $message,
-                            $aidstreamOrganizationId,
-                            'organization_data',
-                            $aidstreamOrganizationId
-                        );
+                        $this->setGeneralError($message)
+                             ->setDetailedError(
+                                 $message,
+                                 $aidstreamOrganizationId,
+                                 'organization_data',
+                                 $aidstreamOrganizationId
+                             );
                         $this->error($message);
                         $timestamp = Carbon::now()->format('y-m-d-H-i-s');
                         awsUploadFile(
@@ -116,6 +118,8 @@ class MigrateExistingOrganizationCommand extends MigrateOrganizationCommand
                             $message
                         );
                     }
+
+                    $this->migrateCustomVocabularyCsvFileToS3($aidStreamOrganization);
 
                     $this->logInfo(
                         "Started organization dates update for organization id: {$aidstreamOrganizationId}."
@@ -184,6 +188,10 @@ class MigrateExistingOrganizationCommand extends MigrateOrganizationCommand
 
                     $this->databaseManager->commit();
 
+                    if (!$this->checkIfKeysAreNull($this->customVocabCurrentlyUsedByOrganization)) {
+                        $this->checkForCustomVocabularyMismatchInFile($this->customVocabCurrentlyUsedByOrganization);
+                    }
+
                     if ($this->hasErrors()) {
                         $timestamp = Carbon::now()->format('y-m-d-H-i-s');
                         awsUploadFile("Migration/Migration-errors-{$aidstreamOrganizationId}-{$timestamp}.json", json_encode($this->errors));
@@ -204,6 +212,7 @@ class MigrateExistingOrganizationCommand extends MigrateOrganizationCommand
                         'status' => false,
                     ]);
                     $this->databaseManager->commit();
+
                     continue;
                 } catch (\Exception $exception) {
                     $this->databaseManager->rollBack();

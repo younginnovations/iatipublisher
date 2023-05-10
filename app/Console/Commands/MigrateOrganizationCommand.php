@@ -32,6 +32,7 @@ use App\IATI\Traits\MigrateGeneralTrait;
 use App\IATI\Traits\MigrateIndicatorPeriodTrait;
 use App\IATI\Traits\MigrateOrganizationPublishedTrait;
 use App\IATI\Traits\MigrateOrganizationTrait;
+use App\IATI\Traits\MigrateProUserTrait;
 use App\IATI\Traits\MigrateResultIndicatorTrait;
 use App\IATI\Traits\MigrateSettingTrait;
 use App\IATI\Traits\MigrateUserTrait;
@@ -62,6 +63,7 @@ class MigrateOrganizationCommand extends Command
     use MigrateOrganizationPublishedTrait;
     use MigrateDocumentFileTrait;
     use TrackMigrationErrorTrait;
+    use MigrateProUserTrait;
     use LogFunctionTrait;
 
     /**
@@ -89,6 +91,11 @@ class MigrateOrganizationCommand extends Command
      * @var object|null
      */
     protected object|null $setting = null;
+
+    /**
+     * @var string|object
+     */
+    public string|object $currentAidstreamOrganizationBeingProcessed = '';
 
     /**
      * MigrateOrganizationCommand Constructor.
@@ -144,6 +151,8 @@ class MigrateOrganizationCommand extends Command
 
             foreach ($aidstreamOrganizationIds as $aidstreamOrganizationId) {
                 try {
+                    $this->resetCustomVocabTracking('organization');
+
                     $this->logInfo('Started organization migration for organization id: ' . $aidstreamOrganizationId);
                     $this->databaseManager->beginTransaction();
                     $aidStreamOrganization = $this->db::connection('aidstream')->table('organizations')->where(
@@ -189,6 +198,8 @@ class MigrateOrganizationCommand extends Command
                     $iatiOrganization = $this->organizationService->create(
                         $this->getNewOrganization($aidStreamOrganization)
                     );
+
+                    $this->migrateCustomVocabularyCsvFileToS3($aidStreamOrganization);
 
                     $this->logInfo('Completed organization migration for organization id: ' . $aidstreamOrganizationId);
                     $aidStreamOrganizationSetting = $this->db::connection('aidstream')->table('settings')->where(
@@ -309,6 +320,10 @@ class MigrateOrganizationCommand extends Command
 
                     $this->databaseManager->commit();
 
+                    if (!$this->checkIfKeysAreNull($this->customVocabCurrentlyUsedByOrganization)) {
+                        $this->checkForCustomVocabularyMismatchInFile($this->customVocabCurrentlyUsedByOrganization);
+                    }
+
                     if ($this->hasErrors()) {
                         $timestamp = Carbon::now()->format('y-m-d-H-i-s');
                         awsUploadFile("Migration/Migration-errors-{$aidstreamOrganizationId}-{$timestamp}.json", json_encode($this->errors));
@@ -394,7 +409,7 @@ class MigrateOrganizationCommand extends Command
      * @param $aidStreamOrganization
      * @param $activityPublished
      * @param $setting
-     * @param  bool  $publishOrganization
+     * @param bool  $publishOrganization
      *
      * @return void
      *
@@ -529,29 +544,5 @@ class MigrateOrganizationCommand extends Command
     protected function hasErrors(): bool
     {
         return !$this->checkIfKeysAreNull($this->errors);
-    }
-
-    /**
-     * Returns true if all keys are null.
-     *
-     * @param $parameters
-     *
-     * @return bool
-     */
-    protected function checkIfKeysAreNull($parameters): bool
-    {
-        foreach ($parameters as $value) {
-            if (is_array($value)) {
-                if (!$this->checkIfKeysAreNull($value)) {
-                    return false;
-                }
-            } else {
-                if (!is_null($value) && !empty($value)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 }

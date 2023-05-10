@@ -84,12 +84,12 @@ class FixDocumentLink extends Command
      * @param OrganizationService $organizationService
      * @param ActivityService $activityService
      */
-    public function __construct(protected DB $db,
+    public function __construct(
+        protected DB $db,
         protected DatabaseManager $databaseManager,
         protected OrganizationService $organizationService,
         protected ActivityService $activityService
-    )
-    {
+    ) {
         parent::__construct();
     }
 
@@ -288,29 +288,5 @@ class FixDocumentLink extends Command
                 $result->updateQuietly(['result' => $tempResult], ['touch' => false]);
             }
         }
-    }
-
-    /**
-     * Returns true if all keys are null.
-     *
-     * @param mixed $tempDocumentLink
-     *
-     * @return bool
-     */
-    private function checkIfKeysAreNull(mixed $tempDocumentLink): bool
-    {
-        foreach ($tempDocumentLink as $value) {
-            if (is_array($value)) {
-                if (!$this->checkIfKeysAreNull($value)) {
-                    return false;
-                }
-            } else {
-                if (!empty($value) && !is_null($value)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 }

@@ -426,6 +426,21 @@ trait MigrateActivityTrait
         ];
 
     /**
+     * @var bool
+     */
+    public bool $hasCustomVocab = false;
+
+    /**
+     * @var bool
+     */
+    public bool $activityUsesCustomVocab = false;
+
+    /**
+     * @var string
+     */
+    public string $customVocabUrl = '';
+
+    /**
      * Returns IATI activity data.
      *
      * @param $aidstreamActivity
@@ -439,6 +454,7 @@ trait MigrateActivityTrait
     public function getNewActivity($aidstreamActivity, $iatiOrganization, $aidStreamOrganization): array
     {
         $newActivity = [];
+        $this->activityUsesCustomVocab = false;
         $newActivity['iati_identifier'] = $aidstreamActivity->identifier ? [
             'activity_identifier' => Arr::get(
                 json_decode($aidstreamActivity->identifier, true, 512, JSON_THROW_ON_ERROR),
@@ -478,6 +494,7 @@ trait MigrateActivityTrait
             'region_vocabulary',
             $this->recipientRegionReplaceArray,
             $this->recipientRegionRemoveArray,
+            'recipient_region',
             '1'
         ) : null;
         $newActivity['location'] = $aidstreamActivity ? $this->getActivityLocationData(
@@ -490,6 +507,7 @@ trait MigrateActivityTrait
             'sector_vocabulary',
             $this->sectorReplaceArray,
             $this->sectorRemoveArray,
+            'sector',
             '1'
         ) : null;
         $newActivity['country_budget_items'] = $aidstreamActivity ? $this->getActivityCountryBudgetItemsData(
@@ -502,6 +520,7 @@ trait MigrateActivityTrait
             'vocabulary',
             [],
             $this->humanitarianScopeRemoveArray,
+            'humanitarian_scope',
             '1-2'
         ) : null;
         $newActivity['policy_marker'] = $aidstreamActivity ? $this->getActivityUpdatedVocabularyData(
@@ -509,6 +528,7 @@ trait MigrateActivityTrait
             'vocabulary',
             $this->policyMarkerReplaceArray,
             $this->policyMarkerRemoveArray,
+            'policy_marker',
             '1'
         ) : null;
         $newActivity['collaboration_type'] = $aidstreamActivity ? $this->getIntSelectValue(
@@ -567,6 +587,11 @@ trait MigrateActivityTrait
         $newActivity['reporting_org'] = $iatiOrganization->reporting_org;
         $newActivity['upload_medium'] = 'manual';
         $newActivity['migrated_from_aidstream'] = true;
+
+        if ($this->activityUsesCustomVocab) {
+            $this->customVocabCurrentlyUsedByOrganization[$aidstreamActivity->id] = $this->customVocabCurrentlyUsedByActivity;
+            $this->resetCustomVocabTracking('activity');
+        }
 
         return $newActivity;
     }
@@ -654,7 +679,8 @@ trait MigrateActivityTrait
      * @param $vocabulary
      * @param $replaceArray
      * @param $removeArray
-     * @param  string  $defaultVocabulary
+     * @param $elementName
+     * @param string $defaultVocabulary
      *
      * @return array|null
      *
@@ -665,6 +691,7 @@ trait MigrateActivityTrait
         $vocabulary,
         $replaceArray,
         $removeArray,
+        $elementName,
         string $defaultVocabulary = '1'
     ): ?array {
         if (!$object) {
@@ -676,6 +703,8 @@ trait MigrateActivityTrait
 
         if ($array && count($array)) {
             foreach (array_values($array) as $key => $item) {
+                $this->hasCustomVocab = false;
+
                 if (is_null(Arr::get($item, $vocabulary)) || (is_string(Arr::get($item, $vocabulary)) && trim(
                     Arr::get($item, $vocabulary)
                 ) === '')) {
@@ -683,10 +712,16 @@ trait MigrateActivityTrait
                 }
 
                 if (array_key_exists($vocabulary, $this->vocabularyUriArray) &&
-                    (Arr::get($item, $vocabulary, '1') === '99' || Arr::get($item, $vocabulary, '1') === '98') &&
-                    !array_key_exists($this->vocabularyUriArray[$vocabulary], $item)
+                    (Arr::get($item, $vocabulary, '1') == '99' || Arr::get($item, $vocabulary, '1') == '98')
                 ) {
-                    $item[$this->vocabularyUriArray[$vocabulary]] = null;
+                    if (!array_key_exists($this->vocabularyUriArray[$vocabulary], $item)) {
+                        $item[$this->vocabularyUriArray[$vocabulary]] = null;
+                    }
+
+                    if (Arr::get($item, 'custom_code', false) && Arr::get($item, 'use_my_custom_vocab', false)) {
+                        $this->hasCustomVocab = true;
+                        $this->activityUsesCustomVocab = true;
+                    }
                 }
 
                 $newArray[$key] = $this->formatUpdatedVocabularyData(
@@ -694,6 +729,11 @@ trait MigrateActivityTrait
                     Arr::get($replaceArray, Arr::get($item, $vocabulary, null), []),
                     Arr::get($removeArray, Arr::get($item, $vocabulary, null), []),
                 );
+
+                if ($this->hasCustomVocab) {
+                    $newArray[$key] = $this->resolveCustomVocabularyArray($item, $vocabulary, $elementName);
+                    $this->customVocabCurrentlyUsedByActivity[$elementName][] = $this->resolveCustomVocabularyArray($item, $vocabulary, $elementName, true);
+                }
             }
         }
 
@@ -1275,34 +1315,47 @@ trait MigrateActivityTrait
      */
     public function getTagData($tag): array
     {
-        return match ((string) Arr::get($tag, 'tag_vocabulary', null)) {
-            '1' => [
-                'tag_vocabulary' => Arr::get($tag, 'vocabulary', '1'),
-                'tag_text'       => Arr::get($tag, 'tag_code', null),
-                'narrative'      => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
-            ],
-            '2' => [
-                'tag_vocabulary' => Arr::get($tag, 'vocabulary', '2'),
-                'goals_tag_code' => Arr::get($tag, 'goals_tag_code', null),
-                'narrative'      => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
-            ],
-            '3' => [
-                'tag_vocabulary'   => Arr::get($tag, 'vocabulary', '3'),
-                'targets_tag_code' => Arr::get($tag, 'targets_tag_code', null),
-                'narrative'        => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
-            ],
-            '99' => [
-                'tag_vocabulary' => Arr::get($tag, 'vocabulary', '99'),
-                'tag_text'       => Arr::get($tag, 'tag_text', null),
-                'vocabulary_uri' => Arr::get($tag, 'vocabulary_uri', null),
-                'narrative'      => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
-            ],
-            default => [
-                'tag_vocabulary' => null,
-                'tag_text'       => null,
-                'narrative'      => $this->emptyNarrativeTemplate,
-            ],
-        };
+        switch ((string) Arr::get($tag, 'tag_vocabulary', null)) {
+            case '1':
+                return [
+                    'tag_vocabulary' => Arr::get($tag, 'vocabulary', '1'),
+                    'tag_text' => Arr::get($tag, 'tag_code', null),
+                    'narrative' => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
+                ];
+            case '2':
+                return [
+                    'tag_vocabulary' => Arr::get($tag, 'vocabulary', '2'),
+                    'goals_tag_code' => Arr::get($tag, 'goals_tag_code', null),
+                    'narrative' => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
+                ];
+            case '3':
+                return [
+                    'tag_vocabulary' => Arr::get($tag, 'vocabulary', '3'),
+                    'targets_tag_code' => Arr::get($tag, 'targets_tag_code', null),
+                    'narrative' => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
+                ];
+            case '99':
+                $returnArr = [
+                    'tag_vocabulary' => Arr::get($tag, 'vocabulary', '99'),
+                    'tag_text'       => Arr::get($tag, 'tag_text', null),
+                    'vocabulary_uri' => Arr::get($tag, 'vocabulary_uri', null),
+                    'narrative'      => Arr::get($tag, 'narrative', $this->emptyNarrativeTemplate),
+                ];
+
+                if (Arr::get($tag, 'use_my_custom_vocab', false)) {
+                    $returnArr['vocabulary_uri'] = $this->getCustomVocabularyUrl();
+                    $returnArr['tag_text'] = Arr::get($tag, 'custom_code', null);
+                    $this->customVocabCurrentlyUsedByActivity['tag'][] = $returnArr['tag_text'];
+                }
+
+                return $returnArr;
+            default:
+                return [
+                    'tag_vocabulary' => null,
+                    'tag_text'       => null,
+                    'narrative'      => $this->emptyNarrativeTemplate,
+                ];
+        }
     }
 
     /**
@@ -1599,9 +1652,9 @@ trait MigrateActivityTrait
                         'Completed basic activity migration for activity id: ' . $aidstreamActivity->id . ' of organization: ' . $aidStreamOrganization->name
                     );
 
+                    $this->setDefaultValues($iatiActivity, $aidStreamOrganizationSetting);
                     $this->migrateActivityTransactions($aidstreamActivity, $iatiActivity);
                     $this->migrateActivityResults($iatiActivity, $aidstreamActivity, $iatiOrganization);
-                    $this->setDefaultValues($iatiActivity, $aidStreamOrganizationSetting);
                     $this->migrateActivitySnapshot($iatiActivity, $aidstreamActivity);
                 } else {
                     $message = "Activity with id {$aidstreamActivity->id} and identifier {$aidstreamIdentifier} already exists so not migrated.";
@@ -1666,5 +1719,29 @@ trait MigrateActivityTrait
         }
 
         return Arr::get($identifierArray, 'activity_identifier', null);
+    }
+
+    /**
+     * Returns true if all keys are null.
+     *
+     * @param $element
+     *
+     * @return bool
+     */
+    public function checkIfKeysAreNull($element): bool
+    {
+        foreach ($element as $value) {
+            if (is_array($value)) {
+                if (!$this->checkIfKeysAreNull($value)) {
+                    return false;
+                }
+            } else {
+                if ($value !== '' && !is_null($value)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

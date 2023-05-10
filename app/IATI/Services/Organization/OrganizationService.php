@@ -11,7 +11,6 @@ use App\IATI\Traits\OrganizationXmlBaseElements;
 use GuzzleHttp\Client;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -239,7 +238,7 @@ class OrganizationService
     }
 
     /**
-     * Returns organizations by publisher ids
+     * Returns organizations by publisher ids.
      *
      * @param array $publisherIds
      *
