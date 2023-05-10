@@ -13,6 +13,7 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
+use function PHPUnit\Framework\isNull;
 
 class FixIndicative extends Command
 {
@@ -72,13 +73,15 @@ class FixIndicative extends Command
 
             foreach ($iatiOrganizations as $iatiOrganization) {
                 $recipientCountryBudget = $iatiOrganization->recipient_country_budget;
-                $recipientCountryBudget['status'] = '1';
 
-                $iatiOrganization->timestamps = false;
-                $iatiOrganization->updateQuietly(
-                    ['recipient_country_budget'=>$recipientCountryBudget],
-                    ['touch'                   =>false]
-                );
+                if(empty($recipientCountryBudget['status'])){
+                    $recipientCountryBudget['status'] = '1';
+                    $iatiOrganization->timestamps     = false;
+                    $iatiOrganization->updateQuietly(
+                        ['recipient_country_budget'=>$recipientCountryBudget],
+                        ['touch'                   =>false]
+                    );
+                }
             }
 
             $this->databaseManager->commit();
