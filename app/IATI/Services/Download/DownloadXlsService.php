@@ -7,6 +7,7 @@ namespace App\IATI\Services\Download;
 use App\IATI\Repositories\Activity\IndicatorRepository;
 use App\IATI\Repositories\Activity\ResultRepository;
 use App\IATI\Repositories\Download\XlsDownloadStatusRepository;
+use Illuminate\Support\Facades\URL;
 
 /**
  * Class DownloadXlsService.
@@ -93,7 +94,9 @@ class DownloadXlsService
      */
     public function updateDownloadStatus($userId): bool
     {
-        return $this->xlsDownloadStatusRepository->updateDownloadStatus($userId, ['status' => 'completed']);
+        $url = URL::temporarySignedRoute('admin.activities.download-xls', now()->addMinutes(10), ['userId' => $userId]);
+
+        return $this->xlsDownloadStatusRepository->updateDownloadStatus($userId, ['status' => 'completed', 'url' => $url]);
     }
 
     /**
@@ -112,5 +115,10 @@ class DownloadXlsService
     public function getDownloadStatus(): array
     {
         return $this->xlsDownloadStatusRepository->getDownloadStatus(auth()->user()->id, 'xls');
+    }
+
+    public function getDownloadStatusByUserId($userId)
+    {
+        return $this->xlsDownloadStatusRepository->getDownloadStatusObject($userId, 'xls');
     }
 }

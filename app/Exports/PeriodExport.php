@@ -151,11 +151,12 @@ class PeriodExport implements WithMultipleSheets
             'Indicator Identifier' => $this->indicatorIdentifier,
         ];
         $identifier = array_merge($indicatorIdentifier, $this->mappedIdentifier);
+        $sheets[] = new OptionExport('instructions', 'Instructions');
 
         foreach ($data as $key => $datum) {
             $sheets[] = new XlsExport(Arr::collapse($datum), $key, $xlsHeaders[$this->sheets[$key]], 'period');
         }
-        $sheets[] = new OptionExport('period_options');
+        $sheets[] = new OptionExport('period_options', 'Options');
         $sheets[] = new IdentifierExport($identifier);
 
         return $sheets;

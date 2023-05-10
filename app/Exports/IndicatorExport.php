@@ -149,10 +149,12 @@ class IndicatorExport implements WithMultipleSheets
         ];
         $identifier = array_merge($this->mappedIdentifier, $resultIdentifier);
 
+        $sheets[] = new OptionExport('instructions', 'Instructions');
+
         foreach ($data as $key => $datum) {
             $sheets[] = new XlsExport(Arr::collapse($datum), $key, $xlsHeaders[$this->sheets[$key]], 'indicator');
         }
-        $sheets[] = new OptionExport('indicator_options');
+        $sheets[] = new OptionExport('indicator_options', 'Options');
         $sheets[] = new IdentifierExport($identifier);
 
         return $sheets;

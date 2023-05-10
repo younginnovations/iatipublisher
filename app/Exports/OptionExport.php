@@ -16,14 +16,17 @@ class OptionExport implements FromView, WithTitle
 {
     protected string $fileName;
 
-    public function __construct($fileName)
+    protected string $sheetName;
+
+    public function __construct($fileName, $sheetName)
     {
         $this->fileName = $fileName;
+        $this->sheetName = $sheetName;
     }
 
     public function title(): string
     {
-        return 'Options';
+        return $this->sheetName;
     }
 
     /**
