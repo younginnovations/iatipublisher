@@ -94,7 +94,7 @@ class DownloadXlsService
      */
     public function updateDownloadStatus($userId): bool
     {
-        $url = URL::temporarySignedRoute('admin.activities.download-xls', now()->addMinutes(10), ['userId' => $userId]);
+        $url = URL::signedRoute('admin.activities.download-xls');
 
         return $this->xlsDownloadStatusRepository->updateDownloadStatus($userId, ['status' => 'completed', 'url' => $url]);
     }

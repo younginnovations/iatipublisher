@@ -143,6 +143,8 @@ class DownloadActivityController extends Controller
                 return response()->json(['success' => false, 'message' => 'No activities selected.']);
             }
 
+            $this->clearPreviousXlsFilesOnS3($userId);
+
             $this->downloadXlsService->storeStatus($userId);
             awsUploadFile("Xls/$userId/status.json", json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
             $this->processXlsExportJobs($request);
@@ -220,8 +222,8 @@ class DownloadActivityController extends Controller
         try {
             $userId = auth()->user()->id;
             $this->downloadXlsService->deleteDownloadStatus($userId);
-            awsDeleteFile("Xls/$userId/xlsFiles.zip");
-            awsDeleteFile("Xls/$userId/status.json");
+            $this->clearPreviousXlsFilesOnS3($userId);
+            awsUploadFile("Xls/$userId/cancelStatus.json", json_encode(['success' => true, 'message' => 'Cancelled'], JSON_THROW_ON_ERROR));
 
             return response()->json(['success' => true, 'message' => 'Cancelled Successfully']);
         } catch (\Exception $e) {
@@ -303,5 +305,12 @@ class DownloadActivityController extends Controller
         }
 
         return $queryParams;
+    }
+
+    public function clearPreviousXlsFilesOnS3($userId): void
+    {
+        awsDeleteFile("Xls/$userId/xlsFiles.zip");
+        awsDeleteFile("Xls/$userId/status.json");
+        awsDeleteFile("Xls/$userId/cancelStatus.json");
     }
 }

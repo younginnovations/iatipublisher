@@ -879,11 +879,11 @@
       "index": "sector_vocabulary",
       "color_code": "f6b26b"
     },
+    "sector code": "sector_code",
     "sector vocabulary_uri": {
       "index": "sector_vocabulary_uri",
       "color_code": "f6b26b"
     },
-    "sector code": "sector_code",
     "sector narrative narrative": {
       "index": "sector_narrative",
       "color_code": "6fa8dc"
