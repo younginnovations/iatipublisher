@@ -47,8 +47,8 @@ onUnmounted(() => {
   }
 });
 const percentageWidth = computed(() => {
-  return (4 / 4) * 100;
+  return (fileCount / 4) * 100;
 });
 
-const fileCount = inject('fileCount');
+const fileCount = inject('fileCount') as number;
 </script>
