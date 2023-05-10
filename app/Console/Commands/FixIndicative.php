@@ -13,7 +13,6 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
-use function PHPUnit\Framework\isNull;
 
 /*
  * Class FixIndicative
@@ -84,9 +83,9 @@ class FixIndicative extends Command
             foreach ($iatiOrganizations as $iatiOrganization) {
                 $recipientCountryBudget = $iatiOrganization->recipient_country_budget;
 
-                if(empty($recipientCountryBudget['status'])){
+                if (empty($recipientCountryBudget['status'])) {
                     $recipientCountryBudget['status'] = '1';
-                    $iatiOrganization->timestamps     = false;
+                    $iatiOrganization->timestamps = false;
                     $iatiOrganization->updateQuietly(
                         ['recipient_country_budget'=>$recipientCountryBudget],
                         ['touch'                   =>false]

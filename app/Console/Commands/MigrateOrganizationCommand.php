@@ -177,7 +177,21 @@ class MigrateOrganizationCommand extends Command
                         );
                     }
 
-                    $existingAidstreamOrganization = $this->organizationService->getOrganizationByPublisherId(strtolower($aidStreamOrganization->user_identifier));
+                    $aidStreamOrganizationSetting = $this->db::connection('aidstream')->table('settings')->where(
+                        'organization_id',
+                        $aidstreamOrganizationId
+                    )->first();
+
+                    $aidstreamPublisherId = $aidStreamOrganization->user_identifier;
+
+                    if ($aidStreamOrganizationSetting) {
+                        $aidstreamPublisherId = $this->getSettingsPublisherId(
+                            $aidStreamOrganizationSetting,
+                            $aidStreamOrganization->user_identifier
+                        );
+                    }
+
+                    $existingAidstreamOrganization = $this->organizationService->getOrganizationByPublisherId(strtolower($aidstreamPublisherId));
 
                     if ($existingAidstreamOrganization) {
                         $message = "Organization with publisher name {$existingAidstreamOrganization->publisher_name} already exists.";
@@ -202,10 +216,6 @@ class MigrateOrganizationCommand extends Command
                     $this->migrateCustomVocabularyCsvFileToS3($aidStreamOrganization);
 
                     $this->logInfo('Completed organization migration for organization id: ' . $aidstreamOrganizationId);
-                    $aidStreamOrganizationSetting = $this->db::connection('aidstream')->table('settings')->where(
-                        'organization_id',
-                        $aidstreamOrganizationId
-                    )->first();
 
                     $this->setting = null;
 
