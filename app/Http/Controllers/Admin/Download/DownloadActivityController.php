@@ -123,6 +123,13 @@ class DownloadActivityController extends Controller
     public function prepareActivityXls(Request $request):  BinaryFileResponse|JsonResponse
     {
         try {
+            $userId = auth()->user()->id;
+            $awsStatusFile = awsGetFile("Xls/$userId/status.json");
+
+            if (!empty($awsStatusFile) && json_decode($awsStatusFile, true, 512, JSON_THROW_ON_ERROR)['message'] === 'Processing') {
+                return response()->json(['success' => false, 'message' => 'Previous Download on process']);
+            }
+
             $activityIds = ($request->get('activities') && $request->get('activities') !== 'all') ?
                 json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR) : [];
 
@@ -136,7 +143,8 @@ class DownloadActivityController extends Controller
                 return response()->json(['success' => false, 'message' => 'No activities selected.']);
             }
 
-            $this->downloadXlsService->storeStatus(auth()->user()->id);
+            $this->downloadXlsService->storeStatus($userId);
+            awsUploadFile("Xls/$userId/status.json", json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
             $this->processXlsExportJobs($request);
 
             return response()->json(['success' => true, 'message' => 'Xls Export on process.']);
@@ -144,7 +152,7 @@ class DownloadActivityController extends Controller
             logger()->error($e->getMessage());
             $this->downloadXlsService->deleteDownloadStatus(auth()->user()->id);
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity csv.']);
+            return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity Xls.']);
         }
     }
 
@@ -210,6 +218,7 @@ class DownloadActivityController extends Controller
             $userId = auth()->user()->id;
             $this->downloadXlsService->deleteDownloadStatus($userId);
             awsDeleteFile("Xls/$userId/xlsFiles.zip");
+            awsDeleteFile("Xls/$userId/status.json");
 
             return response()->json(['success' => true, 'message' => 'Cancelled Successfully']);
         } catch (\Exception $e) {

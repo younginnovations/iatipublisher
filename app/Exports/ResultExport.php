@@ -106,9 +106,10 @@ class ResultExport implements WithMultipleSheets
         $xlsHeaders = readJsonFile('Exports/XlsExportTemplate/xlsHeaderTemplate.json');
         $data = array_merge($this->mappedData(), $this->mappedData);
         $sheets = [];
+
         $identifiers = [
             'Result Identifier' => $this->mappedIdentifiers,
-            'Activity Identifier' => array_keys($data['Result Mapper']['Activity Identifier']),
+            'Activity Identifier' => isset($data['Result Mapper']['Activity Identifier']) ? array_keys($data['Result Mapper']['Activity Identifier']) : [],
         ];
 
         foreach ($data as $key => $datum) {
