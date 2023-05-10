@@ -98,6 +98,11 @@ class ActivityExport implements WithMultipleSheets
      * @var array|string[]
      */
     protected array $dynamicMultipleField = [
+        'sector category_code' => 'sector code',
+        'sector text' => 'sector code',
+        'sector code' => 'sector code',
+        'sector sdg_target' => 'sector code',
+        'sector sdg_goal' => 'sector code',
         'sector' => [
             'code' => 'code',
             'text' => 'code',
@@ -121,6 +126,8 @@ class ActivityExport implements WithMultipleSheets
             'earmarking_category' => 'code',
             'earmarking_modality' => 'code',
         ],
+        'recipient_region code' => 'recipient_region region_code',
+        'recipient_region custom_code' => 'recipient_region region_code',
         'recipient_region' => [
             'region_code' => 'code',
             'custom_code' => 'code',
@@ -131,7 +138,7 @@ class ActivityExport implements WithMultipleSheets
      * @var array|string[]
      */
     protected array $headerWithSingleLevel = [
-        'aid_type', 'telephone', 'email', 'website',
+        'aid_type', 'telephone', 'email', 'website', 'category', 'language',
     ];
 
     /**

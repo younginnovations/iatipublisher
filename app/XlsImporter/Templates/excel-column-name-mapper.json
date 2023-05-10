@@ -276,7 +276,7 @@
     "recipient_country narrative narrative": "AB",
     "recipient_country narrative language": "AC",
     "recipient_region region_vocabulary": "AD",
-    "recipient_region code": "AE",
+    "recipient_region region_code": "AE",
     "recipient_region vocabulary_uri": "AF",
     "recipient_region narrative narrative": "AG",
     "recipient_region narrative language": "AH",
