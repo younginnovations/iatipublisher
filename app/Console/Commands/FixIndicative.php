@@ -81,13 +81,18 @@ class FixIndicative extends Command
             $iatiOrganizations = $this->organizationService->getOrganizationByPublisherIds($aidstreamOrganizationIdentifierArray);
 
             foreach ($iatiOrganizations as $iatiOrganization) {
-                $recipientCountryBudget = $iatiOrganization->recipient_country_budget;
+                $recipientCountryBudgets = $iatiOrganization->recipient_country_budget;
 
-                if (empty($recipientCountryBudget['status'])) {
-                    $recipientCountryBudget['status'] = '1';
+                if (!empty($recipientCountryBudgets)) {
+                    foreach ($recipientCountryBudgets as $key => $recipientCountryBudget) {
+                        if (empty($recipientCountryBudget['status'])) {
+                            $recipientCountryBudgets[$key]['status'] = '1';
+                        }
+                    }
+
                     $iatiOrganization->timestamps = false;
                     $iatiOrganization->updateQuietly(
-                        ['recipient_country_budget'=>$recipientCountryBudget],
+                        ['recipient_country_budget'=>$recipientCountryBudgets],
                         ['touch'                   =>false]
                     );
                 }
