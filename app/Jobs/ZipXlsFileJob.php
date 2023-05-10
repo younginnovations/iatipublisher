@@ -39,6 +39,7 @@ class ZipXlsFileJob implements ShouldQueue
      * uploads it in aws and deletes all the generated xls file from local disk.
      *
      * @return void
+     * @throws \JsonException
      */
     public function handle(): void
     {
@@ -54,5 +55,6 @@ class ZipXlsFileJob implements ShouldQueue
         awsUploadFile("Xls/$this->userId/xlsFiles.zip", file_get_contents(storage_path("app/public/Xls/$this->userId/xlsFiles.zip")));
         Storage::disk('public')->deleteDirectory("Xls/$this->userId");
         $downloadXlsService->updateDownloadStatus($this->userId);
+        awsUploadFile("Xls/$this->userId/status.json", json_encode(['success' => true, 'message' => 'Completed'], JSON_THROW_ON_ERROR));
     }
 }
