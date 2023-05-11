@@ -302,9 +302,9 @@ trait MigrateSettingTrait
         $registryInfo = $aidStreamOrganizationSetting->registry_info;
 
         if ($registryInfo) {
-            $registryInfo = json_decode($registryInfo, true, 512, JSON_THROW_ON_ERROR)[0];
+            $registryInfo = json_decode($registryInfo, true, 512, JSON_THROW_ON_ERROR);
 
-            return Arr::get($registryInfo, 'publisher_id', $userIdentifier);
+            return Arr::get($registryInfo, '0.publisher_id', $userIdentifier);
         }
 
         return $userIdentifier;

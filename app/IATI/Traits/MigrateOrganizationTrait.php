@@ -242,7 +242,7 @@ trait MigrateOrganizationTrait
                         'value'         => Arr::get($array, 'value', $this->emptyValueArray),
                     ],
                     'recipient_country' => [
-                        'status'            => Arr::get($array, 'status', null),
+                        'status'            => Arr::get($array, 'status', '1'),
                         'recipient_country' => Arr::get(
                             $array,
                             'recipient_country',

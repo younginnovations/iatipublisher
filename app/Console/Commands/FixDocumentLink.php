@@ -187,53 +187,6 @@ class FixDocumentLink extends Command
     }
 
     /**
-     * Returns array of [organizationId => organizationIdentifier].
-     *
-     * @param $aidstreamOrganizationIds
-     *
-     * @return array
-     */
-    private function getAidstreamOrganizationIdentifier($aidstreamOrganizationIds): array
-    {
-        $aidstreamOrganizationsArray = [];
-        $aidStreamSettings = $this->db::connection('aidstream')->table('settings')
-            ->whereIn('organization_id', $aidstreamOrganizationIds)
-            ->get();
-
-        if ($aidStreamSettings) {
-            foreach ($aidStreamSettings as $aidStreamSetting) {
-                if (in_array($aidStreamSetting->organization_id, $aidstreamOrganizationIds)) {
-                    $registryInfo = $aidStreamSetting->registry_info ? json_decode($aidStreamSetting->registry_info) : false;
-                    $organizationIdentifier = $registryInfo[0]?->publisher_id;
-                    $aidstreamOrganizationsArray[$aidStreamSetting->organization_id] = $organizationIdentifier;
-                }
-            }
-        }
-
-        return $aidstreamOrganizationsArray;
-    }
-
-    /**
-     * Returns mapped array of ids
-     * [aidstreamOrgId => iatiOrgId].
-     *
-     * @param array $aidstreamOrganizationIdentifierArray
-     * @param $iatiOrganizationIdArray
-     *
-     * @return array
-     */
-    private function mapOrganizationIds(array $aidstreamOrganizationIdentifierArray, $iatiOrganizationIdArray): array
-    {
-        $mappedOrganizationsIdArray = [];
-
-        foreach ($aidstreamOrganizationIdentifierArray as $aidstreamId=>$identifier) {
-            $mappedOrganizationsIdArray[$aidstreamId] = Arr::get($iatiOrganizationIdArray, $identifier, '');
-        }
-
-        return $mappedOrganizationsIdArray;
-    }
-
-    /**
      * Fix activity >> result >> document_links.
      *
      * @param Activity $activity

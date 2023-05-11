@@ -8,18 +8,16 @@ use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Traits\MigrateActivityTrait;
 use App\IATI\Traits\MigrateGeneralTrait;
 use App\IATI\Traits\MigrateOrganizationTrait;
-use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Database\DatabaseManager;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
 
 /*
- * Class FixRegionIssues.
+ * Class FixIndicative
  */
-class FixRegionIssues extends Command
+class FixIndicative extends Command
 {
     use MigrateOrganizationTrait;
     use MigrateActivityTrait;
@@ -30,15 +28,22 @@ class FixRegionIssues extends Command
      *
      * @var string
      */
-    protected $signature = 'command:FixRegionIssues';
+    protected $signature = 'command:FixIndicative';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Adds indicative to recipient country budget >> status for migrated organizations';
 
+    /**
+     * Constructor.
+     *
+     * @param DB $db
+     * @param DatabaseManager $databaseManager
+     * @param OrganizationService $organizationService
+     */
     public function __construct(
         protected DB $db,
         protected DatabaseManager $databaseManager,
@@ -71,45 +76,24 @@ class FixRegionIssues extends Command
 
             $this->databaseManager->beginTransaction();
 
-            $aidstreamOrganizationDataCollectionArray = $this->db::connection('aidstream')
-                ->table('organization_data')
-                ->whereIn('organization_id', $aidstreamOrganizationIds)
-                ->where('is_reporting_org', true)
-                ->get();
-
             $aidstreamOrganizationIdentifierArray = $this->getAidstreamOrganizationIdentifier($aidstreamOrganizationIds);
-            $recipientCountryBudgetArray = $aidstreamOrganizationDataCollectionArray->pluck('recipient_country_budget', 'organization_id');
-            $recipientRegionBudgetArray = $aidstreamOrganizationDataCollectionArray->pluck('recipient_region_budget', 'organization_id');
             $aidstreamOrganizationIdentifierArray = array_map('strtolower', $aidstreamOrganizationIdentifierArray);
-
             $iatiOrganizations = $this->organizationService->getOrganizationByPublisherIds($aidstreamOrganizationIdentifierArray);
-            $iatiOrganizationIdArray = $iatiOrganizations->pluck('id', 'publisher_id');
-
-            $idMap = $this->mapOrganizationIds($aidstreamOrganizationIdentifierArray, $iatiOrganizationIdArray);
-
-            $flippedMap = array_flip($idMap);
 
             foreach ($iatiOrganizations as $iatiOrganization) {
-                $key = Arr::get($flippedMap, $iatiOrganization->id, false);
-                $defaultFieldValues = json_encode(
-                    [
-                        $iatiOrganization->settings->default_values,
-                    ]
-                );
+                $recipientCountryBudgets = $iatiOrganization->recipient_country_budget;
 
-                if ($key) {
-                    $recipientCountryBudgetData = $this->getOrganizationBudget($recipientCountryBudgetArray[$key], 'recipient_country', 'budget_line');
-                    $recipientCountryBudgetData = $this->populateDefaultFields($recipientCountryBudgetData, $defaultFieldValues);
-                    $recipientRegionBudgetData = $this->getOrganizationRecipientRegionBudget($recipientRegionBudgetArray[$key]);
-                    $recipientRegionBudgetData = $this->populateDefaultFields($recipientRegionBudgetData, $defaultFieldValues);
+                if (!empty($recipientCountryBudgets)) {
+                    foreach ($recipientCountryBudgets as $key => $recipientCountryBudget) {
+                        if (empty($recipientCountryBudget['status'])) {
+                            $recipientCountryBudgets[$key]['status'] = '1';
+                        }
+                    }
 
                     $iatiOrganization->timestamps = false;
                     $iatiOrganization->updateQuietly(
-                        [
-                            'recipient_country_budget'=> $recipientCountryBudgetData,
-                            'recipient_region_budget'=>$recipientRegionBudgetData,
-                        ],
-                        ['touch'=>false]
+                        ['recipient_country_budget'=>$recipientCountryBudgets],
+                        ['touch'                   =>false]
                     );
                 }
             }
@@ -117,10 +101,10 @@ class FixRegionIssues extends Command
             $this->databaseManager->commit();
 
             $this->info('Completed updating organization.');
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             $this->databaseManager->rollBack();
-            logger()->error($e);
             $this->logInfo($e->getMessage());
+            logger()->error($e);
         }
     }
 

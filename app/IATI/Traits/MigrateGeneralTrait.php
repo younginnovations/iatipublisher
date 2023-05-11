@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\IATI\Traits;
 
+use Illuminate\Support\Arr;
+
 /**
  * Class MigrateGeneralTrait.
  */
@@ -74,5 +76,59 @@ trait MigrateGeneralTrait
     {
         $this->info($message);
         logger()->channel('migration')->info($message);
+    }
+
+    /**
+     * Returns array of [organizationId => organizationIdentifier].
+     *
+     * @param $aidstreamOrganizationIds
+     *
+     * @return array
+     */
+    private function getAidstreamOrganizationIdentifier($aidstreamOrganizationIds): array
+    {
+        $aidstreamOrganizationsArray = [];
+        $aidStreamSettings = $this->db::connection('aidstream')->table('settings')
+            ->whereIn('organization_id', $aidstreamOrganizationIds)
+            ->get();
+
+        $userIdentifierArray = $this->db::connection('aidstream')->table('organizations')
+            ->whereIn('id', $aidstreamOrganizationIds)
+            ->get()->pluck('user_identifier', 'id');
+
+        if ($aidStreamSettings) {
+            foreach ($aidStreamSettings as $aidStreamSetting) {
+                $registryInfo = $aidStreamSetting->registry_info ? json_decode($aidStreamSetting->registry_info) : false;
+
+                if ($registryInfo) {
+                    $organizationIdentifier = $registryInfo[0]?->publisher_id;
+                    $aidstreamOrganizationsArray[$aidStreamSetting->organization_id] = $organizationIdentifier;
+                } else {
+                    $aidstreamOrganizationsArray[$aidStreamSetting->organization_id] = strtolower($userIdentifierArray[$aidStreamSetting->organization_id]);
+                }
+            }
+        }
+
+        return $aidstreamOrganizationsArray;
+    }
+
+    /**
+     * Returns mapped array of ids
+     * [aidstreamOrgId => iatiOrgId].
+     *
+     * @param array $aidstreamOrganizationIdentifierArray
+     * @param $iatiOrganizationIdArray
+     *
+     * @return array
+     */
+    public function mapOrganizationIds(array $aidstreamOrganizationIdentifierArray, $iatiOrganizationIdArray): array
+    {
+        $returnArr = [];
+
+        foreach ($aidstreamOrganizationIdentifierArray as $aidstreamId=>$identifier) {
+            $returnArr[$aidstreamId] = Arr::get($iatiOrganizationIdArray, $identifier, '');
+        }
+
+        return $returnArr;
     }
 }
