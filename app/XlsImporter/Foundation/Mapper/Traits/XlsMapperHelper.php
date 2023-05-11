@@ -111,12 +111,16 @@ trait XlsMapperHelper
             return $value;
         }
 
-        $locationArr = explode('/', $location);
+        if (is_string($location)) {
+            $locationArr = explode('/', $location);
 
-        $dropDownValues = array_flip(getCodeList(explode('.', $locationArr[1])[0], $locationArr[0]));
-        $key = Arr::get($dropDownValues, $value, $value);
+            $dropDownValues = array_flip(getCodeList(explode('.', $locationArr[1])[0], $locationArr[0]));
+            $key = Arr::get($dropDownValues, $value, $value);
 
-        return $key;
+            return $key;
+        }
+
+        return $value;
     }
 
     /**
