@@ -215,14 +215,18 @@
                                       <div class="description text-xs">
                                         <span>
                                           Value:
-                                          <template v-if="baseline.value">
+                                          <template
+                                            v-if="isEmpty(baseline.value)"
+                                          >
                                             {{ baseline.value }},
                                           </template>
                                           <template v-else> Missing, </template>
                                         </span>
                                         <span>
                                           Date:
-                                          <template v-if="baseline.date">
+                                          <template
+                                            v-if="isEmpty(baseline.date)"
+                                          >
                                             {{ baseline.date }}
                                           </template>
                                           <template v-else> Missing </template>
@@ -334,6 +338,7 @@ import NotYet from 'Components/sections/HaveNotAddedYet.vue';
 // composable
 import getActivityTitle from 'Composable/title';
 import dateFormat from 'Composable/dateFormat';
+import isEmpty from 'Composable/helper';
 
 export default defineComponent({
   name: 'ActivityResult',
@@ -386,5 +391,6 @@ export default defineComponent({
       dateFormat,
     };
   },
+  methods: { isEmpty },
 });
 </script>

@@ -36,7 +36,9 @@
             </th>
           </tr>
         </thead>
-        <tbody v-if="indicatorsData.data && indicatorsData.data.length > 0">
+        <tbody
+          v-if="!isEmpty(indicatorsData.data) && indicatorsData.data.length > 0"
+        >
           <tr v-for="(indicator, t, index) in indicatorsData.data" :key="index">
             <td
               class="indicator-title-list cursor-pointer"
@@ -144,6 +146,7 @@ import DeleteAction from 'Components/sections/DeleteAction.vue';
 // composable
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
+import isEmpty from 'Composable/helper';
 
 export default defineComponent({
   name: 'IndicatorList',
@@ -281,5 +284,6 @@ export default defineComponent({
       handleNavigate,
     };
   },
+  methods: { isEmpty },
 });
 </script>

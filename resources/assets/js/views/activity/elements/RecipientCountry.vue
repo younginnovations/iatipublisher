@@ -5,7 +5,7 @@
     :class="{ 'mb-4': Number(key) !== data.length - 1 }"
   >
     <div class="recipient_country-code mb-2 text-sm">
-      <div v-if="participating_org.country_code" class="space-x-1">
+      <div v-if="!isEmpty(participating_org.country_code)" class="space-x-1">
         <span>{{ types.country[participating_org.country_code] }}</span>
         <span v-if="participating_org.percentage" class="text-sm font-normal"
           >({{ roundFloat(participating_org.percentage) }}%)</span
@@ -20,7 +20,7 @@
       :class="{ 'mb-4': i !== participating_org.narrative.length - 1 }"
       class="recipient_country-content text-sm"
     >
-      <div v-if="item.narrative" class="flex max-w-[887px] flex-col">
+      <div v-if="!isEmpty(item.narrative)" class="flex max-w-[887px] flex-col">
         <span v-if="item.language" class="language mb-1.5">
           (Language: {{ types.languages[item.language] }})
         </span>
@@ -33,6 +33,7 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
+import isEmpty from 'Composable/helper';
 
 export default defineComponent({
   name: 'ActivityRecipientCountry',
@@ -56,5 +57,6 @@ export default defineComponent({
 
     return { types, roundFloat };
   },
+  methods: { isEmpty },
 });
 </script>

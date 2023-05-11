@@ -10,7 +10,7 @@
     >
       <div class="category">
         <span>{{
-          sec.sector_vocabulary
+          !isEmpty(sec.sector_vocabulary)
             ? type.sectorVocabulary[sec.sector_vocabulary]
             : 'Vocabulary Missing'
         }}</span>
@@ -23,26 +23,30 @@
               <td>
                 <div class="text-sm">
                   <span v-if="sec.text">
-                    {{ sec.text ?? 'Missing' }}
+                    {{ !isEmpty(sec.text) ? sec.text : 'Missing' }}
                   </span>
                   <span v-else-if="sec.code">
-                    {{ sec.code ? type.sectorCode[sec.code] : 'Missing' }}
+                    {{
+                      !isEmpty(sec.code) ? type.sectorCode[sec.code] : 'Missing'
+                    }}
                   </span>
                   <span v-else-if="sec.category_code">
                     {{
-                      sec.category_code
+                      !isEmpty(sec.category_code)
                         ? type.sectorCategory[sec.category_code]
                         : 'Missing'
                     }}
                   </span>
                   <span v-else-if="sec.sdg_goal">
                     {{
-                      sec.sdg_goal ? type.unsdgGoals[sec.sdg_goal] : 'Missing'
+                      !isEmpty(sec.sdg_goal)
+                        ? type.unsdgGoals[sec.sdg_goal]
+                        : 'Missing'
                     }}
                   </span>
                   <span v-else-if="sec.sdg_target">
                     {{
-                      sec.sdg_target
+                      !isEmpty(sec.sdg_target)
                         ? type.unsdgTargets[sec.sdg_target]
                         : 'Missing'
                     }}
@@ -58,7 +62,7 @@
               <td>Vocabulary URI</td>
               <td>
                 <div class="text-sm">
-                  <span v-if="sec.vocabulary_uri">
+                  <span v-if="!isEmpty(sec.vocabulary_uri)">
                     <a href="sec.vocabulary_uri" target="_blank">
                       {{ sec.vocabulary_uri }}
                     </a>
@@ -81,13 +85,17 @@
                   <div class="language mb-1.5">
                     (
                     {{
-                      sd.language
+                      !isEmpty(sd.language)
                         ? `Language: ${type.languages[sd.language]}`
                         : 'Language Missing'
                     }})
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? 'Narrative Missing' }}
+                    {{
+                      !isEmpty(sd.narrative)
+                        ? sd.narrative
+                        : 'Narrative Missing'
+                    }}
                   </div>
                 </div>
               </td>
@@ -101,6 +109,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import isEmpty from '../../../../composable/helper';
 
 export default defineComponent({
   name: 'TransactionSector',
@@ -143,5 +152,6 @@ export default defineComponent({
       type,
     };
   },
+  methods: { isEmpty },
 });
 </script>

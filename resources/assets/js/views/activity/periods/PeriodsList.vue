@@ -43,13 +43,13 @@
                 :href="`${periodLink}/${pe.id}`"
               >
                 {{
-                  pe.period.period_start[0].date
+                  !isEmpty(pe.period.period_start[0].date)
                     ? dateFormat(pe.period.period_start[0].date)
                     : 'Missing'
                 }}
                 -
                 {{
-                  pe.period.period_end[0].date
+                  !isEmpty(pe.period.period_end[0].date)
                     ? dateFormat(pe.period.period_end[0].date)
                     : 'Missing'
                 }}

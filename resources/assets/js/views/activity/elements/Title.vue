@@ -1,6 +1,6 @@
 <template>
   <div v-for="(post, i) in data.content" :key="i" class="title-content">
-    <div v-if="post.narrative" class="flex flex-col">
+    <div v-if="!isEmpty(post.narrative)" class="flex flex-col">
       <span v-if="post.language" class="language mb-1.5">
         (Language: {{ types.languages[post.language] }})
       </span>
@@ -15,6 +15,7 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
+import isEmpty from 'Composable/helper';
 
 export default defineComponent({
   name: 'ActivityTitle',
@@ -32,5 +33,6 @@ export default defineComponent({
     const types = inject('types') as Types;
     return { types };
   },
+  methods: { isEmpty },
 });
 </script>

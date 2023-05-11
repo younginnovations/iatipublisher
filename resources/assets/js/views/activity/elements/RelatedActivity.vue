@@ -6,13 +6,13 @@
   >
     <div class="related-content text-sm">
       <div class="category">
-        <span v-if="post.relationship_type">{{
+        <span v-if="!isEmpty(post.relationship_type)">{{
           types.relatedActivityType[post.relationship_type]
         }}</span>
         <span v-else class="italic">Type Missing</span>
       </div>
       <div>
-        <span v-if="post.activity_identifier">{{
+        <span v-if="!isEmpty(post.activity_identifier)">{{
           post.activity_identifier
         }}</span>
         <span v-else class="italic">Reference Missing</span>
@@ -24,6 +24,7 @@
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
 import dateFormat from 'Composable/dateFormat';
+import isEmpty from 'Composable/helper';
 
 export default defineComponent({
   name: 'RelatedActivity',
@@ -43,5 +44,6 @@ export default defineComponent({
 
     return { types, dateFormat };
   },
+  methods: { isEmpty },
 });
 </script>

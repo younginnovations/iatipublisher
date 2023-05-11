@@ -7,7 +7,11 @@
   >
     <div class="category">
       <span v-if="post.type">
-        {{ types.humanitarianScopeType[post.type] ?? 'Missing' }}
+        {{
+          isEmpty(types.humanitarianScopeType[post.type])
+            ? 'Missing'
+            : types.humanitarianScopeType[post.type]
+        }}
       </span>
       <span v-else>Vocabulary Missing</span>
     </div>
@@ -18,7 +22,9 @@
             <td>Vocabulary</td>
             <td>
               {{
-                types.humanitarianScopeVocabulary[post.vocabulary] ?? 'Missing'
+                isEmpty(types.humanitarianScopeVocabulary[post.vocabulary])
+                  ? 'Missing'
+                  : types.humanitarianScopeVocabulary[post.vocabulary]
               }}
             </td>
           </tr>
@@ -38,7 +44,7 @@
           <tr>
             <td>Code</td>
             <td>
-              {{ post.code ?? 'Missing' }}
+              {{ isEmpty(post.code) ? 'Missing' : post.code }}
             </td>
           </tr>
           <tr>
@@ -53,13 +59,17 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : 'Missing'
+                    isEmpty(narrative.language)
+                      ? 'Missing'
+                      : types.languages[narrative.language]
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  {{
+                    isEmpty(narrative.narrative)
+                      ? 'Missing'
+                      : narrative.narrative
+                  }}
                 </div>
               </div>
             </td>
@@ -72,6 +82,7 @@
 
 <script setup lang="ts">
 import { defineProps, inject } from 'vue';
+import isEmpty from '../../../composable/helper';
 
 defineProps({
   data: {

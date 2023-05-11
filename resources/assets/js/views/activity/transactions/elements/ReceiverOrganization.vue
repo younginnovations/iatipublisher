@@ -7,7 +7,11 @@
             <td>Organisation Identifier Code</td>
             <td>
               <div class="text-sm">
-                {{ PoData[0].organization_identifier_code ?? 'Missing' }}
+                {{
+                  !isEmpty(PoData[0].organization_identifier_code)
+                    ? PoData[0].organization_identifier_code
+                    : 'Missing'
+                }}
               </div>
             </td>
           </tr>
@@ -24,13 +28,13 @@
               >
                 <div class="language mb-1.5">
                   ({{
-                    po.language
+                    !isEmpty(po.language)
                       ? `Language: ${type.languages[po.language]}`
                       : 'Language Missing'
                   }})
                 </div>
                 <div class="text-sm">
-                  {{ po.narrative ?? 'Narrative Missing' }}
+                  {{ !isEmpty ? po.narrative : 'Narrative Missing' }}
                 </div>
               </div>
             </td>
@@ -39,7 +43,11 @@
             <td>Provider Activity ID</td>
             <td>
               <div class="text-sm">
-                {{ PoData[0].receiver_activity_id ?? 'Missing' }}
+                {{
+                  !isEmpty(PoData[0].receiver_activity_id)
+                    ? PoData[0].receiver_activity_id
+                    : 'Missing'
+                }}
               </div>
             </td>
           </tr>
@@ -48,7 +56,7 @@
             <td>
               <div class="text-sm">
                 {{
-                  PoData[0].type
+                  !isEmpty(PoData[0].type)
                     ? type.organizationType[PoData[0].type]
                     : 'Missing'
                 }}
@@ -63,6 +71,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import isEmpty from '../../../../composable/helper';
 
 export default defineComponent({
   name: 'TransactionReceiverOrganisation',
@@ -88,5 +97,6 @@ export default defineComponent({
     const type = inject('types');
     return { PoData, type };
   },
+  methods: { isEmpty },
 });
 </script>

@@ -6,20 +6,20 @@
     :class="{ 'mb-4': Number(key) !== data.length - 1 }"
   >
     <div class="category">
-      <span v-if="post.policy_marker_vocabulary">{{
+      <span v-if="!isEmpty(post.policy_marker_vocabulary)">{{
         types.policyMarkerVocabulary[post.policy_marker_vocabulary]
       }}</span>
       <span v-else class="italic">Vocabulary Missing</span>
     </div>
     <div class="text-sm">
       <div v-if="post.policy_marker_vocabulary == '1'">
-        <span v-if="post.policy_marker">
+        <span v-if="!isEmpty(post.policy_marker)">
           {{ types.policyMarker[post.policy_marker] }}
         </span>
         <span v-else class="italic">Missing</span>
       </div>
       <div v-else>
-        <span v-if="post.policy_marker_text">{{
+        <span v-if="!isEmpty(post.policy_marker_text)">{{
           post.policy_marker_text
         }}</span>
         <span v-else class="italic">Missing</span>
@@ -31,7 +31,7 @@
           <td>Vocabulary URI</td>
           <td>
             <a
-              v-if="post.vocabulary_uri"
+              v-if="!isEmpty(post.vocabulary_uri)"
               target="_blank"
               :href="post.vocabulary_uri"
               >{{ post.vocabulary_uri }}</a
@@ -42,7 +42,7 @@
         <tr>
           <td>Significance</td>
           <td>
-            <span v-if="post.significance">{{
+            <span v-if="!isEmpty(post.significance)">{{
               types.policySignificance[post.significance]
             }}</span>
             <span v-else class="italic">Missing</span>
@@ -55,7 +55,7 @@
           <td>Narrative</td>
           <td>
             <div v-for="(narrative, k) in post.narrative" :key="k">
-              <div v-if="narrative.narrative" class="flex flex-col">
+              <div v-if="!isEmpty(narrative.narrative)" class="flex flex-col">
                 <span v-if="narrative.language" class="language top"
                   >(Language: {{ types.languages[narrative.language] }})</span
                 >
@@ -73,6 +73,7 @@
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
 import dateFormat from 'Composable/dateFormat';
+import isEmpty from 'Composable/helper';
 
 export default defineComponent({
   name: 'PolicyMarker',
@@ -94,5 +95,6 @@ export default defineComponent({
 
     return { types, dateFormat };
   },
+  methods: { isEmpty },
 });
 </script>

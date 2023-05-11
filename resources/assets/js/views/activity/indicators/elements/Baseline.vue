@@ -12,7 +12,7 @@
         <div :class="elementSpacing">
           <span>
             Year:
-            <template v-if="base.year">
+            <template v-if="!isEmpty(base.year)">
               {{ base.year }}
             </template>
             <template v-else>Missing</template>
@@ -20,7 +20,7 @@
           </span>
           <span>
             Date:
-            <template v-if="base.date">
+            <template v-if="!isEmpty(base.date)">
               {{ base.date }}
             </template>
             <template v-else>Missing</template>
@@ -28,7 +28,7 @@
           </span>
           <span>
             Value:
-            <template v-if="base.value">
+            <template v-if="!isEmpty(base.value)">
               {{ base.value }}
             </template>
             <template v-else>Missing</template>
@@ -38,7 +38,11 @@
         <div class="flex" :class="elementSpacing">
           <div>Location:&nbsp;</div>
           <div>
-            {{ location(base.location) ? location(base.location) : 'Missing' }}
+            {{
+              !isEmpty(location(base.location))
+                ? location(base.location)
+                : 'Missing'
+            }}
           </div>
         </div>
 
@@ -65,7 +69,9 @@
                   {{ com.narrative ? com.narrative : 'Missing' }}
                   (Language:
                   {{
-                    com.language ? baseType.language[com.language] : 'Missing'
+                    !isEmpty(com.language)
+                      ? baseType.language[com.language]
+                      : 'Missing'
                   }})
                 </div>
               </div>

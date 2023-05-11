@@ -5,7 +5,7 @@
     :class="{ 'mb-4': Number(key) !== data.length - 1 }"
   >
     <div class="description-type mb-2 text-sm font-bold">
-      <span v-if="post.type">
+      <span v-if="!isEmpty(post.type)">
         {{ types.descriptionType[post.type] }}
       </span>
       <span v-else class="italic">Type Missing</span>
@@ -16,7 +16,7 @@
       :class="{ 'mb-4': i !== post.narrative.length - 1 }"
       class="description-content text-sm"
     >
-      <div v-if="item.narrative" class="flex flex-col">
+      <div v-if="!isEmpty(item.narrative)" class="flex flex-col">
         <span v-if="item.language" class="language mb-1.5">
           (Language: {{ types.languages[item.language] }})
         </span>
@@ -31,6 +31,7 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
+import isEmpty from 'Composable/helper';
 
 export default defineComponent({
   name: 'ActivityDescription',
@@ -49,5 +50,6 @@ export default defineComponent({
     const types = inject('types') as Types;
     return { types };
   },
+  methods: { isEmpty },
 });
 </script>

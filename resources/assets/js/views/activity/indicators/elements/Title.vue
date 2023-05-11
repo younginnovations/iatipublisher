@@ -13,7 +13,7 @@
             (Language: {{ titleType[title.language] }})
           </div>
           <div class="description text-xs">
-            {{ title.narrative ?? 'Missing' }}
+            {{ !isEmpty(title.narrative) ? title.narrative : 'Missing' }}
           </div>
         </div>
       </template>
@@ -23,6 +23,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import isEmpty from '../../../../composable/helper';
 
 export default defineComponent({
   name: 'IndicatorTitle',
@@ -42,5 +43,6 @@ export default defineComponent({
     const titleData = data.value;
     return { titleData };
   },
+  methods: { isEmpty },
 });
 </script>

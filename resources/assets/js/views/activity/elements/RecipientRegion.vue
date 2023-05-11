@@ -6,7 +6,7 @@
     :class="{ 'mb-4': Number(key) !== data.length - 1 }"
   >
     <div class="tb-title category">
-      <span v-if="post.region_vocabulary">{{
+      <span v-if="!isEmpty(post.region_vocabulary)">{{
         types.regionVocabulary[post.region_vocabulary]
       }}</span>
       <span v-else>Vocabulary Missing</span>
@@ -17,7 +17,7 @@
           <tr v-if="post.region_vocabulary == '1'">
             <td>Region Code</td>
             <td>
-              <span v-if="post.region_code">{{
+              <span v-if="!isEmpty(post.region_code)">{{
                 types.region[post.region_code]
               }}</span>
               <span v-else>Missing</span>
@@ -26,14 +26,16 @@
           <tr v-else>
             <td>Custom Code</td>
             <td>
-              <span v-if="post.custom_code">{{ post.custom_code }}</span>
+              <span v-if="!isEmpty(post.custom_code)">{{
+                post.custom_code
+              }}</span>
               <span v-else>Missing</span>
             </td>
           </tr>
           <tr>
             <td>Percentage</td>
             <td>
-              <span v-if="post.percentage">
+              <span v-if="!isEmpty(post.percentage)">
                 ({{ roundFloat(post.percentage) }}%)
               </span>
               <span v-else>Missing</span>
@@ -43,7 +45,7 @@
             <td>Vocabulary-uri</td>
             <td>
               <a
-                v-if="post.vocabulary_uri"
+                v-if="!isEmpty(post.vocabulary_uri)"
                 target="_blank"
                 :href="post.vocabulary_uri"
               >
@@ -64,13 +66,17 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : 'Missing'
+                    isEmpty(narrative.language)
+                      ? 'Missing'
+                      : types.languages[narrative.language]
                   }})
                 </div>
                 <div class="w-[500px] max-w-full text-xs">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  {{
+                    isEmpty(narrative.narrative)
+                      ? 'Missing'
+                      : narrative.narrative
+                  }}
                 </div>
               </div>
             </td>
@@ -83,6 +89,7 @@
 
 <script setup lang="ts">
 import { defineProps, inject } from 'vue';
+import isEmpty from '../../../composable/helper';
 
 defineProps({
   data: {

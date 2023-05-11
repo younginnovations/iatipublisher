@@ -61,7 +61,11 @@
               class="cursor-pointer"
               @click="handleNavigate(`${activityLink}/result/${result.id}`)"
             >
-              {{ types.resultType[result.result.type] ?? 'Missing' }}
+              {{
+                !isEmpty(types.resultType[result.result.type])
+                  ? types.resultType[result.result.type]
+                  : 'Missing'
+              }}
             </td>
             <td
               class="cursor-pointer capitalize"
@@ -125,6 +129,7 @@ import DeleteAction from 'Components/sections/DeleteAction.vue';
 // composable
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
+import isEmpty from '../../../composable/helper';
 
 export default defineComponent({
   name: 'ResultsList',
@@ -245,5 +250,6 @@ export default defineComponent({
       handleNavigate,
     };
   },
+  methods: { isEmpty },
 });
 </script>

@@ -180,14 +180,14 @@
         >
           <div class="default_aid_type-content">
             <div class="date-type mb-2 text-sm font-bold">
-              <span v-if="post.default_aid_type_vocabulary">{{
+              <span v-if="!isEmpty(post.default_aid_type_vocabulary)">{{
                 types.aidTypeVocabulary[post.default_aid_type_vocabulary]
               }}</span>
               <span v-else class="italic">Vocabulary Missing</span>
             </div>
 
             <div v-if="post.default_aid_type_vocabulary == '2'" class="text-sm">
-              <span v-if="post.earmarking_category">{{
+              <span v-if="!isEmpty(post.earmarking_category)">{{
                 types.earmarkingCategory[post.earmarking_category]
               }}</span>
               <span v-else class="italic">Code Missing</span>
@@ -197,7 +197,7 @@
               v-else-if="post.default_aid_type_vocabulary == '3'"
               class="text-sm"
             >
-              <span v-if="post.earmarking_modality">{{
+              <span v-if="!isEmpty(post.earmarking_modality)">{{
                 types.earmarkingModality[post.earmarking_modality]
               }}</span>
               <span v-else class="italic">Code Missing</span>
@@ -207,14 +207,14 @@
               v-else-if="post.default_aid_type_vocabulary == '4'"
               class="text-sm"
             >
-              <span v-if="post.cash_and_voucher_modalities">{{
+              <span v-if="!isEmpty(post.cash_and_voucher_modalities)">{{
                 types.cashandVoucherModalities[post.cash_and_voucher_modalities]
               }}</span>
               <span v-else class="italic">Code Missing</span>
             </div>
 
             <div v-else class="max-w-[887px] text-sm">
-              <span v-if="post.default_aid_type">{{
+              <span v-if="!isEmpty(post.default_aid_type)">{{
                 types.aidType[post.default_aid_type]
               }}</span>
               <span v-else class="italic">Code Missing</span>
@@ -228,7 +228,7 @@
         <div class="category">
           <span>Vocabulary - </span>
           <span>
-            <span v-if="data.content.country_budget_vocabulary">{{
+            <span v-if="!isEmpty(data.content.country_budget_vocabulary)">{{
               props.types.budgetIdentifierVocabulary[
                 data.content.country_budget_vocabulary
               ]
@@ -246,7 +246,7 @@
             v-if="data.content.country_budget_vocabulary === '1'"
             class="text-sm"
           >
-            <div v-if="post.code" class="flex space-x-1">
+            <div v-if="!isEmpty(post.code)" class="flex space-x-1">
               <span>
                 {{ types.budgetIdentifier[post.code] }}
               </span>
@@ -255,11 +255,11 @@
             <span v-else class="italic">Missing</span>
           </div>
           <div v-else class="text-sm">
-            <span v-if="post.code">{{
+            <span v-if="!isEmpty(post.code)">{{
               types.budgetIdentifier[post.code]
             }}</span>
             <span v-else class="italic">Missing</span>
-            <span v-if="post.percentage">
+            <span v-if="!isEmpty(post.percentage)">
               ({{ roundFloat(post.percentage) }} %)</span
             >
             <span v-else class="italic">(Percentage Missing)</span>
@@ -275,7 +275,10 @@
                 <tr class="multiline">
                   <td>Description</td>
                   <td>
-                    <div v-if="narrative.narrative" class="flex flex-col">
+                    <div
+                      v-if="!isEmpty(narrative.narrative)"
+                      class="flex flex-col"
+                    >
                       <span v-if="narrative.language" class="language top"
                         >(Language:
                         {{ types.languages[narrative.language] }})</span
@@ -305,7 +308,7 @@
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
           <div class="category">
-            <span v-if="post.budget_type">{{
+            <span v-if="!isEmpty(post.budget_type)">{{
               types.budgetType[post.budget_type]
             }}</span>
             <span v-else class="italic">Type Missing</span>
@@ -321,7 +324,7 @@
               <div v-if="item.amount" class="value">
                 <span>{{ Number(item.amount).toLocaleString() }}</span>
                 <span>{{ item.currency }}</span>
-                <span v-if="item.value_date"
+                <span v-if="!isEmpty(item.value_date)"
                   >(Valued at {{ formatDate(item.value_date) }})</span
                 >
               </div>
@@ -337,7 +340,9 @@
               <table>
                 <tr>
                   <td>Period Start</td>
-                  <td v-if="item.date">{{ formatDate(item.date) }}</td>
+                  <td v-if="!isEmpty(item.date)">
+                    {{ formatDate(item.date) }}
+                  </td>
                   <td v-else class="italic">Missing</td>
                 </tr>
               </table>
@@ -350,7 +355,9 @@
               <table>
                 <tr>
                   <td>Period end</td>
-                  <td v-if="item.date">{{ formatDate(item.date) }}</td>
+                  <td v-if="!isEmpty(item.date)">
+                    {{ formatDate(item.date) }}
+                  </td>
                   <td v-else class="italic">Missing</td>
                 </tr>
               </table>
@@ -359,7 +366,7 @@
               <tr>
                 <td>Status</td>
                 <td>
-                  <span v-if="post.budget_status">{{
+                  <span v-if="!isEmpty(post.budget_status)">{{
                     types.budgetStatus[post.budget_status]
                   }}</span>
                   <span v-else class="italic">Missing</span>
@@ -384,7 +391,7 @@
           :class="{ 'mb-4': key !== data.content.length - 1 }"
         >
           <div>
-            <div v-if="post.url" class="max-w-[887px] text-sm">
+            <div v-if="!isEmpty(post.url)" class="max-w-[887px] text-sm">
               <a :href="post.url" target="_blank">{{ post.url }}</a>
             </div>
             <span v-else class="italic">URL Missing</span>
@@ -396,7 +403,7 @@
                   <tr>
                     <td>Language</td>
                     <td>
-                      <span v-if="language.code">{{
+                      <span v-if="!isEmpty(language.code)">{{
                         types.languages[language.code]
                       }}</span>
                       <span v-else class="italic">Missing</span>
@@ -409,7 +416,7 @@
                   <tr>
                     <td>Date</td>
                     <td>
-                      <span v-if="document_date.date">{{
+                      <span v-if="!isEmpty(document_date.date)">{{
                         formatDate(document_date.date)
                       }}</span>
                       <span v-else class="italic">Missing</span>
@@ -431,7 +438,10 @@
                       <span v-if="narrative.language" class="language">
                         ({{ types.languages[narrative.language] }})
                       </span>
-                      <div v-if="narrative.narrative" class="flex flex-col">
+                      <div
+                        v-if="!isEmpty(narrative.narrative)"
+                        class="flex flex-col"
+                      >
                         <span>
                           {{ narrative.narrative }}
                         </span>
@@ -447,7 +457,7 @@
                 <tr>
                   <td>Category</td>
                   <td>
-                    <span v-if="category.code">{{
+                    <span v-if="!isEmpty(category.code)">{{
                       types.documentCategory[category.code]
                     }}</span>
                     <span v-else class="italic">Missing</span>
@@ -458,7 +468,7 @@
             <table>
               <tr>
                 <td>Format</td>
-                <td v-if="post.format">{{ post.format }}</td>
+                <td v-if="!isEmpty(post.format)">{{ post.format }}</td>
                 <td v-else class="italic">Missing</td>
               </tr>
             </table>
@@ -468,7 +478,10 @@
                   <tr class="multiline">
                     <td>Description</td>
                     <td>
-                      <div v-if="narrative.narrative" class="flex flex-col">
+                      <div
+                        v-if="!isEmpty(narrative.narrative)"
+                        class="flex flex-col"
+                      >
                         <span v-if="narrative.language" class="language"
                           >(Language:
                           {{ types.languages[narrative.language] }})</span
@@ -505,7 +518,7 @@
         <!-- Activity Status -->
         <div class="content text-sm">
           <template v-if="title === 'activity_status'">
-            <span v-if="data.content">{{
+            <span v-if="!isEmpty(data.content)">{{
               props.types.activityStatus[data.content]
             }}</span>
             <span v-else class="italic">Missing</span>
@@ -513,7 +526,7 @@
 
           <!-- Activity Scope -->
           <template v-else-if="title === 'activity_scope'">
-            <span v-if="data.content">{{
+            <span v-if="!isEmpty(data.content)">{{
               props.types.activityScope[data.content]
             }}</span>
             <span v-else class="italic">Missing</span>
@@ -521,7 +534,7 @@
 
           <!-- Collaboration Type -->
           <template v-else-if="title === 'collaboration_type'">
-            <span v-if="data.content">{{
+            <span v-if="!isEmpty(data.content)">{{
               props.types.collaborationType[data.content]
             }}</span>
             <span v-else class="italic">Missing</span>
@@ -529,7 +542,7 @@
 
           <!-- Default Flow Type -->
           <template v-else-if="title === 'default_flow_type'">
-            <span v-if="data.content">{{
+            <span v-if="!isEmpty(data.content)">{{
               props.types.flowType[data.content]
             }}</span>
             <span v-else class="italic">Missing</span>
@@ -537,7 +550,7 @@
 
           <!-- Default Tied Status -->
           <template v-else-if="title === 'default_tied_status'">
-            <span v-if="data.content">{{
+            <span v-if="!isEmpty(data.content)">{{
               props.types.tiedStatus[data.content]
             }}</span>
             <span v-else class="italic">Missing</span>
@@ -545,7 +558,7 @@
 
           <!-- Capital Spend -->
           <template v-else-if="title === 'capital_spend'">
-            <span v-if="data.content.toString()"
+            <span v-if="!isEmpty(data.content.toString())"
               >{{ data.content.toString() }}%</span
             >
             <span v-else class="italic">Missing</span>
@@ -553,7 +566,7 @@
 
           <!-- Default Finance Type -->
           <template v-else-if="title === 'default_finance_type'">
-            <span v-if="data.content">
+            <span v-if="!isEmpty(data.content)">
               {{ props.types.financeType[data.content] }}</span
             >
             <span v-else class="italic">Missing</span>
@@ -605,6 +618,7 @@ import Status from 'Components/status/ElementStatus.vue';
 import HoverText from 'Components/HoverText.vue';
 import Modal from 'Components/PopupModal.vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
+import isEmpty from 'Composable/helper';
 
 // toggle state for modal popup
 let [deleteValue, deleteToggle] = useToggle();

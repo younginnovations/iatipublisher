@@ -6,7 +6,7 @@
     :class="{ 'mb-4': Number(key) !== data.length - 1 }"
   >
     <div class="category text-sm font-bold">
-      <span v-if="post.type">{{ types.contactType[post.type] }}</span>
+      <span v-if="!isEmpty(post.type)">{{ types.contactType[post.type] }}</span>
       <span v-else class="italic">Type Missing</span>
     </div>
 
@@ -27,13 +27,17 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : 'Missing'
+                    isEmpty(narrative, 'language')
+                      ? 'Not Available'
+                      : types.languages[narrative.language]
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  {{
+                    isEmpty(narrative, 'narrative')
+                      ? 'Missing'
+                      : narrative.narrative
+                  }}
                 </div>
               </div>
             </td>
@@ -52,13 +56,17 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : 'Missing'
+                    isEmpty(narrative, 'language')
+                      ? 'Not Available'
+                      : types.languages[narrative.language]
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  {{
+                    isEmpty(narrative, 'narrative')
+                      ? 'Missing'
+                      : narrative.narrative
+                  }}
                 </div>
               </div>
             </td>
@@ -78,13 +86,17 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : 'Missing'
+                    isEmpty(narrative, 'language')
+                      ? 'Not Available'
+                      : types.languages[narrative.language]
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  {{
+                    isEmpty(narrative, 'narrative')
+                      ? 'Missing'
+                      : narrative.narrative
+                  }}
                 </div>
               </div>
             </td>
@@ -103,13 +115,17 @@
                 <div class="language mb-1.5">
                   (Language:
                   {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : 'Missing'
+                    isEmpty(narrative, 'language')
+                      ? 'Not Available'
+                      : types.languages[narrative.language]
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  {{
+                    isEmpty(narrative, 'narrative')
+                      ? 'Missing'
+                      : narrative.narrative
+                  }}
                 </div>
               </div>
             </td>
@@ -126,7 +142,11 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ email_value.email ?? 'Missing' }}
+                  {{
+                    isEmpty(email_value, 'email')
+                      ? 'Missing'
+                      : email_value.email
+                  }}
                 </div>
               </div>
             </td>
@@ -143,7 +163,7 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ tel.telephone ?? 'Missing' }}
+                  {{ isEmpty(tel, 'telephone') ? 'Missing' : tel.telephone }}
                 </div>
               </div>
             </td>
@@ -160,7 +180,7 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ w.website ?? 'Missing' }}
+                  {{ isEmpty(w, 'website') ? 'Missing' : w.website }}
                 </div>
               </div>
             </td>
@@ -183,13 +203,17 @@
                   <div class="language mb-1.5">
                     (Language:
                     {{
-                      narrative.language
-                        ? types.languages[narrative.language]
-                        : 'Not Available'
+                      isEmpty(narrative, 'language')
+                        ? 'Not Available'
+                        : types.languages[narrative.language]
                     }})
                   </div>
                   <div class="w-[500px] max-w-full">
-                    {{ narrative.narrative ?? 'Not Available' }}
+                    {{
+                      isEmpty(narrative, 'narrative')
+                        ? 'Missing'
+                        : narrative.narrative
+                    }}
                   </div>
                 </div>
               </div>
@@ -203,7 +227,7 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
-
+import isEmpty from 'Composable/helper';
 export default defineComponent({
   name: 'ActivityContactInfo',
   components: {},
@@ -222,5 +246,6 @@ export default defineComponent({
 
     return { types };
   },
+  methods: { isEmpty },
 });
 </script>

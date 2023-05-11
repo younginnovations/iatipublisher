@@ -10,12 +10,13 @@
     <div class="elements-detail mb-4">
       <div class="category flex">
         {{
-          types?.budgetType[total_budget.total_budget_status] ??
-          'Budget Status Missing'
+          !isEmpty(types?.budgetType[total_budget.total_budget_status])
+            ? types?.budgetType[total_budget.total_budget_status]
+            : 'Budget Status Missing'
         }}
       </div>
       <div class="flex text-sm">
-        <span v-if="total_budget.value[0].amount">
+        <span v-if="!isEmpty(total_budget.value[0].amount)">
           {{ Number(total_budget.value['0'].amount).toLocaleString() }}
           {{ total_budget.value['0'].currency }}
         </span>
@@ -27,13 +28,15 @@
             <td>Period</td>
             <td>
               {{
-                formatDate(total_budget.period_start['0'].date) ??
-                'Period Start Date Missing'
+                !isEmpty(formatDate(total_budget.period_start['0'].date))
+                  ? formatDate(total_budget.period_start['0'].date)
+                  : 'Period Start Date Missing'
               }}
               -
               {{
-                formatDate(total_budget.period_end['0'].date) ??
-                'Period End Date Missing'
+                !isEmpty(formatDate(total_budget.period_end['0'].date))
+                  ? formatDate(total_budget.period_end['0'].date)
+                  : 'Period End Date Missing'
               }}
             </td>
           </tr>
@@ -41,8 +44,9 @@
             <td>Value date</td>
             <td>
               {{
-                formatDate(total_budget.value['0'].value_date) ??
-                'Value Date Missing'
+                !isEmpty(formatDate(total_budget.value['0'].value_date))
+                  ? formatDate(total_budget.value['0'].value_date)
+                  : 'Value Date Missing'
               }}
             </td>
           </tr>
@@ -75,15 +79,20 @@
                   <tr>
                     <td>Reference</td>
                     <td>
-                      {{ budget_line.ref ?? 'Reference Missing' }}
+                      {{
+                        !isEmpty(budget_line.ref)
+                          ? budget_line.ref
+                          : 'Reference Missing'
+                      }}
                     </td>
                   </tr>
                   <tr>
                     <td>Value Date</td>
                     <td>
                       {{
-                        formatDate(budget_line.value['0'].value_date) ??
-                        'Value Date Missing'
+                        !isEmpty(formatDate(budget_line.value['0'].value_date))
+                          ? formatDate(budget_line.value['0'].value_date)
+                          : 'Value Date Missing'
                       }}
                     </td>
                   </tr>
@@ -100,7 +109,7 @@
                       >
                         <div class="language mb-1.5">
                           ({{
-                            narrative.language
+                            !isEmpty(narrative.language)
                               ? `Language: ${
                                   types?.languages[narrative.language]
                                 }`
@@ -108,7 +117,11 @@
                           }})
                         </div>
                         <div class="w-[500px] max-w-full">
-                          {{ narrative.narrative ?? 'Narrative Missing' }}
+                          {{
+                            !isEmpty(narrative.narrative)
+                              ? narrative.narrative
+                              : 'Narrative Missing'
+                          }}
                         </div>
                       </div>
                     </td>
@@ -126,6 +139,7 @@
 <script setup lang="ts">
 import { defineProps, inject } from 'vue';
 import moment from 'moment';
+import isEmpty from '../../../composable/helper';
 
 defineProps({
   content: { type: Object, required: true },

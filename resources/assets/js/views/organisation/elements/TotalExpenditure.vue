@@ -8,9 +8,9 @@
   >
     <div class="elements-detail mb-4">
       <div class="ml-2 flex text-sm">
-        <span v-if="total_expenditure.value[0].amount">
+        <span v-if="!isEmpty(total_expenditure.value[0].amount)">
           {{
-            total_expenditure.value['0'].amount
+            !isEmpty(total_expenditure.value['0'].amount)
               ? Number(total_expenditure.value[0].amount).toLocaleString()
               : 'Budget Missing'
           }}
@@ -56,7 +56,7 @@
         <div class="indicator-content flex px-6 py-2">
           <div class="elements-detail grow">
             <div class="category flex">
-              <span v-if="expense_line.value['0'].amount">
+              <span v-if="!isEmpty(expense_line.value['0'].amount)">
                 {{ Number(expense_line.value['0'].amount).toLocaleString() }}
                 {{ expense_line.value['0'].currency }}
               </span>
@@ -68,7 +68,11 @@
                   <tr>
                     <td>Reference</td>
                     <td>
-                      {{ expense_line.ref ?? 'Reference Missing' }}
+                      {{
+                        !isEmpty(expense_line.ref)
+                          ? expense_line.ref
+                          : 'Reference Missing'
+                      }}
                     </td>
                   </tr>
                   <tr>
@@ -90,7 +94,7 @@
                       >
                         <div class="language mb-1.5">
                           ({{
-                            narrative.language
+                            !isEmpty(narrative.language)
                               ? `Language: ${
                                   types?.languages[narrative.language]
                                 }`
@@ -98,7 +102,11 @@
                           }})
                         </div>
                         <div class="w-[500px] max-w-full">
-                          {{ narrative.narrative ?? 'Narrative Missing' }}
+                          {{
+                            !isEmpty(narrative.narrative)
+                              ? narrative.narrative
+                              : 'Narrative Missing'
+                          }}
                         </div>
                       </div>
                     </td>
@@ -116,6 +124,7 @@
 <script setup lang="ts">
 import { defineProps, inject } from 'vue';
 import moment from 'moment';
+import isEmpty from '../../../composable/helper';
 
 defineProps({
   content: { type: Object, required: true },

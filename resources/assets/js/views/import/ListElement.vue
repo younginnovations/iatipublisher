@@ -4,7 +4,7 @@
       <span
         class="ellipsis !inline-block w-[400px] overflow-x-hidden text-ellipsis whitespace-nowrap font-normal"
         >{{
-          activity['data']['title'][0]['narrative']
+          !isEmpty(activity['data']['title'][0]['narrative'])
             ? activity['data']['title'][0]['narrative']
             : 'Missing'
         }}</span
@@ -226,6 +226,7 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, ref, watch, reactive } from 'vue';
+import isEmpty from '../../composable/helper';
 
 const props = defineProps({
   activity: {
