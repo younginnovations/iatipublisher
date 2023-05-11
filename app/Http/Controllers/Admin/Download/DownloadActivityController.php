@@ -178,7 +178,6 @@ class DownloadActivityController extends Controller
      * Downloads xls zip file from aws s3.
      *
      * @param Request $request
-     * @param $userId
      *
      * @return bool|int
      */
@@ -186,10 +185,9 @@ class DownloadActivityController extends Controller
     {
         $userId = auth()->user()->id;
 
-        // if (!$request->hasValidSignature()) {
-        //     $this->downloadXlsService->deleteDownloadStatus($userId);
-        //     abort(403);
-        // }
+        if (!$request->hasValidSignature()) {
+            abort(403);
+        }
 
         $temporaryUrl = awsUrl("Xls/$userId/xlsFiles.zip");
         header('Content-Disposition: attachment; filename=xlsFiles.zip');
@@ -217,13 +215,24 @@ class DownloadActivityController extends Controller
         }
     }
 
+    /**
+     * Checks if the status is completed
+     * if completed then do not upload cancel json else upload.
+     *
+     *
+     * @return JsonResponse|void
+     */
     public function cancelXlsDownload()
     {
         try {
             $userId = auth()->user()->id;
+            $status = $this->downloadXlsService->getDownloadStatus();
             $this->downloadXlsService->deleteDownloadStatus($userId);
             $this->clearPreviousXlsFilesOnS3($userId);
-            awsUploadFile("Xls/$userId/cancelStatus.json", json_encode(['success' => true, 'message' => 'Cancelled'], JSON_THROW_ON_ERROR));
+
+            if ($status->status !== 'completed') {
+                awsUploadFile("Xls/$userId/cancelStatus.json", json_encode(['success' => true, 'message' => 'Cancelled'], JSON_THROW_ON_ERROR));
+            }
 
             return response()->json(['success' => true, 'message' => 'Cancelled Successfully']);
         } catch (\Exception $e) {

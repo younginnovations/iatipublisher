@@ -70,7 +70,6 @@ class XlsDownloadStatusRepository extends Repository
             'user_id' => $userId,
             'status' => $status,
             'type' => $fileType,
-            'status' => 'processing',
             'file_count' => 0,
         ]);
     }

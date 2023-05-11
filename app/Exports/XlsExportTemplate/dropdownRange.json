@@ -102,7 +102,7 @@
     },
     "tag_vocabulary": {
       "index": "CU",
-      "max_row": "16"
+      "max_row": "6"
     },
     "tag code": {
       "index": "CW",
@@ -384,7 +384,7 @@
     },
     "aggregation_status": {
       "index": "I",
-      "max_row": "3"
+      "max_row": "4"
     },
     "type": {
       "index": "K",

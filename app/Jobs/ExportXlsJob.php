@@ -65,6 +65,7 @@ class ExportXlsJob implements ShouldQueue
     {
         $this->requestData = $requestData;
         $this->authUser = $authUser;
+        $this->downloadXlsService = app()->make(DownloadXlsService::class);
     }
 
     /**
@@ -77,7 +78,6 @@ class ExportXlsJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $this->downloadXlsService = app()->make(DownloadXlsService::class);
         $downloadActivityService = app()->make(DownloadActivityService::class);
 
         $activityIds = (isset($this->requestData['activities']) && $this->requestData['activities'] !== 'all') ?
@@ -193,5 +193,22 @@ class ExportXlsJob implements ShouldQueue
     public function incrementDownloadStatusFileCount(): void
     {
         $this->downloadXlsService->incrementFileCount($this->authUser['id']);
+    }
+
+    /**
+     * Handle a job failure.
+     *
+     * @param  \Throwable  $exception
+     * @return void
+     */
+    public function failed(\Throwable $exception)
+    {
+        $userId = $this->authUser['id'];
+        $downloadStatusData = [
+            'status' => 'failed',
+        ];
+        $this->downloadXlsService->updateDownloadStatus($userId, $downloadStatusData);
+        awsDeleteFile("Xls/$userId/status.json");
+        awsDeleteFile("Xls/$userId/cancelStatus.json");
     }
 }
