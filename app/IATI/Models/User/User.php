@@ -20,6 +20,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 use Laravel\Sanctum\HasApiTokens;
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -185,6 +186,12 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
             'url' => $url,
         ];
         Mail::to($email)->send(new XlsDownloadMail($mailDetails));
+        $url = URL::signedRoute('admin.activities.download-xls');
+        $downloadStatusData = [
+            'status' => 'completed',
+            'url' => $url,
+        ];
+        $downloadXlsService->updateDownloadStatus($userId, $downloadStatusData);
     }
 
     /**

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
-use App\IATI\Services\Download\DownloadXlsService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -43,7 +42,6 @@ class ZipXlsFileJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $downloadXlsService = app()->make(DownloadXlsService::class);
         $zip_file = "storage/app/public/Xls/$this->userId/xlsFiles.zip";
         $zip = new \ZipArchive();
         $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
@@ -54,7 +52,6 @@ class ZipXlsFileJob implements ShouldQueue
         $zip->close();
         awsUploadFile("Xls/$this->userId/xlsFiles.zip", file_get_contents(storage_path("app/public/Xls/$this->userId/xlsFiles.zip")));
         Storage::disk('public')->deleteDirectory("Xls/$this->userId");
-        $downloadXlsService->updateDownloadStatus($this->userId);
         awsUploadFile("Xls/$this->userId/status.json", json_encode(['success' => true, 'message' => 'Completed'], JSON_THROW_ON_ERROR));
     }
 }

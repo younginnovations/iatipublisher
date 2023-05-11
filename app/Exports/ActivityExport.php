@@ -120,6 +120,10 @@ class ActivityExport implements WithMultipleSheets
             'policy_marker' => 'code',
             'policy_marker_text' => 'code',
         ],
+        'aid_type default_aid_type' => 'aid_type aid_type_code',
+        'aid_type cash_and_voucher_modalities' => 'aid_type aid_type_code',
+        'aid_type earmarking_category' => 'aid_type aid_type_code',
+        'aid_type earmarking_modality' => 'aid_type aid_type_code',
         'default_aid_type' => [
             'default_aid_type' => 'code',
             'cash_and_voucher_modalities' => 'code',
