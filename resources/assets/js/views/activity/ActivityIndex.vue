@@ -25,7 +25,7 @@
       </div>
     </div>
     <XlsUploadIndicator
-      v-if="xlsData || downloading"
+      v-if="xlsData || (downloading && !downloadCompleted)"
       :total-count="totalCount"
       :processed-count="processedCount"
       :xls-failed="xlsFailed"
@@ -47,7 +47,8 @@ import Pagination from 'Components/TablePagination.vue';
 import PageTitle from './partials/PageTitle.vue';
 import Loader from 'Components/Loader.vue';
 import ErrorMessage from 'Components/ErrorMessage.vue';
-
+import { useStore } from 'Store/activities/index';
+const store = useStore();
 export default defineComponent({
   name: 'ActivityComponent',
   components: {
@@ -73,7 +74,9 @@ export default defineComponent({
     const isLoading = ref(true);
     const activityName = ref('');
     const fileCount = ref(0);
+    const downloadCompleted = ref(false);
 
+    const xlsDownloadStatus = ref('');
     const xlsData = ref(false);
     const downloading = ref(false);
 
@@ -86,6 +89,7 @@ export default defineComponent({
     const processedCount = ref();
     const showXlsStatus = ref(true);
     const tableLoader = ref(true);
+    const downloadApiUrl = ref('');
     const currentURL = window.location.href;
     let endpoint = '';
     let showEmptyTemplate = false;
@@ -145,6 +149,27 @@ export default defineComponent({
         });
       }, 2500);
     };
+    watch(
+      () => store.state.startXlsDownload,
+      (value) => {
+        console.log(value, 'Start download');
+
+        if (value) {
+          checkDownloadStatus();
+        }
+      },
+      { deep: true }
+    );
+    watch(
+      () => store.state.completeXlsDownload,
+      (value) => {
+        if (value) {
+          downloadCompleted.value = true;
+          store.dispatch('updateStartXlsDownload', false);
+        }
+      },
+      { deep: true }
+    );
 
     const checkXlsstatus = () => {
       axios.get('/import/xls/progress_status').then((res) => {
@@ -173,18 +198,22 @@ export default defineComponent({
     };
     const checkDownloadStatus = () => {
       const checkDownload = setInterval(function () {
+        console.log(' polling');
+
         axios.get('/activities/download-xls-progress-status').then((res) => {
-          console.log(res.data);
           downloading.value = !!res.data.status;
-          console.log(res.data.status);
           fileCount.value = res.data.file_count;
+          xlsDownloadStatus.value = res.data.status;
+          downloadApiUrl.value = res.data.url;
           if (res.data.status === 'completed' || !res.data.status) {
+            console.log('clear');
             clearInterval(checkDownload);
           }
         });
       }, 3000);
     };
     onMounted(() => {
+      console.log(store.state.startXlsDownload, 'from vuex');
       checkXlsstatus();
       checkDownloadStatus();
       if (props.toast.message !== '') {
@@ -273,7 +302,9 @@ export default defineComponent({
     provide('completed', importCompleted);
     provide('processing', processing);
     provide('downloading', downloading);
-    provide('fileCount', fileCount.value);
+    provide('fileCount', fileCount);
+    provide('xlsDownloadStatus', xlsDownloadStatus);
+    provide('downloadApiUrl', downloadApiUrl);
 
     return {
       activities,
@@ -295,6 +326,7 @@ export default defineComponent({
       xlsFailed,
       xlsFailedMessage,
       importCompleted,
+      downloadCompleted,
       downloading,
     };
   },

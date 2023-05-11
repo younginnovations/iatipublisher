@@ -10,19 +10,19 @@
       :completed="completed"
       @close="closeXls"
     />
-    <ActivityDownload v-if="downloading" />
+    <ActivityDownload v-if="downloading && !downloadCompleted" />
   </div>
 </template>
 <script setup lang="ts">
 import ActivityDownload from './ActivityDownload.vue';
 import XlsLoader from './XlsLoader.vue';
 import BulkpublishWithXls from './BulkpublishWithXls.vue';
-import { defineProps, ref, inject } from 'vue';
+import { defineProps, ref, inject, watch } from 'vue';
 import axios from 'axios';
 import { useStore } from 'Store/activities/index';
-
 const store = useStore();
 const showXlsStatus = ref(true);
+const downloadCompleted = ref(false);
 
 defineProps({
   activityName: {
@@ -59,6 +59,15 @@ const closeXls = () => {
     store.dispatch('updateCancelUpload', false), 1000;
   });
 };
+watch(
+  () => store.state.completeXlsDownload,
+  (value) => {
+    console.log(value, ';watchers');
+    if (value) {
+      downloadCompleted.value = true;
+    }
+  },
+  { deep: true }
+);
 const downloading = inject('downloading');
-const fileCount = inject('fileCount');
 </script>

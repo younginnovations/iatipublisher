@@ -5,6 +5,8 @@ interface StateInterface {
   bulkPublishLength: number;
   cancelUpload: boolean;
   maximizeXls: boolean;
+  startXlsDownload: boolean;
+  completeXlsDownload: boolean;
 }
 
 const state = {
@@ -12,6 +14,8 @@ const state = {
   bulkPublishLength: 0,
   cancelUpload: false,
   maximizeXls: true,
+  startXlsDownload: false,
+  completeXlsDownload: false,
 };
 
 const mutations = {
@@ -29,6 +33,15 @@ const mutations = {
   },
   mutateMaximizeXls: function (state: StateInterface, payload: boolean) {
     state.maximizeXls = payload;
+  },
+  mutateStartXlsDownload: function (state: StateInterface, payload: boolean) {
+    state.startXlsDownload = payload;
+  },
+  mutateCompleteXlsDownload: function (
+    state: StateInterface,
+    payload: boolean
+  ) {
+    state.completeXlsDownload = payload;
   },
 };
 
@@ -54,6 +67,18 @@ const actions = {
   },
   updateMaximizeXls: function ({ commit }: CommitFunction, payload: number[]) {
     commit('mutateMaximizeXls', payload);
+  },
+  updateStartXlsDownload: function (
+    { commit }: CommitFunction,
+    payload: boolean
+  ) {
+    commit('mutateStartXlsDownload', payload);
+  },
+  updateCompleteXlsDownload: function (
+    { commit }: CommitFunction,
+    payload: boolean
+  ) {
+    commit('mutateCompleteXlsDownload', payload);
   },
 };
 

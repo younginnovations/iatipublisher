@@ -186,10 +186,10 @@ class DownloadActivityController extends Controller
     {
         $userId = auth()->user()->id;
 
-        if (!$request->hasValidSignature()) {
-            $this->downloadXlsService->deleteDownloadStatus($userId);
-            abort(403);
-        }
+        // if (!$request->hasValidSignature()) {
+        //     $this->downloadXlsService->deleteDownloadStatus($userId);
+        //     abort(403);
+        // }
 
         $temporaryUrl = awsUrl("Xls/$userId/xlsFiles.zip");
         header('Content-Disposition: attachment; filename=xlsFiles.zip');

@@ -8,12 +8,12 @@
     </div>
 
     <div class="flex justify-between space-x-5">
-      <p v-if="fileCount != 4" class="text-sm text-n-40">
+      <p v-if="xlsDownloadStatus != 'completed'" class="text-sm text-n-40">
         Preparing {{ fileCount ? fileCount : 0 }}/4 activities for download
       </p>
       <p v-else class="text-sm text-n-40">Download Ready</p>
 
-      <spinnerLoader v-if="fileCount != 4" />
+      <spinnerLoader v-if="xlsDownloadStatus != 'completed'" />
       <button
         v-else
         class="text-xs font-bold uppercase text-spring-50 hover:text-spring-50"
@@ -28,7 +28,8 @@
 import { inject, computed, onMounted, onUnmounted } from 'vue';
 import spinnerLoader from './spinnerLoader.vue';
 import axios from 'axios';
-
+import { useStore } from 'Store/activities/index';
+const store = useStore();
 onMounted(() => {
   const supportButton: HTMLElement = document.querySelector(
     '#launcher'
@@ -39,9 +40,21 @@ onMounted(() => {
   }
 });
 const downloadFile = () => {
-  console.log('download file');
-  axios.get(`activities/download-xls`).then((res) => {
-    console.log(res.data);
+  store.dispatch('updateCompleteXlsDownload', true);
+  let apiUrl = `${downloadApiUrl.value.split()[0].split('/')[3]}/${
+    downloadApiUrl.value.split()[0].split('/')[4]
+  }`;
+  axios({
+    method: 'get',
+    url: apiUrl,
+    responseType: 'blob',
+  }).then((res) => {
+    let blob = new Blob([res.data], {});
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.setAttribute('download', 'xlsFiles' + '.zip');
+    document.body.appendChild(link);
+    link.click();
   });
 };
 
@@ -55,8 +68,10 @@ onUnmounted(() => {
   }
 });
 const percentageWidth = computed(() => {
-  return (fileCount / 4) * 100;
+  return (fileCount.value / 4) * 100;
 });
 
-const fileCount = inject('fileCount') as number;
+const fileCount = inject('fileCount');
+const xlsDownloadStatus = inject('xlsDownloadStatus');
+const downloadApiUrl = inject('downloadApiUrl');
 </script>
