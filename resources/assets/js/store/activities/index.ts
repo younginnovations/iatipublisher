@@ -3,11 +3,15 @@ import { createStore, Commit } from 'vuex';
 interface StateInterface {
   selectedActivities: number[];
   bulkPublishLength: number;
+  startXlsDownload: boolean;
+  completeXlsDownload: boolean;
 }
 
 const state = {
   selectedActivities: [],
   bulkPublishLength: 0,
+  startXlsDownload: false,
+  completeXlsDownload: false,
 };
 
 const mutations = {
@@ -19,6 +23,15 @@ const mutations = {
   },
   mutateBulkPublishLength: function (state: StateInterface, payload: number) {
     state.bulkPublishLength = payload;
+  },
+  mutateStartXlsDownload: function (state: StateInterface, payload: boolean) {
+    state.startXlsDownload = payload;
+  },
+  mutateCompleteXlsDownload: function (
+    state: StateInterface,
+    payload: boolean
+  ) {
+    state.completeXlsDownload = payload;
   },
 };
 
@@ -38,6 +51,18 @@ const actions = {
     payload: number[]
   ) {
     commit('mutateBulkPublishLength', payload);
+  },
+  updateStartXlsDownload: function (
+    { commit }: CommitFunction,
+    payload: boolean
+  ) {
+    commit('mutateStartXlsDownload', payload);
+  },
+  updateCompleteXlsDownload: function (
+    { commit }: CommitFunction,
+    payload: boolean
+  ) {
+    commit('mutateCompleteXlsDownload', payload);
   },
 };
 

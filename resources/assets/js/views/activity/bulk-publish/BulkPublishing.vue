@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="!xlsData && !downloading"
+    v-if="!xlsData && !(downloading && !downloadCompleted)"
     id="publishing_activities"
     :class="isLoading && 'hidden'"
     class="z-50 w-[366px]"
@@ -68,10 +68,13 @@ import {
 } from 'vue';
 import axios from 'axios';
 import { detailStore } from 'Store/activities/show';
+import { useStore } from 'Store/activities/index';
+const singleStore = useStore();
 const emit = defineEmits(['close']);
 const store = detailStore();
 const xlsData = ref(false);
 const downloading = ref(false);
+const downloadCompleted = ref(false);
 
 const isLoading = ref(false);
 
@@ -167,7 +170,15 @@ setTimeout(() => {
     supportButton.style.opacity = '1';
   }
 }, 720);
-
+watch(
+  () => singleStore.state.completeXlsDownload,
+  (value) => {
+    if (value) {
+      downloadCompleted.value = true;
+    }
+  },
+  { deep: true }
+);
 onUnmounted(() => {
   const supportButton: HTMLElement = document.querySelector(
     '#launcher'

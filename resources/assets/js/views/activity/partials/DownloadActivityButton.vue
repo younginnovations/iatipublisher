@@ -41,7 +41,7 @@
           >
         </li>
         <li>
-          <a href="#" :class="liClass" @click="checkDownload()">Download XLS</a>
+          <a href="#" :class="liClass" @click="checkDownload">Download XLS</a>
         </li>
       </ul>
     </div>
@@ -259,6 +259,9 @@ export default defineComponent({
     const cancelDownload = () => {
       console.log('cancel download');
       downloadingInProcess.value = false;
+
+      store.dispatch('updateStartXlsDownload', false);
+
       axios.get('/activities/cancel-xls-download');
     };
 
@@ -338,6 +341,8 @@ export default defineComponent({
 
     const downloadXls = (countActivities) => {
       isLoading.value = true;
+      store.dispatch('updateStartXlsDownload', true);
+
       downloadingBackgroundMessage.value = false;
       let queryParameters = window.location.href?.split('?');
       let addQueryParams = '';
