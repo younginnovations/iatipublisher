@@ -173,7 +173,9 @@ class IndicatorRequest extends ActivityBaseRequest
                         }
                     }
 
-                    $rules[sprintf('%s.code', $referenceForm)][] = 'result_ref_code_present:' . $resultId ? !app()->make(ResultService::class)->resultHasRefCode($resultId) : $hasCode;
+                    $codeNotPresent = $resultId ? !app()->make(ResultService::class)->resultHasRefCode($resultId) : !$hasCode;
+
+                    $rules[sprintf('%s.code', $referenceForm)][] = 'result_ref_code_present:' . $codeNotPresent;
                 } else {
                     $rules[sprintf('%s.code', $referenceForm)][] = 'result_ref_code_present';
                 }

@@ -239,7 +239,7 @@ trait WarningValidationRules
     {
         $countryBudgetItems = Arr::get($activity, 'country_budget_items', []);
 
-        return (new CountryBudgetItemRequest())->getWarningForCountryBudgetItem($countryBudgetItems);
+        return $this->getBaseRules((new CountryBudgetItemRequest())->getWarningForCountryBudgetItem($countryBudgetItems), 'country_budget_items', $countryBudgetItems, false);
     }
 
     /**

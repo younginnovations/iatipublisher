@@ -243,7 +243,7 @@ trait ErrorValidationRules
     {
         $countryBudgetItems = Arr::get($activity, 'country_budget_items', []);
 
-        return (new CountryBudgetItemRequest())->getErrorsForCountryBudgetItem($countryBudgetItems);
+        return $this->getBaseRules((new CountryBudgetItemRequest())->getErrorsForCountryBudgetItem($countryBudgetItems), 'country_budget_items', $countryBudgetItems, false);
     }
 
     /**
@@ -322,7 +322,11 @@ trait ErrorValidationRules
      */
     protected function errorForCondition(array $activity): array
     {
-        return $this->getBaseRules((new ConditionRequest())->getErrorsForCondition(Arr::get($activity, 'conditions.condition', [])), 'conditions', Arr::get($activity, 'conditions.condition', ''), false);
+        $rules = (new ConditionRequest())->getErrorsForCondition(Arr::get($activity, 'conditions.condition', []));
+        $rules['condition_attached'] = 'nullable|in:0,1';
+        $rules = $this->getBaseRules($rules, 'conditions', Arr::get($activity, 'conditions', ''), false);
+
+        return $rules;
     }
 
     /**

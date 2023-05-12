@@ -225,7 +225,7 @@
         "fieldDependency": {},
         "codeDependency": {
             "dependentOn": {
-                "codes" : {
+                "codes": {
                     "code": "default_aid_type_vocabulary"
                 }
             },
@@ -266,6 +266,10 @@
     },
     "humanitarian_scope": {
         "elementBase": "type",
+        "elementBasePeer": [
+            "vocabulary",
+            "vocabulary_uri"
+        ],
         "fieldDependency": {
             "narrative narrative": {
                 "parent": "narrative",
@@ -315,7 +319,8 @@
     "document_link": {
         "elementBase": "url",
         "elementBasePeer": [
-            "format"
+            "format",
+            "document_date date"
         ],
         "fieldDependency": {
             "title narrative narrative": {
@@ -388,6 +393,18 @@
     },
     "location": {
         "elementBase": "ref",
+        "elementBasePeer": [
+            "location_reach code",
+            "administrative_vocabulary",
+            "administrative code",
+            "administrative level",
+            "point srs_name",
+            "point pos latitude",
+            "point pos longitude",
+            "exactness code",
+            "location_class code",
+            "feature_designation code"
+        ],
         "fieldDependency": {
             "location_reach code": {
                 "parent": "location_reach",
@@ -456,6 +473,19 @@
     },
     "planned_disbursement": {
         "elementBase": "planned_disbursement_type",
+        "elementBasePeer": [
+            "period_start date",
+            "period_end date",
+            "value amount",
+            "value currency",
+            "value value_date",
+            "provider_org ref",
+            "provider_org provider_activity_id",
+            "provider_org type",
+            "receiver_org ref",
+            "receiver_org receiver_activity_id",
+            "receiver_org type"
+        ],
         "fieldDependency": {
             "period_start date": {
                 "parent": "period_start",
@@ -522,6 +552,13 @@
     },
     "budget": {
         "elementBase": "budget_status",
+        "elementBasePeer": [
+            "period_start date",
+            "period_end date",
+            "budget_value amount",
+            "budget_value currency",
+            "budget_value value_date"
+        ],
         "fieldDependency": {
             "period_start date": {
                 "parent": "period_start",
@@ -542,6 +579,11 @@
         }
     },
     "result": {
+        "elementBase": "type",
+        "elementBasePeer": [
+            "aggregation_status"
+        ],
+        "add_more": false,
         "fieldDependency": {
             "title narrative narrative": {
                 "parent": "title narrative",
@@ -562,12 +604,32 @@
                     "reference vocabulary_uri"
                 ]
             }
+        },
+        "codeDependency": {
+            "dependentOn": {
+                "uri": {
+                    "reference vocabulary_uri": "reference vocabulary"
+                }
+            },
+            "parentDependentOn": {
+                "reference": [
+                    "reference vocabulary"
+                ]
+            },
+            "dependencyCondition": {
+                "reference vocabulary": {
+                    "vocabularyUri": [
+                        99
+                    ]
+                }
+            }
         }
     },
     "result document_link": {
         "elementBase": "url",
         "elementBasePeer": [
-            "format"
+            "format",
+            "document_date date"
         ],
         "fieldDependency": {
             "title narrative narrative": {
@@ -595,6 +657,12 @@
         }
     },
     "indicator": {
+        "elementBase": "measure",
+        "elementBasePeer": [
+            "ascending",
+            "aggregation_status"
+        ],
+        "add_more": false,
         "fieldDependency": {
             "title narrative narrative": {
                 "parent": "title narrative",
@@ -615,12 +683,32 @@
                     "reference indicator_uri"
                 ]
             }
+        },
+        "codeDependency": {
+            "dependentOn": {
+                "uri": {
+                    "reference indicator_uri": "reference vocabulary"
+                }
+            },
+            "parentDependentOn": {
+                "reference": [
+                    "reference vocabulary"
+                ]
+            },
+            "dependencyCondition": {
+                "reference vocabulary": {
+                    "vocabularyUri": [
+                        99
+                    ]
+                }
+            }
         }
     },
     "indicator document_link": {
         "elementBase": "url",
         "elementBasePeer": [
-            "format"
+            "format",
+            "document_date date"
         ],
         "fieldDependency": {
             "title narrative narrative": {
@@ -668,7 +756,10 @@
     },
     "baseline document_link": {
         "elementBase": "url",
-        "peer": "format",
+        "elementBasePeer": [
+            "format",
+            "document_date date"
+        ],
         "fieldDependency": {
             "title narrative narrative": {
                 "parent": "title narrative",
@@ -707,6 +798,8 @@
         }
     },
     "target": {
+        "elementBase": "value",
+        "add_more": false,
         "fieldDependency": {
             "comment narrative narrative": {
                 "parent": "comment narrative",
@@ -727,6 +820,10 @@
     },
     "target document_link": {
         "elementBase": "url",
+        "elementBasePeer": [
+            "format",
+            "document_date date"
+        ],
         "fieldDependency": {
             "title narrative narrative": {
                 "parent": "title narrative",
@@ -753,6 +850,8 @@
         }
     },
     "actual": {
+        "elementBase": "value",
+        "add_more": false,
         "fieldDependency": {
             "comment narrative narrative": {
                 "parent": "comment narrative",
@@ -774,7 +873,8 @@
     "actual document_link": {
         "elementBase": "url",
         "elementBasePeer": [
-            "format"
+            "format",
+            "document_date date"
         ],
         "fieldDependency": {
             "title narrative narrative": {
@@ -803,6 +903,24 @@
     },
     "transactions": {
         "elementBase": "reference",
+        "elementBasePeer": [
+            "transaction_type transaction_type_code",
+            "transaction_date date",
+            "value amount",
+            "value currency",
+            "value value_date",
+            "provider_organization organization_identifier_code",
+            "provider_organization provider_activity_id",
+            "provider_organization type",
+            "receiver_organization organization_identifier_code",
+            "receiver_organization receiver_activity_id",
+            "receiver_organization type",
+            "disbursement_channel disbursement_channel_code",
+            "recipient_country country_code",
+            "flow_type flow-type",
+            "finance_type finance_type",
+            "tied_status tied_status-code"
+        ],
         "fieldDependency": {
             "transaction_type transaction_type_code": {
                 "parent": "transaction_type",
@@ -930,6 +1048,17 @@
                     "sector vocabulary_uri": "sector sector_vocabulary",
                     "recipient_region vocabulary_uri": "recipient_region region_vocabulary"
                 }
+            },
+            "parentDependentOn": {
+                "sector": [
+                    "sector sector_vocabulary"
+                ],
+                "recipient_region": [
+                    "recipient_region region_vocabulary"
+                ],
+                "aid_type": [
+                    "aid_type aid_type_vocabulary"
+                ]
             },
             "dependencyCondition": {
                 "sector sector_vocabulary": {

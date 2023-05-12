@@ -540,8 +540,14 @@ class ActivityBaseRequest extends FormRequest
                     }
                 }
 
-                $rules[sprintf('%s.category.0.code', $documentLinkForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('DocumentCategory', 'Activity', false)));
-                $rules[sprintf('%s.language.0.code', $documentLinkForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Language', 'Activity', false)));
+                foreach (array_keys($documentLink['category']) as $index) {
+                    $rules[sprintf('%s.category.%s.code', $documentLinkForm, $index)] = 'nullable|in:' . implode(',', array_keys(getCodeList('DocumentCategory', 'Activity', false)));
+                }
+
+                foreach (array_keys($documentLink['language']) as $index) {
+                    $rules[sprintf('%s.language.%s.language', $documentLinkForm, $index)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Language', 'Activity', false)));
+                }
+
                 $narrativeTitleRules = $this->getErrorsForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm));
 
                 foreach ($narrativeTitleRules as $key => $item) {

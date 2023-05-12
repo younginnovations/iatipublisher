@@ -21,21 +21,21 @@ class DownloadCodeService
         'Result Mapper' => [
             [
                 'Activity Identifier',
-                'Result Code',
+                'Result Number',
                 'Result Identifier',
             ],
         ],
         'Indicator Mapper' => [
             [
                 'Result Identifier',
-                'Indicator Code',
+                'Indicator Number',
                 'Indicator Identifier',
             ],
         ],
         'Period Mapper' => [
             [
                 'Indicator Identifier',
-                'Period Code',
+                'Period Number',
                 'Period Identifier',
             ],
         ],

@@ -27,7 +27,7 @@
               <span>Title</span>
             </th>
             <th id="transaction_type" scope="col">
-              <span>Result Code</span>
+              <span>Result Number</span>
             </th>
             <th id="transaction_value" scope="col" width="190px">
               <span>RESULT TYPE</span>

@@ -226,7 +226,7 @@ const title = computed(() => {
   switch (props.status['template']) {
     case 'activity':
       return props.activity.data.title
-        ? props.activity.data.title[0].narrative
+        ? props.activity.data.title[0].narrative ?? 'Untitled'
         : 'Untitled';
 
     case 'result':

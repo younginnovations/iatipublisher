@@ -54,11 +54,11 @@ class Period
      * @var array
      */
     protected array $periodDivisions = [
-        'Period' => 'period',
+        // 'Period' => 'period',
         'Target' => 'target',
-        'Target Document Link' => 'target document_link',
-        'Actual' => 'actual',
-        'Actual Document Link' => 'actual document_link',
+        // 'Target Document Link' => 'target document_link',
+        // 'Actual' => 'actual',
+        // 'Actual Document Link' => 'actual document_link',
     ];
 
     protected array $elementIdentifiers = [
@@ -211,11 +211,11 @@ class Period
             } else {
                 break;
             }
+        }
 
-            if (!empty($elementData)) {
-                $this->pushPeriodData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
-                $elementData = [];
-            }
+        if (!empty($elementData)) {
+            $this->pushPeriodData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element));
+            $elementData = [];
         }
     }
 
@@ -237,6 +237,7 @@ class Period
     {
         $elementBase = Arr::get($dependency, 'elementBase', null);
         $elementBasePeer = Arr::get($dependency, 'elementBasePeer', []);
+        $elementAddMore = Arr::get($dependency, 'add_more', true);
         $baseCount = null;
         $fieldDependency = $dependency['fieldDependency'];
         $parentBaseCount = [];
@@ -250,7 +251,7 @@ class Period
 
         foreach ($data as $row) {
             foreach ($row as $fieldName => $fieldValue) {
-                if ($elementBase && $fieldName === $elementBase && ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row) || ($this->checkIfPeerAttributesAreNotEmpty(array_keys($row), $row) && is_null($baseCount)))) {
+                if ($elementBase && $elementAddMore && $fieldName === $elementBase && ($fieldValue || is_numeric($fieldValue) || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row) || ($this->checkIfPeerAttributesAreNotEmpty(array_keys($row), $row) && is_null($baseCount)))) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
                     $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
                 }
@@ -259,9 +260,7 @@ class Period
                     $parentKey = $fieldDependency[$fieldName]['parent'];
                     $peerAttributes = Arr::get($fieldDependency, "$fieldName.peer", []);
 
-                    if ($fieldValue) {
-                        $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) ? 0 : $parentBaseCount[$parentKey] + 1;
-                    } elseif ($this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
+                    if ($fieldValue || is_numeric($fieldValue) || $this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
                         $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) ? 0 : $parentBaseCount[$parentKey] + 1;
                     }
                 }
@@ -271,7 +270,7 @@ class Period
                 }
 
                 $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
-                $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
+                $elementPositionBasedOnParent = $elementBase && $elementAddMore ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
 
                 if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null))) {
                     $fieldValue = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;

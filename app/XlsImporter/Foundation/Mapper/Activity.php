@@ -219,14 +219,22 @@ class Activity
                 foreach ($this->defaultValueElements as $element) {
                     $fieldValue = Arr::get($row, $element, null);
 
-                    if (array_key_exists($element, $dropDownFields['default_field_values'])) {
-                        $elementDropDownFields = $dropDownFields['default_field_values'][$element];
+                    if (array_key_exists($element, $dropDownFields['settings'])) {
+                        $elementDropDownFields = $dropDownFields['settings'][$element];
                         $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields);
                     }
 
-                    $this->activities[$elementActivityIdentifier]['default_field_values'][$element] = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
-                    $this->columnTracker[$element]['sheet'] = $this->sheetName;
-                    $this->columnTracker[$element]['cell'] = Arr::get($excelColumnName, $this->sheetName . '.' . $element) . $this->rowCount;
+                    if (isset($this->activities[$elementActivityIdentifier]['default_field_values'][$element])) {
+                        if (!is_array($this->activities[$elementActivityIdentifier]['default_field_values'][$element])) {
+                            $this->activities[$elementActivityIdentifier]['default_field_values'][$element][] = $this->activities[$elementActivityIdentifier]['default_field_values'][$element];
+                        }
+                        $this->activities[$elementActivityIdentifier]['default_field_values'][$element][] = $fieldValue;
+                    } else {
+                        $this->activities[$elementActivityIdentifier]['default_field_values'][$element] = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
+                    }
+
+                    $this->columnTracker[$elementActivityIdentifier]['default_field_values']['default_field_values.' . $element]['sheet'] = $this->sheetName;
+                    $this->columnTracker[$elementActivityIdentifier]['default_field_values']['default_field_values.' . $element]['cell'] = Arr::get($excelColumnName, $this->sheetName . '.' . $element) . $this->rowCount;
                 }
             } else {
                 break;
@@ -277,6 +285,7 @@ class Activity
     {
         $dropDownFields = $this->getDropDownFields();
         $elementActivityIdentifier = null;
+        $excelColumnName = $this->getExcelColumnNameMapper();
 
         foreach ($data as $row) {
             if ($this->checkRowNotEmpty($row)) {
@@ -290,7 +299,18 @@ class Activity
                         $fieldValue = $this->mapDropDownValueToKey($row[$element], $elementDropDownFields);
                     }
 
-                    $this->activities[$elementActivityIdentifier][$element] = $fieldValue;
+                    if (isset($this->activities[$elementActivityIdentifier][$element])) {
+                        if (!is_array($this->activities[$elementActivityIdentifier][$element])) {
+                            $this->activities[$elementActivityIdentifier][$element] = [];
+                            $this->activities[$elementActivityIdentifier][$element][] = $this->activities[$elementActivityIdentifier][$element];
+                        }
+                        $this->activities[$elementActivityIdentifier][$element][] = $fieldValue;
+                    } else {
+                        $this->activities[$elementActivityIdentifier][$element] = is_numeric($fieldValue) ? $fieldValue : $fieldValue;
+                    }
+
+                    $this->columnTracker[$elementActivityIdentifier]["$element"]["$element"]['sheet'] = $this->sheetName;
+                    $this->columnTracker[$elementActivityIdentifier]["$element"]["$element"]['cell'] = Arr::get($excelColumnName, $this->sheetName . '.' . $element) . $this->rowCount;
                 }
             } else {
                 break;
@@ -367,6 +387,7 @@ class Activity
         // variables to map code dependency in elements like sector, recipient region and so on
         $codeDependencyCondition = Arr::get($dependency, 'codeDependency.dependencyCondition', []);
         $dependentOn = Arr::get($dependency, 'codeDependency.dependentOn', []);
+        $parentDependentOn = Arr::get($dependency, 'codeDependency.parentDependentOn', []);
         $dependentOnValue = [];
 
         foreach (array_values($dependentOn) as $dependency) {
@@ -381,8 +402,12 @@ class Activity
 
         foreach ($data as $row) {
             foreach ($row as $fieldName => $fieldValue) {
-                if ($elementBase && ($fieldName === $elementBase && ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)))) {
+                if ($fieldName === $elementBase) {
+                }
+
+                if ($elementBase && ($fieldName === $elementBase && ($fieldValue || is_numeric($fieldValue) || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)))) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
+
                     $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
                     $dependentOnValue = array_fill_keys(array_keys($dependentOnValue), null);
                 }
@@ -393,11 +418,15 @@ class Activity
                     $children = Arr::get($fieldDependency, "$fieldName.children", []);
                     $parentAddMore = Arr::get($fieldDependency, "$fieldName.add_more", true);
 
-                    if ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
+                    if ($fieldValue || is_numeric($fieldValue) || $this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
                         $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) || !$parentAddMore ? 0 : $parentBaseCount[$parentKey] + 1;
 
                         foreach ($children as $child) {
                             $parentBaseCount[$child] = null;
+                        }
+
+                        if (in_array($parentKey, array_keys($parentDependentOn))) {
+                            $dependentOnValue[$parentKey] = null;
                         }
                     }
                 }

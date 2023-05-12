@@ -59,6 +59,7 @@
     "default_finance_type": "Activity/FinanceType.json",
     "default_aid_type": {
         "default_aid_type_vocabulary": "Activity/AidTypeVocabulary.json",
+        "code": "Activity/AidType.json",
         "default_aid_type": "Activity/AidType.json",
         "earmarking_category": "Activity/EarmarkingCategory.json",
         "earmarking_modality": "Activity/EarmarkingModality.json",
@@ -87,7 +88,9 @@
         "condition condition_type": "Activity/ConditionType.json",
         "condition narrative language": "Activity/Language.json"
     },
-    "legacy_data": {},
+    "legacy_data": {
+        "activity_identifier": true
+    },
     "document_link": {
         "format": "Activity/FileFormat.json",
         "title narrative language": "Activity/Language.json",
@@ -145,22 +148,43 @@
         "reference vocabulary": "Activity/ResultVocabulary.json"
     },
     "result document_link": {
-      "format": "Activity/FileFormat.json",
-      "title narrative language": "Activity/Language.json",
-      "description narrative language": "Activity/Language.json",
-      "category code": "Activity/DocumentCategory.json",
-      "language language": "Activity/Language.json"
+        "result_identifier": true,
+        "format": "Activity/FileFormat.json",
+        "title narrative language": "Activity/Language.json",
+        "description narrative language": "Activity/Language.json",
+        "category code": "Activity/DocumentCategory.json",
+        "language language": "Activity/Language.json"
+    },
+    "indicator_mapper": {
+        "result_identifier": true,
+        "indicator_identifier": true
+    },
+    "baseline_mapper": {
+        "indicator_identifier": true,
+        "indicator_baseline_identifier": true
+    },
+    "baseline": {
+        "indicator_baseline_identifier": true,
+        "comment narrative language": "Activity/Language.json"
+    },
+    "baseline document_link": {
+        "result_identifier": true,
+        "format": "Activity/FileFormat.json",
+        "title narrative language": "Activity/Language.json",
+        "description narrative language": "Activity/Language.json",
+        "category code": "Activity/DocumentCategory.json",
+        "language language": "Activity/Language.json"
     },
     "indicator": {
         "measure": "Activity/IndicatorMeasure.json",
         "ascending": {
             "0": false,
             "1": true
-          },
+        },
         "aggregation_status": {
             "0": false,
             "1": true
-          },
+        },
         "title narrative language": "Activity/Language.json",
         "description narrative language": "Activity/Language.json",
         "reference vocabulary": "Activity/IndicatorVocabulary.json"
@@ -172,17 +196,21 @@
         "category code": "Activity/DocumentCategory.json",
         "language language": "Activity/Language.json"
     },
-    "baseline": {
-        "comment narrative language": "Activity/Language.json"
+    "period_mapper": {
+        "indicator_identifier": true,
+        "period_identifier": true
     },
-    "baseline document_link": {
-        "format": "Activity/FileFormat.json",
-        "title narrative language": "Activity/Language.json",
-        "description narrative language": "Activity/Language.json",
-        "category code": "Activity/DocumentCategory.json",
-        "language language": "Activity/Language.json"
+    "target_mapper": {
+        "period_identifier": true,
+        "target_identifier": true
     },
-    "period": {},
+    "actual_mapper": {
+        "period_identifier": true,
+        "actual_identifier": true
+    },
+    "period": {
+        "period_identifier": true
+    },
     "target": {
         "comment narrative language": "Activity/Language.json"
     },
@@ -236,13 +264,26 @@
         "aid_type cash_and_voucher_modalities": "Activity/CashandVoucherModalities.json",
         "tied_status tied_status_code": "Activity/TiedStatus.json"
     },
-    "default_field_values" : {
+    "settings": {
+        "secondary_reporter": {
+            "0": false,
+            "1": true
+        },
         "default_currency": "Activity/Currency.json",
         "default_language": "Activity/Language.json",
         "humanitarian": {
-            "0":false,
-            "1":true
+            "0": false,
+            "1": true
         },
         "budget_not_provided": "Activity/BudgetNotProvided.json"
-}
+    },
+    "element_with_single_field": {
+        "activity_identifier": true,
+        "activity_status": "Activity/ActivityStatus.json",
+        "activity_scope": "Activity/ActivityScope.json",
+        "collaboration_type": "Activity/CollaborationType.json",
+        "default_flow_type": "Activity/FlowType.json",
+        "default_finance_type": "Activity/FinanceType.json",
+        "default_tied_status": "Activity/TiedStatus.json"
+    }
 }

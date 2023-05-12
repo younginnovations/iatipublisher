@@ -58,7 +58,7 @@ class ResultRequest extends ActivityBaseRequest
             $this->getWarningForNarrative($formFields['title'][0]['narrative'], 'title.0'),
             $this->getWarningForNarrative($formFields['description'][0]['narrative'], 'description.0'),
             $this->getWarningForDocumentLink($formFields['document_link']),
-            // $this->getWarningForReferences($formFields['reference'], $fileUpload, $indicators, $resultId),
+            $this->getWarningForReferences($formFields['reference'], $fileUpload, $indicators, $resultId),
         ];
 
         foreach ($tempRules as $key => $tempRule) {
@@ -169,9 +169,10 @@ class ResultRequest extends ActivityBaseRequest
                         }
                     }
 
-                    $rules[sprintf('%s.code', $referenceForm)][] = 'indicator_ref_code_present:' . $resultId ? !app()->make(ResultService::class)->indicatorHasRefCode($resultId) : !$hasCode;
+                    $codeNotPresent = $hasResultId ? !app()->make(ResultService::class)->indicatorHasRefCode($resultId) : !$hasCode;
+                    $rules[sprintf('%s.code', $referenceForm)] = 'indicator_ref_code_present:' . $codeNotPresent;
                 } else {
-                    $rules[sprintf('%s.code', $referenceForm)][] = 'indicator_ref_code_present';
+                    $rules[sprintf('%s.code', $referenceForm)] = 'indicator_ref_code_present';
                 }
             }
         }

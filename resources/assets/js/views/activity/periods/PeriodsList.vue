@@ -26,7 +26,7 @@
               <span>Start Date - End Date</span>
             </th>
             <th id="code" scope="col" width="190px">
-              <span>Period code</span>
+              <span>Period number</span>
             </th>
             <th id="action" scope="col" width="177px">
               <span>Action</span>

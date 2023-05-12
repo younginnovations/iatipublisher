@@ -385,13 +385,15 @@ trait RegistersValidationRules
                     return false;
                 }
 
-                if (($actual_start_date > $planned_end_date) && ($actual_start_date !== '' && $planned_end_date !== '')
+                if (
+                    ($actual_start_date > $planned_end_date) && ($actual_start_date !== '' && $planned_end_date !== '')
                     && ($actual_end_date === '' && $planned_start_date === '')
                 ) {
                     return false;
                 }
 
-                if (($planned_start_date > $actual_end_date) && ($planned_start_date !== '' && $actual_end_date !== '')
+                if (
+                    ($planned_start_date > $actual_end_date) && ($planned_start_date !== '' && $actual_end_date !== '')
                     && ($planned_end_date === '' && $actual_start_date === '')
                 ) {
                     return false;
@@ -493,7 +495,8 @@ trait RegistersValidationRules
             'only_one_among',
             function ($attribute, $values) {
                 foreach ($values as $value) {
-                    if ((Arr::get($value, 'organization_identifier_code', '') === '')
+                    if (
+                        (Arr::get($value, 'organization_identifier_code', '') === '')
                         && (Arr::get($value, 'type', '') === '')
                         && (Arr::get($value, 'provider_activity_id') === '')
                         && (Arr::get($value, 'narrative.0.narrative') === '')
@@ -501,10 +504,12 @@ trait RegistersValidationRules
                         return true;
                     }
 
-                    if (($value['organization_identifier_code'] === '') && (Arr::get(
-                        $value,
-                        'narrative.0.narrative'
-                    ) === '')) {
+                    if (
+                        ($value['organization_identifier_code'] === '') && (Arr::get(
+                            $value,
+                            'narrative.0.narrative'
+                        ) === '')
+                    ) {
                         return false;
                     }
 
@@ -583,7 +588,8 @@ trait RegistersValidationRules
                         $sectorInActivityLevel === false
                     ) {
                         $status = false;
-                    } elseif (($value['sector_vocabulary'] !== '' || $value['code'] !== ''
+                    } elseif (
+                        ($value['sector_vocabulary'] !== '' || $value['code'] !== ''
                             || $value['text'] !== '' || $value['category_code'] !== '' || Arr::get(
                                 $value,
                                 'sdg_goal'
@@ -599,10 +605,6 @@ trait RegistersValidationRules
         );
 
         $this->extend('sector_total_percent', function () {
-            return false;
-        });
-
-        $this->extendImplicit('sector_has_five_digit_oced_vocab', function () {
             return false;
         });
 
@@ -638,13 +640,15 @@ trait RegistersValidationRules
                     }
                 }
 
-                if (($activityRecipientCountry == '' && $activityRecipientRegion == '')
+                if (
+                    ($activityRecipientCountry == '' && $activityRecipientRegion == '')
                     && ($transactionRecipientRegion != '' || $transactionRecipientCountry != '')
                 ) {
                     return true;
                 }
 
-                if (($activityRecipientCountry != '' || $activityRecipientRegion != '')
+                if (
+                    ($activityRecipientCountry != '' || $activityRecipientRegion != '')
                     && ($transactionRecipientRegion == '' && $transactionRecipientCountry == '')
                 ) {
                     return true;

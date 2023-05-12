@@ -150,8 +150,7 @@ class Result
                     ->validateData();
 
                 $existingId = Arr::get($this->existingIdentifier, sprintf('result.%s', $resultIdentifier), false);
-                $excelColumnAndRowName = isset($this->columnTracker[$activityIdentifier]) ? Arr::collapse($this->columnTracker[$activityIdentifier]) : null;
-                $columnAppendedError = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
+                $columnAppendedError = $this->appendExcelColumnAndRowDetail($errors, $this->columnTracker[$activityIdentifier][$resultIdentifier]['results']);
 
                 if (!in_array($activityIdentifier, array_keys($this->existingIdentifier['parent']))) {
                     $columnAppendedError['critical']['activity_identifier']['activity_identifier'] = "The activity identifier doesn't exist in the system";
@@ -219,11 +218,24 @@ class Result
         $elementBase = Arr::get($dependency, 'elementBase', null);
         $elementBasePeer = Arr::get($dependency, 'elementBasePeer', []);
         $baseCount = null;
+        $elementAddMore = Arr::get($dependency, 'add_more', true);
         $fieldDependency = $dependency['fieldDependency'];
         $parentBaseCount = [];
         $excelColumnName = $this->getExcelColumnNameMapper();
         $activityTemplate = $this->getActivityTemplate();
         $elementData = Arr::get($activityTemplate, $element, []);
+
+        // variables to map code dependency in elements like sector, recipient region and so on
+        $codeDependencyCondition = Arr::get($dependency, 'codeDependency.dependencyCondition', []);
+        $dependentOn = Arr::get($dependency, 'codeDependency.dependentOn', []);
+        $parentDependentOn = Arr::get($dependency, 'codeDependency.parentDependentOn', []);
+        $dependentOnValue = [];
+
+        foreach (array_values($dependentOn) as $dependency) {
+            foreach (array_values($dependency) as $dependentVocab) {
+                $dependentOnValue[$dependentVocab] = null;
+            }
+        }
 
         foreach (array_values($fieldDependency) as $dependents) {
             $parentBaseCount[$dependents['parent']] = null;
@@ -231,7 +243,7 @@ class Result
 
         foreach ($data as $row) {
             foreach ($row as $fieldName => $fieldValue) {
-                if ($elementBase && ($fieldName === $elementBase && ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)))) {
+                if ($elementBase && $elementAddMore && ($fieldName === $elementBase && ($fieldValue || is_numeric($fieldValue) || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)))) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
                     $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
                 }
@@ -242,6 +254,27 @@ class Result
 
                     if ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
                         $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) ? 0 : $parentBaseCount[$parentKey] + 1;
+
+                        if (in_array($parentKey, array_keys($parentDependentOn))) {
+                            foreach ($parentDependentOn[$parentKey] as $dependencyIndex) {
+                                $dependentOnValue[$dependencyIndex] = null;
+                            }
+                        }
+                    }
+                }
+
+                if (!empty($dependentOn)) {
+                    if (in_array($fieldName, array_keys(Arr::get($dependentOn, 'uri', [])))) {
+                        $dependentOnFieldName = $dependentOn['uri'][$fieldName];
+                        $dependentOnFieldValue = $dependentOnValue[$dependentOnFieldName];
+                        $uriDependencyCondition = $codeDependencyCondition[$dependentOnFieldName]['vocabularyUri'];
+
+                        if (!in_array($dependentOnFieldValue, $uriDependencyCondition)) {
+                            $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
+                            $elementPositionBasedOnParent = $elementBase && $elementAddMore ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
+                            Arr::forget($elementData, $elementPositionBasedOnParent);
+                            continue;
+                        }
                     }
                 }
 
@@ -249,8 +282,12 @@ class Result
                     $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields[$fieldName]);
                 }
 
+                if (in_array($fieldName, array_keys($dependentOnValue), false) && $fieldValue) {
+                    $dependentOnValue[$fieldName] = $fieldValue;
+                }
+
                 $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
-                $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
+                $elementPositionBasedOnParent = $elementBase && $elementAddMore ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
 
                 if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null))) {
                     $fieldValue = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
@@ -296,13 +333,13 @@ class Result
 
         $this->results[$activityIdentifier][$identifier]['results']['document_link'] = $data;
 
-        $this->updateColumnTracker($activityIdentifier, $identifier, 'results.document_link');
+        $this->updateColumnTracker($activityIdentifier, $identifier, 'document_link');
     }
 
     protected function updateColumnTracker($activityIdentifier, $identifier, $keyPrefix)
     {
         foreach ($this->tempColumnTracker as $columnPosition => $columnIndex) {
-            $this->columnTracker[$activityIdentifier][$identifier]["$keyPrefix.$columnPosition"] = $columnIndex;
+            $this->columnTracker[$activityIdentifier][$identifier]['results']["$keyPrefix.$columnPosition"] = $columnIndex;
         }
     }
 }

@@ -157,7 +157,7 @@ class XlsQueueProcessor
             'Budget' => 'budget',
             'Transaction' => 'transactions',
             'Settings' => 'settings',
-            'Element with single field' => 'element with single field',
+            'Element with single field' => 'element_with_single_field',
             'Result Mapper' => 'result_mapper',
             'Result' => 'result',
             'Result Document Link' => 'result_document_link',
@@ -177,17 +177,30 @@ class XlsQueueProcessor
             'Actual Document Link' => 'actual_document_link',
         ];
 
+        $mainMappingSheet = [
+            'activity' => 'Settings',
+            'result' => 'Result Mapper',
+            'indicator' => 'Indicator Mapper',
+            'period' => 'Period Mapper',
+        ];
+
         if (!$this->checkSheetNames(array_keys($content), $systemSheets)) {
             return false;
         }
 
         foreach ($content as $sheetName => $data) {
-            if (!in_array($sheetName, ['Instructions', 'Options']) && count($data) > 0) {
+            if (!in_array($sheetName, ['Instructions', 'Options', 'Identifiers'])) {
                 $dataHeader = array_keys(Arr::get($data, '0', []));
                 $actualHeader = array_values(Arr::get($excelColumns, $activityElements[$sheetName], []));
 
-                if (!$this->checkColumnHeader($dataHeader, $actualHeader)) {
+                if (!$this->checkColumnHeader($dataHeader, $actualHeader) && count($data) > 0) {
                     awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => 'Header mismatch in ' . $sheetName . ' sheet of xls file.'], JSON_THROW_ON_ERROR));
+
+                    return false;
+                }
+
+                if ($sheetName === $mainMappingSheet[$xlsType] && (count($data) === 0 || is_array_value_empty(Arr::get($data, '0', [])))) {
+                    awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => 'The xls file is empty.'], JSON_THROW_ON_ERROR));
 
                     return false;
                 }

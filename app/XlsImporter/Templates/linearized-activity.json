@@ -253,7 +253,7 @@
         "language language": "language_code",
         "document_date date": "document_date_date"
     },
-    "baseline": {
+    "indicator_baseline": {
         "year": "year",
         "date": "date",
         "value": "value",

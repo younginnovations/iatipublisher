@@ -77,7 +77,7 @@ trait XlsMapperHelper
             if (is_bool($value)) {
                 return (int) $value;
             }
-            foreach ($location as $locationIndex=>$locationValue) {
+            foreach ($location as $locationIndex => $locationValue) {
                 if ($locationValue === $value) {
                     return $locationIndex;
                 }
@@ -102,7 +102,9 @@ trait XlsMapperHelper
     public function checkIfPeerAttributesAreNotEmpty(array $peerAttributes, array $rowContent): bool
     {
         foreach ($peerAttributes as $attributeName) {
-            if (Arr::get($rowContent, $attributeName, null)) {
+            $attributeContent = Arr::get($rowContent, $attributeName, null);
+
+            if (!is_null($attributeContent)) {
                 return true;
             }
         }
@@ -117,8 +119,10 @@ trait XlsMapperHelper
      */
     public function checkRowNotEmpty($row): bool
     {
-        if (implode('', array_values($row))) {
-            return true;
+        foreach (array_values($row) as $content) {
+            if (is_numeric($content) || $content) {
+                return true;
+            }
         }
 
         return false;

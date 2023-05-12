@@ -75,7 +75,7 @@ class Indicator
     protected array $indicatorDivision = [
         'Indicator' => 'indicator',
         'Indicator Document Link' => 'indicator document_link',
-        'Indicator Baseline' => 'baseline',
+        'Indicator Baseline' => 'indicator_baseline',
         'Baseline Document Link' => 'baseline document_link',
     ];
 
@@ -87,7 +87,7 @@ class Indicator
     protected array $elementIdentifiers = [
         'indicator' => 'indicator_identifier',
         'indicator document_link' => 'indicator_identifier',
-        'baseline' => 'indicator_baseline_identifier',
+        'indicator_baseline' => 'indicator_baseline_identifier',
         'baseline document_link' => 'indicator_baseline_identifier',
     ];
 
@@ -283,6 +283,7 @@ class Indicator
     {
         $elementBase = Arr::get($dependency, 'elementBase', null);
         $elementBasePeer = Arr::get($dependency, 'elementBasePeer', []);
+        $elementAddMore = Arr::get($dependency, 'add_more', true);
         $baseCount = null;
         $fieldDependency = $dependency['fieldDependency'];
         $parentBaseCount = [];
@@ -290,24 +291,56 @@ class Indicator
         $activityTemplate = $this->getActivityTemplate();
         $elementData = Arr::get($activityTemplate, $element, []);
 
+        // variables to map code dependency in elements like sector, recipient region and so on
+        $codeDependencyCondition = Arr::get($dependency, 'codeDependency.dependencyCondition', []);
+        $dependentOn = Arr::get($dependency, 'codeDependency.dependentOn', []);
+        $parentDependentOn = Arr::get($dependency, 'codeDependency.parentDependentOn', []);
+        $dependentOnValue = [];
+
+        foreach (array_values($dependentOn) as $dependency) {
+            foreach (array_values($dependency) as $dependentVocab) {
+                $dependentOnValue[$dependentVocab] = null;
+            }
+        }
+
         foreach (array_values($fieldDependency) as $dependents) {
             $parentBaseCount[$dependents['parent']] = null;
         }
 
         foreach ($data as $row) {
             foreach ($row as $fieldName => $fieldValue) {
-                if ($elementBase && $fieldName === $elementBase && ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row) || ($this->checkIfPeerAttributesAreNotEmpty(array_keys($row), $row) && is_null($baseCount)))) {
+                if ($elementBase && $elementAddMore && $fieldName === $elementBase && ($fieldValue || is_numeric($fieldValue) || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row) || ($this->checkIfPeerAttributesAreNotEmpty(array_keys($row), $row) && is_null($baseCount)))) {
                     $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
                     // empty count of child elements
                     $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
+                    $dependentOnValue = array_fill_keys(array_keys($dependentOnValue), null);
                 }
 
                 if (in_array($fieldName, array_keys($fieldDependency))) {
                     $parentKey = $fieldDependency[$fieldName]['parent'];
                     $peerAttributes = Arr::get($fieldDependency, "$fieldName.peer", []);
 
-                    if ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
+                    if ($fieldValue || is_numeric($fieldValue) || $this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
                         $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) ? 0 : $parentBaseCount[$parentKey] + 1;
+
+                        if (in_array($parentKey, array_keys($parentDependentOn))) {
+                            $dependentOnValue[$parentKey] = null;
+                        }
+                    }
+                }
+
+                if (!empty($dependentOn)) {
+                    if (in_array($fieldName, array_keys(Arr::get($dependentOn, 'uri', [])))) {
+                        $dependentOnFieldName = $dependentOn['uri'][$fieldName];
+                        $dependentOnFieldValue = $dependentOnValue[$dependentOnFieldName];
+                        $uriDependencyCondition = $codeDependencyCondition[$dependentOnFieldName]['vocabularyUri'];
+
+                        if (!in_array($dependentOnFieldValue, $uriDependencyCondition) || is_null($dependentOnFieldValue)) {
+                            $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
+                            $elementPositionBasedOnParent = $elementBase && $elementAddMore ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
+                            Arr::forget($elementData, $elementPositionBasedOnParent);
+                            continue;
+                        }
                     }
                 }
 
@@ -316,9 +349,13 @@ class Indicator
                     $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields[$fieldName]);
                 }
 
+                if (in_array($fieldName, array_keys($dependentOnValue), false) && $fieldValue) {
+                    $dependentOnValue[$fieldName] = $fieldValue;
+                }
+
                 $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
                 // map element position from parent
-                $elementPositionBasedOnParent = $elementBase ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
+                $elementPositionBasedOnParent = $elementBase && $elementAddMore ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
 
                 if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null))) {
                     $fieldValue = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
@@ -393,8 +430,8 @@ class Indicator
     {
         $indicatorIdentifier = Arr::get($this->identifiers, "baseline.$identifier", null);
         $resultIdentifier = Arr::get($this->identifiers, "indicator.$indicatorIdentifier", null);
-        $baselineIndex = $this->baselineIndexing[$resultIdentifier][$indicatorIdentifier][$identifier];
         $this->checkIfIndicatorExists($resultIdentifier, $indicatorIdentifier);
+        $baselineIndex = Arr::get($this->baselineIndexing, "$resultIdentifier.$indicatorIdentifier.$identifier", '0');
 
         $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][$baselineIndex]['document_link'] = $data;
         $this->updateColumnTracker($resultIdentifier, $indicatorIdentifier, "baseline.$baselineIndex.document_link");

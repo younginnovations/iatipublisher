@@ -7,6 +7,15 @@
     "budget_not_provided": "F",
     "secondary_reporter": "G"
   },
+  "Element with single field": {
+    "activity_status": "B",
+    "activity_scope": "C",
+    "collaboration_type": "D",
+    "default_flow_type": "E",
+    "default_finance_type": "F",
+    "default_tied_status": "G",
+    "capital_spend": "H"
+  },
   "Title": {
     "narrative": "B",
     "language": "C"
@@ -272,7 +281,7 @@
     "category code": "H",
     "language language": "I",
     "document_date date": "J"
-},
+  },
   "Baseline": {
     "year": "B",
     "date": "C",

@@ -26,7 +26,7 @@
               <span>Title</span>
             </th>
             <th id="code" scope="col" width="190px">
-              <span>Indicator code</span>
+              <span>Indicator number</span>
             </th>
             <th id="measure" scope="col" width="190px">
               <span>Measure</span>
