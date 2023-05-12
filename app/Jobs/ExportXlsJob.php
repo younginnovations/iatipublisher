@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs;
 
 use App\Exports\ActivityExport;
@@ -15,6 +17,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use JsonException;
 use Maatwebsite\Excel\Facades\Excel;
 
 /**
@@ -32,6 +35,8 @@ class ExportXlsJob implements ShouldQueue
     protected object $activities;
 
     /**
+     * Download Xls Service instance to get required methods.
+     *
      * @var object
      */
     protected object $downloadXlsService;
@@ -42,6 +47,8 @@ class ExportXlsJob implements ShouldQueue
     public array $authUser;
 
     /**
+     * Request data to get filtered activities.
+     *
      * @var array
      */
     public array $requestData;
@@ -58,8 +65,13 @@ class ExportXlsJob implements ShouldQueue
 
     /**
      * Create a new job instance.
+     * $requestData to get filtered activities in a chunk
+     * Had to query again in this job instead of directly passing it through constructor is because
+     * it cannot serialize also cannot store the relationship value as well.
      *
      * @return void
+     *
+     * @throws BindingResolutionException
      */
     public function __construct($requestData, $authUser)
     {
@@ -74,7 +86,7 @@ class ExportXlsJob implements ShouldQueue
      * @return void
      *
      * @throws BindingResolutionException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function handle(): void
     {
@@ -133,12 +145,12 @@ class ExportXlsJob implements ShouldQueue
     {
         $activityExportObject = new ActivityExport($activities);
         $userId = $this->authUser['id'];
-        Excel::store($activityExportObject, "Xls/$userId/activity.xls", 'public');
+        Excel::store($activityExportObject, "Xls/$userId/activity.xlsx", 'public', \Maatwebsite\Excel\Excel::XLSX);
         $this->incrementDownloadStatusFileCount();
     }
 
     /**
-     * Stores results in an excel file.
+     * Stores results in an Excel file.
      *
      * @param $activities
      *
@@ -149,7 +161,7 @@ class ExportXlsJob implements ShouldQueue
         $resultExportObject = new ResultExport($activities);
         $this->resultIdentifiers = $resultExportObject->resultIdentifiers;
         $userId = $this->authUser['id'];
-        Excel::store($resultExportObject, "Xls/$userId/result.xls", 'public');
+        Excel::store($resultExportObject, "Xls/$userId/result.xlsx", 'public', \Maatwebsite\Excel\Excel::XLSX);
         $this->incrementDownloadStatusFileCount();
     }
 
@@ -165,7 +177,7 @@ class ExportXlsJob implements ShouldQueue
         $indicatorExportObject = new IndicatorExport($activities, $this->resultIdentifiers);
         $this->indicatorIdentifier = $indicatorExportObject->indicatorIdentifier;
         $userId = $this->authUser['id'];
-        Excel::store($indicatorExportObject, "Xls/$userId/indicator.xls", 'public');
+        Excel::store($indicatorExportObject, "Xls/$userId/indicator.xlsx", 'public', \Maatwebsite\Excel\Excel::XLSX);
         $this->incrementDownloadStatusFileCount();
     }
 
@@ -181,7 +193,7 @@ class ExportXlsJob implements ShouldQueue
         $indicatorIdentifier = $this->indicatorIdentifier;
         $periodExportObject = new PeriodExport($activities, $indicatorIdentifier);
         $userId = $this->authUser['id'];
-        Excel::store($periodExportObject, "Xls/$userId/period.xls", 'public');
+        Excel::store($periodExportObject, "Xls/$userId/period.xlsx", 'public', \Maatwebsite\Excel\Excel::XLSX);
         $this->incrementDownloadStatusFileCount();
     }
 
@@ -197,11 +209,12 @@ class ExportXlsJob implements ShouldQueue
 
     /**
      * Handle a job failure.
+     * if it fails then it uploads the download status table with failed status
+     * also deletes status.json and cancelStatus.json from s3 so that it won't affect for future download.
      *
-     * @param  \Throwable  $exception
      * @return void
      */
-    public function failed(\Throwable $exception)
+    public function failed(): void
     {
         $userId = $this->authUser['id'];
         $downloadStatusData = [

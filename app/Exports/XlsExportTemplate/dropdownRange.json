@@ -246,11 +246,11 @@
     },
     "country_budget_vocabulary": {
       "index": "BI",
-      "max_row": "7"
+      "max_row": "6"
     },
     "budget_item code": {
       "index": "BM",
-      "max_row": "155"
+      "max_row": "154"
     },
     "budget_item description narrative language": {
       "index": "S",
@@ -375,7 +375,7 @@
   },
   "result": {
     "result_identifier": {
-      "index": "A",
+      "index": "C",
       "max_row": null
     },
     "activity_identifier": {
@@ -417,11 +417,11 @@
   },
   "indicator": {
     "indicator_baseline_identifier": {
-      "index": "B",
+      "index": "C",
       "max_row": null
     },
     "indicator_identifier": {
-      "index": "A",
+      "index": "C",
       "max_row": null
     },
     "result_identifier": {
@@ -474,12 +474,8 @@
     }
   },
   "period": {
-    "indicator_identifier": {
-      "index": "A",
-      "max_row": null
-    },
     "period_identifier": {
-      "index": "B",
+      "index": "C",
       "max_row": null
     },
     "target_identifier": {
@@ -487,7 +483,7 @@
       "max_row": null
     },
     "actual_identifier": {
-      "index": "D",
+      "index": "C",
       "max_row": null
     },
     "comment narrative language": {

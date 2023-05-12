@@ -22,7 +22,7 @@
       <p v-if="xlsDownloadStatus != 'completed'" class="text-sm text-n-40">
         Preparing {{ fileCount ? fileCount : 0 }}/4 files for download
       </p>
-      <p v-else class="text-sm text-n-40">Download Ready</p>
+      <p v-else class="text-sm text-n-40">Zip File is Ready</p>
 
       <spinnerLoader v-if="xlsDownloadStatus != 'completed'" />
       <button
@@ -60,10 +60,11 @@ const downloadFile = () => {
     url: apiUrl,
     responseType: 'blob',
   }).then((res) => {
+    let fileName = res.headers['content-disposition'].split('filename=')[1];
     let blob = new Blob([res.data], {});
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
-    link.setAttribute('download', 'xlsFiles' + '.zip');
+    link.setAttribute('download', fileName);
     document.body.appendChild(link);
     link.click();
   });

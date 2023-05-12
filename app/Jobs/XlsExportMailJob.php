@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Jobs;
 
 use App\IATI\Models\User\User;
+use App\IATI\Services\Download\DownloadXlsService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -57,5 +58,15 @@ class XlsExportMailJob implements ShouldQueue
         if (empty($awsCancelStatusFile)) {
             User::sendXlsDownloadLink($this->email, $this->username, $this->userId);
         }
+    }
+
+    public function failed(): void
+    {
+        $downloadXlsService = app()->make(DownloadXlsService::class);
+        $downloadStatusData = [
+            'status' => 'completed',
+            'url' => route('admin.activities.download-xls'),
+        ];
+        $downloadXlsService->updateDownloadStatus($this->userId, $downloadStatusData);
     }
 }

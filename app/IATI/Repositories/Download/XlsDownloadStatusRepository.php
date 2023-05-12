@@ -71,6 +71,7 @@ class XlsDownloadStatusRepository extends Repository
             'status' => $status,
             'type' => $fileType,
             'file_count' => 0,
+//            'url' => route('admin.activities.download-xls'),
         ]);
     }
 

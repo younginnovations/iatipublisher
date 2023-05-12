@@ -11,6 +11,7 @@ use App\Mail\XlsDownloadMail;
 use Database\Factories\IATI\Models\User\UserFactory;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,7 +21,6 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\URL;
 use Laravel\Sanctum\HasApiTokens;
 use OwenIt\Auditing\Contracts\Auditable;
 
@@ -173,23 +173,19 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
      * @param $userId
      *
      * @return void
+     *
+     * @throws BindingResolutionException
      */
     public static function sendXlsDownloadLink($email, $username, $userId): void
     {
         $downloadXlsService = app()->make(DownloadXlsService::class);
-        $downloadStatus = $downloadXlsService->getDownloadStatusByUserId($userId);
-        $url = $downloadStatus->url;
         $mailDetails = [
             'greeting' => 'Hello ' . $username,
-            'message' => 'Your Xls Files are ready for download.
-             Please click the button below to download the xls files.',
-            'url' => $url,
+            'message' => 'Your Xls Files are ready for download.',
         ];
         Mail::to($email)->send(new XlsDownloadMail($mailDetails));
-        $url = URL::signedRoute('admin.activities.download-xls');
         $downloadStatusData = [
             'status' => 'completed',
-            'url' => $url,
         ];
         $downloadXlsService->updateDownloadStatus($userId, $downloadStatusData);
     }

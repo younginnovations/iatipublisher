@@ -57,6 +57,10 @@ trait XlsDownloadTrait
     {
         $dropdownList = readJsonFile('XlsImporter/Templates/dropdown-fields.json');
 
+        if ($headers === 'aid_type') {
+            $datum = $this->populateDynamicFieldAndResetOtherKeys($datum);
+        }
+
         foreach ($datum as $key => $singleArray) {
             $singleArray = is_array($singleArray) ? $singleArray : [$key => $singleArray];
 
@@ -64,12 +68,12 @@ trait XlsDownloadTrait
                 if (isset($this->dynamicMultipleField[$headers . ' ' . $keyPart]) && empty($value)) {
                     continue;
                 }
+
                 $combinedHeader = $this->dynamicMultipleField[$headers . ' ' . $keyPart] ?? $headers . ' ' . $keyPart;
 
                 $this->arrayLevelCount[$mainKey][$combinedHeader] = isset($this->arrayLevelCount[$mainKey][$combinedHeader])
                                                                     ? $this->arrayLevelCount[$mainKey][$combinedHeader] + 1
                                                                     : 0;
-
                 $latestKey = $this->arrayLevelCount[$mainKey][$combinedHeader];
 
                 if (isset($dropdownList[$columnKey][$headers . ' ' . $keyPart])) {
@@ -97,6 +101,19 @@ trait XlsDownloadTrait
         }
     }
 
+    public function populateDynamicFieldAndResetOtherKeys($datum)
+    {
+        $arr = [];
+
+        foreach ($datum as $data) {
+            $arr[] = array_filter($data, static function ($q) {
+                return $q;
+            });
+        }
+
+        return $arr;
+    }
+
     /**
      * Populates dropdown value to full form
      * eg: en to en - english in every dropdown cell.
@@ -111,17 +128,15 @@ trait XlsDownloadTrait
     public function populateValueFromDropdown($value, $dropdownFilePath): mixed
     {
         if (is_bool($dropdownFilePath)) {
-            return true;
+            return true; // for identifier dropdown
         }
 
         if (is_array($dropdownFilePath)) {
-            if (isset($dropdownFilePath[$value])) {
-                $dropValue = $dropdownFilePath[$value] ? 'TRUE' : 'FALSE';
-            } else {
-                $dropValue = '';
-            }
+            return $dropdownFilePath[$value] ?? '';
+        }
 
-            return $dropValue;
+        if ($dropdownFilePath === 'Activity/FileFormat.json') {
+            return $value;
         }
 
         $explodedDropdownFilePath = explode('/', $dropdownFilePath);
@@ -140,19 +155,47 @@ trait XlsDownloadTrait
      * @param $identifierNumber
      * @param $data
      * @param $sheets
+     * @param null $getIdentifierByOrderKey
      *
      * @return void
      *
      * @throws \JsonException
      */
-    public function map($headerKey, $columnName, $sheetName, $primaryIdentifier, $identifierNumber, $data, &$sheets): void
+    public function map($headerKey, $columnName, $sheetName, $primaryIdentifier, $identifierNumber, $data, &$sheets, $getIdentifierByOrderKey = null): void
     {
         $xlsHeaders = readJsonFile('XlsImporter/Templates/linearized-activity.json');
         $flippedSheet = array_flip($this->sheets);
         $headerTemplate = array_fill_keys(array_flip($xlsHeaders[$headerKey]), '');
         $columnData = $data[$columnName];
         $detail = !empty($columnData) ? array_values($this->linearizeArray($columnData, $headerTemplate, $headerKey)) : [$headerTemplate];
-        $sheets[$flippedSheet[$sheetName]][$primaryIdentifier][$this->mappedIdentifier[$primaryIdentifier][$identifierNumber]] = $detail;
+        $getIdentifierKey = is_null($getIdentifierByOrderKey) ? $this->mappedIdentifier[$primaryIdentifier][$identifierNumber]
+                                                              : $this->mappedIdentifier[$primaryIdentifier][$identifierNumber][$getIdentifierByOrderKey];
+
+        $identifierKey = $sheets[$flippedSheet[$sheetName]][$primaryIdentifier][$getIdentifierKey] ?? '';
+
+        if (!empty($identifierKey)) {
+            $sheets[$flippedSheet[$sheetName]][$primaryIdentifier][$getIdentifierKey] = array_merge($identifierKey, $detail);
+        } else {
+            $sheets[$flippedSheet[$sheetName]][$primaryIdentifier][$getIdentifierKey] = $detail;
+        }
+
         $this->arrayLevelCount = [];
+    }
+
+    public function removeDocumentLink($data, $key)
+    {
+        $keyData[$key] = $data;
+
+        foreach ($keyData as $datum) {
+            $keyToRemove = 'document_link';
+            foreach ($datum as &$array) {
+                if (array_key_exists($keyToRemove, $array)) {
+                    unset($array[$keyToRemove]);
+                }
+            }
+            $keyData = $datum;
+        }
+
+        return $keyData;
     }
 }
