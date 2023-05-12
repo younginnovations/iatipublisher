@@ -409,7 +409,7 @@ class ActivityRepository extends Repository
      */
     public function getActivitiesQueryToDownload($activityIds, $authUser): object
     {
-        return $this->model->whereIn('id', $activityIds)->where('org_id', $authUser['organization']['id'])->with(['transactions', 'results', 'organization.settings']);
+        return $this->model->whereIn('id', $activityIds)->where('org_id', $authUser['organization']['id'])->with(['transactions', 'results', 'organization.settings'])->orderBy('updated_at', 'desc')->orderBy('id', 'desc');
     }
 
     /**

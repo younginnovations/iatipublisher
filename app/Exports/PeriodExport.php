@@ -31,9 +31,9 @@ class PeriodExport implements WithMultipleSheets
      * @var array|string[]
      */
     protected array $sheets = [
-        'Period Mapper' => 'period_mapper',
-        'Target Mapper' => 'target_mapper',
-        'Actual Mapper' => 'actual_mapper',
+        'Period_Mapper' => 'period_mapper',
+        'Target_Mapper' => 'target_mapper',
+        'Actual_Mapper' => 'actual_mapper',
         'Period' => 'period',
         'Target' => 'target',
         'Target Document Link' => 'target document_link',
@@ -113,7 +113,7 @@ class PeriodExport implements WithMultipleSheets
      * @var array|string[]
      */
     protected array $headerWithSingleLevel = [
-        'dimension',
+        'dimension', 'location',
     ];
 
     /**
@@ -147,17 +147,12 @@ class PeriodExport implements WithMultipleSheets
         $mappedIdentifier = $this->mapIdentifier();
         $data = array_merge($this->mappedData(), $mappedIdentifier);
         $sheets = [];
-        $indicatorIdentifier = [
-            'Indicator Identifier' => $this->indicatorIdentifier,
-        ];
-        $identifier = array_merge($indicatorIdentifier, $this->mappedIdentifier);
-        $sheets[] = new OptionExport('instructions', 'Instructions');
+        $sheets[] = new OptionExport('period_instructions', 'Instructions');
 
         foreach ($data as $key => $datum) {
             $sheets[] = new XlsExport(Arr::collapse($datum), $key, $xlsHeaders[$this->sheets[$key]], 'period');
         }
         $sheets[] = new OptionExport('period_options', 'Options');
-        $sheets[] = new IdentifierExport($identifier);
 
         return $sheets;
     }
@@ -166,6 +161,8 @@ class PeriodExport implements WithMultipleSheets
      * Maps identifier in a sheets.
      *
      * @return array
+     *
+     * @throws BindingResolutionException
      */
     public function mapIdentifier(): array
     {
@@ -181,6 +178,7 @@ class PeriodExport implements WithMultipleSheets
      * Maps Period Identifier to excel suitable array.
      *
      * @return array
+     * @throws BindingResolutionException
      */
     public function mapPeriodIdentifier(): array
     {
@@ -189,7 +187,7 @@ class PeriodExport implements WithMultipleSheets
         $periodSet = $this->mappingSets['period_mapper'];
         $appendIdentifier = array_values(Arr::collapse($periodSet))[0];
         $finalIdentifierKey = array_keys($periodSet)[0];
-        $sheetName = 'Period Mapper';
+        $sheetName = 'Period_Mapper';
 
         $this->data->chunk(100, function ($chunkedActivities) use ($indicatorMapper, $appendIdentifier, $finalIdentifierKey, &$mapped, $sheetName) {
             $resultIds = array_column(Arr::collapse($chunkedActivities->pluck('results')->toArray()), 'id');
@@ -201,7 +199,19 @@ class PeriodExport implements WithMultipleSheets
         return $mapped;
     }
 
-    protected function getMappedIndicatorData($resultIds, $indicatorMapper, $appendIdentifier, $finalIdentifierKey, $mapped, $sheetName)
+    /**
+     * @param $resultIds
+     * @param $indicatorMapper
+     * @param $appendIdentifier
+     * @param $finalIdentifierKey
+     * @param $mapped
+     * @param $sheetName
+     *
+     * @return array|mixed
+     *
+     * @throws BindingResolutionException
+     */
+    protected function getMappedIndicatorData($resultIds, $indicatorMapper, $appendIdentifier, $finalIdentifierKey, $mapped, $sheetName): mixed
     {
         $downloadXlsService = app()->make(DownloadXlsService::class);
         $downloadXlsService->getResultsWithIndicatorQueryToDownload($resultIds)->chunk(100, function ($chunkedResults) use ($indicatorMapper, $appendIdentifier, $finalIdentifierKey, &$mapped, $sheetName, $downloadXlsService) {
@@ -212,7 +222,18 @@ class PeriodExport implements WithMultipleSheets
         return $mapped;
     }
 
-    protected function getMappedPeriodData($indicatorIds, $indicatorMapper, $appendIdentifier, $finalIdentifierKey, $mapped, $sheetName, $downloadXlsService)
+    /**
+     * @param $indicatorIds
+     * @param $indicatorMapper
+     * @param $appendIdentifier
+     * @param $finalIdentifierKey
+     * @param $mapped
+     * @param $sheetName
+     * @param $downloadXlsService
+     *
+     * @return array|mixed
+     */
+    protected function getMappedPeriodData($indicatorIds, $indicatorMapper, $appendIdentifier, $finalIdentifierKey, $mapped, $sheetName, $downloadXlsService): mixed
     {
         $downloadXlsService->getIndicatorWithPeriodsQueryToDownload($indicatorIds)->chunk(100, function ($chunkedIndicator) use ($indicatorMapper, $appendIdentifier, $finalIdentifierKey, &$mapped, $sheetName) {
             $indicatorData = $chunkedIndicator->pluck('periods', 'indicator_code')->toArray();
@@ -230,6 +251,16 @@ class PeriodExport implements WithMultipleSheets
         return $mapped;
     }
 
+    /**
+     * @param $mapped
+     * @param $sheetName
+     * @param $indicatorIdentifier
+     * @param $appendIdentifier
+     * @param $finalIdentifierKey
+     * @param $appendIdentifierValue
+     *
+     * @return array
+     */
     protected function mapPeriodData($mapped, $sheetName, $indicatorIdentifier, $appendIdentifier, $finalIdentifierKey, $appendIdentifierValue): array
     {
         $mapped[$sheetName]['Indicator Identifier'][$indicatorIdentifier][] = [
@@ -244,6 +275,8 @@ class PeriodExport implements WithMultipleSheets
      * Maps Target Identifier to excel suitable array.
      *
      * @return array
+     *
+     * @throws BindingResolutionException
      */
     public function mapTargetIdentifier(): array
     {
@@ -251,7 +284,7 @@ class PeriodExport implements WithMultipleSheets
         $targetSet = $this->mappingSets['target_mapper'];
         $appendIdentifier = array_values(Arr::collapse($targetSet))[0];
         $finalIdentifierKey = array_keys($targetSet)[0];
-        $sheetName = 'Target Mapper';
+        $sheetName = 'Target_Mapper';
 
         $this->data->chunk(100, function ($chunkedActivities) use ($appendIdentifier, $finalIdentifierKey, $sheetName, &$mapped) {
             $resultIds = array_column(Arr::collapse($chunkedActivities->pluck('results')->toArray()), 'id');
@@ -265,11 +298,24 @@ class PeriodExport implements WithMultipleSheets
             });
         });
 
-        $this->mappedTargetIdentifiers['Target Identifier'] = !empty($mapped) ? array_column(Arr::collapse($mapped[$sheetName]['Period Identifier']), 'target_identifier', 'period_code') : [];
+        if (!empty($mapped)) {
+            $targetIdentifier = [];
+            foreach (Arr::collapse($mapped[$sheetName]['Period Identifier']) as $value) {
+                $targetIdentifier[$value['period_code']][] = $value['target_identifier'];
+            }
+            $this->mappedTargetIdentifiers['Target Identifier'] = $targetIdentifier;
+        } else {
+            $this->mappedTargetIdentifiers['Target Identifier'] = [];
+        }
 
         return $mapped;
     }
 
+    /**
+     * @param $chunkedIndicator
+     *
+     * @return array
+     */
     private function getTargetData($chunkedIndicator): array
     {
         $indicatorData = $chunkedIndicator->pluck('periods', 'indicator_code')->toArray();
@@ -277,6 +323,15 @@ class PeriodExport implements WithMultipleSheets
         return array_column(Arr::collapse($indicatorData), 'period', 'period_code');
     }
 
+    /**
+     * @param $targetData
+     * @param $appendIdentifier
+     * @param $finalIdentifierKey
+     * @param $sheetName
+     * @param $mapped
+     *
+     * @return void
+     */
     private function processTargetData($targetData, $appendIdentifier, $finalIdentifierKey, $sheetName, &$mapped): void
     {
         foreach ($targetData as $identifier => $data) {
@@ -287,7 +342,7 @@ class PeriodExport implements WithMultipleSheets
                 $appendIdentifierValue = generateRandomCharacters(9);
                 $mapped[$sheetName]['Period Identifier'][$periodIdentifier][] = [
                     $appendIdentifier => $appendIdentifierValue,
-                    $finalIdentifierKey => $periodIdentifier . '_' . $appendIdentifierValue,
+                    $finalIdentifierKey => $periodIdentifier . '_t-' . $appendIdentifierValue,
                     'period_code' => $identifier,
                 ];
             }
@@ -298,6 +353,8 @@ class PeriodExport implements WithMultipleSheets
      * Maps Actual Identifier to excel suitable array.
      *
      * @return array
+     *
+     * @throws BindingResolutionException
      */
     public function mapActualIdentifier(): array
     {
@@ -305,7 +362,7 @@ class PeriodExport implements WithMultipleSheets
         $actualSet = $this->mappingSets['actual_mapper'];
         $appendIdentifier = array_values(Arr::collapse($actualSet))[0];
         $finalIdentifierKey = array_keys($actualSet)[0];
-        $sheetName = 'Actual Mapper';
+        $sheetName = 'Actual_Mapper';
 
         $this->data->chunk(100, function ($chunkedActivities) use ($appendIdentifier, $finalIdentifierKey, $sheetName, &$mapped) {
             $resultIds = array_column(Arr::collapse($chunkedActivities->pluck('results')->toArray()), 'id');
@@ -324,7 +381,7 @@ class PeriodExport implements WithMultipleSheets
                             $appendIdentifierValue = generateRandomCharacters(9);
                             $mapped[$sheetName]['Period Identifier'][$periodIdentifier][] = [
                                 $appendIdentifier => $appendIdentifierValue,
-                                $finalIdentifierKey => $periodIdentifier . '_' . $appendIdentifierValue,
+                                $finalIdentifierKey => $periodIdentifier . '_a-' . $appendIdentifierValue,
                                 'period_code' => $identifier,
                             ];
                         }
@@ -332,7 +389,16 @@ class PeriodExport implements WithMultipleSheets
                 });
             });
         });
-        $this->mappedActualIdentifier['Actual Identifier'] = !empty($mapped) ? array_column(Arr::collapse($mapped[$sheetName]['Period Identifier']), 'actual_identifier', 'period_code') : [];
+
+        if (!empty($mapped)) {
+            $actualIdentifier = [];
+            foreach (Arr::collapse($mapped[$sheetName]['Period Identifier']) as $value) {
+                $actualIdentifier[$value['period_code']][] = $value['actual_identifier'];
+            }
+            $this->mappedActualIdentifier['Actual Identifier'] = $actualIdentifier;
+        } else {
+            $this->mappedActualIdentifier['Actual Identifier'] = [];
+        }
 
         return $mapped;
     }
@@ -380,10 +446,15 @@ class PeriodExport implements WithMultipleSheets
      */
     private function mapTarget($identifier_number, &$data, &$sheets): void
     {
-        $this->map('target', 'target', 'target', 'Target Identifier', $identifier_number, $data, $sheets);
+        $targetData['target'] = $this->removeDocumentLink($data['target'], 'target');
 
-        foreach ($data['target'] as $target) {
-            $this->map('target document_link', 'document_link', 'target document_link', 'Target Identifier', $identifier_number, $target, $sheets);
+        foreach ($targetData['target'] as $targetKey => $targetData) {
+            $targetSingleData['target'] = $targetData;
+            $this->map('target', 'target', 'target', 'Target Identifier', $identifier_number, $targetSingleData, $sheets, $targetKey);
+        }
+
+        foreach ($data['target'] as $targetDocumentLinkKey => $target) {
+            $this->map('target document_link', 'document_link', 'target document_link', 'Target Identifier', $identifier_number, $target, $sheets, $targetDocumentLinkKey);
         }
 
         unset($data['target']);
@@ -394,10 +465,15 @@ class PeriodExport implements WithMultipleSheets
      */
     private function mapActual($identifier_number, &$data, &$sheets): void
     {
-        $this->map('actual', 'actual', 'actual', 'Actual Identifier', $identifier_number, $data, $sheets);
+        $actualData['actual'] = $this->removeDocumentLink($data['actual'], 'actual');
 
-        foreach ($data['actual'] as $actual) {
-            $this->map('actual document_link', 'document_link', 'actual document_link', 'Actual Identifier', $identifier_number, $actual, $sheets);
+        foreach ($actualData['actual'] as $actualKey => $actualData) {
+            $actualSingleData['actual'] = $actualData;
+            $this->map('actual', 'actual', 'actual', 'Actual Identifier', $identifier_number, $actualSingleData, $sheets, $actualKey);
+        }
+
+        foreach ($data['actual'] as $actualDocumentLink => $actual) {
+            $this->map('actual document_link', 'document_link', 'actual document_link', 'Actual Identifier', $identifier_number, $actual, $sheets, $actualDocumentLink);
         }
 
         unset($data['actual']);

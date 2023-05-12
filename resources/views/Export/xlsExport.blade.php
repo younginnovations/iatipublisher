@@ -14,11 +14,19 @@
         @foreach($activity as $data)
             @if(!is_array_value_empty($data))
                 <tr>
-                    <td> @if($loop->first) {{ $identifier  }} @endif</td>
+                    <td> @if($loop->first) {{ trim($identifier)  }} @endif</td>
                     @foreach($headers as $headerKey => $header)
                         @if($loop->first) @continue; @endif
                         <td>
-                            {{ $data[$headerKey] ?? ''  }}
+                            @if(isset($data[$headerKey]))
+                                @if($data[$headerKey] === true)
+                                    TRUE
+                                @elseif ($data[$headerKey] === false)
+                                    FALSE
+                                @else
+                                    {{ $data[$headerKey]  }}
+                                @endif
+                            @endif
                         </td>
                     @endforeach
                 </tr>

@@ -72,8 +72,8 @@
     "default_aid_type": {
         "activity_identifier": true,
         "default_aid_type_vocabulary": "Activity/AidTypeVocabulary.json",
-        "code": "Activity/AidType.json",
         "default_aid_type": "Activity/AidType.json",
+        "default_aid_type code": "Activity/AidType.json",
         "earmarking_category": "Activity/EarmarkingCategory.json",
         "earmarking_modality": "Activity/EarmarkingModality.json",
         "cash_and_voucher_modalities": "Activity/CashandVoucherModalities.json"
@@ -160,10 +160,7 @@
         "budget_type": "Activity/BudgetType.json",
         "budget_value currency": "Activity/Currency.json"
     },
-    "result_mapper": {
-        "activity_identifier": true,
-        "result_identifier": true
-    },
+    "result_mapper": {},
     "result": {
         "result_identifier": true,
         "type": "Activity/ResultType.json",
@@ -183,13 +180,9 @@
         "category code": "Activity/DocumentCategory.json",
         "language language": "Activity/Language.json"
     },
-    "indicator_mapper": {
-        "result_identifier": true,
-        "indicator_identifier": true
-    },
+    "indicator_mapper": {},
     "baseline_mapper": {
-        "indicator_identifier": true,
-        "indicator_baseline_identifier": true
+      "indicator_identifier": true
     },
     "indicator_baseline": {
         "indicator_baseline_identifier": true,
@@ -218,6 +211,9 @@
         "description narrative language": "Activity/Language.json",
         "reference vocabulary": "Activity/IndicatorVocabulary.json"
     },
+    "indicator_baseline_mapper": {
+      "indicator_identifier": true
+    },
     "indicator document_link": {
         "indicator_identifier": true,
         "format": "Activity/FileFormat.json",
@@ -227,17 +223,24 @@
         "language language": "Activity/Language.json",
         "language code": "Activity/Language.json"
     },
-    "period_mapper": {
-        "indicator_identifier": true,
-        "period_identifier": true
+    "indicator_baseline": {
+        "indicator_baseline_identifier": true,
+        "comment narrative language": "Activity/Language.json"
     },
+    "baseline document_link": {
+        "indicator_baseline_identifier": true,
+        "format": "Activity/FileFormat.json",
+        "title narrative language": "Activity/Language.json",
+        "description narrative language": "Activity/Language.json",
+        "category code": "Activity/DocumentCategory.json",
+        "language language": "Activity/Language.json"
+    },
+    "period_mapper": {},
     "target_mapper": {
-        "period_identifier": true,
-        "target_identifier": true
+      "period_identifier": true
     },
     "actual_mapper": {
-        "period_identifier": true,
-        "actual_identifier": true
+      "period_identifier": true
     },
     "period": {
         "period_identifier": true
@@ -252,6 +255,7 @@
         "title narrative language": "Activity/Language.json",
         "description narrative language": "Activity/Language.json",
         "category code": "Activity/DocumentCategory.json",
+        "language code": "Activity/Language.json",
         "language language": "Activity/Language.json"
     },
     "actual": {
@@ -264,6 +268,7 @@
         "title narrative language": "Activity/Language.json",
         "description narrative language": "Activity/Language.json",
         "category code": "Activity/DocumentCategory.json",
+        "language code": "Activity/Language.json",
         "language language": "Activity/Language.json"
     },
     "transactions": {

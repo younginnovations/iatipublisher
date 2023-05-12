@@ -31,11 +31,11 @@ class IndicatorExport implements WithMultipleSheets
      * @var array|string[]
      */
     protected array $sheets = [
-        'Indicator Mapper' => 'indicator_mapper',
-        'Baseline Mapper' => 'indicator_baseline_mapper',
+        'Indicator_Mapper' => 'indicator_mapper',
+        'Indicator_Baseline_Mapper' => 'indicator_baseline_mapper',
         'Indicator' => 'indicator',
         'Indicator Document Link' => 'indicator document_link',
-        'Baseline' => 'baseline',
+        'Indicator Baseline' => 'indicator_baseline',
         'Baseline Document Link' => 'baseline document_link',
     ];
 
@@ -98,7 +98,9 @@ class IndicatorExport implements WithMultipleSheets
     /**
      * @var array
      */
-    protected array $headerWithSingleLevel = [];
+    protected array $headerWithSingleLevel = [
+        'language', 'category', 'dimension', 'location',
+    ];
 
     /**
      * Stores all the mapped result identifier.
@@ -124,6 +126,8 @@ class IndicatorExport implements WithMultipleSheets
     /**
      * @param $data
      * @param $resultIdentifier
+     *
+     * @throws BindingResolutionException
      */
     public function __construct($data, $resultIdentifier)
     {
@@ -137,25 +141,19 @@ class IndicatorExport implements WithMultipleSheets
      *
      * @return array
      *
-     * @throws JsonException
+     * @throws JsonException|BindingResolutionException
      */
     public function sheets(): array
     {
         $xlsHeaders = readJsonFile('Exports/XlsExportTemplate/xlsHeaderTemplate.json');
         $data = array_merge($this->mappedData(), $this->mappedData);
         $sheets = [];
-        $resultIdentifier = [
-            'Result Identifier' => $this->resultIdentifier,
-        ];
-        $identifier = array_merge($this->mappedIdentifier, $resultIdentifier);
-
-        $sheets[] = new OptionExport('instructions', 'Instructions');
+        $sheets[] = new OptionExport('indicator_instructions', 'Instructions');
 
         foreach ($data as $key => $datum) {
             $sheets[] = new XlsExport(Arr::collapse($datum), $key, $xlsHeaders[$this->sheets[$key]], 'indicator');
         }
         $sheets[] = new OptionExport('indicator_options', 'Options');
-        $sheets[] = new IdentifierExport($identifier);
 
         return $sheets;
     }
@@ -181,6 +179,7 @@ class IndicatorExport implements WithMultipleSheets
                 foreach (array_column(Arr::collapse($chunkedResultData), 'indicator', 'indicator_code') as $identifier_number => $data) {
                     $data = $this->processDocumentLink($data, $identifier_number, $sheets);
                     $data = $this->processBaseline($data, $identifier_number, $sheets);
+
                     $this->map('indicator', 'indicator', 'indicator', 'Indicator Identifier', $identifier_number, ['indicator' => $data], $sheets);
                 }
             });
@@ -208,10 +207,15 @@ class IndicatorExport implements WithMultipleSheets
     private function processBaseline(array $data, $identifier_number, array &$sheets): array
     {
         if (array_key_exists('baseline', $data)) {
-            $this->map('baseline', 'baseline', 'baseline', 'Indicator Baseline Identifier', $identifier_number, $data, $sheets);
+            $baselineData['baseline'] = $this->removeDocumentLink($data['baseline'], 'baseline');
 
-            foreach ($data['baseline'] as $baseline) {
-                $this->map('baseline document_link', 'document_link', 'baseline document_link', 'Indicator Baseline Identifier', $identifier_number, $baseline, $sheets);
+            foreach ($baselineData['baseline'] as $baselineKey => $baselineData) {
+                $baselineSingleData['baseline'] = $baselineData;
+                $this->map('indicator_baseline', 'baseline', 'indicator_baseline', 'Indicator Baseline Identifier', $identifier_number, $baselineSingleData, $sheets, $baselineKey);
+            }
+
+            foreach ($data['baseline'] as $baselineDocumentLinkKey => $baseline) {
+                $this->map('baseline document_link', 'document_link', 'baseline document_link', 'Indicator Baseline Identifier', $identifier_number, $baseline, $sheets, $baselineDocumentLinkKey);
             }
 
             unset($data['baseline']);
@@ -224,6 +228,8 @@ class IndicatorExport implements WithMultipleSheets
      * Maps identifier in a sheets.
      *
      * @return array
+     *
+     * @throws BindingResolutionException
      */
     public function mapIdentifier(): array
     {
@@ -246,7 +252,7 @@ class IndicatorExport implements WithMultipleSheets
         $indicatorSet = $this->mappingSets['indicator_mapper'];
         $appendIdentifier = array_values(Arr::collapse($indicatorSet))[0];
         $finalIdentifierKey = array_keys($indicatorSet)[0];
-        $sheetName = 'Indicator Mapper';
+        $sheetName = 'Indicator_Mapper';
 
         $this->data->chunk(100, function ($chunkedActivities) use ($resultMapper, $appendIdentifier, $sheetName, $finalIdentifierKey, &$mapped) {
             $resultIds = array_column(Arr::collapse($chunkedActivities->pluck('results')->toArray()), 'id');
@@ -279,6 +285,8 @@ class IndicatorExport implements WithMultipleSheets
      * Maps indicator baseline identifier.
      *
      * @return array
+     *
+     * @throws BindingResolutionException
      */
     public function mapIndicatorBaseline(): array
     {
@@ -286,7 +294,7 @@ class IndicatorExport implements WithMultipleSheets
         $indicatorBaselineSet = $this->mappingSets['indicator_baseline_mapper'];
         $appendIdentifier = array_values(Arr::collapse($indicatorBaselineSet))[0];
         $finalIdentifierKey = array_keys($indicatorBaselineSet)[0];
-        $sheetName = 'Baseline Mapper';
+        $sheetName = 'Indicator_Baseline_Mapper';
 
         $this->data->chunk(100, function ($chunkedActivities) use ($sheetName, $appendIdentifier, $finalIdentifierKey, &$mapped) {
             $resultIds = array_column(Arr::collapse($chunkedActivities->pluck('results')->toArray()), 'id');
@@ -303,7 +311,7 @@ class IndicatorExport implements WithMultipleSheets
                         $appendIdentifierValue = generateRandomCharacters(9);
                         $mapped[$sheetName]['Indicator Identifier'][$indicatorIdentifier][] = [
                             $appendIdentifier => $appendIdentifierValue,
-                            $finalIdentifierKey => $indicatorIdentifier . '_' . $appendIdentifierValue,
+                            $finalIdentifierKey => $indicatorIdentifier . '_b-' . $appendIdentifierValue,
                             'identifier' => $identifier,
                         ];
                     }
@@ -311,7 +319,15 @@ class IndicatorExport implements WithMultipleSheets
             });
         });
 
-        $this->mappedIndicatorBaselineIdentifiers['Indicator Baseline Identifier'] = !empty($mapped) ? array_column(Arr::collapse($mapped[$sheetName]['Indicator Identifier']), 'indicator_baseline_identifier', 'identifier') : [];
+        if (!empty($mapped)) {
+            $finalMapper = [];
+            foreach (Arr::collapse($mapped[$sheetName]['Indicator Identifier']) as $value) {
+                $finalMapper[$value['identifier']][] = $value['indicator_baseline_identifier'];
+            }
+            $this->mappedIndicatorBaselineIdentifiers['Indicator Baseline Identifier'] = $finalMapper;
+        } else {
+            $this->mappedIndicatorBaselineIdentifiers['Indicator Baseline Identifier'] = [];
+        }
 
         return $mapped;
     }

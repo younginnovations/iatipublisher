@@ -142,7 +142,7 @@ class ActivityExport implements WithMultipleSheets
      * @var array|string[]
      */
     protected array $headerWithSingleLevel = [
-        'aid_type', 'telephone', 'email', 'website', 'category', 'language',
+        'aid_type', 'telephone', 'email', 'website', 'category', 'language', 'condition', 'budget_item',
     ];
 
     /**
@@ -166,18 +166,13 @@ class ActivityExport implements WithMultipleSheets
         $data = $this->mappedData();
         $sheets = [];
 
-        $identifiers = [
-            'Activity Identifier' => array_keys($data['Settings']['Activity Identifier']),
-        ];
-
-        $sheets[] = new OptionExport('instructions', 'Instructions');
+        $sheets[] = new OptionExport('activity_instructions', 'Instructions');
 
         foreach ($data as $key => $datum) {
             $sheets[] = new XlsExport(Arr::collapse($datum), $key, $xlsHeaders[$this->sheets[$key]], 'activity');
         }
 
         $sheets[] = new OptionExport('activity_options', 'Options');
-        $sheets[] = new IdentifierExport($identifiers);
 
         return $sheets;
     }
@@ -201,16 +196,19 @@ class ActivityExport implements WithMultipleSheets
                 $data = $data->toArray();
                 $this->prepareSettingsFieldData($data);
                 $this->prepareSingleFieldData($data);
+
                 foreach ($data as $key => $datum) {
                     if (in_array($key, $this->sheets, true)) {
                         if ($key === 'related_activity') {
                             $datum = $this->changeRelatedActivityArrayKey($datum);
                         }
-                        $headerTemplate = array_fill_keys(array_column($xlsHeaders[$key], 'index'), '');
+                        $headerTemplate = array_fill_keys(array_keys($xlsHeaders[$key]), '');
                         $identifier = $data['iati_identifier']['activity_identifier'];
                         $datum = $key === 'transactions' ? array_column($datum, 'transaction') : $datum;
                         $detail = !empty($datum) ? array_values($this->linearizeArray($datum, $headerTemplate, $key)) : [$headerTemplate];
-                        $sheets[$flippedSheet[$key]]['Activity Identifier'][$identifier] = $detail;
+
+                        $sheets[$flippedSheet[$key]]['Activity Identifier'][$identifier . ' '] = $detail;
+
                         $this->arrayLevelCount = [];
                     }
                 }
@@ -248,9 +246,14 @@ class ActivityExport implements WithMultipleSheets
             $value = Arr::get($data, 'default_field_values.' . $settingField, '');
 
             if ($settingField === 'secondary_reporter') {
-                $value = Arr::get($data, 'reporting_org.0.secondary_reporter');
+                $secondary_reporter = Arr::get($data, 'reporting_org.0.secondary_reporter');
+                $value = empty($secondary_reporter) && $secondary_reporter !== '0' ? null : ($secondary_reporter === '0' ? 0 : 1);
             }
-            $data['settings'][$settingField] = $value;
+            if ($settingField === 'humanitarian') {
+                $humanitarian = Arr::get($data, 'default_field_values.humanitarian');
+                $value = empty($humanitarian) && $humanitarian !== '0' ? null : ($humanitarian === '0' || $humanitarian === 'no' ? 0 : 1);
+            }
+            $data['settings'][$settingField] = !empty($value) || $value === 0 ? $value : ' ';
         }
     }
 

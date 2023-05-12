@@ -6,18 +6,22 @@ namespace App\Exports;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Arr;
+use JsonException;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Cell\DataValidation;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 /**
  * Class XlsExport.
  */
-class XlsExport implements FromView, WithTitle, WithEvents, ShouldAutoSize
+class XlsExport implements FromView, WithTitle, WithEvents, ShouldAutoSize, WithColumnFormatting
 {
     /**
      * Holds data from database.
@@ -46,6 +50,7 @@ class XlsExport implements FromView, WithTitle, WithEvents, ShouldAutoSize
     protected string $workSheetName;
 
     /*
+     * Identifiers so that it can be used to get its dropdown range in xls
      *
      * identifier column in sheet => sheet name
      */
@@ -57,6 +62,28 @@ class XlsExport implements FromView, WithTitle, WithEvents, ShouldAutoSize
         'period_identifier' => 'Period_Mapper',
         'actual_identifier' => 'Actual_Mapper',
         'target_identifier' => 'Target_Mapper',
+    ];
+
+    /**
+     * DropdownRange.json contains "type" field
+     * but there are also field like activity_date type which consist of extra character besides type.
+     *
+     * @var array
+     */
+    protected array $specialCaseTypeColumn = [
+        'activity_date.type' => 'activity_date type',
+        'contact_info.type' => 'contact_info type',
+        'humanitarian_scope.type' => 'humanitarian_scope type',
+        'participating_org.type' => 'participating_org type',
+    ];
+
+    protected array $mapperConcatenator = [
+      'Result_Mapper' => '_',
+      'Indicator_Mapper' => '_',
+      'Indicator_Baseline_Mapper' => '_b-',
+      'Period_Mapper' => '_',
+      'Actual_Mapper' => '_a-',
+      'Target_Mapper' => '_t-',
     ];
 
     /**
@@ -96,93 +123,111 @@ class XlsExport implements FromView, WithTitle, WithEvents, ShouldAutoSize
         return $this->sheetName;
     }
 
+    /**
+     * Checks if dropdown exists and then populate the rows with dropdown
+     * Color Code sheet header cell as well as sheet tab.
+     *
+     *
+     * @return mixed
+     */
     public function registerEvents(): array
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 $sheet = $event->sheet;
-                $startRow = 2;
-                $endRow = 5000;
+                $sheet->freezePane('A2');
                 $excelColumnIndex = readJsonFile('XlsImporter/Templates/excel-column-name-mapper.json');
                 $excelColumnIndex = $excelColumnIndex[ucwords($this->workSheetName) . ' ' . $this->sheetName] ?? $excelColumnIndex[$this->sheetName] ?? null;
-                $dropdownFields = readJsonFile('XlsImporter/Templates/dropdown-fields.json');
-                $dropDownRange = readJsonFile('Exports/XlsExportTemplate/dropdownRange.json')[$this->workSheetName];
 
                 if (!empty($excelColumnIndex)) {
-                    // Apply the data validation to the range of cells
                     foreach ($excelColumnIndex as $columnName => $selectOptionCol) {
-                        if (isset($dropdownFields[$columnName]) && !is_array($dropdownFields[$columnName])) {
-                            $location = $dropdownFields[$columnName];
-                        } else {
-                            $searchFor = ' ';
-                            $replaceWith = '_';
-                            $mainString = $this->sheetName === 'Transaction' ? 'transactions' : strtolower($this->sheetName);
-                            $stringPosition = strrpos($mainString, $searchFor);
-                            $newString = !empty($stringPosition) ? substr_replace($mainString, $replaceWith, $stringPosition, strlen($searchFor)) : $mainString;
-                            $newString = $newString === 'default aid_type' ? 'default_aid_type' : $newString;
-                            $newString = $newString === 'country budget_items' ? 'country_budget_items' : $newString;
-                            $newString = $newString === 'element with single_field' ? 'element_with_single_field' : $newString;
-                            $location = Arr::get($dropdownFields, $newString . '.' . $columnName);
-                        }
+                        $columnName = $this->hasDropdownValue($columnName);
 
-                        if (!empty($location)) {
-                            if (isset($newString) && $newString . '.' . $columnName === 'activity_date.type') {
-                                $columnName = $newString === 'activity_date' ? 'activity_date type' : $columnName;
-                            }
-                            if (isset($newString) && $newString . '.' . $columnName === 'contact_info.type') {
-                                $columnName = $newString === 'contact_info' ? 'contact_info type' : $columnName;
-                            }
-                            if (isset($newString) && $newString . '.' . $columnName === 'humanitarian_scope.type') {
-                                $columnName = $newString === 'humanitarian_scope' ? 'humanitarian_scope type' : $columnName;
-                            }
-                            if (isset($newString) && $newString . '.' . $columnName === 'participating_org.type') {
-                                $columnName = $newString === 'participating_org' ? 'participating_org type' : $columnName;
-                            }
-
-//                            do something for above if conditions
-                            if (isset($this->identifiers[$columnName])) {
-                                $this->setIdentifierDropdown($dropDownRange, $columnName, $selectOptionCol, $startRow, $sheet, $this->identifiers[$columnName]);
-                            } else {
-                                $dropDownColumnIndex = $dropDownRange[$columnName]['index'];
-                                $dropdownColumnMaxRow = $dropDownRange[$columnName]['max_row'];
-                                $validation = $sheet->getDataValidation("$selectOptionCol$startRow:$selectOptionCol$endRow");
-                                $validation->setType(DataValidation::TYPE_LIST);
-                                $validation->setErrorStyle(DataValidation::STYLE_INFORMATION);
-                                $validation->setAllowBlank(false);
-                                $validation->setShowInputMessage(true);
-                                $validation->setShowErrorMessage(true);
-                                $validation->setShowDropDown(true);
-                                $validation->setErrorTitle('Input error');
-                                $validation->setError('Value is not in list.');
-                                $validation->setPromptTitle('Pick from list');
-                                $validation->setPrompt('Please pick a value from the drop-down list.');
-                                $validation->setFormula1("Options!$$dropDownColumnIndex$3:$$dropDownColumnIndex$$dropdownColumnMaxRow");
+                        if (!empty($columnName)) {
+                            $this->setDropdownValue($columnName, $sheet, $selectOptionCol);
+                        } elseif (in_array($this->sheetName, ['Result_Mapper', 'Indicator_Mapper', 'Indicator_Baseline_Mapper', 'Period_Mapper', 'Actual_Mapper', 'Target_Mapper'])) {
+                            // Set the formula for each cell in the range
+                            $concatenation = $this->mapperConcatenator[$this->sheetName];
+                            for ($row = 2; $row <= 5000; $row++) {
+                                $cellCoordinate = 'C' . $row;
+                                $formula = '=IFERROR(IF(B' . $row . '<>"",CONCATENATE(xlookup("*",$A$2:A' . $row . ',$A$2:A' . $row . ',"",2,-1),"' . $concatenation . '",B' . $row . '),""),IF(B' . $row . '<>"",CONCATENATE(LOOKUP(2,1/($A$2:A' . $row . '<>""),$A$2:A' . $row . '),"' . $concatenation . '",B' . $row . '),""))';
+                                $sheet->setCellValueExplicit($cellCoordinate, $formula, DataType::TYPE_FORMULA);
                             }
                         }
                     }
                 }
 
-                $event->sheet->freezePane('A2');
-
-                foreach (array_combine($excelColumnIndex, $this->sheetHeaders) as $columnIndex => $detail) {
-                    $styleArray = [
-                        'fill' => [
-                            'fillType' => Fill::FILL_SOLID,
-                            'startColor' => [
-                                'argb' => $detail['color_code'] ?? '',
-                            ],
-                        ],
-                    ];
-                    $event->sheet->getDelegate()->getStyle("${columnIndex}1")->applyFromArray(isset($detail['color_code']) ? $styleArray : []);
-                }
+                $this->sheetTabColorCode($event->sheet);
+                $this->xlsHeaderColorCode($excelColumnIndex, $event->sheet);
             },
         ];
     }
 
-    public function setIdentifierDropdown($dropDownRange, $columnName, $selectOptionCol, $startRow, &$sheet, $dropdownFromSheetName)
+    /**
+     * @throws JsonException
+     */
+    public function hasDropdownValue($columnName)
     {
+        $dropdownFields = readJsonFile('XlsImporter/Templates/dropdown-fields.json');
+
+        if (isset($dropdownFields[$columnName]) && !is_array($dropdownFields[$columnName])) {
+            $location = $dropdownFields[$columnName];
+        } else {
+            $searchFor = ' ';
+            $replaceWith = '_';
+            $mainString = $this->sheetName === 'Transaction' ? 'transactions' : strtolower($this->sheetName);
+            $stringPosition = strrpos($mainString, $searchFor);
+            $newString = !empty($stringPosition) ? substr_replace($mainString, $replaceWith, $stringPosition, strlen($searchFor)) : $mainString;
+
+            $getNewString = [
+                'default aid_type' => 'default_aid_type',
+                'country budget_items' => 'country_budget_items',
+                'element with single_field' => 'element_with_single_field',
+            ];
+            $newString = $getNewString[$newString] ?? $newString;
+            $location = Arr::get($dropdownFields, $newString . '.' . $columnName);
+
+            if (array_key_exists($newString . '.' . $columnName, $this->specialCaseTypeColumn)) {
+                $columnName = $this->specialCaseTypeColumn[$newString . '.' . $columnName];
+            }
+        }
+
+        if (!empty($location)) {
+            return $columnName;
+        }
+
+        return null;
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function setDropdownValue($columnName, $sheet, $selectOptionCol): void
+    {
+        $dropDownRange = readJsonFile('Exports/XlsExportTemplate/dropdownRange.json')[$this->workSheetName];
+
+        if (isset($this->identifiers[$columnName])) {
+            $this->setIdentifierDropdown($dropDownRange, $columnName, $selectOptionCol, $sheet, $this->identifiers[$columnName]);
+        } else {
+            $this->setSheetCellDropdown($dropDownRange, $columnName, $selectOptionCol, $sheet);
+        }
+    }
+
+    /**
+     * @param $dropDownRange
+     * @param $columnName
+     * @param $selectOptionCol
+     * @param $sheet
+     *
+     * @return void
+     */
+    public function setSheetCellDropdown($dropDownRange, $columnName, $selectOptionCol, $sheet): void
+    {
+        $startRow = 2;
+        $endRow = 5000;
         $dropDownColumnIndex = $dropDownRange[$columnName]['index'];
-        $validation = $sheet->getDataValidation("$selectOptionCol$startRow:$selectOptionCol$5000");
+        $dropdownColumnMaxRow = $dropDownRange[$columnName]['max_row'];
+        $validation = $sheet->getDataValidation("$selectOptionCol$startRow:$selectOptionCol$endRow");
         $validation->setType(DataValidation::TYPE_LIST);
         $validation->setErrorStyle(DataValidation::STYLE_INFORMATION);
         $validation->setAllowBlank(false);
@@ -193,6 +238,92 @@ class XlsExport implements FromView, WithTitle, WithEvents, ShouldAutoSize
         $validation->setError('Value is not in list.');
         $validation->setPromptTitle('Pick from list');
         $validation->setPrompt('Please pick a value from the drop-down list.');
-        $validation->setFormula1("'$dropdownFromSheetName'!$$dropDownColumnIndex$2:$$dropDownColumnIndex$5000");
+        $validation->setFormula1("Options!$$dropDownColumnIndex$3:$$dropDownColumnIndex$$dropdownColumnMaxRow");
+    }
+
+    /**
+     * @param $excelColumnIndex
+     * @param $sheet
+     *
+     * @return void
+     */
+    public function xlsHeaderColorCode($excelColumnIndex, $sheet): void
+    {
+        foreach (array_combine($excelColumnIndex, $this->sheetHeaders) as $columnIndex => $detail) {
+            $styleArray = [
+                'fill' => [
+                    'fillType' => Fill::FILL_SOLID,
+                    'startColor' => [
+                        'argb' => $detail['color_code'] ?? '',
+                    ],
+                ],
+            ];
+
+            $sheet->getDelegate()->getStyle("${columnIndex}1")->applyFromArray(isset($detail['color_code']) ? $styleArray : []);
+        }
+    }
+
+    /**
+     * @param $sheet
+     *
+     * @return void
+     *
+     * @throws JsonException
+     */
+    public function sheetTabColorCode($sheet): void
+    {
+        $sheetColorCode = readJsonFile('Exports/XlsExportTemplate/xls-sheet-color-code-mapper.json');
+
+        if (isset($sheetColorCode[$this->sheetName])) {
+            $sheet->getTabColor()->setRGB($sheetColorCode[$this->sheetName]);
+        }
+    }
+
+    /**
+     * @param $dropDownRange
+     * @param $columnName
+     * @param $selectOptionCol
+     * @param $sheet
+     * @param $dropdownFromSheetName
+     *
+     * @return void
+     */
+    public function setIdentifierDropdown($dropDownRange, $columnName, $selectOptionCol, $sheet, $dropdownFromSheetName): void
+    {
+        $startRow = 2;
+        $endRow = 5000;
+        $dropDownColumnIndex = $dropDownRange[$columnName]['index'];
+        $validation = $sheet->getDataValidation("$selectOptionCol$startRow:$selectOptionCol$$endRow");
+        $validation->setType(DataValidation::TYPE_LIST);
+        $validation->setErrorStyle(DataValidation::STYLE_INFORMATION);
+        $validation->setAllowBlank(false);
+        $validation->setShowInputMessage(true);
+        $validation->setShowErrorMessage(true);
+        $validation->setShowDropDown(true);
+        $validation->setErrorTitle('Input error');
+        $validation->setError('Value is not in list.');
+        $validation->setPromptTitle('Pick from list');
+        $validation->setPrompt('Please pick a value from the drop-down list.');
+        $validation->setFormula1("$dropdownFromSheetName!$$dropDownColumnIndex$2:$$dropDownColumnIndex$$endRow");
+    }
+
+    /**
+     * @return array
+     */
+    public function columnFormats(): array
+    {
+        if ($this->sheetName === 'Contact Info') {
+            return [
+               'K' => NumberFormat::FORMAT_NUMBER,
+            ];
+        }
+
+        if (array_key_exists($this->sheetName, $this->mapperConcatenator)) {
+            return [
+                'B' => NumberFormat::FORMAT_NUMBER,
+            ];
+        }
+
+        return [];
     }
 }

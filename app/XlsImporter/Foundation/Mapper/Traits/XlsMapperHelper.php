@@ -83,19 +83,20 @@ trait XlsMapperHelper
      * Maps the dropdown values to their corresponding keys.
      *
      * @return mixed
+     *
+     * @throws \JsonException
      */
     public function mapDropDownValueToKey($value, $location, $fieldName): mixed
     {
         $booleanFieldList = readJsonFile('XlsImporter/Templates/boolean-field-list.json');
-
         // should we consider case(capital and lower)?
         if (is_null($value)) {
-            return $value;
+            return null;
         }
 
         if (is_array($location)) {
             if (is_bool($value)) {
-                return (int) $value;
+                return (int) filter_var($value, FILTER_VALIDATE_BOOLEAN);
             }
 
             if (array_key_exists($fieldName, $booleanFieldList) && is_string($value) && in_array(strtolower($value), ['false', 'true', 'no', 'yes', '0', '1'])) {

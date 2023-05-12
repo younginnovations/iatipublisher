@@ -18,15 +18,6 @@
     "budget_not_provided": "F",
     "secondary_reporter": "G"
   },
-  "Element with single field": {
-    "activity_status": "B",
-    "activity_scope": "C",
-    "collaboration_type": "D",
-    "default_flow_type": "E",
-    "default_finance_type": "F",
-    "default_tied_status": "G",
-    "capital_spend": "H"
-  },
   "Title": {
     "activity_identifier": "A",
     "narrative": "B",
@@ -165,11 +156,7 @@
   },
   "Default Aid Type": {
     "default_aid_type_vocabulary": "B",
-    "code": "C",
-    "default_aid_type": "C",
-    "earmarking_category": "C",
-    "earmarking_modality": "C",
-    "cash_and_voucher_modalities": "C"
+    "code": "C"
   },
   "Sector": {
     "activity_identifier": "A",
@@ -191,9 +178,8 @@
   "Policy Marker": {
     "activity_identifier": "A",
     "policy_marker_vocabulary": "B",
-    "code": "C",
-    "policy_marker": "C",
-    "vocabulary_uri": "D",
+    "policy_marker code": "C",
+    "vocabulary_uri":  "D",
     "significance": "E",
     "narrative narrative": "F",
     "narrative language": "G"
@@ -298,7 +284,7 @@
     "reference code": "I",
     "reference vocabulary_uri": "J"
   },
-  "Result Mapper": {
+  "Result_Mapper": {
     "activity_identifier": "A",
     "result_number": "B",
     "result_identifier": "C"
@@ -328,7 +314,7 @@
     "reference code": "J",
     "reference indicator_uri": "K"
   },
-  "Indicator Document Link": {
+  "indicator Document Link": {
     "url": "B",
     "format": "C",
     "title narrative narrative": "D",
@@ -338,6 +324,16 @@
     "category code": "H",
     "language language": "I",
     "document_date date": "J"
+  },
+  "Baseline": {
+    "year": "B",
+    "date": "C",
+    "value": "D",
+    "comment narrative narrative": "E",
+    "comment narrative language": "F",
+    "dimension name": "G",
+    "dimension value": "H",
+    "location reference": "I"
   },
   "Baseline Document Link": {
     "url": "B",
@@ -350,15 +346,27 @@
     "language language": "I",
     "document_date date": "J"
   },
-  "Indicator Mapper": {
+  "Indicator_Mapper": {
     "result_identifier": "A",
     "indicator_number": "B",
     "indicator_identifier": "C"
   },
-  "Indicator Baseline Mapper": {
+  "Indicator_Baseline_Mapper": {
     "indicator_identifier": "A",
     "baseline_number": "B",
     "indicator_baseline_identifier": "C"
+  },
+  "Indicator Document Link": {
+    "indicator_identifier": "A",
+    "url": "B",
+    "format": "C",
+    "title narrative narrative": "D",
+    "title narrative language": "E",
+    "description narrative narrative": "F",
+    "description narrative language": "G",
+    "category code": "H",
+    "language code": "I",
+    "document_date date": "J"
   },
   "Indicator Baseline": {
     "indicator_baseline_identifier": "A",
@@ -383,17 +391,17 @@
     "language language": "I",
     "document_date date": "J"
   },
-  "Period Mapper": {
+  "Period_Mapper": {
     "indicator_identifier": "A",
     "period_number": "B",
     "period_identifier": "C"
   },
-  "Target Mapper": {
+  "Target_Mapper": {
     "period_identifier": "A",
     "target_number": "B",
     "target_identifier": "C"
   },
-  "Actual Mapper": {
+  "Actual_Mapper": {
     "period_identifier": "A",
     "actual_number": "B",
     "actual_identifier": "C"

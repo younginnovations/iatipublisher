@@ -13,6 +13,7 @@ use App\Jobs\ExportXlsJob;
 use App\Jobs\XlsExportMailJob;
 use App\Jobs\ZipXlsFileJob;
 use App\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -143,8 +144,9 @@ class DownloadActivityController extends Controller
                 return response()->json(['success' => false, 'message' => 'No activities selected.']);
             }
 
+            //  first it clears all the files present on s3 like cancelStatus.json
+            //  if cancelStatus.json is present then mail won't be sent to the user
             $this->clearPreviousXlsFilesOnS3($userId);
-
             $this->downloadXlsService->storeStatus($userId);
             awsUploadFile("Xls/$userId/status.json", json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
             $this->processXlsExportJobs($request);
@@ -161,6 +163,7 @@ class DownloadActivityController extends Controller
 
     /**
      * Exports xls in queue.
+     * First it generates all the 4 files , zips it , upload it to s3 and mail to the user.
      *
      * @param $request
      *
@@ -168,29 +171,27 @@ class DownloadActivityController extends Controller
      */
     public function processXlsExportJobs($request): void
     {
+        $authUser = auth()->user();
         ExportXlsJob::withChain([
-            new ZipXlsFileJob(auth()->user()->id),
-           new XlsExportMailJob(auth()->user()->email, auth()->user()->username, auth()->user()->id),
-        ])->dispatch($request->all(), auth()->user()->toArray());
+            new ZipXlsFileJob($authUser->id),
+           new XlsExportMailJob($authUser->email, $authUser->username, $authUser->id),
+        ])->dispatch($request->all(), $authUser->toArray());
     }
 
     /**
      * Downloads xls zip file from aws s3.
      *
-     * @param Request $request
      *
      * @return bool|int
      */
-    public function downloadActivityXls(Request $request): bool|int
+    public function downloadActivityXls(): bool|int
     {
-        $userId = auth()->user()->id;
-
-        if (!$request->hasValidSignature()) {
-            abort(403);
-        }
-
+        $authUser = auth()->user();
+        $userId = $authUser->id;
+        $organizationName = $authUser->organization->publisher_name ?? 'xlsFiles';
+        $fileName = $organizationName . '-' . Carbon::now()->timestamp . '.zip';
         $temporaryUrl = awsUrl("Xls/$userId/xlsFiles.zip");
-        header('Content-Disposition: attachment; filename=xlsFiles.zip');
+        header("Content-Disposition: attachment; filename=$fileName");
         header('Content-Type: application/zip');
         $this->downloadXlsService->deleteDownloadStatus($userId);
 
@@ -209,7 +210,7 @@ class DownloadActivityController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Download status accessed successfully', 'status' => $status, 'file_count' => $fileCount, 'url' => $url ?? null]);
         } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Error has occured while trying to check download status']);
         }
@@ -226,13 +227,9 @@ class DownloadActivityController extends Controller
     {
         try {
             $userId = auth()->user()->id;
-            $status = $this->downloadXlsService->getDownloadStatus();
-            $this->downloadXlsService->deleteDownloadStatus($userId);
             $this->clearPreviousXlsFilesOnS3($userId);
-
-            if ($status->status !== 'completed') {
-                awsUploadFile("Xls/$userId/cancelStatus.json", json_encode(['success' => true, 'message' => 'Cancelled'], JSON_THROW_ON_ERROR));
-            }
+            awsUploadFile("Xls/$userId/cancelStatus.json", json_encode(['success' => true, 'message' => 'Cancelled'], JSON_THROW_ON_ERROR));
+            $this->downloadXlsService->deleteDownloadStatus($userId);
 
             return response()->json(['success' => true, 'message' => 'Cancelled Successfully']);
         } catch (\Exception $e) {
@@ -316,6 +313,11 @@ class DownloadActivityController extends Controller
         return $queryParams;
     }
 
+    /**
+     * @param $userId
+     *
+     * @return void
+     */
     public function clearPreviousXlsFilesOnS3($userId): void
     {
         awsDeleteFile("Xls/$userId/xlsFiles.zip");

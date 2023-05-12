@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exports;
 
 use App\IATI\Traits\XlsDownloadTrait;
@@ -26,7 +28,7 @@ class ResultExport implements WithMultipleSheets
      * @var array|string[]
      */
     protected array $sheets = [
-        'Result Mapper' => 'result_mapper',
+        'Result_Mapper' => 'result_mapper',
         'Result' => 'result',
         'Result Document Link' => 'result document_link',
     ];
@@ -63,7 +65,7 @@ class ResultExport implements WithMultipleSheets
      * @var array|string[]
      */
     protected array $headerWithSingleLevel = [
-        'reference',
+        'reference', 'category', 'language',
     ];
 
     /**
@@ -107,18 +109,12 @@ class ResultExport implements WithMultipleSheets
         $data = array_merge($this->mappedData(), $this->mappedData);
         $sheets = [];
 
-        $identifiers = [
-            'Result Identifier' => $this->mappedIdentifiers,
-            'Activity Identifier' => isset($data['Result Mapper']['Activity Identifier']) ? array_keys($data['Result Mapper']['Activity Identifier']) : [],
-        ];
-
-        $sheets[] = new OptionExport('instructions', 'Instructions');
+        $sheets[] = new OptionExport('result_instructions', 'Instructions');
 
         foreach ($data as $key => $datum) {
             $sheets[] = new XlsExport(Arr::collapse($datum), $key, $xlsHeaders[$this->sheets[$key]], 'result');
         }
         $sheets[] = new OptionExport('result_options', 'Options');
-        $sheets[] = new IdentifierExport($identifiers);
 
         return $sheets;
     }
@@ -172,7 +168,6 @@ class ResultExport implements WithMultipleSheets
         foreach ($this->mappingSets as $sheetName => $mapSet) {
             $mappingSet = $this->mappingSets[$sheetName];
             $primaryIdentifier = ucwords(str_replace('_', ' ', array_keys(Arr::collapse($mappingSet))[0]));
-
             $this->data->chunk(100, function ($chunkedData) use (&$sheetName, &$mapped, $mapSet, $primaryIdentifier, $mappingSet) {
                 $chunkedData = $chunkedData->pluck('results', 'iati_identifier.activity_identifier')->toArray();
                 $appendIdentifier = array_values(Arr::collapse($mappingSet))[0];
@@ -180,8 +175,8 @@ class ResultExport implements WithMultipleSheets
 
                 foreach ($chunkedData as $identifier => $datum) {
                     foreach ($datum as $row) {
-                        $sheetName = ucwords(str_replace('_', ' ', $sheetName));
-                        $mapped[$sheetName][$primaryIdentifier][$identifier][] = [
+                        $sheetName = mb_convert_case($sheetName, MB_CASE_TITLE);
+                        $mapped[$sheetName][$primaryIdentifier][$identifier . ' '][] = [
                             $appendIdentifier => $row[$appendIdentifier],
                             $finalIdentifierKey => $identifier . '_' . $row[$appendIdentifier],
                         ];

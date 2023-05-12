@@ -7,6 +7,7 @@ namespace App\IATI\Services\Download;
 use App\IATI\Repositories\Activity\IndicatorRepository;
 use App\IATI\Repositories\Activity\ResultRepository;
 use App\IATI\Repositories\Download\XlsDownloadStatusRepository;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class DownloadXlsService.
@@ -69,9 +70,9 @@ class DownloadXlsService
      *
      * @param $userId
      *
-     * @return \Illuminate\Database\Eloquent\Model|null
+     * @return Model|null
      */
-    public function storeStatus($userId): ?\Illuminate\Database\Eloquent\Model
+    public function storeStatus($userId): ?Model
     {
         return $this->xlsDownloadStatusRepository->storeStatus($userId, 'xls');
     }

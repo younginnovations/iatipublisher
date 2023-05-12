@@ -22,6 +22,86 @@ class OptionExport implements FromView, WithTitle, WithEvents, ShouldAutoSize
 
     protected string $sheetName;
 
+    protected array $instruction_properties = [
+      'period_instructions' => [
+          'color_code' =>[
+              'C6' => 'd5a6bd',
+              'C7' => '93c47d',
+              'C8' => 'f6b26b',
+              'C9' => '6fa8dc',
+          ],
+          'merge_cells' => [
+              'B1:C1',
+              'B2:C2',
+              'B3:C3',
+              'B4:C4',
+              'B5:C5',
+              'B10:C10',
+              'B11:C11',
+              'B12:C12',
+              'B13:C13',
+              'B14:C14',
+          ],
+      ],
+      'activity_instructions' => [
+          'color_code' => [
+              'C4' => 'd5a6bd',
+              'C5' => '93c47d',
+              'C6' => 'f6b26b',
+              'C7' => '6fa8dc',
+          ],
+          'merge_cells' => [
+              'B1:C1',
+              'B2:C2',
+              'B3:C3',
+              'B8:C8',
+              'B9:C9',
+              'B10:C10',
+              'B11:C11',
+              'B12:C12',
+              'B13:C13',
+          ],
+      ],
+      'result_instructions' => [
+          'color_code' =>[
+              'C5' => 'd5a6bd',
+              'C6' => '93c47d',
+              'C7' => 'f6b26b',
+              'C8' => '6fa8dc',
+          ],
+          'merge_cells' => [
+              'B1:C1',
+              'B2:C2',
+              'B3:C3',
+              'B4:C4',
+              'B9:B9',
+              'B10:C10',
+              'B11:C11',
+              'B12:C12',
+              'B13:C13',
+          ],
+      ],
+      'indicator_instructions' => [
+          'color_code' =>[
+              'C6' => 'd5a6bd',
+              'C7' => '93c47d',
+              'C8' => 'f6b26b',
+              'C9' => '6fa8dc',
+          ],
+          'merge_cells' => [
+              'B1:C1',
+              'B2:C2',
+              'B3:C3',
+              'B4:C4',
+              'B5:C5',
+              'B10:C10',
+              'B11:C11',
+              'B12:C12',
+              'B13:C13',
+          ],
+      ],
+    ];
+
     public function __construct($fileName, $sheetName)
     {
         $this->fileName = $fileName;
@@ -45,15 +125,19 @@ class OptionExport implements FromView, WithTitle, WithEvents, ShouldAutoSize
 
     public function registerEvents(): array
     {
-        return [
-            $colorCode = [
-                'B5' => 'd9d9d9', // grey
-                'B6' => 'f6b26b', // orange,
-                'B7' => '6fa8dc', // blue
-            ],
+        $colorCode = $this->instruction_properties[$this->fileName]['color_code'] ?? '';
+        $mergeCells = $this->instruction_properties[$this->fileName]['merge_cells'] ?? '';
 
-            AfterSheet::class => function (AfterSheet $event) use ($colorCode) {
+        return [
+            AfterSheet::class => function (AfterSheet $event) use ($mergeCells, $colorCode) {
                 if ($this->sheetName === 'Instructions') {
+                    $event->sheet->getDelegate()->getColumnDimension('B')->setWidth(100);
+                    $event->sheet->getDelegate()->getColumnDimension('C')->setWidth(100);
+
+                    foreach ($mergeCells as $merge_cell) {
+                        $event->sheet->mergeCells($merge_cell);
+                    }
+
                     foreach ($colorCode as $index => $code) {
                         $styleArray = [
                             'fill' => [
