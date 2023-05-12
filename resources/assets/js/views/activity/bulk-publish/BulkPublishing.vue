@@ -199,11 +199,11 @@ const checkDownloadStatus = () => {
   const checkDownload = setInterval(function () {
     axios.get('/activities/download-xls-progress-status').then((res) => {
       downloading.value = !!res.data.status;
-      if (res.data.status === 'completed') {
+      if (res.data.status === 'completed' || !res.data.status) {
         clearInterval(checkDownload);
       }
     });
-  }, 1000);
+  }, 800);
 };
 
 // watching change in value of completed

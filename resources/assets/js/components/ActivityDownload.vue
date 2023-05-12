@@ -1,15 +1,26 @@
 <template>
   <div class="h-[80px] rounded-t-lg bg-eggshell p-6">
-    <div class="mb-3 flex h-1 w-full justify-start rounded-full bg-spring-10">
+    <div
+      v-if="xlsDownloadStatus != 'failed'"
+      class="mb-3 flex h-1 w-full justify-start rounded-full bg-spring-10"
+    >
       <div
         :style="{ width: percentageWidth + '%' }"
         class="h-full rounded-full bg-spring-50"
       ></div>
     </div>
+    <div v-else>
+      <p class="text-sm font-bold text-crimson-50">
+        Failed to prepare files for download
+      </p>
+    </div>
 
-    <div class="flex justify-between space-x-5">
+    <div
+      v-if="xlsDownloadStatus != 'failed'"
+      class="flex justify-between space-x-5"
+    >
       <p v-if="xlsDownloadStatus != 'completed'" class="text-sm text-n-40">
-        Preparing {{ fileCount ? fileCount : 0 }}/4 activities for download
+        Preparing {{ fileCount ? fileCount : 0 }}/4 files for download
       </p>
       <p v-else class="text-sm text-n-40">Download Ready</p>
 
@@ -25,7 +36,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { inject, computed, onMounted, onUnmounted } from 'vue';
+import { inject, computed, onMounted, onUnmounted, ref, Ref } from 'vue';
 import spinnerLoader from './spinnerLoader.vue';
 import axios from 'axios';
 import { useStore } from 'Store/activities/index';
@@ -41,8 +52,8 @@ onMounted(() => {
 });
 const downloadFile = () => {
   store.dispatch('updateCompleteXlsDownload', true);
-  let apiUrl = `${downloadApiUrl.value.split()[0].split('/')[3]}/${
-    downloadApiUrl.value.split()[0].split('/')[4]
+  let apiUrl = `${(downloadApiUrl as Ref).value.split()[0].split('/')[3]}/${
+    (downloadApiUrl as Ref).value.split()[0].split('/')[4]
   }`;
   axios({
     method: 'get',
@@ -58,17 +69,8 @@ const downloadFile = () => {
   });
 };
 
-onUnmounted(() => {
-  const supportButton: HTMLElement = document.querySelector(
-    '#launcher'
-  ) as HTMLElement;
-
-  if (supportButton !== null) {
-    supportButton.style.transform = 'translatey(0px)';
-  }
-});
 const percentageWidth = computed(() => {
-  return (fileCount.value / 4) * 100;
+  return ((fileCount as Ref).value / 4) * 100;
 });
 
 const fileCount = inject('fileCount');

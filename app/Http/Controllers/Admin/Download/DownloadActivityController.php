@@ -151,7 +151,7 @@ class DownloadActivityController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Xls Export on process.']);
         } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
             $this->downloadXlsService->deleteDownloadStatus(auth()->user()->id);
             $this->cancelXlsDownload();
 

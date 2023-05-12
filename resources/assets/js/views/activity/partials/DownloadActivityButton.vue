@@ -257,8 +257,8 @@ export default defineComponent({
     };
 
     const cancelDownload = () => {
-      console.log('cancel download');
       downloadingInProcess.value = false;
+      store.dispatch('updateCancelDownload', true);
 
       store.dispatch('updateStartXlsDownload', false);
 
@@ -342,6 +342,7 @@ export default defineComponent({
     const downloadXls = (countActivities) => {
       isLoading.value = true;
       store.dispatch('updateStartXlsDownload', true);
+      store.dispatch('updateCancelDownload', false);
 
       downloadingBackgroundMessage.value = false;
       let queryParameters = window.location.href?.split('?');
