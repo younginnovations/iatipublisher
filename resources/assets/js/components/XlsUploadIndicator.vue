@@ -10,19 +10,22 @@
       :completed="completed"
       @close="closeXls"
     />
-    <ActivityDownload v-if="downloading && !downloadCompleted" />
+    <ActivityDownload
+      v-if="downloading && !downloadCompleted && !cancelDownload"
+    />
   </div>
 </template>
 <script setup lang="ts">
 import ActivityDownload from './ActivityDownload.vue';
 import XlsLoader from './XlsLoader.vue';
 import BulkpublishWithXls from './BulkpublishWithXls.vue';
-import { defineProps, ref, inject, watch } from 'vue';
+import { defineProps, ref, inject, watch, onUnmounted } from 'vue';
 import axios from 'axios';
 import { useStore } from 'Store/activities/index';
 const store = useStore();
 const showXlsStatus = ref(true);
 const downloadCompleted = ref(false);
+const cancelDownload = ref(false);
 
 defineProps({
   activityName: {
@@ -51,6 +54,16 @@ defineProps({
   },
 });
 
+onUnmounted(() => {
+  const supportButton: HTMLElement = document.querySelector(
+    '#launcher'
+  ) as HTMLElement;
+
+  if (supportButton !== null) {
+    supportButton.style.transform = 'translatey(-30px)';
+  }
+});
+
 const closeXls = () => {
   showXlsStatus.value = false;
   axios.delete(`/import/xls`);
@@ -62,10 +75,16 @@ const closeXls = () => {
 watch(
   () => store.state.completeXlsDownload,
   (value) => {
-    console.log(value, ';watchers');
     if (value) {
       downloadCompleted.value = true;
     }
+  },
+  { deep: true }
+);
+watch(
+  () => store.state.cancelDownload,
+  (value) => {
+    cancelDownload.value = value;
   },
   { deep: true }
 );

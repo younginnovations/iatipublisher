@@ -7,6 +7,7 @@ interface StateInterface {
   maximizeXls: boolean;
   startXlsDownload: boolean;
   completeXlsDownload: boolean;
+  cancelDownload: boolean;
 }
 
 const state = {
@@ -16,6 +17,7 @@ const state = {
   maximizeXls: true,
   startXlsDownload: false,
   completeXlsDownload: false,
+  cancelDownload: false,
 };
 
 const mutations = {
@@ -42,6 +44,9 @@ const mutations = {
     payload: boolean
   ) {
     state.completeXlsDownload = payload;
+  },
+  mutateCancelDownload: function (state: StateInterface, payload: boolean) {
+    state.cancelDownload = payload;
   },
 };
 
@@ -79,6 +84,12 @@ const actions = {
     payload: boolean
   ) {
     commit('mutateCompleteXlsDownload', payload);
+  },
+  updateCancelDownload: function (
+    { commit }: CommitFunction,
+    payload: boolean
+  ) {
+    commit('mutateCancelDownload', payload);
   },
 };
 

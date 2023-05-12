@@ -2465,6 +2465,10 @@ video {
 .tracking-normal {
   letter-spacing: 0em;
 }
+.text-crimson-50 {
+  --tw-text-opacity: 1;
+  color: rgba(var(--crimson-50), var(--tw-text-opacity));
+}
 .text-n-40 {
   --tw-text-opacity: 1;
   color: rgba(var(--n-40), var(--tw-text-opacity));
@@ -2496,10 +2500,6 @@ video {
 .text-salmon-50 {
   --tw-text-opacity: 1;
   color: rgba(var(--salmon-50), var(--tw-text-opacity));
-}
-.text-crimson-50 {
-  --tw-text-opacity: 1;
-  color: rgba(var(--crimson-50), var(--tw-text-opacity));
 }
 .text-salmon-40 {
   --tw-text-opacity: 1;

@@ -37,7 +37,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, provide, reactive, ref, watch } from 'vue';
+import {
+  defineComponent,
+  onMounted,
+  provide,
+  reactive,
+  ref,
+  watch,
+  Ref,
+} from 'vue';
 import { watchIgnorable } from '@vueuse/core';
 import axios from 'axios';
 import XlsUploadIndicator from 'Components/XlsUploadIndicator.vue';
@@ -152,8 +160,6 @@ export default defineComponent({
     watch(
       () => store.state.startXlsDownload,
       (value) => {
-        console.log(value, 'Start download');
-
         if (value) {
           checkDownloadStatus();
         }
@@ -198,22 +204,18 @@ export default defineComponent({
     };
     const checkDownloadStatus = () => {
       const checkDownload = setInterval(function () {
-        console.log(' polling');
-
         axios.get('/activities/download-xls-progress-status').then((res) => {
           downloading.value = !!res.data.status;
           fileCount.value = res.data.file_count;
           xlsDownloadStatus.value = res.data.status;
           downloadApiUrl.value = res.data.url;
           if (res.data.status === 'completed' || !res.data.status) {
-            console.log('clear');
             clearInterval(checkDownload);
           }
         });
       }, 3000);
     };
     onMounted(() => {
-      console.log(store.state.startXlsDownload, 'from vuex');
       checkXlsstatus();
       checkDownloadStatus();
       if (props.toast.message !== '') {
@@ -302,9 +304,9 @@ export default defineComponent({
     provide('completed', importCompleted);
     provide('processing', processing);
     provide('downloading', downloading);
-    provide('fileCount', fileCount);
-    provide('xlsDownloadStatus', xlsDownloadStatus);
-    provide('downloadApiUrl', downloadApiUrl);
+    provide('fileCount', fileCount as Ref);
+    provide('xlsDownloadStatus', xlsDownloadStatus as Ref);
+    provide('downloadApiUrl', downloadApiUrl as Ref);
 
     return {
       activities,
