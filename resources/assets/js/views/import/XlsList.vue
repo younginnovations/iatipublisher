@@ -262,6 +262,9 @@ const cancelImport = () => {
     setTimeout(() => (toastVisibility.value = false), 15000);
     toastMessage.value = response.message;
     toastType.value = response.success;
+    setTimeout(() => {
+      window.location.href = '/import/xls';
+    }, 2000);
   });
 };
 

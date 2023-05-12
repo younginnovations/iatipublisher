@@ -49,7 +49,7 @@
     </div>
   </div>
   <button
-    v-if="totalCount === processedCount && totalCount !== 0"
+    v-if="(totalCount === processedCount && totalCount !== 0) || xlsFailed"
     class="absolute right-0 bottom-[80px] translate-x-4 rounded-full bg-white p-[1px]"
     @click="$emit('close')"
   >
@@ -114,15 +114,17 @@ const retry = () => {
 onMounted(() => {
   currentActivity.value = mapActivityName(props.activityName);
   console.log(';moun');
-  setTimeout(() => {
+  const checkSupportButton = setInterval(() => {
     const supportButton: HTMLElement = document.querySelector(
       '#launcher'
     ) as HTMLElement;
 
     if (supportButton !== null) {
       supportButton.style.transform = 'translatey(-50px)';
+
+      clearInterval(checkSupportButton);
     }
-  }, 500);
+  }, 10);
 });
 onUpdated(() => {
   console.log(xlsFailedMessage);

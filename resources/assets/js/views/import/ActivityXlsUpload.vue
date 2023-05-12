@@ -53,7 +53,7 @@
                   name="product"
                 />
               </div>
-              <p class="h-[120px] text-xs text-n-40">
+              <p class="h-[120px] text-[13px] tracking-normal text-n-40">
                 Download the template 'All elements except result.xls. Fill the
                 data for multiple activities except for 'Result' element and
                 upload the XLS file to add the activity data in the publisher.
@@ -79,7 +79,7 @@
                   name="product"
                 />
               </div>
-              <p class="h-[120px] text-xs text-n-40">
+              <p class="h-[120px] text-[13px] tracking-normal text-n-40">
                 Download the template ‘Result except indicator and period.xls'.
                 Fill the data for multiple results of multiple activities except
                 for the indicator and period sub-elements. Upload the XLS file
@@ -107,7 +107,7 @@
                   name="product"
                 />
               </div>
-              <p class="h-[120px] text-xs text-n-40">
+              <p class="h-[120px] text-[13px] tracking-normal text-n-40">
                 Download the template 'Indicator except period.xls'. Fill the
                 data for multiple indicators of multiple results except for the
                 period sub-elements. Upload the XLS file to add indicator
@@ -133,7 +133,7 @@
                   name="product"
                 />
               </div>
-              <p class="h-[120px] text-xs text-n-40">
+              <p class="h-[120px] text-[13px] tracking-normal text-n-40">
                 Download the template 'Period.xls'. Fill the data for multiple
                 periods of multiple indicators. Upload the XLS file to add
                 period sub-elements in specific indicators already present in
@@ -164,7 +164,7 @@
             {{ error }}
           </div>
         </div>
-        <p class="mt-6 text-n-50">
+        <p class="mt-6 text-center text-n-50">
           Please make sure to read the instructions before beginning this
           process.
         </p>

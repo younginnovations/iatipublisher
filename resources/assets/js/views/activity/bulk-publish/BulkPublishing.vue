@@ -156,7 +156,11 @@ setTimeout(() => {
     '#launcher'
   ) as HTMLElement;
 
-  if (supportButton !== null && Object.keys(activities).length > 0) {
+  if (
+    supportButton !== null &&
+    activities.value &&
+    Object.keys(activities.value).length > 0
+  ) {
     supportButton.style.transform = 'translateX(-350px)';
     supportButton.style.opacity = '1';
   }
