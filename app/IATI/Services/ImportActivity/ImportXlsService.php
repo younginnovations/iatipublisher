@@ -197,6 +197,7 @@ class ImportXlsService
             $existingId = Arr::get($activity, 'existing', false);
 
             if ($existingId && $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'))) {
+                $activityData = $this->fillActivityData($activityData);
                 $this->activityRepository->update($existingId, $activityData);
                 $this->transactionRepository->deleteTransaction($existingId);
                 $this->saveTransactions(Arr::get($activityData, 'transactions'), $existingId);
@@ -216,6 +217,59 @@ class ImportXlsService
                 }
             }
         }
+    }
+
+    /**
+     * Fill elements for activity for update.
+     *
+     * @param $activityData
+     *
+     * @return array
+     */
+    protected function fillActivityData($activityData): array
+    {
+        $activityElements = [
+            'iati_identifier',
+            'other_identifier',
+            'title',
+            'description',
+            'activity_status',
+            'activity_date',
+            'contact_info',
+            'activity_scope',
+            'participating_org',
+            'recipient_country',
+            'recipient_region',
+            'location',
+            'sector',
+            'country_budget_items',
+            'humanitarian_scope',
+            'policy_marker',
+            'collaboration_type',
+            'default_flow_type',
+            'default_finance_type',
+            'default_aid_type',
+            'default_tied_status',
+            'budget',
+            'planned_disbursement',
+            'capital_spend',
+            'document_link',
+            'related_activity',
+            'legacy_data',
+            'conditions',
+            'default_field_values',
+            'tag',
+            'reporting_org',
+            'element_status',
+        ];
+
+        $filledData = [];
+
+        foreach ($activityElements as $element) {
+            $filledData[$element] = Arr::get($activityData, $element, null);
+        }
+
+        return $filledData;
     }
 
     /**

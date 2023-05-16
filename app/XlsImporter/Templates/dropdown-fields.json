@@ -163,7 +163,7 @@
         "indicator_identifier": true,
         "indicator_baseline_identifier": true
     },
-    "baseline": {
+    "indicator_baseline": {
         "indicator_baseline_identifier": true,
         "comment narrative language": "Activity/Language.json"
     },

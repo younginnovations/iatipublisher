@@ -707,7 +707,7 @@
         "indicator_uri": null
       }
     ],
-    "baseline": [
+    "indicator_baseline": [
       {
         "year": null,
         "date": null,
@@ -777,7 +777,7 @@
       }
     ]
   },
-  "baseline": {
+  "indicator_baseline": {
     "year": null,
     "date": null,
     "value": null,

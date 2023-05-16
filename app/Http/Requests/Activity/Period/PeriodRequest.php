@@ -173,10 +173,11 @@ class PeriodRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
+            $date = $periodBase ? $periodBase . '.period_start.' . $periodEndKey . '.date' : 'period_start.' . $periodEndKey . '.date';
             if ($periodBase) {
-                $rules[sprintf('%s.%s.date', $periodType, $periodEndKey)] = sprintf('nullable|date_greater_than:1900|after:%s', $periodBase . '.period_start.' . $periodEndKey . '.date');
+                $rules[sprintf('%s.%s.date', $periodType, $periodEndKey)] = sprintf('nullable|date_greater_than:1900|after:%s', $date);
             } else {
-                $rules[sprintf('%s.%s.date', $periodType, $periodEndKey)] = sprintf('nullable|after:%s', '.period_start.' . $periodEndKey . '.date');
+                $rules[sprintf('%s.%s.date', $periodType, $periodEndKey)] = sprintf('nullable|after:%s', $date);
             }
         }
 
@@ -232,6 +233,13 @@ class PeriodRequest extends ActivityBaseRequest
                 $periodStartKey
             )]
                 = 'The @iso-date field of period end must be a date after @iso-field of period start';
+
+            $messages[sprintf(
+                '%s.%s.date.date_greater_than',
+                $periodType,
+                $periodStartKey
+            )]
+                = 'The @iso-date must be greater than 1900';
 
             $messages[sprintf(
                 '%s.%s.date.period_start_end',

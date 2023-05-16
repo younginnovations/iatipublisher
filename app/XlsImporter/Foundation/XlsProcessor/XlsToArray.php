@@ -73,7 +73,7 @@ class XlsToArray implements ToArray, WithHeadingRow, WithEvents, WithCalculatedF
                     }
                 }
 
-                $row[$key] = $value && !is_string($value) ? Date::excelToDateTimeObject($value)->format('Y-m-d') : null;
+                $row[$key] = $value && !is_string($value) ? Date::excelToDateTimeObject($value)->format('Y-m-d') : $value;
             }
         }
 

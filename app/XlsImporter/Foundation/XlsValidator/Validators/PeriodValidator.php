@@ -38,6 +38,14 @@ class PeriodValidator implements ValidatorInterface
         $this->factory = $factory;
     }
 
+    public function init($period): static
+    {
+        $this->period = $period['period'];
+        $this->indicatorId = $period['indicatorId'];
+
+        return $this;
+    }
+
     /**
      * Returns warnings for xml uploaded activity.
      *
@@ -79,14 +87,6 @@ class PeriodValidator implements ValidatorInterface
     public function messages(): array
     {
         return (new PeriodRequest())->getMessagesForPeriod($this->period, true, [], $this->indicatorId);
-    }
-
-    public function init($period): static
-    {
-        $this->period = $period['period'];
-        $this->indicatorId = $period['indicatorId'];
-
-        return $this;
     }
 
     /**

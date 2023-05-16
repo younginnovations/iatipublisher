@@ -257,7 +257,7 @@ class IndicatorRequest extends ActivityBaseRequest
                 $rules[$key] = $item;
             }
 
-            $dcoLinkRules = $this->getWarningForDocumentLink($baseline['document_link'], $baselineForm);
+            $dcoLinkRules = $this->getWarningForDocumentLink(Arr::get($baseline, 'document_link', []), $baselineForm);
 
             foreach ($dcoLinkRules as $key => $item) {
                 $rules[$key] = $item;

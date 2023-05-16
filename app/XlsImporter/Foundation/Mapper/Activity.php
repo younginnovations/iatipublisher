@@ -17,48 +17,6 @@ class Activity
         getElementPosition as getElementPosition;
     }
 
-    //activities whose identifier is mentioned on setting sheet
-    protected array $activities = [];
-
-    /**
-     * total number of activities.
-     */
-    protected int $totalCount = 0;
-
-    /**
-     * total number of processed count.
-     */
-    protected int $processedCount = 0;
-
-    /**
-     * @var array
-     */
-    protected array $activitiesIdentifier = [];
-
-    protected array $existingIdentifier = [];
-
-    /**
-     * @var array
-     */
-    protected array $duplicateIdentifiers = [];
-
-    /**
-     * @var int
-     */
-    protected int $rowCount = 2;
-
-    /**
-     * name of sheet currently being processed.
-     *
-     * @var string
-     */
-    protected string $sheetName = '';
-
-    /**
-     * @var array
-     */
-    protected array $columnTracker = [];
-
     /**
      * @var array
      */
@@ -116,16 +74,67 @@ class Activity
         'transactions',
     ];
 
+    //activities whose identifier is mentioned on setting sheet
+    protected array $activities = [];
+
+    /**
+     * total number of activities.
+     */
+    protected int $totalCount = 0;
+
+    /**
+     * total number of processed count.
+     */
+    protected int $processedCount = 0;
+
+    /**
+     * @var array
+     */
+    protected array $activitiesIdentifier = [];
+
+    protected array $existingIdentifier = [];
+
+    /**
+     * @var array
+     */
+    protected array $trackIdentifierBySheet = [];
+
+    /**
+     * @var int
+     */
+    protected int $rowCount = 2;
+
+    /**
+     * name of sheet currently being processed.
+     *
+     * @var string
+     */
+    protected string $sheetName = '';
+
+    /**
+     * @var array
+     */
+    protected array $columnTracker = [];
+
+    protected array $globalErrors = [];
+
+    protected array $processingErrors = [];
+    protected array $tempErrors = [];
+
     protected string $elementBeingProcessed = '';
 
     protected string $statusFilePath = '';
     protected string $validatedDataFilePath = '';
+
+    protected string $globalErrorFilePath = '';
+
     protected array $organizationReportingOrg = [];
 
-    public function initMapper($validatedDataFilePath, $statusFilePath, $existingIdentifier)
+    public function initMapper($validatedDataFilePath, $statusFilePath, $globalErrorFilePath, $existingIdentifier)
     {
         $this->validatedDataFilePath = $validatedDataFilePath;
         $this->statusFilePath = $statusFilePath;
+        $this->globalErrorFilePath = $globalErrorFilePath;
         $this->existingIdentifier = $existingIdentifier;
     }
 
@@ -178,17 +187,18 @@ class Activity
             $error = $this->appendExcelColumnAndRowDetail($errors, $excelColumnAndRowName);
             $existingId = Arr::get($this->existingIdentifier, $activityIdentifier, false);
 
-            if (in_array($activityIdentifier, array_keys($this->duplicateIdentifiers))) {
-                $error['critical']['iati_identifier']['iati_identifier'] = 'The activity identifier has been duplicated on sheet: ' . implode(', ', $this->duplicateIdentifiers[$activityIdentifier]);
-            }
-
             if (!in_array($activityIdentifier, $this->activitiesIdentifier)) {
                 $error['critical']['iati_identifier']['settings'] = 'The activity identifier has not been mentioned on setting sheet.';
             }
 
-            $this->storeValidatedData($activity, $error, $existingId);
+            if (Arr::get($this->processingErrors, $activityIdentifier, null)) {
+                $error['critical'] = Arr::get($this->processingErrors, $activityIdentifier);
+            }
+
+            $this->storeValidatedData($activity, $error, $existingId, $activityIdentifier);
         }
 
+        $this->storeGlobalErrors();
         $this->updateStatus();
     }
 
@@ -198,23 +208,22 @@ class Activity
         $excelColumnName = $this->getExcelColumnNameMapper();
         $elementActivityIdentifier = null;
 
-        foreach ($data as $row) {
+        foreach ($data as $index => $row) {
             $secondary_reporter = '';
+
             if ($this->checkRowNotEmpty($row)) {
-                if (empty(Arr::get($row, 'activity_identifier', null))) {
-                    continue;
+                if ($index === 0 && is_null($row['activity_identifier'])) {
+                    $this->globalErrors[] = 'Error detected on ' . $this->sheetName . ' sheet, cell A' . $this->rowCount . ': Identifier is missing.';
                 }
+
+                $this->isIdentifierDuplicate($row['activity_identifier'], 'settings');
 
                 $secondary_reporter = $row['secondary_reporter'];
                 unset($row['secondary_reporter']);
 
                 $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null) ?? $elementActivityIdentifier;
 
-                if (in_array($elementActivityIdentifier, $this->activitiesIdentifier)) {
-                    $this->duplicateIdentifiers[$elementActivityIdentifier][] = 'Settings';
-                } else {
-                    $this->activitiesIdentifier[] = $elementActivityIdentifier;
-                }
+                $this->activitiesIdentifier[] = $elementActivityIdentifier;
 
                 foreach ($this->defaultValueElements as $element) {
                     $fieldValue = Arr::get($row, $element, null);
@@ -226,6 +235,7 @@ class Activity
 
                     if (isset($this->activities[$elementActivityIdentifier]['default_field_values'][$element])) {
                         if (!is_array($this->activities[$elementActivityIdentifier]['default_field_values'][$element])) {
+                            $this->activities[$elementActivityIdentifier]['default_field_values'][$element] = [];
                             $this->activities[$elementActivityIdentifier]['default_field_values'][$element][] = $this->activities[$elementActivityIdentifier]['default_field_values'][$element];
                         }
                         $this->activities[$elementActivityIdentifier]['default_field_values'][$element][] = $fieldValue;
@@ -287,8 +297,12 @@ class Activity
         $elementActivityIdentifier = null;
         $excelColumnName = $this->getExcelColumnNameMapper();
 
-        foreach ($data as $row) {
+        foreach ($data as $index => $row) {
             if ($this->checkRowNotEmpty($row)) {
+                if ($index === 0 && is_null($row['activity_identifier'])) {
+                    $this->globalErrors[] = 'Error detected on ' . $this->sheetName . ' sheet, cell A' . $this->rowCount . ': Identifier is missing.';
+                }
+
                 $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null) ?? $elementActivityIdentifier;
 
                 foreach ($this->singleValuedElements as $element) {
@@ -338,8 +352,12 @@ class Activity
                     )
                 ) {
                     if (!empty($elementData)) {
-                        $this->checkDuplicateIdentifier($elementActivityIdentifier, $element);
-                        $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
+                        $processedData = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
+
+                        if (!empty($processedData)) {
+                            $this->activities[$elementActivityIdentifier][$element] = $processedData;
+                        }
+
                         $elementData = [];
                     }
 
@@ -358,31 +376,34 @@ class Activity
 
         if (!empty($elementData)) {
             if (in_array($elementActivityIdentifier, $this->activitiesIdentifier)) {
-                $this->checkDuplicateIdentifier($elementActivityIdentifier, $element);
-                $this->activities[$elementActivityIdentifier][$element] = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
+                $processedData = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
+
+                if (!empty($processedData)) {
+                    $this->activities[$elementActivityIdentifier][$element] = $processedData;
+                }
             }
             $elementData = [];
         }
     }
 
-    public function checkDuplicateIdentifier($elementActivityIdentifier, $element)
-    {
-        if (in_array($element, array_keys(Arr::get($this->activities, $elementActivityIdentifier, [])))) {
-            if (!in_array($element, Arr::get($this->duplicateIdentifiers, $elementActivityIdentifier, []))) {
-                $this->duplicateIdentifiers[$elementActivityIdentifier][] = $element;
-            }
-        }
-    }
-
     public function getElementData($data, $dependency, $elementDropDownFields, $elementActivityIdentifier, $element): array
     {
-        $elementData = [];
+        if (is_null($elementActivityIdentifier)) {
+            $this->globalErrors[] = 'Error detected on ' . $this->sheetName . ' sheet, cell A' . $this->rowCount . ': Identifier is missing.';
+
+            return [];
+        }
+
+        $this->isIdentifierDuplicate($elementActivityIdentifier, $element);
+
         $elementBase = Arr::get($dependency, 'elementBase', null);
         $elementBasePeer = Arr::get($dependency, 'elementBasePeer', []);
+        $elementAddMore = Arr::get($dependency, 'add_more', true);
         $baseCount = null;
         $fieldDependency = $dependency['fieldDependency'];
-        $parentBaseCount = [];
         $excelColumnName = $this->getExcelColumnNameMapper();
+        $parentBaseCount = [];
+        $elementData = [];
 
         // variables to map code dependency in elements like sector, recipient region and so on
         $codeDependencyCondition = Arr::get($dependency, 'codeDependency.dependencyCondition', []);
@@ -402,34 +423,8 @@ class Activity
 
         foreach ($data as $row) {
             foreach ($row as $fieldName => $fieldValue) {
-                if ($fieldName === $elementBase) {
-                }
-
-                if ($elementBase && ($fieldName === $elementBase && ($fieldValue || is_numeric($fieldValue) || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)))) {
-                    $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
-
-                    $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
-                    $dependentOnValue = array_fill_keys(array_keys($dependentOnValue), null);
-                }
-
-                if (array_key_exists($fieldName, $fieldDependency)) {
-                    $parentKey = $fieldDependency[$fieldName]['parent'];
-                    $peerAttributes = Arr::get($fieldDependency, "$fieldName.peer", []);
-                    $children = Arr::get($fieldDependency, "$fieldName.children", []);
-                    $parentAddMore = Arr::get($fieldDependency, "$fieldName.add_more", true);
-
-                    if ($fieldValue || is_numeric($fieldValue) || $this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
-                        $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) || !$parentAddMore ? 0 : $parentBaseCount[$parentKey] + 1;
-
-                        foreach ($children as $child) {
-                            $parentBaseCount[$child] = null;
-                        }
-
-                        if (in_array($parentKey, array_keys($parentDependentOn))) {
-                            $dependentOnValue[$parentKey] = null;
-                        }
-                    }
-                }
+                list($baseCount, $parentBaseCount, $dependentOnValue) = $this->checkElementAddMore($elementBase, $elementBasePeer, $elementAddMore, $dependentOnValue, $fieldName, $fieldValue, $baseCount, $parentBaseCount, $row, $element);
+                list($parentBaseCount, $dependentOnValue) = $this->checkSubElementAddMore($fieldDependency, $parentBaseCount, $parentDependentOn, $dependentOnValue, $fieldName, $fieldValue, $row);
 
                 if (!empty($dependentOn)) {
                     if (in_array($fieldName, array_keys(Arr::get($dependentOn, 'codes', [])))) {
@@ -474,6 +469,14 @@ class Activity
 
             $this->rowCount++;
         }
+
+        if (!empty($this->tempErrors)) {
+            foreach ($this->tempErrors as $errorIndex => $error) {
+                $this->processingErrors[$elementActivityIdentifier][$element][$errorIndex] = $error;
+            }
+        }
+
+        $this->tempErrors = [];
 
         return $elementData;
     }

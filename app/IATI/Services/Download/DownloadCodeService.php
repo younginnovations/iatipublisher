@@ -87,21 +87,21 @@ class DownloadCodeService
                     foreach ($periods as $periodIndex => $period) {
                         $this->xlsFields['Period Mapper'][] = [
                             $periodIndex === 0 ? $indicatorIdentifier : '',
-                            (string) $period->period_code,
+                            $period->period_code,
                             $indicatorIdentifier . '_' . $period->period_code,
                         ];
                     }
 
                     $this->xlsFields['Indicator Mapper'][] = [
                         $indicatorIndex === 0 ? $resultIdentifier : '',
-                        (string) $indicator->indicator_code,
+                        $indicator->indicator_code,
                         $resultIdentifier . '_' . $indicator->indicator_code,
                     ];
                 }
 
                 $this->xlsFields['Result Mapper'][] = [
                     $resultIndex === 0 ? $activityIdentifier : '',
-                    (string) $result->result_code,
+                    $result->result_code,
                     $activityIdentifier . '_' . $result->result_code,
                 ];
             }

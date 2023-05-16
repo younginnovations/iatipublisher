@@ -51,9 +51,10 @@ class XlsMapper
         $xls_data_storage_path = 'XlsImporter/tmp';
         $validatedDataFilePath = sprintf('%s/%s/%s/%s', $xls_data_storage_path, $orgId, $userId, 'valid.json');
         $statusFilePath = sprintf('%s/%s/%s/%s', $xls_data_storage_path, $orgId, $userId, 'status.json');
+        $globalErrorFilePath = sprintf('%s/%s/%s/%s', $xls_data_storage_path, $orgId, $userId, 'globalError.json');
 
         $xlsMapper = new $mapper();
-        $xlsMapper->initMapper($validatedDataFilePath, $statusFilePath, $dbIatiIdentifiers);
+        $xlsMapper->initMapper($validatedDataFilePath, $statusFilePath, $globalErrorFilePath, $dbIatiIdentifiers);
 
         if ($xlsType === 'activity') {
             $xlsMapper->fillOrganizationReportingOrg($reportingOrg);

@@ -246,6 +246,8 @@
         "default_tied_status": "Code"
     },
     "country_budget_items": {
+        "elementBase": "country_budget_vocabulary",
+        "add_more": false,
         "fieldDependency": {
             "budget_item code": {
                 "parent": "budget_item",
@@ -290,6 +292,8 @@
         "fieldDependency": {}
     },
     "conditions": {
+        "elementBase": "condition_attached",
+        "add_more": false,
         "fieldDependency": {
             "condition condition_type": {
                 "parent": "condition",
@@ -735,7 +739,13 @@
             }
         }
     },
-    "baseline": {
+    "indicator_baseline": {
+        "elementBase": "year",
+        "elementBasePeer": [
+            "date",
+            "value"
+        ],
+        "add_more": false,
         "fieldDependency": {
             "comment narrative narrative": {
                 "parent": "comment narrative",
@@ -786,6 +796,11 @@
         }
     },
     "period": {
+        "elementBase": "period_start date",
+        "elementBasePeer": [
+            "period_end date"
+        ],
+        "add_more": false,
         "fieldDependency": {
             "period_start date": {
                 "parent": "period_start",
@@ -840,7 +855,7 @@
             "category code": {
                 "parent": "category"
             },
-            "language code": {
+            "language language": {
                 "parent": "language"
             },
             "document_date date": {
@@ -892,7 +907,7 @@
             "category code": {
                 "parent": "category"
             },
-            "language code": {
+            "language language": {
                 "parent": "language"
             },
             "document_date date": {

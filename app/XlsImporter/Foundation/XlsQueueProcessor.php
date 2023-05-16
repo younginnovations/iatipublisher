@@ -214,7 +214,7 @@ class XlsQueueProcessor
     {
         foreach ($systemSheets as $sheetName => $type) {
             if (!in_array($sheetName, $xlsSheetNames) && $type === 'required') {
-                awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => $sheetName . ' sheet missing in xls file.'], JSON_THROW_ON_ERROR));
+                awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => $sheetName . ' sheet missing in xls file. Please ensure that the file you have uploaded has correct template.'], JSON_THROW_ON_ERROR));
 
                 return false;
             }

@@ -54,16 +54,24 @@ class Indicator
     protected array $tempColumnTracker = [];
     protected string $statusFilePath = '';
     protected string $validatedDataFilePath = '';
+    protected string $globalErrorFilePath = '';
 
     protected array $existingIdentifier = [];
+    protected array $trackIdentifierBySheet = [];
+
+    protected array $globalErrors = [];
+
+    protected array $processingErrors = [];
+    protected array $tempErrors = [];
 
     protected int $totalCount = 0;
     protected int $processedCount = 0;
 
-    public function initMapper($validatedDataFilePath, $statusFilePath, $existingIdentifier)
+    public function initMapper($validatedDataFilePath, $statusFilePath, $globalErrorFilePath, $existingIdentifier)
     {
         $this->validatedDataFilePath = $validatedDataFilePath;
         $this->statusFilePath = $statusFilePath;
+        $this->globalErrorFilePath = $globalErrorFilePath;
         $this->existingIdentifier = $existingIdentifier;
     }
 
@@ -133,7 +141,7 @@ class Indicator
             }
 
             if (array_key_exists($sheetName, $this->indicatorDivision)) {
-                $this->mapIndicatorDataSheets($this->indicatorDivision[$sheetName], $content);
+                $this->columnToFieldMapper($this->indicatorDivision[$sheetName], $content);
             }
         }
 
@@ -178,15 +186,20 @@ class Indicator
                 $existingId = Arr::get($this->existingIdentifier, sprintf('indicator.%s', $indicatorIdentifier), false);
 
                 if (!$parentId) {
-                    $error['critical']['result_identifier']['result_identifier'] = 'The result identifier doesn\'t exist in the system';
+                    $error['critical']['result_identifier']['result_identifier'] = "The result identifier doesn't exist in the system";
+                }
+
+                if (!empty(Arr::get($this->processingErrors, "$resultIdentifier.$indicatorIdentifier", []))) {
+                    $error['critical']['indicator_identifier'] = Arr::get($this->processingErrors, "$resultIdentifier.$indicatorIdentifier");
                 }
 
                 $this->processedCount++;
 
-                $this->storeValidatedData($indicatorData['indicator'], $error, $existingId, $resultIdentifier, str_replace($resultIdentifier . '_', '', $indicatorIdentifier));
+                $this->storeValidatedData($indicatorData['indicator'], $error, $existingId, $indicatorIdentifier, $resultIdentifier, str_replace($resultIdentifier . '_', '', $indicatorIdentifier));
             }
         }
 
+        $this->storeGlobalErrors();
         $this->updateStatus();
     }
 
@@ -204,8 +217,14 @@ class Indicator
 
         foreach ($data as $index => $row) {
             if ($this->checkRowNotEmpty($row)) {
+                if ($index === 0 && is_null($row[$parentIdentifierKey])) {
+                    $this->globalErrors[] = 'Error detected on ' . $this->sheetName . ' sheet, cell A' . $this->rowCount . ': Identifier is missing.';
+                }
+
                 if ((empty($parentIdentifierValue) || $parentIdentifierValue !== $row[$parentIdentifierKey]) && !empty($row[$parentIdentifierKey])) {
                     $parentIdentifierValue = $row[$parentIdentifierKey];
+
+                    $this->isIdentifierDuplicate($parentIdentifierValue, $sheetName);
                 }
 
                 $this->indicatorIdentifier[$sheetName][$parentIdentifierValue][] = sprintf('%s%s%s', $parentIdentifierValue, $mapperDetails['concatinator'], $row[$numberKey]);
@@ -224,7 +243,7 @@ class Indicator
      *
      * @return void
      */
-    public function mapIndicatorDataSheets($element, $data = []): void
+    public function columnToFieldMapper($element, $data = []): void
     {
         $elementData = [];
         $columnMapper = $this->getLinearizedActivity();
@@ -244,7 +263,7 @@ class Indicator
                     )
                 ) {
                     if (!empty($elementData)) {
-                        $this->pushIndicatorData($element, $elementActivityIdentifier, $this->convertGroupedDataToSystemData($elementData, $dependency[$element], $elementDropDownFields, $element));
+                        $this->pushIndicatorData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element, $elementActivityIdentifier));
                         $elementData = [];
                     }
 
@@ -264,7 +283,7 @@ class Indicator
         }
 
         if (!empty($elementData)) {
-            $this->pushIndicatorData($element, $elementActivityIdentifier, $this->convertGroupedDataToSystemData($elementData, $dependency[$element], $elementDropDownFields, $element));
+            $this->pushIndicatorData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element, $elementActivityIdentifier));
             $elementData = [];
         }
     }
@@ -279,8 +298,16 @@ class Indicator
      *
      * @return array
      */
-    public function convertGroupedDataToSystemData($data, $dependency, $elementDropDownFields, $element): array
+    public function getElementData($data, $dependency, $elementDropDownFields, $element, $elementActivityIdentifier): array
     {
+        if (is_null($elementActivityIdentifier)) {
+            $this->globalErrors[] = sprintf('Error detected on %s sheet, cell A %s: The identifier is missing.', $this->sheetName, $this->rowCount);
+
+            return [];
+        }
+
+        $this->isIdentifierDuplicate($elementActivityIdentifier, $element);
+
         $elementBase = Arr::get($dependency, 'elementBase', null);
         $elementBasePeer = Arr::get($dependency, 'elementBasePeer', []);
         $elementAddMore = Arr::get($dependency, 'add_more', true);
@@ -309,25 +336,8 @@ class Indicator
 
         foreach ($data as $row) {
             foreach ($row as $fieldName => $fieldValue) {
-                if ($elementBase && $elementAddMore && $fieldName === $elementBase && ($fieldValue || is_numeric($fieldValue) || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row) || ($this->checkIfPeerAttributesAreNotEmpty(array_keys($row), $row) && is_null($baseCount)))) {
-                    $baseCount = is_null($baseCount) ? 0 : $baseCount + 1;
-                    // empty count of child elements
-                    $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
-                    $dependentOnValue = array_fill_keys(array_keys($dependentOnValue), null);
-                }
-
-                if (in_array($fieldName, array_keys($fieldDependency))) {
-                    $parentKey = $fieldDependency[$fieldName]['parent'];
-                    $peerAttributes = Arr::get($fieldDependency, "$fieldName.peer", []);
-
-                    if ($fieldValue || is_numeric($fieldValue) || $this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
-                        $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) ? 0 : $parentBaseCount[$parentKey] + 1;
-
-                        if (in_array($parentKey, array_keys($parentDependentOn))) {
-                            $dependentOnValue[$parentKey] = null;
-                        }
-                    }
-                }
+                list($baseCount, $parentBaseCount, $dependentOnValue) = $this->checkElementAddMore($elementBase, $elementBasePeer, $elementAddMore, $dependentOnValue, $fieldName, $fieldValue, $baseCount, $parentBaseCount, $row, $element);
+                list($parentBaseCount, $dependentOnValue) = $this->checkSubElementAddMore($fieldDependency, $parentBaseCount, $parentDependentOn, $dependentOnValue, $fieldName, $fieldValue, $row);
 
                 if (!empty($dependentOn)) {
                     if (in_array($fieldName, array_keys(Arr::get($dependentOn, 'uri', [])))) {
@@ -384,20 +394,27 @@ class Indicator
         $periodElementFunctions = [
             'indicator' => 'pushIndicator',
             'indicator document_link' => 'pushIndicatorDocumentLink',
-            'baseline' => 'pushIndicatorBaseline',
+            'indicator_baseline' => 'pushIndicatorBaseline',
             'baseline document_link' => 'pushIndicatorBaselineDocumentLink',
         ];
 
         call_user_func([$this, $periodElementFunctions[$element]], $identifier, $data);
+
         $this->tempColumnTracker = [];
+        $this->tempErrors = [];
     }
 
     protected function pushIndicator($identifier, $data): void
     {
         $resultIdentifier = Arr::get($this->identifiers, "indicator.$identifier", null);
-        $this->indicators[$resultIdentifier][$identifier]['indicator'] = $data;
-        $this->columnTracker[$resultIdentifier][$identifier]['indicator'] = $this->tempColumnTracker;
-        $this->totalCount++;
+
+        if (!empty($data)) {
+            $this->indicators[$resultIdentifier][$identifier]['indicator'] = $data;
+            $this->columnTracker[$resultIdentifier][$identifier]['indicator'] = $this->tempColumnTracker;
+            $this->totalCount++;
+        }
+
+        $this->addProcessingErrors($resultIdentifier, $identifier);
     }
 
     protected function pushIndicatorDocumentLink($identifier, $data): void
@@ -405,36 +422,49 @@ class Indicator
         $resultIdentifier = Arr::get($this->identifiers, "indicator.$identifier", null);
         $this->checkIfIndicatorExists($resultIdentifier, $identifier);
 
-        $this->indicators[$resultIdentifier][$identifier]['indicator']['document_link'] = $data;
-        $this->updateColumnTracker($resultIdentifier, $identifier, 'document_link');
+        if (!empty($data)) {
+            $this->indicators[$resultIdentifier][$identifier]['indicator']['document_link'] = $data;
+            $this->updateColumnTracker($resultIdentifier, $identifier, 'document_link');
+        }
+
+        $this->addProcessingErrors($resultIdentifier, $identifier);
     }
 
     protected function pushIndicatorBaseline($identifier, $data): void
     {
         $indicatorIdentifier = Arr::get($this->identifiers, "baseline.$identifier", null);
         $resultIdentifier = Arr::get($this->identifiers, "indicator.$indicatorIdentifier", null);
-        $this->checkIfIndicatorExists($resultIdentifier, $indicatorIdentifier);
 
-        if (isset($this->baselineIndexing[$resultIdentifier][$indicatorIdentifier])) {
-            $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][] = $data;
-        } else {
-            $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][0] = $data;
+        if (!empty($data)) {
+            $this->checkIfIndicatorExists($resultIdentifier, $indicatorIdentifier);
+            if (isset($this->baselineIndexing[$resultIdentifier][$indicatorIdentifier])) {
+                $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][] = $data;
+            } else {
+                $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][0] = $data;
+            }
+
+            $currentBaselinePosition = array_key_last($this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline']);
+            $this->baselineIndexing[$resultIdentifier][$indicatorIdentifier][$identifier] = $currentBaselinePosition;
+            $this->updateColumnTracker($resultIdentifier, $indicatorIdentifier, "baseline.$currentBaselinePosition");
         }
 
-        $currentBaselinePosition = array_key_last($this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline']);
-        $this->baselineIndexing[$resultIdentifier][$indicatorIdentifier][$identifier] = $currentBaselinePosition;
-        $this->updateColumnTracker($resultIdentifier, $indicatorIdentifier, "baseline.$currentBaselinePosition");
+        $this->addProcessingErrors($resultIdentifier, $indicatorIdentifier);
     }
 
     protected function pushIndicatorBaselineDocumentLink($identifier, $data): void
     {
         $indicatorIdentifier = Arr::get($this->identifiers, "baseline.$identifier", null);
         $resultIdentifier = Arr::get($this->identifiers, "indicator.$indicatorIdentifier", null);
-        $this->checkIfIndicatorExists($resultIdentifier, $indicatorIdentifier);
-        $baselineIndex = Arr::get($this->baselineIndexing, "$resultIdentifier.$indicatorIdentifier.$identifier", '0');
 
-        $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][$baselineIndex]['document_link'] = $data;
-        $this->updateColumnTracker($resultIdentifier, $indicatorIdentifier, "baseline.$baselineIndex.document_link");
+        if (!empty($data)) {
+            $this->checkIfIndicatorExists($resultIdentifier, $indicatorIdentifier);
+            $baselineIndex = Arr::get($this->baselineIndexing, "$resultIdentifier.$indicatorIdentifier.$identifier", '0');
+
+            $this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator']['baseline'][$baselineIndex]['document_link'] = $data;
+            $this->updateColumnTracker($resultIdentifier, $indicatorIdentifier, "baseline.$baselineIndex.document_link");
+        }
+
+        $this->addProcessingErrors($resultIdentifier, $indicatorIdentifier);
     }
 
     protected function updateColumnTracker($resultIdentifier, $indicatorIdentifier, $keyPrefix)

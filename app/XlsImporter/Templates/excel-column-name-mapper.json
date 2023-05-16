@@ -40,6 +40,7 @@
   "Recipient Region": {
     "region_vocabulary": "B",
     "custom_code": "C",
+    "region_code": "C",
     "vocabulary_uri": "D",
     "percentage": "E",
     "narrative narrative": "F",
@@ -140,11 +141,18 @@
   },
   "Default Aid Type": {
     "default_aid_type_vocabulary": "B",
-    "code": "C"
+    "code": "C",
+    "default_aid_type": "C",
+    "earmarking_category": "C",
+    "earmarking_modality": "C",
+    "cash_and_voucher_modalities": "C"
   },
   "Sector": {
     "sector_vocabulary": "B",
     "code": "C",
+    "category_code": "C",
+    "sdg_goal": "C",
+    "sdg_target": "C",
     "vocabulary_uri": "D",
     "percentage": "E",
     "narrative narrative": "F",
@@ -153,6 +161,9 @@
   "Tag": {
     "tag_vocabulary": "B",
     "code": "C",
+    "tag_text": "C",
+    "goals_tag_code": "C",
+    "targets_tag_code": "C",
     "vocabulary_uri": "D",
     "narrative narrative": "E",
     "narrative language": "F"
@@ -160,6 +171,8 @@
   "Policy Marker": {
     "policy_marker_vocabulary": "B",
     "code": "C",
+    "policy_marker_text": "C",
+    "policy_marker": "C",
     "vocabulary_uri": "D",
     "significance": "E",
     "narrative narrative": "F",
@@ -216,6 +229,9 @@
     "disbursement_channel disbursement_channel_code": "U",
     "sector sector_vocabulary": "V",
     "sector code": "W",
+    "sector category_code": "W",
+    "sector sdg_goal": "W",
+    "sector sdg_target": "W",
     "sector vocabulary_uri": "X",
     "sector narrative narrative": "Y",
     "sector narrative language": "Z",
@@ -224,6 +240,7 @@
     "recipient_country narrative language": "AC",
     "recipient_region region_vocabulary": "AD",
     "recipient_region code": "AE",
+    "recipient_region custom_code": "AE",
     "recipient_region vocabulary_uri": "AF",
     "recipient_region narrative narrative": "AG",
     "recipient_region narrative language": "AH",
@@ -231,6 +248,9 @@
     "finance_type finance_type": "AJ",
     "aid_type aid_type_vocabulary": "AK",
     "aid_type aid_type_code": "AL",
+    "aid_type emarking_category": "AL",
+    "aid_type emarking_modality": "AL",
+    "aid_type cash_and_voucher_modalities": "AL",
     "tied_status tied_status_code": "AM"
   },
   "Result": {
@@ -271,7 +291,7 @@
     "reference vocabulary": "I",
     "reference code": "J"
   },
-  "indicator Document Link": {
+  "Indicator Document Link": {
     "url": "B",
     "format": "C",
     "title narrative narrative": "D",
@@ -281,16 +301,6 @@
     "category code": "H",
     "language language": "I",
     "document_date date": "J"
-  },
-  "Baseline": {
-    "year": "B",
-    "date": "C",
-    "value": "D",
-    "comment narrative narrative": "E",
-    "comment narrative language": "F",
-    "dimension name": "G",
-    "dimension value": "H",
-    "location reference": "I"
   },
   "Baseline Document Link": {
     "url": "B",
@@ -312,13 +322,6 @@
     "indicator_identifier": "A",
     "baseline_number": "B",
     "indicator_baseline_identifier": "C"
-  },
-  "Indicator Document Link": {
-    "url": "B",
-    "format": "C",
-    "category code": "D",
-    "language code": "E",
-    "document_date date": "F"
   },
   "Indicator Baseline": {
     "year": "B",

@@ -1,4 +1,20 @@
 {
+    "settings": {
+        "default_currency": "default_currency",
+        "default_language": "default_language",
+        "hierarchy": "hierarchy",
+        "humanitarian": "humanitarian",
+        "budget_not_provided": "budget_not_provided",
+        "secondary_reporter": "secondary_reporter"
+    },
+    "element_with_single_field": {
+        "activity_status": "activity_status",
+        "activity_scope": "activity_scope",
+        "collaboration_type": "collaboration_type",
+        "default_flow_type": "default_flow_type",
+        "default_finance_type": "default_finance_type",
+        "capital_spend": "capital_spend"
+    },
     "title": {
         "narrative": "narrative",
         "language": "language"
@@ -294,7 +310,7 @@
         "description narrative narrative": "description_narrative",
         "description narrative language": "description_language",
         "category code": "category_code",
-        "language code": "language_code",
+        "language language": "language_code",
         "document_date date": "document_date_date"
     },
     "actual": {
@@ -313,7 +329,7 @@
         "description narrative narrative": "description_narrative",
         "description narrative language": "description_language",
         "category code": "category_code",
-        "language code": "language_code",
+        "language language": "language_code",
         "document_date date": "document_date_date"
     },
     "transactions": {
@@ -385,14 +401,6 @@
         "activity_identifier": "activity_identifier",
         "result_number": "result_number",
         "result_identifier": "result_identifier"
-    },
-    "settings": {
-        "default_currency": "default_currency",
-        "default_language": "default_language",
-        "hierarchy": "hierarchy",
-        "humanitarian": "humanitarian",
-        "secondary_reporter": "secondary_reporter",
-        "budget_not_provided": "budget_not_provided"
     },
     "element with single field": {
         "activity_status": "activity_status",

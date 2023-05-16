@@ -71,7 +71,7 @@
                 </div>
               </div>
             </td>
-            <td>{{ indicators[0].indicator_code }}</td>
+            <td>{{ indicator['indicator_code'] }}</td>
             <td
               class="cursor-pointer"
               @click="

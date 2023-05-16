@@ -163,11 +163,19 @@ trait XlsMapperHelper
      *
      * @return void
      */
-    public function storeValidatedData($processedXlsData, $errors, $existingIdentifier = false, $parentIdentifier = null, $code = null): void
+    public function storeValidatedData($processedXlsData, $errors, $existingIdentifier, $identifier, $parentIdentifier = null, $code = null): void
     {
         $fileData = awsGetFile($this->validatedDataFilePath);
         $currentContents = $fileData ? json_decode(awsGetFile($this->validatedDataFilePath), true, 512, JSON_THROW_ON_ERROR) : [];
-        $currentContents[] = ['data' => $processedXlsData, 'errors' => $errors, 'existing' => $existingIdentifier, 'parentIdentifier' => $parentIdentifier, 'code' => $code, 'status' => 'processed'];
+        $currentContents[] = [
+            'data' => $processedXlsData,
+            'errors' => $errors,
+            'existing' => $existingIdentifier,
+            'parentIdentifier' => $parentIdentifier,
+            'code' => $code,
+            'identifier' => $identifier,
+            'status' => 'processed',
+        ];
         $content = json_encode($currentContents, JSON_THROW_ON_ERROR);
         $status = json_encode([
             'success' => true,
@@ -218,5 +226,94 @@ trait XlsMapperHelper
         }
 
         return $errors;
+    }
+
+    public function checkElementAddMore($elementBase, $elementBasePeer, $elementAddMore, $dependentOnValue, $fieldName, $fieldValue, $baseCount, $parentBaseCount, $row, $element): array
+    {
+        if ($elementBase && ($fieldName === $elementBase && ($fieldValue || is_numeric($fieldValue) || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)))) {
+            if (!$elementAddMore) {
+                if ($baseCount === 0) {
+                    $this->tempErrors["$element"] =
+                        empty($elementBasePeer) ?
+                        sprintf('Error detected on %s sheet, row %s : The %s cannot have multiple %s.', $this->sheetName, $this->rowCount, $element, $elementBase) :
+                        sprintf('Error detected on %s sheet, row %s : The %s cannot have multiple %s or %s.', $this->sheetName, $this->rowCount, $element, $elementBase, implode(', ', $elementBasePeer));
+                }
+
+                $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
+                $dependentOnValue = array_fill_keys(array_keys($dependentOnValue), null);
+            }
+
+            $baseCount = is_null($baseCount) || !$elementAddMore ? 0 : $baseCount + 1;
+        }
+
+        return [
+            $baseCount,
+            $parentBaseCount,
+            $dependentOnValue,
+        ];
+    }
+
+    public function checkSubElementAddMore($fieldDependency, $parentBaseCount, $parentDependentOn, $dependentOnValue, $fieldName, $fieldValue, $row): array
+    {
+        if (array_key_exists($fieldName, $fieldDependency)) {
+            $parentKey = $fieldDependency[$fieldName]['parent'];
+            $peerAttributes = Arr::get($fieldDependency, "$fieldName.peer", []);
+            $children = Arr::get($fieldDependency, "$fieldName.children", []);
+            $parentAddMore = Arr::get($fieldDependency, "$fieldName.add_more", true);
+
+            if ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
+                $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) || !$parentAddMore ? 0 : $parentBaseCount[$parentKey] + 1;
+
+                foreach ($children as $child) {
+                    $parentBaseCount[$child] = null;
+                }
+
+                if (array_key_exists($parentKey, $parentDependentOn)) {
+                    foreach ($parentDependentOn[$parentKey] as $dependencyIndex) {
+                        $dependentOnValue[$dependencyIndex] = null;
+                    }
+                }
+            }
+        }
+
+        return [
+            $parentBaseCount,
+            $dependentOnValue,
+        ];
+    }
+
+    public function addProcessingErrors($parentIdentifier, $identifier)
+    {
+        if (!empty($this->tempErrors)) {
+            foreach ($this->tempErrors as $index => $errors) {
+                $this->processingErrors[$parentIdentifier][$identifier][$index] = $errors;
+            }
+        }
+    }
+
+    public function storeGlobalErrors()
+    {
+        $status = json_encode([
+            'success' => true,
+            'message' => 'Complete',
+            'total_count' => count($this->globalErrors),
+            'errors' => $this->globalErrors,
+
+        ]);
+
+        awsUploadFile($this->globalErrorFilePath, $status);
+    }
+
+    public function isIdentifierDuplicate($elementIdentifier, $element): bool
+    {
+        if (in_array($elementIdentifier, Arr::get($this->trackIdentifierBySheet, $this->sheetName, []))) {
+            $this->tempErrors["$element > $this->rowCount"] = sprintf('Error detected on %s sheet, cell A%s : The identifier has been duplicated.', $this->sheetName, $this->rowCount);
+
+            return true;
+        }
+
+        $this->trackIdentifierBySheet[$this->sheetName][] = $elementIdentifier;
+
+        return false;
     }
 }
