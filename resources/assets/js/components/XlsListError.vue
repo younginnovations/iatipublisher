@@ -7,6 +7,9 @@
       >
         {{ title }}
       </span>
+      <span class="tect-xs mx-3 font-normal capitalize text-n-40"
+        >({{ status['template'] }} Identifier: {{ activity.code }})</span
+      >
       <span
         v-if="countErrors(index) > 0"
         class="ml-4 inline-flex cursor-pointer items-center space-x-2 text-crimson-50"
@@ -175,7 +178,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, onMounted, computed, ref } from 'vue';
+import { defineProps, computed, ref } from 'vue';
 const showErrors = ref(false);
 const showCritical = ref(false);
 const criticalToggle = ref(false);
@@ -183,10 +186,6 @@ const showError = ref(false);
 const errorToggle = ref(false);
 const warningToggle = ref(false);
 const showWarning = ref(false);
-
-onMounted(() => {
-  console.log(props.importData, 'import data');
-});
 
 const props = defineProps({
   // Number with a default value

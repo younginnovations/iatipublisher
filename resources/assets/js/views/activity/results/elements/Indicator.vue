@@ -610,7 +610,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from 'vue';
+import { defineComponent, toRefs, onMounted } from 'vue';
 
 //composable
 import dateFormat from 'Composable/dateFormat';
@@ -643,8 +643,20 @@ export default defineComponent({
   },
   setup(props) {
     let { result } = toRefs(props);
-
+    function isEmpty(data) {
+      return Object.values(data).map((item) => {
+        if (item) {
+          if (item != null && typeof item)
+            console.log(Object.values(item)['0'], 'item');
+        }
+        return item;
+      });
+    }
+    onMounted(() => {
+      console.log(isEmpty(props.result.result.document_link['0']), 'this');
+    });
     const indicatorData = result.value.indicators.reverse();
+
     return { indicatorData, dateFormat, getActivityTitle };
   },
 });

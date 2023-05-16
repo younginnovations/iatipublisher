@@ -5,7 +5,7 @@
       class="mb-3 flex h-1 w-full justify-start rounded-full bg-spring-10"
     >
       <div
-        :style="{ width: percentageWidth + '%' }"
+        :style="{ width: completed ? '100%' : percentageWidth + '%' }"
         class="h-full rounded-full bg-spring-50"
       ></div>
     </div>
@@ -26,7 +26,7 @@
     </div>
     <div v-else class="flex justify-between space-x-5">
       <p
-        v-if="totalCount === processedCount && totalCount !== 0"
+        v-if="(totalCount === processedCount && totalCount !== 0) || completed"
         class="text-sm text-n-40"
       >
         {{ currentActivity }} file upload complete
@@ -38,7 +38,9 @@
         >
         '{{ currentActivity }}'
       </p>
-      <spinnerLoader v-if="processedCount !== totalCount || totalCount === 0" />
+      <spinnerLoader
+        v-if="(processedCount !== totalCount || totalCount === 0) && !completed"
+      />
       <a
         v-else
         href="/import/xls/list"
@@ -77,6 +79,11 @@ const props = defineProps({
   activityName: {
     type: String,
     required: true,
+  },
+  completed: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
   totalCount: {
     type: Number,

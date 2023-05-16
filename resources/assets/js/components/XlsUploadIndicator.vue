@@ -7,6 +7,7 @@
       :processed-count="processedCount"
       :xls-failed="xlsFailed"
       :activity-name="activityName"
+      :completed="completed"
       @close="closeXls"
     />
   </div>
@@ -23,6 +24,12 @@ defineProps({
   activityName: {
     type: String,
     required: true,
+  },
+
+  completed: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
   totalCount: {
     type: Number,

@@ -257,6 +257,7 @@
       :xls-failed="xlsFailed"
       :activity-name="activityName"
       :xls-data="xlsData"
+      :completed="fetchComplete"
     />
   </div>
   <Loader
@@ -283,7 +284,9 @@
       </div>
       <div v-else class="rounded-sm bg-rose p-4">
         <p
-          v-if="totalCount === processedCount && totalCount !== 0"
+          v-if="
+            (totalCount === processedCount && totalCount !== 0) || fetchComplete
+          "
           class="text-sm text-n-50"
         >
           You have recently uploaded '{{ currentActivity }}', either proceed to
@@ -307,7 +310,9 @@
         </button>
 
         <a
-          v-if="totalCount === processedCount && totalCount !== 0"
+          v-if="
+            (totalCount === processedCount && totalCount !== 0) || fetchComplete
+          "
           class="w-[158px] rounded-sm bg-bluecoral py-3 text-center text-xs font-bold uppercase text-white hover:text-white"
           href="/import/xls/list"
         >
@@ -347,6 +352,7 @@ const xlsFailedMessage = ref('');
 const uploadType = ref();
 const showDownloadDropdown = ref(false);
 const activityName = ref('');
+const fetchComplete = ref(false);
 const toastMessage = ref('');
 const toastType = ref(false);
 const xlsFailed = ref(false);
@@ -381,7 +387,7 @@ function uploadFile() {
   console.log(uploadType.value.length, 'length');
 
   loader.value = true;
-  loaderText.value = 'Uploading .xls file';
+  loaderText.value = 'Fetching .xls file';
 
   let activity = file.value.files.length ? file.value.files[0] : '';
 
@@ -425,8 +431,13 @@ const checkXlsstatus = () => {
     activityName.value = res?.data?.status?.template;
     currentActivity.value = mapActivityName(activityName.value);
     xlsData.value = Object.keys(res.data.status).length > 0;
-    console.log(Object.keys(res.data.status).length, 'status');
-    if (Object.keys(res.data.status).length > 0) {
+    if (res.data.status.status === 'completed') {
+      fetchComplete.value = true;
+    }
+    if (
+      Object.keys(res.data.status).length > 0 &&
+      res.data.status.status !== 'completed'
+    ) {
       const checkStatus = setInterval(function () {
         axios.get('/import/xls/status').then((res) => {
           totalCount.value = res.data.data?.total_count;
