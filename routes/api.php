@@ -16,3 +16,4 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'can:crud_activity'], static function () {
     Route::delete('activity/{id}/{element}', [ActivityController::class, 'deleteElement'])->name('activity.element.delete');
 });
+

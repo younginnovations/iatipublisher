@@ -25,7 +25,7 @@ Route::middleware(RedirectIfAuthenticated::class)->name('web.')->group(function 
     Route::get('/iati/register', [App\Http\Controllers\Auth\IatiRegisterController::class, 'showRegistrationForm'])->name('iati.register');
 });
 
-Route::group(['middleware'=>['guest', 'sanitize'], 'name'=>'web.'], static function () {
+Route::group(['middleware' => ['guest', 'sanitize'], 'name' => 'web.'], static function () {
     Route::post('/reset', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('reset');
     Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login');
     Route::post('/verifyPublisher', [App\Http\Controllers\Auth\RegisterController::class, 'verifyPublisher'])->name('verify-publisher');
