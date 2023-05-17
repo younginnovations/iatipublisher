@@ -43,6 +43,11 @@
                 }
             }
 
+            if(isset($options['options']['info_text']) && !empty($options['options']['info_text']))
+            {
+                $error = '<div class="text-danger-error">' . $options['options']['info_text'] . '</div>';
+            }
+
             $collectionLabel = '<div class="title-container w-full" > <div class="flex  justify-between items-center w-full" >' .
                 $label .
                 '<div class="flex   items-center">' .

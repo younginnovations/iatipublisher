@@ -172,3 +172,50 @@
     margin-bottom: 24px;
   }
 }
+
+.freeze {
+  color: #a6b5ba !important;
+  border-color: #a6b5ba !important;
+  pointer-events: none !important;
+
+  .add_more::after {
+    border-color: #a6b5ba;
+  }
+  .add_more::before {
+    border-color: #a6b5ba;
+  }
+
+  button > i {
+    background: url('../../images/add-more-grey.svg') no-repeat center !important;
+  }
+
+  .help svg path {
+    color: #a6b5ba !important;
+    fill: currentColor;
+    stroke: currentColor;
+  }
+}
+.freeze *,
+*::placeholder,
+.freeze svg {
+  color: #a6b5ba !important;
+  border-color: #a6b5ba !important;
+  pointer-events: none !important;
+}
+
+.freeze + .add_to_parent {
+  color: #a6b5ba !important;
+  pointer-events: none !important;
+
+  i {
+    background: url('../../images/add-more-grey.svg') no-repeat center;
+  }
+}
+
+.freeze + .add_to_parent::before {
+  border-color: #a6b5ba !important;
+}
+
+.freeze + .add_to_parent::after {
+  border-color: #a6b5ba !important;
+}

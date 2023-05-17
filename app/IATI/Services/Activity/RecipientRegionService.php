@@ -87,13 +87,12 @@ class RecipientRegionService
      * Generates budget form.
      *
      * @param $id
+     * @param $element
      *
      * @return Form
-     * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $element): Form
     {
-        $element = getElementSchema('recipient_region');
         $model['recipient_region'] = $this->getRecipientRegionData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.recipient-region.update', [$id]);
 

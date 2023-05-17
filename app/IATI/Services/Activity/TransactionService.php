@@ -149,13 +149,12 @@ class TransactionService
      * Generates transaction create form.
      *
      * @param $activityId
+     * @param $element
      *
      * @return Form
-     * @throws \JsonException
      */
-    public function createFormGenerator($activityId): Form
+    public function createFormGenerator($activityId, $element): Form
     {
-        $element = getElementSchema('transactions');
         $this->transactionElementFormCreator->url = route('admin.activity.transaction.store', $activityId);
 
         return $this->transactionElementFormCreator->editForm([], $element, 'POST', '/activity/' . $activityId);
@@ -166,13 +165,14 @@ class TransactionService
      *
      * @param $transactionId
      * @param $activityId
+     * @param $element
      *
      * @return Form
+     *
      * @throws \JsonException
      */
-    public function editFormGenerator($transactionId, $activityId): Form
+    public function editFormGenerator($transactionId, $activityId, $element): Form
     {
-        $element = getElementSchema('transactions');
         $activityTransaction = $this->getTransaction($transactionId);
         $this->transactionElementFormCreator->url = route(
             'admin.activity.transaction.update',
