@@ -21,10 +21,6 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  */
 class DashboardController extends Controller
 {
-    protected DashboardService $dashboardService;
-
-    protected CsvGenerator $csvGenerator;
-
     /**
      * @var UserService
      */
