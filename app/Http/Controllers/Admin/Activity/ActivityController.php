@@ -100,11 +100,102 @@ class ActivityController extends Controller
     public function index(): View|JsonResponse
     {
         try {
+            // $content = file_get_contents('https://iatipublisher-dev.s3.amazonaws.com/CsvImporter/tmp/165/263/status.json');
+//             // $filename = 'https://iatipublisher-dev.s3.amazonaws.com/CsvImporter/tmp/165/263/status.json';
+//             // $filename = 'https://s3.console.aws.amazon.com/s3/object/iatipublisher-prod?region=us-east-1&prefix=CsvImporter/file/86/546/Import_Activity_CSV_Template%285%29-TAFFI.csv';
+//             // $filename = 'https://iatipublisher-prod.s3.amazonaws.com/aidstream-xml/++++++++++++++++++++++++++++++++ET-CSA-1327-35115.xml';
+//             // $filename = 'https://s3.console.aws.amazon.com/s3/object/iatipublisher-dev?region=us-east-1&prefix=XlsImporter/file/1/2/PeriodXLS.xlsx';
+//             // $filename = 'https://iatipublisher-dev.s3.amazonaws.com/CsvImporter/tmp/165/263/status.json';
+//             // $filename = 'https://docs.google.com/spreadsheets/d/1gFDfrA8sPtvpUjIsfg_eBgNTuXL1uJVM17HuszO-Ma0/edit#gid=0';
+//             // $filename = 'https://s3.console.aws.amazon.com/s3/object/iatipublisher-dev?region=us-east-1&prefix=aidstream-xml/-27846.xml';
+//             // $filename = 'https://iatipublisher-staging.yipl.com.np/';
+//             // $filename = 'https://www.abdn.ac.ukz/education\/research\/cgd\/nihr-camw-subsaharan-africa';
+//             // $filename = 'https://drive.google.com/file/d/1ovznClOkrVEE4g3BCGyTkA1sZ8bdzZ2T/view?usp=sharing';
+//             // $filename = 'https://www.abdn.ac.uk/education/research/cgd/nihr-camw-subsaharan-africa';\
+//             $filename = 'https://raw.githubusercontent.com/unikong/unikong.github.io/master/img/unikong/heart.png';
+//             // $pathInfo = pathinfo($filename);
+
+            //             // dd($pathInfo);
+// // $filename = 
+//             // $content = file_get_contents($filename);
+//             // dd($content);
+//             // $filetype = pathinfo('https://docs.google.com/spreadsheets/d/1k8_lfFOl2uaS96EMpzGM8gKjLBSdSiDinGCJOOX2PEQ/edit?pli=1#gid=545870522', PATHINFO_EXTENSION);
+//             // $mimetype = mime_content_type($pathInfo['basename']);
+
+            // $ch = curl_init($filename);
+            // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            // curl_setopt($ch, CURLOPT_HEADER, true);
+            // curl_exec($ch);
+
+            $codelist = array_keys(getCodeList('FileFormat', 'Activity', false));
+            // dump($codelist);
+
+
+            # get the content type
+            // dd(curl_getinfo($ch));
+            // dd($mimetype);
+            // dd($content, $file);
+            $files = ['application', 'audio', 'font', 'image', 'model', 'multipart', 'text', 'video', 'message'];
+            $additional = ['addition'];
+            $mergedFiles = [];
+            $found = [];
+            $notfound = [];
+
+            foreach ($files as $file) {
+                $filePath = app_path('/XlsImporter/Templates test/' . $file . '.php');
+                $test = include $filePath;
+
+                foreach ($test as $key => $value) {
+                    $mergedFiles[$value] = $key;
+
+                    if (in_array($value, array_values($codelist))) {
+                        $found[$value] = $key;
+                    } else {
+                        $notfound[$value] = $key;
+                    }
+
+                }
+            }
+
+            // dd($found, $notfound);
+
+
+            // dump(count($codelist), array_values($codelist));
+
+            // $filejson = [];
+            // $mergedFilesFlipped = $mergedFiles;
+            // $notfound = [];
+            // $mergedCount = 0;
+
+            // foreach ($codelist as $code) {
+            //     if (Arr::get($mergedFilesFlipped, $code, false)) {
+            //         // $filejson[$code] = Arr::get($mergedFilesFlipped, $code, false);
+            //         $filejson[Arr::get($mergedFilesFlipped, $code, false)] = $code;
+            //     } else {
+            //         $notfound[] = $code;
+            //         // dump($code);
+            //     }
+            // }
+
+            // dump(count($filejson), array_diff(array_values($filejson), array_values($codelist)), array_diff(array_values($codelist), array_values($filejson)));
+            $json = json_encode($found, JSON_UNESCAPED_SLASHES, 512);
+            // file_put_contents('includes/')
+
+            // dd(count($found), json_decode($json, true));
+            // dd(count($found), array_count_values($found));
+            // $test = file_put_contents(app_path() . '/XlsImporter/Templates test/fileformats.json', $json);
+            // $test = file_put_contents(app_path() . '/XlsImporter/Templates test/test.php', $found);
+            // dump(count())
+            // dd($notfound, $mergedFilesFlipped);
+            // dd($filejson);
+
+            // /end
             $languages = getCodeListArray('Languages', 'ActivityArray');
             $toast = generateToastData();
 
             return view('admin.activity.index', compact('languages', 'toast'));
         } catch (Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while fetching activities.']);
@@ -293,7 +384,7 @@ class ActivityController extends Controller
             }
 
             return response()->json(['success' => false, 'message' => 'Activity delete failed.']);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
@@ -349,7 +440,7 @@ class ActivityController extends Controller
                 'message' => 'Activities fetched successfully',
                 'data' => $activities,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
@@ -441,4 +532,6 @@ class ActivityController extends Controller
             'crsChannelCode' => getCodeList('CRSChannelCode', 'Activity', false),
         ];
     }
+
+   
 }

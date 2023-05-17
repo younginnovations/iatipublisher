@@ -1,3 +1,4 @@
+import axios from 'axios';
 import $ from 'jquery';
 import 'select2';
 import { DynamicField } from './DynamicField';
@@ -111,8 +112,8 @@ class FormBuilder {
     const count = $(target).attr('parent_count')
       ? parseInt($(target).attr('parent_count') as string) + 1
       : ($(target).prev().find('.multi-form').length
-          ? $(target).prev().find('.multi-form').length
-          : $(target).prev().find('.wrapped-child-body').length) + 1;
+        ? $(target).prev().find('.multi-form').length
+        : $(target).prev().find('.wrapped-child-body').length) + 1;
 
     let proto = container.data('prototype').replace(/__PARENT_NAME__/g, count);
     proto = proto.replace(/__NAME__/g, 0);
@@ -312,14 +313,78 @@ class FormBuilder {
       allowClear: true,
     });
 
-    // $('body').on('change', 'input[id*="[document]"]', function () {
-    //   const endpoint = $('.endpoint').attr('endpoint') ?? '';
-    //   const file_name = ($(this).val() ?? '').toString();
-    //   $(this)
-    //     .closest('.form-field-group')
-    //     .find('input[id*="[url]"]')
-    //     .val(`${endpoint}/${file_name?.split('\\').pop()?.replace(/' '/g, '_')}`);
-    // });
+    // update format on change of document link
+    $('body').on('keyup', 'input[id*="[url]"]', function () {
+      const filePath = ($(this).val() ?? '').toString();
+      var url = `/mimetype?url=${filePath}&type=url`;
+      $(this).closest('.form-field').find('.text-danger').remove();
+
+      if (filePath !== '') {
+        axios.get(url).then((response) => {
+          if (response.data.success) {
+            const format = response.data.data.mimetype;
+            $(this)
+              .closest('.form-field-group')
+              .find('select[id*="[format]"]')
+              .val(format)
+              .trigger('change');
+          } else {
+            let message =
+              "<div class='text-danger error'>" + response.data.message + "</div>";
+            $(this).closest('.form-field').append("<div class='text-danger error'>" + response.data.message + "</div>");
+            console.log(message);
+
+            $(this)
+              .closest('.form-field-group')
+              .find('select[id*="[format]"]')
+              .val('')
+              .trigger('change');
+          }
+        })
+
+        $(this)
+          .closest('.form-field-group')
+          .find('input[id*="[document]"]')
+          .val('')
+          .trigger('change');
+      }
+    });
+
+    $('body').on('change', 'input[id*="[document]"]', function () {
+      console.log('changed')
+      const filePath = ($(this).val() ?? '').toString();
+      var url = `/mimetype?url=${filePath}&&type=document`;
+
+      if (filePath !== '') {
+        axios.get(url).then((response) => {
+          if (response.data.success) {
+            const format = response.data.data.mimetype;
+            $(this)
+              .closest('.form-field-group')
+              .find('select[id*="[format]"]')
+              .val(format)
+              .trigger('change');
+          } else {
+            $(this)
+              .closest('.form-field-group')
+              .find('select[id*="[format]"]')
+              .val('')
+              .trigger('change');
+          }
+        })
+        $(this)
+          .closest('.form-field-group')
+          .find('input[id*="[url]"]')
+          .val('')
+          .trigger('change');
+      } else {
+
+      } $(this)
+        .closest('.form-field-group')
+        .find('select[id*="[format]"]')
+        .val('')
+        .trigger('change');
+    });
   }
 }
 
@@ -428,7 +493,7 @@ $(function () {
   }
 
   // Adding cursor not allowed to <select> where elementJsonSchema read_only : true
-  const readOnlySelects =  document.querySelectorAll("select.cursor-not-allowed");
+  const readOnlySelects = document.querySelectorAll("select.cursor-not-allowed");
   for (let i = 0; i < readOnlySelects.length; i++) {
     const select = readOnlySelects[i];
     const selectElementParentWrapper = select.nextSibling;

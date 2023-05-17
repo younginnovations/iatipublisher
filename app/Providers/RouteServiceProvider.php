@@ -38,27 +38,28 @@ class RouteServiceProvider extends ServiceProvider
         $this->routes(function () {
             Route::prefix('api')
                 ->middleware(['admin', 'auth', 'activity', 'api'])
-                 ->name('api.')
-                 ->group(base_path('routes/api.php'));
+                ->name('api.')
+                ->group(base_path('routes/api.php'));
+            Route::name('general.')->group(base_path('routes/general.php'));
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
 
             Route::middleware(['admin', 'auth'])
-                 ->name('admin.')
-                 ->group(base_path('routes/setting.php'));
+                ->name('admin.')
+                ->group(base_path('routes/setting.php'));
 
             Route::middleware(['admin', 'auth'])
-                 ->name('admin.')
-                 ->group(base_path('routes/organization.php'));
+                ->name('admin.')
+                ->group(base_path('routes/organization.php'));
 
             Route::middleware(['admin', 'auth'])
-                 ->name('admin.')
-                 ->group(base_path('routes/user.php'));
+                ->name('admin.')
+                ->group(base_path('routes/user.php'));
 
             Route::middleware(['admin', 'auth', 'activity'])
-                 ->name('admin.')
-                 ->group(base_path('routes/activity.php'));
+                ->name('admin.')
+                ->group(base_path('routes/activity.php'));
 
             Route::middleware(['admin', 'auth'])
                 ->name('admin.')
@@ -77,11 +78,11 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/superadmin.php'));
 
             Route::middleware(['admin', 'auth'])
-                 ->name('admin.')
-                 ->group(base_path('routes/download.php'));
+                ->name('admin.')
+                ->group(base_path('routes/download.php'));
             Route::middleware(['admin', 'auth', 'superadmin'])
-                 ->name('audit.')
-                 ->group(base_path('routes/audit.php'));
+                ->name('audit.')
+                ->group(base_path('routes/audit.php'));
         });
     }
 
@@ -92,7 +93,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function configureRateLimiting(): void
     {
-        RateLimiter::for('api', static function (Request $request) {
+        RateLimiter::for ('api', static function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
     }
