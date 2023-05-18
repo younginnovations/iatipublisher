@@ -9,7 +9,6 @@ use App\Http\Requests\Activity\UploadActivity\ImportXlsRequest;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\ImportActivity\ImportXlsService;
 use App\IATI\Services\ImportActivityError\ImportActivityErrorService;
-use Arr;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
@@ -244,7 +243,7 @@ class ImportXlsController extends Controller
             $status = $this->importXlsService->getImportStatus();
             $importData = $this->importXlsService->getAwsXlsData('valid.json');
             $globalError = $this->importXlsService->getAwsXlsData('globalError.json');
-            $errors = Arr::get($globalError, 'errors', []);
+            $errors = $globalError->errors;
 
             return view(
                 'admin.import.xls.list',

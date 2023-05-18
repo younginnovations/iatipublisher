@@ -29,16 +29,87 @@
         </button>
       </div>
     </div>
-    <p class="mt-4 text-sm text-n-40">
-      Select from the list below to add {{ status.template }} to the publisher.
-      Make your selection and follow the on-screen prompts to successfully
-      add/update your selected {{ status.template }}
-      <b>
-        Please note that you must re-upload any unselected
-        {{ status.template }}, and if the import is canceled, you will need to
-        upload them again.</b
-      >
-    </p>
+    <div class="flex items-center justify-between space-x-4">
+      <p class="mt-4 text-sm text-n-40">
+        Select from the list below to add {{ status.template }} to the
+        publisher. Make your selection and follow the on-screen prompts to
+        successfully add/update your selected {{ status.template }}
+        <b>
+          Please note that you must re-upload any unselected
+          {{ status.template }}, and if the import is canceled, you will need to
+          upload them again.</b
+        >
+      </p>
+      <div v-if="globalError" class="relative mt-4">
+        <div
+          v-if="!showGLobalError"
+          class="flex w-[250px] justify-between rounded-l-lg border border-crimson-20 bg-crimson-10 p-4"
+        >
+          <div class="flex">
+            <svg-vue
+              class="mr-1 -mt-1.5 text-2xl text-crimson-50"
+              icon="warning-fill"
+            />
+            <span class="text-sm font-bold">
+              {{ globalError.length }} global errors found
+            </span>
+          </div>
+          <button
+            class="cursor-pointer text-xs uppercase text-bluecoral"
+            @click="showGLobalError = true"
+          >
+            show
+          </button>
+        </div>
+        <div
+          v-else
+          class="absolute -top-4 right-0 z-[100] w-[450px] rounded-l-lg bg-white p-4"
+        >
+          <div class="mb-4 flex justify-between">
+            <div class="flex">
+              <div class="text-sm font-bold">
+                {{ globalError.length }} global errors found
+              </div>
+            </div>
+
+            <button
+              class="cursor-pointer text-xs uppercase text-bluecoral"
+              @click="showGLobalError = false"
+            >
+              hide
+            </button>
+          </div>
+          <div class="border-l border-crimson-40 bg-rose p-4">
+            <div class="my-2 flex items-center justify-between">
+              <div class="flex items-center">
+                <svg-vue
+                  class="mr-1 -mt-1.5 text-2xl text-crimson-50"
+                  icon="alert"
+                />
+                <div class="text-sm font-bold capitalize">
+                  {{ globalError.length }} global errors
+                </div>
+              </div>
+              <svg-vue
+                class="mr-1 -mt-1.5 cursor-pointer text-[7px] duration-200"
+                icon="dropdown-arrow"
+                :class="showGlobalErrorList && ' rotate-180'"
+                @click="showGlobalErrorList = !showGlobalErrorList"
+              />
+            </div>
+            <ul v-if="showGlobalErrorList">
+              <li
+                v-for="error in globalError"
+                :key="error"
+                class="border-b border-n-20 p-4 text-sm"
+              >
+                {{ error }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="iati-list-table upload-list-table mt-4">
       <table>
         <thead>
@@ -156,7 +227,8 @@ const tableRow = ref({});
 const showCriticalErrorModel = ref(false);
 const loader = ref(false),
   loaderText = ref('Adding activities');
-
+const showGlobalErrorList = ref(false);
+const showGLobalError = ref(false);
 const selectedCount = ref(0);
 const activitiesLength = ref(0);
 const selectedActivities = ref<string[]>([]);
@@ -175,9 +247,13 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  globalError: {
+    type: Object,
+    required: true,
+  },
 });
 onUpdated(() => {
-  console.log(selectedActivities.value);
+  console.log(props.globalError, 'global error');
 });
 const getDimensions = async () => {
   await nextTick();
