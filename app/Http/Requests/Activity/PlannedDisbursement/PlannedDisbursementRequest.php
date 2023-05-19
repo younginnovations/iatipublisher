@@ -60,12 +60,12 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
             }
 
             $tempRules = [
-                            $this->getPlannedDisbursementRulesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementForm, $diff),
-                            $this->getPlannedDisbursementRulesForPeriodEnd($plannedDisbursement['period_end'], $plannedDisbursementForm, $diff),
-                            $this->getWarningForValue($plannedDisbursement['value'], $plannedDisbursementForm),
-                            $this->getWarningForProviderOrg($plannedDisbursement['provider_org'], $plannedDisbursementForm),
-                            $this->getWarningForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementForm),
-                        ];
+                $this->getPlannedDisbursementRulesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementForm, $diff),
+                $this->getPlannedDisbursementRulesForPeriodEnd($plannedDisbursement['period_end'], $plannedDisbursementForm, $diff),
+                $this->getWarningForValue($plannedDisbursement['value'], $plannedDisbursementForm),
+                $this->getWarningForProviderOrg($plannedDisbursement['provider_org'], $plannedDisbursementForm),
+                $this->getWarningForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementForm),
+            ];
 
             foreach ($tempRules as $rule) {
                 foreach ($rule as $key => $ruleValue) {
@@ -93,12 +93,12 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
             $rules[sprintf('%s.planned_disbursement_type', $plannedDisbursementForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('BudgetType', 'Activity', false)));
 
             $tempRules = [
-                            $this->getCriticalPlannedDisbursementRulesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementForm),
-                            $this->getCriticalPlannedDisbursementRulesForPeriodEnd($plannedDisbursement['period_end'], $plannedDisbursementForm),
-                            $this->getErrorsForValue($plannedDisbursement['value'], $plannedDisbursementForm),
-                            $this->getErrorsForProviderOrg($plannedDisbursement['provider_org'], $plannedDisbursementForm),
-                            $this->getErrorsForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementForm),
-                        ];
+                $this->getCriticalPlannedDisbursementRulesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementForm),
+                $this->getCriticalPlannedDisbursementRulesForPeriodEnd($plannedDisbursement['period_end'], $plannedDisbursementForm),
+                $this->getErrorsForValue($plannedDisbursement['value'], $plannedDisbursementForm),
+                $this->getErrorsForProviderOrg($plannedDisbursement['provider_org'], $plannedDisbursementForm),
+                $this->getErrorsForReceiverOrg($plannedDisbursement['receiver_org'], $plannedDisbursementForm),
+            ];
 
             foreach ($tempRules as $rule) {
                 foreach ($rule as $key => $ruleValue) {
@@ -406,9 +406,10 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'nullable';
             $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = 'period_start_end:' . $diff . ',90';
             $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = sprintf(
-                'after:%s',
+                'after_or_equal:%s',
                 $formBase . '.period_start.' . $periodEndKey . '.date'
             );
         }

@@ -66,8 +66,10 @@ trait XlsMapperHelper
      *
      * @return mixed
      */
-    public function mapDropDownValueToKey($value, $location): mixed
+    public function mapDropDownValueToKey($value, $location, $fieldName): mixed
     {
+        $booleanFieldList = readJsonFile('XlsImporter/Templates/boolean-field-list.json');
+
         // should we consider case(capital and lower)?
         if (is_null($value)) {
             return $value;
@@ -77,6 +79,11 @@ trait XlsMapperHelper
             if (is_bool($value)) {
                 return (int) $value;
             }
+
+            if (array_key_exists($fieldName, $booleanFieldList) && is_string($value) && in_array(strtolower($value), ['false', 'true', 'no', 'yes', '0', '1'])) {
+                return (int) filter_var($value, FILTER_VALIDATE_BOOLEAN);
+            }
+
             foreach ($location as $locationIndex => $locationValue) {
                 if ($locationValue === $value) {
                     return $locationIndex;
@@ -238,12 +245,11 @@ trait XlsMapperHelper
                         sprintf('Error detected on %s sheet, row %s : The %s cannot have multiple %s.', $this->sheetName, $this->rowCount, $element, $elementBase) :
                         sprintf('Error detected on %s sheet, row %s : The %s cannot have multiple %s or %s.', $this->sheetName, $this->rowCount, $element, implode(', ', $elementBasePeer), $elementBase);
                 }
-
-                $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
-                $dependentOnValue = array_fill_keys(array_keys($dependentOnValue), null);
             }
 
             $baseCount = is_null($baseCount) || !$elementAddMore ? 0 : $baseCount + 1;
+            $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
+            $dependentOnValue = array_fill_keys(array_keys($dependentOnValue), null);
         }
 
         return [
@@ -304,12 +310,24 @@ trait XlsMapperHelper
         awsUploadFile($this->globalErrorFilePath, $status);
     }
 
-    public function isIdentifierDuplicate($elementIdentifier, $element): bool
+    public function isIdentifierDuplicate($elementIdentifier, $element, $validate = false, $type = null): bool
     {
         if (in_array($elementIdentifier, Arr::get($this->trackIdentifierBySheet, $this->sheetName, []))) {
             $this->tempErrors["$element > $this->rowCount"] = sprintf('Error detected on %s sheet, cell A%s : The identifier has been duplicated.', $this->sheetName, $this->rowCount);
 
             return true;
+        }
+
+        if ($validate) {
+            if (!is_null($type)) {
+                $element = $type;
+            }
+
+            if (!Arr::get($this->identifiers, "$element.$elementIdentifier", false)) {
+                $this->tempErrors["$element > $this->rowCount"] = sprintf('Error detected on %s sheet, cell A%s : The identifier does not have correct format.', $this->sheetName, $this->rowCount);
+
+                return true;
+            }
         }
 
         $this->trackIdentifierBySheet[$this->sheetName][] = $elementIdentifier;

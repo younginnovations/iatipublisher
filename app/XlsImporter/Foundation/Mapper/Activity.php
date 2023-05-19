@@ -212,8 +212,11 @@ class Activity
             $secondary_reporter = '';
 
             if ($this->checkRowNotEmpty($row)) {
-                if ($index === 0 && is_null($row['activity_identifier'])) {
+                $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null);
+
+                if (is_null($elementActivityIdentifier)) {
                     $this->globalErrors[] = 'Error detected on ' . $this->sheetName . ' sheet, cell A' . $this->rowCount . ': Identifier is missing.';
+                    $this->rowCount++;
                     continue;
                 }
 
@@ -222,8 +225,6 @@ class Activity
                 $secondary_reporter = $row['secondary_reporter'];
                 unset($row['secondary_reporter']);
 
-                $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null) ?? $elementActivityIdentifier;
-
                 $this->activitiesIdentifier[] = $elementActivityIdentifier;
 
                 foreach ($this->defaultValueElements as $element) {
@@ -231,19 +232,10 @@ class Activity
 
                     if (array_key_exists($element, $dropDownFields['settings'])) {
                         $elementDropDownFields = $dropDownFields['settings'][$element];
-                        $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields);
+                        $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields, $element);
                     }
 
-                    if (isset($this->activities[$elementActivityIdentifier]['default_field_values'][$element])) {
-                        if (!is_array($this->activities[$elementActivityIdentifier]['default_field_values'][$element])) {
-                            $this->activities[$elementActivityIdentifier]['default_field_values'][$element] = [];
-                            $this->activities[$elementActivityIdentifier]['default_field_values'][$element][] = $this->activities[$elementActivityIdentifier]['default_field_values'][$element];
-                        }
-                        $this->activities[$elementActivityIdentifier]['default_field_values'][$element][] = $fieldValue;
-                    } else {
-                        $this->activities[$elementActivityIdentifier]['default_field_values'][$element] = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
-                    }
-
+                    $this->activities[$elementActivityIdentifier]['default_field_values'][$element] = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
                     $this->columnTracker[$elementActivityIdentifier]['default_field_values']['default_field_values.' . $element]['sheet'] = $this->sheetName;
                     $this->columnTracker[$elementActivityIdentifier]['default_field_values']['default_field_values.' . $element]['cell'] = Arr::get($excelColumnName, $this->sheetName . '.' . $element) . $this->rowCount;
                 }
@@ -268,7 +260,11 @@ class Activity
      */
     public function getReportingOrganization($secondary_reporter): array
     {
-        $secondary_reporter = is_bool($secondary_reporter) ? (int) $secondary_reporter : $secondary_reporter;
+        if (is_string($secondary_reporter) && in_array(strtolower($secondary_reporter), ['false', 'true'])) {
+            $secondary_reporter = (int) filter_var($secondary_reporter, FILTER_VALIDATE_BOOLEAN);
+        } else {
+            $secondary_reporter = $secondary_reporter ? (int) $secondary_reporter : $secondary_reporter;
+        }
 
         if (!empty($this->organizationReportingOrg)) {
             $activityRef = $this->organizationReportingOrg;
@@ -300,37 +296,30 @@ class Activity
 
         foreach ($data as $index => $row) {
             if ($this->checkRowNotEmpty($row)) {
-                if ($index === 0 && is_null($row['activity_identifier'])) {
+                $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null);
+
+                if (is_null($elementActivityIdentifier)) {
                     $this->globalErrors[] = 'Error detected on ' . $this->sheetName . ' sheet, cell A' . $this->rowCount . ': Identifier is missing.';
+                    $this->rowCount++;
                     continue;
                 }
-
-                $elementActivityIdentifier = Arr::get($row, 'activity_identifier', null) ?? $elementActivityIdentifier;
 
                 foreach ($this->singleValuedElements as $element) {
                     $fieldValue = $row[$element];
 
                     if (array_key_exists($element, $dropDownFields)) {
                         $elementDropDownFields = $dropDownFields[$element];
-                        $fieldValue = $this->mapDropDownValueToKey($row[$element], $elementDropDownFields);
+                        $fieldValue = $this->mapDropDownValueToKey($row[$element], $elementDropDownFields, $element);
                     }
 
-                    if (isset($this->activities[$elementActivityIdentifier][$element])) {
-                        if (!is_array($this->activities[$elementActivityIdentifier][$element])) {
-                            $this->activities[$elementActivityIdentifier][$element] = [];
-                            $this->activities[$elementActivityIdentifier][$element][] = $this->activities[$elementActivityIdentifier][$element];
-                        }
-                        $this->activities[$elementActivityIdentifier][$element][] = $fieldValue;
-                    } else {
-                        $this->activities[$elementActivityIdentifier][$element] = is_numeric($fieldValue) ? $fieldValue : $fieldValue;
-                    }
-
+                    $this->activities[$elementActivityIdentifier][$element] = is_numeric($fieldValue) ? $fieldValue : $fieldValue;
                     $this->columnTracker[$elementActivityIdentifier]["$element"]["$element"]['sheet'] = $this->sheetName;
                     $this->columnTracker[$elementActivityIdentifier]["$element"]["$element"]['cell'] = Arr::get($excelColumnName, $this->sheetName . '.' . $element) . $this->rowCount;
                 }
             } else {
                 break;
             }
+            $this->rowCount++;
         }
     }
 
@@ -344,9 +333,16 @@ class Activity
         $elementDropDownFields = $dropDownFields[$element];
         $elementActivityIdentifier = null;
         $this->elementBeingProcessed = $element;
+        $tempRowCount = 1;
 
-        foreach ($data as $row) {
+        foreach ($data as $index => $row) {
+            $tempRowCount++;
             if ($this->checkRowNotEmpty($row)) {
+                // if ($index === 0 && is_null($row['activity_identifier'])) {
+                //     $this->globalErrors[] = 'Error detected on ' . $this->sheetName . ' sheet, cell A' . $tempRowCount . ': Identifier is missing.';
+                //     continue;
+                // }
+
                 if (
                     is_null($elementActivityIdentifier) || (
                         Arr::get($row, 'activity_identifier', null) &&
@@ -360,6 +356,7 @@ class Activity
                             $this->activities[$elementActivityIdentifier][$element] = $processedData;
                         }
 
+                        $this->rowCount = $tempRowCount;
                         $elementData = [];
                     }
 
@@ -384,6 +381,8 @@ class Activity
                     $this->activities[$elementActivityIdentifier][$element] = $processedData;
                 }
             }
+
+            $this->rowCount = $tempRowCount;
             $elementData = [];
         }
     }
@@ -392,6 +391,7 @@ class Activity
     {
         if (is_null($elementActivityIdentifier)) {
             $this->globalErrors[] = 'Error detected on ' . $this->sheetName . ' sheet, cell A' . $this->rowCount . ': Identifier is missing.';
+            $this->rowCount++;
 
             return [];
         }
@@ -429,6 +429,8 @@ class Activity
                 list($parentBaseCount, $dependentOnValue) = $this->checkSubElementAddMore($fieldDependency, $parentBaseCount, $parentDependentOn, $dependentOnValue, $fieldName, $fieldValue, $row);
                 $originalFieldName = $fieldName;
 
+                // $fieldName = $this->checkDependencyForFieldName($dependentOn, $dependentOnValue, $dependencyCondition, $fieldName);
+
                 if (!empty($dependentOn)) {
                     if (in_array($fieldName, array_keys(Arr::get($dependentOn, 'codes', [])))) {
                         $dependentOnFieldName = $dependentOn['codes'][$fieldName];
@@ -451,7 +453,7 @@ class Activity
                 }
 
                 if (array_key_exists($fieldName, $elementDropDownFields)) {
-                    $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields[$fieldName]);
+                    $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields[$fieldName], $fieldName);
                 }
 
                 // check for non empty.. including zero

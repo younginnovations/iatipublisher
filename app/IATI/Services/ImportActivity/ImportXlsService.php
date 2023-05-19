@@ -162,7 +162,7 @@ class ImportXlsService
     {
         $transactionList = [];
 
-        if ($transactions) {
+        if (!empty($transactions)) {
             foreach ($transactions as $transaction) {
                 $transactionList[] = [
                     'activity_id' => $activityId,
@@ -200,7 +200,7 @@ class ImportXlsService
                 $activityData = $this->fillActivityData($activityData);
                 $this->activityRepository->update($existingId, $activityData);
                 $this->transactionRepository->deleteTransaction($existingId);
-                $this->saveTransactions(Arr::get($activityData, 'transactions'), $existingId);
+                $this->saveTransactions(Arr::get($activityData, 'transactions', []), $existingId);
 
                 if (!empty($activity['errors'])) {
                     $this->importActivityErrorRepo->updateOrCreateError($existingId, $activity['errors']);
@@ -210,7 +210,7 @@ class ImportXlsService
             } else {
                 $activityData['org_id'] = $organizationId;
                 $storeActivity = $this->activityRepository->store($activityData);
-                $this->saveTransactions(Arr::get($activityData, 'transactions'), $storeActivity->id);
+                $this->saveTransactions(Arr::get($activityData, 'transactions', []), $storeActivity->id);
 
                 if (!empty($activity['errors'])) {
                     $this->importActivityErrorRepo->updateOrCreateError($storeActivity->id, $activity['errors']);
@@ -228,7 +228,6 @@ class ImportXlsService
      */
     protected function fillActivityData($activityData): array
     {
-        // dump($activityData);
         $activityElements = [
             'iati_identifier',
             'other_identifier',
@@ -261,7 +260,7 @@ class ImportXlsService
             'default_field_values',
             'tag',
             'reporting_org',
-            'element_status',
+            'transactions',
         ];
 
         $filledData = [];
@@ -270,7 +269,6 @@ class ImportXlsService
             $filledData[$element] = Arr::get($activityData, $element, null);
         }
 
-        // dd($filledData);
         return $filledData;
     }
 

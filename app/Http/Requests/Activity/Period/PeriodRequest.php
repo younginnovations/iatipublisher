@@ -271,7 +271,7 @@ class PeriodRequest extends ActivityBaseRequest
 
         if ($fileUpload) {
             $measure = $indicatorId ? $indicatorService->getIndicatorMeasureType($indicatorId) : Arr::get($indicator, 'measure');
-            $indicatorMeasureType = [
+            $indicatorMeasureType = is_array($measure) ? $measure : [
                 'qualitative' => $measure === '5',
                 'non_qualitative' => in_array($measure, ['1', '2', '3', '4']),
             ];
@@ -358,7 +358,7 @@ class PeriodRequest extends ActivityBaseRequest
 
         if ($fileUpload) {
             $measure = $indicatorId ? $indicatorService->getIndicatorMeasureType($indicatorId) : Arr::get($indicator, 'measure');
-            $indicatorMeasureType = [
+            $indicatorMeasureType = is_array($measure) ? $measure : [
                 'qualitative' => $measure === '5',
                 'non_qualitative' => in_array($measure, ['1', '2', '3', '4']),
             ];

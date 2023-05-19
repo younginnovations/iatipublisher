@@ -287,7 +287,7 @@ class Result
                 }
 
                 if (in_array($fieldName, array_keys($elementDropDownFields))) {
-                    $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields[$fieldName]);
+                    $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields[$fieldName], $fieldName);
                 }
 
                 if (in_array($fieldName, array_keys($dependentOnValue), false) && $fieldValue) {
@@ -346,8 +346,8 @@ class Result
             if (!isset($this->results[$activityIdentifier][$identifier]['results'])) {
                 $activityTemplate = $this->getActivityTemplate();
                 $this->results[$activityIdentifier][$identifier]['results'] = $activityTemplate['result'];
-                $this->totalCount++;
             }
+            $this->totalCount++;
 
             $this->results[$activityIdentifier][$identifier]['results']['document_link'] = $data;
 

@@ -119,7 +119,7 @@ class Indicator
                 'number' => 'baseline_number',
             ],
             'concatinator' => '_b-',
-            'type' => 'baseline',
+            'type' => 'indicator_baseline',
         ],
     ];
 
@@ -306,7 +306,12 @@ class Indicator
             return [];
         }
 
-        $this->isIdentifierDuplicate($elementActivityIdentifier, $element);
+        $periodElementParent = [
+            'baseline document_link' => 'indicator_baseline',
+            'indicator document_link' => 'indicator',
+        ];
+
+        $this->isIdentifierDuplicate($elementActivityIdentifier, $element, true, Arr::get($periodElementParent, $element, null));
 
         $elementBase = Arr::get($dependency, 'elementBase', null);
         $elementBasePeer = Arr::get($dependency, 'elementBasePeer', []);
@@ -356,7 +361,7 @@ class Indicator
 
                 // checking and mapping select fields
                 if (in_array($fieldName, array_keys($elementDropDownFields))) {
-                    $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields[$fieldName]);
+                    $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields[$fieldName], $fieldName);
                 }
 
                 if (in_array($fieldName, array_keys($dependentOnValue), false) && $fieldValue) {
@@ -420,9 +425,9 @@ class Indicator
     protected function pushIndicatorDocumentLink($identifier, $data): void
     {
         $resultIdentifier = Arr::get($this->identifiers, "indicator.$identifier", null);
-        $this->checkIfIndicatorExists($resultIdentifier, $identifier);
 
         if (!empty($data)) {
+            $this->checkIfIndicatorExists($resultIdentifier, $identifier);
             $this->indicators[$resultIdentifier][$identifier]['indicator']['document_link'] = $data;
             $this->updateColumnTracker($resultIdentifier, $identifier, 'document_link');
         }
@@ -432,7 +437,7 @@ class Indicator
 
     protected function pushIndicatorBaseline($identifier, $data): void
     {
-        $indicatorIdentifier = Arr::get($this->identifiers, "baseline.$identifier", null);
+        $indicatorIdentifier = Arr::get($this->identifiers, "indicator_baseline.$identifier", null);
         $resultIdentifier = Arr::get($this->identifiers, "indicator.$indicatorIdentifier", null);
 
         if (!empty($data)) {
@@ -453,7 +458,7 @@ class Indicator
 
     protected function pushIndicatorBaselineDocumentLink($identifier, $data): void
     {
-        $indicatorIdentifier = Arr::get($this->identifiers, "baseline.$identifier", null);
+        $indicatorIdentifier = Arr::get($this->identifiers, "indicator_baseline.$identifier", null);
         $resultIdentifier = Arr::get($this->identifiers, "indicator.$indicatorIdentifier", null);
 
         if (!empty($data)) {

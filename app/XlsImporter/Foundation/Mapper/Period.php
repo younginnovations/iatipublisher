@@ -244,8 +244,12 @@ class Period
             return [];
         }
 
-        $this->isIdentifierDuplicate($elementActivityIdentifier, $element);
+        $periodElementParent = [
+            'actual document_link' => 'actual',
+            'target document_link' => 'target',
+        ];
 
+        $this->isIdentifierDuplicate($elementActivityIdentifier, $element, true, Arr::get($periodElementParent, $element, null));
         $elementBase = Arr::get($dependency, 'elementBase', null);
         $elementBasePeer = Arr::get($dependency, 'elementBasePeer', []);
         $elementAddMore = Arr::get($dependency, 'add_more', true);
@@ -266,7 +270,7 @@ class Period
                 list($parentBaseCount) = $this->checkSubElementAddMore($fieldDependency, $parentBaseCount, [], [], $fieldName, $fieldValue, $row);
 
                 if (in_array($fieldName, array_keys($elementDropDownFields))) {
-                    $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields[$fieldName]);
+                    $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields[$fieldName], $fieldName);
                 }
 
                 $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
