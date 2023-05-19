@@ -1,6 +1,11 @@
 <template>
   <div class="chart-wrapper">
-    <apexchart width="800" type="line" :options="chartOptions" :series="series">
+    <apexchart
+      height="210"
+      type="line"
+      :options="chartOptions"
+      :series="series"
+    >
     </apexchart>
   </div>
 </template>
@@ -11,13 +16,24 @@ const xAxisCounter = ref(0);
 
 let chartOptions = reactive({
   chart: {
-    height: 350,
+    height: 210,
     type: 'line',
     zoom: {
       enabled: false,
     },
   },
-
+  stroke: {
+    width: 1,
+  },
+  colors: ['#17997B'],
+  tooltip: {
+    custom: function ({ series, seriesIndex, dataPointIndex, w, xaxis }) {
+      return `<div class="p-4">
+                <div> ${xaxis}</div>
+                <div>${series[seriesIndex][dataPointIndex]}</div>
+              </div>`;
+    },
+  },
   xaxis: {
     categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
 

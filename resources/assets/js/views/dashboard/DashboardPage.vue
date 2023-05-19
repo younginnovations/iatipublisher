@@ -1,6 +1,6 @@
 <template>
   <div class="py-8 px-6">
-    <div class="mb-3">
+    <div class="mb-3 border-b border-n-20 pb-3">
       <div class="flex gap-x-2">
         <button
           :class="
@@ -37,12 +37,14 @@
         </button>
       </div>
     </div>
-    <DashboardGraph />
+    <DashboardStatsSection :current-view="currentView" />
+    <DashboardListSection :current-view="currentView" />
   </div>
 </template>
 
 <script setup lang="ts">
-import DashboardGraph from './DashboardGraph.vue';
+import DashboardStatsSection from './DashboardStatsSection.vue';
+import DashboardListSection from './DashboardListSection.vue';
 import { ref } from 'vue';
 const currentView = ref('publisher');
 </script>
