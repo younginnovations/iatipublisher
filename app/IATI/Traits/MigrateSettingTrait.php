@@ -304,7 +304,7 @@ trait MigrateSettingTrait
         if ($registryInfo) {
             $registryInfo = json_decode($registryInfo, true, 512, JSON_THROW_ON_ERROR);
 
-            return Arr::get($registryInfo, '0.publisher_id', $userIdentifier);
+            return Arr::get($registryInfo, '0.publisher_id', $userIdentifier) ?: $userIdentifier;
         }
 
         return $userIdentifier;

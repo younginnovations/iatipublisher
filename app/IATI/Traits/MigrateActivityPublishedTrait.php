@@ -359,7 +359,7 @@ trait MigrateActivityPublishedTrait
             $this->logInfo("Started migration of merged file for Aidstream org: {$aidStreamOrganization->id}.");
             $existingContents = awsGetFile("{$aidstreamMergedFilePath}/{$aidstreamMergedFilename}");
 
-            if ($existingContents && !$merge) {
+            if ($existingContents && !$merge && !$this->filenameHasSegmentedLastname($aidstreamActivityPublished->first()->filename)) {
                 $existingContents = $this->replaceDocumentLinkInXml($existingContents, $iatiOrganization->id);
                 awsUploadFile($iatiMergedFile, $existingContents);
             } else {
