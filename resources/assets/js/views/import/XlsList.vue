@@ -190,12 +190,24 @@
   <Modal :modal-active="showCriticalErrorModel" width="583">
     <div class="mb-6 flex items-center space-x-1">
       <svg-vue class="text-crimson-40" icon="warning-fill" />
-      <h6 class="text-sm font-bold">Critical Errors Detected</h6>
+      <h6 class="text-sm font-bold">Errors Detected</h6>
     </div>
     <div class="mb-6 rounded-sm bg-rose p-4 text-sm text-n-50">
-      Some of the {{ status.template }} contain critical errors and thus, cannot
-      be uploaded to IATI Publisher. Please review the errors and follow the
-      instructions provided in the user manual.
+      <div v-if="showCriticalErrorMessage" class="mb-6">
+        <h6 class="mb-2 text-sm font-bold">Critical Errors</h6>
+        <p>
+          Some of the {{ status.template }} contain critical errors and thus,
+          cannot be uploaded to IATI Publisher. Please review the errors and
+          follow the instructions provided in the user manual.
+        </p>
+      </div>
+      <div v-if="globalError.length > 0">
+        <h6 class="mb-2 text-sm font-bold">Global Errors</h6>
+        <p>
+          We have found some global errors in the imported file. The presence of
+          global error might cause incomplete data to be imported.
+        </p>
+      </div>
     </div>
     <button
       class="ml-auto flex w-[158px] justify-center rounded-sm bg-bluecoral py-3 text-center text-xs font-bold uppercase text-white hover:text-white"
@@ -227,6 +239,7 @@ const tableRow = ref({});
 const showCriticalErrorModel = ref(false);
 const loader = ref(false),
   loaderText = ref('Adding activities');
+const showCriticalErrorMessage = ref(false);
 const showGlobalErrorList = ref(false);
 const showGLobalError = ref(false);
 const selectedCount = ref(0);
@@ -353,6 +366,9 @@ const checkCriticalError = () => {
     totalCriricalErrorCount += criricalArray[i];
   }
   if (totalCriricalErrorCount > 0) {
+    showCriticalErrorMessage.value = true;
+  }
+  if (totalCriricalErrorCount > 0 || props.globalError.length > 0) {
     showCriticalErrorModel.value = true;
   }
 };
