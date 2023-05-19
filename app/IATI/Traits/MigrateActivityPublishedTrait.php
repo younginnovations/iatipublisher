@@ -348,7 +348,7 @@ trait MigrateActivityPublishedTrait
                                                        1
                                                    )->get();
             $aidstreamMergedFilePath = 'aidstream-xml';
-            $aidstreamMergedFilename = $this->getAidStreamMergedqFilename(
+            $aidstreamMergedFilename = $this->getAidStreamMergedFilename(
                 $aidStreamOrganization,
                 $aidstreamActivityPublished
             );
