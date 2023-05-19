@@ -104,7 +104,7 @@ class Result
             $this->sheetName = $sheetName;
             $this->rowCount = 2;
 
-            if ($sheetName === 'Result Mapper') {
+            if ($sheetName === 'Result_Mapper') {
                 $this->mapResultMapperSheets($content, $sheetName);
             }
 
@@ -134,7 +134,7 @@ class Result
                 if ((empty($parentIdentifierValue) || $parentIdentifierValue !== $row['activity_identifier']) && !empty($row['activity_identifier'])) {
                     $parentIdentifierValue = $row['activity_identifier'];
 
-                    $this->isIdentifierDuplicate($parentIdentifierValue, 'result mapper');
+                    $this->isIdentifierDuplicate($parentIdentifierValue, 'Result_Mapper');
                 }
 
                 $this->resultIdentifier[$sheetName][$parentIdentifierValue][] = sprintf('%s_%s', $parentIdentifierValue, $row['result_number']);

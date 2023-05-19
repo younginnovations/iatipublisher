@@ -30,15 +30,15 @@
   },
   "result": {
     "Instructions": "required",
-    "Result Mapper": "required",
+    "Result_Mapper": "required",
     "Result": "required",
     "Result Document Link": "required",
     "Options": "required"
   },
   "indicator": {
     "Instructions": "required",
-    "Indicator Mapper": "required",
-    "Indicator Baseline Mapper": "required",
+    "Indicator_Mapper": "required",
+    "Indicator_Baseline_Mapper": "required",
     "Indicator": "required",
     "Indicator Document Link": "required",
     "Indicator Baseline": "required",
@@ -47,9 +47,9 @@
   },
   "period": {
     "Instructions": "required",
-    "Period Mapper": "required",
-    "Target Mapper": "required",
-    "Actual Mapper": "required",
+    "Period_Mapper": "required",
+    "Target_Mapper": "required",
+    "Actual_Mapper": "required",
     "Period": "required",
     "Target": "required",
     "Target Document Link": "required",

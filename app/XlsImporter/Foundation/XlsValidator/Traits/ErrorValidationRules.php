@@ -34,6 +34,7 @@ use App\Http\Requests\Activity\Scope\ScopeRequest;
 use App\Http\Requests\Activity\Sector\SectorRequest;
 use App\Http\Requests\Activity\Status\StatusRequest;
 use App\Http\Requests\Activity\Tag\TagRequest;
+use App\Http\Requests\Activity\Title\TitleRequest;
 use App\Http\Requests\Activity\Transaction\TransactionRequest;
 use Illuminate\Support\Arr;
 
@@ -42,6 +43,16 @@ use Illuminate\Support\Arr;
  */
 trait ErrorValidationRules
 {
+    /**
+     * @param array $activity
+     *
+     * @return array
+     */
+    protected function errorForTitle(array $activity): array
+    {
+        return (new TitleRequest())->getErrorsForTitle('title', Arr::get($activity, 'title', []));
+    }
+
     /**
      * @param array $activity
      *

@@ -25,7 +25,7 @@ class TitleRequest extends ActivityBaseRequest
             $titles = request()->get('narrative');
         }
 
-        $totalRules = [$this->getErrorsForTitle($name, $titles), $this->getWarningForTitle($name, $titles)];
+        $totalRules = [$this->getCriticalErrorsForTitle($name, $titles), $this->getErrorsForTitle($name, $titles), $this->getWarningForTitle($name, $titles)];
 
         return mergeRules($totalRules);
     }
@@ -37,15 +37,39 @@ class TitleRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getErrorsForTitle($name, $titles = []): array
+    public function getCriticalErrorsForTitle($name, $titles = []): array
     {
         $firstTitleKey = array_key_first($titles) ?? '0';
+        $rules = [];
 
         if (empty(Arr::get($titles, sprintf('%s.narrative', $firstTitleKey), null))) {
-            return [sprintf('%s.%s.narrative', $name, $firstTitleKey) => 'required'];
+            $rules[sprintf('%s.%s.narrative', $name, $firstTitleKey)] = 'required';
         }
 
-        return [];
+        return $rules;
+    }
+
+    /**
+     * Return errors for title.
+     *
+     * @param $name
+     * @param $titles
+     *
+     * @return array
+     */
+    public function getErrorsForTitle($name, $titles = []): array
+    {
+        $rules = [];
+        $validLanguages = implode(',', array_keys(getCodeList('Language', 'Activity', false)));
+
+        if (is_array($titles) && count($titles)) {
+            foreach ($titles as $key => $title) {
+                $rules[sprintf('%s.%s.language', $name, $key)][] = 'nullable';
+                $rules[sprintf('%s.%s.language', $name, $key)][] = sprintf('in:%s', $validLanguages);
+            }
+        }
+
+        return $rules;
     }
 
     /**

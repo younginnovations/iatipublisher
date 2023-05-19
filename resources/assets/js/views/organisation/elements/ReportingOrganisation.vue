@@ -29,7 +29,7 @@
               {{
                 parseInt(reporting_org.secondary_reporter)
                   ? 'True'
-                  : reporting_org.secondary_reporter
+                  : reporting_org.secondary_reporter === '0'
                   ? 'False'
                   : 'Missing'
               }}

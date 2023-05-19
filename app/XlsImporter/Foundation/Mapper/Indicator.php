@@ -105,7 +105,7 @@ class Indicator
      * @var array
      */
     protected array $mappers = [
-        'Indicator Mapper' => [
+        'Indicator_Mapper' => [
             'columns' => [
                 'parentIdentifier' => 'result_identifier',
                 'number' => 'indicator_number',
@@ -113,7 +113,7 @@ class Indicator
             'concatinator' => '_',
             'type' => 'indicator',
         ],
-        'Indicator Baseline Mapper' => [
+        'Indicator_Baseline_Mapper' => [
             'columns' => [
                 'parentIdentifier' => 'indicator_identifier',
                 'number' => 'baseline_number',

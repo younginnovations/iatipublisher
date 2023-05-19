@@ -228,6 +228,7 @@ class ImportXlsService
      */
     protected function fillActivityData($activityData): array
     {
+        // dump($activityData);
         $activityElements = [
             'iati_identifier',
             'other_identifier',
@@ -269,6 +270,7 @@ class ImportXlsService
             $filledData[$element] = Arr::get($activityData, $element, null);
         }
 
+        // dd($filledData);
         return $filledData;
     }
 

@@ -158,18 +158,18 @@ class XlsQueueProcessor
             'Transaction' => 'transactions',
             'Settings' => 'settings',
             'Element with single field' => 'element_with_single_field',
-            'Result Mapper' => 'result_mapper',
+            'Result_Mapper' => 'result_mapper',
             'Result' => 'result',
             'Result Document Link' => 'result_document_link',
-            'Indicator Mapper' => 'indicator_mapper',
-            'Indicator Baseline Mapper' => 'indicator_baseline_mapper',
+            'Indicator_Mapper' => 'indicator_mapper',
+            'Indicator_Baseline_Mapper' => 'indicator_baseline_mapper',
             'Indicator' => 'indicator',
             'Indicator Document Link' => 'indicator_document_link',
             'Indicator Baseline' => 'indicator_baseline',
             'Baseline Document Link' => 'baseline_document_link',
-            'Period Mapper' => 'period_mapper',
-            'Target Mapper' => 'target_mapper',
-            'Actual Mapper' => 'actual_mapper',
+            'Period_Mapper' => 'period_mapper',
+            'Target_Mapper' => 'target_mapper',
+            'Actual_Mapper' => 'actual_mapper',
             'Period' => 'period',
             'Target' => 'target',
             'Target Document Link' => 'target_document_link',
@@ -179,9 +179,9 @@ class XlsQueueProcessor
 
         $mainMappingSheet = [
             'activity' => 'Settings',
-            'result' => 'Result Mapper',
-            'indicator' => 'Indicator Mapper',
-            'period' => 'Period Mapper',
+            'result' => 'Result_Mapper',
+            'indicator' => 'Indicator_Mapper',
+            'period' => 'Period_Mapper',
         ];
 
         if (!$this->checkSheetNames(array_keys($content), $systemSheets)) {

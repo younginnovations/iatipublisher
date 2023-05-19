@@ -8,7 +8,7 @@
         {{ title }}
       </span>
       <span class="tect-xs mx-3 font-normal capitalize text-n-40"
-        >({{ status['template'] }} Identifier: {{ activity.code }})</span
+        >({{ status['template'] }} Identifier: {{ activity.identifier }})</span
       >
       <span
         v-if="countErrors(index) > 0"

@@ -18,21 +18,21 @@ class DownloadCodeService
     protected ActivityRepository $activityRepository;
 
     protected $xlsFields = [
-        'Result Mapper' => [
+        'Result_Mapper' => [
             [
                 'Activity Identifier',
                 'Result Number',
                 'Result Identifier',
             ],
         ],
-        'Indicator Mapper' => [
+        'Indicator_Mapper' => [
             [
                 'Result Identifier',
                 'Indicator Number',
                 'Indicator Identifier',
             ],
         ],
-        'Period Mapper' => [
+        'Period_Mapper' => [
             [
                 'Indicator Identifier',
                 'Period Number',
@@ -85,21 +85,21 @@ class DownloadCodeService
                     $periods = $indicator->periods;
 
                     foreach ($periods as $periodIndex => $period) {
-                        $this->xlsFields['Period Mapper'][] = [
+                        $this->xlsFields['Period_Mapper'][] = [
                             $periodIndex === 0 ? $indicatorIdentifier : '',
                             $period->period_code,
                             $indicatorIdentifier . '_' . $period->period_code,
                         ];
                     }
 
-                    $this->xlsFields['Indicator Mapper'][] = [
+                    $this->xlsFields['Indicator_Mapper'][] = [
                         $indicatorIndex === 0 ? $resultIdentifier : '',
                         $indicator->indicator_code,
                         $resultIdentifier . '_' . $indicator->indicator_code,
                     ];
                 }
 
-                $this->xlsFields['Result Mapper'][] = [
+                $this->xlsFields['Result_Mapper'][] = [
                     $resultIndex === 0 ? $activityIdentifier : '',
                     $result->result_code,
                     $activityIdentifier . '_' . $result->result_code,

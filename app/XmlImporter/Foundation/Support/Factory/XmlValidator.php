@@ -108,6 +108,7 @@ class XmlValidator
         $rules = [];
 
         $tempRules = [
+            $this->errorForTitle($activity),
             $this->errorForActivityStatus($activity),
             $this->errorForActivityScope($activity),
             $this->errorForCollaborationType($activity),
@@ -162,12 +163,12 @@ class XmlValidator
         $reportingOrgRequest->reportingOrganisationInOrganisation($this->organizationReportingOrg);
 
         $tempRules = [
-                (new TitleRequest())->getErrorsForTitle('title'),
-                (new IdentifierRequest())->getErrorsForIdentifier(true, 'identifier'),
-                $reportingOrgRequest->getCriticalErrorsForReportingOrganization(Arr::get($activity, 'reporting_org')),
-            ];
+            (new TitleRequest())->getCriticalErrorsForTitle('title'),
+            (new IdentifierRequest())->getErrorsForIdentifier(true, 'identifier'),
+            $reportingOrgRequest->getCriticalErrorsForReportingOrganization(Arr::get($activity, 'reporting_org')),
+        ];
 
-        foreach ($tempRules as $index=>$tempRule) {
+        foreach ($tempRules as $index => $tempRule) {
             foreach ($tempRule as $key => $rule) {
                 $rules[$key] = $rule;
             }
@@ -336,7 +337,7 @@ class XmlValidator
      *
      * @return $this
      */
-    public function reportingOrganisationInOrganisation($organizationReportingOrg):static
+    public function reportingOrganisationInOrganisation($organizationReportingOrg): static
     {
         $this->organizationReportingOrg = $organizationReportingOrg;
 

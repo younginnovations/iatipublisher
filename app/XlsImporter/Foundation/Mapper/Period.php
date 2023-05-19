@@ -77,7 +77,7 @@ class Period
     ];
 
     protected array $mappers = [
-        'Period Mapper' => [
+        'Period_Mapper' => [
             'columns' => [
                 'parentIdentifier' => 'indicator_identifier',
                 'number' => 'period_number',
@@ -85,7 +85,7 @@ class Period
             'concatinator' => '_',
             'type' => 'period',
         ],
-        'Target Mapper' => [
+        'Target_Mapper' => [
             'columns' => [
                 'parentIdentifier' => 'period_identifier',
                 'number' => 'target_number',
@@ -93,7 +93,7 @@ class Period
             'concatinator' => '_t-',
             'type' => 'target',
         ],
-        'Actual Mapper' => [
+        'Actual_Mapper' => [
             'columns' => [
                 'parentIdentifier' => 'period_identifier',
                 'number' => 'actual_number',

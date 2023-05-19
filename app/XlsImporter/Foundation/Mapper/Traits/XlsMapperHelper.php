@@ -230,13 +230,13 @@ trait XlsMapperHelper
 
     public function checkElementAddMore($elementBase, $elementBasePeer, $elementAddMore, $dependentOnValue, $fieldName, $fieldValue, $baseCount, $parentBaseCount, $row, $element): array
     {
-        if ($elementBase && ($fieldName === $elementBase && ($fieldValue || is_numeric($fieldValue) || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)))) {
+        if ($elementBase && ($fieldName === $elementBase && ($fieldValue || is_numeric($fieldValue) || is_bool($fieldValue) || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)))) {
             if (!$elementAddMore) {
-                if ($baseCount === 0) {
-                    $this->tempErrors["$element"] =
+                if ($baseCount === 0 || $baseCount > 0) {
+                    $this->tempErrors["$element > $this->rowCount"] =
                         empty($elementBasePeer) ?
                         sprintf('Error detected on %s sheet, row %s : The %s cannot have multiple %s.', $this->sheetName, $this->rowCount, $element, $elementBase) :
-                        sprintf('Error detected on %s sheet, row %s : The %s cannot have multiple %s or %s.', $this->sheetName, $this->rowCount, $element, $elementBase, implode(', ', $elementBasePeer));
+                        sprintf('Error detected on %s sheet, row %s : The %s cannot have multiple %s or %s.', $this->sheetName, $this->rowCount, $element, implode(', ', $elementBasePeer), $elementBase);
                 }
 
                 $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
@@ -261,7 +261,7 @@ trait XlsMapperHelper
             $children = Arr::get($fieldDependency, "$fieldName.children", []);
             $parentAddMore = Arr::get($fieldDependency, "$fieldName.add_more", true);
 
-            if ($fieldValue || $this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
+            if ($fieldValue || is_numeric($fieldValue) || is_bool($fieldValue) || $this->checkIfPeerAttributesAreNotEmpty($peerAttributes, $row)) {
                 $parentBaseCount[$parentKey] = is_null($parentBaseCount[$parentKey]) || !$parentAddMore ? 0 : $parentBaseCount[$parentKey] + 1;
 
                 foreach ($children as $child) {

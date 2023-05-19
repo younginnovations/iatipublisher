@@ -546,6 +546,7 @@ class ActivityBaseRequest extends FormRequest
 
                 foreach (array_keys($documentLink['language']) as $index) {
                     $rules[sprintf('%s.language.%s.language', $documentLinkForm, $index)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Language', 'Activity', false)));
+                    $rules[sprintf('%s.language.%s.code', $documentLinkForm, $index)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Language', 'Activity', false)));
                 }
 
                 $narrativeTitleRules = $this->getErrorsForNarrative($documentLink['title'][0]['narrative'], sprintf('%s.title.0', $documentLinkForm));
