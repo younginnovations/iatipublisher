@@ -318,19 +318,33 @@ trait XlsMapperHelper
             return true;
         }
 
+        $this->trackIdentifierBySheet[$this->sheetName][] = $elementIdentifier;
+
         if ($validate) {
+            $identifier = '';
+            $elementPosition = '';
+
             if (!is_null($type)) {
                 $element = $type;
+                $identifier = "$element.$elementIdentifier";
+                $elementPosition = "$element > $this->rowCount";
             }
 
-            if (!Arr::get($this->identifiers, "$element.$elementIdentifier", false)) {
-                $this->tempErrors["$element > $this->rowCount"] = sprintf('Error detected on %s sheet, cell A%s : The identifier does not have correct format.', $this->sheetName, $this->rowCount);
+            if (empty($type)) {
+                $element = $type;
+                $identifier = "$elementIdentifier";
+                $elementPosition = "$this->rowCount";
+            }
+
+            dump($this->identifiers, $identifier);
+
+            if (!Arr::get($this->identifiers, "$identifier", false)) {
+                dump('here');
+                $this->tempErrors["$elementPosition"] = sprintf('Error detected on %s sheet, cell A%s : The identifier does not have correct format.', $this->sheetName, $this->rowCount);
 
                 return true;
             }
         }
-
-        $this->trackIdentifierBySheet[$this->sheetName][] = $elementIdentifier;
 
         return false;
     }

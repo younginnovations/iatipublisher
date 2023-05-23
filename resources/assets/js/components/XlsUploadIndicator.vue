@@ -1,6 +1,9 @@
 <template>
   <div class="fixed right-10 bottom-0 z-[1000] flex items-end space-x-5">
     <BulkpublishWithXls />
+    <ActivityDownload
+      v-if="downloading && !downloadCompleted && !cancelDownload"
+    />
     <XlsLoader
       v-if="xlsData && showXlsStatus"
       :total-count="totalCount"

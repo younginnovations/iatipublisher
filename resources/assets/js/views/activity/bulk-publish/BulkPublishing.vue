@@ -147,7 +147,7 @@ onMounted(() => {
       clearInterval(checkSupportButton);
     }
   }, 10);
-  
+
   checkXlsstatus();
 });
 

@@ -265,7 +265,7 @@
     :text="loaderText"
     :class="{ 'animate-loader': loader }"
   />
-  <Modal :modal-active="xlsData" width="583">
+  <Modal :modal-active="showCancelModel" width="583">
     <div>
       <div class="mb-6 flex items-center space-x-1">
         <svg-vue class="text-crimson-40" icon="warning-fill" />
@@ -359,6 +359,8 @@ const xlsFailed = ref(false);
 const currentActivity = ref('');
 const toastVisibility = ref(false);
 const xlsData = ref(false);
+const showCancelModel = ref(false);
+
 const totalCount = ref(0);
 const processedCount = ref(0);
 const file = ref(),
@@ -384,41 +386,44 @@ const activityLength = computed(() => {
 });
 
 function uploadFile() {
-  console.log(uploadType.value.length, 'length');
+  if (xlsData.value) {
+    showCancelModel.value = true;
+  } else {
+    loader.value = true;
+    loaderText.value = 'Fetching .xls file';
 
-  loader.value = true;
-  loaderText.value = 'Fetching .xls file';
+    let activity = file.value.files.length ? file.value.files[0] : '';
 
-  let activity = file.value.files.length ? file.value.files[0] : '';
-
-  let xlsType = uploadType;
-  const config = {
-    headers: {
-      'content-type': 'multipart/form-data',
-    },
-  };
-  let data = new FormData();
-  data.append('activity', activity);
-  data.append('xlsType', xlsType.value as any);
-  error.value = '';
-
-  axios
-    .post('/import/xls', data, config)
-    .then((res) => {
-      if (file.value.files.length && res?.data?.success) {
-        window.location.href = '/activities';
-      } else {
-        error.value = Object.values(res.data.errors).join(' ');
-        loader.value = false;
-      }
-    })
-    .catch(() => {
-      error.value = 'Error has occured while uploading file.';
-    });
+    let xlsType = uploadType;
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    };
+    let data = new FormData();
+    data.append('activity', activity);
+    data.append('xlsType', xlsType.value as any);
+    error.value = '';
+    axios
+      .post('/import/xls', data, config)
+      .then((res) => {
+        if (file.value.files.length && res?.data?.success) {
+          window.location.href = '/import/xls';
+        } else {
+          error.value = Object.values(res.data.errors).join(' ');
+          loader.value = false;
+        }
+      })
+      .catch(() => {
+        error.value = 'Error has occured while uploading file.';
+      });
+  }
+  console.log(showCancelModel.value);
 }
 const cancelImport = () => {
   axios.delete(`/import/xls`).then((res) => {
     xlsData.value = false;
+    showCancelModel.value = false;
     const response = res.data;
     toastVisibility.value = true;
     setTimeout(() => (toastVisibility.value = false), 15000);
@@ -427,6 +432,7 @@ const cancelImport = () => {
   });
 };
 const checkXlsstatus = () => {
+  console.log('checking status');
   axios.get('/import/xls/progress_status').then((res) => {
     activityName.value = res?.data?.status?.template;
     currentActivity.value = mapActivityName(activityName.value);
@@ -440,6 +446,7 @@ const checkXlsstatus = () => {
     ) {
       const checkStatus = setInterval(function () {
         axios.get('/import/xls/status').then((res) => {
+          console.log(res);
           totalCount.value = res.data.data?.total_count;
           processedCount.value = res.data.data?.processed_count;
           xlsFailed.value = !res.data.data?.success;
@@ -448,6 +455,8 @@ const checkXlsstatus = () => {
             !res.data?.data?.success ||
             res.data?.data?.message === 'Complete'
           ) {
+            console.log('yes complete');
+            fetchComplete.value = true;
             clearInterval(checkStatus);
           }
         });

@@ -7,9 +7,10 @@
       >
         {{ title }}
       </span>
-      <span class="tect-xs mx-3 font-normal capitalize text-n-40"
-        >({{ status['template'] }} Identifier: {{ activity.identifier }})</span
-      >
+      <span class="tect-xs mx-3 font-normal text-n-40">
+        <span class="capitalize"> ({{ status['template'] }} Identifier </span>
+        : {{ activity.identifier }})
+      </span>
       <span
         v-if="countErrors(index) > 0"
         class="ml-4 inline-flex cursor-pointer items-center space-x-2 text-crimson-50"

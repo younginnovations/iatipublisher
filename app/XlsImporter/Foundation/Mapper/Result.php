@@ -236,7 +236,7 @@ class Result
             return [];
         }
 
-        if ($this->isIdentifierDuplicate($elementActivityIdentifier, $element)) {
+        if ($this->isIdentifierDuplicate($elementActivityIdentifier, $element, true, '')) {
             return [];
         }
 
@@ -265,46 +265,49 @@ class Result
         foreach (array_values($fieldDependency) as $dependents) {
             $parentBaseCount[$dependents['parent']] = null;
         }
+        try {
+            foreach ($data as $row) {
+                foreach ($row as $fieldName => $fieldValue) {
+                    list($baseCount, $parentBaseCount, $dependentOnValue) = $this->checkElementAddMore($elementBase, $elementBasePeer, $elementAddMore, $dependentOnValue, $fieldName, $fieldValue, $baseCount, $parentBaseCount, $row, $element);
+                    list($parentBaseCount, $dependentOnValue) = $this->checkSubElementAddMore($fieldDependency, $parentBaseCount, $parentDependentOn, $dependentOnValue, $fieldName, $fieldValue, $row);
 
-        foreach ($data as $row) {
-            foreach ($row as $fieldName => $fieldValue) {
-                list($baseCount, $parentBaseCount, $dependentOnValue) = $this->checkElementAddMore($elementBase, $elementBasePeer, $elementAddMore, $dependentOnValue, $fieldName, $fieldValue, $baseCount, $parentBaseCount, $row, $element);
-                list($parentBaseCount, $dependentOnValue) = $this->checkSubElementAddMore($fieldDependency, $parentBaseCount, $parentDependentOn, $dependentOnValue, $fieldName, $fieldValue, $row);
+                    if (!empty($dependentOn)) {
+                        if (in_array($fieldName, array_keys(Arr::get($dependentOn, 'uri', [])))) {
+                            $dependentOnFieldName = $dependentOn['uri'][$fieldName];
+                            $dependentOnFieldValue = $dependentOnValue[$dependentOnFieldName];
+                            $uriDependencyCondition = $codeDependencyCondition[$dependentOnFieldName]['vocabularyUri'];
 
-                if (!empty($dependentOn)) {
-                    if (in_array($fieldName, array_keys(Arr::get($dependentOn, 'uri', [])))) {
-                        $dependentOnFieldName = $dependentOn['uri'][$fieldName];
-                        $dependentOnFieldValue = $dependentOnValue[$dependentOnFieldName];
-                        $uriDependencyCondition = $codeDependencyCondition[$dependentOnFieldName]['vocabularyUri'];
-
-                        if (!in_array($dependentOnFieldValue, $uriDependencyCondition)) {
-                            $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
-                            $elementPositionBasedOnParent = $elementBase && $elementAddMore ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
-                            Arr::forget($elementData, $elementPositionBasedOnParent);
-                            continue;
+                            if (!in_array($dependentOnFieldValue, $uriDependencyCondition)) {
+                                $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
+                                $elementPositionBasedOnParent = $elementBase && $elementAddMore ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
+                                Arr::forget($elementData, $elementPositionBasedOnParent);
+                                continue;
+                            }
                         }
                     }
-                }
 
-                if (in_array($fieldName, array_keys($elementDropDownFields))) {
-                    $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields[$fieldName], $fieldName);
-                }
+                    if (in_array($fieldName, array_keys($elementDropDownFields))) {
+                        $fieldValue = $this->mapDropDownValueToKey($fieldValue, $elementDropDownFields[$fieldName], $fieldName);
+                    }
 
-                if (in_array($fieldName, array_keys($dependentOnValue), false) && $fieldValue) {
-                    $dependentOnValue[$fieldName] = $fieldValue;
-                }
+                    if (in_array($fieldName, array_keys($dependentOnValue), false) && $fieldValue) {
+                        $dependentOnValue[$fieldName] = $fieldValue;
+                    }
 
-                $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
-                $elementPositionBasedOnParent = $elementBase && $elementAddMore ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
+                    $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
+                    $elementPositionBasedOnParent = $elementBase && $elementAddMore ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
 
-                if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null))) {
-                    $fieldValue = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
-                    Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
-                    $this->tempColumnTracker[$elementPositionBasedOnParent]['sheet'] = $this->sheetName;
-                    $this->tempColumnTracker[$elementPositionBasedOnParent]['cell'] = Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
+                    if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null))) {
+                        $fieldValue = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
+                        Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
+                        $this->tempColumnTracker[$elementPositionBasedOnParent]['sheet'] = $this->sheetName;
+                        $this->tempColumnTracker[$elementPositionBasedOnParent]['cell'] = Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
+                    }
                 }
+                $this->rowCount++;
             }
-            $this->rowCount++;
+        } catch (\Exception $e) {
+            logger()->error($e);
         }
 
         return $elementData;

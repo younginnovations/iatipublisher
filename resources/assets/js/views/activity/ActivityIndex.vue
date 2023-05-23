@@ -31,6 +31,7 @@
       :xls-failed="xlsFailed"
       :activity-name="activityName"
       :xls-data="xlsData"
+      :completed="importCompleted"
     />
   </div>
 </template>
@@ -76,6 +77,7 @@ export default defineComponent({
     const xlsFailed = ref(false);
     const xlsFailedMessage = ref('');
 
+    const importCompleted = ref(false);
     const totalCount = ref();
     const processedCount = ref();
     const showXlsStatus = ref(true);
@@ -127,7 +129,7 @@ export default defineComponent({
                 !res.data?.data?.success ||
                 res.data?.data?.message === 'Complete'
               ) {
-                totalCount.value = processedCount.value;
+                importCompleted.value = true;
                 clearInterval(checkStatus);
               }
             });
@@ -242,6 +244,7 @@ export default defineComponent({
       showXlsStatus,
       xlsFailed,
       xlsFailedMessage,
+      importCompleted,
     };
   },
 });
