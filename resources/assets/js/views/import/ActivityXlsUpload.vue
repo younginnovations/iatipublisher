@@ -142,6 +142,24 @@
             </label>
           </div>
         </div>
+        <div
+          class="mx-auto mb-4 flex max-w-[570px] justify-between bg-eggshell py-2.5 px-4"
+        >
+          <div class="flex">
+            <svg-vue class="mr-2.5 text-[20px]" icon="alert-outline" />
+            <p class="max-w-[320px] text-sm text-n-40">
+              Please download the identifier code to determine the correct
+              values. Download Identifier Code
+            </p>
+          </div>
+
+          <button
+            class="text-sm text-bluecoral"
+            @click="showDownloadCode = true"
+          >
+            Download Identifier Code
+          </button>
+        </div>
         <div>
           <div class="flex justify-center space-x-4">
             <div class="mb-4 h-10 rounded border border-n-30 px-4 py-2">
@@ -257,7 +275,6 @@
       :xls-failed="xlsFailed"
       :activity-name="activityName"
       :xls-data="xlsData"
-      :completed="fetchComplete"
     />
   </div>
   <Loader
@@ -265,6 +282,121 @@
     :text="loaderText"
     :class="{ 'animate-loader': loader }"
   />
+  <Modal :no-padding="true" :modal-active="showDownloadCode" width="1220">
+    <div class="border-b border-n-20 py-5 px-6">
+      <div class="flex justify-between">
+        <div>
+          <div class="flex items-center space-x-2">
+            <h6 class="text-2xl">Activities</h6>
+            <span
+              class="rounded-full bg-mint px-2 py-2 text-[10px] font-bold text-spring-50"
+              >{{ activities['total'] }} activities</span
+            >
+          </div>
+          <p class="text-xs text-n-40">
+            Please choose the activities for which you would like to download
+            the identifier codes.
+          </p>
+        </div>
+        <button @click="showDownloadCode = false">
+          <svg-vue class="-mt-4 h-[20px] text-n-50" icon="cross"></svg-vue>
+        </button>
+      </div>
+    </div>
+    <div class="flex justify-between border-b border-n-20 py-5 px-6">
+      <div class="relative">
+        <svg-vue
+          class="absolute left-3 top-1/2 h-[16px] -translate-y-1/2 text-base text-n-30"
+          icon="search"
+        ></svg-vue>
+
+        <input
+          v-model="searchValue"
+          class="search__input mr-3.5 !rounded-full"
+          type="text"
+          placeholder="Search activity..."
+          @keyup.enter="fetchActivities(1)"
+        />
+      </div>
+      <BtnComponent
+        type="primary"
+        :text="
+          store.state.selectedActivities.length > 0
+            ? 'Download Selected'
+            : 'Download All'
+        "
+        icon="download"
+        @click="downloadCode"
+      />
+    </div>
+    <div>
+      <table class="w-full text-xs text-n-40">
+        <thead>
+          <tr class="border-b border-n-20 text-left">
+            <th class="w-[600px] py-4 px-6">Activity Title</th>
+            <th class="py-4 px-6">Updated on</th>
+            <th class="py-4 px-6">Status</th>
+            <th class="py-4 px-6 text-left">
+              <button class="cursor-pointer" @click="selectAll">
+                <svg-vue class="text-base" icon="checkbox" />
+              </button>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="[&>*:nth-child(odd)]:bg-n-10">
+          <tr
+            v-for="activity in activities.data"
+            :key="activity['id']"
+            class="w-full border-b border-n-20"
+          >
+            <td class="py-4 px-6 text-sm text-n-50">
+              {{ activity['title'][0]['narrative'] }}
+            </td>
+            <td class="py-4 px-6 text-xs text-n-40">
+              {{ formatDate(activity['updated_at']) }}
+            </td>
+            <td>
+              <button
+                class="inline-flex items-center transition duration-500 hover:text-spring-50"
+                :class="{
+                  'text-n-40': activity['status'] === 'draft',
+                  'text-spring-50': activity['status'] === 'published',
+                }"
+              >
+                <span class="mr-1 text-base">
+                  <svg-vue
+                    :icon="
+                      activity['status'] === 'draft' ? 'document-write' : 'tick'
+                    "
+                  />
+                </span>
+                <span class="text-sm leading-relaxed">{{
+                  activity['status']
+                }}</span>
+              </button>
+            </td>
+            <td class="pl-6">
+              <label class="checkbox">
+                <input
+                  v-model="store.state.selectedActivities"
+                  :value="activity['id']"
+                  type="checkbox"
+                />
+                <span class="checkmark" />
+              </label>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div v-if="!isEmpty" class="mx-6 my-4">
+        <Pagination
+          v-if="activities && activities.last_page > 1"
+          :data="activities"
+          @fetch-activities="fetchActivities"
+        />
+      </div>
+    </div>
+  </Modal>
   <Modal :modal-active="showCancelModel" width="583">
     <div>
       <div class="mb-6 flex items-center space-x-1">
@@ -284,9 +416,7 @@
       </div>
       <div v-else class="rounded-sm bg-rose p-4">
         <p
-          v-if="
-            (totalCount === processedCount && totalCount !== 0) || fetchComplete
-          "
+          v-if="totalCount === processedCount && totalCount !== 0"
           class="text-sm text-n-50"
         >
           You have recently uploaded '{{ currentActivity }}', either proceed to
@@ -310,9 +440,7 @@
         </button>
 
         <a
-          v-if="
-            (totalCount === processedCount && totalCount !== 0) || fetchComplete
-          "
+          v-if="totalCount === processedCount && totalCount !== 0"
           class="w-[158px] rounded-sm bg-bluecoral py-3 text-center text-xs font-bold uppercase text-white hover:text-white"
           href="/import/xls/list"
         >
@@ -339,7 +467,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, provide, computed } from 'vue';
+import { ref, onMounted, provide, computed, reactive, watch, Ref } from 'vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import HoverText from 'Components/HoverText.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
@@ -347,26 +475,48 @@ import axios from 'axios';
 import XlsUploadIndicator from 'Components/XlsUploadIndicator.vue';
 import Modal from 'Components/PopupModal.vue';
 import Toast from 'Components/ToastMessage.vue';
+import moment from 'moment';
+import Pagination from 'Components/TablePagination.vue';
+import { useStore } from 'Store/activities/index';
+
+interface ActivitiesInterface {
+  last_page: number;
+  data: object;
+}
 
 const xlsFailedMessage = ref('');
 const uploadType = ref();
 const showDownloadDropdown = ref(false);
 const activityName = ref('');
-const fetchComplete = ref(false);
 const toastMessage = ref('');
 const toastType = ref(false);
+const showDownloadCode = ref(false);
+const isEmpty = ref(false);
 const xlsFailed = ref(false);
 const currentActivity = ref('');
 const toastVisibility = ref(false);
 const xlsData = ref(false);
 const showCancelModel = ref(false);
-
+const activities = reactive({}) as ActivitiesInterface;
+const selectAllValue = ref(false);
 const totalCount = ref(0);
 const processedCount = ref(0);
 const file = ref(),
   error = ref(''),
   loader = ref(false),
   loaderText = ref('Please Wait');
+const store = useStore();
+const searchValue: Ref<string | null> = ref('');
+
+watch(
+  () => store.state.selectedActivities,
+  (value) => {
+    if (value.length < 10) {
+      selectAllValue.value = false;
+    }
+  }
+);
+
 const mapActivityName = (name) => {
   switch (name) {
     case 'activity':
@@ -384,6 +534,54 @@ const mapActivityName = (name) => {
 const activityLength = computed(() => {
   return !uploadType?.value?.length;
 });
+
+const downloadCode = async () => {
+  let apiUrl = '/activities/download-codes/?activities=all';
+
+  if (store.state.selectedActivities.length > 0) {
+    const activities = store.state.selectedActivities.join(',');
+    apiUrl = `/activities/download-codes/?activities=[${activities}]`;
+  }
+  const req = await axios({
+    method: 'get',
+    url: apiUrl,
+    responseType: 'blob',
+  });
+  var blob = new Blob([req.data], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  });
+
+  // var blob = new Blob([req.data], {
+  //   type: 'application/vnd.ms-excel',
+  // });
+  const link = document.createElement('a');
+  link.href = window.URL.createObjectURL(blob);
+  link.download = `codes.xlsx`;
+  link.click();
+};
+
+const selectAll = () => {
+  if (!selectAllValue.value) {
+    let ids = [] as number[];
+    for (let i = 0; i < Object.values(activities.data).length; i++) {
+      ids.push(activities.data[i]['id']);
+    }
+
+    // for (const activity in activities.data) {
+    //   if (!store.state.selectedActivities.includes(activity['id'])) {
+    //     ids.push(activity['id']);
+    //   }
+    // }
+    store.dispatch('updateSelectedActivities', ids);
+    selectAllValue.value = true;
+  } else {
+    store.dispatch('updateSelectedActivities', []);
+    selectAllValue.value = false;
+  }
+};
+function formatDate(date: Date) {
+  return moment(date).fromNow();
+}
 
 function uploadFile() {
   if (xlsData.value) {
@@ -409,6 +607,7 @@ function uploadFile() {
       .then((res) => {
         if (file.value.files.length && res?.data?.success) {
           window.location.href = '/import/xls';
+          loader.value = false;
         } else {
           error.value = Object.values(res.data.errors).join(' ');
           loader.value = false;
@@ -418,8 +617,31 @@ function uploadFile() {
         error.value = 'Error has occured while uploading file.';
       });
   }
-  console.log(showCancelModel.value);
 }
+
+function fetchActivities(active_page: number) {
+  // tableLoader.value = true;
+  let queryString = '';
+  // if (currentURL.includes('?')) {
+  //   queryString = window.location.search;
+  // }
+  let apiUrl = '/activities/page/' + active_page + queryString;
+  if (searchValue.value) {
+    apiUrl =
+      '/activities/page/' +
+      active_page +
+      queryString +
+      '?q=' +
+      searchValue.value;
+  }
+  axios.get(apiUrl).then((res) => {
+    const response = res.data;
+    Object.assign(activities, response.data);
+    isEmpty.value = !response.data.data.length;
+  });
+  // tableLoader.value = false;
+}
+
 const cancelImport = () => {
   axios.delete(`/import/xls`).then((res) => {
     xlsData.value = false;
@@ -432,21 +654,14 @@ const cancelImport = () => {
   });
 };
 const checkXlsstatus = () => {
-  console.log('checking status');
   axios.get('/import/xls/progress_status').then((res) => {
     activityName.value = res?.data?.status?.template;
     currentActivity.value = mapActivityName(activityName.value);
     xlsData.value = Object.keys(res.data.status).length > 0;
-    if (res.data.status.status === 'completed') {
-      fetchComplete.value = true;
-    }
-    if (
-      Object.keys(res.data.status).length > 0 &&
-      res.data.status.status !== 'completed'
-    ) {
+
+    if (Object.keys(res.data.status).length > 0) {
       const checkStatus = setInterval(function () {
         axios.get('/import/xls/status').then((res) => {
-          console.log(res);
           totalCount.value = res.data.data?.total_count;
           processedCount.value = res.data.data?.processed_count;
           xlsFailed.value = !res.data.data?.success;
@@ -455,8 +670,6 @@ const checkXlsstatus = () => {
             !res.data?.data?.success ||
             res.data?.data?.message === 'Complete'
           ) {
-            console.log('yes complete');
-            fetchComplete.value = true;
             clearInterval(checkStatus);
           }
         });
@@ -465,6 +678,7 @@ const checkXlsstatus = () => {
   });
 };
 onMounted(() => {
+  fetchActivities(1);
   checkXlsstatus();
 });
 provide('xlsFailedMessage', xlsFailedMessage);

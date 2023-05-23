@@ -336,11 +336,8 @@ trait XlsMapperHelper
                 $elementPosition = "$this->rowCount";
             }
 
-            dump($this->identifiers, $identifier);
-
             if (!Arr::get($this->identifiers, "$identifier", false)) {
-                dump('here');
-                $this->tempErrors["$elementPosition"] = sprintf('Error detected on %s sheet, cell A%s : The identifier does not have correct format.', $this->sheetName, $this->rowCount);
+                $this->globalErrors["$elementPosition"] = sprintf('Error detected on %s sheet, cell A%s : The identifier does not have correct format or is not mentioned on mapper sheet.', $this->sheetName, $this->rowCount);
 
                 return true;
             }

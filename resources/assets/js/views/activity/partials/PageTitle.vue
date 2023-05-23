@@ -80,9 +80,9 @@
               :type="refreshToastMsg.refreshMessageType"
             />
             <div class="flex flex-col items-end gap-2 lg:flex-row">
-              <div>
+              <!-- <div>
                 <DownloadCodeButton />
-              </div>
+              </div> -->
               <div class="flex gap-2">
                 <DownloadActivityButton /> <PublishSelected />
               </div>
@@ -102,7 +102,6 @@
 
 <script setup lang="ts">
 import { inject } from 'vue';
-import DownloadCodeButton from './DownloadCodeButton.vue';
 import DownloadActivityButton from './DownloadActivityButton.vue';
 import AddActivityButton from './AddActivityButton.vue';
 import Toast from 'Components/ToastMessage.vue';

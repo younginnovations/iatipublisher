@@ -40,7 +40,7 @@
           upload them again.</b
         >
       </p>
-      <div v-if="globalError" class="relative mt-4">
+      <!-- <div v-if="globalError" class="relative mt-4">
         <div
           v-if="!showGLobalError"
           class="flex w-[250px] justify-between rounded-l-lg border border-crimson-20 bg-crimson-10 p-4"
@@ -108,7 +108,7 @@
             </ul>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="iati-list-table upload-list-table mt-4">
       <table>
@@ -187,7 +187,42 @@
     :text="loaderText"
     :class="{ 'animate-loader': loader }"
   />
-  <Modal :modal-active="showCriticalErrorModel" width="583">
+  <Modal :modal-active="showIdentifierErrorModel" width="583">
+    <div class="mb-2">
+      <svg-vue class="text-4xl text-crimson-40" icon="warning-fill" />
+      <h6 class="text-sm font-bold">Errors Detected</h6>
+    </div>
+    <p class="text-sm text-n-40">
+      We detected some errors in the uploaded file.
+    </p>
+    <div class="mb-6 rounded-sm bg-rose p-4 text-sm text-n-50">
+      <h6 class="mb-2 text-sm font-bold">Identifier Errors</h6>
+      <p class="text-sm text-n-40">
+        We have found some identifier errors in the imported file. You cannot
+        import data until all the identifier errors are resolved.
+      </p>
+      <ul class="max-h-[250px] overflow-y-scroll">
+        <li
+          v-for="error in props.globalError"
+          :key="error"
+          class="border-b border-n-20 p-4 text-sm"
+        >
+          {{ error }}
+        </li>
+      </ul>
+    </div>
+    <button
+      class="flex space-x-1 rounded-sm py-3 text-center text-xs font-bold uppercase text-bluecoral"
+      @click="downloadIdentifierError"
+    >
+      <svg-vue icon="download"></svg-vue>
+      <span>Download identifier errors</span>
+    </button>
+  </Modal>
+  <Modal
+    :modal-active="showCriticalErrorModel && !showIdentifierErrorModel"
+    width="583"
+  >
     <div class="mb-6 flex items-center space-x-1">
       <svg-vue class="text-crimson-40" icon="warning-fill" />
       <h6 class="text-sm font-bold">Errors Detected</h6>
@@ -201,17 +236,10 @@
           follow the instructions provided in the user manual.
         </p>
       </div>
-      <div v-if="globalError.length > 0">
-        <h6 class="mb-2 text-sm font-bold">Global Errors</h6>
-        <p>
-          We have found some global errors in the imported file. The presence of
-          global error might cause incomplete data to be imported.
-        </p>
-      </div>
     </div>
     <button
       class="ml-auto flex w-[158px] justify-center rounded-sm bg-bluecoral py-3 text-center text-xs font-bold uppercase text-white hover:text-white"
-      @click="showCriticalErrorModel = false"
+      @click="downloadIdentifierError"
     >
       <span>Review errors</span>
     </button>
@@ -237,6 +265,8 @@ const sortOrder = ref('asceding');
 
 const tableRow = ref({});
 const showCriticalErrorModel = ref(false);
+const showIdentifierErrorModel = ref(false);
+
 const loader = ref(false),
   loaderText = ref('Adding activities');
 const showCriticalErrorMessage = ref(false);
@@ -339,6 +369,9 @@ onMounted(() => {
   getDimensions();
   window.addEventListener('resize', getDimensions);
   checkCriticalError();
+  if (props.globalError.length) {
+    showIdentifierErrorModel.value = true;
+  }
   activitiesLength.value = props.importData.length;
   loaderText.value = `Adding ${props.status.template}`;
   console.log(props.importData, props.status, 'onm');
@@ -355,6 +388,17 @@ const cancelImport = () => {
       window.location.href = '/import/xls';
     }, 2000);
   });
+};
+const downloadIdentifierError = () => {
+  let file = new File(['\ufeff' + props.globalError], 'indicator-errors.txt', {
+    type: 'text/plain:charset=UTF-8',
+  });
+  let url = window.URL.createObjectURL(file);
+  let a = document.createElement('a');
+  a.href = url;
+  a.download = file.name;
+  a.click();
+  window.URL.revokeObjectURL(url);
 };
 
 const checkCriticalError = () => {

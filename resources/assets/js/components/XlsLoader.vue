@@ -69,7 +69,11 @@
     <div v-if="maximize" class="mt-5 flex justify-end space-x-3">
       <button
         class="text-xs font-bold uppercase text-bluecoral"
-        @click="$emit('close')"
+        @click="
+          () => {
+            $emit('close');
+          }
+        "
       >
         cancel
       </button>
@@ -130,7 +134,9 @@
         >
         '{{ currentActivity }}'
       </p>
-      <spinnerLoader v-if="!completed" />
+      <spinnerLoader
+        v-if="(processedCount !== totalCount || totalCount === 0) && !completed"
+      />
       <a
         v-else
         href="/import/xls/list"
