@@ -301,10 +301,10 @@
                 <template v-if="name.toString() !== 'result'">
                   <ActivityElement
                     v-if="
-                      (typeof (element as any).content === 'object'
-                        ? Object.keys((element as any).content).length > 0
-                        : (element as any).content) ||
-                      typeof (element as any).content === 'number'
+                      (typeof element.content === 'object'
+                        ? Object.keys(element.content).length > 0
+                        : element.content) ||
+                      typeof element.content === 'number'
                     "
                     :id="key"
                     :data="element"
@@ -313,17 +313,17 @@
                     :activity-id="activity.id"
                     :width="'full'"
                     :completed="status[name] ?? false"
-                    :tooltip="(element as any).hover_text"
+                    :tooltip="element.hover_text"
                     class="elements-card"
                   />
                 </template>
                 <template v-else>
                   <Result
                     v-if="
-                      (typeof (element as any).content === 'object'
-                        ? Object.keys((element as any).content).length > 0
-                        : (element as any).content) ||
-                      typeof (element as any).content === 'number'
+                      (typeof element.content === 'object'
+                        ? Object.keys(element.content).length > 0
+                        : element.content) ||
+                      typeof element.content === 'number'
                     "
                     :id="key"
                     :data="element"
@@ -334,7 +334,7 @@
                     :title="String(name)"
                     :activity-id="activity.id"
                     :completed="status[name] ?? false"
-                    :tooltip="(element as any).hover_text"
+                    :tooltip="element.hover_text"
                   />
                 </template>
               </template>
