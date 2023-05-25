@@ -262,8 +262,8 @@
             >
               <svg-vue class="mr-0.5 text-base" icon="setting"></svg-vue>
               <span class="whitespace-nowrap"
-                >Override this activity's default values</span
-              >
+                >Override this activity's default values
+              </span>
             </a>
           </div>
           <div
@@ -328,6 +328,9 @@
                     :id="key"
                     :data="element"
                     :types="types"
+                    :default-language="
+                      activityProps.default_field_values.default_language
+                    "
                     :title="String(name)"
                     :activity-id="activity.id"
                     :completed="status[name] ?? false"

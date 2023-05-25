@@ -67,7 +67,7 @@
                 </div>
                 <div>
                   <span v-if="item.code">code {{ item.code }}</span>
-                  <span v-else class="italic">(Missing)</span>
+                  <span v-else class="italic">(Code Missing)</span>
                 </div>
               </div>
             </td>

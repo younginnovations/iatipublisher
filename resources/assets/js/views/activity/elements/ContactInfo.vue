@@ -185,11 +185,11 @@
                     {{
                       narrative.language
                         ? types.languages[narrative.language]
-                        : 'Not Available'
+                        : 'Missing'
                     }})
                   </div>
                   <div class="w-[500px] max-w-full">
-                    {{ narrative.narrative ?? 'Not Available' }}
+                    {{ narrative.narrative ?? 'Missing' }}
                   </div>
                 </div>
               </div>

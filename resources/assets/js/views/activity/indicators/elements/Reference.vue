@@ -9,10 +9,11 @@
           'mb-1.5': r !== Object.keys(refData).length - 1,
         }"
       >
-        <span v-if="ref.vocabulary">
-          Vocabulary: {{ refType.indicatorVocabulary[ref.vocabulary] }},
+        <span>
+          Vocabulary:
+          {{ refType.indicatorVocabulary[ref.vocabulary] ?? 'Missing' }},
         </span>
-        <span v-if="ref.code"> Code: {{ ref.code }}, </span>
+        <span> Code: {{ ref.code ?? 'Missing' }}, </span>
         <span v-if="ref.indicator_uri">
           Indicator URI:
           <a target="_blank" :href="ref.indicator_uri">

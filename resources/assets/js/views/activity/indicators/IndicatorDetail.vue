@@ -211,10 +211,9 @@
             >
               <div class="title mb-4">
                 <div class="item elements-detail wider">
-                  <table class="mb-5">
+                  <table class="mb-2">
                     <tr>
-                      <td>Document Link</td>
-                      <td></td>
+                      <td class="pl-4">Document Link:</td>
                     </tr>
                   </table>
                 </div>

@@ -63,10 +63,14 @@
               <div>
                 <div class="description">
                   {{ com.narrative ? com.narrative : 'Missing' }}
-                  (Language:
-                  {{
-                    com.language ? baseType.language[com.language] : 'Missing'
-                  }})
+                  <span class="text-n-30">
+                    (Language:
+                    {{
+                      com.language
+                        ? baseType.language[com.language]
+                        : 'Missing'
+                    }})</span
+                  >
                 </div>
               </div>
             </div>
@@ -178,7 +182,7 @@ export default defineComponent({
       dimensions = data.map((item) => {
         const name = item.name ?? 'Missing',
           value = item.value ?? 'Missing';
-        return `code - ${name}, value - (${value})`;
+        return `code - ${name}, value - ${value}`;
       });
 
       return dimensions.join('; ');

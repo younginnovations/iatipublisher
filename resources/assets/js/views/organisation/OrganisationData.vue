@@ -57,7 +57,7 @@
               <div>
                 <h4 class="ellipsis__title relative mr-4 text-2xl font-bold">
                   <span
-                    class="ellipsis__title max-w-[400px] overflow-hidden text-ellipsis whitespace-nowrap"
+                    class="ellipsis__title !inline-block max-w-[400px] overflow-x-hidden text-ellipsis whitespace-nowrap"
                   >
                     {{
                       organization.name

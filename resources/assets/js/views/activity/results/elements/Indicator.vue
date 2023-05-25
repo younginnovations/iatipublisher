@@ -98,7 +98,12 @@
                               }"
                             >
                               <div class="language mb-1">
-                                (Language: {{ type.language[title.language] }})
+                                (Language:
+                                {{
+                                  type.language[title.language]
+                                    ? type.language[title.language]
+                                    : 'Missing'
+                                }})
                               </div>
                               <div class="description text-xs">
                                 {{ title.narrative }}
@@ -140,7 +145,11 @@
                             >
                               <div class="language mb-1">
                                 (Language:
-                                {{ type.language[description.language] }})
+                                {{
+                                  type.language[description.language]
+                                    ? type.language[description.language]
+                                    : 'Missing'
+                                }})
                               </div>
                               <div class="description text-xs">
                                 {{ description.narrative }}
@@ -161,12 +170,23 @@
                                 r !== post.indicator.reference.length - 1,
                             }"
                           >
-                            <span v-if="ref.vocabulary">
-                              Vocabulary: {{ ref.vocabulary }},
+                            <span>
+                              Vocabulary: {{ ref.vocabulary ?? 'Missing' }},
                             </span>
-                            <span v-if="ref.code"> Code: {{ ref.code }}, </span>
-                            <span v-if="ref.indicator_uri">
-                              Indicator URI: {{ ref.indicator_uri }}
+                            <span>
+                              Code: {{ ref.code ? ref.code : 'Missing' }},
+                            </span>
+                            <span>
+                              Indicator URI:
+                              <a
+                                v-if="ref.indicator_uri"
+                                :href="ref.indicator_uri"
+                                class="cursor-pointer"
+                                target="_blank"
+                              >
+                                {{ ref.indicator_uri }}</a
+                              >
+                              <span v-else>Mising</span>
                             </span>
                           </div>
                         </td>
