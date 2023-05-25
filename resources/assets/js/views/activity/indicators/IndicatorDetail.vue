@@ -213,7 +213,7 @@
                 <div class="item elements-detail wider">
                   <table class="mb-2">
                     <tr>
-                      <td class="ml-4">Document Link:</td>
+                      <td class="pl-4">Document Link:</td>
                     </tr>
                   </table>
                 </div>
