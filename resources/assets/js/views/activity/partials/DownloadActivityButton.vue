@@ -146,16 +146,21 @@
         </div>
         <div class="mb-4 rounded-lg bg-rose p-4 text-sm text-n-50">
           <p>
-            We are in the process of preparing the activities for download. We
-            ask for your patience while we complete the preparation.
+            We are currently preparing the activities for download. This may
+            take a few minutes.
           </p>
+          <p>
+            If you would like to proceed with the new download, the prior
+            download will be cancelled and your new download will start zipping.
+          </p>
+          <p>Would you like to proceed with the new download?</p>
         </div>
         <div class="flex justify-end space-x-5">
-          <button class="ghost-btn" @click="cancelDownload">
-            cancel download
-          </button>
-          <button class="primary-btn" @click="downloadingInProcess = false">
+          <button class="ghost-btn" @click="downloadingInProcess = false">
             go back
+          </button>
+          <button class="primary-btn" @click="downloadAnyway">
+            Download Anyway
           </button>
         </div>
       </div>
@@ -256,13 +261,14 @@ export default defineComponent({
       });
     };
 
-    const cancelDownload = () => {
+    const downloadAnyway = () => {
       downloadingInProcess.value = false;
       store.dispatch('updateCancelDownload', true);
 
       store.dispatch('updateStartXlsDownload', false);
 
       axios.get('/activities/cancel-xls-download');
+      checkDownload();
     };
 
     const downloadErrorxml = (countActivities) => {
@@ -420,7 +426,7 @@ export default defineComponent({
       downloadXls,
       downloadingInProcess,
       isLoading,
-      cancelDownload,
+      downloadAnyway,
     };
   },
 });
