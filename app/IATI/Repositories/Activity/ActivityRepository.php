@@ -76,6 +76,7 @@ class ActivityRepository extends Repository
 
         $orderBy = 'updated_at';
         $direction = 'desc';
+        $limit = '10';
 
         if (array_key_exists('orderBy', $queryParams) && !empty($queryParams['orderBy'])) {
             $orderBy = $queryParams['orderBy'];
@@ -85,10 +86,14 @@ class ActivityRepository extends Repository
             }
         }
 
+        if (array_key_exists('limit', $queryParams) && !empty($queryParams['limit'])) {
+            $limit = $queryParams['limit'];
+        }
+
         return $this->model->whereRaw($whereSql, $bindParams)
             ->orderBy($orderBy, $direction)
             ->orderBy('id', $direction)
-            ->paginate(10, ['*'], 'activity', $page);
+            ->paginate($limit, ['*'], 'activity', $page);
     }
 
     /**

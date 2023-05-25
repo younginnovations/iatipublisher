@@ -621,20 +621,15 @@ function uploadFile() {
 
 function fetchActivities(active_page: number) {
   // tableLoader.value = true;
-  let queryString = '';
-  // if (currentURL.includes('?')) {
-  //   queryString = window.location.search;
-  // }
-  let apiUrl = '/activities/page/' + active_page + queryString;
+  let apiUrl = '/activities/page/';
+  let params = new URLSearchParams();
+  params.append('limit', '6');
+
   if (searchValue.value) {
-    apiUrl =
-      '/activities/page/' +
-      active_page +
-      queryString +
-      '?q=' +
-      searchValue.value;
+    params.append('q', searchValue.value);
   }
-  axios.get(apiUrl).then((res) => {
+
+  axios.get(apiUrl, { params: params }).then((res) => {
     const response = res.data;
     Object.assign(activities, response.data);
     isEmpty.value = !response.data.data.length;

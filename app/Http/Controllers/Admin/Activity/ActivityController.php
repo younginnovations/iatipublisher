@@ -272,6 +272,10 @@ class ActivityController extends Controller
             $queryParams['query'] = $request->get('q');
         }
 
+        if (!empty($request->get('limit'))) {
+            $queryParams['limit'] = $request->get('limit');
+        }
+
         if (in_array($request->get('orderBy'), $tableConfig['orderBy'], true)) {
             $queryParams['orderBy'] = $request->get('orderBy');
 

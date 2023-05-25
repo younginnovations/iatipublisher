@@ -5,84 +5,68 @@
         ? 'bottom-1/2 right-1/2 translate-y-1/2 translate-x-1/2 p-6'
         : ' bottom-0 right-10 translate-y-full'
     "
-    class="!fixed z-[100] bg-white duration-300"
+    class="!fixed z-[100] rounded bg-eggshell duration-300"
   >
-    <h6 v-if="maximize" class="mb-5 font-bold">Upload in progess</h6>
-    <div
-      :class="maximize && 'p-6'"
-      class="relative h-[80px] rounded-lg border border-n-20 duration-200"
-    >
-      <div
-        v-if="!xlsFailed"
-        class="mb-3 mr-2 flex h-1 w-[calc(100%_-_10px)] justify-start rounded-full bg-spring-10"
-      >
-        <div
-          :style="{ width: completed ? '100%' : percentageWidth + '%' }"
-          class="h-full rounded-full bg-spring-50"
-        ></div>
-      </div>
-      <div v-if="xlsFailed" class="flex justify-between space-x-5">
-        <div>
-          <p class="text-sm font-bold text-crimson-50">
-            {{ currentActivity }} upload failed:
-          </p>
-
-          <p class="text-sm text-crimson-50">{{ xlsFailedMessage }}</p>
-        </div>
+    <div class="mb-5 flex items-start justify-between">
+      <h6 v-if="maximize" class="font-bold">Upload in progess</h6>
+      <div v-if="maximize" class="flex items-center space-x-3">
         <button
-          class="text-xs font-bold uppercase text-crimson-50 hover:text-spring-50"
-          @click="retry"
+          class="text-xs font-bold uppercase text-bluecoral"
+          @click="maximize = !maximize"
         >
-          Retry
+          <svg-vue class="w-[16px] text-n-50" icon="minimize" />
+        </button>
+        <button
+          @click="
+            () => {
+              $emit('close');
+            }
+          "
+        >
+          <svg-vue class="w-[12px] text-n-50" icon="cancel-cross" />
         </button>
       </div>
-      <div v-else class="flex justify-between space-x-5">
-        <p
-          v-if="
-            (totalCount === processedCount && totalCount !== 0) || completed
-          "
-          class="text-sm text-n-40"
-        >
-          {{ currentActivity }} file upload complete
-        </p>
-        <p v-else class="text-sm text-n-40">
-          Uploading
-          <span v-if="totalCount">
-            {{ `${processedCount}  /  ${totalCount}` }}</span
-          >
-          '{{ currentActivity }}'
-        </p>
-        <spinnerLoader
-          v-if="
-            (processedCount !== totalCount || totalCount === 0) && !completed
-          "
-        />
-        <a
-          v-else
-          href="/import/xls/list"
-          class="text-xs font-bold uppercase text-spring-50 hover:text-spring-50"
-        >
-          Proceed
-        </a>
-      </div>
     </div>
-    <div v-if="maximize" class="mt-5 flex justify-end space-x-3">
-      <button
-        class="text-xs font-bold uppercase text-bluecoral"
-        @click="
-          () => {
-            $emit('close');
-          }
-        "
+    <div
+      :class="maximize && 'p-4'"
+      class="relative h-[80px] min-w-[430px] rounded-lg border border-n-20 duration-200"
+    >
+      <p class="text-sm font-bold text-bluecoral">
+        Uploading '{{ currentActivity }}' file
+      </p>
+
+      <div
+        v-if="!xlsFailed"
+        class="my-3 flex items-center justify-between space-x-2"
       >
-        cancel
+        <div
+          class="flex h-1 w-[calc(100%_-_40px)] justify-between rounded-full bg-spring-10"
+        >
+          <div
+            :style="{ width: completed ? '100%' : percentageWidth + '%' }"
+            class="h-full rounded-full bg-spring-50"
+          ></div>
+        </div>
+        <div class="text-sm text-n-50">{{ percentageWidth }}%</div>
+      </div>
+      <div v-else class="text-xs text-n-50">Failed</div>
+    </div>
+
+    <div class="mt-5 flex justify-end">
+      <a
+        v-if="(processedCount === totalCount && totalCount !== 0) || completed"
+        href="/import/xls/list"
+        class="rounded bg-bluecoral py-3 px-7 text-xs font-bold uppercase text-white hover:text-white"
+      >
+        Proceed
+      </a>
+      <button
+        v-if="xlsFailed"
+        class="rounded bg-bluecoral py-3 px-7 text-xs font-bold uppercase text-white hover:text-white"
+        @click="retry"
+      >
+        Retry
       </button>
-      <BtnComponent
-        class="!border-red h-10 !border"
-        type="primary"
-        text="Minimize"
-        @click="maximize = !maximize"
-      />
     </div>
   </div>
   <div
