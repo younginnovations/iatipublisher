@@ -209,12 +209,18 @@ export default defineComponent({
           fileCount.value = res.data.file_count;
           xlsDownloadStatus.value = res.data.status;
           downloadApiUrl.value = res.data.url;
-          if (res.data.status === 'completed' || !res.data.status) {
+          console.log(xlsDownloadStatus.value);
+          if (
+            xlsDownloadStatus.value === 'completed' ||
+            xlsDownloadStatus.value === 'failed' ||
+            !res.data.status
+          ) {
             clearInterval(checkDownload);
           }
         });
       }, 3000);
     };
+
     onMounted(() => {
       checkXlsstatus();
       checkDownloadStatus();
@@ -246,6 +252,7 @@ export default defineComponent({
         }, 10000);
       }
     );
+
     const state = reactive({
       showButtons: false,
     });
