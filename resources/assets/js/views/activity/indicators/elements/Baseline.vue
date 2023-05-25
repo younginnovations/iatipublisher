@@ -182,7 +182,7 @@ export default defineComponent({
       dimensions = data.map((item) => {
         const name = item.name ?? 'Missing',
           value = item.value ?? 'Missing';
-        return `code - ${name}, value - (${value})`;
+        return `code - ${name}, value - ${value}`;
       });
 
       return dimensions.join('; ');

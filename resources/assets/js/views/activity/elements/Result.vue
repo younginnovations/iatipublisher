@@ -82,7 +82,9 @@
                         <td>Result Type</td>
                         <td>
                           <div>
-                            {{ types.resultType[result.result.type] }}
+                            {{
+                              types.resultType[result.result.type] ?? 'Missing'
+                            }}
                           </div>
                         </td>
                       </tr>
