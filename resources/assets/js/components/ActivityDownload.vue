@@ -54,12 +54,7 @@
       <button class="ghost-btn" @click="showRetryDownloadModel = false">
         cancel
       </button>
-      <button
-        class="primary-btn"
-        @click="retryDownload(store.state.selectedActivities.length)"
-      >
-        Retry
-      </button>
+      <button class="primary-btn" @click="retryDownload()">Retry</button>
     </div>
   </Modal>
 </template>
@@ -103,25 +98,15 @@ const downloadFile = () => {
   });
 };
 
-const retryDownload = (countActivities) => {
+const retryDownload = () => {
   xlsDownloadStatus.value = '';
   isLoading.value = true;
   store.dispatch('updateStartXlsDownload', true);
   store.dispatch('updateCancelDownload', false);
 
   showRetryDownloadModel.value = false;
-  let queryParameters = window.location.href?.split('?');
-  let addQueryParams = '';
-  if (queryParameters.length === 2) {
-    addQueryParams = '&' + queryParameters[1];
-  }
 
-  let apiUrl = '/activities/prepare-xls?activities=all' + addQueryParams;
-
-  if (countActivities > 0) {
-    const activities = store.state.selectedActivities.join(',');
-    apiUrl = `/activities/prepare-xls?activities=[${activities}]`;
-  }
+  let apiUrl = 'activities/retry-xls-download';
 
   axios.get(apiUrl).finally(() => (isLoading.value = false));
 };

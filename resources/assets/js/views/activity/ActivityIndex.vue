@@ -177,7 +177,7 @@ export default defineComponent({
           fileCount.value = res.data.file_count;
           xlsDownloadStatus.value = res.data.status;
           downloadApiUrl.value = res.data.url;
-          console.log(xlsDownloadStatus.value);
+          console.log(xlsDownloadStatus.value, 'polling for doenload status');
           if (
             xlsDownloadStatus.value === 'completed' ||
             xlsDownloadStatus.value === 'failed' ||
