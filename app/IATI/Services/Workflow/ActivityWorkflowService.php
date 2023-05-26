@@ -221,7 +221,7 @@ class ActivityWorkflowService
         $client = new Client();
         $URI = env('IATI_VALIDATOR_ENDPOINT');
         $params['headers'] = ['Content-Type' => 'application/json', 'Ocp-Apim-Subscription-Key' => env('IATI_VALIDATOR_KEY')];
-        $params['query'] = ['group' => 'false'];
+        $params['query'] = ['group' => 'false', 'details' => 'true'];
         $params['body'] = $xmlData;
         $response = $client->post($URI, $params);
 
