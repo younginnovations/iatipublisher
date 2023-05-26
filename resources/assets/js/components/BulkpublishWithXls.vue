@@ -1,11 +1,18 @@
 <template>
   <div
     v-if="
-      bulkPublishLength > 0 || Object.keys(pa.publishingActivities).length > 0
+      bulkPublishLength > 0 ||
+      Object.keys(paStorage.publishingActivities).length > 0
     "
     :class="!openModel ? 'h-[80px]' : ''"
-    class="relative w-[300px] rounded-t-lg duration-200"
+    class="relative w-[300px] duration-200"
   >
+    <div
+      class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2"
+      @click="emit['close']"
+    >
+      <svg-vue icon="cross-icon" class="text-sm" />
+    </div>
     <svg-vue
       class="absolute right-0 top-0 translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white p-[1px] text-sm"
       icon="cross-icon"
@@ -26,7 +33,9 @@
         ></div>
       </div>
       <div class="text-sm text-n-40">
-        Publishing {{ completedActivities }}/{{ totalActivites }}
+        Publishing {{ completedActivities }}/{{
+          publishingActivities && Object.keys(publishingActivities).length
+        }}
         activities to IATI registry
       </div>
     </div>
@@ -41,9 +50,7 @@
       >
         <div>
           <div
-            v-for="(value, name, index) in pa?.publishingActivities[
-              'activities'
-            ]"
+            v-for="(value, name, index) in activities"
             :key="index"
             class="item flex py-3"
           >
@@ -71,18 +78,137 @@
 </template>
 <script setup lang="ts">
 import { useStorage } from '@vueuse/core';
-import { watch, computed, ref } from 'vue';
+import {
+  onMounted,
+  watch,
+  computed,
+  ref,
+  reactive,
+  inject,
+  defineEmits,
+  onUpdated,
+} from 'vue';
 import { useStore } from 'Store/activities/index';
 import axios from 'axios';
-
 const store = useStore();
-
 let pa = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
 });
 
+interface paInterface {
+  value: {
+    publishingActivities: paElements;
+  };
+}
+
+interface paElements {
+  activities: actElements;
+  organization_id: number;
+  job_batch_uuid: string;
+  status: string;
+  message: string;
+}
+
+interface actElements {
+  activity_id: number;
+  activity_title: string;
+  status: string;
+}
+
+interface RefreshToastMsgTypeface {
+  visibility: boolean;
+  refreshMessageType: boolean;
+  refreshMessage: string;
+}
+
 const bulkPublishLength = ref(0);
 const openModel = ref(false);
+let paStorage = ref(store.state.bulkpublishActivities);
+
+const publishingActivities = reactive(
+  paStorage.value.publishingActivities['activities']
+);
+const completed = ref();
+const emit = defineEmits(['close']);
+
+//inject
+
+let refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
+
+let intervalID;
+// let activities = ref(paStorage.value.publishingActivities.activities);
+let activities = ref();
+
+let hasFailedActivities = reactive({
+  data: {} as actElements,
+  ids: [] as number[],
+  status: false,
+});
+const bulkPublishStatus = () => {
+  intervalID = setInterval(() => {
+    axios
+      .get(
+        `activities/bulk-publish-status?organization_id=${paStorage.value.publishingActivities.organization_id}&&uuid=${paStorage.value.publishingActivities.job_batch_uuid}`
+      )
+      .then((res) => {
+        const response = res.data;
+        // console.log(response, 'polling bulkpublsh');
+        if (!response.publishing) {
+          clearInterval(intervalID);
+        }
+        if ('data' in response) {
+          activities.value = response.data.activities;
+          completed.value = response.data.status;
+
+          console.log(activities.value, 'activities');
+
+          // saving in local storage
+          paStorage.value.publishingActivities.activities =
+            response.data.activities;
+          paStorage.value.publishingActivities.status = response.data.status;
+          paStorage.value.publishingActivities.message = response.data.message;
+          if (completed.value === 'completed') {
+            clearInterval(intervalID);
+
+            failedActivities(paStorage.value.publishingActivities.activities);
+            refreshToastMsg.visibility = true;
+            setTimeout(() => {
+              refreshToastMsg.visibility = false;
+            }, 10000);
+          }
+        } else {
+          completed.value = 'completed';
+        }
+      });
+  }, 2000);
+};
+const failedActivities = (nestedObject: actElements) => {
+  const failedActivitiesID = [] as number[];
+  const asArrayData = nestedObject && Object.entries(nestedObject);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const filtered = asArrayData?.filter(([key, value]) => {
+    if (value && Object.values(value).indexOf('failed') > -1) {
+      failedActivitiesID.push(value.activity_id);
+      return key;
+    }
+  });
+
+  const failedActivitiesData = filtered && Object.fromEntries(filtered);
+
+  if (failedActivitiesID.length > 0) {
+    hasFailedActivities.status = true;
+    hasFailedActivities.ids = failedActivitiesID;
+    hasFailedActivities.data = failedActivitiesData as actElements;
+    refreshToastMsg.refreshMessageType = false;
+    refreshToastMsg.refreshMessage =
+      'Some activities have failed to publish. Refresh to see changes.';
+  } else {
+    hasFailedActivities.status = false;
+    hasFailedActivities.ids = [];
+    hasFailedActivities.data = {} as actElements;
+  }
+};
 
 const totalActivites = computed(() => {
   return (
@@ -93,17 +219,52 @@ const totalActivites = computed(() => {
 
 const completedActivities = computed(() => {
   let count = 0;
-
-  for (let publishingActivites in Object.values(
-    pa.value.publishingActivities['activities']
-  )) {
-    if (publishingActivites['status'] === 'completed') {
+  for (
+    let i = 0;
+    i <
+    (paStorage.value?.publishingActivities['activities'] &&
+      Object.values(paStorage.value?.publishingActivities['activities'])
+        .length);
+    i++
+  ) {
+    if (
+      Object.values(
+        paStorage.value.publishingActivities['activities'] as object
+      )[i]['status'] === 'completed'
+    ) {
       count++;
     }
   }
 
   return count;
 });
+
+onUpdated(() => {
+  console.log(activities.value);
+});
+
+// const retryPublishing = () => {
+//   //reset required states
+//   completed.value = 'processing';
+
+//   for (const key in hasFailedActivities.data) {
+//     hasFailedActivities.data[key].status = 'processing';
+//   }
+
+//   activities.value = hasFailedActivities.data;
+
+//   // api endpoint call
+//   const endpoint = `activities/start-bulk-publish?activities=[${hasFailedActivities.ids}]`;
+
+//   axios.get(endpoint).then((res) => {
+//     const response = res.data;
+
+//     if (response.success) {
+//       paStorage.value.publishingActivities = response.data;
+//       bulkPublishStatus();
+//     }
+//   });
+// };
 
 const percentageWidth = computed(() => {
   return (
@@ -113,10 +274,38 @@ const percentageWidth = computed(() => {
     100
   );
 });
+watch(
+  () => store.state.bulkpublishActivities,
+  () => {
+    setDataToLocalstorage();
+    getDataFromLocalstorage();
+  }
+);
+const getDataFromLocalstorage = () => {
+  activities.value = localStorage.getItem('bulkPublishActivities');
+};
 
-const closeWindow = () => {
-  pa.value.publishingActivities = {};
-  axios.delete(`activities/delete-bulk-publish-status`);
+const setDataToLocalstorage = () => {
+  localStorage.setItem('bulkPublishActivities', paStorage.value.toString());
+};
+
+onMounted(() => {
+  console.log(paStorage, 'pa storage');
+  completed.value = paStorage.value.publishingActivities.status ?? 'processing';
+  bulkPublishStatus();
+
+  console.log(
+    completedActivities.value,
+    pa.value?.publishingActivities['activities'] &&
+      Object.keys(pa.value?.publishingActivities['activities']).length,
+    percentageWidth.value
+  );
+});
+
+const emptybulkPublishStatus = () => {
+  for (const status in publishingActivities) {
+    delete publishingActivities[status];
+  }
 };
 
 watch(
@@ -126,6 +315,12 @@ watch(
     pa = useStorage('vue-use-local-storage', {
       publishingActivities: localStorage.getItem('publishingActivities') ?? {},
     });
+    emptybulkPublishStatus();
+    bulkPublishStatus();
+    Object.assign(
+      publishingActivities,
+      pa.value?.publishingActivities['activities']
+    );
   },
   { deep: true }
 );
@@ -149,24 +344,6 @@ watch(
   width: 20px;
   height: 20px;
   border-top-color: white;
-}
-
-.cross {
-  @apply relative ml-5 h-3 w-3 overflow-hidden;
-
-  &:before,
-  &:after {
-    content: '';
-    @apply absolute left-1/2 top-0 block h-3 w-0.5 -translate-x-1/2 rounded-xl bg-blue-50;
-  }
-
-  &:before {
-    @apply rotate-45;
-  }
-
-  &:after {
-    @apply -rotate-45;
-  }
 }
 
 .activity-title {

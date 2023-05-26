@@ -126,35 +126,45 @@ let intervalID;
 onMounted(() => {
   completed.value = paStorage.value.publishingActivities.status ?? 'processing';
   bulkPublishStatus();
-
+  console.log(downloading.value, 'downloading value');
   if (!(activities.value && Object.keys(activities.value).length > 0)) {
     closeWindow();
   }
 
   //check constantly in a inter for when support button enters the dom
-  const checkSupportButton = setInterval(() => {
-    const supportButton: HTMLElement = document.querySelector(
-      '#launcher'
-    ) as HTMLElement;
+  if (!xlsData.value && !(downloading.value && !downloadCompleted.value)) {
+    const checkSupportButton = setInterval(() => {
+      const supportButton: HTMLElement = document.querySelector(
+        '#launcher'
+      ) as HTMLElement;
 
-    if (
-      supportButton !== null &&
-      activities.value &&
-      Object.keys(activities.value).length > 0
-    ) {
-      supportButton.style.transform = 'translate(-350px ,-20px)';
+      if (
+        supportButton !== null &&
+        activities.value &&
+        Object.keys(activities.value).length > 0
+      ) {
+        supportButton.style.transform = 'translate(-350px ,-20px)';
 
-      supportButton.style.opacity = '0';
-      setTimeout(() => {
-        supportButton.style.opacity = '1';
-      }, 300);
-      clearInterval(checkSupportButton);
-    }
-  }, 10);
+        supportButton.style.opacity = '0';
+        setTimeout(() => {
+          supportButton.style.opacity = '1';
+        }, 300);
+        clearInterval(checkSupportButton);
+      }
+    }, 10);
+  }
 
   checkXlsstatus();
   checkDownloadStatus();
 });
+
+watch(
+  () => singleStore.state.bulkPublishLength,
+  () => {
+    bulkPublishStatus();
+  },
+  { deep: true }
+);
 
 setTimeout(() => {
   const supportButton: HTMLElement = document.querySelector(
@@ -203,7 +213,7 @@ const checkDownloadStatus = () => {
         clearInterval(checkDownload);
       }
     });
-  }, 800);
+  }, 500);
 };
 
 // watching change in value of completed
@@ -233,7 +243,10 @@ const bulkPublishStatus = () => {
       )
       .then((res) => {
         const response = res.data;
-
+        // console.log(response, 'polling bulkpublsh');
+        if (!response.publishing) {
+          clearInterval(intervalID);
+        }
         if ('data' in response) {
           activities.value = response.data.activities;
           completed.value = response.data.status;
@@ -243,7 +256,6 @@ const bulkPublishStatus = () => {
             response.data.activities;
           paStorage.value.publishingActivities.status = response.data.status;
           paStorage.value.publishingActivities.message = response.data.message;
-
           if (completed.value === 'completed') {
             clearInterval(intervalID);
 

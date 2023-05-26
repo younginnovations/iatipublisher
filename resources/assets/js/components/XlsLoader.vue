@@ -131,7 +131,7 @@
     </div>
   </div>
   <button
-    v-if="totalCount === processedCount || xlsFailed"
+    v-if="(totalCount === processedCount || xlsFailed) && !maximize"
     class="absolute right-0 bottom-[80px] translate-x-4 rounded-full bg-white p-[1px]"
     @click="$emit('close')"
   >
@@ -151,7 +151,7 @@ import {
   inject,
   ref,
   computed,
-  onUnmounted,
+  onUnmounted
 } from 'vue';
 import spinnerLoader from './spinnerLoader.vue';
 import axios from 'axios';

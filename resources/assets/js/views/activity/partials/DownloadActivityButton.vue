@@ -262,13 +262,15 @@ export default defineComponent({
     };
 
     const downloadAnyway = () => {
+      isLoading.value = true;
       downloadingInProcess.value = false;
       store.dispatch('updateCancelDownload', true);
 
       store.dispatch('updateStartXlsDownload', false);
 
-      axios.get('/activities/cancel-xls-download');
-      checkDownload();
+      axios.get('/activities/cancel-xls-download').then(() => {
+        checkDownload();
+      });
     };
 
     const downloadErrorxml = (countActivities) => {

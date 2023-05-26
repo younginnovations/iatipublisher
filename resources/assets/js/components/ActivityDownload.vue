@@ -1,5 +1,12 @@
 <template>
-  <div class="h-[80px] rounded-t-lg bg-eggshell p-6">
+  <div class="relative h-[80px] rounded-t-lg bg-eggshell p-6">
+    <button
+      v-if="xlsDownloadStatus === 'completed'"
+      class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 rounded-full bg-white p-[1px] text-xs text-n-40"
+      @click="cancelDownload"
+    >
+      <svg-vue class="text-sm" icon="cross-icon" />
+    </button>
     <div
       v-if="xlsDownloadStatus != 'failed'"
       class="mb-3 flex h-1 w-full justify-start rounded-full bg-spring-10"
@@ -54,17 +61,12 @@
       <button class="ghost-btn" @click="showRetryDownloadModel = false">
         cancel
       </button>
-      <button
-        class="primary-btn"
-        @click="retryDownload(store.state.selectedActivities.length)"
-      >
-        Retry
-      </button>
+      <button class="primary-btn" @click="retryDownload()">Retry</button>
     </div>
   </Modal>
 </template>
 <script setup lang="ts">
-import { inject, computed, onMounted, onUnmounted, ref, Ref } from 'vue';
+import { inject, computed, onMounted, ref, Ref } from 'vue';
 import spinnerLoader from './spinnerLoader.vue';
 import Modal from 'Components/PopupModal.vue';
 
@@ -103,25 +105,15 @@ const downloadFile = () => {
   });
 };
 
-const retryDownload = (countActivities) => {
+const retryDownload = () => {
   xlsDownloadStatus.value = '';
   isLoading.value = true;
   store.dispatch('updateStartXlsDownload', true);
   store.dispatch('updateCancelDownload', false);
 
   showRetryDownloadModel.value = false;
-  let queryParameters = window.location.href?.split('?');
-  let addQueryParams = '';
-  if (queryParameters.length === 2) {
-    addQueryParams = '&' + queryParameters[1];
-  }
 
-  let apiUrl = '/activities/prepare-xls?activities=all' + addQueryParams;
-
-  if (countActivities > 0) {
-    const activities = store.state.selectedActivities.join(',');
-    apiUrl = `/activities/prepare-xls?activities=[${activities}]`;
-  }
+  let apiUrl = 'activities/retry-xls-download';
 
   axios.get(apiUrl).finally(() => (isLoading.value = false));
 };

@@ -83,7 +83,7 @@ export default defineComponent({
     const activityName = ref('');
     const fileCount = ref(0);
     const downloadCompleted = ref(false);
-
+    const closeModel = ref(false);
     const xlsDownloadStatus = ref('');
     const xlsData = ref(false);
     const downloading = ref(false);
@@ -176,6 +176,14 @@ export default defineComponent({
       },
       { deep: true }
     );
+    watch(
+      () => store.state.closeXlsModel,
+      (value) => {
+        if (value) {
+          checkXlsstatus();
+        }
+      }
+    );
 
     const checkXlsstatus = () => {
       axios.get('/import/xls/progress_status').then((res) => {
@@ -209,7 +217,7 @@ export default defineComponent({
           fileCount.value = res.data.file_count;
           xlsDownloadStatus.value = res.data.status;
           downloadApiUrl.value = res.data.url;
-          console.log(xlsDownloadStatus.value);
+          console.log(xlsDownloadStatus.value, 'polling for doenload status');
           if (
             xlsDownloadStatus.value === 'completed' ||
             xlsDownloadStatus.value === 'failed' ||
@@ -220,6 +228,12 @@ export default defineComponent({
         });
       }, 3000);
     };
+    watch(
+      () => store.state.closeXlsModel,
+      () => {
+        checkDownloadStatus();
+      }
+    );
 
     onMounted(() => {
       checkXlsstatus();
@@ -314,6 +328,7 @@ export default defineComponent({
     provide('fileCount', fileCount as Ref);
     provide('xlsDownloadStatus', xlsDownloadStatus as Ref);
     provide('downloadApiUrl', downloadApiUrl as Ref);
+    provide('closeModel', closeModel as Ref);
 
     return {
       activities,

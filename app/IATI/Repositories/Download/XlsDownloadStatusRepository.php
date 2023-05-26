@@ -38,6 +38,19 @@ class XlsDownloadStatusRepository extends Repository
         return [$status->status ?? null, $status->file_count ?? 0, $status->url ?? null];
     }
 
+    public function resetDownloadStatus($userId, $fileType): ?array
+    {
+        $status = $this->model->where('user_id', $userId)->where('type', $fileType)->first();
+
+        if (!empty($status)) {
+            $status->update(['file_count' => 0, 'status' => 'processing']);
+
+            return $status->selected_activities ?? null;
+        }
+
+        return null;
+    }
+
     public function getDownloadStatusObject($userId, $fileType)
     {
         return $this->model->where('user_id', $userId)->where('type', $fileType)->first();
@@ -64,14 +77,14 @@ class XlsDownloadStatusRepository extends Repository
      *
      * @return Model|null
      */
-    public function storeStatus($userId, $fileType, string $status = 'processing'): ?Model
+    public function storeStatus($userId, $fileType, $selected_activities, string $status = 'processing'): ?Model
     {
-        return $this->model->create([
+        return $this->model->updateOrCreate(['user_id' => $userId], [
             'user_id' => $userId,
             'status' => $status,
             'type' => $fileType,
             'file_count' => 0,
-//            'url' => route('admin.activities.download-xls'),
+            'selected_activities' => $selected_activities ?? null,
         ]);
     }
 

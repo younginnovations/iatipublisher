@@ -26,5 +26,10 @@ class DownloadStatus extends Model
         'user_id',
         'type',
         'url',
+        'selected_activities',
+    ];
+
+    protected $casts = [
+        'selected_activities' => 'json',
     ];
 }

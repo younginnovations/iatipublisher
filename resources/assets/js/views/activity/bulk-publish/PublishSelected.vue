@@ -494,6 +494,7 @@ watch(
         Object.keys(pa?.value?.publishingActivities?.activities as string[])
           .length
     );
+    store.dispatch('updateBulkpublishActivities', pa?.value);
   },
   { deep: true }
 );

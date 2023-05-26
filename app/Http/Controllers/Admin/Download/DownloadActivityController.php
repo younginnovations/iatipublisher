@@ -147,7 +147,7 @@ class DownloadActivityController extends Controller
             //  first it clears all the files present on s3 like cancelStatus.json
             //  if cancelStatus.json is present then mail won't be sent to the user
             $this->clearPreviousXlsFilesOnS3($userId);
-            $this->downloadXlsService->storeStatus($userId);
+            $this->downloadXlsService->storeStatus($userId, $activityIds);
             awsUploadFile("Xls/$userId/status.json", json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
             $this->processXlsExportJobs($request);
 
@@ -213,6 +213,30 @@ class DownloadActivityController extends Controller
             logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Error has occured while trying to check download status']);
+        }
+    }
+
+    /**
+     * @return JsonResponse|void
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws \Throwable
+     */
+    public function retryXlsDownload()
+    {
+        try {
+            $activities = $this->downloadXlsService->resetDownloadStatus();
+
+            if (!empty($activities)) {
+                $userId = auth()->user()->id;
+                $this->clearPreviousXlsFilesOnS3($userId);
+                $this->prepareActivityXls(request()->merge(['activities' => json_encode($activities, JSON_THROW_ON_ERROR)]));
+            }
+        } catch (\Exception $e) {
+            logger()->error($e);
+
+            return response()->json(['success' => false, 'message' => 'Error has occured while trying to retry download']);
         }
     }
 

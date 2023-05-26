@@ -8,6 +8,8 @@ interface StateInterface {
   startXlsDownload: boolean;
   completeXlsDownload: boolean;
   cancelDownload: boolean;
+  closeXlsModel: boolean;
+  bulkpublishActivities: object;
 }
 
 const state = {
@@ -18,6 +20,16 @@ const state = {
   startXlsDownload: false,
   completeXlsDownload: false,
   cancelDownload: false,
+  closeXlsModel: false,
+  bulkpublishActivities: {
+    publishingActivities: {
+      activities: { activity_id: 0, activity_title: '', status: '' },
+      organization_id: 0,
+      job_batch_uuid: '',
+      status: '',
+      message: '',
+    },
+  },
 };
 
 const mutations = {
@@ -26,6 +38,9 @@ const mutations = {
     payload: number[]
   ) {
     state.selectedActivities = payload;
+  },
+  mutateCloseXlsModel: function (state: StateInterface, payload: boolean) {
+    state.closeXlsModel = payload;
   },
   mutateBulkPublishLength: function (state: StateInterface, payload: number) {
     state.bulkPublishLength = payload;
@@ -48,6 +63,12 @@ const mutations = {
   mutateCancelDownload: function (state: StateInterface, payload: boolean) {
     state.cancelDownload = payload;
   },
+  mutateBulkpublishActivities: function (
+    state: StateInterface,
+    payload: object
+  ) {
+    state.bulkpublishActivities = payload;
+  },
 };
 
 interface CommitFunction {
@@ -60,6 +81,9 @@ const actions = {
     payload: number[]
   ) {
     commit('mutateSelectedActivities', payload);
+  },
+  updateCloseXlsModel: function ({ commit }: CommitFunction, payload: boolean) {
+    commit('mutateCloseXlsModel', payload);
   },
   updateBulkPublishLength: function (
     { commit }: CommitFunction,
@@ -90,6 +114,12 @@ const actions = {
     payload: boolean
   ) {
     commit('mutateCancelDownload', payload);
+  },
+  updateBulkpublishActivities: function (
+    { commit }: CommitFunction,
+    payload: boolean
+  ) {
+    commit('mutateBulkpublishActivities', payload);
   },
 };
 
