@@ -47,7 +47,7 @@
             class="h-full rounded-full bg-spring-50"
           ></div>
         </div>
-        <div class="text-sm text-n-50">{{ percentageWidth }}%</div>
+        <div class="text-sm text-n-50">{{ Math.trunc(percentageWidth) }}%</div>
       </div>
       <div v-else class="text-xs text-n-50">Failed</div>
     </div>
@@ -156,7 +156,6 @@ import {
 } from 'vue';
 import spinnerLoader from './spinnerLoader.vue';
 import axios from 'axios';
-import BtnComponent from 'Components/ButtonComponent.vue';
 
 const currentActivity = ref(null);
 const maximize = ref(true);

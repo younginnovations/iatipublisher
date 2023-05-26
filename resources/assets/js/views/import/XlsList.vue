@@ -195,7 +195,9 @@
     <p class="text-sm text-n-40">
       We detected some errors in the uploaded file.
     </p>
-    <div class="mb-6 rounded-sm bg-rose p-4 text-sm text-n-50">
+    <div
+      class="mb-6 rounded-sm border-crimson-20 bg-rose p-4 text-sm text-n-50"
+    >
       <h6 class="mb-2 text-sm font-bold">Identifier Errors</h6>
       <p class="text-sm text-n-40">
         We have found some identifier errors in the imported file. You cannot
@@ -211,38 +213,52 @@
         </li>
       </ul>
     </div>
-    <button
-      class="flex space-x-1 rounded-sm py-3 text-center text-xs font-bold uppercase text-bluecoral"
-      @click="downloadIdentifierError"
-    >
-      <svg-vue icon="download"></svg-vue>
-      <span>Download identifier errors</span>
-    </button>
+    <p class="text-sm text-n-40">
+      Additionally, there are 5 critical error, 3 errors and 102 warning in the
+      file
+    </p>
+    <div class="flex justify-end space-x-3">
+      <button class="ghost-btn" @click="cancelImport">Cancel Import</button>
+      <BtnComponent
+        class=""
+        text="Download error message"
+        type="primary"
+        icon="download"
+        @click="downloadIdentifierError"
+      />
+    </div>
   </Modal>
   <Modal
     :modal-active="showCriticalErrorModel && !showIdentifierErrorModel"
     width="583"
   >
-    <div class="mb-6 flex items-center space-x-1">
-      <svg-vue class="text-crimson-40" icon="warning-fill" />
+    <div class="mb-2">
+      <svg-vue class="text-4xl text-crimson-40" icon="warning-fill" />
       <h6 class="text-sm font-bold">Errors Detected</h6>
     </div>
-    <div class="mb-6 rounded-sm bg-rose p-4 text-sm text-n-50">
+    <p class="text-sm text-n-40">
+      We detected some errors in the uploaded file.
+    </p>
+    <div
+      class="mb-6 rounded-sm border border-crimson-20 bg-rose p-4 text-sm text-n-50"
+    >
       <div v-if="showCriticalErrorMessage" class="mb-6">
         <h6 class="mb-2 text-sm font-bold">Critical Errors</h6>
-        <p>
+        <p class="text-sm text-n-40">
           Some of the {{ status.template }} contain critical errors and thus,
           cannot be uploaded to IATI Publisher. Please review the errors and
           follow the instructions provided in the user manual.
         </p>
       </div>
     </div>
-    <button
-      class="ml-auto flex w-[158px] justify-center rounded-sm bg-bluecoral py-3 text-center text-xs font-bold uppercase text-white hover:text-white"
-      @click="downloadIdentifierError"
-    >
-      <span>Review errors</span>
-    </button>
+    <div class="flex justify-end space-x-3">
+      <button class="ghost-btn" @click="cancelImport">Cancel Import</button>
+      <BtnComponent
+        text="Review errors"
+        type="primary"
+        @click="showCriticalErrorModel = false"
+      />
+    </div>
   </Modal>
 </template>
 <script setup lang="ts">
@@ -259,6 +275,7 @@ import {
   onUpdated,
 } from 'vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
+import BtnComponent from 'Components/ButtonComponent.vue';
 
 const selectAll = ref(false);
 const sortOrder = ref('asceding');
@@ -390,7 +407,8 @@ const cancelImport = () => {
   });
 };
 const downloadIdentifierError = () => {
-  let file = new File(['\ufeff' + props.globalError], 'indicator-errors.txt', {
+  let text = props.globalError.join('\n');
+  let file = new File(['\ufeff' + text], 'indicator-errors.txt', {
     type: 'text/plain:charset=UTF-8',
   });
   let url = window.URL.createObjectURL(file);

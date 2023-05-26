@@ -606,22 +606,23 @@ function uploadFile() {
       .post('/import/xls', data, config)
       .then((res) => {
         if (file.value.files.length && res?.data?.success) {
-          window.location.href = '/import/xls';
-          loader.value = false;
+          checkXlsstatus();
         } else {
           error.value = Object.values(res.data.errors).join(' ');
-          loader.value = false;
         }
       })
       .catch(() => {
         error.value = 'Error has occured while uploading file.';
+      })
+      .finally(() => {
+        loader.value = false;
       });
   }
 }
 
 function fetchActivities(active_page: number) {
   // tableLoader.value = true;
-  let apiUrl = '/activities/page/';
+  let apiUrl = `/activities/page/${active_page}`;
   let params = new URLSearchParams();
   params.append('limit', '6');
 
