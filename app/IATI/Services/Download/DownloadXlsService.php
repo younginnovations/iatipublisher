@@ -69,12 +69,13 @@ class DownloadXlsService
      * Stores initial state of download status.
      *
      * @param $userId
+     * @param $selected_activities
      *
      * @return Model|null
      */
-    public function storeStatus($userId): ?Model
+    public function storeStatus($userId, $selected_activities): ?Model
     {
-        return $this->xlsDownloadStatusRepository->storeStatus($userId, 'xls');
+        return $this->xlsDownloadStatusRepository->storeStatus($userId, 'xls', $selected_activities);
     }
 
     /**
@@ -118,5 +119,10 @@ class DownloadXlsService
     public function getDownloadStatusByUserId($userId)
     {
         return $this->xlsDownloadStatusRepository->getDownloadStatusObject($userId, 'xls');
+    }
+
+    public function resetDownloadStatus()
+    {
+        return $this->xlsDownloadStatusRepository->resetDownloadStatus(auth()->user()->id, 'xls');
     }
 }
