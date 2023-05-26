@@ -13,7 +13,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-// use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * Class OrganizationController.
@@ -64,13 +63,6 @@ class OrganizationController extends Controller
         //
     }
 
-    public function updateOrganizationRegistrationAgency(): void 
-    {
-        $filepath = storage_path()."/app/org-reg.csv";
-        Excel::import(new OrganizationRegistrationImport, $filepath;
-    }
-
-
     /**
      * Display the specified resource.
      *
@@ -79,7 +71,6 @@ class OrganizationController extends Controller
     public function show(): View|RedirectResponse
     {
         try {
-            // $this->updateOrganizationRegistrationAgency();
             $toast['message'] = Session::has('error') ? Session::get('error') : (Session::get('success') ? Session::get('success') : '');
             $toast['type'] = Session::has('error') ? 'error' : 'success';
             $elements = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
@@ -94,7 +85,6 @@ class OrganizationController extends Controller
 
             return view('admin.organisation.index', compact('elements', 'elementGroups', 'progress', 'organization', 'toast', 'types', 'mandatoryCompleted', 'status', 'userRole'));
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while opening organization detail page.');
