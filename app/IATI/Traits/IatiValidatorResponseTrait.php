@@ -36,7 +36,7 @@ trait IatiValidatorResponseTrait
         $xmlLines = explode("\n", $xmlString);
 
         if ($lineNumber >= 1 && $lineNumber <= count($xmlLines)) {
-            $targetLine = $xmlLines[$lineNumber - 1];
+            $targetLine = $xmlLines[$lineNumber];
             $targetNode = null;
 
             foreach ($xml->xpath('//iati-activity/*') as $node) {
