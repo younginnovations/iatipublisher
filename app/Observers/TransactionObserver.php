@@ -66,7 +66,10 @@ class TransactionObserver
                 break;
         }
 
-        if (is_array_value_empty($transaction->transaction['recipient_region']) || is_array_value_empty($transaction->transaction['recipient_country'])) {
+        $recipientRegionOrCountryIsEmptyInTransaction = is_array_value_empty($transaction->transaction['recipient_region']) || is_array_value_empty($transaction->transaction['recipient_country']);
+        $recipientRegionOrCountryIsCompleteInActivity = $this->elementCompleteService->isRecipientCountryElementCompleted($activityObj) || $this->elementCompleteService->isRecipientRegionElementCompleted($activityObj);
+
+        if ($recipientRegionOrCountryIsEmptyInTransaction && $recipientRegionOrCountryIsCompleteInActivity) {
             $elementStatus['recipient_region'] = true;
             $elementStatus['recipient_country'] = true;
         }
