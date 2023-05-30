@@ -201,8 +201,9 @@ class TransactionController extends Controller
     {
         try {
             $activity = $this->activityService->getActivity($activityId);
-            $element = $this->getManipulatedTransactionElementSchema($activity);
+            $element = $this->getManipulatedTransactionElementSchema($activity, $transactionId);
             $form = $this->transactionService->editFormGenerator($transactionId, $activityId, $element);
+
             $data = ['title' => $element['label'], 'name' => 'transactions'];
 
             return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
@@ -219,7 +220,7 @@ class TransactionController extends Controller
     /**
      * @throws \JsonException
      */
-    public function getManipulatedTransactionElementSchema($activity): array
+    public function getManipulatedTransactionElementSchema($activity, $transactionId = null): array
     {
         $element = getElementSchema('transactions');
 
@@ -233,6 +234,29 @@ class TransactionController extends Controller
             $element['sub_elements']['recipient_region']['info_text'] = 'Recipient Region or Recipient Country is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.';
             $element['sub_elements']['recipient_country']['freeze'] = true;
             $element['sub_elements']['recipient_country']['info_text'] = 'Recipient Region or Recipient Country is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.';
+        }
+
+        $hasDefinedInTransaction = $this->transactionService->hasRecipientRegionOrCountryDefinedInTransaction($activity->id);
+
+        $emptyRecipientRegionOrCountryTransaction = $activity->transactions->filter(function ($item) {
+            $recipientRegion = $item->transaction['recipient_region'];
+            $recipientCountry = $item->transaction['recipient_country'];
+
+            return is_array_value_empty($recipientRegion) && is_array_value_empty($recipientCountry);
+        });
+
+        $emptyRecipientRegionOrCountryTransactionCount = count($emptyRecipientRegionOrCountryTransaction);
+
+        if (!empty($emptyRecipientRegionOrCountryTransaction) && $hasDefinedInTransaction) {
+            if (in_array((int) $transactionId, $emptyRecipientRegionOrCountryTransaction->pluck('id')->toArray(), true)) {
+                $message = 'Recipient Region or Recipient Country is declared at transaction level. You must add either Recipient Region or Recipient Country.';
+            } else {
+                $messagePart = $emptyRecipientRegionOrCountryTransactionCount > 1 ? "are $emptyRecipientRegionOrCountryTransactionCount transactions"
+                                                                              : "is $emptyRecipientRegionOrCountryTransactionCount transaction";
+                $message = "There $messagePart without Recipient Region or Recipient Country.";
+            }
+            $element['sub_elements']['recipient_region']['info_text'] = $message;
+            $element['sub_elements']['recipient_country']['info_text'] = $message;
         }
 
         return $element;
