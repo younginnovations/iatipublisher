@@ -577,7 +577,7 @@ if (!function_exists('getTableConfig')) {
     function getTableConfig($module): array
     {
         $tableConfig = [
-            'activity' => ['orderBy' => ['updated_at'], 'direction' => ['asc', 'desc']],
+            'activity' => ['orderBy' => ['updated_at', 'complete_percentage'], 'direction' => ['asc', 'desc']],
             'organisation' => ['orderBy' => ['updated_at', 'all_activities_count', 'name'], 'direction' => ['asc', 'desc']],
             'user' => ['orderBy' => ['username', 'publisher_name', 'created_at'], 'direction' => ['asc', 'desc']],
             'audit' => ['orderBy' => ['user_id', 'user_type', 'event', 'auditable_type', 'created_at'], 'direction' => ['asc', 'desc']],
