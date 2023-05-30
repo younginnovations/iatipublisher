@@ -1,5 +1,12 @@
 <template>
-  <div class="h-[80px] rounded-t-lg bg-eggshell p-6">
+  <div class="relative h-[80px] rounded-t-lg bg-eggshell p-6">
+    <button
+      v-if="xlsDownloadStatus === 'completed'"
+      class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2"
+      @click="cancelDownload"
+    >
+      <svg-vue icon="cross-icon" />
+    </button>
     <div
       v-if="xlsDownloadStatus != 'failed'"
       class="mb-3 flex h-1 w-full justify-start rounded-full bg-spring-10"
