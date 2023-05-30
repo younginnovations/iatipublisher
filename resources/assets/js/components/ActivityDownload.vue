@@ -2,10 +2,10 @@
   <div class="relative h-[80px] rounded-t-lg bg-eggshell p-6">
     <button
       v-if="xlsDownloadStatus === 'completed'"
-      class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2"
+      class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 text-n-40"
       @click="cancelDownload"
     >
-      <svg-vue icon="cross-icon" />
+      <svg-vue class="text-sm" icon="cross-icon" />
     </button>
     <div
       v-if="xlsDownloadStatus != 'failed'"
@@ -66,7 +66,7 @@
   </Modal>
 </template>
 <script setup lang="ts">
-import { inject, computed, onMounted, onUnmounted, ref, Ref } from 'vue';
+import { inject, computed, onMounted, ref, Ref } from 'vue';
 import spinnerLoader from './spinnerLoader.vue';
 import Modal from 'Components/PopupModal.vue';
 
