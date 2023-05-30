@@ -267,8 +267,9 @@ export default defineComponent({
 
       store.dispatch('updateStartXlsDownload', false);
 
-      axios.get('/activities/cancel-xls-download');
-      checkDownload();
+      axios.get('/activities/cancel-xls-download').then(() => {
+        checkDownload();
+      });
     };
 
     const downloadErrorxml = (countActivities) => {
