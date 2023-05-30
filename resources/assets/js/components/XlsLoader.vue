@@ -8,7 +8,9 @@
     class="!fixed z-[100] rounded bg-eggshell duration-300"
   >
     <div class="mb-5 flex items-start justify-between">
-      <h6 v-if="maximize" class="font-bold">Upload in progess</h6>
+      <h6 v-if="maximize && xlsFailed" class="font-bold">Upload Failed</h6>
+
+      <h6 v-if="maximize && !xlsFailed" class="font-bold">Upload in progess</h6>
       <div v-if="maximize" class="flex items-center space-x-3">
         <button
           class="text-xs font-bold uppercase text-bluecoral"
@@ -28,10 +30,13 @@
       </div>
     </div>
     <div
-      :class="maximize && 'p-4'"
-      class="relative h-[80px] min-w-[430px] rounded-lg border border-n-20 duration-200"
+      :class="xlsFailed && '!border-crimson-20 !bg-rose'"
+      class="relative min-h-[80px] min-w-[430px] rounded-lg border border-n-20 p-4 duration-200"
     >
-      <p class="text-sm font-bold text-bluecoral">
+      <p
+        class="text-sm font-bold text-bluecoral"
+        :class="xlsFailed && ' text-crimson-50'"
+      >
         Uploading '{{ currentActivity }}' file
       </p>
 
@@ -49,10 +54,10 @@
         </div>
         <div class="text-sm text-n-50">{{ Math.trunc(percentageWidth) }}%</div>
       </div>
-      <div v-else class="text-xs text-n-50">Failed</div>
+      <div v-else class="text-sm text-crimson-40">{{ xlsFailedMessage }}</div>
     </div>
 
-    <div class="mt-5 flex justify-end">
+    <div class="mt-5 flex justify-end space-x-2">
       <a
         v-if="(processedCount === totalCount && totalCount !== 0) || completed"
         href="/import/xls/list"

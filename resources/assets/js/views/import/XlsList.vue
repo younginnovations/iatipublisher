@@ -395,6 +395,7 @@ onMounted(() => {
 });
 
 const cancelImport = () => {
+  showCriticalErrorModel.value = false;
   axios.delete(`/import/xls`).then((res) => {
     const response = res.data;
     toastVisibility.value = true;

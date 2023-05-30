@@ -176,7 +176,7 @@
                               <div class="mr-4">
                                 {{
                                   indicator.indicator.title[0].narrative[0]
-                                    .narrative
+                                    .narrative ?? 'untitled'
                                 }}
                               </div>
                               <div class="flex shrink-0 grow justify-between">

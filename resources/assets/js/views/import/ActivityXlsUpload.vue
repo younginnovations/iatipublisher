@@ -457,7 +457,7 @@
       <div v-else class="mt-6 flex items-center justify-end space-x-4">
         <button
           class="text-xs font-bold uppercase text-crimson-50"
-          @click="xlsData = false"
+          @click="retry"
         >
           Retry
         </button>
@@ -516,6 +516,11 @@ watch(
     }
   }
 );
+
+const retry = () => {
+  axios.delete(`/import/xls`);
+  window.location.href = '/import/xls';
+};
 
 const mapActivityName = (name) => {
   switch (name) {
@@ -641,6 +646,10 @@ function fetchActivities(active_page: number) {
 const cancelImport = () => {
   axios.delete(`/import/xls`).then((res) => {
     xlsData.value = false;
+    uploadType.value = [];
+
+    file.value.value = null;
+
     showCancelModel.value = false;
     const response = res.data;
     toastVisibility.value = true;

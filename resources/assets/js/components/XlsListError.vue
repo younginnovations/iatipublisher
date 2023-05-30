@@ -1,16 +1,22 @@
 <template>
   <div>
-    <div>
-      <span
-        :class="countErrors(index) > 0 && 'font-bold'"
-        class="text-sm uppercase text-n-50"
-      >
-        {{ title }}
-      </span>
-      <span class="tect-xs mx-3 font-normal text-n-40">
+    <div class="flex">
+      <div class="group relative">
+        <div
+          :class="countErrors(index) > 0 && 'font-bold'"
+          class="group max-w-[300px] overflow-hidden overflow-x-hidden text-ellipsis whitespace-nowrap text-sm uppercase text-n-50"
+        >
+          {{ title }}
+        </div>
+        <span
+          class="absolute top-8 left-0 hidden rounded bg-[#F6F7FC] p-2 shadow-sm group-hover:block"
+          >{{ title }}</span
+        >
+      </div>
+      <div class="tect-xs mx-3 font-normal text-n-40">
         <span class="capitalize"> ({{ status['template'] }} Identifier </span>
         : {{ activity.identifier }})
-      </span>
+      </div>
       <span
         v-if="countErrors(index) > 0"
         class="ml-4 inline-flex cursor-pointer items-center space-x-2 text-crimson-50"
