@@ -262,6 +262,7 @@ export default defineComponent({
     };
 
     const downloadAnyway = () => {
+      isLoading.value = true;
       downloadingInProcess.value = false;
       store.dispatch('updateCancelDownload', true);
 
