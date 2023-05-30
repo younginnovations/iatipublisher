@@ -72,6 +72,7 @@ import { useStore } from 'Store/activities/index';
 const singleStore = useStore();
 const emit = defineEmits(['close']);
 const store = detailStore();
+
 const xlsData = ref(false);
 const downloading = ref(false);
 const downloadCompleted = ref(false);
@@ -126,35 +127,46 @@ let intervalID;
 onMounted(() => {
   completed.value = paStorage.value.publishingActivities.status ?? 'processing';
   bulkPublishStatus();
-
+  console.log(downloading.value, 'downloading value');
   if (!(activities.value && Object.keys(activities.value).length > 0)) {
     closeWindow();
   }
 
   //check constantly in a inter for when support button enters the dom
-  const checkSupportButton = setInterval(() => {
-    const supportButton: HTMLElement = document.querySelector(
-      '#launcher'
-    ) as HTMLElement;
+  if (!xlsData.value && !(downloading.value && !downloadCompleted.value)) {
+    const checkSupportButton = setInterval(() => {
+      const supportButton: HTMLElement = document.querySelector(
+        '#launcher'
+      ) as HTMLElement;
 
-    if (
-      supportButton !== null &&
-      activities.value &&
-      Object.keys(activities.value).length > 0
-    ) {
-      supportButton.style.transform = 'translate(-350px ,-20px)';
+      if (
+        supportButton !== null &&
+        activities.value &&
+        Object.keys(activities.value).length > 0
+      ) {
+        supportButton.style.transform = 'translate(-350px ,-20px)';
 
-      supportButton.style.opacity = '0';
-      setTimeout(() => {
-        supportButton.style.opacity = '1';
-      }, 300);
-      clearInterval(checkSupportButton);
-    }
-  }, 10);
+        supportButton.style.opacity = '0';
+        setTimeout(() => {
+          supportButton.style.opacity = '1';
+        }, 300);
+        clearInterval(checkSupportButton);
+      }
+    }, 10);
+  }
 
   checkXlsstatus();
   checkDownloadStatus();
 });
+watch(
+  () => singleStore.state.startXlsDownload,
+  (value) => {
+    if (value) {
+      checkDownloadStatus();
+    }
+  },
+  { deep: true }
+);
 
 setTimeout(() => {
   const supportButton: HTMLElement = document.querySelector(
@@ -203,7 +215,7 @@ const checkDownloadStatus = () => {
         clearInterval(checkDownload);
       }
     });
-  }, 800);
+  }, 500);
 };
 
 // watching change in value of completed

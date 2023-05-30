@@ -20,15 +20,20 @@
 import ActivityDownload from './ActivityDownload.vue';
 import XlsLoader from './XlsLoader.vue';
 import BulkpublishWithXls from './BulkpublishWithXls.vue';
-import { defineProps, ref, inject, watch, onUnmounted } from 'vue';
+import { defineProps, ref, inject, watch, onUnmounted, onMounted } from 'vue';
 import axios from 'axios';
 import { useStore } from 'Store/activities/index';
 const store = useStore();
 const showXlsStatus = ref(true);
+import { useStorage } from '@vueuse/core';
+
 const downloadCompleted = ref(false);
 const cancelDownload = ref(false);
-
-defineProps({
+const bulkPublishLength = ref(0);
+const pa = useStorage('vue-use-local-storage', {
+  publishingActivities: localStorage.getItem('publishingActivities') ?? {},
+});
+const props = defineProps({
   activityName: {
     type: String,
     required: true,
@@ -56,6 +61,19 @@ defineProps({
     type: Boolean,
   },
 });
+onMounted(() => {
+  const checkSupportButton = setInterval(() => {
+    const supportButton: HTMLElement = document.querySelector(
+      '#launcher'
+    ) as HTMLElement;
+
+    if (supportButton !== null) {
+      supportButton.style.transform = 'translatey(-50px)';
+
+      clearInterval(checkSupportButton);
+    }
+  }, 10);
+});
 
 onUnmounted(() => {
   const supportButton: HTMLElement = document.querySelector(
@@ -63,7 +81,14 @@ onUnmounted(() => {
   ) as HTMLElement;
 
   if (supportButton !== null) {
-    supportButton.style.transform = 'translatey(-30px)';
+    if (
+      bulkPublishLength.value > 0 ||
+      Object.keys(pa.value.publishingActivities).length > 0
+    ) {
+      supportButton.style.transform = 'translate(-350px ,-20px)';
+    } else {
+      supportButton.style.transform = 'translateY(-50px)';
+    }
   }
 });
 
@@ -80,6 +105,44 @@ watch(
   },
   { deep: true }
 );
+watch(
+  () => store.state.bulkPublishLength,
+  (value) => {
+    bulkPublishLength.value = value;
+  },
+  { deep: true }
+);
+// watch(
+//   () => [
+//     props.xlsData,
+//     showXlsStatus.value,
+//     downloading,
+//     downloadCompleted.value,
+//     cancelDownload.value,
+//   ],
+//   ([
+//     xlsData,
+//     showXlsStatus,
+//     downloading,
+//     downloadCompleted,
+//     cancelDownload,
+//   ]) => {
+//     if (
+//       !(xlsData && showXlsStatus) &&
+//       !(downloading && !downloadCompleted && !cancelDownload) &&
+//       (bulkPublishLength.value > 0 ||
+//         Object.keys(pa.value.publishingActivities).length > 0)
+//     ) {
+//       const supportButton: HTMLElement = document.querySelector(
+//         '#launcher'
+//       ) as HTMLElement;
+
+//       if (supportButton !== null) {
+//         supportButton.style.transform = 'translate(-350px ,-20px)';
+//       }
+//     }
+//   }
+// );
 watch(
   () => store.state.cancelDownload,
   (value) => {
