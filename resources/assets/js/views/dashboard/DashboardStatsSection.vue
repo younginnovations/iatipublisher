@@ -120,8 +120,9 @@
   </section>
 </template>
 <script lang="ts" setup>
-import { ref, defineProps } from 'vue';
+import { ref, defineProps, onMounted, watch } from 'vue';
 import DashboardGraph from './DashboardGraph.vue';
+import axios from 'axios';
 
 const props = defineProps({
   currentView: {
@@ -129,5 +130,30 @@ const props = defineProps({
     required: true,
   },
 });
+const total = ref();
+const inactivePublisher = ref();
+const lastRegistered = ref();
+
+onMounted(() => {
+  fetchStatsData();
+});
+
+watch(
+  () => props.currentView,
+  () => {
+    fetchStatsData();
+  }
+);
+const fetchStatsData = () => {
+  axios.get(`/dashboard/${props.currentView}/stats`).then((res) => {
+    const response = res.data;
+    console.log(response);
+    if (props.currentView === 'publisher') {
+      total.value = response.data.totalCount;
+      lastRegistered.value = response.data.lastRegisteredPublisher[0];
+      inactivePublisher.value = response.data.inActivePublisher;
+    }
+  });
+};
 </script>
 <style></style>

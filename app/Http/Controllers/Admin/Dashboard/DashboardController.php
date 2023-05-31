@@ -296,7 +296,6 @@ class DashboardController extends Controller
         try {
             $params = $this->getQueryParams($request);
             $publisherStat = $this->dashboardService->getActivityStats($params);
-            dd($publisherStat);
 
             return response()->json([
                 'success' => true,
