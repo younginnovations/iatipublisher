@@ -213,7 +213,7 @@ class OrganizationRepository extends Repository
     {
         return [
             'totalCount' => $this->model->count(),
-            'lastRegisteredPublisher' => $this->model->select('id', 'created_at', 'name')->latest('created_at')->get(),
+            'lastRegisteredPublisher' => $this->model->select('id', 'created_at', 'name')->latest('created_at')->first(),
             'inActivePublisher' => $this->model->with('latestLoggedInUser')
                 ->whereHas('latestLoggedInUser', function (Builder $q) {
                     $q->where('last_logged_in', '<', '2023-05-03 04:14:12');

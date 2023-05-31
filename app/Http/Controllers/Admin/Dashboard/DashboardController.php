@@ -11,6 +11,7 @@ use App\IATI\Services\Download\CsvGenerator;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -21,21 +22,6 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  */
 class DashboardController extends Controller
 {
-    /**
-     * @var UserService
-     */
-    protected UserService $userService;
-
-    /**
-     * @var DashboardService
-     */
-    protected DashboardService $dashboardService;
-
-    /**
-     * @var CsvGenerator
-     */
-    protected CsvGenerator $csvGenerator;
-
     /**
      * ActivityController Constructor.
      *
@@ -52,9 +38,6 @@ class DashboardController extends Controller
         DashboardService $dashboardService,
         CsvGenerator $csvGenerator
     ) {
-        $this->activityService = $activityService;
-        $this->organizationService = $organizationService;
-        $this->userService = $userService;
         $this->dashboardService = $dashboardService;
         $this->csvGenerator = $csvGenerator;
     }
@@ -97,7 +80,7 @@ class DashboardController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Paginated users fetched successfully',
-                'data' => $this->userService->getUserCountByOrganization($page, $queryParams),
+                // 'data' => $this->userService->getUserCountByOrganization($page, $queryParams),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
@@ -140,7 +123,7 @@ class DashboardController extends Controller
                 'message' => 'Publisher stats fetched successfully',
                 'data' => $publisherStat,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
@@ -187,13 +170,13 @@ class DashboardController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Publisher stats fetched successfully',
+                'message' => 'Publisher by type fetched successfully',
                 'data' => $publisherStat,
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher by type.']);
         }
     }
 
@@ -209,6 +192,7 @@ class DashboardController extends Controller
         try {
             $params = $this->getQueryParams($request);
             $publisherStat = $this->dashboardService->getPublisherBy($params, 'country');
+            $publisherStat['codelist'] = getCodeList('Country', 'Activity');
 
             return response()->json([
                 'success' => true,
@@ -234,6 +218,33 @@ class DashboardController extends Controller
         try {
             $params = $this->getQueryParams($request);
             $publisherStat = $this->dashboardService->getPublisherBy($params, 'publisher_type');
+            $publisherStat['codelist'] = getCodeList('OrganizationType', 'Organization');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Publisher grouped by type fetched successfully',
+                'data' => $publisherStat,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher grouped by type.']);
+        }
+    }
+
+    /**
+     * Returns json data containing publisher stats.
+     *
+     * @param $request
+     *
+     * @return JsonResponse
+     */
+    public function publisherGroupedByDataLicense(Request $request): JsonResponse
+    {
+        try {
+            $params = $this->getQueryParams($request);
+            $publisherStat = $this->dashboardService->getPublisherBy($params, 'data_license');
+            $publisherStat['codelist'] = getCodeList('DataLicense', 'Activity');
 
             return response()->json([
                 'success' => true,
@@ -388,12 +399,12 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->dashboardService->getActivityCompleteness($params);
+            // $publisherStat = $this->dashboardService->getActivityCompleteness($params);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Publisher grouped by setup completeness fetched successfully',
-                'data' => $publisherStat,
+                // 'data' => $publisherStat,
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
@@ -643,7 +654,6 @@ class DashboardController extends Controller
 
             return $this->csvGenerator->generateWithHeaders(getTimeStampedText('activities'), $activities, $headers);
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
             // $this->auditService->auditEvent(null, 'download', 'csv');
 
