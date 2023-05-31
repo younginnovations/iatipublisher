@@ -319,7 +319,9 @@
                             <div class="flex">
                               <div>Document Link:&nbsp;</div>
                               <div>
-                                {{ base.document_link.length }} document
+                                {{ base.document_link }}
+                                {{ countDocumentLink(base.document_link) }}
+                                document
                               </div>
                             </div>
                           </div>
@@ -619,6 +621,7 @@ import getActivityTitle from 'Composable/title';
 //components
 import NotYet from 'Components/sections/HaveNotAddedYet.vue';
 import Btn from 'Components/buttons/Link.vue';
+import { refDebounced } from '@vueuse/core';
 
 export default defineComponent({
   name: 'ResultIndicator',
@@ -645,19 +648,49 @@ export default defineComponent({
     let { result } = toRefs(props);
     function isEmpty(data) {
       return Object.values(data).map((item) => {
-        if (item) {
-          if (item != null && typeof item)
-            console.log(Object.values(item)['0'], 'item');
-        }
+        // if (item) {
+        // if (item != null && typeof item)
+        // console.log(Object.values(item)['0'], 'item');
+        // }
         return item;
       });
     }
     onMounted(() => {
-      console.log(isEmpty(props.result.result.document_link['0']), 'this');
+      // console.log(isEmpty(props.result.result.document_link['0']), 'this');
     });
+
+    const countDocumentLink = (document_link) => {
+      console.log(document_link);
+      let documentCount = 0;
+
+      for (let document in document_link) {
+        let result = reduceDocumentLink(document_link[document], []);
+
+        if (result.every((item) => item === null)) {
+          documentCount++;
+        }
+      }
+
+      return documentCount;
+    };
+
+    const reduceDocumentLink = (document_link, values) => {
+      console.log(typeof document_link, document_link);
+
+      if (typeof document_link === 'object' && document_link) {
+        for (let key in document_link) {
+          values.concat(reduceDocumentLink(document_link[key], values));
+        }
+      } else {
+        values.push(document_link);
+      }
+
+      return values;
+    };
+
     const indicatorData = result.value.indicators.reverse();
 
-    return { indicatorData, dateFormat, getActivityTitle };
+    return { indicatorData, dateFormat, getActivityTitle, countDocumentLink };
   },
 });
 </script>

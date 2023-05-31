@@ -427,7 +427,7 @@ class Activity
             foreach ($row as $fieldName => $fieldValue) {
                 list($baseCount, $parentBaseCount, $dependentOnValue) = $this->checkElementAddMore($elementBase, $elementBasePeer, $elementAddMore, $dependentOnValue, $fieldName, $fieldValue, $baseCount, $parentBaseCount, $row, $element);
                 list($parentBaseCount, $dependentOnValue) = $this->checkSubElementAddMore($fieldDependency, $parentBaseCount, $parentDependentOn, $dependentOnValue, $fieldName, $fieldValue, $row);
-                $originalFieldName = $fieldName;
+                $cell = Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName);
 
                 // $fieldName = $this->checkDependencyForFieldName($dependentOn, $dependentOnValue, $dependencyCondition, $fieldName);
 
@@ -468,7 +468,7 @@ class Activity
                     $fieldValue = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
                     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
                     $this->columnTracker[$elementActivityIdentifier][$element][$element . '.' . $elementPositionBasedOnParent]['sheet'] = $this->sheetName;
-                    $this->columnTracker[$elementActivityIdentifier][$element][$element . '.' . $elementPositionBasedOnParent]['cell'] = Arr::get($excelColumnName, $this->sheetName . '.' . $originalFieldName) . $this->rowCount;
+                    $this->columnTracker[$elementActivityIdentifier][$element][$element . '.' . $elementPositionBasedOnParent]['cell'] = $cell . $this->rowCount;
                 }
             }
 

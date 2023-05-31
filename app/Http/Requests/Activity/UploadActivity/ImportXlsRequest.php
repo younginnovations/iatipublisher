@@ -37,7 +37,7 @@ class ImportXlsRequest extends ActivityBaseRequest
      */
     public function rules(): array
     {
-        return ['activity' => 'required|activity_file| max:10000', 'xlsType' => 'required'];
+        return ['activity' => 'required|activity_file| max:10000', 'xlsType' => 'required|string'];
     }
 
     /**

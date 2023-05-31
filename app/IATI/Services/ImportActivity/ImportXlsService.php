@@ -198,6 +198,7 @@ class ImportXlsService
 
             if ($existingId && $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'))) {
                 $activityData = $this->fillActivityData($activityData);
+                $activityData['upload_medium'] = 'xls';
                 $this->activityRepository->update($existingId, $activityData);
                 $this->transactionRepository->deleteTransaction($existingId);
                 $this->saveTransactions(Arr::get($activityData, 'transactions', []), $existingId);
@@ -209,6 +210,7 @@ class ImportXlsService
                 }
             } else {
                 $activityData['org_id'] = $organizationId;
+                $activityData['upload_medium'] = 'xls';
                 $storeActivity = $this->activityRepository->store($activityData);
                 $this->saveTransactions(Arr::get($activityData, 'transactions', []), $storeActivity->id);
 
