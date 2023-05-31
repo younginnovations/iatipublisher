@@ -71,11 +71,18 @@ import { useStorage } from '@vueuse/core';
 import { onMounted, watch, computed, ref } from 'vue';
 import { useStore } from 'Store/activities/index';
 const store = useStore();
-const pa = useStorage('vue-use-local-storage', {
+let pa = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
 });
 const bulkPublishLength = ref(0);
 const openModel = ref(false);
+
+const totalActivites = computed(() => {
+  return (
+    pa?.publishingActivities['activities'] &&
+    Object.keys(pa?.publishingActivities['activities']).length
+  );
+});
 
 const completedActivities = computed(() => {
   let count = 0;
@@ -113,18 +120,17 @@ const percentageWidth = computed(() => {
 });
 
 onMounted(() => {
-  console.log(
-    completedActivities.value,
-    pa.value?.publishingActivities['activities'] &&
-      Object.keys(pa.value?.publishingActivities['activities']).length,
-    percentageWidth.value
-  );
+  console.log(pa, 'pa');
 });
 
 watch(
   () => store.state.bulkPublishLength,
   (value) => {
     bulkPublishLength.value = value;
+    pa = useStorage('vue-use-local-storage', {
+      publishingActivities: localStorage.getItem('publishingActivities') ?? {},
+    });
+    console.log(pa, 'pa fromw atchers');
   },
   { deep: true }
 );

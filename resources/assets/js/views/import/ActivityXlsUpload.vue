@@ -350,7 +350,18 @@
             class="w-full border-b border-n-20"
           >
             <td class="py-4 px-6 text-sm text-n-50">
-              {{ activity['title'][0]['narrative'] }}
+              <div class="ellipsis relative w-full">
+                <div
+                  class="w-[500px] !max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-n-50"
+                >
+                  {{ activity['title'][0]['narrative'] }}
+                </div>
+                <div class="w-52">
+                  <span class="ellipsis__title--hover">{{
+                    activity['title'][0]['narrative']
+                  }}</span>
+                </div>
+              </div>
             </td>
             <td class="py-4 px-6 text-xs text-n-40">
               {{ formatDate(activity['updated_at']) }}
@@ -511,7 +522,7 @@ const searchValue: Ref<string | null> = ref('');
 watch(
   () => store.state.selectedActivities,
   (value) => {
-    if (value.length < 10) {
+    if (value.length < 6) {
       selectAllValue.value = false;
     }
   }
