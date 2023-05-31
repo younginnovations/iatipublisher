@@ -621,6 +621,15 @@ const downloadCode = async () => {
   link.download = `codes.xlsx`;
   link.click();
 };
+watch(
+  () => {
+    store.state.cancelUpload;
+  },
+  () => {
+    cancelImport();
+  },
+  { deep: true }
+);
 
 const selectAll = () => {
   if (!selectAllValue.value) {

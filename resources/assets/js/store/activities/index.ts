@@ -3,11 +3,13 @@ import { createStore, Commit } from 'vuex';
 interface StateInterface {
   selectedActivities: number[];
   bulkPublishLength: number;
+  cancelUpload: boolean;
 }
 
 const state = {
   selectedActivities: [],
   bulkPublishLength: 0,
+  cancelUpload: false,
 };
 
 const mutations = {
@@ -19,6 +21,9 @@ const mutations = {
   },
   mutateBulkPublishLength: function (state: StateInterface, payload: number) {
     state.bulkPublishLength = payload;
+  },
+  mutateCancelUpload: function (state: StateInterface, payload: boolean) {
+    state.cancelUpload = payload;
   },
 };
 
@@ -38,6 +43,9 @@ const actions = {
     payload: number[]
   ) {
     commit('mutateBulkPublishLength', payload);
+  },
+  updateCancelUpload: function ({ commit }: CommitFunction, payload: number[]) {
+    commit('mutateCancelUpload', payload);
   },
 };
 

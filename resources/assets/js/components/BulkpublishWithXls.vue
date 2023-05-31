@@ -140,7 +140,6 @@ watch(
     pa = useStorage('vue-use-local-storage', {
       publishingActivities: localStorage.getItem('publishingActivities') ?? {},
     });
-    console.log(pa, 'pa fromw atchers');
   },
   { deep: true }
 );

@@ -18,6 +18,8 @@ import XlsLoader from './XlsLoader.vue';
 import BulkpublishWithXls from './BulkpublishWithXls.vue';
 import { defineProps, ref } from 'vue';
 import axios from 'axios';
+import { useStore } from 'Store/activities/index';
+const store = useStore();
 
 const showXlsStatus = ref(true);
 
@@ -52,5 +54,9 @@ defineProps({
 const closeXls = () => {
   showXlsStatus.value = false;
   axios.delete(`/import/xls`);
+  store.dispatch('updateCancelUpload', true);
+  setTimeout(() => {
+    store.dispatch('updateCancelUpload', false), 1000;
+  });
 };
 </script>
