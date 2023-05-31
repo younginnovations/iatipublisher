@@ -26,12 +26,12 @@
         </button>
         <button
           :class="
-            currentView === 'users'
+            currentView === 'user'
               ? ' !border-turquoise bg-n-10 text-bluecoral'
               : ''
           "
           class="flex w-[140px] justify-center rounded border border-n-20 py-2 text-sm text-n-40"
-          @click="currentView = 'users'"
+          @click="currentView = 'user'"
         >
           <span>Users</span>
         </button>

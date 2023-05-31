@@ -1,6 +1,6 @@
 <template>
   <div class="mt-6 w-full bg-white py-6 px-14">
-    <div v-if="currentView === 'users'">
+    <div v-if="currentView === 'user'">
       <h6 class="text-xs uppercase text-n-40">users by organisation</h6>
     </div>
 
@@ -16,7 +16,7 @@
           <h6 v-else class="text-xs uppercase text-n-40">
             Publisher segregated by
           </h6>
-          <ul class="mt-2 mr-6">
+          <ul class="mt-4 mr-6">
             <li
               v-for="item in currentNavList"
               :key="item.label"

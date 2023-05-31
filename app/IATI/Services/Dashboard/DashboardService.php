@@ -99,9 +99,9 @@ class DashboardService
         $results = $this->userRepo->getUserCounts();
 
         $userCounts = [
-            'general_users_count' => ['active' => 0, 'disabled' => 0],
-            'admin_users_count' => ['active' => 0, 'disabled' => 0],
-            'iati_admins_count' => ['active' => 0, 'disabled' => 0],
+            'general_user' => ['active' => 0, 'disabled' => 0],
+            'admin' => ['active' => 0, 'disabled' => 0],
+            'iati_admin' => ['active' => 0, 'disabled' => 0],
         ];
 
         foreach ($results as $result) {
@@ -109,11 +109,11 @@ class DashboardService
             $count = $result->count;
 
             if ($result->role_id === 4) {
-                $userCounts['general_users_count'][$status] = $count;
+                $userCounts['general_user'][$status] = $count;
             } elseif ($result->role_id === 3) {
-                $userCounts['admin_users_count'][$status] = $count;
+                $userCounts['admin'][$status] = $count;
             } elseif ($result->role_id === 2) {
-                $userCounts['iati_admins_count'][$status] = $count;
+                $userCounts['iati_admin'][$status] = $count;
             }
         }
 

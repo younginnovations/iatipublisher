@@ -1,7 +1,7 @@
 <template>
   <section class="flex space-x-6">
-    <div class="min-w-[390px] rounded bg-white p-4">
-      <div v-if="currentView !== 'users'">
+    <div class="min-w-[450px] rounded bg-white p-4">
+      <div v-if="currentView !== 'user'">
         <div class="border-b border-n-20 pb-4">
           <div class="flex items-center justify-between">
             <span
@@ -17,7 +17,7 @@
           </div>
           <div class="my-1 text-2xl text-bluecoral">
             <!-- total count -->
-            2545
+            {{ total }}
           </div>
         </div>
         <div class="border-b border-n-20 py-4">
@@ -33,13 +33,21 @@
 
             <svg-vue icon="question-mark" class="text-base text-n-40" />
           </div>
-          <div class="mb-1 mt-2 text-2xl text-bluecoral">
-            <!-- latest registered -->
-            Heart of One
-          </div>
-          <div class="my-1 text-xs italic text-n-40">
-            <!-- latest registered date -->
-            Registered Date:Mar 2, 2023
+          <div>
+            <div class="mb-1 mt-2 text-2xl text-bluecoral">
+              <!-- latest registered -->
+              {{
+                lastRegistered?.name
+                  ? lastRegistered?.name
+                  : lastRegistered?.publisher_name
+                  ? lastRegistered?.publisher_name
+                  : 'untitled'
+              }}
+            </div>
+            <div class="my-1 text-xs italic text-n-40">
+              <!-- latest registered date -->
+              Registered Date: {{ formatDate(lastRegistered?.created_at) }}
+            </div>
           </div>
         </div>
         <div class="border-b border-n-20 py-4">
@@ -57,9 +65,16 @@
               <svg-vue icon="question-mark" class="text-base text-n-40" />
             </div>
           </div>
-          <div class="my-1 text-2xl text-bluecoral">
+          <div
+            v-if="currentView === 'publisher'"
+            class="my-1 text-2xl text-bluecoral"
+          >
             <!-- total count -->
-            128
+            {{ inactivePublisher }}
+          </div>
+          <div v-else class="my-1 text-2xl text-bluecoral">
+            <!-- total count -->
+            {{ publisherWithoutActivity }}
           </div>
         </div>
       </div>
@@ -76,29 +91,51 @@
               <td class="py-3 px-6 text-xs font-bold uppercase text-n-40">
                 users
               </td>
-              <td class="py-3 px-6 text-xs font-bold uppercase text-n-40">
-                total
+              <td class="py-3 text-xs font-bold uppercase text-n-40">active</td>
+              <td class="py-3 text-xs font-bold uppercase text-n-40">
+                disabled
               </td>
+              <td class="py-3 text-xs font-bold uppercase text-n-40">total</td>
             </tr>
           </thead>
           <tbody>
             <tr class="border-b border-n-20">
-              <td class="px-6 py-2.5 text-sm text-bluecoral">Super Admin</td>
-              <td class="px-6 py-2.5 text-sm text-n-50">22</td>
-            </tr>
-            <tr class="border-b border-n-20">
               <td class="px-6 py-2.5 text-sm text-bluecoral">IATI Admin</td>
-              <td class="px-6 py-2.5 text-sm text-n-50">22</td>
+              <td class="px-6 py-2.5 text-sm text-n-50">
+                {{ iatiAdminStats?.active }}
+              </td>
+              <td class="px-6 py-2.5 text-sm text-n-50">
+                {{ iatiAdminStats?.disabled }}
+              </td>
+              <td class="px-6 py-2.5 text-sm text-n-50">
+                {{ iatiAdminStats?.active + iatiAdminStats?.disabled }}
+              </td>
             </tr>
             <tr class="border-b border-n-20">
               <td class="px-6 py-2.5 text-sm text-bluecoral">
                 Organisation Admin
               </td>
-              <td class="px-6 py-2.5 text-sm text-n-50">22</td>
+              <td class="px-6 py-2.5 text-sm text-n-50">
+                {{ orgAdminStats?.active }}
+              </td>
+              <td class="px-6 py-2.5 text-sm text-n-50">
+                {{ orgAdminStats?.disabled }}
+              </td>
+              <td class="px-6 py-2.5 text-sm text-n-50">
+                {{ orgAdminStats?.active + orgAdminStats?.disabled }}
+              </td>
             </tr>
             <tr class="border-b border-n-20">
               <td class="px-6 py-2.5 text-sm text-bluecoral">General Users</td>
-              <td class="px-6 py-2.5 text-sm text-n-50">22</td>
+              <td class="px-6 py-2.5 text-sm text-n-50">
+                {{ genUserStats?.active }}
+              </td>
+              <td class="px-6 py-2.5 text-sm text-n-50">
+                {{ genUserStats?.disabled }}
+              </td>
+              <td class="px-6 py-2.5 text-sm text-n-50">
+                {{ genUserStats?.active + genUserStats?.disabled }}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -123,6 +160,7 @@
 import { ref, defineProps, onMounted, watch } from 'vue';
 import DashboardGraph from './DashboardGraph.vue';
 import axios from 'axios';
+import moment from 'moment';
 
 const props = defineProps({
   currentView: {
@@ -132,11 +170,20 @@ const props = defineProps({
 });
 const total = ref();
 const inactivePublisher = ref();
+const publisherWithoutActivity = ref();
 const lastRegistered = ref();
+
+const iatiAdminStats = ref();
+const orgAdminStats = ref();
+const genUserStats = ref();
 
 onMounted(() => {
   fetchStatsData();
 });
+
+const formatDate = (date) => {
+  return moment(date).format('MMMM DD, YYYY');
+};
 
 watch(
   () => props.currentView,
@@ -148,10 +195,19 @@ const fetchStatsData = () => {
   axios.get(`/dashboard/${props.currentView}/stats`).then((res) => {
     const response = res.data;
     console.log(response);
+    total.value = response.data.totalCount;
+    lastRegistered.value = response.data.lastRegisteredPublisher;
     if (props.currentView === 'publisher') {
-      total.value = response.data.totalCount;
-      lastRegistered.value = response.data.lastRegisteredPublisher[0];
       inactivePublisher.value = response.data.inActivePublisher;
+    }
+    if (props.currentView === 'activity') {
+      publisherWithoutActivity.value = response.data.publisherWithoutActivity;
+    }
+    if (props.currentView === 'user') {
+      iatiAdminStats.value = response.data.iati_admin;
+      orgAdminStats.value = response.data.admin;
+      genUserStats.value = response.data.general_user;
+      console.log(iatiAdminStats.value?.active);
     }
   });
 };
