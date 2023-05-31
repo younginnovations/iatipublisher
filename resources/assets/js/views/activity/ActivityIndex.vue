@@ -146,10 +146,10 @@ export default defineComponent({
       { deep: true }
     );
     watch(
-      () => closeModel.value,
+      () => store.state.closeXlsModel,
       (value) => {
         if (value) {
-          checkXlsstatus(), (closeModel.value = false);
+          checkXlsstatus();
         }
       }
     );
@@ -196,6 +196,12 @@ export default defineComponent({
         });
       }, 3000);
     };
+    watch(
+      () => store.state.closeXlsModel,
+      () => {
+        checkDownloadStatus();
+      }
+    );
 
     onMounted(() => {
       checkXlsstatus();

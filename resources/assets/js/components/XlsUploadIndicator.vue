@@ -1,7 +1,10 @@
 <template>
   <div class="fixed right-10 bottom-0 z-[1000] flex items-end space-x-5">
-    <BulkpublishWithXls />
+    <BulkpublishWithXls v-if="showBulkpublish" />
 
+    <ActivityDownload
+      v-if="downloading && !downloadCompleted && !cancelDownload"
+    />
     <XlsLoader
       v-if="xlsData && showXlsStatus"
       :total-count="totalCount"
@@ -10,9 +13,6 @@
       :activity-name="activityName"
       :completed="completed"
       @close="closeXls"
-    />
-    <ActivityDownload
-      v-if="downloading && !downloadCompleted && !cancelDownload"
     />
   </div>
 </template>
@@ -37,6 +37,8 @@ import { useStorage } from '@vueuse/core';
 
 const downloadCompleted = ref(false);
 const cancelDownload = ref(false);
+const showBulkpublish = ref(true);
+
 const bulkPublishLength = ref(0);
 const pa = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
@@ -82,6 +84,40 @@ onMounted(() => {
     }
   }, 10);
 });
+watch(
+  () => [
+    props.xlsData,
+    showXlsStatus.value,
+    downloading,
+    downloadCompleted.value,
+    cancelDownload.value,
+  ],
+  ([
+    xlsData,
+    showXlsStatus,
+    downloading,
+    downloadCompleted,
+    cancelDownload,
+  ]) => {
+    const supportButton: HTMLElement = document.querySelector(
+      '#launcher'
+    ) as HTMLElement;
+    if (
+      !(xlsData && showXlsStatus) &&
+      !(downloading && !downloadCompleted && !cancelDownload)
+    ) {
+      showBulkpublish.value = false;
+      setTimeout(() => {
+        showBulkpublish.value = true;
+        supportButton.style.transform = 'translate(-350px ,-20px)';
+      }, 2500);
+    } else {
+      if (supportButton !== null) {
+        supportButton.style.transform = 'translatey(-50px)';
+      }
+    }
+  }
+);
 
 onUnmounted(() => {
   const supportButton: HTMLElement = document.querySelector(
@@ -95,16 +131,17 @@ onUnmounted(() => {
     ) {
       supportButton.style.transform = 'translate(-350px ,-20px)';
     } else {
-      supportButton.style.transform = 'translateY(-50px)';
+      supportButton.style.transform = 'translateY(-65px)';
     }
   }
 });
 
 const closeXls = () => {
   showXlsStatus.value = false;
-  closeModel.value = true;
-
-  axios.delete(`/import/xls`);
+  axios.delete(`/import/xls`).then(() => {
+    store.dispatch('mutateCloseXlsModel', true);
+    setTimeout(() => store.dispatch('mutateCloseXlsModel', false), 2000);
+  });
 };
 watch(
   () => store.state.completeXlsDownload,
@@ -122,37 +159,7 @@ watch(
   },
   { deep: true }
 );
-// watch(
-//   () => [
-//     props.xlsData,
-//     showXlsStatus.value,
-//     downloading,
-//     downloadCompleted.value,
-//     cancelDownload.value,
-//   ],
-//   ([
-//     xlsData,
-//     showXlsStatus,
-//     downloading,
-//     downloadCompleted,
-//     cancelDownload,
-//   ]) => {
-//     if (
-//       !(xlsData && showXlsStatus) &&
-//       !(downloading && !downloadCompleted && !cancelDownload) &&
-//       (bulkPublishLength.value > 0 ||
-//         Object.keys(pa.value.publishingActivities).length > 0)
-//     ) {
-//       const supportButton: HTMLElement = document.querySelector(
-//         '#launcher'
-//       ) as HTMLElement;
 
-//       if (supportButton !== null) {
-//         supportButton.style.transform = 'translate(-350px ,-20px)';
-//       }
-//     }
-//   }
-// );
 watch(
   () => store.state.cancelDownload,
   (value) => {
@@ -161,5 +168,4 @@ watch(
   { deep: true }
 );
 const downloading = inject('downloading');
-const closeModel = inject('closeModel') as Ref;
 </script>

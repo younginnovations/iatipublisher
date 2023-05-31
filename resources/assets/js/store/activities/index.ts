@@ -6,6 +6,7 @@ interface StateInterface {
   startXlsDownload: boolean;
   completeXlsDownload: boolean;
   cancelDownload: boolean;
+  closeXlsModel: boolean;
 }
 
 const state = {
@@ -14,6 +15,7 @@ const state = {
   startXlsDownload: false,
   completeXlsDownload: false,
   cancelDownload: false,
+  closeXlsModel: false,
 };
 
 const mutations = {
@@ -22,6 +24,9 @@ const mutations = {
     payload: number[]
   ) {
     state.selectedActivities = payload;
+  },
+  mutateCloseXlsModel: function (state: StateInterface, payload: boolean) {
+    state.closeXlsModel = payload;
   },
   mutateBulkPublishLength: function (state: StateInterface, payload: number) {
     state.bulkPublishLength = payload;
@@ -50,6 +55,9 @@ const actions = {
     payload: number[]
   ) {
     commit('mutateSelectedActivities', payload);
+  },
+  updateCloseXlsModel: function ({ commit }: CommitFunction, payload: boolean) {
+    commit('mutateCloseXlsModel', payload);
   },
   updateBulkPublishLength: function (
     { commit }: CommitFunction,
