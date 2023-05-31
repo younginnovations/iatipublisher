@@ -319,7 +319,6 @@
                             <div class="flex">
                               <div>Document Link:&nbsp;</div>
                               <div>
-                                {{ base.document_link }}
                                 {{ countDocumentLink(base.document_link) }}
                                 document
                               </div>
