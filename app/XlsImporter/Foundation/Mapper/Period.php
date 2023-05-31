@@ -154,7 +154,7 @@ class Period
                 $existingId = Arr::get($this->existingIdentifier, sprintf('period.%s', $periodIdentifier), false);
 
                 if (!$parentId) {
-                    $error['critical']['indicator_identifier']['indicator_identifier'] = "The indicator identifier $indicatorIdentifier doesn\'t exist in the system";
+                    $error['critical']['indicator_identifier']['indicator_identifier'] = "The indicator identifier $indicatorIdentifier doesn't exist in the system";
                     $this->errorCount['critical']++;
                 }
 
