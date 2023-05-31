@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::group([], static function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/dashboard/user/user-count', [DashboardController::class, 'getUserCounts'])->name('getUserCounts');
+    Route::get('/dashboard/user/stats', [DashboardController::class, 'getUserCounts'])->name('getUserCounts');
     Route::get('/dashboard/user/paginated-organization-users/{page?}', [DashboardController::class, 'getUserCountByOrganization'])->name('getUserCountByOrganization');
     Route::get('/dashboard/user/registered-today', [DashboardController::class, 'getUsersRegisteredToday'])->name('getUsersRegisteredToday');
     Route::get('/dashboard/user/registered-this-week', [DashboardController::class, 'getUsersRegisteredThisWeek'])->name('getUsersRegisteredThisWeek');
