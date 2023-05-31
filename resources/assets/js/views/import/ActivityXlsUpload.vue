@@ -143,13 +143,17 @@
           </div>
         </div>
         <div
-          class="mx-auto mb-4 flex max-w-[570px] justify-between bg-eggshell py-2.5 px-4"
+          class="mx-auto mb-4 flex max-w-[900px] justify-between bg-eggshell py-2.5 px-4"
         >
           <div class="flex">
             <svg-vue class="mr-2.5 text-[20px]" icon="alert-outline" />
-            <p class="max-w-[320px] text-sm text-n-40">
+            <p class="max-w-[650px] text-sm text-n-40">
+              Downloading identifier provides you code that uniquely identifies
+              result, indicator and period on the IATI Publishers, and allows
+              you to update or create new result, indicator and period based on
+              them.<br />
               Please download the identifier code to determine the correct
-              values. Download Identifier Code
+              values.
             </p>
           </div>
 
@@ -334,7 +338,23 @@
         <thead>
           <tr class="border-b border-n-20 text-left">
             <th class="w-[600px] py-4 px-6">Activity Title</th>
-            <th class="py-4 px-6">Updated on</th>
+            <th class="py-4 px-6">
+              <div
+                class="flex cursor-pointer text-n-50 transition duration-500 hover:text-spring-50"
+                @click="sortingDirection"
+              >
+                <span class="sorting-indicator">
+                  <svg-vue
+                    :icon="
+                      direction === 'desc'
+                        ? 'descending-arrow'
+                        : `ascending-arrow`
+                    "
+                  />
+                </span>
+                <span>Updated On</span>
+              </div>
+            </th>
             <th class="py-4 px-6">Status</th>
             <th class="py-4 px-6 text-left">
               <button class="cursor-pointer" @click="selectAll">
@@ -343,7 +363,10 @@
             </th>
           </tr>
         </thead>
-        <tbody class="[&>*:nth-child(odd)]:bg-n-10">
+        <tbody
+          v-if="activities['total'] > 0"
+          class="[&>*:nth-child(odd)]:bg-n-10"
+        >
           <tr
             v-for="activity in activities.data"
             :key="activity['id']"
@@ -399,6 +422,9 @@
           </tr>
         </tbody>
       </table>
+      <div v-if="activities['total'] === 0" class="mx-auto h-[200px] w-full">
+        <p class="my-8 text-center text-lg text-n-40">No activites found</p>
+      </div>
       <div v-if="!isEmpty" class="mx-6 my-4">
         <Pagination
           v-if="activities && activities.last_page > 1"
@@ -518,6 +544,26 @@ const file = ref(),
   loaderText = ref('Please Wait');
 const store = useStore();
 const searchValue: Ref<string | null> = ref('');
+const direction = ref('');
+
+const sortingDirection = () => {
+  direction.value === 'asc'
+    ? (direction.value = 'desc')
+    : (direction.value = 'asc');
+  console.log(direction.value, 'direction');
+  fetchActivities(1, direction.value);
+};
+
+// const sortByDateUrl = () => {
+//   if (currentURL.includes('?')) {
+//     const queryString = window.location.search,
+//       urlParams = new URLSearchParams(queryString);
+//     query = urlParams.get('q') ?? '';
+//     direction = urlParams.get('direction') === 'desc' ? 'asc' : 'desc';
+//   }
+
+//   return `?q=${query}&orderBy=updated_at&direction=${direction}`;
+// };
 
 watch(
   () => store.state.selectedActivities,
@@ -636,12 +682,15 @@ function uploadFile() {
   }
 }
 
-function fetchActivities(active_page: number) {
+function fetchActivities(active_page: number, direction = '') {
   // tableLoader.value = true;
   let apiUrl = `/activities/page/${active_page}`;
   let params = new URLSearchParams();
   params.append('limit', '6');
-
+  if (direction) {
+    params.append('orderBy', 'updated_at');
+    params.append('direction', direction);
+  }
   if (searchValue.value) {
     params.append('q', searchValue.value);
   }

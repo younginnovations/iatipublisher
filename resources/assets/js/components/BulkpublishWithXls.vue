@@ -4,8 +4,14 @@
       bulkPublishLength > 0 || Object.keys(pa.publishingActivities).length > 0
     "
     :class="!openModel ? 'h-[80px]' : ''"
-    class="relative w-[300px] overflow-y-hidden rounded-t-lg duration-200"
+    class="relative w-[300px] rounded-t-lg duration-200"
   >
+    <svg-vue
+      class="absolute right-0 top-0 translate-x-1/2 -translate-y-1/2 cursor-pointer"
+      icon="cross-icon"
+      @click="closeWindow"
+    />
+
     <svg-vue
       :class="!openModel ? 'rotate-180' : ''"
       class="absolute right-2.5 top-6 cursor-pointer text-[7px] text-bluecoral duration-200"
@@ -20,10 +26,7 @@
         ></div>
       </div>
       <div class="text-sm text-n-40">
-        Publishing {{ completedActivities }}/{{
-          pa?.publishingActivities['activities'] &&
-          Object.keys(pa?.publishingActivities['activities']).length
-        }}
+        Publishing {{ completedActivities }}/{{ totalActivites }}
         activities to IATI registry
       </div>
     </div>
@@ -70,6 +73,8 @@
 import { useStorage } from '@vueuse/core';
 import { onMounted, watch, computed, ref } from 'vue';
 import { useStore } from 'Store/activities/index';
+import axios from 'axios';
+
 const store = useStore();
 let pa = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
@@ -79,8 +84,8 @@ const openModel = ref(false);
 
 const totalActivites = computed(() => {
   return (
-    pa?.publishingActivities['activities'] &&
-    Object.keys(pa?.publishingActivities['activities']).length
+    pa.value?.publishingActivities['activities'] &&
+    Object.keys(pa.value?.publishingActivities['activities']).length
   );
 });
 
@@ -122,6 +127,11 @@ const percentageWidth = computed(() => {
 onMounted(() => {
   console.log(pa, 'pa');
 });
+const closeWindow = () => {
+  pa.value.publishingActivities = {};
+  // emit('close');
+  axios.delete(`activities/delete-bulk-publish-status`);
+};
 
 watch(
   () => store.state.bulkPublishLength,

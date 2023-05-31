@@ -221,7 +221,7 @@
       <button class="ghost-btn" @click="cancelImport">Cancel Import</button>
       <BtnComponent
         class=""
-        text="Download error message"
+        text="download identifier errors"
         type="primary"
         icon="download"
         @click="downloadIdentifierError"
@@ -409,7 +409,7 @@ const cancelImport = () => {
 };
 const downloadIdentifierError = () => {
   let text = props.globalError.join('\n');
-  let file = new File(['\ufeff' + text], 'indicator-errors.txt', {
+  let file = new File(['\ufeff' + text], 'identifier-errors.txt', {
     type: 'text/plain:charset=UTF-8',
   });
   let url = window.URL.createObjectURL(file);
