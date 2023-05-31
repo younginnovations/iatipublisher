@@ -20,7 +20,15 @@
 import ActivityDownload from './ActivityDownload.vue';
 import XlsLoader from './XlsLoader.vue';
 import BulkpublishWithXls from './BulkpublishWithXls.vue';
-import { defineProps, ref, inject, watch, onUnmounted, onMounted } from 'vue';
+import {
+  defineProps,
+  ref,
+  inject,
+  watch,
+  onUnmounted,
+  onMounted,
+  Ref,
+} from 'vue';
 import axios from 'axios';
 import { useStore } from 'Store/activities/index';
 const store = useStore();
@@ -94,6 +102,8 @@ onUnmounted(() => {
 
 const closeXls = () => {
   showXlsStatus.value = false;
+  closeModel.value = true;
+
   axios.delete(`/import/xls`);
 };
 watch(
@@ -151,4 +161,5 @@ watch(
   { deep: true }
 );
 const downloading = inject('downloading');
+const closeModel = inject('closeModel') as Ref;
 </script>

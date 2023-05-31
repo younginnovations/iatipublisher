@@ -83,7 +83,7 @@ export default defineComponent({
     const activityName = ref('');
     const fileCount = ref(0);
     const downloadCompleted = ref(false);
-
+    const closeModel = ref(false);
     const xlsDownloadStatus = ref('');
     const xlsData = ref(false);
     const downloading = ref(false);
@@ -144,6 +144,14 @@ export default defineComponent({
         }
       },
       { deep: true }
+    );
+    watch(
+      () => closeModel.value,
+      (value) => {
+        if (value) {
+          checkXlsstatus(), (closeModel.value = false);
+        }
+      }
     );
 
     const checkXlsstatus = () => {
@@ -281,6 +289,7 @@ export default defineComponent({
     provide('fileCount', fileCount as Ref);
     provide('xlsDownloadStatus', xlsDownloadStatus as Ref);
     provide('downloadApiUrl', downloadApiUrl as Ref);
+    provide('closeModel', closeModel as Ref);
 
     return {
       activities,

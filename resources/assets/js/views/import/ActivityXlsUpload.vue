@@ -467,7 +467,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, provide, computed, reactive, watch, Ref } from 'vue';
+import {
+  ref,
+  onMounted,
+  provide,
+  computed,
+  reactive,
+  watch,
+  Ref,
+  onUnmounted,
+} from 'vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import HoverText from 'Components/HoverText.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
@@ -483,6 +492,7 @@ interface ActivitiesInterface {
   last_page: number;
   data: object;
 }
+const xlsIndicatorMounted = ref(false);
 
 const xlsFailedMessage = ref('');
 const uploadType = ref();
@@ -672,12 +682,19 @@ const checkXlsstatus = () => {
     }
   });
 };
+
+onUnmounted(() => {
+  xlsIndicatorMounted.value = false;
+});
+
 onMounted(() => {
   fetchActivities(1);
   checkXlsstatus();
+  xlsIndicatorMounted.value = true;
 });
 provide('xlsFailedMessage', xlsFailedMessage);
 provide('activityLength', activityLength);
+provide('xlsIndicatorMounted', xlsIndicatorMounted as Ref);
 </script>
 
 <style lang="scss"></style>
