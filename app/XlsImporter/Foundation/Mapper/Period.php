@@ -46,6 +46,12 @@ class Period
     protected array $processingErrors = [];
     protected array $tempErrors = [];
 
+    protected array $errorCount = [
+        'critical' => 0,
+        'warning' => 0,
+        'error' => 0,
+    ];
+
     protected int $totalCount = 0;
     protected int $processedCount = 0;
 
@@ -149,10 +155,12 @@ class Period
 
                 if (!$parentId) {
                     $error['critical']['indicator_identifier']['indicator_identifier'] = "The indicator identifier $indicatorIdentifier doesn\'t exist in the system";
+                    $this->errorCount['critical']++;
                 }
 
                 if (Arr::get($this->processingErrors, "$indicatorIdentifier.$periodIdentifier", null)) {
                     $error['critical']['period'] = Arr::get($this->processingErrors, "$indicatorIdentifier.$periodIdentifier");
+                    $this->errorCount['critical'] += count(Arr::get($this->processingErrors, "$indicatorIdentifier.$periodIdentifier"));
                 }
 
                 $this->processedCount++;
@@ -249,7 +257,7 @@ class Period
             'target document_link' => 'target',
         ];
 
-        $this->isIdentifierDuplicate($elementActivityIdentifier, $element, true, Arr::get($periodElementParent, $element, null));
+        $this->isIdentifierDuplicate($elementActivityIdentifier, $element, true, Arr::get($periodElementParent, $element, $element));
         $elementBase = Arr::get($dependency, 'elementBase', null);
         $elementBasePeer = Arr::get($dependency, 'elementBasePeer', []);
         $elementAddMore = Arr::get($dependency, 'add_more', true);

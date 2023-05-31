@@ -225,6 +225,8 @@ trait XlsMapperHelper
                         if (isset($excelColumnAndRowName[$key])) {
                             $errors[$errorLevel][$element][$key] = 'Error detected on ' . $excelColumnAndRowName[$key]['sheet'] . ' sheet, cell ' . $excelColumnAndRowName[$key]['cell'] . ':' . $errors[$errorLevel][$element][$key];
                         }
+
+                        $this->errorCount[$errorLevel]++;
                     }
                 }
             } else {
@@ -304,6 +306,7 @@ trait XlsMapperHelper
             'message' => 'Complete',
             'total_count' => count($this->globalErrors),
             'errors' => $this->globalErrors,
+            'error_count' => $this->errorCount,
 
         ]);
 
@@ -336,7 +339,7 @@ trait XlsMapperHelper
                 $elementPosition = "$this->rowCount";
             }
 
-            if (!Arr::get($this->identifiers, "$identifier", false)) {
+            if (is_null(Arr::get($this->identifiers, "$identifier", null))) {
                 $this->globalErrors["$elementPosition"] = sprintf('Error detected on %s sheet, cell A%s : The identifier does not have correct format or is not mentioned on mapper sheet.', $this->sheetName, $this->rowCount);
 
                 return true;

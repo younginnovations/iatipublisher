@@ -56,6 +56,12 @@ class Result
     protected array $processingErrors = [];
     protected array $tempErrors = [];
 
+    protected array $errorCount = [
+        'critical' => 0,
+        'warning' => 0,
+        'error' => 0,
+    ];
+
     /**
      * Division of indicator data based on sheet names.
      *
@@ -166,10 +172,12 @@ class Result
 
                 if (!in_array($activityIdentifier, array_keys($this->existingIdentifier['parent']))) {
                     $error['critical']['activity_identifier']['activity_identifier'] = "The activity identifier doesn't exist in the system";
+                    $this->errorCount['critical']++;
                 }
 
                 if (!empty(Arr::get($this->processingErrors, "$activityIdentifier.$resultIdentifier", []))) {
                     $error['critical']['result_identifier'] = Arr::get($this->processingErrors, "$activityIdentifier.$resultIdentifier");
+                    $this->errorCount['critical'] += count(Arr::get($this->processingErrors, "$activityIdentifier.$resultIdentifier"));
                 }
 
                 $this->processedCount++;

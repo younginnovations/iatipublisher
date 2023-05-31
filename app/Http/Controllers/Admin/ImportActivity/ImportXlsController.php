@@ -244,10 +244,11 @@ class ImportXlsController extends Controller
             $importData = $this->importXlsService->getAwsXlsData('valid.json');
             $globalError = $this->importXlsService->getAwsXlsData('globalError.json');
             $errors = $globalError->errors;
+            $errorCount = $globalError->error_count;
 
             return view(
                 'admin.import.xls.list',
-                compact('status', 'importData', 'errors')
+                compact('status', 'importData', 'errors', 'errorCount')
             );
         } catch (Exception $e) {
             logger()->error($e->getMessage());

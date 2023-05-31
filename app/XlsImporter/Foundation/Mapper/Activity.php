@@ -120,7 +120,11 @@ class Activity
 
     protected array $processingErrors = [];
     protected array $tempErrors = [];
-
+    protected array $errorCount = [
+        'critical' => 0,
+        'warning' => 0,
+        'error' => 0,
+    ];
     protected string $elementBeingProcessed = '';
 
     protected string $statusFilePath = '';
@@ -189,10 +193,12 @@ class Activity
 
             if (!in_array($activityIdentifier, $this->activitiesIdentifier)) {
                 $error['critical']['iati_identifier']['settings'] = 'The activity identifier has not been mentioned on setting sheet.';
+                $this->errorCount['critical']++;
             }
 
             if (Arr::get($this->processingErrors, $activityIdentifier, null)) {
                 $error['critical'] = Arr::get($this->processingErrors, $activityIdentifier);
+                $this->errorCount['critical'] += count(Arr::get($this->processingErrors, $activityIdentifier));
             }
 
             $this->storeValidatedData($activity, $error, $existingId, $activityIdentifier);
