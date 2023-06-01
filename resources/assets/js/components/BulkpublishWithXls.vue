@@ -7,7 +7,7 @@
     class="relative w-[300px] rounded-t-lg duration-200"
   >
     <svg-vue
-      class="absolute right-0 top-0 translate-x-1/2 -translate-y-1/2 cursor-pointer"
+      class="absolute right-0 top-0 translate-x-1/2 -translate-y-1/2 cursor-pointer text-[11px]"
       icon="cross-icon"
       @click="closeWindow"
     />
@@ -18,7 +18,7 @@
       icon="dropdown-arrow"
       @click="openModel = !openModel"
     />
-    <div v-if="!openModel" class="bg-eggshell p-6">
+    <div v-if="!openModel" class="rounded-t-lg bg-eggshell p-6">
       <div class="mb-3 mr-2 flex h-1 justify-start rounded-full bg-spring-10">
         <div
           :style="{ width: percentageWidth + '%' }"
@@ -30,7 +30,7 @@
         activities to IATI registry
       </div>
     </div>
-    <div v-else class="bg-white">
+    <div v-else class="rounded-t-lg bg-white">
       <h6 class="bg-eggshell py-4 px-6 text-sm font-bold">
         Publishing
 

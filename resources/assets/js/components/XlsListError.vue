@@ -8,10 +8,11 @@
         >
           {{ title }}
         </div>
-        <span
-          class="absolute top-8 left-0 hidden rounded bg-[#F6F7FC] p-2 shadow-sm group-hover:block"
-          >{{ title }}</span
+        <div
+          class="absolute left-[80%] top-0 z-[110] hidden max-w-[200px] overflow-x-scroll whitespace-nowrap rounded bg-eggshell px-4 py-2 text-sm font-normal shadow-sm group-hover:block"
         >
+          {{ title }}
+        </div>
       </div>
       <div class="tect-xs mx-3 font-normal text-n-40">
         <span class="capitalize"> ({{ status['template'] }} Identifier </span>

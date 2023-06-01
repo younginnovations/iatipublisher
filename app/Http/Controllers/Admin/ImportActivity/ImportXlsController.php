@@ -244,6 +244,8 @@ class ImportXlsController extends Controller
             $importData = $this->importXlsService->getAwsXlsData('valid.json');
             $globalError = $this->importXlsService->getAwsXlsData('globalError.json');
             $errors = $globalError->errors;
+            $errors = empty($errors) ? null : $errors;
+
             $errorCount = $globalError->error_count;
 
             return view(

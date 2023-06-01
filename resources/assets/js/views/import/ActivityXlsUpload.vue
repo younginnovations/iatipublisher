@@ -143,7 +143,7 @@
           </div>
         </div>
         <div
-          class="mx-auto mb-4 flex max-w-[900px] justify-between bg-eggshell py-2.5 px-4"
+          class="mx-auto mb-4 flex max-w-[900px] justify-between rounded bg-eggshell py-3 px-6"
         >
           <div class="flex">
             <svg-vue class="mr-2.5 text-[20px]" icon="alert-outline" />
@@ -152,8 +152,6 @@
               result, indicator and period on the IATI Publishers, and allows
               you to update or create new result, indicator and period based on
               them.<br />
-              Please download the identifier code to determine the correct
-              values.
             </p>
           </div>
 
@@ -279,6 +277,7 @@
       :xls-failed="xlsFailed"
       :activity-name="activityName"
       :xls-data="xlsData"
+      :completed="uploadComplete"
     />
   </div>
   <Loader
@@ -438,66 +437,28 @@
     <div>
       <div class="mb-6 flex items-center space-x-1">
         <svg-vue class="text-crimson-40" icon="warning-fill" />
-        <h6 class="text-sm font-bold">
-          {{
-            xlsFailed
-              ? `${currentActivity} upload failed:`
-              : 'Upload in progess'
-          }}
-        </h6>
+        <h6 class="text-sm font-bold">Upload in progress</h6>
       </div>
-      <div v-if="xlsFailed" class="rounded-sm bg-rose p-4">
-        <p class="text-sm text-n-50">
-          {{ xlsFailedMessage }}
-        </p>
-      </div>
-      <div v-else class="rounded-sm bg-rose p-4">
-        <p
-          v-if="totalCount === processedCount && totalCount !== 0"
-          class="text-sm text-n-50"
-        >
-          You have recently uploaded '{{ currentActivity }}', either proceed to
-          add/update or cancel to start new import.
-        </p>
 
-        <p v-else class="text-sm text-n-50">
-          We are in the process of uploading '{{ currentActivity }}' XLS file.
-          We ask for your patience while we complete the upload.
+      <div class="rounded-sm bg-rose p-4">
+        <p class="text-sm text-n-50">
+          please wait for the completion of previous import or click on 'upload
+          anyway'
         </p>
       </div>
-      <div
-        v-if="!xlsFailed"
-        class="mt-6 flex items-center justify-end space-x-4"
-      >
+
+      <div class="mt-6 flex items-center justify-end space-x-4">
         <button
           class="text-xs font-bold uppercase text-n-40"
-          @click="cancelImport"
+          @click="showCancelModel = false"
         >
-          Cancel upload
+          Go Back
         </button>
-
-        <a
-          v-if="totalCount === processedCount && totalCount !== 0"
-          class="w-[158px] rounded-sm bg-bluecoral py-3 text-center text-xs font-bold uppercase text-white hover:text-white"
-          href="/import/xls/list"
-        >
-          Proceed to Import
-        </a>
-        <a
-          v-else
-          class="rounded-sm bg-bluecoral px-10 py-3 text-xs font-bold uppercase text-white hover:text-white"
-          href="/activities"
-        >
-          go back
-        </a>
-      </div>
-      <div v-else class="mt-6 flex items-center justify-end space-x-4">
-        <button
-          class="text-xs font-bold uppercase text-crimson-50"
-          @click="retry"
-        >
-          Retry
-        </button>
+        <BtnComponent
+          text="Import Anyway"
+          type="primary"
+          @click="importAnyway"
+        />
       </div>
     </div>
   </Modal>
@@ -536,6 +497,7 @@ const xlsData = ref(false);
 const showCancelModel = ref(false);
 const activities = reactive({}) as ActivitiesInterface;
 const selectAllValue = ref(false);
+const uploadComplete = ref(false);
 const totalCount = ref(0);
 const processedCount = ref(0);
 const file = ref(),
@@ -631,6 +593,43 @@ watch(
   { deep: true }
 );
 
+const importAnyway = () => {
+  cancelImport();
+  loader.value = true;
+  loaderText.value = 'Fetching .xls file';
+
+  let activity = file.value.files.length ? file.value.files[0] : '';
+
+  let xlsType = uploadType;
+  const config = {
+    headers: {
+      'content-type': 'multipart/form-data',
+    },
+  };
+  let data = new FormData();
+  data.append('activity', activity);
+  data.append('xlsType', xlsType.value as any);
+  error.value = '';
+  axios
+    .post('/import/xls', data, config)
+    .then((res) => {
+      if (file.value.files.length && res?.data?.success) {
+        checkXlsstatus();
+      } else {
+        error.value = Object.values(res.data.errors).join(' ');
+      }
+    })
+    .catch(() => {
+      error.value = 'Error has occured while uploading file.';
+    })
+    .finally(() => {
+      loader.value = false;
+      uploadType.value = [];
+
+      file.value.value = null;
+    });
+};
+
 const selectAll = () => {
   if (!selectAllValue.value) {
     let ids = [] as number[];
@@ -687,6 +686,9 @@ function uploadFile() {
       })
       .finally(() => {
         loader.value = false;
+        uploadType.value = [];
+
+        file.value.value = null;
       });
   }
 }
@@ -729,6 +731,7 @@ const cancelImport = () => {
 };
 const checkXlsstatus = () => {
   axios.get('/import/xls/progress_status').then((res) => {
+    console.log(res);
     activityName.value = res?.data?.status?.template;
     currentActivity.value = mapActivityName(activityName.value);
     xlsData.value = Object.keys(res.data.status).length > 0;
@@ -744,6 +747,7 @@ const checkXlsstatus = () => {
             !res.data?.data?.success ||
             res.data?.data?.message === 'Complete'
           ) {
+            uploadComplete.value = true;
             clearInterval(checkStatus);
           }
         });

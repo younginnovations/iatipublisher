@@ -163,7 +163,7 @@ import spinnerLoader from './spinnerLoader.vue';
 import axios from 'axios';
 
 const currentActivity = ref(null);
-const maximize = ref(true);
+const maximize = ref();
 const showMinimizedModel = ref(false);
 
 defineEmits(['close']);
@@ -212,8 +212,13 @@ const retry = () => {
 };
 
 onMounted(() => {
+  if (localStorage.getItem('maximize') == 'false') {
+    maximize.value = false;
+  } else {
+    maximize.value = true;
+  }
   currentActivity.value = mapActivityName(props.activityName);
-  console.log(';moun');
+
   const checkSupportButton = setInterval(() => {
     const supportButton: HTMLElement = document.querySelector(
       '#launcher'
@@ -234,11 +239,14 @@ watch(
     } else {
       showMinimizedModel.value = false;
     }
+    localStorage.setItem('maximize', value.toString());
   },
   { deep: true }
 );
 
 onUnmounted(() => {
+  localStorage.setItem('maximize', '');
+
   const supportButton: HTMLElement = document.querySelector(
     '#launcher'
   ) as HTMLElement;

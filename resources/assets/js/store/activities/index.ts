@@ -4,12 +4,14 @@ interface StateInterface {
   selectedActivities: number[];
   bulkPublishLength: number;
   cancelUpload: boolean;
+  maximizeXls: boolean;
 }
 
 const state = {
   selectedActivities: [],
   bulkPublishLength: 0,
   cancelUpload: false,
+  maximizeXls: true,
 };
 
 const mutations = {
@@ -24,6 +26,9 @@ const mutations = {
   },
   mutateCancelUpload: function (state: StateInterface, payload: boolean) {
     state.cancelUpload = payload;
+  },
+  mutateMaximizeXls: function (state: StateInterface, payload: boolean) {
+    state.maximizeXls = payload;
   },
 };
 
@@ -46,6 +51,9 @@ const actions = {
   },
   updateCancelUpload: function ({ commit }: CommitFunction, payload: number[]) {
     commit('mutateCancelUpload', payload);
+  },
+  updateMaximizeXls: function ({ commit }: CommitFunction, payload: number[]) {
+    commit('mutateMaximizeXls', payload);
   },
 };
 

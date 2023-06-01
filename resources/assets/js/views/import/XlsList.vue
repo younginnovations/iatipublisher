@@ -25,7 +25,7 @@
         >
           <svg-vue class="mr-2 text-sm" icon="up-arrow-outline" />
           <span class="mr-2">add </span> ({{ selectedActivities.length }} /
-          {{ activitiesLength }})
+          {{ activitiesLength ?? 0 }})
         </button>
       </div>
     </div>
@@ -213,8 +213,12 @@
         </li>
       </ul>
     </div>
-    <p class="text-sm text-n-40">
-      Additionally, there are 5 critical error, 3 errors and 102 warning in the
+    <p
+      v-if="errorCount.critical + errorCount.error + errorCount.warning > 0"
+      class="text-sm text-n-40"
+    >
+      Additionally, there are {{ errorCount.critical }} critical error,
+      {{ errorCount.error }} errors and {{ errorCount.warning }} warning in the
       file
     </p>
     <div class="flex justify-end space-x-3">
@@ -311,13 +315,14 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-});
-onUpdated(() => {
-  console.log(props.globalError, 'global error');
+  errorCount: {
+    type: Object,
+    required: true,
+  },
 });
 const getDimensions = async () => {
   await nextTick();
-  tableWidth.value = tableRow?.value['0'].clientWidth;
+  tableWidth.value = tableRow?.value['0']?.clientWidth;
 };
 
 const sort = () => {
@@ -374,8 +379,6 @@ const sort = () => {
     default:
       break;
   }
-
-  console.log(props.importData, 'sort', sortedData);
 };
 
 onUnmounted(() => {
@@ -386,12 +389,12 @@ onMounted(() => {
   getDimensions();
   window.addEventListener('resize', getDimensions);
   checkCriticalError();
-  if (props.globalError.length) {
+
+  if (props.globalError) {
     showIdentifierErrorModel.value = true;
   }
   activitiesLength.value = props.importData.length;
   loaderText.value = `Adding ${props.status.template}`;
-  console.log(props.importData, props.status, 'onm');
 });
 
 const cancelImport = () => {
@@ -408,7 +411,10 @@ const cancelImport = () => {
   });
 };
 const downloadIdentifierError = () => {
-  let text = props.globalError.join('\n');
+  let text;
+  if (typeof props.globalError === 'object') {
+    text = Object.values(props.globalError).join('\n');
+  }
   let file = new File(['\ufeff' + text], 'identifier-errors.txt', {
     type: 'text/plain:charset=UTF-8',
   });
@@ -421,9 +427,11 @@ const downloadIdentifierError = () => {
 };
 
 const checkCriticalError = () => {
-  const criricalArray = props.importData?.map((data, index) => {
-    return errorLength('critical', index);
-  });
+  const criricalArray =
+    props.importData &&
+    props.importData.map((data, index) => {
+      return errorLength('critical', index);
+    });
   let totalCriricalErrorCount = 0;
   for (let i = 0; i < criricalArray.length; i++) {
     totalCriricalErrorCount += criricalArray[i];
@@ -431,7 +439,7 @@ const checkCriticalError = () => {
   if (totalCriricalErrorCount > 0) {
     showCriticalErrorMessage.value = true;
   }
-  if (totalCriricalErrorCount > 0 || props.globalError.length > 0) {
+  if (totalCriricalErrorCount > 0 || props.globalError?.length > 0) {
     showCriticalErrorModel.value = true;
   }
 };
@@ -474,7 +482,6 @@ function selectAllActivities() {
   selectAll.value = !selectAll.value;
   selectedCount.value = 0;
   selectedActivities.value.length = 0;
-  console.log(props.importData, 'from selectall');
   Object.keys(props.importData).forEach((activity_id) => {
     let index = selectedActivities.value.indexOf(activity_id);
     if (
@@ -484,7 +491,6 @@ function selectAllActivities() {
     ) {
       if (selectAll.value) {
         selectedActivities.value.push(activity_id);
-        console.log(activity_id, 'acivity id');
         selectedCount.value = selectedCount.value + 1;
       } else {
         selectedActivities.value.splice(index, 1);
