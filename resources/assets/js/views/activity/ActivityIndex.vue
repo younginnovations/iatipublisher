@@ -116,24 +116,26 @@ export default defineComponent({
       axios.get('/import/xls/progress_status').then((res) => {
         activityName.value = res?.data?.status?.template;
         xlsData.value = Object.keys(res.data.status).length > 0;
-        console.log(Object.keys(res.data.status).length, 'status');
-        if (Object.keys(res.data.status).length > 0) {
-          const checkStatus = setInterval(function () {
-            axios.get('/import/xls/status').then((res) => {
-              totalCount.value = res.data.data?.total_count;
-              processedCount.value = res.data.data?.processed_count;
-              xlsFailed.value = !res.data.data?.success;
-              xlsFailedMessage.value = res.data.data?.message;
-
-              if (
-                !res.data?.data?.success ||
-                res.data?.data?.message === 'Complete'
-              ) {
-                importCompleted.value = true;
-                clearInterval(checkStatus);
-              }
-            });
-          }, 2500);
+        if (res?.data?.status?.status === 'completed') {
+          importCompleted.value = true;
+        } else {
+          if (Object.keys(res.data.status).length > 0) {
+            const checkStatus = setInterval(function () {
+              axios.get('/import/xls/status').then((res) => {
+                totalCount.value = res.data.data?.total_count;
+                processedCount.value = res.data.data?.processed_count;
+                xlsFailed.value = !res.data.data?.success;
+                xlsFailedMessage.value = res.data.data?.message;
+                if (
+                  !res.data?.data?.success ||
+                  res.data?.data?.message === 'Complete'
+                ) {
+                  importCompleted.value = true;
+                  clearInterval(checkStatus);
+                }
+              });
+            }, 2500);
+          }
         }
       });
     };

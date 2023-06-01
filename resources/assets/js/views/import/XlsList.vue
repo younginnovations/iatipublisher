@@ -187,7 +187,10 @@
     :text="loaderText"
     :class="{ 'animate-loader': loader }"
   />
-  <Modal :modal-active="showIdentifierErrorModel" width="583">
+  <Modal
+    :modal-active="showIdentifierErrorModel && showGLobalError"
+    width="583"
+  >
     <div class="mb-2">
       <svg-vue class="text-4xl text-crimson-40" icon="warning-fill" />
       <h6 class="text-sm font-bold">Errors Detected</h6>
@@ -291,8 +294,7 @@ const showIdentifierErrorModel = ref(false);
 const loader = ref(false),
   loaderText = ref('Adding activities');
 const showCriticalErrorMessage = ref(false);
-const showGlobalErrorList = ref(false);
-const showGLobalError = ref(false);
+const showGLobalError = ref(true);
 const selectedCount = ref(0);
 const activitiesLength = ref(0);
 const selectedActivities = ref<string[]>([]);
@@ -399,6 +401,7 @@ onMounted(() => {
 
 const cancelImport = () => {
   showCriticalErrorModel.value = false;
+  showGLobalError.value = false;
   axios.delete(`/import/xls`).then((res) => {
     const response = res.data;
     toastVisibility.value = true;
