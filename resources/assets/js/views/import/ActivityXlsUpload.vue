@@ -142,25 +142,26 @@
             </label>
           </div>
         </div>
-        <div
-          class="mx-auto mb-4 flex max-w-[900px] justify-between rounded bg-eggshell py-3 px-6"
-        >
+        <div class="mx-auto mb-4 max-w-[565px] rounded bg-eggshell py-3 px-6">
           <div class="flex">
-            <svg-vue class="mr-2.5 text-[20px]" icon="alert-outline" />
-            <p class="max-w-[650px] text-sm text-n-40">
+            <div class="w-[30px]">
+              <svg-vue class="mr-2.5 text-[20px]" icon="alert-outline" />
+            </div>
+            <p class="max-w-[520px] text-sm text-n-40">
               Downloading identifier provides you code that uniquely identifies
-              result, indicator and period on the IATI Publishers, and allows
-              you to update or create new result, indicator and period based on
-              them.<br />
+              result, indicator, and period on the IATI Publishers, and allows
+              you to update or create new results, indicator and period based on
+              them.
             </p>
           </div>
-
-          <button
-            class="text-sm text-bluecoral"
-            @click="showDownloadCode = true"
-          >
-            Download Identifier Code
-          </button>
+          <div class="mt-2 flex justify-end">
+            <button
+              class="text-sm text-bluecoral underline"
+              @click="showDownloadCode = true"
+            >
+              Download Identifier Code
+            </button>
+          </div>
         </div>
         <div>
           <div class="flex justify-center space-x-4">
@@ -442,8 +443,8 @@
 
       <div class="rounded-sm bg-rose p-4">
         <p class="text-sm text-n-50">
-          please wait for the completion of previous import or click on 'upload
-          anyway'
+          We are in the process of uploading 'filename' file. Please wait for
+          the completion of previous import or click on "Import Anyway
         </p>
       </div>
 
