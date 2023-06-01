@@ -314,6 +314,7 @@
                     :width="'full'"
                     :completed="status[name] ?? false"
                     :tooltip="element.hover_text"
+                    :warning_info_text="element.warning_info_text ?? ''"
                     class="elements-card"
                   />
                 </template>
@@ -566,6 +567,8 @@ export default defineComponent({
           activities[key]['elements'][k]['content'] = activityProps[k];
           activities[key]['elements'][k]['hover_text'] =
             elementProps[k]['hover_text'] ?? '';
+          activities[key]['elements'][k]['warning_info_text'] =
+            elementProps[k]['warning_info_text'] ?? '';
           flag = true;
         } else {
           delete activities[key][k];
