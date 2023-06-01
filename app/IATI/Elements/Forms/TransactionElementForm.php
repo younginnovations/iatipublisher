@@ -59,6 +59,7 @@ class TransactionElementForm extends BaseForm
                             'hover_text' => $this->getData(sprintf('sub_elements.%s.hover_text', $name)) ?? '',
                             'help_text' => $this->getData(sprintf('sub_elements.%s.help_text', $name)) ?? '',
                             'info_text' => $this->getData(sprintf('sub_elements.%s.info_text', $name)) ?? '',
+                            'warning_info_text' => $this->getData(sprintf('sub_elements.%s.warning_info_text', $name)) ?? '',
                             'label' => false,
                             'wrapper' => [
                                 'class' => 'multi-form relative',

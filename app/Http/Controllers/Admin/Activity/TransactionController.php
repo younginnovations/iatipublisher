@@ -265,8 +265,8 @@ class TransactionController extends Controller
                     : "is $emptyRecipientRegionOrCountryTransactionCount transaction";
                 $message = "There $messagePart without Recipient Region or Recipient Country.";
             }
-            $element['sub_elements']['recipient_region']['info_text'] = $message;
-            $element['sub_elements']['recipient_country']['info_text'] = $message;
+            $element['sub_elements']['recipient_region']['warning_info_text'] = $message;
+            $element['sub_elements']['recipient_country']['warning_info_text'] = $message;
         }
     }
 
@@ -284,13 +284,13 @@ class TransactionController extends Controller
 
         if ($emptySectorTransactionCount && $hasSectorDefinedInTransaction) {
             if (in_array((int) $transactionId, $emptySectorTransaction->pluck('id')->toArray(), true)) {
-                $message = 'Sector is declared at transaction level. You must add sector at all transactions.';
+                $message = 'Sector is declared at transaction level. You must add sector in all transactions.';
             } else {
                 $messagePart = $emptySectorTransactionCount > 1 ? "are $emptySectorTransactionCount transactions"
                     : "is $emptySectorTransactionCount transaction";
                 $message = "There $messagePart without Sector.";
             }
-            $element['sub_elements']['sector']['info_text'] = $message;
+            $element['sub_elements']['sector']['warning_info_text'] = $message;
         }
     }
 

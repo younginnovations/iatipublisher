@@ -113,7 +113,7 @@
 
       <div
         v-if="title === 'transactions' && data.warning_info_text !== ''"
-        class="mb-4 flex items-center bg-eggshell pt-2 pr-4 pb-2 pl-4 text-xs"
+        class="mb-4 flex items-center rounded-md bg-eggshell pt-2 pr-4 pb-2 pl-4 text-xs"
       >
         <svg
           class="elements-svg"
