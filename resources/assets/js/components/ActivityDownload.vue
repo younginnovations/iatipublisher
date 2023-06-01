@@ -2,7 +2,7 @@
   <div class="relative h-[80px] rounded-t-lg bg-eggshell p-6">
     <button
       v-if="xlsDownloadStatus === 'completed'"
-      class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 text-n-40"
+      class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 text-[10px] text-n-40"
       @click="cancelDownload"
     >
       <svg-vue class="text-sm" icon="cross-icon" />
