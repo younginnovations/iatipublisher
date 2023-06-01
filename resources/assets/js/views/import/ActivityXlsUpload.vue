@@ -594,40 +594,20 @@ watch(
 );
 
 const importAnyway = () => {
-  cancelImport();
-  loader.value = true;
-  loaderText.value = 'Fetching .xls file';
+  axios.delete(`/import/xls`).then((res) => {
+    xlsData.value = false;
+    uploadFile();
+    uploadType.value = [];
 
-  let activity = file.value.files.length ? file.value.files[0] : '';
+    file.value.value = null;
 
-  let xlsType = uploadType;
-  const config = {
-    headers: {
-      'content-type': 'multipart/form-data',
-    },
-  };
-  let data = new FormData();
-  data.append('activity', activity);
-  data.append('xlsType', xlsType.value as any);
-  error.value = '';
-  axios
-    .post('/import/xls', data, config)
-    .then((res) => {
-      if (file.value.files.length && res?.data?.success) {
-        checkXlsstatus();
-      } else {
-        error.value = Object.values(res.data.errors).join(' ');
-      }
-    })
-    .catch(() => {
-      error.value = 'Error has occured while uploading file.';
-    })
-    .finally(() => {
-      loader.value = false;
-      uploadType.value = [];
-
-      file.value.value = null;
-    });
+    showCancelModel.value = false;
+    const response = res.data;
+    toastVisibility.value = true;
+    setTimeout(() => (toastVisibility.value = false), 15000);
+    toastMessage.value = response.message;
+    toastType.value = response.success;
+  });
 };
 
 const selectAll = () => {
