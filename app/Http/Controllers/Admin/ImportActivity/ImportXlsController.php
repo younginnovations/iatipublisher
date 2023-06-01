@@ -254,6 +254,7 @@ class ImportXlsController extends Controller
             );
         } catch (Exception $e) {
             logger()->error($e->getMessage());
+            logger()->error($e);
 
             return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while opening import listing page.');
         }

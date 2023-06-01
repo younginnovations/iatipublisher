@@ -600,7 +600,7 @@ const importAnyway = () => {
     uploadFile();
     uploadType.value = [];
 
-    file.value.value = null;
+    // file.value.value = null;
 
     showCancelModel.value = false;
     const response = res.data;
@@ -656,14 +656,18 @@ function uploadFile() {
     axios
       .post('/import/xls', data, config)
       .then((res) => {
+        console.log(res, 'res');
         if (file.value.files.length && res?.data?.success) {
+          console.log('success');
           checkXlsstatus();
         } else {
-          error.value = Object.values(res.data.errors).join(' ');
+          error.value =
+            res.data.errors && Object.values(res.data.errors).join(' ');
         }
       })
-      .catch(() => {
+      .catch((err) => {
         error.value = 'Error has occured while uploading file.';
+        console.log(err);
       })
       .finally(() => {
         loader.value = false;
