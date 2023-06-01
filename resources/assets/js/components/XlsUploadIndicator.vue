@@ -109,7 +109,7 @@ watch(
       showBulkpublish.value = false;
       setTimeout(() => {
         showBulkpublish.value = true;
-        supportButton.style.transform = 'translate(-350px ,-20px)';
+        supportButton.style.transform = 'translate(-350px ,0px)';
       }, 2500);
     } else {
       if (supportButton !== null) {

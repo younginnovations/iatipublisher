@@ -151,11 +151,9 @@ import {
   inject,
   ref,
   computed,
-  onUnmounted,
 } from 'vue';
 import spinnerLoader from './spinnerLoader.vue';
 import axios from 'axios';
-import BtnComponent from 'Components/ButtonComponent.vue';
 
 const currentActivity = ref(null);
 const maximize = ref(true);
@@ -232,16 +230,6 @@ watch(
   },
   { deep: true }
 );
-
-onUnmounted(() => {
-  const supportButton: HTMLElement = document.querySelector(
-    '#launcher'
-  ) as HTMLElement;
-
-  if (supportButton !== null) {
-    supportButton.style.transform = 'translatey(0px)';
-  }
-});
 
 const percentageWidth = computed(() => {
   console.log('width');
