@@ -357,8 +357,8 @@ class Result
             if (!isset($this->results[$activityIdentifier][$identifier]['results'])) {
                 $activityTemplate = $this->getActivityTemplate();
                 $this->results[$activityIdentifier][$identifier]['results'] = $activityTemplate['result'];
+                $this->totalCount++;
             }
-            $this->totalCount++;
 
             $this->results[$activityIdentifier][$identifier]['results']['document_link'] = $data;
 

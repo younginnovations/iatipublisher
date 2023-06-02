@@ -10,13 +10,12 @@ return new class extends Migration {
      */
     public function up()
     {
-        DB::statement('ALTER table activities DROP CONSTRAINT activities_upload_medium_check;');
-        DB::statement("ALTER table activities ADD CONSTRAINT activities_upload_medium_check CHECK
-                        (((upload_medium)::text = ANY (ARRAY[
-                            ('xls'::character varying)::text,
-                            ('csv'::character varying)::text,
-                            ('xml'::character varying)::text,
-                            ('manual'::character varying)::text])));");
+        DB::statement('ALTER table import_status DROP CONSTRAINT import_status_status_check;');
+        DB::statement("ALTER table import_status ADD CONSTRAINT import_status_status_check CHECK
+                        (((status)::text = ANY (ARRAY[
+                            ('processing'::character varying)::text,
+                            ('completed'::character varying)::text,
+                            ('failed'::character varying)::text])));");
     }
 
     /**
@@ -26,11 +25,10 @@ return new class extends Migration {
      */
     public function down()
     {
-        DB::statement('ALTER table activities DROP CONSTRAINT activities_upload_medium_check;');
-        DB::statement("ALTER table activities ADD CONSTRAINT activities_upload_medium_check CHECK
-                        (((upload_medium)::text = ANY (ARRAY[
-                                ('csv'::character varying)::text,
-                                ('xml'::character varying)::text,
-                                ('manual'::character varying)::text])));");
+        DB::statement('ALTER table import_status DROP CONSTRAINT import_status_status_check;');
+        DB::statement("ALTER table import_status ADD CONSTRAINT import_status_status_check CHECK
+                        (((status)::text = ANY (ARRAY[
+                                ('completed'::character varying)::text,
+                                ('processing'::character varying)::text])));");
     }
 };

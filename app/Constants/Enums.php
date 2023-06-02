@@ -66,6 +66,7 @@ abstract class Enums
     const IMPORT_STATUS = [
         'processing',
         'completed',
+        'failed',
     ];
 
     const IMPORT_TYPE = [

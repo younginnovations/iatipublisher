@@ -303,7 +303,7 @@ trait XlsMapperHelper
     {
         $status = json_encode([
             'success' => true,
-            'message' => 'Complete',
+            'message' => 'Global errors',
             'total_count' => count($this->globalErrors),
             'errors' => $this->globalErrors,
             'error_count' => $this->errorCount,

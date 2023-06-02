@@ -412,11 +412,9 @@ class ImportXlsService
     {
         awsDeleteDirectory(sprintf('%s/%s/%s', $this->xls_data_storage_path, $orgId, $userId));
         awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $orgId, $userId, 'status.json'), json_encode(['success' => true, 'message' => 'Started'], JSON_THROW_ON_ERROR));
-        $status = $this->importStatusRepo->storeStatus($orgId, $userId, 'xls', $xlsType);
+        $this->importStatusRepo->storeStatus($orgId, $userId, 'xls', $xlsType);
 
         $this->fireXmlUploadEvent($filename, $userId, $orgId, $xlsType);
-        $completionStatus = json_decode(awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $orgId, $userId, 'status.json')), true, 512, 0);
-        $this->importStatusRepo->update($status->id, ['status' => $completionStatus['message'] === 'Complete' ? 'completed' : 'failed']);
     }
 
     /**

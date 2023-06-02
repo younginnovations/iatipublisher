@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\XlsImporter\Foundation\Queue;
 
+use App\IATI\Repositories\Import\ImportStatusRepository;
 use App\Jobs\Job;
 use App\XlsImporter\Foundation\XlsQueueProcessor;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -95,5 +96,25 @@ class ImportXls extends Job implements ShouldQueue
         awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->organizationId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => 'Failed to import xls file. Please check your file for correctness before importing again.'], JSON_THROW_ON_ERROR));
 
         // Send user notification of failure, etc...
+    }
+
+    /**
+     * Delete the job from the queue.
+     *
+     * @return void
+     */
+    public function delete()
+    {
+        if ($this->job) {
+            $completionStatus = json_decode(awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->organizationId, $this->userId, 'status.json')), true, 512, 0);
+            $importStatus = app()->make(ImportStatusRepository::class);
+            $status = $importStatus->getImportStatus($this->organizationId, $this->userId);
+
+            if (!empty($status)) {
+                $importStatus->update($status['id'], ['status' => $completionStatus['message'] === 'Complete' ? 'completed' : 'failed']);
+            }
+
+            return $this->job->delete();
+        }
     }
 }
