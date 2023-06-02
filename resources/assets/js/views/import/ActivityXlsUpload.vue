@@ -443,8 +443,10 @@
 
       <div class="rounded-sm bg-rose p-4">
         <p class="text-sm text-n-50">
-          We are in the process of uploading 'filename' file. Please wait for
-          the completion of previous import or click on "Import Anyway
+          We are in the process of uploading '{{
+            mapActivityName(activityName)
+          }}' file. Please wait for the completion of previous import or click
+          on "Import Anyway
         </p>
       </div>
 
@@ -723,18 +725,34 @@ const checkXlsstatus = () => {
       uploadComplete.value = true;
     } else {
       if (Object.keys(res.data.status).length > 0) {
+        //reset
+        totalCount.value = 1;
+        processedCount.value = 0;
+        xlsFailed.value = false;
+        xlsFailedMessage.value = '';
         const checkStatus = setInterval(function () {
           axios.get('/import/xls/status').then((res) => {
-            totalCount.value = res.data.data?.total_count;
-            processedCount.value = res.data.data?.processed_count;
-            xlsFailed.value = !res.data.data?.success;
-            xlsFailedMessage.value = res.data.data?.message;
+            if (res.data.data?.message === 'Started') {
+              //reset
+              totalCount.value = 1;
+              processedCount.value = 0;
+              xlsFailed.value = false;
+              xlsFailedMessage.value = '';
+            } else {
+              totalCount.value = res.data.data?.total_count;
+              processedCount.value = res.data.data?.processed_count;
+              xlsFailed.value = !res.data.data?.success;
+              xlsFailedMessage.value = res.data.data?.message;
+            }
+
             if (
               !res.data?.data?.success ||
               res.data?.data?.message === 'Complete'
             ) {
-              uploadComplete.value = true;
               clearInterval(checkStatus);
+            }
+            if (res.data?.data?.message === 'Complete') {
+              uploadComplete.value = true;
             }
           });
         }, 2500);
@@ -748,6 +766,7 @@ onMounted(() => {
 });
 provide('xlsFailedMessage', xlsFailedMessage);
 provide('activityLength', activityLength);
+provide('completed', uploadComplete);
 </script>
 
 <style lang="scss"></style>

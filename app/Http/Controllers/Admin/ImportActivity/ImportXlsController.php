@@ -81,6 +81,7 @@ class ImportXlsController extends Controller
 
             return view('admin.import.xls.index');
         } catch (Exception $e) {
+            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while rendering activity import page.']);
@@ -99,20 +100,24 @@ class ImportXlsController extends Controller
         try {
             $file = $request->file('activity');
             $xlsType = $request->get('xlsType');
-
             $status = $this->importXlsService->getImportStatus();
 
             if (!empty($status)) {
                 return response()->json(['status' => 'error', 'message' => 'Import is currently on progress. Please cancel the current import to continue.']);
             }
 
+            // $this->db->beginTransaction();
+
             if ($this->importXlsService->store($file)) {
                 $user = Auth::user();
                 $this->importXlsService->startImport($file->getClientOriginalName(), $user->id, $user->organization_id, $xlsType);
             }
 
+            // $this->db->commit();
+
             return response()->json(['success' => true, 'message' => 'Uploaded successfully']);
         } catch (Exception $e) {
+            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while rendering activity import page.']);

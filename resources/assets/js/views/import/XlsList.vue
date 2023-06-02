@@ -191,13 +191,16 @@
     :modal-active="showIdentifierErrorModel && showGLobalError"
     width="583"
   >
-    <div class="mb-2">
+    <div class="mb-5 flex space-x-2.5">
       <svg-vue class="text-4xl text-crimson-40" icon="warning-fill" />
-      <h6 class="text-sm font-bold">Errors Detected</h6>
+      <div>
+        <h6 class="text-base font-bold">Errors Detected</h6>
+        <p class="text-sm text-n-40">
+          We detected some errors in the uploaded file.
+        </p>
+      </div>
     </div>
-    <p class="text-sm text-n-40">
-      We detected some errors in the uploaded file.
-    </p>
+
     <div
       class="mb-6 rounded-sm border-crimson-20 bg-rose p-4 text-sm text-n-50"
     >
@@ -239,13 +242,15 @@
     :modal-active="showCriticalErrorModel && !showIdentifierErrorModel"
     width="583"
   >
-    <div class="mb-2">
+    <div class="mb-5 flex space-x-2.5">
       <svg-vue class="text-4xl text-crimson-40" icon="warning-fill" />
-      <h6 class="text-sm font-bold">Errors Detected</h6>
+      <div>
+        <h6 class="text-base font-bold">Errors Detected</h6>
+        <p class="text-sm text-n-40">
+          We detected some errors in the uploaded file.
+        </p>
+      </div>
     </div>
-    <p class="text-sm text-n-40">
-      We detected some errors in the uploaded file.
-    </p>
     <div
       class="mb-6 rounded-sm border border-crimson-20 bg-rose p-4 text-sm text-n-50"
     >
@@ -273,14 +278,7 @@ import XlsListError from 'Components/XlsListError.vue';
 import Modal from 'Components/PopupModal.vue';
 import axios from 'axios';
 import Toast from 'Components/ToastMessage.vue';
-import {
-  defineProps,
-  onMounted,
-  ref,
-  nextTick,
-  onUnmounted,
-  onUpdated,
-} from 'vue';
+import { defineProps, onMounted, ref, nextTick, onUnmounted } from 'vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 

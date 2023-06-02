@@ -9,7 +9,7 @@
           {{ title }}
         </div>
         <div
-          class="absolute left-[80%] top-0 z-[110] hidden max-w-[200px] overflow-x-scroll whitespace-nowrap rounded bg-eggshell px-4 py-2 text-sm font-normal shadow-sm group-hover:block"
+          class="absolute left-[80%] top-0 z-[110] hidden max-w-[500px] overflow-x-scroll whitespace-nowrap rounded bg-eggshell px-4 py-2 text-sm font-normal shadow-sm group-hover:block"
         >
           {{ title }}
         </div>

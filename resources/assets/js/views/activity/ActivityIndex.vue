@@ -226,6 +226,7 @@ export default defineComponent({
     provide('errorData', errorData);
     provide('refreshToastMsg', refreshToastMsg);
     provide('xlsFailedMessage', xlsFailedMessage);
+    provide('completed', importCompleted);
 
     return {
       activities,

@@ -48,7 +48,7 @@
           class="flex h-1 w-[calc(100%_-_40px)] justify-between rounded-full bg-spring-10"
         >
           <div
-            :style="{ width: completed ? '100%' : percentageWidth + '%' }"
+            :style="{ width: percentageWidth + '%' }"
             class="h-full rounded-full bg-spring-50"
           ></div>
         </div>
@@ -59,7 +59,7 @@
 
     <div class="mt-5 flex justify-end space-x-2">
       <a
-        v-if="(processedCount === totalCount && totalCount !== 0) || completed"
+        v-if="completed"
         href="/import/xls/list"
         class="rounded bg-bluecoral py-3 px-7 text-xs font-bold uppercase text-white hover:text-white"
       >
@@ -157,6 +157,7 @@ import {
   inject,
   ref,
   computed,
+  Ref,
   onUnmounted,
 } from 'vue';
 import spinnerLoader from './spinnerLoader.vue';
@@ -173,11 +174,7 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  completed: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
+
   totalCount: {
     type: Number,
     default: 0,
@@ -257,11 +254,9 @@ onUnmounted(() => {
 });
 
 const percentageWidth = computed(() => {
-  console.log('width');
   if (props.totalCount !== 0) {
     return (props.processedCount / props.totalCount) * 100;
-  } else if (props.completed) {
-    console.log('completed');
+  } else if (completed.value) {
     return 100;
   } else {
     return 0;
@@ -269,4 +264,5 @@ const percentageWidth = computed(() => {
 });
 
 const xlsFailedMessage = inject('xlsFailedMessage');
+const completed = inject('completed') as Ref;
 </script>
