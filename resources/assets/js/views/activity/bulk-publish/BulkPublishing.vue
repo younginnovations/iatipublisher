@@ -248,7 +248,10 @@ const bulkPublishStatus = () => {
       )
       .then((res) => {
         const response = res.data;
-
+        console.log(response, 'polling bulkpublsh');
+        if (!response.publishing) {
+          clearInterval(intervalID);
+        }
         if ('data' in response) {
           activities.value = response.data.activities;
           completed.value = response.data.status;
@@ -258,7 +261,6 @@ const bulkPublishStatus = () => {
             response.data.activities;
           paStorage.value.publishingActivities.status = response.data.status;
           paStorage.value.publishingActivities.message = response.data.message;
-
           if (completed.value === 'completed') {
             clearInterval(intervalID);
 
