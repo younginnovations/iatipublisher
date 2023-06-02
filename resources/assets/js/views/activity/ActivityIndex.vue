@@ -122,10 +122,18 @@ export default defineComponent({
           if (Object.keys(res.data.status).length > 0) {
             const checkStatus = setInterval(function () {
               axios.get('/import/xls/status').then((res) => {
-                totalCount.value = res.data.data?.total_count;
-                processedCount.value = res.data.data?.processed_count;
-                xlsFailed.value = !res.data.data?.success;
-                xlsFailedMessage.value = res.data.data?.message;
+                if (res.data.data?.message === 'Started') {
+                  //reset
+                  totalCount.value = null;
+                  processedCount.value = 0;
+                  xlsFailed.value = false;
+                  xlsFailedMessage.value = '';
+                } else {
+                  totalCount.value = res.data.data?.total_count;
+                  processedCount.value = res.data.data?.processed_count;
+                  xlsFailed.value = !res.data.data?.success;
+                  xlsFailedMessage.value = res.data.data?.message;
+                }
                 if (
                   !res.data?.data?.success ||
                   res.data?.data?.message === 'Complete'

@@ -501,7 +501,7 @@ const showCancelModel = ref(false);
 const activities = reactive({}) as ActivitiesInterface;
 const selectAllValue = ref(false);
 const uploadComplete = ref(false);
-const totalCount = ref(0);
+const totalCount = ref<number | null>();
 const processedCount = ref(0);
 const file = ref(),
   error = ref(''),
@@ -737,7 +737,7 @@ const checkXlsstatus = () => {
           axios.get('/import/xls/status').then((res) => {
             if (res.data.data?.message === 'Started') {
               //reset
-              totalCount.value = 1;
+              totalCount.value = null;
               processedCount.value = 0;
               xlsFailed.value = false;
               xlsFailedMessage.value = '';

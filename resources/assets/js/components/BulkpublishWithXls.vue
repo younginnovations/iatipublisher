@@ -7,7 +7,7 @@
     class="relative w-[300px] rounded-t-lg duration-200"
   >
     <svg-vue
-      class="absolute right-0 top-0 translate-x-1/2 -translate-y-1/2 cursor-pointer text-[11px]"
+      class="absolute right-0 top-0 translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white p-[1px] text-sm"
       icon="cross-icon"
       @click="closeWindow"
     />

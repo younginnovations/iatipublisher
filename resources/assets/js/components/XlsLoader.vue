@@ -148,7 +148,6 @@ import {
   watch,
   onMounted,
   defineEmits,
-  onUpdated,
   inject,
   ref,
   computed,
@@ -253,7 +252,7 @@ onUnmounted(() => {
 
 const percentageWidth = computed(() => {
   console.log('width');
-  if (props.totalCount !== 0) {
+  if (props.totalCount !== 0 && props.totalCount !== null) {
     return (props.processedCount / props.totalCount) * 100;
   } else if (props.completed) {
     console.log('completed');
