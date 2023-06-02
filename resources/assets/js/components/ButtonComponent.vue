@@ -36,6 +36,11 @@ export default defineComponent({
       required: false,
       default: '',
     },
+    activityLength: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   setup(props) {
     let btnType = '';
@@ -48,9 +53,9 @@ export default defineComponent({
     } else {
       btnType = 'font-bold';
     }
-    const activityLength = inject('activityLength');
+    // const activityLength = inject('activityLength');
 
-    return { btnType, activityLength };
+    return { btnType };
   },
 });
 </script>

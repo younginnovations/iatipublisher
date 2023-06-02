@@ -64,7 +64,7 @@ const downloadCode = async () => {
   // });
   const link = document.createElement('a');
   link.href = window.URL.createObjectURL(blob);
-  link.download = `codes.xlsx`;
+  link.download = `identifiers.xlsx`;
   link.click();
 };
 </script>
