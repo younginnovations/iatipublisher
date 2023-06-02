@@ -458,6 +458,7 @@ class XmlGenerator
      * @param $organization
      *
      * @return array
+     * @throws \JsonException
      */
     public function getXmlData($activity, $transaction, $result, $organization): array
     {
@@ -496,7 +497,41 @@ class XmlGenerator
         $xmlActivity['result'] = $this->resultService->getXmlData($result);
         removeEmptyValues($xmlActivity);
 
+        $this->mapActivityTransactionAndResultIndex($xmlActivity, $activity);
+
         return $xmlActivity;
+    }
+
+    /**
+     * @throws \JsonException
+     */
+    public function mapActivityTransactionAndResultIndex($xmlActivity, $activity): void
+    {
+        $transactions = $xmlActivity['transaction'];
+        $results = $xmlActivity['result'];
+        $mapper = [];
+
+        foreach ($transactions as $transactionKey => $transaction) {
+            $mapper['transactions'][] = 'transactions.' . $transactionKey;
+        }
+
+        foreach ($results as $resultKey => $result) {
+            $mapper['results'][] = 'results.' . $resultKey;
+
+            if (isset($result['indicator']) && !empty($result['indicator'])) {
+                foreach ($result['indicator'] as $indicatorKey => $indicator) {
+                    $mapper['indicators'][] = "results.$resultKey.indicators." . $indicatorKey;
+
+                    if (isset($indicator['period']) && !empty($indicator['period'])) {
+                        foreach ($indicator['period'] as $periodKey => $period) {
+                            $mapper['periods'][] = "results.$resultKey.indicators.$indicatorKey.periods." . $periodKey;
+                        }
+                    }
+                }
+            }
+        }
+
+        awsUploadFile("xmlValidation/$activity->org_id/activity_mapper_$activity->id.xml", json_encode($mapper, JSON_THROW_ON_ERROR));
     }
 
     /**
