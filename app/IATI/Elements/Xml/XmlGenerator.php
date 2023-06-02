@@ -520,11 +520,11 @@ class XmlGenerator
 
             if (isset($result['indicator']) && !empty($result['indicator'])) {
                 foreach ($result['indicator'] as $indicatorKey => $indicator) {
-                    $mapper['indicators'][] = "results.$resultKey.indicators." . $indicatorKey;
+                    $mapper['indicators']["results.$resultKey"][] = "results.$resultKey.indicators." . $indicatorKey;
 
                     if (isset($indicator['period']) && !empty($indicator['period'])) {
                         foreach ($indicator['period'] as $periodKey => $period) {
-                            $mapper['periods'][] = "results.$resultKey.indicators.$indicatorKey.periods." . $periodKey;
+                            $mapper['periods']["results.$resultKey.indicators.$indicatorKey"][] = "results.$resultKey.indicators.$indicatorKey.periods." . $periodKey;
                         }
                     }
                 }
