@@ -72,7 +72,6 @@ import { useStore } from 'Store/activities/index';
 const singleStore = useStore();
 const emit = defineEmits(['close']);
 const store = detailStore();
-
 const xlsData = ref(false);
 const downloading = ref(false);
 const downloadCompleted = ref(false);
@@ -158,12 +157,11 @@ onMounted(() => {
   checkXlsstatus();
   checkDownloadStatus();
 });
+
 watch(
-  () => singleStore.state.startXlsDownload,
-  (value) => {
-    if (value) {
-      checkDownloadStatus();
-    }
+  () => singleStore.state.bulkPublishLength,
+  () => {
+    bulkPublishStatus();
   },
   { deep: true }
 );
@@ -248,7 +246,7 @@ const bulkPublishStatus = () => {
       )
       .then((res) => {
         const response = res.data;
-        console.log(response, 'polling bulkpublsh');
+        // console.log(response, 'polling bulkpublsh');
         if (!response.publishing) {
           clearInterval(intervalID);
         }
