@@ -90,7 +90,6 @@ class XmlGeneratorService
     public function getActivityXmlData($activity, $transaction, $result, $settings, $organization): string
     {
         $xmlDom = $this->xmlGenerator->getXml($activity, $transaction, $result, $settings, $organization);
-        awsUploadFile("xmlValidation/$activity->org_id/activity_$activity->id.xml", $xmlDom->saveXML());
 
         return $xmlDom->saveXML();
     }

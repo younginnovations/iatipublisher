@@ -526,4 +526,16 @@ class ActivityRepository extends Repository
 
         return $query->get();
     }
+
+    /**
+     * returns with Nested relation.
+     *
+     * @param $activityId
+     *
+     * @return \Illuminate\Database\Eloquent\Builder|Model|mixed|object|null
+     */
+    public function getActivitityWithRelationsById($activityId)
+    {
+        return $this->model->with('results.indicators.periods', 'transactions')->where('id', $activityId)->first();
+    }
 }
