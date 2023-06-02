@@ -446,7 +446,7 @@
           We are in the process of uploading '{{
             mapActivityName(activityName)
           }}' file. Please wait for the completion of previous import or click
-          on "Import Anyway
+          on "Import Anyway".
         </p>
       </div>
 
@@ -718,11 +718,14 @@ const cancelImport = () => {
 };
 const checkXlsstatus = () => {
   axios.get('/import/xls/progress_status').then((res) => {
+    uploadComplete.value = false;
+
     activityName.value = res?.data?.status?.template;
     currentActivity.value = mapActivityName(activityName.value);
     xlsData.value = Object.keys(res.data.status).length > 0;
     if (res?.data?.status?.status === 'completed') {
       uploadComplete.value = true;
+      console.log(uploadComplete.value, ';uploadcomplete');
     } else {
       if (Object.keys(res.data.status).length > 0) {
         //reset

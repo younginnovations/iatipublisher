@@ -135,9 +135,9 @@
           </tr>
         </thead>
         <tbody>
-          <template v-if="activitiesLength === 0">
-            <Placeholder />
-          </template>
+          <tr v-if="!importData.length">
+            <div class="p-4 text-center">No data found for import</div>
+          </tr>
           <tr
             v-for="(activity, index) in importData"
             v-else

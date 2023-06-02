@@ -90,7 +90,7 @@
       class="mb-3 mr-2 flex h-1 w-[calc(100%_-_10px)] justify-start rounded-full bg-spring-10"
     >
       <div
-        :style="{ width: completed ? '100%' : percentageWidth + '%' }"
+        :style="{ width: percentageWidth + '%' }"
         class="h-full rounded-full bg-spring-50"
       ></div>
     </div>
@@ -110,10 +110,7 @@
       </button>
     </div>
     <div v-else class="flex justify-between space-x-5">
-      <p
-        v-if="totalCount === processedCount || completed"
-        class="text-sm text-n-40"
-      >
+      <p v-if="completed" class="text-sm text-n-40">
         {{ currentActivity }} file upload complete
       </p>
       <p v-else class="text-sm text-n-40">
@@ -123,16 +120,14 @@
         >
         '{{ currentActivity }}'
       </p>
-      <spinnerLoader
-        v-if="(processedCount !== totalCount || totalCount === 0) && !completed"
-      />
       <a
-        v-else
+        v-if="completed"
         href="/import/xls/list"
         class="text-xs font-bold uppercase text-spring-50 hover:text-spring-50"
       >
         Proceed
       </a>
+      <spinnerLoader v-else />
     </div>
   </div>
   <button
@@ -157,7 +152,6 @@ import {
   inject,
   ref,
   computed,
-  Ref,
   onUnmounted,
 } from 'vue';
 import spinnerLoader from './spinnerLoader.vue';
@@ -174,7 +168,11 @@ const props = defineProps({
     type: String,
     required: true,
   },
-
+  completed: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
   totalCount: {
     type: Number,
     default: 0,
@@ -254,9 +252,11 @@ onUnmounted(() => {
 });
 
 const percentageWidth = computed(() => {
+  console.log('width');
   if (props.totalCount !== 0) {
     return (props.processedCount / props.totalCount) * 100;
-  } else if (completed.value) {
+  } else if (props.completed) {
+    console.log('completed');
     return 100;
   } else {
     return 0;
@@ -264,5 +264,4 @@ const percentageWidth = computed(() => {
 });
 
 const xlsFailedMessage = inject('xlsFailedMessage');
-const completed = inject('completed') as Ref;
 </script>
