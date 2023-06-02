@@ -279,6 +279,20 @@
                     "narrative language"
                 ]
             }
+        },
+        "codeDependency": {
+            "dependentOn": {
+                "uri": {
+                    "vocabulary_uri": "vocabulary"
+                }
+            },
+            "dependencyCondition": {
+                "vocabulary": {
+                    "vocabularyUri": [
+                        99
+                    ]
+                }
+            }
         }
     },
     "capital_spend": {

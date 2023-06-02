@@ -48,6 +48,9 @@ class IndicatorRequest extends ActivityBaseRequest
      * Returns rules for result indicator.
      *
      * @param array $formFields
+     * @param bool $fileUpload
+     * @param array $result
+     * @param $resultId
      *
      * @return array
      * @throws ContainerExceptionInterface
@@ -78,6 +81,8 @@ class IndicatorRequest extends ActivityBaseRequest
      * Returns rules for result indicator.
      *
      * @param array $formFields
+     * @param bool $fileUpload
+     * @param array $result
      *
      * @return array
      * @throws ContainerExceptionInterface
@@ -86,7 +91,6 @@ class IndicatorRequest extends ActivityBaseRequest
     public function getErrorsForIndicator(array $formFields, bool $fileUpload = false, array $result = []): array
     {
         $rules = [];
-
         $rules['measure'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('IndicatorMeasure', 'Activity', false))));
         $rules['ascending'] = sprintf('nullable|in:0,1');
         $rules['aggregation_status'] = sprintf('nullable|in:0,1');
@@ -125,7 +129,7 @@ class IndicatorRequest extends ActivityBaseRequest
         $tempMessages = [
             $this->getMessagesForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
             $this->getMessagesForNarrative(Arr::get($formFields, 'description', []), 'description.0'),
-            $this->getMessagesForDocumentLink(Arr::get($formFields, 'document_link', [])),
+            $this->getMessagesForDocumentLink(Arr::get($formFields, 'docarrayument_link', [])),
             $this->getMessagesForReference(Arr::get($formFields, 'reference', [])),
             $this->getMessagesForBaseline(Arr::get($formFields, 'baseline', [])),
         ];
@@ -174,7 +178,6 @@ class IndicatorRequest extends ActivityBaseRequest
                     }
 
                     $codeNotPresent = $resultId ? !app()->make(ResultService::class)->resultHasRefCode($resultId) : !$hasCode;
-
                     $rules[sprintf('%s.code', $referenceForm)][] = 'result_ref_code_present:' . $codeNotPresent;
                 } else {
                     $rules[sprintf('%s.code', $referenceForm)][] = 'result_ref_code_present';

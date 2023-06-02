@@ -452,7 +452,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
         foreach ($formFields as $periodEndKey => $periodEndVal) {
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.required'] = 'Period end is a required field';
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = 'Period end must be a date field';
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = 'Period end must be a date after period';
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after_or_equal'] = 'Period end must be a date after period';
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date_greater_than'] = 'Period end date must be date greater than year 1900.';
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.period_start_end'] = 'The Planned Disbursement Period must not be longer than three months';
         }

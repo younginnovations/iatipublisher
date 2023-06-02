@@ -28,11 +28,8 @@ class ImportActivityTest extends TestCase
         $xlsData = $xlsToArray->sheetData;
 
         $xlsMapper = new Activity();
-        // $xlsMapper->initMapper($validatedDataFilePath, $statusFilePath, $dbIatiIdentifiers);
 
-        // if ($xlsType === 'activity') {
         $xlsMapper->fillOrganizationReportingOrg(null);
-        // }
 
         $xlsMapper->map($xlsData);
         $processedData = $xlsMapper->getActivityData();

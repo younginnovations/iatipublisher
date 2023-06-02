@@ -694,7 +694,7 @@ class ActivityService
      *
      * @return array|Collection
      */
-    public function getActivitiesByOrgIds(array $idMap): Collection | array
+    public function getActivitiesByOrgIds(array $idMap): Collection|array
     {
         return $this->activityRepository->getActivitiesByOrgIds($idMap);
     }

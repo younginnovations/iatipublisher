@@ -105,6 +105,8 @@ class ResultRequest extends ActivityBaseRequest
      * Returns messages for transaction validations.
      *
      * @param array $formFields
+     * @param array $fileUpload
+     * @param array $resultId
      *
      * @return array
      */
@@ -132,6 +134,9 @@ class ResultRequest extends ActivityBaseRequest
      * returns rules for Reference.
      *
      * @param $formFields
+     * @param $fileUpload
+     * @param $indicators
+     * @param $resultId
      *
      * @return array
      */
@@ -184,6 +189,8 @@ class ResultRequest extends ActivityBaseRequest
      * returns critical rules for Reference.
      *
      * @param $formFields
+     * @param $fileUpload
+     * @param $indicators
      *
      * @return array
      */
@@ -204,6 +211,8 @@ class ResultRequest extends ActivityBaseRequest
      * returns messages for Reference.
      *
      * @param $formFields
+     * @param $fileUPload
+     * @param $resultId
      *
      * @return array
      */

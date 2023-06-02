@@ -436,7 +436,7 @@ class ActivityBaseRequest extends FormRequest
         $rules = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
-            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = ['nullable', 'date', 'date_greater_than:1900'];
+            $rules[$formBase . '.period_end.' . $periodEndKey . '.date'] = ['nullable', 'date', 'date_greater_than:1900'];
             $rules[$formBase . '.period_end.' . $periodEndKey . '.date'][] = sprintf(
                 'after:%s',
                 $formBase . '.period_start.' . $periodEndKey . '.date'

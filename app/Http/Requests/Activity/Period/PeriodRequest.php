@@ -44,6 +44,10 @@ class PeriodRequest extends ActivityBaseRequest
      * Returns rules for result indicator.
      *
      * @param array $formFields
+     * @param bool $fileUpload
+     * @param array $indicator
+     * @param array $periodBase
+     * @param $indicatorId
      *
      * @return array
      * @throws BindingResolutionException
@@ -72,6 +76,9 @@ class PeriodRequest extends ActivityBaseRequest
      * Returns rules for result indicator.
      *
      * @param array $formFields
+     * @param bool $fileUpload
+     * @param array $indicator
+     * @param array $periodBase
      *
      * @return array
      * @throws BindingResolutionException
@@ -99,6 +106,9 @@ class PeriodRequest extends ActivityBaseRequest
      * Returns messages for result indicator validations.
      *
      * @param array $formFields
+     * @param bool $fileUpload
+     * @param array $indicator
+     * @param $indicatorId
      *
      * @return array
      * @throws BindingResolutionException

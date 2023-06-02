@@ -43,7 +43,7 @@ class DownloadCodesController extends Controller
     }
 
     /**
-     * Downloads selected activities in csv format.
+     * Downloads selected result, indicator and period identifiers in xls format.
      *
      * @param Request $request
      *

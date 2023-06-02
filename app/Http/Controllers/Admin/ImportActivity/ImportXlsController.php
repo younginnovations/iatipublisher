@@ -100,6 +100,12 @@ class ImportXlsController extends Controller
             $file = $request->file('activity');
             $xlsType = $request->get('xlsType');
 
+            $status = $this->importXlsService->getImportStatus();
+
+            if (!empty($status)) {
+                return response()->json(['status' => 'error', 'message' => 'Import is currently on progress. Please cancel the current import to continue.']);
+            }
+
             if ($this->importXlsService->store($file)) {
                 $user = Auth::user();
                 $this->importXlsService->startImport($file->getClientOriginalName(), $user->id, $user->organization_id, $xlsType);
@@ -139,11 +145,11 @@ class ImportXlsController extends Controller
             $xlsType = $status['template'];
             $this->importXlsService->create($activities, $xlsType);
             $this->importXlsService->deleteImportStatus();
-
             $this->db->commit();
-            Session::put('success', 'Imported successfully.');
 
-            return response()->json(['success' => true, 'message' => 'Imported successfully']);
+            Session::put('success', "Xls file with $xlsType imported successfully.");
+
+            return response()->json(['success' => true, 'message' => "Xls file with $xlsType imported successfully."]);
         } catch (Exception $e) {
             Session::put('error', 'Error occurred while importing activity');
 
@@ -153,6 +159,11 @@ class ImportXlsController extends Controller
         }
     }
 
+    /**
+     * Checks if import progress data is present for user in database.
+     *
+     * @return JsonResponse
+     */
     public function checkImportInProgress(): JsonResponse
     {
         try {
@@ -160,6 +171,7 @@ class ImportXlsController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Import status accessed successfully', 'status' => $status]);
         } catch (Exception $e) {
+            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error has occured while trying to check import status']);
@@ -167,7 +179,7 @@ class ImportXlsController extends Controller
     }
 
     /**
-     * Check Import Status.
+     * Check Import Status based on status.json file present at AWS.
      *
      * @return JsonResponse
      */
@@ -186,6 +198,7 @@ class ImportXlsController extends Controller
 
             return response()->json(['success' => true, 'data' => $result]);
         } catch (Exception $e) {
+            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
@@ -206,6 +219,7 @@ class ImportXlsController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Import error for activity has been successfully deleted.']);
         } catch (Exception $e) {
+            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while trying to delete import error.']);
@@ -226,6 +240,7 @@ class ImportXlsController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Import status for organization has been successfully deleted.']);
         } catch (Exception $e) {
+            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while trying to delete import status.']);
@@ -241,11 +256,15 @@ class ImportXlsController extends Controller
     {
         try {
             $status = $this->importXlsService->getImportStatus();
+
+            if (empty($status)) {
+                return redirect()->route('admin.activities.index')->with('error', 'Please upload xls file to continue.');
+            }
+
             $importData = $this->importXlsService->getAwsXlsData('valid.json');
             $globalError = $this->importXlsService->getAwsXlsData('globalError.json');
             $errors = $globalError->errors;
             $errors = empty($errors) ? null : $errors;
-
             $errorCount = $globalError->error_count;
 
             return view(

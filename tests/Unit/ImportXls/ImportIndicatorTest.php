@@ -38,6 +38,7 @@ class ImportIndicatorTest extends TestCase
                 $difference2 = array_diff_assoc(Arr::dot($value), Arr::dot($elementData));
                 $this->assertTrue(empty($difference1));
                 $this->assertTrue(empty($difference2));
+                dump($difference1, $difference2);
             } elseif ($elementData !== $value && !(empty($value) && empty($elementData))) {
                 $this->assertTrue(false);
             }

@@ -415,7 +415,8 @@ class ImportXlsService
         $status = $this->importStatusRepo->storeStatus($orgId, $userId, 'xls', $xlsType);
 
         $this->fireXmlUploadEvent($filename, $userId, $orgId, $xlsType);
-        $this->importStatusRepo->update($status->id, ['status' => 'completed']);
+        $completionStatus = json_decode(awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $orgId, $userId, 'status.json')), true, 512, 0);
+        $this->importStatusRepo->update($status->id, ['status' => $completionStatus['message'] === 'Complete' ? 'completed' : 'failed']);
     }
 
     /**

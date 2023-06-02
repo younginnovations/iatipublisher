@@ -455,7 +455,6 @@
             "sector_vocabulary": "1",
             "code": "11120",
             "percentage": "100",
-            "vocabulary_uri":null,
             "narrative": [
                 {
                     "narrative": "nar 1",
@@ -471,7 +470,6 @@
             "sector_vocabulary": "2",
             "category_code": "113",
             "percentage": "100",
-            "vocabulary_uri":null,
             "narrative": [
                 {
                     "narrative": "nar 3",
@@ -487,7 +485,6 @@
             "sector_vocabulary": "7",
             "sdg_goal": "2",
             "percentage": "100",
-            "vocabulary_uri":null,
             "narrative": [
                 {
                     "narrative": "nar 1",
@@ -503,7 +500,6 @@
             "sector_vocabulary": "8",
             "sdg_target": "1.2",
             "percentage": "100",
-            "vocabulary_uri":null,
             "narrative": [
                 {
                     "narrative": "nar 1",
@@ -578,7 +574,6 @@
             "type": "1",
             "vocabulary": "2-1",
             "code": "code",
-            "vocabulary_uri":null,
             "narrative": [
                 {
                     "narrative": "nar 1",
@@ -612,7 +607,6 @@
             "policy_marker_vocabulary": "1",
             "significance": "0",
             "policy_marker": "2",
-            "vocabulary_uri":null,
             "narrative": [
                 {
                     "narrative": "nar 1",
@@ -923,7 +917,6 @@
         {
             "tag_vocabulary": "2",
             "goals_tag_code": "3",
-            "vocabulary_uri":null,
             "narrative": [
                 {
                     "narrative": "nar 1",
@@ -953,7 +946,6 @@
         {
             "tag_vocabulary": "3",
             "targets_tag_code": "1.2",
-            "vocabulary_uri":null,
             "narrative": [
                 {
                     "narrative": "nar 1",
@@ -968,7 +960,6 @@
         {
             "tag_vocabulary": "1",
             "tag_text": "vocab 1",
-            "vocabulary_uri":null,
             "narrative": [
                 {
                     "narrative": "nar 1",
