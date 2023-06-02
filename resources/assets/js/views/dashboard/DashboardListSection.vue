@@ -22,7 +22,7 @@
               :key="item.label"
               class="w-[270px] p-3 text-sm text-n-50"
               :class="activeClass === item.label ? 'activeNav' : ''"
-              @click="activeClass = item.label"
+              @click="fetchTableData(item)"
             >
               {{ item.label }}
             </li>
@@ -39,18 +39,21 @@
 <script lang="ts" setup>
 import { ref, defineProps, watch, onMounted } from 'vue';
 import axios from 'axios';
+import { defineEmits } from 'vue';
+
+const emit = defineEmits(['tableNav']);
 
 const activityNavList = [
-  { label: 'Activity Status', api: '' },
-  { label: 'Actvity Added', api: '' },
-  { label: 'Activity Completion', api: '' },
+  { label: 'Activity Status', apiParams: '' },
+  { label: 'Actvity Added', apiParams: '' },
+  { label: 'Activity Completion', apiParams: '' },
 ];
 const publisherNavList = [
-  { label: 'Publisher Type', api: '' },
-  { label: 'Data Licence', api: '' },
-  { label: 'Country', api: '' },
-  { label: 'Registration Type', api: '' },
-  { label: 'Setup Completeness', api: '' },
+  { label: 'Publisher Type', apiParams: 'type' },
+  { label: 'Data Licence', apiParams: 'data-license' },
+  { label: 'Country', apiParams: 'registration-type' },
+  { label: 'Registration Type', apiParams: 'country' },
+  { label: 'Setup Completeness', apiParams: 'setup' },
 ];
 
 const currentNavList = ref(publisherNavList);
@@ -74,6 +77,11 @@ const props = defineProps({
   },
 });
 const activeClass = ref(currentNavList.value[0].label);
+
+const fetchTableData = (item) => {
+  activeClass.value = item.label;
+  emit('tableNav', item.apiParams);
+};
 </script>
 <style lang="scss">
 .activeNav {

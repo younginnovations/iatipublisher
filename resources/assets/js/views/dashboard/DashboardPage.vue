@@ -38,7 +38,10 @@
       </div>
     </div>
     <DashboardStatsSection :current-view="currentView" />
-    <DashboardListSection :current-view="currentView" />
+    <DashboardListSection
+      :current-view="currentView"
+      @table-nav="(n) => handleChangeTableNav(n)"
+    />
   </div>
 </template>
 
@@ -47,4 +50,7 @@ import DashboardStatsSection from './DashboardStatsSection.vue';
 import DashboardListSection from './DashboardListSection.vue';
 import { ref } from 'vue';
 const currentView = ref('publisher');
+const handleChangeTableNav = (item) => {
+  console.log(item);
+};
 </script>
