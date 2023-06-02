@@ -75,10 +75,10 @@ trait IatiValidatorResponseTrait
      * @return string|null
      *
      * @throws \JsonException
+     * @throws BindingResolutionException
      */
     public function getNodeByLineNumber($lineNumber, $activity): ?string
     {
-        $lineNumber++;
         $xmlFile = awsGetFile("xmlValidation/$activity->org_id/activity_$activity->id.xml");
         $xml = simplexml_load_string((string) $xmlFile);
         $xmlString = $xml->asXML();
@@ -87,19 +87,18 @@ trait IatiValidatorResponseTrait
         if ($lineNumber >= 1 && $lineNumber <= count($xmlLines)) {
             $parentNode = [];
 
-            foreach ($xml->xpath('//iati-activity/*') as $node) {
+            foreach ($xml->xpath('//iati-activity/* | //iati-activity//@*') as $node) {
                 $nodeName = $node->getName();
                 $childNodePath = $node->xpath("//$nodeName/*");
                 $parentNode[str_replace('/iati-activities/iati-activity/', '', dom_import_simplexml($node)->getNodePath())] = dom_import_simplexml($node)->getLineNo();
 
-                if (count($childNodePath)) {
+                if (!empty($childNodePath)) {
                     foreach ($childNodePath as $childNode) {
                         $domImportSimpleXml = dom_import_simplexml($childNode);
                         $parentNode[str_replace('/iati-activities/iati-activity/', '', $domImportSimpleXml->getNodePath())] = $domImportSimpleXml->getLineNo();
                     }
                 }
             }
-
             asort($parentNode);
             $parentNode = array_flip($parentNode);
 
@@ -131,6 +130,7 @@ trait IatiValidatorResponseTrait
      * @return string
      *
      * @throws \JsonException
+     * @throws BindingResolutionException
      */
     public function generateUrlPath($targetNode, $activity): string
     {
@@ -162,15 +162,16 @@ trait IatiValidatorResponseTrait
         }
 
         if (array_key_exists('period', $getId)) {
-            $indicatorIdPath = $activityTransactionResultMapper['indicators'][$getId['indicator']];
-            $periodIdPath = $activityTransactionResultMapper['periods'][$getId['period']];
+            $resultIdPath = $activityTransactionResultMapper['results'][$getId['result']];
+            $indicatorIdPath = $activityTransactionResultMapper['indicators'][$resultIdPath][$getId['indicator']];
+            $periodIdPath = $activityTransactionResultMapper['periods'][$indicatorIdPath][$getId['period']];
             $indicatorId = $this->getElementId($indicatorIdPath, $activityId);
             $periodId = $this->getElementId($periodIdPath, $activityId);
             $url = array_flip($this->multilevelElements)['period'];
             $url = str_replace(['indicatorId', 'periodId'], [$indicatorId, $periodId], $url);
         } elseif (array_key_exists('indicator', $getId)) {
             $resultIdPath = $activityTransactionResultMapper['results'][$getId['result']];
-            $indicatorIdPath = $activityTransactionResultMapper['indicators'][$getId['indicator']];
+            $indicatorIdPath = $activityTransactionResultMapper['indicators'][$resultIdPath][$getId['indicator']];
             $resultId = $this->getElementId($resultIdPath, $activityId);
             $indicatorId = $this->getElementId($indicatorIdPath, $activityId);
             $url = array_flip($this->multilevelElements)['indicator'];
