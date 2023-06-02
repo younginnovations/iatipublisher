@@ -219,7 +219,7 @@
         "title narrative language": "Activity/Language.json",
         "description narrative language": "Activity/Language.json",
         "category code": "Activity/DocumentCategory.json",
-        "language code": "Activity/Language.json"
+        "language language": "Activity/Language.json"
     },
     "actual": {
         "comment narrative language": "Activity/Language.json"
@@ -229,7 +229,7 @@
         "title narrative language": "Activity/Language.json",
         "description narrative language": "Activity/Language.json",
         "category code": "Activity/DocumentCategory.json",
-        "language code": "Activity/Language.json"
+        "language language": "Activity/Language.json"
     },
     "transactions": {
         "humanitarian": {
