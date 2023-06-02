@@ -87,6 +87,19 @@ class DownloadActivityService
     }
 
     /**
+     * Returns activities Query having given ids for downloading.
+     *
+     * @param $activityIds
+     * @param $authUser
+     *
+     * @return object
+     */
+    public function getActivitiesQueryToDownload($activityIds, $authUser): object
+    {
+        return $this->activityRepository->getActivitiesQueryToDownload($activityIds, $authUser);
+    }
+
+    /**
      * Returns formatted csv data for downloading.
      *
      * @param $activities
@@ -154,6 +167,7 @@ class DownloadActivityService
     {
         $data = [];
         $count = $this->getElementCount($activityArray);
+
         $headers = $this->getCsvHeaderArray('Activity', 'other_fields_transaction');
 
         for ($i = 0; $i < $count; $i++) {
@@ -431,5 +445,18 @@ class DownloadActivityService
     public function getAllActivitiesToDownload($queryParams): object
     {
         return $this->activityRepository->getAllActivitiesToDownload(auth()->user()->organization_id, $queryParams);
+    }
+
+    /**
+     * Returns all activities Query of an organization.
+     *
+     * @param $queryParams
+     * @param $authUser
+     *
+     * @return object
+     */
+    public function getAllActivitiesQueryToDownload($queryParams, $authUser): object
+    {
+        return $this->activityRepository->getAllActivitiesQueryToDownload($authUser['organization_id'], $queryParams);
     }
 }

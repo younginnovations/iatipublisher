@@ -401,14 +401,5 @@
         "activity_identifier": "activity_identifier",
         "result_number": "result_number",
         "result_identifier": "result_identifier"
-    },
-    "element with single field": {
-        "activity_status": "activity_status",
-        "activity_scope": "activity_scope",
-        "collaboration_type": "collaboration_type",
-        "default_flow_type": "default_flow_type",
-        "default_finance_type": "default_finance_type",
-        "default_tied_status": "default_tied_status",
-        "capital_spend": "capital_spend"
     }
 }

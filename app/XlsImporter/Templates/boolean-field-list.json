@@ -1,1 +1,7 @@
-{}
+{
+  "secondary_reporter" : true,
+  "condition_attached": true,
+  "aggregation_status": true,
+  "ascending": true,
+  "humanitarian": true
+}

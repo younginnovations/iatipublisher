@@ -8,10 +8,17 @@ use App\Http\Controllers\Controller;
 use App\IATI\Services\Audit\AuditService;
 use App\IATI\Services\Download\CsvGenerator;
 use App\IATI\Services\Download\DownloadActivityService;
+use App\IATI\Services\Download\DownloadXlsService;
+use App\Jobs\ExportXlsJob;
+use App\Jobs\XlsExportMailJob;
+use App\Jobs\ZipXlsFileJob;
 use App\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
@@ -23,6 +30,11 @@ class DownloadActivityController extends Controller
      * @var DownloadActivityService
      */
     protected DownloadActivityService $downloadActivityService;
+
+    /**
+     * @var DownloadXlsService
+     */
+    protected DownloadXlsService $downloadXlsService;
 
     /**
      * @var CsvGenerator
@@ -51,12 +63,14 @@ class DownloadActivityController extends Controller
         DownloadActivityService $downloadActivityService,
         CsvGenerator $csvGenerator,
         XmlServiceProvider $xmlServiceProvider,
-        AuditService $auditService
+        AuditService $auditService,
+        DownloadXlsService $downloadXlsService,
     ) {
         $this->downloadActivityService = $downloadActivityService;
         $this->csvGenerator = $csvGenerator;
         $this->xmlServiceProvider = $xmlServiceProvider;
         $this->auditService = $auditService;
+        $this->downloadXlsService = $downloadXlsService;
     }
 
     /**
@@ -94,6 +108,156 @@ class DownloadActivityController extends Controller
             $this->auditService->auditEvent(null, 'download', 'csv');
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity csv.']);
+        }
+    }
+
+    /**
+     * Prepare selected activities in xls format.
+     *
+     * @param Request $request
+     *
+     * @return BinaryFileResponse|JsonResponse
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface|\Throwable
+     */
+    public function prepareActivityXls(Request $request):  BinaryFileResponse|JsonResponse
+    {
+        try {
+            $userId = auth()->user()->id;
+            $awsStatusFile = awsGetFile("Xls/$userId/status.json");
+
+            if (!empty($awsStatusFile) && json_decode($awsStatusFile, true, 512, JSON_THROW_ON_ERROR)['message'] === 'Processing') {
+                return response()->json(['success' => false, 'message' => 'Previous Download on process']);
+            }
+
+            $activityIds = ($request->get('activities') && $request->get('activities') !== 'all') ?
+                json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR) : [];
+
+            if (request()->get('activities') === 'all') {
+                $activities = $this->downloadActivityService->getAllActivitiesQueryToDownload($this->sanitizeRequest($request), auth()->user());
+            } elseif (!empty($activityIds)) {
+                $activities = $this->downloadActivityService->getActivitiesQueryToDownload($activityIds, auth()->user());
+            }
+
+            if (!isset($activities) || !$activities->count()) {
+                return response()->json(['success' => false, 'message' => 'No activities selected.']);
+            }
+
+            //  first it clears all the files present on s3 like cancelStatus.json
+            //  if cancelStatus.json is present then mail won't be sent to the user
+            $this->clearPreviousXlsFilesOnS3($userId);
+            $this->downloadXlsService->storeStatus($userId, $activityIds);
+            awsUploadFile("Xls/$userId/status.json", json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
+            $this->processXlsExportJobs($request);
+
+            return response()->json(['success' => true, 'message' => 'Xls Export on process.']);
+        } catch (\Exception $e) {
+            logger()->error($e);
+            $this->downloadXlsService->deleteDownloadStatus(auth()->user()->id);
+            $this->cancelXlsDownload();
+
+            return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity Xls.']);
+        }
+    }
+
+    /**
+     * Exports xls in queue.
+     * First it generates all the 4 files , zips it , upload it to s3 and mail to the user.
+     *
+     * @param $request
+     *
+     * @return void
+     */
+    public function processXlsExportJobs($request): void
+    {
+        $authUser = auth()->user();
+        ExportXlsJob::withChain([
+            new ZipXlsFileJob($authUser->id),
+           new XlsExportMailJob($authUser->email, $authUser->username, $authUser->id),
+        ])->dispatch($request->all(), $authUser->toArray());
+    }
+
+    /**
+     * Downloads xls zip file from aws s3.
+     *
+     *
+     * @return bool|int
+     */
+    public function downloadActivityXls(): bool|int
+    {
+        $authUser = auth()->user();
+        $userId = $authUser->id;
+        $organizationName = $authUser->organization->publisher_name ?? 'xlsFiles';
+        $fileName = $organizationName . '-' . Carbon::now()->timestamp . '.zip';
+        $temporaryUrl = awsUrl("Xls/$userId/xlsFiles.zip");
+        header("Content-Disposition: attachment; filename=$fileName");
+        header('Content-Type: application/zip');
+        $this->downloadXlsService->deleteDownloadStatus($userId);
+
+        return readfile($temporaryUrl);
+    }
+
+    /**
+     * Download api to check the progress of a xls export.
+     *
+     * @return JsonResponse
+     */
+    public function xlsDownloadInProgressStatus(): JsonResponse
+    {
+        try {
+            [$status, $fileCount, $url] = $this->downloadXlsService->getDownloadStatus();
+
+            return response()->json(['success' => true, 'message' => 'Download status accessed successfully', 'status' => $status, 'file_count' => $fileCount, 'url' => $url ?? null]);
+        } catch (\Exception $e) {
+            logger()->error($e);
+
+            return response()->json(['success' => false, 'message' => 'Error has occured while trying to check download status']);
+        }
+    }
+
+    /**
+     * @return JsonResponse|void
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws \Throwable
+     */
+    public function retryXlsDownload()
+    {
+        try {
+            $activities = $this->downloadXlsService->resetDownloadStatus();
+
+            if (!empty($activities)) {
+                $userId = auth()->user()->id;
+                $this->clearPreviousXlsFilesOnS3($userId);
+                $this->prepareActivityXls(request()->merge(['activities' => json_encode($activities, JSON_THROW_ON_ERROR)]));
+            }
+        } catch (\Exception $e) {
+            logger()->error($e);
+
+            return response()->json(['success' => false, 'message' => 'Error has occured while trying to retry download']);
+        }
+    }
+
+    /**
+     * Checks if the status is completed
+     * if completed then do not upload cancel json else upload.
+     *
+     *
+     * @return JsonResponse|void
+     */
+    public function cancelXlsDownload()
+    {
+        try {
+            $userId = auth()->user()->id;
+            $this->clearPreviousXlsFilesOnS3($userId);
+            awsUploadFile("Xls/$userId/cancelStatus.json", json_encode(['success' => true, 'message' => 'Cancelled'], JSON_THROW_ON_ERROR));
+            $this->downloadXlsService->deleteDownloadStatus($userId);
+
+            return response()->json(['success' => true, 'message' => 'Cancelled Successfully']);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
         }
     }
 
@@ -171,5 +335,17 @@ class DownloadActivityController extends Controller
         }
 
         return $queryParams;
+    }
+
+    /**
+     * @param $userId
+     *
+     * @return void
+     */
+    public function clearPreviousXlsFilesOnS3($userId): void
+    {
+        awsDeleteFile("Xls/$userId/xlsFiles.zip");
+        awsDeleteFile("Xls/$userId/status.json");
+        awsDeleteFile("Xls/$userId/cancelStatus.json");
     }
 }

@@ -26,7 +26,9 @@
         ></div>
       </div>
       <div class="text-sm text-n-40">
-        Publishing {{ completedActivities }}/{{ totalActivites }}
+        Publishing {{ completedActivities }}/{{
+          publishingActivities && Object.keys(publishingActivities).length
+        }}
         activities to IATI registry
       </div>
     </div>
@@ -41,9 +43,7 @@
       >
         <div>
           <div
-            v-for="(value, name, index) in pa?.publishingActivities[
-              'activities'
-            ]"
+            v-for="(value, name, index) in publishingActivities"
             :key="index"
             class="item flex py-3"
           >
@@ -71,7 +71,7 @@
 </template>
 <script setup lang="ts">
 import { useStorage } from '@vueuse/core';
-import { onMounted, watch, computed, ref } from 'vue';
+import { onMounted, watch, computed, ref, reactive } from 'vue';
 import { useStore } from 'Store/activities/index';
 import axios from 'axios';
 
@@ -81,6 +81,9 @@ let pa = useStorage('vue-use-local-storage', {
 });
 const bulkPublishLength = ref(0);
 const openModel = ref(false);
+const publishingActivities = reactive(
+  pa.value.publishingActivities['activities']
+);
 
 const totalActivites = computed(() => {
   return (
@@ -133,6 +136,12 @@ const closeWindow = () => {
   axios.delete(`activities/delete-bulk-publish-status`);
 };
 
+const emptybulkPublishStatus = () => {
+  for (const status in publishingActivities) {
+    delete publishingActivities[status];
+  }
+};
+
 watch(
   () => store.state.bulkPublishLength,
   (value) => {
@@ -140,6 +149,11 @@ watch(
     pa = useStorage('vue-use-local-storage', {
       publishingActivities: localStorage.getItem('publishingActivities') ?? {},
     });
+    emptybulkPublishStatus();
+    Object.assign(
+      publishingActivities,
+      pa.value?.publishingActivities['activities']
+    );
   },
   { deep: true }
 );

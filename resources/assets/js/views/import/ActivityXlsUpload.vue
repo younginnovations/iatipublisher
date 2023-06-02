@@ -272,7 +272,7 @@
       </div>
     </div>
     <XlsUploadIndicator
-      v-if="xlsData"
+      v-if="xlsData || (downloading && !downloadCompleted)"
       :total-count="totalCount"
       :processed-count="processedCount"
       :xls-failed="xlsFailed"
@@ -468,7 +468,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, provide, computed, reactive, watch, Ref } from 'vue';
+import {
+  ref,
+  onMounted,
+  provide,
+  computed,
+  reactive,
+  watch,
+  Ref,
+  onUnmounted,
+} from 'vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import HoverText from 'Components/HoverText.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
@@ -484,11 +493,16 @@ interface ActivitiesInterface {
   last_page: number;
   data: object;
 }
+const xlsIndicatorMounted = ref(false);
 
 const xlsFailedMessage = ref('');
 const uploadType = ref();
 const showDownloadDropdown = ref(false);
 const activityName = ref('');
+const fileCount = ref(0);
+const xlsDownloadStatus = ref('');
+const downloadCompleted = ref(false);
+
 const toastMessage = ref('');
 const toastType = ref(false);
 const showDownloadCode = ref(false);
@@ -503,6 +517,8 @@ const selectAllValue = ref(false);
 const uploadComplete = ref(false);
 const totalCount = ref<number | null>();
 const processedCount = ref(0);
+const downloadApiUrl = ref('');
+
 const file = ref(),
   error = ref(''),
   loader = ref(false),
@@ -529,6 +545,7 @@ const sortingDirection = () => {
 
 //   return `?q=${query}&orderBy=updated_at&direction=${direction}`;
 // };
+const downloading = ref(false);
 
 watch(
   () => store.state.selectedActivities,
@@ -561,6 +578,40 @@ const mapActivityName = (name) => {
 const activityLength = computed(() => {
   return !uploadType?.value?.length;
 });
+watch(
+  () => store.state.startXlsDownload,
+  (value) => {
+    if (value) {
+      checkDownloadStatus();
+    }
+  },
+  { deep: true }
+);
+watch(
+  () => store.state.closeXlsModel,
+  () => {
+    checkDownloadStatus();
+  }
+);
+
+const checkDownloadStatus = () => {
+  const checkDownload = setInterval(function () {
+    axios.get('/activities/download-xls-progress-status').then((res) => {
+      downloading.value = !!res.data.status;
+      fileCount.value = res.data.file_count;
+      xlsDownloadStatus.value = res.data.status;
+      downloadApiUrl.value = res.data.url;
+      console.log(xlsDownloadStatus.value, 'polling for doenload status');
+      if (
+        xlsDownloadStatus.value === 'completed' ||
+        xlsDownloadStatus.value === 'failed' ||
+        !res.data.status
+      ) {
+        clearInterval(checkDownload);
+      }
+    });
+  }, 3000);
+};
 
 const downloadCode = async () => {
   let apiUrl = '/activities/download-codes/?activities=all';
@@ -763,13 +814,38 @@ const checkXlsstatus = () => {
     }
   });
 };
+
+watch(
+  () => store.state.completeXlsDownload,
+  (value) => {
+    if (value) {
+      downloadCompleted.value = true;
+      store.dispatch('updateStartXlsDownload', false);
+    }
+  },
+  { deep: true }
+);
+
+onUnmounted(() => {
+  xlsIndicatorMounted.value = false;
+});
+
 onMounted(() => {
   fetchActivities(1);
   checkXlsstatus();
+  checkDownloadStatus();
+
+  xlsIndicatorMounted.value = true;
 });
 provide('xlsFailedMessage', xlsFailedMessage);
 provide('activityLength', activityLength);
 provide('completed', uploadComplete);
+provide('xlsIndicatorMounted', xlsIndicatorMounted as Ref);
+provide('downloading', downloading);
+provide('xlsDownloadStatus', xlsDownloadStatus as Ref);
+provide('downloadApiUrl', downloadApiUrl as Ref);
+
+provide('fileCount', fileCount as Ref);
 </script>
 
 <style lang="scss"></style>

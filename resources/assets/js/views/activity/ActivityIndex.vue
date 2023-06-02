@@ -25,7 +25,7 @@
       </div>
     </div>
     <XlsUploadIndicator
-      v-if="xlsData"
+      v-if="xlsData || (downloading && !downloadCompleted)"
       :total-count="totalCount"
       :processed-count="processedCount"
       :xls-failed="xlsFailed"
@@ -37,7 +37,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, provide, reactive, ref, watch } from 'vue';
+import {
+  defineComponent,
+  onMounted,
+  provide,
+  reactive,
+  ref,
+  watch,
+  Ref,
+} from 'vue';
 import { watchIgnorable } from '@vueuse/core';
 import axios from 'axios';
 import XlsUploadIndicator from 'Components/XlsUploadIndicator.vue';
@@ -47,7 +55,8 @@ import Pagination from 'Components/TablePagination.vue';
 import PageTitle from './partials/PageTitle.vue';
 import Loader from 'Components/Loader.vue';
 import ErrorMessage from 'Components/ErrorMessage.vue';
-
+import { useStore } from 'Store/activities/index';
+const store = useStore();
 export default defineComponent({
   name: 'ActivityComponent',
   components: {
@@ -72,8 +81,13 @@ export default defineComponent({
     const activities = reactive({}) as ActivitiesInterface;
     const isLoading = ref(true);
     const activityName = ref('');
-
+    const fileCount = ref(0);
+    const downloadCompleted = ref(false);
+    const closeModel = ref(false);
+    const xlsDownloadStatus = ref('');
     const xlsData = ref(false);
+    const downloading = ref(false);
+
     const xlsFailed = ref(false);
     const xlsFailedMessage = ref('');
 
@@ -82,6 +96,7 @@ export default defineComponent({
     const processedCount = ref();
     const showXlsStatus = ref(true);
     const tableLoader = ref(true);
+    const downloadApiUrl = ref('');
     const currentURL = window.location.href;
     let endpoint = '';
     let showEmptyTemplate = false;
@@ -111,6 +126,33 @@ export default defineComponent({
       message: '',
       type: false,
     });
+    watch(
+      () => store.state.startXlsDownload,
+      (value) => {
+        if (value) {
+          checkDownloadStatus();
+        }
+      },
+      { deep: true }
+    );
+    watch(
+      () => store.state.completeXlsDownload,
+      (value) => {
+        if (value) {
+          downloadCompleted.value = true;
+          store.dispatch('updateStartXlsDownload', false);
+        }
+      },
+      { deep: true }
+    );
+    watch(
+      () => store.state.closeXlsModel,
+      (value) => {
+        if (value) {
+          checkXlsstatus();
+        }
+      }
+    );
 
     const checkXlsstatus = () => {
       axios.get('/import/xls/progress_status').then((res) => {
@@ -147,9 +189,34 @@ export default defineComponent({
         }
       });
     };
+    const checkDownloadStatus = () => {
+      const checkDownload = setInterval(function () {
+        axios.get('/activities/download-xls-progress-status').then((res) => {
+          downloading.value = !!res.data.status;
+          fileCount.value = res.data.file_count;
+          xlsDownloadStatus.value = res.data.status;
+          downloadApiUrl.value = res.data.url;
+          console.log(xlsDownloadStatus.value, 'polling for doenload status');
+          if (
+            xlsDownloadStatus.value === 'completed' ||
+            xlsDownloadStatus.value === 'failed' ||
+            !res.data.status
+          ) {
+            clearInterval(checkDownload);
+          }
+        });
+      }, 3000);
+    };
+    watch(
+      () => store.state.closeXlsModel,
+      () => {
+        checkDownloadStatus();
+      }
+    );
 
     onMounted(() => {
       checkXlsstatus();
+      checkDownloadStatus();
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
@@ -179,6 +246,7 @@ export default defineComponent({
         }, 10000);
       }
     );
+
     const state = reactive({
       showButtons: false,
     });
@@ -235,6 +303,11 @@ export default defineComponent({
     provide('refreshToastMsg', refreshToastMsg);
     provide('xlsFailedMessage', xlsFailedMessage);
     provide('completed', importCompleted);
+    provide('downloading', downloading);
+    provide('fileCount', fileCount as Ref);
+    provide('xlsDownloadStatus', xlsDownloadStatus as Ref);
+    provide('downloadApiUrl', downloadApiUrl as Ref);
+    provide('closeModel', closeModel as Ref);
 
     return {
       activities,
@@ -256,6 +329,8 @@ export default defineComponent({
       xlsFailed,
       xlsFailedMessage,
       importCompleted,
+      downloadCompleted,
+      downloading,
     };
   },
 });

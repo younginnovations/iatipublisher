@@ -8,9 +8,7 @@
     class="!fixed z-[100] rounded bg-eggshell duration-300"
   >
     <div class="mb-5 flex items-start justify-between">
-      <h6 v-if="maximize && xlsFailed" class="font-bold">Upload Failed</h6>
-
-      <h6 v-if="maximize && !xlsFailed" class="font-bold">Upload in progess</h6>
+      <h6 v-if="maximize" class="font-bold">Upload in progress</h6>
       <div v-if="maximize" class="flex items-center space-x-3">
         <button
           class="text-xs font-bold uppercase text-bluecoral"
@@ -131,7 +129,7 @@
     </div>
   </div>
   <button
-    v-if="totalCount === processedCount || xlsFailed"
+    v-if="(totalCount === processedCount || xlsFailed) && !maximize"
     class="absolute right-0 bottom-[80px] translate-x-4 rounded-full bg-white p-[1px]"
     @click="$emit('close')"
   >
@@ -151,7 +149,6 @@ import {
   inject,
   ref,
   computed,
-  onUnmounted,
 } from 'vue';
 import spinnerLoader from './spinnerLoader.vue';
 import axios from 'axios';
@@ -237,18 +234,6 @@ watch(
   },
   { deep: true }
 );
-
-onUnmounted(() => {
-  localStorage.setItem('maximize', '');
-
-  const supportButton: HTMLElement = document.querySelector(
-    '#launcher'
-  ) as HTMLElement;
-
-  if (supportButton !== null) {
-    supportButton.style.transform = 'translatey(0px)';
-  }
-});
 
 const percentageWidth = computed(() => {
   console.log('width');

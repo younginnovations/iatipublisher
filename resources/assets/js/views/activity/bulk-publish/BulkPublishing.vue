@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="!xlsData"
+    v-if="!xlsData && !(downloading && !downloadCompleted)"
     id="publishing_activities"
     :class="isLoading && 'hidden'"
     class="z-50 w-[366px]"
@@ -68,9 +68,13 @@ import {
 } from 'vue';
 import axios from 'axios';
 import { detailStore } from 'Store/activities/show';
+import { useStore } from 'Store/activities/index';
+const singleStore = useStore();
 const emit = defineEmits(['close']);
 const store = detailStore();
 const xlsData = ref(false);
+const downloading = ref(false);
+const downloadCompleted = ref(false);
 
 const isLoading = ref(false);
 
@@ -122,34 +126,45 @@ let intervalID;
 onMounted(() => {
   completed.value = paStorage.value.publishingActivities.status ?? 'processing';
   bulkPublishStatus();
-
+  console.log(downloading.value, 'downloading value');
   if (!(activities.value && Object.keys(activities.value).length > 0)) {
     closeWindow();
   }
 
   //check constantly in a inter for when support button enters the dom
-  const checkSupportButton = setInterval(() => {
-    const supportButton: HTMLElement = document.querySelector(
-      '#launcher'
-    ) as HTMLElement;
+  if (!xlsData.value && !(downloading.value && !downloadCompleted.value)) {
+    const checkSupportButton = setInterval(() => {
+      const supportButton: HTMLElement = document.querySelector(
+        '#launcher'
+      ) as HTMLElement;
 
-    if (
-      supportButton !== null &&
-      activities.value &&
-      Object.keys(activities.value).length > 0
-    ) {
-      supportButton.style.transform = 'translate(-350px ,-20px)';
+      if (
+        supportButton !== null &&
+        activities.value &&
+        Object.keys(activities.value).length > 0
+      ) {
+        supportButton.style.transform = 'translate(-350px ,-20px)';
 
-      supportButton.style.opacity = '0';
-      setTimeout(() => {
-        supportButton.style.opacity = '1';
-      }, 300);
-      clearInterval(checkSupportButton);
-    }
-  }, 10);
+        supportButton.style.opacity = '0';
+        setTimeout(() => {
+          supportButton.style.opacity = '1';
+        }, 300);
+        clearInterval(checkSupportButton);
+      }
+    }, 10);
+  }
 
   checkXlsstatus();
+  checkDownloadStatus();
 });
+
+watch(
+  () => singleStore.state.bulkPublishLength,
+  () => {
+    bulkPublishStatus();
+  },
+  { deep: true }
+);
 
 setTimeout(() => {
   const supportButton: HTMLElement = document.querySelector(
@@ -165,7 +180,15 @@ setTimeout(() => {
     supportButton.style.opacity = '1';
   }
 }, 720);
-
+watch(
+  () => singleStore.state.completeXlsDownload,
+  (value) => {
+    if (value) {
+      downloadCompleted.value = true;
+    }
+  },
+  { deep: true }
+);
 onUnmounted(() => {
   const supportButton: HTMLElement = document.querySelector(
     '#launcher'
@@ -180,9 +203,17 @@ onUnmounted(() => {
 const checkXlsstatus = () => {
   axios.get('/import/xls/progress_status').then((res) => {
     xlsData.value = Object.keys(res.data.status).length > 0;
-
-    console.log(res.data.status, 'from bulkpublish');
   });
+};
+const checkDownloadStatus = () => {
+  const checkDownload = setInterval(function () {
+    axios.get('/activities/download-xls-progress-status').then((res) => {
+      downloading.value = !!res.data.status;
+      if (res.data.status === 'completed' || !res.data.status) {
+        clearInterval(checkDownload);
+      }
+    });
+  }, 500);
 };
 
 // watching change in value of completed
@@ -215,7 +246,10 @@ const bulkPublishStatus = () => {
       )
       .then((res) => {
         const response = res.data;
-
+        // console.log(response, 'polling bulkpublsh');
+        if (!response.publishing) {
+          clearInterval(intervalID);
+        }
         if ('data' in response) {
           activities.value = response.data.activities;
           completed.value = response.data.status;
@@ -225,7 +259,6 @@ const bulkPublishStatus = () => {
             response.data.activities;
           paStorage.value.publishingActivities.status = response.data.status;
           paStorage.value.publishingActivities.message = response.data.message;
-
           if (completed.value === 'completed') {
             clearInterval(intervalID);
 

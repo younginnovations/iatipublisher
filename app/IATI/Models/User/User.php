@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace App\IATI\Models\User;
 
 use App\IATI\Models\Organization\Organization;
+use App\IATI\Services\Download\DownloadXlsService;
 use App\Mail\NewUserEmail;
+use App\Mail\XlsDownloadMail;
 use Database\Factories\IATI\Models\User\UserFactory;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -162,6 +165,29 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
         ];
 
         Mail::to($user->email)->send(new NewUserEmail($user, $mailDetails));
+    }
+
+    /**
+     * @param $email
+     * @param $username
+     * @param $userId
+     *
+     * @return void
+     *
+     * @throws BindingResolutionException
+     */
+    public static function sendXlsDownloadLink($email, $username, $userId): void
+    {
+        $downloadXlsService = app()->make(DownloadXlsService::class);
+        $mailDetails = [
+            'greeting' => 'Hello ' . $username,
+            'message' => 'Your Xls Files are ready for download.',
+        ];
+        Mail::to($email)->send(new XlsDownloadMail($mailDetails));
+        $downloadStatusData = [
+            'status' => 'completed',
+        ];
+        $downloadXlsService->updateDownloadStatus($userId, $downloadStatusData);
     }
 
     /**
