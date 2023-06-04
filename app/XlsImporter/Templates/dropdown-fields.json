@@ -255,7 +255,8 @@
         "title narrative language": "Activity/Language.json",
         "description narrative language": "Activity/Language.json",
         "category code": "Activity/DocumentCategory.json",
-        "language language": "Activity/Language.json"
+        "language language": "Activity/Language.json",
+        "language code": "Activity/Language.json"
     },
     "actual": {
         "actual_identifier": true,
@@ -267,7 +268,8 @@
         "title narrative language": "Activity/Language.json",
         "description narrative language": "Activity/Language.json",
         "category code": "Activity/DocumentCategory.json",
-        "language language": "Activity/Language.json"
+        "language language": "Activity/Language.json",
+        "language code": "Activity/Language.json"
     },
     "transactions": {
         "activity_identifier": true,
