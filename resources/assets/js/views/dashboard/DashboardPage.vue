@@ -40,6 +40,7 @@
     <DashboardStatsSection :current-view="currentView" />
     <DashboardListSection
       :current-view="currentView"
+      :table-data="tableData"
       @table-nav="(n) => handleChangeTableNav(n)"
     />
   </div>
@@ -48,9 +49,52 @@
 <script setup lang="ts">
 import DashboardStatsSection from './DashboardStatsSection.vue';
 import DashboardListSection from './DashboardListSection.vue';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+
+interface tableDataType {
+  label: string;
+  total: number;
+}
+
+const currentNav = ref('type');
+const tableData = ref<any>([]);
 const currentView = ref('publisher');
 const handleChangeTableNav = (item) => {
-  console.log(item);
+  currentNav.value = item;
+  fetchTableData();
+};
+
+onMounted(() => {
+  fetchTableData();
+});
+
+const fetchTableData = () => {
+  axios
+    .get(`/dashboard/${currentView.value}/${currentNav.value}`)
+    .then((res) => {
+      let response = res.data;
+      Object.keys(response.data?.codelist)?.map((key) => {
+        console.log(response.data?.codelist, 'item');
+        tableData.value.push({
+          label: response.data?.codelist[key],
+          id: key,
+          total: null,
+        });
+      });
+
+      Object.keys(response.data?.publisher_type)?.map((key) => {
+        tableData.value.map((item, index) => {
+          if (item.id == key) {
+            tableData.value[index].total = response.data?.publisher_type[key];
+          }
+        });
+      });
+
+      tableData.value = tableData.value.filter(function (el) {
+        return el.total != null;
+      });
+      console.log(tableData.value);
+    });
 };
 </script>

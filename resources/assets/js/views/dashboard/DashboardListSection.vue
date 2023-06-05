@@ -20,7 +20,7 @@
             <li
               v-for="item in currentNavList"
               :key="item.label"
-              class="w-[270px] p-3 text-sm text-n-50"
+              class="w-[270px] cursor-pointer p-3 text-sm text-n-50"
               :class="activeClass === item.label ? 'activeNav' : ''"
               @click="fetchTableData(item)"
             >
@@ -38,7 +38,6 @@
 </template>
 <script lang="ts" setup>
 import { ref, defineProps, watch, onMounted } from 'vue';
-import axios from 'axios';
 import { defineEmits } from 'vue';
 
 const emit = defineEmits(['tableNav']);
@@ -57,6 +56,11 @@ const publisherNavList = [
 ];
 
 const currentNavList = ref(publisherNavList);
+
+onMounted(() => {
+  console.log(props.tableData, 'as props');
+});
+
 watch(
   () => props.currentView,
   (value) => {
@@ -73,6 +77,10 @@ watch(
 const props = defineProps({
   currentView: {
     type: String,
+    required: true,
+  },
+  tableData: {
+    type: [Object],
     required: true,
   },
 });
