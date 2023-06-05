@@ -1328,8 +1328,6 @@ function group_by($key, $data)
 
     foreach ($data as $val) {
         if (array_key_exists($key, $val)) {
-            foreach ($val as $keyValue => $value) {
-            }
             $result[$val[$key]] = $val;
         } else {
             $result[''] = $val;

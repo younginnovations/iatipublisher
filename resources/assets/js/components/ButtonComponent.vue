@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'ButtonComponent',

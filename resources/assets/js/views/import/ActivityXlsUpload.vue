@@ -539,10 +539,10 @@ watch(
   }
 );
 
-const retry = () => {
-  axios.delete(`/import/xls`);
-  window.location.href = '/import/xls';
-};
+// const retry = () => {
+//   axios.delete(`/import/xls`);
+//   window.location.href = '/import/xls';
+// };
 
 const mapActivityName = (name) => {
   switch (name) {
@@ -653,7 +653,7 @@ function uploadFile() {
     };
     let data = new FormData();
     data.append('activity', activity);
-    data.append('xlsType', xlsType.value as any);
+    data.append('xlsType', xlsType.value as string);
     error.value = '';
     axios
       .post('/import/xls', data, config)

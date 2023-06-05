@@ -611,7 +611,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, onMounted } from 'vue';
+import { defineComponent, toRefs } from 'vue';
 
 //composable
 import dateFormat from 'Composable/dateFormat';
@@ -620,7 +620,6 @@ import getActivityTitle from 'Composable/title';
 //components
 import NotYet from 'Components/sections/HaveNotAddedYet.vue';
 import Btn from 'Components/buttons/Link.vue';
-import { refDebounced } from '@vueuse/core';
 
 export default defineComponent({
   name: 'ResultIndicator',
@@ -645,18 +644,6 @@ export default defineComponent({
   },
   setup(props) {
     let { result } = toRefs(props);
-    function isEmpty(data) {
-      return Object.values(data).map((item) => {
-        // if (item) {
-        // if (item != null && typeof item)
-        // console.log(Object.values(item)['0'], 'item');
-        // }
-        return item;
-      });
-    }
-    onMounted(() => {
-      // console.log(isEmpty(props.result.result.document_link['0']), 'this');
-    });
 
     const countDocumentLink = (document_link) => {
       console.log(document_link);
