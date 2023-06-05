@@ -445,8 +445,8 @@
         <p class="text-sm text-n-50">
           We are in the process of uploading '{{
             mapActivityName(activityName)
-          }}' file. Please wait for the completion of previous import or click
-          on "Import Anyway".
+          }}' file. Please wait for the completion of previous import
+          {{ uploadComplete ? 'or click on "Import Anyway"' : '' }}.
         </p>
       </div>
 
@@ -467,6 +467,7 @@
         <BtnComponent
           text="Import Anyway"
           type="primary"
+          v-if="uploadComplete"
           @click="importAnyway"
         />
       </div>
@@ -585,10 +586,6 @@ const downloadCode = async () => {
   var blob = new Blob([req.data], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   });
-
-  // var blob = new Blob([req.data], {
-  //   type: 'application/vnd.ms-excel',
-  // });
   const link = document.createElement('a');
   link.href = window.URL.createObjectURL(blob);
   link.download = 'identifiers.xlsx';
@@ -734,7 +731,6 @@ const checkXlsstatus = () => {
     if (res?.data?.status?.status === 'completed') {
       uploadComplete.value = true;
     } else if (res?.data?.status?.status === 'failed') {
-      console.log('here');
       xlsFailed.value = true;
       xlsFailedMessage.value = res?.data?.status?.message;
     } else {

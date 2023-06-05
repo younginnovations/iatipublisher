@@ -44,6 +44,8 @@ use Illuminate\Support\Arr;
 trait ErrorValidationRules
 {
     /**
+     * Validation for title.
+     *
      * @param array $activity
      *
      * @return array
@@ -54,6 +56,8 @@ trait ErrorValidationRules
     }
 
     /**
+     * Validation for activity status.
+     *
      * @param array $activity
      *
      * @return array
@@ -64,6 +68,8 @@ trait ErrorValidationRules
     }
 
     /**
+     * Validation for default values.
+     *
      * @param array $activity
      *
      * @return array
@@ -80,6 +86,8 @@ trait ErrorValidationRules
     }
 
     /**
+     * Validation for reporting org.
+     *
      * @return array
      */
     protected function errorForReportingOrg(): array
@@ -90,6 +98,8 @@ trait ErrorValidationRules
     }
 
     /**
+     * Validation for activity scope.
+     *
      * @param array $activity
      *
      * @return array
@@ -100,6 +110,8 @@ trait ErrorValidationRules
     }
 
     /**
+     * Validation for collaboration type.
+     *
      * @param array $activity
      *
      * @return array
@@ -110,6 +122,8 @@ trait ErrorValidationRules
     }
 
     /**
+     * Validation for default flow type.
+     *
      * @param array $activity
      *
      * @return array
@@ -120,6 +134,8 @@ trait ErrorValidationRules
     }
 
     /**
+     * Validation for default finance type.
+     *
      * @param array $activity
      *
      * @return array
@@ -130,6 +146,8 @@ trait ErrorValidationRules
     }
 
     /**
+     * Validation for default tied status.
+     *
      * @param array $activity
      *
      * @return array
@@ -140,6 +158,8 @@ trait ErrorValidationRules
     }
 
     /**
+     * Validation for capital spend.
+     *
      * @param array $activity
      *
      * @return array
@@ -177,6 +197,7 @@ trait ErrorValidationRules
      * Rules for Activity Date.
      *
      * @param array $activity
+     *
      * @return array
      */
     protected function errorForActivityDate(array $activity): array
@@ -188,6 +209,7 @@ trait ErrorValidationRules
      * Rules for Contact Info.
      *
      * @param array $activity
+     *
      * @return array
      */
     protected function errorForContactInfo(array $activity): array
@@ -197,7 +219,9 @@ trait ErrorValidationRules
 
     /**
      * returns rules for participating organization.
+     *
      * @param array $activity
+     *
      * @return array
      */
     public function errorForParticipatingOrg(array $activity): array
@@ -207,7 +231,9 @@ trait ErrorValidationRules
 
     /**
      * returns rules for recipient country form.
+     *
      * @param array $activity
+     *
      * @return array
      */
     public function errorForRecipientCountry(array $activity): array
@@ -217,7 +243,9 @@ trait ErrorValidationRules
 
     /**
      * returns rules for recipient region.
+     *
      * @param array $activity
+     *
      * @return array
      */
     public function errorForRecipientRegion(array $activity): array
@@ -227,7 +255,9 @@ trait ErrorValidationRules
 
     /**
      * returns rules for sector form.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function errorForSector(array $activity): array
@@ -237,7 +267,9 @@ trait ErrorValidationRules
 
     /**
      * returns rules for location form.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function errorForLocation(array $activity): array
@@ -247,7 +279,9 @@ trait ErrorValidationRules
 
     /**
      * returns rules for country budget item form.
+     *
      * @param array $activity
+     *
      * @return array
      */
     public function errorForCountryBudgetItem(array $activity): array
@@ -273,6 +307,7 @@ trait ErrorValidationRules
      * Get rules for Policy Marker.
      *
      * @param array $activity
+     *
      * @return array
      */
     public function errorForPolicyMarker(array $activity): array
@@ -284,6 +319,7 @@ trait ErrorValidationRules
      * Get rules for Budget.
      *
      * @param array $activity
+     *
      * @return array
      */
     protected function errorForBudget(array $activity): array
@@ -292,7 +328,10 @@ trait ErrorValidationRules
     }
 
     /**
+     * Error for planned disbursement.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function errorForPlannedDisbursement(array $activity): array
@@ -301,7 +340,10 @@ trait ErrorValidationRules
     }
 
     /**
+     * Error validation for document link.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function errorForDocumentLink(array $activity): array
@@ -310,7 +352,10 @@ trait ErrorValidationRules
     }
 
     /**
+     * Error validation for related activity.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function errorForRelatedActivity(array $activity): array
@@ -319,7 +364,10 @@ trait ErrorValidationRules
     }
 
     /**
+     * Error validation for legacy data.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function errorForLegacyData(array $activity): array
@@ -328,7 +376,10 @@ trait ErrorValidationRules
     }
 
     /**
+     * Error validation for condition.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function errorForCondition(array $activity): array
@@ -342,7 +393,9 @@ trait ErrorValidationRules
 
     /**
      * returns rules for transaction.
+     *
      * @param $activity
+     *
      * @return array
      */
     protected function errorForTransaction($activity): array
@@ -363,7 +416,9 @@ trait ErrorValidationRules
 
     /**
      * returns rules for result.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function errorForResult(array $activity): array
@@ -396,9 +451,11 @@ trait ErrorValidationRules
 
     /**
      * returns rules for indicator.
+     *
      * @param $indicators
      * @param $resultBase
      * @param $result
+     *
      * @return array
      */
     protected function getErrorsForIndicator($indicators, $resultBase, $result): array
@@ -426,8 +483,11 @@ trait ErrorValidationRules
 
     /**
      * returns rules for period.
+     *
      * @param $formFields
      * @param $formBase
+     * @param $indicator
+     *
      * @return array
      */
     protected function getErrorsForPeriod($formFields, $formBase, $indicator): array
@@ -450,6 +510,7 @@ trait ErrorValidationRules
      * return rules for tag.
      *
      * @param array $activity
+     *
      * @return array
      */
     public function errorForTag(array $activity): array
@@ -461,6 +522,7 @@ trait ErrorValidationRules
      * returns rules for default aid type.
      *
      * @param array $activity
+     *
      * @return array
      */
     protected function errorForDefaultAidType(array $activity): array
