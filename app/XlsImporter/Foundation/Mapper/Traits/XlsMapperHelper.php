@@ -348,4 +348,19 @@ trait XlsMapperHelper
 
         return false;
     }
+
+    public function setValueToField($elementBase, $elementAddMore, $elementData, $baseCount, $parentBaseCount, $fieldName, $fieldValue, $elementActivityIdentifier, $element, $cell)
+    {
+        $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
+        $elementPositionBasedOnParent = $elementBase && $elementAddMore ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
+
+        if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null)) && !empty($elementPosition)) {
+            $fieldValue = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
+            Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
+            $this->columnTracker[$elementActivityIdentifier][$element][$element . '.' . $elementPositionBasedOnParent]['sheet'] = $this->sheetName;
+            $this->columnTracker[$elementActivityIdentifier][$element][$element . '.' . $elementPositionBasedOnParent]['cell'] = $cell . $this->rowCount;
+        }
+
+        return $elementData;
+    }
 }

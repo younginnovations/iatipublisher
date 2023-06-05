@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\XlsImporter\Foundation\Mapper;
 
-use App\XlsImporter\Foundation\Mapper\Traits\XlsMapperHelper;
 use App\XlsImporter\Foundation\XlsValidator\Validators\ActivityValidator;
 use Illuminate\Support\Arr;
 
@@ -13,10 +12,6 @@ use Illuminate\Support\Arr;
  */
 class Activity
 {
-    use XlsMapperHelper {
-        getElementPosition as getElementPosition;
-    }
-
     /**
      * @var array
      */
@@ -45,6 +40,9 @@ class Activity
         'Transaction' => 'transactions',
     ];
 
+    /**
+     * @var array
+     */
     protected array $singleValuedElements = [
         'activity_status',
         'activity_scope',
@@ -66,6 +64,9 @@ class Activity
         'budget_not_provided',
     ];
 
+    /**
+     * @var array
+     */
     protected array $enclosedNarrative = [
         'country_budget_items',
         'location',
@@ -79,6 +80,7 @@ class Activity
 
     /**
      * total number of activities.
+     * @var
      */
     protected int $totalCount = 0;
 
@@ -344,11 +346,6 @@ class Activity
         foreach ($data as $index => $row) {
             $tempRowCount++;
             if ($this->checkRowNotEmpty($row)) {
-                // if ($index === 0 && is_null($row['activity_identifier'])) {
-                //     $this->globalErrors[] = 'Error detected on ' . $this->sheetName . ' sheet, cell A' . $tempRowCount . ': Identifier is missing.';
-                //     continue;
-                // }
-
                 if (
                     is_null($elementActivityIdentifier) || (
                         Arr::get($row, 'activity_identifier', null) &&
@@ -467,15 +464,7 @@ class Activity
                     $dependentOnValue[$fieldName] = $fieldValue;
                 }
 
-                $elementPosition = $this->getActivityElementPosition($parentBaseCount, $fieldName);
-                $elementPositionBasedOnParent = $elementBase && $elementAddMore ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
-
-                if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null)) && !empty($elementPosition)) {
-                    $fieldValue = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
-                    Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
-                    $this->columnTracker[$elementActivityIdentifier][$element][$element . '.' . $elementPositionBasedOnParent]['sheet'] = $this->sheetName;
-                    $this->columnTracker[$elementActivityIdentifier][$element][$element . '.' . $elementPositionBasedOnParent]['cell'] = $cell . $this->rowCount;
-                }
+                $elementData = $this->setValueToField($elementBase, $elementAddMore, $elementData, $baseCount, $parentBaseCount, $fieldName, $fieldValue, $elementActivityIdentifier, $element, $cell);
             }
 
             $this->rowCount++;
@@ -492,7 +481,7 @@ class Activity
         return $elementData;
     }
 
-    public function getActivityElementPosition($fieldDependency, $dependencies): string
+    public function getElementPosition($fieldDependency, $dependencies): string
     {
         $position = '';
         $dependency = explode(' ', $dependencies);

@@ -376,16 +376,18 @@ class Indicator
                     $dependentOnValue[$fieldName] = $fieldValue;
                 }
 
-                $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
-                // map element position from parent
-                $elementPositionBasedOnParent = $elementBase && $elementAddMore ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
+                $elementData = $this->setValueToField($elementBase, $elementAddMore, $elementData, $baseCount, $parentBaseCount, $fieldName, $fieldValue, $elementActivityIdentifier, $element, Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName));
 
-                if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null))) {
-                    $fieldValue = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
-                    Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
-                    $this->tempColumnTracker[$elementPositionBasedOnParent]['sheet'] = $this->sheetName;
-                    $this->tempColumnTracker[$elementPositionBasedOnParent]['cell'] = Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
-                }
+                // $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
+                // // map element position from parent
+                // $elementPositionBasedOnParent = $elementBase && $elementAddMore ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
+
+                // if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null))) {
+                //     $fieldValue = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
+                //     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
+                //     $this->tempColumnTracker[$elementPositionBasedOnParent]['sheet'] = $this->sheetName;
+                //     $this->tempColumnTracker[$elementPositionBasedOnParent]['cell'] = Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
+                // }
             }
             $this->rowCount++;
         }
