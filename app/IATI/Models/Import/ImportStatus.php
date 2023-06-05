@@ -33,12 +33,6 @@ class ImportStatus extends Model
     ];
 
     /**
-     * @var array
-     */
-    protected $casts = [
-    ];
-
-    /**
      * Validator response belongs to an activity.
      *
      * @return BelongsTo

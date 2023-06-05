@@ -13,10 +13,28 @@ use Maatwebsite\Excel\Concerns\WithTitle;
  */
 class ArrayToXls implements FromArray, WithTitle, ShouldAutoSize
 {
+    /**
+     * @var string
+     */
     private string $title;
+
+    /**
+     * @var array
+     */
     private array $data;
+
+    /**
+     * @var array
+     */
     private array $sheetFormatting;
 
+    /**
+     * Constructor.
+     *
+     * @param $title
+     * @param $data
+     * @param $sheetFormatting
+     */
     public function __construct(string $title, array $data, array $sheetFormatting)
     {
         $this->title = $title;

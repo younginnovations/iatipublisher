@@ -129,7 +129,7 @@ class IndicatorRequest extends ActivityBaseRequest
         $tempMessages = [
             $this->getMessagesForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
             $this->getMessagesForNarrative(Arr::get($formFields, 'description', []), 'description.0'),
-            $this->getMessagesForDocumentLink(Arr::get($formFields, 'docarrayument_link', [])),
+            $this->getMessagesForDocumentLink(Arr::get($formFields, 'document_link', [])),
             $this->getMessagesForReference(Arr::get($formFields, 'reference', [])),
             $this->getMessagesForBaseline(Arr::get($formFields, 'baseline', [])),
         ];

@@ -17,6 +17,9 @@ class DownloadCodeService
      */
     protected ActivityRepository $activityRepository;
 
+    /**
+     * @var array
+     */
     protected $xlsFields = [
         'Result_Mapper' => [
             [

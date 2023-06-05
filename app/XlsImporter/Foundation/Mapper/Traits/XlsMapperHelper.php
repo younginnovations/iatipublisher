@@ -213,6 +213,11 @@ trait XlsMapperHelper
         awsUploadFile($this->statusFilePath, $status);
     }
 
+    /**
+     * Update status after completion.
+     *
+     * @return void
+     */
     public function updateStatus(): void
     {
         $status = json_encode([
@@ -255,6 +260,22 @@ trait XlsMapperHelper
         return $errors;
     }
 
+    /**
+     * Check if element supports add more and increase count.
+     *
+     * @param $elementBase
+     * @param $elementBasePeer
+     * @param $elementAddMore
+     * @param $dependentOnValue
+     * @param $fieldName
+     * @param $fieldValue
+     * @param $baseCount
+     * @param $parentBaseCount
+     * @param $row
+     * @param $element
+     *
+     * @return array
+     */
     public function checkElementAddMore($elementBase, $elementBasePeer, $elementAddMore, $dependentOnValue, $fieldName, $fieldValue, $baseCount, $parentBaseCount, $row, $element): array
     {
         if ($elementBase && ($fieldName === $elementBase && ($fieldValue || is_numeric($fieldValue) || is_bool($fieldValue) || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)))) {
@@ -279,6 +300,19 @@ trait XlsMapperHelper
         ];
     }
 
+    /**
+     * Check if subelement supports add more and increase the count.
+     *
+     * @param $fieldDependency
+     * @param $parentBaseCount
+     * @param $parentDependentOn
+     * @param $dependentOnValue
+     * @param $fieldName
+     * @param $fieldValue
+     * @param $row
+     *
+     * @return array
+     */
     public function checkSubElementAddMore($fieldDependency, $parentBaseCount, $parentDependentOn, $dependentOnValue, $fieldName, $fieldValue, $row): array
     {
         if (array_key_exists($fieldName, $fieldDependency)) {
@@ -308,7 +342,15 @@ trait XlsMapperHelper
         ];
     }
 
-    public function addProcessingErrors($parentIdentifier, $identifier)
+    /**
+     * Append processing error to existing processing errors.
+     *
+     * @param $parentIdentifier
+     * @param $identifier
+     *
+     * @return void
+     */
+    public function addProcessingErrors($parentIdentifier, $identifier): void
     {
         if (!empty($this->tempErrors)) {
             foreach ($this->tempErrors as $index => $errors) {
@@ -317,7 +359,12 @@ trait XlsMapperHelper
         }
     }
 
-    public function storeGlobalErrors()
+    /**
+     * Store global errors in aws.
+     *
+     * @return void
+     */
+    public function storeGlobalErrors(): void
     {
         $status = json_encode([
             'success' => true,
@@ -331,6 +378,16 @@ trait XlsMapperHelper
         awsUploadFile($this->globalErrorFilePath, $status);
     }
 
+    /**
+     * Check if identifier is duplicate and validate identifier format.
+     *
+     * @param $elementIdentifier
+     * @param $element
+     * @param $validate
+     * @param $type
+     *
+     * @return bool
+     */
     public function isIdentifierDuplicate($elementIdentifier, $element, $validate = false, $type = null): bool
     {
         if (in_array($elementIdentifier, Arr::get($this->trackIdentifierBySheet, $this->sheetName, []))) {
@@ -367,7 +424,23 @@ trait XlsMapperHelper
         return false;
     }
 
-    public function setValueToField($elementBase, $elementAddMore, $elementData, $baseCount, $parentBaseCount, $fieldName, $fieldValue, $elementActivityIdentifier, $element, $cell)
+    /**
+     * Set Values to their corresponding fields within element.
+     *
+     * @param $elementBase
+     * @param $elementAddMore
+     * @param $elementData
+     * @param $baseCount
+     * @param $parentBaseCount
+     * @param $fieldName
+     * @param $fieldValue
+     * @param $elementActivityIdentifier
+     * @param $element
+     * @param $cell
+     *
+     * @return array
+     */
+    public function setValueToField($elementBase, $elementAddMore, $elementData, $baseCount, $parentBaseCount, $fieldName, $fieldValue, $elementActivityIdentifier, $element, $cell): array
     {
         $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
         $elementPositionBasedOnParent = $elementBase && $elementAddMore ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;

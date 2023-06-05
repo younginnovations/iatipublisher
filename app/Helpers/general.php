@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\IATI\Models\User\Role;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 

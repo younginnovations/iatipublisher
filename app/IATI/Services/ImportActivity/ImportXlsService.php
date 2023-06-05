@@ -376,6 +376,15 @@ class ImportXlsService
         }
     }
 
+    /**
+     * Store import errors.
+     *
+     * @param $activityId
+     * @param $newErrors
+     * @param $fieldName
+     *
+     * @return void
+     */
     protected function storeImportErrors($activityId, $newErrors, $fieldName): void
     {
         $activityError = $this->importActivityErrorRepo->exists('activity_id', $activityId) ? $this->importActivityErrorRepo->findBy('activity_id', $activityId)->toArray() : [];
@@ -400,6 +409,8 @@ class ImportXlsService
     }
 
     /**
+     * Start import by updating status file.
+     *
      * @param $filename
      * @param $userId
      * @param $orgId
@@ -418,7 +429,7 @@ class ImportXlsService
     }
 
     /**
-     * Fire the XmlWasUploaded event.
+     * Fire the XlsWasUploaded event.
      *
      * @param $filename
      * @param $userId
@@ -592,27 +603,21 @@ class ImportXlsService
         return $this->importStatusRepo->deleteImportStatus(Auth::user()->organization->id, Auth::user()->id);
     }
 
-    public function getAwsXlsData($filename)
+    /**
+     * Returns data from aws file with $filename.
+     *
+     * @param $filename
+     *
+     * @return object
+     */
+    public function getAwsXlsData($filename): object|array
     {
-        try {
-            $contents = awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, Auth::user()->organization_id, Auth::user()->id, $filename));
+        $contents = awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, Auth::user()->organization_id, Auth::user()->id, $filename));
 
-            if ($contents) {
-                return json_decode($contents, false, 512, JSON_THROW_ON_ERROR);
-            }
-
-            return false;
-        } catch (Exception $exception) {
-            logger()->error(
-                sprintf('Error due to %s', $exception->getMessage()),
-                [
-                    'trace' => $exception->getTraceAsString(),
-                    'user_id' => auth()->user()->id,
-                    'filename' => $filename,
-                ]
-            );
-
-            return null;
+        if ($contents) {
+            return json_decode($contents, false, 512, JSON_THROW_ON_ERROR);
         }
+
+        return [];
     }
 }

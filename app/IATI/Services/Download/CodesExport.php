@@ -14,10 +14,22 @@ class CodesExport implements WithMultipleSheets
 {
     use Exportable;
 
+    /**
+     * @var array
+     */
     protected array $data;
 
+    /**
+     * @var array
+     */
     protected array $sheetFormats;
 
+    /**
+     * Constructor.
+     *
+     * @param $data
+     * @param $sheetFormats
+     */
     public function __construct($data, $sheetFormats)
     {
         $this->data = $data;
@@ -25,6 +37,8 @@ class CodesExport implements WithMultipleSheets
     }
 
     /**
+     * Adds data to individual sheets.
+     *
      * @return array
      */
     public function sheets(): array

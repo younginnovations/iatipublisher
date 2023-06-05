@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Illuminate\Encryption\Encrypter;
+
 if (!function_exists('customDecryptString')) {
     /**
      * @param string      $encryptedString

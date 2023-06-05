@@ -129,7 +129,15 @@ class XlsQueueProcessor
         }
     }
 
-    public function checkXlsFile($content, $xlsType)
+    /**
+     * Validates xls file format.
+     *
+     * @param $content
+     * @param $xlsType
+     *
+     * @return bool
+     */
+    public function checkXlsFile($content, $xlsType): bool
     {
         $systemSheets = Arr::get($this->getXlsSheets(), $xlsType, []);
         $excelColumns = $this->getXlsHeaders();
@@ -210,7 +218,15 @@ class XlsQueueProcessor
         return true;
     }
 
-    public function checkSheetNames($xlsSheetNames, $systemSheets)
+    /**
+     * Checks correctness of sheetname within xls file.
+     *
+     * @param $xlsSheetNames
+     * @param $systemSheets
+     *
+     * @return bool
+     */
+    public function checkSheetNames($xlsSheetNames, $systemSheets): bool
     {
         foreach ($systemSheets as $sheetName => $type) {
             if (!in_array($sheetName, $xlsSheetNames) && $type === 'required') {
@@ -231,7 +247,15 @@ class XlsQueueProcessor
         return true;
     }
 
-    public function checkFileEmpty($xlsSheetNames, $systemSheets)
+    /**
+     * Checks if the uploaded xls file is empty.
+     *
+     * @param $xlsSheetNames
+     * @param $systemSheets
+     *
+     * @return bool
+     */
+    public function checkFileEmpty($xlsSheetNames, $systemSheets): bool
     {
         foreach ($systemSheets as $sheetName => $type) {
             if (!in_array($sheetName, $xlsSheetNames) && $type === 'required') {
@@ -252,7 +276,15 @@ class XlsQueueProcessor
         return true;
     }
 
-    public function checkColumnHeader($dataHeader, $actualHeader)
+    /**
+     * Validates the column header of each sheet.
+     *
+     * @param $dataHeader
+     * @param $actualHeader
+     *
+     * @return bool
+     */
+    public function checkColumnHeader($dataHeader, $actualHeader): bool
     {
         if (count(array_diff($actualHeader, $dataHeader))) {
             return false;

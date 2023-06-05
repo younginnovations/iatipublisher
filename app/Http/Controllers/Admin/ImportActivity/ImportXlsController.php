@@ -106,18 +106,13 @@ class ImportXlsController extends Controller
                 return response()->json(['status' => 'error', 'message' => 'Import is currently on progress. Please cancel the current import to continue.']);
             }
 
-            // $this->db->beginTransaction();
-
             if ($this->importXlsService->store($file)) {
                 $user = Auth::user();
                 $this->importXlsService->startImport($file->getClientOriginalName(), $user->id, $user->organization_id, $xlsType);
             }
 
-            // $this->db->commit();
-
             return response()->json(['success' => true, 'message' => 'Uploaded successfully']);
         } catch (Exception $e) {
-            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while rendering activity import page.']);
@@ -174,14 +169,13 @@ class ImportXlsController extends Controller
         try {
             $status = $this->importXlsService->getImportStatus();
 
-            if ($status['status'] = 'failed') {
+            if (isset($status['status']) && $status['status'] === 'failed') {
                 $result = $this->importXlsService->getAwsXlsData('status.json');
                 $status['message'] = $result->message;
             }
 
             return response()->json(['success' => true, 'message' => 'Import status accessed successfully', 'status' => $status]);
         } catch (Exception $e) {
-            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error has occured while trying to check import status']);
@@ -208,7 +202,6 @@ class ImportXlsController extends Controller
 
             return response()->json(['success' => true, 'data' => $result]);
         } catch (Exception $e) {
-            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
@@ -229,7 +222,6 @@ class ImportXlsController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Import error for activity has been successfully deleted.']);
         } catch (Exception $e) {
-            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while trying to delete import error.']);
@@ -250,7 +242,6 @@ class ImportXlsController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Import status for organization has been successfully deleted.']);
         } catch (Exception $e) {
-            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while trying to delete import status.']);
@@ -283,7 +274,6 @@ class ImportXlsController extends Controller
             );
         } catch (Exception $e) {
             logger()->error($e->getMessage());
-            logger()->error($e);
 
             return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while opening import listing page.');
         }
