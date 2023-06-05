@@ -308,7 +308,7 @@ class PeriodRequest extends ActivityBaseRequest
             }
 
             if ($indicatorMeasureType['non_qualitative']) {
-                $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'numeric|required';
+                $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'required|numeric';
             } elseif ($indicatorMeasureType['qualitative'] && !empty($target['value'])) {
                 $rules[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'qualitative_empty';
             }

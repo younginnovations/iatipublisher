@@ -9,59 +9,120 @@ use App\XlsImporter\Foundation\XlsValidator\Validators\PeriodValidator;
 use Illuminate\Support\Arr;
 
 /**
- * Class Activity.
+ * Class Period.
  */
 class Period
 {
     use XlsMapperHelper;
 
-    //activities whose identifier is mentioned on setting sheet
+    /**
+     * @var array
+     */
     protected array $periods = [];
 
-    //
+    /**
+     * @var array
+     */
     protected array $indicatorIdentifier = [];
 
-    // activities whose identifier is not mentioned on setting
+    /**
+     * @var array
+     */
     protected array $periodIdentifier = [];
 
+    /**
+     * @var array
+     */
     protected array $identifiers = [];
 
+    /**
+     * @var int
+     */
     protected int $rowCount = 2;
+
+    /**
+     * @var string
+     */
     protected string $sheetName = '';
 
+    /**
+     * @var array
+     */
     protected array $targetActualIndexing = [];
+
+    /**
+     * @var array
+     */
     protected array $actualMapping = [];
 
+    /**
+     * @var array
+     */
     protected array $columnTracker = [];
+
+    /**
+     * @var array
+     */
     protected array $tempColumnTracker = [];
+
+    /**
+     * @var string
+     */
     protected string $statusFilePath = '';
+
+    /**
+     * @var string
+     */
     protected string $globalErrorFilePath = '';
+
+    /**
+     * @var string
+     */
     protected string $validatedDataFilePath = '';
 
+    /**
+     * @var array
+     */
     protected array $existingIdentifier = [];
+
+    /**
+     * @var array
+     */
     protected array $trackIdentifierBySheet = [];
 
+    /**
+     * @var array
+     */
     protected array $globalErrors = [];
 
+    /**
+     * @var array
+     */
     protected array $processingErrors = [];
+
+    /**
+     * @var array
+     */
     protected array $tempErrors = [];
 
+    /**
+     * @var array
+     */
     protected array $errorCount = [
         'critical' => 0,
         'warning' => 0,
         'error' => 0,
     ];
 
+    /**
+     * @var int
+     */
     protected int $totalCount = 0;
-    protected int $processedCount = 0;
 
-    // public function initMapper($validatedDataFilePath, $statusFilePath, $globalErrorFilePath, $existingIdentifier)
-    // {
-    //     $this->validatedDataFilePath = $validatedDataFilePath;
-    //     $this->statusFilePath = $statusFilePath;
-    //     $this->globalErrorFilePath = $globalErrorFilePath;
-    //     $this->existingIdentifier = $existingIdentifier;
-    // }
+    /**
+     * @var int
+     */
+    protected int $processedCount = 0;
 
     /**
      * @var array
@@ -74,6 +135,9 @@ class Period
         'Actual Document Link' => 'actual document_link',
     ];
 
+    /**
+     * @var array
+     */
     protected array $elementIdentifiers = [
         'period' => 'period_identifier',
         'target' => 'target_identifier',
@@ -82,6 +146,9 @@ class Period
         'actual document_link' => 'actual_identifier',
     ];
 
+    /**
+     * @var array
+     */
     protected array $mappers = [
         'Period_Mapper' => [
             'columns' => [
@@ -109,6 +176,13 @@ class Period
         ],
     ];
 
+    /**
+     * Map period sheets.
+     *
+     * @param $periodData
+     *
+     * @return static
+     */
     public function map($periodData): static
     {
         foreach ($periodData as $sheetName => $content) {
@@ -116,7 +190,7 @@ class Period
             $this->rowCount = 2;
 
             if (in_array($sheetName, array_keys($this->mappers))) {
-                $this->mapPeriods($content, $sheetName);
+                $this->storePeriodMapper($content, $sheetName);
             }
 
             if (in_array($sheetName, array_keys($this->periodDivisions))) {
@@ -127,6 +201,11 @@ class Period
         return $this;
     }
 
+    /**
+     * Returns period data for unit test.
+     *
+     * @return array
+     */
     public function getPeriodData(): array
     {
         $periodTestData = [];
@@ -140,7 +219,12 @@ class Period
         return $periodTestData;
     }
 
-    public function validateAndStoreData()
+    /**
+     * Validate period and store data in json files.
+     *
+     * @return void
+     */
+    public function validateAndStoreData(): void
     {
         $periodValidator = app(PeriodValidator::class);
 
@@ -172,7 +256,15 @@ class Period
         $this->updateStatus();
     }
 
-    public function mapPeriods($data, $sheetName)
+    /**
+     * Store mapper of period (period, baseline, target and actual).
+     *
+     * @param $data
+     * @param $sheetName
+     *
+     * @return void
+     */
+    public function storePeriodMapper($data, $sheetName): void
     {
         $mapperDetails = $this->mappers[$sheetName];
         $parentIdentifierKey = $mapperDetails['columns']['parentIdentifier'];
@@ -198,17 +290,16 @@ class Period
         }
     }
 
-    public function columnToFieldMapper($element, $data = [])
-    { // $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
-        // // map element position from parent
-        // $elementPositionBasedOnParent = $elementBase && $elementAddMore ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
-
-        // if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null))) {
-        //     $fieldValue = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
-        //     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
-        //     $this->tempColumnTracker[$elementPositionBasedOnParent]['sheet'] = $this->sheetName;
-        //     $this->tempColumnTracker[$elementPositionBasedOnParent]['cell'] = Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
-        // }
+    /**
+     * Group period data based on identifier and map them to specific periods.
+     *
+     * @param $element
+     * @param $data
+     *
+     * @return void
+     */
+    public function columnToFieldMapper($element, $data = []): void
+    {
         $elementData = [];
         $columnMapper = $this->getLinearizedActivity();
         $dependency = $this->getDependencies();
@@ -253,6 +344,17 @@ class Period
         }
     }
 
+    /**
+     * Map period values to specific fields.
+     *
+     * @param $data
+     * @param $dependency
+     * @param $elementDropDownFields
+     * @param $element
+     * @param $elementActivityIdentifier
+     *
+     * @return array
+     */
     public function getElementData($data, $dependency, $elementDropDownFields, $element, $elementActivityIdentifier): array
     {
         if (is_null($elementActivityIdentifier)) {
@@ -291,16 +393,6 @@ class Period
                 }
 
                 $elementData = $this->setValueToField($elementBase, $elementAddMore, $elementData, $baseCount, $parentBaseCount, $fieldName, $fieldValue, $elementActivityIdentifier, $element, Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName));
-
-                // $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
-                // $elementPositionBasedOnParent = $elementBase && $elementAddMore ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
-
-                // if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null))) {
-                //     $fieldValue = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
-                //     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
-                //     $this->tempColumnTracker[$elementPositionBasedOnParent]['sheet'] = $this->sheetName;
-                //     $this->tempColumnTracker[$elementPositionBasedOnParent]['cell'] = Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
-                // }
             }
             $this->rowCount++;
         }

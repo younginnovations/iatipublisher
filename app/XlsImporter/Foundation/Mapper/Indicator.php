@@ -200,6 +200,11 @@ class Indicator
         return $this;
     }
 
+    /**
+     * Returns indicator data for unit test.
+     *
+     * @return array
+     */
     public function getIndicatorData(): array
     {
         $indicatorTestData = [];
@@ -317,7 +322,7 @@ class Indicator
                     )
                 ) {
                     if (!empty($elementData)) {
-                        $this->pushIndicatorData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element, $elementActivityIdentifier));
+                        $this->appendIndicatorData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element, $elementActivityIdentifier));
                         $elementData = [];
                     }
 
@@ -337,7 +342,7 @@ class Indicator
         }
 
         if (!empty($elementData)) {
-            $this->pushIndicatorData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element, $elementActivityIdentifier));
+            $this->appendIndicatorData($element, $elementActivityIdentifier, $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $element, $elementActivityIdentifier));
             $elementData = [];
         }
     }
@@ -439,13 +444,13 @@ class Indicator
      *
      * @return void
      */
-    protected function pushIndicatorData($element, $identifier, $data): void
+    protected function appendIndicatorData($element, $identifier, $data): void
     {
         $periodElementFunctions = [
-            'indicator' => 'pushIndicator',
-            'indicator document_link' => 'pushIndicatorDocumentLink',
-            'indicator_baseline' => 'pushIndicatorBaseline',
-            'baseline document_link' => 'pushIndicatorBaselineDocumentLink',
+            'indicator' => 'appendIndicator',
+            'indicator document_link' => 'appendIndicatorDocumentLink',
+            'indicator_baseline' => 'appendIndicatorBaseline',
+            'baseline document_link' => 'appendIndicatorBaselineDocumentLink',
         ];
 
         call_user_func([$this, $periodElementFunctions[$element]], $identifier, $data);
@@ -454,7 +459,15 @@ class Indicator
         $this->tempErrors = [];
     }
 
-    protected function pushIndicator($identifier, $data): void
+    /**
+     * Append indicator.
+     *
+     * @param $identifier
+     * @param $data
+     *
+     * @return void
+     */
+    protected function appendIndicator($identifier, $data): void
     {
         $resultIdentifier = Arr::get($this->identifiers, "indicator.$identifier", null);
 
@@ -467,7 +480,15 @@ class Indicator
         $this->addProcessingErrors($resultIdentifier, $identifier);
     }
 
-    protected function pushIndicatorDocumentLink($identifier, $data): void
+    /**
+     * Appends indicator document link to parent indicator.
+     *
+     * @param $identifier
+     * @param $data
+     *
+     * @return void
+     */
+    protected function appendIndicatorDocumentLink($identifier, $data): void
     {
         $resultIdentifier = Arr::get($this->identifiers, "indicator.$identifier", null);
 
@@ -480,7 +501,15 @@ class Indicator
         $this->addProcessingErrors($resultIdentifier, $identifier);
     }
 
-    protected function pushIndicatorBaseline($identifier, $data): void
+    /**
+     * Append indicator baseline to parent indicator.
+     *
+     * @param $identifier
+     * @param $data
+     *
+     * @return void
+     */
+    protected function appendIndicatorBaseline($identifier, $data): void
     {
         $indicatorIdentifier = Arr::get($this->identifiers, "indicator_baseline.$identifier", null);
         $resultIdentifier = Arr::get($this->identifiers, "indicator.$indicatorIdentifier", null);
@@ -501,7 +530,15 @@ class Indicator
         $this->addProcessingErrors($resultIdentifier, $indicatorIdentifier);
     }
 
-    protected function pushIndicatorBaselineDocumentLink($identifier, $data): void
+    /**
+     * Append baseline document link to parent baseline of indicator.
+     *
+     * @param $identifier
+     * @param $data
+     *
+     * @return void
+     */
+    protected function appendIndicatorBaselineDocumentLink($identifier, $data): void
     {
         $indicatorIdentifier = Arr::get($this->identifiers, "indicator_baseline.$identifier", null);
         $resultIdentifier = Arr::get($this->identifiers, "indicator.$indicatorIdentifier", null);
@@ -517,14 +554,31 @@ class Indicator
         $this->addProcessingErrors($resultIdentifier, $indicatorIdentifier);
     }
 
-    protected function updateColumnTracker($resultIdentifier, $indicatorIdentifier, $keyPrefix)
+    /**
+     * Append column tracker to specific parent.
+     *
+     * @param $resultIdentifier
+     * @param $indicatorIdentifier
+     * @param $keyPrefix
+     *
+     * @return void
+     */
+    protected function updateColumnTracker($resultIdentifier, $indicatorIdentifier, $keyPrefix): void
     {
         foreach ($this->tempColumnTracker as $columnPosition => $columnIndex) {
             $this->columnTracker[$resultIdentifier][$indicatorIdentifier]['indicator']["$keyPrefix.$columnPosition"] = $columnIndex;
         }
     }
 
-    protected function checkIfIndicatorExists($resultIdentifier, $indicatorIdentifier)
+    /**
+     * Checks if indicator exists and append template.
+     *
+     * @param $resultIdentifier
+     * @param $indicatorIdentifier
+     *
+     * @return void
+     */
+    protected function checkIfIndicatorExists($resultIdentifier, $indicatorIdentifier): void
     {
         if (!isset($this->indicators[$resultIdentifier][$indicatorIdentifier]['indicator'])) {
             $activityTemplate = $this->getActivityTemplate();

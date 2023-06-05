@@ -36,11 +36,10 @@ class ImportPeriodTest extends TestCase
             $elementData = Arr::get($processedData, $key, []);
 
             if (is_array($value) && is_array($elementData)) {
-                dump(Arr::dot($value), Arr::dot($elementData));
                 $difference1 = array_diff_assoc(Arr::dot($value), Arr::dot($elementData));
                 $difference2 = array_diff_assoc(Arr::dot($elementData), Arr::dot($value));
-                dump('difference', $difference1);
-                dump('difference', $difference2);
+                $this->assertTrue(empty($difference1));
+                $this->assertTrue(empty($difference2));
             } elseif ($elementData !== $value && !(empty($value) && empty($elementData))) {
                 $this->assertTrue(false);
             }
