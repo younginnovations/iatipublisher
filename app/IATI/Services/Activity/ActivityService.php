@@ -286,13 +286,13 @@ class ActivityService
     }
 
     /**
-     * Returns allocated recipient region percent.
+     * Returns possible allocation % for Recipient Region.
      *
      * @param $activityId
      *
      * @return float
      */
-    public function getAllottedRecipientRegionPercent($activityId): float
+    public function getPossibleAllocationPercentForRecipientRegion($activityId): float
     {
         $activity = $this->getActivity($activityId);
         $data = $activity->recipient_country;
@@ -314,7 +314,7 @@ class ActivityService
      *
      * @return float
      */
-    public function getAllottedRecipientRegionPercentFileUpload($recipientCountries): float
+    public function getPossibleAllocationPercentForRecipientRegionFileUpload($recipientCountries): float
     {
         $data = $recipientCountries;
         $total = 0;
@@ -329,13 +329,13 @@ class ActivityService
     }
 
     /**
-     * Returns allocated recipient region percent.
+     * Returns possible allocation % for recipient country.
      *
      * @param $activityId
      *
      * @return float
      */
-    public function getAllottedRecipientCountryPercent($activityId): float
+    public function getPossibleAllocationPercentForRecipientCountry($activityId): float
     {
         $activity = $this->getActivity($activityId);
         $data = $activity->recipient_region;

@@ -25,7 +25,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
     /**
      * @var array
      */
-    protected array $groupedPercentRegion;
+    protected array $dataGroupedByVocabulary;
 
     /**
      * Get the validation rules that apply to the request.
@@ -36,7 +36,6 @@ class RecipientRegionRequest extends ActivityBaseRequest
     public function rules($recipient_region = []): array
     {
         $data = $this->get('recipient_region') ?? $recipient_region;
-
         $totalRules = [
             $this->getWarningForRecipientRegion($data),
             $this->getErrorsForRecipientRegion($data),
@@ -141,9 +140,9 @@ class RecipientRegionRequest extends ActivityBaseRequest
                 return ['recipient_region' => 'already_in_transactions'];
             }
 
-            $this->allottedRegionPercent = $activityService->getAllottedRecipientRegionPercent($params['id']);
+            $this->allottedRegionPercent = $activityService->getPossibleAllocationPercentForRecipientRegion($params['id']);
         } else {
-            $this->allottedRegionPercent = $activityService->getAllottedRecipientRegionPercentFileUpload($recipientCountries);
+            $this->allottedRegionPercent = $activityService->getPossibleAllocationPercentForRecipientRegionFileUpload($recipientCountries);
         }
 
         Validator::extend('allocated_region_total_mismatch', function () {
@@ -167,7 +166,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
         });
 
         $recipientRegionService = app()->make(RecipientRegionService::class);
-        $this->groupedPercentRegion = $recipientRegionService->groupRegion($formFields);
+        $this->dataGroupedByVocabulary = $recipientRegionService->groupRegion($formFields);
 
         foreach ($formFields as $recipientRegionIndex => $recipientRegion) {
             $recipientRegionForm = 'recipient_region.' . $recipientRegionIndex;
@@ -180,7 +179,7 @@ class RecipientRegionRequest extends ActivityBaseRequest
             $this->getPercentageRule($rules, $recipientRegionForm, $recipientRegion, $fileUpload, $recipientCountries);
         }
 
-        $firstGroupTotalPercentage = Arr::first($this->groupedPercentRegion, static function ($value) {
+        $firstGroupTotalPercentage = Arr::first($this->dataGroupedByVocabulary, static function ($value) {
             return $value;
         });
 
@@ -228,57 +227,60 @@ class RecipientRegionRequest extends ActivityBaseRequest
 
     /**
      * Gets Percentage rule for recipient region.
+     * Note: The rules are applied iteratively for each different vocabulary used.
      *
      * @param $rules
      * @param $fileUpload
      * @param $recipientRegionForm
      * @param $recipientRegion
      * @param $recipientCountries
+     *
      * @return array
+     * @throws BindingResolutionException
      */
     public function getPercentageRule(&$rules, $recipientRegionForm, $recipientRegion, $fileUpload, $recipientCountries): array
     {
-        $allottedRegionPercent = $this->allottedRegionPercent;
-        $groupedPercentRegion = $this->groupedPercentRegion;
-        $groupedPercentRegionVocabulary = $groupedPercentRegion[$recipientRegion['region_vocabulary']];
+        $sumOfAllGroupedPercentages = $this->allottedRegionPercent;
+        $percentagesGroupedByVocabulary = $this->dataGroupedByVocabulary;
+        $currentVocabularyData = $percentagesGroupedByVocabulary[$recipientRegion['region_vocabulary']];
         $activityService = app()->make(ActivityService::class);
 
-        if ($allottedRegionPercent !== 100.0) {
-            if ($groupedPercentRegionVocabulary['count'] > 1) {
-                if ($groupedPercentRegionVocabulary['total'] !== $allottedRegionPercent) {
+        if ($sumOfAllGroupedPercentages !== 100.0) {
+            if (Arr::get($currentVocabularyData, 'count') > 1) {
+                if ($currentVocabularyData['total'] !== $sumOfAllGroupedPercentages) {
                     $rules[$recipientRegionForm . '.percentage'][] = 'nullable';
                     $rules[$recipientRegionForm . '.percentage'][] = 'allocated_region_total_mismatch';
                 }
-            } elseif ($allottedRegionPercent === 0.0 && $groupedPercentRegionVocabulary['total'] > $allottedRegionPercent) {
+            } elseif ($sumOfAllGroupedPercentages === 0.0 && $currentVocabularyData['total'] > $sumOfAllGroupedPercentages) {
                 $rules[$recipientRegionForm . '.percentage'][] = 'country_percentage_complete';
-            } elseif ($allottedRegionPercent !== 0.0) {
-                $rules[$recipientRegionForm . '.percentage'][] = 'in:' . $allottedRegionPercent;
+            } elseif ($sumOfAllGroupedPercentages !== 0.0) {
+                $rules[$recipientRegionForm . '.percentage'][] = 'in:' . $sumOfAllGroupedPercentages;
             } else {
                 $rules[$recipientRegionForm . '.percentage'][] = 'nullable';
             }
-        } elseif ($groupedPercentRegionVocabulary['total'] > 100.0 && ($groupedPercentRegionVocabulary['total'] - 100.0) > 0.00001) {
+        } elseif ($currentVocabularyData['total'] > 100.0 && ($currentVocabularyData['total'] - 100.0) > 0.00001) {
             $rules[$recipientRegionForm . '.percentage'][] = 'sum_greater_than';
-        } elseif ($groupedPercentRegionVocabulary['total'] !== $groupedPercentRegion[array_key_first($groupedPercentRegion)]['total']) {
+        } elseif ($currentVocabularyData['total'] !== $percentagesGroupedByVocabulary[array_key_first($percentagesGroupedByVocabulary)]['total']) {
             $rules[$recipientRegionForm . '.percentage'][] = 'percentage_within_vocabulary';
         }
 
         if (!$fileUpload) {
             $params = $this->route()->parameters();
 
-            if ($groupedPercentRegionVocabulary['total'] === 0.0 && !$activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
+            if ($currentVocabularyData['total'] === 0.0 && !$activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
                 $rules[$recipientRegionForm . '.percentage'][] = 'nullable';
-            } elseif ($groupedPercentRegionVocabulary['total'] < $allottedRegionPercent && $activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
-                if ($groupedPercentRegionVocabulary['total'] !== $groupedPercentRegion[array_key_first($groupedPercentRegion)]['total']) {
+            } elseif ($currentVocabularyData['total'] < $sumOfAllGroupedPercentages && $activityService->hasRecipientCountryDefinedInActivity($params['id'])) {
+                if ($currentVocabularyData['total'] !== $percentagesGroupedByVocabulary[array_key_first($percentagesGroupedByVocabulary)]['total']) {
                     $rules[$recipientRegionForm . '.percentage'] = 'percentage_within_vocabulary';
                 } else {
                     $rules[$recipientRegionForm . '.percentage'] = 'single_allocated_region_total_mismatch';
                 }
             }
-        } elseif ($groupedPercentRegionVocabulary['total'] === 0.0 && is_array_values_null($recipientCountries)) {
+        } elseif ($currentVocabularyData['total'] === 0.0 && is_array_values_null($recipientCountries)) {
             $rules[$recipientRegionForm . '.percentage'][] = 'nullable';
-        } elseif ($groupedPercentRegionVocabulary['total'] !== $groupedPercentRegion[array_key_first($groupedPercentRegion)]['total']) {
+        } elseif ($currentVocabularyData['total'] !== $percentagesGroupedByVocabulary[array_key_first($percentagesGroupedByVocabulary)]['total']) {
             $rules[$recipientRegionForm . '.percentage'][] = 'percentage_within_vocabulary';
-        } elseif ($groupedPercentRegionVocabulary['total'] < $allottedRegionPercent && !is_array_values_null($recipientCountries)) {
+        } elseif ($currentVocabularyData['total'] < $sumOfAllGroupedPercentages && !is_array_values_null($recipientCountries)) {
             $rules[$recipientRegionForm . '.percentage'] = 'allocated_region_total_mismatch';
         }
 
