@@ -517,6 +517,7 @@ const file = ref(),
 const store = useStore();
 const searchValue: Ref<string | null> = ref('');
 const direction = ref('');
+const processing = ref();
 
 const sortingDirection = () => {
   direction.value === 'asc'
@@ -732,11 +733,16 @@ const checkXlsstatus = () => {
     xlsData.value = Object.keys(res.data.status).length > 0;
     if (res?.data?.status?.status === 'completed') {
       uploadComplete.value = true;
-      console.log(uploadComplete.value, ';uploadcomplete');
+    } else if (res?.data?.status?.status === 'failed') {
+      console.log('here');
+      xlsFailed.value = true;
+      xlsFailedMessage.value = res?.data?.status?.message;
     } else {
       if (Object.keys(res.data.status).length > 0) {
         //reset
-        totalCount.value = 1;
+        totalCount.value = null;
+
+        processing.value = false;
         processedCount.value = 0;
         xlsFailed.value = false;
         xlsFailedMessage.value = '';
@@ -753,6 +759,9 @@ const checkXlsstatus = () => {
               processedCount.value = res.data.data?.processed_count;
               xlsFailed.value = !res.data.data?.success;
               xlsFailedMessage.value = res.data.data?.message;
+            }
+            if (res.data.data?.message === 'Processing') {
+              processing.value = true;
             }
 
             if (
@@ -777,6 +786,7 @@ onMounted(() => {
 provide('xlsFailedMessage', xlsFailedMessage);
 provide('activityLength', activityLength);
 provide('completed', uploadComplete);
+provide('processing', processing);
 </script>
 
 <style lang="scss"></style>

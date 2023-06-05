@@ -174,6 +174,11 @@ class ImportXlsController extends Controller
         try {
             $status = $this->importXlsService->getImportStatus();
 
+            if ($status['status'] = 'failed') {
+                $result = $this->importXlsService->getAwsXlsData('status.json');
+                $status['message'] = $result->message;
+            }
+
             return response()->json(['success' => true, 'message' => 'Import status accessed successfully', 'status' => $status]);
         } catch (Exception $e) {
             logger()->error($e);

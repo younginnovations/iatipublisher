@@ -76,6 +76,7 @@ export default defineComponent({
     const xlsData = ref(false);
     const xlsFailed = ref(false);
     const xlsFailedMessage = ref('');
+    const processing = ref();
 
     const importCompleted = ref(false);
     const totalCount = ref();
@@ -118,6 +119,10 @@ export default defineComponent({
         xlsData.value = Object.keys(res.data.status).length > 0;
         if (res?.data?.status?.status === 'completed') {
           importCompleted.value = true;
+        } else if (res?.data?.status?.status === 'failed') {
+          console.log('here');
+          xlsFailed.value = true;
+          xlsFailedMessage.value = res?.data?.status?.message;
         } else {
           if (Object.keys(res.data.status).length > 0) {
             const checkStatus = setInterval(function () {
@@ -133,6 +138,9 @@ export default defineComponent({
                   processedCount.value = res.data.data?.processed_count;
                   xlsFailed.value = !res.data.data?.success;
                   xlsFailedMessage.value = res.data.data?.message;
+                }
+                if (res.data.data?.message === 'Processing') {
+                  processing.value = true;
                 }
                 if (
                   !res.data?.data?.success ||
@@ -235,6 +243,7 @@ export default defineComponent({
     provide('refreshToastMsg', refreshToastMsg);
     provide('xlsFailedMessage', xlsFailedMessage);
     provide('completed', importCompleted);
+    provide('processing', processing);
 
     return {
       activities,

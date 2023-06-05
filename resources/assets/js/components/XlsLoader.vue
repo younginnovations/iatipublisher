@@ -115,7 +115,8 @@
       </p>
       <p v-else class="text-sm text-n-40">
         Uploading
-        <span v-if="totalCount">
+        <span v-if="totalCount && processing">
+          <!-- {{ totalCount }} {{ processing }} -->
           {{ `${processedCount} / ${totalCount}` }}</span
         >
         '{{ currentActivity }}'
@@ -263,4 +264,5 @@ const percentageWidth = computed(() => {
 });
 
 const xlsFailedMessage = inject('xlsFailedMessage');
+const processing = inject('processing');
 </script>
