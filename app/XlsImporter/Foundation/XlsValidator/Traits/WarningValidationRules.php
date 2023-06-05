@@ -45,6 +45,8 @@ use Illuminate\Support\Arr;
 trait WarningValidationRules
 {
     /**
+     * Validation of activity status.
+     *
      * @param array $activity
      *
      * @return array
@@ -55,6 +57,8 @@ trait WarningValidationRules
     }
 
     /**
+     * Validation for activity scope.
+     *
      * @param array $activity
      *
      * @return array
@@ -65,6 +69,8 @@ trait WarningValidationRules
     }
 
     /**
+     * Validation for collaboration type.
+     *
      * @param array $activity
      *
      * @return array
@@ -75,6 +81,8 @@ trait WarningValidationRules
     }
 
     /**
+     * Validation for default flow type.
+     *
      * @param array $activity
      *
      * @return array
@@ -85,6 +93,8 @@ trait WarningValidationRules
     }
 
     /**
+     * Validation for default finance type.
+     *
      * @param array $activity
      *
      * @return array
@@ -95,6 +105,8 @@ trait WarningValidationRules
     }
 
     /**
+     * Validation for default tied status.
+     *
      * @param array $activity
      *
      * @return array
@@ -105,6 +117,8 @@ trait WarningValidationRules
     }
 
     /**
+     * Validation for capital spend.
+     *
      * @param array $activity
      *
      * @return array
@@ -115,6 +129,8 @@ trait WarningValidationRules
     }
 
     /**
+     * Validation for title.
+     *
      * @param array $activity
      *
      * @return array
@@ -125,6 +141,8 @@ trait WarningValidationRules
     }
 
     /**
+     * Validation for identifier.
+     *
      * @param array $activity
      *
      * @return array
@@ -162,6 +180,7 @@ trait WarningValidationRules
      * Rules for Activity Date.
      *
      * @param array $activity
+     *
      * @return array
      */
     protected function warningForActivityDate(array $activity): array
@@ -173,6 +192,7 @@ trait WarningValidationRules
      * Rules for Contact Info.
      *
      * @param array $activity
+     *
      * @return array
      */
     protected function warningForContactInfo(array $activity): array
@@ -182,7 +202,9 @@ trait WarningValidationRules
 
     /**
      * returns rules for participating organization.
+     *
      * @param array $activity
+     *
      * @return array
      */
     public function warningForParticipatingOrg(array $activity): array
@@ -192,7 +214,9 @@ trait WarningValidationRules
 
     /**
      * returns rules for recipient country form.
+     *
      * @param array $activity
+     *
      * @return array
      */
     public function warningForRecipientCountry(array $activity): array
@@ -202,7 +226,9 @@ trait WarningValidationRules
 
     /**
      * returns rules for recipient region.
+     *
      * @param array $activity
+     *
      * @return array
      */
     public function warningForRecipientRegion(array $activity): array
@@ -212,7 +238,9 @@ trait WarningValidationRules
 
     /**
      * returns rules for sector form.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function warningForSector(array $activity): array
@@ -222,7 +250,9 @@ trait WarningValidationRules
 
     /**
      * returns rules for location form.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function warningForLocation(array $activity): array
@@ -232,7 +262,9 @@ trait WarningValidationRules
 
     /**
      * returns rules for country budget item form.
+     *
      * @param array $activity
+     *
      * @return array
      */
     public function warningForCountryBudgetItems(array $activity): array
@@ -258,6 +290,7 @@ trait WarningValidationRules
      * Get rules for Policy Marker.
      *
      * @param array $activity
+     *
      * @return array
      */
     public function warningForPolicyMarker(array $activity): array
@@ -269,6 +302,7 @@ trait WarningValidationRules
      * Get rules for Budget.
      *
      * @param array $activity
+     *
      * @return array
      */
     protected function warningForBudget(array $activity): array
@@ -277,7 +311,10 @@ trait WarningValidationRules
     }
 
     /**
+     * Validation for planned disbursement.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function warningForPlannedDisbursement(array $activity): array
@@ -286,7 +323,10 @@ trait WarningValidationRules
     }
 
     /**
+     * Validation for document link.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function warningForDocumentLink(array $activity): array
@@ -295,7 +335,10 @@ trait WarningValidationRules
     }
 
     /**
+     * Validation for related activity.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function warningForRelatedActivity(array $activity): array
@@ -304,7 +347,10 @@ trait WarningValidationRules
     }
 
     /**
+     * Validation for legacy data.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function warningForLegacyData(array $activity): array
@@ -313,7 +359,10 @@ trait WarningValidationRules
     }
 
     /**
+     * Validation for condition.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function warningForCondition(array $activity): array
@@ -323,7 +372,9 @@ trait WarningValidationRules
 
     /**
      * returns rules for transaction.
+     *
      * @param $activity
+     *
      * @return array
      */
     protected function warningForTransaction($activity): array
@@ -375,9 +426,11 @@ trait WarningValidationRules
 
     /**
      * returns rules for indicator.
+     *
      * @param $indicators
      * @param $resultBase
      * @param $result
+     *
      * @return array
      */
     protected function getWarningForIndicator($indicators, $resultBase, $result): array
@@ -404,8 +457,11 @@ trait WarningValidationRules
 
     /**
      * returns rules for period.
+     *
      * @param $formFields
      * @param $formBase
+     * @param $indicator
+     *
      * @return array
      */
     protected function getWarningForPeriod($formFields, $formBase, $indicator): array
@@ -438,11 +494,14 @@ trait WarningValidationRules
     }
 
     /**
+     * Loads code list.
+     *
      * @param        $codeList
      * @param string $directory
      *
-     * @return mixed
      * @throws \JsonException
+     *
+     * @return mixed
      */
     protected function loadCodeList($codeList, string $directory = 'Activity'): mixed
     {
@@ -453,6 +512,7 @@ trait WarningValidationRules
      * return rules for tag.
      *
      * @param array $activity
+     *
      * @return array
      */
     public function warningForTag(array $activity): array
@@ -464,6 +524,7 @@ trait WarningValidationRules
      * returns rules for default aid type.
      *
      * @param array $activity
+     *
      * @return array
      */
     protected function warningForDefaultAidType(array $activity): array

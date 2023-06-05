@@ -18,12 +18,14 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 class XlsToArray implements ToArray, WithHeadingRow, WithEvents, WithCalculatedFormulas, WithMapping
 {
     /**
-     * @var
+     * Array containing name of all sheets.
+     * @var array
      */
     public $sheetNames;
 
     /**
-     * @var
+     * Array containing data present within sheets.
+     * @var array
      */
     public $sheetData;
 

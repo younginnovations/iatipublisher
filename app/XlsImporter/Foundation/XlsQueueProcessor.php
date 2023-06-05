@@ -92,11 +92,12 @@ class XlsQueueProcessor
      * @param $orgId
      * @param $userId
      *
-     * @return bool
      * @throws BindingResolutionException
      * @throws \JsonException
      * @throws ParseException
      * @throws \Throwable
+     *
+     * @return bool
      */
     public function import($filename, $orgId, $reportingOrg, $userId, $dbIatiIdentifiers, $xlsType): bool
     {

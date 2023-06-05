@@ -14,11 +14,13 @@ use App\XlsImporter\Foundation\XlsValidator\ValidatorInterface;
 class IndicatorValidator implements ValidatorInterface
 {
     /**
+     * array containing indicator and its subelements.
      * @var array
      */
     protected $indicator;
 
     /**
+     * parent result id to the indicator being validated.
      * @var
      */
     protected $resultId;
@@ -29,6 +31,8 @@ class IndicatorValidator implements ValidatorInterface
     protected $factory;
 
     /**
+     * Constructor.
+     *
      * @param Validation $factory
      */
     public function __construct(Validation $factory)
@@ -38,6 +42,10 @@ class IndicatorValidator implements ValidatorInterface
 
     /**
      * Initialize indicator for the class.
+     *
+     * @param $indicator
+     *
+     * @return static
      */
     public function init($indicator): static
     {
@@ -95,6 +103,7 @@ class IndicatorValidator implements ValidatorInterface
 
     /**
      * Returns critical rules for xml uploaded indicator.
+     *
      * @return array
      */
     public function criticalRules(): array

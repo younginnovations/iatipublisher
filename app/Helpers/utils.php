@@ -2,108 +2,116 @@
 
 declare(strict_types=1);
 
-/**
- * trim an input.
- *
- * @param $input
- *
- * @return string
- */
-function trimInput($input): string
-{
-    return trim(preg_replace('/\s+/', ' ', $input));
+if (!function_exists('trimInput')) {
+    /**
+     * trim an input.
+     *
+     * @param $input
+     *
+     * @return string
+     */
+    function trimInput($input): string
+    {
+        return trim(preg_replace('/\s+/', ' ', $input));
+    }
 }
 
-/**
- * Returns formatted date.
- *
- * @param $format
- * @param $date
- *
- * @return false|string
- */
-function dateFormat($format, $date): bool|string
-{
-    if (is_array($date) || is_bool($date)) {
-        return false;
-    }
-
-    if (is_string($date) && $date !== '') {
-        if ((str_contains($date, '/'))) {
-            $date = str_replace('/', '-', $date);
+if (!function_exists('dateFormat')) {
+    /**
+     * Returns formatted date.
+     *
+     * @param $format
+     * @param $date
+     *
+     * @return false|string
+     */
+    function dateFormat($format, $date): bool|string
+    {
+        if (is_array($date) || is_bool($date)) {
+            return false;
         }
 
-        $dateArray = date_parse_from_format('Y-m-d', $date);
+        if (is_string($date) && $date !== '') {
+            if ((str_contains($date, '/'))) {
+                $date = str_replace('/', '-', $date);
+            }
 
-        if (checkdate((int) $dateArray['month'], (int) $dateArray['day'], (int) $dateArray['year']) && (bool) strtotime($date)) {
-            return date($format, strtotime($date));
+            $dateArray = date_parse_from_format('Y-m-d', $date);
+
+            if (checkdate((int) $dateArray['month'], (int) $dateArray['day'], (int) $dateArray['year']) && (bool) strtotime($date)) {
+                return date($format, strtotime($date));
+            }
+
+            return false;
         }
 
-        return false;
+        return '';
     }
-
-    return '';
 }
 
-/**
- * Returns formatted date.
- *
- * @param $format
- * @param $date
- *
- * @return false
- */
-function isDate($date): bool
-{
-    if (is_array($date) || is_bool($date)) {
-        return false;
-    }
-
-    if (is_string($date) && $date !== '') {
-        if ((str_contains($date, '/'))) {
-            $date = str_replace('/', '-', $date);
+if (!function_exists('isDate')) {
+    /**
+     * Returns formatted date.
+     *
+     * @param $format
+     * @param $date
+     *
+     * @return false
+     */
+    function isDate($date): bool
+    {
+        if (is_array($date) || is_bool($date)) {
+            return false;
         }
 
-        $dateArray = date_parse_from_format('Y-m-d', $date);
+        if (is_string($date) && $date !== '') {
+            if ((str_contains($date, '/'))) {
+                $date = str_replace('/', '-', $date);
+            }
 
-        if (checkdate((int) $dateArray['month'], (int) $dateArray['day'], (int) $dateArray['year']) && (bool) strtotime($date)) {
-            return true;
+            $dateArray = date_parse_from_format('Y-m-d', $date);
+
+            if (checkdate((int) $dateArray['month'], (int) $dateArray['day'], (int) $dateArray['year']) && (bool) strtotime($date)) {
+                return true;
+            }
+
+            return false;
         }
 
         return false;
     }
-
-    return false;
 }
 
-/**
- * Returns strtotime date.
- *
- * @param $date
- *
- * @return false|int
- */
-function dateStrToTime($date): int|bool
-{
-    if (is_array($date)) {
-        return false;
-    }
-
-    if ($date !== '' && is_string($date)) {
-        if ((str_contains($date, '/'))) {
-            $date = str_replace('/', '-', $date);
+if (!function_exists('dateStrToTime')) {
+    /**
+     * Returns strtotime date.
+     *
+     * @param $date
+     *
+     * @return false|int
+     */
+    function dateStrToTime($date): int|bool
+    {
+        if (is_array($date)) {
+            return false;
         }
 
-        $dateArray = date_parse_from_format('Y-m-d', $date);
+        if ($date !== '' && is_string($date)) {
+            if ((str_contains($date, '/'))) {
+                $date = str_replace('/', '-', $date);
+            }
 
-        if (checkdate((int) $dateArray['month'], (int) $dateArray['day'], (int) $dateArray['year']) && (bool) strtotime($date)) {
-            return strtotime($date);
+            $dateArray = date_parse_from_format('Y-m-d', $date);
+
+            if (checkdate((int) $dateArray['month'], (int) $dateArray['day'], (int) $dateArray['year']) && (bool) strtotime($date)) {
+                return strtotime($date);
+            }
+
+            return false;
         }
 
         return false;
     }
-
-    return false;
 }
 
 if (!function_exists('array_values_recursive')) {
@@ -165,6 +173,7 @@ if (!function_exists('is_array_value_null')) {
      * Checks if array | nested array values are null or empty string.
      *
      * @param $array
+     *
      * @return bool
      */
     function is_array_value_empty($array): bool
@@ -179,25 +188,27 @@ if (!function_exists('is_array_value_null')) {
     }
 }
 
-/**
- * Function that groups an array of associative arrays by some key.
- *
- * @param {String} $key Property to sort by.
- * @param {Array} $data Array that stores multiple associative arrays.
- */
-function group_by($key, $data)
-{
-    $result = [];
+if (!function_exists('group_by')) {
+    /**
+     * Function that groups an array of associative arrays by some key.
+     *
+     * @param {String} $key Property to sort by.
+     * @param {Array} $data Array that stores multiple associative arrays.
+     */
+    function group_by($key, $data)
+    {
+        $result = [];
 
-    foreach ($data as $val) {
-        if (array_key_exists($key, $val)) {
-            $result[$val[$key]] = $val;
-        } else {
-            $result[''] = $val;
+        foreach ($data as $val) {
+            if (array_key_exists($key, $val)) {
+                $result[$val[$key]] = $val;
+            } else {
+                $result[''] = $val;
+            }
         }
-    }
 
-    return $result;
+        return $result;
+    }
 }
 
 if (!function_exists('compareStringIgnoringWhitespace')) {
@@ -215,26 +226,28 @@ if (!function_exists('compareStringIgnoringWhitespace')) {
     }
 }
 
-/**
- * Returns encoding type of the file.
- * Returns UTF-8 if any exception or charset is not found.
- *
- * @param $file
- *
- * @return string
- */
-function getEncodingType($file): string
-{
-    try {
-        $response = exec('file -i ' . $file->getPathname());
-        $charset = strripos($response, 'charset=');
+if (!function_exists('getEncodingType')) {
+    /**
+     * Returns encoding type of the file.
+     * Returns UTF-8 if any exception or charset is not found.
+     *
+     * @param $file
+     *
+     * @return string
+     */
+    function getEncodingType($file): string
+    {
+        try {
+            $response = exec('file -i ' . $file->getPathname());
+            $charset = strripos($response, 'charset=');
 
-        if ($charset) {
-            return strtoupper(substr($response, $charset + strlen('charset=')));
+            if ($charset) {
+                return strtoupper(substr($response, $charset + strlen('charset=')));
+            }
+
+            return 'UTF-8';
+        } catch (\Exception $exception) {
+            return 'UTF-8';
         }
-
-        return 'UTF-8';
-    } catch (\Exception $exception) {
-        return 'UTF-8';
     }
 }

@@ -44,6 +44,8 @@ use Illuminate\Support\Arr;
 trait ValidationMessages
 {
     /**
+     * Validation messages for activity status.
+     *
      * @param array $activity
      *
      * @return array
@@ -54,6 +56,8 @@ trait ValidationMessages
     }
 
     /**
+     * Validation messages for activity scope.
+     *
      * @param array $activity
      *
      * @return array
@@ -64,6 +68,8 @@ trait ValidationMessages
     }
 
     /**
+     * Validation message for collaboration type.
+     *
      * @param array $activity
      *
      * @return array
@@ -74,6 +80,8 @@ trait ValidationMessages
     }
 
     /**
+     * Validation message for default flow type.
+     *
      * @param array $activity
      *
      * @return array
@@ -84,6 +92,8 @@ trait ValidationMessages
     }
 
     /**
+     * Validation message for default finance type.
+     *
      * @param array $activity
      *
      * @return array
@@ -94,6 +104,8 @@ trait ValidationMessages
     }
 
     /**
+     * Validation message for default tied status.
+     *
      * @param array $activity
      *
      * @return array
@@ -104,6 +116,8 @@ trait ValidationMessages
     }
 
     /**
+     * Validation message for capital spend.
+     *
      * @param array $activity
      *
      * @return array
@@ -114,6 +128,8 @@ trait ValidationMessages
     }
 
     /**
+     * Validation message for title.
+     *
      * @param array $activity
      *
      * @return array
@@ -151,6 +167,7 @@ trait ValidationMessages
      * Messages for Activity Date.
      *
      * @param array $activity
+     *
      * @return array
      */
     protected function messagesForActivityDate(array $activity): array
@@ -162,6 +179,7 @@ trait ValidationMessages
      * Messages for Contact Info.
      *
      * @param array $activity
+     *
      * @return array
      */
     protected function messagesForContactInfo(array $activity): array
@@ -171,7 +189,9 @@ trait ValidationMessages
 
     /**
      * returns messages for participating organization.
+     *
      * @param array $activity
+     *
      * @return array
      */
     public function messagesForParticipatingOrg(array $activity): array
@@ -181,7 +201,9 @@ trait ValidationMessages
 
     /**
      * returns messages for recipient country form rules.
+     *
      * @param array $activity
+     *
      * @return array
      */
     public function messagesForRecipientCountry(array $activity): array
@@ -190,8 +212,10 @@ trait ValidationMessages
     }
 
     /**
-     * returns messages for recipient region m.
+     * returns messages for recipient region.
+     *
      * @param array $activity
+     *
      * @return array
      */
     public function messagesForRecipientRegion(array $activity): array
@@ -201,7 +225,9 @@ trait ValidationMessages
 
     /**
      * returns messages for sector form.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function messagesForSector(array $activity): array
@@ -211,7 +237,9 @@ trait ValidationMessages
 
     /**
      * returns messages for location form.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function messagesForLocation(array $activity): array
@@ -237,6 +265,7 @@ trait ValidationMessages
      * Returns messages for HumanitarianScope.
      *
      * @param array $activity
+     *
      * @return array
      */
     public function messagesForHumanitarianScope(array $activity): array
@@ -248,6 +277,7 @@ trait ValidationMessages
      * Get messages for PolicyMarker.
      *
      * @param array $activity
+     *
      * @return array
      */
     public function messagesForPolicyMarker(array $activity): array
@@ -259,6 +289,7 @@ trait ValidationMessages
      * Get messages for Budget.
      *
      * @param array $activity
+     *
      * @return array
      */
     protected function messagesForBudget(array $activity): array
@@ -267,7 +298,10 @@ trait ValidationMessages
     }
 
     /**
+     * Validation message for planned disbursement.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function messagesForPlannedDisbursement(array $activity): array
@@ -276,7 +310,10 @@ trait ValidationMessages
     }
 
     /**
+     * Validation message for document link.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function messagesForDocumentLink(array $activity): array
@@ -285,7 +322,10 @@ trait ValidationMessages
     }
 
     /**
+     * Validation message for related activity.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function messagesForRelatedActivity(array $activity): array
@@ -294,7 +334,10 @@ trait ValidationMessages
     }
 
     /**
+     * Validation message for legacy data.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function messagesForLegacyData(array $activity): array
@@ -303,7 +346,10 @@ trait ValidationMessages
     }
 
     /**
+     * Validation message for condition.
+     *
      * @param array $activity
+     *
      * @return array
      */
     protected function messagesForCondition(array $activity): array
@@ -313,7 +359,9 @@ trait ValidationMessages
 
     /**
      * returns messages for transaction.
+     *
      * @param $activity
+     *
      * @return array
      */
     protected function messagesForTransaction($activity): array
@@ -323,6 +371,7 @@ trait ValidationMessages
 
         foreach ($transactions as $idx => $transaction) {
             $tempMessage = $this->getBaseMessages((new TransactionRequest())->getMessagesForTransaction($transaction, true, $activity), 'transactions.' . $idx, $transaction, false);
+
             foreach ($tempMessage as $index => $message) {
                 $messages[$index] = $message;
             }
@@ -333,7 +382,9 @@ trait ValidationMessages
 
     /**
      * returns messages for result.
+     *
      * @param $activity
+     *
      * @return array
      */
     protected function messagesForResult($activity): array
@@ -361,8 +412,10 @@ trait ValidationMessages
 
     /**
      * returns messages for indicator.
+     *
      * @param $indicators
      * @param $resultBase
+     *
      * @return array
      */
     protected function getMessagesForIndicator($indicators, $resultBase): array
@@ -392,8 +445,10 @@ trait ValidationMessages
 
     /**
      * returns messages for period.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getMessagesForPeriod($formFields, $formBase, $indicator): array
@@ -417,6 +472,7 @@ trait ValidationMessages
      * returns messages for tag.
      *
      * @param array $activity
+     *
      * @return array
      */
     public function messagesForTag(array $activity): array
@@ -428,6 +484,7 @@ trait ValidationMessages
      * returns messages for default aid type.
      *
      * @param array $activity
+     *
      * @return array
      */
     protected function messagesForDefaultAidType(array $activity): array

@@ -42,6 +42,7 @@ class XlsUpload
      * Handle the XlsWasUploadedEvent.
      *
      * @param XlsWasUploaded $event
+     *
      * @return bool
      */
     public function handle(XlsWasUploaded $event): bool

@@ -18,8 +18,9 @@ class PeriodRequest extends ActivityBaseRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
      * @throws BindingResolutionException
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -32,8 +33,9 @@ class PeriodRequest extends ActivityBaseRequest
     /**
      * Get the error message as required.
      *
-     * @return array
      * @throws BindingResolutionException
+     *
+     * @return array
      */
     public function messages(): array
     {
@@ -49,8 +51,9 @@ class PeriodRequest extends ActivityBaseRequest
      * @param array $periodBase
      * @param $indicatorId
      *
-     * @return array
      * @throws BindingResolutionException
+     *
+     * @return array
      */
     public function getWarningForPeriod(array $formFields, bool $fileUpload = false, array $indicator = [], $periodBase = [], $indicatorId = null): array
     {
@@ -80,8 +83,9 @@ class PeriodRequest extends ActivityBaseRequest
      * @param array $indicator
      * @param array $periodBase
      *
-     * @return array
      * @throws BindingResolutionException
+     *
+     * @return array
      */
     public function getErrorsForPeriod(array $formFields, bool $fileUpload = false, array $indicator = [], $periodBase = []): array
     {
@@ -110,8 +114,9 @@ class PeriodRequest extends ActivityBaseRequest
      * @param array $indicator
      * @param $indicatorId
      *
-     * @return array
      * @throws BindingResolutionException
+     *
+     * @return array
      */
     public function getMessagesForPeriod(array $formFields, bool $fileUpload = false, array $indicator = [], $indicatorId = null): array
     {
@@ -271,8 +276,9 @@ class PeriodRequest extends ActivityBaseRequest
      * @param $indicator
      * @param $indicatorId
      *
-     * @return array
      * @throws BindingResolutionException
+     *
+     * @return array
      */
     protected function getWarningForTarget($formFields, $valueType, $fileUpload, $indicator, $indicatorId): array
     {
@@ -325,8 +331,9 @@ class PeriodRequest extends ActivityBaseRequest
      * @param $fileUpload
      * @param $indicator
      *
-     * @return array
      * @throws BindingResolutionException
+     *
+     * @return array
      */
     protected function getErrorsForTarget($formFields, $valueType, $fileUpload, $indicator): array
     {
@@ -358,8 +365,9 @@ class PeriodRequest extends ActivityBaseRequest
      * @param $indicator
      * @param $indicatorId
      *
-     * @return array
      * @throws BindingResolutionException
+     *
+     * @return array
      */
     protected function getMessagesForTarget($formFields, $valueType, $fileUpload, $indicator, $indicatorId): array
     {

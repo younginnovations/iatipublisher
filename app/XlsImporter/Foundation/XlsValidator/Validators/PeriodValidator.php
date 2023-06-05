@@ -16,12 +16,14 @@ use App\XlsImporter\Foundation\XlsValidator\ValidatorInterface;
 class PeriodValidator implements ValidatorInterface
 {
     /**
-     * @var
+     * period with all its subelements.
+     * @var array
      */
     protected $period;
 
     /**
-     * @var
+     * parent indicator id of period being validated.
+     * @var int
      */
     protected $indicatorId;
 
@@ -31,6 +33,8 @@ class PeriodValidator implements ValidatorInterface
     protected $factory;
 
     /**
+     * Constructor.
+     *
      * @param Validation $factory
      */
     public function __construct(Validation $factory)
@@ -38,6 +42,13 @@ class PeriodValidator implements ValidatorInterface
         $this->factory = $factory;
     }
 
+    /**
+     * Initializes data for period validation.
+     *
+     * @param $period
+     *
+     * @return static
+     */
     public function init($period): static
     {
         $this->period = $period['period'];
@@ -72,6 +83,7 @@ class PeriodValidator implements ValidatorInterface
 
     /**
      * Returns critical rules for xml uploaded activity.
+     *
      * @return array
      */
     public function criticalRules(): array
@@ -90,6 +102,8 @@ class PeriodValidator implements ValidatorInterface
     }
 
     /**
+     * Validate period rules.
+     *
      * @return array
      */
     public function validateData(): array

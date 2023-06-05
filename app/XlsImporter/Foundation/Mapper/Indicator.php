@@ -17,98 +17,102 @@ class Indicator
 
     /**
      * array containing all indicator data.
-     *
      * @var array
      */
     protected array $indicators = [];
 
     /**
+     * Mapped list of indicator identifier with result identifier.
      * @var array
      */
     protected array $indicatorIdentifier = [];
 
     /**
-     * @var array
-     */
-    protected array $periodIdentifier = [];
-
-    /**
+     * baseline and their position within parent indicator.
      * @var array
      */
     protected array $baselineIndexing = [];
 
     /**
+     * array of all the identifiers.
      * @var array
      */
     protected array $identifiers = [];
 
     /**
+     * Count of row within sheet.
      * @var int
      */
     protected int $rowCount = 2;
 
     /**
      * Name of the sheet that is currently being processed.
-     *
      * @var string
      */
     protected string $sheetName = '';
 
     /**
      * column Tracker for all the elements.
-     *
      * @var array
      */
     protected array $columnTracker = [];
 
     /**
      * Temporary column tracker for each element group.
-     *
      * @var array
      */
     protected array $tempColumnTracker = [];
 
     /**
+     * Path to status.json file.
      * @var string
      */
     protected string $statusFilePath = '';
 
     /**
+     * Path to valid.json file.
      * @var string
      */
     protected string $validatedDataFilePath = '';
 
     /**
+     * Path to globalErrors.json file.
      * @var string
      */
     protected string $globalErrorFilePath = '';
 
     /**
+     * Array containing all the result and indicator identifiers present in the system.
      * @var array
      */
     protected array $existingIdentifier = [];
 
     /**
+     * identifier present within each sheet.
      * @var array
      */
     protected array $trackIdentifierBySheet = [];
 
     /**
+     * array of all the global errors.
      * @var array
      */
     protected array $globalErrors = [];
 
     /**
+     * array of processing errors.
      * @var array
      */
     protected array $processingErrors = [];
 
     /**
+     * array containing temporary processing errors.
      * @var array
      */
     protected array $tempErrors = [];
 
     /**
+     * validation error count.
      * @var array
      */
     protected array $errorCount = [
@@ -118,11 +122,13 @@ class Indicator
     ];
 
     /**
+     * total count of indicators.
      * @var int
      */
     protected int $totalCount = 0;
 
     /**
+     * indicator that has been processed.
      * @var int
      */
     protected int $processedCount = 0;

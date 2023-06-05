@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\IATI\Models\Activity\Indicator;
@@ -8,6 +10,9 @@ use App\IATI\Models\Activity\Result;
 use DB;
 use Illuminate\Console\Command;
 
+/**
+ * Class FillResultIndicatorPeriodCode.
+ */
 class FillResultIndicatorPeriodCode extends Command
 {
     /**

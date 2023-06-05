@@ -23,7 +23,8 @@ class ActivityValidator implements ValidatorInterface
     use ValidationMessages;
 
     /**
-     * @var
+     * Activity with all it's elements.
+     * @var array
      */
     protected $activity;
 
@@ -147,6 +148,7 @@ class ActivityValidator implements ValidatorInterface
 
     /**
      * Returns critical rules for xml uploaded activity.
+     *
      * @return array
      */
     public function criticalRules(): array
@@ -231,6 +233,8 @@ class ActivityValidator implements ValidatorInterface
     }
 
     /**
+     * Validate critical, error and warning within activity data.
+     *
      * @param bool $isDuplicate
      * @param bool $isIdentifierValid
      *

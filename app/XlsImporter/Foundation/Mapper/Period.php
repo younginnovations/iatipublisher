@@ -16,96 +16,103 @@ class Period
     use XlsMapperHelper;
 
     /**
+     * Array containing all the processed periods.
      * @var array
      */
     protected array $periods = [];
 
     /**
-     * @var array
-     */
-    protected array $indicatorIdentifier = [];
-
-    /**
+     * array containing list of all period identifier grouped by indicator.
      * @var array
      */
     protected array $periodIdentifier = [];
 
     /**
+     * all the identifiers.
      * @var array
      */
     protected array $identifiers = [];
 
     /**
+     * row count for sheet.
      * @var int
      */
     protected int $rowCount = 2;
 
     /**
+     * name of currently processing sheet.
      * @var string
      */
     protected string $sheetName = '';
 
     /**
+     * indexing for target and actual within the period.
      * @var array
      */
     protected array $targetActualIndexing = [];
 
     /**
-     * @var array
-     */
-    protected array $actualMapping = [];
-
-    /**
+     * array containing all the cell position.
      * @var array
      */
     protected array $columnTracker = [];
 
     /**
+     * temporary array containing cell positions.
      * @var array
      */
     protected array $tempColumnTracker = [];
 
     /**
+     * path to status.json file.
      * @var string
      */
     protected string $statusFilePath = '';
 
     /**
+     * path to globalerror.json file.
      * @var string
      */
     protected string $globalErrorFilePath = '';
 
     /**
+     * path to valid.json file.
      * @var string
      */
     protected string $validatedDataFilePath = '';
 
     /**
+     * array containing all the indicator and period identifiers present in the system.
      * @var array
      */
     protected array $existingIdentifier = [];
 
     /**
+     * array containing identifiers grouped by sheet.
      * @var array
      */
     protected array $trackIdentifierBySheet = [];
 
     /**
+     * array of all the global errors.
      * @var array
      */
     protected array $globalErrors = [];
 
     /**
+     * array of all the processing errors.
      * @var array
      */
     protected array $processingErrors = [];
 
     /**
+     * array that temporarily holds processing errors.
      * @var array
      */
     protected array $tempErrors = [];
 
     /**
+     * error counts.
      * @var array
      */
     protected array $errorCount = [
@@ -115,16 +122,19 @@ class Period
     ];
 
     /**
+     * total count of period.
      * @var int
      */
     protected int $totalCount = 0;
 
     /**
+     * count of period that has been processed.
      * @var int
      */
     protected int $processedCount = 0;
 
     /**
+     * period data in xls file.
      * @var array
      */
     protected array $periodDivisions = [
@@ -136,6 +146,7 @@ class Period
     ];
 
     /**
+     * period mapper sheets in the xls file.
      * @var array
      */
     protected array $elementIdentifiers = [
@@ -147,6 +158,7 @@ class Period
     ];
 
     /**
+     * Mapper sheets with additional information.
      * @var array
      */
     protected array $mappers = [

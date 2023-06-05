@@ -10,40 +10,55 @@ use App\XlsImporter\Foundation\XlsQueueProcessor;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Throwable;
 
+/**
+ * Class ImportXls.
+ */
 class ImportXls extends Job implements ShouldQueue
 {
     /**
-     * @var
+     * Organization id.
+     * @var int
      */
     protected $organizationId;
+
     /**
-     * @var
+     * Organization reporting org.
+     * @var array
      */
     protected $reportingOrg;
+
     /**
-     * @var
+     * Uploaded xls filename.
+     * @var string
      */
     protected $filename;
+
     /**
-     * @var
+     * user id.
+     * @var int
      */
     protected $userId;
+
     /**
-     * @var
+     * Array containing all the identifiers existing in the system.
+     * @var array
      */
     protected $iatiIdentifiers;
 
     /**
-     * @var
+     * Type of xls file that has been uploaded (template).
+     * @var string
      */
     protected $xlsType;
 
     /**
+     * path where xls file is stored.
      * @var string
      */
     private string $xls_file_storage_path;
 
     /**
+     * path where processed xls data is stored.
      * @var string
      */
     private string $xls_data_storage_path;
@@ -71,6 +86,8 @@ class ImportXls extends Job implements ShouldQueue
     }
 
     /**
+     * Handle method of job.
+     *
      * @return void
      */
     public function handle(): void
@@ -89,13 +106,11 @@ class ImportXls extends Job implements ShouldQueue
     }
 
     /**
-     * Handle a job failure.
+     * Handles a job failure.
      */
     public function failed(Throwable $exception): void
     {
         awsUploadFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->organizationId, $this->userId, 'status.json'), json_encode(['success' => false, 'message' => 'Failed to import xls file. Please check your file for correctness before importing again.'], JSON_THROW_ON_ERROR));
-
-        // Send user notification of failure, etc...
     }
 
     /**

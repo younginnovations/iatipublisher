@@ -395,7 +395,7 @@ trait ErrorValidationRules
      * returns rules for transaction.
      *
      * @param $activity
-     *
+     *:
      * @return array
      */
     protected function errorForTransaction($activity): array

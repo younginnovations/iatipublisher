@@ -16,6 +16,7 @@ class Activity
     use XlsMapperHelper;
 
     /**
+     * List of all the activity sheets and corresponding elements.
      * @var array
      */
     protected array $activityElements = [
@@ -44,6 +45,7 @@ class Activity
     ];
 
     /**
+     * List of single valued elements.
      * @var array
      */
     protected array $singleValuedElements = [
@@ -57,6 +59,7 @@ class Activity
     ];
 
     /**
+     * List of default values.
      * @var array
      */
     protected array $defaultValueElements = [
@@ -68,6 +71,7 @@ class Activity
     ];
 
     /**
+     * List of element with enclosed narrative.
      * @var array
      */
     protected array $enclosedNarrative = [
@@ -78,7 +82,10 @@ class Activity
         'transactions',
     ];
 
-    //activities whose identifier is mentioned on setting sheet
+    /**
+     * activities whose identifier is mentioned on setting sheet.
+     * @var array
+     */
     protected array $activities = [];
 
     /**
@@ -94,53 +101,61 @@ class Activity
     protected int $processedCount = 0;
 
     /**
+     * Array of activities identifier in the xls file.
      * @var array
      */
     protected array $activitiesIdentifier = [];
 
     /**
+     * Array containing all the identifier that currently exists in the system.
      * @var
      */
     protected array $existingIdentifier = [];
 
     /**
+     * Array tracking the identifier present in each sheet.
      * @var array
      */
     protected array $trackIdentifierBySheet = [];
 
     /**
+     * Row count in the sheet.
      * @var int
      */
     protected int $rowCount = 2;
 
     /**
      * name of sheet currently being processed.
-     *
      * @var string
      */
     protected string $sheetName = '';
 
     /**
+     * Array with list of all fields and their position.
      * @var array
      */
     protected array $columnTracker = [];
 
     /**
-     * @var
+     * Array containing all the global errors.
+     * @var array
      */
     protected array $globalErrors = [];
 
     /**
-     * @var
+     * Array containing all the processing errors.
+     * @var array
      */
     protected array $processingErrors = [];
 
     /**
-     * @var
+     * Array for temporary storage of errors.
+     * @var array
      */
     protected array $tempErrors = [];
 
     /**
+     * Count of validation error.
      * @var array
      */
     protected array $errorCount = [
@@ -150,26 +165,31 @@ class Activity
     ];
 
     /**
+     * Name of element currently being processed.
      * @var string
      */
     protected string $elementBeingProcessed = '';
 
     /**
+     * Path of status.json file.
      * @var string
      */
     protected string $statusFilePath = '';
 
     /**
+     * Path of valid.json file.
      * @var string
      */
     protected string $validatedDataFilePath = '';
 
     /**
+     * Path of globalError.json file.
      * @var string
      */
     protected string $globalErrorFilePath = '';
 
     /**
+     * Reporting org of the organization.
      * @var string
      */
     protected array $organizationReportingOrg = [];

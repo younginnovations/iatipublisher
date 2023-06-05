@@ -19,9 +19,10 @@ class IndicatorRequest extends ActivityBaseRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -52,9 +53,10 @@ class IndicatorRequest extends ActivityBaseRequest
      * @param array $result
      * @param $resultId
      *
-     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     *
+     * @return array
      */
     public function getWarningForIndicator(array $formFields, bool $fileUpload = false, array $result = [], $resultId = null): array
     {
@@ -84,9 +86,10 @@ class IndicatorRequest extends ActivityBaseRequest
      * @param bool $fileUpload
      * @param array $result
      *
-     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     *
+     * @return array
      */
     public function getErrorsForIndicator(array $formFields, bool $fileUpload = false, array $result = []): array
     {
@@ -236,9 +239,10 @@ class IndicatorRequest extends ActivityBaseRequest
      *
      * @param $formFields
      *
-     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     *
+     * @return array
      */
     protected function getWarningForBaseline($formFields): array
     {
@@ -275,9 +279,10 @@ class IndicatorRequest extends ActivityBaseRequest
      *
      * @param $formFields
      *
-     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     *
+     * @return array
      */
     protected function getErrorsForBaseline($formFields): array
     {

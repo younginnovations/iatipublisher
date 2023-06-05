@@ -14,12 +14,14 @@ use App\XlsImporter\Foundation\XlsValidator\ValidatorInterface;
 class ResultValidator implements ValidatorInterface
 {
     /**
-     * @var
+     * result to be validated.
+     * @var array
      */
     protected $result;
 
     /**
-     * @var
+     * id of result being validated if it already exists in the system.
+     * @var int|null
      */
     protected $resultId;
 
@@ -29,6 +31,8 @@ class ResultValidator implements ValidatorInterface
     protected $factory;
 
     /**
+     * Constructor.
+     *
      * @param Validation $factory
      */
     public function __construct(Validation $factory)
@@ -36,6 +40,13 @@ class ResultValidator implements ValidatorInterface
         $this->factory = $factory;
     }
 
+    /**
+     * Initialization of data for result validation.
+     *
+     * @param $result
+     *
+     * @return static
+     */
     public function init($result): static
     {
         $this->result = $result['result'];
@@ -45,6 +56,8 @@ class ResultValidator implements ValidatorInterface
     }
 
     /**
+     * Validation of result.
+     *
      * @return array
      */
     public function validateData(): array
