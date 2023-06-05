@@ -453,7 +453,14 @@
       <div class="mt-6 flex items-center justify-end space-x-4">
         <button
           class="text-xs font-bold uppercase text-n-40"
-          @click="showCancelModel = false"
+          @click="
+            () => {
+              showCancelModel = false;
+              uploadType = [];
+
+              file.value = null;
+            }
+          "
         >
           Go Back
         </button>
