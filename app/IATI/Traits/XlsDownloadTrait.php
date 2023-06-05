@@ -14,10 +14,11 @@ trait XlsDownloadTrait
      *
      * @param $data
      * @param $defaultHeaders
-     *
-     * @return array
+     * @param $columnKey
      *
      * @throws \JsonException
+     *
+     * @return array
      */
     public function linearizeArray($data, $defaultHeaders, $columnKey): array
     {
@@ -48,10 +49,11 @@ trait XlsDownloadTrait
      * @param $collectData
      * @param $defaultHeaders
      * @param $mainKey
-     *
-     * @return void
+     * @param $columnKey
      *
      * @throws \JsonException
+     *
+     * @return void
      */
     public function convertToOneDimension($datum, $headers, &$collectData, $defaultHeaders, $mainKey, $columnKey): void
     {
@@ -101,7 +103,14 @@ trait XlsDownloadTrait
         }
     }
 
-    public function populateDynamicFieldAndResetOtherKeys($datum)
+    /**
+     * Reset other unnecessary keys.
+     *
+     * @param $datum
+     *
+     * @return array
+     */
+    public function populateDynamicFieldAndResetOtherKeys($datum): array
     {
         $arr = [];
 
@@ -121,9 +130,9 @@ trait XlsDownloadTrait
      * @param $value
      * @param $dropdownFilePath
      *
-     * @return mixed|string
-     *
      * @throws \JsonException
+     *
+     * @return mixed|string
      */
     public function populateValueFromDropdown($value, $dropdownFilePath): mixed
     {
@@ -148,6 +157,8 @@ trait XlsDownloadTrait
     }
 
     /**
+     * Manipulate, maps data and makes it ready for xlsExport class.
+     *
      * @param $headerKey
      * @param $columnName
      * @param $sheetName
@@ -157,9 +168,9 @@ trait XlsDownloadTrait
      * @param $sheets
      * @param null $getIdentifierByOrderKey
      *
-     * @return void
-     *
      * @throws \JsonException
+     *
+     * @return void
      */
     public function map($headerKey, $columnName, $sheetName, $primaryIdentifier, $identifierNumber, $data, &$sheets, $getIdentifierByOrderKey = null): void
     {
@@ -182,7 +193,16 @@ trait XlsDownloadTrait
         $this->arrayLevelCount = [];
     }
 
-    public function removeDocumentLink($data, $key)
+    /**
+     * Removed document link of baseline, target, actual after mapping
+     * so that document link doesn't get included when basline, target and actual are mapped.
+     *
+     * @param $data
+     * @param $key
+     *
+     * @return mixed
+     */
+    public function removeDocumentLink($data, $key): mixed
     {
         $keyData[$key] = $data;
 

@@ -18,10 +18,25 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
  */
 class OptionExport implements FromView, WithTitle, WithEvents, ShouldAutoSize
 {
+    /**
+     * Filename for selecting the json file.
+     *
+     * @var string
+     */
     protected string $fileName;
 
+    /**
+     * Sheet name to export.
+     *
+     * @var string
+     */
     protected string $sheetName;
 
+    /**
+     * Configuration for color code and cell merge for different xls files.
+     *
+     * @var array|array[]
+     */
     protected array $instruction_properties = [
       'period_instructions' => [
           'color_code' =>[
@@ -102,19 +117,32 @@ class OptionExport implements FromView, WithTitle, WithEvents, ShouldAutoSize
       ],
     ];
 
+    /**
+     * @param $fileName
+     * @param $sheetName
+     */
     public function __construct($fileName, $sheetName)
     {
         $this->fileName = $fileName;
         $this->sheetName = $sheetName;
     }
 
+    /**
+     * To define the name of a sheet.
+     *
+     * @return string
+     */
     public function title(): string
     {
         return $this->sheetName;
     }
 
     /**
+     * To export data using blade file.
+     *
      * @throws JsonException
+     *
+     * @return View
      */
     public function view(): View
     {
@@ -123,6 +151,11 @@ class OptionExport implements FromView, WithTitle, WithEvents, ShouldAutoSize
         return view('Export.optionExport', ['data' => $data]);
     }
 
+    /**
+     * To manipulate sheets after sheet being created like color coding, merging cell or size.
+     *
+     * @return mixed
+     */
     public function registerEvents(): array
     {
         $colorCode = $this->instruction_properties[$this->fileName]['color_code'] ?? '';

@@ -96,6 +96,8 @@ class IndicatorExport implements WithMultipleSheets
     ];
 
     /**
+     * list of keys from activity data whose nested array is only one level.
+     *
      * @var array
      */
     protected array $headerWithSingleLevel = [
@@ -139,9 +141,9 @@ class IndicatorExport implements WithMultipleSheets
     /**
      * Populate data in sheets one by one.
      *
-     * @return array
-     *
      * @throws JsonException|BindingResolutionException
+     *
+     * @return array
      */
     public function sheets(): array
     {
@@ -161,9 +163,9 @@ class IndicatorExport implements WithMultipleSheets
     /**
      * Maps data into excel export compatible array.
      *
-     * @return array
-     *
      * @throws JsonException|BindingResolutionException
+     *
+     * @return array
      */
     public function mappedData(): array
     {
@@ -189,7 +191,15 @@ class IndicatorExport implements WithMultipleSheets
     }
 
     /**
+     * Maps document link seperately.
+     *
+     * @param array $data
+     * @param $identifier_number
+     * @param array $sheets
+     *
      * @throws JsonException
+     *
+     * @return array
      */
     private function processDocumentLink(array $data, $identifier_number, array &$sheets): array
     {
@@ -202,7 +212,15 @@ class IndicatorExport implements WithMultipleSheets
     }
 
     /**
+     * Maps baseline and its document link seperately.
+     *
+     * @param array $data
+     * @param $identifier_number
+     * @param array $sheets
+     *
      * @throws JsonException
+     *
+     * @return array
      */
     private function processBaseline(array $data, $identifier_number, array &$sheets): array
     {
@@ -227,9 +245,9 @@ class IndicatorExport implements WithMultipleSheets
     /**
      * Maps identifier in a sheets.
      *
-     * @return array
-     *
      * @throws BindingResolutionException
+     *
+     * @return array
      */
     public function mapIdentifier(): array
     {
@@ -242,6 +260,8 @@ class IndicatorExport implements WithMultipleSheets
 
     /**
      * Maps Indicator Identifier to excel suitable array.
+     *
+     * @throws BindingResolutionException
      *
      * @return array
      */
@@ -284,9 +304,9 @@ class IndicatorExport implements WithMultipleSheets
     /**
      * Maps indicator baseline identifier.
      *
-     * @return array
-     *
      * @throws BindingResolutionException
+     *
+     * @return array
      */
     public function mapIndicatorBaseline(): array
     {

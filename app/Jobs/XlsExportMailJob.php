@@ -7,6 +7,7 @@ namespace App\Jobs;
 use App\IATI\Models\User\User;
 use App\IATI\Services\Download\DownloadXlsService;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -20,16 +21,22 @@ class XlsExportMailJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
+     * Stores Email.
+     *
      * @var string
      */
     public string $email;
 
     /**
+     * Stores username.
+     *
      * @var string
      */
     public string $username;
 
     /**
+     * Stores user id.
+     *
      * @var int
      */
     public int $userId;
@@ -49,6 +56,8 @@ class XlsExportMailJob implements ShouldQueue
     /**
      * After zip file is uploaded in aws, a download link is sent to the user in mail.
      *
+     * @throws BindingResolutionException
+     *
      * @return void
      */
     public function handle(): void
@@ -60,6 +69,13 @@ class XlsExportMailJob implements ShouldQueue
         }
     }
 
+    /**
+     * If Export mail jobs fails to send a mail to user then update download progress as completed.
+     *
+     * @throws BindingResolutionException
+     *
+     * @return void
+     */
     public function failed(): void
     {
         $downloadXlsService = app()->make(DownloadXlsService::class);

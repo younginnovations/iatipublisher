@@ -110,6 +110,8 @@ class PeriodExport implements WithMultipleSheets
     ];
 
     /**
+     * list of keys from data whose nested array is only one level.
+     *
      * @var array|string[]
      */
     protected array $headerWithSingleLevel = [
@@ -136,10 +138,10 @@ class PeriodExport implements WithMultipleSheets
     /**
      * Populate data in sheets one by one.
      *
-     * @return array
-     *
      * @throws JsonException
      * @throws BindingResolutionException
+     *
+     * @return array
      */
     public function sheets(): array
     {
@@ -160,9 +162,9 @@ class PeriodExport implements WithMultipleSheets
     /**
      * Maps identifier in a sheets.
      *
-     * @return array
-     *
      * @throws BindingResolutionException
+     *
+     * @return array
      */
     public function mapIdentifier(): array
     {
@@ -177,8 +179,9 @@ class PeriodExport implements WithMultipleSheets
     /**
      * Maps Period Identifier to excel suitable array.
      *
-     * @return array
      * @throws BindingResolutionException
+     *
+     * @return array
      */
     public function mapPeriodIdentifier(): array
     {
@@ -207,9 +210,9 @@ class PeriodExport implements WithMultipleSheets
      * @param $mapped
      * @param $sheetName
      *
-     * @return array|mixed
-     *
      * @throws BindingResolutionException
+     *
+     * @return array|mixed
      */
     protected function getMappedIndicatorData($resultIds, $indicatorMapper, $appendIdentifier, $finalIdentifierKey, $mapped, $sheetName): mixed
     {
@@ -274,9 +277,9 @@ class PeriodExport implements WithMultipleSheets
     /**
      * Maps Target Identifier to excel suitable array.
      *
-     * @return array
-     *
      * @throws BindingResolutionException
+     *
+     * @return array
      */
     public function mapTargetIdentifier(): array
     {
@@ -352,9 +355,9 @@ class PeriodExport implements WithMultipleSheets
     /**
      * Maps Actual Identifier to excel suitable array.
      *
-     * @return array
-     *
      * @throws BindingResolutionException
+     *
+     * @return array
      */
     public function mapActualIdentifier(): array
     {
@@ -406,9 +409,9 @@ class PeriodExport implements WithMultipleSheets
     /**
      * Maps data into excel export compatible array.
      *
-     * @return array
-     *
      * @throws JsonException|BindingResolutionException
+     *
+     * @return array
      */
     public function mappedData(): array
     {
@@ -442,7 +445,13 @@ class PeriodExport implements WithMultipleSheets
     }
 
     /**
+     * @param $identifier_number
+     * @param $data
+     * @param $sheets
+     *
      * @throws JsonException
+     *
+     * @return void
      */
     private function mapTarget($identifier_number, &$data, &$sheets): void
     {
@@ -461,7 +470,13 @@ class PeriodExport implements WithMultipleSheets
     }
 
     /**
+     * @param $identifier_number
+     * @param $data
+     * @param $sheets
+     *
      * @throws JsonException
+     *
+     * @return void
      */
     private function mapActual($identifier_number, &$data, &$sheets): void
     {
@@ -480,7 +495,13 @@ class PeriodExport implements WithMultipleSheets
     }
 
     /**
+     * @param $identifier_number
+     * @param $data
+     * @param $sheets
+     *
      * @throws JsonException
+     *
+     * @return void
      */
     private function mapPeriod($identifier_number, $data, &$sheets): void
     {

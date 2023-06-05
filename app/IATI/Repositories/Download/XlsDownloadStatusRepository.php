@@ -38,6 +38,14 @@ class XlsDownloadStatusRepository extends Repository
         return [$status->status ?? null, $status->file_count ?? 0, $status->url ?? null];
     }
 
+    /**
+     * Resets download status back to starting point.
+     *
+     * @param $userId
+     * @param $fileType
+     *
+     * @return array|null
+     */
     public function resetDownloadStatus($userId, $fileType): ?array
     {
         $status = $this->model->where('user_id', $userId)->where('type', $fileType)->first();
@@ -51,7 +59,15 @@ class XlsDownloadStatusRepository extends Repository
         return null;
     }
 
-    public function getDownloadStatusObject($userId, $fileType)
+    /**
+     * Checks if user's download process exists.
+     *
+     * @param $userId
+     * @param $fileType
+     *
+     * @return \Illuminate\Database\Eloquent\Builder|Model|mixed|object|null
+     */
+    public function getDownloadStatusObject($userId, $fileType): mixed
     {
         return $this->model->where('user_id', $userId)->where('type', $fileType)->first();
     }
@@ -73,6 +89,7 @@ class XlsDownloadStatusRepository extends Repository
      *
      * @param $userId
      * @param $fileType
+     * @param $selected_activities
      * @param string $status
      *
      * @return Model|null
@@ -103,7 +120,15 @@ class XlsDownloadStatusRepository extends Repository
         return $status->increment('file_count');
     }
 
-    public function updateDownloadStatus($userId, $data)
+    /**
+     * Updates download process of a user.
+     *
+     * @param $userId
+     * @param $data
+     *
+     * @return bool
+     */
+    public function updateDownloadStatus($userId, $data): bool
     {
         return (bool) $this->model->where('user_id', $userId)->update($data);
     }

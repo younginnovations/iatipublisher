@@ -139,6 +139,8 @@ class ActivityExport implements WithMultipleSheets
     ];
 
     /**
+     * list of keys from activity data whose nested array is only one level.
+     *
      * @var array|string[]
      */
     protected array $headerWithSingleLevel = [
@@ -156,9 +158,9 @@ class ActivityExport implements WithMultipleSheets
     /**
      * Populate data in sheets one by one.
      *
-     * @return array
-     *
      * @throws JsonException
+     *
+     * @return array
      */
     public function sheets(): array
     {
@@ -180,9 +182,9 @@ class ActivityExport implements WithMultipleSheets
     /**
      * Maps data into excel export compatible array.
      *
-     * @return array
-     *
      * @throws JsonException
+     *
+     * @return array
      */
     public function mappedData(): array
     {

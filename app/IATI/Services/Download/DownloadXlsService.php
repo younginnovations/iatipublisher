@@ -15,16 +15,22 @@ use Illuminate\Database\Eloquent\Model;
 class DownloadXlsService
 {
     /**
+     * Result Repository to get results data for download.
+     *
      * @var ResultRepository
      */
     protected ResultRepository $resultRepository;
 
     /**
+     * Indicator Repository for indicator related data for download.
+     *
      * @var IndicatorRepository
      */
     protected IndicatorRepository $indicatorRepository;
 
     /**
+     * XlsDownloadStatusRepository for store, get, update, increment file count, reset download status.
+     *
      * @var XlsDownloadStatusRepository
      */
     protected XlsDownloadStatusRepository $xlsDownloadStatusRepository;
@@ -33,6 +39,8 @@ class DownloadXlsService
      * Download Xls Service constructor.
      *
      * @param ResultRepository $resultRepository
+     * @param IndicatorRepository $indicatorRepository
+     * @param XlsDownloadStatusRepository $xlsDownloadStatusRepository
      */
     public function __construct(ResultRepository $resultRepository, IndicatorRepository $indicatorRepository, XlsDownloadStatusRepository $xlsDownloadStatusRepository)
     {
@@ -79,6 +87,8 @@ class DownloadXlsService
     }
 
     /**
+     * Increment file count by one.
+     *
      * @param $userId
      *
      * @return false|int
@@ -89,7 +99,10 @@ class DownloadXlsService
     }
 
     /**
+     * Update download status of a suer.
+     *
      * @param $userId
+     * @param $data
      *
      * @return bool
      */
@@ -99,6 +112,8 @@ class DownloadXlsService
     }
 
     /**
+     * Deletes download process of a user.
+     *
      * @param $userId
      *
      * @return bool
@@ -109,6 +124,8 @@ class DownloadXlsService
     }
 
     /**
+     * Get download progress status.
+     *
      * @return array
      */
     public function getDownloadStatus(): array
@@ -116,12 +133,24 @@ class DownloadXlsService
         return $this->xlsDownloadStatusRepository->getDownloadStatus(auth()->user()->id, 'xls');
     }
 
+    /**
+     * get download status of a specific user.
+     *
+     * @param $userId
+     *
+     * @return \Illuminate\Database\Eloquent\Builder|Model|mixed|object|null
+     */
     public function getDownloadStatusByUserId($userId)
     {
         return $this->xlsDownloadStatusRepository->getDownloadStatusObject($userId, 'xls');
     }
 
-    public function resetDownloadStatus()
+    /**
+     * Resets download status back to starting point.
+     *
+     * @return array|null
+     */
+    public function resetDownloadStatus(): ?array
     {
         return $this->xlsDownloadStatusRepository->resetDownloadStatus(auth()->user()->id, 'xls');
     }

@@ -83,6 +83,8 @@ class ResultExport implements WithMultipleSheets
     public array $resultIdentifiers = [];
 
     /**
+     * stores all mapped data ready to export.
+     *
      * @var array
      */
     protected array $mappedData;
@@ -99,9 +101,9 @@ class ResultExport implements WithMultipleSheets
     /**
      * Populate data in sheets one by one.
      *
-     * @return array
-     *
      * @throws \JsonException
+     *
+     * @return array
      */
     public function sheets(): array
     {
@@ -122,9 +124,9 @@ class ResultExport implements WithMultipleSheets
     /**
      * Maps data into excel export compatible array.
      *
-     * @return array
-     *
      * @throws \JsonException
+     *
+     * @return array
      */
     public function mappedData(): array
     {

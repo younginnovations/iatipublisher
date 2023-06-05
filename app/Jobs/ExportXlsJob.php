@@ -42,6 +42,8 @@ class ExportXlsJob implements ShouldQueue
     protected object $downloadXlsService;
 
     /**
+     * Stores auth user.
+     *
      * @var array
      */
     public array $authUser;
@@ -54,11 +56,15 @@ class ExportXlsJob implements ShouldQueue
     public array $requestData;
 
     /**
+     * Stores result identifiers.
+     *
      * @var array
      */
     protected array $resultIdentifiers;
 
     /**
+     * stores indicator identifiers.
+     *
      * @var array
      */
     protected array $indicatorIdentifier;
@@ -69,9 +75,9 @@ class ExportXlsJob implements ShouldQueue
      * Had to query again in this job instead of directly passing it through constructor is because
      * it cannot serialize also cannot store the relationship value as well.
      *
-     * @return void
-     *
      * @throws BindingResolutionException
+     *
+     * @return void
      */
     public function __construct($requestData, $authUser)
     {
@@ -83,10 +89,10 @@ class ExportXlsJob implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @return void
-     *
      * @throws BindingResolutionException
      * @throws JsonException
+     *
+     * @return void
      */
     public function handle(): void
     {
@@ -169,6 +175,8 @@ class ExportXlsJob implements ShouldQueue
      * Stores indicator in an excel file.
      *
      * @param $activities
+     *
+     * @throws BindingResolutionException
      *
      * @return void
      */

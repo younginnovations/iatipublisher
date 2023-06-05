@@ -16,15 +16,11 @@ class XlsDownloadMail extends Mailable
     use Queueable, SerializesModels;
 
     /**
+     * Stores mail detail.
+     *
      * @var array
      */
     public array $mailDetails;
-
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
 
     /**
      * Create a new message instance.

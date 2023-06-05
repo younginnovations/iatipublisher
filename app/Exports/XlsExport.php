@@ -77,6 +77,11 @@ class XlsExport implements FromView, WithTitle, WithEvents, ShouldAutoSize, With
         'participating_org.type' => 'participating_org type',
     ];
 
+    /**
+     * Mapper Concatenator for concatenating the identifier using formula.
+     *
+     * @var array|string[]
+     */
     protected array $mapperConcatenator = [
       'Result_Mapper' => '_',
       'Indicator_Mapper' => '_',
@@ -127,7 +132,6 @@ class XlsExport implements FromView, WithTitle, WithEvents, ShouldAutoSize, With
      * Checks if dropdown exists and then populate the rows with dropdown
      * Color Code sheet header cell as well as sheet tab.
      *
-     *
      * @return mixed
      */
     public function registerEvents(): array
@@ -164,9 +168,15 @@ class XlsExport implements FromView, WithTitle, WithEvents, ShouldAutoSize, With
     }
 
     /**
+     * Checks if the column has dropdown.
+     *
+     * @param $columnName
+     *
      * @throws JsonException
+     *
+     * @return mixed|string|null
      */
-    public function hasDropdownValue($columnName)
+    public function hasDropdownValue($columnName): mixed
     {
         $dropdownFields = readJsonFile('XlsImporter/Templates/dropdown-fields.json');
 
@@ -200,7 +210,15 @@ class XlsExport implements FromView, WithTitle, WithEvents, ShouldAutoSize, With
     }
 
     /**
+     * sets dropdown from a range using formula.
+     *
+     * @param $columnName
+     * @param $sheet
+     * @param $selectOptionCol
+     *
      * @throws JsonException
+     *
+     * @return void
      */
     public function setDropdownValue($columnName, $sheet, $selectOptionCol): void
     {
@@ -214,6 +232,8 @@ class XlsExport implements FromView, WithTitle, WithEvents, ShouldAutoSize, With
     }
 
     /**
+     * sets dropdown from a range using formula.
+     *
      * @param $dropDownRange
      * @param $columnName
      * @param $selectOptionCol
@@ -242,6 +262,8 @@ class XlsExport implements FromView, WithTitle, WithEvents, ShouldAutoSize, With
     }
 
     /**
+     * Sets color code for a header in xls.
+     *
      * @param $excelColumnIndex
      * @param $sheet
      *
@@ -264,11 +286,13 @@ class XlsExport implements FromView, WithTitle, WithEvents, ShouldAutoSize, With
     }
 
     /**
+     * Sets color for a sheet.
+     *
      * @param $sheet
      *
-     * @return void
-     *
      * @throws JsonException
+     *
+     * @return void
      */
     public function sheetTabColorCode($sheet): void
     {
@@ -280,6 +304,8 @@ class XlsExport implements FromView, WithTitle, WithEvents, ShouldAutoSize, With
     }
 
     /**
+     * Sets dropdown for a identifier.
+     *
      * @param $dropDownRange
      * @param $columnName
      * @param $selectOptionCol
@@ -308,6 +334,8 @@ class XlsExport implements FromView, WithTitle, WithEvents, ShouldAutoSize, With
     }
 
     /**
+     * Formats Certain column.
+     *
      * @return array
      */
     public function columnFormats(): array

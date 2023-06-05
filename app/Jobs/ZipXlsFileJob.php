@@ -21,6 +21,8 @@ class ZipXlsFileJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
+     * Stores user id.
+     *
      * @var int
      */
     protected int $userId;
@@ -39,10 +41,10 @@ class ZipXlsFileJob implements ShouldQueue
      * get all the generated xls file from local disk and zips it
      * uploads it in aws and deletes all the generated xls file from local disk.
      *
-     * @return void
-     *
      * @throws \JsonException
      * @throws BindingResolutionException
+     *
+     * @return void
      */
     public function handle(): void
     {
@@ -66,9 +68,12 @@ class ZipXlsFileJob implements ShouldQueue
     }
 
     /**
-     * @return void
+     * if class fails to zip a xls files then update as failed download status
+     * also delete status and cancel status json if exists.
      *
      * @throws BindingResolutionException
+     *
+     * @return void
      */
     public function failed(): void
     {

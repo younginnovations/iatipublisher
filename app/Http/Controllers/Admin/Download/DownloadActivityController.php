@@ -116,10 +116,10 @@ class DownloadActivityController extends Controller
      *
      * @param Request $request
      *
-     * @return BinaryFileResponse|JsonResponse
-     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface|\Throwable
+     *
+     * @return BinaryFileResponse|JsonResponse
      */
     public function prepareActivityXls(Request $request):  BinaryFileResponse|JsonResponse
     {
@@ -181,7 +181,6 @@ class DownloadActivityController extends Controller
     /**
      * Downloads xls zip file from aws s3.
      *
-     *
      * @return bool|int
      */
     public function downloadActivityXls(): bool|int
@@ -217,11 +216,11 @@ class DownloadActivityController extends Controller
     }
 
     /**
-     * @return JsonResponse|void
-     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \Throwable
+     *
+     * @return JsonResponse|void
      */
     public function retryXlsDownload()
     {
