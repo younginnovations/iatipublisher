@@ -22,14 +22,29 @@ class Indicator
      */
     protected array $indicators = [];
 
+    /**
+     * @var array
+     */
     protected array $indicatorIdentifier = [];
 
+    /**
+     * @var array
+     */
     protected array $periodIdentifier = [];
 
+    /**
+     * @var array
+     */
     protected array $baselineIndexing = [];
 
+    /**
+     * @var array
+     */
     protected array $identifiers = [];
 
+    /**
+     * @var int
+     */
     protected int $rowCount = 2;
 
     /**
@@ -52,34 +67,65 @@ class Indicator
      * @var array
      */
     protected array $tempColumnTracker = [];
+
+    /**
+     * @var string
+     */
     protected string $statusFilePath = '';
+
+    /**
+     * @var string
+     */
     protected string $validatedDataFilePath = '';
+
+    /**
+     * @var string
+     */
     protected string $globalErrorFilePath = '';
 
+    /**
+     * @var array
+     */
     protected array $existingIdentifier = [];
+
+    /**
+     * @var array
+     */
     protected array $trackIdentifierBySheet = [];
 
+    /**
+     * @var array
+     */
     protected array $globalErrors = [];
 
+    /**
+     * @var array
+     */
     protected array $processingErrors = [];
+
+    /**
+     * @var array
+     */
     protected array $tempErrors = [];
 
+    /**
+     * @var array
+     */
     protected array $errorCount = [
         'critical' => 0,
         'warning' => 0,
         'error' => 0,
     ];
 
+    /**
+     * @var int
+     */
     protected int $totalCount = 0;
-    protected int $processedCount = 0;
 
-    public function initMapper($validatedDataFilePath, $statusFilePath, $globalErrorFilePath, $existingIdentifier)
-    {
-        $this->validatedDataFilePath = $validatedDataFilePath;
-        $this->statusFilePath = $statusFilePath;
-        $this->globalErrorFilePath = $globalErrorFilePath;
-        $this->existingIdentifier = $existingIdentifier;
-    }
+    /**
+     * @var int
+     */
+    protected int $processedCount = 0;
 
     /**
      * Division of indicator data based on sheet names.
@@ -377,17 +423,6 @@ class Indicator
                 }
 
                 $elementData = $this->setValueToField($elementBase, $elementAddMore, $elementData, $baseCount, $parentBaseCount, $fieldName, $fieldValue, $elementActivityIdentifier, $element, Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName));
-
-                // $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
-                // // map element position from parent
-                // $elementPositionBasedOnParent = $elementBase && $elementAddMore ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
-
-                // if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null))) {
-                //     $fieldValue = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
-                //     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
-                //     $this->tempColumnTracker[$elementPositionBasedOnParent]['sheet'] = $this->sheetName;
-                //     $this->tempColumnTracker[$elementPositionBasedOnParent]['cell'] = Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
-                // }
             }
             $this->rowCount++;
         }

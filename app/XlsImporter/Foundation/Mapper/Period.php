@@ -55,13 +55,13 @@ class Period
     protected int $totalCount = 0;
     protected int $processedCount = 0;
 
-    public function initMapper($validatedDataFilePath, $statusFilePath, $globalErrorFilePath, $existingIdentifier)
-    {
-        $this->validatedDataFilePath = $validatedDataFilePath;
-        $this->statusFilePath = $statusFilePath;
-        $this->globalErrorFilePath = $globalErrorFilePath;
-        $this->existingIdentifier = $existingIdentifier;
-    }
+    // public function initMapper($validatedDataFilePath, $statusFilePath, $globalErrorFilePath, $existingIdentifier)
+    // {
+    //     $this->validatedDataFilePath = $validatedDataFilePath;
+    //     $this->statusFilePath = $statusFilePath;
+    //     $this->globalErrorFilePath = $globalErrorFilePath;
+    //     $this->existingIdentifier = $existingIdentifier;
+    // }
 
     /**
      * @var array

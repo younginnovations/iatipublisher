@@ -20,9 +20,19 @@ class Result
      */
     protected array $results = [];
 
+    /**
+     * @var string
+     */
     protected string $destinationFilePath = '';
 
+    /**
+     * @var array
+     */
     protected array $resultIdentifier = [];
+
+    /**
+     * @var array
+     */
     protected array $identifiers = [];
 
     /**
@@ -30,10 +40,24 @@ class Result
      */
     protected array $resultDocumentLink = [];
 
+    /**
+     * @var int
+     */
     protected int $totalCount = 0;
+
+    /**
+     * @var int
+     */
     protected int $processedCount = 0;
 
+    /**
+     * @var array
+     */
     protected array $columnTracker = [];
+
+    /**
+     * @var array
+     */
     protected array $tempColumnTracker = [];
 
     /**
@@ -41,21 +65,59 @@ class Result
      */
     protected array $activityResultMapper = [];
 
+    /**
+     * @var int
+     */
     protected int $rowCount = 2;
+
+    /**
+     * @var string
+     */
     protected string $sheetName = '';
+
+    /**
+     * @var string
+     */
     protected string $statusFilePath = '';
+
+    /**
+     * @var string
+     */
     protected string $globalErrorFilePath = '';
+
+    /**
+     * @var string
+     */
     protected string $validatedDataFilePath = '';
 
+    /**
+     * @var array
+     */
     protected array $existingIdentifier = [];
 
+    /**
+     * @var array
+     */
     protected array $trackIdentifierBySheet = [];
 
+    /**
+     * @var array
+     */
     protected array $globalErrors = [];
 
+    /**
+     * @var array
+     */
     protected array $processingErrors = [];
+
+    /**
+     * @var array
+     */
     protected array $tempErrors = [];
 
+    /**
+     * @var array
+     */
     protected array $errorCount = [
         'critical' => 0,
         'warning' => 0,
@@ -82,14 +144,11 @@ class Result
         'result document_link' => 'result_identifier',
     ];
 
-    public function initMapper($validatedDataFilePath, $statusFilePath, $globalErrorFilePath, $existingIdentifier)
-    {
-        $this->validatedDataFilePath = $validatedDataFilePath;
-        $this->statusFilePath = $statusFilePath;
-        $this->existingIdentifier = $existingIdentifier;
-        $this->globalErrorFilePath = $globalErrorFilePath;
-    }
-
+    /**
+     * Returns result data for unit test.
+     *
+     * @return array
+     */
     public function getResultData(): array
     {
         $resultTestData = [];
@@ -104,6 +163,13 @@ class Result
         return $resultTestData;
     }
 
+    /**
+     * Map result data based on sheet.
+     *
+     * @param $resultData
+     *
+     * @return static
+     */
     public function map($resultData): static
     {
         foreach ($resultData as $sheetName => $content) {
@@ -151,6 +217,11 @@ class Result
         }
     }
 
+    /**
+     * Validate and store result data to json files.
+     *
+     * @return void
+     */
     public function validateAndStoreData(): void
     {
         $errors = [];
@@ -189,6 +260,14 @@ class Result
         $this->updateStatus();
     }
 
+    /**
+     * Group columns by identifier.
+     *
+     * @param $element
+     * @param $data
+     *
+     * @return void
+     */
     public function columnToFieldMapper($element, $data = []): void
     {
         $elementData = [];
@@ -236,6 +315,17 @@ class Result
         }
     }
 
+    /**
+     * Map fields within element to form elementdata.
+     *
+     * @param $data
+     * @param $dependency
+     * @param $elementDropDownFields
+     * @param $element
+     * @param $elementActivityIdentifier
+     *
+     * @return array
+     */
     public function getElementData($data, $dependency, $elementDropDownFields, $element, $elementActivityIdentifier): array
     {
         if (is_null($elementActivityIdentifier)) {
@@ -302,16 +392,6 @@ class Result
                 }
 
                 $elementData = $this->setValueToField($elementBase, $elementAddMore, $elementData, $baseCount, $parentBaseCount, $fieldName, $fieldValue, $elementActivityIdentifier, $element, Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName));
-
-                // $elementPosition = $this->getElementPosition($parentBaseCount, $fieldName);
-                // $elementPositionBasedOnParent = $elementBase && $elementAddMore ? (empty($elementPosition) ? $baseCount : $baseCount . '.' . $elementPosition) : $elementPosition;
-
-                // if (is_null(Arr::get($elementData, $elementPositionBasedOnParent, null))) {
-                //     $fieldValue = is_numeric($fieldValue) ? (string) $fieldValue : $fieldValue;
-                //     Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
-                //     $this->tempColumnTracker[$elementPositionBasedOnParent]['sheet'] = $this->sheetName;
-                //     $this->tempColumnTracker[$elementPositionBasedOnParent]['cell'] = Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName) . $this->rowCount;
-                // }
             }
             $this->rowCount++;
         }
@@ -319,21 +399,36 @@ class Result
         return $elementData;
     }
 
-    protected function appendResultData($element, $identifier, $data)
+    /**
+     * Append the result data to their specific position.
+     *
+     * @param $element
+     * @param $identifier
+     * @param $data
+     *
+     * @return void
+     */
+    protected function appendResultData($element, $identifier, $data):void
     {
         $periodElementFunctions = [
             'result' => 'appendResult',
             'result document_link' => 'appendResultDocumentLink',
         ];
 
-        // if (!empty($data)) {
         call_user_func([$this, $periodElementFunctions[$element]], $identifier, $data);
-        // }
 
         $this->tempColumnTracker = [];
         $this->tempErrors = [];
     }
 
+    /**
+     * Append result data.
+     *
+     * @param $identifier
+     * @param $data
+     *
+     * @return void
+     */
     protected function appendResult($identifier, $data): void
     {
         $activityIdentifier = Arr::get($this->identifiers, "$identifier", null);
@@ -347,6 +442,14 @@ class Result
         $this->addProcessingErrors($activityIdentifier, $identifier);
     }
 
+    /**
+     * Append document link to its parent result.
+     *
+     * @param $identifier
+     * @param $data
+     *
+     * @return void
+     */
     protected function appendResultDocumentLink($identifier, $data): void
     {
         $activityIdentifier = Arr::get($this->identifiers, "$identifier", null);
@@ -366,7 +469,16 @@ class Result
         $this->addProcessingErrors($activityIdentifier, $identifier);
     }
 
-    protected function updateColumnTracker($activityIdentifier, $identifier, $keyPrefix)
+    /**
+     * Append column tracker to parent element.
+     *
+     * @param $activityIdentifier
+     * @param $identifier
+     * @param $keyPrefix
+     *
+     * @return void
+     */
+    protected function updateColumnTracker($activityIdentifier, $identifier, $keyPrefix):void
     {
         foreach ($this->tempColumnTracker as $columnPosition => $columnIndex) {
             $this->columnTracker[$activityIdentifier][$identifier]['results']["$keyPrefix.$columnPosition"] = $columnIndex;

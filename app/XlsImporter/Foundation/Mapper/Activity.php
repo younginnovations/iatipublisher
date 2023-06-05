@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\XlsImporter\Foundation\Mapper;
 
+use App\XlsImporter\Foundation\Mapper\Traits\XlsMapperHelper;
 use App\XlsImporter\Foundation\XlsValidator\Validators\ActivityValidator;
 use Illuminate\Support\Arr;
 
@@ -12,6 +13,8 @@ use Illuminate\Support\Arr;
  */
 class Activity
 {
+    use XlsMapperHelper;
+
     /**
      * @var array
      */
@@ -86,6 +89,7 @@ class Activity
 
     /**
      * total number of processed count.
+     * @var
      */
     protected int $processedCount = 0;
 
@@ -94,6 +98,9 @@ class Activity
      */
     protected array $activitiesIdentifier = [];
 
+    /**
+     * @var
+     */
     protected array $existingIdentifier = [];
 
     /**
@@ -118,32 +125,62 @@ class Activity
      */
     protected array $columnTracker = [];
 
+    /**
+     * @var
+     */
     protected array $globalErrors = [];
 
+    /**
+     * @var
+     */
     protected array $processingErrors = [];
+
+    /**
+     * @var
+     */
     protected array $tempErrors = [];
+
+    /**
+     * @var array
+     */
     protected array $errorCount = [
         'critical' => 0,
         'warning' => 0,
         'error' => 0,
     ];
+
+    /**
+     * @var string
+     */
     protected string $elementBeingProcessed = '';
 
+    /**
+     * @var string
+     */
     protected string $statusFilePath = '';
+
+    /**
+     * @var string
+     */
     protected string $validatedDataFilePath = '';
 
+    /**
+     * @var string
+     */
     protected string $globalErrorFilePath = '';
 
+    /**
+     * @var string
+     */
     protected array $organizationReportingOrg = [];
 
-    public function initMapper($validatedDataFilePath, $statusFilePath, $globalErrorFilePath, $existingIdentifier)
-    {
-        $this->validatedDataFilePath = $validatedDataFilePath;
-        $this->statusFilePath = $statusFilePath;
-        $this->globalErrorFilePath = $globalErrorFilePath;
-        $this->existingIdentifier = $existingIdentifier;
-    }
-
+    /**
+     * Fill organization Reporting org.
+     *
+     * @param $organizationReportingOrg
+     *
+     * @return static
+     */
     public function fillOrganizationReportingOrg($organizationReportingOrg = []): static
     {
         $this->organizationReportingOrg = $organizationReportingOrg ?? [];
@@ -151,11 +188,23 @@ class Activity
         return $this;
     }
 
+    /**
+     * Returns activity data for unit test.
+     *
+     * @return array
+     */
     public function getActivityData(): array
     {
         return $this->activities[array_key_first($this->activities)];
     }
 
+    /**
+     * Map activity data sheets based on their type.
+     *
+     * @param $activityData
+     *
+     * @return static
+     */
     public function map($activityData): static
     {
         foreach ($activityData as $sheetName => $content) {
@@ -178,6 +227,11 @@ class Activity
         return $this;
     }
 
+    /**
+     * Validates mapped data and store them to json files.
+     *
+     * @return void
+     */
     public function validateAndStoreData(): void
     {
         $activityValidator = app(ActivityValidator::class);
@@ -210,6 +264,13 @@ class Activity
         $this->updateStatus();
     }
 
+    /**
+     * Map default values for each activity.
+     *
+     * @param $data
+     *
+     * @return void
+     */
     public function defaultValues($data): void
     {
         $dropDownFields = $this->getDropDownFields();
@@ -296,7 +357,14 @@ class Activity
         ];
     }
 
-    public function singleValuedFields($data)
+    /**
+     * Map single values field of each activity.
+     *
+     * @param $data
+     *
+     * @return void
+     */
+    public function singleValuedFields($data): void
     {
         $dropDownFields = $this->getDropDownFields();
         $elementActivityIdentifier = null;
@@ -331,7 +399,15 @@ class Activity
         }
     }
 
-    public function columnToFieldMapper($element, $data = [])
+    /**
+     * Group columns for activity.
+     *
+     * @param $element
+     * @param $data
+     *
+     * @return void
+     */
+    public function columnToFieldMapper($element, $data = []): void
     {
         $elementData = [];
         $columnMapper = $this->getLinearizedActivity();
@@ -390,11 +466,21 @@ class Activity
         }
     }
 
+    /**
+     * Map field values for each element of activity.
+     *
+     * @param $data
+     * @param $dependency
+     * @param $elementDropDownFields
+     * @param $elementActivityIdentifier
+     * @param $element
+     *
+     * @return array
+     */
     public function getElementData($data, $dependency, $elementDropDownFields, $elementActivityIdentifier, $element): array
     {
         if (is_null($elementActivityIdentifier)) {
             $this->globalErrors[] = 'Error detected on ' . $this->sheetName . ' sheet, cell A' . $this->rowCount . ': Identifier is missing.';
-            $this->rowCount++;
 
             return [];
         }
@@ -431,8 +517,6 @@ class Activity
                 list($baseCount, $parentBaseCount, $dependentOnValue) = $this->checkElementAddMore($elementBase, $elementBasePeer, $elementAddMore, $dependentOnValue, $fieldName, $fieldValue, $baseCount, $parentBaseCount, $row, $element);
                 list($parentBaseCount, $dependentOnValue) = $this->checkSubElementAddMore($fieldDependency, $parentBaseCount, $parentDependentOn, $dependentOnValue, $fieldName, $fieldValue, $row);
                 $cell = Arr::get($excelColumnName, $this->sheetName . '.' . $fieldName);
-
-                // $fieldName = $this->checkDependencyForFieldName($dependentOn, $dependentOnValue, $dependencyCondition, $fieldName);
 
                 if (!empty($dependentOn)) {
                     if (in_array($fieldName, array_keys(Arr::get($dependentOn, 'codes', [])))) {
@@ -481,6 +565,14 @@ class Activity
         return $elementData;
     }
 
+    /**
+     * Get position for each field of element.
+     *
+     * @param $fieldDependency
+     * @param $dependencies
+     *
+     * @return string
+     */
     public function getElementPosition($fieldDependency, $dependencies): string
     {
         $position = '';

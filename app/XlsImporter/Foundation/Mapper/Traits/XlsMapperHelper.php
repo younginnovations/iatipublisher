@@ -12,6 +12,24 @@ use Illuminate\Support\Arr;
 trait XlsMapperHelper
 {
     /**
+     * Initialize activity mapper.
+     *
+     * @param $validatedDataFilePath
+     * @param $statusFilePath
+     * @param $globalErrorFilePath
+     * @param $existingIdentifier
+     *
+     * @return void
+     */
+    public function initMapper($validatedDataFilePath, $statusFilePath, $globalErrorFilePath, $existingIdentifier): void
+    {
+        $this->validatedDataFilePath = $validatedDataFilePath;
+        $this->statusFilePath = $statusFilePath;
+        $this->globalErrorFilePath = $globalErrorFilePath;
+        $this->existingIdentifier = $existingIdentifier;
+    }
+
+    /**
      * Returns content of linearized-activity json file which contains mapping of system field name to column name present in xls sheet.
      *
      * @return array
