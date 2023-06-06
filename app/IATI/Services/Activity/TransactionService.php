@@ -534,6 +534,40 @@ class TransactionService
     }
 
     /**
+     * append freeze and info_text in sector, recipient region or country if present in activity level.
+     *
+     * @param $activity
+     * @param $transactionId
+     *
+     * @return array
+     *
+     * @throws \JsonException
+     */
+    public function getManipulatedTransactionElementSchema($activity, $transactionId = null): array
+    {
+        $element = getElementSchema('transactions');
+
+        if (!is_array_value_empty($activity->sector)) {
+            $element['sub_elements']['sector']['freeze'] = true;
+            $element['sub_elements']['sector']['info_text'] = 'Sector has already been declared at activity level. You can’t declare a sector at the transaction level. To declare at transaction level, you need to remove sector at activity level.';
+        }
+
+        if (!is_array_value_empty($activity->recipient_country) || !is_array_value_empty($activity->recipient_region)) {
+            $element['sub_elements']['recipient_region']['freeze'] = true;
+            $element['sub_elements']['recipient_region']['info_text'] = 'Recipient Region or Recipient Country is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.';
+            $element['sub_elements']['recipient_country']['freeze'] = true;
+            $element['sub_elements']['recipient_country']['info_text'] = 'Recipient Region or Recipient Country is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.';
+        }
+
+        if ($transactionId) {
+            $this->appendInfoTextForRecipientRegionAndCountryInTransaction($activity, $element, $transactionId);
+            $this->appendInfoTextForSectorInTransaction($activity, $element, $transactionId);
+        }
+
+        return $element;
+    }
+
+    /**
      * appends warning info text in recipient region or country in transaction level.
      *
      * @param $activity

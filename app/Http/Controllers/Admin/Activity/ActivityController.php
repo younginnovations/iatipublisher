@@ -203,9 +203,9 @@ class ActivityController extends Controller
      *
      * @param $activity
      *
-     * @throws \JsonException
-     *
      * @return array
+     *
+     * @throws \JsonException
      */
     public function getElementJsonSchema($activity): array
     {

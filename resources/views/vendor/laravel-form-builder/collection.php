@@ -54,7 +54,7 @@
 
             if ($showError && isset($errors) && $errors->hasBag($errorBag)) {
                 foreach ($errors->getBag($errorBag)->get($nameKey) as $err) {
-                    if($err !== "")
+                    if(!empty($err))
                     {
                         $error = '<div class="text-danger-error">' . $err . '</div>';
                     }

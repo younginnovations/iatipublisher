@@ -23,7 +23,7 @@ class ParentCollectionForm extends BaseForm
             (strtolower($field['name']) === 'narrative' && Arr::get($field, 'attributes', null) ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
             : 'subelement rounded-tl-lg border-l border-spring-50 mb-6';
 
-        if (isset($field['freeze']) && $field['freeze']) {
+        if (Arr::get($field, 'freeze')) {
             $dynamicWrapperClass .= ' freeze';
         }
 
