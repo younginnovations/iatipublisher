@@ -453,7 +453,7 @@ trait XlsMapperHelper
             Arr::set($elementData, $elementPositionBasedOnParent, $fieldValue);
 
             if ($isActivity) {
-                $this->olumnTracker[$elementActivityIdentifier][$element][$element . '.' . $elementPositionBasedOnParent]['sheet'] = $this->sheetName;
+                $this->columnTracker[$elementActivityIdentifier][$element][$element . '.' . $elementPositionBasedOnParent]['sheet'] = $this->sheetName;
                 $this->columnTracker[$elementActivityIdentifier][$element][$element . '.' . $elementPositionBasedOnParent]['cell'] = $cell . $this->rowCount;
             } else {
                 $this->tempColumnTracker[$elementActivityIdentifier][$element][$element . '.' . $elementPositionBasedOnParent]['sheet'] = $this->sheetName;
