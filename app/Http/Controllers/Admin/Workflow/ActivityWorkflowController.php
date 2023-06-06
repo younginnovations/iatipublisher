@@ -79,12 +79,14 @@ class ActivityWorkflowController extends Controller
         } catch (PublisherNotFound $message) {
             DB::rollBack();
             logger()->error($message->getMessage());
+            logger()->error($message);
             Session::put('error', $message->getMessage());
 
             return response()->json(['success' => false, 'message' => $message->getMessage()]);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
+            logger()->error($e);
             Session::put('error', 'Error has occurred while publishing activity.');
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while publishing activity.']);
@@ -167,6 +169,7 @@ class ActivityWorkflowController extends Controller
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while validating activity.']);
         } catch (\Exception $e) {
+            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while validating activity.']);

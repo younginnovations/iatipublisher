@@ -392,11 +392,11 @@ class XmlGenerator
     {
         $data = [
             'last-updated-datetime' => gmdate('c', time()),
-            'xml:lang'              => Arr::get($defaultValues, 'default_language', null),
-            'default-currency'      => Arr::get($defaultValues, 'default_currency', null),
-            'humanitarian'          => Arr::get($defaultValues, 'humanitarian', 1),
-            'hierarchy'             => Arr::get($defaultValues, 'hierarchy', 1),
-            'budget-not-provided'   => Arr::get($defaultValues, 'budget_not_provided', ''),
+            'xml:lang' => Arr::get($defaultValues, 'default_language', null),
+            'default-currency' => Arr::get($defaultValues, 'default_currency', null),
+            'humanitarian' => Arr::get($defaultValues, 'humanitarian', 1),
+            'hierarchy' => Arr::get($defaultValues, 'hierarchy', 1),
+            'budget-not-provided' => Arr::get($defaultValues, 'budget_not_provided', ''),
         ];
 
         foreach ($data as $key => $datum) {
@@ -506,8 +506,8 @@ class XmlGenerator
      */
     public function mapActivityTransactionAndResultIndex($xmlActivity, $activity): void
     {
-        $transactions = $xmlActivity['transaction'];
-        $results = $xmlActivity['result'];
+        $transactions = Arr::get($xmlActivity, 'transaction', []);
+        $results = Arr::get($xmlActivity, 'result', []);
         $mapper = [];
 
         foreach ($transactions as $transactionKey => $transaction) {
