@@ -22,8 +22,8 @@ class ActivityFactory extends Factory
     {
         return [
             'iati_identifier' => [
-                'activity_identifier'  => 'SYRZ000041' . fake()->numberBetween(0, 999999),
-                'iati_identifier_text' => 'CZ-ICO-25755277-SYRZ000041' . fake()->numberBetween(0, 999999),
+                'activity_identifier'  => 'SYRZ000041',
+                'iati_identifier_text' => 'CZ-ICO-25755277-SYRZ000041',
             ],
             'title'           => [
                 [
