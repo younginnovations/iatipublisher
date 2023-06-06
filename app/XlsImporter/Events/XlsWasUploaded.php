@@ -5,15 +5,12 @@ declare(strict_types=1);
 namespace App\XlsImporter\Events;
 
 use App\Events\Event;
-use Illuminate\Queue\SerializesModels;
 
 /**
  * Class XlsWasUploaded.
  */
 class XlsWasUploaded extends Event
 {
-    //    use SerializesModels;
-
     /**
      * @var
      */

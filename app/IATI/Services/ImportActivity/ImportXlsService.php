@@ -137,14 +137,21 @@ class ImportXlsService
      */
     public function create($activities, $xlsType = 'activity'): bool
     {
-        if ($xlsType === 'activity') {
-            $this->saveActivities($activities);
-        } elseif ($xlsType === 'result') {
-            $this->saveResults($activities);
-        } elseif ($xlsType === 'indicator') {
-            $this->saveIndicator($activities);
-        } elseif ($xlsType === 'period') {
-            $this->savePeriod($activities);
+        switch ($xlsType) {
+            case 'activity':
+                $this->saveActivities($activities);
+                break;
+            case 'result':
+                $this->saveResults($activities);
+                break;
+            case 'indicator':
+                $this->saveIndicator($activities);
+                break;
+            case 'period':
+                $this->savePeriod($activities);
+                break;
+            default:
+                return false;
         }
 
         return true;

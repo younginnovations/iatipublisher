@@ -41,6 +41,11 @@ class Period extends Model implements Auditable
         'period' => 'json',
     ];
 
+    /**
+     * Updates timestamp of indicator on period update.
+     *
+     * @var array
+     */
     protected $touches = ['indicator'];
 
     /**

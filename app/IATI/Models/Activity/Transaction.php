@@ -42,6 +42,11 @@ class Transaction extends Model implements Auditable
         'transaction' => 'json',
     ];
 
+    /**
+     * Updates timestamp of activity on transaction update.
+     *
+     * @var array
+     */
     protected $touches = ['activity'];
 
     /**

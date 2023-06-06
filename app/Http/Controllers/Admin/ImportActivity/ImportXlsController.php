@@ -81,7 +81,6 @@ class ImportXlsController extends Controller
 
             return view('admin.import.xls.index');
         } catch (Exception $e) {
-            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while rendering activity import page.']);

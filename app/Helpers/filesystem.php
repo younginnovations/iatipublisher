@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Storage;
 
 if (!function_exists('awsHasFile')) {
     /**
+     * Checks if file with $filepath is present in aws.
+     *
      * @param $filePath
      *
      * @return bool
@@ -18,18 +20,26 @@ if (!function_exists('awsHasFile')) {
 
 if (!function_exists('awsGetFile')) {
     /**
+     * Gets the content of file from aws.
+     *
      * @param $filePath
      *
      * @return string|null
      */
     function awsGetFile($filePath): ?string
     {
-        return Storage::disk('s3')->get($filePath);
+        if (awsHasFile($filePath)) {
+            return Storage::disk('s3')->get($filePath);
+        }
+
+        return null;
     }
 }
 
 if (!function_exists('awsUploadFile')) {
     /**
+     * Uploads file with $content to aws path $path.
+     *
      * @param $path
      * @param $content
      *
@@ -43,6 +53,8 @@ if (!function_exists('awsUploadFile')) {
 
 if (!function_exists('awsUploadFileAs')) {
     /**
+     * Upload file with $content to aws path $path and name it as $filename.
+     *
      * @param $path
      * @param $content
      * @param $filename
@@ -57,6 +69,8 @@ if (!function_exists('awsUploadFileAs')) {
 
 if (!function_exists('awsDeleteFile')) {
     /**
+     * Deletes file at aws.
+     *
      * @param $filePath
      *
      * @return bool
@@ -73,6 +87,8 @@ if (!function_exists('awsDeleteFile')) {
 
 if (!function_exists('awsDeleteDirectory')) {
     /**
+     * Deletes aws directory.
+     *
      * @param $folderName
      *
      * @return bool
@@ -89,6 +105,8 @@ if (!function_exists('awsDeleteDirectory')) {
 
 if (!function_exists('awsUrl')) {
     /**
+     * Creates aws url out of file path.
+     *
      * @param $filePath
      *
      * @return string
@@ -101,6 +119,8 @@ if (!function_exists('awsUrl')) {
 
 if (!function_exists('awsFilePath')) {
     /**
+     * Returns full path for the file at aws $path.
+     *
      * @param $path
      *
      * @return string
@@ -113,6 +133,8 @@ if (!function_exists('awsFilePath')) {
 
 if (!function_exists('localHasFile')) {
     /**
+     * Checks if $filePath exists for local disk.
+     *
      * @param $filePath
      *
      * @return bool
@@ -125,6 +147,8 @@ if (!function_exists('localHasFile')) {
 
 if (!function_exists('localUploadFile')) {
     /**
+     * Uploads file to local disk.
+     *
      * @param $path
      * @param $content
      *
@@ -138,6 +162,8 @@ if (!function_exists('localUploadFile')) {
 
 if (!function_exists('localFilePath')) {
     /**
+     * Gets full path for file at local disk.
+     *
      * @param $path
      *
      * @return string
@@ -150,6 +176,8 @@ if (!function_exists('localFilePath')) {
 
 if (!function_exists('localDeleteFile')) {
     /**
+     * Deletes file from local disk.
+     *
      * @param $filePath
      *
      * @return bool

@@ -6,6 +6,8 @@ use Illuminate\Encryption\Encrypter;
 
 if (!function_exists('customDecryptString')) {
     /**
+     * Decryption using the encryption method of application.
+     *
      * @param string      $encryptedString
      * @param string|null $key
      *
@@ -21,6 +23,8 @@ if (!function_exists('customDecryptString')) {
 
 if (!function_exists('customEncryptString')) {
     /**
+     * Encryption using encryption method of application.
+     *
      * @param string      $string
      * @param string|null $key
      *

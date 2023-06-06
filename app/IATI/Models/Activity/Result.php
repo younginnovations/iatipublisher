@@ -30,14 +30,14 @@ class Result extends Model implements Auditable
      * @var array
      */
     protected $fillable
-    = [
-        'activity_id',
-        'result',
-        'migrated_from_aidstream',
-        'created_at',
-        'updated_at',
-        'result_code',
-    ];
+        = [
+            'activity_id',
+            'result',
+            'migrated_from_aidstream',
+            'created_at',
+            'updated_at',
+            'result_code',
+        ];
 
     /**
      * @var array
@@ -47,6 +47,11 @@ class Result extends Model implements Auditable
             'result' => 'json',
         ];
 
+    /**
+     * Updates timestamp of activity on result update.
+     *
+     * @var array
+     */
     protected $touches = ['activity'];
 
     /**
@@ -103,12 +108,14 @@ class Result extends Model implements Auditable
                     $narratives = $title['narrative'];
 
                     foreach ($narratives as $narrative) {
-                        if (array_key_exists(
-                            'language',
-                            $narrative
-                        ) && !empty($narrative['language']) && $narrative['language'] === getDefaultLanguage(
-                            $this->activity->default_field_values
-                        )) {
+                        if (
+                            array_key_exists(
+                                'language',
+                                $narrative
+                            ) && !empty($narrative['language']) && $narrative['language'] === getDefaultLanguage(
+                                $this->activity->default_field_values
+                            )
+                        ) {
                             return $narrative['narrative'];
                         }
                     }

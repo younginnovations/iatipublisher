@@ -461,6 +461,7 @@ class Activity
 
         foreach ($data as $index => $row) {
             $tempRowCount++;
+
             if ($this->checkRowNotEmpty($row)) {
                 if (
                     is_null($elementActivityIdentifier) || (

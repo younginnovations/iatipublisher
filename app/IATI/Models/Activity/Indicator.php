@@ -44,6 +44,11 @@ class Indicator extends Model implements Auditable
             'indicator' => 'json',
         ];
 
+    /**
+     * Updates timestamp of result on result indicator.
+     *
+     * @var array
+     */
     protected $touches = ['result'];
 
     /**
