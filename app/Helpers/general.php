@@ -866,9 +866,9 @@ if (!function_exists('getAllocatedPercentageOfRecipientRegion')) {
      *
      * @param $activity
      *
-     * @return int|mixed
+     * @return float
      */
-    function getAllocatedPercentageOfRecipientRegion($activity): mixed
+    function getAllocatedPercentageOfRecipientRegion($activity):float
     {
         $data = $activity->recipient_region;
         $groupedRegion = [];
@@ -889,7 +889,7 @@ if (!function_exists('getAllocatedPercentageOfRecipientRegion')) {
             }
         }
 
-        return 0;
+        return 0.0;
     }
 }
 
@@ -899,12 +899,12 @@ if (!function_exists('getAllocatedPercentageOfRecipientCountry')) {
      *
      * @param $activity
      *
-     * @return float|int
+     * @return float
      */
-    function getAllocatedPercentageOfRecipientCountry($activity): float|int
+    function getAllocatedPercentageOfRecipientCountry($activity): float
     {
         $data = $activity->recipient_country;
-        $total = 0;
+        $total = 0.0;
 
         if (!empty($data)) {
             foreach ($data as $datum) {

@@ -178,7 +178,7 @@ class RecipientCountryService
         $currentRecipientRegionPercent = getAllocatedPercentageOfRecipientRegion($activity);
         $totalPercentage = $totalRecipientCountry + $currentRecipientRegionPercent;
         $elementStatus['element_status'] = $activity->element_status;
-        $elementStatus['element_status']['recipient_region'] = $totalPercentage === 100.0;
+        $elementStatus['element_status']['recipient_region'] = ($totalPercentage === 100.0);
 
         $data = array_merge($data, $elementStatus);
 

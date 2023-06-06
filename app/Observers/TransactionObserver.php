@@ -197,11 +197,25 @@ class TransactionObserver
         $activityObj->save();
     }
 
+    /**
+     * Checks if Recipient region is empty in transaction.
+     *
+     * @param mixed $recipientRegion
+     *
+     * @return bool
+     */
     private function recipientRegionIsEmptyInTransaction(mixed $recipientRegion): bool
     {
         return (bool) Arr::get($recipientRegion, '0.region_vocabulary', false);
     }
 
+    /**
+     * Checks if Recipient country is empty in transaction.
+     *
+     * @param mixed $recipientCountry
+     *
+     * @return bool
+     */
     private function recipientCountryIsEmptyInTransaction(mixed $recipientCountry): bool
     {
         return (bool) Arr::get($recipientCountry, '0.country_code', false);

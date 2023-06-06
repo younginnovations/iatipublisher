@@ -86,6 +86,7 @@ class RecipientRegionService
      * @param $activityRecipientRegion
      *
      * @return bool
+     *
      * @throws BindingResolutionException
      * @throws JsonException
      */
