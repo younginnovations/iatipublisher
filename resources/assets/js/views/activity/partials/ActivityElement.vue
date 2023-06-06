@@ -659,7 +659,7 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-  warning_info_text: {
+  warningInfoText: {
     type: String,
     required: false,
     default: '',

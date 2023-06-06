@@ -698,4 +698,33 @@ class ActivityService
     {
         return $this->activityRepository->getActivitiesByOrgIds($idMap);
     }
+
+    /**
+     * append freeze and info_text if recipient country or region exists in any one of the activity transactions
+     * if exists then it freezes the section.
+     *
+     * @param $activity
+     * @param $elementName
+     *
+     * @return array
+     *
+     * @throws \JsonException
+     */
+    public function getRecipientRegionOrCountryManipulatedElementSchema($activity, $elementName): array
+    {
+        $element = getElementSchema($elementName);
+        $manipulatedElement = ucfirst(str_replace('_', ' ', $elementName));
+
+        if (count($activity->transactions)) {
+            $recipient_region = $activity->transactions->pluck('transaction.recipient_region')->toArray();
+            $recipient_country = $activity->transactions->pluck('transaction.recipient_country')->toArray();
+
+            if (!is_array_value_empty($recipient_region) || !is_array_value_empty($recipient_country)) {
+                $element['freeze'] = true;
+                $element['info_text'] = "$manipulatedElement is already added at transaction level. You can add a $manipulatedElement either at activity level or at transaction level but not at both.";
+            }
+        }
+
+        return $element;
+    }
 }

@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\RecipientCountry\RecipientCountryRequest;
+use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\RecipientCountryService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -23,13 +24,22 @@ class RecipientCountryController extends Controller
     protected RecipientCountryService $recipientCountryService;
 
     /**
+     * For recipient region or country element json schema.
+     *
+     * @var ActivityService
+     */
+    protected ActivityService $activityService;
+
+    /**
      * RecipientCountryController Constructor.
      *
      * @param RecipientCountryService $recipientCountryService
+     * @param ActivityService $activityService
      */
-    public function __construct(RecipientCountryService $recipientCountryService)
+    public function __construct(RecipientCountryService $recipientCountryService, ActivityService $activityService)
     {
         $this->recipientCountryService = $recipientCountryService;
+        $this->activityService = $activityService;
     }
 
     /**
@@ -43,7 +53,7 @@ class RecipientCountryController extends Controller
     {
         try {
             $activity = $this->recipientCountryService->getActivityData($id);
-            $element = $this->getRecipientCountryManipulatedElementSchema($activity);
+            $element = $this->activityService->getRecipientRegionOrCountryManipulatedElementSchema($activity, 'recipient_country');
             $form = $this->recipientCountryService->formGenerator($id, $element);
             $data = ['title' => $element['label'], 'name' => 'recipient_country'];
 

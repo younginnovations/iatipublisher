@@ -199,15 +199,19 @@ class ActivityController extends Controller
     }
 
     /**
+     * manipulate element json schema and adds warning info text.
+     *
+     * @param $activity
+     *
      * @throws \JsonException
+     *
+     * @return array
      */
     public function getElementJsonSchema($activity): array
     {
         $element = readElementJsonSchema();
         $hasDefinedInTransaction = $this->transactionService->hasRecipientRegionOrCountryDefinedInTransaction($activity->id);
-
         $hasSectorDefinedInTransaction = $this->transactionService->hasSectorDefinedInTransaction($activity->id);
-
         $emptyRecipientRegionOrCountryTransactionCount = 0;
         $emptySectorTransactionCount = 0;
 
@@ -228,14 +232,12 @@ class ActivityController extends Controller
             })->count();
         }
 
-        $warning_info_text = match (true) {
+        $element['transactions']['warning_info_text'] = match (true) {
             $emptyRecipientRegionOrCountryTransactionCount > 0 && $emptySectorTransactionCount > 0 => 'Recipient Region , Recipient Country and Sector are declared at transaction level. Some of the transactions are missing these values.',
             $emptyRecipientRegionOrCountryTransactionCount > 0 && $emptySectorTransactionCount === 0 => 'Recipient Region and Recipient Country is declared at transaction level. Some of the transactions are missing these values.',
             $emptySectorTransactionCount > 0 && $emptyRecipientRegionOrCountryTransactionCount === 0  => 'Sector is declared at transaction level. Some of the transactions are missing this value.',
             default => ''
         };
-
-        $element['transactions']['warning_info_text'] = $warning_info_text;
 
         return $element;
     }

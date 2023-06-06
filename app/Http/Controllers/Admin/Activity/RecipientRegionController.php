@@ -6,11 +6,11 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\RecipientRegion\RecipientRegionRequest;
+use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\RecipientRegionService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use JsonException;
 
 /**
  * Class RecipientRegionController.
@@ -23,13 +23,22 @@ class RecipientRegionController extends Controller
     protected RecipientRegionService $recipientRegionService;
 
     /**
+     * For recipient region or country element json schema.
+     *
+     * @var ActivityService
+     */
+    protected ActivityService $activityService;
+
+    /**
      * RecipientRegionController Constructor.
      *
      * @param RecipientRegionService $recipientRegionService
+     * @param ActivityService $activityService
      */
-    public function __construct(RecipientRegionService $recipientRegionService)
+    public function __construct(RecipientRegionService $recipientRegionService, ActivityService $activityService)
     {
         $this->recipientRegionService = $recipientRegionService;
+        $this->activityService = $activityService;
     }
 
     /**
@@ -43,7 +52,7 @@ class RecipientRegionController extends Controller
     {
         try {
             $activity = $this->recipientRegionService->getActivityData($id);
-            $element = $this->getRecipientRegionManipulatedElementSchema($activity);
+            $element = $this->activityService->getRecipientRegionOrCountryManipulatedElementSchema($activity, 'recipient_region');
             $form = $this->recipientRegionService->formGenerator($id, $element);
             $data = ['title' => $element['label'], 'name' => 'recipient_region'];
 
@@ -76,32 +85,5 @@ class RecipientRegionController extends Controller
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating recipient-region.');
         }
-    }
-
-    /**
-     * append freeze and info_text if recipient country or region exists in any one of the activity transactions
-     * if exists then it freezes the section.
-     *
-     * @param $activity
-     *
-     * @throws JsonException
-     *
-     * @return array
-     */
-    public function getRecipientRegionManipulatedElementSchema($activity): array
-    {
-        $element = getElementSchema('recipient_region');
-
-        if (count($activity->transactions)) {
-            $recipient_region = $activity->transactions->pluck('transaction.recipient_region')->toArray();
-            $recipient_country = $activity->transactions->pluck('transaction.recipient_country')->toArray();
-
-            if (!is_array_value_empty($recipient_region) || !is_array_value_empty($recipient_country)) {
-                $element['freeze'] = true;
-                $element['info_text'] = 'Recipient Region is already added at transaction level. You can add a Recipient Region either at activity level or at transaction level but not at both.';
-            }
-        }
-
-        return $element;
     }
 }

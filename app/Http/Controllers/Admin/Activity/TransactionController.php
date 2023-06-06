@@ -244,79 +244,11 @@ class TransactionController extends Controller
         }
 
         if ($transactionId) {
-            $this->appendInfoTextForRecipientRegionAndCountryInTransaction($activity, $element, $transactionId);
-            $this->appendInfoTextForSectorInTransaction($activity, $element, $transactionId);
+            $this->transactionService->appendInfoTextForRecipientRegionAndCountryInTransaction($activity, $element, $transactionId);
+            $this->transactionService->appendInfoTextForSectorInTransaction($activity, $element, $transactionId);
         }
 
         return $element;
-    }
-
-    /**
-     * appends warning info text in recipient region or country in transaction level.
-     *
-     * @param $activity
-     * @param $element
-     * @param $transactionId
-     *
-     * @return void
-     */
-    public function appendInfoTextForRecipientRegionAndCountryInTransaction($activity, &$element, $transactionId): void
-    {
-        $hasDefinedInTransaction = $this->transactionService->hasRecipientRegionOrCountryDefinedInTransaction($activity->id);
-
-        $emptyRecipientRegionOrCountryTransaction = $activity->transactions->filter(function ($item) {
-            $recipientRegion = $item->transaction['recipient_region'];
-            $recipientCountry = $item->transaction['recipient_country'];
-
-            return is_array_value_empty($recipientRegion) && is_array_value_empty($recipientCountry);
-        });
-
-        $emptyRecipientRegionOrCountryTransactionCount = count($emptyRecipientRegionOrCountryTransaction);
-
-        if ($emptyRecipientRegionOrCountryTransactionCount && $hasDefinedInTransaction) {
-            if (in_array((int) $transactionId, $emptyRecipientRegionOrCountryTransaction->pluck('id')->toArray(), true)) {
-                $message = 'Recipient Region or Recipient Country is declared at transaction level. You must add either Recipient Region or Recipient Country.';
-            } else {
-                $messagePart = $emptyRecipientRegionOrCountryTransactionCount > 1 ? "are $emptyRecipientRegionOrCountryTransactionCount transactions"
-                    : "is $emptyRecipientRegionOrCountryTransactionCount transaction";
-                $message = "There $messagePart without Recipient Region or Recipient Country.";
-            }
-            $element['sub_elements']['recipient_region']['warning_info_text'] = $message;
-            $element['sub_elements']['recipient_country']['warning_info_text'] = $message;
-        }
-    }
-
-    /**
-     * Adds warning info text in sector in transaction level.
-     *
-     * @param $activity
-     * @param $element
-     * @param $transactionId
-     *
-     * @return void
-     */
-    public function appendInfoTextForSectorInTransaction($activity, &$element, $transactionId): void
-    {
-        $hasSectorDefinedInTransaction = $this->transactionService->hasSectorDefinedInTransaction($activity->id);
-
-        $emptySectorTransaction = $activity->transactions->filter(function ($item) {
-            $sector = $item->transaction['sector'];
-
-            return is_array_value_empty($sector);
-        });
-
-        $emptySectorTransactionCount = count($emptySectorTransaction);
-
-        if ($emptySectorTransactionCount && $hasSectorDefinedInTransaction) {
-            if (in_array((int) $transactionId, $emptySectorTransaction->pluck('id')->toArray(), true)) {
-                $message = 'Sector is declared at transaction level. You must add sector in all transactions.';
-            } else {
-                $messagePart = $emptySectorTransactionCount > 1 ? "are $emptySectorTransactionCount transactions"
-                    : "is $emptySectorTransactionCount transaction";
-                $message = "There $messagePart without Sector.";
-            }
-            $element['sub_elements']['sector']['warning_info_text'] = $message;
-        }
     }
 
     /**
