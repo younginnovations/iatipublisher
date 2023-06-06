@@ -592,7 +592,7 @@ class Activity
                     $dependentOnValue[$fieldName] = $fieldValue;
                 }
 
-                $elementData = $this->setValueToField($elementBase, $elementAddMore, $elementData, $baseCount, $parentBaseCount, $fieldName, $fieldValue, $elementActivityIdentifier, $element, $cell);
+                $elementData = $this->setValueToField($elementBase, $elementAddMore, $elementData, $baseCount, $parentBaseCount, $fieldName, $fieldValue, $elementActivityIdentifier, $element, $cell, true);
             }
 
             $this->rowCount++;

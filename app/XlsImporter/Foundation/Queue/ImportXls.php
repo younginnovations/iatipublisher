@@ -127,7 +127,7 @@ class ImportXls extends Job implements ShouldQueue
      *
      * @return void
      */
-    public function delete(): void
+    public function delete()
     {
         if ($this->job) {
             $completionStatus = json_decode(awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->organizationId, $this->userId, 'status.json')), true, 512, 0);

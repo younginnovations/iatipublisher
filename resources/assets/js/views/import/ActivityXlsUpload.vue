@@ -446,7 +446,9 @@
           We are in the process of uploading '{{
             mapActivityName(activityName)
           }}' file. Please wait for the completion of previous import
-          {{ uploadComplete ? 'or click on "Import Anyway"' : '' }}.
+          {{
+            uploadComplete || xlsFailed ? 'or click on "Import Anyway"' : ''
+          }}.
         </p>
       </div>
 
@@ -465,7 +467,7 @@
           Go Back
         </button>
         <BtnComponent
-          v-if="uploadComplete"
+          v-if="uploadComplete || xlsFailed"
           text="Import Anyway"
           type="primary"
           @click="importAnyway"
@@ -643,7 +645,7 @@ function uploadFile() {
             res.data.errors && Object.values(res.data.errors).join(' ');
         }
       })
-      .catch((err) => {
+      .catch(() => {
         error.value = 'Error has occured while uploading file.';
       })
       .finally(() => {

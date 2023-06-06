@@ -19,8 +19,8 @@ import BulkpublishWithXls from './BulkpublishWithXls.vue';
 import { defineProps, ref } from 'vue';
 import axios from 'axios';
 import { useStore } from 'Store/activities/index';
-const store = useStore();
 
+const store = useStore();
 const showXlsStatus = ref(true);
 
 defineProps({
@@ -28,7 +28,6 @@ defineProps({
     type: String,
     required: true,
   },
-
   completed: {
     type: Boolean,
     required: false,
@@ -51,6 +50,7 @@ defineProps({
     type: Boolean,
   },
 });
+
 const closeXls = () => {
   showXlsStatus.value = false;
   axios.delete(`/import/xls`);

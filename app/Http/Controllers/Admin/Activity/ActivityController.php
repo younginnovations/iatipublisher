@@ -13,7 +13,6 @@ use App\IATI\Services\Activity\TransactionService;
 use App\IATI\Services\ImportActivityError\ImportActivityErrorService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\Validator\ActivityValidatorResponseService;
-use App\XlsImporter\Foundation\XlsProcessor\XlsToArray;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\DatabaseManager;
@@ -23,7 +22,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * Class ActivityController.
@@ -102,11 +100,6 @@ class ActivityController extends Controller
     public function index(): View|JsonResponse
     {
         try {
-            $systemDataFilePath = 'tests/Unit/TestFiles/Xls/SystemData/indicator.json';
-            $xlsfilePath = 'tests/Unit/TestFiles/Xls/XlsData/Indicator.xlsx';
-            $actualData = json_decode(file_get_contents($systemDataFilePath), true, 512, 0);
-            $xlsToArray = new XlsToArray();
-            Excel::import($xlsToArray, $xlsfilePath);
             $languages = getCodeListArray('Languages', 'ActivityArray');
             $toast = generateToastData();
 
