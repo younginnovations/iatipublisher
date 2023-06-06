@@ -125,11 +125,6 @@
       "language": "en"
     },
     {
-      "code": "BYN",
-      "name": "Belarussian Ruble",
-      "language": "en"
-    },
-    {
       "code": "BZD",
       "name": "Belize Dollar",
       "language": "en"
@@ -470,11 +465,6 @@
       "language": "en"
     },
     {
-      "code": "MRU",
-      "name": "Ouguiya",
-      "language": "en"
-    },
-    {
       "code": "MUR",
       "name": "Mauritius Rupee",
       "language": "en"
@@ -660,11 +650,6 @@
       "language": "en"
     },
     {
-      "code": "STN",
-      "name": "Dobra",
-      "language": "en"
-    },
-    {
       "code": "SVC",
       "name": "El Salvador Colon",
       "language": "en"
@@ -812,11 +797,6 @@
     {
       "code": "ZAR",
       "name": "Rand",
-      "language": "en"
-    },
-    {
-      "code": "ZMW",
-      "name": "Zambian Kwacha",
       "language": "en"
     },
     {

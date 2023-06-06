@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Models\Activity;
 
+use Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,13 +30,14 @@ class Result extends Model implements Auditable
      * @var array
      */
     protected $fillable
-    = [
-        'activity_id',
-        'result',
-        'migrated_from_aidstream',
-        'created_at',
-        'updated_at',
-    ];
+        = [
+            'activity_id',
+            'result',
+            'migrated_from_aidstream',
+            'created_at',
+            'updated_at',
+            'result_code',
+        ];
 
     /**
      * @var array
@@ -45,7 +47,30 @@ class Result extends Model implements Auditable
             'result' => 'json',
         ];
 
+    /**
+     * Updates timestamp of activity on result update.
+     *
+     * @var array
+     */
     protected $touches = ['activity'];
+
+    /**
+     * Before inbuilt function.
+     *
+     * @return void
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::saving(
+            function ($model) {
+                if (!$model->result_code) {
+                    $model->result_code = Auth::user() ? sprintf('%d%s', Auth::user()->id, time()) : sprintf('%d%s', $model->id, time());
+                }
+            }
+        );
+    }
 
     /**
      * Result belongs to activity.
@@ -83,12 +108,14 @@ class Result extends Model implements Auditable
                     $narratives = $title['narrative'];
 
                     foreach ($narratives as $narrative) {
-                        if (array_key_exists(
-                            'language',
-                            $narrative
-                        ) && !empty($narrative['language']) && $narrative['language'] === getDefaultLanguage(
-                            $this->activity->default_field_values
-                        )) {
+                        if (
+                            array_key_exists(
+                                'language',
+                                $narrative
+                            ) && !empty($narrative['language']) && $narrative['language'] === getDefaultLanguage(
+                                $this->activity->default_field_values
+                            )
+                        ) {
                             return $narrative['narrative'];
                         }
                     }

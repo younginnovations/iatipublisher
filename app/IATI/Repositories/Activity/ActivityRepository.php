@@ -8,6 +8,7 @@ use App\Constants\Enums;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Repository;
 use App\IATI\Traits\FillDefaultValuesTrait;
+use Auth;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -75,6 +76,7 @@ class ActivityRepository extends Repository
 
         $orderBy = 'updated_at';
         $direction = 'desc';
+        $limit = '10';
 
         if (array_key_exists('orderBy', $queryParams) && !empty($queryParams['orderBy'])) {
             $orderBy = $queryParams['orderBy'];
@@ -84,10 +86,14 @@ class ActivityRepository extends Repository
             }
         }
 
+        if (array_key_exists('limit', $queryParams) && !empty($queryParams['limit'])) {
+            $limit = $queryParams['limit'];
+        }
+
         return $this->model->whereRaw($whereSql, $bindParams)
             ->orderBy($orderBy, $direction)
             ->orderBy('id', $direction)
-            ->paginate(10, ['*'], 'activity', $page);
+            ->paginate($limit, ['*'], 'activity', $page);
     }
 
     /**
@@ -152,7 +158,7 @@ class ActivityRepository extends Repository
      */
     public function getActivityIdentifiers($orgId): Collection|array
     {
-        return $this->model->where('org_id', $orgId)->get('iati_identifier->activity_identifier');
+        return $this->model->where('org_id', $orgId)->get(['id', 'iati_identifier->activity_identifier as identifier']);
     }
 
     /**
@@ -199,7 +205,7 @@ class ActivityRepository extends Repository
             'other_identifier' => $this->getActivityElement($mappedActivity, 'other_identifier'),
             'legacy_data' => $this->getActivityElement($mappedActivity, 'legacy_data'),
             'tag' => $this->getActivityElement($mappedActivity, 'tag'),
-            'org_id' => $mappedActivity['org_id'],
+            'org_id' => Auth::user()->organization->id,
             'policy_marker' => $this->getActivityElement($mappedActivity, 'policy_marker'),
             'budget' => $this->getActivityElement($mappedActivity, 'budget'),
             'activity_scope' => $this->getSingleValuedActivityElement($mappedActivity, 'activity_scope'),
@@ -447,12 +453,12 @@ class ActivityRepository extends Repository
         $activitiesCount = $this->model->where('org_id', $id)->count();
 
         if ($activitiesCount > 0) {
-            $this->model->where('org_id', $id)->update(['reporting_org->0->ref'=>$reportingOrg['ref'] ?? '']);
-            $this->model->where('org_id', $id)->update(['reporting_org->0->type'=>$reportingOrg['type'] ?? '']);
+            $this->model->where('org_id', $id)->update(['reporting_org->0->ref' => $reportingOrg['ref'] ?? '']);
+            $this->model->where('org_id', $id)->update(['reporting_org->0->type' => $reportingOrg['type'] ?? '']);
 
             return $this->model->where('org_id', $id)->update([
-                'reporting_org->0->narrative'=>$reportingOrg['narrative'] ?? '',
-                'status'=>'draft',
+                'reporting_org->0->narrative' => $reportingOrg['narrative'] ?? '',
+                'status' => 'draft',
             ]);
         }
 
@@ -470,7 +476,7 @@ class ActivityRepository extends Repository
      */
     public function updateReportingOrg($id, $key, $data): int
     {
-        return $this->model->where('id', $id)->update(["reporting_org->0->{$key}"=>$data]);
+        return $this->model->where('id', $id)->update(["reporting_org->0->{$key}" => $data]);
     }
 
     /**
@@ -479,8 +485,27 @@ class ActivityRepository extends Repository
      *
      * @return Collection|array
      */
-    public function getActivitiesByOrgIds(array $orgIds): Collection | array
+    public function getActivitiesByOrgIds(array $orgIds): Collection|array
     {
         return $this->model->whereIn('org_id', $orgIds)->get();
+    }
+
+    /*
+     * Returns activities with result belonging to an organization
+     *
+     * @param $organizationId
+     * @param $activitiesId
+     *
+     * @return object
+     */
+    public function getCodesToDownload($organizationId, $activitiesId): object
+    {
+        $query = $this->model->with(['results'])->select('id', 'iati_identifier')->where('org_id', $organizationId);
+
+        if (!empty($activitiesId)) {
+            $query = $query->whereIn('id', $activitiesId);
+        }
+
+        return $query->get();
     }
 }

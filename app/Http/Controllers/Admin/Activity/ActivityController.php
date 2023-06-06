@@ -180,7 +180,7 @@ class ActivityController extends Controller
             $importActivityError = $this->importActivityErrorService->getImportActivityError($id);
             $organization_identifier = $activity->organization->identifier;
             $activity->iati_identifier = [
-                'activity_identifier'  => $activity->iati_identifier['activity_identifier'],
+                'activity_identifier' => $activity->iati_identifier['activity_identifier'],
                 'iati_identifier_text' => $activity->organization->identifier . '-' . $activity->iati_identifier['activity_identifier'],
             ];
 
@@ -270,6 +270,10 @@ class ActivityController extends Controller
 
         if (!empty($request->get('q')) || $request->get('q') === '0') {
             $queryParams['query'] = $request->get('q');
+        }
+
+        if (!empty($request->get('limit'))) {
+            $queryParams['limit'] = $request->get('limit');
         }
 
         if (in_array($request->get('orderBy'), $tableConfig['orderBy'], true)) {

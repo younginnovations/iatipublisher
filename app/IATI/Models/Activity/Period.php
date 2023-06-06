@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Models\Activity;
 
+use Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
@@ -30,6 +31,7 @@ class Period extends Model implements Auditable
         'created_at',
         'updated_at',
         'migrated_from_aidstream',
+        'period_code',
     ];
 
     /**
@@ -39,7 +41,30 @@ class Period extends Model implements Auditable
         'period' => 'json',
     ];
 
+    /**
+     * Updates timestamp of indicator on period update.
+     *
+     * @var array
+     */
     protected $touches = ['indicator'];
+
+    /**
+     * Before inbuilt function.
+     *
+     * @return void
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::saving(
+            function ($model) {
+                if (!$model->period_code) {
+                    $model->period_code = Auth::user() ? sprintf('%d%s', Auth::user()->id, time()) : sprintf('%d%s', $model->id, time());
+                }
+            }
+        );
+    }
 
     /**
      * Period belongs to indicator.

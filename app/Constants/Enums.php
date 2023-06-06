@@ -9,57 +9,137 @@ namespace App\Constants;
  */
 abstract class Enums
 {
-    const IATI_ORGANIZATION_STATUS
-    = [
-        'pending',
-        'verified',
-    ];
+    /**
+     * Enum for iati organization status.
+     *
+     * @var array
+     */
+    public const IATI_ORGANIZATION_STATUS
+        = [
+            'pending',
+            'verified',
+        ];
 
-    const ORGANIZATION_STATUS
-    = [
-        'draft',
-        'ready_to_publish',
-        'published',
-    ];
+    /**
+     * Enum for organization status.
+     *
+     * @var array
+     */
+    public const ORGANIZATION_STATUS
+        = [
+            'draft',
+            'ready_to_publish',
+            'published',
+        ];
 
-    const BULK_PUBLISHING_STATUS
-    = [
-        'created',
-        'processing',
-        'completed',
-        'failed',
-    ];
+    /**
+     * Enum for bulk publishing status.
+     *
+     * @var array
+     */
+    public const BULK_PUBLISHING_STATUS
+        = [
+            'created',
+            'processing',
+            'completed',
+            'failed',
+        ];
 
-    const STATUS = [
+    /**
+     * Enum for status for activeness of user.
+     *
+     * @var array
+     */
+    public const STATUS = [
         'active',
         'inactive',
     ];
 
-    const ORGANIZATION_SYSTEM_STATUS = [
+    /**
+     * Enum for organization status for activeness or organization.
+     *
+     * @var array
+     */
+    public const ORGANIZATION_SYSTEM_STATUS = [
         'active',
         'disabled',
     ];
 
-    const REGISTRATION_METHOD = [
+    /**
+     * Enum for registration method of user.
+     *
+     * @var array
+     */
+    public const REGISTRATION_METHOD = [
         'new_org',
         'existing_org',
         'user_create',
     ];
 
-    const LANGUAGE_PREFERENCE = [
+    /**
+     * Enum for language preference of user.
+     *
+     * @var array
+     */
+    public const LANGUAGE_PREFERENCE = [
         'en',
         'fr',
         'es',
     ];
 
-    const UPLOAD_TYPE = [
+    /**
+     * Enum for upload type of activity.
+     *
+     * @var array
+     */
+    public const UPLOAD_TYPE = [
         'manual' => 'manual',
-        'csv'    => 'csv',
-        'xml'    => 'xml',
+        'csv' => 'csv',
+        'xml' => 'xml',
+        'xls' => 'xls',
     ];
 
-    const API_TYPE = [
+    /**
+     * Enum for api type.
+     *
+     * @var array
+     */
+    public const API_TYPE = [
         'internal',
         'external',
+    ];
+
+    /**
+     * Enum for status of importing activity.
+     *
+     * @var array
+     */
+    public const IMPORT_STATUS = [
+        'processing',
+        'completed',
+        'failed',
+    ];
+
+    /**
+     * Enum for type of import.
+     *
+     * @var array
+     */
+    public const IMPORT_TYPE = [
+        'xml',
+        'csv',
+        'xls',
+    ];
+
+    /**
+     * Enum for template of xls import.
+     *
+     * @var array
+     */
+    public const IMPORT_TEMPLATE_TYPE = [
+        'activity',
+        'result',
+        'indicator',
+        'period',
     ];
 }

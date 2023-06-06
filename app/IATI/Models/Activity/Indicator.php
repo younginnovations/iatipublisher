@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Models\Activity;
 
+use Auth;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -32,17 +33,41 @@ class Indicator extends Model implements Auditable
         'created_at',
         'updated_at',
         'migrated_from_aidstream',
+        'indicator_code',
     ];
 
     /**
      * @var array
      */
     protected $casts
-    = [
-        'indicator' => 'json',
-    ];
+        = [
+            'indicator' => 'json',
+        ];
 
+    /**
+     * Updates timestamp of result on result indicator.
+     *
+     * @var array
+     */
     protected $touches = ['result'];
+
+    /**
+     * Before inbuilt function.
+     *
+     * @return void
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::saving(
+            function ($model) {
+                if (!$model->indicator_code) {
+                    $model->indicator_code = Auth::user() ? sprintf('%d%s', Auth::user()->id, time()) : sprintf('%d%s', $model->id, time());
+                }
+            }
+        );
+    }
 
     /**
      * Indicator hasmany periods.

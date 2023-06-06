@@ -617,10 +617,6 @@
         "name": "United Nations Office on Drugs and Crime"
       },
       {
-        "code": "41311",
-        "name": "United Nations Peacebuilding Fund (Window One: Flexible Contributions Only)"
-      },
-      {
         "code": "41141",
         "name": "United Nations Peacebuilding Fund (Window Two: Restricted Contributions Only)"
       },
@@ -1261,10 +1257,6 @@
         "name": "International Renewable Energy Agency"
       },
       {
-        "code": "50000",
-        "name": "Other"
-      },
-      {
         "code": "51000",
         "name": "University, college or other teaching institution, research institute or think‑tank"
       },
@@ -1381,10 +1373,6 @@
         "name": "WorldFish Centre"
       },
       {
-        "code": "52000",
-        "name": "Other"
-      },
-      {
         "code": "60000",
         "name": "Private sector institution"
       },
@@ -1395,10 +1383,6 @@
       {
         "code": "61001",
         "name": "Private bank in provider country"
-      },
-      {
-        "code": "61002",
-        "name": "Private exporter in provider country"
       },
       {
         "code": "61003",

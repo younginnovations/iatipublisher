@@ -228,13 +228,16 @@ class BulkPublishingController extends Controller
     {
         try {
             $organizationId = Auth::user()->organization_id;
+            $uuid = $this->publishingStatusService->getPublishingUuid($organizationId);
 
-            $publishStatus = $this->publishingStatusService->getActivityPublishingStatus($organizationId);
+            if ($uuid) {
+                $publishStatus = $this->publishingStatusService->getActivityPublishingStatus($organizationId, $uuid);
 
-            if ($publishStatus && count($publishStatus)) {
-                $response = $this->bulkPublishingService->getPublishingResponse($publishStatus);
+                if ($publishStatus && count($publishStatus)) {
+                    $response = $this->bulkPublishingService->getPublishingResponse($publishStatus);
 
-                return response()->json(['success' => true, 'message' => $response['message'], 'data' => $response, 'publishing' => true]);
+                    return response()->json(['success' => true, 'message' => $response['message'], 'data' => $response, 'publishing' => true]);
+                }
             }
 
             return response()->json(['success' => false, 'message' => 'No bulk publishing in progress', 'publishing' => false]);

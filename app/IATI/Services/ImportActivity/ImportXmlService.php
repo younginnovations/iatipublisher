@@ -9,7 +9,7 @@ use App\IATI\Repositories\Activity\IndicatorRepository;
 use App\IATI\Repositories\Activity\PeriodRepository;
 use App\IATI\Repositories\Activity\ResultRepository;
 use App\IATI\Repositories\Activity\TransactionRepository;
-use App\IATI\Repositories\ImportActivityError\ImportActivityErrorRepository;
+use App\IATI\Repositories\Import\ImportActivityErrorRepository;
 use App\IATI\Traits\FillDefaultValuesTrait;
 use App\XmlImporter\Events\XmlWasUploaded;
 use App\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;

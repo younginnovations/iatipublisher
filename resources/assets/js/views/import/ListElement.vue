@@ -358,7 +358,6 @@ const warningAccordionToggle = (e: Event) => {
   } else {
     if (target != null) {
       target.style.cssText = `height: ${elHeight}px;`;
-      console.log(elHeight);
       setTimeout(function () {
         target.style.cssText = `height: auto;`;
       }, 100);

@@ -8,6 +8,7 @@ export enum MutationTypes {
   UPDATE_DEFAULT_VALUES = 'UPDATE_DEFAULT_VALUES',
   UPDATE_DEFAULT_ERROR = 'UPDATE_DEFAULT_ERROR',
   IS_LOADING = 'IS_LOADING',
+  BULKPUBLISH_LENGTH = 'BULKPUBLISH_LENGTH',
 }
 
 export type Mutations<S = State> = {
@@ -17,6 +18,7 @@ export type Mutations<S = State> = {
   [MutationTypes.UPDATE_PUBLISHING_ERROR](state: S, payload: object): void;
   [MutationTypes.UPDATE_DEFAULT_ERROR](state: S, payload: object): void;
   [MutationTypes.IS_LOADING](state: S, payload: object): void;
+  [MutationTypes.BULKPUBLISH_LENGTH](state: S, payload: object): void;
 };
 
 interface PayloadPublishingForm {
@@ -67,6 +69,9 @@ export const mutations: MutationTree<State> & Mutations = {
     state.defaultError[payload.key] = payload.value;
   },
   [MutationTypes.IS_LOADING](state, payload: PayloadDefaultError) {
+    state.defaultError[payload.key] = payload.value;
+  },
+  [MutationTypes.BULKPUBLISH_LENGTH](state, payload: PayloadDefaultError) {
     state.defaultError[payload.key] = payload.value;
   },
 };

@@ -124,6 +124,7 @@ class TransactionRequest extends ActivityBaseRequest
         $rules['aid_type.0.earmarking_modality'] = 'nullable|in:' . implode(',', array_keys(getCodeList('EarmarkingModality', 'Activity', false)));
         $rules['aid_type.0.cash_and_voucher_modalities'] = 'nullable|in:' . implode(',', array_keys(getCodeList('CashandVoucherModalities', 'Activity', false)));
         $rules['tied_status.0.tied_status_code'] = 'nullable|in:' . implode(',', array_keys(getCodeList('TiedStatus', 'Activity', false)));
+        $rules['disbursement_channel.0.disbursement_channel_code'] = 'nullable|in:' . implode(',', array_keys(getCodeList('DisbursementChannel', 'Activity', false)));
 
         $tempRules = [
             $this->getCriticalTransactionDateRules($formFields['transaction_date']),
@@ -155,7 +156,6 @@ class TransactionRequest extends ActivityBaseRequest
     public function getMessagesForTransaction(array $formFields): array
     {
         $messages = [];
-
         $messages['transaction_type.0.transaction_type_code.in'] = 'The transaction type is invalid.';
         $messages['flow_type.0.flow_type.in'] = 'The transaction flow type code is invalid.';
         $messages['finance_type.0.finance_type.in'] = 'The transaction finance type code is invalid.';
@@ -198,7 +198,7 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $dateIndex => $date) {
             $dateForm = sprintf('transaction_date.%s', $dateIndex);
-            $rules[sprintf('%s.date', $dateForm)] = 'before:tomorrow';
+            $rules[sprintf('%s.date', $dateForm)] = 'nullable|before:tomorrow';
         }
 
         return $rules;
@@ -277,7 +277,7 @@ class TransactionRequest extends ActivityBaseRequest
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('value.%s', $valueIndex);
             $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric';
-            $rules[sprintf('%s.date', $valueForm)] = 'date';
+            $rules[sprintf('%s.date', $valueForm)] = 'nullable|date';
             $rules[sprintf('%s.currency', $valueForm)] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Currency', 'Activity'))));
         }
 
@@ -856,7 +856,7 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('recipient_country.%s', $recipientCountryIndex);
-            $narrativeRules = $this->getWarningForNarrative($recipientCountry['narrative'], $recipientCountryForm);
+            $narrativeRules = $this->getWarningForNarrative(Arr::get($recipientCountry, 'narrative', []), $recipientCountryForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -891,7 +891,7 @@ class TransactionRequest extends ActivityBaseRequest
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('recipient_country.%s', $recipientCountryIndex);
             $rules[sprintf('%s.country_code', $recipientCountryForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Country', 'Activity', false)));
-            $narrativeRules = $this->getErrorsForNarrative($recipientCountry['narrative'], $recipientCountryForm);
+            $narrativeRules = $this->getErrorsForNarrative(Arr::get($recipientCountry, 'narrative', []), $recipientCountryForm);
 
             foreach ($narrativeRules as $key => $item) {
                 $rules[$key] = $item;
@@ -922,7 +922,7 @@ class TransactionRequest extends ActivityBaseRequest
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = sprintf('recipient_country.%s', $recipientCountryIndex);
             $messages[sprintf('%s.country_code.in', $recipientCountryForm)] = 'The transaction recipient country code is invalid.';
-            $narrativeMessages = $this->getMessagesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
+            $narrativeMessages = $this->getMessagesForNarrative(Arr::get($recipientCountry, 'narrative', []), $recipientCountryForm);
 
             foreach ($narrativeMessages as $key => $item) {
                 $messages[$key] = $item;

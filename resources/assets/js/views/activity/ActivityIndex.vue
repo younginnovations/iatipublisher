@@ -24,6 +24,15 @@
         </div>
       </div>
     </div>
+    <XlsUploadIndicator
+      v-if="xlsData"
+      :total-count="totalCount"
+      :processed-count="processedCount"
+      :xls-failed="xlsFailed"
+      :activity-name="activityName"
+      :xls-data="xlsData"
+      :completed="importCompleted"
+    />
   </div>
 </template>
 
@@ -31,7 +40,7 @@
 import { defineComponent, onMounted, provide, reactive, ref, watch } from 'vue';
 import { watchIgnorable } from '@vueuse/core';
 import axios from 'axios';
-
+import XlsUploadIndicator from 'Components/XlsUploadIndicator.vue';
 import EmptyActivity from './partials/EmptyActivity.vue';
 import TableLayout from './partials/TableLayout.vue';
 import Pagination from 'Components/TablePagination.vue';
@@ -48,6 +57,7 @@ export default defineComponent({
     TableLayout,
     Loader,
     ErrorMessage,
+    XlsUploadIndicator,
   },
   props: {
     toast: {
@@ -61,6 +71,17 @@ export default defineComponent({
     }
     const activities = reactive({}) as ActivitiesInterface;
     const isLoading = ref(true);
+    const activityName = ref('');
+
+    const xlsData = ref(false);
+    const xlsFailed = ref(false);
+    const xlsFailedMessage = ref('');
+    const processing = ref();
+
+    const importCompleted = ref(false);
+    const totalCount = ref();
+    const processedCount = ref();
+    const showXlsStatus = ref(true);
     const tableLoader = ref(true);
     const currentURL = window.location.href;
     let endpoint = '';
@@ -91,8 +112,56 @@ export default defineComponent({
       message: '',
       type: false,
     });
+    const pollingForXlsStatus = () => {
+      const checkStatus = setInterval(function () {
+        axios.get('/import/xls/status').then((res) => {
+          if (res.data.data?.message === 'Started') {
+            //reset
+            totalCount.value = null;
+            processedCount.value = 0;
+            xlsFailed.value = false;
+            xlsFailedMessage.value = '';
+          } else {
+            totalCount.value = res.data.data?.total_count;
+            processedCount.value = res.data.data?.processed_count;
+            xlsFailed.value = !res.data.data?.success;
+            xlsFailedMessage.value = res.data.data?.message;
+          }
+
+          if (res.data.data?.message === 'Processing') {
+            processing.value = true;
+          }
+
+          if (
+            !res.data?.data?.success ||
+            res.data?.data?.message === 'Complete'
+          ) {
+            importCompleted.value = true;
+            clearInterval(checkStatus);
+          }
+        });
+      }, 2500);
+    };
+
+    const checkXlsstatus = () => {
+      axios.get('/import/xls/progress_status').then((res) => {
+        activityName.value = res?.data?.status?.template;
+        xlsData.value = Object.keys(res.data.status).length > 0;
+
+        if (res?.data?.status?.status === 'completed') {
+          importCompleted.value = true;
+        } else if (res?.data?.status?.status === 'failed') {
+          xlsFailed.value = true;
+          xlsFailedMessage.value = res?.data?.status?.message;
+        } else if (Object.keys(res.data.status).length > 0) {
+          pollingForXlsStatus();
+        }
+      });
+    };
 
     onMounted(() => {
+      checkXlsstatus();
+
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
@@ -176,6 +245,9 @@ export default defineComponent({
     provide('toastData', toastData);
     provide('errorData', errorData);
     provide('refreshToastMsg', refreshToastMsg);
+    provide('xlsFailedMessage', xlsFailedMessage);
+    provide('completed', importCompleted);
+    provide('processing', processing);
 
     return {
       activities,
@@ -189,6 +261,14 @@ export default defineComponent({
       refreshToastMsg,
       errorData,
       tableLoader,
+      xlsData,
+      activityName,
+      processedCount,
+      totalCount,
+      showXlsStatus,
+      xlsFailed,
+      xlsFailedMessage,
+      importCompleted,
     };
   },
 });

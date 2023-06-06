@@ -167,11 +167,11 @@ abstract class Repository implements RepositoryInterface
      * Checks if specific resource exists.
      *
      * @param       $attribute
-     * @param array $value
+     * @param $value
      *
      * @return bool
      */
-    public function exists($attribute, array $value): bool
+    public function exists($attribute, $value): bool
     {
         return $this->model->where($attribute, '=', $value)->exists();
     }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ImportActivity\ImportActivityController;
+use App\Http\Controllers\Admin\ImportActivity\ImportXlsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,6 +20,14 @@ Route::group(['middleware' => ['can:crud_activity']], static function () {
     Route::get('/import/list', [ImportActivityController::class, 'status'])->name('import.list');
     Route::get('/import/check_status', [ImportActivityController::class, 'checkStatus'])->name('import.check.status');
     Route::post('/import/activity', [ImportActivityController::class, 'importValidatedActivities'])->name('import.activity');
-    Route::get('/import/download/csv', [ImportActivityController::class, 'downloadTemplate'])->name('import.csv');
+    Route::get('/import/download/csv', [ImportActivityController::class, 'downloadTemplate'])->name('import.template');
     Route::delete('/import/errors/{activityId}', [ImportActivityController::class, 'deleteImportError'])->name('import.delete.error');
+
+    Route::get('/import/xls', [ImportXlsController::class, 'index'])->name('import.xls.index');
+    Route::post('/import/xls', [ImportXlsController::class, 'store'])->name('import.xls');
+    Route::post('/import/xls/activity', [ImportXlsController::class, 'importValidatedActivities'])->name('import.activity.xls');
+    Route::get('/import/xls/progress_status', [ImportXlsController::class, 'checkImportInProgress'])->name('import.xls.progress_status');
+    Route::get('/import/xls/status', [ImportXlsController::class, 'checkStatus'])->name('import.xls.status');
+    Route::get('/import/xls/list', [ImportXlsController::class, 'show'])->name('import.xls.list');
+    Route::delete('/import/xls', [ImportXlsController::class, 'deleteImportStatus'])->name('import.xls.status.delete');
 });

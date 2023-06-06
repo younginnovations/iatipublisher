@@ -122,6 +122,7 @@ class DateRequest extends ActivityBaseRequest
             $activityDateForm = sprintf('activity_date.%s', $activityDateIndex);
             $date = $activityDate['date'];
             $type = $activityDate['type'];
+            $rules[sprintf('%s.date', $activityDateForm)][] = 'nullable';
 
             if (isset($date, $type)) {
                 if (($type === '2' || $type === '4')) {

@@ -5,6 +5,7 @@ const state = {
   showPublished: false,
   publishErrors: [],
   isLoading: false,
+  bulkpublishLength: 0,
 };
 
 type State = typeof state;
@@ -21,6 +22,9 @@ const mutations = {
   },
   mutateIsLoading: function (state: State, payload: boolean) {
     state.isLoading = payload;
+  },
+  mutateBulkpublishLength: function (state: State, payload: number) {
+    state.bulkpublishLength = payload;
   },
 };
 
@@ -40,6 +44,9 @@ const actions = {
   },
   updateIsLoading: function ({ commit }: CommitFunction, payload: []) {
     commit('mutateIsLoading', payload);
+  },
+  updateBulkpublishLength: function ({ commit }: CommitFunction, payload: []) {
+    commit('mutateBulkpublishLength', payload);
   },
 };
 

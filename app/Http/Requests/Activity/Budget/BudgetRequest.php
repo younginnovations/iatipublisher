@@ -158,7 +158,7 @@ class BudgetRequest extends ActivityBaseRequest
             }
 
             $startDate = Arr::get($budget, 'period_start.0.date', null);
-            $newDate = $startDate ? date('Y-m-d', strtotime($startDate . '+1year')) : '';
+            $newDate = $startDate && isDate($startDate) ? date('Y-m-d', strtotime($startDate . '+1year')) : null;
 
             if ($newDate) {
                 $rules[$budgetForm . '.period_end.0.date'][] = sprintf('before:%s', $newDate);
@@ -181,7 +181,7 @@ class BudgetRequest extends ActivityBaseRequest
         $rules = [];
         $periodStartFormBase = sprintf('%s.period_start.0.date', $formBase);
         $periodEndFormBase = sprintf('%s.period_end.0.date', $formBase);
-        $betweenRule = sprintf('after_or_equal:%s|before_or_equal:%s', $periodStartFormBase, $periodEndFormBase);
+        $betweenRule = sprintf('nullable|after_or_equal:%s|before_or_equal:%s', $periodStartFormBase, $periodEndFormBase);
 
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('%s.budget_value.%s', $formBase, $valueIndex);
@@ -207,6 +207,7 @@ class BudgetRequest extends ActivityBaseRequest
             $valueForm = sprintf('%s.budget_value.%s', $formBase, $valueIndex);
             $rules[sprintf('%s.amount', $valueForm)] = 'nullable|numeric|min:0';
             $rules[sprintf('%s.value_date', $valueForm)] = 'nullable|date';
+            $rules[sprintf('%s.currency', $valueForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('Currency', 'Activity', false)));
         }
 
         return $rules;
@@ -226,7 +227,7 @@ class BudgetRequest extends ActivityBaseRequest
         $rules = [];
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'date_greater_than:1900|period_start_end:' . $diff . ',365';
+            $rules[$formBase . '.period_start.' . $periodStartKey . '.date'] = 'nullable|date_greater_than:1900|period_start_end:' . $diff . ',365';
         }
 
         return $rules;

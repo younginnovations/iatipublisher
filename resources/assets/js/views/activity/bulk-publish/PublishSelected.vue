@@ -233,6 +233,7 @@ import {
   Ref,
   computed,
   onMounted,
+  watch,
   provide,
   inject,
 } from 'vue';
@@ -484,6 +485,18 @@ const startBulkPublish = () => {
       }, 1000);
     });
 };
+watch(
+  () => pa.value,
+  () => {
+    store.dispatch(
+      'updateBulkPublishLength',
+      pa?.value?.publishingActivities?.activities &&
+        Object.keys(pa?.value?.publishingActivities?.activities as string[])
+          .length
+    );
+  },
+  { deep: true }
+);
 
 /*Cancels on-going bulk publish*/
 const cancelOtherBulkPublish = () => {

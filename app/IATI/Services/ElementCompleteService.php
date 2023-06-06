@@ -972,7 +972,8 @@ class ElementCompleteService
 
         $activity->element_status = $elementStatus;
         $activity->complete_percentage = $this->calculateCompletePercentage($activity->element_status);
-        $activity->updateQuietly(['touch' => false, 'timestamp' => false]);
+        $activity->timestamps = false;
+        $activity->updateQuietly(['touch' => false]);
     }
 
     /**

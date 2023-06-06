@@ -1,0 +1,1127 @@
+{
+    "title": {
+        "elementBase": "narrative",
+        "elementBasePeer": [
+            "language"
+        ],
+        "fieldDependency": {}
+    },
+    "reporting_org": {
+        "elementBase": "ref",
+        "add_more": false,
+        "fieldDependency": {
+            "narrative narrative": "narrative"
+        }
+    },
+    "iati_identifier": {
+        "activity_identifier": "Activity-identifier",
+        "iati_identifier_text": "Iati Identifier"
+    },
+    "other_identifier": {
+        "elementBase": "reference",
+        "elementBasePeer": [
+            "reference_type"
+        ],
+        "fieldDependency": {
+            "owner_org ref": {
+                "parent": "owner_org",
+                "add_more": false,
+                "peer": []
+            },
+            "owner_org narrative narrative": {
+                "parent": "owner_org narrative",
+                "peer": [
+                    "owner_org narrative language"
+                ]
+            }
+        }
+    },
+    "description": {
+        "elementBase": "type",
+        "fieldDependency": {
+            "narrative narrative": {
+                "parent": "narrative",
+                "peer": [
+                    "narrative language"
+                ]
+            }
+        }
+    },
+    "activity_status": {
+        "activity_status": "Code"
+    },
+    "activity_date": {
+        "elementBase": "type",
+        "elementBasePeer": [
+            "date"
+        ],
+        "fieldDependency": {
+            "narrative narrative": {
+                "parent": "narrative",
+                "peer": [
+                    "narrative language"
+                ]
+            }
+        }
+    },
+    "activity_scope": {
+        "activity_scope": "Code"
+    },
+    "recipient_country": {
+        "elementBase": "country_code",
+        "fieldDependency": {
+            "narrative narrative": {
+                "parent": "narrative",
+                "peer": [
+                    "narrative language"
+                ]
+            }
+        }
+    },
+    "recipient_region": {
+        "elementBase": "region_vocabulary",
+        "fieldDependency": {
+            "narrative narrative": {
+                "parent": "narrative",
+                "peer": [
+                    "narrative language"
+                ]
+            }
+        },
+        "codeDependency": {
+            "dependentOn": {
+                "codes": {
+                    "code": "region_vocabulary"
+                },
+                "uri": {
+                    "vocabulary_uri": "region_vocabulary"
+                }
+            },
+            "dependencyCondition": {
+                "region_vocabulary": {
+                    "defaultCodeField": "custom_code",
+                    "vocabularyUri": [
+                        99
+                    ],
+                    "dependencyRelation": {
+                        "1": "region_code"
+                    }
+                }
+            }
+        }
+    },
+    "sector": {
+        "elementBase": "sector_vocabulary",
+        "fieldDependency": {
+            "narrative narrative": {
+                "parent": "narrative",
+                "peer": [
+                    "narrative language"
+                ]
+            }
+        },
+        "codeDependency": {
+            "dependentOn": {
+                "codes": {
+                    "code": "sector_vocabulary"
+                },
+                "uri": {
+                    "vocabulary_uri": "sector_vocabulary"
+                }
+            },
+            "dependencyCondition": {
+                "sector_vocabulary": {
+                    "defaultCodeField": "text",
+                    "vocabularyUri": [
+                        99,
+                        98
+                    ],
+                    "dependencyRelation": {
+                        "1": "code",
+                        "2": "category_code",
+                        "7": "sdg_goal",
+                        "8": "sdg_target"
+                    }
+                }
+            }
+        }
+    },
+    "tag": {
+        "elementBase": "tag_vocabulary",
+        "fieldDependency": {
+            "narrative narrative": {
+                "parent": "narrative",
+                "peer": [
+                    "narrative language"
+                ]
+            }
+        },
+        "codeDependency": {
+            "dependentOn": {
+                "codes": {
+                    "code": "tag_vocabulary"
+                },
+                "uri": {
+                    "vocabulary_uri": "tag_vocabulary"
+                }
+            },
+            "dependencyCondition": {
+                "tag_vocabulary": {
+                    "defaultCodeField": "tag_text",
+                    "vocabularyUri": [
+                        99
+                    ],
+                    "dependencyRelation": {
+                        "2": "goals_tag_code",
+                        "3": "targets_tag_code"
+                    }
+                }
+            }
+        }
+    },
+    "policy_marker": {
+        "elementBase": "policy_marker_vocabulary",
+        "fieldDependency": {
+            "narrative narrative": {
+                "parent": "narrative",
+                "peer": [
+                    "narrative language"
+                ]
+            }
+        },
+        "codeDependency": {
+            "dependentOn": {
+                "codes": {
+                    "code": "policy_marker_vocabulary"
+                },
+                "uri": {
+                    "vocabulary_uri": "policy_marker_vocabulary"
+                }
+            },
+            "dependencyCondition": {
+                "policy_marker_vocabulary": {
+                    "defaultCodeField": "policy_marker_text",
+                    "vocabularyUri": [
+                        99
+                    ],
+                    "dependencyRelation": {
+                        "1": "policy_marker"
+                    }
+                }
+            }
+        }
+    },
+    "collaboration_type": {
+        "collaboration_type": "Code"
+    },
+    "default_flow_type": {
+        "default_flow_type": "Code"
+    },
+    "default_finance_type": {
+        "default_finance_type": "Code"
+    },
+    "default_aid_type": {
+        "elementBase": "default_aid_type_vocabulary",
+        "fieldDependency": {},
+        "codeDependency": {
+            "dependentOn": {
+                "codes": {
+                    "code": "default_aid_type_vocabulary"
+                }
+            },
+            "dependencyCondition": {
+                "default_aid_type_vocabulary": {
+                    "defaultCodeField": "default_aid_type",
+                    "dependencyRelation": {
+                        "1": "default_aid_type",
+                        "2": "earmarking_category",
+                        "3": "earmarking_modality",
+                        "4": "cash_and_voucher_modalities"
+                    }
+                }
+            }
+        }
+    },
+    "default_tied_status": {
+        "default_tied_status": "Code"
+    },
+    "country_budget_items": {
+        "elementBase": "country_budget_vocabulary",
+        "add_more": false,
+        "fieldDependency": {
+            "budget_item code": {
+                "parent": "budget_item",
+                "peer": [
+                    "budget_item percentage"
+                ],
+                "children": [
+                    "budget_item description narrative"
+                ]
+            },
+            "budget_item description narrative narrative": {
+                "parent": "budget_item description narrative",
+                "peer": [
+                    "budget_item description narrative language"
+                ]
+            }
+        }
+    },
+    "humanitarian_scope": {
+        "elementBase": "type",
+        "elementBasePeer": [
+            "vocabulary",
+            "vocabulary_uri"
+        ],
+        "fieldDependency": {
+            "narrative narrative": {
+                "parent": "narrative",
+                "peer": [
+                    "narrative language"
+                ]
+            }
+        },
+        "codeDependency": {
+            "dependentOn": {
+                "uri": {
+                    "vocabulary_uri": "vocabulary"
+                }
+            },
+            "dependencyCondition": {
+                "vocabulary": {
+                    "vocabularyUri": [
+                        99
+                    ]
+                }
+            }
+        }
+    },
+    "capital_spend": {
+        "capital_spend": "Percentage"
+    },
+    "related_activity": {
+        "elementBase": "activity_identifier",
+        "elementBasePeer": [
+            "relationship_type"
+        ],
+        "fieldDependency": {}
+    },
+    "conditions": {
+        "elementBase": "condition_attached",
+        "add_more": false,
+        "fieldDependency": {
+            "condition condition_type": {
+                "parent": "condition",
+                "peer": [
+                    "condition condition_type"
+                ],
+                "children": [
+                    "condition narrative"
+                ]
+            },
+            "condition narrative narrative": {
+                "parent": "condition narrative",
+                "peer": [
+                    "condition narrative language"
+                ]
+            }
+        }
+    },
+    "legacy_data": {
+        "elementBase": "legacy_name",
+        "elementBasePeer": [
+            "value",
+            "iati-equivalent"
+        ],
+        "fieldDependency": {}
+    },
+    "document_link": {
+        "elementBase": "url",
+        "elementBasePeer": [
+            "format",
+            "document_date date"
+        ],
+        "fieldDependency": {
+            "title narrative narrative": {
+                "parent": "title narrative",
+                "peer": [
+                    "title narrative language"
+                ]
+            },
+            "description narrative narrative": {
+                "parent": "description narrative",
+                "peer": [
+                    "description narrative language"
+                ]
+            },
+            "category code": {
+                "parent": "category"
+            },
+            "language code": {
+                "parent": "language"
+            },
+            "document_date date": {
+                "parent": "document_date",
+                "add_more": false
+            }
+        }
+    },
+    "contact_info": {
+        "elementBase": "type",
+        "fieldDependency": {
+            "organisation narrative narrative": {
+                "parent": "organisation narrative",
+                "peer": [
+                    "organisation narrative language"
+                ]
+            },
+            "department narrative narrative": {
+                "parent": "department narrative",
+                "peer": [
+                    "department narrative language"
+                ]
+            },
+            "person_name narrative narrative": {
+                "parent": "person_name narrative",
+                "peer": [
+                    "person_name narrative language"
+                ]
+            },
+            "job_title narrative narrative": {
+                "parent": "job_title narrative",
+                "peer": [
+                    "job_title narrative language"
+                ]
+            },
+            "telephone telephone": {
+                "parent": "telephone"
+            },
+            "email email": {
+                "parent": "email"
+            },
+            "website website": {
+                "parent": "website"
+            },
+            "mailing_address narrative narrative": {
+                "parent": "mailing_address narrative",
+                "peer": [
+                    "mailing_address narrative language"
+                ]
+            }
+        }
+    },
+    "location": {
+        "elementBase": "ref",
+        "elementBasePeer": [
+            "location_reach code",
+            "administrative_vocabulary",
+            "administrative code",
+            "administrative level",
+            "point srs_name",
+            "point pos latitude",
+            "point pos longitude",
+            "exactness code",
+            "location_class code",
+            "feature_designation code"
+        ],
+        "fieldDependency": {
+            "location_reach code": {
+                "parent": "location_reach",
+                "add_more": false
+            },
+            "location_id vocabulary": {
+                "parent": "location_id",
+                "peer": [
+                    "location_id code"
+                ]
+            },
+            "name narrative narrative": {
+                "parent": "name narrative",
+                "peer": [
+                    "name narrative language"
+                ]
+            },
+            "description narrative narrative": {
+                "parent": "description narrative",
+                "peer": [
+                    "description narrative language"
+                ]
+            },
+            "activity_description narrative narrative": {
+                "parent": "activity_description narrative",
+                "peer": [
+                    "activity_description narrative language"
+                ]
+            },
+            "administrative vocabulary": {
+                "parent": "administrative",
+                "add_more": false,
+                "peer": [
+                    "administrative code",
+                    "administrative level"
+                ]
+            },
+            "point srs_name": {
+                "parent": "point",
+                "add_more": false,
+                "peer": [
+                    "point pos latitude",
+                    "point pos longitude"
+                ]
+            },
+            "point pos latitude": {
+                "parent": "point pos",
+                "add_more": false,
+                "peer": [
+                    "point pos longitude"
+                ]
+            },
+            "exactness code": {
+                "parent": "exactness",
+                "add_more": false
+            },
+            "location_class code": {
+                "parent": "location_class",
+                "add_more": false
+            },
+            "feature_designation code": {
+                "parent": "feature_designation",
+                "add_more": false
+            }
+        }
+    },
+    "planned_disbursement": {
+        "elementBase": "planned_disbursement_type",
+        "elementBasePeer": [
+            "period_start date",
+            "period_end date",
+            "value amount",
+            "value currency",
+            "value value_date",
+            "provider_org ref",
+            "provider_org provider_activity_id",
+            "provider_org type",
+            "receiver_org ref",
+            "receiver_org receiver_activity_id",
+            "receiver_org type"
+        ],
+        "fieldDependency": {
+            "period_start date": {
+                "parent": "period_start",
+                "add_more": false
+            },
+            "period_end date": {
+                "parent": "period_end",
+                "add_more": false
+            },
+            "value amount": {
+                "parent": "value",
+                "add_more": false,
+                "peer": [
+                    "value currency",
+                    "value value_date"
+                ]
+            },
+            "provider_org ref": {
+                "parent": "provider_org",
+                "add_more": false,
+                "peer": [
+                    "provider_org provider_activity_id",
+                    "provider_org type"
+                ]
+            },
+            "provider_org narrative narrative": {
+                "parent": "provider_org narrative",
+                "peer": [
+                    "provider_org narrative language"
+                ]
+            },
+            "receiver_org ref": {
+                "parent": "receiver_org",
+                "add_more": false,
+                "peer": [
+                    "receiver_org receiver_activity_id",
+                    "receiver_org type"
+                ]
+            },
+            "receiver_org narrative narrative": {
+                "parent": "receiver_org narrative",
+                "peer": [
+                    "receiver_org narrative language"
+                ]
+            }
+        }
+    },
+    "participating_org": {
+        "elementBase": "organization_role",
+        "elementBasePeer": [
+            "ref",
+            "type",
+            "identifier",
+            "crs_channel_code"
+        ],
+        "fieldDependency": {
+            "narrative narrative": {
+                "parent": "narrative",
+                "peer": [
+                    "narrative language"
+                ]
+            }
+        }
+    },
+    "budget": {
+        "elementBase": "budget_status",
+        "elementBasePeer": [
+            "period_start date",
+            "period_end date",
+            "budget_value amount",
+            "budget_value currency",
+            "budget_value value_date"
+        ],
+        "fieldDependency": {
+            "period_start date": {
+                "parent": "period_start",
+                "add_more": false
+            },
+            "period_end date": {
+                "parent": "period_end",
+                "add_more": false
+            },
+            "budget_value amount": {
+                "parent": "budget_value",
+                "add_more": false,
+                "peer": [
+                    "budget_value currency",
+                    "budget_value value_date"
+                ]
+            }
+        }
+    },
+    "result": {
+        "elementBase": "type",
+        "elementBasePeer": [
+            "aggregation_status"
+        ],
+        "add_more": false,
+        "fieldDependency": {
+            "title narrative narrative": {
+                "parent": "title narrative",
+                "peer": [
+                    "title narrative language"
+                ]
+            },
+            "description narrative narrative": {
+                "parent": "description narrative",
+                "peer": [
+                    "description narrative language"
+                ]
+            },
+            "reference vocabulary": {
+                "parent": "reference",
+                "peer": [
+                    "reference code",
+                    "reference vocabulary_uri"
+                ]
+            }
+        },
+        "codeDependency": {
+            "dependentOn": {
+                "uri": {
+                    "reference vocabulary_uri": "reference vocabulary"
+                }
+            },
+            "parentDependentOn": {
+                "reference": [
+                    "reference vocabulary"
+                ]
+            },
+            "dependencyCondition": {
+                "reference vocabulary": {
+                    "vocabularyUri": [
+                        99
+                    ]
+                }
+            }
+        }
+    },
+    "result document_link": {
+        "elementBase": "url",
+        "elementBasePeer": [
+            "format",
+            "document_date date"
+        ],
+        "fieldDependency": {
+            "title narrative narrative": {
+                "parent": "title narrative",
+                "peer": [
+                    "title narrative language"
+                ]
+            },
+            "description narrative narrative": {
+                "parent": "description narrative",
+                "peer": [
+                    "description narrative language"
+                ]
+            },
+            "category code": {
+                "parent": "category"
+            },
+            "language language": {
+                "parent": "language"
+            },
+            "document_date date": {
+                "parent": "document_date",
+                "add_more": false
+            }
+        }
+    },
+    "indicator": {
+        "elementBase": "measure",
+        "elementBasePeer": [
+            "ascending",
+            "aggregation_status"
+        ],
+        "add_more": false,
+        "fieldDependency": {
+            "title narrative narrative": {
+                "parent": "title narrative",
+                "peer": [
+                    "title narrative language"
+                ]
+            },
+            "description narrative narrative": {
+                "parent": "description narrative",
+                "peer": [
+                    "description narrative language"
+                ]
+            },
+            "reference vocabulary": {
+                "parent": "reference",
+                "peer": [
+                    "reference code",
+                    "reference indicator_uri"
+                ]
+            }
+        },
+        "codeDependency": {
+            "dependentOn": {
+                "uri": {
+                    "reference indicator_uri": "reference vocabulary"
+                }
+            },
+            "parentDependentOn": {
+                "reference": [
+                    "reference vocabulary"
+                ]
+            },
+            "dependencyCondition": {
+                "reference vocabulary": {
+                    "vocabularyUri": [
+                        99
+                    ]
+                }
+            }
+        }
+    },
+    "indicator document_link": {
+        "elementBase": "url",
+        "elementBasePeer": [
+            "format",
+            "document_date date"
+        ],
+        "fieldDependency": {
+            "title narrative narrative": {
+                "parent": "title narrative",
+                "peer": [
+                    "title narrative language"
+                ]
+            },
+            "description narrative narrative": {
+                "parent": "description narrative",
+                "peer": [
+                    "description narrative language"
+                ]
+            },
+            "category code": {
+                "parent": "category"
+            },
+            "language language": {
+                "parent": "language"
+            },
+            "document_date date": {
+                "parent": "document_date",
+                "add_more": false
+            }
+        }
+    },
+    "indicator_baseline": {
+        "elementBase": "year",
+        "elementBasePeer": [
+            "date",
+            "value"
+        ],
+        "add_more": false,
+        "fieldDependency": {
+            "comment narrative narrative": {
+                "parent": "comment narrative",
+                "peer": [
+                    "comment narrative language"
+                ]
+            },
+            "dimension name": {
+                "parent": "dimension",
+                "peer": [
+                    "dimension value"
+                ]
+            },
+            "location reference": {
+                "parent": "location"
+            }
+        }
+    },
+    "baseline document_link": {
+        "elementBase": "url",
+        "elementBasePeer": [
+            "format",
+            "document_date date"
+        ],
+        "fieldDependency": {
+            "title narrative narrative": {
+                "parent": "title narrative",
+                "peer": [
+                    "title narrative language"
+                ]
+            },
+            "description narrative narrative": {
+                "parent": "description narrative",
+                "peer": [
+                    "description narrative language"
+                ]
+            },
+            "category code": {
+                "parent": "category"
+            },
+            "language language": {
+                "parent": "language"
+            },
+            "document_date date": {
+                "parent": "document_date",
+                "add_more": false
+            }
+        }
+    },
+    "period": {
+        "elementBase": "period_start date",
+        "elementBasePeer": [
+            "period_end date"
+        ],
+        "add_more": false,
+        "fieldDependency": {
+            "period_start date": {
+                "parent": "period_start",
+                "add_more": false
+            },
+            "period_end date": {
+                "parent": "period_end",
+                "add_more": false
+            }
+        }
+    },
+    "target": {
+        "elementBase": "value",
+        "add_more": false,
+        "fieldDependency": {
+            "comment narrative narrative": {
+                "parent": "comment narrative",
+                "peer": [
+                    "comment narrative language"
+                ]
+            },
+            "dimension name": {
+                "parent": "dimension",
+                "peer": [
+                    "dimension value"
+                ]
+            },
+            "location reference": {
+                "parent": "location"
+            }
+        }
+    },
+    "target document_link": {
+        "elementBase": "url",
+        "elementBasePeer": [
+            "format",
+            "document_date date"
+        ],
+        "fieldDependency": {
+            "title narrative narrative": {
+                "parent": "title narrative",
+                "peer": [
+                    "title narrative language"
+                ]
+            },
+            "description narrative narrative": {
+                "parent": "description narrative",
+                "peer": [
+                    "description narrative language"
+                ]
+            },
+            "category code": {
+                "parent": "category"
+            },
+            "language language": {
+                "parent": "language"
+            },
+            "document_date date": {
+                "parent": "document_date",
+                "add_more": false
+            }
+        }
+    },
+    "actual": {
+        "elementBase": "value",
+        "add_more": false,
+        "fieldDependency": {
+            "comment narrative narrative": {
+                "parent": "comment narrative",
+                "peer": [
+                    "comment narrative language"
+                ]
+            },
+            "dimension name": {
+                "parent": "dimension",
+                "peer": [
+                    "dimension value"
+                ]
+            },
+            "location reference": {
+                "parent": "location"
+            }
+        }
+    },
+    "actual document_link": {
+        "elementBase": "url",
+        "elementBasePeer": [
+            "format",
+            "document_date date"
+        ],
+        "fieldDependency": {
+            "title narrative narrative": {
+                "parent": "title narrative",
+                "peer": [
+                    "title narrative language"
+                ]
+            },
+            "description narrative narrative": {
+                "parent": "description narrative",
+                "peer": [
+                    "description narrative language"
+                ]
+            },
+            "category code": {
+                "parent": "category"
+            },
+            "language language": {
+                "parent": "language"
+            },
+            "document_date date": {
+                "parent": "document_date",
+                "add_more": false
+            }
+        }
+    },
+    "transactions": {
+        "elementBase": "reference",
+        "elementBasePeer": [
+            "transaction_type transaction_type_code",
+            "transaction_date date",
+            "value amount",
+            "value currency",
+            "value value_date",
+            "provider_organization organization_identifier_code",
+            "provider_organization provider_activity_id",
+            "provider_organization type",
+            "receiver_organization organization_identifier_code",
+            "receiver_organization receiver_activity_id",
+            "receiver_organization type",
+            "disbursement_channel disbursement_channel_code",
+            "recipient_country country_code",
+            "flow_type flow-type",
+            "finance_type finance_type",
+            "tied_status tied_status-code"
+        ],
+        "fieldDependency": {
+            "transaction_type transaction_type_code": {
+                "parent": "transaction_type",
+                "add_more": false
+            },
+            "transaction_date date": {
+                "parent": "transaction_date",
+                "add_more": false
+            },
+            "value amount": {
+                "parent": "value",
+                "add_more": false,
+                "peer": [
+                    "value currency",
+                    "value value_date"
+                ]
+            },
+            "description narrative narrative": {
+                "parent": "description narrative",
+                "peer": [
+                    "description narrative language"
+                ]
+            },
+            "provider_organization organization_identifier_code": {
+                "parent": "provider_organization",
+                "add_more": false,
+                "peer": [
+                    "provider_organization provider_activity_id",
+                    "provider_organization type"
+                ]
+            },
+            "provider_organization narrative narrative": {
+                "parent": "provider_organization narrative",
+                "peer": [
+                    "provider_organization narrative language"
+                ]
+            },
+            "receiver_organization organization_identifier_code": {
+                "parent": "receiver_organization",
+                "add_more": false,
+                "peer": [
+                    "receiver_organization receiver_activity_id",
+                    "receiver_organization type"
+                ]
+            },
+            "receiver_organization narrative narrative": {
+                "parent": "receiver_organization narrative",
+                "peer": [
+                    "receiver_organization narrative language"
+                ]
+            },
+            "disbursement_channel disbursement_channel_code": {
+                "parent": "disbursement_channel",
+                "add_more": false
+            },
+            "sector sector_vocabulary": {
+                "parent": "sector",
+                "peer": [
+                    "sector vocabulary_uri",
+                    "sector code"
+                ]
+            },
+            "sector narrative narrative": {
+                "parent": "sector narrative",
+                "peer": [
+                    "sector narrative language"
+                ]
+            },
+            "recipient_country country_code": {
+                "parent": "recipient_country",
+                "peer": [
+                    "recipient_country narrative narrative"
+                ],
+                "add_more": false
+            },
+            "recipient_country narrative narrative": {
+                "parent": "recipient_country narrative",
+                "peer": [
+                    "recipient_country narrative language"
+                ]
+            },
+            "recipient_region region_vocabulary": {
+                "parent": "recipient_region",
+                "peer": [
+                    "recipient_region code",
+                    "recipient_region vocabulary_uri"
+                ]
+            },
+            "recipient_region narrative narrative": {
+                "parent": "recipient_region narrative",
+                "peer": [
+                    "recipient_region narrative language"
+                ]
+            },
+            "flow_type flow_type": {
+                "parent": "flow_type",
+                "add_more": false
+            },
+            "finance_type finance_type": {
+                "parent": "finance_type",
+                "add_more": false
+            },
+            "aid_type aid_type_vocabulary": {
+                "parent": "aid_type",
+                "peer": [
+                    "aid_type aid_type_code",
+                    "aid_type earmarking_category",
+                    "aid_type earmarking_modality",
+                    "aid_type cash_and_voucher_modalities"
+                ]
+            },
+            "tied_status tied_status_code": {
+                "parent": "tied_status",
+                "add_more": false
+            }
+        },
+        "codeDependency": {
+            "dependentOn": {
+                "codes": {
+                    "sector code": "sector sector_vocabulary",
+                    "recipient_region code": "recipient_region region_vocabulary",
+                    "aid_type aid_type_code": "aid_type aid_type_vocabulary"
+                },
+                "uri": {
+                    "sector vocabulary_uri": "sector sector_vocabulary",
+                    "recipient_region vocabulary_uri": "recipient_region region_vocabulary"
+                }
+            },
+            "parentDependentOn": {
+                "sector": [
+                    "sector sector_vocabulary"
+                ],
+                "recipient_region": [
+                    "recipient_region region_vocabulary"
+                ],
+                "aid_type": [
+                    "aid_type aid_type_vocabulary"
+                ]
+            },
+            "dependencyCondition": {
+                "sector sector_vocabulary": {
+                    "defaultCodeField": "sector text",
+                    "vocabularyUri": [
+                        98,
+                        99
+                    ],
+                    "dependencyRelation": {
+                        "1": "sector code",
+                        "2": "sector category_code",
+                        "7": "sector sdg_goal",
+                        "8": "sector sdg_target"
+                    }
+                },
+                "recipient_region region_vocabulary": {
+                    "defaultCodeField": "recipient_region custom_code",
+                    "vocabularyUri": [
+                        99
+                    ],
+                    "dependencyRelation": {
+                        "1": "recipient_region region_code"
+                    }
+                },
+                "aid_type aid_type_vocabulary": {
+                    "defaultCodeField": "aid_type aid_type_code",
+                    "dependencyRelation": {
+                        "1": "aid_type aid_type_code",
+                        "2": "aid_type earmarking_category",
+                        "3": "aid_type earmarking_modality",
+                        "4": "aid_type cash_and_voucher_modalities"
+                    }
+                }
+            }
+        }
+    }
+}

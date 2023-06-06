@@ -3,6 +3,7 @@
     <Transition name="modal-animation">
       <div
         v-if="modalActive"
+        :class="{ '!p-0': noPadding }"
         class="modal fixed top-0 left-0 z-[200] flex h-screen w-screen items-center justify-center p-4 sm:p-8"
       >
         <Transition name="modal-animation-inner">
@@ -14,6 +15,7 @@
             <div
               v-if="modalActive"
               :style="`max-width:${width}px;`"
+              :class="{ '!p-0': noPadding }"
               class="modal-inner relative max-h-full w-full overflow-x-hidden rounded-lg bg-white p-4 sm:p-8"
             >
               <slot />
@@ -33,6 +35,11 @@ export default defineComponent({
     modalActive: {
       type: Boolean,
       required: true,
+    },
+    noPadding: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
     width: {
       type: String,

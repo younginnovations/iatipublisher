@@ -86,6 +86,7 @@ class SectorRequest extends ActivityBaseRequest
             $rules[sprintf('%s.category_code', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('SectorCategory', 'Activity', false)));
             $rules[sprintf('%s.sdg_goal', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Goals', 'Activity', false)));
             $rules[sprintf('%s.sdg_target', $sectorForm)] = 'nullable|in:' . implode(',', array_keys(getCodeList('UNSDG-Targets', 'Activity', false)));
+            $rules[sprintf('%s.percentage', $sectorForm)] = 'nullable|numeric';
 
             if (isset($sector['sector_vocabulary']) && ($sector['sector_vocabulary'] === '99' || $sector['sector_vocabulary'] === '98')) {
                 $rules[sprintf('%s.vocabulary_uri', $sectorForm)] = 'nullable|url';
@@ -146,7 +147,7 @@ class SectorRequest extends ActivityBaseRequest
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
 
-            $rules[sprintf('%s.percentage', $sectorForm)] = 'nullable|numeric|min:0';
+            $rules[sprintf('%s.percentage', $sectorForm)] = 'nullable|min:0';
 
             if ($groupedPercentSector[$sector['sector_vocabulary']]['count'] > 1) {
                 if ($groupedPercentSector[$sector['sector_vocabulary']]['total'] !== 100.0) {
@@ -182,7 +183,6 @@ class SectorRequest extends ActivityBaseRequest
             $messages[sprintf('%s.percentage.numeric', $sectorForm)] = 'The sector percentage field must be a number.';
             $messages[sprintf('%s.percentage.in', $sectorForm)] = 'The percentage must be 100% or left empty, which is assumed as 100%.';
             $messages[sprintf('%s.percentage.sector_total_percent', $sectorForm)] = 'The sum of percentages of same vocabulary must be equal to 100%';
-            $messages[sprintf('%s.sector_vocabulary.sector_has_five_digit_oced_vocab', $sectorForm)] = 'The sector vocabulary must have 5 digit OECD';
 
             $messageNarratives = $this->getMessagesForNarrative($sector['narrative'], $sectorForm);
 

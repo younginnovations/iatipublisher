@@ -22,6 +22,7 @@ class ResultRequest extends ActivityBaseRequest
     public function rules(): array
     {
         $data = request()->except(['_token']);
+
         $totalRules = [
             $this->getWarningForResult($data),
             $this->getErrorsForResult($data),
@@ -49,7 +50,7 @@ class ResultRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getWarningForResult(array $formFields, bool $fileUpload = false, array $indicators = []): array
+    public function getWarningForResult(array $formFields, bool $fileUpload = false, array $indicators = [], $resultId = null): array
     {
         $rules = [];
 
@@ -57,7 +58,7 @@ class ResultRequest extends ActivityBaseRequest
             $this->getWarningForNarrative($formFields['title'][0]['narrative'], 'title.0'),
             $this->getWarningForNarrative($formFields['description'][0]['narrative'], 'description.0'),
             $this->getWarningForDocumentLink($formFields['document_link']),
-            $this->getWarningForReferences($formFields['reference'], $fileUpload, $indicators),
+            $this->getWarningForReferences($formFields['reference'], $fileUpload, $indicators, $resultId),
         ];
 
         foreach ($tempRules as $key => $tempRule) {
@@ -81,15 +82,14 @@ class ResultRequest extends ActivityBaseRequest
     public function getErrorsForResult(array $formFields, bool $fileUpload = false, array $indicators = []): array
     {
         $rules = [];
-
         $rules['type'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('ResultType', 'Activity', false))));
         $rules['aggregation_status'] = sprintf('nullable|in:0,1');
 
         $tempRules = [
-            $this->getErrorsForNarrative($formFields['title'][0]['narrative'], 'title.0'),
-            $this->getErrorsForNarrative($formFields['description'][0]['narrative'], 'description.0'),
-            $this->getErrorsForDocumentLink($formFields['document_link']),
-            $this->getErrorsForReferences($formFields['reference'], $fileUpload, $indicators),
+            $this->getErrorsForNarrative(Arr::get($formFields, 'title.0.narrative', []), 'title.0'),
+            $this->getErrorsForNarrative(Arr::get($formFields, 'description.0.narrative', []), 'description.0'),
+            $this->getErrorsForDocumentLink(Arr::get($formFields, 'document_link')),
+            $this->getErrorsForReferences(Arr::get($formFields, 'reference', []), $fileUpload, $indicators),
         ];
 
         foreach ($tempRules as $key => $tempRule) {
@@ -105,18 +105,20 @@ class ResultRequest extends ActivityBaseRequest
      * Returns messages for transaction validations.
      *
      * @param array $formFields
+     * @param array $fileUpload
+     * @param array $resultId
      *
      * @return array
      */
-    public function getMessagesForResult(array $formFields, bool $fileUpload = false): array
+    public function getMessagesForResult(array $formFields, bool $fileUpload = false, $resultId = null): array
     {
         $messages = [];
 
         $tempMessages = [
-            $this->getMessagesForNarrative($formFields['title'][0]['narrative'], 'title.0'),
-            $this->getMessagesForNarrative($formFields['description'][0]['narrative'], 'description.0'),
-            $this->getMessagesForDocumentLink($formFields['document_link']),
-            $this->getMessagesForReferences($formFields['reference'], $fileUpload),
+            $this->getMessagesForNarrative(Arr::get($formFields, 'title.0.narrative', []), 'title.0'),
+            $this->getMessagesForNarrative(Arr::get($formFields, 'description.0.narrative', []), 'description.0'),
+            $this->getMessagesForDocumentLink(Arr::get($formFields, 'document_link', [])),
+            $this->getMessagesForReferences(Arr::get($formFields, 'reference', []), $fileUpload, $resultId),
         ];
 
         foreach ($tempMessages as $key => $tempMessage) {
@@ -132,24 +134,27 @@ class ResultRequest extends ActivityBaseRequest
      * returns rules for Reference.
      *
      * @param $formFields
+     * @param $fileUpload
+     * @param $indicators
+     * @param $resultId
      *
      * @return array
      */
-    protected function getWarningForReferences($formFields, $fileUpload = false, array $indicators = []): array
+    protected function getWarningForReferences($formFields, $fileUpload = false, array $indicators = [], int $resultId = null): array
     {
         Validator::extendImplicit(
             'indicator_ref_code_present',
-            function () {
-                $params = $this->route()->parameters();
+            function () use ($resultId) {
+                $resultId = Arr::get($this->route()->parameters(), 'resultId');
 
-                return !app()->make(ResultService::class)->indicatorHasRefCode($params['resultId']);
+                return !app()->make(ResultService::class)->indicatorHasRefCode($resultId);
             }
         );
 
         $rules = [];
 
         if ($fileUpload) {
-            $hasResultId = false;
+            $hasResultId = (bool) $resultId;
         } else {
             $params = $this->route()->parameters();
             $hasResultId = array_key_exists('resultId', $params);
@@ -169,7 +174,8 @@ class ResultRequest extends ActivityBaseRequest
                         }
                     }
 
-                    $rules[sprintf('%s.code', $referenceForm)] = 'indicator_ref_code_present:' . !$hasCode;
+                    $codeNotPresent = $hasResultId ? !app()->make(ResultService::class)->indicatorHasRefCode($resultId) : !$hasCode;
+                    $rules[sprintf('%s.code', $referenceForm)] = 'indicator_ref_code_present:' . $codeNotPresent;
                 } else {
                     $rules[sprintf('%s.code', $referenceForm)] = 'indicator_ref_code_present';
                 }
@@ -183,11 +189,15 @@ class ResultRequest extends ActivityBaseRequest
      * returns critical rules for Reference.
      *
      * @param $formFields
+     * @param $fileUpload
+     * @param $indicators
      *
      * @return array
      */
     protected function getErrorsForReferences($formFields, $fileUpload = false, array $indicators = []): array
     {
+        $rules = [];
+
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
             $rules[sprintf('%s.vocabulary_uri', $referenceForm)] = 'nullable|url';
@@ -201,15 +211,17 @@ class ResultRequest extends ActivityBaseRequest
      * returns messages for Reference.
      *
      * @param $formFields
+     * @param $fileUPload
+     * @param $resultId
      *
      * @return array
      */
-    protected function getMessagesForReferences($formFields, $fileUpload = false): array
+    protected function getMessagesForReferences($formFields, $fileUpload = false, $resultId = null): array
     {
         $messages = [];
 
         if ($fileUpload) {
-            $hasResultId = true;
+            $hasResultId = (bool) $resultId;
         } else {
             $params = $this->route()->parameters();
             $hasResultId = array_key_exists('resultId', $params);

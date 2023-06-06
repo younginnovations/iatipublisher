@@ -1,0 +1,278 @@
+{
+    "123-234_result1": {
+        "type": "2",
+        "aggregation_status": "1",
+        "title": [
+            {
+                "narrative": [
+                    {
+                        "narrative": "nar 1",
+                        "language": "ae"
+                    },
+                    {
+                        "narrative": "nar 2",
+                        "language": "ak"
+                    }
+                ]
+            }
+        ],
+        "description": [
+            {
+                "narrative": [
+                    {
+                        "narrative": "des 1",
+                        "language": "af"
+                    },
+                    {
+                        "narrative": "des 2",
+                        "language": "ae"
+                    }
+                ]
+            }
+        ],
+        "document_link": [
+            {
+                "url": "https:\/\/minio-stage.yipl.com.np:9000\/document_link\/1\/test.backup",
+                "format": "application\/A2L",
+                "title": [
+                    {
+                        "narrative": [
+                            {
+                                "narrative": "nar 1",
+                                "language": "af"
+                            },
+                            {
+                                "narrative": "nar 2",
+                                "language": "ae"
+                            }
+                        ]
+                    }
+                ],
+                "description": [
+                    {
+                        "narrative": [
+                            {
+                                "narrative": "nar 1",
+                                "language": "ab"
+                            },
+                            {
+                                "narrative": "nar 2",
+                                "language": "fr"
+                            }
+                        ]
+                    }
+                ],
+                "category": [
+                    {
+                        "code": "A02"
+                    },
+                    {
+                        "code": "B17"
+                    }
+                ],
+                "language": [
+                    {
+                        "language": "af"
+                    },
+                    {
+                        "language": "eu"
+                    }
+                ],
+                "document_date": [
+                    {
+                        "date": "2023-04-08"
+                    }
+                ]
+            },
+            {
+                "url": "http:\/\/localhost:8001\/activity\/9\/document_link",
+                "format": "application\/cdmi-domain",
+                "title": [
+                    {
+                        "narrative": [
+                            {
+                                "narrative": "nar 1",
+                                "language": "ae"
+                            },
+                            {
+                                "narrative": "nar 2",
+                                "language": "en"
+                            }
+                        ]
+                    }
+                ],
+                "description": [
+                    {
+                        "narrative": [
+                            {
+                                "narrative": null,
+                                "language": null
+                            }
+                        ]
+                    }
+                ],
+                "category": [
+                    {
+                        "code": null
+                    }
+                ],
+                "language": [
+                    {
+                        "language": "aa"
+                    },
+                    {
+                        "language": "ho"
+                    }
+                ],
+                "document_date": [
+                    {
+                        "date": "2023-04-14"
+                    }
+                ]
+            }
+        ],
+        "reference": [
+            {
+                "vocabulary": "99",
+                "code": "123",
+                "vocabulary_uri": "http:\/\/json-parser.com\/8e6e1d55\/1"
+            },
+            {
+                "vocabulary": "99",
+                "code": "1234",
+                "vocabulary_uri": "http:\/\/json-parser.com\/8e6e1d55\/1"
+            }
+        ]
+    },
+    "123-234_result2": {
+        "type": "3",
+        "aggregation_status": "0",
+        "title": [
+            {
+                "narrative": [
+                    {
+                        "narrative": "nar 1",
+                        "language": "ak"
+                    },
+                    {
+                        "narrative": "nar 2",
+                        "language": "hi"
+                    }
+                ]
+            }
+        ],
+        "description": [
+            {
+                "narrative": [
+                    {
+                        "narrative": "des 1",
+                        "language": "hi"
+                    },
+                    {
+                        "narrative": "des 2",
+                        "language": "ne"
+                    }
+                ]
+            }
+        ],
+        "document_link": [
+            {
+                "url": "https:\/\/minio-stage.yipl.com.np:9000\/document_link\/1\/test2.backup",
+                "format": "application\/A2L",
+                "title": [
+                    {
+                        "narrative": [
+                            {
+                                "narrative": "nar 1",
+                                "language": "co"
+                            },
+                            {
+                                "narrative": "nar 2",
+                                "language": "ki"
+                            }
+                        ]
+                    }
+                ],
+                "description": [
+                    {
+                        "narrative": [
+                            {
+                                "narrative": "des 1",
+                                "language": "gd"
+                            },
+                            {
+                                "narrative": "des 2",
+                                "language": "mr"
+                            }
+                        ]
+                    }
+                ],
+                "category": [
+                    {
+                        "code": "A03"
+                    }
+                ],
+                "language": [
+                    {
+                        "language": "en"
+                    }
+                ],
+                "document_date": [
+                    {
+                        "date": null
+                    }
+                ]
+            },
+            {
+                "url": "http:\/\/localhost:8001\/activity\/9\/document_link",
+                "format": null,
+                "title": [
+                    {
+                        "narrative": [
+                            {
+                                "narrative": null,
+                                "language": null
+                            }
+                        ]
+                    }
+                ],
+                "description": [
+                    {
+                        "narrative": [
+                            {
+                                "narrative": null,
+                                "language": null
+                            }
+                        ]
+                    }
+                ],
+                "category": [
+                    {
+                        "code": null
+                    }
+                ],
+                "language": [
+                    {
+                        "language": "en"
+                    }
+                ],
+                "document_date": [
+                    {
+                        "date": null
+                    }
+                ]
+            }
+        ],
+        "reference": [
+            {
+                "vocabulary": "99",
+                "code": "234",
+                "vocabulary_uri": "http:\/\/json-parser.com\/8e6e1d55\/1"
+            },
+            {
+                "vocabulary": null,
+                "code": "1234"
+            }
+        ]
+    }
+}

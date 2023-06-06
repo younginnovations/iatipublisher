@@ -635,10 +635,6 @@ class Validation extends Factory
         $this->extend('sector_total_percent', function () {
             return false;
         });
-
-        $this->extend('sector_has_five_digit_oced_vocab', function () {
-            return false;
-        });
     }
 
     /**

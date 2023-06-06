@@ -319,7 +319,8 @@
                             <div class="flex">
                               <div>Document Link:&nbsp;</div>
                               <div>
-                                {{ base.document_link.length }} document
+                                {{ countDocumentLink(base.document_link) }}
+                                document
                               </div>
                             </div>
                           </div>
@@ -644,8 +645,35 @@ export default defineComponent({
   setup(props) {
     let { result } = toRefs(props);
 
+    const countDocumentLink = (document_link) => {
+      let documentCount = 0;
+
+      for (let document in document_link) {
+        let result = reduceDocumentLink(document_link[document], []);
+
+        if (result.every((item) => item === null)) {
+          documentCount++;
+        }
+      }
+
+      return documentCount;
+    };
+
+    const reduceDocumentLink = (document_link, values) => {
+      if (typeof document_link === 'object' && document_link) {
+        for (let key in document_link) {
+          values.concat(reduceDocumentLink(document_link[key], values));
+        }
+      } else {
+        values.push(document_link);
+      }
+
+      return values;
+    };
+
     const indicatorData = result.value.indicators.reverse();
-    return { indicatorData, dateFormat, getActivityTitle };
+
+    return { indicatorData, dateFormat, getActivityTitle, countDocumentLink };
   },
 });
 </script>

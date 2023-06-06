@@ -7,6 +7,7 @@ namespace App\IATI\Services\Activity;
 use App\IATI\Elements\Builder\ResultElementFormCreator;
 use App\IATI\Repositories\Activity\IndicatorRepository;
 use App\IATI\Traits\DataSanitizeTrait;
+use Auth;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Kris\LaravelFormBuilder\Form;
@@ -119,6 +120,7 @@ class IndicatorService
     public function create(array $indicatorData): object
     {
         $indicatorData['indicator'] = $this->sanitizeData($indicatorData['indicator']);
+        $indicatorData['indicator_code'] = Auth::user() ? Auth::user()->id . time() : time();
 
         return $this->indicatorRepository->store($indicatorData);
     }
@@ -213,6 +215,6 @@ class IndicatorService
     {
         $measure = $this->getIndicatorMeasure($indicatorId);
 
-        return ['qualitative' => $measure === '5', 'non_qualitative' =>  in_array($measure, ['1', '2', '3', '4'])];
+        return ['qualitative' => $measure === '5', 'non_qualitative' => in_array($measure, ['1', '2', '3', '4'])];
     }
 }

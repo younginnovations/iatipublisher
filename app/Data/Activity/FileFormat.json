@@ -756,21 +756,7 @@
     {
       "category": "application",
       "category-name": "",
-      "code": "application/font-sfnt",
-      "name": "",
-      "language": "en"
-    },
-    {
-      "category": "application",
-      "category-name": "",
       "code": "application/font-tdpfr",
-      "name": "",
-      "language": "en"
-    },
-    {
-      "category": "application",
-      "category-name": "",
-      "code": "application/font-woff",
       "name": "",
       "language": "en"
     },
@@ -2093,13 +2079,6 @@
     {
       "category": "application",
       "category-name": "",
-      "code": "application/smil",
-      "name": "",
-      "language": "en"
-    },
-    {
-      "category": "application",
-      "category-name": "",
       "code": "application/smil+xml",
       "name": "",
       "language": "en"
@@ -2710,13 +2689,6 @@
       "category": "application",
       "category-name": "",
       "code": "application/vnd.apple.installer+xml",
-      "name": "",
-      "language": "en"
-    },
-    {
-      "category": "application",
-      "category-name": "",
-      "code": "application/vnd.arastra.swi",
       "name": "",
       "language": "en"
     },
@@ -4018,20 +3990,6 @@
     {
       "category": "application",
       "category-name": "",
-      "code": "application/vnd.geo+json",
-      "name": "",
-      "language": "en"
-    },
-    {
-      "category": "application",
-      "category-name": "",
-      "code": "application/vnd.geocube+xml",
-      "name": "",
-      "language": "en"
-    },
-    {
-      "category": "application",
-      "category-name": "",
       "code": "application/vnd.geogebra.file",
       "name": "",
       "language": "en"
@@ -4089,13 +4047,6 @@
       "category": "application",
       "category-name": "",
       "code": "application/vnd.globalplatform.card-content-mgt-response",
-      "name": "",
-      "language": "en"
-    },
-    {
-      "category": "application",
-      "category-name": "",
-      "code": "application/vnd.gmx",
       "name": "",
       "language": "en"
     },
@@ -4509,13 +4460,6 @@
       "category": "application",
       "category-name": "",
       "code": "application/vnd.infotech.project+xml",
-      "name": "",
-      "language": "en"
-    },
-    {
-      "category": "application",
-      "category-name": "",
-      "code": "application/vnd.informix-visionary",
       "name": "",
       "language": "en"
     },
@@ -5713,13 +5657,6 @@
       "category": "application",
       "category-name": "",
       "code": "application/vnd.nokia.n-gage.data",
-      "name": "",
-      "language": "en"
-    },
-    {
-      "category": "application",
-      "category-name": "",
-      "code": "application/vnd.nokia.n-gage.symbian.install",
       "name": "",
       "language": "en"
     },
@@ -8505,13 +8442,6 @@
     {
       "category": "application",
       "category-name": "",
-      "code": "application/xhtml-voice+xml",
-      "name": "",
-      "language": "en"
-    },
-    {
-      "category": "application",
-      "category-name": "",
       "code": "application/xhtml+xml",
       "name": "",
       "language": "en"
@@ -9611,13 +9541,6 @@
     {
       "category": "audio",
       "category-name": "",
-      "code": "audio/vnd.qcelp",
-      "name": "",
-      "language": "en"
-    },
-    {
-      "category": "audio",
-      "category-name": "",
       "code": "audio/vnd.rhetorex.32kadpcm",
       "name": "",
       "language": "en"
@@ -10078,20 +10001,6 @@
       "language": "en"
     },
     {
-      "category": "image",
-      "category-name": "",
-      "code": "image/x-emf",
-      "name": "",
-      "language": "en"
-    },
-    {
-      "category": "image",
-      "category-name": "",
-      "code": "image/x-wmf",
-      "name": "",
-      "language": "en"
-    },
-    {
       "category": "message",
       "category-name": "",
       "code": "message/CPIM",
@@ -10178,13 +10087,6 @@
     {
       "category": "message",
       "category-name": "",
-      "code": "message/news",
-      "name": "",
-      "language": "en"
-    },
-    {
-      "category": "message",
-      "category-name": "",
       "code": "message/partial",
       "name": "",
       "language": "en"
@@ -10221,13 +10123,6 @@
       "category": "message",
       "category-name": "",
       "code": "message/tracking-status",
-      "name": "",
-      "language": "en"
-    },
-    {
-      "category": "message",
-      "category-name": "",
-      "code": "message/vnd.si.simp",
       "name": "",
       "language": "en"
     },
@@ -10556,21 +10451,7 @@
     {
       "category": "text",
       "category-name": "",
-      "code": "text/directory",
-      "name": "",
-      "language": "en"
-    },
-    {
-      "category": "text",
-      "category-name": "",
       "code": "text/dns",
-      "name": "",
-      "language": "en"
-    },
-    {
-      "category": "text",
-      "category-name": "",
-      "code": "text/ecmascript",
       "name": "",
       "language": "en"
     },
@@ -10613,13 +10494,6 @@
       "category": "text",
       "category-name": "",
       "code": "text/html",
-      "name": "",
-      "language": "en"
-    },
-    {
-      "category": "text",
-      "category-name": "",
-      "code": "text/javascript",
       "name": "",
       "language": "en"
     },
@@ -10956,13 +10830,6 @@
       "category": "text",
       "category-name": "",
       "code": "text/vnd.radisys.msml-basic-layout",
-      "name": "",
-      "language": "en"
-    },
-    {
-      "category": "text",
-      "category-name": "",
-      "code": "text/vnd.si.uricatalogue",
       "name": "",
       "language": "en"
     },

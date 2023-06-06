@@ -25,6 +25,9 @@
             <th id="transaction_type" scope="col">
               <span>Start Date - End Date</span>
             </th>
+            <th id="code" scope="col" width="190px">
+              <span>Period number</span>
+            </th>
             <th id="action" scope="col" width="177px">
               <span>Action</span>
             </th>
@@ -55,6 +58,7 @@
                 }}
               </a>
             </td>
+            <td>{{ pe.period_code }}</td>
             <td>
               <div class="flex">
                 <a class="mr-6 text-n-40" :href="`${periodLink}/${pe.id}/edit`">
@@ -147,6 +151,7 @@ export default defineComponent({
       data: {
         result_id: number;
         id: number;
+        period_code: string;
         period: {
           period_start: {
             date: Date;
@@ -200,7 +205,6 @@ export default defineComponent({
         Object.assign(periodsData, response.data);
         isEmpty.value = response.data.data.length ? false : true;
       });
-
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;

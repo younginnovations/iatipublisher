@@ -9,6 +9,7 @@ export enum ActionTypes {
   UPDATE_DEFAULT_VALUES = 'UPDATE_DEFAULT_VALUES',
   UPDATE_DEFAULT_ERROR = 'UPDATE_DEFAULT_ERROR',
   UPDATE_IS_LOADING = 'UPDATE_IS_LOADING',
+  UPDATE_BULKPUBLISH_LENGTH = 'UPDATE_BULKPUBLISH_LENGTH',
 }
 
 type AugmentedActionContext = {
@@ -47,6 +48,10 @@ export interface Actions {
     { commit }: AugmentedActionContext,
     payload: object
   ): void;
+  [ActionTypes.UPDATE_BULKPUBLISH_LENGTH](
+    { commit }: AugmentedActionContext,
+    payload: object
+  ): void;
 }
 
 export const actions: ActionTree<State, State> = {
@@ -71,5 +76,8 @@ export const actions: ActionTree<State, State> = {
   },
   [ActionTypes.UPDATE_IS_LOADING]({ commit }, payload) {
     commit(MutationTypes.IS_LOADING, payload);
+  },
+  [ActionTypes.UPDATE_BULKPUBLISH_LENGTH]({ commit }, payload) {
+    commit(MutationTypes.BULKPUBLISH_LENGTH, payload);
   },
 };

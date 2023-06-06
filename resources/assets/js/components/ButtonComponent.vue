@@ -1,7 +1,11 @@
 <template>
-  <button class="button relative text-n-40" :class="btnType">
+  <button
+    :disabled="activityLength"
+    class="button relative text-n-40"
+    :class="[{ '!cursor-not-allowed': activityLength }, btnType]"
+  >
     <svg-vue v-if="icon" :icon="icon" />
-    <span v-if="text">{{ text }}</span>
+    <span v-if="text">{{ text }} </span>
   </button>
 </template>
 
@@ -16,6 +20,7 @@ export default defineComponent({
       type: String,
       required: true,
     },
+
     icon: {
       type: String,
       required: false,
@@ -31,6 +36,11 @@ export default defineComponent({
       required: false,
       default: '',
     },
+    activityLength: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   setup(props) {
     let btnType = '';
@@ -43,6 +53,7 @@ export default defineComponent({
     } else {
       btnType = 'font-bold';
     }
+
     return { btnType };
   },
 });

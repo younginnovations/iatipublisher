@@ -1,6 +1,6 @@
 <?php
 
-namespace App\IATI\Models\ImportActivityError;
+namespace App\IATI\Models\Import;
 
 use App\IATI\Models\Activity\Activity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

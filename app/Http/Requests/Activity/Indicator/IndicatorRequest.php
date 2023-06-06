@@ -19,9 +19,10 @@ class IndicatorRequest extends ActivityBaseRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     *
+     * @return array
      */
     public function rules(): array
     {
@@ -48,12 +49,16 @@ class IndicatorRequest extends ActivityBaseRequest
      * Returns rules for result indicator.
      *
      * @param array $formFields
+     * @param bool $fileUpload
+     * @param array $result
+     * @param $resultId
      *
-     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     *
+     * @return array
      */
-    public function getWarningForIndicator(array $formFields, bool $fileUpload = false, array $result = []): array
+    public function getWarningForIndicator(array $formFields, bool $fileUpload = false, array $result = [], $resultId = null): array
     {
         $rules = [];
 
@@ -61,7 +66,7 @@ class IndicatorRequest extends ActivityBaseRequest
             $this->getWarningForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
             $this->getWarningForNarrative(Arr::get($formFields, 'description', []), 'description.0'),
             $this->getWarningForDocumentLink(Arr::get($formFields, 'document_link', [])),
-            $this->getWarningForReference(Arr::get($formFields, 'reference', []), $fileUpload, $result),
+            $this->getWarningForReference(Arr::get($formFields, 'reference', []), $fileUpload, $result, $resultId),
             $this->getWarningForBaseline(Arr::get($formFields, 'baseline', [])),
         ];
 
@@ -78,15 +83,17 @@ class IndicatorRequest extends ActivityBaseRequest
      * Returns rules for result indicator.
      *
      * @param array $formFields
+     * @param bool $fileUpload
+     * @param array $result
      *
-     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     *
+     * @return array
      */
     public function getErrorsForIndicator(array $formFields, bool $fileUpload = false, array $result = []): array
     {
         $rules = [];
-
         $rules['measure'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('IndicatorMeasure', 'Activity', false))));
         $rules['ascending'] = sprintf('nullable|in:0,1');
         $rules['aggregation_status'] = sprintf('nullable|in:0,1');
@@ -95,7 +102,7 @@ class IndicatorRequest extends ActivityBaseRequest
             $this->getErrorsForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
             $this->getErrorsForNarrative(Arr::get($formFields, 'description', []), 'description.0'),
             $this->getErrorsForDocumentLink(Arr::get($formFields, 'document_link', [])),
-            $this->getErrorsForReference(Arr::get($formFields, 'reference', []), $fileUpload, $result),
+            $this->getErrorsForReference(Arr::get($formFields, 'reference', []), $fileUpload),
             $this->getErrorsForBaseline(Arr::get($formFields, 'baseline', [])),
         ];
 
@@ -146,7 +153,7 @@ class IndicatorRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getWarningForReference($formFields, bool $fileUpload, array $result): array
+    protected function getWarningForReference($formFields, bool $fileUpload, array $result, $resultId): array
     {
         $rules = [];
 
@@ -173,9 +180,10 @@ class IndicatorRequest extends ActivityBaseRequest
                         }
                     }
 
-                    $rules[sprintf('%s.code', $referenceForm)] = "result_ref_code_present:$hasCode";
+                    $codeNotPresent = $resultId ? !app()->make(ResultService::class)->resultHasRefCode($resultId) : !$hasCode;
+                    $rules[sprintf('%s.code', $referenceForm)][] = 'result_ref_code_present:' . $codeNotPresent;
                 } else {
-                    $rules[sprintf('%s.code', $referenceForm)] = 'result_ref_code_present';
+                    $rules[sprintf('%s.code', $referenceForm)][] = 'result_ref_code_present';
                 }
             }
         }
@@ -190,7 +198,7 @@ class IndicatorRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    protected function getErrorsForReference($formFields, bool $fileUpload, array $result): array
+    protected function getErrorsForReference($formFields, bool $fileUpload): array
     {
         $rules = [];
 
@@ -231,9 +239,10 @@ class IndicatorRequest extends ActivityBaseRequest
      *
      * @param $formFields
      *
-     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     *
+     * @return array
      */
     protected function getWarningForBaseline($formFields): array
     {
@@ -241,13 +250,6 @@ class IndicatorRequest extends ActivityBaseRequest
 
         foreach ($formFields as $baselineIndex => $baseline) {
             $baselineForm = sprintf('baseline.%s', $baselineIndex);
-            // $baselineYearRule = 'nullable|date_format:Y|digits:4';
-
-            // if (!empty($baseline['date'])) {
-            //     $baselineYearRule = sprintf('%s|in:%s', $baselineYearRule, date('Y', strtotime($baseline['date'])));
-            // }
-
-            // $rules[sprintf('%s.year', $baselineForm)] = $baselineYearRule;
             $rules[sprintf('%s.value', $baselineForm)] = 'nullable|numeric|gte:0';
 
             if ((request()->get('measure') == 2) && Arr::get($baseline, 'value', null)) {
@@ -262,7 +264,7 @@ class IndicatorRequest extends ActivityBaseRequest
                 $rules[$key] = $item;
             }
 
-            $dcoLinkRules = $this->getWarningForDocumentLink($baseline['document_link'], $baselineForm);
+            $dcoLinkRules = $this->getWarningForDocumentLink(Arr::get($baseline, 'document_link', []), $baselineForm);
 
             foreach ($dcoLinkRules as $key => $item) {
                 $rules[$key] = $item;
@@ -277,9 +279,10 @@ class IndicatorRequest extends ActivityBaseRequest
      *
      * @param $formFields
      *
-     * @return array
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     *
+     * @return array
      */
     protected function getErrorsForBaseline($formFields): array
     {
@@ -289,18 +292,11 @@ class IndicatorRequest extends ActivityBaseRequest
             $baselineForm = sprintf('baseline.%s', $baselineIndex);
             $baselineYearRule = 'nullable|date_format:Y|digits:4';
 
-            if (!empty($baseline['date'])) {
-                $baselineYearRule = sprintf('%s|in:%s', $baselineYearRule, date('Y', strtotime($baseline['date'])));
+            if (!empty($baseline['date']) && dateStrToTime(($baseline['date']))) {
+                $baselineYearRule = sprintf('%s|in:%s', $baselineYearRule, date('Y', dateStrToTime($baseline['date'])));
             }
 
             $rules[sprintf('%s.year', $baselineForm)] = $baselineYearRule;
-            // $rules[sprintf('%s.value', $baselineForm)] = 'nullable|numeric|gte:0';
-
-            // if ((request()->get('measure') == 2) && Arr::get($baseline, 'value', null)) {
-            //     $rules[sprintf('%s.value', $baselineForm)] = 'nullable|numeric|gte:0';
-            // } elseif ((request()->get('measure') == 1) && Arr::get($baseline, 'value', null)) {
-            //     $rules[sprintf('%s.value', $baselineForm)] = 'nullable|numeric';
-            // }
 
             $narrativeRules = $this->getErrorsForNarrative($baseline['comment'][0]['narrative'], sprintf('%s.comment.0', $baselineForm));
 
@@ -308,7 +304,7 @@ class IndicatorRequest extends ActivityBaseRequest
                 $rules[$key] = $item;
             }
 
-            $dcoLinkRules = $this->getErrorsForDocumentLink($baseline['document_link'], $baselineForm);
+            $dcoLinkRules = $this->getErrorsForDocumentLink(Arr::get($baseline, 'document_link', []), $baselineForm);
 
             foreach ($dcoLinkRules as $key => $item) {
                 $rules[$key] = $item;
@@ -344,7 +340,7 @@ class IndicatorRequest extends ActivityBaseRequest
                 $messages[$key] = $item;
             }
 
-            $docLinkMessages = $this->getMessagesForDocumentLink($baseline['document_link'], $baselineForm);
+            $docLinkMessages = $this->getMessagesForDocumentLink(Arr::get($baseline, 'document_link', []), $baselineForm);
 
             foreach ($docLinkMessages as $key => $item) {
                 $messages[$key] = $item;
