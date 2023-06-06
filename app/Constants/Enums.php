@@ -10,25 +10,25 @@ namespace App\Constants;
 abstract class Enums
 {
     const IATI_ORGANIZATION_STATUS
-    = [
-        'pending',
-        'verified',
-    ];
+        = [
+            'pending',
+            'verified',
+        ];
 
     const ORGANIZATION_STATUS
-    = [
-        'draft',
-        'ready_to_publish',
-        'published',
-    ];
+        = [
+            'draft',
+            'ready_to_publish',
+            'published',
+        ];
 
     const BULK_PUBLISHING_STATUS
-    = [
-        'created',
-        'processing',
-        'completed',
-        'failed',
-    ];
+        = [
+            'created',
+            'processing',
+            'completed',
+            'failed',
+        ];
 
     const STATUS = [
         'active',
@@ -54,8 +54,8 @@ abstract class Enums
 
     const UPLOAD_TYPE = [
         'manual' => 'manual',
-        'csv'    => 'csv',
-        'xml'    => 'xml',
+        'csv' => 'csv',
+        'xml' => 'xml',
     ];
 
     const API_TYPE = [

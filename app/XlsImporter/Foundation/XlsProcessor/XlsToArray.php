@@ -77,7 +77,7 @@ class XlsToArray implements ToArray, WithHeadingRow, WithEvents, WithCalculatedF
      *
      * @return array
      */
-    public function getSheetNames()
+    public function getSheetNames(): array
     {
         return $this->sheetNames;
     }

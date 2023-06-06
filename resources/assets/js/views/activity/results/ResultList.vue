@@ -214,7 +214,6 @@ export default defineComponent({
         const response = res.data;
         Object.assign(resultsData, response.data);
         isEmpty.value = response.data.data.length ? false : true;
-        console.log(resultsData.data, 'for code');
       });
 
       if (props.toast.message !== '') {

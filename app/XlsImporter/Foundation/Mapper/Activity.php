@@ -17,6 +17,8 @@ class Activity
 
     /**
      * List of all the activity sheets and corresponding elements.
+     *
+     *
      * @var array
      */
     protected array $activityElements = [
@@ -46,6 +48,7 @@ class Activity
 
     /**
      * List of single valued elements.
+     *
      * @var array
      */
     protected array $singleValuedElements = [
@@ -60,6 +63,7 @@ class Activity
 
     /**
      * List of default values.
+     *
      * @var array
      */
     protected array $defaultValueElements = [
@@ -72,6 +76,7 @@ class Activity
 
     /**
      * List of element with enclosed narrative.
+     *
      * @var array
      */
     protected array $enclosedNarrative = [
@@ -84,6 +89,7 @@ class Activity
 
     /**
      * activities whose identifier is mentioned on setting sheet.
+     *
      * @var array
      */
     protected array $activities = [];
@@ -102,6 +108,7 @@ class Activity
 
     /**
      * Array of activities identifier in the xls file.
+     *
      * @var array
      */
     protected array $activitiesIdentifier = [];
@@ -114,48 +121,56 @@ class Activity
 
     /**
      * Array tracking the identifier present in each sheet.
+     *
      * @var array
      */
     protected array $trackIdentifierBySheet = [];
 
     /**
      * Row count in the sheet.
+     *
      * @var int
      */
     protected int $rowCount = 2;
 
     /**
      * name of sheet currently being processed.
+     *
      * @var string
      */
     protected string $sheetName = '';
 
     /**
      * Array with list of all fields and their position.
+     *
      * @var array
      */
     protected array $columnTracker = [];
 
     /**
      * Array containing all the global errors.
+     *
      * @var array
      */
     protected array $globalErrors = [];
 
     /**
      * Array containing all the processing errors.
+     *
      * @var array
      */
     protected array $processingErrors = [];
 
     /**
      * Array for temporary storage of errors.
+     *
      * @var array
      */
     protected array $tempErrors = [];
 
     /**
      * Count of validation error.
+     *
      * @var array
      */
     protected array $errorCount = [
@@ -166,30 +181,35 @@ class Activity
 
     /**
      * Name of element currently being processed.
+     *
      * @var string
      */
     protected string $elementBeingProcessed = '';
 
     /**
      * Path of status.json file.
+     *
      * @var string
      */
     protected string $statusFilePath = '';
 
     /**
      * Path of valid.json file.
+     *
      * @var string
      */
     protected string $validatedDataFilePath = '';
 
     /**
      * Path of globalError.json file.
+     *
      * @var string
      */
     protected string $globalErrorFilePath = '';
 
     /**
      * Reporting org of the organization.
+     *
      * @var string
      */
     protected array $organizationReportingOrg = [];
@@ -449,12 +469,7 @@ class Activity
                     )
                 ) {
                     if (!empty($elementData)) {
-                        $processedData = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
-
-                        if (!empty($processedData)) {
-                            $this->activities[$elementActivityIdentifier][$element] = $processedData;
-                        }
-
+                        $this->setProcessedElementToActivity($element, $elementActivityIdentifier, $elementData, $dependency, $elementDropDownFields);
                         $this->rowCount = $tempRowCount;
                         $elementData = [];
                     }
@@ -472,17 +487,31 @@ class Activity
             }
         }
 
-        if (!empty($elementData)) {
-            if (in_array($elementActivityIdentifier, $this->activitiesIdentifier)) {
-                $processedData = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
-
-                if (!empty($processedData)) {
-                    $this->activities[$elementActivityIdentifier][$element] = $processedData;
-                }
-            }
-
+        if (!empty($elementData) && in_array($elementActivityIdentifier, $this->activitiesIdentifier)) {
+            $this->setProcessedElementToActivity($element, $elementActivityIdentifier, $elementData, $dependency, $elementDropDownFields);
             $this->rowCount = $tempRowCount;
             $elementData = [];
+        }
+    }
+
+    /**
+     * Set processed element to its specific position in activities array.
+     *
+     * @param $element
+     * @param $elementActivityIdentifier
+     * @param $elementData
+     * @param $dependency
+     * @param $elementDropDownFields
+     *
+     * @return void
+     */
+    public function setProcessedElementToActivity($element, $elementActivityIdentifier, $elementData, $dependency, $elementDropDownFields): void
+    {
+        if (is_null($elementActivityIdentifier)) {
+            $this->globalErrors[] = 'Error detected on ' . $this->sheetName . ' sheet, cell A' . $this->rowCount . ': Identifier is missing.';
+        } else {
+            $processedData = $this->getElementData($elementData, $dependency[$element], $elementDropDownFields, $elementActivityIdentifier, $element);
+            $this->activities[$elementActivityIdentifier][$element] = $processedData;
         }
     }
 
@@ -499,12 +528,6 @@ class Activity
      */
     public function getElementData($data, $dependency, $elementDropDownFields, $elementActivityIdentifier, $element): array
     {
-        if (is_null($elementActivityIdentifier)) {
-            $this->globalErrors[] = 'Error detected on ' . $this->sheetName . ' sheet, cell A' . $this->rowCount . ': Identifier is missing.';
-
-            return [];
-        }
-
         $this->isIdentifierDuplicate($elementActivityIdentifier, $element);
 
         $elementBase = Arr::get($dependency, 'elementBase', null);

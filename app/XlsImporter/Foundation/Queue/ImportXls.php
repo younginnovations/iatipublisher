@@ -17,18 +17,21 @@ class ImportXls extends Job implements ShouldQueue
 {
     /**
      * Organization id.
+     *
      * @var int
      */
     protected $organizationId;
 
     /**
      * Organization reporting org.
+     *
      * @var array
      */
     protected $reportingOrg;
 
     /**
      * Uploaded xls filename.
+     *
      * @var string
      */
     protected $filename;
@@ -41,24 +44,28 @@ class ImportXls extends Job implements ShouldQueue
 
     /**
      * Array containing all the identifiers existing in the system.
+     *
      * @var array
      */
     protected $iatiIdentifiers;
 
     /**
      * Type of xls file that has been uploaded (template).
+     *
      * @var string
      */
     protected $xlsType;
 
     /**
      * path where xls file is stored.
+     *
      * @var string
      */
     private string $xls_file_storage_path;
 
     /**
      * path where processed xls data is stored.
+     *
      * @var string
      */
     private string $xls_data_storage_path;
@@ -107,6 +114,8 @@ class ImportXls extends Job implements ShouldQueue
 
     /**
      * Handles a job failure.
+     *
+     * @return void
      */
     public function failed(Throwable $exception): void
     {
@@ -118,7 +127,7 @@ class ImportXls extends Job implements ShouldQueue
      *
      * @return void
      */
-    public function delete()
+    public function delete(): void
     {
         if ($this->job) {
             $completionStatus = json_decode(awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $this->organizationId, $this->userId, 'status.json')), true, 512, 0);

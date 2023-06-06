@@ -465,9 +465,9 @@
           Go Back
         </button>
         <BtnComponent
+          v-if="uploadComplete"
           text="Import Anyway"
           type="primary"
-          v-if="uploadComplete"
           @click="importAnyway"
         />
       </div>
@@ -524,20 +524,8 @@ const sortingDirection = () => {
   direction.value === 'asc'
     ? (direction.value = 'desc')
     : (direction.value = 'asc');
-  console.log(direction.value, 'direction');
   fetchActivities(1, direction.value);
 };
-
-// const sortByDateUrl = () => {
-//   if (currentURL.includes('?')) {
-//     const queryString = window.location.search,
-//       urlParams = new URLSearchParams(queryString);
-//     query = urlParams.get('q') ?? '';
-//     direction = urlParams.get('direction') === 'desc' ? 'asc' : 'desc';
-//   }
-
-//   return `?q=${query}&orderBy=updated_at&direction=${direction}`;
-// };
 
 watch(
   () => store.state.selectedActivities,
@@ -547,11 +535,6 @@ watch(
     }
   }
 );
-
-// const retry = () => {
-//   axios.delete(`/import/xls`);
-//   window.location.href = '/import/xls';
-// };
 
 const mapActivityName = (name) => {
   switch (name) {
@@ -603,16 +586,17 @@ watch(
 
 const importAnyway = () => {
   axios.delete(`/import/xls`).then((res) => {
-    xlsData.value = false;
-    uploadFile();
-    uploadType.value = [];
-
-    // file.value.value = null;
-
-    showCancelModel.value = false;
     const response = res.data;
+    xlsData.value = false;
+
+    uploadFile();
+
+    uploadType.value = [];
+    showCancelModel.value = false;
     toastVisibility.value = true;
+
     setTimeout(() => (toastVisibility.value = false), 15000);
+
     toastMessage.value = response.message;
     toastType.value = response.success;
   });
@@ -624,12 +608,6 @@ const selectAll = () => {
     for (let i = 0; i < Object.values(activities.data).length; i++) {
       ids.push(activities.data[i]['id']);
     }
-
-    // for (const activity in activities.data) {
-    //   if (!store.state.selectedActivities.includes(activity['id'])) {
-    //     ids.push(activity['id']);
-    //   }
-    // }
     store.dispatch('updateSelectedActivities', ids);
     selectAllValue.value = true;
   } else {
@@ -637,6 +615,7 @@ const selectAll = () => {
     selectAllValue.value = false;
   }
 };
+
 function formatDate(date: Date) {
   return moment(date).fromNow();
 }
@@ -663,9 +642,7 @@ function uploadFile() {
     axios
       .post('/import/xls', data, config)
       .then((res) => {
-        console.log(res, 'res');
         if (file.value.files.length && res?.data?.success) {
-          console.log('success');
           checkXlsstatus();
         } else {
           error.value =
@@ -674,7 +651,6 @@ function uploadFile() {
       })
       .catch((err) => {
         error.value = 'Error has occured while uploading file.';
-        console.log(err);
       })
       .finally(() => {
         loader.value = false;
@@ -686,7 +662,6 @@ function uploadFile() {
 }
 
 function fetchActivities(active_page: number, direction = '') {
-  // tableLoader.value = true;
   let apiUrl = `/activities/page/${active_page}`;
   let params = new URLSearchParams();
   params.append('limit', '6');
@@ -703,7 +678,6 @@ function fetchActivities(active_page: number, direction = '') {
     Object.assign(activities, response.data);
     isEmpty.value = !response.data.data.length;
   });
-  // tableLoader.value = false;
 }
 
 const cancelImport = () => {
@@ -721,68 +695,67 @@ const cancelImport = () => {
     toastType.value = response.success;
   });
 };
+
 const checkXlsstatus = () => {
   axios.get('/import/xls/progress_status').then((res) => {
     uploadComplete.value = false;
-
     activityName.value = res?.data?.status?.template;
     currentActivity.value = mapActivityName(activityName.value);
     xlsData.value = Object.keys(res.data.status).length > 0;
+
     if (res?.data?.status?.status === 'completed') {
       uploadComplete.value = true;
     } else if (res?.data?.status?.status === 'failed') {
       xlsFailed.value = true;
       xlsFailedMessage.value = res?.data?.status?.message;
-    } else {
-      if (Object.keys(res.data.status).length > 0) {
-        //reset
-        totalCount.value = null;
+    } else if (Object.keys(res.data.status).length > 0) {
+      //reset
+      totalCount.value = null;
 
-        processing.value = false;
-        processedCount.value = 0;
-        xlsFailed.value = false;
-        xlsFailedMessage.value = '';
-        const checkStatus = setInterval(function () {
-          axios.get('/import/xls/status').then((res) => {
-            if (res.data.data?.message === 'Started') {
-              //reset
-              totalCount.value = null;
-              processedCount.value = 0;
-              xlsFailed.value = false;
-              xlsFailedMessage.value = '';
-            } else {
-              totalCount.value = res.data.data?.total_count;
-              processedCount.value = res.data.data?.processed_count;
-              xlsFailed.value = !res.data.data?.success;
-              xlsFailedMessage.value = res.data.data?.message;
-            }
-            if (res.data.data?.message === 'Processing') {
-              processing.value = true;
-            }
+      processing.value = false;
+      processedCount.value = 0;
+      xlsFailed.value = false;
+      xlsFailedMessage.value = '';
+      const checkStatus = setInterval(function () {
+        axios.get('/import/xls/status').then((res) => {
+          if (res.data.data?.message === 'Started') {
+            //reset
+            totalCount.value = null;
+            processedCount.value = 0;
+            xlsFailed.value = false;
+            xlsFailedMessage.value = '';
+          } else {
+            totalCount.value = res.data.data?.total_count;
+            processedCount.value = res.data.data?.processed_count;
+            xlsFailed.value = !res.data.data?.success;
+            xlsFailedMessage.value = res.data.data?.message;
+          }
+          if (res.data.data?.message === 'Processing') {
+            processing.value = true;
+          }
 
-            if (
-              !res.data?.data?.success ||
-              res.data?.data?.message === 'Complete'
-            ) {
-              clearInterval(checkStatus);
-            }
-            if (res.data?.data?.message === 'Complete') {
-              uploadComplete.value = true;
-            }
-          });
-        }, 2500);
-      }
+          if (
+            !res.data?.data?.success ||
+            res.data?.data?.message === 'Complete'
+          ) {
+            clearInterval(checkStatus);
+          }
+          if (res.data?.data?.message === 'Complete') {
+            uploadComplete.value = true;
+          }
+        });
+      }, 2500);
     }
   });
 };
+
 onMounted(() => {
   fetchActivities(1);
   checkXlsstatus();
 });
+
 provide('xlsFailedMessage', xlsFailedMessage);
 provide('activityLength', activityLength);
 provide('completed', uploadComplete);
 provide('processing', processing);
 </script>
-
-<style lang="scss"></style>

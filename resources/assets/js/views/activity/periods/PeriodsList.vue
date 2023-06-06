@@ -204,7 +204,6 @@ export default defineComponent({
         const response = res.data;
         Object.assign(periodsData, response.data);
         isEmpty.value = response.data.data.length ? false : true;
-        console.log(periodsData.data, 'preioddata');
       });
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;

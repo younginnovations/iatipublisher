@@ -29,6 +29,7 @@ class XlsUpload
 
     /**
      * XmlUpload constructor.
+     *
      * @param ImportXlsService  $importXmlService
      * @param XlsQueueProcessor $xlsQueueProcessor
      */

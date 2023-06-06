@@ -180,8 +180,6 @@ onUnmounted(() => {
 const checkXlsstatus = () => {
   axios.get('/import/xls/progress_status').then((res) => {
     xlsData.value = Object.keys(res.data.status).length > 0;
-
-    console.log(res.data.status, 'from bulkpublish');
   });
 };
 
@@ -189,14 +187,11 @@ const checkXlsstatus = () => {
 watch(completed, async (newValue) => {
   if (newValue === 'completed') {
     clearInterval(intervalID);
-
-    // resetting local storage
-    // paStorage.value.publishingActivities = {} as paElements;
-
     // check for failed publish
     failedActivities(paStorage.value.publishingActivities.activities);
   }
 });
+
 watch(
   () => store.state.isLoading,
   (value) => {

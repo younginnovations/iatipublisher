@@ -396,7 +396,6 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      console.log(props);
       window.addEventListener('resize', calcWidth);
       window.addEventListener('scroll', handleScroll);
 

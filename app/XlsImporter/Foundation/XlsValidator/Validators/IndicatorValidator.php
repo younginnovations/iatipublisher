@@ -15,13 +15,15 @@ class IndicatorValidator implements ValidatorInterface
 {
     /**
      * array containing indicator and its subelements.
+     *
      * @var array
      */
     protected $indicator;
 
     /**
      * parent result id to the indicator being validated.
-     * @var
+     *
+     * @var int|null
      */
     protected $resultId;
 

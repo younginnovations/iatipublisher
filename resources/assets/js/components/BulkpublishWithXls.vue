@@ -71,7 +71,7 @@
 </template>
 <script setup lang="ts">
 import { useStorage } from '@vueuse/core';
-import { onMounted, watch, computed, ref } from 'vue';
+import { watch, computed, ref } from 'vue';
 import { useStore } from 'Store/activities/index';
 import axios from 'axios';
 
@@ -98,12 +98,6 @@ const completedActivities = computed(() => {
       Object.values(pa.value?.publishingActivities['activities']).length);
     i++
   ) {
-    // console.log(
-    //   (Object.values(pa.value.publishingActivities['activities']) as object)[i][
-    //     'status'
-    //   ],
-    //   'computed'
-    // );
     if (
       Object.values(pa.value.publishingActivities['activities'] as object)[i][
         'status'
@@ -124,9 +118,6 @@ const percentageWidth = computed(() => {
   );
 });
 
-onMounted(() => {
-  console.log(pa, 'pa');
-});
 const closeWindow = () => {
   pa.value.publishingActivities = {};
   // emit('close');

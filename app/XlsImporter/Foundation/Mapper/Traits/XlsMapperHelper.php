@@ -279,18 +279,20 @@ trait XlsMapperHelper
     public function checkElementAddMore($elementBase, $elementBasePeer, $elementAddMore, $dependentOnValue, $fieldName, $fieldValue, $baseCount, $parentBaseCount, $row, $element): array
     {
         if ($elementBase && ($fieldName === $elementBase && ($fieldValue || is_numeric($fieldValue) || is_bool($fieldValue) || $this->checkIfPeerAttributesAreNotEmpty($elementBasePeer, $row)))) {
-            if (!$elementAddMore) {
-                if ($baseCount === 0 || $baseCount > 0) {
-                    $this->tempErrors["$element > $this->rowCount"] =
-                        empty($elementBasePeer) ?
-                        sprintf('Error detected on %s sheet, row %s : The %s cannot have multiple %s.', $this->sheetName, $this->rowCount, $element, $elementBase) :
-                        sprintf('Error detected on %s sheet, row %s : The %s cannot have multiple %s or %s.', $this->sheetName, $this->rowCount, $element, implode(', ', $elementBasePeer), $elementBase);
-                }
+            if (!$elementAddMore && ($baseCount === 0 || $baseCount > 0)) {
+                $this->tempErrors["$element > $this->rowCount"] =
+                    empty($elementBasePeer) ?
+                    sprintf('Error detected on %s sheet, row %s : The %s cannot have multiple %s.', $this->sheetName, $this->rowCount, $element, $elementBase) :
+                    sprintf('Error detected on %s sheet, row %s : The %s cannot have multiple %s or %s.', $this->sheetName, $this->rowCount, $element, implode(', ', $elementBasePeer), $elementBase);
             }
 
             $baseCount = is_null($baseCount) || !$elementAddMore ? 0 : $baseCount + 1;
             $parentBaseCount = array_fill_keys(array_keys($parentBaseCount), null);
             $dependentOnValue = array_fill_keys(array_keys($dependentOnValue), null);
+        }
+
+        if (is_null($baseCount)) {
+            $baseCount = 0;
         }
 
         return [

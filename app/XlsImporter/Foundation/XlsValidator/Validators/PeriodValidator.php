@@ -8,8 +8,6 @@ use App\Http\Requests\Activity\Period\PeriodRequest;
 use App\XlsImporter\Foundation\Factory\Validation;
 use App\XlsImporter\Foundation\XlsValidator\ValidatorInterface;
 
-// use Validation
-
 /**
  * Class XmlValidator.
  */
@@ -17,12 +15,14 @@ class PeriodValidator implements ValidatorInterface
 {
     /**
      * period with all its subelements.
+     *
      * @var array
      */
     protected $period;
 
     /**
      * parent indicator id of period being validated.
+     *
      * @var int
      */
     protected $indicatorId;

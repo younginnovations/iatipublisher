@@ -15,12 +15,14 @@ class ResultValidator implements ValidatorInterface
 {
     /**
      * result to be validated.
+     *
      * @var array
      */
     protected $result;
 
     /**
      * id of result being validated if it already exists in the system.
+     *
      * @var int|null
      */
     protected $resultId;

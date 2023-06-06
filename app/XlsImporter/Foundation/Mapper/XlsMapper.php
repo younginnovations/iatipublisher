@@ -12,7 +12,7 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 class XlsMapper
 {
     /**
-     * @var
+     * @var array
      */
     protected $activity;
 

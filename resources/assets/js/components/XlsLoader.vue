@@ -186,6 +186,7 @@ const props = defineProps({
     default: false,
   },
 });
+
 const mapActivityName = (name) => {
   switch (name) {
     case 'activity':
@@ -226,6 +227,7 @@ onMounted(() => {
     }
   }, 10);
 });
+
 watch(
   () => maximize.value,
   (value) => {
@@ -252,11 +254,9 @@ onUnmounted(() => {
 });
 
 const percentageWidth = computed(() => {
-  console.log('width');
   if (props.totalCount !== 0 && props.totalCount !== null) {
     return (props.processedCount / props.totalCount) * 100;
   } else if (props.completed) {
-    console.log('completed');
     return 100;
   } else {
     return 0;

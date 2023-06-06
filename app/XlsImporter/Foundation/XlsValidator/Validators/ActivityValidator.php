@@ -24,6 +24,7 @@ class ActivityValidator implements ValidatorInterface
 
     /**
      * Activity with all it's elements.
+     *
      * @var array
      */
     protected $activity;

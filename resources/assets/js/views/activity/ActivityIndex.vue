@@ -117,10 +117,10 @@ export default defineComponent({
       axios.get('/import/xls/progress_status').then((res) => {
         activityName.value = res?.data?.status?.template;
         xlsData.value = Object.keys(res.data.status).length > 0;
+
         if (res?.data?.status?.status === 'completed') {
           importCompleted.value = true;
         } else if (res?.data?.status?.status === 'failed') {
-          console.log('here');
           xlsFailed.value = true;
           xlsFailedMessage.value = res?.data?.status?.message;
         } else {

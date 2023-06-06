@@ -646,7 +646,6 @@ export default defineComponent({
     let { result } = toRefs(props);
 
     const countDocumentLink = (document_link) => {
-      console.log(document_link);
       let documentCount = 0;
 
       for (let document in document_link) {
@@ -661,8 +660,6 @@ export default defineComponent({
     };
 
     const reduceDocumentLink = (document_link, values) => {
-      console.log(typeof document_link, document_link);
-
       if (typeof document_link === 'object' && document_link) {
         for (let key in document_link) {
           values.concat(reduceDocumentLink(document_link[key], values));

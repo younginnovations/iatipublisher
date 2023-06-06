@@ -49,6 +49,6 @@ abstract class TestCase extends BaseTestCase
     {
         parent::tearDown();
         $this->clearProperties();
-        //$this->showMemory($this->getName());
+        // $this->showMemory($this->getName());
     }
 }

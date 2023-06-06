@@ -33,10 +33,10 @@ class ImportResultTest extends TestCase
 
         foreach ($actualData as $key => $value) {
             $elementData = Arr::get($processedData, $key, []);
+
             if (is_array($value) && is_array($elementData)) {
                 $difference1 = array_diff_assoc(Arr::dot($value), Arr::dot($elementData));
                 $difference2 = array_diff_assoc(Arr::dot($value), Arr::dot($elementData));
-                dump($difference1, $difference2);
                 $this->assertTrue(empty($difference1));
                 $this->assertTrue(empty($difference2));
             } elseif ($elementData !== $value && !(empty($value) && empty($elementData))) {

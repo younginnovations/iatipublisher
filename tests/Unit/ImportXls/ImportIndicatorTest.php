@@ -24,24 +24,24 @@ class ImportIndicatorTest extends TestCase
         $xlsfilePath = 'tests/Unit/TestFiles/Xls/XlsData/Indicator.xlsx';
         $actualData = json_decode(file_get_contents($systemDataFilePath), true, 512, 0);
         $xlsToArray = new XlsToArray();
-        // Excel::import($xlsToArray, $xlsfilePath);
-        // $xlsData = $xlsToArray->sheetData;
+        Excel::import($xlsToArray, $xlsfilePath);
+        $xlsData = $xlsToArray->sheetData;
 
-        // $xlsMapper = new Indicator();
-        // $xlsMapper->map($xlsData);
-        // $processedData = $xlsMapper->getIndicatorData();
+        $xlsMapper = new Indicator();
+        $xlsMapper->map($xlsData);
+        $processedData = $xlsMapper->getIndicatorData();
 
-        // foreach ($actualData as $key => $value) {
-        //     $elementData = Arr::get($processedData, $key, []);
-        //     if (is_array($value) && is_array($elementData)) {
-        //         $difference1 = array_diff_assoc(Arr::dot($value), Arr::dot($elementData));
-        //         $difference2 = array_diff_assoc(Arr::dot($value), Arr::dot($elementData));
-        //         $this->assertTrue(empty($difference1));
-        //         $this->assertTrue(empty($difference2));
-        //         dump($difference1, $difference2);
-        //     } elseif ($elementData !== $value && !(empty($value) && empty($elementData))) {
-        //         $this->assertTrue(false);
-        //     }
-        // }
+        foreach ($actualData as $key => $value) {
+            $elementData = Arr::get($processedData, $key, []);
+
+            if (is_array($value) && is_array($elementData)) {
+                $difference1 = array_diff_assoc(Arr::dot($value), Arr::dot($elementData));
+                $difference2 = array_diff_assoc(Arr::dot($value), Arr::dot($elementData));
+                $this->assertTrue(empty($difference1));
+                $this->assertTrue(empty($difference2));
+            } elseif ($elementData !== $value && !(empty($value) && empty($elementData))) {
+                $this->assertTrue(false);
+            }
+        }
     }
 }
