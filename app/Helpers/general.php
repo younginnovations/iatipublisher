@@ -864,7 +864,7 @@ if (!function_exists('getAllocatedPercentageOfRecipientRegion')) {
     /**
      * Returns currently consumed % by recipient region.
      *
-     * @param $activityId
+     * @param $activity
      *
      * @return int|mixed
      */
@@ -897,7 +897,7 @@ if (!function_exists('getAllocatedPercentageOfRecipientCountry')) {
     /**
      * Returns currently consumed % by recipient country.
      *
-     * @param $activityId
+     * @param $activity
      *
      * @return float|int
      */
