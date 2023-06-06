@@ -277,6 +277,8 @@ class ActivityWorkflowService
      * @param string $type
      *
      * @return array
+     *
+     * @throws \JsonException
      */
     public function getPublishErrorMessage($organization, string $type = 'activity'): array
     {

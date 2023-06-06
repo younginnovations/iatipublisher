@@ -83,6 +83,7 @@ trait IatiValidatorResponseTrait
         $xml = simplexml_load_string((string) $xmlFile);
         $xmlString = $xml->asXML();
         $xmlLines = explode("\n", $xmlString);
+        $lineNumber++;
 
         if ($lineNumber >= 1 && $lineNumber <= count($xmlLines)) {
             $parentNode = [];
