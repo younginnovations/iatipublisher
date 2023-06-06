@@ -217,13 +217,11 @@
             />
             <svg-vue class="text-[6px] text-bluecoral" icon="dropdown-arrow" />
 
-            <!-- dropdown -->
             <ul
-              :class="
-                showDownloadDropdown
-                  ? 'visible translate-y-2 opacity-100'
-                  : 'invisible -translate-y-2 opacity-0 '
-              "
+              :class="{
+                'visible translate-y-2 opacity-100': showDownloadDropdown,
+                'invisible -translate-y-2 opacity-0': !showDownloadDropdown,
+              }"
               class="absolute top-full -left-2.5 z-0 w-[110%] rounded bg-n-0 p-2 uppercase text-n-40 shadow-lg duration-75"
             >
               <li
@@ -513,10 +511,10 @@ const selectAllValue = ref(false);
 const uploadComplete = ref(false);
 const totalCount = ref<number | null>();
 const processedCount = ref(0);
-const file = ref(),
-  error = ref(''),
-  loader = ref(false),
-  loaderText = ref('Please Wait');
+const file = ref();
+const error = ref('');
+const loader = ref(false);
+const loaderText = ref('Please Wait');
 const store = useStore();
 const searchValue: Ref<string | null> = ref('');
 const direction = ref('');
@@ -528,6 +526,11 @@ const sortingDirection = () => {
     : (direction.value = 'asc');
   fetchActivities(1, direction.value);
 };
+
+onMounted(() => {
+  fetchActivities(1);
+  checkXlsstatus();
+});
 
 watch(
   () => store.state.selectedActivities,
@@ -552,6 +555,7 @@ const mapActivityName = (name) => {
       return name;
   }
 };
+
 const activityLength = computed(() => {
   return !uploadType?.value?.length;
 });
@@ -568,14 +572,17 @@ const downloadCode = async () => {
     url: apiUrl,
     responseType: 'blob',
   });
+
   let blob = new Blob([req.data], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   });
+
   const link = document.createElement('a');
   link.href = window.URL.createObjectURL(blob);
   link.download = 'identifiers.xlsx';
   link.click();
 };
+
 watch(
   () => {
     store.state.cancelUpload;
@@ -663,10 +670,12 @@ function fetchActivities(active_page: number, direction = '') {
   let apiUrl = `/activities/page/${active_page}`;
   let params = new URLSearchParams();
   params.append('limit', '6');
+
   if (direction) {
     params.append('orderBy', 'updated_at');
     params.append('direction', direction);
   }
+
   if (searchValue.value) {
     params.append('q', searchValue.value);
   }
@@ -693,6 +702,7 @@ const cancelImport = () => {
     toastType.value = response.success;
   });
 };
+
 const pollingForXlsStatus = () => {
   const checkStatus = setInterval(function () {
     axios.get('/import/xls/status').then((res) => {
@@ -748,11 +758,6 @@ const checkXlsstatus = () => {
     }
   });
 };
-
-onMounted(() => {
-  fetchActivities(1);
-  checkXlsstatus();
-});
 
 provide('xlsFailedMessage', xlsFailedMessage);
 provide('activityLength', activityLength);

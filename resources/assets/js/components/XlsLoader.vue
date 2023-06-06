@@ -116,7 +116,6 @@
       <p v-else class="text-sm text-n-40">
         Uploading
         <span v-if="totalCount && processing">
-          <!-- {{ totalCount }} {{ processing }} -->
           {{ `${processedCount} / ${totalCount}` }}</span
         >
         '{{ currentActivity }}'
@@ -208,11 +207,10 @@ const retry = () => {
 };
 
 onMounted(() => {
-  if (localStorage.getItem('maximize') == 'false') {
-    maximize.value = false;
-  } else {
-    maximize.value = true;
-  }
+  localStorage.getItem('maximize') === 'false'
+    ? (maximize.value = false)
+    : (maximize.value = true);
+
   currentActivity.value = mapActivityName(props.activityName);
 
   const checkSupportButton = setInterval(() => {

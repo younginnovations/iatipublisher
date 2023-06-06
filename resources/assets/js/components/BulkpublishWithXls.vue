@@ -13,7 +13,7 @@
     />
 
     <svg-vue
-      :class="!openModel ? 'rotate-180' : ''"
+      :class="{ 'rotate-180': openModel, '': !openModel }"
       class="absolute right-2.5 top-6 cursor-pointer text-[7px] text-bluecoral duration-200"
       icon="dropdown-arrow"
       @click="openModel = !openModel"
@@ -76,9 +76,11 @@ import { useStore } from 'Store/activities/index';
 import axios from 'axios';
 
 const store = useStore();
+
 let pa = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
 });
+
 const bulkPublishLength = ref(0);
 const openModel = ref(false);
 
@@ -102,6 +104,7 @@ const completedActivities = computed(() => {
 
   return count;
 });
+
 const percentageWidth = computed(() => {
   return (
     (completedActivities.value /

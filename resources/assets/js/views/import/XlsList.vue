@@ -326,11 +326,10 @@ const getDimensions = async () => {
 };
 
 const sort = () => {
-  if (sortOrder.value === 'ascending') {
-    sortOrder.value = 'descending';
-  } else {
-    sortOrder.value = 'ascending';
-  }
+  sortOrder.value === 'ascending'
+    ? (sortOrder.value = 'descending')
+    : (sortOrder.value = 'ascending');
+
   let sortedData = props.importData;
   switch (props.status['template']) {
     case 'activity':
@@ -428,14 +427,14 @@ const downloadIdentifierError = () => {
 };
 
 const checkCriticalError = () => {
-  const criricalArray =
+  const criticalArry =
     props.importData &&
     props.importData.map((data, index) => {
       return errorLength('critical', index);
     });
   let totalCriricalErrorCount = 0;
-  for (let i = 0; i < criricalArray.length; i++) {
-    totalCriricalErrorCount += criricalArray[i];
+  for (let i = 0; i < criticalArry.length; i++) {
+    totalCriricalErrorCount += criticalArry[i];
   }
   if (totalCriricalErrorCount > 0) {
     showCriticalErrorMessage.value = true;

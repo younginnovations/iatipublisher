@@ -3,7 +3,7 @@
     <div class="flex">
       <div class="group relative">
         <div
-          :class="countErrors(index) > 0 && 'font-bold'"
+          :class="{ 'font-bold': countErrors(index) }"
           class="group max-w-[300px] overflow-hidden overflow-x-hidden text-ellipsis whitespace-nowrap text-sm uppercase text-n-50"
         >
           {{ title }}
@@ -202,7 +202,6 @@ const props = defineProps({
     required: true,
   },
   width: { type: Number, required: false, default: 0 },
-
   activity: {
     type: Object,
     required: true,

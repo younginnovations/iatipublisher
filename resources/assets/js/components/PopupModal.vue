@@ -3,7 +3,7 @@
     <Transition name="modal-animation">
       <div
         v-if="modalActive"
-        :class="noPadding ? '!p-0' : ' p-4 sm:p-8'"
+        :class="{ '!p-0': noPadding, '': ' p-4 sm:p-8' }"
         class="modal fixed top-0 left-0 z-[200] flex h-screen w-screen items-center justify-center"
       >
         <Transition name="modal-animation-inner">
@@ -15,7 +15,7 @@
             <div
               v-if="modalActive"
               :style="`max-width:${width}px;`"
-              :class="noPadding ? '!p-0' : ' p-4 sm:p-8'"
+              :class="{ '!p-0': noPadding, '': ' p-4 sm:p-8' }"
               class="modal-inner relative max-h-full w-full overflow-x-hidden rounded-lg bg-white"
             >
               <slot />

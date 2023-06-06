@@ -17,10 +17,6 @@
             period which the IATI system generates automatically to map the
             respective activity.
           </p>
-          <!-- <p class="text-n-40">
-            To know more about how to publish data on activities according to
-            the IATI read the <a class="font-bold">full guidance.</a>
-          </p> -->
         </div>
       </div>
     </button>
