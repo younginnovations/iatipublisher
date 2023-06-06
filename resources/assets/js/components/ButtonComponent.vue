@@ -2,7 +2,7 @@
   <button
     :disabled="activityLength"
     class="button relative text-n-40"
-    :class="{ '!cursor-not-allowed': activityLength, btnType }"
+    :class="[{ '!cursor-not-allowed': activityLength }, btnType]"
   >
     <svg-vue v-if="icon" :icon="icon" />
     <span v-if="text">{{ text }} </span>

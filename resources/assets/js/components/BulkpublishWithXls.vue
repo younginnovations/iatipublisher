@@ -13,7 +13,7 @@
     />
 
     <svg-vue
-      :class="{ 'rotate-180': openModel, '': !openModel }"
+      :class="{ 'rotate-180': !openModel, '': openModel }"
       class="absolute right-2.5 top-6 cursor-pointer text-[7px] text-bluecoral duration-200"
       icon="dropdown-arrow"
       @click="openModel = !openModel"
