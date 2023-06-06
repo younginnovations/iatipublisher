@@ -133,7 +133,8 @@ class ActivityWorkflowController extends Controller
      * @param $id
      *
      * @return JsonResponse
-     * @throws \JsonException
+     *
+     * @throws \JsonException|\GuzzleHttp\Exception\GuzzleException
      */
     public function validateActivity($id): JsonResponse
     {
