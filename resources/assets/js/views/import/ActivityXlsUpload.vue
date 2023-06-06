@@ -387,7 +387,7 @@
               </div>
             </td>
             <td class="py-4 px-6 text-xs text-n-40">
-              {{ formatDate(activity['updated_at']) }}
+              {{ dateFormat(activity['updated_at'], 'fromNow') }}
             </td>
             <td>
               <button
@@ -484,7 +484,7 @@ import axios from 'axios';
 import XlsUploadIndicator from 'Components/XlsUploadIndicator.vue';
 import Modal from 'Components/PopupModal.vue';
 import Toast from 'Components/ToastMessage.vue';
-import moment from 'moment';
+import dateFormat from 'Composable/dateFormat';
 import Pagination from 'Components/TablePagination.vue';
 import { useStore } from 'Store/activities/index';
 
@@ -566,7 +566,7 @@ const downloadCode = async () => {
     url: apiUrl,
     responseType: 'blob',
   });
-  var blob = new Blob([req.data], {
+  let blob = new Blob([req.data], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   });
   const link = document.createElement('a');
@@ -616,14 +616,8 @@ const selectAll = () => {
   }
 };
 
-function formatDate(date: Date) {
-  return moment(date).fromNow();
-}
-
 function uploadFile() {
-  if (xlsData.value) {
-    showCancelModel.value = true;
-  } else {
+  if (!xlsData.value) {
     loader.value = true;
     loaderText.value = 'Fetching .xls file';
 
@@ -658,6 +652,8 @@ function uploadFile() {
 
         file.value.value = null;
       });
+  } else {
+    showCancelModel.value = true;
   }
 }
 
@@ -695,6 +691,34 @@ const cancelImport = () => {
     toastType.value = response.success;
   });
 };
+const pollingForXlsStatus = () => {
+  const checkStatus = setInterval(function () {
+    axios.get('/import/xls/status').then((res) => {
+      if (res.data.data?.message === 'Started') {
+        //reset
+        totalCount.value = null;
+        processedCount.value = 0;
+        xlsFailed.value = false;
+        xlsFailedMessage.value = '';
+      } else {
+        totalCount.value = res.data.data?.total_count;
+        processedCount.value = res.data.data?.processed_count;
+        xlsFailed.value = !res.data.data?.success;
+        xlsFailedMessage.value = res.data.data?.message;
+      }
+      if (res.data.data?.message === 'Processing') {
+        processing.value = true;
+      }
+
+      if (!res.data?.data?.success || res.data?.data?.message === 'Complete') {
+        clearInterval(checkStatus);
+      }
+      if (res.data?.data?.message === 'Complete') {
+        uploadComplete.value = true;
+      }
+    });
+  }, 2500);
+};
 
 const checkXlsstatus = () => {
   axios.get('/import/xls/progress_status').then((res) => {
@@ -709,42 +733,16 @@ const checkXlsstatus = () => {
       xlsFailed.value = true;
       xlsFailedMessage.value = res?.data?.status?.message;
     } else if (Object.keys(res.data.status).length > 0) {
-      //reset
-      totalCount.value = null;
+      {
+        //reset
+        totalCount.value = null;
+        processing.value = false;
+        processedCount.value = 0;
+        xlsFailed.value = false;
+        xlsFailedMessage.value = '';
 
-      processing.value = false;
-      processedCount.value = 0;
-      xlsFailed.value = false;
-      xlsFailedMessage.value = '';
-      const checkStatus = setInterval(function () {
-        axios.get('/import/xls/status').then((res) => {
-          if (res.data.data?.message === 'Started') {
-            //reset
-            totalCount.value = null;
-            processedCount.value = 0;
-            xlsFailed.value = false;
-            xlsFailedMessage.value = '';
-          } else {
-            totalCount.value = res.data.data?.total_count;
-            processedCount.value = res.data.data?.processed_count;
-            xlsFailed.value = !res.data.data?.success;
-            xlsFailedMessage.value = res.data.data?.message;
-          }
-          if (res.data.data?.message === 'Processing') {
-            processing.value = true;
-          }
-
-          if (
-            !res.data?.data?.success ||
-            res.data?.data?.message === 'Complete'
-          ) {
-            clearInterval(checkStatus);
-          }
-          if (res.data?.data?.message === 'Complete') {
-            uploadComplete.value = true;
-          }
-        });
-      }, 2500);
+        pollingForXlsStatus();
+      }
     }
   });
 };

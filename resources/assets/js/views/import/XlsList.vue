@@ -420,10 +420,10 @@ const downloadIdentifierError = () => {
     type: 'text/plain:charset=UTF-8',
   });
   let url = window.URL.createObjectURL(file);
-  let a = document.createElement('a');
-  a.href = url;
-  a.download = file.name;
-  a.click();
+  let anchorTag = document.createElement('a');
+  anchorTag.href = url;
+  anchorTag.download = file.name;
+  anchorTag.click();
   window.URL.revokeObjectURL(url);
 };
 

@@ -91,18 +91,11 @@ const totalActivites = computed(() => {
 
 const completedActivities = computed(() => {
   let count = 0;
-  for (
-    let i = 0;
-    i <
-    (pa.value?.publishingActivities['activities'] &&
-      Object.values(pa.value?.publishingActivities['activities']).length);
-    i++
-  ) {
-    if (
-      Object.values(pa.value.publishingActivities['activities'] as object)[i][
-        'status'
-      ] === 'completed'
-    ) {
+
+  for (let publishingActivites in Object.values(
+    pa.value.publishingActivities['activities']
+  )) {
+    if (publishingActivites['status'] === 'completed') {
       count++;
     }
   }
@@ -120,7 +113,6 @@ const percentageWidth = computed(() => {
 
 const closeWindow = () => {
   pa.value.publishingActivities = {};
-  // emit('close');
   axios.delete(`activities/delete-bulk-publish-status`);
 };
 

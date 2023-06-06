@@ -53,7 +53,6 @@ export default defineComponent({
     } else {
       btnType = 'font-bold';
     }
-    // const activityLength = inject('activityLength');
 
     return { btnType };
   },

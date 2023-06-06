@@ -55,13 +55,10 @@ const downloadCode = async () => {
     url: apiUrl,
     responseType: 'blob',
   });
-  var blob = new Blob([req.data], {
+  let blob = new Blob([req.data], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   });
 
-  // var blob = new Blob([req.data], {
-  //   type: 'application/vnd.ms-excel',
-  // });
   const link = document.createElement('a');
   link.href = window.URL.createObjectURL(blob);
   link.download = `identifiers.xlsx`;

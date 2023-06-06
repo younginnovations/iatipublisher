@@ -220,9 +220,7 @@ const props = defineProps({
 const errorLength = (currentError) => {
   let count = 0;
 
-  props?.activity &&
-    props.activity['errors'] &&
-    props.activity['errors'][currentError] &&
+  props.activity?.errors[currentError] &&
     Object.values(props.activity['errors'][currentError])?.map((item) => {
       count += Object.keys(item as object).length;
     });
@@ -278,24 +276,20 @@ const criticalAccordionToggle = (e: Event) => {
   ).querySelector<HTMLElement>('.critical-dropdown-container');
   const elHeight = target?.querySelector('.critical-dropdown')?.clientHeight;
 
-  if (criticalToggle.value) {
-    if (target != null) {
-      target.style.cssText = `height: ${elHeight}px;`;
-      setTimeout(function () {
-        target.style.cssText = ``;
-      }, 100);
-      criticalToggle.value = false;
-    }
-  } else {
-    if (target != null) {
-      target.style.cssText = `height: ${elHeight}px;`;
+  if (criticalToggle.value && target != null) {
+    target.style.cssText = `height: ${elHeight}px;`;
+    setTimeout(function () {
+      target.style.cssText = ``;
+    }, 100);
+    criticalToggle.value = false;
+  } else if (target != null) {
+    target.style.cssText = `height: ${elHeight}px;`;
 
-      setTimeout(function () {
-        target.style.cssText = `height: auto;`;
-      }, 600);
+    setTimeout(function () {
+      target.style.cssText = `height: auto;`;
+    }, 600);
 
-      criticalToggle.value = true;
-    }
+    criticalToggle.value = true;
   }
 };
 const warningAccordionToggle = (e: Event) => {
@@ -305,23 +299,19 @@ const warningAccordionToggle = (e: Event) => {
     currentTarget.parentElement as HTMLElement
   ).querySelector<HTMLElement>('.warning-dropdown-container');
   const elHeight = target?.querySelector('.warning-dropdown')?.clientHeight;
-  if (warningToggle.value) {
-    if (target != null) {
-      target.style.cssText = `height: ${elHeight}px;`;
-      setTimeout(function () {
-        target.style.cssText = ``;
-      }, 100);
-      warningToggle.value = false;
-    }
-  } else {
-    if (target != null) {
-      target.style.cssText = `height: ${elHeight}px;`;
-      setTimeout(function () {
-        target.style.cssText = `height: auto;`;
-      }, 100);
+  if (warningToggle.value && target != null) {
+    target.style.cssText = `height: ${elHeight}px;`;
+    setTimeout(function () {
+      target.style.cssText = ``;
+    }, 100);
+    warningToggle.value = false;
+  } else if (target != null) {
+    target.style.cssText = `height: ${elHeight}px;`;
+    setTimeout(function () {
+      target.style.cssText = `height: auto;`;
+    }, 100);
 
-      warningToggle.value = true;
-    }
+    warningToggle.value = true;
   }
 };
 const errorAccordionToggle = (e: Event) => {
@@ -331,24 +321,20 @@ const errorAccordionToggle = (e: Event) => {
     currentTarget.parentElement as HTMLElement
   ).querySelector<HTMLElement>('.error-dropdown-container');
   const elHeight = target?.querySelector('.error-dropdown')?.clientHeight;
-  if (errorToggle.value) {
-    if (target != null) {
-      target.style.cssText = `height: ${elHeight}px;`;
-      setTimeout(function () {
-        target.style.cssText = ``;
-      }, 100);
-      errorToggle.value = false;
-    }
-  } else {
-    if (target != null) {
-      target.style.cssText = `height: ${elHeight}px;`;
+  if (errorToggle.value && target != null) {
+    target.style.cssText = `height: ${elHeight}px;`;
+    setTimeout(function () {
+      target.style.cssText = ``;
+    }, 100);
+    errorToggle.value = false;
+  } else if (target != null) {
+    target.style.cssText = `height: ${elHeight}px;`;
 
-      setTimeout(function () {
-        target.style.cssText = `height: auto;`;
-      }, 600);
+    setTimeout(function () {
+      target.style.cssText = `height: auto;`;
+    }, 600);
 
-      errorToggle.value = true;
-    }
+    errorToggle.value = true;
   }
 };
 </script>

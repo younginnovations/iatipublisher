@@ -112,6 +112,36 @@ export default defineComponent({
       message: '',
       type: false,
     });
+    const pollingForXlsStatus = () => {
+      const checkStatus = setInterval(function () {
+        axios.get('/import/xls/status').then((res) => {
+          if (res.data.data?.message === 'Started') {
+            //reset
+            totalCount.value = null;
+            processedCount.value = 0;
+            xlsFailed.value = false;
+            xlsFailedMessage.value = '';
+          } else {
+            totalCount.value = res.data.data?.total_count;
+            processedCount.value = res.data.data?.processed_count;
+            xlsFailed.value = !res.data.data?.success;
+            xlsFailedMessage.value = res.data.data?.message;
+          }
+
+          if (res.data.data?.message === 'Processing') {
+            processing.value = true;
+          }
+
+          if (
+            !res.data?.data?.success ||
+            res.data?.data?.message === 'Complete'
+          ) {
+            importCompleted.value = true;
+            clearInterval(checkStatus);
+          }
+        });
+      }, 2500);
+    };
 
     const checkXlsstatus = () => {
       axios.get('/import/xls/progress_status').then((res) => {
@@ -123,41 +153,15 @@ export default defineComponent({
         } else if (res?.data?.status?.status === 'failed') {
           xlsFailed.value = true;
           xlsFailedMessage.value = res?.data?.status?.message;
-        } else {
-          if (Object.keys(res.data.status).length > 0) {
-            const checkStatus = setInterval(function () {
-              axios.get('/import/xls/status').then((res) => {
-                if (res.data.data?.message === 'Started') {
-                  //reset
-                  totalCount.value = null;
-                  processedCount.value = 0;
-                  xlsFailed.value = false;
-                  xlsFailedMessage.value = '';
-                } else {
-                  totalCount.value = res.data.data?.total_count;
-                  processedCount.value = res.data.data?.processed_count;
-                  xlsFailed.value = !res.data.data?.success;
-                  xlsFailedMessage.value = res.data.data?.message;
-                }
-                if (res.data.data?.message === 'Processing') {
-                  processing.value = true;
-                }
-                if (
-                  !res.data?.data?.success ||
-                  res.data?.data?.message === 'Complete'
-                ) {
-                  importCompleted.value = true;
-                  clearInterval(checkStatus);
-                }
-              });
-            }, 2500);
-          }
+        } else if (Object.keys(res.data.status).length > 0) {
+          pollingForXlsStatus();
         }
       });
     };
 
     onMounted(() => {
       checkXlsstatus();
+
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
