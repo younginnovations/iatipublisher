@@ -218,7 +218,14 @@ class TransactionController extends Controller
     }
 
     /**
+     * append freeze and info_text in sector, recipient region or country if present in activity level.
+     *
+     * @param $activity
+     * @param $transactionId
+     *
      * @throws \JsonException
+     *
+     * @return array
      */
     public function getManipulatedTransactionElementSchema($activity, $transactionId = null): array
     {
@@ -244,6 +251,15 @@ class TransactionController extends Controller
         return $element;
     }
 
+    /**
+     * appends warning info text in recipient region or country in transaction level.
+     *
+     * @param $activity
+     * @param $element
+     * @param $transactionId
+     *
+     * @return void
+     */
     public function appendInfoTextForRecipientRegionAndCountryInTransaction($activity, &$element, $transactionId): void
     {
         $hasDefinedInTransaction = $this->transactionService->hasRecipientRegionOrCountryDefinedInTransaction($activity->id);
@@ -270,6 +286,15 @@ class TransactionController extends Controller
         }
     }
 
+    /**
+     * Adds warning info text in sector in transaction level.
+     *
+     * @param $activity
+     * @param $element
+     * @param $transactionId
+     *
+     * @return void
+     */
     public function appendInfoTextForSectorInTransaction($activity, &$element, $transactionId): void
     {
         $hasSectorDefinedInTransaction = $this->transactionService->hasSectorDefinedInTransaction($activity->id);

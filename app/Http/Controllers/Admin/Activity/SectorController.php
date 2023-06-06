@@ -79,11 +79,14 @@ class SectorController extends Controller
     }
 
     /**
+     * append freeze if sector found in activity transactions
+     * and freezes sector in activity level.
+     *
      * @param $activity
      *
-     * @return array
-     *
      * @throws JsonException
+     *
+     * @return array
      */
     public function getSectorManipulatedElementSchema($activity): array
     {

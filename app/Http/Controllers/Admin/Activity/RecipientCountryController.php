@@ -79,11 +79,14 @@ class RecipientCountryController extends Controller
     }
 
     /**
+     * append freeze and info_text if recipient country or region exists in any one of the activity transactions
+     * if exists then it freezes the section.
+     *
      * @param $activity
      *
-     * @return array
-     *
      * @throws JsonException
+     *
+     * @return array
      */
     public function getRecipientCountryManipulatedElementSchema($activity): array
     {
