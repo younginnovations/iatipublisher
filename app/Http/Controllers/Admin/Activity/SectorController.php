@@ -97,6 +97,7 @@ class SectorController extends Controller
 
             if (!is_array_value_empty($sector)) {
                 $element['freeze'] = true;
+                $element['info_text'] = 'Sector has already been declared at transaction level. You can add either in activity level or transaction level.';
             }
         }
 
