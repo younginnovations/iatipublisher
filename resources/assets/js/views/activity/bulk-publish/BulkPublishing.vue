@@ -125,7 +125,6 @@ let intervalID;
 onMounted(() => {
   completed.value = paStorage.value.publishingActivities.status ?? 'processing';
   bulkPublishStatus();
-  console.log(downloading.value, 'downloading value');
   if (!(activities.value && Object.keys(activities.value).length > 0)) {
     closeWindow();
   }

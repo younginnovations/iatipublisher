@@ -1,7 +1,7 @@
 <template>
   <div class="fixed right-10 bottom-0 z-[1000] flex items-end space-x-5">
     <BulkpublishWithXls
-      v-if="showBulkpublish && publishingActivities?.length > 0"
+      v-if="showBulkpublish && activities && Object.keys(activities).length > 0"
       @close="closeBulkpublish"
     />
 
@@ -41,7 +41,7 @@ import { useStorage } from '@vueuse/core';
 const downloadCompleted = ref(false);
 const cancelDownload = ref(false);
 const showBulkpublish = ref(true);
-
+const publishingActivities = ref();
 const bulkPublishLength = ref(0);
 const pa = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
@@ -71,13 +71,10 @@ const props = defineProps({
   xlsData: {
     type: Boolean,
   },
-  publishingActivities: {
-    type: Array,
-    required: true,
-  },
 });
 onMounted(() => {
-  console.log('xls upload indicator mounted');
+  publishingActivities.value =
+    pa.value.publishingActivities && Object.keys(pa.value.publishingActivities);
   const checkSupportButton = setInterval(() => {
     const supportButton: HTMLElement = document.querySelector(
       '#launcher'
@@ -90,6 +87,34 @@ onMounted(() => {
     }
   }, 10);
 });
+
+watch(
+  () => [store.state.startBulkPublish, store.state.bulkpublishActivities],
+  (value) => {
+    if (value) {
+      console.log('watcher from xls upload indicator');
+      publishingActivities.value =
+        store.state.bulkpublishActivities.publishingActivities;
+
+      publishingActivities.value =
+        pa.value.publishingActivities &&
+        Object.keys(pa.value.publishingActivities);
+      console.log('bulkpublish started', pa.value?.publishingActivities);
+      console.log(publishingActivities.value, 'reactive');
+
+      return;
+    }
+  },
+  { deep: true }
+);
+watch(
+  () => store.state.startBulkPublish,
+  (value) => {
+    showBulkpublish.value = true;
+  },
+  { deep: true }
+);
+
 watch(
   () => [
     props.xlsData,
@@ -110,7 +135,9 @@ watch(
     ) as HTMLElement;
     if (
       !(xlsData && showXlsStatus) &&
-      !(downloading && !downloadCompleted && !cancelDownload)
+      !(downloading && !downloadCompleted && !cancelDownload) &&
+      showBulkpublish &&
+      publishingActivities.value?.length > 0
     ) {
       setTimeout(() => {
         supportButton.style.transform = 'translate(-350px ,0px)';
@@ -180,4 +207,5 @@ watch(
   { deep: true }
 );
 const downloading = inject('downloading');
+const activities = inject('activities');
 </script>

@@ -37,7 +37,6 @@
       :activity-name="activityName"
       :xls-data="xlsData"
       :completed="importCompleted"
-      :publishing-activities="publishingActivities"
     />
   </div>
 </template>
@@ -192,14 +191,15 @@ export default defineComponent({
     );
 
     watch(
-      () => store.state.startBulkPublish,
+      () => [store.state.startBulkPublish, store.state.bulkpublishActivities],
       (value) => {
         if (value) {
           startBulkPublish.value = true;
           publishingActivities.value =
-            pa.value.publishingActivities &&
-            Object.keys(pa.value.publishingActivities);
+            store.state.bulkpublishActivities.publishingActivities;
           console.log('bulkpublish started', pa.value?.publishingActivities);
+          console.log(publishingActivities.value, 'reactive');
+
           return;
         }
         startBulkPublish.value = false;
@@ -250,7 +250,7 @@ export default defineComponent({
           fileCount.value = res.data.file_count;
           xlsDownloadStatus.value = res.data.status;
           downloadApiUrl.value = res.data.url;
-          console.log(xlsDownloadStatus.value, 'polling for doenload status');
+          downloading.value = !!res.data.status;
           if (
             xlsDownloadStatus.value === 'completed' ||
             xlsDownloadStatus.value === 'failed' ||
@@ -258,8 +258,6 @@ export default defineComponent({
           ) {
             clearInterval(checkDownload);
           }
-
-          downloading.value = !!res.data.status;
         });
       }, 3000);
     };
@@ -271,8 +269,9 @@ export default defineComponent({
     );
 
     onMounted(() => {
-      console.log('bulkpublish started', pa.value?.publishingActivities);
-
+      publishingActivities.value =
+        pa.value?.publishingActivities &&
+        Object.keys(pa.value.publishingActivities);
       checkXlsstatus();
       checkDownloadStatus();
       if (props.toast.message !== '') {
@@ -366,6 +365,7 @@ export default defineComponent({
     provide('xlsDownloadStatus', xlsDownloadStatus as Ref);
     provide('downloadApiUrl', downloadApiUrl as Ref);
     provide('closeModel', closeModel as Ref);
+    provide('activities', publishingActivities as Ref);
 
     return {
       activities,

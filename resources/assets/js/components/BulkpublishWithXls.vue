@@ -157,16 +157,12 @@ const bulkPublishStatus = () => {
   intervalID = setInterval(() => {
     axios.get(`/activities/bulk-publish-status`).then((res) => {
       const response = res.data;
-      console.log(response, 'polling bulkpublsh');
       if (!response.publishing) {
-        console.log('clear interval');
         clearInterval(intervalID);
       }
       if ('data' in response) {
         activities.value = response.data.activities;
         completed.value = response.data.status;
-
-        console.log(activities.value, 'activities');
 
         // saving in local storage
         paStorage.value.publishingActivities.activities =
@@ -271,10 +267,6 @@ const completedActivities = computed(() => {
   return count;
 });
 
-onUpdated(() => {
-  console.log(activities.value);
-});
-
 // const retryPublishing = () => {
 //   //reset required states
 //   completed.value = 'processing';
@@ -328,12 +320,9 @@ const setDataToLocalstorage = () => {
 onMounted(() => {
   completed.value = paStorage.value.publishingActivities.status ?? 'processing';
   bulkPublishStatus();
-
-  console.log('bulk publish with xls mounted');
 });
 onUnmounted(() => {
   store.dispatch('updateStartBulkPublish', false);
-  console.log('unmounted');
 });
 
 const emptybulkPublishStatus = () => {

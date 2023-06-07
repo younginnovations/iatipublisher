@@ -596,6 +596,7 @@ const mapActivityName = (name) => {
 watch(
   () => store.state.startBulkPublish,
   (value) => {
+    console.log(';from watcher');
     if (value) {
       publishingActivities.value =
         pa.value.publishingActivities &&
@@ -626,12 +627,15 @@ watch(
 );
 
 const checkDownloadStatus = () => {
+  downloading.value = false;
+
   const checkDownload = setInterval(function () {
     axios.get('/activities/download-xls-progress-status').then((res) => {
       fileCount.value = res.data.file_count;
       xlsDownloadStatus.value = res.data.status;
       downloadApiUrl.value = res.data.url;
-      console.log(xlsDownloadStatus.value, 'polling for doenload status');
+      downloading.value = !!res.data.status;
+
       if (
         xlsDownloadStatus.value === 'completed' ||
         xlsDownloadStatus.value === 'failed' ||
@@ -639,7 +643,6 @@ const checkDownloadStatus = () => {
       ) {
         clearInterval(checkDownload);
       }
-      downloading.value = !!res.data.status;
     });
   }, 3000);
 };
@@ -877,6 +880,7 @@ provide('xlsIndicatorMounted', xlsIndicatorMounted as Ref);
 provide('downloading', downloading);
 provide('xlsDownloadStatus', xlsDownloadStatus as Ref);
 provide('downloadApiUrl', downloadApiUrl as Ref);
+provide('activities', publishingActivities as Ref);
 
 provide('fileCount', fileCount as Ref);
 </script>

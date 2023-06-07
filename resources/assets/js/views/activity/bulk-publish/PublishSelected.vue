@@ -377,6 +377,7 @@ const verifyCoreElements = () => {
         if (response?.in_progress) {
           emptybulkPublishStatus();
           Object.assign(bulkPublishStatus, response.data.activities);
+
           showCancelConfirmationModal();
         } else {
           displayToast(response.message, response.success);
@@ -399,10 +400,7 @@ onMounted(() => {
       `activities/bulk-publish-status?organization_id=${pa.value?.publishingActivities.organization_id}&&uuid=${pa.value?.publishingActivities.job_batch_uuid}`
     )
     .then((res) => {
-      pa.value.publishingActivities.activities = res.data?.data?.activities;
-      pa.value.publishingActivities.status = res?.data?.data?.status;
-      pa.value.publishingActivities.message = res?.data?.data?.message;
-      showBulkpublish.value = res.data.publishing;
+      Object.assign(pa.value.publishingActivities, res.data?.data);
     });
 });
 const validateActivities = () => {
@@ -451,6 +449,8 @@ const pa: Ref<paType> = useStorage('vue-use-local-storage', {
 });
 
 const startBulkPublish = () => {
+  store.dispatch('updateStartBulkPublish', true);
+
   loader.value = true;
   loaderText.value = 'Starting to publish';
   pa.value.publishingActivities = {};
@@ -461,6 +461,7 @@ const startBulkPublish = () => {
     )
     .then((res) => {
       store.dispatch('updateStartBulkPublish', true);
+
       startPublish.value = true;
 
       const response = res.data;
@@ -475,6 +476,15 @@ const startBulkPublish = () => {
         if (response?.in_progress) {
           emptybulkPublishStatus();
           Object.assign(bulkPublishStatus, response.data.activities);
+          Object.assign(
+            pa.value.publishingActivities,
+            response.data.activities
+          );
+          store.dispatch(
+            'updateBulkpublishActivities',
+            response.data.activities
+          );
+
           showCancelConfirmationModal();
         } else {
           displayToast(response.message, response.success);
@@ -484,7 +494,6 @@ const startBulkPublish = () => {
       setTimeout(() => {
         loader.value = false;
         published.value = true;
-        store.dispatch('updateStartBulkPublish', false);
       }, 1000);
     });
 };
