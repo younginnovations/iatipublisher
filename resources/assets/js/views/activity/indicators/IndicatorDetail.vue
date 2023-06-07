@@ -145,7 +145,9 @@
         <div class="bg-white px-4 py-5">
           <div
             class="elements-detail wider"
-            :class="{ 'mb-10': indicatorData.document_link.length > 0 }"
+            :class="{
+              'mb-10': countDocumentLink(indicatorData.document_link) > 0,
+            }"
           >
             <div class="category flex">
               {{ indicatorTitle }}
@@ -209,7 +211,7 @@
               </div>
             </div>
             <div
-              v-if="indicatorData.document_link.length > 0"
+              v-if="countDocumentLink(indicatorData.document_link) > 0"
               id="document_link"
             >
               <div class="title mb-4">
@@ -255,6 +257,9 @@ import {
 import Btn from 'Components/buttons/Link.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
 import Toast from 'Components/ToastMessage.vue';
+
+//helper
+import { countDocumentLink } from 'Composable/utils';
 
 import {
   TitleElement,
@@ -439,6 +444,7 @@ export default defineComponent({
       periodData,
       showSidebar,
       istopVisible,
+      countDocumentLink,
     };
   },
 });

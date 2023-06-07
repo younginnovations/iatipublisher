@@ -77,7 +77,7 @@
           </div>
         </div>
 
-        <div v-if="base.document_link.length > 0">
+        <div v-if="countDocumentLink(base.document_link) > 0">
           <div class="mb-2.5 flex">
             <div>Document Link:&nbsp;</div>
             <div></div>
@@ -97,6 +97,7 @@
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
 import { DocumentLink } from './Index';
+import { countDocumentLink } from 'Composable/utils';
 
 export default defineComponent({
   name: 'IndicatorBaseline',
@@ -187,7 +188,13 @@ export default defineComponent({
 
       return dimensions.join('; ');
     };
-    return { baseline, location, dimensions, elementSpacing };
+    return {
+      baseline,
+      location,
+      dimensions,
+      elementSpacing,
+      countDocumentLink,
+    };
   },
 });
 </script>

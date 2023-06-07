@@ -58,6 +58,7 @@
                     </div>
                   </div>
                 </div>
+                getLocation
               </div>
             </td>
           </tr>
@@ -89,7 +90,7 @@ import { defineComponent, toRefs, inject } from 'vue';
 import { DocumentLink } from 'Activity/indicators/elements/Index';
 
 //composable
-import getLocation from 'Composable/utils';
+import { getLocation } from 'Composable/utils';
 
 export default defineComponent({
   name: 'TargetValue',
