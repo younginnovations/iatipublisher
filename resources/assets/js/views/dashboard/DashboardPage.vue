@@ -41,6 +41,7 @@
     <DashboardListSection
       :current-view="currentView"
       :table-data="tableData"
+      :table-header="currentNav['label']"
       @table-nav="(n) => handleChangeTableNav(n)"
     />
   </div>
@@ -49,7 +50,7 @@
 <script setup lang="ts">
 import DashboardStatsSection from './DashboardStatsSection.vue';
 import DashboardListSection from './DashboardListSection.vue';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, provide } from 'vue';
 import axios from 'axios';
 
 interface tableDataType {
@@ -60,6 +61,7 @@ interface tableDataType {
 const currentNav = ref('type');
 const tableData = ref<any>([]);
 const currentView = ref('publisher');
+const completeNess = ref();
 const handleChangeTableNav = (item) => {
   currentNav.value = item;
   fetchTableData();
@@ -68,33 +70,53 @@ const handleChangeTableNav = (item) => {
 onMounted(() => {
   fetchTableData();
 });
+const mapApiParamsToVariable = (item) => {
+  switch (item) {
+    case 'type':
+      return 'publisher_type';
+
+    default:
+      return item;
+  }
+};
 
 const fetchTableData = () => {
   axios
-    .get(`/dashboard/${currentView.value}/${currentNav.value}`)
+    .get(`/dashboard/${currentView.value}/${currentNav.value['apiParams']}`)
     .then((res) => {
       let response = res.data;
-      Object.keys(response.data?.codelist)?.map((key) => {
-        console.log(response.data?.codelist, 'item');
-        tableData.value.push({
-          label: response.data?.codelist[key],
-          id: key,
-          total: null,
-        });
-      });
 
-      Object.keys(response.data?.publisher_type)?.map((key) => {
-        tableData.value.map((item, index) => {
-          if (item.id == key) {
-            tableData.value[index].total = response.data?.publisher_type[key];
-          }
-        });
-      });
+      if (currentNav.value['apiParams'] !== 'setup') {
+        tableData.value = [];
 
-      tableData.value = tableData.value.filter(function (el) {
-        return el.total != null;
-      });
-      console.log(tableData.value);
+        Object.keys(response.data?.codelist)?.map((key) => {
+          tableData.value.push({
+            label: response.data?.codelist[key],
+            id: key,
+            total: null,
+          });
+        });
+
+        Object.keys(
+          response.data?.[mapApiParamsToVariable(currentNav.value['apiParams'])]
+        )?.map((key) => {
+          tableData.value.map((item, index) => {
+            if (item.id == key) {
+              tableData.value[index].total =
+                response.data?.[
+                  mapApiParamsToVariable(currentNav.value['apiParams'])
+                ][key];
+            }
+          });
+        });
+
+        tableData.value = tableData.value.filter(function (el) {
+          return el.total != null;
+        });
+      } else {
+        completeNess.value = response.data;
+      }
     });
 };
+provide('completeNess', completeNess);
 </script>
