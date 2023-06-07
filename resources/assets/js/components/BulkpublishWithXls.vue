@@ -1,8 +1,9 @@
 <template>
   <div
     v-if="
-      bulkPublishLength > 0 ||
-      Object.keys(paStorage.publishingActivities).length > 0
+      (bulkPublishLength > 0 ||
+        Object.keys(paStorage.publishingActivities).length > 0) &&
+      activities
     "
     :class="!openModel ? 'h-[80px]' : ''"
     class="relative w-[300px] duration-200"
@@ -13,11 +14,19 @@
     >
       <svg-vue icon="cross-icon" class="text-sm" />
     </div>
-    <svg-vue
+    <div
+      v-if="hasFailedActivities.ids.length > 0"
+      class="retry flex cursor-pointer items-center text-crimson-50"
+      @click="retryPublishing"
+    >
+      <svg-vue class="mr-1" icon="redo" />
+      <span class="text-xs uppercase">Retry</span>
+    </div>
+    <!-- <svg-vue
       class="absolute right-0 top-0 translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white p-[1px] text-sm"
       icon="cross-icon"
       @click="closeWindow"
-    />
+    /> -->
 
     <svg-vue
       :class="{ 'rotate-180': !openModel, '': openModel }"
@@ -34,7 +43,7 @@
       </div>
       <div class="text-sm text-n-40">
         Publishing {{ completedActivities }}/{{
-          publishingActivities && Object.keys(publishingActivities).length
+          activities && Object.keys(activities).length
         }}
         activities to IATI registry
       </div>
@@ -146,42 +155,62 @@ let hasFailedActivities = reactive({
 });
 const bulkPublishStatus = () => {
   intervalID = setInterval(() => {
-    axios
-      .get(
-        `activities/bulk-publish-status?organization_id=${paStorage.value.publishingActivities.organization_id}&&uuid=${paStorage.value.publishingActivities.job_batch_uuid}`
-      )
-      .then((res) => {
-        const response = res.data;
-        // console.log(response, 'polling bulkpublsh');
-        if (!response.publishing) {
+    axios.get(`/activities/bulk-publish-status`).then((res) => {
+      const response = res.data;
+      // console.log(response, 'polling bulkpublsh');
+      if (!response.publishing) {
+        clearInterval(intervalID);
+      }
+      if ('data' in response) {
+        activities.value = response.data.activities;
+        completed.value = response.data.status;
+
+        console.log(activities.value, 'activities');
+
+        // saving in local storage
+        paStorage.value.publishingActivities.activities =
+          response.data.activities;
+        paStorage.value.publishingActivities.status = response.data.status;
+        paStorage.value.publishingActivities.message = response.data.message;
+        if (completed.value === 'completed') {
           clearInterval(intervalID);
+
+          failedActivities(paStorage.value.publishingActivities.activities);
+          refreshToastMsg.visibility = true;
+          setTimeout(() => {
+            refreshToastMsg.visibility = false;
+          }, 10000);
         }
-        if ('data' in response) {
-          activities.value = response.data.activities;
-          completed.value = response.data.status;
-
-          console.log(activities.value, 'activities');
-
-          // saving in local storage
-          paStorage.value.publishingActivities.activities =
-            response.data.activities;
-          paStorage.value.publishingActivities.status = response.data.status;
-          paStorage.value.publishingActivities.message = response.data.message;
-          if (completed.value === 'completed') {
-            clearInterval(intervalID);
-
-            failedActivities(paStorage.value.publishingActivities.activities);
-            refreshToastMsg.visibility = true;
-            setTimeout(() => {
-              refreshToastMsg.visibility = false;
-            }, 10000);
-          }
-        } else {
-          completed.value = 'completed';
-        }
-      });
+      } else {
+        completed.value = 'completed';
+      }
+    });
   }, 2000);
 };
+
+const retryPublishing = () => {
+  //reset required states
+  completed.value = 'processing';
+
+  for (const key in hasFailedActivities.data) {
+    hasFailedActivities.data[key].status = 'processing';
+  }
+
+  activities.value = hasFailedActivities.data;
+
+  // api endpoint call
+  const endpoint = `/activities/start-bulk-publish?activities=[${hasFailedActivities.ids}]`;
+
+  axios.get(endpoint).then((res) => {
+    const response = res.data;
+
+    if (response.success) {
+      paStorage.value.publishingActivities = response.data;
+      bulkPublishStatus();
+    }
+  });
+};
+
 const failedActivities = (nestedObject: actElements) => {
   const failedActivitiesID = [] as number[];
   const asArrayData = nestedObject && Object.entries(nestedObject);

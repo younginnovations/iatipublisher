@@ -151,7 +151,7 @@ import {
   inject,
   ref,
   computed,
-  onUnmounted
+  onUnmounted,
 } from 'vue';
 import spinnerLoader from './spinnerLoader.vue';
 import axios from 'axios';
