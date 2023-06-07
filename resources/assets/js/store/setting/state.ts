@@ -14,6 +14,7 @@ export const state = {
     hierarchy: '',
     humanitarian: '',
     budget_not_provided: '',
+    defaultCollaborationType: ''
   },
   publishingError: {
     api_token: '',
@@ -24,6 +25,7 @@ export const state = {
     hierarchy: '',
     humanitarian: '',
     budget_not_provided: '',
+    defaultCollaborationType: ''
   },
   isLoading: {},
 };

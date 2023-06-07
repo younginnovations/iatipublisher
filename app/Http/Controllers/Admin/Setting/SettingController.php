@@ -58,9 +58,11 @@ class SettingController extends Controller
             $languages = getCodeList('Language', 'Organization');
             $humanitarian = trans('setting.humanitarian_types');
             $budgetNotProvided = getCodeList('BudgetNotProvided', 'Activity');
+            $defaultCollaborationType = getCodeList('CollaborationType', 'Activity');
+
             $userRole = Auth::user()->role->role;
 
-            return view('admin.settings.index', compact('currencies', 'languages', 'humanitarian', 'budgetNotProvided', 'userRole'));
+            return view('admin.settings.index', compact('currencies', 'languages', 'humanitarian', 'budgetNotProvided', 'userRole', 'defaultCollaborationType'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

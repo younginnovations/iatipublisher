@@ -115,6 +115,7 @@
             should only be reported at the lowest hierarchical level.
           </p>
         </div>
+        <!--  Default Hierarchy      -->
         <div>
           <div class="flex justify-between">
             <label for="budget-not-provided">Budget Not Provided</label>
@@ -148,6 +149,7 @@
             {{ defaultError.budget_not_provided }}
           </span>
         </div>
+        <!--  Budget Not Provided      -->
         <div>
           <div class="flex justify-between">
             <label for="humanitarian">Humanitarian</label>
@@ -181,6 +183,178 @@
             If not selected, it will be set to 'Yes' in all the activities.
           </p>
         </div>
+        <!--  Humanitarian      -->
+        <div>
+          <div class="flex justify-between">
+            <label for="default-collaboration-type"
+              >Default Collaboration Type</label
+            >
+            <button>
+              <HoverText
+                width="w-72"
+                name="collaboration-type"
+                hover-text="add text here"
+                :show-iati-reference="true"
+              />
+            </button>
+          </div>
+          <Multiselect
+            id="collaboration-type"
+            v-model="defaultForm.defaultCollaborationType"
+            :disabled="userRole !== 'admin' ? true : false"
+            class="vue__select"
+            :class="{
+              error__input: defaultError.defaultCollaborationType,
+            }"
+            placeholder="Select Collaboration Type here"
+            :options="props.defaultCollaborationType"
+            :searchable="true"
+            @click="updateStore('humanitarian')"
+          />
+          <span
+            v-if="defaultError.defaultCollaborationType"
+            class="error"
+            role="alert"
+          >
+            {{ defaultError.defaultCollaborationType }}
+          </span>
+          <p v-if="!defaultError.defaultCollaborationType">
+            add collaboration type text here
+          </p>
+        </div>
+        <!--  Default Collaboration Type  -->
+        <div>
+          <div class="flex justify-between">
+            <label for="default-collaboration-type">Default Flow Type</label>
+            <button>
+              <HoverText
+                width="w-72"
+                name="default-flow-type"
+                hover-text="add text here"
+                :show-iati-reference="true"
+              />
+            </button>
+          </div>
+          <Multiselect
+            id="default-flow-type"
+            v-model="defaultForm.humanitarian"
+            :disabled="userRole !== 'admin' ? true : false"
+            class="vue__select"
+            :class="{
+              error__input: defaultError.humanitarian,
+            }"
+            placeholder="Select Default Flow Type here"
+            :options="props.humanitarian"
+            :searchable="true"
+            @click="updateStore('humanitarian')"
+          />
+          <span v-if="defaultError.humanitarian" class="error" role="alert">
+            {{ defaultError.humanitarian }}
+          </span>
+          <p v-if="!defaultError.humanitarian">
+            add default flow type text here
+          </p>
+        </div>
+        <!--  Default Flow Type  -->
+        <div>
+          <div class="flex justify-between">
+            <label for="default-collaboration-type">Default Finance Type</label>
+            <button>
+              <HoverText
+                width="w-72"
+                name="default-finance-type"
+                hover-text="add text here"
+                :show-iati-reference="true"
+              />
+            </button>
+          </div>
+          <Multiselect
+            id="default-finance-type"
+            v-model="defaultForm.humanitarian"
+            :disabled="userRole !== 'admin' ? true : false"
+            class="vue__select"
+            :class="{
+              error__input: defaultError.humanitarian,
+            }"
+            placeholder="Select Default Finance Type here"
+            :options="props.humanitarian"
+            :searchable="true"
+            @click="updateStore('humanitarian')"
+          />
+          <span v-if="defaultError.humanitarian" class="error" role="alert">
+            {{ defaultError.humanitarian }}
+          </span>
+          <p v-if="!defaultError.humanitarian">
+            add default finance type text here
+          </p>
+        </div>
+        <!--  Default Finance Type  -->
+        <div>
+          <div class="flex justify-between">
+            <label for="default-collaboration-type">Default Aid Type</label>
+            <button>
+              <HoverText
+                width="w-72"
+                name="default-aid-type"
+                hover-text="add text here"
+                :show-iati-reference="true"
+              />
+            </button>
+          </div>
+          <Multiselect
+            id="default-aid-type"
+            v-model="defaultForm.humanitarian"
+            :disabled="userRole !== 'admin' ? true : false"
+            class="vue__select"
+            :class="{
+              error__input: defaultError.humanitarian,
+            }"
+            placeholder="Select Default Aid Type here"
+            :options="props.humanitarian"
+            :searchable="true"
+            @click="updateStore('humanitarian')"
+          />
+          <span v-if="defaultError.humanitarian" class="error" role="alert">
+            {{ defaultError.humanitarian }}
+          </span>
+          <p v-if="!defaultError.humanitarian">
+            add default aid type text here
+          </p>
+        </div>
+        <!--  Default Aid Type   -->
+        <div>
+          <div class="flex justify-between">
+            <label for="default-tied-status">Default Tied Status</label>
+            <button>
+              <HoverText
+                width="w-72"
+                name="default-tied-status"
+                hover-text="add text here"
+                :show-iati-reference="true"
+              />
+            </button>
+          </div>
+          <Multiselect
+            id="default-tied-status"
+            v-model="defaultForm.humanitarian"
+            :disabled="userRole !== 'admin' ? true : false"
+            class="vue__select"
+            :class="{
+              error__input: defaultError.humanitarian,
+            }"
+            placeholder="Select Default Tied Status here"
+            :options="props.humanitarian"
+            :searchable="true"
+            @click="updateStore('humanitarian')"
+          />
+          <span v-if="defaultError.humanitarian" class="error" role="alert">
+            {{ defaultError.humanitarian }}
+          </span>
+          <p v-if="!defaultError.humanitarian">
+            add default tied status text here
+          </p>
+        </div>
+        <!--  Default Tied Status      -->
       </div>
     </div>
   </div>
@@ -198,7 +372,6 @@ export default defineComponent({
     Multiselect,
     HoverText,
   },
-
   props: {
     currencies: {
       type: [String, Object],
@@ -213,6 +386,10 @@ export default defineComponent({
       required: true,
     },
     budgetNotProvided: {
+      type: [String, Object],
+      required: true,
+    },
+    defaultCollaborationType: {
       type: [String, Object],
       required: true,
     },

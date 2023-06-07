@@ -54,6 +54,7 @@
           :languages="languages"
           :humanitarian="humanitarian"
           :budget-not-provided="budgetNotProvided"
+          :defaultCollaborationType="defaultCollaborationType"
           @keyup.enter="submitForm"
         />
       </div>
@@ -125,6 +126,10 @@ export default defineComponent({
     },
     userRole: {
       type: String,
+      required: true,
+    },
+    defaultCollaborationType: {
+      type: [String, Object],
       required: true,
     },
   },
