@@ -137,7 +137,7 @@ const closeBulkpublish = () => {
   showBulkpublish.value = false;
   localStorage.setItem('vue-use-local-storage', 'publishingActivities:{}');
   store.dispatch('updateBulkpublishActivities', {});
-  axios.delete(`activities/delete-bulk-publish-status`);
+  axios.delete(`/activities/delete-bulk-publish-status`);
 };
 
 const closeXls = () => {

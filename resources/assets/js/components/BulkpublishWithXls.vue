@@ -28,9 +28,10 @@
         ></div>
       </div>
       <div class="text-sm text-n-40">
-        Publishing {{ completedActivities }}/{{
-          activities && Object.keys(activities).length
-        }}
+        Publishing
+        <span v-if="activities"
+          >{{ completedActivities }}/{{ Object.keys(activities).length }}</span
+        >
         activities to IATI registry
       </div>
     </div>
