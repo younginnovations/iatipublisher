@@ -270,7 +270,9 @@
       </div>
     </div>
     <XlsUploadIndicator
-      v-if="xlsData || (downloading && !downloadCompleted)"
+      v-if="
+        xlsData || (downloading && !downloadCompleted) || publishingActivities
+      "
       :total-count="totalCount"
       :processed-count="processedCount"
       :xls-failed="xlsFailed"
@@ -496,11 +498,23 @@ import Toast from 'Components/ToastMessage.vue';
 import dateFormat from 'Composable/dateFormat';
 import Pagination from 'Components/TablePagination.vue';
 import { useStore } from 'Store/activities/index';
+import { useStorage } from '@vueuse/core';
 
 interface ActivitiesInterface {
   last_page: number;
   data: object;
 }
+// local storage for publishing
+interface paType {
+  publishingActivities: {
+    organization_id?: string;
+    job_batch_uuid?: string;
+    activities?: object;
+    status?: string;
+    message?: string;
+  };
+}
+
 const xlsIndicatorMounted = ref(false);
 
 const xlsFailedMessage = ref('');
@@ -510,6 +524,7 @@ const activityName = ref('');
 const fileCount = ref(0);
 const xlsDownloadStatus = ref('');
 const downloadCompleted = ref(false);
+const publishingActivities = ref();
 
 const toastMessage = ref('');
 const toastType = ref(false);
@@ -541,12 +556,17 @@ const sortingDirection = () => {
   fetchActivities(1, direction.value);
 };
 
+const downloadApiUrl = ref('');
+const downloading = ref(false);
+
+const pa: Ref<paType> = useStorage('vue-use-local-storage', {
+  publishingActivities: localStorage.getItem('publishingActivities') ?? {},
+});
+
 onMounted(() => {
   fetchActivities(1);
   checkXlsstatus();
 });
-const downloadApiUrl = ref('');
-const downloading = ref(false);
 
 watch(
   () => store.state.selectedActivities,
@@ -571,6 +591,19 @@ const mapActivityName = (name) => {
       return name;
   }
 };
+
+watch(
+  () => store.state.startBulkPublish,
+  (value) => {
+    if (value) {
+      publishingActivities.value =
+        pa.value.publishingActivities &&
+        Object.keys(pa.value.publishingActivities);
+      return;
+    }
+  },
+  { deep: true }
+);
 
 const activityLength = computed(() => {
   return !uploadType?.value?.length;
@@ -832,6 +865,8 @@ onMounted(() => {
   fetchActivities(1);
   checkXlsstatus();
   checkDownloadStatus();
+  publishingActivities.value =
+    pa.value.publishingActivities && Object.keys(pa.value.publishingActivities);
 
   xlsIndicatorMounted.value = true;
 });

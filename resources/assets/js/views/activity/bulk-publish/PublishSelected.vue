@@ -209,7 +209,7 @@
       :class="{ 'animate-loader': loader }"
     />
 
-    <BulkPublishing
+    <!-- <BulkPublishing
       v-if="
         showBulkpublish ||
         (pa.publishingActivities &&
@@ -221,7 +221,7 @@
           showBulkpublish = false;
         }
       "
-    />
+    /> -->
   </div>
 </template>
 
@@ -396,7 +396,7 @@ let validationErrors = ref({});
 onMounted(() => {
   axios
     .get(
-      `activities/bulk-publish-status?organization_id=${pa.value.publishingActivities.organization_id}&&uuid=${pa.value.publishingActivities.job_batch_uuid}`
+      `activities/bulk-publish-status?organization_id=${pa.value?.publishingActivities.organization_id}&&uuid=${pa.value?.publishingActivities.job_batch_uuid}`
     )
     .then((res) => {
       pa.value.publishingActivities.activities = res.data?.data?.activities;
@@ -460,7 +460,9 @@ const startBulkPublish = () => {
       `activities/start-bulk-publish?activities=[${selectedActivities.value}]`
     )
     .then((res) => {
+      store.dispatch('updateStartBulkPublish', true);
       startPublish.value = true;
+
       const response = res.data;
       if (response.success) {
         bulkPublishStep.value = 1;
@@ -482,6 +484,7 @@ const startBulkPublish = () => {
       setTimeout(() => {
         loader.value = false;
         published.value = true;
+        store.dispatch('updateStartBulkPublish', false);
       }, 1000);
     });
 };

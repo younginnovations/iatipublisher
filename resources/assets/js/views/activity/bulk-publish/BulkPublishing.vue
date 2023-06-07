@@ -11,14 +11,13 @@
       </div>
       <div class="flex shrink-0">
         <div
-          v-if="hasFailedActivities.ids.length > 0"
           class="retry flex cursor-pointer items-center text-crimson-50"
           @click="retryPublishing"
         >
           <svg-vue class="mr-1" icon="redo" />
           <span class="text-xs uppercase">Retry</span>
         </div>
-        <div v-else class="minus cursor-pointer" @click="toggleWindow"></div>
+        <!-- <div v-else class="minus cursor-pointer" @click="toggleWindow"></div> -->
         <div
           v-if="completed === 'completed'"
           class="cross cursor-pointer"

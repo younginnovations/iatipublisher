@@ -132,7 +132,7 @@
   </div>
   <button
     v-if="(totalCount === processedCount || xlsFailed) && !maximize"
-    class="absolute right-0 bottom-[80px] translate-x-4 rounded-full bg-white p-[1px]"
+    class="absolute top-0 right-0 bottom-[80px] translate-x-1/2 -translate-y-1/2 rounded-full bg-white p-[1px]"
     @click="$emit('close')"
   >
     <svg-vue icon="cross-icon" />

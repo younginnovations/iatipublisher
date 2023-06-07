@@ -1,32 +1,18 @@
 <template>
   <div
-    v-if="
-      (bulkPublishLength > 0 ||
-        Object.keys(paStorage.publishingActivities).length > 0) &&
-      activities
-    "
     :class="!openModel ? 'h-[80px]' : ''"
     class="relative w-[300px] duration-200"
   >
-    <div
-      class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2"
-      @click="emit['close']"
+    <button
+      class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 rounded-full bg-white p-[1px]"
+      @click="
+        () => {
+          $emit('close');
+        }
+      "
     >
       <svg-vue icon="cross-icon" class="text-sm" />
-    </div>
-    <div
-      v-if="hasFailedActivities.ids.length > 0"
-      class="retry flex cursor-pointer items-center text-crimson-50"
-      @click="retryPublishing"
-    >
-      <svg-vue class="mr-1" icon="redo" />
-      <span class="text-xs uppercase">Retry</span>
-    </div>
-    <!-- <svg-vue
-      class="absolute right-0 top-0 translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white p-[1px] text-sm"
-      icon="cross-icon"
-      @click="closeWindow"
-    /> -->
+    </button>
 
     <svg-vue
       :class="{ 'rotate-180': !openModel, '': openModel }"
@@ -49,11 +35,23 @@
       </div>
     </div>
     <div v-else class="rounded-t-lg bg-white">
-      <h6 class="bg-eggshell py-4 px-6 text-sm font-bold">
-        Publishing
+      <div
+        class="flex justify-between rounded-t-lg bg-eggshell py-4 px-6 text-sm font-bold"
+      >
+        <h6>
+          Publishing
 
-        {{ bulkPublishLength != 0 ? bulkPublishLength : '' }} activities
-      </h6>
+          {{ bulkPublishLength != 0 ? bulkPublishLength : '' }} activities
+        </h6>
+        <div
+          v-if="hasFailedActivities.ids.length > 0"
+          class="retry mr-2 flex cursor-pointer items-center text-crimson-50"
+          @click="retryPublishing"
+        >
+          <svg-vue class="mr-1" icon="redo" />
+          <span class="text-xs uppercase">Retry</span>
+        </div>
+      </div>
       <div
         class="bulk-activities max-h-[240px] overflow-y-auto overflow-x-hidden py-2 px-6 transition-all duration-500"
       >
@@ -96,6 +94,7 @@ import {
   inject,
   defineEmits,
   onUpdated,
+  onUnmounted,
 } from 'vue';
 import { useStore } from 'Store/activities/index';
 import axios from 'axios';
@@ -157,8 +156,9 @@ const bulkPublishStatus = () => {
   intervalID = setInterval(() => {
     axios.get(`/activities/bulk-publish-status`).then((res) => {
       const response = res.data;
-      // console.log(response, 'polling bulkpublsh');
+      console.log(response, 'polling bulkpublsh');
       if (!response.publishing) {
+        console.log('clear interval');
         clearInterval(intervalID);
       }
       if ('data' in response) {
@@ -200,7 +200,9 @@ const retryPublishing = () => {
 
   // api endpoint call
   const endpoint = `/activities/start-bulk-publish?activities=[${hasFailedActivities.ids}]`;
-
+  hasFailedActivities.status = false;
+  hasFailedActivities.ids = [];
+  hasFailedActivities.data = {} as actElements;
   axios.get(endpoint).then((res) => {
     const response = res.data;
 
@@ -312,23 +314,25 @@ watch(
 );
 const getDataFromLocalstorage = () => {
   activities.value = localStorage.getItem('bulkPublishActivities');
+  activities.value = JSON.parse(activities.value);
 };
 
 const setDataToLocalstorage = () => {
-  localStorage.setItem('bulkPublishActivities', paStorage.value.toString());
+  localStorage.setItem(
+    'bulkPublishActivities',
+    JSON.stringify(paStorage.value)
+  );
 };
 
 onMounted(() => {
-  console.log(paStorage, 'pa storage');
   completed.value = paStorage.value.publishingActivities.status ?? 'processing';
   bulkPublishStatus();
 
-  console.log(
-    completedActivities.value,
-    pa.value?.publishingActivities['activities'] &&
-      Object.keys(pa.value?.publishingActivities['activities']).length,
-    percentageWidth.value
-  );
+  console.log('bulk publish with xls mounted');
+});
+onUnmounted(() => {
+  store.dispatch('updateStartBulkPublish', false);
+  console.log('unmounted');
 });
 
 const emptybulkPublishStatus = () => {

@@ -70,6 +70,7 @@ const props = defineProps({
   },
 });
 onMounted(() => {
+  console.log('xls upload indicator mounted');
   const checkSupportButton = setInterval(() => {
     const supportButton: HTMLElement = document.querySelector(
       '#launcher'
@@ -134,7 +135,8 @@ onUnmounted(() => {
 
 const closeBulkpublish = () => {
   showBulkpublish.value = false;
-  store.dispatch('mutateBulkpublishActivities', {});
+  localStorage.setItem('vue-use-local-storage', 'publishingActivities:{}');
+  store.dispatch('updateBulkpublishActivities', {});
   axios.delete(`activities/delete-bulk-publish-status`);
 };
 
@@ -142,8 +144,8 @@ const closeXls = () => {
   showXlsStatus.value = false;
   axios.delete(`/import/xls`).then(() => {
     store.dispatch('updateCancelUpload', true);
-    store.dispatch('mutateCloseXlsModel', true);
-    setTimeout(() => store.dispatch('mutateCloseXlsModel', false), 2000);
+    store.dispatch('updateCloseXlsModel', true);
+    setTimeout(() => store.dispatch('updateCloseXlsModel', false), 2000);
   });
 };
 watch(

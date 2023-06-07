@@ -25,7 +25,12 @@
       </div>
     </div>
     <XlsUploadIndicator
-      v-if="xlsData || (downloading && !downloadCompleted)"
+      v-if="
+        xlsData ||
+        (downloading && !downloadCompleted) ||
+        publishingActivities ||
+        startBulkPublish
+      "
       :total-count="totalCount"
       :processed-count="processedCount"
       :xls-failed="xlsFailed"
@@ -56,6 +61,8 @@ import PageTitle from './partials/PageTitle.vue';
 import Loader from 'Components/Loader.vue';
 import ErrorMessage from 'Components/ErrorMessage.vue';
 import { useStore } from 'Store/activities/index';
+import { useStorage } from '@vueuse/core';
+
 const store = useStore();
 export default defineComponent({
   name: 'ActivityComponent',
@@ -87,10 +94,11 @@ export default defineComponent({
     const xlsDownloadStatus = ref('');
     const xlsData = ref(false);
     const downloading = ref(false);
-
+    const startBulkPublish = ref(false);
     const xlsFailed = ref(false);
     const xlsFailedMessage = ref('');
     const processing = ref();
+    const publishingActivities = ref();
 
     const importCompleted = ref(false);
     const totalCount = ref();
@@ -101,6 +109,21 @@ export default defineComponent({
     const currentURL = window.location.href;
     let endpoint = '';
     let showEmptyTemplate = false;
+
+    // local storage for publishing
+    interface paType {
+      publishingActivities: {
+        organization_id?: string;
+        job_batch_uuid?: string;
+        activities?: object;
+        status?: string;
+        message?: string;
+      };
+    }
+
+    const pa: Ref<paType> = useStorage('vue-use-local-storage', {
+      publishingActivities: localStorage.getItem('publishingActivities') ?? {},
+    });
 
     if (currentURL.includes('?')) {
       const queryString = window.location.search;
@@ -163,6 +186,22 @@ export default defineComponent({
         if (value) {
           checkDownloadStatus();
         }
+      },
+      { deep: true }
+    );
+
+    watch(
+      () => store.state.startBulkPublish,
+      (value) => {
+        if (value) {
+          startBulkPublish.value = true;
+          publishingActivities.value =
+            pa.value.publishingActivities &&
+            Object.keys(pa.value.publishingActivities);
+          console.log('bulkpublish started', pa.value?.publishingActivities);
+          return;
+        }
+        startBulkPublish.value = false;
       },
       { deep: true }
     );
@@ -229,6 +268,8 @@ export default defineComponent({
     );
 
     onMounted(() => {
+      console.log('bulkpublish started', pa.value?.publishingActivities);
+
       checkXlsstatus();
       checkDownloadStatus();
       if (props.toast.message !== '') {
@@ -345,6 +386,9 @@ export default defineComponent({
       importCompleted,
       downloadCompleted,
       downloading,
+      startBulkPublish,
+      publishingActivities,
+      pa,
     };
   },
 });

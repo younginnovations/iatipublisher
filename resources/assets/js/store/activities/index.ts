@@ -10,12 +10,14 @@ interface StateInterface {
   cancelDownload: boolean;
   closeXlsModel: boolean;
   bulkpublishActivities: object;
+  startBulkPublish: boolean;
 }
 
 const state = {
   selectedActivities: [],
   bulkPublishLength: 0,
   cancelUpload: false,
+  startBulkPublish: false,
   maximizeXls: true,
   startXlsDownload: false,
   completeXlsDownload: false,
@@ -69,6 +71,9 @@ const mutations = {
   ) {
     state.bulkpublishActivities = payload;
   },
+  mutateStartBulkPublish: function (state: StateInterface, payload: boolean) {
+    state.startBulkPublish = payload;
+  },
 };
 
 interface CommitFunction {
@@ -117,9 +122,15 @@ const actions = {
   },
   updateBulkpublishActivities: function (
     { commit }: CommitFunction,
-    payload: boolean
+    payload: object
   ) {
     commit('mutateBulkpublishActivities', payload);
+  },
+  updateStartBulkPublish: function (
+    { commit }: CommitFunction,
+    payload: boolean
+  ) {
+    commit('mutateStartBulkPublish', payload);
   },
 };
 
