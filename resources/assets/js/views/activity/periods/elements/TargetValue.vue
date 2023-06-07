@@ -58,7 +58,6 @@
                     </div>
                   </div>
                 </div>
-                getLocation
               </div>
             </td>
           </tr>

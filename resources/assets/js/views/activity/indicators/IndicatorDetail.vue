@@ -210,10 +210,7 @@
                 </table>
               </div>
             </div>
-            <div
-              v-if="countDocumentLink(indicatorData.document_link) > 0"
-              id="document_link"
-            >
+            <div id="document_link">
               <div class="title mb-4">
                 <div class="item elements-detail wider">
                   <table class="mb-2">

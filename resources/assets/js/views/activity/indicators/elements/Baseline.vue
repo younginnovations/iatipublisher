@@ -77,7 +77,7 @@
           </div>
         </div>
 
-        <div v-if="countDocumentLink(base.document_link) > 0">
+        <div>
           <div class="mb-2.5 flex">
             <div>Document Link:&nbsp;</div>
             <div></div>
