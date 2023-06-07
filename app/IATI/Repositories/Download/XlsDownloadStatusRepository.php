@@ -111,13 +111,15 @@ class XlsDownloadStatusRepository extends Repository
      * @param $userId
      * @param $fileType
      *
-     * @return false|int
+     * @return void
      */
-    public function incrementFileCount($userId, $fileType)
+    public function incrementFileCount($userId, $fileType): void
     {
         $status = $this->model->where('user_id', $userId)->where('type', $fileType)->first();
 
-        return $status->increment('file_count');
+        if (!empty($status) && $status->file_count < 4) {
+            $status->increment('file_count');
+        }
     }
 
     /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
+use App\IATI\Models\User\User;
 use App\IATI\Services\Download\DownloadXlsService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -48,6 +49,12 @@ class ZipXlsFileJob implements ShouldQueue
      */
     public function handle(): void
     {
+        $awsCancelStatusFile = awsGetFile("Xls/$this->userId/cancelStatus.json");
+
+        if (empty($awsCancelStatusFile)) {
+            $this->fail();
+        }
+
         $zip_file = "storage/app/public/Xls/$this->userId/xlsFiles.zip";
         $zip = new \ZipArchive();
         $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);

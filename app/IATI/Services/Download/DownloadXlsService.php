@@ -91,11 +91,11 @@ class DownloadXlsService
      *
      * @param $userId
      *
-     * @return false|int
+     * @return void
      */
-    public function incrementFileCount($userId)
+    public function incrementFileCount($userId): void
     {
-        return $this->xlsDownloadStatusRepository->incrementFileCount($userId, 'xls');
+        $this->xlsDownloadStatusRepository->incrementFileCount($userId, 'xls');
     }
 
     /**
