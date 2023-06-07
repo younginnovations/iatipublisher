@@ -279,6 +279,7 @@
       :activity-name="activityName"
       :xls-data="xlsData"
       :completed="uploadComplete"
+      :publishing-activities="publishingActivities"
     />
   </div>
   <Loader
@@ -627,7 +628,6 @@ watch(
 const checkDownloadStatus = () => {
   const checkDownload = setInterval(function () {
     axios.get('/activities/download-xls-progress-status').then((res) => {
-      downloading.value = !!res.data.status;
       fileCount.value = res.data.file_count;
       xlsDownloadStatus.value = res.data.status;
       downloadApiUrl.value = res.data.url;
@@ -639,6 +639,7 @@ const checkDownloadStatus = () => {
       ) {
         clearInterval(checkDownload);
       }
+      downloading.value = !!res.data.status;
     });
   }, 3000);
 };

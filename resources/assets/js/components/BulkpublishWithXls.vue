@@ -45,7 +45,7 @@
           {{ bulkPublishLength != 0 ? bulkPublishLength : '' }} activities
         </h6>
         <div
-          v-if="hasFailedActivities.ids.length > 0"
+          v-if="hasFailedActivities?.ids?.length > 0"
           class="retry mr-2 flex cursor-pointer items-center text-crimson-50"
           @click="retryPublishing"
         >
@@ -228,7 +228,7 @@ const failedActivities = (nestedObject: actElements) => {
 
   const failedActivitiesData = filtered && Object.fromEntries(filtered);
 
-  if (failedActivitiesID.length > 0) {
+  if (failedActivitiesID?.length > 0) {
     hasFailedActivities.status = true;
     hasFailedActivities.ids = failedActivitiesID;
     hasFailedActivities.data = failedActivitiesData as actElements;

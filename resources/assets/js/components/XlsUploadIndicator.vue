@@ -1,6 +1,9 @@
 <template>
   <div class="fixed right-10 bottom-0 z-[1000] flex items-end space-x-5">
-    <BulkpublishWithXls v-if="showBulkpublish" @close="closeBulkpublish" />
+    <BulkpublishWithXls
+      v-if="showBulkpublish && publishingActivities?.length > 0"
+      @close="closeBulkpublish"
+    />
 
     <ActivityDownload
       v-if="downloading && !downloadCompleted && !cancelDownload"
@@ -67,6 +70,10 @@ const props = defineProps({
   },
   xlsData: {
     type: Boolean,
+  },
+  publishingActivities: {
+    type: Array,
+    required: true,
   },
 });
 onMounted(() => {
