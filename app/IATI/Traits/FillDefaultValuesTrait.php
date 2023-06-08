@@ -185,6 +185,12 @@ trait FillDefaultValuesTrait
             'hierarchy' => '',
             'budget_not_provided' => '',
             'humanitarian' => '',
+            'linked_data_uri' => '',
+            'default_collaboration_type' => '',
+            'default_flow_type' => '',
+            'default_finance_type' => '',
+            'default_aid_type' => '',
+            'default_tied_status' => '',
         ];
         $defaultValueFromData = Arr::get($data, 'default_field_values', []);
 
