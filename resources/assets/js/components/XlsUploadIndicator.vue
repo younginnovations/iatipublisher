@@ -4,7 +4,6 @@
       v-if="showBulkpublish && activities && Object.keys(activities).length > 0"
       @close="closeBulkpublish"
     />
-
     <ActivityDownload
       v-if="downloading && !downloadCompleted && !cancelDownload"
     />
@@ -23,15 +22,7 @@
 import ActivityDownload from './ActivityDownload.vue';
 import XlsLoader from './XlsLoader.vue';
 import BulkpublishWithXls from './BulkpublishWithXls.vue';
-import {
-  defineProps,
-  ref,
-  inject,
-  watch,
-  onUnmounted,
-  onMounted,
-  Ref,
-} from 'vue';
+import { defineProps, ref, inject, watch, onUnmounted, onMounted } from 'vue';
 import axios from 'axios';
 import { useStore } from 'Store/activities/index';
 const store = useStore();
@@ -41,7 +32,8 @@ import { useStorage } from '@vueuse/core';
 const downloadCompleted = ref(false);
 const cancelDownload = ref(false);
 const showBulkpublish = ref(true);
-const publishingActivities = ref();
+const publishingActivities = ref<string[]>([]);
+console.log(publishingActivities.value);
 const bulkPublishLength = ref(0);
 const pa = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
@@ -92,15 +84,13 @@ watch(
   () => [store.state.startBulkPublish, store.state.bulkpublishActivities],
   (value) => {
     if (value) {
-      console.log('watcher from xls upload indicator');
       publishingActivities.value =
-        store.state.bulkpublishActivities.publishingActivities;
+        store.state.bulkpublishActivities.publishingActivities &&
+        Object.keys(store.state.bulkpublishActivities.publishingActivities);
 
       publishingActivities.value =
         pa.value.publishingActivities &&
         Object.keys(pa.value.publishingActivities);
-      console.log('bulkpublish started', pa.value?.publishingActivities);
-      console.log(publishingActivities.value, 'reactive');
 
       return;
     }
@@ -109,7 +99,7 @@ watch(
 );
 watch(
   () => store.state.startBulkPublish,
-  (value) => {
+  () => {
     showBulkpublish.value = true;
   },
   { deep: true }
@@ -137,7 +127,8 @@ watch(
       !(xlsData && showXlsStatus) &&
       !(downloading && !downloadCompleted && !cancelDownload) &&
       showBulkpublish &&
-      publishingActivities.value?.length > 0
+      publishingActivities.value &&
+      publishingActivities.value.length > 0
     ) {
       setTimeout(() => {
         supportButton.style.transform = 'translate(-350px ,0px)';

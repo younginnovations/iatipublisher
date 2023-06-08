@@ -94,29 +94,15 @@ import {
   reactive,
   inject,
   defineEmits,
-  onUpdated,
   onUnmounted,
 } from 'vue';
 import { useStore } from 'Store/activities/index';
 import axios from 'axios';
+import { isJson } from 'Composable/utils';
 const store = useStore();
 let pa = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
 });
-
-interface paInterface {
-  value: {
-    publishingActivities: paElements;
-  };
-}
-
-interface paElements {
-  activities: actElements;
-  organization_id: number;
-  job_batch_uuid: string;
-  status: string;
-  message: string;
-}
 
 interface actElements {
   activity_id: number;
@@ -138,7 +124,7 @@ const publishingActivities = reactive(
   paStorage.value.publishingActivities['activities']
 );
 const completed = ref();
-const emit = defineEmits(['close']);
+defineEmits(['close']);
 
 //inject
 
@@ -238,13 +224,6 @@ const failedActivities = (nestedObject: actElements) => {
   }
 };
 
-const totalActivites = computed(() => {
-  return (
-    pa.value?.publishingActivities['activities'] &&
-    Object.keys(pa.value?.publishingActivities['activities']).length
-  );
-});
-
 const completedActivities = computed(() => {
   let count = 0;
   for (
@@ -307,7 +286,7 @@ watch(
 );
 const getDataFromLocalstorage = () => {
   activities.value = localStorage.getItem('bulkPublishActivities');
-  activities.value = JSON.parse(activities.value);
+  activities.value = isJson(activities.value) && JSON.parse(activities.value);
 };
 
 const setDataToLocalstorage = () => {

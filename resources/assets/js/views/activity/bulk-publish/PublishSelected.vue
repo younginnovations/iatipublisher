@@ -400,7 +400,7 @@ onMounted(() => {
       `activities/bulk-publish-status?organization_id=${pa.value?.publishingActivities.organization_id}&&uuid=${pa.value?.publishingActivities.job_batch_uuid}`
     )
     .then((res) => {
-      Object.assign(pa.value.publishingActivities, res.data?.data);
+      Object.assign(pa.value?.publishingActivities, res.data?.data);
     });
 });
 const validateActivities = () => {

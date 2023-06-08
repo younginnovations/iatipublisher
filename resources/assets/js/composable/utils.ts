@@ -17,23 +17,21 @@ export function getLocation(data: Location[]) {
   }
 }
 
-export function countDocumentLink(document_link) 
-{
+export function countDocumentLink(document_link) {
   let documentCount = 0;
 
   for (const document in document_link) {
     const result = reduceDocumentLink(document_link[document], []);
 
-    if (!(result.every((item) => item === null))) {
+    if (!result.every((item) => item === null)) {
       documentCount++;
     }
   }
 
   return documentCount;
-};
+}
 
-export function reduceDocumentLink(document_link, values) 
-{
+export function reduceDocumentLink(document_link, values) {
   if (typeof document_link === 'object' && document_link) {
     for (const key in document_link) {
       values.concat(reduceDocumentLink(document_link[key], values));
@@ -43,4 +41,13 @@ export function reduceDocumentLink(document_link, values)
   }
 
   return values;
-};
+}
+
+export function isJson(str) {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}

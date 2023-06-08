@@ -197,8 +197,6 @@ export default defineComponent({
           startBulkPublish.value = true;
           publishingActivities.value =
             store.state.bulkpublishActivities.publishingActivities;
-          console.log('bulkpublish started', pa.value?.publishingActivities);
-          console.log(publishingActivities.value, 'reactive');
 
           return;
         }
@@ -269,9 +267,8 @@ export default defineComponent({
     );
 
     onMounted(() => {
-      publishingActivities.value =
-        pa.value?.publishingActivities &&
-        Object.keys(pa.value.publishingActivities);
+      publishingActivities.value = pa.value?.publishingActivities;
+
       checkXlsstatus();
       checkDownloadStatus();
       if (props.toast.message !== '') {
