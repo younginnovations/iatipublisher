@@ -11,8 +11,10 @@ use App\IATI\Repositories\Activity\ResultRepository;
 use App\IATI\Repositories\Activity\TransactionRepository;
 use App\IATI\Repositories\Import\ImportActivityErrorRepository;
 use App\IATI\Repositories\Import\ImportStatusRepository;
+use App\IATI\Services\Activity\ActivityService;
 use App\XlsImporter\Events\XlsWasUploaded;
 use Exception;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
@@ -186,16 +188,18 @@ class ImportXlsService
     /**
      * Save result of mapped activity in database.
      *
-     * @param $results
-     * @param $activityId
+     * @param $activities
      *
-     * @return $this
+     * @return void
+     *
+     * @throws BindingResolutionException
+     * @throws \JsonException
      */
     protected function saveActivities($activities): void
     {
         $organizationId = Auth::user()->organization->id;
         $userId = Auth::user()->id;
-        $contents = json_decode(awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $organizationId, $userId, 'valid.json')), false, 512, 0);
+        $contents = json_decode(awsGetFile(sprintf('%s/%s/%s/%s', $this->xls_data_storage_path, $organizationId, $userId, 'valid.json')), false, 512, JSON_THROW_ON_ERROR | 0);
 
         foreach ($activities as $value) {
             $activity = unsetErrorFields($contents[$value]);
@@ -216,8 +220,16 @@ class ImportXlsService
                     $this->importActivityErrorRepo->deleteImportError($existingId);
                 }
             } else {
+                $activityService = app()->make(ActivityService::class);
+                $defaultValues = $activityService->getDefaultValues();
                 $activityData['org_id'] = $organizationId;
                 $activityData['upload_medium'] = 'xls';
+                $activityData['collaboration_type'] = isset($defaultValues['default_collaboration_type']) && !empty($defaultValues['default_collaboration_type']) ? (int) $defaultValues['default_collaboration_type'] : null;
+                $activityData['default_flow_type'] = isset($defaultValues['default_flow_type']) && !empty($defaultValues['default_flow_type']) ? (int) $defaultValues['default_flow_type'] : null;
+                $activityData['default_finance_type'] = isset($defaultValues['default_finance_type']) && !empty($defaultValues['default_finance_type']) ? (int) $defaultValues['default_finance_type'] : null;
+                // default aid type here
+                $activityData['default_tied_status'] = isset($defaultValues['default_tied_status']) && !empty($defaultValues['default_tied_status']) ? (int) $defaultValues['default_tied_status'] : null;
+
                 $storeActivity = $this->activityRepository->store($activityData);
                 $this->saveTransactions(Arr::get($activityData, 'transactions', []), $storeActivity->id);
 
