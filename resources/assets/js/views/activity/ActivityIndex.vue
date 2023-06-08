@@ -36,7 +36,7 @@
       :xls-failed="xlsFailed"
       :activity-name="activityName"
       :xls-data="xlsData"
-      :completed="importCompleted"
+      :completed="uploadComplete"
     />
   </div>
 </template>
@@ -99,7 +99,7 @@ export default defineComponent({
     const xlsFailedMessage = ref('');
     const processing = ref();
     const publishingActivities = ref();
-
+    const uploadComplete = ref(false);
     const importCompleted = ref(false);
     const totalCount = ref();
     const processedCount = ref();
@@ -174,7 +174,7 @@ export default defineComponent({
             !res.data?.data?.success ||
             res.data?.data?.message === 'Complete'
           ) {
-            importCompleted.value = true;
+            uploadComplete.value = true;
             clearInterval(checkStatus);
           }
         });
@@ -227,18 +227,24 @@ export default defineComponent({
       axios.get('/import/xls/progress_status').then((res) => {
         activityName.value = res?.data?.status?.template;
         xlsData.value = Object.keys(res.data.status).length > 0;
-        if (Object.keys(res.data.status).length > 0) {
-          pollingForXlsStatus();
-        }
+        if (res?.data?.status?.status === 'completed') {
+          console.log('completed');
+          uploadComplete.value = true;
+        } else if (res?.data?.status?.status === 'failed') {
+          xlsFailed.value = true;
+          xlsFailedMessage.value = res?.data?.status?.message;
+        } else if (Object.keys(res.data.status).length > 0) {
+          {
+            //reset
+            totalCount.value = null;
+            processing.value = false;
+            processedCount.value = 0;
+            xlsFailed.value = false;
+            xlsFailedMessage.value = '';
 
-        // if (res?.data?.status?.status === 'completed') {
-        //   importCompleted.value = true;
-        // } else if (res?.data?.status?.status === 'failed') {
-        //   xlsFailed.value = true;
-        //   xlsFailedMessage.value = res?.data?.status?.message;
-        // } else if (Object.keys(res.data.status).length > 0) {
-        //   pollingForXlsStatus();
-        // }
+            pollingForXlsStatus();
+          }
+        }
       });
     };
     const checkDownloadStatus = () => {
@@ -355,7 +361,6 @@ export default defineComponent({
     provide('errorData', errorData);
     provide('refreshToastMsg', refreshToastMsg);
     provide('xlsFailedMessage', xlsFailedMessage);
-    provide('completed', importCompleted);
     provide('processing', processing);
     provide('downloading', downloading);
     provide('fileCount', fileCount as Ref);
@@ -363,6 +368,7 @@ export default defineComponent({
     provide('downloadApiUrl', downloadApiUrl as Ref);
     provide('closeModel', closeModel as Ref);
     provide('activities', publishingActivities as Ref);
+    provide('completed', uploadComplete);
 
     return {
       activities,
@@ -385,6 +391,7 @@ export default defineComponent({
       xlsFailedMessage,
       importCompleted,
       downloadCompleted,
+      uploadComplete,
       downloading,
       startBulkPublish,
       publishingActivities,

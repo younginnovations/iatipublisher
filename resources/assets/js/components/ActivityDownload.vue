@@ -87,6 +87,9 @@ onMounted(() => {
 });
 const downloadFile = () => {
   store.dispatch('updateCompleteXlsDownload', true);
+  store.dispatch('updateCancelDownload', true);
+  store.dispatch('updateStartXlsDownload', false);
+
   let apiUrl = `${(downloadApiUrl as Ref).value.split()[0].split('/')[3]}/${
     (downloadApiUrl as Ref).value.split()[0].split('/')[4]
   }`;

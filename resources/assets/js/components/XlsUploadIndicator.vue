@@ -187,6 +187,7 @@ watch(
     if (value) {
       downloadCompleted.value = true;
     }
+    downloadCompleted.value = false;
   },
   { deep: true }
 );

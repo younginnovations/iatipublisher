@@ -130,7 +130,6 @@ defineEmits(['close']);
 
 let refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
 
-let intervalID;
 // let activities = ref(paStorage.value.publishingActivities.activities);
 let activities = ref();
 
@@ -140,7 +139,7 @@ let hasFailedActivities = reactive({
   status: false,
 });
 const bulkPublishStatus = () => {
-  intervalID = setInterval(() => {
+  const intervalID = setInterval(() => {
     axios.get(`/activities/bulk-publish-status`).then((res) => {
       const response = res.data;
       if (!response.publishing) {
@@ -156,6 +155,7 @@ const bulkPublishStatus = () => {
         paStorage.value.publishingActivities.status = response.data.status;
         paStorage.value.publishingActivities.message = response.data.message;
         if (completed.value === 'completed') {
+          console.log('clear interval');
           clearInterval(intervalID);
 
           failedActivities(paStorage.value.publishingActivities.activities);
@@ -318,6 +318,7 @@ watch(
       publishingActivities: localStorage.getItem('publishingActivities') ?? {},
     });
     emptybulkPublishStatus();
+    console.log('bulkpublish length');
     bulkPublishStatus();
     Object.assign(
       publishingActivities,
