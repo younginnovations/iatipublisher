@@ -69,7 +69,15 @@ class DashboardController extends Controller
     public function getUserCountByOrganization(Request $request, int $page = 1): JsonResponse
     {
         try {
-            $queryParams = $this->getQueryParams($request);
+            $tableConfig = getTableConfig('user_dashboard');
+            $queryParams = [];
+
+            if (in_array($request->get('orderBy'), $tableConfig['orderBy'], true)) {
+                $queryParams['orderBy'] = $request->get('orderBy');
+                if (in_array($request->get('direction'), $tableConfig['direction'], true)) {
+                    $queryParams['direction'] = $request->get('direction');
+                }
+            }
 
             return response()->json([
                 'success' => true,

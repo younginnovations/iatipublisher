@@ -103,11 +103,12 @@ class UserRepository extends Repository
             ->groupBy('organizations.id', 'organizations.publisher_name');
 
         $direction = Arr::get($queryParam, 'direction', 'asc');
-        $orderBy = Arr::get($queryParam, 'order_by', 'name');
+        $orderBy = Arr::get($queryParam, 'orderBy', 'publisher_name');
 
-        if ($orderBy === 'name') {
+        if ($orderBy === 'publisher_name') {
             $query->orderBy('organizations.publisher_name', $direction);
         } else {
+            $orderBy = $orderBy . '_user_count';
             $query->orderBy($orderBy, $direction);
         }
 

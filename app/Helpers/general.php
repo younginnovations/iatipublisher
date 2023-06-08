@@ -593,6 +593,7 @@ if (!function_exists('getTableConfig')) {
                 ],
             ],
             'user' => ['orderBy' => ['username', 'publisher_name', 'created_at'], 'direction' => ['asc', 'desc']],
+            'user_dashboard' => ['orderBy' => ['publisher_name', 'admin', 'general', 'active', 'deactivated', 'total'], 'direction' => ['asc', 'desc']],
             'audit' => ['orderBy' => ['user_id', 'user_type', 'event', 'auditable_type', 'created_at'], 'direction' => ['asc', 'desc']],
         ];
 
