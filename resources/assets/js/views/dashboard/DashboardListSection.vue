@@ -2,6 +2,59 @@
   <div class="mt-6 w-full bg-white py-6 px-14">
     <div v-if="currentView === 'user'">
       <h6 class="text-xs uppercase text-n-40">users by organisation</h6>
+
+      <table class="mt-2 w-full text-left">
+        <thead class="bg-n-10 text-xs font-bold uppercase text-n-40">
+          <tr>
+            <th><div class="py-3 px-8">Organisation</div></th>
+            <th><div class="py-3 px-8">admin</div></th>
+            <th><div class="py-3 px-8">general</div></th>
+            <th><div class="py-3 px-8">active</div></th>
+            <th><div class="py-3 px-8">deactivated</div></th>
+            <th><div class="py-3 px-8">total</div></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="organisation in tableData"
+            :key="organisation.id"
+            class="border-b border-n-20 text-sm text-bluecoral"
+          >
+            <td>
+              <div class="py-3 px-8">{{ organisation.publisher_name }}</div>
+            </td>
+            <td>
+              <div class="py-3 px-8 text-center">
+                {{ organisation.admin_user_count }}
+              </div>
+            </td>
+
+            <td>
+              <div class="py-3 px-8 text-center">
+                {{ organisation.general_user_count }}
+              </div>
+            </td>
+
+            <td>
+              <div class="py-3 px-8 text-center">
+                {{ organisation.active_user_count }}
+              </div>
+            </td>
+
+            <td>
+              <div class="py-3 px-8 text-center">
+                {{ organisation.deactivated_user_count }}
+              </div>
+            </td>
+
+            <td>
+              <div class="py-3 px-8 text-center">
+                {{ organisation.total_user_count }}
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <div v-else>
@@ -16,7 +69,7 @@
           <h6 v-else class="text-xs uppercase text-n-40">
             Publisher segregated by
           </h6>
-          <ul class="mt-4 mr-6">
+          <ul class="mt-4 mr-6 min-h-[300px]">
             <li
               v-for="item in currentNavList"
               :key="item.label"
@@ -30,7 +83,9 @@
         </div>
         <div class="w-full px-4">
           <table class="w-full">
-            <thead class="bg-[#F1F7F9] text-xs uppercase text-[#68797E]">
+            <thead
+              class="bg-[#F1F7F9] text-xs font-bold uppercase text-[#68797E]"
+            >
               <tr>
                 <th>
                   <div class="px-4 py-3 text-left">{{ title }}</div>
@@ -49,7 +104,7 @@
                 </td>
                 <td class="text-sm text-[#2A2F30]">
                   <div class="px-4 py-3 text-right">
-                    {{ completeNess.completeSetup.count }}
+                    {{ completeNess?.completeSetup?.count }}
                   </div>
                 </td>
               </tr>
@@ -60,7 +115,9 @@
                   </div>
                 </td>
                 <td class="text-sm text-[#2A2F30]">
-                  <div class="px-4 py-3 text-right">99</div>
+                  <div class="px-4 py-3 text-right">
+                    {{ completeNess?.completeSetup?.count }}
+                  </div>
                 </td>
               </tr>
               <tr>
@@ -70,7 +127,9 @@
                   </div>
                 </td>
                 <td class="text-sm text-[#2A2F30]">
-                  <div class="px-4 py-3 text-right">99</div>
+                  <div class="px-4 py-3 text-right">
+                    {{ completeNess?.incompleteSetup?.types?.publisher }}
+                  </div>
                 </td>
               </tr>
               <tr>
@@ -80,7 +139,9 @@
                   </div>
                 </td>
                 <td class="text-sm text-[#2A2F30]">
-                  <div class="px-4 py-3 text-right">99</div>
+                  <div class="px-4 py-3 text-right">
+                    {{ completeNess?.incompleteSetup?.types?.defaultValue }}
+                  </div>
                 </td>
               </tr>
               <tr class="border-b border-n-20">
@@ -90,7 +151,9 @@
                   </div>
                 </td>
                 <td class="text-sm text-[#2A2F30]">
-                  <div class="px-4 py-3 text-right">99</div>
+                  <div class="px-4 py-3 text-right">
+                    {{ completeNess?.incompleteSetup?.types?.both }}
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -124,9 +187,9 @@ import { defineEmits } from 'vue';
 const emit = defineEmits(['tableNav']);
 
 const activityNavList = [
-  { label: 'Activity Status', apiParams: '' },
-  { label: 'Actvity Added', apiParams: '' },
-  { label: 'Activity Completion', apiParams: '' },
+  { label: 'Activity Status', apiParams: 'status' },
+  { label: 'Actvity Added', apiParams: 'method' },
+  { label: 'Activity Completion', apiParams: 'completeness' },
 ];
 const publisherNavList = [
   { label: 'Publisher Type', apiParams: 'type' },
@@ -151,6 +214,7 @@ watch(
     } else {
       currentNavList.value = publisherNavList;
     }
+    fetchTableData(currentNavList.value[0]);
 
     activeClass.value = currentNavList.value[0].label;
     title.value = currentNavList.value[0].label;
@@ -174,9 +238,13 @@ const props = defineProps({
 const activeClass = ref(currentNavList.value[0].label);
 
 const fetchTableData = (item) => {
-  console.log('fetch ', completeNess);
   activeClass.value = item.label;
   title.value = item.label;
+  console.log(item, 'item');
+  if (props.currentView === 'user') {
+    (item.label = 'user'), (item.apiParams = 'page/1');
+  }
+
   emit('tableNav', item);
 };
 const completeNess = inject('completeNess') as Ref;

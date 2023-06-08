@@ -1,6 +1,6 @@
 <template>
   <div class="py-8 px-6">
-    <div class="mb-3 border-b border-n-20 pb-3">
+    <div class="mb-3 flex justify-between border-b border-n-20 pb-3">
       <div class="flex gap-x-2">
         <button
           :class="
@@ -36,6 +36,12 @@
           <span>Users</span>
         </button>
       </div>
+      <div>
+        <DateRangeWidget
+          :date-label="DateLabel"
+          @trigger-set-date-range="setDateRangeDate"
+        />
+      </div>
     </div>
     <DashboardStatsSection :current-view="currentView" />
     <DashboardListSection
@@ -50,16 +56,20 @@
 <script setup lang="ts">
 import DashboardStatsSection from './DashboardStatsSection.vue';
 import DashboardListSection from './DashboardListSection.vue';
-import { ref, onMounted, provide } from 'vue';
+import DateRangeWidget from 'Components/DateRangeWidget.vue';
+import { ref, onMounted, provide, watch } from 'vue';
 import axios from 'axios';
 
 interface tableDataType {
   label: string;
   total: number;
 }
-
 const currentNav = ref('type');
 const tableData = ref<any>([]);
+const DateLabel = ref('Registered date:');
+const startDate = ref('');
+const endDate = ref('');
+
 const currentView = ref('publisher');
 const completeNess = ref();
 const handleChangeTableNav = (item) => {
@@ -70,6 +80,12 @@ const handleChangeTableNav = (item) => {
 onMounted(() => {
   fetchTableData();
 });
+
+const setDateRangeDate = (start, end) => {
+  startDate.value = start;
+  endDate.value = end;
+};
+
 const mapApiParamsToVariable = (item) => {
   switch (item) {
     case 'type':
@@ -80,12 +96,39 @@ const mapApiParamsToVariable = (item) => {
   }
 };
 
-const fetchTableData = () => {
-  axios
-    .get(`/dashboard/${currentView.value}/${currentNav.value['apiParams']}`)
-    .then((res) => {
-      let response = res.data;
+const datetLabelMapper = (item) => {
+  switch (item) {
+    case 'publisher':
+      return 'Registered date:';
+    case 'activity':
+      return 'Activity added on:';
+    case 'user':
+      return 'User Created Date:';
 
+    default:
+      return item;
+  }
+};
+
+watch(
+  () => currentView.value,
+  () => {
+    DateLabel.value = datetLabelMapper(currentView.value);
+  }
+);
+
+const fetchTableData = () => {
+  let apiUrl = `/dashboard/${currentView.value}/${currentNav.value['apiParams']}`;
+  let params = new URLSearchParams();
+  if (startDate.value && endDate.value) {
+    apiUrl = `/dashboard/${currentView.value}/${currentNav.value['apiParams']}/date-range`;
+    params.append('start_date', startDate.value);
+    params.append('end_date', endDate.value);
+  }
+  axios.get(apiUrl, { params: params }).then((res) => {
+    let response = res.data;
+
+    if (currentView.value === 'publisher') {
       if (currentNav.value['apiParams'] !== 'setup') {
         tableData.value = [];
 
@@ -116,7 +159,12 @@ const fetchTableData = () => {
       } else {
         completeNess.value = response.data;
       }
-    });
+    }
+    if (currentView.value === 'user') {
+      tableData.value = response.data.data;
+      console.log(tableData.value, 'users table data');
+    }
+  });
 };
 provide('completeNess', completeNess);
 </script>

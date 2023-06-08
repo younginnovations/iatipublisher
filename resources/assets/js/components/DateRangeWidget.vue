@@ -1,9 +1,13 @@
 <template>
-  <div id="date-range-main" class="flex">
+  <div id="date-range-main" class="flex space-x-2">
     <div>
       <div class="relative" style="min-width: 150px">
         <!--Range Dropdown-->
-        <div class="flex hover:cursor-pointer" @click="toggleShowRangeDropdown">
+        <div
+          v-if="dropdownRange && Object.keys(dropdownRange).length"
+          class="flex hover:cursor-pointer"
+          @click="toggleShowRangeDropdown"
+        >
           <span>{{ dateType }}</span>
           <span style="height: fit-content; font-size: 20px; margin-top: 2px">
             <svg-vue icon="arrow-down"></svg-vue>
@@ -34,6 +38,10 @@
     </div>
 
     <div class="h-fit w-fit">
+      <span v-if="dateLabel" class="mx-2 text-sm text-n-50">{{
+        dateLabel
+      }}</span>
+
       <span
         id="fixed-date-range"
         class="w-fit bg-n-10 py-1 px-2 text-center text-xs font-semibold text-bluecoral hover:cursor-pointer"
@@ -43,7 +51,7 @@
       >
     </div>
     <div class="">
-      <div class="relative mx-2">
+      <div class="relative flex">
         <VueDatePicker
           v-model="selectedDate"
           ref="datepicker"
@@ -81,6 +89,12 @@
             </div>
           </template>
         </VueDatePicker>
+        <span
+          class="absolute top-1/2 right-0 -translate-y-1/2"
+          style="height: fit-content; font-size: 20px; margin-top: 2px"
+        >
+          <svg-vue icon="arrow-down"></svg-vue>
+        </span>
       </div>
     </div>
   </div>
@@ -106,15 +120,21 @@ import moment from 'moment';
 const props = defineProps({
   dropdownRange: {
     type: Object,
-    required: true,
+    required: false,
+    default: () => ({}),
+  },
+  dateLabel: {
+    type: String,
+    required: false,
+    default: '',
   },
 });
 
 const dateType = ref('');
-dateType.value = Object.values(props.dropdownRange)[0];
+dateType.value = props.dropdownRange && Object.values(props.dropdownRange)[0];
 
 const dateTypeKey = ref('');
-dateTypeKey.value = Object.keys(props.dropdownRange)[0];
+dateTypeKey.value = props.dropdownRange && Object.keys(props.dropdownRange)[0];
 
 const showRangeDropdown = ref(false);
 
