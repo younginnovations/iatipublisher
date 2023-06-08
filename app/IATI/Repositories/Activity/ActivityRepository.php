@@ -7,8 +7,10 @@ namespace App\IATI\Repositories\Activity;
 use App\Constants\Enums;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Repository;
+use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Traits\FillDefaultValuesTrait;
 use Auth;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -180,11 +182,17 @@ class ActivityRepository extends Repository
      * @param array $mappedActivity
      *
      * @return mixed
+     *
      * @throws \JsonException
+     * @throws BindingResolutionException
      */
     public function importXmlActivities($activity_id, array $mappedActivity): mixed
     {
         $mappedActivity = json_decode(json_encode($mappedActivity, JSON_THROW_ON_ERROR | 512), true, 512, JSON_THROW_ON_ERROR);
+        $collaborationType = $this->autoFillSettingsValue($this->getSingleValuedActivityElement($mappedActivity, 'collaboration_type'), 'default_collaboration_type');
+        $defaultFlowType = $this->autoFillSettingsValue($this->getSingleValuedActivityElement($mappedActivity, 'default_flow_type'), 'default_flow_type');
+        $defaultFinanceType = $this->autoFillSettingsValue($this->getSingleValuedActivityElement($mappedActivity, 'default_finance_type'), 'default_finance_type');
+        $defaultTiedStatus = $this->autoFillSettingsValue($this->getSingleValuedActivityElement($mappedActivity, 'default_tied_status'), 'default_tied_status');
 
         $data = [
             'iati_identifier' => $mappedActivity['iati_identifier'],
@@ -209,12 +217,12 @@ class ActivityRepository extends Repository
             'policy_marker' => $this->getActivityElement($mappedActivity, 'policy_marker'),
             'budget' => $this->getActivityElement($mappedActivity, 'budget'),
             'activity_scope' => $this->getSingleValuedActivityElement($mappedActivity, 'activity_scope'),
-            'collaboration_type' => $this->getSingleValuedActivityElement($mappedActivity, 'collaboration_type'),
+            'collaboration_type' => !empty($collaborationType) ? (int) $collaborationType : null,
             'capital_spend' => $this->getSingleValuedActivityElement($mappedActivity, 'capital_spend'),
-            'default_flow_type' => $this->getSingleValuedActivityElement($mappedActivity, 'default_flow_type'),
-            'default_finance_type' => $this->getSingleValuedActivityElement($mappedActivity, 'default_finance_type'),
+            'default_flow_type' => !empty($defaultFlowType) ? (int) $defaultFlowType : null,
+            'default_finance_type' => !empty($defaultFinanceType) ? (int) $defaultFinanceType : null,
             'default_aid_type' => $this->getActivityElement($mappedActivity, 'default_aid_type'),
-            'default_tied_status' => $this->getSingleValuedActivityElement($mappedActivity, 'default_tied_status'),
+            'default_tied_status' => !empty($defaultTiedStatus) ? (int) $defaultTiedStatus : null,
             'contact_info' => $this->getActivityElement($mappedActivity, 'contact_info'),
             'related_activity' => $this->getActivityElement($mappedActivity, 'related_activity'),
             'default_field_values' => $mappedActivity['default_field_values'],
@@ -278,9 +286,16 @@ class ActivityRepository extends Repository
      * @param $activityData
      *
      * @return Model
+     *
+     * @throws BindingResolutionException
      */
     public function createActivity($activityData): Model
     {
+        $collaborationType = $this->autoFillSettingsValue($this->getSingleValuedActivityElement($activityData, 'collaboration_type'), 'default_collaboration_type');
+        $defaultFlowType = $this->autoFillSettingsValue($this->getSingleValuedActivityElement($activityData, 'default_flow_type'), 'default_flow_type');
+        $defaultFinanceType = $this->autoFillSettingsValue($this->getSingleValuedActivityElement($activityData, 'default_finance_type'), 'default_finance_type');
+        $defaultTiedStatus = $this->autoFillSettingsValue($this->getSingleValuedActivityElement($activityData, 'default_tied_status'), 'default_tied_status');
+
         return $this->store(
             [
                 'iati_identifier' => $activityData['identifier'],
@@ -301,10 +316,10 @@ class ActivityRepository extends Repository
                 'related_activity' => $this->getActivityElement($activityData, 'related_activity'),
                 'other_identifier' => $this->getActivityElement($activityData, 'other_identifier'),
                 'tag' => $this->getActivityElement($activityData, 'tag'),
-                'collaboration_type' => $this->getSingleValuedActivityElement($activityData, 'collaboration_type'),
-                'default_flow_type' => $this->getSingleValuedActivityElement($activityData, 'default_flow_type'),
-                'default_finance_type' => $this->getSingleValuedActivityElement($activityData, 'default_finance_type'),
-                'default_tied_status' => $this->getSingleValuedActivityElement($activityData, 'default_tied_status'),
+                'collaboration_type' => !empty($collaborationType) ? (int) $collaborationType : null,
+                'default_flow_type' => !empty($defaultFlowType) ? (int) $defaultFlowType : null,
+                'default_finance_type' => !empty($defaultFinanceType) ? (int) $defaultFinanceType : null,
+                'default_tied_status' => !empty($defaultTiedStatus) ? (int) $defaultTiedStatus : null,
                 'default_aid_type' => $this->getActivityElement($activityData, 'default_aid_type'),
                 'country_budget_items' => Arr::get($activityData, 'country_budget_item', null),
                 'humanitarian_scope' => $this->getActivityElement($activityData, 'humanitarian_scope'),
@@ -318,6 +333,26 @@ class ActivityRepository extends Repository
                 'upload_medium' => Enums::UPLOAD_TYPE['csv'],
             ]
         );
+    }
+
+    /**
+     * @param $csvValue
+     * @param $defaultElementName
+     *
+     * @return mixed
+     *
+     * @throws BindingResolutionException
+     */
+    public function autoFillSettingsValue($csvValue, $defaultElementName): mixed
+    {
+        if (!empty($csvValue)) {
+            return $csvValue;
+        }
+
+        $activityService = app()->make(ActivityService::class);
+        $defaultValues = $activityService->getDefaultValues();
+
+        return isset($defaultValues[$defaultElementName]) && !empty($defaultValues[$defaultElementName]) ? $defaultValues[$defaultElementName] : null;
     }
 
     /**
