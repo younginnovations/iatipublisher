@@ -38,7 +38,7 @@ Route::group([], static function () {
     Route::get('/dashboard/activity/stats', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'activityStats'])->name('dashboard.activity.stats');
     Route::get('/dashboard/activity/count', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'activityCount'])->name('dashboard.activity.count');
     Route::get('/dashboard/activity/status', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'activityStatus'])->name('dashboard.activity.status');
-    Route::get('/dashboard/activity/method', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'activityMethod'])->name('dashboard.activitiy.method');
+    Route::get('/dashboard/activity/method', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'activityMethod'])->name('dashboard.activity.method');
     Route::get('/dashboard/activity/completeness', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'activityCompleteness'])->name('dashboard.activity.completeness');
     Route::get('/dashboard/activity/download', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'downloadActivity'])->name('dashboard.activity.download');
 });

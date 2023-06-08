@@ -9,6 +9,7 @@ use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Repositories\User\UserRepository;
 use App\IATI\Traits\DateRangeResolverTrait;
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**
@@ -189,5 +190,18 @@ class DashboardService
     public function getOrganizationToDownload(): array
     {
         return $this->organizationRepo->getOrganizationDashboardDownload();
+    }
+
+    /**
+     * Returns data for user dashboard table component.
+     *
+     * @param int   $page
+     * @param array $queryParams
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getUserCountByOrganization(int $page, array $queryParams): LengthAwarePaginator
+    {
+        return $this->userRepo->getUserCountByOrganization($page, $queryParams);
     }
 }

@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\IATI\Services\Audit\AuditService;
 use App\IATI\Services\Dashboard\DashboardService;
 use App\IATI\Services\Download\CsvGenerator;
-use App\IATI\Services\User\UserService;
 use Carbon\Exceptions\InvalidFormatException;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -75,7 +74,7 @@ class DashboardController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Paginated users fetched successfully',
-                // 'data' => $this->userService->getUserCountByOrganization($page, $queryParams),
+                 'data' => $this->dashboardService->getUserCountByOrganization($page, $queryParams),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
@@ -544,7 +543,6 @@ class DashboardController extends Controller
 
             return $this->csvGenerator->generateWithHeaders(getTimeStampedText('organizations'), $organizations, $headers);
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
             // $this->auditService->auditEvent(null, 'download', 'csv');
 
