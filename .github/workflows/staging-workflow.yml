@@ -38,7 +38,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@c4ee3adeed93b1fa6a762f209fb01608c1a22f1e
+        uses: docker/metadata-action@2c0bd771b40637d97bf205cbccdd294a32112176
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/cli
 
@@ -86,7 +86,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@c4ee3adeed93b1fa6a762f209fb01608c1a22f1e
+        uses: docker/metadata-action@2c0bd771b40637d97bf205cbccdd294a32112176
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/fpm_server
 
@@ -132,7 +132,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@c4ee3adeed93b1fa6a762f209fb01608c1a22f1e
+        uses: docker/metadata-action@2c0bd771b40637d97bf205cbccdd294a32112176
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/web_server
 
@@ -179,7 +179,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@c4ee3adeed93b1fa6a762f209fb01608c1a22f1e
+        uses: docker/metadata-action@2c0bd771b40637d97bf205cbccdd294a32112176
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/cron
 
@@ -225,7 +225,7 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@c4ee3adeed93b1fa6a762f209fb01608c1a22f1e
+        uses: docker/metadata-action@2c0bd771b40637d97bf205cbccdd294a32112176
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/horizon
 
