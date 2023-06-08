@@ -14,7 +14,9 @@ class TransactionElementForm extends BaseForm
     /**
      * Builds multilevel subelement form.
      *
-     * @return mixed|void
+     * @throws \JsonException
+     *
+     * @return void
      */
     public function buildForm(): void
     {
@@ -36,31 +38,18 @@ class TransactionElementForm extends BaseForm
 
         if ($sub_elements) {
             foreach ($sub_elements as $name => $sub_element) {
+                $dynamicWrapperClass = ((isset($sub_element['add_more']) && $sub_element['add_more']) || Arr::get($sub_element, 'add_more_attributes', false)) ?
+                    ((!Arr::get($sub_element, 'attributes', null) && strtolower($sub_element['name']) === 'narrative') ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
+                    : ((empty($sub_element['attributes']) && $sub_element['sub_elements'] && isset($sub_element['sub_elements']['narrative'])) ? 'subelement rounded-tl-lg mb-6' : 'subelement rounded-tl-lg border-l border-spring-50 mb-6');
+
+                if (Arr::get($sub_element, 'freeze')) {
+                    $dynamicWrapperClass .= ' freeze';
+                }
+
                 $this->add(
                     $this->getData(sprintf('sub_elements.%s.name', $name)),
                     'collection',
-                    [
-                        'type'    => 'form',
-                        'property' => 'name',
-                        'prototype' => true,
-                        'prototype_name' => '__PARENT_NAME__',
-                        'options' => [
-                            'class' => 'App\IATI\Elements\Forms\BaseForm',
-                            'data'  => $this->getData(sprintf('sub_elements.%s', $name)),
-                            'element_criteria'  => $this->getData(sprintf('sub_elements.%s.element_criteria', $name)),
-                            'hover_text' => $this->getData(sprintf('sub_elements.%s.hover_text', $name)) ?? '',
-                            'help_text' => $this->getData(sprintf('sub_elements.%s.help_text', $name)) ?? '',
-                            'label' => false,
-                            'wrapper' => [
-                                'class' => 'multi-form relative',
-                            ],
-                            'dynamic_wrapper' => [
-                                'class' => (isset($sub_element['add_more']) && $sub_element['add_more'] || Arr::get($sub_element, 'add_more_attributes', false)) ?
-                                    ((!Arr::get($sub_element, 'attributes', null) && strtolower($sub_element['name']) === 'narrative') ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
-                                    : ((empty($sub_element['attributes']) && $sub_element['sub_elements'] && isset($sub_element['sub_elements']['narrative'])) ? 'subelement rounded-tl-lg mb-6' : 'subelement rounded-tl-lg border-l border-spring-50 mb-6'),
-                            ],
-                        ],
-                    ]
+                    $this->addProperty($name, $dynamicWrapperClass)
                 );
 
                 if (Arr::get($sub_element, 'add_more', false) || Arr::get($sub_element, 'add_more_attributes', false)) {
@@ -75,5 +64,39 @@ class TransactionElementForm extends BaseForm
                 }
             }
         }
+    }
+
+    /**
+     * Adds property for form.
+     *
+     * @param $name
+     * @param $dynamicWrapperClass
+     *
+     * @return array
+     */
+    public function addProperty($name, $dynamicWrapperClass): array
+    {
+        return  [
+            'type'    => 'form',
+            'property' => 'name',
+            'prototype' => true,
+            'prototype_name' => '__PARENT_NAME__',
+            'options' => [
+                'class' => 'App\IATI\Elements\Forms\BaseForm',
+                'data'  => $this->getData(sprintf('sub_elements.%s', $name)),
+                'element_criteria'  => $this->getData(sprintf('sub_elements.%s.element_criteria', $name)),
+                'hover_text' => $this->getData(sprintf('sub_elements.%s.hover_text', $name)) ?? '',
+                'help_text' => $this->getData(sprintf('sub_elements.%s.help_text', $name)) ?? '',
+                'info_text' => $this->getData(sprintf('sub_elements.%s.info_text', $name)) ?? '',
+                'warning_info_text' => $this->getData(sprintf('sub_elements.%s.warning_info_text', $name)) ?? '',
+                'label' => false,
+                'wrapper' => [
+                    'class' => 'multi-form relative',
+                ],
+                'dynamic_wrapper' => [
+                    'class' => $dynamicWrapperClass,
+                ],
+            ],
+        ];
     }
 }

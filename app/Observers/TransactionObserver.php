@@ -49,7 +49,7 @@ class TransactionObserver
         $isSectorCompletedInActivityLevel = Arr::get($elementStatus, 'sector', false);
         $transactionService = app()->make(TransactionService::class);
         $isSectorFilledInTransactionLevel = $transactionService->checkIfTransactionHasElementDefined($activityObj, 'sector');
-        $isSectorCompleteInTransactionLevel = $this->elementCompleteService->isSectorElementCompleted(new Activity(['sector' => $transaction->transaction]));
+        $isSectorCompleteInTransactionLevel = $this->elementCompleteService->isSectorElementCompleted(new Activity(['sector' => $transaction->transaction['sector']]));
 
         switch([
             $isSectorFilledInActivityLevel,
@@ -58,6 +58,7 @@ class TransactionObserver
             $isSectorCompleteInTransactionLevel,
         ]) {
             case [0, 0, 1, 1]:
+            case [0, 1, 1, 1]:
             case [1, 1, 0, 0]:
                 $elementStatus['sector'] = true;
                 break;
@@ -66,7 +67,10 @@ class TransactionObserver
                 break;
         }
 
-        if (is_array_value_empty($transaction->transaction['recipient_region']) || is_array_value_empty($transaction->transaction['recipient_country'])) {
+        $recipientRegionOrCountryIsCompleteInTransaction = $this->recipientRegionIsEmptyInTransaction($transaction->transaction['recipient_region']) || $this->recipientCountryIsEmptyInTransaction($transaction->transaction['recipient_country']);
+        $recipientRegionOrCountryIsCompleteInActivity = $this->elementCompleteService->isRecipientCountryElementCompleted($activityObj) || $this->elementCompleteService->isRecipientRegionElementCompleted($activityObj);
+
+        if ($recipientRegionOrCountryIsCompleteInTransaction || $recipientRegionOrCountryIsCompleteInActivity) {
             $elementStatus['recipient_region'] = true;
             $elementStatus['recipient_country'] = true;
         }
@@ -192,5 +196,29 @@ class TransactionObserver
 
         $activityObj->element_status = $elementStatus;
         $activityObj->save();
+    }
+
+    /**
+     * Checks if Recipient region is empty in transaction.
+     *
+     * @param mixed $recipientRegion
+     *
+     * @return bool
+     */
+    private function recipientRegionIsEmptyInTransaction(mixed $recipientRegion): bool
+    {
+        return (bool) Arr::get($recipientRegion, '0.region_vocabulary', false);
+    }
+
+    /**
+     * Checks if Recipient country is empty in transaction.
+     *
+     * @param mixed $recipientCountry
+     *
+     * @return bool
+     */
+    private function recipientCountryIsEmptyInTransaction(mixed $recipientCountry): bool
+    {
+        return (bool) Arr::get($recipientCountry, '0.country_code', false);
     }
 }

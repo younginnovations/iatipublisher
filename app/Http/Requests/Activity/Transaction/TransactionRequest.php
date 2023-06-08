@@ -945,12 +945,13 @@ class TransactionRequest extends ActivityBaseRequest
         $transactionService = app()->make(TransactionService::class);
         $params = $this->route()->parameters();
         $transactionId = isset($params['transactionId']) ? (int) $params['transactionId'] : null;
+        $hasDefinedInTransaction = $transactionService->hasRecipientRegionOrCountryDefinedInTransaction($params['id'], $transactionId);
 
-        if (($transactionService->hasRecipientRegionOrCountryDefinedInTransaction($params['id'], $transactionId)) && (is_variable_null($this->all()['recipient_region']) && is_variable_null($this->all()['recipient_country']))) {
+        if ($hasDefinedInTransaction && (is_variable_null($this->all()['recipient_region']) && is_variable_null($this->all()['recipient_country']))) {
             $rules[$attribute] = 'country_or_region';
         } elseif (!is_variable_null($this->all()['recipient_region']) && !is_variable_null($this->all()['recipient_country'])) {
             $rules[$attribute] = 'country_or_region';
-        } elseif (!$this->hasCountryOrRegionDefinedInActivity && is_variable_null($this->all()['recipient_region']) && is_variable_null($this->all()['recipient_country'])) {
+        } elseif ($hasDefinedInTransaction && !$this->hasCountryOrRegionDefinedInActivity && is_variable_null($this->all()['recipient_region']) && is_variable_null($this->all()['recipient_country'])) {
             $rules[$attribute] = 'country_or_region';
         }
 

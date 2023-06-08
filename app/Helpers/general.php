@@ -577,7 +577,7 @@ if (!function_exists('getTableConfig')) {
     function getTableConfig($module): array
     {
         $tableConfig = [
-            'activity' => ['orderBy' => ['updated_at'], 'direction' => ['asc', 'desc']],
+            'activity' => ['orderBy' => ['updated_at', 'complete_percentage'], 'direction' => ['asc', 'desc']],
             'organisation' => ['orderBy' => ['updated_at', 'all_activities_count', 'name'], 'direction' => ['asc', 'desc']],
             'user' => ['orderBy' => ['username', 'publisher_name', 'created_at'], 'direction' => ['asc', 'desc']],
             'audit' => ['orderBy' => ['user_id', 'user_type', 'event', 'auditable_type', 'created_at'], 'direction' => ['asc', 'desc']],
@@ -822,5 +822,96 @@ if (!function_exists('unsetErrorFields')) {
         $importData['data'] = $activity;
 
         return $importData;
+    }
+}
+
+if (!function_exists('compareStringIgnoringWhitespace')) {
+    /**
+     * Check if 2 strings are exactly same after removing all whitespaces.
+     *
+     * @param string $string1
+     * @param string $string2
+     *
+     * @return bool
+     */
+    function compareStringIgnoringWhitespace(string $string1, string $string2): bool
+    {
+        return preg_replace('/\s+/', '', $string1) === preg_replace('/\s+/', '', $string2);
+    }
+}
+
+if (!function_exists('getFileNameExtension')) {
+    /**
+     * Get extension from filename.
+     *
+     * @param $fileName
+     *
+     * @return string|null
+     */
+    function getFileNameExtension($fileName): ?string
+    {
+        if (empty($fileName)) {
+            return null;
+        }
+
+        $explodedFileName = explode('.', $fileName);
+
+        return $explodedFileName[1] ?? null;
+    }
+}
+
+if (!function_exists('getAllocatedPercentageOfRecipientRegion')) {
+    /**
+     * Returns currently consumed % by recipient region.
+     *
+     * @param $activity
+     *
+     * @return float
+     */
+    function getAllocatedPercentageOfRecipientRegion($activity):float
+    {
+        $data = $activity->recipient_region;
+        $groupedRegion = [];
+
+        if (!empty($data)) {
+            foreach ($data as $datum) {
+                if (array_key_exists($datum['region_vocabulary'], $groupedRegion)) {
+                    $groupedRegion[$datum['region_vocabulary']] += (float) $datum['percentage'];
+                } else {
+                    $groupedRegion[$datum['region_vocabulary']] = (float) $datum['percentage'];
+                }
+            }
+
+            if (!empty($groupedRegion)) {
+                $groupedRegion = array_values($groupedRegion);
+
+                return $groupedRegion[0];
+            }
+        }
+
+        return 0.0;
+    }
+}
+
+if (!function_exists('getAllocatedPercentageOfRecipientCountry')) {
+    /**
+     * Returns currently consumed % by recipient country.
+     *
+     * @param $activity
+     *
+     * @return float
+     */
+    function getAllocatedPercentageOfRecipientCountry($activity): float
+    {
+        $data = $activity->recipient_country;
+        $total = 0.0;
+
+        if (!empty($data)) {
+            foreach ($data as $datum) {
+                $total += (float) $datum['percentage'];
+            }
+        }
+
+        return $total;
     }
 }

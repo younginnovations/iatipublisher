@@ -7,7 +7,15 @@
             <span>Activity Title</span>
           </th>
           <th id="publishing-progress" scope="col" class="progress-bar-header">
-            <div class="">Publishing Progress</div>
+            <a
+              class="flex justify-end text-n-50 transition duration-500 hover:text-spring-50"
+              :href="sortByPublishingProgress()"
+            >
+              <span class="sorting-indicator" :class="sortingDirection()">
+                <svg-vue :icon="`${sortingDirection()}-arrow`" />
+              </span>
+              <span class="">Publishing Progress</span>
+            </a>
           </th>
           <th id="date" scope="col">
             <a
@@ -213,6 +221,17 @@ let query = '',
 
 const sortingDirection = () => {
   return direction === 'asc' ? 'descending' : 'ascending';
+};
+
+const sortByPublishingProgress = () => {
+  if (currentURL.includes('?')) {
+    const queryString = window.location.search,
+      urlParams = new URLSearchParams(queryString);
+    query = urlParams.get('q') ?? '';
+    direction = urlParams.get('direction') === 'desc' ? 'asc' : 'desc';
+  }
+
+  return `?q=${query}&orderBy=complete_percentage&direction=${direction}`;
 };
 
 const sortByDateUrl = () => {

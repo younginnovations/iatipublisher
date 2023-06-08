@@ -10,6 +10,7 @@ use App\IATI\Services\Activity\SectorService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use JsonException;
 
 /**
  * Class SectorController.
@@ -41,9 +42,9 @@ class SectorController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = getElementSchema('sector');
             $activity = $this->sectorService->getActivityData($id);
-            $form = $this->sectorService->formGenerator($id);
+            $element = $this->getSectorManipulatedElementSchema($activity);
+            $form = $this->sectorService->formGenerator($id, $element);
             $data = ['title' => $element['label'], 'name' => 'sector'];
 
             return view('admin.activity.sector.edit', compact('form', 'activity', 'data'));
@@ -75,5 +76,31 @@ class SectorController extends Controller
 
             return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity sector.');
         }
+    }
+
+    /**
+     * append freeze if sector found in activity transactions
+     * and freezes sector in activity level.
+     *
+     * @param $activity
+     *
+     * @throws JsonException
+     *
+     * @return array
+     */
+    public function getSectorManipulatedElementSchema($activity): array
+    {
+        $element = getElementSchema('sector');
+
+        if (count($activity->transactions)) {
+            $sector = $activity->transactions->pluck('transaction.sector')->toArray();
+
+            if (!is_array_value_empty($sector)) {
+                $element['freeze'] = true;
+                $element['info_text'] = 'Sector has already been declared at transaction level. You can add either in activity level or transaction level.';
+            }
+        }
+
+        return $element;
     }
 }

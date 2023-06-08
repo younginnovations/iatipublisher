@@ -8,6 +8,7 @@ use App\IATI\Services\Activity\RecipientRegionService;
 use App\IATI\Traits\ElementCompleteServiceTrait;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
+use JsonException;
 
 /**
  * Class ElementCompleteService.
@@ -40,7 +41,8 @@ class ElementCompleteService
      * @param $data
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isAttributeDataCompleted($mandatoryAttributes, $data): bool
     {
@@ -63,7 +65,8 @@ class ElementCompleteService
      * @param $data
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function singleDimensionAttributeCheck($data): bool
     {
@@ -76,7 +79,8 @@ class ElementCompleteService
      * @param $data
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isLevelOneMultiDimensionElementCompleted($data): bool
     {
@@ -93,7 +97,8 @@ class ElementCompleteService
      * @param $data
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isLevelTwoSingleDimensionElementCompleted($data): bool
     {
@@ -112,7 +117,8 @@ class ElementCompleteService
      * @param $data
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isLevelTwoMultiDimensionElementCompleted($data): bool
     {
@@ -129,7 +135,8 @@ class ElementCompleteService
      * @param $data
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isLevelThreeSingleDimensionElementCompleted($data): bool
     {
@@ -192,7 +199,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isTitleElementCompleted($activity): bool
     {
@@ -208,7 +216,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isReportingOrgElementCompleted($activity): bool
     {
@@ -223,7 +232,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isDescriptionElementCompleted($activity): bool
     {
@@ -238,7 +248,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isActivityDateElementCompleted($activity): bool
     {
@@ -253,7 +264,9 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws BindingResolutionException
+     * @throws JsonException
      */
     public function isRecipientCountryElementCompleted($activity): bool
     {
@@ -268,7 +281,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isBudgetElementCompleted($activity): bool
     {
@@ -283,7 +297,9 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws BindingResolutionException
+     * @throws JsonException
      */
     public function isRecipientRegionElementCompleted($activity): bool
     {
@@ -298,7 +314,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isDefaultAidTypeElementCompleted($activity): bool
     {
@@ -313,7 +330,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isRelatedActivityElementCompleted($activity): bool
     {
@@ -328,7 +346,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isSectorElementCompleted($activity): bool
     {
@@ -343,7 +362,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isHumanitarianScopeElementCompleted($activity): bool
     {
@@ -358,7 +378,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isLegacyDataElementCompleted($activity): bool
     {
@@ -373,7 +394,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isTagElementCompleted($activity): bool
     {
@@ -388,7 +410,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isPolicyMarkerElementCompleted($activity): bool
     {
@@ -403,7 +426,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isParticipatingOrgElementCompleted($activity): bool
     {
@@ -516,7 +540,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isOtherIdentifierElementCompleted($activity): bool
     {
@@ -531,7 +556,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isConditionsElementCompleted($activity): bool
     {
@@ -550,7 +576,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isDocumentLinkElementCompleted($activity): bool
     {
@@ -565,7 +592,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isContactInfoElementCompleted($activity): bool
     {
@@ -580,7 +608,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isLocationElementCompleted($activity): bool
     {
@@ -595,7 +624,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isPlannedDisbursementElementCompleted($activity): bool
     {
@@ -610,7 +640,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isCountryBudgetItemsElementCompleted($activity): bool
     {
@@ -625,7 +656,8 @@ class ElementCompleteService
      * @param $data
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isPeriodElementCompleted($data): bool
     {
@@ -661,7 +693,8 @@ class ElementCompleteService
      * @param $subElement
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isBaselineCompleted($data, $subElement): bool
     {
@@ -684,7 +717,8 @@ class ElementCompleteService
      * @param $data
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isResultAndIndicatorElementCompleted($elementSchema, $data): bool
     {
@@ -710,7 +744,8 @@ class ElementCompleteService
      * @param $data
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isIndicatorElementCompleted($data): bool
     {
@@ -735,7 +770,8 @@ class ElementCompleteService
      * @param $data
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isResultElementDataCompleted($data): bool
     {
@@ -794,7 +830,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isResultElementCompleted($activity): bool
     {
@@ -816,7 +853,8 @@ class ElementCompleteService
      * @param $data
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function checkTransactionData($subElements, $data): bool
     {
@@ -837,7 +875,8 @@ class ElementCompleteService
      * @param $activity
      *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function isTransactionsElementCompleted($activity): bool
     {
@@ -866,7 +905,8 @@ class ElementCompleteService
      *
      * @return bool
      *
-     * @throws \JsonException
+     * @throws BindingResolutionException
+     * @throws JsonException
      */
     public function checkIfRecipientRegionElementCompleted($activity): bool
     {
@@ -889,8 +929,20 @@ class ElementCompleteService
                 return $value;
             })['total'];
 
-            if (empty($activity->recipient_country) && $firstGroupTotalPercentage === 0.0) {
-                return false;
+            /*
+             * We are only comparing first groups percentage because all groups are expected to be same.
+             * This is because recipient region request validation prevents unique vocab from having different percentages.
+             * Comparing with ( 100 - % of RecipientCountry ) is the same as comparing with 100.0 if Recipient Country is empty.
+             */
+            if (empty($activity->recipient_country) && $firstGroupTotalPercentage !== 100.0) {
+                return  false;
+            }
+
+            if (!empty($activity->recipient_country)) {
+                $countryTotalPercentage = (float) array_sum(array_column($activity->recipient_country, 'percentage'));
+                $totalPercentage = $firstGroupTotalPercentage + $countryTotalPercentage;
+
+                return $totalPercentage === 100.0 ? $regionStatus : false;
             }
         }
 
@@ -901,8 +953,11 @@ class ElementCompleteService
      * Checks if recipient country is completed.
      *
      * @param $activity
+     *
      * @return bool
-     * @throws \JsonException
+     *
+     * @throws BindingResolutionException
+     * @throws JsonException
      */
     public function checkIfRecipientCountryElementCompleted($activity): bool
     {
@@ -916,7 +971,7 @@ class ElementCompleteService
             })['total'];
 
             if ($firstGroupTotalPercentage === 100.0) {
-                return true;
+                return $countryStatus;
             }
 
             return false;
@@ -925,7 +980,11 @@ class ElementCompleteService
         if (!empty($activity->recipient_country)) {
             $countryTotalPercentage = (float) array_sum(array_column($activity->recipient_country, 'percentage'));
 
-            if (empty($activity->recipient_region) && $countryTotalPercentage === 0.0) {
+            if (empty($activity->recipient_region) && $countryTotalPercentage != 100.0) {
+                return false;
+            }
+
+            if ($countryTotalPercentage !== (100.0 - getAllocatedPercentageOfRecipientRegion($activity))) {
                 return false;
             }
         }
@@ -939,6 +998,7 @@ class ElementCompleteService
      * @param $activity
      *
      * @return void
+     *
      * @throws BindingResolutionException
      */
     public function refreshElementStatus($activity): void

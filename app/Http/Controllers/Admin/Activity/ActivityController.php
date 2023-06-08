@@ -163,7 +163,7 @@ class ActivityController extends Controller
         try {
             $toast = generateToastData();
             $activity = $this->activityService->getActivity($id);
-            $elements = readElementJsonSchema();
+            $elements = $this->getElementJsonSchema($activity);
             $elementGroups = readElementGroup();
             $types = $this->getActivityDetailDataType();
             $results = $this->resultService->getActivityResultsWithIndicatorsAndPeriods($activity->id);
@@ -196,6 +196,50 @@ class ActivityController extends Controller
 
             return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while opening activity detail page.');
         }
+    }
+
+    /**
+     * manipulate element json schema and adds warning info text.
+     *
+     * @param $activity
+     *
+     * @return array
+     *
+     * @throws \JsonException
+     */
+    public function getElementJsonSchema($activity): array
+    {
+        $element = readElementJsonSchema();
+        $hasDefinedInTransaction = $this->transactionService->hasRecipientRegionOrCountryDefinedInTransaction($activity->id);
+        $hasSectorDefinedInTransaction = $this->transactionService->hasSectorDefinedInTransaction($activity->id);
+        $emptyRecipientRegionOrCountryTransactionCount = 0;
+        $emptySectorTransactionCount = 0;
+
+        if ($hasDefinedInTransaction) {
+            $emptyRecipientRegionOrCountryTransactionCount = $activity->transactions->filter(function ($item) {
+                $recipientRegion = $item->transaction['recipient_region'];
+                $recipientCountry = $item->transaction['recipient_country'];
+
+                return is_array_value_empty($recipientRegion) && is_array_value_empty($recipientCountry);
+            })->count();
+        }
+
+        if ($hasSectorDefinedInTransaction) {
+            $emptySectorTransactionCount = $activity->transactions->filter(function ($item) {
+                $sector = $item->transaction['sector'];
+
+                return is_array_value_empty($sector);
+            })->count();
+        }
+
+        $element['transactions']['warning_info_text'] = match (true) {
+            $emptyRecipientRegionOrCountryTransactionCount > 0 && $emptySectorTransactionCount > 0 => 'Recipient Region , Recipient Country and Sector are declared at transaction level. Some of the transactions are missing these values.',
+            $emptyRecipientRegionOrCountryTransactionCount > 0 && $emptySectorTransactionCount === 0 => 'Recipient Region and Recipient Country is declared at transaction level. Some of the transactions are missing these values.',
+            $emptySectorTransactionCount > 0 && $emptyRecipientRegionOrCountryTransactionCount === 0  => 'Sector is declared at transaction level. Some of the transactions are missing this value.',
+            default => ''
+        };
+
+        return $element;
     }
 
     /**

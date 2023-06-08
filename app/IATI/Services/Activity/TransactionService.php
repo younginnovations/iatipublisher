@@ -149,13 +149,12 @@ class TransactionService
      * Generates transaction create form.
      *
      * @param $activityId
+     * @param $element
      *
      * @return Form
-     * @throws \JsonException
      */
-    public function createFormGenerator($activityId): Form
+    public function createFormGenerator($activityId, $element): Form
     {
-        $element = getElementSchema('transactions');
         $this->transactionElementFormCreator->url = route('admin.activity.transaction.store', $activityId);
 
         return $this->transactionElementFormCreator->editForm([], $element, 'POST', '/activity/' . $activityId);
@@ -166,13 +165,14 @@ class TransactionService
      *
      * @param $transactionId
      * @param $activityId
+     * @param $element
      *
      * @return Form
+     *
      * @throws \JsonException
      */
-    public function editFormGenerator($transactionId, $activityId): Form
+    public function editFormGenerator($transactionId, $activityId, $element): Form
     {
-        $element = getElementSchema('transactions');
         $activityTransaction = $this->getTransaction($transactionId);
         $this->transactionElementFormCreator->url = route(
             'admin.activity.transaction.update',
@@ -531,5 +531,109 @@ class TransactionService
     public function insert($transactions): bool
     {
         return $this->transactionRepository->insert($transactions);
+    }
+
+    /**
+     * append freeze and info_text in sector, recipient region or country if present in activity level.
+     *
+     * @param $activity
+     * @param $transactionId
+     *
+     * @return array
+     *
+     * @throws \JsonException
+     */
+    public function getManipulatedTransactionElementSchema($activity, $transactionId = null): array
+    {
+        $element = getElementSchema('transactions');
+
+        if (!empty($activity->sector)) {
+            $element['sub_elements']['sector']['freeze'] = true;
+            $element['sub_elements']['sector']['info_text'] = 'Sector has already been declared at activity level. You can’t declare a sector at the transaction level. To declare at transaction level, you need to remove sector at activity level.';
+        }
+
+        if (!empty($activity->recipient_country) || !empty($activity->recipient_region)) {
+            $element['sub_elements']['recipient_region']['freeze'] = true;
+            $element['sub_elements']['recipient_region']['info_text'] = 'Recipient Region or Recipient Country is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.';
+            $element['sub_elements']['recipient_country']['freeze'] = true;
+            $element['sub_elements']['recipient_country']['info_text'] = 'Recipient Region or Recipient Country is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.';
+        }
+
+        if ($transactionId) {
+            $this->appendInfoTextForRecipientRegionAndCountryInTransaction($activity, $element, $transactionId);
+            $this->appendInfoTextForSectorInTransaction($activity, $element, $transactionId);
+        }
+
+        return $element;
+    }
+
+    /**
+     * appends warning info text in recipient region or country in transaction level.
+     *
+     * @param $activity
+     * @param $element
+     * @param $transactionId
+     *
+     * @return void
+     */
+    public function appendInfoTextForRecipientRegionAndCountryInTransaction($activity, &$element, $transactionId): void
+    {
+        $hasDefinedInTransaction = $this->hasRecipientRegionOrCountryDefinedInTransaction($activity->id);
+
+        $emptyRecipientRegionOrCountryTransaction = $activity->transactions->filter(function ($item) {
+            $recipientRegion = $item->transaction['recipient_region'];
+            $recipientCountry = $item->transaction['recipient_country'];
+
+            return is_array_value_empty($recipientRegion) && is_array_value_empty($recipientCountry);
+        });
+
+        $emptyRecipientRegionOrCountryTransactionCount = count($emptyRecipientRegionOrCountryTransaction);
+
+        if ($emptyRecipientRegionOrCountryTransactionCount && $hasDefinedInTransaction) {
+            $recipientRegionOrCountryMessage = 'Recipient Region or Recipient Country is declared at transaction level.';
+
+            if (in_array((int) $transactionId, $emptyRecipientRegionOrCountryTransaction->pluck('id')->toArray(), true)) {
+                $message = $recipientRegionOrCountryMessage;
+            } else {
+                $messagePart = $emptyRecipientRegionOrCountryTransactionCount > 1 ? "are other $emptyRecipientRegionOrCountryTransactionCount transactions"
+                    : "is $emptyRecipientRegionOrCountryTransactionCount transaction";
+                $message = $recipientRegionOrCountryMessage . " There $messagePart without Recipient Region or Recipient Country in this activity.";
+            }
+            $element['sub_elements']['recipient_region']['warning_info_text'] = $message;
+            $element['sub_elements']['recipient_country']['warning_info_text'] = $message;
+        }
+    }
+
+    /**
+     * Adds warning info text in sector in transaction level.
+     *
+     * @param $activity
+     * @param $element
+     * @param $transactionId
+     *
+     * @return void
+     */
+    public function appendInfoTextForSectorInTransaction($activity, &$element, $transactionId): void
+    {
+        $hasSectorDefinedInTransaction = $this->hasSectorDefinedInTransaction($activity->id);
+        $emptySectorTransaction = $activity->transactions->filter(function ($item) {
+            $sector = $item->transaction['sector'];
+
+            return is_array_value_empty($sector);
+        });
+        $emptySectorTransactionCount = count($emptySectorTransaction);
+
+        if ($emptySectorTransactionCount && $hasSectorDefinedInTransaction) {
+            $sectorMessage = 'Sector is declared at transaction level. You must add sector in all transactions.';
+
+            if (in_array((int) $transactionId, $emptySectorTransaction->pluck('id')->toArray(), true)) {
+                $message = $sectorMessage;
+            } else {
+                $messagePart = $emptySectorTransactionCount > 1 ? "are other $emptySectorTransactionCount transactions"
+                    : "is $emptySectorTransactionCount transaction";
+                $message = $sectorMessage . " There $messagePart without Sector in this activity.";
+            }
+            $element['sub_elements']['sector']['warning_info_text'] = $message;
+        }
     }
 }

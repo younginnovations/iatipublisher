@@ -80,14 +80,13 @@ class SectorService
     /**
      * Generates sector form.
      *
-     * @param id
+     * @param $id
+     * @param $element
      *
      * @return Form
-     * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $element): Form
     {
-        $element = getElementSchema('sector');
         $model['sector'] = $this->getSectorData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.sector.update', [$id]);
 

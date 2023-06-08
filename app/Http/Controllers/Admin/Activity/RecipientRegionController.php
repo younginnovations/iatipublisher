@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin\Activity;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\RecipientRegion\RecipientRegionRequest;
+use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\RecipientRegionService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -22,13 +23,22 @@ class RecipientRegionController extends Controller
     protected RecipientRegionService $recipientRegionService;
 
     /**
+     * For recipient region or country element json schema.
+     *
+     * @var ActivityService
+     */
+    protected ActivityService $activityService;
+
+    /**
      * RecipientRegionController Constructor.
      *
      * @param RecipientRegionService $recipientRegionService
+     * @param ActivityService $activityService
      */
-    public function __construct(RecipientRegionService $recipientRegionService)
+    public function __construct(RecipientRegionService $recipientRegionService, ActivityService $activityService)
     {
         $this->recipientRegionService = $recipientRegionService;
+        $this->activityService = $activityService;
     }
 
     /**
@@ -41,9 +51,9 @@ class RecipientRegionController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $element = getElementSchema('recipient_region');
             $activity = $this->recipientRegionService->getActivityData($id);
-            $form = $this->recipientRegionService->formGenerator($id);
+            $element = $this->activityService->getRecipientRegionOrCountryManipulatedElementSchema($activity, 'recipient_region');
+            $form = $this->recipientRegionService->formGenerator($id, $element);
             $data = ['title' => $element['label'], 'name' => 'recipient_region'];
 
             return view('admin.activity.recipientRegion.edit', compact('form', 'activity', 'data'));

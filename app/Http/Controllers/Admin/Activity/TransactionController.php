@@ -114,9 +114,9 @@ class TransactionController extends Controller
     public function create($activityId): Factory|View|RedirectResponse|Application
     {
         try {
-            $element = getElementSchema('transactions');
             $activity = $this->activityService->getActivity($activityId);
-            $form = $this->transactionService->createFormGenerator($activityId);
+            $element = $this->transactionService->getManipulatedTransactionElementSchema($activity);
+            $form = $this->transactionService->createFormGenerator($activityId, $element);
             $data = ['title' => $element['label'], 'name' => 'transactions'];
 
             return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));
@@ -200,9 +200,10 @@ class TransactionController extends Controller
     public function edit($activityId, $transactionId): Factory|View|RedirectResponse|Application
     {
         try {
-            $element = getElementSchema('transactions');
             $activity = $this->activityService->getActivity($activityId);
-            $form = $this->transactionService->editFormGenerator($transactionId, $activityId);
+            $element = $this->transactionService->getManipulatedTransactionElementSchema($activity, $transactionId);
+            $form = $this->transactionService->editFormGenerator($transactionId, $activityId, $element);
+
             $data = ['title' => $element['label'], 'name' => 'transactions'];
 
             return view('admin.activity.transaction.edit', compact('form', 'activity', 'data'));

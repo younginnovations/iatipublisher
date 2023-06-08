@@ -114,7 +114,7 @@ class RecipientCountryRequest extends ActivityBaseRequest
                 return false;
             });
 
-            $allottedCountryPercent = $activityService->getAllottedRecipientCountryPercent($params['id']);
+            $allottedCountryPercent = $activityService->getPossibleAllocationPercentForRecipientCountry($params['id']);
         }
 
         Validator::extend('sum_exceeded', function () {

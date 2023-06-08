@@ -7,8 +7,11 @@ namespace App\IATI\Services\Activity;
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Models\Activity\Activity;
 use App\IATI\Repositories\Activity\ActivityRepository;
+use App\IATI\Services\ElementCompleteService;
 use App\IATI\Traits\XmlBaseElement;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
+use JsonException;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -34,17 +37,24 @@ class RecipientCountryService
     protected RecipientRegionService $recipientRegionService;
 
     /**
+     * @var ElementCompleteService
+     */
+    protected ElementCompleteService $elementCompleteService;
+
+    /**
      * RecipientCountryService constructor.
      *
-     * @param ActivityRepository          $activityRepository
+     * @param ActivityRepository $activityRepository
      * @param ParentCollectionFormCreator $parentCollectionFormCreator
      * @param RecipientRegionService $recipientRegionService
+     * @param ElementCompleteService $elementCompleteService
      */
-    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator, RecipientRegionService $recipientRegionService)
+    public function __construct(ActivityRepository $activityRepository, ParentCollectionFormCreator $parentCollectionFormCreator, RecipientRegionService $recipientRegionService, ElementCompleteService $elementCompleteService)
     {
         $this->activityRepository = $activityRepository;
         $this->parentCollectionFormCreator = $parentCollectionFormCreator;
         $this->recipientRegionService = $recipientRegionService;
+        $this->elementCompleteService = $elementCompleteService;
     }
 
     /**
@@ -78,6 +88,7 @@ class RecipientCountryService
      * @param $activityRecipientCountry
      *
      * @return bool
+     * @throws BindingResolutionException
      */
     public function update($id, $activityRecipientCountry): bool
     {
@@ -85,7 +96,7 @@ class RecipientCountryService
             'recipient_country' => $this->sanitizeRecipientCountryData($activityRecipientCountry),
         ];
         $totalRecipientCountry = $activityRecipientCountry['total_country_percentage'] ?? 0;
-        $data = $this->setRecipientRegionStatus((int) $id, $data, (int) $totalRecipientCountry);
+        $data = $this->setRecipientRegionStatus((int) $id, $data, $totalRecipientCountry);
 
         return $this->activityRepository->update($id, $data);
     }
@@ -94,13 +105,12 @@ class RecipientCountryService
      * Generates budget form.
      *
      * @param $id
+     * @param $element
      *
      * @return Form
-     * @throws \JsonException
      */
-    public function formGenerator($id): Form
+    public function formGenerator($id, $element): Form
     {
-        $element = getElementSchema('recipient_country');
         $model['recipient_country'] = $this->getRecipientCountryData($id);
         $this->parentCollectionFormCreator->url = route('admin.activity.recipient-country.update', [$id]);
 
@@ -155,19 +165,21 @@ class RecipientCountryService
      *
      * @param int $id
      * @param array $data
-     * @param int $totalRecipientCountry
+     * @param $totalRecipientCountry
+     *
      * @return array
+     *
+     * @throws BindingResolutionException
+     * @throws JsonException
      */
-    public function setRecipientRegionStatus(int $id, array &$data, int $totalRecipientCountry): array
+    public function setRecipientRegionStatus(int $id, array &$data, $totalRecipientCountry): array
     {
         $activity = $this->activityRepository->find($id);
-        $recipientRegionStatus = ($totalRecipientCountry === 100 && is_variable_null($activity->recipient_region))
-                                || ($totalRecipientCountry !== 100 && !is_variable_null($activity->recipient_region))
-                                || ($totalRecipientCountry === 100 && !is_variable_null($activity->recipient_region)
-                                                                    && empty($this->getRecipientRegionFirstTotalPercentage($activity->recipient_region)));
-
+        $currentRecipientRegionPercent = getAllocatedPercentageOfRecipientRegion($activity);
+        $totalPercentage = $totalRecipientCountry + $currentRecipientRegionPercent;
         $elementStatus['element_status'] = $activity->element_status;
-        $elementStatus['element_status']['recipient_region'] = $recipientRegionStatus;
+        $elementStatus['element_status']['recipient_region'] = ($totalPercentage === 100.0);
+
         $data = array_merge($data, $elementStatus);
 
         return $data;

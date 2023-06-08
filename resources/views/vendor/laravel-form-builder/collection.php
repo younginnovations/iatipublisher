@@ -36,20 +36,38 @@
                 </div>' : '';
             $label = strtolower(str_replace(' ', '-', $options['label']));
             $error = '';
+            $errorSection = '';
+
+            if(isset($options['options']['info_text']) && !empty($options['options']['info_text']))
+            {
+                $error = '<div class="text-danger-error">' . $options['options']['info_text'] . '</div>';
+                $errorSection = '<section class="collection_error">' . $error . '</section>';
+            }
+
+            if(isset($options['options']['warning_info_text']) && !empty($options['options']['warning_info_text']))
+            {
+                $errorSection = '<div class="mt-2 flex items-center bg-eggshell pt-2 pr-4 pb-2 pl-4 text-xs rounded-md font-normal">
+                                    <svg-vue icon="exclamation-warning" class="mr-2 w-2/100"></svg-vue>
+                                    <div>'.$options['options']['warning_info_text'].'</div>
+                                </div>';
+            }
 
             if ($showError && isset($errors) && $errors->hasBag($errorBag)) {
                 foreach ($errors->getBag($errorBag)->get($nameKey) as $err) {
-                    $error = $error . '<div class="text-danger-error">' . $err . '</div>';
+                    if(!empty($err))
+                    {
+                        $error = '<div class="text-danger-error">' . $err . '</div>';
+                    }
                 }
+                $errorSection = '<section class="collection_error">' . $error . '</section>';
             }
 
-            $collectionLabel = '<div class="title-container w-full" > <div class="flex  justify-between items-center w-full" >' .
+            $collectionLabel = '<div class="title-container w-full" > <div class="flex justify-between items-center w-full" >' .
                 $label .
-                '<div class="flex   items-center">' .
+                '<div class="flex items-center">' .
                 $help_text . $hover_text .
                 '</div>' .
-                '</div>' . '<section class="collection_error">' . $error .
-                '</section> </div>';
+                '</div>' . $errorSection. '</div>';
             ?>
 
             <?php if (isset($options['options']['element_criteria']) && $options['options']['element_criteria'] === 'mandatory'): ?>
