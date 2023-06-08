@@ -22,7 +22,15 @@
 import ActivityDownload from './ActivityDownload.vue';
 import XlsLoader from './XlsLoader.vue';
 import BulkpublishWithXls from './BulkpublishWithXls.vue';
-import { defineProps, ref, inject, watch, onUnmounted, onMounted } from 'vue';
+import {
+  defineProps,
+  ref,
+  inject,
+  watch,
+  onUnmounted,
+  onMounted,
+  Ref,
+} from 'vue';
 import axios from 'axios';
 import { useStore } from 'Store/activities/index';
 const store = useStore();
@@ -49,7 +57,7 @@ const props = defineProps({
     default: false,
   },
   totalCount: {
-    type: Number,
+    type: Number || null,
     default: 0,
   },
   processedCount: {
@@ -198,5 +206,5 @@ watch(
   { deep: true }
 );
 const downloading = inject('downloading');
-const activities = inject('activities');
+const activities = inject('activities') as Ref;
 </script>

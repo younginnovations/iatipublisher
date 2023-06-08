@@ -173,7 +173,7 @@ const props = defineProps({
     default: false,
   },
   totalCount: {
-    type: Number,
+    type: Number || null,
     default: 0,
   },
   processedCount: {

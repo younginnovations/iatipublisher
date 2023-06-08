@@ -96,7 +96,7 @@ const actions = {
   ) {
     commit('mutateBulkPublishLength', payload);
   },
-  updateCancelUpload: function ({ commit }: CommitFunction, payload: number[]) {
+  updateCancelUpload: function ({ commit }: CommitFunction, payload: boolean) {
     commit('mutateCancelUpload', payload);
   },
   updateMaximizeXls: function ({ commit }: CommitFunction, payload: number[]) {
