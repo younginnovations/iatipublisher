@@ -51,7 +51,7 @@ class ZipXlsFileJob implements ShouldQueue
     {
         $awsCancelStatusFile = awsGetFile("Xls/$this->userId/cancelStatus.json");
 
-        if (empty($awsCancelStatusFile)) {
+        if (!empty($awsCancelStatusFile)) {
             $this->fail();
         }
 
