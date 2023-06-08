@@ -47,7 +47,7 @@
             if(isset($options['options']['warning_info_text']) && !empty($options['options']['warning_info_text']))
             {
                 $errorSection = '<div class="mt-2 flex items-center bg-eggshell pt-2 pr-4 pb-2 pl-4 text-xs rounded-md font-normal">
-                                    <svg-vue icon="exclamation-warning" class="mr-2"></svg-vue>
+                                    <svg-vue icon="exclamation-warning" class="mr-2 w-2/100"></svg-vue>
                                     <div>'.$options['options']['warning_info_text'].'</div>
                                 </div>';
             }

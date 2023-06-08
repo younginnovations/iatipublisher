@@ -547,12 +547,12 @@ class TransactionService
     {
         $element = getElementSchema('transactions');
 
-        if (!is_array_value_empty($activity->sector)) {
+        if (!empty($activity->sector)) {
             $element['sub_elements']['sector']['freeze'] = true;
             $element['sub_elements']['sector']['info_text'] = 'Sector has already been declared at activity level. You can’t declare a sector at the transaction level. To declare at transaction level, you need to remove sector at activity level.';
         }
 
-        if (!is_array_value_empty($activity->recipient_country) || !is_array_value_empty($activity->recipient_region)) {
+        if (!empty($activity->recipient_country) || !empty($activity->recipient_region)) {
             $element['sub_elements']['recipient_region']['freeze'] = true;
             $element['sub_elements']['recipient_region']['info_text'] = 'Recipient Region or Recipient Country is already added at activity level. You can add a Recipient Region and or Recipient Country either at activity level or at transaction level.';
             $element['sub_elements']['recipient_country']['freeze'] = true;
@@ -590,12 +590,14 @@ class TransactionService
         $emptyRecipientRegionOrCountryTransactionCount = count($emptyRecipientRegionOrCountryTransaction);
 
         if ($emptyRecipientRegionOrCountryTransactionCount && $hasDefinedInTransaction) {
+            $recipientRegionOrCountryMessage = 'Recipient Region or Recipient Country is declared at transaction level.';
+
             if (in_array((int) $transactionId, $emptyRecipientRegionOrCountryTransaction->pluck('id')->toArray(), true)) {
-                $message = 'Recipient Region or Recipient Country is declared at transaction level. You must add either Recipient Region or Recipient Country.';
+                $message = $recipientRegionOrCountryMessage;
             } else {
-                $messagePart = $emptyRecipientRegionOrCountryTransactionCount > 1 ? "are $emptyRecipientRegionOrCountryTransactionCount transactions"
+                $messagePart = $emptyRecipientRegionOrCountryTransactionCount > 1 ? "are other $emptyRecipientRegionOrCountryTransactionCount transactions"
                     : "is $emptyRecipientRegionOrCountryTransactionCount transaction";
-                $message = "There $messagePart without Recipient Region or Recipient Country.";
+                $message = $recipientRegionOrCountryMessage . " There $messagePart without Recipient Region or Recipient Country in this activity.";
             }
             $element['sub_elements']['recipient_region']['warning_info_text'] = $message;
             $element['sub_elements']['recipient_country']['warning_info_text'] = $message;
@@ -614,22 +616,22 @@ class TransactionService
     public function appendInfoTextForSectorInTransaction($activity, &$element, $transactionId): void
     {
         $hasSectorDefinedInTransaction = $this->hasSectorDefinedInTransaction($activity->id);
-
         $emptySectorTransaction = $activity->transactions->filter(function ($item) {
             $sector = $item->transaction['sector'];
 
             return is_array_value_empty($sector);
         });
-
         $emptySectorTransactionCount = count($emptySectorTransaction);
 
         if ($emptySectorTransactionCount && $hasSectorDefinedInTransaction) {
+            $sectorMessage = 'Sector is declared at transaction level. You must add sector in all transactions.';
+
             if (in_array((int) $transactionId, $emptySectorTransaction->pluck('id')->toArray(), true)) {
-                $message = 'Sector is declared at transaction level. You must add sector in all transactions.';
+                $message = $sectorMessage;
             } else {
-                $messagePart = $emptySectorTransactionCount > 1 ? "are $emptySectorTransactionCount transactions"
+                $messagePart = $emptySectorTransactionCount > 1 ? "are other $emptySectorTransactionCount transactions"
                     : "is $emptySectorTransactionCount transaction";
-                $message = "There $messagePart without Sector.";
+                $message = $sectorMessage . " There $messagePart without Sector in this activity.";
             }
             $element['sub_elements']['sector']['warning_info_text'] = $message;
         }
