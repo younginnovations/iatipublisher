@@ -67,20 +67,26 @@ class SettingService
      *
      * @param array $data
      *
-     * @return Setting
+     * @return Model
      */
-    public function storeDefaultValues(array $data): Setting
+    public function storeDefaultValues(array $data): Model
     {
         return $this->settingRepo->updateSetting(Auth::user()->organization_id, [
             'organization_id'         => Auth::user()->organization_id,
             'default_values'          => [
-                'default_currency' => isset($data['default_currency']) ? $data['default_currency'] : '',
+                'default_currency' => $data['default_currency'] ?? '',
                 'default_language' => $data['default_language'],
             ],
             'activity_default_values' => [
-                'hierarchy' => isset($data['hierarchy']) ? $data['hierarchy'] : 1,
-                'humanitarian' => isset($data['humanitarian']) ? $data['humanitarian'] : '1',
-                'budget_not_provided' => isset($data['budget_not_provided']) ? $data['budget_not_provided'] : '',
+                'hierarchy' => $data['hierarchy'] ?? 1,
+                'humanitarian' => $data['humanitarian'] ?? '1',
+                'budget_not_provided' => $data['budget_not_provided'] ?? '',
+                'linked_data_uri' => $data['linked_data_uri'] ?? '',
+                'default_collaboration_type' => $data['default_collaboration_type'] ?? '',
+                'default_flow_type' => $data['default_flow_type'] ?? '',
+                'default_finance_type' => $data['default_finance_type'] ?? '',
+                'default_aid_type' => $data['default_aid_type'] ?? '',
+                'default_tied_status' => $data['default_tied_status'] ?? '',
             ],
         ]);
     }

@@ -12,9 +12,14 @@ export const state = {
     default_currency: '',
     default_language: '',
     hierarchy: '',
+    linked_data_uri: '',
     humanitarian: '',
     budget_not_provided: '',
-    defaultCollaborationType: ''
+    default_collaboration_type: '',
+    default_flow_type: '',
+    default_finance_type: '',
+    default_aid_type: '',
+    default_tied_status: '',
   },
   publishingError: {
     api_token: '',
@@ -23,9 +28,14 @@ export const state = {
     default_currency: '',
     default_language: '',
     hierarchy: '',
+    linked_data_uri: '',
     humanitarian: '',
     budget_not_provided: '',
-    defaultCollaborationType: ''
+    default_collaboration_type: '',
+    default_flow_type: '',
+    default_finance_type: '',
+    default_aid_type: '',
+    default_tied_status: ''
   },
   isLoading: {},
 };

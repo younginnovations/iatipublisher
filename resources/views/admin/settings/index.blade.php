@@ -3,7 +3,11 @@
 @section('content')
     <setting-page :currencies='{{ json_encode($currencies) }}' :languages='{{ json_encode($languages) }}'
         :humanitarian='{{ json_encode($humanitarian) }}' :organization='{{ Auth::user()->organization }}'
-        :defaultCollaborationType='{{ json_encode($defaultCollaborationType)  }}'
+        :default-collaboration-type='{{ json_encode($defaultCollaborationType)  }}'
+        :default-flow-type='{{ json_encode($defaultFlowType)  }}'
+        :default-finance-type='{{ json_encode($defaultFinanceType)  }}'
+        :default-aid-type='{{ json_encode($defaultAidType)  }}'
+        :default-tied-status='{{ json_encode($defaultTiedStatus) }}'
         :budget-not-provided="{{ json_encode($budgetNotProvided) }}" user-role="{{ $userRole }}"
     ></setting-page>
 @endsection

@@ -54,7 +54,11 @@
           :languages="languages"
           :humanitarian="humanitarian"
           :budget-not-provided="budgetNotProvided"
-          :defaultCollaborationType="defaultCollaborationType"
+          :default-collaboration-type="defaultCollaborationType"
+          :default-flow-type="defaultFlowType"
+          :default-finance-type="defaultFinanceType"
+          :default-aid-type="defaultAidType"
+          :default-tied-status="defaultTiedStatus"
           @keyup.enter="submitForm"
         />
       </div>
@@ -129,6 +133,22 @@ export default defineComponent({
       required: true,
     },
     defaultCollaborationType: {
+      type: [String, Object],
+      required: true,
+    },
+    defaultFlowType: {
+      type: [String, Object],
+      required: true,
+    },
+    defaultFinanceType: {
+      type: [String, Object],
+      required: true,
+    },
+    defaultAidType: {
+      type: [String, Object],
+      required: true,
+    },
+    defaultTiedStatus: {
       type: [String, Object],
       required: true,
     },

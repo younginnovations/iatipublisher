@@ -59,10 +59,13 @@ class SettingController extends Controller
             $humanitarian = trans('setting.humanitarian_types');
             $budgetNotProvided = getCodeList('BudgetNotProvided', 'Activity');
             $defaultCollaborationType = getCodeList('CollaborationType', 'Activity');
-
+            $defaultFlowType = getCodeList('FlowType', 'Activity');
+            $defaultFinanceType = getCodeList('FinanceType', 'Activity');
+            $defaultAidType = getCodeList('AidType', 'Activity');
+            $defaultTiedStatus = getCodeList('TiedStatus', 'Activity');
             $userRole = Auth::user()->role->role;
 
-            return view('admin.settings.index', compact('currencies', 'languages', 'humanitarian', 'budgetNotProvided', 'userRole', 'defaultCollaborationType'));
+            return view('admin.settings.index', compact('currencies', 'languages', 'humanitarian', 'budgetNotProvided', 'userRole', 'defaultCollaborationType', 'defaultFlowType', 'defaultFinanceType', 'defaultAidType', 'defaultTiedStatus'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

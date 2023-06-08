@@ -186,6 +186,32 @@
         <!--  Humanitarian      -->
         <div>
           <div class="flex justify-between">
+            <label for="default-hierarchy">Linked Data URI</label>
+            <button>
+              <HoverText
+                width="w-64"
+                name="Linked Data URI"
+                hover-text="If a publisher chooses to publish linked data about their IATI activities then allowing them to declare where this data is published would support discovery of it, and any additional information they may choose to publish as Linked Data alongside it."
+                :show-iati-reference="true"
+              />
+            </button>
+          </div>
+          <input
+            id="linked-data-uri"
+            v-model="defaultForm.linked_data_uri"
+            :disabled="userRole !== 'admin' ? true : false"
+            class="register__input mb-2"
+            type="text"
+            placeholder="Type linked data uri here"
+            @input="updateStore('linked_data_uri')"
+          />
+          <span v-if="defaultError.linked_data_uri" class="error" role="alert">
+            {{ defaultError.linked_data_uri }}
+          </span>
+        </div>
+        <!--  Linked Data Uri      -->
+        <div>
+          <div class="flex justify-between">
             <label for="default-collaboration-type"
               >Default Collaboration Type</label
             >
@@ -200,25 +226,25 @@
           </div>
           <Multiselect
             id="collaboration-type"
-            v-model="defaultForm.defaultCollaborationType"
+            v-model="defaultForm.default_collaboration_type"
             :disabled="userRole !== 'admin' ? true : false"
             class="vue__select"
             :class="{
-              error__input: defaultError.defaultCollaborationType,
+              error__input: defaultError.default_collaboration_type,
             }"
             placeholder="Select Collaboration Type here"
             :options="props.defaultCollaborationType"
             :searchable="true"
-            @click="updateStore('humanitarian')"
+            @click="updateStore('default_collaboration_type')"
           />
           <span
-            v-if="defaultError.defaultCollaborationType"
+            v-if="defaultError.default_collaboration_type"
             class="error"
             role="alert"
           >
-            {{ defaultError.defaultCollaborationType }}
+            {{ defaultError.default_collaboration_type }}
           </span>
-          <p v-if="!defaultError.defaultCollaborationType">
+          <p v-if="!defaultError.default_collaboration_type">
             add collaboration type text here
           </p>
         </div>
@@ -237,21 +263,25 @@
           </div>
           <Multiselect
             id="default-flow-type"
-            v-model="defaultForm.humanitarian"
+            v-model="defaultForm.default_flow_type"
             :disabled="userRole !== 'admin' ? true : false"
             class="vue__select"
             :class="{
-              error__input: defaultError.humanitarian,
+              error__input: defaultError.default_flow_type,
             }"
             placeholder="Select Default Flow Type here"
-            :options="props.humanitarian"
+            :options="props.defaultFlowType"
             :searchable="true"
-            @click="updateStore('humanitarian')"
+            @click="updateStore('default_flow_type')"
           />
-          <span v-if="defaultError.humanitarian" class="error" role="alert">
-            {{ defaultError.humanitarian }}
+          <span
+            v-if="defaultError.default_flow_type"
+            class="error"
+            role="alert"
+          >
+            {{ defaultError.default_flow_type }}
           </span>
-          <p v-if="!defaultError.humanitarian">
+          <p v-if="!defaultError.default_flow_type">
             add default flow type text here
           </p>
         </div>
@@ -270,21 +300,25 @@
           </div>
           <Multiselect
             id="default-finance-type"
-            v-model="defaultForm.humanitarian"
+            v-model="defaultForm.default_finance_type"
             :disabled="userRole !== 'admin' ? true : false"
             class="vue__select"
             :class="{
-              error__input: defaultError.humanitarian,
+              error__input: defaultError.default_finance_type,
             }"
             placeholder="Select Default Finance Type here"
-            :options="props.humanitarian"
+            :options="props.defaultFinanceType"
             :searchable="true"
-            @click="updateStore('humanitarian')"
+            @click="updateStore('default_finance_type')"
           />
-          <span v-if="defaultError.humanitarian" class="error" role="alert">
-            {{ defaultError.humanitarian }}
+          <span
+            v-if="defaultError.default_finance_type"
+            class="error"
+            role="alert"
+          >
+            {{ defaultError.default_finance_type }}
           </span>
-          <p v-if="!defaultError.humanitarian">
+          <p v-if="!defaultError.default_finance_type">
             add default finance type text here
           </p>
         </div>
@@ -303,21 +337,21 @@
           </div>
           <Multiselect
             id="default-aid-type"
-            v-model="defaultForm.humanitarian"
+            v-model="defaultForm.default_aid_type"
             :disabled="userRole !== 'admin' ? true : false"
             class="vue__select"
             :class="{
-              error__input: defaultError.humanitarian,
+              error__input: defaultError.default_aid_type,
             }"
             placeholder="Select Default Aid Type here"
-            :options="props.humanitarian"
+            :options="props.defaultAidType"
             :searchable="true"
-            @click="updateStore('humanitarian')"
+            @click="updateStore('default_aid_type')"
           />
-          <span v-if="defaultError.humanitarian" class="error" role="alert">
-            {{ defaultError.humanitarian }}
+          <span v-if="defaultError.default_aid_type" class="error" role="alert">
+            {{ defaultError.default_aid_type }}
           </span>
-          <p v-if="!defaultError.humanitarian">
+          <p v-if="!defaultError.default_aid_type">
             add default aid type text here
           </p>
         </div>
@@ -336,21 +370,25 @@
           </div>
           <Multiselect
             id="default-tied-status"
-            v-model="defaultForm.humanitarian"
+            v-model="defaultForm.default_tied_status"
             :disabled="userRole !== 'admin' ? true : false"
             class="vue__select"
             :class="{
-              error__input: defaultError.humanitarian,
+              error__input: defaultError.default_tied_status,
             }"
             placeholder="Select Default Tied Status here"
-            :options="props.humanitarian"
+            :options="props.defaultTiedStatus"
             :searchable="true"
-            @click="updateStore('humanitarian')"
+            @click="updateStore('default_tied_status')"
           />
-          <span v-if="defaultError.humanitarian" class="error" role="alert">
-            {{ defaultError.humanitarian }}
+          <span
+            v-if="defaultError.default_tied_status"
+            class="error"
+            role="alert"
+          >
+            {{ defaultError.default_tied_status }}
           </span>
-          <p v-if="!defaultError.humanitarian">
+          <p v-if="!defaultError.default_tied_status">
             add default tied status text here
           </p>
         </div>
@@ -390,6 +428,22 @@ export default defineComponent({
       required: true,
     },
     defaultCollaborationType: {
+      type: [String, Object],
+      required: true,
+    },
+    defaultFlowType: {
+      type: [String, Object],
+      required: true,
+    },
+    defaultFinanceType: {
+      type: [String, Object],
+      required: true,
+    },
+    defaultAidType: {
+      type: [String, Object],
+      required: true,
+    },
+    defaultTiedStatus: {
       type: [String, Object],
       required: true,
     },
