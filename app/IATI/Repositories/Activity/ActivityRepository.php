@@ -193,6 +193,7 @@ class ActivityRepository extends Repository
         $defaultFlowType = $this->autoFillSettingsValue($this->getSingleValuedActivityElement($mappedActivity, 'default_flow_type'), 'default_flow_type');
         $defaultFinanceType = $this->autoFillSettingsValue($this->getSingleValuedActivityElement($mappedActivity, 'default_finance_type'), 'default_finance_type');
         $defaultTiedStatus = $this->autoFillSettingsValue($this->getSingleValuedActivityElement($mappedActivity, 'default_tied_status'), 'default_tied_status');
+        $defaultAidType = $this->autoFillDefaultAidTypeSettingValue($this->getActivityElement($mappedActivity, 'default_aid_type'));
 
         $data = [
             'iati_identifier' => $mappedActivity['iati_identifier'],
@@ -221,7 +222,7 @@ class ActivityRepository extends Repository
             'capital_spend' => $this->getSingleValuedActivityElement($mappedActivity, 'capital_spend'),
             'default_flow_type' => !empty($defaultFlowType) ? (int) $defaultFlowType : null,
             'default_finance_type' => !empty($defaultFinanceType) ? (int) $defaultFinanceType : null,
-            'default_aid_type' => $this->getActivityElement($mappedActivity, 'default_aid_type'),
+            'default_aid_type' => $defaultAidType,
             'default_tied_status' => !empty($defaultTiedStatus) ? (int) $defaultTiedStatus : null,
             'contact_info' => $this->getActivityElement($mappedActivity, 'contact_info'),
             'related_activity' => $this->getActivityElement($mappedActivity, 'related_activity'),
@@ -295,6 +296,7 @@ class ActivityRepository extends Repository
         $defaultFlowType = $this->autoFillSettingsValue($this->getSingleValuedActivityElement($activityData, 'default_flow_type'), 'default_flow_type');
         $defaultFinanceType = $this->autoFillSettingsValue($this->getSingleValuedActivityElement($activityData, 'default_finance_type'), 'default_finance_type');
         $defaultTiedStatus = $this->autoFillSettingsValue($this->getSingleValuedActivityElement($activityData, 'default_tied_status'), 'default_tied_status');
+        $defaultAidType = $this->autoFillDefaultAidTypeSettingValue($this->getActivityElement($activityData, 'default_aid_type'));
 
         return $this->store(
             [
@@ -320,7 +322,7 @@ class ActivityRepository extends Repository
                 'default_flow_type' => !empty($defaultFlowType) ? (int) $defaultFlowType : null,
                 'default_finance_type' => !empty($defaultFinanceType) ? (int) $defaultFinanceType : null,
                 'default_tied_status' => !empty($defaultTiedStatus) ? (int) $defaultTiedStatus : null,
-                'default_aid_type' => $this->getActivityElement($activityData, 'default_aid_type'),
+                'default_aid_type' => $defaultAidType,
                 'country_budget_items' => Arr::get($activityData, 'country_budget_item', null),
                 'humanitarian_scope' => $this->getActivityElement($activityData, 'humanitarian_scope'),
                 'capital_spend' => $this->getSingleValuedActivityElement($activityData, 'capital_spend'),
@@ -336,6 +338,8 @@ class ActivityRepository extends Repository
     }
 
     /**
+     * Populates organization settings value if csv value is empty.
+     *
      * @param $csvValue
      * @param $defaultElementName
      *
@@ -349,10 +353,50 @@ class ActivityRepository extends Repository
             return $csvValue;
         }
 
-        $activityService = app()->make(ActivityService::class);
-        $defaultValues = $activityService->getDefaultValues();
+        $defaultValues = $this->getOrganizationSettingDefaultValues();
 
         return isset($defaultValues[$defaultElementName]) && !empty($defaultValues[$defaultElementName]) ? $defaultValues[$defaultElementName] : null;
+    }
+
+    /**
+     * Populates default aid type value from organization setting if empty.
+     *
+     * @param $csvValue
+     *
+     * @return array[]|null
+     *
+     * @throws BindingResolutionException
+     */
+    public function autoFillDefaultAidTypeSettingValue($csvValue): ?array
+    {
+        if (!empty($csvValue)) {
+            return $csvValue;
+        }
+
+        $defaultValues = $this->getOrganizationSettingDefaultValues();
+
+        if (empty($defaultValues) || empty($defaultValues['default_aid_type'])) {
+            return null;
+        }
+
+        return [
+          [
+              'default_aid_type_vocabulary' => '1',
+              'default_aid_type' => $defaultValues['default_aid_type'],
+          ],
+        ];
+    }
+
+    /**
+     * returns organization settings value.
+     *
+     * @return array|null
+     *
+     * @throws BindingResolutionException
+     */
+    public function getOrganizationSettingDefaultValues(): ?array
+    {
+        return app()->make(ActivityService::class)->getDefaultValues();
     }
 
     /**
