@@ -1,7 +1,8 @@
 <template>
   <div
+    v-if="activities"
     :class="!openModel ? 'h-[80px]' : ''"
-    class="relative w-[300px] duration-200"
+    class="relative w-[300px] rounded-t-lg bg-eggshell duration-200"
   >
     <button
       class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 rounded-full bg-white p-[1px]"
@@ -21,15 +22,24 @@
       @click="openModel = !openModel"
     />
     <div v-if="!openModel" class="rounded-t-lg bg-eggshell p-6">
-      <div class="mb-3 mr-2 flex h-1 justify-start rounded-full bg-spring-10">
+      <div
+        v-if="hasFailedActivities?.ids?.length === 0"
+        class="mb-3 mr-2 flex h-1 justify-start rounded-full bg-spring-10"
+      >
         <div
           :style="{ width: percentageWidth + '%' }"
           class="h-full rounded-full bg-spring-50"
         ></div>
       </div>
-      <div class="text-sm text-n-40">
+      <div
+        v-if="hasFailedActivities?.ids?.length > 0"
+        class="text-sm font-medium text-crimson-50"
+      >
+        Some activities have failed to publish.
+      </div>
+      <div v-else class="text-sm text-n-40">
         Publishing
-        <span v-if="activities"
+        <span
           >{{ completedActivities }}/{{ Object.keys(activities).length }}</span
         >
         activities to IATI registry
@@ -161,10 +171,19 @@ const bulkPublishStatus = () => {
           clearInterval(intervalID);
 
           failedActivities(paStorage.value.publishingActivities.activities);
-          refreshToastMsg.visibility = true;
-          setTimeout(() => {
-            refreshToastMsg.visibility = false;
-          }, 10000);
+          if (hasFailedActivities?.ids?.length > 0) {
+            refreshToastMsg.visibility = true;
+            refreshToastMsg.refreshMessageType = false;
+            refreshToastMsg.refreshMessage =
+              'Some activities have failed to publish. Refresh to see changes.';
+          } else {
+            refreshToastMsg.visibility = true;
+            refreshToastMsg.refreshMessage =
+              'Activity has been published successfully, refresh to see changes';
+            setTimeout(() => {
+              refreshToastMsg.visibility = false;
+            }, 10000);
+          }
         }
       } else {
         completed.value = 'completed';

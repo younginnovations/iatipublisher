@@ -26,10 +26,11 @@
     </div>
     <XlsUploadIndicator
       v-if="
-        xlsData ||
-        (downloading && !downloadCompleted) ||
-        publishingActivities ||
-        startBulkPublish
+        (xlsData ||
+          (downloading && !downloadCompleted) ||
+          publishingActivities ||
+          startBulkPublish) &&
+        !activityStore.state.isLoading
       "
       :total-count="totalCount"
       :processed-count="processedCount"
@@ -61,9 +62,11 @@ import PageTitle from './partials/PageTitle.vue';
 import Loader from 'Components/Loader.vue';
 import ErrorMessage from 'Components/ErrorMessage.vue';
 import { useStore } from 'Store/activities/index';
+import { detailStore } from 'Store/activities/show';
 import { useStorage } from '@vueuse/core';
 
 const store = useStore();
+const activityStore = detailStore();
 export default defineComponent({
   name: 'ActivityComponent',
   components: {
@@ -400,6 +403,7 @@ export default defineComponent({
       downloading,
       startBulkPublish,
       publishingActivities,
+      activityStore,
       pa,
     };
   },

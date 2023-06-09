@@ -202,7 +202,7 @@
         </button>
       </div>
     </Modal>
-
+    <PageLoader v-if="isLoading"></PageLoader>
     <Loader
       v-if="loader"
       :text="loaderText"
@@ -231,7 +231,7 @@ import BtnComponent from 'Components/ButtonComponent.vue';
 import Modal from 'Components/PopupModal.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 import ValidationErrors from './ValidationErrors.vue';
-import BulkPublishing from './BulkPublishing.vue';
+import PageLoader from 'Components/Loader.vue';
 
 // Vuex Store
 import { useStore } from 'Store/activities/index';
@@ -252,7 +252,7 @@ let [publishAlertValue, publishAlertToggle] = useToggle();
 // state for step of the flow
 const bulkPublishStep = ref(1);
 const bulkPublishStatus = reactive({});
-const showBulkpublish = ref(false);
+const isLoading = ref(false);
 const startPublish = ref(false);
 
 const published = ref(false);
@@ -314,21 +314,25 @@ const emptybulkPublishStatus = () => {
  * check publish status
  */
 const checkPublish = () => {
-  axios.get(`/activities/checks-for-activity-bulk-publish`).then((res) => {
-    const response = res.data;
+  isLoading.value = true;
+  axios
+    .get(`/activities/checks-for-activity-bulk-publish`)
+    .then((res) => {
+      const response = res.data;
 
-    if (response.success === true) {
-      publishAlertValue.value = true;
-    } else {
-      if (response?.in_progress) {
-        emptybulkPublishStatus();
-        Object.assign(bulkPublishStatus, response.data.activities);
-        showCancelConfirmationModal();
+      if (response.success === true) {
+        publishAlertValue.value = true;
       } else {
-        displayToast(response.message, response.success);
+        if (response?.in_progress) {
+          emptybulkPublishStatus();
+          Object.assign(bulkPublishStatus, response.data.activities);
+          showCancelConfirmationModal();
+        } else {
+          displayToast(response.message, response.success);
+        }
       }
-    }
-  });
+    })
+    .finally(() => (isLoading.value = false));
 };
 
 /**

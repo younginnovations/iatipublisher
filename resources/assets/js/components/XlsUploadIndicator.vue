@@ -82,6 +82,16 @@ onMounted(() => {
 
     if (supportButton !== null) {
       supportButton.style.transform = 'translatey(-50px)';
+      if (
+        !(props.xlsData && showXlsStatus) &&
+        !(downloading && !downloadCompleted.value && !cancelDownload.value) &&
+        showBulkpublish &&
+        publishingActivities.value &&
+        publishingActivities.value.length > 0
+      ) {
+        supportButton.style.transform = 'translate(-350px ,0px)';
+        console.log('translate');
+      }
 
       clearInterval(checkSupportButton);
     }
@@ -139,12 +149,12 @@ watch(
       publishingActivities.value.length > 0
     ) {
       setTimeout(() => {
-        supportButton.style.transform = 'translate(-350px ,0px)';
-      }, 2500);
-    } else {
-      if (supportButton !== null) {
-        supportButton.style.transform = 'translatey(-50px)';
-      }
+        if (supportButton !== null) {
+          supportButton.style.transform = 'translate(-350px ,0px)';
+        }
+      }, 100);
+    } else if (supportButton !== null) {
+      supportButton.style.transform = 'translatey(-50px)';
     }
   }
 );
