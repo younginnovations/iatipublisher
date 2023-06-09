@@ -657,9 +657,7 @@ class ActivityRepository extends Repository
         //     $query = $this->filterPublisher($query, $queryParams);
         // }
 
-        return [
-            $type => $query->groupBy($type)->pluck('count', $type),
-        ];
+        return $query->groupBy($type)->pluck('count', $type)->toArray();
     }
 
     public function getActivityStatus($queryParams): array
@@ -667,11 +665,11 @@ class ActivityRepository extends Repository
         return $this->model->select(DB::raw('count(*) as count,status,linked_to_iati'))->groupBy('status', 'linked_to_iati')->get()->toArray();
     }
 
-    public function getCompleteStatus($queryParams): array
+    public function getCompleteStatus(): array
     {
         return [
             'complete' => $this->model->select(DB::raw('count(*) as count,status,linked_to_iati,complete_percentage'))->where('complete_percentage', 100)->groupBy('status', 'linked_to_iati', 'complete_percentage')->get()->toArray(),
-            'incomplete' => $this->model->select(DB::raw('count(*) as count,status,linked_to_iati,complete_percentage'))->where('complete_percentage', '<>', 100)->groupBy('status', 'linked_to_iati', 'complete_percentage')->get()->toArray(),
+            'incomplete' => $this->model->select(DB::raw('count(*) as count,status'))->where('complete_percentage', '<>', 100)->groupBy('status')->get()->toArray(),
         ];
     }
 

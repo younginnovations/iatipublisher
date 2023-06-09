@@ -166,7 +166,24 @@ class DashboardService
 
     public function getActivityStatus($queryParams)
     {
-        return $this->activityRepo->getActivityStatus($queryParams);
+        $activityStatus = $this->activityRepo->getActivityStatus($queryParams);
+        $processedStatus = [
+            'Published' => 0,
+            'Draft (Not Published)' => 0,
+            'Draft (Need to republish)' => 0,
+        ];
+
+        foreach ($activityStatus as $status) {
+            if ($status['status'] === 'published') {
+                $processedStatus['Published'] = $status['count'];
+            } elseif ($status['linked_to_iati'] === true) {
+                $processedStatus['Draft (Not Published)'] = $status['count'];
+            } else {
+                $processedStatus['Draft (Need to republish)'] = $status['count'];
+            }
+        }
+
+        return $processedStatus;
     }
 
     /**
@@ -179,12 +196,58 @@ class DashboardService
      */
     public function getActivityBy($queryParams, $type): array
     {
-        return $this->activityRepo->getActivityBy($queryParams, $type);
+        $activityStatus = $this->activityRepo->getActivityBy($queryParams, $type);
+        $processedStatus = [
+            'By importing via CSV' => 0,
+            'By importing via XML' => 0,
+            'By importing via XLS' => 0,
+            'Manually' => 0,
+        ];
+
+        foreach ($activityStatus as $type => $count) {
+            switch ($type) {
+                case 'manual':
+                    $processedStatus['Manually'] = $count;
+                    break;
+                case 'xls':
+                    $processedStatus['By importing via XLS'] = $count;
+                    break;
+                case 'xml':
+                    $processedStatus['By importing via xml'] = $count;
+                    break;
+                case 'csv':
+                    $processedStatus['By importing via CSV'] = $count;
+                    break;
+            }
+        }
+
+        return $processedStatus;
     }
 
     public function getAllActivitiesToDownload(): array
     {
         return $this->activityRepo->getActivitiesDashboardDownload();
+    }
+
+    public function getActivityCompleteness(): array
+    {
+        $activityCompleteness = $this->activityRepo->getCompleteStatus();
+        $processedCompleteness = [];
+
+        foreach ($activityCompleteness as $status => $data) {
+            $type = sprintf('Activities with %s core element data', $status);
+
+            if (!empty($data)) {
+                foreach ($data as $countArray) {
+                    $processedCompleteness[$type][$countArray['status']] = $countArray['count'];
+                }
+            } else {
+                $processedCompleteness[$type]['published'] = 0;
+                $processedCompleteness[$type]['draft'] = 0;
+            }
+        }
+
+        return $processedCompleteness;
     }
 
     public function getOrganizationToDownload(): array

@@ -82,7 +82,7 @@ class DashboardController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Paginated users fetched successfully',
-                 'data' => $this->dashboardService->getUserCountByOrganization($page, $queryParams),
+                'data' => $this->dashboardService->getUserCountByOrganization($page, $queryParams),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
@@ -374,15 +374,14 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->dashboardService->getActivityBy($params, 'upload_medium');
+            $activityStats = $this->dashboardService->getActivityBy($params, 'upload_medium');
 
             return response()->json([
                 'success' => true,
                 'message' => 'Publisher grouped by setup completeness fetched successfully',
-                'data' => $publisherStat,
+                'data' => $activityStats,
             ]);
         } catch (\Exception $e) {
-            dd($e->getMessage());
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
@@ -400,14 +399,15 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            // $publisherStat = $this->dashboardService->getActivityCompleteness($params);
+            $activityStats = $this->dashboardService->getActivityCompleteness();
 
             return response()->json([
                 'success' => true,
                 'message' => 'Publisher grouped by setup completeness fetched successfully',
-                // 'data' => $publisherStat,
+                'data' => $activityStats,
             ]);
         } catch (\Exception $e) {
+            dd($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
@@ -445,13 +445,13 @@ class DashboardController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'User count in date range fetched successfully',
-                'data'    => $results,
+                'data' => $results,
             ]);
-        } catch(InvalidFormatException $e) {
+        } catch (InvalidFormatException $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Invalid date value entered in date range.']);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching user count in custom-range.']);
@@ -492,7 +492,7 @@ class DashboardController extends Controller
                 return $this->csvGenerator->generateWithHeaders(getTimeStampedText('users_report'), $userData->toArray(), $headers);
             }
 
-            return response()->json(['success'=>false, 'message'=>'No user data to download within this range']);
+            return response()->json(['success' => false, 'message' => 'No user data to download within this range']);
         } catch (InvalidFormatException $e) {
             logger()->error($e);
 
