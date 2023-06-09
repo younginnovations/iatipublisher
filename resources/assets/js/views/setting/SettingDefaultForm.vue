@@ -219,7 +219,7 @@
               <HoverText
                 width="w-72"
                 name="collaboration-type"
-                hover-text="add text here"
+                hover-text="The type of collaboration involved in the activity’s disbursements, e.g. “bilateral” or “multilateral”.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/collaboration-type/'>For more information</a>"
                 :show-iati-reference="true"
               />
             </button>
@@ -256,7 +256,7 @@
               <HoverText
                 width="w-72"
                 name="default-flow-type"
-                hover-text="add text here"
+                hover-text="Whether the activity is funded by Official Development Assistance (ODA), Other Official Flows (OOF), etc. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-flow-type/'>For more information</a>"
                 :show-iati-reference="true"
               />
             </button>
@@ -293,7 +293,7 @@
               <HoverText
                 width="w-72"
                 name="default-finance-type"
-                hover-text="add text here"
+                hover-text="The type of finance (e.g. grant, loan, debt relief, etc). This the default value for all transactions in the activity report; it can be overridden by individual transactions. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-finance-type/'>For more information</a>"
                 :show-iati-reference="true"
               />
             </button>
@@ -330,7 +330,7 @@
               <HoverText
                 width="w-72"
                 name="default-aid-type"
-                hover-text="add text here"
+                hover-text="The type of aid being supplied (project-type intervention, budget support, debt relief, etc.). This element specifies a default for all the activity’s financial transactions; it can be overridden at the individual transaction level. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>"
                 :show-iati-reference="true"
               />
             </button>
@@ -363,7 +363,7 @@
               <HoverText
                 width="w-72"
                 name="default-tied-status"
-                hover-text="add text here"
+                hover-text="Whether the aid is untied, tied, or partially tied. This element specifies a default for all the activity’s financial transactions; it can be overridden at the individual transaction level.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-tied-status/'>For more information</a>"
                 :show-iati-reference="true"
               />
             </button>
