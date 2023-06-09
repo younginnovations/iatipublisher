@@ -11,10 +11,14 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import dateFormat from 'Composable/dateFormat';
+import { reactive, ref, inject, Ref, onUpdated, watch, computed } from 'vue';
 const xAxisCounter = ref(0);
+const graphDate = inject('graphDate') as Ref;
+const graphAmount = inject('graphAmount') as Ref;
+const xAxisData = ref([]);
 
-let chartOptions = reactive({
+let chartOptions = computed(() => ({
   chart: {
     height: 210,
     type: 'line',
@@ -23,6 +27,7 @@ let chartOptions = reactive({
     },
   },
   stroke: {
+    curve: 'straight',
     width: 1,
   },
   colors: ['#17997B'],
@@ -34,28 +39,51 @@ let chartOptions = reactive({
               </div>`;
     },
   },
+
   xaxis: {
-    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
-
-    labels: {
-      formatter: function (value) {
-        xAxisCounter.value++;
-        if (
-          xAxisCounter.value === 26 ||
-          xAxisCounter.value === Math.trunc(4 + 26 * 0.33) ||
-          xAxisCounter.value === 4
-        ) {
-          return value + xAxisCounter.value;
-        } else return value;
-      },
-    },
+    tickAmount: 3,
   },
-});
+}));
 
-const series = reactive([
+// let chartOptions = reactive({
+//   chart: {
+//     height: 210,
+//     type: 'line',
+//     zoom: {
+//       enabled: false,
+//     },
+//   },
+//   stroke: {
+//     curve: 'straight',
+//     width: 1,
+//   },
+//   colors: ['#17997B'],
+//   tooltip: {
+//     custom: function ({ series, seriesIndex, dataPointIndex, w, xaxis }) {
+//       return `<div class="p-4">
+//                 <div> ${xaxis}</div>
+//                 <div>${series[seriesIndex][dataPointIndex]}</div>
+//               </div>`;
+//     },
+//   },
+
+//   xaxis: {
+//     tickAmount: 3,
+//   },
+// });
+
+let series = reactive([
   {
     name: 'Desktops',
-    data: [10, 41, 35, 51, 49, 62, 69, 91, 148],
+    type: 'line',
+    data: graphAmount.value,
   },
 ]);
+watch(
+  () => graphAmount.value,
+  () => {
+    series['data'] = graphAmount.value;
+  },
+  { deep: true }
+);
 </script>

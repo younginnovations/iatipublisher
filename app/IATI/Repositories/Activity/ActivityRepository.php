@@ -627,6 +627,23 @@ class ActivityRepository extends Repository
         return $this->model->select('id', 'org_id')->latest('updated_at')->first();
     }
 
+    /**
+     * Applies filter to the activity query.
+     *
+     * @param $queryParams
+     */
+    protected function filterActivity($query, $queryParams)
+    {
+        $filteredQuery = $query;
+
+        if ($queryParams['start_date'] && $queryParams['end_date']) {
+            $filteredQuery = $query->where('created_at', '>=', $queryParams['start_date'])
+                ->where('created_at', '<=', $queryParams['end_date']);
+        }
+
+        return $filteredQuery;
+    }
+
     public function getActivityCount($queryParams)
     {
         $query = $this->model;
@@ -637,12 +654,12 @@ class ActivityRepository extends Repository
             'month' => 'Y-m',
         ];
 
-        // if ($queryParams) {
-        //     $query = $this->filterPublisher($query, $queryParams);
-        // }
+        if ($queryParams) {
+            $query = $this->filterActivity($query, $queryParams);
+        }
 
         return
-            $query->all()->groupBy(
+            $query->get()->groupBy(
                 function ($q) use ($formats, $queryType) {
                     return $q->created_at->format($formats[$queryType]);
                 }
@@ -653,23 +670,37 @@ class ActivityRepository extends Repository
     {
         $query = $this->model->select(DB::raw('count(*) as count, ' . $type));
 
-        // if ($queryParams) {
-        //     $query = $this->filterPublisher($query, $queryParams);
-        // }
+        if ($queryParams) {
+            $query = $this->filterActivity($query, $queryParams);
+        }
 
         return $query->groupBy($type)->pluck('count', $type)->toArray();
     }
 
     public function getActivityStatus($queryParams): array
     {
-        return $this->model->select(DB::raw('count(*) as count,status,linked_to_iati'))->groupBy('status', 'linked_to_iati')->get()->toArray();
+        $query = $this->model->select(DB::raw('count(*) as count,status,linked_to_iati'));
+
+        if ($queryParams) {
+            $query = $this->filterActivity($query, $queryParams);
+        }
+
+        return $query->groupBy('status', 'linked_to_iati')->get()->toArray();
     }
 
-    public function getCompleteStatus(): array
+    public function getCompleteStatus($queryParams): array
     {
+        $completeQuery = $this->model->select(DB::raw('count(*) as count,status,linked_to_iati,complete_percentage'))->where('complete_percentage', 100);
+        $incompleteQuery = $this->model->select(DB::raw('count(*) as count,status'))->where('complete_percentage', '<>', 100);
+
+        if ($queryParams) {
+            $completeQuery = $this->filterActivity($completeQuery, $queryParams);
+            $incompleteQuery = $this->filterActivity($completeQuery, $queryParams);
+        }
+
         return [
-            'complete' => $this->model->select(DB::raw('count(*) as count,status,linked_to_iati,complete_percentage'))->where('complete_percentage', 100)->groupBy('status', 'linked_to_iati', 'complete_percentage')->get()->toArray(),
-            'incomplete' => $this->model->select(DB::raw('count(*) as count,status'))->where('complete_percentage', '<>', 100)->groupBy('status')->get()->toArray(),
+            'complete' => $completeQuery->groupBy('status', 'linked_to_iati', 'complete_percentage')->get()->toArray(),
+            'incomplete' => $incompleteQuery->groupBy('status')->get()->toArray(),
         ];
     }
 

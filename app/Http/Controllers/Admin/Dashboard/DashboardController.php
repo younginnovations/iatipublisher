@@ -19,6 +19,10 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  */
 class DashboardController extends Controller
 {
+    public DashboardService $dashboardService;
+    public CsvGenerator $csvGenerator;
+    public AuditService $auditService;
+
     /**
      * ActivityController Constructor.
      *
@@ -93,8 +97,11 @@ class DashboardController extends Controller
 
     protected function getQueryParams($request): array
     {
-        $validParameters = ['startDate', 'endDate'];
+        $validParameters = ['start_date', 'end_date', 'order_by'];
         $queryParams = [];
+        // list($fixed, $startDateString, $endDateString, $column) = $this->resolveDateRangeFromRequest($request);
+        // list($startDate, $endDate, $groupBy) = $this->resolveFixedRangeParams($fixed);
+        // $validParameters =
 
         foreach ($validParameters as $parameter) {
             $value = $request->get($parameter);
@@ -279,7 +286,6 @@ class DashboardController extends Controller
                 'data' => $publisherStat,
             ]);
         } catch (\Exception $e) {
-            dd($e->getMessage());
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
@@ -399,7 +405,7 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $activityStats = $this->dashboardService->getActivityCompleteness();
+            $activityStats = $this->dashboardService->getActivityCompleteness($params);
 
             return response()->json([
                 'success' => true,

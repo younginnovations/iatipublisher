@@ -101,7 +101,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, defineEmits, Ref, defineProps } from 'vue';
+import { ref, watch, defineEmits, Ref, defineProps, onMounted } from 'vue';
 import {
   subDays,
   startOfWeek,
@@ -144,7 +144,7 @@ const toggleShowRangeDropdown = () => {
 
 const emit = defineEmits(['triggerSetDateRange', 'triggerSetDateType']);
 
-const fixed: Ref<string> = ref('Custom');
+const fixed: Ref<string> = ref('All time');
 
 const selectedDate: Ref<any[]> = ref([
   new Date(),
@@ -185,6 +185,13 @@ const presetRanges = ref([
     range: [new Date('1990-12-31'), new Date()],
   },
 ]);
+onMounted(() => {
+  selectedDate.value[0] = '1990-12-31';
+  selectedDate.value[1] = moment(new Date()).format('YYYY-MM-DD');
+
+  // triggerSetDateRange('1990-12-31', moment(new Date()).format('YYYY-MM-DD'));
+  triggerSetDateRange('1990-12-31', '2020-12-31');
+});
 
 const datepicker = ref<DatePickerInstance>(null);
 

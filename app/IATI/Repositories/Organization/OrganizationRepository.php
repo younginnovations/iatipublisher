@@ -207,7 +207,7 @@ class OrganizationRepository extends Repository
      *
      * @return array|Collection
      */
-    public function getOrganizationByPublisherIds(array $publisherIds): Collection | array
+    public function getOrganizationByPublisherIds(array $publisherIds): Collection|array
     {
         return $this->model->whereIn('publisher_id', $publisherIds)->get();
     }
@@ -217,13 +217,16 @@ class OrganizationRepository extends Repository
      *
      * @param $queryParams
      */
-    protected function filterPublisher($query, $queryParams): Builder
+    protected function filterPublisher($query, $queryParams)
     {
-        // if (!$queryParams['startDate']) {
-        //     $query->where('created')
-        // }
+        $filteredQuery = $query;
 
-        return $query;
+        if ($queryParams['start_date'] && $queryParams['end_date']) {
+            $filteredQuery = $query->where('created_at', '>=', $queryParams['start_date'])
+                ->where('created_at', '<=', $queryParams['end_date']);
+        }
+
+        return $filteredQuery;
     }
 
     public function getPublisherStats($queryParams): array
@@ -318,7 +321,7 @@ class OrganizationRepository extends Repository
 
     public function getPublisherGroupedByDate($queryParams, $type)
     {
-        $query = $this->model->all();
+        $query = $this->model;
         $queryType = 'day';
 
         $formats = [
@@ -326,17 +329,15 @@ class OrganizationRepository extends Repository
             'month' => 'Y-m',
         ];
 
-        // if ($queryParams) {
-        //     $query = $this->filterPublisher($query, $queryParams);
-        // }
+        if ($queryParams) {
+            $query = $this->filterPublisher($query, $queryParams);
+        }
 
-        return [
-            $type => $query->groupBy(
-                function ($q) use ($formats, $queryType) {
-                    return $q->created_at->format($formats[$queryType]);
-                }
-            ),
-        ];
+        return $query->get()->groupBy(
+            function ($q) use ($formats, $queryType) {
+                return $q->created_at->format($formats[$queryType]);
+            }
+        )->map(fn ($d) => count($d));
     }
 
     public function publisherWithoutActivity()
@@ -371,13 +372,13 @@ class OrganizationRepository extends Repository
         $filterMode = $tableConfig['filters'];
         $queryMap = $this->getCompletenessMap();
         $filterColumnMap = [
-            'country'          => 'country',
+            'country' => 'country',
             'registrationType' => 'registration_type',
-            'publisherType'    => 'publisher_type',
-            'dataLicense'      => 'data_license',
+            'publisherType' => 'publisher_type',
+            'dataLicense' => 'data_license',
         ];
 
-        foreach ($filters as $filterName=>$filterValue) {
+        foreach ($filters as $filterName => $filterValue) {
             if ($filterName !== 'completeness') {
                 if (Arr::get($filterMode, $filterName) === 'single') {
                     $organizations->where($filterColumnMap[$filterName], $filterValue);
@@ -404,19 +405,19 @@ class OrganizationRepository extends Repository
     private function getCompletenessMap(): array
     {
         return [
-            'Publisher with complete setup'                             => "
+            'Publisher with complete setup' => "
                     CAST(settings.publishing_info->>'publisher_verification' as bool) = true and
                     settings.publishing_info->>'publisher_id' notnull and
                     CAST(settings.publishing_info->>'token_verification' as bool) = true and
                     settings.publishing_info->>'api_token' notnull
                 ",
-            'Publisher setting not completed'                           => "
+            'Publisher setting not completed' => "
                     CAST(settings.publishing_info->>'publisher_verification' as bool) = false or
                     settings.publishing_info->>'publisher_id' isnull  or
                     CAST(settings.publishing_info->>'token_verification' as bool) = false or
                     settings.publishing_info->>'api_token' isnull
                 ",
-            'Default values not completed'                              => "
+            'Default values not completed' => "
                     settings.default_values->>'default_currency' isnull or
                     settings.default_values->>'default_language' isnull or
                     settings.activity_default_values->>'hierarchy' isnull or

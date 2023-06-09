@@ -18,7 +18,7 @@ Route::group([], static function () {
     Route::get('/dashboard/user/stats', [DashboardController::class, 'getUserCounts'])->name('getUserCounts');
     Route::get('/dashboard/user/page/{page}', [DashboardController::class, 'getUserCountByOrganization'])->name('getUserCountByOrganization');
     Route::get('/dashboard/user/download-report', [DashboardController::class, 'downloadUserReport'])->name('downloadUserReport');
-    Route::get('/dashboard/user/date-range', [DashboardController::class, 'getDataInDateRange'])->name('getDataInCustomRange');
+    Route::get('/dashboard/user/count', [DashboardController::class, 'getDataInDateRange'])->name('getDataInCustomRange');
     /*
      * Example
      * dashboard/user/date-range?fixed=this_year <- Valid params for fixed are :today, this_week, this_month, this_year , last_N_UNITS (example, last_7_days, last_7_month, last_2_years)
@@ -32,7 +32,7 @@ Route::group([], static function () {
     Route::get('/dashboard/publisher/country', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherGroupedByCountry'])->name('dashboard.publisher.country');
     Route::get('/dashboard/publisher/registration-type', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherType'])->name('dashboard.publisher.registration');
     Route::get('/dashboard/publisher/setup', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherGroupedBySetupCompleteness'])->name('dashboard.publisher.setup');
-    Route::get('/dashboard/publisher/registration-count', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherRegistrationCount'])->name('dashboard.publisher.registration_count');
+    Route::get('/dashboard/publisher/count', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherRegistrationCount'])->name('dashboard.publisher.registration_count');
     Route::get('/dashboard/publisher/download', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'downloadOrganization'])->name('dashboard.publisher.download');
 
     Route::get('/dashboard/activity/stats', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'activityStats'])->name('dashboard.activity.stats');

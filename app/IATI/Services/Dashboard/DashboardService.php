@@ -229,9 +229,9 @@ class DashboardService
         return $this->activityRepo->getActivitiesDashboardDownload();
     }
 
-    public function getActivityCompleteness(): array
+    public function getActivityCompleteness($queryParams): array
     {
-        $activityCompleteness = $this->activityRepo->getCompleteStatus();
+        $activityCompleteness = $this->activityRepo->getCompleteStatus($queryParams);
         $processedCompleteness = [];
 
         foreach ($activityCompleteness as $status => $data) {

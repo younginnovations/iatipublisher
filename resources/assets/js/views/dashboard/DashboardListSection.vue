@@ -20,7 +20,7 @@
         <tbody>
           <tr
             v-for="organisation in tableData.data"
-            :key="organisation.id"
+            :key="organisation?.id"
             class="border-b border-n-20 text-sm text-bluecoral"
           >
             <td>
@@ -91,6 +91,28 @@
         <div class="w-full px-4">
           <table class="w-full">
             <thead
+              v-if="
+                currentView === 'activity' && title === 'Activity Completion'
+              "
+              class="bg-[#F1F7F9] text-xs font-bold uppercase text-[#68797E]"
+            >
+              <tr>
+                <th>
+                  <div class="px-4 py-3 text-left">{{ title }}</div>
+                </th>
+                <td class="mx-8 my-3 w-[100px]">
+                  <div class="px-4 py-3 text-right">published</div>
+                </td>
+                <td class="mx-8 my-3 w-[100px]">
+                  <div class="px-4 py-3 text-right">unpublished</div>
+                </td>
+                <td class="mx-8 my-3 w-[100px]">
+                  <div class="px-4 py-3 text-right">total</div>
+                </td>
+              </tr>
+            </thead>
+            <thead
+              v-else
               class="bg-[#F1F7F9] text-xs font-bold uppercase text-[#68797E]"
             >
               <tr>
@@ -102,7 +124,11 @@
                 </td>
               </tr>
             </thead>
-            <tbody v-if="title === 'Setup Completeness'">
+            <tbody
+              v-if="
+                title === 'Setup Completeness' && currentView === 'publisher'
+              "
+            >
               <tr class="border-b border-n-20">
                 <td class="text-sm text-bluecoral">
                   <div class="px-4 py-3 text-left">
@@ -164,17 +190,69 @@
                 </td>
               </tr>
             </tbody>
-            <tbody v-else>
+            <tbody
+              v-else-if="
+                title !== 'Setup Completeness' && currentView === 'publisher'
+              "
+            >
               <tr
                 v-for="item in tableData"
-                :key="item.id"
+                :key="item?.id"
                 class="border-b border-n-20"
               >
                 <td class="text-sm text-bluecoral">
-                  <div class="px-4 py-3 text-left">{{ item.label }}</div>
+                  <div class="px-4 py-3 text-left">{{ item?.label }}</div>
                 </td>
                 <td class="text-sm text-[#2A2F30]">
-                  <div class="px-4 py-3 text-right">{{ item.total }}</div>
+                  <div class="px-4 py-3 text-right">{{ item?.total }}</div>
+                </td>
+              </tr>
+            </tbody>
+            <tbody
+              v-else-if="
+                currentView === 'activity' && title !== 'Activity Completion'
+              "
+            >
+              <tr
+                v-for="(item, index) in tableData"
+                :key="item?.id"
+                class="border-b border-n-20"
+              >
+                <td class="text-sm text-bluecoral">
+                  <div class="px-4 py-3 text-left">
+                    {{ index }}
+                  </div>
+                </td>
+                <td class="text-sm text-[#2A2F30]">
+                  <div class="px-4 py-3 text-right">{{ item }}</div>
+                </td>
+              </tr>
+            </tbody>
+            <tbody
+              v-else-if="
+                currentView === 'activity' && title === 'Activity Completion'
+              "
+            >
+              <tr
+                v-for="(item, index) in tableData"
+                :key="item?.id"
+                class="border-b border-n-20"
+              >
+                <td class="text-sm text-bluecoral">
+                  <div class="px-4 py-3 text-left">
+                    {{ index }}
+                  </div>
+                </td>
+                <td class="text-sm text-[#2A2F30]">
+                  <div class="px-4 py-3 text-right">{{ item.published }}</div>
+                </td>
+                <td class="text-sm text-[#2A2F30]">
+                  <div class="px-4 py-3 text-right">{{ item.draft }}</div>
+                </td>
+                <td class="text-sm text-[#2A2F30]">
+                  <div class="px-4 py-3 text-right">
+                    {{ item.published + item.draft }}
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -190,7 +268,7 @@
 <script lang="ts" setup>
 import { ref, defineProps, watch, onMounted, inject, Ref } from 'vue';
 import { defineEmits } from 'vue';
-import Pagination from 'Components/DashboardPagination.vue';
+// import Pagination from 'Components/DashboardPagination.vue';
 
 const emit = defineEmits(['tableNav']);
 
@@ -206,12 +284,13 @@ const publisherNavList = [
   { label: 'Registration Type', apiParams: 'registration-type' },
   { label: 'Setup Completeness', apiParams: 'setup' },
 ];
+const currentpage = ref(1);
+
+const userNavlist = [{ label: 'user', apiParams: `page/${currentpage.value}` }];
 
 const currentNavList = ref(publisherNavList);
-const currentpage = ref(1);
 const title = ref(currentNavList.value[0].label);
 onMounted(() => {
-  console.log(props.tableData, 'as props');
   fetchTableData(currentNavList.value[0]);
 });
 
@@ -220,9 +299,12 @@ watch(
   (value) => {
     if (value === 'activity') {
       currentNavList.value = activityNavList;
-    } else {
+    } else if (value === 'publisher') {
       currentNavList.value = publisherNavList;
+    } else {
+      currentNavList.value = userNavlist;
     }
+    // console.log('table watcher', currentNavList.value[0]);
     fetchTableData(currentNavList.value[0]);
 
     activeClass.value = currentNavList.value[0].label;
@@ -249,10 +331,6 @@ const activeClass = ref(currentNavList.value[0].label);
 const fetchTableData = (item) => {
   activeClass.value = item.label;
   title.value = item.label;
-  console.log(item, 'item');
-  if (props.currentView === 'user') {
-    (item.label = 'user'), (item.apiParams = `page/${currentpage.value}`);
-  }
 
   emit('tableNav', item);
 };

@@ -72,22 +72,86 @@ interface tableDataType {
   label: string;
   total: number;
 }
-const currentNav = ref('type');
+const currentNav = ref({ label: 'Publisher Type', apiParams: 'type' });
 const tableData = ref<any>([]);
 const DateLabel = ref('Registered date:');
 const startDate = ref('');
 const endDate = ref('');
+const graphDate = ref<string[]>([]);
+const graphAmount = ref<object[]>([]);
 
 const currentView = ref('publisher');
 const completeNess = ref();
 const handleChangeTableNav = (item) => {
   currentNav.value = item;
+
   fetchTableData();
 };
 
 onMounted(() => {
   fetchTableData();
+  fetchGraphData();
 });
+
+const graphDataFormatter = (item) => {
+  const monthConverter = (month) => {
+    switch (month) {
+      case '01':
+        return 'Jan';
+
+      case '02':
+        return 'Feb';
+      case '03':
+        return 'Mar';
+      case '04':
+        return 'Apr';
+      case '05':
+        return 'May';
+      case '06':
+        return 'June';
+      case '07':
+        return 'July';
+      case '08':
+        return 'Aug';
+      case '09':
+        return 'Sep';
+      case '10':
+        return 'Oct';
+      case '11':
+        return 'Nov';
+      case '12':
+        return 'Dec';
+      default:
+        break;
+    }
+  };
+  for (let x in item) {
+    const data = {
+      x: x,
+      y: item[x],
+    };
+    graphAmount.value.push(data);
+
+    // graphDate.value.push(
+    //   `${monthConverter(rawDate[x].split('-')[1])} ${
+    //     rawDate[x].split('-')[2]
+    //   } ${rawDate[x].split('-')[0]}`
+    // );
+  }
+};
+
+const fetchGraphData = () => {
+  let params = new URLSearchParams();
+  params.append('start_date', startDate.value);
+  params.append('end_date', endDate.value);
+
+  axios
+    .get(`/dashboard/${currentView.value}/count/`, { params: params })
+    .then((res) => {
+      graphAmount.value.length = 0;
+      graphDataFormatter(res.data.data);
+    });
+};
 
 const setDateRangeDate = (start, end) => {
   startDate.value = start;
@@ -122,17 +186,18 @@ watch(
   () => currentView.value,
   () => {
     DateLabel.value = datetLabelMapper(currentView.value);
+    fetchGraphData();
   }
 );
 
 const fetchTableData = () => {
   let apiUrl = `/dashboard/${currentView.value}/${currentNav.value['apiParams']}`;
   let params = new URLSearchParams();
-  if (startDate.value && endDate.value) {
-    apiUrl = `/dashboard/${currentView.value}/${currentNav.value['apiParams']}/date-range`;
-    params.append('start_date', startDate.value);
-    params.append('end_date', endDate.value);
-  }
+  // if (startDate.value && endDate.value && currentNav.value.label !== 'user') {
+  //   apiUrl = `/dashboard/${currentView.value}/${currentNav.value['apiParams']}/date-range`;
+  //   params.append('start_date', startDate.value);
+  //   params.append('end_date', endDate.value);
+  // }
   axios.get(apiUrl, { params: params }).then((res) => {
     let response = res.data;
 
@@ -170,9 +235,13 @@ const fetchTableData = () => {
     }
     if (currentView.value === 'user') {
       tableData.value = response.data;
-      console.log(tableData.value, 'users table data');
+    }
+    if (currentView.value === 'activity') {
+      tableData.value = response.data;
     }
   });
 };
 provide('completeNess', completeNess);
+provide('graphDate', graphDate);
+provide('graphAmount', graphAmount);
 </script>
