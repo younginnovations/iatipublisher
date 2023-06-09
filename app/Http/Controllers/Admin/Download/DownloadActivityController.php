@@ -58,6 +58,7 @@ class DownloadActivityController extends Controller
      * @param CsvGenerator $csvGenerator
      * @param XmlServiceProvider $xmlServiceProvider
      * @param AuditService $auditService
+     * @param DownloadXlsService $downloadXlsService
      */
     public function __construct(
         DownloadActivityService $downloadActivityService,
@@ -216,6 +217,8 @@ class DownloadActivityController extends Controller
     }
 
     /**
+     * Retry download if it fails.
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \Throwable
@@ -243,10 +246,9 @@ class DownloadActivityController extends Controller
      * Checks if the status is completed
      * if completed then do not upload cancel json else upload.
      *
-     *
-     * @return JsonResponse|void
+     * @return JsonResponse
      */
-    public function cancelXlsDownload()
+    public function cancelXlsDownload(): JsonResponse
     {
         try {
             $userId = auth()->user()->id;
@@ -257,6 +259,8 @@ class DownloadActivityController extends Controller
             return response()->json(['success' => true, 'message' => 'Cancelled Successfully']);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error has occured while trying to cancel download']);
         }
     }
 

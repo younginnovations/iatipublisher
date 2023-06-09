@@ -208,20 +208,6 @@
       :text="loaderText"
       :class="{ 'animate-loader': loader }"
     />
-
-    <!-- <BulkPublishing
-      v-if="
-        showBulkpublish ||
-        (pa.publishingActivities &&
-          Object.keys(pa.publishingActivities).length > 0)
-      "
-      :published="published"
-      @close="
-        {
-          showBulkpublish = false;
-        }
-      "
-    /> -->
   </div>
 </template>
 

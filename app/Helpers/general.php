@@ -840,26 +840,6 @@ if (!function_exists('compareStringIgnoringWhitespace')) {
     }
 }
 
-if (!function_exists('getFileNameExtension')) {
-    /**
-     * Get extension from filename.
-     *
-     * @param $fileName
-     *
-     * @return string|null
-     */
-    function getFileNameExtension($fileName): ?string
-    {
-        if (empty($fileName)) {
-            return null;
-        }
-
-        $explodedFileName = explode('.', $fileName);
-
-        return $explodedFileName[1] ?? null;
-    }
-}
-
 if (!function_exists('getAllocatedPercentageOfRecipientRegion')) {
     /**
      * Returns currently consumed % by recipient region.
@@ -913,19 +893,5 @@ if (!function_exists('getAllocatedPercentageOfRecipientCountry')) {
         }
 
         return $total;
-    }
-}
-
-if (!function_exists('generateRandomCharacters')) {
-    /**
-     * Function to generate random characters mix of digit and alphabets.
-     *
-     * @param $length
-     *
-     * @return string
-     */
-    function generateRandomCharacters($length): string
-    {
-        return substr(str_shuffle('0123456789abcdefghilkmnopqrstuvwxyz'), 0, $length);
     }
 }

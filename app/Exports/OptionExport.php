@@ -146,9 +146,7 @@ class OptionExport implements FromView, WithTitle, WithEvents, ShouldAutoSize
      */
     public function view(): View
     {
-        $data = readJsonFile('Exports/XlsExportTemplate/' . $this->fileName . '.json');
-
-        return view('Export.optionExport', ['data' => $data]);
+        return view('Export.optionExport', ['data' => readJsonFile('Exports/XlsExportTemplate/' . $this->fileName . '.json')]);
     }
 
     /**

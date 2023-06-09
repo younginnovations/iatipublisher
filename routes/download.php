@@ -23,5 +23,4 @@ Route::group(['middleware' => 'can:crud_activity'], static function () {
     Route::get('/activities/download-xls-progress-status', [DownloadActivityController::class, 'xlsDownloadInProgressStatus'])->name('activities.xls.download-status');
     Route::get('/activities/cancel-xls-download', [DownloadActivityController::class, 'cancelXlsDownload'])->name('activities.xls.download-cancel');
     Route::get('/activities/retry-xls-download', [DownloadActivityController::class, 'retryXlsDownload'])->name('activities.xls.retry-xls-download');
-    // Route::get('activities/download-codes/{download?}', [DownloadCodesController::class, , 'downloadCodes'])->name('activities.download-codes');
 });

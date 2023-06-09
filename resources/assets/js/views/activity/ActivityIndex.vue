@@ -227,6 +227,7 @@ export default defineComponent({
       axios.get('/import/xls/progress_status').then((res) => {
         activityName.value = res?.data?.status?.template;
         xlsData.value = Object.keys(res.data.status).length > 0;
+
         if (res?.data?.status?.status === 'completed') {
           console.log('completed');
           uploadComplete.value = true;
@@ -249,12 +250,14 @@ export default defineComponent({
     };
     const checkDownloadStatus = () => {
       downloading.value = false;
+
       const checkDownload = setInterval(function () {
         axios.get('/activities/download-xls-progress-status').then((res) => {
           fileCount.value = res.data.file_count;
           xlsDownloadStatus.value = res.data.status;
           downloadApiUrl.value = res.data.url;
           downloading.value = !!res.data.status;
+
           if (
             xlsDownloadStatus.value === 'completed' ||
             xlsDownloadStatus.value === 'failed' ||
@@ -277,6 +280,7 @@ export default defineComponent({
 
       checkXlsstatus();
       checkDownloadStatus();
+
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
@@ -323,6 +327,7 @@ export default defineComponent({
     function fetchActivities(active_page: number) {
       tableLoader.value = true;
       let queryString = '';
+
       if (currentURL.includes('?')) {
         queryString = window.location.search;
       }

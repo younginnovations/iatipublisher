@@ -356,6 +356,7 @@ export default defineComponent({
       downloadingBackgroundMessage.value = false;
       let queryParameters = window.location.href?.split('?');
       let addQueryParams = '';
+
       if (queryParameters.length === 2) {
         addQueryParams = '&' + queryParameters[1];
       }

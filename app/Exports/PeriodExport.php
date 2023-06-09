@@ -203,6 +203,8 @@ class PeriodExport implements WithMultipleSheets
     }
 
     /**
+     * Maps Indicator and Period.
+     *
      * @param $resultIds
      * @param $indicatorMapper
      * @param $appendIdentifier
@@ -212,11 +214,12 @@ class PeriodExport implements WithMultipleSheets
      *
      * @throws BindingResolutionException
      *
-     * @return array|mixed
+     * @return array
      */
-    protected function getMappedIndicatorData($resultIds, $indicatorMapper, $appendIdentifier, $finalIdentifierKey, $mapped, $sheetName): mixed
+    protected function getMappedIndicatorData($resultIds, $indicatorMapper, $appendIdentifier, $finalIdentifierKey, $mapped, $sheetName): array
     {
         $downloadXlsService = app()->make(DownloadXlsService::class);
+
         $downloadXlsService->getResultsWithIndicatorQueryToDownload($resultIds)->chunk(100, function ($chunkedResults) use ($indicatorMapper, $appendIdentifier, $finalIdentifierKey, &$mapped, $sheetName, $downloadXlsService) {
             $indicatorIds = array_column(Arr::collapse($chunkedResults->pluck('indicators')->toArray()), 'id');
             $mapped = $this->getMappedPeriodData($indicatorIds, $indicatorMapper, $appendIdentifier, $finalIdentifierKey, $mapped, $sheetName, $downloadXlsService);
@@ -226,6 +229,8 @@ class PeriodExport implements WithMultipleSheets
     }
 
     /**
+     * Maps Period Data.
+     *
      * @param $indicatorIds
      * @param $indicatorMapper
      * @param $appendIdentifier
@@ -234,9 +239,9 @@ class PeriodExport implements WithMultipleSheets
      * @param $sheetName
      * @param $downloadXlsService
      *
-     * @return array|mixed
+     * @return array
      */
-    protected function getMappedPeriodData($indicatorIds, $indicatorMapper, $appendIdentifier, $finalIdentifierKey, $mapped, $sheetName, $downloadXlsService): mixed
+    protected function getMappedPeriodData($indicatorIds, $indicatorMapper, $appendIdentifier, $finalIdentifierKey, $mapped, $sheetName, $downloadXlsService): array
     {
         $downloadXlsService->getIndicatorWithPeriodsQueryToDownload($indicatorIds)->chunk(100, function ($chunkedIndicator) use ($indicatorMapper, $appendIdentifier, $finalIdentifierKey, &$mapped, $sheetName) {
             $indicatorData = $chunkedIndicator->pluck('periods', 'indicator_code')->toArray();
@@ -255,6 +260,8 @@ class PeriodExport implements WithMultipleSheets
     }
 
     /**
+     * Maps Period Data with identifier and identifier value.
+     *
      * @param $mapped
      * @param $sheetName
      * @param $indicatorIdentifier
@@ -292,8 +299,10 @@ class PeriodExport implements WithMultipleSheets
         $this->data->chunk(100, function ($chunkedActivities) use ($appendIdentifier, $finalIdentifierKey, $sheetName, &$mapped) {
             $resultIds = array_column(Arr::collapse($chunkedActivities->pluck('results')->toArray()), 'id');
             $downloadXlsService = app()->make(DownloadXlsService::class);
+
             $downloadXlsService->getResultsWithIndicatorQueryToDownload($resultIds)->chunk(100, function ($chunkedResults) use ($appendIdentifier, $finalIdentifierKey, $sheetName, &$mapped, $downloadXlsService) {
                 $indicatorIds = array_column(Arr::collapse($chunkedResults->pluck('indicators')->toArray()), 'id');
+
                 $downloadXlsService->getIndicatorWithPeriodsQueryToDownload($indicatorIds)->chunk(100, function ($chunkedIndicator) use ($appendIdentifier, $finalIdentifierKey, $sheetName, &$mapped) {
                     $targetData = $this->getTargetData($chunkedIndicator);
                     $this->processTargetData($targetData, $appendIdentifier, $finalIdentifierKey, $sheetName, $mapped);
@@ -303,6 +312,7 @@ class PeriodExport implements WithMultipleSheets
 
         if (!empty($mapped)) {
             $targetIdentifier = [];
+
             foreach (Arr::collapse($mapped[$sheetName]['Period Identifier']) as $value) {
                 $targetIdentifier[$value['period_code']][] = $value['target_identifier'];
             }
@@ -315,6 +325,8 @@ class PeriodExport implements WithMultipleSheets
     }
 
     /**
+     * Fetch target.
+     *
      * @param $chunkedIndicator
      *
      * @return array
@@ -327,6 +339,8 @@ class PeriodExport implements WithMultipleSheets
     }
 
     /**
+     * Processes target data.
+     *
      * @param $targetData
      * @param $appendIdentifier
      * @param $finalIdentifierKey
@@ -370,8 +384,10 @@ class PeriodExport implements WithMultipleSheets
         $this->data->chunk(100, function ($chunkedActivities) use ($appendIdentifier, $finalIdentifierKey, $sheetName, &$mapped) {
             $resultIds = array_column(Arr::collapse($chunkedActivities->pluck('results')->toArray()), 'id');
             $downloadXlsService = app()->make(DownloadXlsService::class);
+
             $downloadXlsService->getResultsWithIndicatorQueryToDownload($resultIds)->chunk(100, function ($chunkedResults) use ($appendIdentifier, $finalIdentifierKey, $sheetName, &$mapped, $downloadXlsService) {
                 $indicatorIds = array_column(Arr::collapse($chunkedResults->pluck('indicators')->toArray()), 'id');
+
                 $downloadXlsService->getIndicatorWithPeriodsQueryToDownload($indicatorIds)->chunk(100, function ($chunkedIndicator) use ($appendIdentifier, $finalIdentifierKey, $sheetName, &$mapped) {
                     $indicatorData = $chunkedIndicator->pluck('periods', 'indicator_code')->toArray();
                     $actualData = array_column(Arr::collapse($indicatorData), 'period', 'period_code');
@@ -395,6 +411,7 @@ class PeriodExport implements WithMultipleSheets
 
         if (!empty($mapped)) {
             $actualIdentifier = [];
+
             foreach (Arr::collapse($mapped[$sheetName]['Period Identifier']) as $value) {
                 $actualIdentifier[$value['period_code']][] = $value['actual_identifier'];
             }
@@ -421,8 +438,10 @@ class PeriodExport implements WithMultipleSheets
         $this->data->chunk(100, function ($chunkedActivities) use (&$sheets) {
             $resultIds = array_column(Arr::collapse($chunkedActivities->pluck('results')->toArray()), 'id');
             $downloadXlsService = app()->make(DownloadXlsService::class);
+
             $downloadXlsService->getResultsWithIndicatorQueryToDownload($resultIds)->chunk(100, function ($chunkedResults) use (&$sheets, $downloadXlsService) {
                 $indicatorIds = array_column(Arr::collapse($chunkedResults->pluck('indicators')->toArray()), 'id');
+
                 $downloadXlsService->getIndicatorWithPeriodsQueryToDownload($indicatorIds)->chunk(100, function ($chunkedIndicator) use (&$sheets) {
                     $indicatorData = $chunkedIndicator->pluck('periods', 'indicator_code')->toArray();
 
@@ -445,6 +464,8 @@ class PeriodExport implements WithMultipleSheets
     }
 
     /**
+     * Maps target and target's document link data to make ready for export.
+     *
      * @param $identifier_number
      * @param $data
      * @param $sheets
@@ -470,6 +491,8 @@ class PeriodExport implements WithMultipleSheets
     }
 
     /**
+     * Maps actual and actual's document link data ready for export.
+     *
      * @param $identifier_number
      * @param $data
      * @param $sheets
@@ -495,6 +518,8 @@ class PeriodExport implements WithMultipleSheets
     }
 
     /**
+     * Maps Period data to make it ready for export.
+     *
      * @param $identifier_number
      * @param $data
      * @param $sheets

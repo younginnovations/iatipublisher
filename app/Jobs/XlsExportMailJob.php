@@ -44,6 +44,10 @@ class XlsExportMailJob implements ShouldQueue
     /**
      * Create a new job instance.
      *
+     * @param $email
+     * @param $userId
+     * @param $username
+     *
      * @return void
      */
     public function __construct($email, $username, $userId)
@@ -62,9 +66,7 @@ class XlsExportMailJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $awsCancelStatusFile = awsGetFile("Xls/$this->userId/cancelStatus.json");
-
-        if (empty($awsCancelStatusFile)) {
+        if (empty(awsGetFile("Xls/$this->userId/cancelStatus.json"))) {
             User::sendXlsDownloadLink($this->email, $this->username, $this->userId);
         }
     }

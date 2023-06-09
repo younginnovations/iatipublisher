@@ -341,6 +341,7 @@ class IndicatorExport implements WithMultipleSheets
 
         if (!empty($mapped)) {
             $finalMapper = [];
+
             foreach (Arr::collapse($mapped[$sheetName]['Indicator Identifier']) as $value) {
                 $finalMapper[$value['identifier']][] = $value['indicator_baseline_identifier'];
             }

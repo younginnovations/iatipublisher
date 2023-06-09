@@ -6,6 +6,7 @@ namespace App\IATI\Repositories\Download;
 
 use App\IATI\Models\Download\DownloadStatus;
 use App\IATI\Repositories\Repository;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -60,14 +61,14 @@ class XlsDownloadStatusRepository extends Repository
     }
 
     /**
-     * Checks if user's download process exists.
+     * Returns download status.
      *
      * @param $userId
      * @param $fileType
      *
-     * @return \Illuminate\Database\Eloquent\Builder|Model|mixed|object|null
+     * @return Builder|Model|null
      */
-    public function getDownloadStatusObject($userId, $fileType): mixed
+    public function getDownloadStatusObject($userId, $fileType): Model|Builder|null
     {
         return $this->model->where('user_id', $userId)->where('type', $fileType)->first();
     }

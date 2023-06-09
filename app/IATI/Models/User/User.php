@@ -168,6 +168,8 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
     }
 
     /**
+     * Informs xls download completion user through mail and updates download status table.
+     *
      * @param $email
      * @param $username
      * @param $userId

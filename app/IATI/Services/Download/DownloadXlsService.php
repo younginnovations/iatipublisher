@@ -7,6 +7,7 @@ namespace App\IATI\Services\Download;
 use App\IATI\Repositories\Activity\IndicatorRepository;
 use App\IATI\Repositories\Activity\ResultRepository;
 use App\IATI\Repositories\Download\XlsDownloadStatusRepository;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -54,9 +55,9 @@ class DownloadXlsService
      *
      * @param $resultIds
      *
-     * @return mixed
+     * @return Builder
      */
-    public function getResultsWithIndicatorQueryToDownload($resultIds): mixed
+    public function getResultsWithIndicatorQueryToDownload($resultIds): Builder
     {
         return $this->resultRepository->getResultsWithIndicatorQueryToDownload($resultIds);
     }
@@ -66,9 +67,9 @@ class DownloadXlsService
      *
      * @param $indicatorIds
      *
-     * @return mixed
+     * @return Builder
      */
-    public function getIndicatorWithPeriodsQueryToDownload($indicatorIds): mixed
+    public function getIndicatorWithPeriodsQueryToDownload($indicatorIds): Builder
     {
         return $this->indicatorRepository->getIndicatorWithPeriodsQueryToDownload($indicatorIds);
     }
@@ -138,9 +139,9 @@ class DownloadXlsService
      *
      * @param $userId
      *
-     * @return \Illuminate\Database\Eloquent\Builder|Model|mixed|object|null
+     * @return Builder|Model|null
      */
-    public function getDownloadStatusByUserId($userId)
+    public function getDownloadStatusByUserId($userId): Model|Builder|null
     {
         return $this->xlsDownloadStatusRepository->getDownloadStatusObject($userId, 'xls');
     }

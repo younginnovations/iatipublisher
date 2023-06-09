@@ -112,10 +112,7 @@ class XlsExport implements FromView, WithTitle, WithEvents, ShouldAutoSize, With
      */
     public function view(): View
     {
-        $totalData = $this->data;
-        $headers = $this->sheetHeaders;
-
-        return view('Export.xlsExport', ['activities' => $totalData, 'headers' => $headers]);
+        return view('Export.xlsExport', ['activities' => $this->data, 'headers' => $this->sheetHeaders]);
     }
 
     /**
@@ -152,6 +149,7 @@ class XlsExport implements FromView, WithTitle, WithEvents, ShouldAutoSize, With
                         } elseif (in_array($this->sheetName, ['Result_Mapper', 'Indicator_Mapper', 'Indicator_Baseline_Mapper', 'Period_Mapper', 'Actual_Mapper', 'Target_Mapper'])) {
                             // Set the formula for each cell in the range
                             $concatenation = $this->mapperConcatenator[$this->sheetName];
+
                             for ($row = 2; $row <= 5000; $row++) {
                                 $cellCoordinate = 'C' . $row;
                                 $formula = '=IFERROR(IF(B' . $row . '<>"",CONCATENATE(xlookup("*",$A$2:A' . $row . ',$A$2:A' . $row . ',"",2,-1),"' . $concatenation . '",B' . $row . '),""),IF(B' . $row . '<>"",CONCATENATE(LOOKUP(2,1/($A$2:A' . $row . '<>""),$A$2:A' . $row . '),"' . $concatenation . '",B' . $row . '),""))';

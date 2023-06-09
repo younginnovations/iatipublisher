@@ -126,11 +126,7 @@ const publishingActivities = reactive(
 const completed = ref();
 defineEmits(['close']);
 
-//inject
-
 let refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
-
-// let activities = ref(paStorage.value.publishingActivities.activities);
 let activities = ref();
 
 let hasFailedActivities = reactive({
@@ -138,10 +134,16 @@ let hasFailedActivities = reactive({
   ids: [] as number[],
   status: false,
 });
+
+onMounted(() => {
+  completed.value = paStorage.value.publishingActivities.status ?? 'processing';
+  bulkPublishStatus();
+});
 const bulkPublishStatus = () => {
   const intervalID = setInterval(() => {
     axios.get(`/activities/bulk-publish-status`).then((res) => {
       const response = res.data;
+
       if (!response.publishing) {
         clearInterval(intervalID);
       }
@@ -154,8 +156,8 @@ const bulkPublishStatus = () => {
           response.data.activities;
         paStorage.value.publishingActivities.status = response.data.status;
         paStorage.value.publishingActivities.message = response.data.message;
+
         if (completed.value === 'completed') {
-          console.log('clear interval');
           clearInterval(intervalID);
 
           failedActivities(paStorage.value.publishingActivities.activities);
@@ -186,6 +188,7 @@ const retryPublishing = () => {
   hasFailedActivities.status = false;
   hasFailedActivities.ids = [];
   hasFailedActivities.data = {} as actElements;
+
   axios.get(endpoint).then((res) => {
     const response = res.data;
 
@@ -246,29 +249,6 @@ const completedActivities = computed(() => {
   return count;
 });
 
-// const retryPublishing = () => {
-//   //reset required states
-//   completed.value = 'processing';
-
-//   for (const key in hasFailedActivities.data) {
-//     hasFailedActivities.data[key].status = 'processing';
-//   }
-
-//   activities.value = hasFailedActivities.data;
-
-//   // api endpoint call
-//   const endpoint = `activities/start-bulk-publish?activities=[${hasFailedActivities.ids}]`;
-
-//   axios.get(endpoint).then((res) => {
-//     const response = res.data;
-
-//     if (response.success) {
-//       paStorage.value.publishingActivities = response.data;
-//       bulkPublishStatus();
-//     }
-//   });
-// };
-
 const percentageWidth = computed(() => {
   return (
     (completedActivities.value /
@@ -296,10 +276,6 @@ const setDataToLocalstorage = () => {
   );
 };
 
-onMounted(() => {
-  completed.value = paStorage.value.publishingActivities.status ?? 'processing';
-  bulkPublishStatus();
-});
 onUnmounted(() => {
   store.dispatch('updateStartBulkPublish', false);
 });

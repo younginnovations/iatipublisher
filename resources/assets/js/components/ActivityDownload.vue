@@ -90,7 +90,7 @@ const downloadFile = () => {
   store.dispatch('updateCancelDownload', true);
   store.dispatch('updateStartXlsDownload', false);
 
-  let apiUrl = `${(downloadApiUrl as Ref).value.split()[0].split('/')[3]}/${
+  const apiUrl = `${(downloadApiUrl as Ref).value.split()[0].split('/')[3]}/${
     (downloadApiUrl as Ref).value.split()[0].split('/')[4]
   }`;
   axios({
@@ -98,8 +98,8 @@ const downloadFile = () => {
     url: apiUrl,
     responseType: 'blob',
   }).then((res) => {
-    let fileName = res.headers['content-disposition'].split('filename=')[1];
-    let blob = new Blob([res.data], {});
+    const fileName = res.headers['content-disposition'].split('filename=')[1];
+    const blob = new Blob([res.data], {});
     const link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
     link.setAttribute('download', fileName);
@@ -116,11 +116,10 @@ const retryDownload = () => {
 
   showRetryDownloadModel.value = false;
 
-  let apiUrl = 'activities/retry-xls-download';
+  const apiUrl = 'activities/retry-xls-download';
 
   axios.get(apiUrl).finally(() => (isLoading.value = false));
 };
-
 const cancelDownload = () => {
   store.dispatch('updateCancelDownload', true);
 

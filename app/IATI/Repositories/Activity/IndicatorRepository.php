@@ -8,6 +8,7 @@ use App\IATI\Models\Activity\Indicator;
 use App\IATI\Repositories\Repository;
 use App\IATI\Traits\FillDefaultValuesTrait;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
@@ -68,9 +69,9 @@ class IndicatorRepository extends Repository
      *
      * @param $indicatorIds
      *
-     * @return mixed
+     * @return Builder
      */
-    public function getIndicatorWithPeriodsQueryToDownload($indicatorIds): mixed
+    public function getIndicatorWithPeriodsQueryToDownload($indicatorIds): Builder
     {
         return $this->model->with('periods')
                             ->has('periods')

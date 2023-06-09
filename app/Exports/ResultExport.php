@@ -110,12 +110,12 @@ class ResultExport implements WithMultipleSheets
         $xlsHeaders = readJsonFile('Exports/XlsExportTemplate/xlsHeaderTemplate.json');
         $data = array_merge($this->mappedData(), $this->mappedData);
         $sheets = [];
-
         $sheets[] = new OptionExport('result_instructions', 'Instructions');
 
         foreach ($data as $key => $datum) {
             $sheets[] = new XlsExport(Arr::collapse($datum), $key, $xlsHeaders[$this->sheets[$key]], 'result');
         }
+
         $sheets[] = new OptionExport('result_options', 'Options');
 
         return $sheets;
@@ -170,6 +170,7 @@ class ResultExport implements WithMultipleSheets
         foreach ($this->mappingSets as $sheetName => $mapSet) {
             $mappingSet = $this->mappingSets[$sheetName];
             $primaryIdentifier = ucwords(str_replace('_', ' ', array_keys(Arr::collapse($mappingSet))[0]));
+
             $this->data->chunk(100, function ($chunkedData) use (&$sheetName, &$mapped, $mapSet, $primaryIdentifier, $mappingSet) {
                 $chunkedData = $chunkedData->pluck('results', 'iati_identifier.activity_identifier')->toArray();
                 $appendIdentifier = array_values(Arr::collapse($mappingSet))[0];

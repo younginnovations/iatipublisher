@@ -195,24 +195,26 @@ trait XlsDownloadTrait
 
     /**
      * Removed document link of baseline, target, actual after mapping
-     * so that document link doesn't get included when basline, target and actual are mapped.
+     * so that document link doesn't get included when baseline, target and actual are mapped.
      *
      * @param $data
      * @param $key
      *
-     * @return mixed
+     * @return array
      */
-    public function removeDocumentLink($data, $key): mixed
+    public function removeDocumentLink($data, $key): array
     {
         $keyData[$key] = $data;
 
         foreach ($keyData as $datum) {
             $keyToRemove = 'document_link';
+
             foreach ($datum as &$array) {
                 if (array_key_exists($keyToRemove, $array)) {
                     unset($array[$keyToRemove]);
                 }
             }
+
             $keyData = $datum;
         }
 

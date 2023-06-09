@@ -204,6 +204,7 @@ class ActivityExport implements WithMultipleSheets
                         if ($key === 'related_activity') {
                             $datum = $this->changeRelatedActivityArrayKey($datum);
                         }
+
                         $headerTemplate = array_fill_keys(array_keys($xlsHeaders[$key]), '');
                         $identifier = $data['iati_identifier']['activity_identifier'];
                         $datum = $key === 'transactions' ? array_column($datum, 'transaction') : $datum;
@@ -251,10 +252,12 @@ class ActivityExport implements WithMultipleSheets
                 $secondary_reporter = Arr::get($data, 'reporting_org.0.secondary_reporter');
                 $value = empty($secondary_reporter) && $secondary_reporter !== '0' ? null : ($secondary_reporter === '0' ? 0 : 1);
             }
+
             if ($settingField === 'humanitarian') {
                 $humanitarian = Arr::get($data, 'default_field_values.humanitarian');
                 $value = empty($humanitarian) && $humanitarian !== '0' ? null : ($humanitarian === '0' || $humanitarian === 'no' ? 0 : 1);
             }
+
             $data['settings'][$settingField] = !empty($value) || $value === 0 ? $value : ' ';
         }
     }

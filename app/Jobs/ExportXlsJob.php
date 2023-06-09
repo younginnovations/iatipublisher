@@ -75,6 +75,9 @@ class ExportXlsJob implements ShouldQueue
      * Had to query again in this job instead of directly passing it through constructor is because
      * it cannot serialize also cannot store the relationship value as well.
      *
+     * @param $requestData
+     * @param $authUser
+     *
      * @throws BindingResolutionException
      *
      * @return void

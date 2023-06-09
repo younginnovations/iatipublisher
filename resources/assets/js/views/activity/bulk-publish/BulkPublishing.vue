@@ -17,7 +17,6 @@
           <svg-vue class="mr-1" icon="redo" />
           <span class="text-xs uppercase">Retry</span>
         </div>
-        <!-- <div v-else class="minus cursor-pointer" @click="toggleWindow"></div> -->
         <div
           v-if="completed === 'completed'"
           class="cross cursor-pointer"
