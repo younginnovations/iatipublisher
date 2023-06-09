@@ -52,7 +52,7 @@
         <ErrorPopUp
           v-if="errorData.visibility"
           :message="errorData.message"
-          :title="language.common_lang.error.activity_couldnt_be_published"
+          :title="language.common_lang.error.activity_could_not_be_published"
           @close-popup="
             () => {
               errorData.visibility = false;

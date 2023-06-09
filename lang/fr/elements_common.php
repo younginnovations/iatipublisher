@@ -215,7 +215,7 @@ return array (
   'the_date_of_document_result_document_link_document_date' => 'Date de publication du document associé. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/document-date/\'>En savoir plus</a>',
   'the_date_of_document_baseline_document_link_document_date' => 'Date de publication du document associé. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/document-date/\'>En savoir plus</a>',
   'the_date_of_document_target_document_link_document_date' => 'Date de publication du document associé. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/target/document-link/document-date/\'>En savoir plus</a>',
-  'thed_of_reporting_period' => 'Fin de la période considérée. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/period-end/\'>En savoir plus</a>',
+  'the_end_of_reporting_period' => 'Fin de la période considérée. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/period/period-end/\'>En savoir plus</a>',
   'the_free_text_name_link_iati_activity_description_narrative' => 'Nom ou description en texte libre de l’élément concerné. Peut figurer en plusieurs langues. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/description/narrative/\'>En savoir plus</a>',
   'the_free_text_name_link_document_link_description_narrative' => 'Nom ou description en texte libre de l’élément concerné. Peut figurer en plusieurs langues. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/description/narrative/\'>En savoir plus</a>',
   'the_free_text_name_link_activity_document_link_title_narrative' => 'Nom ou description en texte libre de l’élément concerné. Peut figurer en plusieurs langues. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/title/narrative/\'>En savoir plus</a>',
@@ -238,7 +238,7 @@ return array (
   'provide_the_code_for_policy' => 'Indiquez le code de la politique ou du thème dont relève votre activité. Si vous utilisez la liste des marqueurs politiques du SNPC du CAD de l’OCDE, sélectionnez <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/codelists/policymarker/\'>l’une de ces options</a>.',
   'provide_the_date_for_when' => 'Indiquez la date de publication du document.',
   'provide_the_date_of_publication' => 'Indiquez la date de publication du document ou de la page Web, ou celle de sa dernière mise à jour.',
-  'provide_thed_of_budget_period' => 'Indiquez la date de fin de la période budgétaire.',
+  'provide_the_end_of_budget_period' => 'Indiquez la date de fin de la période budgétaire.',
   'provide_the_start_of_budget_period ' => 'Indiquez la date de début de la période budgétaire.',
   'select_a_document_category' => 'Sélectionnez une catégorie de document.',
   'select_the_aid_type' => 'Sélectionnez le type d’aide associé à votre activité.',
@@ -255,4 +255,8 @@ return array (
   'you_can_provide_a_reference' => 'Vous pouvez indiquer la référence que vous utilisez pour reconnaître cette ligne budgétaire dans le système de gestion financière interne de votre organisation.',
   'you_can_provide_information' => 'Vous pouvez saisir des informations concernant le type d’aide fourni. Cet élément est généralement nommé « modalité d’aide » et l’IITA recommande d’utiliser un type d’aide issu de la liste de codes du CAD de l’OCDE pour l’ensemble des activités.<br>Dans cette liste de codes, on trouve notamment : les interventions de type projet, qui consistent à soutenir un projet particulière, et l’aide budgétaire, qui prend la forme d’une contribution financière au budget d’un gouvernement bénéficiaire. Les interventions de type projet sont les plus courantes pour les ONG et les OSC, mais on peut trouver beaucoup d’autres types d’aides <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/codelists/aidtype/\'>ici</a>.<br></br>Si votre activité concerne un événement humanitaire, vous pouvez fournir des informations précises concernant le type de fonds correspondant. Il peut s’agir d’informations sur le niveau d’affectation des fonds de l’activité ou sur la forme de l’aide (espèces ou coupons). <a target=\'_blank\' href=\'https://iatistandard.org/en/guidance/standard-guidance/humanitarian/\'>En savoir plus sur la publication des types d’aide liés aux activités humanitaires</a>.',
   'you_must_select_category' => 'Vous devez sélectionner une catégorie pour le document ou la page Web que vous avez fournie.',
+  'capital_spend' => 'dépenses-capital',
+  'participating_org' => 'org-participante',
+  'reporting_org' => 'org-déclarante',
+  'recipient_org_budget'=>'budget-org-bénéficiaire'
 );

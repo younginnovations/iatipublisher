@@ -17,10 +17,8 @@
             <span class="flex flex-wrap">
               {{
                 pageContent === language.web_lang.join_now
-                  ? language.home.iati_publishing_tool_section
-                      .havent_registered_label
-                  : language.home.iati_publishing_tool_section
-                      .already_have_account_label
+                  ? language.home.iati_publishing_tool_section.havent_registered_label
+                  : language.home.iati_publishing_tool_section.already_have_account_label
               }}
               <button
                 class="ml-1 border-b-2 border-b-transparent text-base text-turquoise hover:border-b-2 hover:border-b-turquoise"

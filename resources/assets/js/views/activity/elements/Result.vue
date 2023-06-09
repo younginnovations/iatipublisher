@@ -41,7 +41,7 @@
             :text="
               language.button_lang.show_element.replace(
                 ':element',
-                language.common_lang.full_result_list
+                language.common_lang.full_result
               )
             "
             icon=""

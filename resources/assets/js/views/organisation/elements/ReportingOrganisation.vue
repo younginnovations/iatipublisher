@@ -18,7 +18,7 @@
       <table>
         <tbody>
           <tr>
-            <td>{{ translation.common_lang.reference_label }}</td>
+            <td>{{ translation.common_lang.reference }}</td>
             <td>
               {{
                 reporting_org.ref ?? translation.common_lang.missing.reference

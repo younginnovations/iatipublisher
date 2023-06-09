@@ -162,7 +162,7 @@ class ActivityController extends Controller
             return response()->json(
                 [
                     'success' => false,
-                    'message' => trans('responses.error_has_occurred', ['event'=> trans('responses.saving'), 'suffix' => trans('elements_common.activity')]),
+                    'message' => trans('responses.error_has_occurred', ['event'=> trans('events.saving'), 'suffix' => trans('elements_common.activity')]),
                     'data'    => [],
                 ]
             );
@@ -335,8 +335,8 @@ class ActivityController extends Controller
                 [
                     'success' => false,
                     'message' => ucfirst(trans(
-                        'controller.event_failed',
-                        ['prefix' => trans('elements_common.activity'), 'event'=> trans('events.deleted')]
+                        'responses.event_failed',
+                        ['prefix' => trans('elements_common.activity'), 'event'=> lcfirst(trans('buttons.delete'))]
                     )),
                 ]
             );

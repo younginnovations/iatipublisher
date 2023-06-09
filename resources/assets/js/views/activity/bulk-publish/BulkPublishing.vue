@@ -8,7 +8,8 @@
     <div class="bulk-head flex items-center justify-between bg-eggshell p-4">
       <div class="grow text-sm font-bold leading-normal">
         {{ language.common_lang.publishing }}
-        {{ Object.keys(activities).length }} activities
+        {{ activities &&
+      Object.keys(activities).length }} activities
       </div>
       <div class="flex shrink-0">
         <div
@@ -201,9 +202,10 @@ onUnmounted(() => {
   }
 });
 
+
 const checkXlsstatus = () => {
   axios.get('/import/xls/progress_status').then((res) => {
-    xlsData.value = Object.keys(res.data.status).length > 0;
+    xlsData.value = res.data.status && Object.keys(res.data.status).length > 0;
   });
 };
 const checkDownloadStatus = () => {

@@ -38,10 +38,13 @@
         "
       ></div>
     </div>
-    <div id="nav-list" class="activity-nav-menu flex w-full justify-between">
+    <div id="nav-list" class="activity-nav-menu flex w-full">
       <!-- commented to temporarily hide language buttons , remove width later -->
-      <nav class="w-[85px] justify-end">
-        <ul class="flex">
+      <!-- Need to fix flex direction for smaller screens @momik -->
+      <nav class="flex w-full justify-between">
+        <ul
+            class="activity-nav-list -mx-4"
+        >
           <li
             v-for="(language, index) in data.languages"
             :key="index"
@@ -49,26 +52,26 @@
           >
             <a
               :class="[
-                { nav__pointer: language.active },
-                data.languageNavAnchorClasses,
-              ]"
+              { nav__pointer: language.active },
+              data.languageNavAnchorClasses,
+            ]"
               :href="language.permalink"
             >
               <span>{{ language.language }}</span>
             </a>
           </li>
         </ul>
-      </nav>
-      <nav>
+
         <ul class="activity-nav-list -mx-4">
           <li
             v-for="(menu, index) in data[
               superAdmin ? 'superadmin_menus' : 'org_menus'
             ]"
             :key="index"
-            :class="data.menuNavLiClasses"
+            :class="[data.menuNavLiClasses, translation.web_lang.active === 'fr' ? 'px-3' : 'px-4']"
+            :style="translation.web_lang.active === 'fr' ? {'text-align':'center'} : {}"
           >
-            <a
+           <a
               v-if="
                 menu.name !== translation.common_lang.add_import_activity &&
                 menu.name !== translation.common_lang.logs.default
@@ -112,7 +115,7 @@
                         id="header-import-activity"
                         href="/import"
                         :class="liClass"
-                        >{{ translation.common_lang.import_activities }}</a
+                        >{{ translation.common_lang.import_activities_from_csv }}</a
                       >
                     </li>
                     <li>
@@ -120,7 +123,7 @@
                         id="header-import-xls"
                         href="/import/xls"
                         :class="liClass"
-                        >Import activities from .XLS</a
+                        >{{translation.common_lang.import_activities_from_xls}}</a
                       >
                     </li>
                   </ul>
@@ -207,13 +210,13 @@
                 </li>
                 <li>
                   <a href="/import" :class="liClass">{{
-                    translation.common_lang.import_activities
+                    translation.common_lang.import_activities_from_csv
                   }}</a>
                 </li>
                 <li>
-                  <a id="header-import-xls" href="/import/xls" :class="liClass"
-                    >Import activities from .XLS</a
-                  >
+                  <a id="header-import-xls" href="/import/xls" :class="liClass">
+                    {{translation.common_lang.import_activities_from_xls}}
+                  </a>
                 </li>
               </ul>
             </div>
@@ -391,8 +394,8 @@ const toastType = ref(false);
 const data = reactive({
   languageNavLiClasses: 'flex',
   languageNavAnchorClasses:
-    'flex text-white items-center uppercase nav__pointer-hover px-1.5',
-  menuNavLiClasses: 'flex px-4 relative',
+    'flex text-white items-center uppercase nav__pointer-hover px-1',
+  menuNavLiClasses: 'flex relative',
   menuNavAnchorClasses:
     'flex text-white items-center uppercase nav__pointer-hover',
   languages: [

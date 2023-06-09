@@ -59,7 +59,7 @@
 
           <HoverText
             v-if="tooltip"
-            :name="title.toString().replace(/_/g, '-')"
+            :name="translation.elements_common_lang[title.toString()] ?? title.toString().replace(/_/g, '-')"
             :hover-text="tooltip"
             :show-iati-reference="true"
             class="text-n-40"
@@ -199,4 +199,9 @@ const replaceUnderscore = (string) => {
   let result = string.replace(regex, '-');
   return result;
 };
+
+const toSnakeCase = (sentence: string): string => {
+  const words = sentence.split(' ');
+  return words.map(word => word.toLowerCase()).join('_');
+}
 </script>

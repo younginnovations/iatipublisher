@@ -11,7 +11,7 @@
           <div>
             <ul
               id="nav-list"
-              class="nav__list flex pt-10 leading-5 xl:space-x-3"
+              class="nav__list flex pt-10 leading-5 xl:space-x-3 uppercase"
             >
               <li class="nav__links active dropdown">
                 <a href="/about">{{ language.web_lang.about }}</a>
@@ -55,12 +55,51 @@
                   btn-link="/support"
                 />
               </li>
+              <li class="flex xl:hidden">
+                <span class="mr-2 pt-5 pb-5 uppercase xl:pt-0"
+                >{{ language.web_lang.language }}:</span
+                >
+                <ul class="flex items-center justify-center">
+                  <li class="nav__links language-hover">
+                    <a
+                      :class="
+                        language.web_lang.active === 'en'
+                          ? 'nav__active links__active'
+                          : ''
+                      "
+                      href="/lang/en"
+                    >EN</a
+                    >
+                  </li>
+                  <li class="nav__links language-hover">
+                    <a
+                      :class="
+                        language.web_lang.active === 'fr'
+                          ? 'nav__active links__active'
+                          : ''
+                      "
+                      href="/lang/fr"
+                    >FR</a
+                    >
+                  </li>
+                  <li class="nav__links language-hover">
+                    <a
+                      :class="
+                        language.web_lang.active === 'es'
+                          ? 'nav__active links__active'
+                          : ''
+                      "
+                      href="/lang/es"
+                    >ES</a
+                    >
+                  </li>
+                </ul>
+              </li>
             </ul>
           </div>
+
           <!-- remove width later -->
           <div class="languages hidden w-[170px] pt-11 xl:block">
-            <!-- commented to temporarily hide language buttons -->
-
             <div class="flex">
               <span class="mr-2 pt-5 pb-5 uppercase xl:pt-0"
                 >{{ language.web_lang.language }}:</span
@@ -102,6 +141,7 @@
               </ul>
             </div>
           </div>
+
           <div id="menu-overlay"></div>
           <div
             id="hamburger"

@@ -148,7 +148,7 @@
                   language.button_lang.add_element.replace(
                     ':element',
                     language.common_lang.period
-                  )
+                  ).toLowerCase()
                 }}
               </a>
             </li>

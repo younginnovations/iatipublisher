@@ -1,6 +1,6 @@
 <?php
 return array (
-  'user_roles' => 
+  'user_roles' =>
   array (
     'superadmin' => 'Superadministrador',
     'iati_admin' => 'Administrador IATI',
@@ -18,7 +18,7 @@ return array (
   'user_role' => 'Rol de usuario',
   'user_profile' => 'Perfil de usuario',
   'status' => 'Estado',
-  'joined_on' => 'Unido',
+  'joined_on' => 'Unido en',
   'action' => 'Acción',
   'role' => 'Rol',
   'roles' => 'Roles',

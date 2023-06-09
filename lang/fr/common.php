@@ -129,7 +129,7 @@ return array (
   'errors_and_warnings_found' => 'Erreurs et avertissement détectés dans',
   'add_import_activity' => 'ajouter/importer une activité',
   'add_activity_manually' => 'AJOUTER ACTIVITÉ MANUELLEMENT',
-  'import_activities' => 'IMPORTER ACTIVITÉS DE CSV/XML',
+  'import_activities_from_csv' => 'IMPORTER ACTIVITÉS DE CSV/XML',
   'activities_not_found' => 'Activités non trouvées.',
   'validating' => 'Validation',
   'unpublishing' => 'Annulation de la publication',
@@ -141,7 +141,7 @@ return array (
   'related_period_deleted' => 'Les périodes associées seront également supprimées',
   'issues_found' => 'Problèmes',
   'issues_found_in_iati_validator' => 'problèmes dans l’outil de validation de l’IITA',
-  'previously_publizshed_on_iati' => 'Déjà publiés par l’IITA',
+  'previously_published_on_iati' => 'Déjà publiés par l’IITA',
   'general' => 'Général',
   'objectives' => 'Objectifs',
   'target_groups' => 'Groupes_cibles',
@@ -277,7 +277,6 @@ return array (
     'the_publisher_id_is_not_verified_in_iati_registry' => 'L’identifiant du signataire n’est pas vérifié dans le registre de l’IITA.',
     'some_activities_have_failed_to_publish' => 'Certaines activités n’ont pas pu être publiées. Rafraîchir pour voir les changements.',
     'couldnt_delete_the_activity' => 'L’activité n’a pas pu être supprimée en raison d’une erreur du système.',
-    'activity_couldnt_be_published' => 'L’activité a été publiée avec succès, actualisez pour voir les modifications',
     'activity_has_been_published_successfully' => 'L’activité a été publiée avec succès, actualisez pour voir les modifications',
     'error_has_occured_while_uploading_file' => 'Une erreur s’est produite lors du téléversement du fichier',
     'illegal_character_in_attribute_name' => 'Caractère interdit dans le nom de l’attribut. attribute',
@@ -345,5 +344,8 @@ return array (
   'activities_with_error_will_be_uploaded' => 'L’activité contenant des erreurs sera téléversée sur notre système, mais le champ contenant l’erreur sera supprimé. Une fois l’activité téléversée sur notre système, vous devrez indiquer des données correctes dans ces champs.',
   'field_with_warning_will_be_uploaded' => 'Les champs contenant des avertissements seront téléversés dans notre système. Les données contenues dans ces champs enfreignent les règles de l’outil de validation de l’IITA et provoqueront des erreurs de validation lors de la publication.',
   'activity_contains_critical_errors' => 'L’activité contient des erreurs critiques et ne peut donc pas être téléversée dans le système.',
-  'receiver_activity_id'=>'ID activité bénéficiaire'
+  'receiver_activity_id'=>'ID activité bénéficiaire',
+  'import_activities_from_XLS' => 'IMPORTER ACTIVITÉS DE XLS',
+  'xls' => 'XLS',
+  'to' => 'à'
 );

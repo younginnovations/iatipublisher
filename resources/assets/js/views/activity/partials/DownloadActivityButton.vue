@@ -55,7 +55,16 @@
           >
         </li>
         <li>
-          <a href="#" :class="liClass" @click="checkDownload">Download XLS</a>
+          <a href="#" :class="liClass" @click="checkDownload">
+             {{
+               capitalize(
+                 language.button_lang.download_element.replace(
+                   ':element',
+                   language.common_lang.xls
+                 )
+               )
+             }}
+          </a>
         </li>
       </ul>
     </div>
@@ -161,7 +170,7 @@
             class="primary-btn"
             @click="downloadXls(store.state.selectedActivities.length)"
           >
-            Continue
+            {{ language.button_lang.continue }}
           </button>
         </div>
       </div>
@@ -187,10 +196,10 @@
         </div>
         <div class="flex justify-end space-x-5">
           <button class="ghost-btn" @click="downloadingInProcess = false">
-            go back
+            {{ language.button_lang.go_back }}
           </button>
           <button class="primary-btn" @click="downloadAnyway">
-            Download Anyway
+            {{ language.button_lang.download_element.replace(':element', language.common_lang.anyway) }}
           </button>
         </div>
       </div>
