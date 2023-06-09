@@ -49,7 +49,7 @@
             error_input: errorData.username,
           }"
           type="text"
-          :placeholder="language.web_lang.sign_in"
+          :placeholder="language.home.sign_in_section.username_placeholder"
         />
         <svg-vue class="absolute top-12 left-5 text-xl sm:left-6" icon="user" />
         <span

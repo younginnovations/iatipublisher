@@ -145,10 +145,9 @@
               >
                 <svg-vue icon="add" class="mr-2 text-n-40"></svg-vue>
                 {{
-                  language.button_lang.add_element.replace(
-                    ':element',
-                    language.common_lang.period
-                  )
+                  language.button_lang.add_element
+                    .replace(':element', language.common_lang.period)
+                    .toLowerCase()
                 }}
               </a>
             </li>

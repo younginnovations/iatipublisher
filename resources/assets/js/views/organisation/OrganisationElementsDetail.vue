@@ -87,7 +87,10 @@
 
           <HoverText
             v-if="tooltip"
-            :name="title.toString().replace(/_/g, '-')"
+            :name="
+              translation.elements_common_lang[title.toString()] ??
+              title.toString().replace(/_/g, '-')
+            "
             :hover-text="tooltip"
             :show-iati-reference="true"
             class="text-n-40"

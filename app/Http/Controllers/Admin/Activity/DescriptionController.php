@@ -51,7 +51,8 @@ class DescriptionController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.rendering'), 'suffix'=>trans('elements_common.activity_description')]));
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.activity_description', 'rendering', 'form'));
         }
     }
 
@@ -70,14 +71,14 @@ class DescriptionController extends Controller
             $activityDescription = $request->all();
 
             if (!$this->descriptionService->update($activityDescription, $activityData)) {
-                return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('common.description')]));
+                return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.description', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('common.description'), 'event'=>trans('events.updated')])));
+            return redirect()->route('admin.activity.show', $id)->with('success', translateElementSuccessfully('description', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('common.description')]));
+            return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.description', 'updating'));
         }
     }
 }

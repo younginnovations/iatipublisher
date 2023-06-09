@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Scope;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use JsonException;
 
 /**
  * Class ScopeRequest.
@@ -14,9 +15,11 @@ class ScopeRequest extends ActivityBaseRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @param $scope
+     * @param null $scope
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function rules($scope = null): array
     {
@@ -36,9 +39,11 @@ class ScopeRequest extends ActivityBaseRequest
     /**
      * Returns critical error for scope.
      *
-     * @param $scope
+     * @param null $scope
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getErrorsForActivityScope($scope = null): array
     {
@@ -61,8 +66,8 @@ class ScopeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => trans('requests.activity_scope', ['suffix'=>trans('requests.suffix.doesnt_exist')]),
-            'size'      => trans('requests.activity_scope', ['suffix'=>trans('requests.suffix.cannot_have_more_than_one')]),
+            'in'        => translateRequestMessage('activity_scope', 'doesnt_exist'),
+            'size'      => translateRequestMessage('activity_scope', 'cannot_have_more_than_one'),
         ];
     }
 }

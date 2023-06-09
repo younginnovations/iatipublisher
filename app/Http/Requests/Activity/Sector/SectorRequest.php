@@ -8,6 +8,7 @@ use App\Http\Requests\Activity\ActivityBaseRequest;
 use App\IATI\Services\Activity\ActivityService;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Validator;
+use JsonException;
 
 /**
  * Class SectorRequest.
@@ -18,7 +19,9 @@ class SectorRequest extends ActivityBaseRequest
      * Get the validation rules that apply to the request.
      *
      * @return array
+     *
      * @throws BindingResolutionException
+     * @throws JsonException
      */
     public function rules(): array
     {
@@ -73,7 +76,7 @@ class SectorRequest extends ActivityBaseRequest
      * @param bool $fileUpload
      *
      * @return array
-     * @throws BindingResolutionException
+     * @throws JsonException
      */
     public function getErrorsForSector($formFields, bool $fileUpload = false): array
     {
@@ -176,19 +179,19 @@ class SectorRequest extends ActivityBaseRequest
      */
     public function getSectorsMessages($formFields): array
     {
-        $messages = ['sector.already_in_transactions' => trans('requests.sector_defined_in_transactions')];
+        $messages = ['sector.already_in_transactions' => translateRequestMessage('sector_defined_in_transactions')];
 
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
-            $messages[sprintf('%s.sector_vocabulary.in', $sectorForm)] = trans('requests.sector', ['suffix'=>trans('requests.suffix.vocabulary_is_invalid')]);
-            $messages[sprintf('%s.code.in', $sectorForm)] = trans('requests.sector', ['suffix'=>trans('requests.suffix.code_is_invalid')]);
-            $messages[sprintf('%s.category_code.in', $sectorForm)] = trans('requests.sector', ['suffix'=>trans('requests.suffix.code_is_invalid')]);
-            $messages[sprintf('%s.sdg_goal.in', $sectorForm)] = trans('requests.sector', ['suffix'=>trans('requests.suffix.code_is_invalid')]);
-            $messages[sprintf('%s.sdg_target.in', $sectorForm)] = trans('requests.sector', ['suffix'=>trans('requests.suffix.code_is_invalid')]);
-            $messages[sprintf('%s.vocabulary_uri.url', $sectorForm)] = trans('requests.sector', ['suffix'=>trans('requests.suffix.must_be_valid_vocal_url')]);
-            $messages[sprintf('%s.percentage.numeric', $sectorForm)] = trans('requests.sector', ['suffix'=>trans('requests.suffix.percent_field_must_be_a_number')]);
-            $messages[sprintf('%s.percentage.in', $sectorForm)] = trans('requests.percentage_must_be_100_or_empty');
-            $messages[sprintf('%s.percentage.sector_total_percent', $sectorForm)] = trans('requests.the_total_percent_100');
+            $messages[sprintf('%s.sector_vocabulary.in', $sectorForm)] = translateRequestMessage('sector', 'vocabulary_is_invalid');
+            $messages[sprintf('%s.code.in', $sectorForm)] = translateRequestMessage('sector', 'code_is_invalid');
+            $messages[sprintf('%s.category_code.in', $sectorForm)] = translateRequestMessage('sector', 'code_is_invalid');
+            $messages[sprintf('%s.sdg_goal.in', $sectorForm)] = translateRequestMessage('sector', 'code_is_invalid');
+            $messages[sprintf('%s.sdg_target.in', $sectorForm)] = translateRequestMessage('sector', 'code_is_invalid');
+            $messages[sprintf('%s.vocabulary_uri.url', $sectorForm)] = translateRequestMessage('sector', 'must_be_valid_vocal_url');
+            $messages[sprintf('%s.percentage.numeric', $sectorForm)] = translateRequestMessage('sector', 'percent_field_must_be_a_number');
+            $messages[sprintf('%s.percentage.in', $sectorForm)] = translateRequestMessage('percentage_must_be_100_or_empty');
+            $messages[sprintf('%s.percentage.sector_total_percent', $sectorForm)] = translateRequestMessage('the_total_percent_100');
 
             $messageNarratives = $this->getMessagesForNarrative($sector['narrative'], $sectorForm);
 

@@ -110,6 +110,7 @@ return array (
   'sector' => 'Le secteur :suffix',
   'tag' => 'La balise :suffix',
   'the_value_date' => 'La date-valeur :suffix',
+  'the_alt_value_date' => 'La date valeur :suffix',
   'title_language_field' => 'Le champ de la langue du titre :suffix',
   'transaction_aid' => 'Le type d’aide de la transaction :suffix',
   'transaction_finance' => 'Le type de financement de la transaction :suffix',

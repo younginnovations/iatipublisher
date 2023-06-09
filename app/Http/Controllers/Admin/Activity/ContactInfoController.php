@@ -54,7 +54,8 @@ class ContactInfoController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.rendering'), 'suffix'=>trans('responses.contact_info_controller')]));
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('responses.contact_info_controller', 'rendering', 'form'));
         }
     }
 
@@ -72,14 +73,14 @@ class ContactInfoController extends Controller
             $activityCountryBudgetItem = $request->except(['_token', '_method']);
 
             if (!$this->contactInfoService->update($id, $activityCountryBudgetItem)) {
-                return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.contact_info')]));
+                return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.contact_info', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.contact_info'), 'event'=>trans('events.updated')])));
+            return redirect()->route('admin.activity.show', $id)->with('success', translateElementSuccessfully('contact_info', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.contact-info')]));
+            return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.contact_info', 'updating'));
         }
     }
 }

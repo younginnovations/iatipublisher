@@ -29,12 +29,24 @@
                     >
                       {{ language.activities_lang.what_is_activity.label }}
                     </div>
-                    <p>
-                      {{
+                    <p
+                      v-html="
                         language.activities_lang.what_is_activity.description
                           .one
-                      }}
-                    </p>
+                      "
+                    ></p>
+                    <p
+                      v-html="
+                        language.activities_lang.what_is_activity.description
+                          .two
+                      "
+                    ></p>
+                    <p
+                      v-html="
+                        language.activities_lang.what_is_activity.description
+                          .three
+                      "
+                    ></p>
                   </div>
                 </div>
               </div>
@@ -61,7 +73,7 @@
           <p
             class="border-b border-n-30 p-4 text-sm font-bold uppercase text-n-50"
           >
-            {{ language.common_lang.import_activities }}
+            {{ language.common_lang.import_activities_from_csv }}
           </p>
           <div class="p-6">
             <div class="mb-4 rounded border border-n-30 px-4 py-3">

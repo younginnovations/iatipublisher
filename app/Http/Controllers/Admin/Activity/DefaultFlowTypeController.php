@@ -50,7 +50,8 @@ class DefaultFlowTypeController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.rendering'), 'suffix'=>trans('elements_common.default_flow_type')]));
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.default_flow_type', 'rendering', 'form'));
         }
     }
 
@@ -68,14 +69,14 @@ class DefaultFlowTypeController extends Controller
             $activityDefaultFlowType = $request->get('default_flow_type') !== null ? (int) $request->get('default_flow_type') : null;
 
             if (!$this->defaultFlowTypeService->update($id, $activityDefaultFlowType)) {
-                return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.default_flow_type')]));
+                return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.default_flow_type', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.default_flow_type'), 'event'=>trans('events.updated')])));
+            return redirect()->route('admin.activity.show', $id)->with('success', translateElementSuccessfully('default_flow_type', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.default_flow_type')]));
+            return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.default_flow_type', 'updating'));
         }
     }
 }

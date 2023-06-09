@@ -25,7 +25,7 @@ class PlannedDisbursementXmlTest extends XmlBaseTest
         $this->assertContains('Amount field must be a number.', $flattenErrors);
         $this->assertContains('Amount field must not be in negative.', $flattenErrors);
         $this->assertContains('The value currency is invalid.', $flattenErrors);
-        $this->assertContains('The Value Date must be a valid Date', $flattenErrors);
+        $this->assertContains('The Value date must be a valid date.', $flattenErrors);
         $this->assertContains('The Planned Disbursement provider org type is invalid.', $flattenErrors);
         $this->assertContains('The Planned Disbursement provider org ref shouldn\'t contain the symbols /, &, | or ?.', $flattenErrors);
         $this->assertContains('The Planned Disbursement receiver org type is invalid.', $flattenErrors);

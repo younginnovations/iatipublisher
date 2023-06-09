@@ -85,6 +85,7 @@
           'org_lang': {!! json_encode(trans('organisation'), JSON_THROW_ON_ERROR) !!},
           'events_lang': {!! json_encode(trans('events'), JSON_THROW_ON_ERROR) !!},
           'misc_lang': {!! json_encode(trans('misc'), JSON_THROW_ON_ERROR) !!},
+          'element_labels_lang': {!! json_encode(trans('element_labels'), JSON_THROW_ON_ERROR) !!},
       };
   </script>
 </body>

@@ -72,7 +72,7 @@
           </h3>
           <p class="text-base">
             {{
-              language.iati_standard.organisation_data_description.one
+              language.iati_standard.activity_data_description.one
                 .list_items.header
             }}
           </p>

@@ -87,7 +87,7 @@
               <table>
                 <tbody>
                   <tr>
-                    <td>{{ language.common_lang.reference_label }}</td>
+                    <td>{{ language.common_lang.reference }}</td>
                     <td>
                       {{
                         budget_line.ref ??

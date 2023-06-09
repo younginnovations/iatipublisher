@@ -26,13 +26,21 @@
                 <div class="mb-1.5 text-caption-c1 font-bold text-bluecoral">
                   {{ language.activities_lang.what_is_activity.label }}
                 </div>
-                <p>
-                  <span
-                    v-html="
-                      language.activities_lang.what_is_activity.description.one
-                    "
-                  ></span>
-                </p>
+                <p
+                  v-html="
+                    language.activities_lang.what_is_activity.description.one
+                  "
+                ></p>
+                <p
+                  v-html="
+                    language.activities_lang.what_is_activity.description.two
+                  "
+                ></p>
+                <p
+                  v-html="
+                    language.activities_lang.what_is_activity.description.three
+                  "
+                ></p>
               </div>
             </div>
           </div>
@@ -52,7 +60,7 @@
         <ErrorPopUp
           v-if="errorData.visibility"
           :message="errorData.message"
-          :title="language.common_lang.error.activity_couldnt_be_published"
+          :title="language.common_lang.error.activity_could_not_be_published"
           @close-popup="
             () => {
               errorData.visibility = false;

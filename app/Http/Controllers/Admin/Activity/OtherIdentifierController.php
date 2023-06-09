@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\OtherIdentifier\OtherIdentifierRequest;
 use App\IATI\Services\Activity\OtherIdentifierService;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -36,7 +37,7 @@ class OtherIdentifierController extends Controller
      *
      * @param int $id
      *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|void
+     * @return View|RedirectResponse
      */
     public function edit(int $id): View|RedirectResponse
     {
@@ -47,10 +48,11 @@ class OtherIdentifierController extends Controller
             $data = ['title' => $element['label'], 'name' => 'other_identifier'];
 
             return view('admin.activity.otherIdentifier.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.opening'), 'suffix'=>trans('elements_common.other_identifier')]));
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.other_identifier', 'opening', 'form'));
         }
     }
 
@@ -66,14 +68,17 @@ class OtherIdentifierController extends Controller
     {
         try {
             if (!$this->otherIdentifierService->update($id, $request->get('other_identifier'))) {
-                return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.other_identifier')]));
+                return redirect()->route('admin.activity.show', $id)
+                    ->with('error', translateErrorHasOccurred('elements_common.other_identifier', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.other_identifier'), 'event'=>trans('events.updated')])));
-        } catch (\Exception $e) {
+            return redirect()->route('admin.activity.show', $id)
+                ->with('success', translateElementSuccessfully('other_identifier', 'updated'));
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.other_identifier')]));
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.other_identifier', 'updating'));
         }
     }
 }

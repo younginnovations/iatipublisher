@@ -42,7 +42,7 @@ return array (
   'step' => 'Step',
   'out_of' => 'out of',
   'save_data' => 'Saved data',
-  'add_additional' => 'add additional',
+  'add_additional' => 'add additional :element',
   'add_a_new' => 'add a new',
   'delete_confirmation' => 'Are you sure you want to delete this :element',
   'unpublish_confirmation' => 'Are you sure you want to unpublish this :element',

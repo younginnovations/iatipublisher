@@ -603,6 +603,10 @@ return array (
       'document_date' =>
       array (
         'hover_text' => 'Fecha de publicación del documento al que se vincula (@iso-date). <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/document-link/document-date/\'>Más información aquí</a>.',
+        'date'=>
+           array(
+               'hover_text' => 'Fecha de publicación del documento al que se vincula. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/document-link/document-date/\'>Más información aquí</a>.',
+        )
       ),
     ),
     'location' =>
@@ -712,33 +716,33 @@ return array (
           'hover_text' => 'Coordenadas de latitud y longitud en el formato “lat lng”. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/point/pos/\'>Más información aquí</a>.',
           'help_text' => 'Introduzca las coordenadas de latitud y longitud separadas por un espacio, por ejemplo “31.616944 65.716944”<br></br>Si aún no dispone de una herramienta para encontrar las coordenadas de una actividad, puede ayudarse de plataformas en línea como <a target=\'_blank\' href=\'https://www.google.com/maps/\'>Google Maps</a> o <a target=\'_blank\' href=\'https://www.latlong.net/\'>LatLong.net</a>. Para encontrar las coordenadas de una actividad en Google Maps, haga clic con el botón derecho del ratón en la ubicación de la actividad y seleccione “¿Qué hay aquí?”, a continuación, se mostrarán las coordenadas. Otra opción consiste en introducir las coordenadas y la ubicación de la actividad aparecerá en el mapa. <a target=\'_blank\' href=\'https://iatistandard.org/en/guidance/standard-guidance/sub-national-locations/\'>Más información aquí</a>.',
         ),
-        'exactness' =>
-        array (
+      ),
+      'exactness' =>
+      array (
           'hover_text' => 'Define si la ubicación representa el punto más identificable que podría asociarse a este tipo de actividad o si se trata de una aproximación debido a la falta de información suficientemente detallada. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/exactness/\'>Más información aquí</a>.',
           'code' =>
-          array (
-            'hover_text' => 'Código de la lista códigos de exactitud geográfica. Este atributo es necesario. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/exactness/\'>Más información aquí</a>.',
-            'help_text' => 'Si ya ha indicado las coordinadas geográficas de la ubicación de la actividad, elija una opción de la <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/codelists/geographicexactness/\'>lista de exactitud geográfica</a> para especificar si la ubicación es exacta o aproximada.',
-          ),
-        ),
-        'location_class' =>
-        array (
+              array (
+                  'hover_text' => 'Código de la lista códigos de exactitud geográfica. Este atributo es necesario. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/exactness/\'>Más información aquí</a>.',
+                  'help_text' => 'Si ya ha indicado las coordinadas geográficas de la ubicación de la actividad, elija una opción de la <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/codelists/geographicexactness/\'>lista de exactitud geográfica</a> para especificar si la ubicación es exacta o aproximada.',
+              ),
+      ),
+      'location_class' =>
+      array (
           'hover_text' => 'Tipo de ubicación, ya sea una estructura, un lugar habitado (p. ej., una ciudad o un pueblo), una división administrativa u otra categoría topográfica (p. ej., un río o una reserva natural). <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-class/\'>Más información aquí</a>.',
           'code' =>
-          array (
-            'hover_text' => 'Código de la lista de códigos de clases de ubicaciones. Este atributo es necesario. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-class/\'>Más información aquí</a>.',
-            'help_text' => 'Especifique el tipo de ubicación de la actividad de la <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/codelists/GeographicLocationClass/\'>lista de clases de ubicaciones geográficas</a>. Por ejemplo, si se trata de un lugar habitado (un pueblo, una granja, etc.) o de una categoría topográfica (un río, una montaña, etc.).',
-          ),
-        ),
-        'feature_designation' =>
-        array (
+              array (
+                  'hover_text' => 'Código de la lista de códigos de clases de ubicaciones. Este atributo es necesario. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/location-class/\'>Más información aquí</a>.',
+                  'help_text' => 'Especifique el tipo de ubicación de la actividad de la <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/codelists/GeographicLocationClass/\'>lista de clases de ubicaciones geográficas</a>. Por ejemplo, si se trata de un lugar habitado (un pueblo, una granja, etc.) o de una categoría topográfica (un río, una montaña, etc.).',
+              ),
+      ),
+      'feature_designation' =>
+      array (
           'hover_text' => 'Clasificación codificada más precisa del tipo de característica que define a esta ubicación. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/feature-designation/\'>Más información aquí</a>.',
           'code' =>
-          array (
-            'hover_text' => 'Código de designación de características de la lista autorizada (mantenida por la Agencia Nacional de Inteligencia Geoespacial de EE.UU.). <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/feature-designation/\'>Más información aquí</a>.',
-            'help_text' => 'Puede añadir información adicional sobre el tipo de ubicación en el que se desarrolla su actividad (por ejemplo, una playa, un pozo o una universidad). Elija una opción de la <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/codelists/LocationType/\'>lista de tipos de ubicación</a>.',
-          ),
-        ),
+              array (
+                  'hover_text' => 'Código de designación de características de la lista autorizada (mantenida por la Agencia Nacional de Inteligencia Geoespacial de EE.UU.). <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/location/feature-designation/\'>Más información aquí</a>.',
+                  'help_text' => 'Puede añadir información adicional sobre el tipo de ubicación en el que se desarrolla su actividad (por ejemplo, una playa, un pozo o una universidad). Elija una opción de la <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/codelists/LocationType/\'>lista de tipos de ubicación</a>.',
+              ),
       ),
     ),
     'planned_disbursement' =>
@@ -804,35 +808,38 @@ return array (
       ),
       'receiving_org' =>
       array (
+         'hover_text' => 'Organización que recibe el dinero del desembolso previsto. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/\'>Más información aquí</a>.',
+         'help_text' => 'Proporcione información sobre qué organización recibirá los fondos.',
         'reference' =>
-        array (
-          'hover_text' => 'Organización que recibe el dinero del desembolso previsto. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/\'>Más información aquí</a>.',
-          'help_text' => 'Proporcione información sobre qué organización recibirá los fondos.',
-        ),
-        'receiver_activity_id' =>
         array (
           'hover_text' => 'Cadena de identificación legible por computadora para la organización que presenta el informe. Debe tener el formato {agencia de registro}-{número de registro}. En este caso, {agencia de registro} es un código válido de la lista de códigos de la agencia de registro y {número de registro} es un identificador válido emitido por la {agencia de registro}. En caso de no estar presente, la descripción DEBE incluir el nombre de la organización. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/\'>Más información aquí</a>.',
           'help_text' => 'Indique el <i>identificador de organización de la IATI</i> de la organización receptora (org-ID). La forma más rápida de encontrarlo es hacer una búsqueda de la organización en la <a target=\'_blank\' href=\'https://www.iatiregistry.org/publisher/\'>lista de entidades que publican conforme a la IATI</a>. Si no puede encontrar la organización, acceda al siguiente enlace para obtener <a target=\'_blank\' href=\'https://iatistandard.org/en/guidance/publishing-data/data-quality-and-visualisation/finding-other-organisations-identifiers/\'>orientación adicional</a>.',
         ),
-        'type' =>
+        'receiver_activity_id' =>
         array (
           'hover_text' => 'Si los fondos salientes se destinan a otra actividad que se haya notificado a la IATI, cabe la posibilidad de que se haya registrado el identificador único de la IATI para dicha actividad. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/\'>Más información aquí</a>.',
           'help_text' => 'De ser posible, indique el identificador para la actividad de la organización receptora que recibirá el desembolso. Puede consultar el identificador de la actividad a la organización receptora o buscar la actividad en d-portal.org. <a target=\'_blank\' href=\'https://iatistandard.org/en/guidance/publishing-data/data-quality-and-visualisation/finding-other-organisations-identifiers/\'>Orientación adicional aquí</a>.',
         ),
-        'narrative' =>
+        'type' =>
         array (
           'hover_text' => 'Tipo de organización que recibe los fondos. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/\'>Más información aquí</a>.',
           'help_text' => 'Seleccione el tipo que mejor corresponda a la organización receptora. <<a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/codelists/organisationtype/\'>Información sobre todos los tipos de organizaciones aquí</a>.',
         ),
-        'language' =>
+        'narrative' =>
         array (
           'hover_text' => 'Nombre de la organización. Puede repetirse en varios idiomas. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/narrative/\'>Más información aquí</a>.',
+          'help_text'=>'Add the name of the receiver organisation.'
+        ),
+        'language' =>
+        array (
+          'hover_text' => 'Código que especifica el idioma del texto en este elemento. Se recomienda, en la medida de lo posible, utilizar únicamente los códigos de la norma ISO 639-1. En caso de no estar presente, se asume el idioma predeterminado. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/planned-disbursement/receiver-org/narrative/\'>Más información aquí</a>.',
+          'help_text' => 'Seleccione el idioma del texto que facilitó en la descripción. Si no se selecciona ningún idioma, se asume el idioma predeterminado.',
         ),
       ),
     ),
     'budget' =>
     array (
-      'hover_text' => 'Valor del presupuesto de la actividad para cada trimestre o ejercicio financiero a lo largo de la duración de la actividad. Este elemento tiene por objeto ofrecer previsibilidad para facilitar la planificación anual de los beneficiarios. El estado detalla si el presupuesto que se comunica es indicativo o si se ha comprometido formalmente. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/\'>Más información aquí</a>.',
+      'hover_text' => 'Vaxlor del presupuesto de la actividad para cada trimestre o ejercicio financiero a lo largo de la duración de la actividad. Este elemento tiene por objeto ofrecer previsibilidad para facilitar la planificación anual de los beneficiarios. El estado detalla si el presupuesto que se comunica es indicativo o si se ha comprometido formalmente. <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/\'>Más información aquí</a>.',
       'help_text' => 'Indique el monto de la financiación que se desembolsará en el marco de esta actividad. Debe presentar el presupuesto o los presupuestos desglosados por períodos de tiempo de un año o menos, abarcando todo el ciclo de vida de la actividad. Publicar los presupuestos trimestrales puede resultar útil para los usuarios de los datos. Un presupuesto no debe abarcar más de 12 meses.<br></br>Debe presentar el presupuesto o los presupuestos para su actividad lo antes posible. Más adelante, podrá actualizarlo en función de la financiación que reciba, o si cambia el alcance de la actividad. <a target=\'_blank\' href=\'https://iatistandard.org/en/guidance/standard-guidance/activity-budgets/\'>Más información aquí</a>.',
       'budget_status' =>
       array (
@@ -841,7 +848,7 @@ return array (
       ),
       'budget_type' =>
       array (
-        'hover_text' =>'Si se trata del presupuesto original (preparado cuando se contrajo el compromiso original) o si ha sido revisado ',
+        'hover_text' =>'Si se trata del presupuesto original (preparado cuando se contrajo el compromiso original) o si ha sido revisado <a target=\'_blank\' href=\'https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/\'>Más información aquí</a>',
         'help_text' => 'Seleccione el tipo de presupuesto que ha elaborado:<br></br><b>1) Original</b>: el presupuesto original que se asignó a la actividad. Elija esta opción si es la primera vez que publica información sobre este presupuesto.<br></br><b>2) Revisado</b>: el presupuesto actualizado de una actividad. Elija esta opción si está revisando su presupuesto original.<br></br>Por ejemplo, una actividad que tiene una duración de un año. El presupuesto original de dicha actividad era de 10.000 dólares, y más tarde se redujo en 2.000 dólares. Así pues, el presupuesto final para la actividad es de 8.000 dólares. Tendrá que crear dos presupuestos distintos para este período de tiempo. En primer lugar, debería añadir un presupuesto etiquetado como “original”, indicando la fecha de inicio y finalización, por valor de 10.000 dólares. Cuando se le informara de que el presupuesto se ha revisado, debería añadir otro presupuesto para las mismas fechas, denominado como “revisado”, por valor de 8.000 dólares.<br></br>Si se produjeran más cambios en el presupuesto revisado, debería modificar el valor en el presupuesto “revisado”. No debe crear presupuestos “revisados” adicionales para el mismo período de tiempo.<br></br>Por lo tanto, solo debe publicarse un presupuesto original y uno revisado para cada período de tiempo. <a target=\'_blank\' href=\'https://iatistandard.org/en/guidance/standard-guidance/activity-budgets/\'>Más información aquí</a>.',
       ),
       'period_start' =>

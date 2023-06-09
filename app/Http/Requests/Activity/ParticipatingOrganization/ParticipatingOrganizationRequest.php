@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\ParticipatingOrganization;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use JsonException;
 
 /**
  * Class ParticipatingOrganizationRequest.
@@ -14,9 +15,13 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param array $participating_org
+     *
      * @return array
+     *
+     * @throws JsonException
      */
-    public function rules($participating_org = []): array
+    public function rules(array $participating_org = []): array
     {
         $data = $this->get('participating_org') ?? [];
         $totalRules = [$this->getWarningForParticipatingOrg($data), $this->getErrorsForParticipatingOrg($data)];
@@ -26,9 +31,12 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
 
     /**
      * prepare the error message.
+     *
+     * @param array $participating_org
+     *
      * @return array
      */
-    public function messages($participating_org = []): array
+    public function messages(array $participating_org = []): array
     {
         return $this->getMessagesForParticipatingOrg($this->get('participating_org') ?? $participating_org);
     }
@@ -38,7 +46,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
      *
      * @param $formFields
      *
-     * @return array|mixed
+     * @return array
      */
     public function getWarningForParticipatingOrg($formFields): array
     {
@@ -62,7 +70,9 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
      *
      * @param $formFields
      *
-     * @return array|mixed
+     * @return array
+     *
+     * @throws JsonException
      */
     public function getErrorsForParticipatingOrg($formFields): array
     {
@@ -88,7 +98,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
      *
      * @param $formFields
      *
-     * @return array|mixed
+     * @return array
      */
     public function getMessagesForParticipatingOrg($formFields): array
     {
@@ -102,7 +112,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
 
             $messages[sprintf('%s.organization_role.in', $participatingOrgForm)] = translateRequestMessage('participating_org', 'role_is_invalid');
             $messages[sprintf('%s.type.in', $participatingOrgForm)] = translateRequestMessage('participating_org', 'type_is_invalid');
-            $messages[sprintf('%s.crs_channel_code.in', $participatingOrgForm)] = trans('requests.the_midfix_suffix', ['midfix'=>trans('common.crs_channel_code'), 'suffix'=>trans('requests.suffix.is_invalid')]);
+            $messages[sprintf('%s.crs_channel_code.in', $participatingOrgForm)] = translateMidfixSuffix('common.crs_channel_code', 'requests.suffix.is_invalid');
 
             foreach ($this->getMessagesForNarrative($participatingOrg['narrative'], $participatingOrgForm) as $participatingNarrativeIndex => $narrativeMessages) {
                 $messages[$participatingNarrativeIndex] = $narrativeMessages;

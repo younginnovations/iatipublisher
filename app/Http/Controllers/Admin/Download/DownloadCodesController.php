@@ -64,7 +64,7 @@ class DownloadCodesController extends Controller
             logger()->error($e->getMessage());
             $this->auditService->auditEvent(null, 'download', 'codes');
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity csv.']);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('responses.activity_csv', 'downloading')]);
         }
     }
 }

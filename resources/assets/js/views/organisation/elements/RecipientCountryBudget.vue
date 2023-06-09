@@ -143,7 +143,7 @@
                 <tbody>
                   <tr>
                     <td class="pr-20 text-n-40">
-                      {{ language.common_lang.reference_label }}
+                      {{ language.common_lang.reference }}
                     </td>
                     <td>
                       {{

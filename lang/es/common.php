@@ -129,7 +129,7 @@ return array (
   'errors_and_warnings_found' => 'Se detectaron errores y advertencias en',
   'add_import_activity' => 'añadir / importar actividad',
   'add_activity_manually' => 'AÑADIR ACTIVIDAD MANUALMENTE',
-  'import_activities' => 'IMPORTAR ACTIVIDADES DE CSV/XML',
+  'import_activities_from_csv' => 'IMPORTAR ACTIVIDADES DE CSV/XML',
   'activities_not_found' => 'No se encontraron actividades.',
   'validating' => 'Validando',
   'unpublishing' => 'cancelando publicación',
@@ -277,7 +277,6 @@ return array (
     'the_publisher_id_is_not_verified_in_iati_registry' => 'El identificador de IATI Publisher no se verifica en el Registro de la IATI.',
     'some_activities_have_failed_to_publish' => 'Ha fallado la publicación de algunas actividades. Actualice para ver los cambios.',
     'couldnt_delete_the_activity' => 'No fue posible eliminar el título de la actividad debido a un error del sistema.',
-    'activity_couldnt_be_published' => 'Se ha publicado correctamente la actividad, actualice para ver los cambios.',
     'activity_has_been_published_successfully' => 'Se ha publicado correctamente la actividad, actualice para ver los cambios.',
     'error_has_occured_while_uploading_file' => 'Se ha producido un error al cargar el archivo',
     'illegal_character_in_attribute_name' => 'Carácter no válido en el atributo nombre. attribute',
@@ -345,5 +344,8 @@ return array (
   'activities_with_error_will_be_uploaded' => 'La actividad con errores se cargará a nuestro sistema, pero se eliminará el campo que contiene el error. Deberá volver a cumplimentar estos campos con los datos correctos una vez la actividad se haya cargado a nuestro sistema.',
   'field_with_warning_will_be_uploaded' => 'El campo con advertencias se cargará a nuestro sistema. Estos campos contienen datos que incumplen las reglas del Validador de la IATI, por lo que causarán errores de validación durante la publicación.',
   'activity_contains_critical_errors' => 'La actividad contiene errores críticos, por lo cual no es posible cargarla a nuestro sistema.',
-  'receiver_activity_id'=>'ID Actividad receptor'
+  'receiver_activity_id'=>'ID Actividad receptor',
+  'import_activities_from_xls' => 'IMPORTAR ACTIVIDADES DE XLS',
+  'xls' => 'XLS',
+  'to'=> 'a'
 );

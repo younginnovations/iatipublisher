@@ -89,7 +89,7 @@ class ImportActivityController extends Controller
     {
         try {
             if (!Auth::user()->organization_id) {
-                Session::put('error', trans('responses.user_not_associated'));
+                Session::put('error', translateResponses('user_not_associated'));
 
                 return redirect()->route('admin.activities.index');
             }
@@ -98,7 +98,7 @@ class ImportActivityController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => trans('responses.error_has_occurred_form', ['event'=>trans('events.rendering'), 'suffix'=>trans('responses.activity_import')])]);
+            return response()->json(['success' => false, 'error' => translateErrorHasOccurred('responses.activity_import', 'rendering', 'form')]);
         }
     }
 
@@ -123,7 +123,7 @@ class ImportActivityController extends Controller
                 }
             } else {
                 if ($this->importCsvService->isCsvFileEmpty($file)) {
-                    $response = ['success' => false, 'errors' =>['activity' => trans('responses.file_is_empty_upload_with_activities')]];
+                    $response = ['success' => false, 'errors' =>['activity' => translateResponses('file_is_empty_upload_with_activities')]];
 
                     return response()->json($response);
                 }
@@ -137,11 +137,11 @@ class ImportActivityController extends Controller
                 }
             }
 
-            return response()->json(['success' => true, 'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>'', 'event'=>trans('events.uploaded')])), 'type' => $filetype]);
+            return response()->json(['success' => true, 'message' =>ucfirst(trans('responses.event_successfully', ['prefix'=>'', 'event'=>trans('events.uploaded')])), 'type' => $filetype]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => trans('responses.error_has_occurred_page', ['event'=>trans('events.rendering'), 'suffix'=>trans('responses.activity_import')])]);
+            return response()->json(['success' => false, 'error' => translateErrorHasOccurred('responses.activity_import', 'rendering', 'page')]);
         }
     }
 
@@ -183,10 +183,11 @@ class ImportActivityController extends Controller
                 ]
             );
         } catch (\Exception $e) {
-            Session::put('error', trans('responses.error_has_occurred', ['event'=>trans('events.importing'), 'suffix'=>trans('elements_common.activity')]));
+            Session::put('error', translateErrorHasOccurred('elements_common.activity', 'importing'));
             logger()->error($e);
 
-            return redirect()->back()->withResponse(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.importing'), 'suffix'=>trans('elements_common.activity')])]);
+            return redirect()->back()
+                ->withResponse(['success' => false, 'message' => translateErrorHasOccurred('elements_common.activity', 'importing')]);
         }
     }
 
@@ -203,7 +204,7 @@ class ImportActivityController extends Controller
             $userId = Auth::user()->id;
 
             if (!$orgId) {
-                Session::put('error', trans('responses.user_not_associated'));
+                Session::put('error', translateResponses('user_not_associated'));
 
                 return redirect()->route('admin.activities.index');
             }
@@ -240,7 +241,8 @@ class ImportActivityController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.index')->withResponse(['success' => false, 'error' => trans('responses.error_has_occurred', ['event'=>trans('events.checking'), 'suffix'=>trans('responses.the_status')])]);
+            return redirect()->route('admin.activities.index')
+                ->withResponse(['success' => false, 'error' => translateErrorHasOccurred('responses.the_status', 'checking')]);
         }
     }
 
@@ -255,9 +257,9 @@ class ImportActivityController extends Controller
             $filetype = Session::get('import_filetype');
 
             if (!$filetype) {
-                Session::put('error', trans('responses.please_upload_csc_or_xml'));
+                Session::put('error', translateResponses('please_upload_csc_or_xml'));
 
-                return response()->json(['status' => 'error', 'message' => trans('responses.please_upload_csc_or_xml')]);
+                return response()->json(['status' => 'error', 'message' => translateResponses('please_upload_csc_or_xml')]);
             }
 
             if ($filetype === 'xml') {
@@ -271,7 +273,7 @@ class ImportActivityController extends Controller
             $status = strcasecmp($result->message, 'Complete') === 0;
 
             if (!$data) {
-                Session::put('error', trans('responses.error_has_occurred', ['event'=>trans('events.importing'), 'suffix'=>trans('elements_common.activities')]));
+                Session::put('error', translateErrorHasOccurred('elements_common.activities', 'importing'));
             }
 
             return response()->json(['status' => $status, 'data' => $data]);
@@ -328,11 +330,11 @@ class ImportActivityController extends Controller
         try {
             $this->importActivityErrorService->deleteImportError($activityId);
 
-            return response()->json(['success' => true, 'message' => trans('responses.import_error_for_activity_successfully_deleted')]);
+            return response()->json(['success' => true, 'message' => translateResponses('import_error_for_activity_successfully_deleted')]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => trans('responses.error_has_occured_while_trying_to_delete_import_error')]);
+            return response()->json(['success' => false, 'message' => translateResponses('error_has_occured_while_trying_to_delete_import_error')]);
         }
     }
 }

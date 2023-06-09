@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\OtherIdentifier;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use JsonException;
 
 /**
  * Class OtherIdentifierRequest.
@@ -15,6 +16,8 @@ class OtherIdentifierRequest extends ActivityBaseRequest
      * Get the validation rules that apply to the request.
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function rules(): array
     {
@@ -40,9 +43,11 @@ class OtherIdentifierRequest extends ActivityBaseRequest
     /**
      * Get critical rule for other identifier request.
      *
-     * @param $formFields
+     * @param array $formFields
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getErrorsForOtherIdentifier(array $formFields): array
     {
@@ -96,8 +101,8 @@ class OtherIdentifierRequest extends ActivityBaseRequest
 
         foreach ($formFields as $otherIdentifierIndex => $otherIdentifier) {
             $otherIdentifierForm = sprintf('other_identifier.%s', $otherIdentifierIndex);
-            $messages[sprintf('%s.reference.not_regex', $otherIdentifierForm)] = trans('requests.other_identifier_ref', ['suffix'=>trans('requests.suffix.shouldnt_contain_symbol')]);
-            $messages[sprintf('%s.reference_type.in', $otherIdentifierForm)] = trans('requests.other_identifier', ['suffix'=>trans('requests.suffix.type_is_not_valid')]);
+            $messages[sprintf('%s.reference.not_regex', $otherIdentifierForm)] = translateRequestMessage('other_identifier_ref', 'shouldnt_contain_symbol');
+            $messages[sprintf('%s.reference_type.in', $otherIdentifierForm)] = translateRequestMessage('other_identifier', 'type_is_not_valid');
 
             foreach ($this->getMessagesForOwnerOrg($otherIdentifier['owner_org'], $otherIdentifierForm) as $ownerOrgIndex => $ownerOrgMessages) {
                 $messages[$ownerOrgIndex] = $ownerOrgMessages;
@@ -108,7 +113,7 @@ class OtherIdentifierRequest extends ActivityBaseRequest
     }
 
     /**
-     * Return rules for owner org.
+     * Return warning rules for owner org.
      *
      * @param $formFields
      * @param $formBase
@@ -131,6 +136,14 @@ class OtherIdentifierRequest extends ActivityBaseRequest
         return $rules;
     }
 
+    /**
+     * Return error rules for owner org.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
     public function getErrorsForOwnerOrg($formFields, $formBase) : array
     {
         $rules = [];
@@ -154,13 +167,13 @@ class OtherIdentifierRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getMessagesForOwnerOrg($formFields, $formBase)
+    public function getMessagesForOwnerOrg($formFields, $formBase): array
     {
         $messages = [];
 
         foreach ($formFields as $ownerOrgIndex => $ownerOrg) {
             $ownerOrgForm = sprintf('%s.owner_org.%s', $formBase, $ownerOrgIndex);
-            $messages[sprintf('%s.owner_org.%s.ref.not_regex', $formBase, $ownerOrgIndex)] = trans('requests.org_reference', ['suffix'=>trans('requests.suffix.shouldnt_contain_symbol')]);
+            $messages[sprintf('%s.owner_org.%s.ref.not_regex', $formBase, $ownerOrgIndex)] = translateRequestMessage('org_reference', 'shouldnt_contain_symbol');
 
             foreach ($this->getMessagesForNarrative($ownerOrg['narrative'], $ownerOrgForm) as $ownerOrgNarrativeIndex => $ownerOrgNarrativeMessages) {
                 $messages[$ownerOrgNarrativeIndex] = $ownerOrgNarrativeMessages;

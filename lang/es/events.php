@@ -35,4 +35,5 @@ return array (
   'verifying' => 'verificando',
   'imported' => 'importado',
   'stored' => 'almacenado',
+  'delete' => 'eliminar',
 );

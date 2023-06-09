@@ -63,8 +63,8 @@ class DefaultFinanceTypeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => trans('requests.default_finance', ['suffix'=>trans('requests.suffix.doesnt_exist')]),
-            'size'      => trans('requests.default_finance', ['suffix'=>trans('requests.suffix.cannot_have_more_than_one')]),
+            'in'        => translateRequestMessage('default_finance', 'doesnt_exist'),
+            'size'      => translateRequestMessage('default_finance', 'cannot_have_more_than_one'),
         ];
     }
 }

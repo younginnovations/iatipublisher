@@ -18,7 +18,7 @@
       <table>
         <tbody>
           <tr>
-            <td>{{ translation.common_lang.reference_label }}</td>
+            <td>{{ translation.common_lang.reference }}</td>
             <td>
               {{
                 reporting_org.ref ?? translation.common_lang.missing.reference
@@ -30,10 +30,10 @@
             <td>
               {{
                 parseInt(reporting_org.secondary_reporter)
-                  ? translation.common_lang.true
+                  ? 'True'
                   : reporting_org.secondary_reporter === '0'
-                  ? translation.common_lang.false
-                  : translation.common_lang.missing.default
+                  ? 'False'
+                  : 'Missing'
               }}
             </td>
           </tr>

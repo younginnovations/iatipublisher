@@ -225,3 +225,10 @@
     @apply justify-end;
   }
 }
+
+.language-hover:hover {
+  @apply nav__active links__active;
+  a {
+    color: white !important;
+  }
+}

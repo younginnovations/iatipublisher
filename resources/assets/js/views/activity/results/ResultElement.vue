@@ -10,7 +10,7 @@
     <div class="rounded-lg bg-white p-4">
       <div class="mb-4 flex">
         <div class="title flex grow">
-          <div class="title text-sm font-bold">{{ elementName }}</div>
+          <div class="title text-sm font-bold">{{ translation.elements_common_lang[elementName] }}</div>
         </div>
         <div class="icons flex items-center">
           <HoverText :hover-text="hoverText" class="text-n-40"></HoverText>

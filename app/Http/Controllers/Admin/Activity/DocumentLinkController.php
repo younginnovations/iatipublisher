@@ -61,7 +61,8 @@ class DocumentLinkController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.rendering'), 'suffix'=>trans('elements_common.document_link')]));
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.document_link', 'rendering', 'form'));
         }
     }
 
@@ -82,12 +83,12 @@ class DocumentLinkController extends Controller
             $this->documentLinkService->update($id, $documentLink);
             $this->db->commit();
 
-            return redirect()->route('admin.activity.show', $id)->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.document_link'), 'event'=>trans('events.updated')])));
+            return redirect()->route('admin.activity.show', $id)->with('success', translateElementSuccessfully('document_link', 'updated'));
         } catch (\Exception $e) {
             $this->db->rollBack();
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.document_link')]));
+            return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.document_link', 'updating'));
         }
     }
 }

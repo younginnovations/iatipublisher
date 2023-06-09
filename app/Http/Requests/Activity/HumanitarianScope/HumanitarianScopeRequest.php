@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\HumanitarianScope;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use JsonException;
 
 /**
  * Class HumanitarianScopeRequest.
@@ -65,6 +66,8 @@ class HumanitarianScopeRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getErrorsForHumanitarianScope(array $formFields): array
     {
@@ -98,10 +101,10 @@ class HumanitarianScopeRequest extends ActivityBaseRequest
 
         foreach ($formFields as $humanitarianScopeIndex => $humanitarianScope) {
             $humanitarianScopeForm = 'humanitarian_scope.' . $humanitarianScopeIndex;
-            $messages[sprintf('%s.type.in', $humanitarianScopeForm)] = trans('requests.humanitarian', ['suffix'=>trans('requests.suffix.type_is_invalid')]);
-            $messages[sprintf('%s.vocabulary.in', $humanitarianScopeForm)] = trans('requests.humanitarian', ['suffix'=>trans('requests.suffix.vocabulary_is_invalid')]);
-            $messages[sprintf('%s.code.string', $humanitarianScopeForm)] = trans('requests.humanitarian_code', ['suffix'=>trans('requests.suffix.must_be_a_string')]);
-            $messages[sprintf('%s.vocabulary_uri.url', $humanitarianScopeForm)] = trans('requests.humanitarian', ['suffix'=>trans('requests.suffix.must_be_valid_vocal_url')]);
+            $messages[sprintf('%s.type.in', $humanitarianScopeForm)] = translateRequestMessage('humanitarian', 'type_is_invalid');
+            $messages[sprintf('%s.vocabulary.in', $humanitarianScopeForm)] = translateRequestMessage('humanitarian', 'vocabulary_is_invalid');
+            $messages[sprintf('%s.code.string', $humanitarianScopeForm)] = translateRequestMessage('humanitarian_code', 'must_be_a_string');
+            $messages[sprintf('%s.vocabulary_uri.url', $humanitarianScopeForm)] = translateRequestMessage('humanitarian', 'must_be_valid_vocal_url');
 
             foreach ($this->getMessagesForNarrative($humanitarianScope['narrative'], $humanitarianScopeForm) as $humanitarianIndex => $narrativeMessages) {
                 $messages[$humanitarianIndex] = $narrativeMessages;

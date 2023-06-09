@@ -149,7 +149,9 @@
 
     <div class="indicator overflow-hidden rounded-t-lg border border-n-20">
       <div class="head flex items-center border-b border-n-20 px-6 py-2">
-        <span class="text-xs font-bold text-n-50">Budget line</span>
+        <span class="text-xs font-bold text-n-50">{{
+          language.common_lang.budget_line
+        }}</span>
       </div>
       <div
         v-for="(budget_line, j) in recipient_region_budget.budget_line"
@@ -180,7 +182,7 @@
                 <tbody>
                   <tr>
                     <td class="pr-20 text-n-40">
-                      {{ language.common_lang.reference_label }}
+                      {{ language.common_lang.reference }}
                     </td>
                     <td>
                       {{

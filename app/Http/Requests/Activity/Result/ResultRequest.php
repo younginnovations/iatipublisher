@@ -114,8 +114,8 @@ class ResultRequest extends ActivityBaseRequest
      * Returns messages for transaction validations.
      *
      * @param array $formFields
-     * @param array $fileUpload
-     * @param array $resultId
+     * @param bool $fileUpload
+     * @param null $resultId
      *
      * @return array
      */
@@ -221,6 +221,7 @@ class ResultRequest extends ActivityBaseRequest
      * @param array $indicators
      *
      * @return array
+     *
      * @throws JsonException
      */
     protected function getErrorsForReferences($formFields, $fileUpload = false, array $indicators = []): array
@@ -258,10 +259,10 @@ class ResultRequest extends ActivityBaseRequest
 
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
-            $messages[sprintf('%s.vocabulary_uri.url', $referenceForm)] = trans('requests.vocab_url_field_symbol', ['suffix'=>trans('requests.suffix.must_be_valid_url')]);
+            $messages[sprintf('%s.vocabulary_uri.url', $referenceForm)] = translateRequestMessage('vocab_url_field_symbol', 'must_be_valid_url');
 
             if (!empty($reference['code']) && $hasResultId) {
-                $messages[sprintf('%s.code.indicator_ref_code_present', $referenceForm)] = trans('requests.code', ['suffix'=>trans('requests.suffix.defined_in_indicators')]);
+                $messages[sprintf('%s.code.indicator_ref_code_present', $referenceForm)] = translateRequestMessage('code', 'defined_in_indicators');
             }
 
             if (!empty($reference['vocabulary']) && $hasResultId) {

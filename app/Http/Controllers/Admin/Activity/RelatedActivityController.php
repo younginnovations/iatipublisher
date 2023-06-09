@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\RelatedActivity\RelatedActivityRequest;
 use App\IATI\Services\Activity\RelatedActivityService;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -45,10 +46,11 @@ class RelatedActivityController extends Controller
             $data = ['title' => $element['label'], 'name' => 'related_activity'];
 
             return view('admin.activity.relatedActivity.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.opening'), 'suffix'=>trans('elements_common.related_activity')]));
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.related_activity', 'opening', 'form'));
         }
     }
 
@@ -64,14 +66,17 @@ class RelatedActivityController extends Controller
     {
         try {
             if (!$this->relatedActivityService->update($id, $request->all())) {
-                return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.related_activity')]));
+                return redirect()->route('admin.activity.show', $id)
+                    ->with('error', translateErrorHasOccurred('elements_common.related_activity', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.related_activity'), 'event'=>trans('events.updated')])));
-        } catch (\Exception $e) {
+            return redirect()->route('admin.activity.show', $id)
+                ->with('success', translateElementSuccessfully('related_activity', 'updated'));
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.related_activity')]));
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.related_activity', 'updating'));
         }
     }
 }

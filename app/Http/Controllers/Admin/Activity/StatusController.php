@@ -50,7 +50,8 @@ class StatusController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.opening'), 'suffix'=>trans('responses.activity_title')]));
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('responses.activity_title', 'opening', 'form'));
         }
     }
 
@@ -68,16 +69,16 @@ class StatusController extends Controller
             $activityStatus = $request->get('activity_status') !== null ? (int) $request->get('activity_status') : null;
 
             if (!$this->statusService->update($id, $activityStatus)) {
-                return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.activity_status')]));
+                return redirect()->route('admin.activity.show', $id)
+                                        ->with('error', translateErrorHasOccurred('elements_common.activity_status', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.activity_status'), 'event'=>trans('events.updated')])));
+            return redirect()->route('admin.activity.show', $id)
+                                ->with('success', translateElementSuccessfully('activity_status', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(
-                ['success' => false, 'error' => trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.activity_status')])]
-            );
+            return response()->json(['success' => false, 'error' => translateErrorHasOccurred('elements_common.activity_status', 'updating')]);
         }
     }
 }

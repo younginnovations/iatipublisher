@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\RecipientRegion\RecipientRegionRequest;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\RecipientRegionService;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -57,10 +58,11 @@ class RecipientRegionController extends Controller
             $data = ['title' => $element['label'], 'name' => 'recipient_region'];
 
             return view('admin.activity.recipientRegion.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.opening'), 'suffix'=>trans('elements_common.recipient_region')]));
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.recipient_region', 'opening', 'form'));
         }
     }
 
@@ -76,14 +78,17 @@ class RecipientRegionController extends Controller
     {
         try {
             if (!$this->recipientRegionService->update($id, $request->all())) {
-                return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.recipient_region')]));
+                return redirect()->route('admin.activity.show', $id)
+                    ->with('error', translateErrorHasOccurred('elements_common.recipient_region', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.recipient_region'), 'event'=>trans('events.updated')])));
-        } catch (\Exception $e) {
+            return redirect()->route('admin.activity.show', $id)
+                ->with('success', translateElementSuccessfully('recipient_region', 'updated'));
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.recipient_region')]));
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.recipient_region', 'updating'));
         }
     }
 }

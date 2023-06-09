@@ -81,8 +81,9 @@
     <div v-if="post.provider_org" class="mb-4 ml-5">
       <div class="category">
         <span
-          >{{ language.common_lang.provider
-          }}{{ language.common_lang.org }} org</span
+          >
+        {{language.element_labels_lang.activities.provider_org_spaced}}
+        </span
         >
       </div>
       <table class="ml-5">
@@ -101,7 +102,7 @@
             </td>
           </tr>
           <tr>
-            <td>{{ language.common_lang.reference_label }}</td>
+            <td>{{ language.common_lang.reference }}</td>
             <td>
               {{
                 post.provider_org[0].provider_activity_id ??
@@ -110,7 +111,7 @@
             </td>
           </tr>
           <tr>
-            <td>{{ language.common_lang.reference_label }}</td>
+            <td>{{ language.common_lang.reference }}</td>
             <td>
               {{
                 post.provider_org[0].ref ?? language.common_lang.missing.default
@@ -150,8 +151,7 @@
     <div v-if="post.receiver_org" class="ml-5">
       <div class="category">
         <span
-          >{{ language.common_lang.provider
-          }}{{ language.common_lang.org }}</span
+          >{{language.element_labels_lang.activities.receiver_org_spaced}}</span
         >
       </div>
       <table class="ml-5">
@@ -179,7 +179,7 @@
             </td>
           </tr>
           <tr>
-            <td>{{ language.common_lang.reference_label }}</td>
+            <td>{{ language.common_lang.reference }}</td>
             <td>
               {{
                 post.receiver_org[0].ref ?? language.common_lang.missing.default

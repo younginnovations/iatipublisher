@@ -110,7 +110,7 @@ class ActivityController extends Controller
             return response()->json(
                 [
                     'success' => false,
-                    'error'   => trans('responses.error_has_occurred', ['event'=> trans('events.fetching'), 'suffix' => trans('elements_common.activities')]),
+                    'error'   => translateErrorHasOccurred('elements_common.activities', 'fetching'),
                 ]
             );
         }
@@ -144,16 +144,12 @@ class ActivityController extends Controller
             $this->db->commit();
             Session::put(
                 'success',
-                ucfirst(
-                    trans('responses.has_been_event_successfully', ['prefix' => trans('elements_common.activity'), 'event'=> trans('events.created')])
-                )
+                translateElementHasBeenSuccessfully('activity', 'created')
             );
 
             return response()->json([
                 'success' => true,
-                'message' => ucfirst(
-                    trans('responses.event_successfully', ['prefix' => trans('elements_common.activity'), 'event'=> trans('events.created')])
-                ),
+                'message' => translateElementSuccessfully('activity', 'created'),
                 'data'    => $activity,
             ]);
         } catch (Exception $e) {
@@ -162,7 +158,7 @@ class ActivityController extends Controller
             return response()->json(
                 [
                     'success' => false,
-                    'message' => trans('responses.error_has_occurred', ['event'=> trans('responses.saving'), 'suffix' => trans('elements_common.activity')]),
+                    'message' => translateErrorHasOccurred('elements_common.activity', 'saving'),
                     'data'    => [],
                 ]
             );
@@ -218,7 +214,7 @@ class ActivityController extends Controller
 
             return redirect()->route('admin.activities.index')->with(
                 'error',
-                trans('responses.error_has_occurred_page', ['event'=> trans('events.opening'), 'suffix' => trans('elements_common.activity_detail')])
+                translateErrorHasOccurred('elements_common.activity_detail', 'opening', 'page')
             );
         }
     }
@@ -306,27 +302,18 @@ class ActivityController extends Controller
             $activity = $this->activityService->getActivity($activityId);
 
             if ($activity->linked_to_iati) {
-                Session::put('error', trans('responses.activity_must_be_unpublished_before_deleting'));
+                Session::put('error', translateResponses('activity_must_be_unpublished_before_deleting'));
 
-                return response()->json(['success' => false, 'message' => trans('responses.activity_must_be_unpublished_before_deleting')]);
+                return response()->json(['success' => false, 'message' => translateResponses('activity_must_be_unpublished_before_deleting')]);
             }
 
             if ($this->activityService->deleteActivity($activity)) {
-                Session::put(
-                    'success',
-                    ucfirst(trans(
-                        'responses.has_been_event_successfully',
-                        ['prefix' => trans('elements_common.activities'), 'event' => trans('events.deleted')]
-                    ))
-                );
+                Session::put('success', translateElementHasBeenSuccessfully('activities', 'deleted'));
 
                 return response()->json(
                     [
                         'success' => true,
-                        'message' => ucfirst(trans(
-                            'responses.has_been_event_successfully',
-                            ['prefix' => trans('elements_common.activities'), 'event' => trans('events.deleted')]
-                        )),
+                        'message' => translateElementHasBeenSuccessfully('activities', 'deleted'),
                     ]
                 );
             }
@@ -334,10 +321,7 @@ class ActivityController extends Controller
             return response()->json(
                 [
                     'success' => false,
-                    'message' => ucfirst(trans(
-                        'controller.event_failed',
-                        ['prefix' => trans('elements_common.activity'), 'event'=> trans('events.deleted')]
-                    )),
+                    'message' => translateElementFailed('activity', 'delete'),
                 ]
             );
         } catch (Exception $e) {
@@ -393,13 +377,13 @@ class ActivityController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => trans('responses.event_successfully', ['prefix' => trans('elements_common.activities'), 'event' => trans('events.fetched')]),
+                'message' => translateElementSuccessfully('activities', 'fetched'),
                 'data'    => $activities,
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.fetching'), 'suffix'=>trans('responses.the_data')])]);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('responses.the_data', 'fetching')]);
         }
     }
 
@@ -416,7 +400,7 @@ class ActivityController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.languages'), 'event'=>trans('events.fetched')])),
+                'message' => translateElementSuccessfully('language', 'fetched'),
                 'data'    => [
                     'languages'    => $languages,
                     'organization' => $organization,
@@ -425,7 +409,7 @@ class ActivityController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.fetching'), 'suffix'=>trans('responses.the_data')])]);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('responses.the_data', 'fetching')]);
         }
     }
 

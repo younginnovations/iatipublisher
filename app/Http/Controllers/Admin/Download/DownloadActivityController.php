@@ -78,6 +78,9 @@ class DownloadActivityController extends Controller
      * @param Request $request
      *
      * @return BinaryFileResponse|JsonResponse
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function downloadActivityCsv(Request $request): BinaryFileResponse|JsonResponse
     {
@@ -94,7 +97,7 @@ class DownloadActivityController extends Controller
             }
 
             if (!isset($activities) || !count($activities)) {
-                return response()->json(['success' => false, 'message' => trans('responses.no_activities_selected')]);
+                return response()->json(['success' => false, 'message' => translateResponses('no_activities_selected')]);
             }
 
             $csvData = $this->downloadActivityService->getCsvData($activities);
@@ -111,7 +114,7 @@ class DownloadActivityController extends Controller
             logger()->error($e->getMessage());
             $this->auditService->auditEvent(null, 'download', 'csv');
 
-            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.downloading'), 'suffix'=>trans('responses.activity_csv')])]);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('responses.activity_csv', 'downloading')]);
         }
     }
 
@@ -259,6 +262,9 @@ class DownloadActivityController extends Controller
      * @param bool $download
      *
      * @return Response|JsonResponse
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function downloadActivityXml(Request $request, bool $download = false): Response|JsonResponse
     {
@@ -297,7 +303,7 @@ class DownloadActivityController extends Controller
             logger()->error($e->getMessage());
             $this->auditService->auditEvent(null, 'download', 'xml');
 
-            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.downloading'), 'suffix'=>trans('responses.activity_csv')])]);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('responses.activity_csv', 'downloading')]);
         }
     }
 

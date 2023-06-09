@@ -11,6 +11,9 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Exception;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
+/*
+ * Class GenerateLanguageBaseFile.
+ */
 class GenerateLanguageBaseFile extends Command
 {
     /**

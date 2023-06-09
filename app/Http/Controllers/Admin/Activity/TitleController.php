@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Title\TitleRequest;
 use App\IATI\Services\Activity\TitleService;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -49,10 +50,11 @@ class TitleController extends Controller
             $data = ['title' => $element['label'], 'name' => 'title'];
 
             return view('admin.activity.title.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.opening'), 'suffix'=>trans('responses.activity_title')]));
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('responses.activity_title', 'opening', 'form'));
         }
     }
 
@@ -68,14 +70,17 @@ class TitleController extends Controller
     {
         try {
             if (!$this->titleService->update($id, $request->all())) {
-                return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('responses.activity_title')]));
+                return redirect()->route('admin.activity.show', $id)
+                    ->with('error', translateErrorHasOccurred('responses.activity_title', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('common.activity_title'), 'event'=>trans('events.updated')])));
-        } catch (\Exception $e) {
+            return redirect()->route('admin.activity.show', $id)
+                ->with('success', translateElementSuccessfully('activity_title', 'updated'));
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('responses.activity_title')]));
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('responses.activity_title', 'updating'));
         }
     }
 }

@@ -90,13 +90,13 @@
             <li>
               <a v-smooth-scroll href="#target" :class="linkClasses">
                 <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
-                {{ language.common_lang.target }}
+                {{ language.common_lang.target.toLowerCase() }}
               </a>
             </li>
             <li>
               <a v-smooth-scroll href="#actual" :class="linkClasses">
                 <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
-                {{ language.common_lang.actual }}
+                {{ language.common_lang.actual.toLowerCase() }}
               </a>
             </li>
           </ul>
@@ -112,13 +112,13 @@
               <li>
                 <a v-smooth-scroll href="#target" :class="linkClasses">
                   <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
-                  {{ language.common_lang.target }}
+                  {{ language.common_lang.target.toLowerCase() }}
                 </a>
               </li>
               <li>
                 <a v-smooth-scroll href="#actual" :class="linkClasses">
                   <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
-                  {{ language.common_lang.target }}
+                  {{ language.common_lang.actual.toLowerCase() }}
                 </a>
               </li>
             </ul>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\PlannedDisbursement;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use JsonException;
 
 /**
  * Class PlannedDisbursementRequest.
@@ -15,6 +16,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
      * Returns planned disbursement rules.
      *
      * @return array
+     * @throws JsonException
      */
     public function rules(): array
     {
@@ -83,6 +85,8 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getErrorsForPlannedDisbursement(array $formFields): array
     {
@@ -123,7 +127,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
         foreach ($formFields as $plannedDisbursementIndex => $plannedDisbursement) {
             $plannedDisbursementForm = sprintf('planned_disbursement.%s', $plannedDisbursementIndex);
-            $messages[sprintf('%s.planned_disbursement_type.in', $plannedDisbursementForm)] = trans('requests.planned_disb', ['suffix'=>trans('requests.suffix.type_is_invalid')]);
+            $messages[sprintf('%s.planned_disbursement_type.in', $plannedDisbursementForm)] = translateRequestMessage('planned_disb', 'type_is_invalid');
 
             $periodStartMessages = $this->getMessagesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementForm);
 
@@ -190,6 +194,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
      * @param       $formBase
      *
      * @return array
+     * @throws JsonException
      */
     public function getErrorsForProviderOrg(array $formFields, $formBase): array
     {
@@ -221,8 +226,8 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
         foreach ($formFields as $providerOrgIndex => $providerOrg) {
             $providerOrgForm = sprintf('%s.provider_org.%s', $formBase, $providerOrgIndex);
-            $message[sprintf('%s.type.in', $providerOrgForm)] = trans('requests.planned_disb_pro', ['suffix'=>trans('requests.suffix.type_is_invalid')]);
-            $message[sprintf('%s.ref.not_regex', $providerOrgForm)] = trans('requests.planned_disb_pro_ref', ['suffix'=>trans('requests.suffix.shouldnt_contain_symbol')]);
+            $message[sprintf('%s.type.in', $providerOrgForm)] = translateRequestMessage('planned_disb_pro', 'type_is_invalid');
+            $message[sprintf('%s.ref.not_regex', $providerOrgForm)] = translateRequestMessage('planned_disb_pro_ref', 'shouldnt_contain_symbol');
 
             foreach ($this->getMessagesForNarrative($providerOrg['narrative'], $providerOrgForm) as $providerOrgNarrativeIndex => $providerOrgNarrativeMessages) {
                 $message[$providerOrgNarrativeIndex] = $providerOrgNarrativeMessages;
@@ -263,6 +268,8 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
      * @param       $formBase
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getErrorsForReceiverOrg(array $formFields, $formBase): array
     {
@@ -294,8 +301,8 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
         foreach ($formFields as $receiverOrgIndex => $receiverOrg) {
             $receiverOrgForm = sprintf('%s.receiver_org.%s', $formBase, $receiverOrgIndex);
-            $message[sprintf('%s.type.in', $receiverOrgForm)] = trans('requests.planned_disb_rec', ['suffix'=>trans('requests.suffix.type_is_invalid')]);
-            $message[sprintf('%s.ref.not_regex', $receiverOrgForm)] = trans('requests.planned_disb_rec_ref', ['suffix'=>trans('requests.suffix.shouldnt_contain_symbol')]);
+            $message[sprintf('%s.type.in', $receiverOrgForm)] = translateRequestMessage('planned_disb_rec', 'type_is_invalid');
+            $message[sprintf('%s.ref.not_regex', $receiverOrgForm)] = translateRequestMessage('planned_disb_rec_ref', 'shouldnt_contain_symbol');
 
             foreach ($this->getMessagesForNarrative($receiverOrg['narrative'], $receiverOrgForm) as $receiverOrgNarrativeIndex => $receiverOrgNarrativeMessages) {
                 $message[$receiverOrgNarrativeIndex] = $receiverOrgNarrativeMessages;
@@ -319,12 +326,12 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('%s.value.%s', $formBase, $valueIndex);
-            $messages[sprintf('%s.amount.required', $valueForm)] = trans('requests.alt_amount_field', ['suffix'=>trans('requests.suffix.is_required')]);
-            $messages[sprintf('%s.amount.numeric', $valueForm)] = trans('requests.alt_amount_field', ['suffix'=>trans('requests.suffix.must_be_a_number')]);
-            $messages[sprintf('%s.amount.min', $valueForm)] = trans('requests.alt_amount_field', ['suffix'=>trans('requests.suffix.must_not_be_negative')]);
-            $messages[sprintf('%s.currency.in', $valueForm)] = trans('requests.value', ['suffix'=>trans('requests.suffix.currency_is_invalid')]);
-            $messages[sprintf('%s.value_date.required', $valueForm)] = trans('requests.alt_value_date', ['suffix'=>trans('requests.suffix.is_a_required_field')]);
-            $messages[sprintf('%s.value_date.date', $valueForm)] = 'The Value Date must be a valid Date';
+            $messages[sprintf('%s.amount.required', $valueForm)] = translateRequestMessage('alt_amount_field', 'is_required');
+            $messages[sprintf('%s.amount.numeric', $valueForm)] = translateRequestMessage('alt_amount_field', 'must_be_a_number');
+            $messages[sprintf('%s.amount.min', $valueForm)] = translateRequestMessage('alt_amount_field', 'must_not_be_negative');
+            $messages[sprintf('%s.currency.in', $valueForm)] = translateRequestMessage('value', 'currency_is_invalid');
+            $messages[sprintf('%s.value_date.required', $valueForm)] = translateRequestMessage('alt_value_date', 'is_a_required_field');
+            $messages[sprintf('%s.value_date.date', $valueForm)] = translateRequestMessage('the_alt_value_date', 'must_be_a_valid_date');
         }
 
         return $messages;
@@ -335,6 +342,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
      *
      * @param $formFields
      * @param $formBase
+     * @param $diff
      *
      * @return array
      */
@@ -350,7 +358,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
     }
 
     /**
-     * returns criticalrules for period start form.
+     * returns critical rules for period start form.
      *
      * @param $formFields
      * @param $formBase

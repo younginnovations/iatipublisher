@@ -7,10 +7,12 @@ namespace App\Http\Requests\Activity;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\IndicatorService;
 use App\IATI\Services\Activity\ResultService;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
+use JsonException;
 
 /**
  * Class ActivityBaseRequest.
@@ -196,6 +198,8 @@ class ActivityBaseRequest extends FormRequest
      * Returns default values related to an activity.
      *
      * @return mixed
+     *
+     * @throws BindingResolutionException
      */
     public function getActivityDefaultValues(): mixed
     {
@@ -224,6 +228,8 @@ class ActivityBaseRequest extends FormRequest
      * @param      $validator
      *
      * @return bool
+     *
+     * @throws BindingResolutionException
      */
     public function uniqueDefaultLangValidator($attribute, $value, $parameters, $validator): bool
     {
@@ -263,8 +269,8 @@ class ActivityBaseRequest extends FormRequest
     /**
      * returns rules for narrative if narrative is required.
      *
-     * @param      $formFields
-     * @param      $formBase
+     * @param $formFields
+     * @param $formBase
      *
      * @return array
      */
@@ -335,6 +341,7 @@ class ActivityBaseRequest extends FormRequest
      * @param      $formBase
      *
      * @return array
+     * @throws JsonException
      */
     public function getErrorsForNarrative($formFields, $formBase): array
     {
@@ -360,20 +367,20 @@ class ActivityBaseRequest extends FormRequest
     public function getMessagesForNarrative($formFields, $formBase): array
     {
         $messages = [];
-        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = translateRequestMessage('narrative_lang', 'must_be_unique');
-        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = translateRequestMessage('narrative_lang', 'must_be_unique');
+        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = translateRequestMessage('narrative_language', 'must_be_unique');
+        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = translateRequestMessage('narrative_language', 'must_be_unique');
 
         foreach ($formFields as $narrativeIndex => $narrative) {
             $messages[sprintf(
                 '%s.narrative.%s.narrative.required_with_language',
                 $formBase,
                 $narrativeIndex
-            )] = trans('requests.narrative_field', ['suffix'=>trans('requests.suffix.is_required_with_xml')]);
+            )] = translateRequestMessage('narrative_field', 'is_required_with_xml');
             $messages[sprintf(
                 '%s.narrative.%s.language.in',
                 $formBase,
                 $narrativeIndex
-            )] = trans('requests.xml_lang_field_symbol', ['suffix'=>trans('requests.suffix.is_invalid')]);
+            )] = translateRequestMessage('xml_lang_field_symbol', 'is_invalid');
             $messages[sprintf(
                 '%s.narrative.%s.narrative.required',
                 $formBase,
@@ -515,9 +522,10 @@ class ActivityBaseRequest extends FormRequest
      *
      *
      * @param $formFields
-     * @param $formBase
+     * @param null $formBase
      *
      * @return array
+     * @throws JsonException
      */
     public function getErrorsForDocumentLink($formFields, $formBase = null): array
     {
@@ -623,10 +631,10 @@ class ActivityBaseRequest extends FormRequest
                 $documentLinkForm = sprintf('document_link.%s', $documentLinkIndex);
             }
 
-            $messages[sprintf('%s.format', $documentLinkForm)] = trans('requests.the_midfix_suffix', ['midfix'=>trans('common.document_link'), 'suffix'=>trans('requests.suffix.format_is_invalid')]);
+            $messages[sprintf('%s.format', $documentLinkForm)] = translateMidfixSuffix('common.document_link', 'requests.suffix.format_is_invalid');
 
             if (Arr::get($documentLink, 'url', null) !== '') {
-                $messages[sprintf('%s.url.url', $documentLinkForm)] = trans('requests.url_field_symbol', ['suffix'=>trans('requests.suffix.must_be_valid_url')]);
+                $messages[sprintf('%s.url.url', $documentLinkForm)] = translateRequestMessage('url_field_symbol', 'must_be_valid_url');
             }
 
             if (Arr::get($documentLink, 'document_date', null) !== '') {
@@ -670,9 +678,9 @@ class ActivityBaseRequest extends FormRequest
 
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
             $messages[sprintf('%s.document_date.%s.date.date', $formIndex, $documentCategoryIndex)]
-                = trans('requests.iso_field_symbol', ['suffix'=>trans('requests.suffix.must_be_a_proper_date')]);
+                = translateRequestMessage('iso_field_symbol', 'must_be_a_proper_date');
             $messages[sprintf('%s.document_date.%s.date.date_greater_than', $formIndex, $documentCategoryIndex)]
-                = trans('requests.iso_field_symbol', ['suffix'=>trans('requests.suffix.date_must_be_greater')]);
+                = translateRequestMessage('iso_field_symbol', 'date_must_be_greater');
         }
 
         return $messages;
@@ -706,6 +714,8 @@ class ActivityBaseRequest extends FormRequest
      * @param $formBase
      *
      * @return array
+     *
+     * @throws JsonException
      */
     protected function getErrorsForValue($formFields, $formBase): array
     {

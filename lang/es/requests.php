@@ -110,6 +110,7 @@ return array (
   'sector' => 'El sector :suffix',
   'tag' => 'La etiqueta :suffix',
   'the_value_date' => 'La fecha-valor :suffix',
+  'the_alt_value_date' => 'La fecha valor :suffix',
   'title_language_field' => 'El campo de idioma del título :suffix',
   'transaction_aid' => 'El tipo de ayuda de la transacción :suffix',
   'transaction_finance' => 'El tipo de financiamiento de la transacción :suffix',
@@ -140,7 +141,7 @@ return array (
   'default_aid_type' => 'El tipo de ayuda predeterminado :suffix',
   'period_start' => 'Inicio de período :suffix',
   'transaction_recipient_country' => 'El país receptor de la transacción :suffix',
-  'suffix' => 
+  'suffix' =>
   array (
     'already_defined_in_transaction' => 'ya se ha definido en las transacciones',
     'identifier_already_exists' => 'el identificador ya existe',

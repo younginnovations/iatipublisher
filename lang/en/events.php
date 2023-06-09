@@ -35,4 +35,5 @@ return array (
   'verifying' => 'verifying',
   'imported' => 'imported',
   'stored' => 'stored',
+  'delete'=>'delete',
 );

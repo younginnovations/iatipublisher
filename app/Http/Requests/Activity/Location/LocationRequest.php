@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Location;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use JsonException;
 
 /**
  * Class LocationRequest.
@@ -69,6 +70,8 @@ class LocationRequest extends ActivityBaseRequest
      * @param $formFields
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getErrorsForLocation($formFields): array
     {
@@ -88,7 +91,7 @@ class LocationRequest extends ActivityBaseRequest
                 $this->getErrorsForLocationDescription($location['description'], $locationForm),
                 $this->getErrorsForActivityDescription($location['activity_description'], $locationForm),
                 $this->getErrorsForAdministrative($location['administrative'], $locationForm),
-                $this->getErrorsForPoing($location['point'], $locationForm),
+                $this->getErrorsForPoint($location['point'], $locationForm),
             ];
 
             foreach ($tempRules as $tempRule) {
@@ -103,7 +106,9 @@ class LocationRequest extends ActivityBaseRequest
 
     /**
      * returns messages for location form.
+     *
      * @param $formFields
+     *
      * @return array
      */
     public function getMessagesForLocation($formFields): array
@@ -143,6 +148,8 @@ class LocationRequest extends ActivityBaseRequest
      * @param $formBase
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getWarningForLocationId($formFields, $formBase): array
     {
@@ -389,6 +396,8 @@ class LocationRequest extends ActivityBaseRequest
      * @param $formBase
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getErrorsForAdministrative($formFields, $formBase): array
     {
@@ -435,7 +444,7 @@ class LocationRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getErrorsForPoing($formFields, $formBase): array
+    public function getErrorsForPoint($formFields, $formBase): array
     {
         $rules = [];
         $pointForm = sprintf('%s.point.0', $formBase);

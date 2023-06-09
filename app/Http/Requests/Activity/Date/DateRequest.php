@@ -94,10 +94,10 @@ class DateRequest extends ActivityBaseRequest
 
         foreach ($formFields as $activityDateIndex => $activityDate) {
             $activityDateForm = sprintf('activity_date.%s', $activityDateIndex);
-            $messages[sprintf('%s.date.date', $activityDateForm)] = trans('requests.date', ['suffix'=>trans('requests.suffix.is_invalid')]);
-            $messages[sprintf('%s.date.before', $activityDateForm)] = trans('requests.actual_start_and_end_dates', ['suffix'=>trans('requests.suffix.may_not_be_in_future')]);
-            $messages[sprintf('%s.date.end_later_than_start', $activityDateForm)] = trans('requests.end_date', ['suffix'=>trans('requests.suffix.must_be_later_than_start_date')]);
-            $messages[sprintf('%s.type.in', $activityDateForm)] = trans('requests.selected_type_is_invalid');
+            $messages[sprintf('%s.date.date', $activityDateForm)] = translateRequestMessage('date', 'is_invalid');
+            $messages[sprintf('%s.date.before', $activityDateForm)] = translateRequestMessage('actual_start_and_end_dates', 'may_not_be_in_future');
+            $messages[sprintf('%s.date.end_later_than_start', $activityDateForm)] = translateRequestMessage('end_date', 'must_be_later_than_start_date');
+            $messages[sprintf('%s.type.in', $activityDateForm)] = translateRequestMessage('selected_type_is_invalid');
             $messages += $this->getMessagesForNarrative($activityDate['narrative'], $activityDateForm);
         }
 

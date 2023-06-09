@@ -110,6 +110,7 @@ return array (
   'sector' => 'The sector :suffix',
   'tag' => 'The tag :suffix',
   'the_value_date' => 'The value-date :suffix',
+  'the_alt_value_date' => 'The Value date :suffix',
   'title_language_field' => 'The title language field :suffix',
   'transaction_aid' => 'The transaction aid type :suffix',
   'transaction_finance' => 'The transaction finance type :suffix',
@@ -140,7 +141,7 @@ return array (
   'default_aid_type' => 'The default aid type :suffix',
   'period_start' => 'Period Start :suffix',
   'transaction_recipient_country' => 'The transaction recipient country :suffix',
-  'suffix' => 
+  'suffix' =>
   array (
     'already_defined_in_transaction' => 'already defined in Transactions',
     'identifier_already_exists' => 'identifier already exists',

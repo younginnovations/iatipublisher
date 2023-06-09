@@ -53,7 +53,8 @@ class CollaborationTypeController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.rendering'), 'suffix'=>trans('responses.activity_collaboration_type')]));
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('responses.activity_collaboration_type', 'rendering', 'form'));
         }
     }
 
@@ -71,14 +72,14 @@ class CollaborationTypeController extends Controller
             $activityCollaborationType = $request->get('collaboration_type') !== null ? (int) $request->get('collaboration_type') : null;
 
             if (!$this->collaborationTypeService->update($id, $activityCollaborationType)) {
-                return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('responses.activity_collaboration_type')]));
+                return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('responses.activity_collaboration_type', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.activity_collaboration_type'), 'event'=>trans('events.updated')])));
+            return redirect()->route('admin.activity.show', $id)->with('success', translateElementSuccessfully('activity_collaboration_type', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('responses.activity_collaboration_type')]));
+            return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('responses.activity_collaboration_type', 'updating'));
         }
     }
 }

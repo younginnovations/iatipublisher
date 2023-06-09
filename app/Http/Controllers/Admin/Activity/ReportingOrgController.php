@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin\Activity;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\ReportingOrg\ReportingOrgRequest;
 use App\IATI\Services\Activity\ReportingOrgService;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +25,7 @@ class ReportingOrgController extends Controller
     /**
      * ReportingOrgController Constructor.
      *
-     * @param reportingOrgService    $reportingOrgService
+     * @param reportingOrgService $reportingOrgService
      */
     public function __construct(ReportingOrgService $reportingOrgService)
     {
@@ -48,10 +49,11 @@ class ReportingOrgController extends Controller
             $data = ['title' => $element['label'], 'name' => 'reporting_org'];
 
             return view('admin.activity.reportingOrg.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.opening'), 'suffix'=>trans('responses.activity_reporting_org')]));
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.activity_reporting_org', 'opening', 'form'));
         }
     }
 
@@ -69,17 +71,20 @@ class ReportingOrgController extends Controller
             DB::beginTransaction();
 
             if (!$this->reportingOrgService->update($id, $request->all())) {
-                return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.reporting_organisation')]));
+                return redirect()->route('admin.activity.show', $id)
+                    ->with('error', translateErrorHasOccurred('elements_common.reporting_organisation', 'updating'));
             }
 
             DB::commit();
 
-            return redirect()->route('admin.activity.show', $id)->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.reporting_organisation'), 'event'=>trans('events.updated')])));
-        } catch (\Exception $e) {
+            return redirect()->route('admin.activity.show', $id)
+                ->with('success', translateElementSuccessfully('reporting_organisation', 'updated'));
+        } catch (Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.reporting_organisation')]));
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.reporting_organisation', 'updating'));
         }
     }
 }

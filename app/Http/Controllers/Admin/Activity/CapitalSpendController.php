@@ -53,7 +53,7 @@ class CapitalSpendController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.rendering'), 'suffix'=>trans('responses.activity_capital_form')]));
+            return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('responses.activity_capital_spend', 'rendering', 'form'));
         }
     }
 
@@ -71,14 +71,14 @@ class CapitalSpendController extends Controller
             $activityCapitalSpend = $request->get('capital_spend') !== null ? (float) $request->get('capital_spend') : null;
 
             if (!$this->capitalSpendService->update($id, $activityCapitalSpend)) {
-                return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('responses.activity_capital_spend')]));
+                return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('responses.activity_capital_spend', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.activity_capital_spend'), 'event'=>trans('events.updated')])));
+            return redirect()->route('admin.activity.show', $id)->with('success', translateElementSuccessfully('activity_capital_spend', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('responses.activity_capital_spend')]));
+            return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('responses.activity_capital_spend', 'updating'));
         }
     }
 }

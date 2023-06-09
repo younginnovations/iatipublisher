@@ -736,7 +736,7 @@ class ActivityRow extends Row
     protected function containsDuplicateActivities($commonIdentifierCount): bool
     {
         if ($commonIdentifierCount > 1) {
-            $this->errors['activity_identifier']['activity_identifier'] = trans('common.error.this_activity_has_been_duplicated');
+            $this->errors['critical']['activity_identifier']['activity_identifier'] = trans('common.error.this_activity_has_been_duplicated');
 
             return true;
         }

@@ -294,13 +294,10 @@
               class="tab-btn-anchor"
             >
               <button :disabled="post.status == 'disabled'" class="tab-btn">
-                <span>{{
-                  language.elements_common_lang[post.label.toLowerCase()] ??
-                  post.label
-                }}</span>
+                <span>{{ formatTitle(toSnakeCase(post.label)) }}</span>
                 <span class="hover__text">
                   <HoverText
-                    :name="post.label"
+                    :name="formatTitle(toSnakeCase(post.label))"
                     :hover-text="
                       language.common_lang
                         .cannot_publish_activity_until_mandatory
@@ -381,6 +378,7 @@ import {
   onUnmounted,
   ref,
   watch,
+  capitalize,
 } from 'vue';
 import { useToggle, watchIgnorable } from '@vueuse/core';
 
@@ -651,7 +649,9 @@ export default defineComponent({
     );
 
     function formatTitle(title: string) {
-      return title.replace(/_/gi, ' ');
+      const translatedTitle = language.activity_lang[title]?.label;
+
+      return capitalize(translatedTitle ?? title.replace(/_/gi, ' '));
     }
 
     const toastMessage = reactive({
@@ -729,6 +729,11 @@ export default defineComponent({
       store.dispatch('updateShowPublished', false);
     }
 
+    const toSnakeCase = (sentence: string) => {
+      const words = sentence.split(' ');
+      return words.map((word) => word.toLowerCase()).join('_');
+    };
+
     return {
       groupedData,
       activities,
@@ -753,6 +758,7 @@ export default defineComponent({
       screenWidth,
       width,
       language,
+      toSnakeCase,
     };
   },
 });

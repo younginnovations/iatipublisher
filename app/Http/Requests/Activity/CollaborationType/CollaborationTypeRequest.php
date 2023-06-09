@@ -65,8 +65,8 @@ class CollaborationTypeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => trans('requests.collaboration_type', ['suffix'=>trans('requests.suffix.doesnt_exist')]),
-            'size'      => trans('requests.collaboration_type', ['suffix'=>trans('requests.suffix.cannot_have_more_than_one')]),
+            'in'        => translateRequestMessage('collaboration_type', 'doesnt_exist'),
+            'size'      => translateRequestMessage('collaboration_type', 'cannot_have_more_than_one'),
         ];
     }
 }

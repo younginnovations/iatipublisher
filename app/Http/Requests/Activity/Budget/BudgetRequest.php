@@ -294,7 +294,7 @@ class BudgetRequest extends ActivityBaseRequest
         if (count($this->identicalIds)) {
             foreach ($this->identicalIds as $ids) {
                 foreach ($ids as $id) {
-                    $messages['budget.' . $id . '.budget_type.budgets_identical'] = trans('requests.multiple_budget_periods_should_not_be_same');
+                    $messages['budget.' . $id . '.budget_type.budgets_identical'] = translateRequestMessage('multiple_budget_periods_should_not_be_same');
                 }
             }
         }
@@ -302,7 +302,7 @@ class BudgetRequest extends ActivityBaseRequest
         if (count($this->revisedIds)) {
             foreach ($this->revisedIds as $ids) {
                 foreach ($ids as $id) {
-                    $messages['budget.' . $id . '.budget_type.budget_revised_invalid'] = trans('requests.budget_with_type_revised_must_have_same_type') . $this->getIdenticalIds($ids);
+                    $messages['budget.' . $id . '.budget_type.budget_revised_invalid'] = translateRequestMessage('budget_with_type_revised_must_have_same_type') . $this->getIdenticalIds($ids);
                 }
             }
         }
@@ -395,8 +395,6 @@ class BudgetRequest extends ActivityBaseRequest
             $messages[sprintf('%s.amount.numeric', $valueForm)] = translateRequestMessage('amount_field', 'must_be_a_number');
             $messages[sprintf('%s.amount.min', $valueForm)] = translateRequestMessage('amount_field', 'must_not_be_negative');
             $messages[sprintf('%s.value_date.date', $valueForm)] = translateRequestMessage('value_date_field', 'must_be_a_valid_date');
-            $messages[sprintf('%s.value_date.after_or_equal', $valueForm)] = translateRequestMessage('value_date_field', 'must_be_between');
-            $messages[sprintf('%s.value_date.before_or_equal', $valueForm)] = translateRequestMessage('value_date_field', 'must_be_between');
         }
 
         return $messages;

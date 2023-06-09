@@ -118,7 +118,7 @@ class ContactInfoRequest extends ActivityBaseRequest
 
         foreach ($formFields as $contactInfoIndex => $contactInfo) {
             $contactInfoForm = sprintf('contact_info.%s', $contactInfoIndex);
-            $messages[sprintf('%s.type.in', $contactInfoForm)] = trans('requests.contact_info', ['suffix'=>trans('requests.suffix.type_is_invalid')]);
+            $messages[sprintf('%s.type.in', $contactInfoForm)] = translateRequestMessage('contact_info', 'type_is_invalid');
             $tempMessages = [
                 $this->getMessagesForDepartment(Arr::get($contactInfo, 'department', []), $contactInfoForm),
                 $this->getMessagesForOrganisation(Arr::get($contactInfo, 'organisation', []), $contactInfoForm),
@@ -558,8 +558,8 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $emailIndex => $email) {
-            $messages[sprintf('%s.email.%s.email.email', $formBase, $emailIndex)] = trans('requests.contact_info_email', ['suffix'=>trans('requests.suffix.must_be_valid')]);
-            $messages[sprintf('%s.email.%s.email.regex', $formBase, $emailIndex)] = trans('requests.contact_info_email', ['suffix'=>trans('requests.suffix.format_is_invalid')]);
+            $messages[sprintf('%s.email.%s.email.email', $formBase, $emailIndex)] = translateRequestMessage('contact_info_email', 'must_be_valid');
+            $messages[sprintf('%s.email.%s.email.regex', $formBase, $emailIndex)] = translateRequestMessage('contact_info_email', 'format_is_invalid');
         }
 
         return $messages;
@@ -597,7 +597,7 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $websiteIndex => $website) {
-            $messages[sprintf('%s.website.%s.website.url', $formBase, $websiteIndex)] = trans('requests.contact_info_website', ['suffix'=>trans('requests.suffix.must_be_valid_url')]);
+            $messages[sprintf('%s.website.%s.website.url', $formBase, $websiteIndex)] = translateRequestMessage('contact_info_website', 'must_be_valid_url');
         }
 
         return $messages;

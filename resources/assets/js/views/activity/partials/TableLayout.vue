@@ -14,7 +14,9 @@
               <span class="sorting-indicator" :class="sortingDirection()">
                 <svg-vue :icon="`${sortingDirection()}-arrow`" />
               </span>
-              <span class="">Publishing Progress</span>
+              <span class="">{{
+                language.common_lang.publishing_progress
+              }}</span>
             </a>
           </th>
           <th id="date" scope="col">

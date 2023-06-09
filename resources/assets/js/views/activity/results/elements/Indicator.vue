@@ -141,7 +141,7 @@
                       </tr>
 
                       <tr v-if="post.indicator.measure">
-                        <td>{{ lanugage.common_lang.measure }}</td>
+                        <td>{{ language.common_lang.measure }}</td>
                         <td>
                           {{ type.indicatorMeasure[post.indicator.measure] }}
                         </td>
@@ -187,7 +187,7 @@
                       </tr>
 
                       <tr>
-                        <td>{{ language.common_lang.reference_label }}</td>
+                        <td>{{ language.common_lang.reference }}</td>
                         <td>
                           <div
                             v-for="(ref, r) in post.indicator.reference"

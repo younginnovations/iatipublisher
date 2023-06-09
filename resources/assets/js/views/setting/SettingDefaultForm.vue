@@ -80,7 +80,7 @@
           </span>
 
           <p v-if="!defaultError.default_language">
-            {{ language.settings_lang.default_language.label }}
+            {{ language.settings_lang.default_language.help_text }}
           </p>
         </div>
       </div>

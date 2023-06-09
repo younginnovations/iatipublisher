@@ -16,7 +16,7 @@ class SubElementForm extends Form
     /**
      * Builds subelement form.
      *
-     * @return mixed|void
+     * @return void
      */
     public function buildForm():void
     {
@@ -50,10 +50,10 @@ class SubElementForm extends Form
      * Builds form field.
      *
      * @param $field
-     *
+     * @param bool $isAttribute
      * @return void
      */
-    public function buildFields($field, $isAttribute = false): void
+    public function buildFields($field, bool $isAttribute = false): void
     {
         $options = [
             'label' => $field['label'] ?? '',

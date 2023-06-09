@@ -9,6 +9,7 @@ use App\IATI\Services\Activity\ResultService;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
+use JsonException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -20,10 +21,11 @@ class IndicatorRequest extends ActivityBaseRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     *
      * @return array
+     *
+     * @throws ContainerExceptionInterface
+     * @throws JsonException
+     * @throws NotFoundExceptionInterface
      */
     public function rules(): array
     {
@@ -91,10 +93,9 @@ class IndicatorRequest extends ActivityBaseRequest
      * @param bool $fileUpload
      * @param array $result
      *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getErrorsForIndicator(array $formFields, bool $fileUpload = false, array $result = []): array
     {
@@ -130,9 +131,9 @@ class IndicatorRequest extends ActivityBaseRequest
     public function getMessagesForIndicator(array $formFields): array
     {
         $messages = [];
-        $messages['measure.in'] = trans('requests.indicator_measure', ['suffix'=>trans('requests.suffix.is_invalid')]);
-        $messages['aggregation_status.in'] = trans('requests.indicator_aggregation', ['suffix'=>trans('requests.suffix.is_invalid')]);
-        $messages['ascending.in'] = trans('requests.indicator_ascending', ['suffix'=>trans('requests.suffix.is_invalid')]);
+        $messages['measure.in'] = translateRequestMessage('indicator_measure', 'is_invalid');
+        $messages['aggregation_status.in'] = translateRequestMessage('indicator_aggregation', 'is_invalid');
+        $messages['ascending.in'] = translateRequestMessage('indicator_ascending', 'is_invalid');
 
         $tempMessages = [
             $this->getMessagesForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
@@ -253,10 +254,10 @@ class IndicatorRequest extends ActivityBaseRequest
 
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
-            $messages[sprintf('%s.indicator_uri.url', $referenceForm)] = trans('requests.indicator_uri_symbol', ['suffix'=>trans('requests.suffix.must_be_valid_url')]);
+            $messages[sprintf('%s.indicator_uri.url', $referenceForm)] = translateRequestMessage('indicator_uri_symbol', 'must_be_valid_url');
 
             if (!empty($reference['code'])) {
-                $messages[sprintf('%s.code.result_ref_code_present', $referenceForm)] = trans('requests.code', ['suffix'=>trans('requests.suffix.defined_in_result')]);
+                $messages[sprintf('%s.code.result_ref_code_present', $referenceForm)] = translateRequestMessage('code', 'defined_in_result');
             }
 
             if (!empty($reference['vocabulary'])) {
@@ -312,9 +313,6 @@ class IndicatorRequest extends ActivityBaseRequest
      *
      * @param $formFields
      *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     *
      * @return array
      */
     protected function getErrorsForBaseline($formFields): array
@@ -360,12 +358,11 @@ class IndicatorRequest extends ActivityBaseRequest
 
         foreach ($formFields as $baselineIndex => $baseline) {
             $baselineForm = sprintf('baseline.%s', $baselineIndex);
-            $messages[sprintf('%s.year.date_format', $baselineForm)] = trans('requests.year_field_symbol', ['suffix'=>trans('requests.suffix.is_not_valid')]);
-            $messages[sprintf('%s.year.in', $baselineForm)] = trans('requests.year_field_symbol', ['suffix'=>trans('requests.suffix.should_be_baseline')]);
-            $messages[sprintf('%s.year.digits', $baselineForm)] = trans('requests.year_field_symbol', ['suffix'=>trans('requests.suffix.must_be_4_digits')]);
-
-            $messages[sprintf('%s.value.numeric', $baselineForm)] = trans('requests.value_field_symbol', ['suffix'=>trans('requests.suffix.must_be_a_number')]);
-            $messages[sprintf('%s.value.gte', $baselineForm)] = trans('requests.value_field_symbol', ['suffix'=>trans('requests.suffix.must_be_greater_equal_0')]);
+            $messages[sprintf('%s.year.date_format', $baselineForm)] = translateRequestMessage('year_field_symbol', 'is_not_valid');
+            $messages[sprintf('%s.year.in', $baselineForm)] = translateRequestMessage('year_field_symbol', 'should_be_baseline');
+            $messages[sprintf('%s.year.digits', $baselineForm)] = translateRequestMessage('year_field_symbol', 'must_be_4_digits');
+            $messages[sprintf('%s.value.numeric', $baselineForm)] = translateRequestMessage('value_field_symbol', 'must_be_a_number');
+            $messages[sprintf('%s.value.gte', $baselineForm)] = translateRequestMessage('value_field_symbol', 'must_be_greater_equal_0');
 
             $narrativeMessages = $this->getMessagesForNarrative($baseline['comment'][0]['narrative'], sprintf('%s.comment.0', $baselineForm));
 

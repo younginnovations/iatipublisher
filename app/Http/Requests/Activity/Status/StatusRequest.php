@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Status;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use JsonException;
 
 /**
  * Class StatusRequest.
@@ -43,6 +44,8 @@ class StatusRequest extends ActivityBaseRequest
      * @param $status
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getErrorsForActivityStatus($status): array
     {
@@ -65,8 +68,8 @@ class StatusRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => trans('requests.activity_status', ['suffix'=>trans('requests.suffix.doesnt_exist')]),
-            'size'      => trans('requests.activity_status', ['suffix'=>trans('requests.suffix.cannot_have_more_than_one')]),
+            'in'        => translateRequestMessage('activity_status', 'doesnt_exist'),
+            'size'      => translateRequestMessage('activity_status', 'cannot_have_more_than_one'),
         ];
     }
 }

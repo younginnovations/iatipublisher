@@ -35,4 +35,5 @@ return array (
   'verifying' => 'vérification',
   'imported' => 'importé',
   'stored' => 'stocké',
+  'delete' => 'supprimer',
 );

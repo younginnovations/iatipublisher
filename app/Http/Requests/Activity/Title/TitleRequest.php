@@ -6,6 +6,9 @@ namespace App\Http\Requests\Activity\Title;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 use Illuminate\Support\Arr;
+use JsonException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class TitleRequest.
@@ -15,9 +18,16 @@ class TitleRequest extends ActivityBaseRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * @param string $name
+     * @param array $data
+     *
      * @return array
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws JsonException
      */
-    public function rules($name = 'narrative', $data = []): array
+    public function rules(string $name = 'narrative', array $data = []): array
     {
         if ($name === 'title') {
             $titles = $data;
@@ -34,10 +44,11 @@ class TitleRequest extends ActivityBaseRequest
      * Return critical rules for title.
      *
      * @param $name
+     * @param array $titles
      *
      * @return array
      */
-    public function getCriticalErrorsForTitle($name, $titles = []): array
+    public function getCriticalErrorsForTitle($name, array $titles = []): array
     {
         $firstTitleKey = array_key_first($titles) ?? '0';
         $rules = [];
@@ -53,11 +64,13 @@ class TitleRequest extends ActivityBaseRequest
      * Return errors for title.
      *
      * @param $name
-     * @param $titles
+     * @param array $titles
      *
      * @return array
+     *
+     * @throws JsonException
      */
-    public function getErrorsForTitle($name, $titles = []): array
+    public function getErrorsForTitle($name, array $titles = []): array
     {
         $rules = [];
         $validLanguages = implode(',', array_keys(getCodeList('Language', 'Activity', false)));
@@ -76,11 +89,11 @@ class TitleRequest extends ActivityBaseRequest
      * Return rules for title.
      *
      * @param $name
-     * @param $titles
+     * @param array $titles
      *
      * @return array
      */
-    public function getWarningForTitle($name, $titles = []): array
+    public function getWarningForTitle($name, array $titles = []): array
     {
         $rules[$name] = 'unique_lang|unique_default_lang';
 
@@ -98,9 +111,15 @@ class TitleRequest extends ActivityBaseRequest
     /**
      * Get the error message as required.
      *
+     * @param string $name
+     * @param array $data
+     *
      * @return array
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function messages($name = 'narrative', $data = []): array
+    public function messages(string $name = 'narrative', array $data = []): array
     {
         if ($name === 'title') {
             $titles = $data;
@@ -108,14 +127,14 @@ class TitleRequest extends ActivityBaseRequest
             $titles = request()->get('narrative');
         }
 
-        $messages[sprintf('%s.unique_lang', $name)] = trans('requests.title_language_field', ['suffix'=>trans('requests.suffix.must_be_unique')]);
-        $messages[sprintf('%s.unique_default_lang', $name)] = trans('requests.title_language_field', ['suffix'=>trans('requests.suffix.must_be_unique')]);
-        $messages[sprintf('%s.0.narrative.required', $name)] = trans('requests.first_title', ['suffix'=>trans('requests.suffix.is_required')]);
+        $messages[sprintf('%s.unique_lang', $name)] = translateRequestMessage('title_language_field', 'must_be_unique');
+        $messages[sprintf('%s.unique_default_lang', $name)] = translateRequestMessage('title_language_field', 'must_be_unique');
+        $messages[sprintf('%s.0.narrative.required', $name)] = translateRequestMessage('first_title', 'is_required');
 
         if (is_array($titles) && count($titles)) {
             foreach ($titles as $key => $title) {
                 if ($key !== 0) {
-                    $messages[sprintf('%s.%s.narrative.required_with_language', $name, $key)] = trans('requests.narrative', ['suffix'=>trans('requests.suffix.required_when_language')]);
+                    $messages[sprintf('%s.%s.narrative.required_with_language', $name, $key)] = translateRequestMessage('narrative', 'required_when_language');
                 }
             }
         }

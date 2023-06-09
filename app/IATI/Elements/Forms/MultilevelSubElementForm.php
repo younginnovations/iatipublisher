@@ -14,7 +14,8 @@ class MultilevelSubElementForm extends BaseForm
     /**
      * Builds multilevel subelement form.
      *
-     * @return mixed|void
+     * @return void
+     * @throws \JsonException
      */
     public function buildForm():void
     {
@@ -64,7 +65,7 @@ class MultilevelSubElementForm extends BaseForm
                             ],                        ],
                     ]
                 )->add('add_to_collection', 'button', [
-                    'label' => sprintf('add additional %s', str_replace('_', ' ', $this->getData(sprintf('sub_elements.%s.name', $name)))),
+                    'label' => getLabelForAddAdditional($this->getData(sprintf('sub_elements.%s.name', $name))),
                     'attr' => [
                         'class' => 'add_to_parent add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
                         'icon' => true,                    ],

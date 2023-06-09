@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Identifier;
 
 use App\IATI\Services\Activity\ActivityService;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -14,14 +15,13 @@ use Illuminate\Validation\Rule;
 class IdentifierRequest extends FormRequest
 {
     /**
-     * @var ActivityService
-     */
-    protected $activityService;
-
-    /**
      * Get the validation rules that apply to the request.
      *
+     * @param bool $fileUpload
+     *
      * @return array
+     *
+     * @throws BindingResolutionException
      */
     public function rules(bool $fileUpload = false): array
     {
@@ -33,14 +33,15 @@ class IdentifierRequest extends FormRequest
     /**
      * Return critical rules for identifier.
      *
-     * @param $fileUpload
+     * @param bool $fileUpload
+     * @param string $elementName
      *
-     * @return void
+     * @return array
+     *
+     * @throws BindingResolutionException
      */
-    public function getErrorsForIdentifier(bool $fileUpload = false, $elementName = ''): array
+    public function getErrorsForIdentifier(bool $fileUpload = false, string $elementName = ''): array
     {
-        $activityIdentifiers = [];
-
         if (!$fileUpload) {
             $activityIdentifiers = [];
             $activityService = app()->make(ActivityService::class);
@@ -85,7 +86,7 @@ class IdentifierRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'activity_identifier.not_in' => trans('requests.activity', ['suffix'=>trans('requests.suffix.identifier_already_exists')]),
+            'activity_identifier.not_in' => translateRequestMessage('activity', 'identifier_already_exists'),
         ];
     }
 }

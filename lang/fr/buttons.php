@@ -42,7 +42,7 @@ return array (
   'step' => 'Étape',
   'out_of' => 'sur',
   'save_data' => 'Données enregistrées',
-  'add_additional' => 'ajouter',
+  'add_additional' => 'ajouter :element',
   'add_a_new' => 'Ajouter un nouvel',
   'delete_confirmation' => 'Voulez-vous vraiment supprimer cet(te) :element',
   'unpublish_confirmation' => 'Voulez-vous vraiment annuler la publication de cet(te) :element',

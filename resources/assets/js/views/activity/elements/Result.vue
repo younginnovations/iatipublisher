@@ -41,7 +41,7 @@
             :text="
               language.button_lang.show_element.replace(
                 ':element',
-                language.common_lang.full_result_list
+                language.common_lang.full_result
               )
             "
             icon=""
@@ -116,7 +116,7 @@
                         <td>
                           <div class="description-content">
                             <div class="language mb-1.5">
-                              (Language:
+                              ({{ language.common_lang.language }}:
                               {{
                                 getActivityTitle(
                                   result.result.description[0].narrative,

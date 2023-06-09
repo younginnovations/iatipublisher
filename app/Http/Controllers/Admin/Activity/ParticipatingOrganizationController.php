@@ -51,7 +51,8 @@ class ParticipatingOrganizationController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.rendering'), 'suffix'=>trans('elements_common.participating_organisation')]));
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.participating_organisation', 'rendering', 'form'));
         }
     }
 
@@ -67,14 +68,17 @@ class ParticipatingOrganizationController extends Controller
     {
         try {
             if (!$this->participatingOrganizationService->update($id, $request->except(['_token', '_method']))) {
-                return redirect()->route('admin.activities.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.participating_organisation')]));
+                return redirect()->route('admin.activities.show', $id)
+                    ->with('error', translateErrorHasOccurred('elements_common.participating_organisation', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.participating_organisation'), 'event'=>trans('events.updated')])));
+            return redirect()->route('admin.activity.show', $id)
+               ->with('success', translateElementSuccessfully('participating_organisation', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.participating_organisation')]));
+            return redirect()->route('admin.activity.show', $id)
+               ->with('error', translateErrorHasOccurred('elements_common.participating_organisation', 'updating'));
         }
     }
 }

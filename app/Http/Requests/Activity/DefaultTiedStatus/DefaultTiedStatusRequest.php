@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\DefaultTiedStatus;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use JsonException;
 
 /**
  * Class DefaultTiedStatusRequest.
@@ -14,9 +15,10 @@ class DefaultTiedStatusRequest extends ActivityBaseRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @param $tied_status
+     * @param null $tied_status
      *
      * @return array
+     * @throws JsonException
      */
     public function rules($tied_status = null): array
     {
@@ -27,8 +29,6 @@ class DefaultTiedStatusRequest extends ActivityBaseRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @param $tied_status
      *
      * @return array
      */
@@ -43,6 +43,8 @@ class DefaultTiedStatusRequest extends ActivityBaseRequest
      * @param $tied_status
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getErrorsForDefaultTiedStatus($tied_status = null): array
     {
@@ -65,8 +67,8 @@ class DefaultTiedStatusRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => trans('requests.default_tied_status', ['suffix'=>trans('requests.suffix.doesnt_exist')]),
-            'size'      => trans('requests.default_tied_status', ['suffix'=>trans('requests.suffix.cannot_have_more_than_one')]),
+            'in'        => translateRequestMessage('default_tied_status', 'doesnt_exist'),
+            'size'      => translateRequestMessage('default_tied_status', 'cannot_have_more_than_one'),
         ];
     }
 }

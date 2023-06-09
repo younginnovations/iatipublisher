@@ -403,8 +403,10 @@ trait ErrorValidationRules
 
     /**
      * returns rules for period.
+     *
      * @param $formFields
      * @param $formBase
+     *
      * @return array
      */
     protected function getErrorsForPeriod($formFields, $formBase, $indicator): array

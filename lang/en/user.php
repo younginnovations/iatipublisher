@@ -1,6 +1,6 @@
 <?php
 return array (
-  'user_roles' => 
+  'user_roles' =>
   array (
     'superadmin' => 'SuperAdmin',
     'iati_admin' => 'IATI Admin',
@@ -41,5 +41,5 @@ return array (
   'successfully_logged_out' => 'Successfully logged out.',
   'username_is_invalid' => 'The username is invalid. Username must be purely lowercase alphabets followed by alphanumeric(ascii) characters and these symbols:-_',
   'publisher_id_is_invalid' => 'The publisher id is invalid. The publisher id must be at least two characters long and lower case. It can include letters, numbers and also - (dash) and _ (underscore).',
-  'delete_confirmation' => 'Are you sure you want to delete :element ?',
+  'delete_confirmation' => 'Are you sure you want to delete :element ',
 );

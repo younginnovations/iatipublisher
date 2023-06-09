@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\RelatedActivity;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use JsonException;
 
 /**
  * Class RelatedActivityRequest.
@@ -15,6 +16,8 @@ class RelatedActivityRequest extends ActivityBaseRequest
      * Get the validation rules that apply to the request.
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function rules(): array
     {
@@ -44,6 +47,8 @@ class RelatedActivityRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getErrorsForRelatedActivity(array $formFields): array
     {
@@ -67,9 +72,7 @@ class RelatedActivityRequest extends ActivityBaseRequest
      */
     public function getWarningForRelatedActivity(array $formFields): array
     {
-        $rules = [];
-
-        return $rules;
+        return [];
     }
 
     /**
@@ -85,7 +88,7 @@ class RelatedActivityRequest extends ActivityBaseRequest
 
         foreach ($formFields as $index => $formField) {
             $baseForm = sprintf('related_activity.%s', $index);
-            $messages[sprintf('%s.relationship_type.in', $baseForm)] = trans('requests.relationship_type', ['suffix'=>trans('requests.suffix.is_invalid')]);
+            $messages[sprintf('%s.relationship_type.in', $baseForm)] = translateRequestMessage('relationship_type', 'is_invalid');
         }
 
         return $messages;

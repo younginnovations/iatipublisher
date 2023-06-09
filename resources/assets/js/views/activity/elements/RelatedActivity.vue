@@ -23,7 +23,7 @@
         <span v-else class="italic">{{
           language.common_lang.missing.element.replace(
             ':element',
-            language.common_lang.reference_label
+            language.common_lang.reference
           )
         }}</span>
       </div>

@@ -1,6 +1,6 @@
 <?php
 return array (
-  'user_roles' => 
+  'user_roles' =>
   array (
     'superadmin' => 'Superadministrador',
     'iati_admin' => 'Administrador IATI',
@@ -18,7 +18,7 @@ return array (
   'user_role' => 'Rol de usuario',
   'user_profile' => 'Perfil de usuario',
   'status' => 'Estado',
-  'joined_on' => 'Unido',
+  'joined_on' => 'Unido en',
   'action' => 'Acción',
   'role' => 'Rol',
   'roles' => 'Roles',
@@ -41,5 +41,5 @@ return array (
   'successfully_logged_out' => 'Se ha cerrado la sesión correctamente.',
   'username_is_invalid' => 'El nombre de usuario es inválido. El nombre de usuario debe contener únicamente letras minúsculas seguidas de caracteres alfanuméricos (ASCII) y los símbolos “-” y “_”',
   'publisher_id_is_invalid' => 'El identificador de entidad que publica es inválido. El identificador de entidad debe tener al menos dos caracteres y escribirse en minúsculas. Puede incluir letras, números, guiones (-) y guiones bajos (_).',
-  'delete_confirmation' => '¿Está seguro de que desea eliminar :element',
+  'delete_confirmation' => '¿Está seguro de que desea eliminar :element ',
 );

@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Description;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
-use Arr;
+use Illuminate\Support\Arr;
+use JsonException;
 
 /**
  * Class DescriptionRequest.
@@ -41,6 +42,8 @@ class DescriptionRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getErrorsForDescription(array $formFields): array
     {
@@ -95,7 +98,7 @@ class DescriptionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $descriptionIndex => $description) {
             $descriptionForm = sprintf('description.%s', $descriptionIndex);
-            $messages[$descriptionForm . '.type'] = trans('requests.selected_description_type_is_invalid');
+            $messages[$descriptionForm . '.type'] = translateRequestMessage('selected_description_type_is_invalid');
 
             $narrativeMessages = $this->getMessagesForNarrative(Arr::get($description, 'narrative', []), $descriptionForm);
 

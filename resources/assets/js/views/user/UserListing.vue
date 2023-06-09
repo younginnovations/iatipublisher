@@ -73,9 +73,9 @@
           </div>
           <div class="grid grid-cols-2 gap-6">
             <div class="col-span-2 flex flex-col items-start gap-2">
-              <label class="text-sm text-n-50"
-                >{{ language.register_lang.fullname.label
-                }}<span class="text-crimson-50"> * </span></label
+              <label class="text-sm text-n-50">
+                {{ language.register_lang.fullname.label }}
+                <span class="text-crimson-50"> * </span></label
               >
               <input
                 id="full_name"
@@ -253,7 +253,7 @@
         <p class="rounded-lg bg-rose p-4">
           {{ language.user_lang.delete_confirmation.replace(':element', ':')
           }}<b> {{ deleteUsername }}</b
-          >?
+          > ?
         </p>
         <div class="mt-6 flex justify-end space-x-2">
           <button

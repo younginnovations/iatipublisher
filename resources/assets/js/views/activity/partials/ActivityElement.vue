@@ -462,7 +462,7 @@
             </div>
             <table>
               <tr>
-                <td>{{ translation.common_lang.period }}</td>
+                <td>{{ translation.common_lang.status }}</td>
                 <td>
                   <span v-if="post.budget_status">{{
                     types.budgetStatus[post.budget_status]

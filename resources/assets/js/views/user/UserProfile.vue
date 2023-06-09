@@ -396,7 +396,7 @@
           {{ language.user_lang.role }}
         </div>
         <div class="text-base">
-          {{ userData['user_role'] }}
+          {{ language.user_lang.user_roles[userData['user_role']] }}
         </div>
       </div>
     </div>
@@ -436,7 +436,7 @@ const userData = reactive({ user_role: '' });
 
 onMounted(() => {
   Object.assign(userData, props.user);
-  userData.user_role = userData.user_role.split('_').join(' ');
+  userData.user_role = userData.user_role.toLowerCase();
 });
 
 const formData = reactive({

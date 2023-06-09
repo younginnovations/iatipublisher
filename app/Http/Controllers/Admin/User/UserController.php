@@ -379,8 +379,10 @@ class UserController extends Controller
             $this->db->beginTransaction();
             $this->userService->update(Auth::user()->id, $formData);
             $this->db->commit();
-            session()->put('locale', Arr::get($formData, 'language_preference', 'en'));
-            app()->setLocale(Arr::get($formData, 'language_preference', 'en'));
+
+            $currentLanguage = app()->getLocale();
+            session()->put('locale', Arr::get($formData, 'language_preference', $currentLanguage));
+            app()->setLocale(Arr::get($formData, 'language_preference', $currentLanguage));
 
             return response()->json([
                 'success' => true,

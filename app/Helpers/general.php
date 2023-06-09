@@ -5,9 +5,9 @@ declare(strict_types=1);
 use App\IATI\Models\User\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -788,56 +788,6 @@ if (!function_exists('generateApiInfo')) {
         }
 
         return $requestInfo;
-    }
-}
-
-if (!function_exists('translateRequestMessage')) {
-    /**
-     * Builds translated lines using prefix and suffix of request.php.
-     *
-     * @param string $prefix_key
-     * @param string $suffix_key
-     *
-     * @return string
-     */
-    function translateRequestMessage(string $prefix_key, string $suffix_key = ''): string
-    {
-        if (empty($suffix_key)) {
-            return trans('requests.' . $prefix_key);
-        }
-
-        return trans('requests.' . $prefix_key, ['suffix' => trans('requests.suffix.' . $suffix_key)]);
-    }
-}
-
-if (!function_exists('translateJsonValues')) {
-    /**
-     * Translates json values for the keys: label, placeholder, hover_text & help_text
-     * json[obj][label] = 'buttons.delete_confirmation'
-     * becomes json[obj][label] = "Are you sure you want to delete item ?".
-     *
-     * @param $elements
-     *
-     * @return mixed
-     */
-    function translateJsonValues($elements): mixed
-    {
-        $swapable_keys = ['label', 'placeholder', 'hover_text', 'help_text'];
-        $result = [];
-        if (is_array($elements)) {
-            foreach ($elements as $key => $value) {
-                if (is_string($value) && in_array($key, $swapable_keys)) {
-                    $translated = trans($value);
-                    $result[$key] = $translated;
-                } else {
-                    $result[$key] = translateJsonValues($value);
-                }
-            }
-        } else {
-            $result = $elements;
-        }
-
-        return $result;
     }
 }
 

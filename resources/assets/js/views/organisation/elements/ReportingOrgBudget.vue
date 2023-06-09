@@ -49,7 +49,7 @@
             <td>
               {{
                 recipient_org.ref
-                  ? `${language.common_lang.reference_label} - ${recipient_org.ref}`
+                  ? `${language.common_lang.reference} - ${recipient_org.ref}`
                   : language.common_lang.missing.reference
               }}
               <div
@@ -156,7 +156,7 @@
               <table>
                 <tbody>
                   <tr>
-                    <td>{{ language.common_lang.reference_label }}</td>
+                    <td>{{ language.common_lang.reference }}</td>
                     <td>
                       {{
                         budget_line.ref ??

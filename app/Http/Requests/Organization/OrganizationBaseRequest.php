@@ -8,6 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use JsonException;
 
 /**
  * Class OrganizationBaseRequest.
@@ -194,6 +195,8 @@ class OrganizationBaseRequest extends FormRequest
      * @param $formBase
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getWarningForNarrative($formFields, $formBase): array
     {
@@ -221,7 +224,6 @@ class OrganizationBaseRequest extends FormRequest
      */
     public function getMessagesForNarrative($formFields, $formBase): array
     {
-//        REVIEW THIS
         $messages = [];
         $messages[sprintf('%s.narrative.unique_lang', $formBase)] = translateRequestMessage('xml_lang_field_symbol', 'must_be_unique');
         $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = translateRequestMessage('narrative_language', 'must_be_unique');
@@ -245,6 +247,8 @@ class OrganizationBaseRequest extends FormRequest
      * @param $formBase
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getWarningForValue($formFields, $formBase): array
     {
@@ -292,6 +296,8 @@ class OrganizationBaseRequest extends FormRequest
      * @param $formBase
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getWarningForBudgetLine($formFields, $formBase): array
     {
@@ -381,7 +387,7 @@ class OrganizationBaseRequest extends FormRequest
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.required'] = translateRequestMessage('iso_field', 'is_required');
             $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = translateRequestMessage('iso_field', 'must_be_a_date');
-            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.period_start_end'] = trans('requests.the_midfix_suffix', ['midfix'=>trans('common.period'), 'suffix'=>trans('requests.must_not_be_longer_than_1_year')]);
+            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.period_start_end'] = translateMidfixSuffix('common.period', 'requests.must_not_be_longer_than_1_year');
         }
 
         return $messages;
@@ -424,7 +430,7 @@ class OrganizationBaseRequest extends FormRequest
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.required'] = translateRequestMessage('iso_date_field_symbol', 'is_required');
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = translateRequestMessage('iso_date_field_symbol', 'must_be_a_date');
             $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = translateRequestMessage('iso_date_field_symbol', 'must_be_a_date_after_period_start');
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.period_start_end'] = trans('requests.the_midfix_suffix', ['midfix'=>trans('common.period'), 'suffix'=>trans('requests.must_not_be_longer_than_1_year')]);
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.period_start_end'] = translateMidfixSuffix('common.period', 'requests.must_not_be_longer_than_1_year');
         }
 
         return $messages;
@@ -437,6 +443,8 @@ class OrganizationBaseRequest extends FormRequest
      * @param $parentFormBase
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getWarningForBudgetOrExpenseLineValue($formField, $formBase, $parentFormBase): array
     {
@@ -482,6 +490,8 @@ class OrganizationBaseRequest extends FormRequest
      * @param $formBase
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getWarningForBudgetOrExpenseLineNarrative($formFields, $formBase): array
     {

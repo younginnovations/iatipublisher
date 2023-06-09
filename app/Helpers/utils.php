@@ -266,3 +266,8 @@ if (!function_exists('generateRandomCharacters')) {
         return substr(str_shuffle('0123456789abcdefghilkmnopqrstuvwxyz'), 0, $length);
     }
 }
+
+function sentenceToSnakecase($string)
+{
+    return str_replace(' ', '_', $string);
+}

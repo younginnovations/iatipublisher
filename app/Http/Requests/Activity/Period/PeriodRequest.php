@@ -48,12 +48,12 @@ class PeriodRequest extends ActivityBaseRequest
      * @param array $formFields
      * @param bool $fileUpload
      * @param array $indicator
-     * @param array $periodBase
+     * @param $periodBase
      * @param $indicatorId
      *
-     * @throws BindingResolutionException
-     *
      * @return array
+     *
+     *@throws BindingResolutionException
      */
     public function getWarningForPeriod(array $formFields, bool $fileUpload = false, array $indicator = [], $periodBase = [], $indicatorId = null): array
     {
@@ -81,9 +81,7 @@ class PeriodRequest extends ActivityBaseRequest
      * @param array $formFields
      * @param bool $fileUpload
      * @param array $indicator
-     * @param array $periodBase
-     *
-     * @throws BindingResolutionException
+     * @param $periodBase
      *
      * @return array
      */
@@ -180,6 +178,7 @@ class PeriodRequest extends ActivityBaseRequest
      *
      * @param $formFields
      * @param $periodType
+     * @param $periodBase
      *
      * @return array
      */
@@ -204,6 +203,7 @@ class PeriodRequest extends ActivityBaseRequest
      *
      * @param $formFields
      * @param $periodType
+     * @param $periodBase
      *
      * @return array
      */
@@ -240,14 +240,14 @@ class PeriodRequest extends ActivityBaseRequest
                 $periodType,
                 $periodStartKey
             )]
-                = trans('requests.date_field_symbol', ['suffix'=>trans('requests.suffix.must_be_a_proper_date')]);
+                = translateRequestMessage('date_field_symbol', 'must_be_a_proper_date');
 
             $messages[sprintf(
                 '%s.%s.date.after',
                 $periodType,
                 $periodStartKey
             )]
-                = trans('requests.the_iso_date_field_after');
+                = translateRequestMessage('the_iso_date_field_after');
 
             $messages[sprintf(
                 '%s.%s.date.date_greater_than',
@@ -261,7 +261,7 @@ class PeriodRequest extends ActivityBaseRequest
                 $periodType,
                 $periodStartKey
             )]
-                = trans('requests.the_iso_date_field_difference');
+                = translateRequestMessage('the_iso_date_field_difference');
         }
 
         return $messages;
@@ -331,8 +331,6 @@ class PeriodRequest extends ActivityBaseRequest
      * @param $fileUpload
      * @param $indicator
      *
-     * @throws BindingResolutionException
-     *
      * @return array
      */
     protected function getErrorsForTarget($formFields, $valueType, $fileUpload, $indicator): array
@@ -388,7 +386,7 @@ class PeriodRequest extends ActivityBaseRequest
         foreach ($formFields as $targetIndex => $target) {
             $targetForm = sprintf('%s.%s', $valueType, $targetIndex);
 
-            $messages[sprintf('%s.%s.value.numeric', $valueType, $targetIndex)] = trans('requests.value_field_symbol', ['suffix'=>trans('requests.suffix.must_be_numeric')]);
+            $messages[sprintf('%s.%s.value.numeric', $valueType, $targetIndex)] = translateRequestMessage('value_field_symbol', 'must_be_numeric');
 
             $narrativeMessages = $this->getMessagesForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm));
 
@@ -403,9 +401,9 @@ class PeriodRequest extends ActivityBaseRequest
             }
 
             if ($indicatorMeasureType['non_qualitative']) {
-                $messages[sprintf('%s.%s.value', $valueType, $targetIndex)] = trans('requests.value_must_be_filled');
+                $messages[sprintf('%s.%s.value', $valueType, $targetIndex)] = translateRequestMessage('value_must_be_filled');
             } elseif ($indicatorMeasureType['qualitative'] && !empty($target['value'])) {
-                $messages[sprintf('%s.%s.value.qualitative_empty', $valueType, $targetIndex)] = trans('requests.value_must_be_omitted');
+                $messages[sprintf('%s.%s.value.qualitative_empty', $valueType, $targetIndex)] = translateRequestMessage('value_must_be_omitted');
             }
         }
 

@@ -183,24 +183,24 @@ class RecipientCountryRequest extends ActivityBaseRequest
      */
     public function getMessagesForRecipientCountry(array $formFields): array
     {
-        $messages = ['recipient_country.already_in_transactions' => trans('requests.alt_recipient_country', ['suffix'=>trans('requests.suffix.already_defined_in_transaction')])];
+        $messages = ['recipient_country.already_in_transactions' => translateRequestMessage('alt_recipient_country', 'already_defined_in_transaction')];
 
         foreach ($formFields as $recipientCountryIndex => $recipientCountry) {
             $recipientCountryForm = 'recipient_country.' . $recipientCountryIndex;
-            $messages[sprintf('%s.country_code.in', $recipientCountryForm)] = trans('requests.recipient_country', ['suffix'=>trans('requests.suffix.code_is_invalid')]);
+            $messages[sprintf('%s.country_code.in', $recipientCountryForm)] = translateRequestMessage('recipient_country', 'code_is_invalid');
             $messages[sprintf('%s.country_code.duplicate_country_code', $recipientCountryForm)] = 'The Country Code cannot be redundant.';
-            $messages[$recipientCountryForm . '.percentage.numeric'] = trans('requests.recipient_country_percentage', ['suffix'=>trans('requests.suffix.must_be_a_number')]);
-            $messages[$recipientCountryForm . '.percentage.max'] = trans('requests.recipient_country_percentage', ['suffix'=>trans('requests.suffix.cannot_be_greater_than_100')]);
-            $messages[$recipientCountryForm . '.percentage.sum_exceeded'] = trans('requests.the_sum_of_recipient');
+            $messages[$recipientCountryForm . '.percentage.numeric'] = translateRequestMessage('recipient_country_percentage', 'must_be_a_number');
+            $messages[$recipientCountryForm . '.percentage.max'] = translateRequestMessage('recipient_country_percentage', 'cannot_be_greater_than_100');
+            $messages[$recipientCountryForm . '.percentage.sum_exceeded'] = translateRequestMessage('the_sum_of_recipient');
             $messages[$recipientCountryForm . '.percentage.min'] = translateRequestMessage('recipient_country_percentage', 'must_be_atleast_0');
-            $messages[$recipientCountryForm . '.percentage.region_percentage_complete'] = trans('requests.recipient_region_percentage_already_100') . ' ' . trans('requests.the_sum_of_recipient_country_and_recipient_region');
+            $messages[$recipientCountryForm . '.percentage.region_percentage_complete'] = translateRequestMessage('recipient_region_percentage_already_100') . ' ' . translateRequestMessage('the_sum_of_recipient_country_and_recipient_region');
             $narrativeMessages = $this->getMessagesForNarrative($recipientCountry['narrative'], $recipientCountryForm);
 
             foreach ($narrativeMessages as $key => $item) {
                 $messages[$key] = $item;
             }
-            $messages[$recipientCountryForm . '.percentage.in'] = trans('requests.the_sum_of_recipient_regions_and_recipient_country');
-            $messages[$recipientCountryForm . '.percentage.allocated_country_percent'] = trans('requests.the_sum_of_recipient_regions_and_recipient_country');
+            $messages[$recipientCountryForm . '.percentage.in'] = translateRequestMessage('the_sum_of_recipient_regions_and_recipient_country');
+            $messages[$recipientCountryForm . '.percentage.allocated_country_percent'] = translateRequestMessage('the_sum_of_recipient_regions_and_recipient_country');
         }
 
         return $messages;

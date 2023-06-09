@@ -11,6 +11,7 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use JsonException;
 
 /**
  * Class TransactionRequest.
@@ -37,7 +38,7 @@ class TransactionRequest extends ActivityBaseRequest
      *
      * @return array
      * @throws BindingResolutionException
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function rules(): array
     {
@@ -67,9 +68,12 @@ class TransactionRequest extends ActivityBaseRequest
      * @param array $formFields
      * @param bool $fileUpload
      * @param array $activityData
+     * @param array $multipleTransactions
      *
      * @return array
-     * @throws BindingResolutionException|\JsonException
+     *
+     * @throws BindingResolutionException
+     * @throws JsonException
      */
     public function getWarningForTransaction(array $formFields, bool $fileUpload = false, array $activityData = [], array $multipleTransactions = []): array
     {
@@ -109,7 +113,9 @@ class TransactionRequest extends ActivityBaseRequest
      * @param array $activityData
      *
      * @return array
+     *
      * @throws BindingResolutionException
+     * @throws JsonException
      */
     public function getErrorsForTransaction(array $formFields, bool $fileUpload = false, array $activityData = []): array
     {
@@ -271,6 +277,8 @@ class TransactionRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getCriticalValueRules(array $formFields): array
     {
@@ -385,7 +393,7 @@ class TransactionRequest extends ActivityBaseRequest
      * @param array $transactions
      *
      * @return array
-     * @throws BindingResolutionException|\JsonException
+     * @throws BindingResolutionException|JsonException
      */
     public function getSectorsRules(array $formFields, bool $fileUpload, array $activitySectors, array $transactions = []): array
     {
@@ -467,13 +475,16 @@ class TransactionRequest extends ActivityBaseRequest
      * @param array $activitySectors
      *
      * @return array
-     * @throws BindingResolutionException
+     *
+     * @throws JsonException
      */
     public function getCriticalSectorsRules(array $formFields, bool $fileUpload, array $activitySectors): array
     {
         if (empty($formFields)) {
             return [];
         }
+
+        $rules = [];
 
         foreach ($formFields as $sectorIndex => $sector) {
             $sectorForm = sprintf('sector.%s', $sectorIndex);
@@ -507,8 +518,8 @@ class TransactionRequest extends ActivityBaseRequest
     public function getSectorsMessages(array $formFields): array
     {
         $messages = [
-            'sector.already_in_activity' => trans('requests.sector_has_already_been_declared'),
-            'sector.sector_required' => trans('requests.you_have_declared_sector'),
+            'sector.already_in_activity' => translateRequestMessage('sector_has_already_been_declared'),
+            'sector.sector_required' => translateRequestMessage('you_have_declared_sector'),
         ];
 
         if (empty($formFields)) {
@@ -568,6 +579,8 @@ class TransactionRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getErrorsForProviderOrg(array $formFields): array
     {
@@ -641,6 +654,8 @@ class TransactionRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getErrorsForReceiverOrg(array $formFields): array
     {
@@ -750,7 +765,8 @@ class TransactionRequest extends ActivityBaseRequest
      * @param array $activityRecipientRegions
      *
      * @return array
-     * @throws BindingResolutionException
+     *
+     * @throws JsonException
      */
     public function getErrorsForRecipientRegion(array $formFields, bool $fileUpload, array $activityRecipientRegions): array
     {
@@ -789,8 +805,8 @@ class TransactionRequest extends ActivityBaseRequest
     public function getMessagesForRecipientRegion(array $formFields): array
     {
         $messages = [
-            'recipient_region.already_in_activity' => trans('requests.recipient_region_or_recipient_country_already_added'),
-            'recipient_region.country_or_region' => trans('requests.you_must_add_either_or'),
+            'recipient_region.already_in_activity' => translateRequestMessage('recipient_region_or_recipient_country_already_added'),
+            'recipient_region.country_or_region' => translateRequestMessage('you_must_add_either_or'),
         ];
 
         if (!$formFields) {
@@ -880,7 +896,8 @@ class TransactionRequest extends ActivityBaseRequest
      * @param array $activityRecipientCountries
      *
      * @return array
-     * @throws BindingResolutionException
+     *
+     * @throws JsonException
      */
     public function getErrorsForRecipientCountry(array $formFields, bool $fileUpload, array $activityRecipientCountries): array
     {
@@ -913,8 +930,8 @@ class TransactionRequest extends ActivityBaseRequest
     public function getMessagesForRecipientCountry(array $formFields): array
     {
         $messages = [
-            'recipient_country.already_in_activity' => trans('requests.recipient_region_or_recipient_country_already_added'),
-            'recipient_country.country_or_region' => trans('requests.you_must_add_either_or'),
+            'recipient_country.already_in_activity' => translateRequestMessage('recipient_region_or_recipient_country_already_added'),
+            'recipient_country.country_or_region' => translateRequestMessage('you_must_add_either_or'),
         ];
 
         if (!$formFields) {

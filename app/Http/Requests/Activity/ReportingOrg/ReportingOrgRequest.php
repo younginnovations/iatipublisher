@@ -6,6 +6,7 @@ namespace App\Http\Requests\Activity\ReportingOrg;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 use Illuminate\Support\Arr;
+use JsonException;
 
 /**
  * Class ReportingOrgRequest.
@@ -24,7 +25,7 @@ class ReportingOrgRequest extends ActivityBaseRequest
      * Get the validation rules that apply to the request.
      *
      * @return array
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function rules(): array
     {
@@ -53,7 +54,7 @@ class ReportingOrgRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function getCriticalErrorsForReportingOrganization(array $formFields):array
     {
@@ -136,22 +137,22 @@ class ReportingOrgRequest extends ActivityBaseRequest
     public function getMessagesForReportingOrganization(array $formFields): array
     {
         $messages = [];
-        $messages['reporting_org.size'] = trans('requests.reporting_org', ['suffix'=>trans('requests.suffix.should_not_have_multiple_values')]);
+        $messages['reporting_org.size'] = translateRequestMessage('reporting_org', 'should_not_have_multiple_values');
         $reportingOrganization = $formFields[0];
         $reportingOrganizationIndex = 0;
         $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
 
-        $messages[$reportingOrganizationForm . '.ref.must_match'] = trans('requests.the_reference_of_reporting_org_must_match');
+        $messages[$reportingOrganizationForm . '.ref.must_match'] = translateRequestMessage('the_reference_of_reporting_org_must_match');
         $messages[$reportingOrganizationForm . '.ref.not_regex'] = translateRequestMessage('reference_format', 'organisation_is_invalid');
-        $messages[$reportingOrganizationForm . '.type.must_match'] = trans('requests.the_type_of_reporting_org_must_match');
+        $messages[$reportingOrganizationForm . '.type.must_match'] = translateRequestMessage('the_type_of_reporting_org_must_match');
         $messages[$reportingOrganizationForm . '.type.in'] = translateRequestMessage('type_for', 'organisation_is_invalid');
 
         if ($this->reportingOrganisationInOrganisation) {
             $narrativeMessages = $this->getMessagesForNarrative($reportingOrganization['narrative'], $reportingOrganizationForm);
 
             foreach ($reportingOrganization['narrative'] as $index => $narrative) {
-                $narrativeMessages["$reportingOrganizationForm.narrative.$index.narrative.must_match"] = trans('requests.the_narrative_of_reporting_org_must_match');
-                $narrativeMessages["$reportingOrganizationForm.narrative.$index.language.must_match"] = trans('requests.the_language_of_reporting_org_must_match');
+                $narrativeMessages["$reportingOrganizationForm.narrative.$index.narrative.must_match"] = translateRequestMessage('the_narrative_of_reporting_org_must_match');
+                $narrativeMessages["$reportingOrganizationForm.narrative.$index.language.must_match"] = translateRequestMessage('the_language_of_reporting_org_must_match');
             }
 
             foreach ($narrativeMessages as $key => $item) {

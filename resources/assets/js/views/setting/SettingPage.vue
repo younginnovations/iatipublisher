@@ -73,7 +73,7 @@
           :class="userRole !== 'admin' && 'cursor-not-allowed'"
           class="ghost-btn mr-4 sm:mr-8"
           href="/activities"
-          >Cancel</a
+          >{{ language.button_lang.cancel }}</a
         >
         <button
           :class="userRole !== 'admin' && 'cursor-not-allowed'"

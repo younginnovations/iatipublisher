@@ -2,7 +2,6 @@
 
 use App\Http\Middleware\RedirectIfAuthenticated;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,21 +45,8 @@ Route::get('/iati-standard', [App\Http\Controllers\Web\WebController::class, 'ia
 Route::get('/support', [App\Http\Controllers\Web\WebController::class, 'support'])->name('support');
 
 Route::get('lang/{lang}', static function ($lang) {
-    $url = url();
     if (in_array($lang, ['en', 'fr', 'es'])) {
         session()->put('locale', $lang);
-    }
-
-    $baseRoutes = ['activities', 'users', 'organisation', 'list-organisations', 'setting'];
-
-    foreach ($baseRoutes as $baseRoute) {
-        if (Str::contains($url->previous(), $baseRoute)) {
-            if ($baseRoute === 'organisation' && auth()->user()->role_id === 1) {
-                return redirect(url()->to('/list-organisations'));
-            }
-
-            return redirect(url()->to("/$baseRoute"));
-        }
     }
 
     return redirect()->back();

@@ -23,13 +23,13 @@
           </li>
           <li>
             <a id="import-activity" href="/import" :class="liClass">{{
-              language.common_lang.import_activities
+              language.common_lang.import_activities_from_csv
             }}</a>
           </li>
           <li>
-            <a id="import-xls" href="/import/xls" :class="liClass"
-              >Import activities from .XLS</a
-            >
+            <a id="import-xls" href="/import/xls" :class="liClass">
+              {{ language.common_lang.import_activities_from_xls }}
+            </a>
           </li>
         </ul>
       </div>

@@ -1,6 +1,6 @@
 <?php
 return array (
-  'about_iati_publisher' => 'À PROPOS DE IATI Publisher',
+  'about_iati_publisher' => 'À propose de IATI Publisher',
   'what_is_iati_publisher_header' => 'Qu’est-ce que IATI Publisher ?',
   'what_is_iati_publisher_description' =>
   array (
@@ -21,7 +21,7 @@ return array (
       ),
     ),
     'two' => 'IATI Publisher a été conçu pour aider les organisations publiant un petit nombre d’activités dans le secteur du développement et de l’aide humanitaire. Une « activité » est un projet individuel ou une autre unité de travail en matière de développement ou d’aide humanitaire, déterminé par l’organisation qui publie les données. Les organisations publiant peu d’activités sont généralement des organisations de petite à moyenne taille.',
-    'three' => 'Il est recommandé aux grandes organisations, telles que les gouvernements donateurs et les organismes des Nations Unies proposant plus de 100 activités, de ne pas utiliser IATI Publisher. Ces organisations ont tout intérêt à opter pour une solution technique qui permet la publication de gros volumes de données. Envoyez un e-mail au service d’assistance de l’IITA pour en savoir plus :<a target="_blank" rel="noopener noreferrer" href="mailto: support@iatistandard.org">support@iatistandard.org </a>.',
+    'three' => 'Il est recommandé aux grandes organisations, telles que les gouvernements donateurs et les organismes des Nations Unies proposant plus de 100 activités, de ne pas utiliser IATI Publisher. Ces organisations ont tout intérêt à opter pour une solution technique qui permet la publication de gros volumes de données. Envoyez un e-mail au service d’assistance de l’IITA pour en savoir plus : <a target="_blank" rel="noopener noreferrer" href="mailto: support@iatistandard.org">support@iatistandard.org </a>.',
   ),
   'development_of_iati_header' => 'Développement de IATI Publisher',
   'development_of_iati_description' =>
