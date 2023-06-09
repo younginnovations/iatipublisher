@@ -1,12 +1,15 @@
 <template>
-  <div class="mt-6 w-full bg-white py-6 px-14">
+  <div
+    class="mt-6 w-full bg-white px-6 py-6"
+    :class="{ '!px-14': currentView !== 'user' }"
+  >
     <div v-if="currentView === 'user'">
       <h6 class="text-xs uppercase text-n-40">users by organisation</h6>
 
-      <table class="mt-2 w-full text-left">
+      <table class="mt-2 mb-8 w-full text-left">
         <thead class="bg-n-10 text-xs font-bold uppercase text-n-40">
           <tr>
-            <th><div class="py-3 px-8">Organisation</div></th>
+            <th><div class="min-w-[400px] py-3 px-8">Organisation</div></th>
             <th><div class="py-3 px-8">admin</div></th>
             <th><div class="py-3 px-8">general</div></th>
             <th><div class="py-3 px-8">active</div></th>
@@ -16,7 +19,7 @@
         </thead>
         <tbody>
           <tr
-            v-for="organisation in tableData"
+            v-for="organisation in tableData.data"
             :key="organisation.id"
             class="border-b border-n-20 text-sm text-bluecoral"
           >
@@ -55,6 +58,10 @@
           </tr>
         </tbody>
       </table>
+      <!-- <Pagination :data="tableData" @fetch-data="fetchTableData" /> -->
+      <p class="mt-10 text-xs italic text-n-40">
+        This widget is not affected by the date range
+      </p>
     </div>
 
     <div v-else>
@@ -183,6 +190,7 @@
 <script lang="ts" setup>
 import { ref, defineProps, watch, onMounted, inject, Ref } from 'vue';
 import { defineEmits } from 'vue';
+import Pagination from 'Components/DashboardPagination.vue';
 
 const emit = defineEmits(['tableNav']);
 
@@ -200,6 +208,7 @@ const publisherNavList = [
 ];
 
 const currentNavList = ref(publisherNavList);
+const currentpage = ref(1);
 const title = ref(currentNavList.value[0].label);
 onMounted(() => {
   console.log(props.tableData, 'as props');
@@ -242,7 +251,7 @@ const fetchTableData = (item) => {
   title.value = item.label;
   console.log(item, 'item');
   if (props.currentView === 'user') {
-    (item.label = 'user'), (item.apiParams = 'page/1');
+    (item.label = 'user'), (item.apiParams = `page/${currentpage.value}`);
   }
 
   emit('tableNav', item);

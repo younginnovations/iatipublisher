@@ -36,10 +36,17 @@
           <span>Users</span>
         </button>
       </div>
-      <div>
+      <div class="flex items-center space-x-2 outline">
         <DateRangeWidget
           :date-label="DateLabel"
           @trigger-set-date-range="setDateRangeDate"
+        />
+
+        <ButtonComponent
+          text="Download report"
+          class="p- bg-white"
+          type="secondary"
+          icon="download-file"
         />
       </div>
     </div>
@@ -58,6 +65,7 @@ import DashboardStatsSection from './DashboardStatsSection.vue';
 import DashboardListSection from './DashboardListSection.vue';
 import DateRangeWidget from 'Components/DateRangeWidget.vue';
 import { ref, onMounted, provide, watch } from 'vue';
+import ButtonComponent from 'Components/ButtonComponent.vue';
 import axios from 'axios';
 
 interface tableDataType {
@@ -161,7 +169,7 @@ const fetchTableData = () => {
       }
     }
     if (currentView.value === 'user') {
-      tableData.value = response.data.data;
+      tableData.value = response.data;
       console.log(tableData.value, 'users table data');
     }
   });
