@@ -10,6 +10,11 @@ use Illuminate\Support\Arr;
 
 trait IatiValidatorResponseTrait
 {
+    /**
+     * elements path to be replaced.
+     *
+     * @var array|string[]
+     */
     public array $multilevelElements = [
         '/activity/activityId/result/resultId/edit' => 'result',
         '/result/resultId/indicator/indicatorId/edit' => 'indicator',
@@ -18,9 +23,17 @@ trait IatiValidatorResponseTrait
     ];
 
     /**
+     * Pinpoint the error location and appends in the IATI validator response.
+     *
+     * @param $response
+     * @param $activity
+     *
+     * @return mixed
+     *
+     * @throws BindingResolutionException
      * @throws \JsonException
      */
-    public function addElementOnIatiValidatorResponse($response, $activity)
+    public function addElementOnIatiValidatorResponse($response, $activity): array
     {
         $response = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
         $errors = $response['errors'];
@@ -31,18 +44,36 @@ trait IatiValidatorResponseTrait
                 foreach ($error['details'] as $key => $detailedError) {
                     if (isset($detailedError['error']['line'])) {
                         $lineNumber = $detailedError['error']['line'];
-                        $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
-                        $errorLocation = str_replace('/', '>', getStringBetween($nodePath, '/', '/edit'));
+                        $nodePath = $this->getNodeByLineNumber($lineNumber + 1, $activity);
+
+                        if (strpos($nodePath, 'edit')) {
+                            $stringBetween = getStringBetween($nodePath, '/', '/edit');
+                        } else {
+                            $stringBetween = getStringBetween($nodePath, '/', '#');
+                        }
+
+                        $errorLocation = str_replace('/', '>', $stringBetween);
                         $error['context'][$key]['iati_path'] = $nodePath;
                         $error['context'][$key]['message'] = $errorLocation;
                     }
                 }
-            } elseif (isset($error['details']['xpathContext'])) {
-                $lineNumber = $error['details']['xpathContext']['lineNumber'];
-                $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
-                $errorLocation = str_replace('/', '>', getStringBetween($nodePath, '/', '/edit'));
-                $error['context'][0]['iati_path'] = $nodePath;
-                $error['context'][0]['message'] = $errorLocation;
+            } elseif (isset($error['details']['caseContext']['paths'])) {
+                foreach ($error['details']['caseContext']['paths'] as $caseContext => $detailedErrors) {
+                    if (isset($detailedErrors['lineNumber'])) {
+                        $lineNumber = $detailedErrors['lineNumber'];
+                        $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
+
+                        if (strpos($nodePath, 'edit')) {
+                            $stringBetween = getStringBetween($nodePath, '/', '/edit');
+                        } else {
+                            $stringBetween = getStringBetween($nodePath, '/', '#');
+                        }
+
+                        $errorLocation = str_replace('/', '>', $stringBetween);
+                        $error['context'][$caseContext]['iati_path'] = $nodePath;
+                        $error['context'][$caseContext]['message'] = $errorLocation;
+                    }
+                }
             }
             $updatedErrors[] = $error;
         }
@@ -83,7 +114,6 @@ trait IatiValidatorResponseTrait
         $xml = simplexml_load_string((string) $xmlFile);
         $xmlString = $xml->asXML();
         $xmlLines = explode("\n", $xmlString);
-        $lineNumber++;
 
         if ($lineNumber >= 1 && $lineNumber <= count($xmlLines)) {
             $parentNode = [];
@@ -188,7 +218,7 @@ trait IatiValidatorResponseTrait
             $url = array_flip($this->multilevelElements)['transaction'];
             $url = str_replace(['activityId', 'transactionId'], [$activityId, $transactionId], $url);
         } else {
-            $url = "/activity/activityId/$firstElementName/edit";
+            $url = "/activity/activityId/$firstElementName";
             $url = str_replace('activityId', (string) $activityId, $url);
         }
 
