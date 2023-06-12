@@ -16,11 +16,11 @@
       ></svg-vue>
     </div>
     <div class="errors__list">
-      <ul class="errors__list__error">
-        <li v-for="(error, e) in errors" :key="e" class="errors__list__item">
+      <ul>
+        <li v-for="(error, e) in errors" :key="e" class="errors__item">
           <div v-if="error.context.length > 1">
             {{ error.message }}
-            <ul class="errors__list__item__element">
+            <ul class="errors__element">
               <li v-for="(element, index) in error.context" :key="index">
                 <a :href="error.context[index].iati_path">{{
                   element.message
@@ -137,21 +137,21 @@ watch(
   &__list {
     @apply h-0 overflow-hidden px-4 transition-all duration-500;
 
-    &__error {
+    ul {
       @apply px-6;
     }
+  }
 
-    &__item {
-      @apply py-4 text-sm leading-normal;
+  &__item {
+    @apply py-4 text-sm leading-normal;
+  }
 
-      &__element {
-        @apply list-disc px-4 text-blue-50;
-      }
-    }
+  &__item:not(:last-child) {
+    @apply border-b border-n-20;
+  }
 
-    &__item:not(:last-child) {
-      @apply border-b border-n-20;
-    }
+  &__element {
+    @apply list-disc px-4 text-blue-50;
   }
 }
 </style>
