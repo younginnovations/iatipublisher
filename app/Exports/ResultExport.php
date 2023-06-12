@@ -40,9 +40,9 @@ class ResultExport implements WithMultipleSheets
      */
     protected array $mappingSets = [
         'result_mapper' => [
-           'result_identifier' => [
-               'activity_identifier' => 'result_code',
-           ],
+            'result_identifier' => [
+                'activity_identifier' => 'result_code',
+            ],
         ],
     ];
 
@@ -65,7 +65,9 @@ class ResultExport implements WithMultipleSheets
      * @var array|string[]
      */
     protected array $headerWithSingleLevel = [
-        'reference', 'category', 'language',
+        'reference',
+        'category',
+        'language',
     ];
 
     /**

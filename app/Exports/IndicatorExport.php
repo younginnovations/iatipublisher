@@ -282,6 +282,7 @@ class IndicatorExport implements WithMultipleSheets
                 $data = $chunkedResults->pluck('indicators', 'result_code')->toArray();
 
                 foreach ($data as $identifier => $datum) {
+                    // dump($data, $identifier, $resultMapper);
                     $resultIdentifier = $resultMapper[$identifier];
 
                     foreach ($datum as $row) {

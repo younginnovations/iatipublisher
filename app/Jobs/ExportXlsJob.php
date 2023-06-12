@@ -56,6 +56,13 @@ class ExportXlsJob implements ShouldQueue
     public array $requestData;
 
     /**
+     * Status id of download.
+     *
+     * @var int
+     */
+    public int $statusId;
+
+    /**
      * Stores result identifiers.
      *
      * @var array
@@ -77,15 +84,17 @@ class ExportXlsJob implements ShouldQueue
      *
      * @param $requestData
      * @param $authUser
+     * @param $statusId
      *
      * @throws BindingResolutionException
      *
      * @return void
      */
-    public function __construct($requestData, $authUser)
+    public function __construct($requestData, $authUser, $statusId)
     {
         $this->requestData = $requestData;
         $this->authUser = $authUser;
+        $this->statusId = $statusId;
         $this->downloadXlsService = app()->make(DownloadXlsService::class);
     }
 
@@ -154,7 +163,7 @@ class ExportXlsJob implements ShouldQueue
     {
         $activityExportObject = new ActivityExport($activities);
         $userId = $this->authUser['id'];
-        Excel::store($activityExportObject, "Xls/$userId/activity.xlsx", 'public', \Maatwebsite\Excel\Excel::XLSX);
+        Excel::store($activityExportObject, "Xls/$userId/$this->statusId/activity.xlsx", 'public', \Maatwebsite\Excel\Excel::XLSX);
         $this->incrementDownloadStatusFileCount();
     }
 
@@ -170,7 +179,7 @@ class ExportXlsJob implements ShouldQueue
         $resultExportObject = new ResultExport($activities);
         $this->resultIdentifiers = $resultExportObject->resultIdentifiers;
         $userId = $this->authUser['id'];
-        Excel::store($resultExportObject, "Xls/$userId/result.xlsx", 'public', \Maatwebsite\Excel\Excel::XLSX);
+        Excel::store($resultExportObject, "Xls/$userId/$this->statusId/result.xlsx", 'public', \Maatwebsite\Excel\Excel::XLSX);
         $this->incrementDownloadStatusFileCount();
     }
 
@@ -188,7 +197,7 @@ class ExportXlsJob implements ShouldQueue
         $indicatorExportObject = new IndicatorExport($activities, $this->resultIdentifiers);
         $this->indicatorIdentifier = $indicatorExportObject->indicatorIdentifier;
         $userId = $this->authUser['id'];
-        Excel::store($indicatorExportObject, "Xls/$userId/indicator.xlsx", 'public', \Maatwebsite\Excel\Excel::XLSX);
+        Excel::store($indicatorExportObject, "Xls/$userId/$this->statusId/indicator.xlsx", 'public', \Maatwebsite\Excel\Excel::XLSX);
         $this->incrementDownloadStatusFileCount();
     }
 
@@ -204,7 +213,7 @@ class ExportXlsJob implements ShouldQueue
         $indicatorIdentifier = $this->indicatorIdentifier;
         $periodExportObject = new PeriodExport($activities, $indicatorIdentifier);
         $userId = $this->authUser['id'];
-        Excel::store($periodExportObject, "Xls/$userId/period.xlsx", 'public', \Maatwebsite\Excel\Excel::XLSX);
+        Excel::store($periodExportObject, "Xls/$userId/$this->statusId/period.xlsx", 'public', \Maatwebsite\Excel\Excel::XLSX);
         $this->incrementDownloadStatusFileCount();
     }
 
@@ -232,7 +241,7 @@ class ExportXlsJob implements ShouldQueue
             'status' => 'failed',
         ];
         $this->downloadXlsService->updateDownloadStatus($userId, $downloadStatusData);
-        awsDeleteFile("Xls/$userId/status.json");
-        awsDeleteFile("Xls/$userId/cancelStatus.json");
+        awsDeleteFile("Xls/$userId/$this->statusId/status.json");
+        awsDeleteFile("Xls/$userId/$this->statusId/cancelStatus.json");
     }
 }

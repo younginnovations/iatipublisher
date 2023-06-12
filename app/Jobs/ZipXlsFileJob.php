@@ -29,13 +29,21 @@ class ZipXlsFileJob implements ShouldQueue
     protected int $userId;
 
     /**
+     * Status id of download.
+     *
+     * @var int
+     */
+    protected int $statusId;
+
+    /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($userId)
+    public function __construct($userId, $statusId)
     {
         $this->userId = $userId;
+        $this->statusId = $statusId;
     }
 
     /**
@@ -49,7 +57,7 @@ class ZipXlsFileJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $awsCancelStatusFile = awsGetFile("Xls/$this->userId/cancelStatus.json");
+        $awsCancelStatusFile = awsGetFile("Xls/$this->userId/$this->statusId/cancelStatus.json");
 
         if (!empty($awsCancelStatusFile)) {
             $this->fail();
@@ -58,14 +66,14 @@ class ZipXlsFileJob implements ShouldQueue
         $zip_file = "storage/app/public/Xls/$this->userId/xlsFiles.zip";
         $zip = new \ZipArchive();
         $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-        $zip->addFile(storage_path("app/public/Xls/$this->userId/activity.xlsx"), 'activity.xlsx');
-        $zip->addFile(storage_path("app/public/Xls/$this->userId/result.xlsx"), 'result.xlsx');
-        $zip->addFile(storage_path("app/public/Xls/$this->userId/indicator.xlsx"), 'indicator.xlsx');
-        $zip->addFile(storage_path("app/public/Xls/$this->userId/period.xlsx"), 'period.xlsx');
+        $zip->addFile(storage_path("app/public/Xls/$this->userId/$this->statusId/activity.xlsx"), 'activity.xlsx');
+        $zip->addFile(storage_path("app/public/Xls/$this->userId/$this->statusId/result.xlsx"), 'result.xlsx');
+        $zip->addFile(storage_path("app/public/Xls/$this->userId/$this->statusId/indicator.xlsx"), 'indicator.xlsx');
+        $zip->addFile(storage_path("app/public/Xls/$this->userId/$this->statusId/period.xlsx"), 'period.xlsx');
         $zip->close();
-        awsUploadFile("Xls/$this->userId/xlsFiles.zip", file_get_contents(storage_path("app/public/Xls/$this->userId/xlsFiles.zip")));
-        Storage::disk('public')->deleteDirectory("Xls/$this->userId");
-        awsUploadFile("Xls/$this->userId/status.json", json_encode(['success' => true, 'message' => 'Completed'], JSON_THROW_ON_ERROR));
+        awsUploadFile("Xls/$this->userId/$this->statusId/xlsFiles.zip", file_get_contents(storage_path("app/public/Xls/$this->userId/$this->statusId/xlsFiles.zip")));
+        Storage::disk('public')->deleteDirectory("Xls/$this->userId/$this->statusId");
+        awsUploadFile("Xls/$this->userId/$this->statusId/status.json", json_encode(['success' => true, 'message' => 'Completed'], JSON_THROW_ON_ERROR));
 
         $downloadXlsService = app()->make(DownloadXlsService::class);
         $downloadStatusData = [
@@ -90,7 +98,7 @@ class ZipXlsFileJob implements ShouldQueue
             'status' => 'failed',
         ];
         $downloadXlsService->updateDownloadStatus($userId, $downloadStatusData);
-        awsDeleteFile("Xls/$userId/status.json");
-        awsDeleteFile("Xls/$userId/cancelStatus.json");
+        awsDeleteFile("Xls/$userId/$this->statusId/status.json");
+        awsDeleteFile("Xls/$userId/$this->statusId/cancelStatus.json");
     }
 }

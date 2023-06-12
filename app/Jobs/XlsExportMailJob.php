@@ -42,19 +42,28 @@ class XlsExportMailJob implements ShouldQueue
     public int $userId;
 
     /**
+     * Stores statusID of download.
+     *
+     * @var int
+     */
+    public int $statusId;
+
+    /**
      * Create a new job instance.
      *
      * @param $email
      * @param $userId
      * @param $username
+     * @param $statusId
      *
      * @return void
      */
-    public function __construct($email, $username, $userId)
+    public function __construct($email, $username, $userId, $statusId)
     {
         $this->email = $email;
         $this->username = $username;
         $this->userId = $userId;
+        $this->statusId = $statusId;
     }
 
     /**
@@ -66,7 +75,7 @@ class XlsExportMailJob implements ShouldQueue
      */
     public function handle(): void
     {
-        if (empty(awsGetFile("Xls/$this->userId/cancelStatus.json"))) {
+        if (empty(awsGetFile("Xls/$this->userId/$this->statusId/cancelStatus.json"))) {
             User::sendXlsDownloadLink($this->email, $this->username, $this->userId);
         }
     }
