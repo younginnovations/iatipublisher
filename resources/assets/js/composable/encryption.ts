@@ -1,4 +1,4 @@
-import CryptoJS from "crypto-js";
+import CryptoJS from 'crypto-js';
 
 function encrypt(string: string, key: string) {
   const iv = CryptoJS.lib.WordArray.random(16);

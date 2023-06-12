@@ -61,7 +61,8 @@ export class DynamicField {
       index
         .closest('.form-field-group')
         .find(humanitarianScopeHideVocabularyUri)
-        .show().removeAttr('disabled')
+        .show()
+        .removeAttr('disabled')
         .closest('.form-field')
         .show();
     } else {
@@ -70,17 +71,18 @@ export class DynamicField {
         .find(humanitarianScopeHideVocabularyUri)
         .val('')
         .trigger('change')
-        .hide().attr('disabled', 'disabled')
+        .hide()
+        .attr('disabled', 'disabled')
         .closest('.form-field')
         .hide();
     }
   }
 
   /**
- * Humanitarian Scope Form Page
- *
- * @Logic hide vocabulary-uri field based on '@vocabulary' field value
- */
+   * Humanitarian Scope Form Page
+   *
+   * @Logic hide vocabulary-uri field based on '@vocabulary' field value
+   */
   public indicatorReferenceHideFieldUri() {
     const referenceVocabulary = $(
       'select[id^="reference"][id*="[vocabulary]"]'
@@ -112,14 +114,14 @@ export class DynamicField {
 
   // hide country budget based on vocabulary
   public indicatorReferenceHideField(index: JQuery, value: string) {
-    const referenceUri =
-      'input[id^="reference"][id*="[indicator_uri]"]';
+    const referenceUri = 'input[id^="reference"][id*="[indicator_uri]"]';
 
     if (value === '99') {
       index
         .closest('.form-field-group')
         .find(referenceUri)
-        .show().removeAttr('disabled')
+        .show()
+        .removeAttr('disabled')
         .closest('.form-field')
         .show();
     } else {
@@ -128,7 +130,8 @@ export class DynamicField {
         .find(referenceUri)
         .val('')
         .trigger('change')
-        .hide().attr('disabled', 'disabled')
+        .hide()
+        .attr('disabled', 'disabled')
         .closest('.form-field')
         .hide();
     }
@@ -165,18 +168,25 @@ export class DynamicField {
    */
   public hideCountryBudgetField(value: string) {
     const countryBudgetCodeInput =
-      'input[id^="budget_item"][id*="[code_text]"]',
+        'input[id^="budget_item"][id*="[code_text]"]',
       countryBudgetCodeSelect = 'select[id^="budget_item"][id*="[code]"]';
 
     if (value === '1') {
       $(countryBudgetCodeSelect)
         .val('')
-        .trigger('change').attr('disabled', 'disabled')
+        .trigger('change')
+        .attr('disabled', 'disabled')
         .closest('.form-field')
         .hide();
-      $(countryBudgetCodeInput).removeAttr('disabled').closest('.form-field').show();
+      $(countryBudgetCodeInput)
+        .removeAttr('disabled')
+        .closest('.form-field')
+        .show();
     } else {
-      $(countryBudgetCodeSelect).removeAttr('disabled').closest('.form-field').show();
+      $(countryBudgetCodeSelect)
+        .removeAttr('disabled')
+        .closest('.form-field')
+        .show();
       $(countryBudgetCodeInput)
         .val('')
         .trigger('change')
@@ -266,7 +276,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(earmarking_category)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -274,7 +285,8 @@ export class DynamicField {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -282,7 +294,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(earmarking_modality)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -290,7 +303,8 @@ export class DynamicField {
           .find(case3)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -299,7 +313,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(cash_and_voucher_modalities)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -307,7 +322,8 @@ export class DynamicField {
           .find(case4)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -315,7 +331,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(default_aid_type)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -323,7 +340,8 @@ export class DynamicField {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
     }
@@ -352,7 +370,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(earmarking_category)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -360,7 +379,8 @@ export class DynamicField {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -368,7 +388,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(earmarking_modality)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -376,7 +397,8 @@ export class DynamicField {
           .find(case3)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -385,7 +407,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(cash_and_voucher_modalities)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -393,7 +416,8 @@ export class DynamicField {
           .find(case4)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -401,7 +425,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(aid_type)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -409,7 +434,8 @@ export class DynamicField {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
     }
@@ -458,7 +484,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(case1_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -466,7 +493,8 @@ export class DynamicField {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -475,7 +503,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(case2_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -483,7 +512,8 @@ export class DynamicField {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
     }
@@ -546,7 +576,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(case1_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -554,7 +585,8 @@ export class DynamicField {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -562,7 +594,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(case2_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -570,7 +603,8 @@ export class DynamicField {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -578,7 +612,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(case7_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -586,7 +621,8 @@ export class DynamicField {
           .find(case7)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -594,7 +630,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(case8_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -602,7 +639,8 @@ export class DynamicField {
           .find(case8)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -610,7 +648,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(case98_99_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -618,7 +657,8 @@ export class DynamicField {
           .find(case98_99)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -626,7 +666,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(case98_99_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -634,7 +675,8 @@ export class DynamicField {
           .find(case98_99)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -642,7 +684,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(default_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
 
@@ -651,7 +694,8 @@ export class DynamicField {
           .find(default_hide)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
     }
@@ -692,8 +736,10 @@ export class DynamicField {
   public hideRecipientRegionField(index: JQuery, value: string) {
     const case1_show = 'select[id*="[region_code]"]',
       case2_show = 'input[id*="[custom_code]"], input[id*="[code]"]',
-      case99_show = 'input[id*="[custom_code]"],input[id*="[vocabulary_uri]"], input[id*="[code]"]',
-      case1 = 'input[id*="[custom_code]"],input[id*="[vocabulary_uri]"],input[id*="[code]"]',
+      case99_show =
+        'input[id*="[custom_code]"],input[id*="[vocabulary_uri]"], input[id*="[code]"]',
+      case1 =
+        'input[id*="[custom_code]"],input[id*="[vocabulary_uri]"],input[id*="[code]"]',
       case2 = 'select[id*="[region_code]"],input[id*="[vocabulary_uri]"]',
       case99 = 'select[id*="[region_code]"]';
 
@@ -702,7 +748,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(case1_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -710,7 +757,8 @@ export class DynamicField {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -718,7 +766,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(case2_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -726,7 +775,8 @@ export class DynamicField {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -734,7 +784,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(case99_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -742,7 +793,8 @@ export class DynamicField {
           .find(case99)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -750,7 +802,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(case2_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -758,7 +811,8 @@ export class DynamicField {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
     }
@@ -830,7 +884,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(case1_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -838,7 +893,8 @@ export class DynamicField {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -846,7 +902,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(case2_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -854,7 +911,8 @@ export class DynamicField {
           .find(case2)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -862,7 +920,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(case3_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -870,7 +929,8 @@ export class DynamicField {
           .find(case3)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -878,7 +938,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(case99_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -886,7 +947,8 @@ export class DynamicField {
           .find(case99)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
         break;
@@ -894,7 +956,8 @@ export class DynamicField {
         index
           .closest('.form-field-group')
           .find(case1_show)
-          .show().removeAttr('disabled')
+          .show()
+          .removeAttr('disabled')
           .closest('.form-field')
           .show();
         index
@@ -902,10 +965,10 @@ export class DynamicField {
           .find(case1)
           .val('')
           .trigger('change')
-          .hide().attr('disabled', 'disabled')
+          .hide()
+          .attr('disabled', 'disabled')
           .closest('.form-field')
           .hide();
     }
   }
 }
-
