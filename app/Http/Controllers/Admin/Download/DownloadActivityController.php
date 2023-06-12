@@ -148,9 +148,8 @@ class DownloadActivityController extends Controller
 
             //  first it clears all the files present on s3 like cancelStatus.json
             //  if cancelStatus.json is present then mail won't be sent to the user
-            // $this->clearPreviousXlsFilesOnS3($userId);
+//            $this->clearPreviousXlsFilesOnS3($userId);
             $status = $this->downloadXlsService->storeStatus($userId, $activityIds);
-
             awsUploadFile("Xls/$userId/" . $status['id'] . '/status.json', json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
             $this->processXlsExportJobs($request, $status['id']);
 
@@ -169,6 +168,7 @@ class DownloadActivityController extends Controller
      * First it generates all the 4 files , zips it , upload it to s3 and mail to the user.
      *
      * @param $request
+     * @param $statusId
      *
      * @return void
      */
@@ -196,7 +196,7 @@ class DownloadActivityController extends Controller
         $temporaryUrl = awsUrl("Xls/$userId/" . $status['id'] . '/xlsFiles.zip');
         header("Content-Disposition: attachment; filename=$fileName");
         header('Content-Type: application/zip');
-        $this->downloadXlsService->deleteDownloadStatus($userId);
+        $this->downloadXlsService->deleteDownloadStatus($userId, $status['id']);
         $file = readfile($temporaryUrl);
         $this->clearPreviousXlsFilesOnS3($userId, $status['id']);
 
@@ -261,7 +261,7 @@ class DownloadActivityController extends Controller
             $status = $this->downloadXlsService->getDownloadStatusByUserId($userId)?->toArray();
             $this->clearPreviousXlsFilesOnS3($userId, $status['id']);
             awsUploadFile("Xls/$userId/" . $status['id'] . '/cancelStatus.json', json_encode(['success' => true, 'message' => 'Cancelled'], JSON_THROW_ON_ERROR));
-            $this->downloadXlsService->deleteDownloadStatus($userId);
+            $this->downloadXlsService->deleteDownloadStatus($userId, $status['id']);
 
             return response()->json(['success' => true, 'message' => 'Cancelled Successfully']);
         } catch (\Exception $e) {

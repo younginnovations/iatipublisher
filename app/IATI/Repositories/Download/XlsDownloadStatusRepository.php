@@ -77,12 +77,13 @@ class XlsDownloadStatusRepository extends Repository
      * Delete download status of user after completion.
      *
      * @param $userId
+     * @param $statusId
      *
      * @return bool
      */
-    public function deleteDownloadStatus($userId): bool
+    public function deleteDownloadStatus($userId, $statusId): bool
     {
-        return (bool) $this->model->where('user_id', $userId)->delete();
+        return (bool) $this->model->where('id', $statusId)->where('user_id', $userId)->delete();
     }
 
     /**
@@ -110,13 +111,14 @@ class XlsDownloadStatusRepository extends Repository
      * Increments file count after every file generates.
      *
      * @param $userId
+     * @param $statusId
      * @param $fileType
      *
      * @return void
      */
-    public function incrementFileCount($userId, $fileType): void
+    public function incrementFileCount($userId, $statusId, $fileType): void
     {
-        $status = $this->model->where('user_id', $userId)->where('type', $fileType)->first();
+        $status = $this->model->where('id', $statusId)->where('user_id', $userId)->where('type', $fileType)->first();
 
         if (!empty($status) && $status->file_count < 4) {
             $status->increment('file_count');
@@ -126,13 +128,13 @@ class XlsDownloadStatusRepository extends Repository
     /**
      * Updates download process of a user.
      *
-     * @param $userId
+     * @param $statusId
      * @param $data
      *
      * @return bool
      */
-    public function updateDownloadStatus($userId, $data): bool
+    public function updateDownloadStatus($statusId, $data): bool
     {
-        return (bool) $this->model->where('user_id', $userId)->update($data);
+        return (bool) $this->model->where('id', $statusId)->update($data);
     }
 }

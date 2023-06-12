@@ -224,7 +224,7 @@ class ExportXlsJob implements ShouldQueue
      */
     public function incrementDownloadStatusFileCount(): void
     {
-        $this->downloadXlsService->incrementFileCount($this->authUser['id']);
+        $this->downloadXlsService->incrementFileCount($this->authUser['id'], $this->statusId);
     }
 
     /**
@@ -240,7 +240,7 @@ class ExportXlsJob implements ShouldQueue
         $downloadStatusData = [
             'status' => 'failed',
         ];
-        $this->downloadXlsService->updateDownloadStatus($userId, $downloadStatusData);
+        $this->downloadXlsService->updateDownloadStatus($this->statusId, $downloadStatusData);
         awsDeleteFile("Xls/$userId/$this->statusId/status.json");
         awsDeleteFile("Xls/$userId/$this->statusId/cancelStatus.json");
     }

@@ -172,13 +172,13 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
      *
      * @param $email
      * @param $username
-     * @param $userId
+     * @param $statusId
      *
      * @return void
      *
      * @throws BindingResolutionException
      */
-    public static function sendXlsDownloadLink($email, $username, $userId): void
+    public static function sendXlsDownloadLink($email, $username, $statusId): void
     {
         $downloadXlsService = app()->make(DownloadXlsService::class);
         $mailDetails = [
@@ -189,7 +189,7 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
         $downloadStatusData = [
             'status' => 'completed',
         ];
-        $downloadXlsService->updateDownloadStatus($userId, $downloadStatusData);
+        $downloadXlsService->updateDownloadStatus($statusId, $downloadStatusData);
     }
 
     /**

@@ -76,7 +76,7 @@ class XlsExportMailJob implements ShouldQueue
     public function handle(): void
     {
         if (empty(awsGetFile("Xls/$this->userId/$this->statusId/cancelStatus.json"))) {
-            User::sendXlsDownloadLink($this->email, $this->username, $this->userId);
+            User::sendXlsDownloadLink($this->email, $this->username, $this->statusId);
         }
     }
 
@@ -94,6 +94,6 @@ class XlsExportMailJob implements ShouldQueue
             'status' => 'completed',
             'url' => route('admin.activities.download-xls'),
         ];
-        $downloadXlsService->updateDownloadStatus($this->userId, $downloadStatusData);
+        $downloadXlsService->updateDownloadStatus($this->statusId, $downloadStatusData);
     }
 }

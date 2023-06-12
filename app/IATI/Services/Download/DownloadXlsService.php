@@ -94,34 +94,35 @@ class DownloadXlsService
      *
      * @return void
      */
-    public function incrementFileCount($userId): void
+    public function incrementFileCount($userId, $statusId): void
     {
-        $this->xlsDownloadStatusRepository->incrementFileCount($userId, 'xls');
+        $this->xlsDownloadStatusRepository->incrementFileCount($userId, $statusId, 'xls');
     }
 
     /**
      * Update download status of a suer.
      *
-     * @param $userId
+     * @param $statusId
      * @param $data
      *
      * @return bool
      */
-    public function updateDownloadStatus($userId, $data): bool
+    public function updateDownloadStatus($statusId, $data): bool
     {
-        return $this->xlsDownloadStatusRepository->updateDownloadStatus($userId, $data);
+        return $this->xlsDownloadStatusRepository->updateDownloadStatus($statusId, $data);
     }
 
     /**
      * Deletes download process of a user.
      *
      * @param $userId
+     * @param $statusId
      *
      * @return bool
      */
-    public function deleteDownloadStatus($userId): bool
+    public function deleteDownloadStatus($userId, $statusId): bool
     {
-        return $this->xlsDownloadStatusRepository->deleteDownloadStatus($userId);
+        return $this->xlsDownloadStatusRepository->deleteDownloadStatus($userId, $statusId);
     }
 
     /**

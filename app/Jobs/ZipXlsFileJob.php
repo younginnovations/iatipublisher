@@ -63,7 +63,7 @@ class ZipXlsFileJob implements ShouldQueue
             $this->deleteJob();
         }
 
-        $zip_file = "storage/app/public/Xls/$this->userId/xlsFiles.zip";
+        $zip_file = "storage/app/public/Xls/$this->userId/$this->statusId/xlsFiles.zip";
         $zip = new \ZipArchive();
         $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
         $zip->addFile(storage_path("app/public/Xls/$this->userId/$this->statusId/activity.xlsx"), 'activity.xlsx');
@@ -79,7 +79,7 @@ class ZipXlsFileJob implements ShouldQueue
         $downloadStatusData = [
             'url' => route('admin.activities.download-xls'),
         ];
-        $downloadXlsService->updateDownloadStatus($this->userId, $downloadStatusData);
+        $downloadXlsService->updateDownloadStatus($this->statusId, $downloadStatusData);
     }
 
     /**
@@ -92,6 +92,10 @@ class ZipXlsFileJob implements ShouldQueue
      */
     public function failed(): void
     {
+        $downloadStatusData = [
+            'status' => 'failed',
+        ];
+        $this->updateDownloadStatus($downloadStatusData);
         $this->updateDownloadProcessJob();
     }
 
@@ -104,6 +108,8 @@ class ZipXlsFileJob implements ShouldQueue
      */
     public function deleteJob(): void
     {
+        $downloadXlsService = app()->make(DownloadXlsService::class);
+        $downloadXlsService->deleteDownloadStatus($this->userId, $this->statusId);
         $this->updateDownloadProcessJob();
         $this->delete();
     }
@@ -112,18 +118,20 @@ class ZipXlsFileJob implements ShouldQueue
      * Updates download process like status, delete files from aws.
      *
      * @return void
-     *
-     * @throws BindingResolutionException
      */
     public function updateDownloadProcessJob(): void
     {
-        $downloadXlsService = app()->make(DownloadXlsService::class);
         $userId = $this->userId;
-        $downloadStatusData = [
-            'status' => 'failed',
-        ];
-        $downloadXlsService->updateDownloadStatus($userId, $downloadStatusData);
         awsDeleteFile("Xls/$userId/$this->statusId/status.json");
         awsDeleteFile("Xls/$userId/$this->statusId/cancelStatus.json");
+    }
+
+    /**
+     * @throws BindingResolutionException
+     */
+    public function updateDownloadStatus($downloadStatusData): void
+    {
+        $downloadXlsService = app()->make(DownloadXlsService::class);
+        $downloadXlsService->updateDownloadStatus($this->statusId, $downloadStatusData);
     }
 }
