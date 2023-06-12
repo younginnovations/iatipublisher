@@ -163,7 +163,7 @@ class ExportXlsJob implements ShouldQueue
     {
         $activityExportObject = new ActivityExport($activities);
         $userId = $this->authUser['id'];
-        Excel::store($activityExportObject, "Xls/$userId/$this->statusId/activity.xlsx", 'public', \Maatwebsite\Excel\Excel::XLSX);
+        Excel::store($activityExportObject, "Xls/$userId/$this->statusId/activity.xlsx", 's3', \Maatwebsite\Excel\Excel::XLSX);
         $this->incrementDownloadStatusFileCount();
     }
 
@@ -179,7 +179,7 @@ class ExportXlsJob implements ShouldQueue
         $resultExportObject = new ResultExport($activities);
         $this->resultIdentifiers = $resultExportObject->resultIdentifiers;
         $userId = $this->authUser['id'];
-        Excel::store($resultExportObject, "Xls/$userId/$this->statusId/result.xlsx", 'public', \Maatwebsite\Excel\Excel::XLSX);
+        Excel::store($resultExportObject, "Xls/$userId/$this->statusId/result.xlsx", 's3', \Maatwebsite\Excel\Excel::XLSX);
         $this->incrementDownloadStatusFileCount();
     }
 
@@ -197,7 +197,7 @@ class ExportXlsJob implements ShouldQueue
         $indicatorExportObject = new IndicatorExport($activities, $this->resultIdentifiers);
         $this->indicatorIdentifier = $indicatorExportObject->indicatorIdentifier;
         $userId = $this->authUser['id'];
-        Excel::store($indicatorExportObject, "Xls/$userId/$this->statusId/indicator.xlsx", 'public', \Maatwebsite\Excel\Excel::XLSX);
+        Excel::store($indicatorExportObject, "Xls/$userId/$this->statusId/indicator.xlsx", 's3', \Maatwebsite\Excel\Excel::XLSX);
         $this->incrementDownloadStatusFileCount();
     }
 
@@ -213,7 +213,7 @@ class ExportXlsJob implements ShouldQueue
         $indicatorIdentifier = $this->indicatorIdentifier;
         $periodExportObject = new PeriodExport($activities, $indicatorIdentifier);
         $userId = $this->authUser['id'];
-        Excel::store($periodExportObject, "Xls/$userId/$this->statusId/period.xlsx", 'public', \Maatwebsite\Excel\Excel::XLSX);
+        Excel::store($periodExportObject, "Xls/$userId/$this->statusId/period.xlsx", 's3', \Maatwebsite\Excel\Excel::XLSX);
         $this->incrementDownloadStatusFileCount();
     }
 

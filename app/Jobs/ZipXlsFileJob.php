@@ -63,16 +63,20 @@ class ZipXlsFileJob implements ShouldQueue
             $this->deleteJob();
         }
 
-        $zip_file = "storage/app/public/Xls/$this->userId/$this->statusId/xlsFiles.zip";
+        $zip_file = "storage/app/public/Xls/$this->userId/xlsFiles.zip";
         $zip = new \ZipArchive();
         $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-        $zip->addFile(storage_path("app/public/Xls/$this->userId/$this->statusId/activity.xlsx"), 'activity.xlsx');
-        $zip->addFile(storage_path("app/public/Xls/$this->userId/$this->statusId/result.xlsx"), 'result.xlsx');
-        $zip->addFile(storage_path("app/public/Xls/$this->userId/$this->statusId/indicator.xlsx"), 'indicator.xlsx');
-        $zip->addFile(storage_path("app/public/Xls/$this->userId/$this->statusId/period.xlsx"), 'period.xlsx');
+        $activityFile = awsUrl("Xls/$this->userId/$this->statusId/activity.xlsx");
+        $resultFile = awsUrl("Xls/$this->userId/$this->statusId/result.xlsx");
+        $indicatorFile = awsUrl("Xls/$this->userId/$this->statusId/indicator.xlsx");
+        $periodFile = awsUrl("Xls/$this->userId/$this->statusId/period.xlsx");
+        $zip->addFromString('activity.xlsx', file_get_contents($activityFile));
+        $zip->addFromString('result.xlsx', file_get_contents($resultFile));
+        $zip->addFromString('indicator.xlsx', file_get_contents($indicatorFile));
+        $zip->addFromString('period.xlsx', file_get_contents($periodFile));
         $zip->close();
-        awsUploadFile("Xls/$this->userId/$this->statusId/xlsFiles.zip", file_get_contents(storage_path("app/public/Xls/$this->userId/$this->statusId/xlsFiles.zip")));
-        Storage::disk('public')->deleteDirectory("Xls/$this->userId/$this->statusId");
+        awsUploadFile("Xls/$this->userId/$this->statusId/xlsFiles.zip", file_get_contents(storage_path("app/public/Xls/$this->userId/xlsFiles.zip")));
+        Storage::disk('public')->deleteDirectory("Xls/$this->userId");
         awsUploadFile("Xls/$this->userId/$this->statusId/status.json", json_encode(['success' => true, 'message' => 'Completed'], JSON_THROW_ON_ERROR));
 
         $downloadXlsService = app()->make(DownloadXlsService::class);
