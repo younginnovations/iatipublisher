@@ -60,7 +60,7 @@ class ZipXlsFileJob implements ShouldQueue
         $awsCancelStatusFile = awsGetFile("Xls/$this->userId/$this->statusId/cancelStatus.json");
 
         if (!empty($awsCancelStatusFile)) {
-            $this->fail();
+            $this->deleteJob();
         }
 
         $zip_file = "storage/app/public/Xls/$this->userId/xlsFiles.zip";
@@ -91,6 +91,31 @@ class ZipXlsFileJob implements ShouldQueue
      * @return void
      */
     public function failed(): void
+    {
+        $this->updateDownloadProcessJob();
+    }
+
+    /**
+     * Deletes job if cancel status.
+     *
+     * @return void
+     *
+     * @throws BindingResolutionException
+     */
+    public function deleteJob(): void
+    {
+        $this->updateDownloadProcessJob();
+        $this->delete();
+    }
+
+    /**
+     * Updates download process like status, delete files from aws.
+     *
+     * @return void
+     *
+     * @throws BindingResolutionException
+     */
+    public function updateDownloadProcessJob(): void
     {
         $downloadXlsService = app()->make(DownloadXlsService::class);
         $userId = $this->userId;
