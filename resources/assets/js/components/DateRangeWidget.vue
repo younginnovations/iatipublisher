@@ -51,10 +51,10 @@
       >
     </div>
     <div class="">
-      <div class="relative flex">
+      <div class="relative flex pr-4">
         <VueDatePicker
-          v-model="selectedDate"
           ref="datepicker"
+          v-model="selectedDate"
           range
           :preset-ranges="presetRanges"
           :enable-time-picker="false"

@@ -15,10 +15,10 @@
 
             <svg-vue icon="question-mark" class="text-base text-n-40" />
           </div>
-          <div class="my-1 text-2xl text-bluecoral">
+          <a class="my-1 text-2xl text-bluecoral" :href="`/list-organisations`">
             <!-- total count -->
             {{ total }}
-          </div>
+          </a>
         </div>
         <div class="border-b border-n-20 py-4">
           <div class="flex items-center justify-between">
@@ -34,16 +34,35 @@
             <svg-vue icon="question-mark" class="text-base text-n-40" />
           </div>
           <div>
-            <div class="mb-1 mt-2 text-2xl text-bluecoral">
+            <button
+              v-if="currentView === 'publisher'"
+              class="mb-1 mt-2 text-2xl text-bluecoral"
+              @click="proxyUser(lastRegistered.id)"
+            >
               <!-- latest registered -->
               {{
                 lastRegistered?.name
-                  ? lastRegistered?.name
+                  ? lastRegistered?.name[0].narrative
                   : lastRegistered?.publisher_name
                   ? lastRegistered?.publisher_name
                   : 'untitled'
               }}
-            </div>
+            </button>
+            <button
+              v-else
+              class="mb-1 mt-2 text-2xl text-bluecoral"
+              @click="proxyUser(lastPubActivityUpdate.id)"
+            >
+              <!-- latest registered -->
+
+              {{
+                lastPubActivityUpdate?.name
+                  ? lastPubActivityUpdate?.name[0].narrative
+                  : lastPubActivityUpdate?.publisher_name
+                  ? lastPubActivityUpdate?.publisher_name
+                  : 'untitled'
+              }}
+            </button>
             <div class="my-1 text-xs italic text-n-40">
               <!-- latest registered date -->
               Registered Date: {{ formatDate(lastRegistered?.created_at) }}
@@ -65,13 +84,14 @@
               <svg-vue icon="question-mark" class="text-base text-n-40" />
             </div>
           </div>
-          <div
+          <a
             v-if="currentView === 'publisher'"
             class="my-1 text-2xl text-bluecoral"
+            :href="`/users?status=0`"
           >
             <!-- total count -->
             {{ inactivePublisher }}
-          </div>
+          </a>
           <div v-else class="my-1 text-2xl text-bluecoral">
             <!-- total count -->
             {{ publisherWithoutActivity }}
@@ -100,7 +120,9 @@
           </thead>
           <tbody>
             <tr class="border-b border-n-20">
-              <td class="px-6 py-2.5 text-sm text-bluecoral">IATI Admin</td>
+              <td class="px-6 py-2.5 text-sm text-bluecoral">
+                <a :href="`/users?roles=2`"> IATI Admin</a>
+              </td>
               <td class="px-6 py-2.5 text-sm text-n-50">
                 {{ iatiAdminStats?.active }}
               </td>
@@ -113,7 +135,7 @@
             </tr>
             <tr class="border-b border-n-20">
               <td class="px-6 py-2.5 text-sm text-bluecoral">
-                Organisation Admin
+                <a :href="`/users?roles=3`">Organisation Admin</a>
               </td>
               <td class="px-6 py-2.5 text-sm text-n-50">
                 {{ orgAdminStats?.active }}
@@ -126,7 +148,9 @@
               </td>
             </tr>
             <tr class="border-b border-n-20">
-              <td class="px-6 py-2.5 text-sm text-bluecoral">General Users</td>
+              <td class="px-6 py-2.5 text-sm text-bluecoral">
+                <a :href="`/users?roles=4`">General Users</a>
+              </td>
               <td class="px-6 py-2.5 text-sm text-n-50">
                 {{ genUserStats?.active }}
               </td>
@@ -145,15 +169,42 @@
       </p>
     </div>
     <div class="flex w-full flex-col justify-between rounded bg-white p-4">
-      <div>
+      <div v-if="currentView === 'user'">
         <div class="flex space-x-2.5 px-2 text-xs uppercase text-n-40">
-          <p>Total No. of Publisher Registration</p>
+          <p>Total Number of Users</p>
+
           <svg-vue icon="question-mark" class="text-base text-n-40" />
         </div>
-        <div class="my-1 px-2 text-3xl text-bluecoral">1701</div>
+        <div class="my-1 px-2 text-3xl text-bluecoral">
+          {{
+            genUserStats?.active +
+            genUserStats?.disabled +
+            orgAdminStats?.active +
+            orgAdminStats?.disabled +
+            iatiAdminStats?.active +
+            iatiAdminStats?.disabled
+          }}
+        </div>
       </div>
-      <DashboardGraph />
+      <div v-else>
+        <div class="flex space-x-2.5 px-2 text-xs uppercase text-n-40">
+          <p v-if="currentView === 'publisher'">
+            Total No. of Publisher Registration
+          </p>
+          <p v-else>Total No. of Activities Added</p>
+
+          <svg-vue icon="question-mark" class="text-base text-n-40" />
+        </div>
+        <div class="my-1 px-2 text-3xl text-bluecoral">{{ total }}</div>
+      </div>
+      <DashboardGraph :current-view="currentView" />
     </div>
+    <Loader
+      v-if="loader.status"
+      :text="loader.text"
+      :class="{ 'animate-loader': loader }"
+      class="-translate-x-6 outline"
+    />
   </section>
 </template>
 <script lang="ts" setup>
@@ -161,6 +212,7 @@ import { ref, defineProps, onMounted, watch } from 'vue';
 import DashboardGraph from './DashboardGraph.vue';
 import axios from 'axios';
 import moment from 'moment';
+import Loader from 'Components/sections/ProgressLoader.vue';
 
 const props = defineProps({
   currentView: {
@@ -172,10 +224,12 @@ const total = ref();
 const inactivePublisher = ref();
 const publisherWithoutActivity = ref();
 const lastRegistered = ref();
+const lastPubActivityUpdate = ref();
+const loader = ref({ status: false, text: '' });
 
-const iatiAdminStats = ref();
-const orgAdminStats = ref();
-const genUserStats = ref();
+const iatiAdminStats = ref({ active: 0, disabled: 0 });
+const orgAdminStats = ref({ active: 0, disabled: 0 });
+const genUserStats = ref({ active: 0, disabled: 0 });
 
 onMounted(() => {
   fetchStatsData();
@@ -183,6 +237,25 @@ onMounted(() => {
 
 const formatDate = (date) => {
   return moment(date).format('MMMM DD, YYYY');
+};
+
+const proxyUser = (id: number) => {
+  console.log('proxy user', id);
+  loader.value.status = true;
+  loader.value.text = 'Proxy Login';
+  const endpoint = `/proxy-organisation/${id}`;
+
+  axios.get(endpoint).then((res) => {
+    const response = res.data;
+
+    if (response.success) {
+      setTimeout(() => {
+        window.location.replace('/activities');
+      }, 1000);
+    } else {
+      loader.value.status = false;
+    }
+  });
 };
 
 watch(
@@ -197,6 +270,8 @@ const fetchStatsData = () => {
     console.log(response);
     total.value = response.data.totalCount;
     lastRegistered.value = response.data.lastRegisteredPublisher;
+    lastPubActivityUpdate.value = response.data.lastUpdatedPublisher;
+
     if (props.currentView === 'publisher') {
       inactivePublisher.value = response.data.inActivePublisher;
     }

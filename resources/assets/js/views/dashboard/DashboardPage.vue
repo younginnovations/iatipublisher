@@ -36,7 +36,7 @@
           <span>Users</span>
         </button>
       </div>
-      <div class="flex items-center space-x-2 outline">
+      <div class="flex items-center space-x-2">
         <DateRangeWidget
           :date-label="DateLabel"
           @trigger-set-date-range="setDateRangeDate"
@@ -44,7 +44,6 @@
 
         <ButtonComponent
           text="Download report"
-          class="p- bg-white"
           type="secondary"
           icon="download-file"
         />
@@ -55,7 +54,7 @@
       :current-view="currentView"
       :table-data="tableData"
       :table-header="currentNav['label']"
-      @table-nav="(n) => handleChangeTableNav(n)"
+      @table-nav="(n, filter) => handleChangeTableNav(n, filter)"
     />
   </div>
 </template>
@@ -67,6 +66,7 @@ import DateRangeWidget from 'Components/DateRangeWidget.vue';
 import { ref, onMounted, provide, watch } from 'vue';
 import ButtonComponent from 'Components/ButtonComponent.vue';
 import axios from 'axios';
+import moment from 'moment';
 
 interface tableDataType {
   label: string;
@@ -75,25 +75,27 @@ interface tableDataType {
 const currentNav = ref({ label: 'Publisher Type', apiParams: 'type' });
 const tableData = ref<any>([]);
 const DateLabel = ref('Registered date:');
-const startDate = ref('');
-const endDate = ref('');
+const startDate = ref('1990-12-31');
+const endDate = ref(moment(new Date()).format('YYYY-MM-DD'));
 const graphDate = ref<string[]>([]);
 const graphAmount = ref<object[]>([]);
 
 const currentView = ref('publisher');
 const completeNess = ref();
-const handleChangeTableNav = (item) => {
+const handleChangeTableNav = (item, filter) => {
   currentNav.value = item;
-
-  fetchTableData();
+  console.log(filter.value, ';filter');
+  fetchTableData(filter.value);
 };
 
 onMounted(() => {
+  setDateRangeDate('1990-12-31', moment(new Date()).format('YYYY-MM-DD'));
   fetchTableData();
   fetchGraphData();
 });
 
 const graphDataFormatter = (item) => {
+  console.log('inside formatter', item);
   const monthConverter = (month) => {
     switch (month) {
       case '01':
@@ -126,8 +128,11 @@ const graphDataFormatter = (item) => {
     }
   };
   for (let x in item) {
+    console.log('formatting date');
     const data = {
-      x: x,
+      x: `${monthConverter(x.split('-')[1])} ${x.split('-')[2]} ${
+        x.split('-')[0]
+      } `,
       y: item[x],
     };
     graphAmount.value.push(data);
@@ -149,6 +154,7 @@ const fetchGraphData = () => {
     .get(`/dashboard/${currentView.value}/count/`, { params: params })
     .then((res) => {
       graphAmount.value.length = 0;
+      console.log('graph fetched');
       graphDataFormatter(res.data.data);
     });
 };
@@ -156,6 +162,8 @@ const fetchGraphData = () => {
 const setDateRangeDate = (start, end) => {
   startDate.value = start;
   endDate.value = end;
+  fetchTableData();
+  fetchGraphData();
 };
 
 const mapApiParamsToVariable = (item) => {
@@ -190,14 +198,18 @@ watch(
   }
 );
 
-const fetchTableData = () => {
+const fetchTableData = (filter = { orderBy: '', sort: '' }) => {
   let apiUrl = `/dashboard/${currentView.value}/${currentNav.value['apiParams']}`;
   let params = new URLSearchParams();
-  // if (startDate.value && endDate.value && currentNav.value.label !== 'user') {
-  //   apiUrl = `/dashboard/${currentView.value}/${currentNav.value['apiParams']}/date-range`;
-  //   params.append('start_date', startDate.value);
-  //   params.append('end_date', endDate.value);
-  // }
+  params.append('orderBy', filter.orderBy);
+  params.append('direction', filter.sort);
+  console.log(apiUrl);
+
+  if (startDate.value && endDate.value && currentNav.value.label !== 'user') {
+    apiUrl = `/dashboard/${currentView.value}/${currentNav.value['apiParams']}`;
+    params.append('start_date', startDate.value);
+    params.append('end_date', endDate.value);
+  }
   axios.get(apiUrl, { params: params }).then((res) => {
     let response = res.data;
 
@@ -205,26 +217,32 @@ const fetchTableData = () => {
       if (currentNav.value['apiParams'] !== 'setup') {
         tableData.value = [];
 
-        Object.keys(response.data?.codelist)?.map((key) => {
-          tableData.value.push({
-            label: response.data?.codelist[key],
-            id: key,
-            total: null,
+        response.data?.codelist &&
+          Object.keys(response.data?.codelist)?.map((key) => {
+            tableData.value.push({
+              label: response.data?.codelist[key],
+              id: key,
+              total: null,
+            });
           });
-        });
 
-        Object.keys(
-          response.data?.[mapApiParamsToVariable(currentNav.value['apiParams'])]
-        )?.map((key) => {
-          tableData.value.map((item, index) => {
-            if (item.id == key) {
-              tableData.value[index].total =
-                response.data?.[
-                  mapApiParamsToVariable(currentNav.value['apiParams'])
-                ][key];
-            }
+        response.data?.[
+          mapApiParamsToVariable(currentNav.value['apiParams'])
+        ] &&
+          Object.keys(
+            response.data?.[
+              mapApiParamsToVariable(currentNav.value['apiParams'])
+            ]
+          )?.map((key) => {
+            tableData.value.map((item, index) => {
+              if (item.id == key) {
+                tableData.value[index].total =
+                  response.data?.[
+                    mapApiParamsToVariable(currentNav.value['apiParams'])
+                  ][key];
+              }
+            });
           });
-        });
 
         tableData.value = tableData.value.filter(function (el) {
           return el.total != null;

@@ -421,10 +421,16 @@ const data = reactive({
   ],
   superadmin_menus: [
     {
+      name: 'Dashboard',
+      permalink: '/dashboard',
+      active: false,
+    },
+    {
       name: 'Organisation List',
       permalink: '/list-organisations',
       active: false,
     },
+
     {
       name: 'Users',
       permalink: '/users',
@@ -489,12 +495,15 @@ function changeActiveMenu() {
   if (path.includes('import')) {
     data.org_menus[3]['active'] = true;
   }
+  if (path.includes('dashboard')) {
+    data.superadmin_menus[0]['active'] = true;
+  }
   if (path.includes('users')) {
     data.org_menus[4]['active'] = true;
-    data.superadmin_menus[1]['active'] = true;
+    data.superadmin_menus[2]['active'] = true;
   }
   if (path.includes('list-organisations')) {
-    data.superadmin_menus[0]['active'] = true;
+    data.superadmin_menus[1]['active'] = true;
   }
   if (
     path.includes('system-version') ||

@@ -445,17 +445,19 @@
             </td>
             <td class="text-n-40">
               <div>
-                {{ data.country }}
+                {{ data['country'] }}
               </div>
             </td>
             <td class="text-n-40">
               <div>
                 <div class="pb-1">
-                  {{ dateFormat(data.created_at, 'MMMM, DD, YYYY') }}
+                  {{ dateFormat(data['created_at'], 'MMMM, DD, YYYY') }}
                 </div>
                 <div class="text-xs">
                   Previously
-                  {{ data.registration_type !== 'registry-wala' ? 'not' : '' }}
+                  {{
+                    data['registration_type'] !== 'registry-wala' ? 'not' : ''
+                  }}
                   registered in IATI platform
                 </div>
               </div>
@@ -463,9 +465,9 @@
             <td class="text-n-40">
               <div>
                 {{
-                  data.latest_logged_in_user
+                  data['latest_logged_in_user']
                     ? dateFormat(
-                        data.latest_logged_in_user.last_logged_in,
+                        data['latest_logged_in_user'].last_logged_in,
                         'MMMM, DD,YYYY'
                       )
                     : 'Not Available'
@@ -481,7 +483,7 @@
                   Last updated on:
                   {{
                     dateFormat(
-                      data.latest_updated_activity.updated_at,
+                      data['latest_updated_activity'].updated_at,
                       'MMMM, DD, YYYY'
                     )
                   }}
@@ -490,12 +492,12 @@
             </td>
             <td class="text-n-40">
               <div>
-                {{ data.publisher_type }}
+                {{ data['publisher_type'] }}
               </div>
             </td>
             <td class="text-n-40">
               <div>
-                {{ data.data_license }}
+                {{ data['data_license'] }}
               </div>
             </td>
             <td>
@@ -531,6 +533,7 @@ import {
   defineProps,
   watch,
   computed,
+  onUpdated,
 } from 'vue';
 import axios from 'axios';
 import MultiSelectWithSearch from 'Components/MultiSelectWithSearch.vue';
@@ -616,7 +619,25 @@ let dropdownRange = {
 };
 
 //lifecycle
-onMounted(async () => {
+onMounted(() => {
+  let filterparams =
+    window.location.href.toString().split('?')[1] &&
+    window.location.href.toString().split('?')[1].split('=');
+  console.log(filterparams, 'route');
+  if (filterparams) {
+    if (filterparams[0] === 'country') {
+      filter[filterparams[0] as string] = [filterparams[1]];
+    } else if (filterparams[0] === 'data-license') {
+      filter['dataLicense' as string] = [filterparams[1]];
+    } else if (filterparams[0] === 'type') {
+      filter['publisherType' as string] = [filterparams[1]];
+    } else if (filterparams[0] === 'completeness') {
+      filter[filterparams[0]] = filterparams[1].split('_').join(' ');
+    } else {
+      filter[filterparams[0]] = filterparams[1];
+    }
+  }
+  console.log(filter);
   fetchOrganisation(1);
 });
 
@@ -630,6 +651,7 @@ const fetchOrganisation = (active_page: number) => {
   if (currentURL.includes('?')) {
     queryString = window.location.search;
   }
+  active_page = active_page ?? 1;
   let endpoint = `/list-organisations/page/${active_page}${queryString}`;
 
   if (isFilterApplied.value) {
@@ -644,6 +666,10 @@ const fetchOrganisation = (active_page: number) => {
       }
     }
   }
+
+  onUpdated(() => {
+    console.log(filter);
+  });
 
   axios
     .get(endpoint, { params: isFilterApplied.value ? urlParams : '' })

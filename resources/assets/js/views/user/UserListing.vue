@@ -728,6 +728,20 @@ const ignoreToastUpdate = () => {
   });
 };
 
+onMounted(() => {
+  let filterparams =
+    window.location.href.toString().split('?')[1] &&
+    window.location.href.toString().split('?')[1].split('=');
+  console.log(filterparams, 'route');
+  if (filterparams) {
+    if (filterparams[0] === 'roles' || filterparams[0] === 'organization') {
+      filter[filterparams[0] as string] = [filterparams[1]];
+    } else {
+      filter[filterparams[0]] = filterparams[1];
+    }
+  }
+});
+
 onMounted(async () => {
   axios.get(`/users/page/1`).then((res) => {
     const response = res.data;
@@ -881,6 +895,7 @@ const updateUser = () => {
 watch(
   () => [filter.organization, filter.roles, filter.q, filter.status],
   () => {
+    console.log('watchers called', filter);
     fetchUsersList(usersData['current_page'], true);
   },
   { deep: true }
