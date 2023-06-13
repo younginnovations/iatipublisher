@@ -18,18 +18,18 @@
     <div class="errors__list">
       <ul>
         <li v-for="(error, e) in errors" :key="e" class="errors__item">
-          <div v-if="error.context.length > 1">
+          <div v-if="error.response.length > 1">
             {{ error.message }}
             <ul class="errors__element">
-              <li v-for="(element, index) in error.context" :key="index">
-                <a :href="error.context[index].iati_path">{{
+              <li v-for="(element, index) in error.response" :key="index">
+                <a :href="error.response[index].iati_path">{{
                   element.message
                 }}</a>
               </li>
             </ul>
           </div>
-          <div v-else-if="error.context.length === 1">
-            <a :href="error.context['0'].iati_path">{{ error.message }}</a>
+          <div v-else-if="error.response.length === 1">
+            <a :href="error.response['0'].iati_path">{{ error.message }}</a>
           </div>
           <div v-else>
             {{ error.message }}
