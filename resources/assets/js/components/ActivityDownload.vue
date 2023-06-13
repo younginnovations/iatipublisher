@@ -33,10 +33,20 @@
       v-if="xlsDownloadStatus != 'failed'"
       class="flex justify-between space-x-5"
     >
-      <p v-if="xlsDownloadStatus != 'completed'" class="text-sm text-n-40">
+      <p
+        v-if="
+          xlsDownloadStatus != 'completed' && xlsDownloadStatus != 'cancelled'
+        "
+        class="text-sm text-n-40"
+      >
         Preparing {{ fileCount ? fileCount : 0 }}/4 files for download
       </p>
-      <p v-else class="text-sm text-n-40">Zip File is Ready</p>
+      <p v-if="xlsDownloadStatus == 'cancelled'" class="text-sm text-n-40">
+        Preparing for Cancel
+      </p>
+      <p v-if="xlsDownloadStatus == 'completed'" class="text-sm text-n-40">
+        Zip File is Ready
+      </p>
 
       <spinnerLoader v-if="xlsDownloadStatus != 'completed'" />
       <button
@@ -45,15 +55,6 @@
         @click="downloadFile"
       >
         download
-      </button>
-      <button
-        v-if="
-          xlsDownloadStatus == 'completed' && xlsDownloadStatus !== 'cancelled'
-        "
-        class="text-xs font-bold uppercase text-bluecoral hover:text-bluecoral"
-        @click="cancelDownload"
-      >
-        cancel
       </button>
     </div>
   </div>
