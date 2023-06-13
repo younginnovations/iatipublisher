@@ -66,14 +66,20 @@ class ZipXlsFileJob implements ShouldQueue
         $zip_file = "storage/app/public/Xls/$this->userId/xlsFiles.zip";
         $zip = new \ZipArchive();
         $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-        $activityFile = awsUrl("Xls/$this->userId/$this->statusId/activity.xlsx");
-        $resultFile = awsUrl("Xls/$this->userId/$this->statusId/result.xlsx");
-        $indicatorFile = awsUrl("Xls/$this->userId/$this->statusId/indicator.xlsx");
-        $periodFile = awsUrl("Xls/$this->userId/$this->statusId/period.xlsx");
-        $zip->addFromString('activity.xlsx', file_get_contents($activityFile));
-        $zip->addFromString('result.xlsx', file_get_contents($resultFile));
-        $zip->addFromString('indicator.xlsx', file_get_contents($indicatorFile));
-        $zip->addFromString('period.xlsx', file_get_contents($periodFile));
+        $activityFile = awsGetFile("Xls/$this->userId/$this->statusId/activity.xlsx");
+        localUploadFile("public/Xls/$this->userId/$this->statusId/activity.xlsx", $activityFile);
+        $resultFile = awsGetFile("Xls/$this->userId/$this->statusId/result.xlsx");
+        localUploadFile("public/Xls/$this->userId/$this->statusId/result.xlsx", $resultFile);
+        $indicatorFile = awsGetFile("Xls/$this->userId/$this->statusId/indicator.xlsx");
+        localUploadFile("public/Xls/$this->userId/$this->statusId/indicator.xlsx", $indicatorFile);
+        $periodFile = awsGetFile("Xls/$this->userId/$this->statusId/period.xlsx");
+        localUploadFile("public/Xls/$this->userId/$this->statusId/period.xlsx", $periodFile);
+
+        $zip->addFile(storage_path("app/public/Xls/$this->userId/$this->statusId/activity.xlsx"), 'activity.xlsx');
+        $zip->addFile(storage_path("app/public/Xls/$this->userId/$this->statusId/result.xlsx"), 'result.xlsx');
+        $zip->addFile(storage_path("app/public/Xls/$this->userId/$this->statusId/indicator.xlsx"), 'indicator.xlsx');
+        $zip->addFile(storage_path("app/public/Xls/$this->userId/$this->statusId/period.xlsx"), 'period.xlsx');
+
         $zip->close();
         awsUploadFile("Xls/$this->userId/$this->statusId/xlsFiles.zip", file_get_contents(storage_path("app/public/Xls/$this->userId/xlsFiles.zip")));
         Storage::disk('public')->deleteDirectory("Xls/$this->userId");
