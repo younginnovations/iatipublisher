@@ -127,7 +127,6 @@ class DownloadActivityController extends Controller
         try {
             $userId = auth()->user()->id;
             $status = $this->downloadXlsService->getDownloadStatusByUserId($userId)?->toArray();
-            // $awsStatusFile = awsGetFile("Xls/$userId/status.json");
 
             if (!empty($status)) {
                 return response()->json(['success' => false, 'message' => 'Previous Download on process']);
@@ -146,16 +145,13 @@ class DownloadActivityController extends Controller
                 return response()->json(['success' => false, 'message' => 'No activities selected.']);
             }
 
-            //  first it clears all the files present on s3 like cancelStatus.json
-            //  if cancelStatus.json is present then mail won't be sent to the user
-//            $this->clearPreviousXlsFilesOnS3($userId);
             $status = $this->downloadXlsService->storeStatus($userId, $activityIds);
             awsUploadFile("Xls/$userId/" . $status['id'] . '/status.json', json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
             $this->processXlsExportJobs($request, $status['id']);
 
             return response()->json(['success' => true, 'message' => 'Xls Export on process.']);
         } catch (\Exception $e) {
-            logger()->error($e);
+            logger()->error($e->getMessage());
             $this->downloadXlsService->deleteDownloadStatus(auth()->user()->id);
             $this->cancelXlsDownload();
 

@@ -137,6 +137,12 @@ class ZipXlsFileJob implements ShouldQueue
     }
 
     /**
+     * Updates on going download status.
+     *
+     * @param $downloadStatusData
+     *
+     * @return void
+     *
      * @throws BindingResolutionException
      */
     public function updateDownloadStatus($downloadStatusData): void
