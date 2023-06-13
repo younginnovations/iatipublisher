@@ -53,8 +53,8 @@ trait IatiValidatorResponseTrait
                         }
 
                         $errorLocation = str_replace('/', '>', $stringBetween);
-                        $error['context'][$key]['iati_path'] = $nodePath;
-                        $error['context'][$key]['message'] = $errorLocation;
+                        $error['response'][$key]['iati_path'] = $nodePath;
+                        $error['response'][$key]['message'] = $errorLocation;
                     }
                 }
             } elseif (isset($error['details']['caseContext']['paths'])) {
@@ -70,10 +70,23 @@ trait IatiValidatorResponseTrait
                         }
 
                         $errorLocation = str_replace('/', '>', $stringBetween);
-                        $error['context'][$caseContext]['iati_path'] = $nodePath;
-                        $error['context'][$caseContext]['message'] = $errorLocation;
+                        $error['response'][$caseContext]['iati_path'] = $nodePath;
+                        $error['response'][$caseContext]['message'] = $errorLocation;
                     }
                 }
+            } elseif (isset($error['details']['xpathContext']['lineNumber'])) {
+                $lineNumber = $error['details']['xpathContext']['lineNumber'];
+                $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
+
+                if (strpos($nodePath, 'edit')) {
+                    $stringBetween = getStringBetween($nodePath, '/', '/edit');
+                } else {
+                    $stringBetween = getStringBetween($nodePath, '/', '#');
+                }
+
+                $errorLocation = str_replace('/', '>', $stringBetween);
+                $error['response'][0]['iati_path'] = $nodePath;
+                $error['response'][0]['message'] = $errorLocation;
             }
             $updatedErrors[] = $error;
         }

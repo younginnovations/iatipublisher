@@ -128,7 +128,7 @@ const issueType = ref();
  **/
 interface ErrorInterface {
   category: string;
-  context: [];
+  response: [];
   id: string;
   identifier: string;
   message: string;
