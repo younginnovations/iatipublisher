@@ -40,18 +40,20 @@
 
       <spinnerLoader v-if="xlsDownloadStatus != 'completed'" />
       <button
-        v-if="xlsDownloadStatus != 'completed'"
-        class="text-xs font-bold uppercase text-bluecoral hover:text-bluecoral"
-        @click="cancelDownload"
-      >
-        cancel
-      </button>
-      <button
-        v-else
+        v-if="xlsDownloadStatus == 'completed'"
         class="text-xs font-bold uppercase text-spring-50 hover:text-spring-50"
         @click="downloadFile"
       >
         download
+      </button>
+      <button
+        v-if="
+          xlsDownloadStatus == 'completed' && xlsDownloadStatus !== 'cancelled'
+        "
+        class="text-xs font-bold uppercase text-bluecoral hover:text-bluecoral"
+        @click="cancelDownload"
+      >
+        cancel
       </button>
     </div>
   </div>
@@ -121,11 +123,13 @@ const retryDownload = () => {
   axios.get(apiUrl).finally(() => (isLoading.value = false));
 };
 const cancelDownload = () => {
-  store.dispatch('updateCancelDownload', true);
-
-  store.dispatch('updateStartXlsDownload', false);
-
-  axios.get('/activities/cancel-xls-download');
+  xlsDownloadStatus.value = 'cancelled';
+  axios.get('/activities/cancel-xls-download').then((res) => {
+    if (res.data.success) {
+      store.dispatch('updateCancelDownload', true);
+      store.dispatch('updateStartXlsDownload', false);
+    }
+  });
 };
 
 const percentageWidth = computed(() => {
