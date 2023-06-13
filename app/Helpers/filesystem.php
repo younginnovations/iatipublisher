@@ -211,23 +211,3 @@ if (!function_exists('getFileNameExtension')) {
         return $explodedFileName[1] ?? null;
     }
 }
-
-if (!function_exists('getFileNameExtension')) {
-    /**
-     * Get extension from filename.
-     *
-     * @param $fileName
-     *
-     * @return string|null
-     */
-    function getFileNameExtension($fileName): ?string
-    {
-        if (empty($fileName)) {
-            return null;
-        }
-
-        $explodedFileName = explode('.', $fileName);
-
-        return $explodedFileName[1] ?? null;
-    }
-}

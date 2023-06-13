@@ -240,7 +240,7 @@ const bulkPublishStatus = () => {
       )
       .then((res) => {
         const response = res.data;
-        // console.log(response, 'polling bulkpublsh');
+
         if (!response.publishing) {
           clearInterval(intervalID);
         }

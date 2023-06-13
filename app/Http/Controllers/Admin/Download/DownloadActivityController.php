@@ -9,9 +9,6 @@ use App\IATI\Services\Audit\AuditService;
 use App\IATI\Services\Download\CsvGenerator;
 use App\IATI\Services\Download\DownloadActivityService;
 use App\IATI\Services\Download\DownloadXlsService;
-use App\Jobs\ExportXlsJob;
-use App\Jobs\XlsExportMailJob;
-use App\Jobs\ZipXlsFileJob;
 use App\XmlImporter\Foundation\Support\Providers\XmlServiceProvider;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -147,7 +144,7 @@ class DownloadActivityController extends Controller
 
             $status = $this->downloadXlsService->storeStatus($userId, $activityIds);
             awsUploadFile("Xls/$userId/" . $status['id'] . '/status.json', json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
-            $this->processXlsExportJobs($request, $status['id']);
+            $this->downloadXlsService->processXlsExportJobs($request, $status['id']);
 
             return response()->json(['success' => true, 'message' => 'Xls Export on process.']);
         } catch (\Exception $e) {
@@ -157,24 +154,6 @@ class DownloadActivityController extends Controller
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity Xls.']);
         }
-    }
-
-    /**
-     * Exports xls in queue.
-     * First it generates all the 4 files , zips it , upload it to s3 and mail to the user.
-     *
-     * @param $request
-     * @param $statusId
-     *
-     * @return void
-     */
-    public function processXlsExportJobs($request, $statusId): void
-    {
-        $authUser = auth()->user();
-        ExportXlsJob::withChain([
-            new ZipXlsFileJob($authUser->id, $statusId),
-            new XlsExportMailJob($authUser->email, $authUser->username, $authUser->id, $statusId),
-        ])->dispatch($request->all(), $authUser->toArray(), $statusId);
     }
 
     /**
@@ -194,7 +173,7 @@ class DownloadActivityController extends Controller
         header('Content-Type: application/zip');
         $this->downloadXlsService->deleteDownloadStatus($userId, $status['id']);
         $file = readfile($temporaryUrl);
-        $this->clearPreviousXlsFilesOnS3($userId, $status['id']);
+        $this->downloadXlsService->clearPreviousXlsFilesOnS3($userId, $status['id']);
 
         return $file;
     }
@@ -234,7 +213,7 @@ class DownloadActivityController extends Controller
             if (!empty($activities)) {
                 $userId = auth()->user()->id;
                 $status = $this->downloadXlsService->getDownloadStatusByUserId($userId)?->toArray();
-                $this->clearPreviousXlsFilesOnS3($userId, $status['id']);
+                $this->downloadXlsService->clearPreviousXlsFilesOnS3($userId, $status['id']);
                 $this->prepareActivityXls(request()->merge(['activities' => json_encode($activities, JSON_THROW_ON_ERROR)]));
             }
         } catch (\Exception $e) {
@@ -255,7 +234,7 @@ class DownloadActivityController extends Controller
         try {
             $userId = auth()->user()->id;
             $status = $this->downloadXlsService->getDownloadStatusByUserId($userId)?->toArray();
-            $this->clearPreviousXlsFilesOnS3($userId, $status['id']);
+            $this->downloadXlsService->clearPreviousXlsFilesOnS3($userId, $status['id']);
             awsUploadFile("Xls/$userId/" . $status['id'] . '/cancelStatus.json', json_encode(['success' => true, 'message' => 'Cancelled'], JSON_THROW_ON_ERROR));
             $this->downloadXlsService->deleteDownloadStatus($userId, $status['id']);
 
@@ -341,18 +320,5 @@ class DownloadActivityController extends Controller
         }
 
         return $queryParams;
-    }
-
-    /**
-     * @param $userId
-     * @param $statusId
-     *
-     * @return void
-     */
-    public function clearPreviousXlsFilesOnS3($userId, $statusId): void
-    {
-        awsDeleteFile("Xls/$userId/$statusId/xlsFiles.zip");
-        awsDeleteFile("Xls/$userId/$statusId/status.json");
-        awsDeleteFile("Xls/$userId/$statusId/cancelStatus.json");
     }
 }

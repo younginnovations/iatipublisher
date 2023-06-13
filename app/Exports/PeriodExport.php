@@ -154,6 +154,7 @@ class PeriodExport implements WithMultipleSheets
         foreach ($data as $key => $datum) {
             $sheets[] = new XlsExport(Arr::collapse($datum), $key, $xlsHeaders[$this->sheets[$key]], 'period');
         }
+
         $sheets[] = new OptionExport('period_options', 'Options');
 
         return $sheets;

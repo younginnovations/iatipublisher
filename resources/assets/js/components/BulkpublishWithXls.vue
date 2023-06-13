@@ -337,7 +337,6 @@ watch(
       publishingActivities: localStorage.getItem('publishingActivities') ?? {},
     });
     emptybulkPublishStatus();
-    console.log('bulkpublish length');
     bulkPublishStatus();
     Object.assign(
       publishingActivities,

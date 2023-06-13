@@ -7,6 +7,9 @@ namespace App\IATI\Services\Download;
 use App\IATI\Repositories\Activity\IndicatorRepository;
 use App\IATI\Repositories\Activity\ResultRepository;
 use App\IATI\Repositories\Download\XlsDownloadStatusRepository;
+use App\Jobs\ExportXlsJob;
+use App\Jobs\XlsExportMailJob;
+use App\Jobs\ZipXlsFileJob;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -155,5 +158,38 @@ class DownloadXlsService
     public function resetDownloadStatus(): ?array
     {
         return $this->xlsDownloadStatusRepository->resetDownloadStatus(auth()->user()->id, 'xls');
+    }
+
+    /**
+     * Deletes file from s3.
+     *
+     * @param $userId
+     * @param $statusId
+     *
+     * @return void
+     */
+    public function clearPreviousXlsFilesOnS3($userId, $statusId): void
+    {
+        awsDeleteFile("Xls/$userId/$statusId/xlsFiles.zip");
+        awsDeleteFile("Xls/$userId/$statusId/status.json");
+        awsDeleteFile("Xls/$userId/$statusId/cancelStatus.json");
+    }
+
+    /**
+     * Exports xls in queue.
+     * First it generates all the 4 files , zips it , upload it to s3 and mail to the user.
+     *
+     * @param $request
+     * @param $statusId
+     *
+     * @return void
+     */
+    public function processXlsExportJobs($request, $statusId): void
+    {
+        $authUser = auth()->user();
+        ExportXlsJob::withChain([
+            new ZipXlsFileJob($authUser->id, $statusId),
+            new XlsExportMailJob($authUser->email, $authUser->username, $authUser->id, $statusId),
+        ])->dispatch($request->all(), $authUser->toArray(), $statusId);
     }
 }

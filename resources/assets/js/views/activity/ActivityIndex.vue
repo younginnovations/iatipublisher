@@ -234,7 +234,6 @@ export default defineComponent({
         xlsData.value = Object.keys(res.data.status).length > 0;
 
         if (res?.data?.status?.status === 'completed') {
-          console.log('completed');
           uploadComplete.value = true;
         } else if (res?.data?.status?.status === 'failed') {
           xlsFailed.value = true;

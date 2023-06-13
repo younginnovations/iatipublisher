@@ -41,7 +41,6 @@ const downloadCompleted = ref(false);
 const cancelDownload = ref(false);
 const showBulkpublish = ref(true);
 const publishingActivities = ref<string[]>([]);
-console.log(publishingActivities.value);
 const bulkPublishLength = ref(0);
 const pa = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
@@ -90,7 +89,6 @@ onMounted(() => {
         publishingActivities.value.length > 0
       ) {
         supportButton.style.transform = 'translate(-350px ,0px)';
-        console.log('translate');
       }
 
       clearInterval(checkSupportButton);

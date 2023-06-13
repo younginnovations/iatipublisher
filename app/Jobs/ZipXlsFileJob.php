@@ -81,6 +81,7 @@ class ZipXlsFileJob implements ShouldQueue
         $zip->addFile(storage_path("app/public/Xls/$this->userId/$this->statusId/period.xlsx"), 'period.xlsx');
 
         $zip->close();
+
         awsUploadFile("Xls/$this->userId/$this->statusId/xlsFiles.zip", file_get_contents(storage_path("app/public/Xls/$this->userId/xlsFiles.zip")));
         Storage::disk('public')->deleteDirectory("Xls/$this->userId");
         awsUploadFile("Xls/$this->userId/$this->statusId/status.json", json_encode(['success' => true, 'message' => 'Completed'], JSON_THROW_ON_ERROR));
