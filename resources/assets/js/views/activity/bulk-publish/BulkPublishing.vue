@@ -270,10 +270,6 @@ const bulkPublishStatus = () => {
 };
 
 /**
- * Minimize or maximize window
- */
-const open = ref(true);
-/**
  * Closing window
  */
 const closeWindow = () => {
