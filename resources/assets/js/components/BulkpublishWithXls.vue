@@ -149,47 +149,71 @@ onMounted(() => {
   completed.value = paStorage.value.publishingActivities.status ?? 'processing';
   bulkPublishStatus();
 });
+
 const bulkPublishStatus = () => {
-  const intervalID = setInterval(() => {
-    axios.get(`/activities/bulk-publish-status`).then((res) => {
-      const response = res.data;
+  axios.get(`/activities/bulk-publish-status`).then((res) => {
+    const response = res.data;
 
-      if (!response.publishing) {
-        clearInterval(intervalID);
+    if ('data' in response) {
+      activities.value = response.data.activities;
+      completed.value = response.data.status;
+
+      // saving in local storage
+      paStorage.value.publishingActivities.activities =
+        response.data.activities;
+      paStorage.value.publishingActivities.status = response.data.status;
+      paStorage.value.publishingActivities.message = response.data.message;
+
+      if (response.data.status !== 'completed') {
+        pollingForBulkpublishData();
       }
-      if ('data' in response) {
-        activities.value = response.data.activities;
-        completed.value = response.data.status;
+    } else {
+      completed.value = 'completed';
+    }
+  });
 
-        // saving in local storage
-        paStorage.value.publishingActivities.activities =
-          response.data.activities;
-        paStorage.value.publishingActivities.status = response.data.status;
-        paStorage.value.publishingActivities.message = response.data.message;
+  const pollingForBulkpublishData = () => {
+    const intervalID = setInterval(() => {
+      axios.get(`/activities/bulk-publish-status`).then((res) => {
+        const response = res.data;
 
-        if (completed.value === 'completed') {
+        if (!response.publishing) {
           clearInterval(intervalID);
-
-          failedActivities(paStorage.value.publishingActivities.activities);
-          if (hasFailedActivities?.ids?.length > 0) {
-            refreshToastMsg.visibility = true;
-            refreshToastMsg.refreshMessageType = false;
-            refreshToastMsg.refreshMessage =
-              'Some activities have failed to publish. Refresh to see changes.';
-          } else {
-            refreshToastMsg.visibility = true;
-            refreshToastMsg.refreshMessage =
-              'Activity has been published successfully, refresh to see changes';
-            setTimeout(() => {
-              refreshToastMsg.visibility = false;
-            }, 10000);
-          }
         }
-      } else {
-        completed.value = 'completed';
-      }
-    });
-  }, 2000);
+        if ('data' in response) {
+          activities.value = response.data.activities;
+          completed.value = response.data.status;
+
+          // saving in local storage
+          paStorage.value.publishingActivities.activities =
+            response.data.activities;
+          paStorage.value.publishingActivities.status = response.data.status;
+          paStorage.value.publishingActivities.message = response.data.message;
+
+          if (completed.value === 'completed') {
+            clearInterval(intervalID);
+
+            failedActivities(paStorage.value.publishingActivities.activities);
+            if (hasFailedActivities?.ids?.length > 0) {
+              refreshToastMsg.visibility = true;
+              refreshToastMsg.refreshMessageType = false;
+              refreshToastMsg.refreshMessage =
+                'Some activities have failed to publish. Refresh to see changes.';
+            } else {
+              refreshToastMsg.visibility = true;
+              refreshToastMsg.refreshMessage =
+                'Activity has been published successfully, refresh to see changes';
+              setTimeout(() => {
+                refreshToastMsg.visibility = false;
+              }, 10000);
+            }
+          }
+        } else {
+          completed.value = 'completed';
+        }
+      });
+    }, 3000);
+  };
 };
 
 const retryPublishing = () => {

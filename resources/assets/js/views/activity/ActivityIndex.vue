@@ -150,6 +150,8 @@ export default defineComponent({
 
     // for publish button
     const toastMessage = reactive({
+      visibility: false,
+
       message: '',
       type: false,
     });

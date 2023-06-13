@@ -273,57 +273,6 @@ const bulkPublishStatus = () => {
  * Minimize or maximize window
  */
 const open = ref(true);
-const toggleWindow = (e: Event) => {
-  const currentTarget = e.currentTarget as HTMLElement;
-  const target = (
-    currentTarget.closest('#publishing_activities') as HTMLElement
-  ).querySelector<HTMLElement>('.bulk-activities');
-  const elHeight = target?.querySelector('div')?.clientHeight;
-
-  if (open.value) {
-    if (target != null) {
-      target.style.cssText = `height: ${elHeight}px;`;
-      setTimeout(function () {
-        target.style.cssText = `height: 0px; overflow: hidden;`;
-      }, 100);
-      open.value = false;
-      setTimeout(() => {
-        const supportButton: HTMLElement = document.querySelector(
-          '#launcher'
-        ) as HTMLElement;
-
-        if (supportButton !== null) {
-          supportButton.style.transform = 'translateX(0px)';
-          supportButton.style.transform = 'translateY(-20px)';
-        }
-      }, 400);
-    }
-  } else {
-    if (target != null) {
-      target.style.cssText = `height: ${elHeight}px; overflow:hidden;`;
-
-      setTimeout(function () {
-        target.style.cssText = `height: auto;`;
-      }, 600);
-      const supportButton: HTMLElement = document.querySelector(
-        '#launcher'
-      ) as HTMLElement;
-
-      if (
-        supportButton !== null &&
-        activities.value &&
-        Object.keys(activities.value).length > 0
-      ) {
-        supportButton.style.transform = 'translate(-350px ,-20px)';
-
-        supportButton.style.opacity = '1';
-      }
-
-      open.value = true;
-    }
-  }
-};
-
 /**
  * Closing window
  */
