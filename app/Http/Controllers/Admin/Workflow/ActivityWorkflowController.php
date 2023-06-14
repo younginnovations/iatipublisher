@@ -152,8 +152,8 @@ class ActivityWorkflowController extends Controller
             $response = $this->addElementOnIatiValidatorResponse($response, $activity);
             $this->apiLogService->store(generateApiInfo('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)], json_encode($response)));
 
-            if ($this->validatorService->updateOrCreateresponse($id, json_decode($response, true, 512, JSON_THROW_ON_ERROR))) {
-                return response()->json(json_decode($response, true, 512, JSON_THROW_ON_ERROR));
+            if ($this->validatorService->updateOrCreateresponse($id, $response)) {
+                return response()->json($response);
             }
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while validating activity.']);
@@ -161,6 +161,7 @@ class ActivityWorkflowController extends Controller
             if ($ex->getCode() === 422) {
                 $response = $ex->getResponse()->getBody()->getContents();
                 $response = $this->addElementOnIatiValidatorResponse($response, $activity);
+
                 $this->apiLogService->store(generateApiInfo('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)], json_encode($response)));
 
                 if ($this->validatorService->updateOrCreateResponse($id, $response)) {
