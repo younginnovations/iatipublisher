@@ -1,10 +1,12 @@
 <template>
   <h3 class="mb-4 text-lg font-medium">
     <svg-vue icon="alert" class="mr-2 inline text-crimson-40"></svg-vue>
-    <span class="font-bold">Another Bulk publish in progress</span>
+    <span class="font-bold">{{
+      language.common_lang.another_bulk_publish_in_progress
+    }}</span>
   </h3>
   <div class="fw-bold list-disc rounded-md bg-salmon-10 p-3 font-medium">
-    Activities being published:
+    {{ language.common_lang.activities_being_published }}
     <ul class="list-disc rounded-md bg-salmon-10 p-3 font-medium">
       <li
         v-for="(activity, index) in bulkPublishStatus"
@@ -28,8 +30,7 @@
         </span>
       </li>
     </ul>
-    Please wait for previous bulk publish to complete or cancel previous bulk
-    publish to continue this bulk publish.
+    {{ language.common_lang.please_wait_for_previous_to_complete }}
   </div>
 </template>
 
@@ -37,6 +38,7 @@
 import { onUnmounted, onMounted, inject } from 'vue';
 
 const bulkPublishStatus = inject('bulkPublishStatus') as object;
+const language = window['globalLang'];
 
 onMounted(() => {
   document.documentElement.style.overflow = 'hidden';

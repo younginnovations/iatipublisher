@@ -11,7 +11,10 @@
       <div class="mb-4 flex">
         <div class="title flex grow">
           <div class="title text-sm font-bold">
-            {{ elementName.toString().replace(/_/g, '-') }}
+            {{
+              language.elements_common_lang[elementName.toString()] ??
+              elementName.toString().replace(/_/g, '-')
+            }}
           </div>
         </div>
         <div class="icons flex items-center">
@@ -43,7 +46,13 @@
 
         <template v-else-if="elementName === 'humanitarian'">
           <div class="text-sm">
-            {{ data === '0' ? 'False' : data === '1' ? 'True' : 'Missing' }}
+            {{
+              data === '0'
+                ? language.common_lang.false
+                : data === '1'
+                ? language.common_lang.true
+                : language.common_lang.missing.default
+            }}
           </div>
         </template>
 
@@ -83,7 +92,9 @@
           <TiedStatus :data="elementData" />
         </template>
         <template v-else>
-          <div class="text-sm">{{ data ?? 'Missing' }}</div>
+          <div class="text-sm">
+            {{ data ?? language.common_lang.missing.default }}
+          </div>
         </template>
       </div>
     </div>
@@ -159,6 +170,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     let { data, types } = toRefs(props),
       elementData = data.value;
 
@@ -180,6 +192,7 @@ export default defineComponent({
       elementData,
       getLanguages,
       dateFormat,
+      language,
     };
   },
 });

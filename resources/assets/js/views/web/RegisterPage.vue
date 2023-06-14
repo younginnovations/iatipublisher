@@ -5,10 +5,9 @@
     <Loader v-if="isLoaderVisible" />
     <div class="section__container">
       <div class="section__title">
-        <h2>Create IATI Publisher Account</h2>
+        <h2>{{ language.register_lang.create_iati_publisher_header }}</h2>
         <p>
-          Register your organisation to start your IATI publishing journey by
-          creating an account in IATI publisher.
+          {{ language.register_lang.create_iati_publisher_subheader }}
         </p>
       </div>
       <div class="section__wrapper flex justify-center">
@@ -16,7 +15,8 @@
         <div v-else class="form input__field" @keyup.enter="goToNextForm">
           <aside class="mb-4 block border-b border-b-n-10 pb-4 xl:hidden">
             <span class="text-base font-bold"
-              >Step {{ getCurrentStep() }} out of 3</span
+              >{{ language.button_lang.step }} {{ getCurrentStep() }}
+              {{ language.button_lang.out_of }} 3</span
             >
             <ul class="relative mt-3 text-sm text-n-40">
               <li
@@ -67,18 +67,23 @@
             >
               <p class="mb-2 flex font-bold">
                 <svg-vue class="mr-2 text-xl" icon="warning" />
-                Sorry, the information you provided doesn’t match your IATI
-                Registry information.
+                {{ language.register_lang.information_doesnt_match_registry }}
               </p>
               <p class="ml-8 xl:mr-1">
-                Please note that if you’re an account holder in
+                {{ language.register_lang.if_you_are_account_holder }}
                 <span
-                  ><a href="https://iatiregistry.org/">IATI Registry</a></span
-                >, make sure your
+                  ><a href="https://iatiregistry.org/">{{
+                    language.common_lang.iati_registry
+                  }}</a></span
+                >, {{ language.register_lang.make_sure_your }}
                 <span class="font-bold"
-                  >Publisher Name, Publisher ID and IATI Organisation ID</span
+                  >{{ language.register_lang.publisher_name.label }},
+                  {{ language.register_lang.publisher_id.label }}
+                  {{ language.common_lang.and }} IATI
+                  {{ language.common_lang.organisation_id }}</span
                 >
-                match your IATI Registry Information. Contact
+                {{ language.register_lang.match_your_iati_registry_info }}.
+                {{ language.common_lang.contact }}
                 <span
                   ><a
                     class="text-bluecoral"
@@ -86,7 +91,7 @@
                     >support@iatistandard.org</a
                   ></span
                 >
-                for more details.
+                {{ language.common_lang.for_more_details }}.
               </p>
             </div>
             <div class="form__content">
@@ -166,16 +171,16 @@
               @click="goToPreviousForm()"
             >
               <svg-vue class="mr-3 cursor-pointer" icon="left-arrow" />
-              Go back
+              {{ language.button_lang.go_back }}
             </button>
             <span
               v-if="checkStep(1)"
               class="pb-4 text-sm font-normal text-n-40 sm:pb-0"
-              >Already have an account?
+              >{{ language.common_lang.already_have_account }}
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
-                >Sign In.</a
+                >{{ language.button_lang.sign_in }}.</a
               ></span
             >
             <button
@@ -183,17 +188,17 @@
               class="btn btn-next"
               @click="goToNextForm()"
             >
-              Next Step
+              {{ language.button_lang.next_step }}
               <svg-vue class="text-2xl" icon="right-arrow" />
             </button>
           </div>
           <div v-if="checkStep(2)" class="mt-6 text-center">
             <span class="text-sm font-normal text-n-40"
-              >Already have an account?
+              >{{ language.common_lang.already_have_account }}
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
-                >Sign In.</a
+                >{{ language.button_lang.sign_in }}.</a
               ></span
             >
           </div>
@@ -201,7 +206,8 @@
 
         <aside class="register__sidebar hidden xl:block">
           <span class="text-base font-bold"
-            >Step {{ getCurrentStep() }} out of 3</span
+            >{{ language.button_lang.step }} {{ getCurrentStep() }}
+            {{ language.button_lang.out_of }} 3</span
           >
           <ul class="relative mt-6 text-sm text-n-40">
             <li
@@ -274,6 +280,7 @@ export default defineComponent({
   },
 
   setup(props) {
+    const language = window['globalLang'];
     const step = ref(1);
     const publisherExists = ref(true);
     const isLoaderVisible = ref(false);
@@ -366,112 +373,105 @@ export default defineComponent({
 
     const registerForm = reactive({
       1: {
-        title: 'Publisher Information',
+        title: language.register_lang.publisher_information.label,
         is_complete: false,
-        description:
-          'This information will be used to create a Publisher in IATI Publisher',
-        hover_text:
-          'Provide information about your organisation. You will need to provide the same information that you used to create your Publisher Account on the IATI Registry (iatiregistry.org).',
+        description: language.register_lang.publisher_information.description,
+        hover_text: language.register_lang.publisher_information.hover_text,
         fields: {
           publisher_name: {
-            label: 'Publisher Name',
+            label: language.register_lang.publisher_name.label,
             name: 'publisher_name',
-            placeholder: 'Type your Publisher Name here',
+            placeholder: language.register_lang.publisher_name.placeholder,
             id: 'publisher-name',
             required: true,
-            hover_text: 'Provide the name of your organisation.',
+            hover_text: language.register_lang.publisher_name.hover_text,
             type: 'text',
             class: 'col-span-2 mb-4 lg:mb-2',
             help_text: '',
           },
           publisher_id: {
-            label: 'Publisher ID',
+            label: language.register_lang.publisher_id.label,
             name: 'publisher_id',
-            placeholder: 'Type your organisation ID here',
+            placeholder: language.register_lang.publisher_id.placeholder,
             id: 'publisher-id',
             required: true,
-            hover_text:
-              "This is the unique ID for your organisation that you created when you set up your IATI Registry Publisher Account. It should be a shorter version of your organisation's name, which will include lowercase letters and may include numbers, - (dash) or _ (underscore). For example nef_mali' for Near East Foundation Mali.",
+            hover_text: language.register_lang.publisher_id.hover_text,
             type: 'text',
             class: 'mb-4 lg:mb-2',
             help_text: '',
           },
           country: {
-            label: 'Country',
+            label: language.register_lang.country.label,
             name: 'country',
-            placeholder: 'Select a Country',
+            placeholder: language.register_lang.country.placeholder,
             id: 'country_select',
             required: false,
             type: 'select',
-            hover_text: 'Add the location of your organisation.',
+            hover_text: language.register_lang.country.hover_text,
             options: props.country,
             class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
           organization_registration_agency: {
-            label: 'Organisation Registration Agency',
+            label: language.register_lang.org_registration_agency.label,
             name: 'registration_agency',
-            placeholder: 'Select an Organisation Registration Agency',
+            placeholder:
+              language.register_lang.org_registration_agency.placeholder,
             id: 'registration-agency',
             required: true,
             hover_text:
-              'Provide the name of the agency in your country where you organisation is registered. If you do not know this information please email support@iatistandard.org.',
+              language.register_lang.org_registration_agency.hover_text,
             type: 'select',
             options: registration_agency,
             class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
           organization_registration_no: {
-            label: 'Organisation Registration Number',
+            label: language.register_lang.org_registration_no.label,
             name: 'registration_number',
-            placeholder: 'Type your Registration Number here',
+            placeholder: language.register_lang.org_registration_no.placeholder,
             id: 'registration-number',
             required: true,
-            hover_text:
-              'Add the registration number for your organisation that has been provided by the registration agency named above.',
+            hover_text: language.register_lang.org_registration_no.hover_text,
             type: 'text',
             class: 'mb-4 lg:mb-2',
-            help_text: 'for e.g. 123456',
+            help_text: `${language.register_lang.for_eg} 123456`,
           },
           iati_organizational_identifier: {
-            label: 'IATI Organisational Identifier',
+            label: language.register_lang.iati_org_identifier.label,
             name: 'identifier',
             placeholder: '',
             id: 'identifier',
             required: true,
-            hover_text:
-              'The Organisation Identifier is a unique code for your organisation. This is generated from the Organisation Registration Agency and Registration Number. For more information read: <a href="http://iatistandard.org/en/guidance/preparing-organisation/organisation-account/how-to-create-your-iati-organisation-identifier/" target="_blank">How to create your IATI organisation identifier.</a>',
+            hover_text: language.register_lang.iati_org_identifier.hover_text,
             type: 'text',
             class: 'mb-4 lg:mb-6',
-            help_text:
-              'This is autogenerated, please make sure to fill the above fields correctly.',
+            help_text: language.register_lang.iati_org_identifier.help_text,
           },
         },
       },
       2: {
-        title: 'Administrator Information',
+        title: language.register_lang.administrator_information.label,
         is_complete: false,
         description:
-          'This information will be used to create an admin account in IATI Publisher',
-        hover_text:
-          'Provide your information to create an admin account here on IATI Publisher.',
+          language.register_lang.administrator_information.register_description,
+        hover_text: language.register_lang.administrator_information.hover_text,
         fields: {
           username: {
-            label: 'Username',
+            label: language.register_lang.username.label,
             name: 'username',
-            placeholder: 'Type username here',
+            placeholder: language.register_lang.username.placeholder,
             id: 'username',
             required: true,
-            hover_text:
-              'You will need this later to login into IATI Publisher.',
+            hover_text: language.register_lang.username.hover_text,
             type: 'text',
             class: 'mb-4 lg:mb-2',
             help_text: '',
           },
           full_name: {
-            label: 'Full Name',
+            label: language.register_lang.fullname.label,
             name: 'full_name',
-            placeholder: 'Type your full name here',
+            placeholder: language.register_lang.fullname.placeholder,
             id: 'full-name',
             hover_text: '',
             required: true,
@@ -479,9 +479,9 @@ export default defineComponent({
             class: 'col-start-1 mb-4 lg:mb-2',
           },
           email: {
-            label: 'Email Address',
+            label: language.register_lang.email_address.label,
             name: 'email',
-            placeholder: 'Type valid email here',
+            placeholder: language.register_lang.email_address.placeholder,
             id: 'email',
             required: true,
             hover_text: '',
@@ -489,9 +489,9 @@ export default defineComponent({
             class: 'mb-4 lg:mb-2',
           },
           password: {
-            label: 'Password',
+            label: language.register_lang.password.label,
             name: 'password',
-            placeholder: 'Type password here',
+            placeholder: language.register_lang.password.placeholder,
             id: 'password',
             required: true,
             hover_text: '',
@@ -499,9 +499,9 @@ export default defineComponent({
             class: 'mb-4 lg:mb-2',
           },
           confirm_password: {
-            label: 'Confirm Password',
+            label: language.register_lang.password.confirm,
             name: 'password_confirmation',
-            placeholder: 'Type password here',
+            placeholder: language.register_lang.password.placeholder,
             id: 'password-confirmation',
             required: true,
             hover_text: '',
@@ -511,10 +511,9 @@ export default defineComponent({
         },
       },
       3: {
-        title: 'Email Verification',
+        title: language.register_lang.email_verification.title,
         is_complete: false,
-        description:
-          'Please verify and activate your IATI Publisher account through your provided email',
+        description: language.register_lang.email_verification.description,
       },
     });
 
@@ -654,6 +653,7 @@ export default defineComponent({
       checkStep,
       isTextField,
       props,
+      language,
     };
   },
 });

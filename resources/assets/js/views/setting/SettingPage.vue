@@ -2,12 +2,14 @@
   <section class="section-wrapper">
     <Loader v-if="loaderVisibility" />
     <div class="setting input__field">
-      <span class="text-xs font-bold text-n-40">Settings</span>
+      <span class="text-xs font-bold text-n-40">{{
+        language.settings_lang.settings_label
+      }}</span>
       <div class="flex items-center justify-between">
         <div class="my-2 flex items-center sm:mt-4 sm:mb-6">
           <a href="/activities"><svg-vue icon="left-arrow" /></a>
           <h2 class="ml-3 text-heading-5 font-bold text-n-50 sm:text-heading-4">
-            Settings
+            {{ language.settings_lang.settings_label }}
           </h2>
         </div>
         <div>
@@ -30,7 +32,7 @@
             }"
             @click="toggleTab('publish')"
           >
-            Publishing Settings
+            {{ language.settings_lang.publishing_settings_label }}
           </button>
           <button
             class="tab-btn"
@@ -39,7 +41,7 @@
             }"
             @click="toggleTab('default')"
           >
-            Default Values
+            {{ language.settings_lang.default_values_label }}
           </button>
         </div>
         <SettingPublishingForm
@@ -75,8 +77,8 @@
         >
           {{
             tab === 'publish'
-              ? 'Save publishing setting'
-              : 'Save default values'
+              ? language.button_lang.save_publishing_settings
+              : language.button_lang.save_default_values
           }}
         </button>
       </div>
@@ -130,6 +132,7 @@ export default defineComponent({
   },
 
   setup(props) {
+    const language = window['globalLang'];
     const tab = ref('publish');
     const store = useStore();
     const loaderVisibility = ref(false);
@@ -318,6 +321,7 @@ export default defineComponent({
       toastType,
       toggleTab,
       submitForm,
+      language,
     };
   },
 });

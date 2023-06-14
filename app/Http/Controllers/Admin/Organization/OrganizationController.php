@@ -11,6 +11,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -71,10 +72,11 @@ class OrganizationController extends Controller
     public function show(): View|RedirectResponse
     {
         try {
+            $currentLang = App::currentLocale();
             $toast['message'] = Session::has('error') ? Session::get('error') : (Session::get('success') ? Session::get('success') : '');
             $toast['type'] = Session::has('error') ? 'error' : 'success';
-            $elements = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
-            $elementGroups = json_decode(file_get_contents(app_path('Data/Organization/OrganisationElementsGroup.json')), true, 512, JSON_THROW_ON_ERROR);
+            $elements = translateJsonValues(json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR));
+            $elementGroups = json_decode(file_get_contents(app_path("Data/$currentLang/Organization/OrganisationElementsGroup.json")), true, 512, JSON_THROW_ON_ERROR);
             $types = $this->organizationService->getOrganizationTypes();
             $organization = $this->organizationService->getOrganizationData(Auth::user()->organization_id);
             $progress = $this->organizationService->organizationMandatoryCompletePercentage($organization);
@@ -87,7 +89,7 @@ class OrganizationController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while opening organization detail page.');
+            return redirect()->route('admin.activities.index')->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.opening'), 'suffix'=>trans('responses.org_detail')]));
         }
     }
 
@@ -145,7 +147,7 @@ class OrganizationController extends Controller
             }
         }
 
-        return ['message' => 'Filtered Agency successfully fetched', 'data' => $filtered_agency];
+        return ['message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.filtered_agency'), 'event'=>trans('events.fetched')])), 'data' => $filtered_agency];
     }
 
     /**
@@ -163,7 +165,7 @@ class OrganizationController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Publisher status successfully retrieved.',
+                'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.publisher_status'), 'suffix'=>trans('responses.retrieved')])),
                 'data' => ['publisher_active' => $status],
             ]);
         } catch (\Exception $e) {

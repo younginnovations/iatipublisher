@@ -6,8 +6,10 @@
     <Loader v-if="isLoaderVisible"></Loader>
 
     <div class="right__container flex w-full flex-col" @keyup.enter="login">
-      <h2 class="mb-2 hidden sm:block">Sign In.</h2>
-      <span class="text-n-40">Welcome back! Please enter your details.</span>
+      <h2 class="mb-2 hidden sm:block">{{ language.web_lang.sign_in }}.</h2>
+      <span class="text-n-40">{{
+        language.home.sign_in_section.welcome_back_label
+      }}</span>
       <div
         v-if="
           message !== '' &&
@@ -26,15 +28,19 @@
         <div class="flex space-x-2">
           <svg-vue class="text-spring-50" icon="tick" />
           <span class="flex flex-col space-y-2">
-            <span class="text-sm font-bold text-n-50">Password Updated!</span>
+            <span class="text-sm font-bold text-n-50">{{
+              language.register_lang.password.updated
+            }}</span>
             <span class="text-sm text-n-50"
-              >Please use your new password to login again.</span
+              >{{ language.register_lang.password.use_new }}.</span
             >
           </span>
         </div>
       </div>
       <div class="relative mt-6 mb-4 flex flex-col text-sm text-bluecoral">
-        <label for="Username">Username</label>
+        <label for="Username">{{
+          language.home.sign_in_section.username_label
+        }}</label>
         <input
           id="username"
           v-model="formData.username"
@@ -43,7 +49,7 @@
             error_input: errorData.username,
           }"
           type="text"
-          placeholder="Enter a registered username"
+          :placeholder="language.home.sign_in_section.username_placeholder"
         />
         <svg-vue class="absolute top-12 left-5 text-xl sm:left-6" icon="user" />
         <span
@@ -55,7 +61,9 @@
         </span>
       </div>
       <div class="relative mb-4 flex flex-col text-sm text-bluecoral">
-        <label for="Password">Password</label>
+        <label for="Password">{{
+          language.home.sign_in_section.password_label
+        }}</label>
         <input
           id="password"
           v-model="formData.password"
@@ -64,7 +72,7 @@
             error__input: errorData.password || errorData.username,
           }"
           type="password"
-          placeholder="Enter a correct password"
+          :placeholder="language.home.sign_in_section.password_placeholder"
         />
         <svg-vue
           class="absolute top-12 left-5 text-xl sm:left-6"
@@ -75,17 +83,17 @@
         }}</span>
       </div>
       <p class="mb-6 text-sm text-n-40">
-        Forgot your password?
+        {{ language.home.sign_in_section.forgot_password_label }}
         <span
           ><a
             class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
             href="/password/email"
-            >Reset.</a
+            >{{ language.button_lang.reset }}.</a
           ></span
         >
       </p>
       <button id="btn" type="submit" class="btn" @click="login">
-        SIGN IN
+        {{ language.button_lang.sign_in }}
         <svg-vue class="" icon="right-arrow" />
       </button>
     </div>
@@ -114,6 +122,7 @@ export default defineComponent({
     },
   },
   setup() {
+    const language = window['globalLang'];
     const formData = reactive({
       username: '',
       password: '',
@@ -158,6 +167,7 @@ export default defineComponent({
       errorData,
       isLoaderVisible,
       login,
+      language,
     };
   },
 });

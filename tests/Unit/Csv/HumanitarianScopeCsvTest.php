@@ -86,7 +86,7 @@ class HumanitarianScopeCsvTest extends CsvBaseTest
         $flattenErrors = Arr::flatten($errors);
         $this->assertContains('The humanitarian scope type is invalid.', $flattenErrors);
         $this->assertContains('The humanitarian scope vocabulary is invalid.', $flattenErrors);
-        $this->assertContains('The humanitarian scope vocabulary-uri must be a proper url.', $flattenErrors);
+        $this->assertContains('The humanitarian scope vocabulary uri must be a valid url.', $flattenErrors);
     }
 
    /**

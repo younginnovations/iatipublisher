@@ -1,8 +1,14 @@
 <template>
   <tr>
-    <td>Aggregation Status</td>
+    <td>{{ language.common_lang.aggregation_status }}</td>
     <td class="capitalize">
-      {{ parseInt(data) ? 'True' : data ? 'False' : 'Missing' }}
+      {{
+        parseInt(data)
+          ? 'True'
+          : data
+          ? language.common_lang.false
+          : language.common_lang.missing.default
+      }}
     </td>
   </tr>
 </template>
@@ -20,9 +26,10 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     let { data } = toRefs(props);
     const statusData = data.value;
-    return { statusData };
+    return { statusData, language };
   },
 });
 </script>

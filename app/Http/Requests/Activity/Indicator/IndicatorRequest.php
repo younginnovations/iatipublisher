@@ -125,9 +125,9 @@ class IndicatorRequest extends ActivityBaseRequest
     public function getMessagesForIndicator(array $formFields): array
     {
         $messages = [];
-        $messages['measure.in'] = 'The indicator measure is invalid.';
-        $messages['aggregation_status.in'] = 'The indicator aggregation status is invalid.';
-        $messages['ascending.in'] = 'The indicator ascending is invalid.';
+        $messages['measure.in'] = trans('requests.indicator_measure', ['suffix'=>trans('requests.suffix.is_invalid')]);
+        $messages['aggregation_status.in'] = trans('requests.indicator_aggregation', ['suffix'=>trans('requests.suffix.is_invalid')]);
+        $messages['ascending.in'] = trans('requests.indicator_ascending', ['suffix'=>trans('requests.suffix.is_invalid')]);
 
         $tempMessages = [
             $this->getMessagesForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
@@ -224,10 +224,10 @@ class IndicatorRequest extends ActivityBaseRequest
 
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
-            $messages[sprintf('%s.indicator_uri.url', $referenceForm)] = 'The @indicator-uri field must be a valid url.';
+            $messages[sprintf('%s.indicator_uri.url', $referenceForm)] = trans('requests.indicator_uri_symbol', ['suffix'=>trans('requests.suffix.must_be_valid_url')]);
 
             if (!empty($reference['code'])) {
-                $messages[sprintf('%s.code.result_ref_code_present', $referenceForm)] = 'The code is already defined in its result';
+                $messages[sprintf('%s.code.result_ref_code_present', $referenceForm)] = trans('requests.code', ['suffix'=>trans('requests.suffix.defined_in_result')]);
             }
         }
 
@@ -327,12 +327,12 @@ class IndicatorRequest extends ActivityBaseRequest
 
         foreach ($formFields as $baselineIndex => $baseline) {
             $baselineForm = sprintf('baseline.%s', $baselineIndex);
-            $messages[sprintf('%s.year.date_format', $baselineForm)] = 'The @year field is not valid.';
-            $messages[sprintf('%s.year.in', $baselineForm)] = 'The @year field should be the year of baseline date';
-            $messages[sprintf('%s.year.digits', $baselineForm)] = 'The @year field must have 4 digits.';
+            $messages[sprintf('%s.year.date_format', $baselineForm)] = trans('requests.year_field_symbol', ['suffix'=>trans('requests.suffix.is_not_valid')]);
+            $messages[sprintf('%s.year.in', $baselineForm)] = trans('requests.year_field_symbol', ['suffix'=>trans('requests.suffix.should_be_baseline')]);
+            $messages[sprintf('%s.year.digits', $baselineForm)] = trans('requests.year_field_symbol', ['suffix'=>trans('requests.suffix.must_be_4_digits')]);
 
-            $messages[sprintf('%s.value.numeric', $baselineForm)] = 'The @value field must be a number.';
-            $messages[sprintf('%s.value.gte', $baselineForm)] = 'The @value field must be greater or equal to 0.';
+            $messages[sprintf('%s.value.numeric', $baselineForm)] = trans('requests.value_field_symbol', ['suffix'=>trans('requests.suffix.must_be_a_number')]);
+            $messages[sprintf('%s.value.gte', $baselineForm)] = trans('requests.value_field_symbol', ['suffix'=>trans('requests.suffix.must_be_greater_equal_0')]);
 
             $narrativeMessages = $this->getMessagesForNarrative($baseline['comment'][0]['narrative'], sprintf('%s.comment.0', $baselineForm));
 

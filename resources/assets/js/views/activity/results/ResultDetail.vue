@@ -22,7 +22,7 @@
     </div>
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      title="Result Detail"
+      :title="language.common_lang.result_detail"
       :back-link="`${activityLink}/result`"
     >
       <div class="flex items-center space-x-3">
@@ -33,7 +33,16 @@
           class="mr-3"
         />
         <a :href="`${activityLink}/result/create`">
-          <Btn text="Edit Result" :link="`${resultLink}/edit`" icon="edit" />
+          <Btn
+            :text="
+              language.button_lang.edit_element.replace(
+                ':element',
+                language.common_lang.result
+              )
+            "
+            :link="`${resultLink}/edit`"
+            icon="edit"
+          />
         </a>
       </div>
     </PageTitle>
@@ -79,7 +88,7 @@
           <li v-if="hasIndicators">
             <a v-smooth-scroll href="#indicator" :class="linkClasses">
               <!-- <svg-vue icon="moon" class="mr-2 text-base"></svg-vue> -->
-              indicator
+              {{ language.elements_common_lang.indicator }}
             </a>
           </li>
           <li v-if="!hasIndicators">
@@ -89,7 +98,12 @@
               class="border border-dashed border-n-40"
             >
               <svg-vue icon="add" class="mr-2 text-n-40"></svg-vue>
-              add indicator
+              {{
+                language.button_lang.add_element.replace(
+                  ':element',
+                  language.elements_common_lang.indicator
+                )
+              }}
             </a>
           </li>
         </ul>
@@ -104,13 +118,13 @@
             <li v-for="(rData, r, ri) in resultsData" :key="ri">
               <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
                 <!-- <svg-vue icon="moon" class="mr-2 text-base"></svg-vue> -->
-                {{ r }}
+                {{ language.elements_common_lang[r] ?? r }}
               </a>
             </li>
             <li v-if="hasIndicators">
               <a v-smooth-scroll href="#indicator" :class="linkClasses">
                 <!-- <svg-vue icon="moon" class="mr-2 text-base"></svg-vue> -->
-                indicator
+                {{ language.common_lang.indicator_nocase }}
               </a>
             </li>
             <li v-if="!hasIndicators">
@@ -120,7 +134,7 @@
                 class="border border-dashed border-n-40"
               >
                 <svg-vue icon="add" class="mr-2 text-n-40"></svg-vue>
-                add indicator
+                {{ language.common_lang.add_indicator_nocase }}
               </a>
             </li>
           </ul>
@@ -167,13 +181,18 @@
           class="add_indicator flex w-full rounded border border-dashed border-n-40 bg-white px-4 py-3 text-xs leading-normal"
         >
           <div class="grow text-left italic">
-            You haven't added any indicator yet.
+            {{ language.button_lang.not_yet_added_indicator }}
           </div>
           <div
             class="flex shrink-0 items-center font-bold uppercase text-bluecoral"
           >
             <svg-vue icon="add" class="mr-1 shrink-0 text-base"></svg-vue>
-            <span class="grow text-[10px]">Add new indicator</span>
+            <span class="grow text-[10px]">{{
+              language.button_lang.add_element.replace(
+                ':element',
+                language.common_lang.new_indicator
+              )
+            }}</span>
           </div>
         </a>
       </div>
@@ -237,6 +256,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
     const positionY = ref(0);
@@ -267,7 +287,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
+        title: language.activities_lang.your_activities,
         link: '/activities',
       },
       {
@@ -334,6 +354,7 @@ export default defineComponent({
       toastData,
       showSidebar,
       istopVisible,
+      language,
     };
   },
 });

@@ -21,6 +21,11 @@ class CsvProcessor
     protected $csv;
 
     /**
+     * @var
+     */
+    protected $locale;
+
+    /**
      * @var array
      */
     protected array $data = [];
@@ -38,10 +43,12 @@ class CsvProcessor
     /**
      * CsvProcessor constructor.
      * @param $csv
+     * @param string $locale
      */
-    public function __construct($csv)
+    public function __construct($csv, string $locale = 'en')
     {
         $this->csv = $csv;
+        $this->locale = $locale;
     }
 
     /**
@@ -50,6 +57,7 @@ class CsvProcessor
      * @param $orgId
      * @param $userId
      * @param $activityIdentifiers
+     * @param $organizationReportingOrg
      *
      * @throws \JsonException
      */
@@ -62,9 +70,10 @@ class CsvProcessor
 
             $this->initActivity(['organization_id' => $orgId, 'user_id' => $userId, 'activity_identifiers' => $activityIdentifiers, 'reporting_org' => $organizationReportingOrg]);
 
+            $this->activity->locale = $this->locale;
             $this->activity->process();
         } else {
-            throw new \RuntimeException('Mismatch CSV header');
+            throw new \RuntimeException(trans('responses.mismatch_csv_header'));
         }
     }
 

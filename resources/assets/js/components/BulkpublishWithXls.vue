@@ -38,11 +38,12 @@
         Some activities have failed to publish.
       </div>
       <div v-else class="text-sm text-n-40">
-        Publishing
+        {{ language.common_lang.publishing }}
         <span
           >{{ completedActivities }}/{{ Object.keys(activities).length }}</span
         >
-        activities to IATI registry
+        {{ language.elements_common_lang.activities }}
+        {{ language.common_lang.to }} {{ language.common_lang.iati_registry }}
       </div>
     </div>
     <div v-else class="rounded-t-lg bg-white">
@@ -50,9 +51,9 @@
         class="flex justify-between rounded-t-lg bg-eggshell py-4 px-6 text-sm font-bold"
       >
         <h6>
-          Publishing
-
-          {{ bulkPublishLength != 0 ? bulkPublishLength : '' }} activities
+          {{ language.common_lang.publishing }}
+          {{ bulkPublishLength != 0 ? bulkPublishLength : '' }}
+          {{ language.elements_common_lang.activities }}
         </h6>
         <div
           v-if="hasFailedActivities?.ids?.length > 0"
@@ -126,6 +127,7 @@ interface RefreshToastMsgTypeface {
   refreshMessage: string;
 }
 
+const language = window['globalLang'];
 const bulkPublishLength = ref(0);
 const openModel = ref(false);
 let paStorage = ref(store.state.bulkpublishActivities);
@@ -198,11 +200,11 @@ const bulkPublishStatus = () => {
               refreshToastMsg.visibility = true;
               refreshToastMsg.refreshMessageType = false;
               refreshToastMsg.refreshMessage =
-                'Some activities have failed to publish. Refresh to see changes.';
+                language.common_lang.error.some_activities_have_failed_to_publish;
             } else {
               refreshToastMsg.visibility = true;
               refreshToastMsg.refreshMessage =
-                'Activity has been published successfully, refresh to see changes';
+                language.common_lang.error.activity_has_been_published_successfully;
               setTimeout(() => {
                 refreshToastMsg.visibility = false;
               }, 10000);
@@ -262,7 +264,7 @@ const failedActivities = (nestedObject: actElements) => {
     hasFailedActivities.data = failedActivitiesData as actElements;
     refreshToastMsg.refreshMessageType = false;
     refreshToastMsg.refreshMessage =
-      'Some activities have failed to publish. Refresh to see changes.';
+      language.common_lang.error.some_activities_have_failed_to_publish;
   } else {
     hasFailedActivities.status = false;
     hasFailedActivities.ids = [];

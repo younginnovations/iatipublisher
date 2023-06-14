@@ -23,7 +23,7 @@
                     }-arrow`"
                   />
                 </span>
-                <span>Organisation Name</span>
+                <span>{{ language.common_lang.organisation_name }}</span>
               </a>
             </th>
             <th id="activities" scope="col" style="width: 173px">
@@ -45,7 +45,7 @@
                     }-arrow`"
                   />
                 </span>
-                <span>Activities</span>
+                <span>{{ language.common_lang.activities }}</span>
               </a>
             </th>
             <th id="updated_on" scope="col" style="width: 173px">
@@ -67,7 +67,7 @@
                     }-arrow`"
                   />
                 </span>
-                <span>Updated On</span>
+                <span>{{ language.common_lang.updated_on }}</span>
               </a>
             </th>
             <th id="proxy" scope="col" style="width: 158px">
@@ -77,30 +77,37 @@
         </thead>
         <tbody>
           <tr v-if="organisationData.status === 'fetching'">
-            <td colspan="4">Fetching Data...</td>
+            <td colspan="4">{{ language.common_lang.fetching_data }}</td>
           </tr>
           <tr v-else-if="organisationData.status === 'empty'">
-            <td colspan="4">No Data Available</td>
+            <td colspan="4">
+              {{ language.common_lang.data }}
+              {{ language.common_lang.missing.not_available }}
+            </td>
           </tr>
           <tr v-for="data in organisationData.data.data" v-else :key="data.id">
             <td>
               <div v-if="data.name" class="ellipsis relative">
                 <span class="ellipsis overflow-hidden">
-                  {{ data?.name[0]?.narrative ?? 'Name Missing' }}
+                  {{
+                    data?.name[0]?.narrative ??
+                    language.common_lang.missing.name
+                  }}
                 </span>
               </div>
-              <div v-else>Name Missing</div>
+              <div v-else>{{ language.common_lang.missing.name }}</div>
               <div class="text-blue-40">{{ data?.user?.email }}</div>
             </td>
             <td class="text-n-40">
-              {{ data.all_activities_count }} activities
+              {{ data.all_activities_count }}
+              {{ language.common_lang.activities_nocase }}
             </td>
             <td class="text-n-40">
               {{ dateFormat(data.updated_at, 'DD MMMM, YYYY') }}
             </td>
             <td>
               <BtnComponent
-                text="proxy"
+                text="Proxy"
                 type="outline"
                 icon="smile"
                 @click="proxyUser(data?.user?.id)"
@@ -129,6 +136,7 @@ import dateFormat from 'Composable/dateFormat';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import Pagination from 'Components/TablePagination.vue';
 
+const language = window['globalLang'];
 // inject
 interface ToastInterface {
   visibility: boolean;
@@ -210,7 +218,7 @@ const fetchOrganisation = (active_page: number) => {
 // display/hide validator loader
 const proxyUser = (id: number) => {
   loader.status = true;
-  loader.text = 'Proxy Login';
+  loader.text = language.button_lang.proxy_login;
   const endpoint = `/proxy-organisation/${id}`;
 
   axios.get(endpoint).then((res) => {

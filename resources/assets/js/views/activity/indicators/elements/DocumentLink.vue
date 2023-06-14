@@ -11,14 +11,14 @@
                   {{
                     getActivityTitle(post.title[0].narrative, 'en')
                       ? getActivityTitle(post.title[0].narrative, 'en')
-                      : 'Missing'
+                      : language.common_lang.missing.default
                   }}
                 </div>
                 <div class="ml-4">
                   <table>
                     <tbody>
                       <tr>
-                        <td>Title</td>
+                        <td>{{ language.common_lang.title }}</td>
                         <td>
                           <div
                             v-for="(na, n) in post.title[0].narrative"
@@ -29,37 +29,46 @@
                             }"
                           >
                             <div class="language mb-1">
-                              (Language:
+                              ({{ language.common_lang.language }}:
                               {{
                                 na.language
                                   ? type.language[na.language]
-                                  : 'Missing'
+                                  : language.common_lang.missing.default
                               }})
                             </div>
                             <div class="description text-xs">
-                              {{ na.narrative ?? 'Missing' }}
+                              {{
+                                na.narrative ??
+                                language.common_lang.missing.default
+                              }}
                             </div>
                           </div>
                         </td>
                       </tr>
 
                       <tr>
-                        <td>Document Link</td>
+                        <td>{{ language.common_lang.document_link }}</td>
                         <td>
                           <a v-if="post.url" target="_blank" :href="post.url">{{
                             post.url
                           }}</a>
-                          <span v-else>Missing</span>
+                          <span v-else>{{
+                            language.common_lang.missing.default
+                          }}</span>
                         </td>
                       </tr>
 
                       <tr>
-                        <td>Format</td>
-                        <td>{{ post.format ?? 'Missing' }}</td>
+                        <td>{{ language.common_lang.format }}</td>
+                        <td>
+                          {{
+                            post.format ?? language.common_lang.missing.default
+                          }}
+                        </td>
                       </tr>
 
                       <tr>
-                        <td>Description</td>
+                        <td>{{ language.common_lang.description }}</td>
                         <td>
                           <div
                             v-for="(na, n) in post.description[0].narrative"
@@ -71,22 +80,25 @@
                             }"
                           >
                             <div class="language mb-1">
-                              (Language:
+                              ({{ language.common_lang.language }}:
                               {{
                                 na.language
                                   ? type.language[na.language]
-                                  : 'Missing'
+                                  : language.common_lang.missing.default
                               }})
                             </div>
                             <div class="description text-xs">
-                              {{ na.narrative ?? 'Missing' }}
+                              {{
+                                na.narrative ??
+                                language.common_lang.missing.defualt
+                              }}
                             </div>
                           </div>
                         </td>
                       </tr>
 
                       <tr v-if="post.category.length > 0">
-                        <td>Category</td>
+                        <td>{{ language.common_lang.category }}</td>
                         <td>
                           <div
                             v-for="(cat, c) in post.category"
@@ -97,14 +109,14 @@
                             {{
                               cat.code
                                 ? type.documentCategory[cat.code]
-                                : 'Missing'
+                                : language.common_lang.missing.default
                             }}
                           </div>
                         </td>
                       </tr>
 
                       <tr v-if="post.language.length > 0">
-                        <td>Language</td>
+                        <td>{{ language.common_lang.language }}</td>
                         <td>
                           <div class="text-xs">
                             {{
@@ -114,17 +126,20 @@
                                       (entry) => type.language[entry.language]
                                     )
                                     .join(', ')
-                                : 'Missing'
+                                : language.common_lang.missing.default
                             }}
                           </div>
                         </td>
                       </tr>
 
                       <tr>
-                        <td>Document Date</td>
+                        <td>{{ language.common_lang.document_date }}</td>
                         <td>
                           <div class="text-xs">
-                            {{ post.document_date[0].date ?? 'Missing' }}
+                            {{
+                              post.document_date[0].date ??
+                              language.common_lang.missing.default
+                            }}
                           </div>
                         </td>
                       </tr>
@@ -165,6 +180,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     let { data } = toRefs(props);
 
     /**
@@ -200,7 +216,7 @@ export default defineComponent({
 
     const dlData = data.value as DocumentLink[];
 
-    return { dlData, getActivityTitle };
+    return { dlData, getActivityTitle, language };
   },
 });
 </script>

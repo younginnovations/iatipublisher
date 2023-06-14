@@ -51,7 +51,7 @@ class IdentifierController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening activity title form.');
+            return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.opening'), 'suffix'=>trans('responses.activity_title')]));
         }
     }
 
@@ -69,18 +69,18 @@ class IdentifierController extends Controller
             DB::beginTransaction();
 
             if (!$this->identifierService->update($id, $request->except(['_method', '_token']))) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating iati-identifier.');
+                return redirect()->route('admin.activity.show', $id)->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.iati_identifier')]));
             }
 
             DB::commit();
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Iati-identifier updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.iati_identifier'), 'event'=>trans('events.updated')])));
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
             return response()->json(
-                ['success' => false, 'error' => 'Error has occurred while updating iati-identifier.']
+                ['success' => false, 'error' => trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.iati_identifier')])]
             );
         }
     }

@@ -72,6 +72,11 @@ class XmlQueueProcessor
     private string $xml_data_storage_path;
 
     /**
+     * @var
+     */
+    public string $locale;
+
+    /**
      * XmlQueueProcessor constructor.
      *
      * @param XmlServiceProvider $xmlServiceProvider
@@ -94,17 +99,23 @@ class XmlQueueProcessor
      *
      * @param $filename
      * @param $orgId
+     * @param $orgRef
      * @param $userId
+     * @param $dbIatiIdentifiers
+     * @param $organizationReportingOrg
      *
      * @return bool
+     *
      * @throws BindingResolutionException
-     * @throws \JsonException
+     * @throws InvalidTag
      * @throws ParseException
+     * @throws \JsonException
      * @throws \Throwable
      */
     public function import($filename, $orgId, $orgRef, $userId, $dbIatiIdentifiers, $organizationReportingOrg): bool
     {
         try {
+            app()->setLocale($this->locale);
             $this->orgId = $orgId;
             $this->orgRef = $orgRef;
             $this->userId = $userId;
@@ -130,7 +141,7 @@ class XmlQueueProcessor
             ));
 
             awsUploadFile(sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, $orgId, $userId, 'status.json'), json_encode(
-                ['success' => false, 'message' => 'Invalid XMl or Header mismatched'],
+                ['success' => false, 'message' => trans('responses.invalid_xml_or_header')],
                 JSON_THROW_ON_ERROR
             ));
 

@@ -1,0 +1,61 @@
+{
+  "identification": {
+    "label": "Identification",
+    "elements": {
+      "organisation_identifier": {
+        "mandatory": false,
+        "label": "Organisation Identifier"
+      },
+      "name": {
+        "mandatory": true,
+        "label": "Organisation Name"
+      },
+      "reporting_org": {
+        "mandatory": true,
+        "label": "Reporting Organisation"
+      }
+    }
+  },
+
+  "budget": {
+    "label": "Budget",
+    "elements": {
+      "total_budget": {
+        "mandatory": false,
+        "label": "Total Budget"
+      },
+      "recipient_org_budget": {
+        "mandatory": false,
+        "label": "Recipient Org Budget"
+      },
+      "recipient_region_budget": {
+        "mandatory": false,
+        "label": "Recipient Region Budget"
+      },
+      "recipient_country_budget": {
+        "mandatory": false,
+        "label": "Recipient Country Budget"
+      }
+    }
+  },
+
+  "expenditure": {
+    "label": "Expenditure",
+    "elements": {
+      "total_expenditure": {
+        "mandatory": false,
+        "label": "Total Expenditure"
+      }
+    }
+  },
+
+  "document link": {
+    "label": "Document Link",
+    "elements": {
+      "document_link": {
+        "mandatory": false,
+        "label": "Document Link"
+      }
+    }
+  }
+}

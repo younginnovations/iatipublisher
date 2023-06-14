@@ -18,14 +18,17 @@
       ]"
     >
       <div v-if="showIatiReference" class="mb-2 italic text-bluecoral">
-        IATI standard reference
+        {{ language.common_lang.iati_standard_reference }}
       </div>
       <span class="font-bold text-bluecoral">{{ name }}</span>
       <!-- eslint-disable vue/no-v-html -->
       <p v-html="hoverText" />
       <!--eslint-enable-->
-      <a v-if="link" :href="link" class="inline-block font-bold text-bluecoral"
-        >Learn more</a
+      <a
+        v-if="link"
+        :href="link"
+        class="inline-block font-bold text-bluecoral"
+        >{{ language.button_lang.learn_more }}</a
       >
     </div>
   </div>
@@ -70,6 +73,10 @@ export default defineComponent({
       required: false,
       default: false,
     },
+  },
+  setup() {
+    const language = window['globalLang'];
+    return { language };
   },
 });
 </script>

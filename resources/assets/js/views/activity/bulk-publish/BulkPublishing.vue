@@ -7,7 +7,8 @@
   >
     <div class="bulk-head flex items-center justify-between bg-eggshell p-4">
       <div class="grow text-sm font-bold leading-normal">
-        Publishing {{ activities && Object.keys(activities).length }} activities
+        {{ language.common_lang.publishing }}
+        {{ activities && Object.keys(activities).length }} activities
       </div>
       <div class="flex shrink-0">
         <div
@@ -15,7 +16,9 @@
           @click="retryPublishing"
         >
           <svg-vue class="mr-1" icon="redo" />
-          <span class="text-xs uppercase">Retry</span>
+          <span class="text-xs uppercase">{{
+            language.common_lang.retry
+          }}</span>
         </div>
         <div
           v-if="completed === 'completed'"
@@ -104,6 +107,7 @@ interface actElements {
   status: string;
 }
 
+const language = window['globalLang'];
 //inject
 let paStorage = inject('paStorage') as paInterface;
 
@@ -199,7 +203,7 @@ onUnmounted(() => {
 
 const checkXlsstatus = () => {
   axios.get('/import/xls/progress_status').then((res) => {
-    xlsData.value = Object.keys(res.data.status).length > 0;
+    xlsData.value = res.data.status && Object.keys(res.data.status).length > 0;
   });
 };
 const checkDownloadStatus = () => {
@@ -302,7 +306,7 @@ const failedActivities = (nestedObject: actElements) => {
     hasFailedActivities.data = failedActivitiesData as actElements;
     refreshToastMsg.refreshMessageType = false;
     refreshToastMsg.refreshMessage =
-      'Some activities have failed to publish. Refresh to see changes.';
+      language.common_lang.error.some_activities_have_failed_to_publish;
   } else {
     hasFailedActivities.status = false;
     hasFailedActivities.ids = [];

@@ -85,7 +85,7 @@ class RelatedActivityRequest extends ActivityBaseRequest
 
         foreach ($formFields as $index => $formField) {
             $baseForm = sprintf('related_activity.%s', $index);
-            $messages[sprintf('%s.relationship_type.in', $baseForm)] = 'The relationship type in related activity is invalid.';
+            $messages[sprintf('%s.relationship_type.in', $baseForm)] = trans('requests.relationship_type', ['suffix'=>trans('requests.suffix.is_invalid')]);
         }
 
         return $messages;

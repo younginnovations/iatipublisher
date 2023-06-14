@@ -28,6 +28,8 @@
 <script setup lang="ts">
 import { defineProps, toRefs, ref, watch } from 'vue';
 
+const language = window['globalLang'];
+
 //props
 const props = defineProps({
   errors: { type: Object, required: true },
@@ -90,11 +92,12 @@ const accordionToggle = (e: Event) => {
 };
 
 const updateErrorCountMessage = () => {
+  let translatedType = language.common_lang.sticky.common[type.value];
   errorType.value =
     errors.value.length +
     ' ' +
-    type.value.charAt(0).toUpperCase() +
-    type.value.slice(1);
+    translatedType.charAt(0).toUpperCase() +
+    translatedType.slice(1);
 };
 
 updateErrorCountMessage();

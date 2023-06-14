@@ -40,8 +40,8 @@ class ParentCollectionForm extends BaseForm
                     'data' => $this->data,
                     'label' => false,
                     'element_criteria' => $field['element_criteria'] ?? '',
-                    'hover_text' => Arr::get($field, 'hover_text', ''),
-                    'help_text' => Arr::get($field, 'help_text', ''),
+                    'hover_text' => trans(Arr::get($field, 'hover_text', '')),
+                    'help_text' => trans(Arr::get($field, 'help_text', '')),
                     'info_text' => Arr::get($field, 'info_text', ''),
                     'wrapper' => [
                         'class' => 'multi-form relative',
@@ -55,7 +55,7 @@ class ParentCollectionForm extends BaseForm
 
         if (Arr::get($field, 'add_more', false) || Arr::get($field, 'add_more_attributes', false)) {
             $this->add('add_to_collection', 'button', [
-                'label' => sprintf('add additional %s', str_replace('_', ' ', $field['name'])),
+                'label' => sprintf(trans('buttons.add_additional') . ' %s', str_replace('-', '', trans('elements_common.' . $field['name']))),
                 'attr' => [
                     'icon' => true,
                     'class' => 'add_to_parent add_more button relative text-xs font-bold text-spring-50 text-bluecoral uppercase leading-normal -translate-y-1/2 pl-3.5',

@@ -86,7 +86,7 @@ class BulkPublishingService
                 if ($activity && $activity->status === 'draft') {
                     $coreElementsCompleted[$this->getCompleteStatus($activity)][] = [
                         'activity_id' => $activity->id,
-                        'title' => Arr::get($activity->title, '0.narrative', 'Not Available') ?: 'Not Available',
+                        'title' => Arr::get($activity->title, '0.narrative', trans('common.missing.not_available')) ?: trans('common.missing.not_available'),
                     ];
                 }
             }
@@ -132,11 +132,11 @@ class BulkPublishingService
                 $this->apiLogRepo->store(generateApiInfo('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)], json_encode($response)));
 
                 if (!Arr::get($response, 'success', true)) {
-                    logger()->error('Error has occurred while validating activity with id' . $activityId);
+                    logger()->error(trans('responses.error_has_occurred', ['event'=>trans('events.validating'), 'suffix'=>trans('responses.activity_with_id')]) . $activityId);
                 } else {
                     $totalResponse[$activity->id] = [
                         'activity_id' => $activity->id,
-                        'title' => Arr::get($activity->title, '0.narrative', 'Not Available') ?: 'Not Available',
+                        'title' => Arr::get($activity->title, '0.narrative', trans('common.missing.not_available')) ?: trans('common.missing.not_available'),
                         'response' => $response,
                     ];
                 }
@@ -164,7 +164,7 @@ class BulkPublishingService
                 return $response;
             }
 
-            return ['success' => false, 'error' => 'Error has occurred while validating activity.'];
+            return ['success' => false, 'error' => trans('responses.error_has_occurred', ['event'=>trans('events.validating'), 'suffix'=>trans('elements_common.activity')])];
         } catch (BadResponseException $ex) {
             if ($ex->getCode() === 422) {
                 $response = json_decode($ex->getResponse()->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -174,7 +174,7 @@ class BulkPublishingService
                 }
             }
 
-            return ['success' => false, 'error' => 'Error has occurred while validating activity.'];
+            return ['success' => false, 'error' => trans('responses.error_has_occurred', ['event'=>trans('events.validating'), 'suffix'=>trans('elements_common.activity')])];
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -218,16 +218,16 @@ class BulkPublishingService
 
         if (array_sum($summary) === 0) {
             $modifiedResponse['no_errors'][] = [
-                'activity_id' => Arr::get($response, 'activity_id', 'Not Available'),
-                'title' => Arr::get($response, 'title', 'Not Available'),
+                'activity_id' => Arr::get($response, 'activity_id', trans('common.missing.not_available')),
+                'title' => Arr::get($response, 'title', trans('common.missing.not_available')),
                 'errors' => [],
             ];
         }
 
         if (Arr::get($summary, 'critical', 0) > 0) {
             $modifiedResponse['critical'][] = [
-                'activity_id' => Arr::get($response, 'activity_id', 'Not Available'),
-                'title' => Arr::get($response, 'title', 'Not Available'),
+                'activity_id' => Arr::get($response, 'activity_id', trans('common.missing.not_available')),
+                'title' => Arr::get($response, 'title', trans('common.missing.not_available')),
                 'errors' => [
                     'critical' => Arr::get($summary, 'critical', 0),
                 ],
@@ -236,8 +236,8 @@ class BulkPublishingService
 
         if ((Arr::get($summary, 'error', 0) > 0) || (Arr::get($summary, 'warning', 0) > 0)) {
             $modifiedResponse['errors'][] = [
-                'activity_id' => Arr::get($response, 'activity_id', 'Not Available'),
-                'title' => Arr::get($response, 'title', 'Not Available'),
+                'activity_id' => Arr::get($response, 'activity_id', trans('common.missing.not_available')),
+                'title' => Arr::get($response, 'title', trans('common.missing.not_available')),
                 'errors' => [
                     'error' => Arr::get($summary, 'error', 0),
                     'warning' => Arr::get($summary, 'warning', 0),
@@ -261,13 +261,13 @@ class BulkPublishingService
         $response['status'] = 'processing';
         $response['organization_id'] = auth()->user()->organization->id;
         $response['job_batch_uuid'] = (string) Str::uuid();
-        $response['message'] = 'Bulk publishing started';
+        $response['message'] = trans('responses.bulk_publishing', ['suffix'=>trans('responses.started')]);
         $response['activities'] = [];
 
         if (count($activities)) {
             foreach ($activities as $activity) {
                 $response['activities'][$activity->id]['activity_id'] = $activity->id;
-                $response['activities'][$activity->id]['activity_title'] = Arr::get($activity->title, '0.narrative', 'Not Available') ?: 'Not Available';
+                $response['activities'][$activity->id]['activity_title'] = Arr::get($activity->title, '0.narrative', trans('common.missing.not_available')) ?: trans('common.missing.not_available');
                 $response['activities'][$activity->id]['status'] = 'created';
             }
         }
@@ -290,7 +290,7 @@ class BulkPublishingService
         $response['status'] = 'completed';
         $response['organization_id'] = $publishStatus->first()->organization_id;
         $response['job_batch_uuid'] = $publishStatus->first()->job_batch_uuid;
-        $response['message'] = 'Bulk publishing completed';
+        $response['message'] = trans('responses.bulk_publishing', ['suffix'=>trans('responses.completed')]);
         $response['activities'] = [];
 
         if (count($publishStatus)) {
@@ -307,7 +307,7 @@ class BulkPublishingService
 
         if ($processing) {
             $response['status'] = 'processing';
-            $response['message'] = 'Bulk publishing processing.';
+            $response['message'] = trans('responses.bulk_publishing', ['suffix'=>trans('responses.processing')]);
         }
 
         return $response;

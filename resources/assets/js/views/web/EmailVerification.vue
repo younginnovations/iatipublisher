@@ -3,18 +3,17 @@
     <div class="grid justify-items-center gap-6 tracking-normal xl:px-2">
       <div class="space-y-4 sm:space-y-6">
         <p class="text-center text-xl font-bold text-n-50 sm:text-2xl">
-          Please verify your account
+          {{ language.email_verification.verify_your_account }}
         </p>
         <p class="text-sm text-n-40 sm:text-base">
           A verification email has been sent to
           <span class="font-bold text-n-50"> {{ props.email }}</span
-          >. Please click on the link in the email to verify and activate your
-          new IATI publisher account.
+          >. {{ language.email_verification.click_and_activate }}
         </p>
       </div>
       <svg-vue class="verification" icon="ic-verification" />
       <a href="/activities" class="btn btn-next get-started-btn">
-        Get started
+        {{ language.button_lang.get_started }}
         <svg-vue class="text-2xl" icon="right-arrow" />
       </a>
     </div>
@@ -30,8 +29,11 @@ export default defineComponent({
   },
 
   setup(props) {
+    const language = window['globalLang'];
+
     return {
       props,
+      language,
     };
   },
 });

@@ -65,8 +65,8 @@ class DefaultFlowTypeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => 'The default flow type does not exist.',
-            'size'      => 'The default flow type cannot have more than one value.',
+            'in'        => trans('requests.default_flow', ['suffix'=>trans('requests.suffix.doesnt_exist')]),
+            'size'      => trans('requests.default_flow', ['suffix'=>trans('requests.suffix.cannot_have_more_than_one')]),
         ];
     }
 }

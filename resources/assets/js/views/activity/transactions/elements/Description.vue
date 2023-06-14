@@ -10,12 +10,15 @@
     <div class="language mb-1.5">
       ({{
         post.language
-          ? `Language: ${type.languages[post.language]}`
-          : 'Language Missing'
+          ? `${language.common_lang.language}: ${type.languages[post.language]}`
+          : language.common_lang.missing.element.replace(
+              ':element',
+              language.common_lang.language
+            )
       }})
     </div>
     <div class="description text-sm">
-      {{ post.narrative ?? 'Narrative Missing' }}
+      {{ post.narrative ?? language.common_lang.missing.narrative }}
     </div>
   </div>
 </template>
@@ -46,10 +49,11 @@ export default defineComponent({
       };
     }
 
+    const language = window['globalLang'];
     let { data } = toRefs(props);
     const tdData = data.value as Narratives;
     const type = inject('types');
-    return { tdData, type };
+    return { tdData, type, language };
   },
 });
 </script>

@@ -4,15 +4,18 @@
       <table class="mb-3">
         <tbody>
           <tr>
-            <td>Organisation Identifier Code</td>
+            <td>{{ language.common_lang.organiser_identifier_code }}</td>
             <td>
               <div class="text-sm">
-                {{ PoData[0].organization_identifier_code ?? 'Missing' }}
+                {{
+                  PoData[0].organization_identifier_code ??
+                  language.common_lang.missing.default
+                }}
               </div>
             </td>
           </tr>
           <tr>
-            <td>Description</td>
+            <td>{{ language.common_lang.description }}</td>
             <td>
               <div
                 v-for="(po, i) in PoData[0].narrative"
@@ -25,32 +28,40 @@
                 <div class="language mb-1.5">
                   ({{
                     po.language
-                      ? `Language: ${type.languages[po.language]}`
-                      : 'Language Missing'
+                      ? `${language.common_lang.language}: ${
+                          type.languages[po.language]
+                        }`
+                      : language.common_lang.missing.element.replace(
+                          ':element',
+                          language.common_lang.language
+                        )
                   }})
                 </div>
                 <div class="text-sm">
-                  {{ po.narrative ?? 'Narrative Missing' }}
+                  {{ po.narrative ?? language.common_lang.missing.narrative }}
                 </div>
               </div>
             </td>
           </tr>
           <tr>
-            <td>Receiver Activity ID</td>
+            <td>{{ language.common_lang.receiver_activity_id }}</td>
             <td>
               <div class="text-sm">
-                {{ PoData[0].receiver_activity_id ?? 'Missing' }}
+                {{
+                  PoData[0].receiver_activity_id ??
+                  language.common_lang.missing.default
+                }}
               </div>
             </td>
           </tr>
           <tr>
-            <td>Type</td>
+            <td>{{ language.common_lang.type }}</td>
             <td>
               <div class="text-sm">
                 {{
                   PoData[0].type
                     ? type.organizationType[PoData[0].type]
-                    : 'Missing'
+                    : language.common_lang.missing.default
                 }}
               </div>
             </td>
@@ -74,6 +85,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     const { data } = toRefs(props);
 
     interface ArrayObject {
@@ -86,7 +98,7 @@ export default defineComponent({
     }
     const PoData = data.value as ArrayObject;
     const type = inject('types');
-    return { PoData, type };
+    return { PoData, type, language };
   },
 });
 </script>

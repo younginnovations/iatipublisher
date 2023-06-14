@@ -49,7 +49,7 @@ class NameController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while opening organization name form.');
+            return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.opening'), 'suffix'=>trans('common.organisation_name')]));
         }
     }
 
@@ -64,14 +64,14 @@ class NameController extends Controller
     {
         try {
             if (!$this->nameService->update(Auth::user()->organization_id, $request->all())) {
-                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization name.');
+                return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('common.organisation_name')]));
             }
 
-            return redirect()->route('admin.organisation.index')->with('success', 'Organization name updated successfully.');
+            return redirect()->route('admin.organisation.index')->with('success', trans('responses.event_successfully', ['prefix'=>trans('common.organisation_name'), 'event'=>trans('events.updated')]));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization name.');
+            return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('common.organisation_name')]));
         }
     }
 }

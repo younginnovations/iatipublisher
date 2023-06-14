@@ -70,9 +70,9 @@ class ActivityWorkflowController extends Controller
             DB::beginTransaction();
             $this->activityWorkflowService->publishActivity($activity);
             DB::commit();
-            Session::put('success', 'Activity has been published successfully.');
+            Session::put('success', trans('responses.event_successfully', ['event'=>trans('events.published'), 'prefix'=>ucfirst(trans('elements_common.activity'))]));
 
-            return response()->json(['success' => true, 'message' => 'Activity has been published successfully.']);
+            return response()->json(['success' => true, 'message' => ucfirst(trans('responses.has_been_event_successfully', ['prefix'=>trans('elements_common.activity'), 'event'=>trans('events.published')]))]);
         } catch (PublisherNotFound $message) {
             DB::rollBack();
             logger()->error($message->getMessage());
@@ -82,9 +82,9 @@ class ActivityWorkflowController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
-            Session::put('error', 'Error has occurred while publishing activity.');
+            Session::put('error', trans('responses.error_has_occurred', ['event'=>trans('events.publishing'), 'suffix'=>trans('elements_common.activity')]));
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while publishing activity.']);
+            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.publishing'), 'suffix'=>trans('elements_common.activity')])]);
         }
     }
 
@@ -102,23 +102,23 @@ class ActivityWorkflowController extends Controller
             $activity = $this->activityWorkflowService->findActivity($id);
 
             if (!$activity->linked_to_iati) {
-                Session::put('error', 'This activity has not been published to un-publish.');
+                Session::put('error', trans('responses.activity_not_been_published_to_unpublish'));
 
-                return response()->json(['success' => false, 'message' => 'This activity has not been published to un-publish.']);
+                return response()->json(['success' => false, 'message' => trans('responses.activity_not_been_published_to_unpublish')]);
             }
 
             $this->activityWorkflowService->unpublishActivity($activity);
             DB::commit();
             $this->activityWorkflowService->deletePublishedFile($activity);
-            Session::put('success', 'Activity has been un-published successfully.');
+            Session::put('success', ucfirst(trans('responses.has_been_event_successfully', ['prefix'=>trans('elements_common.activity'), 'event'=>trans('events.unpublished')])));
 
-            return response()->json(['success' => true, 'message' => 'Activity has been un-published successfully.']);
+            return response()->json(['success' => true, 'message' => ucfirst(trans('responses.has_been_event_successfully', ['prefix'=>trans('elements_common.activity'), 'event'=>trans('events.unpublished')]))]);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
-            Session::put('error', 'Error has occurred while un-publishing activity.');
+            Session::put('error', trans('responses.error_has_occurred', ['event'=>trans('events.unpublishing'), 'suffix'=>trans('elements_common.activity')]));
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while un-publishing activity.']);
+            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.unpublishing'), 'suffix'=>trans('elements_common.activity')])]);
         }
     }
 
@@ -149,7 +149,7 @@ class ActivityWorkflowController extends Controller
                 return response()->json(json_decode($response, true, 512, JSON_THROW_ON_ERROR));
             }
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while validating activity.']);
+            return response()->json(['success' => false, 'error' => trans('responses.error_has_occurred', ['event'=>trans('events.validating'), 'suffix'=>trans('elements_common.activity')])]);
         } catch (BadResponseException $ex) {
             if ($ex->getCode() === 422) {
                 $response = $ex->getResponse()->getBody()->getContents();
@@ -160,11 +160,11 @@ class ActivityWorkflowController extends Controller
                 }
             }
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while validating activity.']);
+            return response()->json(['success' => false, 'error' => trans('responses.error_has_occured', ['event'=>trans('events.validating'), 'suffix'=>trans('elements_common.activity')])]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while validating activity.']);
+            return response()->json(['success' => false, 'error' => trans('responses.error_has_occured', ['event'=>trans('events.validating'), 'suffix'=>trans('elements_common.activity')])]);
         }
     }
 
@@ -182,11 +182,11 @@ class ActivityWorkflowController extends Controller
                 return response()->json(['success' => false, 'message' => $message]);
             }
 
-            return response()->json(['success' => true, 'message' => 'Activity is ready to be published.']);
+            return response()->json(['success' => true, 'message' => trans('responses.activity_ready_to_publish')]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while checking activity.']);
+            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.checking'), 'suffix'=>trans('elements_common.activity')])]);
         }
     }
 }

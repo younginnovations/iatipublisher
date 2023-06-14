@@ -138,12 +138,14 @@ class ImportCsvService
      * Process the uploaded CSV file.
      *
      * @param $filename
+     * @param $locale
      *
      * @return void
      */
-    public function process($filename): void
+    public function process($filename, $locale): void
     {
         try {
+            app()->setLocale($locale);
             $uploadedFile = awsGetFile(sprintf('%s/%s/%s/%s', $this->csv_file_storage_path, Auth::user()->organization->id, Auth::user()->id, $filename));
             awsUploadFile(sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, Auth::user()->organization->id, Auth::user()->id, 'valid.json'), '');
             $localStorageFile = $this->localStorageFile($uploadedFile, $filename);
@@ -348,7 +350,7 @@ class ImportCsvService
      */
     public function fireCsvUploadEvent($filename): void
     {
-        Event::dispatch(new ActivityCsvWasUploaded($filename));
+        Event::dispatch(new ActivityCsvWasUploaded($filename, app()->getLocale()));
     }
 
     /**

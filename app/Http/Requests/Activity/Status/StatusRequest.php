@@ -65,8 +65,8 @@ class StatusRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in' => 'The activity status does not exist.',
-            'size' => 'The activity status cannot have more than one value.',
+            'in'        => trans('requests.activity_status', ['suffix'=>trans('requests.suffix.doesnt_exist')]),
+            'size'      => trans('requests.activity_status', ['suffix'=>trans('requests.suffix.cannot_have_more_than_one')]),
         ];
     }
 }

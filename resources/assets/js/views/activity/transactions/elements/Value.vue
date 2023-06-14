@@ -8,13 +8,22 @@
       {{
         value[0].amount
           ? Number(value[0].amount).toLocaleString()
-          : 'Amount Missing'
+          : language.common_lang.missing.element.replace(
+              ':element',
+              language.common_lang.amount
+            )
       }}
     </span>
     <span v-if="value[0].amount" class="mb-5">{{ value[0].currency }}</span>
   </div>
   <div v-if="value[0].amount" class="text-sm">
-    {{ value[0].date ? `valued at ${dateFormat(value[0].date)}` : '' }}
+    {{
+      value[0].date
+        ? `${language.common_lang.valued_at.toLowerCase()} ${dateFormat(
+            value[0].date
+          )}`
+        : ''
+    }}
   </div>
 </template>
 
@@ -32,13 +41,14 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     const { data } = toRefs(props);
 
     interface ArrayObject {
       [index: number]: { amount: string; currency: string; date: Date };
     }
     const value = data.value as ArrayObject;
-    return { value, dateFormat };
+    return { value, dateFormat, language };
   },
 });
 </script>

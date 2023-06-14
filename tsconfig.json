@@ -73,6 +73,7 @@
   "include": ["resources/assets/js/**/*"],
   "exclude": ["node_modules"]
 
+
   // "exclude": [
   //   "resources/assets/js/scripts/*"
   // ]

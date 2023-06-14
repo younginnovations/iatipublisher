@@ -92,7 +92,7 @@ class TransactionCsvTest extends CsvBaseTest
     {
         $errors = [];
         foreach ($rows as $row) {
-            $activityRow = new ActivityRow($row, $this->organization->id, $this->user->id, $this->getIdentifiers(), $this->user->organization->reporting_org);
+            $activityRow = new ActivityRow($row, $this->organization->id, $this->user->id, $this->getIdentifiers(), $this->user->organization->reporting_org, 'en');
             $activityRow->validateUnique($row);
             $this->validateElements($activityRow);
             $errors[] = $activityRow->errors();
@@ -325,7 +325,7 @@ class TransactionCsvTest extends CsvBaseTest
         $this->assertContains('The transaction recipient country code is invalid.', $flattenErrors);
         $this->assertContains('The transaction sector code is invalid.', $flattenErrors);
         $this->assertContains('The transaction recipient country code is invalid.', $flattenErrors);
-        $this->assertContains('The transaction sector vocabulary-uri field must be a valid url.', $flattenErrors);
+        $this->assertContains('The transaction sector vocabulary uri must be a valid url.', $flattenErrors);
     }
 
     /**

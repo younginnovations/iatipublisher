@@ -2,7 +2,7 @@
   <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      title="Indicator List"
+      :text="language.common_lang.indicator_link"
       :back-link="`${resultLink}`"
     >
       <div class="flex items-center space-x-3">
@@ -13,7 +13,16 @@
           class="mr-3"
         />
         <a :href="`${indicatorLink}/create`">
-          <Btn text="Add Indicator" icon="plus" type="primary" />
+          <Btn
+            :text="
+              language.button_lang.add_element.replace(
+                ':element',
+                language.common_lang.indicator
+              )
+            "
+            icon="plus"
+            type="primary"
+          />
         </a>
       </div>
     </PageTitle>
@@ -23,19 +32,19 @@
         <thead>
           <tr class="bg-n-10">
             <th id="title" scope="col">
-              <span>Title</span>
+              <span>{{ language.common_lang.title }}</span>
             </th>
             <th id="code" scope="col" width="190px">
               <span>Indicator number</span>
             </th>
             <th id="measure" scope="col" width="190px">
-              <span>Measure</span>
+              <span>{{ language.common_lang.measure }}</span>
             </th>
             <th id="aggregation_status" scope="col" width="208px">
-              <span>Aggregation Status</span>
+              <span>{{ language.common_lang.aggregation_status }}</span>
             </th>
             <th id="action" scope="col" width="190px">
-              <span>Action</span>
+              <span>{{ language.common_lang.action }}</span>
             </th>
           </tr>
         </thead>
@@ -181,6 +190,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     const { activity, parentData } = toRefs(props);
 
     const activityId = activity.value.id,
@@ -219,7 +229,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
+        title: language.activities_lang.your_activities,
         link: '/activities',
       },
       {
@@ -231,7 +241,7 @@ export default defineComponent({
         link: `/activity/${activityId}/result/${resultId}`,
       },
       {
-        title: 'Indicator List',
+        title: language.common_lang.indicator_list,
         link: '',
       },
     ];
@@ -283,6 +293,7 @@ export default defineComponent({
       toastData,
       resultId,
       handleNavigate,
+      language,
     };
   },
 });

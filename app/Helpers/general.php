@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\IATI\Models\User\Role;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
@@ -52,7 +54,9 @@ if (!function_exists('readElementGroup')) {
      */
     function readElementGroup(): array
     {
-        return readJsonFile('Data/Activity/ElementGroup.json');
+        $currentLang = App::currentLocale();
+
+        return readJsonFile("Data/$currentLang/Activity/ElementGroup.json");
     }
 }
 
@@ -358,7 +362,8 @@ if (!function_exists('getCodeList')) {
      */
     function getCodeList($listName, $listType, bool $code = true): array
     {
-        $filePath = app_path("Data/$listType/$listName.json");
+        $currentLang = App::currentLocale();
+        $filePath = app_path("Data/$currentLang/$listType/$listName.json");
         $codeListFromFile = file_get_contents($filePath);
         $codeLists = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
         $codeList = $codeLists[$listName];
@@ -384,7 +389,8 @@ if (!function_exists('getCodeListArray')) {
      */
     function getCodeListArray($listName, $listType, bool $code = true): array
     {
-        $filePath = app_path("Data/$listType/$listName.php");
+        $currentLang = App::currentLocale();
+        $filePath = app_path("Data/$currentLang/$listType/$listName.php");
         $codeListFromFile = include $filePath;
         $data = [];
 
@@ -408,7 +414,9 @@ if (!function_exists('getList')) {
      */
     function getList(string $filePath, bool $code = true): array
     {
-        $filePath = app_path("Data/$filePath");
+        $currentLang = App::currentLocale();
+        $filePath = app_path("Data/$currentLang/$filePath");
+
         $codeListFromFile = file_get_contents($filePath);
         $codeLists = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
         $codeList = last($codeLists);
@@ -682,7 +690,7 @@ function getCsvHeaderCount(): int
     return 69;
 }
 
-if (!function_exists('get_user_status')) {
+if (!function_exists('getUserStatus')) {
     /**
      * Returns user status types.
      *
@@ -697,7 +705,7 @@ if (!function_exists('get_user_status')) {
     }
 }
 
-if (!function_exists('get_language_preference')) {
+if (!function_exists('getLanguagePreference')) {
     /**
      * Returns language preference types.
      *
@@ -713,7 +721,7 @@ if (!function_exists('get_language_preference')) {
     }
 }
 
-if (!function_exists('get_user_csv_header')) {
+if (!function_exists('getUserCsvHeader')) {
     /**
      * Returns user download csv header.
      *
@@ -725,11 +733,13 @@ if (!function_exists('get_user_csv_header')) {
     }
 }
 
-if (!function_exists('get_time_stamped_text')) {
+if (!function_exists('getTimeStampedText')) {
     /**
      * Returns filename with ymdhis.
      *
-     * @return array
+     * @param string $filename
+     *
+     * @return string
      */
     function getTimeStampedText(string $filename): string
     {
@@ -741,7 +751,10 @@ if (!function_exists('generateApiInfo')) {
     /**
      * Generates api log info for API logging.
      *
-     * @param $request
+     * @param      $method
+     * @param      $requestURI
+     * @param      $requestOption
+     * @param null $response
      *
      * @return array
      */
@@ -765,11 +778,61 @@ if (!function_exists('generateApiInfo')) {
     }
 }
 
+if (!function_exists('translateRequestMessage')) {
+    /**
+     * Builds translated lines using prefix and suffix of request.php.
+     *
+     * @param string $prefix_key
+     * @param string $suffix_key
+     *
+     * @return string
+     */
+    function translateRequestMessage(string $prefix_key, string $suffix_key = ''): string
+    {
+        if (empty($suffix_key)) {
+            return trans('requests.' . $prefix_key);
+        }
+
+        return trans('requests.' . $prefix_key, ['suffix' => trans('requests.suffix.' . $suffix_key)]);
+    }
+}
+
+if (!function_exists('translateJsonValues')) {
+    /**
+     * Translates json values for the keys: label, placeholder, hover_text & help_text
+     * json[obj][label] = 'buttons.delete_confirmation'
+     * becomes json[obj][label] = "Are you sure you want to delete item ?".
+     *
+     * @param $elements
+     *
+     * @return mixed
+     */
+    function translateJsonValues($elements): mixed
+    {
+        $swapable_keys = ['label', 'placeholder', 'hover_text', 'help_text'];
+        $result = [];
+        if (is_array($elements)) {
+            foreach ($elements as $key => $value) {
+                if (is_string($value) && in_array($key, $swapable_keys)) {
+                    $translated = trans($value);
+                    $result[$key] = $translated;
+                } else {
+                    $result[$key] = translateJsonValues($value);
+                }
+            }
+        } else {
+            $result = $elements;
+        }
+
+        return $result;
+    }
+}
+
 if (!function_exists('mergeRules')) {
     /**
      * Generates api log info for API logging.
      *
-     * @param $request
+     * @param $totalRules
      *
      * @return array
      */
@@ -801,7 +864,7 @@ if (!function_exists('unsetErrorFields')) {
     /**
      * unset fields from imported activity that contains critical error.
      *
-     * @param $request
+     * @param $importContent
      *
      * @return array
      */

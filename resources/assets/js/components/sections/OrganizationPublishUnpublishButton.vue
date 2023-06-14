@@ -39,13 +39,18 @@
         <BtnComponent
           v-if="!mandatoryElementStatus"
           class="bg-white px-6 uppercase"
-          text="Add Missing Data"
+          :text="
+            language.button_lang.add_element.replace(
+              ':element',
+              language.common_lang.missing.data
+            )
+          "
           type=""
           @click="publishValue = false"
         />
         <BtnComponent
           class="space"
-          text="Continue"
+          :text="language.button_lang.continue"
           type="primary"
           @click="publishFunction"
         />
@@ -56,7 +61,7 @@
   <BtnComponent
     v-if="publishStatus.is_published"
     class="ml-4"
-    text="Unpublish"
+    :text="language.button_lang.unpublish"
     type="primary"
     icon="cancel-cloud"
     @click="unpublishValue = true"
@@ -68,23 +73,31 @@
           class="mr-1 mt-0.5 text-lg text-crimson-40"
           icon="cancel-cloud"
         />
-        <b>Unpublish organisation</b>
+        <b
+          >{{ language.button_lang.unpublish }}
+          {{ language.common_lang.organisation }}</b
+        >
       </div>
       <div class="rounded-lg bg-rose p-4">
-        Are you sure you want to unpublish this organisation?
+        {{
+          language.button_lang.unpublish_confirmation.replace(
+            ':element',
+            language.common_lang.organisation
+          )
+        }}?
       </div>
     </div>
     <div class="flex justify-end">
       <div class="inline-flex">
         <BtnComponent
           class="bg-white px-6 uppercase"
-          text="Go Back"
+          :text="language.button_lang.go_back"
           type=""
           @click="unpublishValue = false"
         />
         <BtnComponent
           class="space"
-          text="Unpublish"
+          :text="language.button_lang.unpublish"
           type="primary"
           @click="unPublishFunction"
         />
@@ -107,6 +120,8 @@ import axios from 'axios';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import Modal from 'Components/PopupModal.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
+
+const language = window['globalLang'];
 // toggle state for modal popup
 let [publishValue, publishToggle] = useToggle();
 let [unpublishValue, unpublishToggle] = useToggle();
@@ -117,7 +132,7 @@ const loader = ref(false);
 // true for completed and false for not completed
 const mandatoryElementStatus = inject('mandatoryCompleted') as boolean;
 // Dynamic text for loader
-const loaderText = ref('Please Wait');
+const loaderText = ref(language.common_lang.please_wait);
 // computed function to change content of modal
 const publishStateChange = computed(() => {
   const publishState = reactive({
@@ -128,14 +143,13 @@ const publishStateChange = computed(() => {
   });
   // different content for step 1 based on coreElement status
   if (mandatoryElementStatus) {
-    publishState.title = 'Core Elements Complete';
-    publishState.description =
-      'Congratulations! All the core elements are complete. Continue to publish this organization.';
+    publishState.title = language.common_lang.core_completed_title;
+    publishState.description = language.common_lang.core_completed_description;
     publishState.icon = 'tick';
   } else {
-    publishState.title = 'Core Elements not complete';
+    publishState.title = language.common_lang.core_completed_title;
     publishState.description =
-      '<p>There is missing data in some of the core elements. We highly recommend that you complete these data fields to help ensure your data is useful.</p>';
+      language.common_lang.core_not_completed_description;
     publishState.icon = 'warning-fill';
   }
   return publishState;
@@ -145,6 +159,7 @@ interface DataTypeface {
   message: string;
   type: boolean;
   visibility: boolean;
+  serve;
 }
 const toastData = inject('toastData') as DataTypeface;
 const errorData = inject('errorData') as DataTypeface;
@@ -168,7 +183,7 @@ const checkPublish = () => {
 
 const publishFunction = () => {
   loader.value = true;
-  loaderText.value = 'Publishing';
+  loaderText.value = language.common_lang.publishing;
   publishValue.value = false;
 
   axios.post(`/organisation/publish`).then((res) => {
@@ -183,7 +198,7 @@ const publishFunction = () => {
     }, 2000);
     if (response.success) {
       publishStatus.is_published = true;
-      publishStatus.status = 'published';
+      publishStatus.status = language.events_lang.published;
     }
   });
 };
@@ -191,7 +206,9 @@ const unPublishFunction = () => {
   unpublishValue.value = false;
 
   loader.value = true;
-  loaderText.value = 'Unpublishing';
+  loaderText.value =
+    language.common_lang.unpublishing.charAt(0).toUpperCase() +
+    language.common_lang.unpublishing.slice(1);
   axios.post(`/organisation/unpublish`).then((res) => {
     const response = res.data;
     toastData.message = response.message;
@@ -215,9 +232,9 @@ const publishStatus = inject('publishStatus') as PublishStatusTypeface;
 
 const btnText = computed(() => {
   if (publishStatus.is_published && publishStatus.status === 'draft') {
-    return 'Republish';
+    return language.button_lang.republish;
   } else {
-    return 'Publish';
+    return language.button_lang.publish;
   }
 });
 </script>

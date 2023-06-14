@@ -14,10 +14,13 @@
             icon="warning-fill"
           ></svg-vue>
           <div class="font-bold">
-            {{ errorData.length + importErrorlength }} Issues found
+            {{ errorData.length + importErrorlength }}
+            {{ language.common_lang.issues_found }}
           </div>
         </div>
-        <button class="validation__toggle" @click="errorToggle()">Show</button>
+        <button class="validation__toggle" @click="errorToggle()">
+          {{ language.common_lang.show }}
+        </button>
       </div>
     </div>
     <div
@@ -39,7 +42,7 @@
             "
             @click="issueType = 'validator'"
           >
-            IATI Validator Issues
+            {{ language.button_lang.iati_validator_issues }}
           </div>
           <div
             v-if="importErrors"
@@ -51,7 +54,7 @@
             "
             @click="issueType = 'upload'"
           >
-            Uploaded file Issues
+            {{ language.button_lang.upload_file_issues }}
           </div>
         </div>
         <div class="flex items-center space-x-2">
@@ -61,7 +64,9 @@
             @click="deleteErrors"
           >
             <svg-vue class="text-sm text-bluecoral" icon="delete"></svg-vue>
-            <span class="mt-1 ml-0.5 text-bluecoral">REMOVE</span>
+            <span class="mt-1 ml-0.5 text-bluecoral">{{
+              language.button_lang.remove
+            }}</span>
           </button>
           <button
             class="validation__toggle text-bluecoral"
@@ -113,6 +118,7 @@ import ErrorLists from 'Components/sections/ErrorLists.vue';
 import UploadedErrors from 'Components/sections/UploadedErrors.vue';
 import axios from 'axios';
 
+const language = window['globalLang'];
 const props = defineProps({
   errorData: { type: Array, required: true },
 });

@@ -6,31 +6,36 @@
     <Loader v-if="loaderVisibility" />
 
     <h5 class="title mb-5 flex text-xl font-bold text-bluecoral sm:text-2xl">
-      Add a title and identifier for the activity
+      {{ language.activities_lang.add_a_tittle_and_identifier_label }}
     </h5>
     <div class="manual-import overflow-hidden">
       <div class="input__field">
         <div class="mb-5">
           <div class="form-group-title-container">
             <HoverText
-              :name="'title'"
-              hover-text="A short, human-readable title. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/' target='_blank'>For more information</a>"
+              :name="language.elements_common_lang.title"
+              :hover-text="language.elements_lang.activities.title.hover_text"
               position="right"
               :show-iati-reference="true"
             />
-            <p class="form-group-title">title</p>
+            <p class="form-group-title">
+              {{ language.elements_common_lang.title }}
+            </p>
           </div>
           <div class="form-group">
             <div class="form__content gap-6">
               <div>
                 <div class="label-field">
                   <label class="label" for="narrative"
-                    >narrative
+                    >{{ language.elements_common_lang.narrative }}
                     <span class="required-icon"> *</span>
                   </label>
                   <HoverText
-                    :name="'narrative'"
-                    hover-text="The free text name or description of the item being described. This can be repeated in multiple languages. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/' target='_blank'>For more information</a>"
+                    :name="language.elements_common_lang.narrative"
+                    :hover-text="
+                      language.elements_lang.activities.title.narrative
+                        .hover_text
+                    "
                     :show-iati-reference="true"
                   />
                 </div>
@@ -41,7 +46,9 @@
                     error__input: errorData.narrative != '',
                   }"
                   type="text"
-                  placeholder="Type narrative here"
+                  :placeholder="
+                    language.elements_common_lang.type_narrative_here
+                  "
                 />
                 <span
                   v-if="errorData.narrative != ''"
@@ -54,12 +61,15 @@
               <div>
                 <div class="label-field">
                   <label class="label" for=""
-                    >language
+                    >{{ language.elements_common_lang.language }}
                     <span class="required-icon"> *</span>
                   </label>
                   <HoverText
-                    name="language"
-                    hover-text="A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/title/narrative/' target='_blank'>For more information</a>"
+                    :name="language.elements_common_lang.language"
+                    :hover-text="
+                      language.elements_common_lang
+                        .a_code_specifying_text_org_document_link_title_narrative
+                    "
                     :show-iati-reference="true"
                   />
                 </div>
@@ -72,7 +82,7 @@
                   }"
                   :searchable="true"
                   :options="languages"
-                  placeholder="Select language"
+                  :placeholder="language.elements_common_lang.select_language"
                 />
 
                 <span
@@ -84,7 +94,10 @@
                 </span>
 
                 <span v-else class="text-xs font-normal text-n-40"
-                  >If no value is selected, default value is assumed.
+                  >{{
+                    language.elements_common_lang
+                      .your_default_language_assumed_no_that
+                  }}
                 </span>
               </div>
             </div>
@@ -93,19 +106,23 @@
         <div>
           <div class="form-group-title-container">
             <HoverText
-              :name="'iati-identifier'"
+              :name="language.elements_common_lang.iati_identifier"
               position="right"
-              hover-text="A globally unique identifier for the activity.<br><br>This MUST be prefixed with EITHER the current IATI organisation identifier for the reporting organisation (reporting-org/@ref) OR a previous identifier reported in other-identifier, and suffixed with the organisation’s own activity identifier. The prefix and the suffix should be separated by a hyphen “-“.<br><br>Once an activity has been reported to IATI its identifier MUST NOT be changed in subsequent updates. <a href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/iati-identifier/' target='_blank'>For more information</a>"
+              :hover-text="
+                language.elements_lang.activities.iati_identifier.hover_text
+              "
               :show-iati-reference="true"
             />
-            <p class="form-group-title">iati-identifier</p>
+            <p class="form-group-title">
+              {{ language.elements_common_lang.iati_identifier }}
+            </p>
           </div>
           <div class="form-group">
             <div class="form__content">
               <div>
                 <div class="label-field">
                   <label class="label" for=""
-                    >activity identifiers
+                    >{{ language.elements_common_lang.activity_identifier }}
                     <span class="required-icon"> *</span>
                   </label>
                 </div>
@@ -116,7 +133,9 @@
                     error__input: errorData.activity_identifier != '',
                   }"
                   type="text"
-                  placeholder="Type activity-identifier here"
+                  :placeholder="
+                    language.elements_common_lang.type_identifier_here
+                  "
                 />
                 <span
                   v-if="errorData.activity_identifier != ''"
@@ -126,17 +145,16 @@
                   {{ errorData.activity_identifier }}
                 </span>
                 <span v-else class="text-xs font-normal text-n-40"
-                  >Enter your own unique activity identifier such as
-                  abbreviation or simply a number. Make sure it is unique across
-                  all the activities. IATI Publisher will concatenate
-                  Organization Identifier and Activity Identifier to
-                  autogenerate 'iati-identifier'.
+                  >{{
+                    language.elements_lang.activities.activity_identifier
+                      .shorter_help_text
+                  }}
                 </span>
               </div>
               <div>
                 <div class="label-field">
                   <label class="label" for=""
-                    >iati-identifier
+                    >{{ language.elements_common_lang.iati_identifier }}
                     <span class="required-icon"> *</span>
                   </label>
                 </div>
@@ -163,7 +181,7 @@
                 </span>
 
                 <span v-else class="text-xs font-normal text-n-40"
-                  >This is autogenerated
+                  >{{ language.common_lang.this_is_autogenerated }}
                 </span>
               </div>
             </div>
@@ -174,13 +192,13 @@
             <BtnComponent
               class="mx-3 bg-white px-3 uppercase"
               type=""
-              text="Cancel"
+              :text="language.button_lang.cancel"
               @click="closeModal"
             />
             <BtnComponent
               class="space"
               type="primary"
-              text="Save"
+              :text="language.button_lang.save"
               @click="storeActivity()"
             />
           </div>
@@ -220,6 +238,7 @@ export default defineComponent({
       [key: string]: string;
     }
 
+    const language = window['globalLang'];
     const formData: ObjectType = reactive({
       narrative: '',
       language: '',
@@ -285,6 +304,7 @@ export default defineComponent({
       organization,
       closeModal,
       storeActivity,
+      language,
     };
   },
 });

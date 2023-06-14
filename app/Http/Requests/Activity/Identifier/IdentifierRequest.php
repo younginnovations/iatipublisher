@@ -85,7 +85,7 @@ class IdentifierRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'activity_identifier.not_in' => 'The activity identifier already exists.',
+            'activity_identifier.not_in' => trans('requests.activity', ['suffix'=>trans('requests.suffix.identifier_already_exists')]),
         ];
     }
 }

@@ -25,8 +25,8 @@
       :title="`${
         transactionData.reference && transactionData.reference !== ''
           ? transactionData.reference
-          : 'Untitled'
-      } - Transaction detail`"
+          : language.common_lang.untitled
+      } - ${language.common_lang.transaction_detail}`"
       :back-link="`${activityLink}/transaction`"
     >
       <div class="flex items-center space-x-3">
@@ -37,7 +37,12 @@
           class="mr-3"
         />
         <Btn
-          text="Edit Transaction"
+          :text="
+            language.button_lang.edit_element.replace(
+              ':element',
+              language.common_lang.transaction
+            )
+          "
           :link="`${activityLink}/transaction/${transaction.id}/edit`"
           icon="edit"
         />
@@ -97,7 +102,9 @@
                   icon="core"
                   class="mr-2 text-base"
                 ></svg-vue>
-                <span :class="isMandatoryIcon(r) ? '' : 'pl-6'">{{ r }}</span>
+                <span :class="isMandatoryIcon(r) ? '' : 'pl-6'">{{
+                  language.elements_common_lang[r] ?? r
+                }}</span>
               </a>
             </li>
           </ul>
@@ -189,6 +196,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     const { activity, transaction } = toRefs(props);
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-relaxed mb-2 shadow-default';
@@ -244,7 +252,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
+        title: language.activities_lang.your_activities,
         link: '/activity',
       },
       {
@@ -252,7 +260,7 @@ export default defineComponent({
         link: activityLink,
       },
       {
-        title: 'Transaction',
+        title: language.common_lang.transaction,
         link: '',
       },
     ];
@@ -292,6 +300,7 @@ export default defineComponent({
       isMandatoryIcon,
       showSidebar,
       istopVisible,
+      language,
     };
   },
 });

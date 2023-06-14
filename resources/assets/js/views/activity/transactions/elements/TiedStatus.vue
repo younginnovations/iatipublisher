@@ -3,7 +3,10 @@
     {{
       tsData[0].tied_status_code
         ? type.tiedStatusType[tsData[0].tied_status_code]
-        : 'Tied Status Code Missing'
+        : language.common_lang.missing.element.replace(
+            ':element',
+            language.common_lang.tied_status
+          )
     }}
   </div>
 </template>
@@ -21,6 +24,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     const { data } = toRefs(props);
 
     interface ArrayObject {
@@ -28,7 +32,7 @@ export default defineComponent({
     }
     const tsData = data.value as ArrayObject;
     const type = inject('types');
-    return { tsData, type };
+    return { tsData, type, language };
   },
 });
 </script>

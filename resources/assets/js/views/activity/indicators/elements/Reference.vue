@@ -1,6 +1,6 @@
 <template>
   <tr>
-    <td>Reference</td>
+    <td>{{ language.common_lang.reference_label }}</td>
     <td>
       <div
         v-for="(ref, r) in refData"
@@ -10,12 +10,18 @@
         }"
       >
         <span>
-          Vocabulary:
-          {{ refType.indicatorVocabulary[ref.vocabulary] ?? 'Missing' }},
+          {{ language.common_lang.vocabulary }}:
+          {{
+            refType.indicatorVocabulary[ref.vocabulary] ??
+            language.common_lang.missing.default
+          }},
         </span>
-        <span> Code: {{ ref.code ?? 'Missing' }}, </span>
+        <span>
+          {{ language.common_lang.code }}:
+          {{ ref.code ?? language.common_lang.missing.default }},
+        </span>
         <span v-if="ref.indicator_uri">
-          Indicator URI:
+          {{ language.common_lang.indicator_uri }}:
           <a target="_blank" :href="ref.indicator_uri">
             {{ ref.indicator_uri }}
           </a>
@@ -42,6 +48,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     let { data } = toRefs(props);
 
     /**
@@ -55,7 +62,7 @@ export default defineComponent({
       };
     }
     const refData = data.value as ReferenceArray;
-    return { refData };
+    return { refData, language };
   },
 });
 </script>

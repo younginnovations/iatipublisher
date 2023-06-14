@@ -9,13 +9,23 @@
         <span v-if="post.relationship_type">{{
           types.relatedActivityType[post.relationship_type]
         }}</span>
-        <span v-else class="italic">Type Missing</span>
+        <span v-else class="italic">{{
+          language.common_lang.missing.element.replace(
+            ':element',
+            language.common_lang.type
+          )
+        }}</span>
       </div>
       <div>
         <span v-if="post.activity_identifier">{{
           post.activity_identifier
         }}</span>
-        <span v-else class="italic">Reference Missing</span>
+        <span v-else class="italic">{{
+          language.common_lang.missing.element.replace(
+            ':element',
+            language.common_lang.reference_label
+          )
+        }}</span>
       </div>
     </div>
   </div>
@@ -40,8 +50,9 @@ export default defineComponent({
     }
 
     const types = inject('types') as Types;
+    const language = window['globalLang'];
 
-    return { types, dateFormat };
+    return { types, dateFormat, language };
   },
 });
 </script>

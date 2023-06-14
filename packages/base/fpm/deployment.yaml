@@ -26,36 +26,36 @@ spec:
           command: [ "/bin/sh","-c" ]
           args: ["chown -R www-data:www-data /opt/apps/laravel-in-kubernetes/storage/logs; php artisan migrate --force"]
           volumeMounts:
-          - name: iati-persistent-storage
-            mountPath: /opt/apps/laravel-in-kubernetes/storage/logs
+            - name: iati-persistent-storage
+              mountPath: /opt/apps/laravel-in-kubernetes/storage/logs
           envFrom:
             - configMapRef:
                 name: iatipublisher
             - secretRef:
                 name: iatipublisher
       containers:
-      - name: iatipublisher-fpm
-        envFrom:
-          - configMapRef:
-              name: iatipublisher
-          - secretRef:
-              name: iatipublisher
-        image: ghcr.io/younginnovations/iatipublisher/fpm_server
-        imagePullPolicy: IfNotPresent
-        command: [ "/bin/sh","-c" ]
-        args: ["php artisan optimize:clear; php-fpm"]
-        ports:
-        - containerPort: 9000
-        volumeMounts:
-        - name: iati-persistent-storage
-          mountPath: /opt/apps/laravel-in-kubernetes/storage/logs
-        securityContext:
+        - name: iatipublisher-fpm
+          envFrom:
+            - configMapRef:
+                name: iatipublisher
+            - secretRef:
+                name: iatipublisher
+          image: ghcr.io/younginnovations/iatipublisher/fpm_server
+          imagePullPolicy: IfNotPresent
+          command: [ "/bin/sh","-c" ]
+          args: ["php artisan optimize:clear; php-fpm"]
+          ports:
+            - containerPort: 9000
+          volumeMounts:
+            - name: iati-persistent-storage
+              mountPath: /opt/apps/laravel-in-kubernetes/storage/logs
+          securityContext:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
-              - ALL
+                - ALL
             privileged: false
       volumes:
-      - name: iati-persistent-storage
-        persistentVolumeClaim:
-          claimName: iati-pv-claim
+        - name: iati-persistent-storage
+          persistentVolumeClaim:
+            claimName: iati-pv-claim

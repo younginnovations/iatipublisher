@@ -11,16 +11,16 @@
           <table class="mb-3">
             <tbody>
               <tr>
-                <td>Title</td>
+                <td>{{ language.common_lang.title }}</td>
                 <td>
                   <template v-for="(na, n) in post.title[0].narrative" :key="n">
                     <div class="title-content mb-1.5">
                       <div class="language mb-1">
-                        (Language:
+                        ({{ language.common_lang.language }}:
                         {{
                           type.language[na.language]
                             ? type.language[na.language]
-                            : 'Missing'
+                            : language.common_lang.missing.default
                         }})
                       </div>
                       <div
@@ -34,7 +34,7 @@
               </tr>
 
               <tr v-if="post.url">
-                <td>Document Link</td>
+                <td>{{ language.common_lang.document_link }}</td>
                 <td>
                   <a
                     class="w-[800px] !max-w-[50%] overflow-x-hidden text-ellipsis whitespace-nowrap"
@@ -46,12 +46,18 @@
               </tr>
 
               <tr>
-                <td>Format</td>
-                <td>{{ post.format ? post.format : 'Missing' }}</td>
+                <td>{{ language.common_lang.format }}</td>
+                <td>
+                  {{
+                    post.format
+                      ? post.format
+                      : language.common_lang.missing.default
+                  }}
+                </td>
               </tr>
 
               <tr>
-                <td>Description</td>
+                <td>{{ language.common_lang.description }}</td>
                 <td>
                   <template
                     v-for="(na, n) in post.description[0].narrative"
@@ -59,11 +65,11 @@
                   >
                     <div class="description-content mb-1.5">
                       <div class="language mb-1">
-                        (Language:
+                        ({{ language.common_lang.language }}:
                         {{
                           type.language[na.language]
                             ? type.language[na.language]
-                            : 'Missing'
+                            : language.common_lang.missing.default
                         }})
                       </div>
                       <div class="description text-xs">
@@ -75,14 +81,14 @@
               </tr>
 
               <tr>
-                <td>Category</td>
+                <td>{{ language.common_lang.category }}</td>
                 <td>
                   <template v-for="(cat, c) in post.category" :key="c">
                     <div class="mb-1 text-xs">
                       {{
                         type.documentCategory[cat.code]
                           ? type.documentCategory[cat.code]
-                          : 'Missing'
+                          : language.common_lang.missing.default
                       }}
                     </div>
                   </template>
@@ -90,12 +96,12 @@
               </tr>
 
               <tr v-if="post.language.length > 0">
-                <td>Language</td>
+                <td>{{ language.common_lang.language }}</td>
                 <td>
                   <div class="text-xs">
                     {{
                       post.language[0].language === null
-                        ? 'Missing'
+                        ? language.common_lang.missing.default
                         : post.language
                             .map((entry) => type.language[entry.language])
                             .join(', ')
@@ -105,13 +111,13 @@
               </tr>
 
               <tr>
-                <td>Document Date</td>
+                <td>{{ language.common_lang.document_date }}</td>
                 <td>
                   <div class="text-xs">
                     {{
                       post.document_date[0].date
                         ? post.document_date[0].date
-                        : 'Missing'
+                        : language.common_lang.missing.default
                     }}
                   </div>
                 </td>
@@ -143,8 +149,9 @@ export default defineComponent({
   setup(props) {
     let { data } = toRefs(props);
     const dlData = data.value;
+    const language = window['globalLang'];
 
-    return { dlData };
+    return { dlData, language };
   },
 });
 </script>

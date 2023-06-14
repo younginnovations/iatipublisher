@@ -28,7 +28,7 @@
           class="rounded bg-bluecoral py-2 px-5 font-semibold text-white"
           @click="close"
         >
-          Close
+          {{ language.button_lang.close }}
         </button>
       </div>
     </div>
@@ -43,6 +43,7 @@ import {
   onUnmounted,
 } from 'vue';
 
+const language = window['globalLang'];
 const emit = defineEmits(['close-popup']);
 const props = defineProps({
   message: {

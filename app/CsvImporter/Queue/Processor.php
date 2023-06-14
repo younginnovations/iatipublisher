@@ -37,6 +37,7 @@ class Processor
      * @param $file
      * @param $filename
      * @param $activityIdentifiers
+     * @param $organizationReportingOrg
      *
      * @return void
      */
@@ -47,7 +48,7 @@ class Processor
         $csv = Excel::toCollection(new CsvToArrayWithHeaders, $file)->first()->toArray();
 
         $this->dispatch(
-            new ImportActivity(new CsvProcessor($csv), $filename, $activityIdentifiers, $organizationReportingOrg)
+            new ImportActivity(new CsvProcessor($csv, app()->getLocale()), $filename, $activityIdentifiers, $organizationReportingOrg)
         );
     }
 }

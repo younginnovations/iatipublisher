@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::middleware(RedirectIfAuthenticated::class)->name('web.')->group(function () {
-    Route::get('/', [App\Http\Controllers\Web\WebController::class, 'index']);
+    Route::get('/', [App\Http\Controllers\Web\WebController::class, 'index'])->name('index.index');
     Route::get('/login', [App\Http\Controllers\Web\WebController::class, 'index'])->name('index.login');
     Route::get('/register/{page}', [App\Http\Controllers\Web\WebController::class, 'index'])->name('join');
     Route::get('/register', [App\Http\Controllers\Web\WebController::class, 'register'])->name('register');
@@ -43,3 +43,11 @@ Route::get('/about', [App\Http\Controllers\Web\WebController::class, 'about'])->
 Route::get('/publishing-checklist', [App\Http\Controllers\Web\WebController::class, 'publishingChecklist'])->name('publishingchecklist');
 Route::get('/iati-standard', [App\Http\Controllers\Web\WebController::class, 'iatiStandard'])->name('iatistandard');
 Route::get('/support', [App\Http\Controllers\Web\WebController::class, 'support'])->name('support');
+
+Route::get('lang/{lang}', static function ($lang) {
+    if (in_array($lang, ['en', 'fr', 'es'])) {
+        session()->put('locale', $lang);
+    }
+
+    return redirect()->back();
+});

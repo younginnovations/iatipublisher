@@ -84,7 +84,7 @@ class ResultCompleteTest extends ElementCompleteTest
         $this->element = 'indicator';
         $this->test_mandatory_sub_elements($this->element, [
             'document_link' => ['url', 'format'],
-            'reference'     => ['vocabulary'],
+            'reference'     => ['vocabulary', 'code'],
             'baseline'      => ['year'],
         ]);
     }

@@ -6,7 +6,7 @@
       class="button secondary-btn font-bold"
       @click="toggle"
     >
-      <svg-vue icon="download-file" /> Download All
+      <svg-vue icon="download-file" /> {{ language.button_lang.download_all }}
       <svg-vue icon="dropdown-arrow" class="text-blue-coral !text-[6px]" />
     </button>
     <button
@@ -29,7 +29,14 @@
             href="#"
             :class="liClass"
             @click="downloadCsv(store.state.selectedActivities.length)"
-            >Download CSV</a
+            >{{
+              capitalize(
+                language.button_lang.download_element.replace(
+                  ':element',
+                  language.common_lang.csv
+                )
+              )
+            }}</a
           >
         </li>
         <li>
@@ -37,11 +44,27 @@
             href="#"
             :class="liClass"
             @click="downloadXml(store.state.selectedActivities.length)"
-            >Download XML</a
+            >{{
+              capitalize(
+                language.button_lang.download_element.replace(
+                  ':element',
+                  language.common_lang.xml
+                )
+              )
+            }}</a
           >
         </li>
         <li>
-          <a href="#" :class="liClass" @click="checkDownload">Download XLS</a>
+          <a href="#" :class="liClass" @click="checkDownload">
+            {{
+              capitalize(
+                language.button_lang.download_element.replace(
+                  ':element',
+                  language.common_lang.xls
+                )
+              )
+            }}
+          </a>
         </li>
       </ul>
     </div>
@@ -55,16 +78,25 @@
       "
     >
       <p class="text-sm font-bold">
-        The XML file is in wrong format. Would you like to download it anyway?
+        {{ language.button_lang.download_xml_confirmation }}
       </p>
 
       <div class="mb-4 h-40 overflow-y-auto rounded-lg bg-rose p-4 text-sm">
         <div class="mb-2 flex justify-between">
-          <div class="text-xs font-bold">Error message</div>
+          <div class="text-xs font-bold">
+            {{ language.common_lang.error_message }}
+          </div>
           <a
             class="top-1 right-3 cursor-pointer text-xs font-bold"
             @click="downloadError('error', message)"
-            >Download error message</a
+            >{{
+              capitalize(
+                language.button_lang.download_element.replace(
+                  ':element',
+                  language.common_lang.error_message
+                )
+              )
+            }}</a
           >
         </div>
         {{ message }}
@@ -79,13 +111,20 @@
             }
           "
         >
-          Go back
+          {{ language.button_lang.go_back }}
         </button>
         <button
           class="rounded bg-bluecoral px-4 py-3 font-bold text-white"
           @click="downloadErrorxml(store.state.selectedActivities.length)"
         >
-          Download Anyway
+          {{
+            capitalize(
+              language.button_lang.download_element.replace(
+                ':element',
+                language.common_lang.anyway
+              )
+            )
+          }}
         </button>
       </div>
     </Modal>
@@ -131,7 +170,7 @@
             class="primary-btn"
             @click="downloadXls(store.state.selectedActivities.length)"
           >
-            Continue
+            {{ language.button_lang.continue }}
           </button>
         </div>
       </div>
@@ -157,10 +196,15 @@
         </div>
         <div class="flex justify-end space-x-5">
           <button class="ghost-btn" @click="downloadingInProcess = false">
-            go back
+            {{ language.button_lang.go_back }}
           </button>
           <button class="primary-btn" @click="downloadAnyway">
-            Download Anyway
+            {{
+              language.button_lang.download_element.replace(
+                ':element',
+                language.common_lang.anyway
+              )
+            }}
           </button>
         </div>
       </div>
@@ -178,8 +222,7 @@
 
 <script lang="ts">
 import { useStore } from 'Store/activities/index';
-
-import { reactive, defineComponent, ref, onMounted } from 'vue';
+import { reactive, defineComponent, ref, onMounted, capitalize } from 'vue';
 import CreateModal from '../CreateModal.vue';
 import { useToggle } from '@vueuse/core';
 import Toast from '../../../components/ToastMessage.vue';
@@ -200,6 +243,7 @@ export default defineComponent({
     Modal,
   },
   setup() {
+    const language = window['globalLang'];
     const state = reactive({
       isVisible: false,
     });
@@ -431,8 +475,10 @@ export default defineComponent({
       downloadingInProcess,
       isLoading,
       downloadAnyway,
+      language,
     };
   },
+  methods: { capitalize },
 });
 </script>
 <style scoped lang="scss">

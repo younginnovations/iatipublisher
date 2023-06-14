@@ -166,7 +166,7 @@ class OrganizationBaseRequest extends FormRequest
         $validator->addReplacer(
             'unique_default_lang',
             function ($message) use ($validator, $defaultLanguage) {
-                return 'The @xml:lang must be unique';
+                return translateRequestMessage('xml_lang_symbol', 'must_be_unique');
             }
         );
 
@@ -221,17 +221,18 @@ class OrganizationBaseRequest extends FormRequest
      */
     public function getMessagesForNarrative($formFields, $formBase): array
     {
+//        REVIEW THIS
         $messages = [];
-        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The @xml:lang field must be unique.';
-        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = 'The narrative language field must be unique.';
+        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = translateRequestMessage('xml_lang_field_symbol', 'must_be_unique');
+        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = translateRequestMessage('narrative_language', 'must_be_unique');
 
         foreach ($formFields as $narrativeIndex => $narrative) {
-            $messages[sprintf('%s.narrative.%s.narrative.required', $formBase, $narrativeIndex)] = 'The narrative field is required.';
+            $messages[sprintf('%s.narrative.%s.narrative.required', $formBase, $narrativeIndex)] = translateRequestMessage('narrative_field', 'is_required');
             $messages[sprintf(
                 '%s.narrative.%s.narrative.required_with_language',
                 $formBase,
                 $narrativeIndex
-            )] = 'The language field is required when narrative field is present.';
+            )] = translateRequestMessage('language_field', 'required_when_narrative_present');
         }
 
         return $messages;
@@ -274,13 +275,13 @@ class OrganizationBaseRequest extends FormRequest
 
         foreach ($formFields as $valueKey => $valueVal) {
             $valueForm = $formBase . '.value.' . $valueKey;
-            $messages[$valueForm . '.amount.required'] = 'The amount field is required.';
-            $messages[$valueForm . '.amount.numeric'] = 'The amount must be numeric.';
-            $messages[$valueForm . '.amount.min'] = 'The amount must not be in negative.';
-            $messages[$valueForm . '.value_date.required'] = 'The @value-date field is required.';
-            $messages[$valueForm . '.value_date.date'] = 'The @value-date must be date.';
-            $messages[sprintf('%s.value_date.after_or_equal', $valueForm)] = 'The @value-date field must be a date between period start and period end';
-            $messages[sprintf('%s.value_date.before_or_equal', $valueForm)] = 'The @value-date field must be a date between period start and period end';
+            $messages[$valueForm . '.amount.required'] = translateRequestMessage('amount_field', 'is_required');
+            $messages[$valueForm . '.amount.numeric'] = translateRequestMessage('amount', 'must_be_numeric');
+            $messages[$valueForm . '.amount.min'] = translateRequestMessage('amount', 'must_not_be_negative');
+            $messages[$valueForm . '.value_date.required'] = translateRequestMessage('value_date_field_symbol', 'is_required');
+            $messages[$valueForm . '.value_date.date'] = translateRequestMessage('value_date_symbol', 'must_be_a_date');
+            $messages[sprintf('%s.value_date.after_or_equal', $valueForm)] = translateRequestMessage('value_date_field_symbol', 'must_be_between');
+            $messages[sprintf('%s.value_date.before_or_equal', $valueForm)] = translateRequestMessage('value_date_field_symbol', 'must_be_between');
         }
 
         return $messages;
@@ -380,9 +381,9 @@ class OrganizationBaseRequest extends FormRequest
         $messages = [];
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.required'] = 'The @iso-date field is required.';
-            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = 'The @iso-date field must be a date.';
-            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.period_start_end'] = 'The period must not be longer than one year.';
+            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.required'] = translateRequestMessage('iso_field', 'is_required');
+            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = translateRequestMessage('iso_field', 'must_be_a_date');
+            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.period_start_end'] = trans('requests.the_midfix_suffix', ['midfix'=>trans('common.period'), 'suffix'=>trans('requests.must_not_be_longer_than_1_year')]);
         }
 
         return $messages;
@@ -422,10 +423,10 @@ class OrganizationBaseRequest extends FormRequest
         $messages = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.required'] = 'The @iso-date field is required.';
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = 'The @iso-date field must be a date.';
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = 'The @iso-date field must be a date after period-start date.';
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.period_start_end'] = 'The period must not be longer than one year.';
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.required'] = translateRequestMessage('iso_date_field_symbol', 'is_required');
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = translateRequestMessage('iso_date_field_symbol', 'must_be_a_date');
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = translateRequestMessage('iso_date_field_symbol', 'must_be_a_date_after_period_start');
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.period_start_end'] = trans('requests.the_midfix_suffix', ['midfix'=>trans('common.period'), 'suffix'=>trans('requests.must_not_be_longer_than_1_year')]);
         }
 
         return $messages;
@@ -467,13 +468,13 @@ class OrganizationBaseRequest extends FormRequest
         $messages = [];
 
         foreach ($formField as $budgetLineIndex => $budgetLine) {
-            $messages[sprintf('%s.value.%s.amount.required_with', $formBase, $budgetLineIndex)] = 'The amount field is required with value.';
-            $messages[sprintf('%s.value.%s.amount.numeric', $formBase, $budgetLineIndex)] = 'The amount field must be a number.';
-            $messages[sprintf('%s.value.%s.amount.min', $formBase, $budgetLineIndex)] = 'The amount field must not be in negative.';
-            $messages[sprintf('%s.value.%s.value_date.date', $formBase, $budgetLineIndex)] = 'The @value-date must be a date.';
-            $messages[sprintf('%s.value.%s.value_date.required_with', $formBase, $budgetLineIndex)] = 'The @value-date is required with value,.';
-            $messages[sprintf('%s.value.%s.value_date.after_or_equal', $formBase, $budgetLineIndex)] = 'The @value-date field must be a date between period start and period end';
-            $messages[sprintf('%s.value.%s.value_date.before_or_equal', $formBase, $budgetLineIndex)] = 'The @value-date field must be a date between period start and period end';
+            $messages[sprintf('%s.value.%s.amount.required_with', $formBase, $budgetLineIndex)] = translateRequestMessage('amount_field', 'is_required_with_val');
+            $messages[sprintf('%s.value.%s.amount.numeric', $formBase, $budgetLineIndex)] = translateRequestMessage('amount_field', 'must_be_a_number');
+            $messages[sprintf('%s.value.%s.amount.min', $formBase, $budgetLineIndex)] = translateRequestMessage('amount_field', 'must_not_be_negative');
+            $messages[sprintf('%s.value.%s.value_date.date', $formBase, $budgetLineIndex)] = translateRequestMessage('value_date_symbol', 'must_be_a_date');
+            $messages[sprintf('%s.value.%s.value_date.required_with', $formBase, $budgetLineIndex)] = translateRequestMessage('value_date_symbol', 'is_required_with_val');
+            $messages[sprintf('%s.value.%s.value_date.after_or_equal', $formBase, $budgetLineIndex)] = translateRequestMessage('value_date_symbol', 'must_be_between');
+            $messages[sprintf('%s.value.%s.value_date.before_or_equal', $formBase, $budgetLineIndex)] = translateRequestMessage('value_date_symbol', 'must_be_between');
         }
 
         return $messages;
@@ -513,11 +514,11 @@ class OrganizationBaseRequest extends FormRequest
     public function getMessagesForBudgetOrExpenseLineNarrative($formFields, $formBase): array
     {
         $messages = [];
-        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = 'The narrative language field must be unique.';
-        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = 'The narrative language field must be unique.';
+        $messages[sprintf('%s.narrative.unique_lang', $formBase)] = translateRequestMessage('narrative_language', 'must_be_unique');
+        $messages[sprintf('%s.narrative.unique_default_lang', $formBase)] = translateRequestMessage('narrative_language', 'must_be_unique');
 
         foreach ($formFields as $narrativeIndex => $narrative) {
-            $messages[sprintf('%s.narrative.%s.narrative.required_with_language', $formBase, $narrativeIndex)] = 'The narrative field is required with language field.';
+            $messages[sprintf('%s.narrative.%s.narrative.required_with_language', $formBase, $narrativeIndex)] = trans('validation.required', ['attribute' => trans('elementForm.narrative')]);
         }
 
         return $messages;

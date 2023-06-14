@@ -17,6 +17,7 @@ class RecipientRegionXmlTest extends XmlBaseTest
     {
         $rows = $this->region_country_percentage_sum_not_equal_to_100_single_data();
         $flattenErrors = $this->getErrors($rows);
+
         $this->assertContains('The sum of recipient country and recipient region of a specific vocabulary must be 100%', $flattenErrors);
     }
 
@@ -299,10 +300,10 @@ class RecipientRegionXmlTest extends XmlBaseTest
     {
         $rows = $this->invalid_data();
         $flattenErrors = $this->getErrors($rows);
-        $this->assertContains('Recipient Country’s percentage is already 100%. The sum of the percentages of Recipient Country and Recipient Region must be 100%', $flattenErrors);
+        $this->assertContains('Recipient Country’s percentage is already 100%. The sum of the percentages of Recipient Country and Recipient Region must be 100%.', $flattenErrors);
         $this->assertContains('The recipient region vocabulary uri must be a valid url.', $flattenErrors);
         $this->assertContains('The recipient region percentage field must be a number.', $flattenErrors);
-        $this->assertContains('The recipient country percentage must be at least 0. ', $flattenErrors);
+        $this->assertContains('The recipient country percentage must be atleast 0.', $flattenErrors);
     }
 
     /**

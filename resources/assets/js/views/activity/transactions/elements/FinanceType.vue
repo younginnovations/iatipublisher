@@ -3,7 +3,10 @@
     {{
       financeData[0].finance_type
         ? type.financeType[financeData[0].finance_type]
-        : 'Finance Type Missing'
+        : language.common_lang.missing.element.replace(
+            ':element',
+            language.common_lang.finance_type
+          )
     }}
   </div>
 </template>
@@ -21,6 +24,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     const { data } = toRefs(props);
 
     interface ArrayObject {
@@ -29,7 +33,7 @@ export default defineComponent({
     const financeData = data.value as ArrayObject;
     const type = inject('types');
 
-    return { financeData, type };
+    return { financeData, type, language };
   },
 });
 </script>

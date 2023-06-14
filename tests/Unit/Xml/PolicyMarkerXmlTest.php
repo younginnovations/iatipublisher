@@ -18,12 +18,12 @@ class PolicyMarkerXmlTest extends XmlBaseTest
         $rows = $this->invalid_data();
         $flattenErrors = $this->getErrors($rows);
         $this->assertContains('The policy marker vocabulary is invalid.', $flattenErrors);
-        $this->assertContains('The policy marker significance is invalid.', $flattenErrors);
+        $this->assertContains('The policy marker significance is invalid', $flattenErrors);
         $this->assertContains('The policy marker code is invalid.', $flattenErrors);
         $this->assertContains('The @vocabulary-uri field must be a valid url.', $flattenErrors);
-        $this->assertContains('The narrative field is required when vocabulary is reporting organisation.', $flattenErrors);
+        $this->assertContains('The Narrative field is required when vocabulary is reporting organisation.', $flattenErrors);
         $this->assertContains('The @xml:lang field is invalid.', $flattenErrors);
-        $this->assertContains('The narrative field is required with @xml:lang field.', $flattenErrors);
+        $this->assertContains('The Narrative field is required with @xml:lang field.', $flattenErrors);
     }
 
     /**

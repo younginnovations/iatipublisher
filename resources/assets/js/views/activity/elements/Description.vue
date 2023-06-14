@@ -8,7 +8,12 @@
       <span v-if="post.type">
         {{ types.descriptionType[post.type] }}
       </span>
-      <span v-else class="italic">Type Missing</span>
+      <span v-else class="italic">{{
+        language.common_lang.missing.element.replace(
+          ':element',
+          language.common_lang.type
+        )
+      }}</span>
     </div>
     <div
       v-for="(item, i) in post.narrative"
@@ -18,13 +23,19 @@
     >
       <div v-if="item.narrative" class="flex flex-col">
         <span v-if="item.language" class="language mb-1.5">
-          (Language: {{ types.languages[item.language] }})
+          ({{ language.common_lang.language }}:
+          {{ types.languages[item.language] }})
         </span>
         <span v-if="item.narrative" class="max-w-[887px]">
           {{ item.narrative }}
         </span>
       </div>
-      <span v-else class="italic">Narrative Missing</span>
+      <span v-else class="italic">{{
+        language.common_lang.missing.element.replace(
+          ':element',
+          language.common_lang.narrative
+        )
+      }}</span>
     </div>
   </div>
 </template>
@@ -46,8 +57,9 @@ export default defineComponent({
       descriptionType: [];
       languages: [];
     }
+    const language = window['globalLang'];
     const types = inject('types') as Types;
-    return { types };
+    return { types, language };
   },
 });
 </script>

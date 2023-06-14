@@ -50,6 +50,6 @@ class AccessibleRoute
             return $next($request);
         }
 
-        return response(['status'=>false, 'message' => 'Activity element delete denied']);
+        return response(['status'=>false, 'message' => trans('middleware.activity_element_delete_denied')]);
     }
 }

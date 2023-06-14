@@ -5,8 +5,13 @@
       <div>
         <NotYet
           :link="`/indicator/${id.indicator}/period/create`"
-          description="You haven't added any periods yet."
-          btn-text="Add period"
+          :description="language.button_lang.not_yet_added_period"
+          :btn-text="
+            language.button_lang.add_element.replace(
+              ':element',
+              language.common_lang.period
+            )
+          "
           class="max-w-[442px]"
         />
       </div>
@@ -14,7 +19,7 @@
   </tr>
 
   <tr v-else>
-    <td>Periods</td>
+    <td>{{ language.common_lang.periods }}</td>
     <td>
       <div class="inline-flex gap-4">
         <div>
@@ -42,7 +47,7 @@
             </div>
             <div class="ml-2">
               <Btn
-                text="Edit"
+                :text="language.button_lang.edit"
                 icon="edit"
                 :link="`/indicator/${id.indicator}/period/${item.id}/edit`"
               />
@@ -51,7 +56,7 @@
         </div>
         <div class="shrink-0">
           <Btn
-            text="Show full period list"
+            :text="language.button_lang.show_full_period"
             icon=""
             design="bgText"
             :link="`/indicator/${id.indicator}/period`"
@@ -86,8 +91,9 @@ export default defineComponent({
       result: string;
       indicator: string;
     }
+    const language = window['globalLang'];
     const id = inject('parentData') as ParentData;
-    return { id, dateFormat };
+    return { id, dateFormat, language };
   },
 });
 </script>

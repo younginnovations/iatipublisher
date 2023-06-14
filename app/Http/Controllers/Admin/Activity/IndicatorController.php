@@ -91,7 +91,7 @@ class IndicatorController extends Controller
 
             return redirect()->route('admin.activity.result.index', $resultId)->with(
                 'error',
-                'Error has occurred while rendering activity transactions listing.'
+                trans('responses.error_has_occurred', ['event'=>trans('events.rendering'), 'suffix'=>trans('responses.activity_transactions_listing')])
             );
         }
     }
@@ -111,13 +111,13 @@ class IndicatorController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Indicators fetched successfully',
+                'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.indicators'), 'event'=>trans('events.fetched')])),
                 'data'    => $indicator,
             ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.fetching'), 'suffix'=>trans('responses.the_data')])]);
         }
     }
 
@@ -143,7 +143,7 @@ class IndicatorController extends Controller
 
             return redirect()->route('admin.result.indicator.index', [$resultId])->with(
                 'error',
-                'Error has occurred while rendering indicator form.'
+                trans('responses.error_has_occurred_form', ['event'=>trans('events.rendering'), 'suffix'=>trans('elements_common.indicator')])
             );
         }
     }
@@ -169,14 +169,14 @@ class IndicatorController extends Controller
 
             return redirect()->route('admin.result.indicator.show', [$resultId, $indicator['id']])->with(
                 'success',
-                'Result indicator created successfully.'
+                ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.result_indicator'), 'event'=>trans('events.created')]))
             );
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.result.indicator.index', $resultId)->with(
                 'error',
-                'Error has occurred while creating result indicator.'
+                trans('responses.error_has_occurred', ['event'=>trans('events.creating'), 'suffix'=>trans('responses.result_indicator')])
             );
         }
     }
@@ -197,7 +197,7 @@ class IndicatorController extends Controller
             $resultTitle = $result['result']['title'];
             $activity = $result->activity;
             $period = $this->periodService->getPeriods($indicatorId)->toArray();
-            $element = getElementSchema('indicator');
+            $element = translateJsonValues(getElementSchema('indicator'));
             $types = getIndicatorTypes();
             $toast = generateToastData();
 
@@ -207,7 +207,7 @@ class IndicatorController extends Controller
 
             return redirect()->route('admin.result.indicator.index', $resultId)->with(
                 'error',
-                'Error has occurred while rending result detail page.'
+                trans('responses.error_has_occurred_page', ['event'=>trans('events.rendering'), 'suffix'=>trans('responses.result_detail')])
             );
         }
     }
@@ -235,7 +235,7 @@ class IndicatorController extends Controller
 
             return redirect()->route('admin.result.indicator.index', $resultId)->with(
                 'error',
-                'Error has occurred while rendering indicator form.'
+                trans('responses.error_has_occurred_form', ['event'=>trans('events.rendering'), 'suffix'=>trans('elements_common.indicator')])
             );
         }
     }
@@ -259,7 +259,7 @@ class IndicatorController extends Controller
             if (!$this->indicatorService->update($indicatorId, ['result_id' => $result->id, 'indicator' => $indicatorData])) {
                 return redirect()->route('admin.result.indicator.index', $resultId)->with(
                     'error',
-                    'Error has occurred while updating result indicator.'
+                    trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('responses.result_indicator')])
                 );
             }
 
@@ -272,7 +272,7 @@ class IndicatorController extends Controller
 
             return redirect()->route('admin.result.indicator.index', $resultId)->with(
                 'error',
-                'Error has occurred while updating indicator.'
+                trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.indicator')])
             );
         }
     }
@@ -289,20 +289,20 @@ class IndicatorController extends Controller
     {
         try {
             $this->indicatorService->deleteIndicator($indicatorId);
-            Session::flash('success', 'Indicator Deleted Successfully');
+            Session::flash('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.indicator'), 'event'=>trans('events.deleted')])));
 
             return response()->json([
                 'status'    => true,
-                'msg'       => 'Indicator Deleted Successfully',
+                'msg'       => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.indicator'), 'event'=>trans('events.deleted')])),
                 'result_id' => $id,
             ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
-            Session::flash('error', 'Indicator Delete Error');
+            Session::flash('error', ucwords(trans('responses.delete_error', ['prefix'=>trans('elements_common.indicator')])));
 
             return response()->json([
                 'status'    => true,
-                'msg'       => 'Indicator Delete Error',
+                'msg'       => ucwords(trans('responses.delete_error', ['prefix'=>trans('elements_common.indicator')])),
                 'result_id' => $id,
             ], 400);
         }

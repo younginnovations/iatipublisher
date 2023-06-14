@@ -1,58 +1,58 @@
 {
   "organisation_identifier": {
     "name": "organisation_identifier",
-    "label": "organisation-identifier",
+    "label": "elements_common.organisation_identifier",
     "criteria": "mandatory",
-    "hover_text": "The Organisation Identifier is a unique code for your organisation. This is generated from the Organisation Registration Agency and Registration Number. For more information read: How to create your IATI organisation identifier. </br><a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/organisation-identifier/'>For more information</a>",
+    "hover_text": "elements.organisation.organisation_identifier.hover_text",
     "help_text": "",
     "attributes": {
       "organization_country": {
         "name": "organization_country",
-        "label": "Country",
+        "label": "elements_common.country",
         "type": "select",
         "choices": "Activity/Country.json",
         "required": false,
         "criteria": "",
-        "hover_text": "Select the location of your organisation.",
-        "help_text": "Provide the country where your organisation is located."
+        "hover_text": "elements.organisation.organisation_identifier.organization_country.hover_text",
+        "help_text": "elements.organisation.organisation_identifier.organization_country.help_text"
       },
       "organization_registration_agency": {
         "name": "organization_registration_agency",
-        "label": "Organisation Registration Agency",
+        "label": "elements_common.organisation_registration_agency",
         "type": "select",
         "choices": "Organization/OrganizationRegistrationAgency.json",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "Select the agency in your country where your organisation is registered. If you do not know this information please email support@iatistandard.org",
-        "help_text": "Provide the name of the agency in your country where your organisation is registered. If you do not know this information please email support@iatistandard.org."
+        "hover_text": "elements.organisation.organisation_identifier.organization_registration_agency.hover_text",
+        "help_text": "elements.organisation.organisation_identifier.organization_registration_agency.help_text"
       },
       "registration_number": {
         "name": "registration_number",
-        "label": "Registration Number",
+        "label": "elements_common.registration_number",
         "type": "text",
         "required": true,
         "placeholder": "for e.g. 123456",
         "criteria": "mandatory",
-        "hover_text": "Provide the registration number for your organisation that has been provided by the organisation registration agency. If you do not know this please email support@iatistandard.org",
-        "help_text": "Provide the registration number for your organisation that has been provided by the registration agency named above. If you do not know this information please email support@iatistandard.org."
+        "hover_text": "elements.organisation.organisation_identifier.registration_number.hover_text",
+        "help_text": "elements.organisation.organisation_identifier.registration_number.help_text"
       },
       "iati-activity-identifier": {
         "name": "organisation_identifier",
-        "label": "organisation-identifier",
+        "label": "elements_common.organisation_identifier",
         "type": "text",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "The Organisation Identifier is a unique code for your organisation. This is generated from the Organisation Registration Agency and Registration Number. For more information read: How to create your IATI organisation identifier. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/organisation-identifier/'>For more information</a>",
-        "help_text": "The Organisation Identifier (Org-ID) is a unique code for your organisation. This is generated from the Organisation Registration Agency and Registration Number. For more information read: <a target='_blank' href='http://iatistandard.org/en/guidance/preparing-organisation/organisation-account/how-to-create-your-iati-organisation-identifier/'>How to create your IATI organisation identifier.</a>"
+        "hover_text": "elements.organisation.organisation_identifier.iati-activity-identifier.hover_text",
+        "help_text": "elements.organisation.organisation_identifier.iati-activity-identifier.help_text"
       }
     },
     "sub_elements": {}
   },
   "name": {
     "name": "name",
-    "label": "name",
+    "label": "elements_common.name",
     "multiple": false,
-    "hover_text": "The human-readable name of the organisation.",
+    "hover_text": "elements.organisation.name.hover_text",
     "show_info_in_title": true,
     "attributes": {},
     "sub_elements": {
@@ -64,23 +64,23 @@
         "criteria": "mandatory",
         "element_criteria": "mandatory",
         "add_more": true,
-        "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/name/narrative/'> For more information</a>",
-        "help_text": "Type the name of your organisation.",
+        "hover_text": "elements.organisation.name.narrative.hover_text",
+        "help_text": "elements.organisation.name.narrative.help_text",
         "attr": {
           "row": 4
         },
         "attributes": {
           "lang": {
             "name": "language",
-            "label": "language",
+            "label": "elements_common.language",
             "type": "select",
             "multiSelect": false,
             "choices": "Activity/Language.json",
-            "placeholder": "Select language",
+            "placeholder": "elements_common.select_language",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/name/narrative/'>For more information</a>",
-            "help_text": "Select the language that you have provided in the narrative. If no language is selected, your default language is assumed."
+            "hover_text": "elements.organisation.name.language.hover_text",
+            "help_text": "elements.organisation.name.language.help_text"
           }
         },
         "sub_elements": {}
@@ -90,54 +90,54 @@
   "reporting_org": {
     "name": "reporting_org",
     "label": "reporting organisation",
-    "hover_text": "The organisation issuing the report. May be a primary source (reporting on its own activity as donor, implementing agency, etc) or a secondary source (reporting on the activities of another organisation).<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
-    "help_text": "You need to specify which organisation is publishing the file, and which organisation the data is about. In most cases, the publishing organisation is publishing data about itself.<a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/activity-participants/'>Further guidance</a>",
+    "hover_text": "elements.organisation.reporting_org.hover_text",
+    "help_text": "elements.organisation.reporting_org.help_text",
     "add_more": false,
     "attributes": {
       "ref": {
         "name": "ref",
-        "label": "reference",
+        "label": "elements_common.reference",
         "type": "text",
-        "placeholder": "Type reference",
+        "placeholder": "elements_common.type_reference",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "Machine-readable identification string for the organisation issuing the report. Must be in the format {RegistrationAgency}-{RegistrationNumber}.<br> <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
-        "help_text": "Provide the IATI Organisation Identifier of the organisation publishing the data. The quickest way to find this is to search for the organisation in the <a target='_blank' href='https://www.iatiregistry.org/publisher/'>IATI Publisher List</a>. If you cannot find the organisation, see <a target='_blank' href='https://iatistandard.org/en/guidance/publishing-data/data-quality-and-visualisation/finding-other-organisations-identifiers/'>further guidance</a>. ",
+        "hover_text": "elements.organisation.reporting_org.reference.hover_text",
+        "help_text": "elements.organisation.reporting_org.reference.help_text",
         "read_only": true
       },
       "type": {
         "name": "type",
-        "label": "type",
+        "label": "elements_common.type",
         "type": "select",
         "multiSelect": false,
         "choices": "Organization/OrganizationType.json",
-        "placeholder": "Select type",
+        "placeholder": "elements_common.select_type",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "The type of organisation issuing the report.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
-        "help_text": "Select the type that best describes the organisation publishing the data.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/codelists/organisationtype/'>Information on all organisation types.</a>"
+        "hover_text": "elements.organisation.reporting_org.type.hover_text",
+        "help_text": "elements.organisation.reporting_org.type.help_text"
       },
       "secondary_reporter": {
         "name": "secondary_reporter",
-        "label": "secondary-reporter",
+        "label": "elements_common.secondary_reporter",
         "type": "select",
         "choices": {
           "1": "True",
           "0": "False"
         },
-        "placeholder": "Select secondary-reporter",
+        "placeholder": "elements_common.select_secondary_reporter",
         "required": false,
         "criteria": "",
-        "hover_text": "A flag indicating that the reporting organisation of this activity is acting as a secondary reporter. A secondary reporter is one that reproduces data on the activities of an organisation for which it is not directly responsible.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
-        "help_text": "Are you reproducing the data reported by another organisation? If so, your organisation is a ‘secondary reporter’ and you should select '<b>Yes</b>’. If you are reporting your own organisation’s data, select ‘<b>No</b>’.<br><br>Please note: you are <b>not</b> a secondary reporter if your organisation is officially assigned as a proxy to report IATI data on behalf of another organisation."
+        "hover_text": "elements.organisation.reporting_org.secondary_reporter.hover_text",
+        "help_text": "elements.organisation.reporting_org.secondary_reporter.help_text"
       }
     },
     "sub_elements": {
       "narrative": {
         "name": "narrative",
-        "label": "narrative",
+        "label": "elements_common.narrative",
         "type": "textarea",
-        "placeholder": "Type narrative",
+        "placeholder": "elements_common.type_narrative",
         "required": true,
         "criteria": "mandatory",
         "element_criteria": "mandatory",
@@ -145,20 +145,20 @@
         "attr": {
           "row": 4
         },
-        "hover_text": "The text in this element must be of type xsd:string. This element must occur at least once (within each parent element). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/narrative/'>For more information</a>",
-        "help_text": "If you are reporting another organisation’s data, provide their name.",
+        "hover_text": "elements.organisation.reporting_org.narrative.hover_text",
+        "help_text": "elements.organisation.reporting_org.narrative.help_text",
         "attributes": {
           "lang": {
             "name": "language",
-            "label": "language",
+            "label": "elements_common.language",
             "type": "select",
             "multiSelect": false,
             "choices": "Activity/Language.json",
-            "language": "Select language",
+            "language": "elements_common.select_language",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/narrative/'>For more information</a>",
-            "help_text": "Select the language of the text you provided in the narrative. If no language is selected, your default language is assumed."
+            "hover_text": "elements.organisation.reporting_org.language.hover_text",
+            "help_text": "elements_common.your_default_language_assumed_no_that"
           }
         },
         "sub_elements": {}
@@ -167,77 +167,77 @@
   },
   "total_budget": {
     "name": "total_budget",
-    "label": "total budget",
+    "label": "elements_common.total_budget",
     "add_more": true,
-    "hover_text": "The total-budget element allows for the reporting of the organisation’s own budget. The recommendation is that, where and when possible, the organisation’s total annual planned budget for each of the next three years is reported.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/'>For more information</a>",
-    "help_text": "Provide your organisation’s total expected development and humanitarian spend for the current and (where possible) following three years. Each total budget that you provide must span a period of no more than 12 months, and preferably aligned with your organisation’s fiscal year. <br><br>Budgets can also be published for periods of less than one year, for example, into quarters. The time periods of the budgets should not overlap.<a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/organisation-budgets-spend/'>Further guidance.</a>",
+    "hover_text": "elements.organisation.total_budget.hover_text",
+    "help_text": "elements.organisation.total_budget.help_text",
     "attributes": {
       "status": {
         "name": "total_budget_status",
-        "label": "status",
+        "label": "elements_common.status",
         "type": "select",
         "multiselect": false,
         "choices": "Activity/BudgetStatus.json",
         "required": false,
         "criteria": "",
-        "hover_text": "The status explains whether the budget being reported is indicative or has been formally committed. The value should appear within the BudgetStatus codelist.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/'>For more information</a>",
-        "help_text": "Please select a status that best describes this budget:<br><br>(1) <b>indicative</b> - a non-binding estimate for the described budget.<br><br>(2) <b>committed</b> - a binding agreement for the described budget.<br><br>If no status is selected, the budget is assumed to be indicative."
+        "hover_text": "elements.organisation.total_budget.status.hover_text",
+        "help_text": "elements.organisation.total_budget.status.help_text"
       }
     },
     "sub_elements": {
       "period_start": {
         "name": "period_start",
-        "label": "period-start",
+        "label": "elements_common.period_start",
         "add_more": false,
         "element_criteria": "mandatory",
-        "hover_text": "The start of the budget period.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/period-start/'>For more information</a>",
+        "hover_text": "elements.organisation.total_budget.period_start.hover_text",
         "attributes": {
           "date": {
             "name": "date",
-            "label": "date",
+            "label": "elements_common.date",
             "type": "date",
-            "placeholder": "YYYY-MM-DD",
+            "placeholder": "elements_common.yyyy_mm_dd",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "This attribute is required.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/period-start/'>For more information</a>",
-            "help_text": "Provide the start date of the budget period."
+            "hover_text": "elements.organisation.total_budget.period_start.date.hover_text",
+            "help_text": "elements_common.provide_the_start_of_budget_period "
           }
         },
         "sub_elements": {}
       },
       "period_end": {
         "name": "period_end",
-        "label": "period-end",
+        "label": "elements_common.period_end",
         "add_more": false,
         "element_criteria": "mandatory",
-        "hover_text": "The end of the period (which must not be greater than one year).<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/period-end/'>For more information</a>",
+        "hover_text": "elements.organisation.total_budget.period_end.hover_text",
         "attributes": {
           "date": {
             "name": "date",
-            "label": "date",
+            "label": "elements_common.date",
             "type": "date",
-            "placeholder": "YYYY-MM-DD",
+            "placeholder": "elements_common.yyyy_mm_dd",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "This attribute is required.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/period-end/'>For more information</a>",
-            "help_text": "Provide the end date of the budget period."
+            "hover_text": "elements.organisation.total_budget.period_end.date.hover_text",
+            "help_text": "elements_common.provide_the_end_of_budget_period"
           }
         },
         "sub_elements": {}
       },
       "value": {
         "name": "value",
-        "label": "value",
+        "label": "elements_common.value",
         "add_more": false,
         "element_criteria": "mandatory",
-        "hover_text": "The total value of the organisation’s aid budget for this period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/value/'>For more information</a>",
-        "help_text": "Provide the total finance for this budget.",
+        "hover_text": "elements.organisation.total_budget.value.hover_text",
+        "help_text": "elements.organisation.total_budget.value.help_text",
         "attributes": {
           "amount": {
             "name": "amount",
-            "label": "value",
+            "label": "elements_common.value",
             "type": "text",
-            "placeholder": "Type value here",
+            "placeholder": "elements_common.type_value_here",
             "required": true,
             "criteria": "mandatory",
             "hover_text": "",
@@ -245,24 +245,24 @@
           },
           "currency": {
             "name": "currency",
-            "label": "currency",
+            "label": "elements_common.currency",
             "type": "select",
             "multiselect": false,
             "choices": "Activity/Currency.json",
-            "placeholder": "Select currency",
+            "placeholder": "elements_common.select_currency",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/value/'>For more information</a>",
-            "help_text": "Select the currency that you have provided the value in."
+            "hover_text": "elements.organisation.total_budget.value.currency.hover_text",
+            "help_text": "elements_common.select_the_currency_that_you_provided"
           },
           "value_date": {
             "name": "value_date",
-            "label": "value-date",
+            "label": "elements_common.value_date",
             "type": "date",
-            "placeholder": "YYYY-MM-DD",
+            "placeholder": "elements_common.yyyy_mm_dd",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "The date to be used for determining the exchange rate for currency conversions. <br><br>This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/value/'>For more information</a>",
+            "hover_text": "elements.organisation.total_budget.value.value_date.hover_text",
             "help_text": ""
           }
         },
@@ -270,35 +270,35 @@
       },
       "budget_line": {
         "name": "budget_line",
-        "label": "budget line",
+        "label": "elements_common.budget_line",
         "add_more": true,
-        "hover_text": "A breakdown of the total budget into sub-totals. The breakdown is determined by the reporting organisation and described in the narrative. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/budget-line/'>For more information</a>",
-        "help_text": "You can provide further budget information in budget lines. Budget lines allow the total budget to be broken down, for example into different programmes happening in the same year.<br><br>Do note: The sum of each budget line <b><u>does not have</u></b> to equal the value of the total budget. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/organisation-budgets-spend/'>Further guidance</a>.",
+        "hover_text": "elements.organisation.total_budget.budget_line.hover_text",
+        "help_text": "elements.organisation.total_budget.budget_line.help_text",
         "attributes": {
           "ref": {
             "name": "ref",
-            "label": "reference",
+            "label": "elements_common.reference",
             "type": "text",
-            "placeholder": "Type reference",
+            "placeholder": "elements_common.type_reference",
             "required": false,
             "criteria": "",
-            "hover_text": "An internal reference for this budget line taken from the reporting organisation’s own system. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/budget-line/'>For more information</a>",
-            "help_text": "You can provide a reference that you use to identify this budget line in your organisation’s financial reporting system."
+            "hover_text": "elements_common.an_internal_reference",
+            "help_text": "elements.organisation.total_budget.budget_line.reference.help_text"
           }
         },
         "sub_elements": {
           "value": {
             "name": "value",
-            "label": "value",
+            "label": "elements_common.value",
             "add_more": false,
-            "hover_text": "The budget sub-total. The definition of the sub-division is determined by iati-organisation/total-budget/budget-line/narrative <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/budget-line/value/'> For more information</a>",
-            "help_text": "Provide the total finance for this budget line.",
+            "hover_text": "elements.organisation.total_budget.budget_line.value.hover_text",
+            "help_text": "elements.organisation.total_budget.budget_line.value.help_text",
             "attributes": {
               "amount": {
                 "name": "amount",
-                "label": "value",
+                "label": "elements_common.value",
                 "type": "text",
-                "placeholder": "Type value here",
+                "placeholder": "elements_common.type_value_here",
                 "required": true,
                 "criteria": "mandatory",
                 "hover_text": "",
@@ -306,24 +306,24 @@
               },
               "currency": {
                 "name": "currency",
-                "label": "currency",
+                "label": "elements_common.currency",
                 "type": "select",
                 "multiselect": false,
                 "choices": "Activity/Currency.json",
                 "required": true,
                 "criteria": "mandatory",
-                "placeholder": "Select currency",
-                "hover_text": "A three letter ISO 4217 code for the original currency of the amount.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/budget-line/value/'>For more information</a>",
-                "help_text": "Select the currency that you have provided the value in."
+                "placeholder": "elements_common.select_currency",
+                "hover_text": "elements.organisation.total_budget.budget_line.value.currency.hover_text",
+                "help_text": "elements_common.select_the_currency_that_you_provided"
               },
               "value_date": {
                 "name": "value_date",
-                "label": "value-date",
+                "label": "elements_common.value_date",
                 "type": "date",
-                "placeholder": "YYYY-MM-DD",
+                "placeholder": "elements_common.yyyy_mm_dd",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "The date to be used for determining the exchange rate for currency conversions.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/budget-line/value/'>For more information</a>",
+                "hover_text": "elements.organisation.total_budget.budget_line.value.value_date.hover_text",
                 "help_text": ""
               }
             },
@@ -331,29 +331,29 @@
           },
           "narrative": {
             "name": "narrative",
-            "label": "narrative",
+            "label": "elements_common.narrative",
             "type": "textarea",
-            "placeholder": "Type narrative",
+            "placeholder": "elements_common.type_narrative",
             "required": true,
             "criteria": "mandatory",
             "add_more": true,
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/narrative/'>For more information</a>",
-            "help_text": "Provide a description for this budget line.",
+            "hover_text": "elements_common.the_free_text_name_link_budget_line_narrative",
+            "help_text": "elements_common.provide_a_description_for_budget_line",
             "attr": {
               "row": 4
             },
             "attributes": {
               "lang": {
                 "name": "language",
-                "label": "language",
+                "label": "elements_common.language",
                 "type": "select",
                 "multiSelect": false,
                 "choices": "Activity/Language.json",
-                "placeholder": "Select language",
+                "placeholder": "elements_common.select_language",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed"
+                "hover_text": "elements_common.a_code_specifying_text_org_recipient_region_buget_line_narrative",
+                "help_text": "elements_common.select_the_language_of_text_in_narrative"
               }
             },
             "sub_elements": {}
@@ -364,70 +364,70 @@
   },
   "recipient_org_budget": {
     "name": "recipient_org_budget",
-    "label": "recipient organisation budget",
+    "label": "elements_common.recipient_organisation_budget",
     "add_more": true,
-    "hover_text": "The recipient-org-budget element allows for the reporting of forward looking budgets for each institution which receives core funding from the reporting organisation. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/'>For more information</a>",
-    "help_text": "If your organisation will provide core funding to a recipient organisation(s), please publish information on this budget here. <a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/organisation-budgets-spend/'>Further guidance</a>.<br><br>Where possible, you should provide annual planned budgets for each recipient organisation for each of the next three financial years.",
+    "hover_text": "elements.organisation.recipient_org_budget.hover_text",
+    "help_text": "elements.organisation.recipient_org_budget.help_text",
     "attributes": {
       "status": {
         "name": "status",
-        "label": "status",
+        "label": "elements_common.status",
         "type": "select",
         "multiselect": false,
         "choices": "Activity/BudgetStatus.json",
-        "placeholder": "Select status",
+        "placeholder": "elements_common.select_status",
         "required": false,
         "criteria": "",
-        "hover_text": "The status explains whether the budget being reported is indicative or has been formally committed. The value should appear within the BudgetStatus codelist.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/'>For more information</a>",
-        "help_text": "Please select a status that best describes this recipient organisation budget:<br><br>(1) <b>indicative</b>  - a non-binding estimate for the described budget line.<br><br>(2) <b>committed</b> - a binding agreement for the described budget line.<br><br>If no status is selected, the budget is assumed to be indicative."
+        "hover_text": "elements.organisation.recipient_org_budget.status.hover_text",
+        "help_text": "elements.organisation.recipient_org_budget.status.help_text"
       }
     },
     "sub_elements": {
       "recipient_org": {
         "name": "recipient_org",
-        "label": "recipient organisation",
+        "label": "elements_common.recipient_organisation",
         "add_more": false,
         "element_criteria": "mandatory",
-        "hover_text": "The organisation that will receive the funds. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/recipient-org/'>For more information</a>",
-        "help_text": "Provide information about the organisation who will receive the funds.",
+        "hover_text": "elements.organisation.recipient_org_budget.recipient_org.hover_text",
+        "help_text": "elements.organisation.recipient_org_budget.recipient_org.help_text",
         "attributes": {
           "ref": {
             "name": "ref",
-            "label": "reference",
+            "label": "elements_common.reference",
             "type": "text",
-            "placeholder": "Type reference",
+            "placeholder": "elements_common.type_reference",
             "required": false,
             "criteria": "",
-            "hover_text": "The organisation that will receive the funds.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/recipient-org/'>For more information</a>",
-            "help_text": "Please type the recipient organisation’s IATI <i>Organisation Identifier</i>. The quickest way to find this is to search for the organisation in the <a target='_blank' href='https://www.iatiregistry.org/publisher/'>IATI Publisher List</a>. If you cannot find the organisation, see <a target='_blank' href='https://iatistandard.org/en/guidance/publishing-data/data-quality-and-visualisation/finding-other-organisations-identifiers/'>further guidance</a>.<br><br>If you cannot provide the Organisation Identifier  then you MUST provide the name of the organisation below."
+            "hover_text": "elements.organisation.recipient_org_budget.recipient_org.reference.hover_text",
+            "help_text": "elements.organisation.recipient_org_budget.recipient_org.reference.help_text"
           }
         },
         "sub_elements": {
           "narrative": {
             "name": "narrative",
-            "label": "narrative",
+            "label": "elements_common.narrative",
             "type": "textarea",
-            "placeholder": "Type narrative",
+            "placeholder": "elements_common.type_narrative",
             "required": true,
             "criteria": "mandatory",
             "add_more": true,
-            "hover_text": "The name of the organisation. This can be repeated in multiple languages.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/recipient-org/narrative/'>For more information</a>",
-            "help_text": "Type the name of the recipient organisation.",
+            "hover_text": "elements.organisation.recipient_org_budget.recipient_org.narrative.hover_text",
+            "help_text": "elements.organisation.recipient_org_budget.recipient_org.narrative.help_text",
             "attr": {
               "row": 4
             },
             "attributes": {
               "lang": {
                 "name": "language",
-                "label": "language",
+                "label": "elements_common.language",
                 "type": "select",
                 "multiSelect": false,
                 "choices": "Activity/Language.json",
-                "placeholder": "Select language",
+                "placeholder": "elements_common.select_language",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/recipient-org/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                "hover_text": "elements.organisation.recipient_org_budget.recipient_org.language.hover_text",
+                "help_text": "elements_common.select_the_language_of_text_in_narrative_2"
               }
             },
             "sub_elements": {}
@@ -436,56 +436,56 @@
       },
       "period_start": {
         "name": "period_start",
-        "label": "period-start",
+        "label": "elements_common.period_start",
         "add_more": false,
         "element_criteria": "mandatory",
-        "hover_text": "This element must occur once and only once (within each parent element). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/period-start/'>For more information</a>",
+        "hover_text": "elements.organisation.recipient_org_budget.period_start.hover_text",
         "attributes": {
           "date": {
             "name": "date",
-            "label": "date",
+            "label": "elements_common.date",
             "type": "date",
-            "placeholder": "YYYY-MM-DD",
+            "placeholder": "elements_common.yyyy_mm_dd",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "This attribute is required. This value must be of type xsd:date.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/period-start/'>For more information</a>",
-            "help_text": "Provide the start date of the budget period."
+            "hover_text": "elements.organisation.recipient_org_budget.period_start.date.hover_text",
+            "help_text": "elements_common.provide_the_start_of_budget_period "
           }
         },
         "sub_elements": {}
       },
       "period_end": {
         "name": "period_end",
-        "label": "period-end",
+        "label": "elements_common.period_end",
         "add_more": false,
         "element_criteria": "mandatory",
-        "hover_text": "The end of the period (which must not be greater than one year).<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/period-end/'>For more information</a>",
+        "hover_text": "elements.organisation.recipient_org_budget.period_end.hover_text",
         "attributes": {
           "date": {
             "name": "date",
-            "label": "date",
+            "label": "elements_common.date",
             "type": "date",
-            "placeholder": "YYYY-MM-DD",
+            "placeholder": "elements_common.yyyy_mm_dd",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "This attribute is required. This value must be of type xsd:date.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/period-end/'>For more information</a>",
-            "help_text": "Provide the end date of the budget period."
+            "hover_text": "elements.organisation.recipient_org_budget.period_end.date.hover_text",
+            "help_text": "elements_common.provide_the_end_of_budget_period"
           }
         },
         "sub_elements": {}
       },
       "value": {
         "name": "value",
-        "label": "value",
+        "label": "elements_common.value",
         "add_more": false,
         "element_criteria": "mandatory",
-        "hover_text": "The total value of the money budgeted to be disbursed to the specified recipient organisation during this time period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/value/'>For more information</a>",
+        "hover_text": "elements.organisation.recipient_org_budget.value.hover_text",
         "attributes": {
           "amount": {
             "name": "amount",
-            "label": "value",
+            "label": "elements_common.value",
             "type": "text",
-            "placeholder": "Type value here",
+            "placeholder": "elements_common.type_value_here",
             "required": true,
             "criteria": "mandatory",
             "hover_text": "",
@@ -493,24 +493,24 @@
           },
           "currency": {
             "name": "currency",
-            "label": "currency",
+            "label": "elements_common.currency",
             "type": "select",
             "multiselect": false,
             "choices": "Activity/Currency.json",
-            "placeholder": "Select currency",
+            "placeholder": "elements_common.select_currency",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/budget/value/'>For more information</a>",
-            "help_text": "Select the currency that you have provided the value in."
+            "hover_text": "elements.organisation.recipient_org_budget.value.currency.hover_text",
+            "help_text": "elements_common.select_the_currency_that_you_provided"
           },
           "value_date": {
             "name": "value_date",
-            "label": "value-date",
+            "label": "elements_common.value_date",
             "type": "date",
-            "placeholder": "YYYY-MM-DD",
+            "placeholder": "elements_common.yyyy_mm_dd",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "The date to be used for determining the exchange rate for currency conversions. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/value/'>For more information</a>",
+            "hover_text": "elements.organisation.recipient_org_budget.value.value_date.hover_text",
             "help_text": ""
           }
         },
@@ -518,34 +518,34 @@
       },
       "budget_line": {
         "name": "budget_line",
-        "label": "budget line",
+        "label": "elements_common.budget_line",
         "add_more": true,
-        "hover_text": "A breakdown of the total budget into sub-totals. The breakdown is determined by the reporting organisation and described in the narrative.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/budget-line/'>For more information</a>",
-        "help_text": "You can provide a breakdown of the recipient organisation’s budget into budget lines.<br><br>Do note: The sum of each budget line does <b>not</b> have to equal the total value of the recipient organisation budget.<a target='_blank' href='https://iatistandard.org/en/guidance/standard-guidance/organisation-budgets-spend/'>Further guidance</a>.",
+        "hover_text": "elements.organisation.recipient_org_budget.budget_line.hover_text",
+        "help_text": "elements.organisation.recipient_org_budget.budget_line.help_text",
         "attributes": {
           "ref": {
             "name": "ref",
-            "label": "reference",
+            "label": "elements_common.reference",
             "type": "text",
-            "placeholder": "Type reference",
+            "placeholder": "elements_common.type_reference",
             "required": false,
             "criteria": "",
-            "hover_text": "An internal reference for this budget line taken from the reporting organisation’s own system. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-budget/budget-line/'>For more information</a>",
-            "help_text": "You can provide a reference that you use to identify this budget line in your organisation’s internal financial management system."
+            "hover_text": "elements_common.an_internal_reference",
+            "help_text": "elements_common.you_can_provide_a_reference"
           }
         },
         "sub_elements": {
           "value": {
             "name": "value",
-            "label": "value",
+            "label": "elements_common.value",
             "add_more": false,
-            "hover_text": "The budget sub-total. The definition of the sub-division is determined by iati-organisation/total-budget/budget-line/narrative <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/budget-line/value/'>For more information</a>",
+            "hover_text": "elements.organisation.recipient_org_budget.budget_line.value.hover_text",
             "attributes": {
               "amount": {
                 "name": "amount",
-                "label": "value",
+                "label": "elements_common.value",
                 "type": "text",
-                "placeholder": "Type value here",
+                "placeholder": "elements_common.type_value_here",
                 "required": true,
                 "criteria": "mandatory",
                 "hover_text": "",
@@ -553,24 +553,24 @@
               },
               "currency": {
                 "name": "currency",
-                "label": "currency",
+                "label": "elements_common.currency",
                 "type": "select",
                 "multiselect": false,
                 "choices": "Activity/Currency.json",
-                "placeholder": "Select currency",
+                "placeholder": "elements_common.select_currency",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "A three letter ISO 4217 code for the original currency of the amount. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/budget-line/value/'>For more information</a>",
-                "help_text": "Select the currency that you have provided the value in."
+                "hover_text": "elements.organisation.recipient_org_budget.budget_line.value.currency.hover_text",
+                "help_text": "elements_common.select_the_currency_that_you_provided"
               },
               "value_date": {
                 "name": "value_date",
-                "label": "value-date",
+                "label": "elements_common.value_date",
                 "type": "date",
-                "placeholder": "YYYY-MM-DD",
+                "placeholder": "elements_common.yyyy_mm_dd",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "The date to be used for determining the exchange rate for currency conversions.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-org-budget/budget-line/value/'>For more information</a>",
+                "hover_text": "elements.organisation.recipient_org_budget.budget_line.value.value_date.hover_text",
                 "help_text": ""
               }
             },
@@ -578,29 +578,29 @@
           },
           "narrative": {
             "name": "narrative",
-            "label": "narrative",
+            "label": "elements_common.narrative",
             "type": "textarea",
-            "placeholder": "Type narrative",
+            "placeholder": "elements_common.type_narrative",
             "required": true,
             "criteria": "mandatory",
             "add_more": true,
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/narrative/'>For more information</a>",
-            "help_text": "Provide a description for this budget line.",
+            "hover_text": "elements_common.the_free_text_name_link_budget_line_narrative",
+            "help_text": "elements_common.provide_a_description_for_budget_line",
             "attr": {
               "row": 4
             },
             "attributes": {
               "lang": {
                 "name": "language",
-                "label": "language",
+                "label": "elements_common.language",
                 "type": "select",
                 "multiSelect": false,
                 "choices": "Activity/Language.json",
-                "placeholder": "Select language",
+                "placeholder": "elements_common.select_language",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                "hover_text": "elements_common.a_code_specifying_text_org_recipient_region_buget_line_narrative",
+                "help_text": "elements_common.select_the_language_of_text_in_narrative_2"
               }
             },
             "sub_elements": {}
@@ -611,105 +611,105 @@
   },
   "recipient_region_budget": {
     "name": "recipient_region_budget",
-    "label": "recipient region budget",
+    "label": "elements_common.recipient_region_budget",
     "add_more": true,
-    "hover_text": "The recipient-region-budget element allows for the reporting of forward looking budgets where the organisation maintains region-wide, rather than or in addition to country-specific budgets.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/'>For more information</a>",
-    "help_text": "IATI strongly encourages organisations to break down your total budget into smaller budgets for the recipient countries or recipient regions in which you operate.<br><br>If you provide a recipient region or country budget(s), you do not need to use the same periods, and these budgets <b>do not</b> have to add up to your organisation’s total budget.<br><br>If you want to provide a recipient region budget, it must NOT be an aggregation of recipient country budgets. For example, if you publish a recipient country budget for Uganda for USD 100,000 and a budget for Kenya of USD 100,000 for the next year, then you should NOT publish a recipient region budget for Africa of USD 200,000 for the next year.",
+    "hover_text": "elements.organisation.recipient_region_budget.hover_text",
+    "help_text": "elements.organisation.recipient_region_budget.help_text",
     "attributes": {
       "status": {
         "name": "status",
-        "label": "status",
+        "label": "elements_common.status",
         "type": "select",
         "multiselect": false,
         "choices": "Activity/BudgetStatus.json",
-        "placeholder": "Select status",
+        "placeholder": "elements_common.select_status",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "The status explains whether the budget being reported is indicative or has been formally committed. The value should appear within the BudgetStatus codelist.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/'>For more information</a>",
-        "help_text": "Please select a status that best describes this recipient region budget:<br><br>(1) <b>indicative</b>  - a non-binding estimate for the described budget.<br><br>(2) <b>committed</b> - a binding agreement for the described budget.<br><br>If no status is present, the budget is assumed to be indicative."
+        "hover_text": "elements.organisation.recipient_region_budget.status.hover_text",
+        "help_text": "elements.organisation.recipient_region_budget.status.help_text"
       }
     },
     "sub_elements": {
       "recipient_region": {
         "name": "recipient_region",
-        "label": "recipient region",
+        "label": "elements_common.recipient_region",
         "criteria": "mandatory",
         "add_more": false,
         "element_criteria": "mandatory",
-        "hover_text": "The supranational geographic region where funds have been allocated.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/recipient-region/'>For more information</a>",
+        "hover_text": "elements.organisation.recipient_region_budget.recipient_region.hover_text",
         "attributes": {
           "vocabulary": {
             "name": "region_vocabulary",
-            "label": "vocabulary",
+            "label": "elements_common.vocabulary",
             "type": "select",
             "multiselect": false,
             "choices": "Activity/RegionVocabulary.json",
-            "placeholder": "Select vocabulary",
+            "placeholder": "elements_common.select_vocabulary",
             "required": false,
             "criteria": "",
-            "hover_text": "An IATI code for the vocabulary from which the region code is drawn. If it is not present, code 1 (‘OECD DAC’) is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/recipient-region/'>For more information</a>",
-            "help_text": "There are two lists of regions; the <a target=’_blank’ href=’https://iatistandard.org/en/iati-standard/203/codelists/region/’>OECD DAC</a> and <a target=’_blank’ href=’https://unstats.un.org/unsd/methodology/m49/’>UN region</a> code lists. Please select one. IATI recommends that you use the OECD DAC codelist. Otherwise you can use another list of regions by selecting the option: ‘Reporting Organisation’ and providing the URI where this internal list is defined. <br><br>If you do not choose an option, then the code list 'OECD DAC' is assumed."
+            "hover_text": "elements.organisation.recipient_region_budget.recipient_region.vocabulary.hover_text",
+            "help_text": "elements.organisation.recipient_region_budget.recipient_region.vocabulary.help_text"
           },
           "oecd_region_code": {
             "name": "region_code",
-            "label": "code",
+            "label": "elements_common.code",
             "type": "select",
             "multiselect": false,
             "choices": "Activity/Region.json",
-            "placeholder": "Select code",
+            "placeholder": "elements_common.select_code",
             "required": false,
             "criteria": "",
-            "hover_text": "Either an OECD DAC, UN region code or (if code ‘99’ Reporting organisation is selected for recipient-region/@vocabulary) a code from your internal vocabulary. <a target=’_blank’ href=’https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/recipient-region/’>For more information</a>",
-            "help_text": "Select the region benefitting from this budget."
+            "hover_text": "elements_common.either_an_orcs",
+            "help_text": "elements_common.select_the_budget_region"
           },
           "region_code": {
             "name": "code",
-            "label": "code",
+            "label": "elements_common.code",
             "type": "text",
-            "placeholder": "Select code",
+            "placeholder": "elements_common.select_code",
             "required": false,
             "criteria": "",
             "hidden": true,
-            "hover_text": "Either an OECD DAC, UN region code or (if code ‘99’ Reporting organisation is selected for recipient-region/@vocabulary) a code from your internal vocabulary. <a target=’_blank’ href=’https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/recipient-region/’>For more information</a>",
-            "help_text": "Select the region benefitting from this budget."
+            "hover_text": "elements_common.either_an_orcs",
+            "help_text": "elements_common.select_the_budget_region"
           },
           "vocabulary-uri": {
             "name": "vocabulary_uri",
-            "label": "vocabulary-uri",
+            "label": "elements_common.vocabulary_uri",
             "type": "text",
-            "placeholder": "Type vocabulary-uri",
+            "placeholder": "elements_common.type_vocabulary_uri",
             "required": false,
             "criteria": "",
-            "hover_text": "The URI where this vocabulary is defined. If the vocabulary is 99 (reporting organisation), the URI where this internal vocabulary is defined. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/recipient-region/'>For more information</a>",
-            "help_text": "If you have selected the option: ‘Reporting Organisation’ please provide the URI where this internal list is defined."
+            "hover_text": "elements.organisation.recipient_region_budget.recipient_region.vocabulary-uri.hover_text",
+            "help_text": "elements_common.if_you_have_selected"
           }
         },
         "sub_elements": {
           "narrative": {
             "name": "narrative",
-            "label": "narrative",
+            "label": "elements_common.narrative",
             "type": "textarea",
-            "placeholder": "Type narrative",
+            "placeholder": "elements_common.type_narrative",
             "required": false,
             "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/recipient-region/narrative/'>For more information</a>",
-            "help_text": "Type the name of the region benefitting from the budget.",
+            "hover_text": "elements.organisation.recipient_region_budget.recipient_region.narrative.hover_text",
+            "help_text": "elements.organisation.recipient_region_budget.recipient_region.narrative.help_text",
             "attributes": {
               "lang": {
                 "name": "language",
-                "label": "language",
+                "label": "elements_common.language",
                 "type": "select",
                 "multiSelect": false,
                 "choices": "Activity/Language.json",
-                "placeholder": "Select language",
+                "placeholder": "elements_common.select_language",
                 "required": false,
                 "criteria": "recommended",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/recipient-region/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                "hover_text": "elements.organisation.recipient_region_budget.recipient_region.language.hover_text",
+                "help_text": "elements_common.select_the_language_of_text_in_narrative_2"
               }
             },
             "sub_elements": {}
@@ -718,57 +718,57 @@
       },
       "period_start": {
         "name": "period_start",
-        "label": "period-start",
+        "label": "elements_common.period_start",
         "add_more": false,
         "element_criteria": "mandatory",
-        "hover_text": "The start of the budget period.This element must occur once and only once (within each parent element).<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/period-start/'>For more information</a>",
+        "hover_text": "elements.organisation.recipient_region_budget.period_start.hover_text",
         "attributes": {
           "date": {
             "name": "date",
-            "label": "date",
+            "label": "elements_common.date",
             "type": "date",
-            "placeholder": "YYYY-MM-DD",
+            "placeholder": "elements_common.yyyy_mm_dd",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "This attribute is required. This value must be of type xsd:date. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/period-start/'>For more information</a>",
-            "help_text": "Provide the start date of the recipient region budget period"
+            "hover_text": "elements.organisation.recipient_region_budget.period_start.date.hover_text",
+            "help_text": "elements.organisation.recipient_region_budget.period_start.date.help_text"
           }
         },
         "sub_elements": {}
       },
       "period_end": {
         "name": "period_end",
-        "label": "period-end",
+        "label": "elements_common.period_end",
         "add_more": false,
         "element_criteria": "mandatory",
-        "hover_text": "The end of the period (which must not be greater than one year).<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/period-end/'>For more information</a>",
+        "hover_text": "elements.organisation.recipient_region_budget.period_end.hover_text",
         "attributes": {
           "date": {
             "name": "date",
-            "label": "date",
+            "label": "elements_common.date",
             "type": "date",
-            "placeholder": "YYYY-MM-DD",
+            "placeholder": "elements_common.yyyy_mm_dd",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "This attribute is required. This value must be of type xsd:date. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/period-end/'>For more information</a>",
-            "help_text": "Provide the end date of the recipient region budget period."
+            "hover_text": "elements.organisation.recipient_region_budget.period_end.date.hover_text",
+            "help_text": "elements.organisation.recipient_region_budget.period_end.date.help_text"
           }
         },
         "sub_elements": {}
       },
       "value": {
         "name": "value",
-        "label": "value",
+        "label": "elements_common.value",
         "add_more": false,
         "element_criteria": "mandatory",
-        "hover_text": "The total value of the money budgeted to be disbursed to the specified country during this time period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/value/'>For more information</a>",
-        "help_text": "Provide the amount of finance for this recipient region budget.",
+        "hover_text": "elements.organisation.recipient_region_budget.value.hover_text",
+        "help_text": "elements.organisation.recipient_region_budget.value.help_text",
         "attributes": {
           "amount": {
             "name": "amount",
-            "label": "value",
+            "label": "elements_common.value",
             "type": "text",
-            "placeholder": "Type value here",
+            "placeholder": "elements_common.type_value_here",
             "required": true,
             "criteria": "mandatory",
             "hover_text": "",
@@ -776,24 +776,24 @@
           },
           "currency": {
             "name": "currency",
-            "label": "currency",
+            "label": "elements_common.currency",
             "type": "select",
             "multiselect": false,
             "choices": "Activity/Currency.json",
-            "placeholder": "Select currency",
+            "placeholder": "elements_common.select_currency",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/value/'>For more information</a>",
-            "help_text": "Select the currency that you have provided the value in."
+            "hover_text": "elements_common.a_three_letter_iso",
+            "help_text": "elements_common.select_the_currency_that_you_provided"
           },
           "value_date": {
             "name": "value_date",
-            "label": "value-date",
+            "label": "elements_common.value_date",
             "type": "date",
-            "placeholder": "YYYY-MM-DD",
+            "placeholder": "elements_common.yyyy_mm_dd",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "The date to be used for determining the exchange rate for currency conversions. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/value/'>For more information</a>",
+            "hover_text": "elements.organisation.recipient_region_budget.value.value_date.hover_text",
             "help_text": ""
           }
         },
@@ -801,35 +801,35 @@
       },
       "budget_line": {
         "name": "budget_line",
-        "label": "budget line",
+        "label": "elements_common.budget_line",
         "add_more": true,
-        "hover_text": "A breakdown of the recipient country’s budget into sub-totals. The breakdown is determined by the reporting organisation and described in the narrative. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/'>For more information</a>",
-        "help_text": "You can provide further information about this recipient region budget in budget lines. Budget lines allow the recipient region budget to be broken down, for example into different projects happening in a given year.<br><br>Do note: The sum of each budget line does <b>not</b> have to equal the total value of the recipient region budget.",
+        "hover_text": "elements.organisation.recipient_region_budget.budget_line.hover_text",
+        "help_text": "elements.organisation.recipient_region_budget.budget_line.help_text",
         "attributes": {
           "ref": {
             "name": "ref",
-            "label": "reference",
+            "label": "elements_common.reference",
             "type": "text",
-            "placeholder": "Type reference",
+            "placeholder": "elements_common.type_reference",
             "required": false,
             "criteria": "",
-            "hover_text": "An internal reference for this budget line taken from the reporting organisation’s own system. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/'>For more information</a>",
-            "help_text": "You can provide a reference that you use to identify this budget line in your organisation’s internal financial management system."
+            "hover_text": "elements.organisation.recipient_region_budget.budget_line.reference.hover_text",
+            "help_text": "elements_common.you_can_provide_a_reference"
           }
         },
         "sub_elements": {
           "value": {
             "name": "value",
-            "label": "value",
+            "label": "elements_common.value",
             "add_more": false,
-            "hover_text": "The budget sub-total. The definition of the sub-division is determined by iati-organisation/total-budget/budget-line/narrative <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/value/'>For more information</a>",
-            "help_text": "Provide the amount of finance for this budget line.",
+            "hover_text": "elements.organisation.recipient_region_budget.budget_line.value.hover_text",
+            "help_text": "elements_common.provide_the_amount_of_finance",
             "attributes": {
               "amount": {
                 "name": "amount",
-                "label": "value",
+                "label": "elements_common.value",
                 "type": "text",
-                "placeholder": "Type value here",
+                "placeholder": "elements_common.type_value_here",
                 "required": true,
                 "criteria": "mandatory",
                 "hover_text": "",
@@ -837,24 +837,24 @@
               },
               "currency": {
                 "name": "currency",
-                "label": "currency",
+                "label": "elements_common.currency",
                 "type": "select",
                 "multiselect": false,
                 "choices": "Activity/Currency.json",
-                "placeholder": "Select currency",
+                "placeholder": "elements_common.select_currency",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "A three letter ISO 4217 code for the original currency of the amount. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/value/'>For more information</a>",
-                "help_text": "Select the currency that you have provided the value in."
+                "hover_text": "elements.organisation.recipient_region_budget.budget_line.value.currency.hover_text",
+                "help_text": "elements_common.select_the_currency_that_you_provided"
               },
               "value_date": {
                 "name": "value_date",
-                "label": "value-date",
+                "label": "elements_common.value_date",
                 "type": "date",
-                "placeholder": "YYYY-MM-DD",
+                "placeholder": "elements_common.yyyy_mm_dd",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "The date to be used for determining the exchange rate for currency conversions. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/value/'>For more information</a>",
+                "hover_text": "elements.organisation.recipient_region_budget.budget_line.value.value_date.hover_text",
                 "help_text": ""
               }
             },
@@ -862,29 +862,29 @@
           },
           "narrative": {
             "name": "narrative",
-            "label": "narrative",
+            "label": "elements_common.narrative",
             "type": "textarea",
-            "placeholder": "Type narrative",
+            "placeholder": "elements_common.type_narrative",
             "required": true,
             "criteria": "mandatory",
             "add_more": true,
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/narrative/'>For more information</a>",
-            "help_text": "Provide a description for this budget line.",
+            "hover_text": "elements_common.the_free_text_name_link_budget_line_narrative",
+            "help_text": "elements_common.provide_a_description_for_budget_line",
             "attr": {
               "row": 4
             },
             "attributes": {
               "lang": {
                 "name": "language",
-                "label": "language",
+                "label": "elements_common.language",
                 "type": "select",
                 "multiSelect": false,
                 "choices": "Activity/Language.json",
-                "placeholder": "Select language",
+                "placeholder": "elements_common.select_language",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-region-budget/budget-line/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                "hover_text": "elements_common.a_code_specifying_text_org_recipient_region_buget_line_narrative",
+                "help_text": "elements_common.select_the_language_of_text_in_narrative_2"
               }
             },
             "sub_elements": {}
@@ -895,71 +895,71 @@
   },
   "recipient_country_budget": {
     "name": "recipient_country_budget",
-    "label": "recipient country budget",
+    "label": "elements_common.recipient_country_budget",
     "add_more": true,
-    "hover_text": "The recipient-country-budget element allows for the reporting of forward looking budgets for each country in which the organisation operates. <a target=’_blank’ href=’https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/’>For more information</a>",
-    "help_text": "You can provide your organisation’s budget(s) according to its recipient country. You do not need to use the same periods, and these budgets <b>do not</b> have to add up to your organisation’s total budget.<br><br>If your organisation maintains country-wide budgets please provide them here.",
+    "hover_text": "elements.organisation.recipient_country_budget.hover_text",
+    "help_text": "elements.organisation.recipient_country_budget.help_text",
     "attributes": {
       "status": {
         "name": "status",
-        "label": "status",
+        "label": "elements_common.status",
         "type": "select",
         "multiselect": false,
         "choices": "Activity/BudgetStatus.json",
-        "placeholder": "Select status",
+        "placeholder": "elements_common.select_status",
         "required": false,
         "criteria": "",
-        "hover_text": "The status explains whether the budget being reported is indicative or has been formally committed. The value should appear within the BudgetStatus codelist.<a target=’_blank’ href=’https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/’>For more information</a>",
-        "help_text": "Please select a status that best describes this recipient country budget:<br><br>(1) <b>indicative</b>  - a non-binding estimate for the described budget.<br><br>(2) <b>committed</b> - a binding agreement for the described budget.<br><br>If no status is selected, the budget is assumed to be indicative."
+        "hover_text": "elements.organisation.recipient_country_budget.status.hover_text",
+        "help_text": "elements.organisation.recipient_country_budget.status.help_text"
       }
     },
     "sub_elements": {
       "recipient_country": {
         "name": "recipient_country",
-        "label": "recipient country",
+        "label": "elements_common.recipient_country",
         "add_more": true,
         "element_criteria": "mandatory",
-        "hover_text": "The recipient country. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/recipient-country/'>For more information</a>",
+        "hover_text": "elements.organisation.recipient_country_budget.recipient_country.hover_text",
         "attributes": {
           "code": {
             "name": "code",
-            "label": "code",
+            "label": "elements_common.code",
             "type": "select",
             "multiselect": false,
             "choices": "Activity/Country.json",
-            "placeholder": "Select code",
+            "placeholder": "elements_common.select_code",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "ISO 3166-1 alpha-2 code for the country.This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/recipient-country/'>For more information</a>",
-            "help_text": "Select the recipient country for this budget."
+            "hover_text": "elements.organisation.recipient_country_budget.recipient_country.code.hover_text",
+            "help_text": "elements.organisation.recipient_country_budget.recipient_country.code.help_text"
           }
         },
         "sub_elements": {
           "narrative": {
             "name": "narrative",
-            "label": "narrative",
+            "label": "elements_common.narrative",
             "type": "textarea",
-            "placeholder": "Type narrative",
+            "placeholder": "elements_common.type_narrative",
             "required": false,
             "criteria": "",
             "add_more": true,
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/recipient-country/narrative/'>For more information</a>",
-            "help_text": "Type the name for the recipient country.",
+            "hover_text": "elements.organisation.recipient_country_budget.recipient_country.narrative.hover_text",
+            "help_text": "elements.organisation.recipient_country_budget.recipient_country.narrative.help_text",
             "attributes": {
               "lang": {
                 "name": "language",
-                "label": "language",
+                "label": "elements_common.language",
                 "type": "select",
                 "multiSelect": false,
                 "choices": "Activity/Language.json",
-                "placeholder": "Select language",
+                "placeholder": "elements_common.select_language",
                 "required": false,
                 "criteria": "",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/recipient-country/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                "hover_text": "elements.organisation.recipient_country_budget.recipient_country.language.hover_text",
+                "help_text": "elements_common.select_the_language_of_text_in_narrative_2"
               }
             },
             "sub_elements": {}
@@ -968,57 +968,57 @@
       },
       "period_start": {
         "name": "period_start",
-        "label": "period-start",
+        "label": "elements_common.period_start",
         "add_more": false,
         "element_criteria": "mandatory",
-        "hover_text": "The start of the budget period.This element must occur once and only once (within each parent element). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/period-start/'>For more information</a>",
+        "hover_text": "elements.organisation.recipient_country_budget.period_start.hover_text",
         "attributes": {
           "date": {
             "name": "date",
-            "label": "date",
+            "label": "elements_common.date",
             "type": "date",
-            "placeholder": "YYYY-MM-DD",
+            "placeholder": "elements_common.yyyy_mm_dd",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "This attribute is required. This value must be of type xsd:date. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/period-start/'>For more information</a>",
-            "help_text": "Provide the start date of the recipient country budget period."
+            "hover_text": "elements.organisation.recipient_country_budget.period_start.date.hover_text",
+            "help_text": "elements.organisation.recipient_country_budget.period_start.date.help_text"
           }
         },
         "sub_elements": {}
       },
       "period_end": {
         "name": "period_end",
-        "label": "period-end",
+        "label": "elements_common.period_end",
         "add_more": false,
         "element_criteria": "mandatory",
-        "hover_text": "The end of the period (which must not be greater than one year). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/period-end/'>For more information</a>",
+        "hover_text": "elements.organisation.recipient_country_budget.period_end.hover_text",
         "attributes": {
           "date": {
             "name": "date",
-            "label": "date",
+            "label": "elements_common.date",
             "type": "date",
-            "placeholder": "YYYY-MM-DD",
+            "placeholder": "elements_common.yyyy_mm_dd",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "This attribute is required. This value must be of type xsd:date. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/period-end/'>For more information</a>",
-            "help_text": "Provide the end date of the recipient country budget period."
+            "hover_text": "elements.organisation.recipient_country_budget.period_end.date.hover_text",
+            "help_text": "elements.organisation.recipient_country_budget.period_end.date.help_text"
           }
         },
         "sub_elements": {}
       },
       "value": {
         "name": "value",
-        "label": "value",
+        "label": "elements_common.value",
         "add_more": false,
         "element_criteria": "mandatory",
-        "hover_text": "The total value of the money budgeted to be disbursed to the specified recipient organisation during this time period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/value/'>For more information</a>",
-        "help_text": "Provide the amount of finance for this budget.",
+        "hover_text": "elements.organisation.recipient_country_budget.value.hover_text",
+        "help_text": "elements.organisation.recipient_country_budget.value.help_text",
         "attributes": {
           "amount": {
             "name": "amount",
-            "label": "value",
+            "label": "elements_common.value",
             "type": "text",
-            "placeholder": "Type value here",
+            "placeholder": "elements_common.type_value_here",
             "required": true,
             "criteria": "mandatory",
             "hover_text": "",
@@ -1026,24 +1026,24 @@
           },
           "currency": {
             "name": "currency",
-            "label": "currency",
+            "label": "elements_common.currency",
             "type": "select",
             "multiselect": false,
             "choices": "Activity/Currency.json",
-            "placeholder": "Select currency",
+            "placeholder": "elements_common.select_currency",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "A three letter ISO 4217 code for the original currency of the amount. This is required for all currency amounts unless the iati-organisation/@default-currency attribute is specified. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/value/'>For more information</a>",
-            "help_text": "Select the currency that you have provided the value in."
+            "hover_text": "elements_common.a_three_letter_iso",
+            "help_text": "elements_common.select_the_currency_that_you_provided"
           },
           "value_date": {
             "name": "value_date",
-            "label": "value-date",
+            "label": "elements_common.value_date",
             "type": "date",
-            "placeholder": "YYYY-MM-DD",
+            "placeholder": "elements_common.yyyy_mm_dd",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "The date to be used for determining the exchange rate for currency conversions. <br><br>This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/value/'>For more information</a>",
+            "hover_text": "elements.organisation.recipient_country_budget.value.value_date.hover_text",
             "help_text": ""
           }
         },
@@ -1051,35 +1051,35 @@
       },
       "budget_line": {
         "name": "budget_line",
-        "label": "budget line",
+        "label": "elements_common.budget_line",
         "add_more": true,
-        "hover_text": "A breakdown of the total budget into sub-totals. The breakdown is determined by the reporting organisation and described in the narrative. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/budget-line/'>For more information</a>",
-        "help_text": "You can provide further information about this recipient country budget in budget lines. Budget lines allow the recipient country budget to be broken down, for example into different projects happening in a given year.<br><br>Do note: The sum of each budget line does <b>not</b> have to equal the total value of the recipient country budget.",
+        "hover_text": "elements.organisation.recipient_country_budget.budget_line.hover_text",
+        "help_text": "elements.organisation.recipient_country_budget.budget_line.help_text",
         "attributes": {
           "ref": {
             "name": "ref",
-            "label": "reference",
+            "label": "elements_common.reference",
             "type": "text",
-            "placeholder": "Type reference",
+            "placeholder": "elements_common.type_reference",
             "required": false,
             "criteria": "",
-            "hover_text": "An internal reference for this budget line taken from the reporting organisation’s own system. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/budget-line/'>For more information</a>",
-            "help_text": "You can provide a reference that you use to identify this budget line in your organisation’s internal financial management system."
+            "hover_text": "elements.organisation.recipient_country_budget.budget_line.reference.hover_text",
+            "help_text": "elements_common.you_can_provide_a_reference"
           }
         },
         "sub_elements": {
           "value": {
             "name": "value",
-            "label": "value",
+            "label": "elements_common.value",
             "add_more": false,
-            "hover_text": "The budget sub-total. The definition of the sub-division is determined by iati-organisation/total-budget/budget-line/narrative <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/budget-line/value/'>For more information</a>",
-            "help_text": "Provide the amount of finance for this budget line.",
+            "hover_text": "elements.organisation.recipient_country_budget.budget_line.value.hover_text",
+            "help_text": "elements_common.provide_the_amount_of_finance",
             "attributes": {
               "amount": {
                 "name": "amount",
-                "label": "value",
+                "label": "elements_common.value",
                 "type": "text",
-                "placeholder": "Type value here",
+                "placeholder": "elements_common.type_value_here",
                 "required": true,
                 "criteria": "mandatory",
                 "hover_text": "",
@@ -1087,24 +1087,24 @@
               },
               "currency": {
                 "name": "currency",
-                "label": "currency",
+                "label": "elements_common.currency",
                 "type": "select",
                 "multiselect": false,
                 "choices": "Activity/Currency.json",
-                "placeholder": "Select currency",
+                "placeholder": "elements_common.select_currency",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "A three letter ISO 4217 code for the original currency of the amount.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/budget-line/value/'>For more information</a>",
-                "help_text": "Select the currency that you have provided the value in."
+                "hover_text": "elements.organisation.recipient_country_budget.budget_line.value.currency.hover_text",
+                "help_text": "elements_common.select_the_currency_that_you_provided"
               },
               "value_date": {
                 "name": "value_date",
-                "label": "value-date",
+                "label": "elements_common.value_date",
                 "type": "date",
-                "placeholder": "YYYY-MM-DD",
+                "placeholder": "elements_common.yyyy_mm_dd",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "The date to be used for determining the exchange rate for currency conversions. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/budget-line/value/'>For more information</a>",
+                "hover_text": "elements.organisation.recipient_country_budget.budget_line.value.value_date.hover_text",
                 "help_text": ""
               }
             },
@@ -1112,29 +1112,29 @@
           },
           "narrative": {
             "name": "narrative",
-            "label": "narrative",
+            "label": "elements_common.narrative",
             "type": "textarea",
-            "placeholder": "Select language",
+            "placeholder": "elements_common.select_language",
             "required": true,
             "criteria": "mandatory",
             "add_more": true,
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/budget-line/narrative/'>For more information</a>",
-            "help_text": "Provide a description for this budget line.",
+            "hover_text": "elements.organisation.recipient_country_budget.budget_line.narrative.hover_text",
+            "help_text": "elements_common.provide_a_description_for_budget_line",
             "attr": {
               "row": 4
             },
             "attributes": {
               "lang": {
                 "name": "language",
-                "label": "language",
+                "label": "elements_common.language",
                 "type": "select",
                 "multiSelect": false,
                 "choices": "Activity/Language.json",
-                "placeholder": "Select language",
+                "placeholder": "elements_common.select_language",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/recipient-country-budget/budget-line/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                "hover_text": "elements.organisation.recipient_country_budget.budget_line.language.hover_text",
+                "help_text": "elements_common.select_the_language_of_text_in_narrative_2"
               }
             },
             "sub_elements": {}
@@ -1145,65 +1145,65 @@
   },
   "total_expenditure": {
     "name": "total_expenditure",
-    "label": "total expenditure",
+    "label": "elements_common.total_expenditure",
     "add_more": true,
-    "hover_text": "The total-expenditure element allows for the reporting of the organisation’s international development expenditure. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/'>For more information</a>",
-    "help_text": "IATI recommends that your organisation reports its past spending on its humanitarian and development work. This is known as ‘total expenditure’ and IATI recommends, where possible, the organisation reports its total expenditure for each of the past 3 years. <br><br>An expenditure period must <b>not</b> be longer than one year.",
+    "hover_text": "elements.organisation.total_expenditure.hover_text",
+    "help_text": "elements.organisation.total_expenditure.help_text",
     "attributes": {},
     "sub_elements": {
       "period_start": {
         "name": "period_start",
-        "label": "period-start",
+        "label": "elements_common.period_start",
         "add_more": false,
         "element_criteria": "mandatory",
-        "hover_text": "The start of the budget period.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/period-start/'>For more information</a>",
+        "hover_text": "elements.organisation.total_expenditure.period_start.hover_text",
         "attributes": {
           "date": {
             "name": "date",
-            "label": "date",
+            "label": "elements_common.date",
             "type": "date",
-            "placeholder": "YYYY-MM-DD",
+            "placeholder": "elements_common.yyyy_mm_dd",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "This attribute is required.This value must be of type xsd:date. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/period-start/'>For more information</a>",
-            "help_text": "Provide the start date of the expenditure period."
+            "hover_text": "elements.organisation.total_expenditure.period_start.date.hover_text",
+            "help_text": "elements.organisation.total_expenditure.period_start.date.help_text"
           }
         },
         "sub_elements": {}
       },
       "period_end": {
         "name": "period_end",
-        "label": "period-end",
+        "label": "elements_common.period_end",
         "add_more": false,
         "element_criteria": "mandatory",
-        "hover_text": "The end of the period (which must not be greater than one year). <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/period-end/'>For more information</a>",
+        "hover_text": "elements.organisation.total_expenditure.period_end.hover_text",
         "attributes": {
           "date": {
             "name": "date",
-            "label": "date",
+            "label": "elements_common.date",
             "type": "date",
-            "placeholder": "YYYY-MM-DD",
+            "placeholder": "elements_common.yyyy_mm_dd",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "This attribute is required.This value must be of type xsd:date. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/period-end/'>For more information</a>",
-            "help_text": "Provide the end date of the expenditure period."
+            "hover_text": "elements.organisation.total_expenditure.period_end.date.hover_text",
+            "help_text": "elements.organisation.total_expenditure.period_end.date.help_text"
           }
         },
         "sub_elements": {}
       },
       "value": {
         "name": "value",
-        "label": "value",
+        "label": "elements_common.value",
         "add_more": false,
         "element_criteria": "mandatory",
-        "hover_text": "The total value of the organisation’s aid expenditure for this period. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/value/'>For more information</a>",
-        "help_text": "Provide the amount of finance for this expenditure.",
+        "hover_text": "elements.organisation.total_expenditure.value.hover_text",
+        "help_text": "elements.organisation.total_expenditure.value.help_text",
         "attributes": {
           "amount": {
             "name": "amount",
-            "label": "value",
+            "label": "elements_common.value",
             "type": "text",
-            "placeholder": "Type value here",
+            "placeholder": "elements_common.type_value_here",
             "required": true,
             "criteria": "mandatory",
             "hover_text": "",
@@ -1211,24 +1211,24 @@
           },
           "currency": {
             "name": "currency",
-            "label": "currency",
+            "label": "elements_common.currency",
             "type": "select",
             "multiselect": false,
             "choices": "Activity/Currency.json",
-            "placeholder": "Select currency",
+            "placeholder": "elements_common.select_currency",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "A three letter ISO 4217 code for the original currency of the amount. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/value/'>For more information</a>",
-            "help_text": "Select the currency that you have provided the value in."
+            "hover_text": "elements.organisation.total_expenditure.value.currency.hover_text",
+            "help_text": "elements_common.select_the_currency_that_you_provided"
           },
           "value_date": {
             "name": "value_date",
-            "label": "value-date",
+            "label": "elements_common.value_date",
             "type": "date",
-            "placeholder": "YYYY-MM-DD",
+            "placeholder": "elements_common.yyyy_mm_dd",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "The date to be used for determining the exchange rate for currency conversions. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/value/'>For more information</a>",
+            "hover_text": "elements.organisation.total_expenditure.value.value_date.hover_text",
             "help_text": ""
           }
         },
@@ -1236,35 +1236,35 @@
       },
       "expense_line": {
         "name": "expense_line",
-        "label": "expense line",
+        "label": "elements_common.expense_line",
         "add_more": true,
-        "hover_text": "A breakdown of the total expenditure into sub-totals. The breakdown is determined by the reporting organisation and described in the narrative. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/expense-line/'>For more information</a>",
-        "help_text": "You can provide further information about your organisation’s expenditure in expense line(s). Expense lines allow the expenditure to be broken down into smaller expenses.<br><br>Do note: The sum of each expense line does <b>not</b> have to equal the total value of the expenditure.",
+        "hover_text": "elements.organisation.total_expenditure.expense_line.hover_text",
+        "help_text": "elements.organisation.total_expenditure.expense_line.help_text",
         "attributes": {
           "ref": {
             "name": "ref",
-            "label": "reference",
+            "label": "elements_common.reference",
             "type": "text",
-            "placeholder": "Type reference",
+            "placeholder": "elements_common.type_reference",
             "required": false,
             "criteria": "",
-            "hover_text": "An internal reference for this expenditure line taken from the reporting organisation’s own system. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/expense-line/'>For more information</a>",
-            "help_text": "You can provide a reference that you use to identify this expense line in your organisation’s internal financial management system."
+            "hover_text": "elements.organisation.total_expenditure.expense_line.reference.hover_text",
+            "help_text": "elements.organisation.total_expenditure.expense_line.reference.help_text"
           }
         },
         "sub_elements": {
           "value": {
             "name": "value",
-            "label": "value",
+            "label": "elements_common.value",
             "add_more": false,
-            "hover_text": "The expenditure sub-total. The definition of the sub-division is determined by iati-organisation/total-expenditure/expenditure-line/narrative. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/expense-line/value/'>For more information</a>",
-            "help_text": "Provide the amount of finance for this expense line.",
+            "hover_text": "elements.organisation.total_expenditure.expense_line.value.hover_text",
+            "help_text": "elements.organisation.total_expenditure.expense_line.value.help_text",
             "attributes": {
               "amount": {
                 "name": "amount",
-                "label": "value",
+                "label": "elements_common.value",
                 "type": "text",
-                "placeholder": "Type value here",
+                "placeholder": "elements_common.type_value_here",
                 "required": true,
                 "criteria": "mandatory",
                 "hover_text": "",
@@ -1272,24 +1272,24 @@
               },
               "currency": {
                 "name": "currency",
-                "label": "currency",
+                "label": "elements_common.currency",
                 "type": "select",
                 "multiselect": false,
                 "choices": "Activity/Currency.json",
-                "placeholder": "Select currency",
+                "placeholder": "elements_common.select_currency",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "A three letter ISO 4217 code for the original currency of the amount.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/expense-line/value/'>For more information</a>",
-                "help_text": "Select the currency that you have provided the value in."
+                "hover_text": "elements.organisation.total_expenditure.expense_line.value.currency.hover_text",
+                "help_text": "elements_common.select_the_currency_that_you_provided"
               },
               "value_date": {
                 "name": "value_date",
-                "label": "value-date",
+                "label": "elements_common.value_date",
                 "type": "date",
-                "placeholder": "YYYY-MM-DD",
+                "placeholder": "elements_common.yyyy_mm_dd",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "The date to be used for determining the exchange rate for currency conversions.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/expense-line/value/'>For more information</a>",
+                "hover_text": "elements.organisation.total_expenditure.expense_line.value.value_date.hover_text",
                 "help_text": ""
               }
             },
@@ -1297,29 +1297,29 @@
           },
           "narrative": {
             "name": "narrative",
-            "label": "narrative",
+            "label": "elements_common.narrative",
             "type": "textarea",
-            "placeholder": "Type narrative",
+            "placeholder": "elements_common.type_narrative",
             "required": true,
             "criteria": "mandatory",
             "add_more": true,
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/expense-line/narrative/'>For more information</a>",
-            "help_text": "Provide a description for this expense line.",
+            "hover_text": "elements.organisation.total_expenditure.expense_line.narrative.hover_text",
+            "help_text": "elements.organisation.total_expenditure.expense_line.narrative.help_text",
             "attr": {
               "row": 4
             },
             "attributes": {
               "lang": {
                 "name": "language",
-                "label": "language",
+                "label": "elements_common.language",
                 "type": "select",
                 "multiSelect": false,
                 "choices": "Activity/Language.json",
-                "placeholder": "Select language",
+                "placeholder": "elements_common.select_language",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/total-expenditure/expense-line/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed"
+                "hover_text": "elements.organisation.total_expenditure.expense_line.language.hover_text",
+                "help_text": "elements_common.select_the_language_of_text_in_narrative"
               }
             },
             "sub_elements": {}
@@ -1330,68 +1330,68 @@
   },
   "document_link": {
     "name": "document_link",
-    "label": "document-link",
+    "label": "elements_common.document_link",
     "add_more": true,
-    "hover_text": "A link to an online, publicly accessible web page or document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/'>For more information</a>",
-    "help_text": "You can report further information about your organisation’s development of humanitarian programming by providing a publicly accessible link to a document or webpage. For example you could provide a link to your organisation’s annual report or a work plan for a particular country.<br><br>If documents are available in other languages and stored separately, please provide them by creating additional document elements.<a target=’_blank’ href=’https://iatistandard.org/en/guidance/standard-guidance/related-documents/’>Further guidance</a>.",
+    "hover_text": "elements.organisation.document_link.hover_text",
+    "help_text": "elements.organisation.document_link.help_text",
     "attributes": {
       "url": {
         "name": "url",
-        "label": "url",
+        "label": "elements_common.url",
         "type": "text",
-        "placeholder": "Select url",
+        "placeholder": "elements_common.select_url",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "The target URL of the external document, e.g. 'http://www.example.org/doc.odt'.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/'>For more information</a>",
-        "help_text": "The URL must begin with either ‘http://’ or ‘https://’."
+        "hover_text": "elements.organisation.document_link.url.hover_text",
+        "help_text": "elements_common.the_url_must_begin_with_either"
       },
       "format": {
         "name": "format",
-        "label": "format",
+        "label": "elements_common.format",
         "type": "select",
-        "placeholder": "Select code",
+        "placeholder": "elements_common.select_code",
         "multiselect": false,
         "choices": "Activity/FileFormat.json",
         "required": true,
         "criteria": "mandatory",
-        "hover_text": "An IANA code for the MIME type of the document being referenced, e.g. “application/pdf”. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/'>For more information</a>",
-        "help_text": "If you know the format of the document file, please type it <a target=’_blank’ href=’https://iatistandard.org/en/iati-standard/203/codelists/fileformat/’>using an option from this list</a>."
+        "hover_text": "elements.organisation.document_link.format.hover_text",
+        "help_text": "elements.organisation.document_link.format.help_text"
       }
     },
     "sub_elements": {
       "title": {
         "name": "title",
-        "label": "title",
+        "label": "elements_common.title",
         "add_more": false,
         "element_criteria": "mandatory",
-        "hover_text": "A short, human-readable title. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/'>For more information</a>",
+        "hover_text": "elements.organisation.document_link.title.hover_text",
         "attributes": {},
         "sub_elements": {
           "narrative": {
             "name": "narrative",
-            "label": "narrative",
+            "label": "elements_common.narrative",
             "type": "textarea",
-            "placeholder": "Type narrative",
+            "placeholder": "elements_common.type_narrative",
             "required": true,
             "criteria": "mandatory",
             "add_more": true,
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/narrative/'>For more information</a>",
-            "help_text": "Provide a short title for the document or webpage.",
+            "hover_text": "elements_common.the_free_text_name_link_org_document_link_title_narrative",
+            "help_text": "elements_common.provide_a_short_title_for_desc",
             "attributes": {
               "lang": {
                 "name": "language",
-                "label": "language",
+                "label": "elements_common.language",
                 "type": "select",
                 "multiSelect": false,
                 "choices": "Activity/Language.json",
-                "placeholder": "Select language",
+                "placeholder": "elements_common.select_language",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                "hover_text": "elements_common.a_code_specifying_text_org_document_link_title_narrative",
+                "help_text": "elements_common.select_the_language_of_text_in_narrative_2"
               }
             },
             "sub_elements": {}
@@ -1400,36 +1400,36 @@
       },
       "description": {
         "name": "description",
-        "label": "Description",
+        "label": "elements_common.description",
         "add_more": false,
         "attributes": {},
-        "hover_text": "A description of the document contents, or guidance on where to access the relevant information in the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/description/'>For more information</a>",
+        "hover_text": "elements.organisation.document_link.description.hover_text",
         "sub_elements": {
           "narrative": {
             "name": "narrative",
-            "label": "narrative",
+            "label": "elements_common.narrative",
             "type": "textarea",
-            "placeholder": "Type narrative",
+            "placeholder": "elements_common.type_narrative",
             "required": true,
             "criteria": "mandatory",
             "add_more": true,
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/narrative/'>For more information</a>",
-            "help_text": "Provide a short description of the document or webpage, including any instructions on where to find relevant information.",
+            "hover_text": "elements_common.the_free_text_name_link_org_document_link_title_narrative",
+            "help_text": "elements_common.provide_a_short_description_of_document",
             "attributes": {
               "lang": {
                 "name": "language",
-                "label": "language",
+                "label": "elements_common.language",
                 "type": "select",
                 "multiSelect": false,
                 "choices": "Activity/Language.json",
-                "placeholder": "Select language",
+                "placeholder": "elements_common.select_language",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                "hover_text": "elements_common.a_code_specifying_text_org_document_link_title_narrative",
+                "help_text": "elements_common.select_the_language_of_text_in_narrative_2"
               }
             },
             "sub_elements": {}
@@ -1438,116 +1438,116 @@
       },
       "category": {
         "name": "category",
-        "label": "Category",
+        "label": "elements_common.category",
         "add_more": true,
         "element_criteria": "mandatory",
         "wrapper_collection": false,
-        "hover_text": "IATI Document Category Code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/category/'>For more information</a>",
+        "hover_text": "elements.organisation.document_link.category.hover_text",
         "help_text": "",
         "attributes": {
           "code": {
             "name": "code",
-            "label": "code",
+            "label": "elements_common.code",
             "type": "select",
             "multiSelect": false,
             "choices": "Activity/DocumentCategory.json",
-            "placeholder": "Select code",
+            "placeholder": "elements_common.select_code",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "An IATI code defining the category of the document. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/category/'>For more information</a>",
-            "help_text": "You must select a category of the document or webpage that you have provided."
+            "hover_text": "elements.organisation.document_link.category.code.hover_text",
+            "help_text": "elements_common.you_must_select_category"
           }
         },
         "sub_elements": {}
       },
       "language": {
         "name": "language",
-        "label": "Language",
+        "label": "elements_common.language",
         "add_more": true,
         "wrapper_collection": false,
-        "hover_text": "The ISO 639-1 language code in which target document is written, e.g. “en”. Can be repeated to describe multi-lingual documents. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/language/'>For more information</a>",
+        "hover_text": "elements.organisation.document_link.language.hover_text",
         "attributes": {
           "code": {
             "name": "language",
-            "label": "code",
+            "label": "elements_common.code",
             "type": "select",
             "multiSelect": false,
             "choices": "Activity/Language.json",
-            "placeholder": "Select code",
+            "placeholder": "elements_common.select_code",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "ISO 639-1 language code. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/language/'>For more information</a>",
-            "help_text": "Select the language of the document or webpage"
+            "hover_text": "elements.organisation.document_link.language.code.hover_text",
+            "help_text": "elements.organisation.document_link.language.code.help_text"
           }
         },
         "sub_elements": {}
       },
       "document_date": {
         "name": "document_date",
-        "label": "document date",
+        "label": "elements_common.document_date",
         "add_more": false,
-        "hover_text": "The date of publication of the document that is being linked to. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/document-date/'>For more information</a>",
+        "hover_text": "elements.organisation.document_link.document_date.hover_text",
         "attributes": {
           "date": {
             "name": "date",
-            "label": "date",
+            "label": "elements_common.date",
             "type": "date",
-            "placeholder": "YYYY-MM-DD",
+            "placeholder": "elements_common.yyyy_mm_dd",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "This attribute is required. This value must be of type xsd:date. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/document-date/'>For more information</a>",
-            "help_text": "Provide the date of publication for the document or webpage, or provide the date that it was last updated."
+            "hover_text": "elements.organisation.document_link.document_date.date.hover_text",
+            "help_text": "elements_common.provide_the_date_of_publication"
           }
         },
         "sub_elements": {}
       },
       "recipient_country": {
         "name": "recipient_country",
-        "label": "recipient country",
+        "label": "elements_common.recipient_country",
         "criteria": "",
         "add_more": true,
-        "hover_text": "The recipient country that is the focus of the document. May be repeated for multiple countries. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/recipient-country/'>For more information</a>",
-        "help_text": "If a recipient country is the focus of this document or webpage, please specify it here. You can state more than one country.",
+        "hover_text": "elements.organisation.document_link.recipient_country.hover_text",
+        "help_text": "elements.organisation.document_link.recipient_country.help_text",
         "attributes": {
           "code": {
             "name": "code",
-            "label": "code",
+            "label": "elements_common.code",
             "type": "select",
             "multiselect": false,
             "choices": "Activity/Country.json",
-            "placeholder": "Select code",
+            "placeholder": "elements_common.select_code",
             "required": true,
             "criteria": "mandatory",
-            "hover_text": "ISO 3166-1 alpha-2 code for the country. This attribute is required. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/recipient-country/'>For more information</a>",
-            "help_text": "Select the recipient country that is the focus for this document or webpage."
+            "hover_text": "elements.organisation.document_link.recipient_country.code.hover_text",
+            "help_text": "elements.organisation.document_link.recipient_country.code.help_text"
           }
         },
         "sub_elements": {
           "narrative": {
             "name": "narrative",
-            "label": "narrative",
+            "label": "elements_common.narrative",
             "type": "textarea",
-            "placeholder": "Type narrative",
+            "placeholder": "elements_common.type_narrative",
             "required": true,
             "criteria": "mandatory",
             "add_more": true,
             "attr": {
               "row": 4
             },
-            "hover_text": "The free text name or description of the item being described. This can be repeated in multiple languages. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/narrative/'>For more information</a>",
-            "help_text": "Type the name of the country that is the focus for this document or webpage.",
+            "hover_text": "elements_common.the_free_text_name_link_org_document_link_title_narrative",
+            "help_text": "elements.organisation.document_link.recipient_country.narrative.help_text",
             "attributes": {
               "lang": {
                 "name": "language",
-                "label": "language",
+                "label": "elements_common.language",
                 "type": "select",
                 "multiSelect": false,
                 "choices": "Activity/Language.json",
-                "placeholder": "Select language",
+                "placeholder": "elements_common.select_language",
                 "required": true,
                 "criteria": "mandatory",
-                "hover_text": "A code specifying the language of text in this element. It is recommended that wherever possible only codes from ISO 639-1 are used. If not present, the default language is assumed. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/document-link/title/narrative/'>For more information</a>",
-                "help_text": "Select the language of the text in the narrative. If no language is selected, your default language is assumed."
+                "hover_text": "elements_common.a_code_specifying_text_org_document_link_title_narrative",
+                "help_text": "elements_common.select_the_language_of_text_in_narrative_2"
               }
             },
             "sub_elements": {}

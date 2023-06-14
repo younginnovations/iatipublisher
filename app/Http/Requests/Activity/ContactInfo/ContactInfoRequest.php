@@ -118,7 +118,7 @@ class ContactInfoRequest extends ActivityBaseRequest
 
         foreach ($formFields as $contactInfoIndex => $contactInfo) {
             $contactInfoForm = sprintf('contact_info.%s', $contactInfoIndex);
-            $messages[sprintf('%s.type.in', $contactInfoForm)] = 'The contact info type is invalid.';
+            $messages[sprintf('%s.type.in', $contactInfoForm)] = trans('requests.contact_info', ['suffix'=>trans('requests.suffix.type_is_invalid')]);
             $tempMessages = [
                 $this->getMessagesForDepartment(Arr::get($contactInfo, 'department', []), $contactInfoForm),
                 $this->getMessagesForOrganisation(Arr::get($contactInfo, 'organisation', []), $contactInfoForm),
@@ -517,10 +517,10 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $telephoneIndex => $telephone) {
-            $messages[sprintf('%s.telephone.%s.telephone.numeric', $formBase, $telephoneIndex)] = 'The contact info telephone number must be valid numeric value.';
-            $messages[sprintf('%s.telephone.%s.telephone.regex', $formBase, $telephoneIndex)] = 'The contact info telephone number is invalid.';
-            $messages[sprintf('%s.telephone.%s.telephone.min', $formBase, $telephoneIndex)] = 'The contact info telephone number must have atleast 7 digits.';
-            $messages[sprintf('%s.telephone.%s.telephone.max', $formBase, $telephoneIndex)] = 'The contact info telephone number must not have more than 20 digits.';
+            $messages[sprintf('%s.telephone.%s.telephone.numeric', $formBase, $telephoneIndex)] = translateRequestMessage('contact_info_telephone', 'must_be_numeric');
+            $messages[sprintf('%s.telephone.%s.telephone.regex', $formBase, $telephoneIndex)] = translateRequestMessage('contact_info_telephone', 'is_invalid');
+            $messages[sprintf('%s.telephone.%s.telephone.min', $formBase, $telephoneIndex)] = translateRequestMessage('contact_info_telephone', 'must_be_atleast_7_digits');
+            $messages[sprintf('%s.telephone.%s.telephone.max', $formBase, $telephoneIndex)] = translateRequestMessage('contact_info_telephone', 'must_not_be_more_than_20_digits');
         }
 
         return $messages;
@@ -558,8 +558,8 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $emailIndex => $email) {
-            $messages[sprintf('%s.email.%s.email.email', $formBase, $emailIndex)] = 'The contact info email must be valid.';
-            $messages[sprintf('%s.email.%s.email.regex', $formBase, $emailIndex)] = 'The contact info email format is invalid.';
+            $messages[sprintf('%s.email.%s.email.email', $formBase, $emailIndex)] = trans('requests.contact_info_email', ['suffix'=>trans('requests.suffix.must_be_valid')]);
+            $messages[sprintf('%s.email.%s.email.regex', $formBase, $emailIndex)] = trans('requests.contact_info_email', ['suffix'=>trans('requests.suffix.format_is_invalid')]);
         }
 
         return $messages;
@@ -597,7 +597,7 @@ class ContactInfoRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $websiteIndex => $website) {
-            $messages[sprintf('%s.website.%s.website.url', $formBase, $websiteIndex)] = 'The contact info website url must be valid url.';
+            $messages[sprintf('%s.website.%s.website.url', $formBase, $websiteIndex)] = trans('requests.contact_info_website', ['suffix'=>trans('requests.suffix.must_be_valid_url')]);
         }
 
         return $messages;

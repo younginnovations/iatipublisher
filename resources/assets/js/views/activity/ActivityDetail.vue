@@ -24,16 +24,16 @@
             <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
               <div class="flex">
                 <a class="whitespace-nowrap font-bold" href="/activities">
-                  Your Activities
+                  {{ language.activity_lang.your_activities_label }}
                 </a>
                 <span class="separator mx-4"> / </span>
                 <div class="breadcrumb__title">
                   <span
                     class="breadcrumb__title last w-[200px] overflow-hidden text-ellipsis text-n-30"
-                    >{{ pageTitle ?? 'Untitled' }}</span
+                    >{{ pageTitle ?? language.common_lang.untitled }}</span
                   >
                   <span class="ellipsis__title--hover">{{
-                    pageTitle ? pageTitle : 'Untitled'
+                    pageTitle ? pageTitle : language.common_lang.untitled
                   }}</span>
                 </div>
               </div>
@@ -52,10 +52,10 @@
               <div class="inline-flex min-h-[48px] grow flex-wrap items-center">
                 <h4 class="ellipsis__title relative text-2xl font-bold">
                   <span class="ellipsis__title overflow-hidden">
-                    {{ pageTitle ? pageTitle : 'Untitled' }}
+                    {{ pageTitle ? pageTitle : language.common_lang.untitled }}
                   </span>
                   <span class="ellipsis__title--hover">
-                    {{ pageTitle ? pageTitle : 'Untitled' }}
+                    {{ pageTitle ? pageTitle : language.common_lang.untitled }}
                   </span>
                 </h4>
               </div>
@@ -74,7 +74,9 @@
               <ErrorPopUp
                 v-if="errorData.visibility"
                 :message="errorData.message"
-                title="Activity couldn’t be published because"
+                :title="
+                  language.common_lang.error.activity_could_not_be_published
+                "
                 @close-popup="
                   () => {
                     errorData.visibility = false;
@@ -128,22 +130,26 @@
           <div id="progress" class="mb-1 flex">
             <div class="activities__card progress mr-1">
               <div class="mb-2 flex items-center justify-between">
-                <span class="mr-2">Publishing Progress</span>
+                <span class="mr-2">{{
+                  language.common_lang.publishing_progress
+                }}</span>
                 <HoverText
-                  hover-text="The IATI Standard contains a wide range of data elements and your organisation is encouraged to (at least) publish data in elements marked as “Core”."
+                  :hover-text="
+                    language.common_lang.the_iati_standard_contains_wide
+                  "
                   name=""
                   class="hover-text"
                   position="right"
                 />
               </div>
               <ProgressBar :percent="progress" class="mb-3" />
-              <span>Complete all core elements to get 100% score</span>
+              <span>{{ language.activity_lang.complete_all_core_label }}</span>
             </div>
             <div class="activities__card elements">
               <div class="mb-7 flex items-center justify-between">
-                <span>Elements</span>
+                <span>{{ language.common_lang.elements }}</span>
                 <HoverText
-                  hover-text="Each “Element” represents a basic unit of information in the IATI Standard. Click on each element listed below and complete all data fields contained in the element. For each element, you will find its technical definition, which is labelled as “IATI Standard Reference” and helpful guidance on the data you are required to provide."
+                  :hover-text="language.common_lang.each_element_represents"
                   name=""
                   class="hover-text"
                 />
@@ -151,10 +157,10 @@
               <div class="mb-3 flex justify-between">
                 <div class="flex items-center space-x-1">
                   <svg-vue icon="core" />
-                  <span>Core</span>
+                  <span>{{ language.common_lang.core }}</span>
                 </div>
                 <HoverText
-                  hover-text="Core elements include the IATI Standard's “mandatory and recommended” elements and it is important to provide this data to ensure your data is usable and useful."
+                  :hover-text="language.common_lang.core_elements_include"
                   name=""
                   class="hover-text"
                 />
@@ -162,10 +168,12 @@
               <div class="flex justify-between">
                 <div class="flex items-center space-x-1">
                   <svg-vue class="text-spring-50" icon="double-tick" />
-                  <span>Completed</span>
+                  <span>{{ language.common_lang.completed }}</span>
                 </div>
                 <HoverText
-                  hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                  :hover-text="
+                    language.common_lang.cannot_publish_activity_until_mandatory
+                  "
                   name=""
                   class="hover-text"
                 />
@@ -205,22 +213,28 @@
             <div class="mb-1 flex">
               <div class="activities__card progress mr-1">
                 <div class="mb-2 flex items-center justify-between">
-                  <span class="mr-2">Publishing Progress</span>
+                  <span class="mr-2">{{
+                    language.common_lang.publishing_progress
+                  }}</span>
                   <HoverText
-                    hover-text="The IATI Standard contains a wide range of data elements and your organisation is encouraged to (at least) publish data in elements marked as “Core”."
+                    :hover-text="
+                      language.common_lang.the_iati_standard_contains_wide
+                    "
                     name=""
                     class="hover-text"
                     position="right"
                   />
                 </div>
                 <ProgressBar :percent="progress" class="mb-3" />
-                <span>Complete all core elements to get 100% score</span>
+                <span>{{
+                  language.activity_lang.complete_all_core_label
+                }}</span>
               </div>
               <div class="activities__card elements">
                 <div class="mb-7 flex items-center justify-between">
-                  <span>Elements</span>
+                  <span>{{ language.common_lang.elements }}</span>
                   <HoverText
-                    hover-text="Each “Element” represents a basic unit of information in the IATI Standard. Click on each element listed below and complete all data fields contained in the element. For each element, you will find its technical definition, which is labelled as “IATI Standard Reference” and helpful guidance on the data you are required to provide."
+                    :hover-text="language.common_lang.each_element_represents"
                     name=""
                     class="hover-text"
                   />
@@ -228,10 +242,10 @@
                 <div class="mb-3 flex justify-between">
                   <div class="flex items-center space-x-1">
                     <svg-vue icon="core" />
-                    <span>Core</span>
+                    <span>{{ language.common_lang.core }}</span>
                   </div>
                   <HoverText
-                    hover-text="Core elements include the IATI Standard's “mandatory and recommended” elements and it is important to provide this data to ensure your data is usable and useful."
+                    :hover-text="language.common_lang.core_elements_include"
                     name=""
                     class="hover-text"
                   />
@@ -239,10 +253,13 @@
                 <div class="flex justify-between">
                   <div class="flex items-center space-x-1">
                     <svg-vue class="text-spring-50" icon="double-tick" />
-                    <span>Completed</span>
+                    <span>{{ language.common_lang.completed }}</span>
                   </div>
                   <HoverText
-                    hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                    :hover-text="
+                      language.common_lang
+                        .cannot_publish_activity_until_mandatory
+                    "
                     name=""
                     class="hover-text"
                   />
@@ -261,9 +278,9 @@
               class="mb-4 flex items-center text-xs font-bold uppercase leading-normal text-n-50"
             >
               <svg-vue class="mr-0.5 text-base" icon="setting"></svg-vue>
-              <span class="whitespace-nowrap"
-                >Override this activity's default values
-              </span>
+              <span class="whitespace-nowrap">{{
+                language.activity_lang.uc_override_this_activity_label
+              }}</span>
             </a>
           </div>
           <div
@@ -277,11 +294,14 @@
               class="tab-btn-anchor"
             >
               <button :disabled="post.status == 'disabled'" class="tab-btn">
-                <span>{{ post.label }}</span>
+                <span>{{ formatTitle(toSnakeCase(post.label)) }}</span>
                 <span class="hover__text">
                   <HoverText
-                    :name="post.label"
-                    hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                    :name="formatTitle(toSnakeCase(post.label))"
+                    :hover-text="
+                      language.common_lang
+                        .cannot_publish_activity_until_mandatory
+                    "
                     icon_size="text-tiny"
                   />
                 </span>
@@ -358,6 +378,7 @@ import {
   onUnmounted,
   ref,
   watch,
+  capitalize,
 } from 'vue';
 import { useToggle, watchIgnorable } from '@vueuse/core';
 
@@ -448,6 +469,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     const { types, coreCompleted } = toRefs(props);
     let removed = sessionStorage.getItem('removed');
 
@@ -627,7 +649,9 @@ export default defineComponent({
     );
 
     function formatTitle(title: string) {
-      return title.replace(/_/gi, ' ');
+      const translatedTitle = language.activity_lang[title]?.label;
+
+      return capitalize(translatedTitle ?? title.replace(/_/gi, ' '));
     }
 
     const toastMessage = reactive({
@@ -671,7 +695,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
+        title: language.activities_lang.your_activities,
         link: '/activities',
       },
       {
@@ -704,6 +728,11 @@ export default defineComponent({
       store.dispatch('updateShowPublished', false);
     }
 
+    const toSnakeCase = (sentence: string) => {
+      const words = sentence.split(' ');
+      return words.map((word) => word.toLowerCase()).join('_');
+    };
+
     return {
       groupedData,
       activities,
@@ -727,6 +756,8 @@ export default defineComponent({
       istopVisible,
       screenWidth,
       width,
+      language,
+      toSnakeCase,
     };
   },
 });

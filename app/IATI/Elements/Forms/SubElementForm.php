@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Elements\Forms;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -68,7 +69,7 @@ class SubElementForm extends Form
             'multiple' => $field['multiple'] ?? false,
             'attr' => [
                 'class' => 'form__input border-0',
-                'placeholder' => Arr::get($field, 'placeholder', ''),
+                'placeholder' => trans(Arr::get($field, 'placeholder', '')),
             ],
             'wrapper' => [
                 'class' => 'form-field xl:basis-6/12',
@@ -77,8 +78,8 @@ class SubElementForm extends Form
 
         if (array_key_exists('type', $field) && $field['type'] == 'select') {
             $options['attr']['class'] = 'select2';
-            $options['attr']['data-placeholder'] = Arr::get($field, 'placeholder', '');
-            $options['empty_value'] = $field['empty_value'] ?? 'Select a value';
+            $options['attr']['data-placeholder'] = trans(Arr::get($field, 'placeholder', ''));
+            $options['empty_value'] = $field['empty_value'] ?? trans('common.placeholder.select_a_value');
             $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList($field['choices'])) : $field['choices']) : false;
             $options['default_value'] = $field['default'] ?? '';
 
@@ -121,7 +122,8 @@ class SubElementForm extends Form
      */
     public function getCodeList(string $filePath, bool $code = true): array
     {
-        $filePath = app_path("Data/$filePath");
+        $currentLang = App::currentLocale();
+        $filePath = app_path("Data/$currentLang/$filePath");
         $codeListFromFile = file_get_contents($filePath);
         $codeLists = json_decode($codeListFromFile, true);
         $codeList = last($codeLists);

@@ -8,7 +8,10 @@
         <div class="title flex grow items-center">
           <svg-vue class="mr-1.5 text-xl text-bluecoral" icon="bill"></svg-vue>
           <div class="title text-sm font-bold">
-            {{ title.toString().replace(/_/g, '-') }}
+            {{
+              language.elements_common_lang[title.toString()] ??
+              title.toString().replace(/_/g, '-')
+            }}
           </div>
           <div
             class="status ml-2.5 flex text-xs leading-5"
@@ -18,19 +21,29 @@
             }"
           >
             <b class="mr-2 text-base leading-3">.</b>
-            <span v-if="completed">completed</span>
-            <span v-else>not completed</span>
+            <span v-if="completed">{{ language.common_lang.completed }}</span>
+            <span v-else>{{ language.common_lang.not_completed }}</span>
           </div>
         </div>
         <div class="icons flex items-center">
           <Btn
-            text="Add New Result"
+            :text="
+              language.button_lang.add_element.replace(
+                ':element',
+                language.common_lang.new_result
+              )
+            "
             icon="add"
             :link="`/activity/${activityId}/${title}/create`"
             class="mr-2.5"
           />
           <Btn
-            text="Show full result list"
+            :text="
+              language.button_lang.show_element.replace(
+                ':element',
+                language.common_lang.full_result
+              )
+            "
             icon=""
             design="bgText"
             :link="`/activity/${activityId}/${title}`"
@@ -62,13 +75,23 @@
                   </div>
                   <div class="flex shrink-0">
                     <Btn
-                      text="View Result"
+                      :text="
+                        language.button_lang.view_element.replace(
+                          ':element',
+                          language.common_lang.result
+                        )
+                      "
                       icon="eye"
                       :link="`/activity/${activityId}/${title}/${result.id}`"
                       class="mr-2.5"
                     />
                     <Btn
-                      text="Edit Result"
+                      :text="
+                        language.button_lang.edit_element.replace(
+                          ':element',
+                          language.common_lang.result
+                        )
+                      "
                       icon="edit"
                       :link="`/activity/${activityId}/${title}/${result.id}/edit`"
                     />
@@ -79,7 +102,7 @@
                   <table class="mb-3">
                     <tbody>
                       <tr>
-                        <td>Result Type</td>
+                        <td>{{ language.common_lang.result_type }}</td>
                         <td>
                           <div>
                             {{
@@ -89,7 +112,7 @@
                         </td>
                       </tr>
                       <tr>
-                        <td>Description</td>
+                        <td>{{ language.common_lang.description }}</td>
                         <td>
                           <div class="description-content">
                             <div class="language mb-1.5">
@@ -99,7 +122,7 @@
                                   result.result.description[0].narrative,
                                   currentLanguage
                                 ) === 'Untitled'
-                                  ? 'Missing'
+                                  ? language.common_lang.missing.default
                                   : types.languages[
                                       result?.result?.description?.[0]
                                         ?.narrative?.[0]?.language ??
@@ -124,8 +147,12 @@
                           <div>
                             <NotYet
                               :link="`/${title}/${result.id}/indicator/create`"
-                              description="You haven't added any indicator yet."
-                              btn-text="Add new indicator"
+                              :description="
+                                language.button_lang.not_yet_added_period
+                              "
+                              :btn-text="
+                                language.button_lang.not_yet_added_period_btn
+                              "
                             />
                           </div>
                         </td>
@@ -142,17 +169,27 @@
                       class="head flex items-center border-b border-n-20 px-6 py-2"
                     >
                       <div class="grow text-xs font-bold text-n-50">
-                        Indicator
+                        {{ language.common_lang.indicator }}
                       </div>
                       <div class="inline-flex shrink-0">
                         <Btn
-                          text="Add New Indicator"
+                          :text="
+                            language.button_lang.add_element.replace(
+                              ':element',
+                              language.common_lang.new_indicator
+                            )
+                          "
                           icon="add"
                           :link="`/${title}/${result.id}/indicator/create`"
                           class="mr-2.5"
                         />
                         <Btn
-                          text="Show full indicator list"
+                          :text="
+                            language.button_lang.show_element.replace(
+                              ':element',
+                              language.common_lang.full_indicator
+                            )
+                          "
                           icon=""
                           design="bgText"
                           :link="`/${title}/${result.id}/indicator`"
@@ -182,19 +219,34 @@
                               <div class="flex shrink-0 grow justify-between">
                                 <span class="flex">
                                   <Btn
-                                    text="View Indicator"
+                                    :text="
+                                      language.button_lang.view_element.replace(
+                                        ':element',
+                                        language.common_lang.indicator
+                                      )
+                                    "
                                     icon="eye"
                                     :link="`/${title}/${result.id}/indicator/${indicator.id}`"
                                     class="mr-2.5"
                                   />
                                   <Btn
-                                    text="Edit Indicator"
+                                    :text="
+                                      language.button_lang.edit_element.replace(
+                                        ':element',
+                                        language.common_lang.indicator
+                                      )
+                                    "
                                     :link="`/${title}/${result.id}/indicator/${indicator.id}/edit`"
                                     class="mr-2.5"
                                   />
                                 </span>
                                 <Btn
-                                  text="Add Period"
+                                  :text="
+                                    language.button_lang.add_element.replace(
+                                      ':element',
+                                      language.common_lang.period
+                                    )
+                                  "
                                   icon="add"
                                   :link="`/indicator/${indicator.id}/period/create`"
                                 />
@@ -203,7 +255,7 @@
                             <table>
                               <tbody>
                                 <tr>
-                                  <td>Baseline:</td>
+                                  <td>{{ language.common_lang.baseline }}:</td>
                                   <td>
                                     <div
                                       v-for="(baseline, b) in indicator
@@ -219,25 +271,35 @@
                                     >
                                       <div class="description text-xs">
                                         <span>
-                                          Value:
+                                          {{ language.common_lang.value }}:
                                           <template v-if="baseline.value">
                                             {{ baseline.value }},
                                           </template>
-                                          <template v-else> Missing, </template>
+                                          <template v-else>
+                                            {{
+                                              language.common_lang.missing
+                                                .default
+                                            }},
+                                          </template>
                                         </span>
                                         <span>
-                                          Date:
+                                          {{ language.common_lang.date }}:
                                           <template v-if="baseline.date">
                                             {{ baseline.date }}
                                           </template>
-                                          <template v-else> Missing </template>
+                                          <template v-else>
+                                            {{
+                                              language.common_lang.missing
+                                                .default
+                                            }}
+                                          </template>
                                         </span>
                                       </div>
                                     </div>
                                   </td>
                                 </tr>
                                 <tr v-if="indicator.periods.length > 0">
-                                  <td>Period:</td>
+                                  <td>{{ language.common_lang.period }}:</td>
                                   <td>
                                     <div class="inline-flex gap-4">
                                       <div>
@@ -277,7 +339,7 @@
                                           </div>
                                           <div class="ml-2">
                                             <Btn
-                                              text="Edit"
+                                              :text="language.button_lang.edit"
                                               icon="edit"
                                               :link="`/indicator/${indicator.id}/period/${period.id}/edit`"
                                             />
@@ -287,7 +349,10 @@
                                       <div class="shrink-0">
                                         <Btn
                                           class="-mt-1"
-                                          text="Show full period list"
+                                          :text="
+                                            language.button_lang
+                                              .show_full_period
+                                          "
                                           icon=""
                                           design="bgText"
                                           :link="`/indicator/${indicator.id}/period`"
@@ -302,7 +367,10 @@
                                     <div>
                                       <NotYet
                                         :link="`/indicator/${indicator.id}/period/create`"
-                                        description="You haven't added any period yet."
+                                        :description="
+                                          language.button_lang
+                                            .not_yet_added_period
+                                        "
                                       />
                                     </div>
                                   </td>
@@ -379,6 +447,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const language = window['globalLang'];
     const format = 'MMMM DD, YYYY';
 
     const { data } = toRefs(props);
@@ -394,6 +463,7 @@ export default defineComponent({
       getActivityTitle,
       currentLanguage,
       dateFormat,
+      language,
     };
   },
 });

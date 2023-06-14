@@ -98,10 +98,10 @@ class HumanitarianScopeRequest extends ActivityBaseRequest
 
         foreach ($formFields as $humanitarianScopeIndex => $humanitarianScope) {
             $humanitarianScopeForm = 'humanitarian_scope.' . $humanitarianScopeIndex;
-            $messages[sprintf('%s.type.in', $humanitarianScopeForm)] = 'The humanitarian scope type is invalid.';
-            $messages[sprintf('%s.vocabulary.in', $humanitarianScopeForm)] = 'The humanitarian scope vocabulary is invalid.';
-            $messages[sprintf('%s.code.string', $humanitarianScopeForm)] = 'The humanitarian scope code must be a string.';
-            $messages[sprintf('%s.vocabulary_uri.url', $humanitarianScopeForm)] = 'The humanitarian scope vocabulary-uri must be a proper url.';
+            $messages[sprintf('%s.type.in', $humanitarianScopeForm)] = trans('requests.humanitarian', ['suffix'=>trans('requests.suffix.type_is_invalid')]);
+            $messages[sprintf('%s.vocabulary.in', $humanitarianScopeForm)] = trans('requests.humanitarian', ['suffix'=>trans('requests.suffix.vocabulary_is_invalid')]);
+            $messages[sprintf('%s.code.string', $humanitarianScopeForm)] = trans('requests.humanitarian_code', ['suffix'=>trans('requests.suffix.must_be_a_string')]);
+            $messages[sprintf('%s.vocabulary_uri.url', $humanitarianScopeForm)] = trans('requests.humanitarian', ['suffix'=>trans('requests.suffix.must_be_valid_vocal_url')]);
 
             foreach ($this->getMessagesForNarrative($humanitarianScope['narrative'], $humanitarianScopeForm) as $humanitarianIndex => $narrativeMessages) {
                 $messages[$humanitarianIndex] = $narrativeMessages;

@@ -4,7 +4,7 @@
       <thead>
         <tr class="bg-n-10">
           <th id="title" scope="col">
-            <span>Activity Title</span>
+            <span>{{ language.common_lang.activity_title }}</span>
           </th>
           <th id="publishing-progress" scope="col" class="progress-bar-header">
             <a
@@ -14,7 +14,9 @@
               <span class="sorting-indicator" :class="sortingDirection()">
                 <svg-vue :icon="`${sortingDirection()}-arrow`" />
               </span>
-              <span class="">Publishing Progress</span>
+              <span class="">{{
+                language.common_lang.publishing_progress
+              }}</span>
             </a>
           </th>
           <th id="date" scope="col">
@@ -25,14 +27,14 @@
               <span class="sorting-indicator" :class="sortingDirection()">
                 <svg-vue :icon="`${sortingDirection()}-arrow`" />
               </span>
-              <span>Updated On</span>
+              <span>{{ language.common_lang.updated_on }}</span>
             </a>
           </th>
           <th id="status" scope="col">
-            <span class="hidden">Status</span>
+            <span class="hidden">{{ language.common_lang.status }}</span>
           </th>
           <th id="publish" scope="col">
-            <span class="hidden">Publish</span>
+            <span class="hidden">{{ language.common_lang.publish }}</span>
           </th>
           <th id="cb" scope="col">
             <span
@@ -69,7 +71,7 @@
                     datum['default_title_narrative'] &&
                     datum['default_title_narrative'] !== ''
                       ? datum['default_title_narrative']
-                      : 'Untitled'
+                      : language.common_lang.untitled
                   }}</a
                 >
                 <div class="w-52">
@@ -77,7 +79,7 @@
                     datum['default_title_narrative'] &&
                     datum['default_title_narrative'] !== ''
                       ? datum['default_title_narrative']
-                      : 'Untitled'
+                      : language.common_lang.untitled
                   }}</span>
                 </div>
               </div>
@@ -121,7 +123,9 @@
                   "
                 />
               </span>
-              <span class="text-sm leading-relaxed">{{ datum['status'] }}</span>
+              <span class="text-sm leading-relaxed">{{
+                language.activities_lang.status_labels[datum['status']]
+              }}</span>
             </button>
           </td>
 
@@ -149,7 +153,9 @@
             @click="(event: Event) => event.stopPropagation()"
           >
             <label class="sr-only" for="">
-              Select "{{ datum['default_title_narrative'] }}"
+              {{ language.common_lang.select }} "{{
+                datum['default_title_narrative']
+              }}"
             </label>
             <label class="checkbox">
               <input
@@ -166,7 +172,9 @@
         <td v-if="loader" colspan="5" class="text-center">
           <div colspan="5" class="spin"></div>
         </td>
-        <td v-else colspan="5" class="text-center">Activities not found</td>
+        <td v-else colspan="5" class="text-center">
+          {{ language.common_lang.activities_not_found }}
+        </td>
       </tbody>
     </table>
   </div>
@@ -184,7 +192,7 @@ import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
 import Publish from 'Components/buttons/PublishButton.vue';
 import UnPublish from 'Components/buttons/UnPublishButton.vue';
 // import Shimmer from "Components/ShimmerLoading.vue";
-
+const language = window['globalLang'];
 const [selectAllValue, selectAllToggle] = useToggle();
 
 defineProps({

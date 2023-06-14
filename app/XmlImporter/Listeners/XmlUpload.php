@@ -30,6 +30,7 @@ class XmlUpload
 
     /**
      * XmlUpload constructor.
+     *
      * @param ImportXmlService  $importXmlService
      * @param XmlQueueProcessor $xmlQueueProcessor
      */
@@ -47,7 +48,7 @@ class XmlUpload
      */
     public function handle(XmlWasUploaded $event): bool
     {
-        $this->dispatch(new ImportXml($event->organizationId, $event->orgRef, $event->userId, $event->filename, $event->iatiIdentifiers, Auth::user()->organization->reporting_org));
+        $this->dispatch(new ImportXml($event->organizationId, $event->orgRef, $event->userId, $event->filename, $event->iatiIdentifiers, Auth::user()->organization->reporting_org, app()->getLocale()));
 
         return true;
     }

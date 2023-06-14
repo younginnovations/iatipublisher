@@ -7,6 +7,7 @@
 <script setup lang="ts">
 import { defineProps, toRefs } from 'vue';
 
+const language = window['globalLang'];
 const props = defineProps({
   data: { type: Boolean, required: true },
 });
@@ -14,5 +15,7 @@ const props = defineProps({
 const { data } = toRefs(props);
 
 let color = data.value ? 'text-spring-50' : 'text-crimson-50',
-  text = data.value ? 'completed' : 'not completed';
+  text = data.value
+    ? language.common_lang.completed
+    : language.common_lang.not_completed;
 </script>

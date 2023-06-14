@@ -200,7 +200,7 @@ class UserService
 
         if ($res->getStatusCode() === 404) {
             if ($exists) {
-                $errors['publisher_id'] = ['Publisher ID doesn\'t exist in IATI Registry.'];
+                $errors['publisher_id'] = [trans('common.error.elements_doesnt_match_iati_registry', ['element'=>trans('register.publisher_id.label')])];
             }
 
             return $errors;
@@ -209,11 +209,11 @@ class UserService
         $response = json_decode($res->getBody()->getContents())->result;
 
         if (!in_array($publisher_id, $response) && $exists) {
-            $errors['publisher_id'] = ['Publisher ID doesn\'t match your IATI Registry information.'];
+            $errors['publisher_id'] = [trans('common.error.elements_doesnt_match_iati_registry', ['element'=>trans('register.publisher_id.label')])];
         }
 
         if (in_array($publisher_id, $response) && !$exists) {
-            $errors['publisher_id'] = ['Publisher ID already exists in IATI Registry.'];
+            $errors['publisher_id'] = [trans('common.error.element_already_exists_in_iati_registry', ['element'=>trans('register.publisher_id.label')])];
         }
 
         return $errors;
@@ -246,7 +246,7 @@ class UserService
         $errors = [];
 
         if ($res->getStatusCode() === 404) {
-            $errors['error'] = ['Error occurred while trying to check user email.'];
+            $errors['error'] = [trans('responses.error_has_occurred', ['event'=>trans('events.trying_to'), 'suffix'=>trans('responses.check_user_email')])];
 
             return $errors;
         }
@@ -258,7 +258,7 @@ class UserService
                 if ($publisher->publisher_iati_id === $identifier) {
                     return [
                         'identifier' => [
-                            0 => 'IATI Organizational Identifier already exists in IATI Registry.',
+                            0 => trans('common.error.element_already_exists_in_iati_registry', ['element'=>trans('common.iati_organisational_identifier')]),
                         ],
                     ];
                 }
@@ -297,7 +297,7 @@ class UserService
 
         if ($res->getStatusCode() === 404) {
             if ($exists) {
-                $errors['username'] = ['User doesn\'t exist in IATI Registry.'];
+                $errors['username'] = [trans('common.error.element_doesnt_exist_in_iati_registry', ['element'=>trans('user.user')])];
             }
 
             return $errors;
@@ -307,11 +307,11 @@ class UserService
 
         if ($exists) {
             if ($data['username'] !== $response->name) {
-                $errors['username'] = ['User with this name does not exists in IATI Registry.'];
+                $errors['username'] = [trans('common.error.element_already_exists_in_iati_registry', ['element'=>trans('user.user_with_this_name')])];
             }
         } else {
             if ($data['username'] === $response->name) {
-                $errors['username'] = ['Username already exists in IATI Registry.'];
+                $errors['username'] = [trans('common.error.element_already_exists_in_iati_registry', ['element'=>trans('user.user_name')])];
             }
         }
 
