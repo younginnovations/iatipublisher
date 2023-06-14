@@ -134,7 +134,7 @@ const issueType = ref();
  **/
 interface ErrorInterface {
   category: string;
-  context: [];
+  response: [];
   id: string;
   identifier: string;
   message: string;
@@ -145,9 +145,9 @@ const { errorData } = toRefs(props);
 const importErrorTypes = ['error', 'warning'];
 
 interface TempData {
-  errors: string[];
-  critical: string[];
-  warnings: string[];
+  errors: object[];
+  critical: object[];
+  warnings: object[];
 }
 onMounted(() => {
   if (errorData.value.length) {
@@ -174,13 +174,17 @@ const updateTempMessage = () => {
     const severity = data.severity;
     switch (severity) {
       case 'critical':
-        tempData.critical.push(data.message);
+        // = data;
+        // =  data.context;
+        tempData.critical.push(data);
         break;
       case 'error':
-        tempData.errors.push(data.message);
+        // tempData['errors'][data.message] =  data.context;
+        tempData.errors.push(data);
         break;
       case 'warning':
-        tempData.warnings.push(data.message);
+        // tempData['warnings'][data.message] =  data.context;
+        tempData.warnings.push(data);
         break;
     }
   }

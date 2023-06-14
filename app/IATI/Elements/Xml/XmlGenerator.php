@@ -392,11 +392,11 @@ class XmlGenerator
     {
         $data = [
             'last-updated-datetime' => gmdate('c', time()),
-            'xml:lang'              => Arr::get($defaultValues, 'default_language', null),
-            'default-currency'      => Arr::get($defaultValues, 'default_currency', null),
-            'humanitarian'          => Arr::get($defaultValues, 'humanitarian', 1),
-            'hierarchy'             => Arr::get($defaultValues, 'hierarchy', 1),
-            'budget-not-provided'   => Arr::get($defaultValues, 'budget_not_provided', ''),
+            'xml:lang' => Arr::get($defaultValues, 'default_language', null),
+            'default-currency' => Arr::get($defaultValues, 'default_currency', null),
+            'humanitarian' => Arr::get($defaultValues, 'humanitarian', 1),
+            'hierarchy' => Arr::get($defaultValues, 'hierarchy', 1),
+            'budget-not-provided' => Arr::get($defaultValues, 'budget_not_provided', ''),
         ];
 
         foreach ($data as $key => $datum) {
@@ -457,6 +457,7 @@ class XmlGenerator
      * @param $organization
      *
      * @return array
+     * @throws \JsonException
      */
     public function getXmlData($activity, $transaction, $result, $organization): array
     {
@@ -495,7 +496,41 @@ class XmlGenerator
         $xmlActivity['result'] = $this->resultService->getXmlData($result);
         removeEmptyValues($xmlActivity);
 
+        $this->mapActivityTransactionAndResultIndex($xmlActivity, $activity);
+
         return $xmlActivity;
+    }
+
+    /**
+     * @throws \JsonException
+     */
+    public function mapActivityTransactionAndResultIndex($xmlActivity, $activity): void
+    {
+        $transactions = Arr::get($xmlActivity, 'transaction', []);
+        $results = Arr::get($xmlActivity, 'result', []);
+        $mapper = [];
+
+        foreach ($transactions as $transactionKey => $transaction) {
+            $mapper['transactions'][] = 'transactions.' . $transactionKey;
+        }
+
+        foreach ($results as $resultKey => $result) {
+            $mapper['results'][] = 'results.' . $resultKey;
+
+            if (isset($result['indicator']) && !empty($result['indicator'])) {
+                foreach ($result['indicator'] as $indicatorKey => $indicator) {
+                    $mapper['indicators']["results.$resultKey"][] = "results.$resultKey.indicators." . $indicatorKey;
+
+                    if (isset($indicator['period']) && !empty($indicator['period'])) {
+                        foreach ($indicator['period'] as $periodKey => $period) {
+                            $mapper['periods']["results.$resultKey.indicators.$indicatorKey"][] = "results.$resultKey.indicators.$indicatorKey.periods." . $periodKey;
+                        }
+                    }
+                }
+            }
+        }
+
+        awsUploadFile("xmlValidation/$activity->org_id/activity_mapper_$activity->id.xml", json_encode($mapper, JSON_THROW_ON_ERROR));
     }
 
     /**

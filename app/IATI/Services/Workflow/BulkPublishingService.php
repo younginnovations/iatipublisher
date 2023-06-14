@@ -8,6 +8,7 @@ use App\IATI\Repositories\ApiLog\ApiLogRepository;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\BulkPublishingStatusService;
 use App\IATI\Services\Validator\ActivityValidatorResponseService;
+use App\IATI\Traits\IatiValidatorResponseTrait;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Arr;
@@ -18,6 +19,8 @@ use Illuminate\Support\Str;
  */
 class BulkPublishingService
 {
+    use IatiValidatorResponseTrait;
+
     /**
      * @var ActivityService
      */
@@ -158,7 +161,8 @@ class BulkPublishingService
     public function validateWithException($activity): array
     {
         try {
-            $response = json_decode($this->activityWorkflowService->validateActivityOnIATIValidator($activity), true, 512, JSON_THROW_ON_ERROR);
+            $validatorResponse = $this->activityWorkflowService->validateActivityOnIATIValidator($activity);
+            $response = $this->addElementOnIatiValidatorResponse($validatorResponse, $activity);
 
             if ($this->validatorService->updateOrCreateResponse($activity->id, $response)) {
                 return $response;
@@ -167,7 +171,8 @@ class BulkPublishingService
             return ['success' => false, 'error' => trans('responses.error_has_occurred', ['event'=>trans('events.validating'), 'suffix'=>trans('elements_common.activity')])];
         } catch (BadResponseException $ex) {
             if ($ex->getCode() === 422) {
-                $response = json_decode($ex->getResponse()->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+                $validatorResponse = $ex->getResponse()->getBody()->getContents();
+                $response = $this->addElementOnIatiValidatorResponse($validatorResponse, $activity);
 
                 if ($this->validatorService->updateOrCreateResponse($activity->id, $response)) {
                     return $response;

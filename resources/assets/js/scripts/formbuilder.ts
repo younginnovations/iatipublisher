@@ -428,14 +428,16 @@ $(function () {
   }
 
   // Adding cursor not allowed to <select> where elementJsonSchema read_only : true
-  const readOnlySelects =  document.querySelectorAll("select.cursor-not-allowed");
+  const readOnlySelects = document.querySelectorAll(
+    'select.cursor-not-allowed'
+  );
   for (let i = 0; i < readOnlySelects.length; i++) {
     const select = readOnlySelects[i];
     const selectElementParentWrapper = select.nextSibling;
     const selectElementParent = selectElementParentWrapper?.firstChild;
     const selectElement = selectElementParent?.firstChild as HTMLElement;
     if (selectElement) {
-      selectElement.style.cursor = "not-allowed";
+      selectElement.style.cursor = 'not-allowed';
     }
   }
 });
