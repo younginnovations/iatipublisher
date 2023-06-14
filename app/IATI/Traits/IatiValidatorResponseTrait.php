@@ -39,60 +39,68 @@ trait IatiValidatorResponseTrait
         $errors = $response['errors'];
         $updatedErrors = [];
 
-        foreach ($errors as $error) {
-            if (isset($error['details'][0])) {
-                foreach ($error['details'] as $key => $detailedError) {
-                    if (isset($detailedError['error']['line'])) {
-                        $lineNumber = $detailedError['error']['line'];
-                        $nodePath = $this->getNodeByLineNumber($lineNumber + 1, $activity);
+        if (!empty($errors)) {
+            foreach ($errors as $error) {
+                if (isset($error['details'][0])) {
+                    foreach ($error['details'] as $key => $detailedError) {
+                        if (isset($detailedError['error']['line'])) {
+                            $lineNumber = $detailedError['error']['line'];
+                            $nodePath = $this->getNodeByLineNumber($lineNumber + 1, $activity);
 
-                        if (strpos($nodePath, 'edit')) {
-                            $stringBetween = getStringBetween($nodePath, '/', '/edit');
-                        } else {
-                            $stringBetween = getStringBetween($nodePath, '/', '#');
+                            if (strpos($nodePath, 'edit')) {
+                                $stringBetween = getStringBetween($nodePath, '/', '/edit');
+                            } else {
+                                $stringBetween = getStringBetween($nodePath, '/', '#');
+                            }
+
+                            $errorLocation = str_replace('/', '>', $stringBetween);
+                            $error['response'][$key]['iati_path'] = $nodePath;
+                            $error['response'][$key]['message'] = $errorLocation;
                         }
-
-                        $errorLocation = str_replace('/', '>', $stringBetween);
-                        $error['response'][$key]['iati_path'] = $nodePath;
-                        $error['response'][$key]['message'] = $errorLocation;
                     }
-                }
-            } elseif (isset($error['details']['caseContext']['paths'])) {
-                foreach ($error['details']['caseContext']['paths'] as $caseContext => $detailedErrors) {
-                    if (isset($detailedErrors['lineNumber'])) {
-                        $lineNumber = $detailedErrors['lineNumber'];
-                        $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
+                } elseif (isset($error['details']['ruleName']) && $error['details']['ruleName'] === 'atLeastOne') {
+                    $error['response'][0]['iati_path'] = "/activity/$activity->id";
+                    $error['response'][0]['message'] = "activity>$activity->id";
+                } elseif (isset($error['details']['caseContext']['paths']) && !empty($error['details']['caseContext']['paths'])) {
+                    foreach ($error['details']['caseContext']['paths'] as $caseContext => $detailedErrors) {
+                        if (isset($detailedErrors['lineNumber'])) {
+                            $lineNumber = $detailedErrors['lineNumber'];
+                            $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
 
-                        if (strpos($nodePath, 'edit')) {
-                            $stringBetween = getStringBetween($nodePath, '/', '/edit');
-                        } else {
-                            $stringBetween = getStringBetween($nodePath, '/', '#');
+                            if (strpos($nodePath, 'edit')) {
+                                $stringBetween = getStringBetween($nodePath, '/', '/edit');
+                            } else {
+                                $stringBetween = getStringBetween($nodePath, '/', '#');
+                            }
+
+                            $errorLocation = str_replace('/', '>', $stringBetween);
+                            $error['response'][$caseContext]['iati_path'] = $nodePath;
+                            $error['response'][$caseContext]['message'] = $errorLocation;
                         }
-
-                        $errorLocation = str_replace('/', '>', $stringBetween);
-                        $error['response'][$caseContext]['iati_path'] = $nodePath;
-                        $error['response'][$caseContext]['message'] = $errorLocation;
                     }
-                }
-            } elseif (isset($error['details']['xpathContext']['lineNumber'])) {
-                $lineNumber = $error['details']['xpathContext']['lineNumber'];
-                $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
+                } elseif (isset($error['details']['xpathContext']['lineNumber'])) {
+                    $lineNumber = $error['details']['xpathContext']['lineNumber'];
+                    $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
 
-                if (strpos($nodePath, 'edit')) {
-                    $stringBetween = getStringBetween($nodePath, '/', '/edit');
-                } else {
-                    $stringBetween = getStringBetween($nodePath, '/', '#');
-                }
+                    if (strpos($nodePath, 'edit')) {
+                        $stringBetween = getStringBetween($nodePath, '/', '/edit');
+                    } else {
+                        $stringBetween = getStringBetween($nodePath, '/', '#');
+                    }
 
-                $errorLocation = str_replace('/', '>', $stringBetween);
-                $error['response'][0]['iati_path'] = $nodePath;
-                $error['response'][0]['message'] = $errorLocation;
+                    $errorLocation = str_replace('/', '>', $stringBetween);
+                    $error['response'][0]['iati_path'] = $nodePath;
+                    $error['response'][0]['message'] = $errorLocation;
+                } elseif (isset($error['details']['xpath'])) {
+                    $error['response'][0]['iati_path'] = "/activity/$activity->id/default_values";
+                    $error['response'][0]['message'] = "activity>$activity->id>default_values";
+                }
+                $updatedErrors[] = $error;
             }
-            $updatedErrors[] = $error;
-        }
 
-        $response['errors'] = $updatedErrors;
-        $this->clearXmlValidationOnS3($activity);
+            $response['errors'] = $updatedErrors;
+            $this->clearXmlValidationOnS3($activity);
+        }
 
         return $response;
     }
@@ -230,6 +238,8 @@ trait IatiValidatorResponseTrait
             $transactionId = $this->getElementId($transactionIdPath, $activityId);
             $url = array_flip($this->multilevelElements)['transaction'];
             $url = str_replace(['activityId', 'transactionId'], [$activityId, $transactionId], $url);
+        } elseif ($targetNode === '@budget-not-provided') {
+            $url = "/activity/$activityId/default_values";
         } else {
             $url = "/activity/activityId/$firstElementName";
             $url = str_replace('activityId', (string) $activityId, $url);
