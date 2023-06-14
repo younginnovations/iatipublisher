@@ -19,7 +19,6 @@ class BudgetXmlTest extends XmlBaseTest
         $flattenErrors = $this->getErrors($rows);
         $this->assertContains('The periods of multiple budgets with the same type should not be the same', $flattenErrors);
         $this->assertContains('The Period End iso-date must be a date after Period Start iso-date', $flattenErrors);
-        $this->assertContains('The value-date field must be between period start and period end.', $flattenErrors);
     }
 
     /**
