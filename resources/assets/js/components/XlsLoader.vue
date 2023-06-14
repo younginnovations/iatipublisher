@@ -131,11 +131,11 @@
     </div>
   </div>
   <button
-    v-if="totalCount === processedCount || xlsFailed"
-    class="absolute right-0 bottom-[80px] translate-x-4 rounded-full bg-white p-[1px]"
+    v-if="(totalCount === processedCount || xlsFailed) && !maximize"
+    class="absolute bottom-[68px] right-0 translate-x-1/2 -translate-y-1/2 rounded-full bg-white p-[1px]"
     @click="$emit('close')"
   >
-    <svg-vue icon="cross-icon" />
+    <svg-vue class="text-sm" icon="cross-icon" />
   </button>
   <div
     v-if="!showMinimizedModel"
@@ -173,7 +173,7 @@ const props = defineProps({
     default: false,
   },
   totalCount: {
-    type: Number,
+    type: Number || null,
     default: 0,
   },
   processedCount: {

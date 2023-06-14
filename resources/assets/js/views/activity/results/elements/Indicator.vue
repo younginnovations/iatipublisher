@@ -195,7 +195,8 @@
                       <tr>
                         <td>Document Link</td>
                         <td>
-                          {{ post.indicator.document_link.length }} documents
+                          {{ countDocumentLink(post.indicator.document_link) }}
+                          documents
                         </td>
                       </tr>
 
@@ -621,6 +622,9 @@ import getActivityTitle from 'Composable/title';
 import NotYet from 'Components/sections/HaveNotAddedYet.vue';
 import Btn from 'Components/buttons/Link.vue';
 
+// helper function
+import { countDocumentLink } from 'Composable/utils';
+
 export default defineComponent({
   name: 'ResultIndicator',
   components: {
@@ -644,32 +648,6 @@ export default defineComponent({
   },
   setup(props) {
     let { result } = toRefs(props);
-
-    const countDocumentLink = (document_link) => {
-      let documentCount = 0;
-
-      for (let document in document_link) {
-        let result = reduceDocumentLink(document_link[document], []);
-
-        if (result.every((item) => item === null)) {
-          documentCount++;
-        }
-      }
-
-      return documentCount;
-    };
-
-    const reduceDocumentLink = (document_link, values) => {
-      if (typeof document_link === 'object' && document_link) {
-        for (let key in document_link) {
-          values.concat(reduceDocumentLink(document_link[key], values));
-        }
-      } else {
-        values.push(document_link);
-      }
-
-      return values;
-    };
 
     const indicatorData = result.value.indicators.reverse();
 

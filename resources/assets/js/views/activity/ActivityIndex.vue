@@ -25,19 +25,33 @@
       </div>
     </div>
     <XlsUploadIndicator
-      v-if="xlsData"
+      v-if="
+        (xlsData ||
+          (downloading && !downloadCompleted) ||
+          publishingActivities ||
+          startBulkPublish) &&
+        !activityStore.state.isLoading
+      "
       :total-count="totalCount"
       :processed-count="processedCount"
       :xls-failed="xlsFailed"
       :activity-name="activityName"
       :xls-data="xlsData"
-      :completed="importCompleted"
+      :completed="uploadComplete"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, provide, reactive, ref, watch } from 'vue';
+import {
+  defineComponent,
+  onMounted,
+  provide,
+  reactive,
+  ref,
+  watch,
+  Ref,
+} from 'vue';
 import { watchIgnorable } from '@vueuse/core';
 import axios from 'axios';
 import XlsUploadIndicator from 'Components/XlsUploadIndicator.vue';
@@ -47,7 +61,12 @@ import Pagination from 'Components/TablePagination.vue';
 import PageTitle from './partials/PageTitle.vue';
 import Loader from 'Components/Loader.vue';
 import ErrorMessage from 'Components/ErrorMessage.vue';
+import { useStore } from 'Store/activities/index';
+import { detailStore } from 'Store/activities/show';
+import { useStorage } from '@vueuse/core';
 
+const store = useStore();
+const activityStore = detailStore();
 export default defineComponent({
   name: 'ActivityComponent',
   components: {
@@ -72,20 +91,42 @@ export default defineComponent({
     const activities = reactive({}) as ActivitiesInterface;
     const isLoading = ref(true);
     const activityName = ref('');
-
+    const fileCount = ref(0);
+    const downloadCompleted = ref(false);
+    const closeModel = ref(false);
+    const xlsDownloadStatus = ref('');
     const xlsData = ref(false);
+    const downloading = ref(false);
+    const startBulkPublish = ref(false);
     const xlsFailed = ref(false);
     const xlsFailedMessage = ref('');
     const processing = ref();
-
+    const publishingActivities = ref();
+    const uploadComplete = ref(false);
     const importCompleted = ref(false);
     const totalCount = ref();
     const processedCount = ref();
     const showXlsStatus = ref(true);
     const tableLoader = ref(true);
+    const downloadApiUrl = ref('');
     const currentURL = window.location.href;
     let endpoint = '';
     let showEmptyTemplate = false;
+
+    // local storage for publishing
+    interface paType {
+      publishingActivities: {
+        organization_id?: string;
+        job_batch_uuid?: string;
+        activities?: object;
+        status?: string;
+        message?: string;
+      };
+    }
+
+    const pa: Ref<paType> = useStorage('vue-use-local-storage', {
+      publishingActivities: localStorage.getItem('publishingActivities') ?? {},
+    });
 
     if (currentURL.includes('?')) {
       const queryString = window.location.search;
@@ -109,6 +150,8 @@ export default defineComponent({
 
     // for publish button
     const toastMessage = reactive({
+      visibility: false,
+
       message: '',
       type: false,
     });
@@ -136,12 +179,54 @@ export default defineComponent({
             !res.data?.data?.success ||
             res.data?.data?.message === 'Complete'
           ) {
-            importCompleted.value = true;
+            uploadComplete.value = true;
             clearInterval(checkStatus);
           }
         });
       }, 2500);
     };
+    watch(
+      () => store.state.startXlsDownload,
+      (value) => {
+        if (value) {
+          checkDownloadStatus();
+        }
+      },
+      { deep: true }
+    );
+
+    watch(
+      () => [store.state.startBulkPublish, store.state.bulkpublishActivities],
+      (value) => {
+        if (value) {
+          startBulkPublish.value = true;
+          publishingActivities.value =
+            store.state.bulkpublishActivities.publishingActivities;
+
+          return;
+        }
+        startBulkPublish.value = false;
+      },
+      { deep: true }
+    );
+    watch(
+      () => store.state.completeXlsDownload,
+      (value) => {
+        if (value) {
+          downloadCompleted.value = true;
+          store.dispatch('updateStartXlsDownload', false);
+        }
+      },
+      { deep: true }
+    );
+    watch(
+      () => store.state.closeXlsModel,
+      (value) => {
+        if (value) {
+          checkXlsstatus();
+        }
+      }
+    );
 
     const checkXlsstatus = () => {
       axios.get('/import/xls/progress_status').then((res) => {
@@ -149,18 +234,56 @@ export default defineComponent({
         xlsData.value = Object.keys(res.data.status).length > 0;
 
         if (res?.data?.status?.status === 'completed') {
-          importCompleted.value = true;
+          uploadComplete.value = true;
         } else if (res?.data?.status?.status === 'failed') {
           xlsFailed.value = true;
           xlsFailedMessage.value = res?.data?.status?.message;
         } else if (Object.keys(res.data.status).length > 0) {
-          pollingForXlsStatus();
+          {
+            //reset
+            totalCount.value = null;
+            processing.value = false;
+            processedCount.value = 0;
+            xlsFailed.value = false;
+            xlsFailedMessage.value = '';
+
+            pollingForXlsStatus();
+          }
         }
       });
     };
+    const checkDownloadStatus = () => {
+      downloading.value = false;
+
+      const checkDownload = setInterval(function () {
+        axios.get('/activities/download-xls-progress-status').then((res) => {
+          fileCount.value = res.data.file_count;
+          xlsDownloadStatus.value = res.data.status;
+          downloadApiUrl.value = res.data.url;
+          downloading.value = !!res.data.status;
+
+          if (
+            xlsDownloadStatus.value === 'completed' ||
+            xlsDownloadStatus.value === 'failed' ||
+            !res.data.status
+          ) {
+            clearInterval(checkDownload);
+          }
+        });
+      }, 3000);
+    };
+    watch(
+      () => store.state.closeXlsModel,
+      () => {
+        checkDownloadStatus();
+      }
+    );
 
     onMounted(() => {
+      publishingActivities.value = pa.value?.publishingActivities;
+
       checkXlsstatus();
+      checkDownloadStatus();
 
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
@@ -168,7 +291,6 @@ export default defineComponent({
         toastData.message = props.toast.message;
       }
     });
-
     onMounted(async () => {
       tableLoader.value = true;
       axios.get(endpoint).then((res) => {
@@ -191,6 +313,7 @@ export default defineComponent({
         }, 10000);
       }
     );
+
     const state = reactive({
       showButtons: false,
     });
@@ -208,6 +331,7 @@ export default defineComponent({
     function fetchActivities(active_page: number) {
       tableLoader.value = true;
       let queryString = '';
+
       if (currentURL.includes('?')) {
         queryString = window.location.search;
       }
@@ -246,8 +370,14 @@ export default defineComponent({
     provide('errorData', errorData);
     provide('refreshToastMsg', refreshToastMsg);
     provide('xlsFailedMessage', xlsFailedMessage);
-    provide('completed', importCompleted);
     provide('processing', processing);
+    provide('downloading', downloading);
+    provide('fileCount', fileCount as Ref);
+    provide('xlsDownloadStatus', xlsDownloadStatus as Ref);
+    provide('downloadApiUrl', downloadApiUrl as Ref);
+    provide('closeModel', closeModel as Ref);
+    provide('activities', publishingActivities as Ref);
+    provide('completed', uploadComplete);
 
     return {
       activities,
@@ -269,6 +399,13 @@ export default defineComponent({
       xlsFailed,
       xlsFailedMessage,
       importCompleted,
+      downloadCompleted,
+      uploadComplete,
+      downloading,
+      startBulkPublish,
+      publishingActivities,
+      activityStore,
+      pa,
     };
   },
 });

@@ -1,6 +1,6 @@
 import Location from 'Interfaces/utils';
 
-function getLocation(data: Location[]) {
+export function getLocation(data: Location[]) {
   let locations: string[] = [];
 
   locations = data.map((item) => {
@@ -17,4 +17,37 @@ function getLocation(data: Location[]) {
   }
 }
 
-export default getLocation;
+export function countDocumentLink(document_link) {
+  let documentCount = 0;
+
+  for (const document in document_link) {
+    const result = reduceDocumentLink(document_link[document], []);
+
+    if (!result.every((item) => item === null)) {
+      documentCount++;
+    }
+  }
+
+  return documentCount;
+}
+
+export function reduceDocumentLink(document_link, values) {
+  if (typeof document_link === 'object' && document_link) {
+    for (const key in document_link) {
+      values.concat(reduceDocumentLink(document_link[key], values));
+    }
+  } else {
+    values.push(document_link);
+  }
+
+  return values;
+}
+
+export function isJson(str) {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}

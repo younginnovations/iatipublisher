@@ -202,25 +202,11 @@
         </button>
       </div>
     </Modal>
-
+    <PageLoader v-if="isLoading"></PageLoader>
     <Loader
       v-if="loader"
       :text="loaderText"
       :class="{ 'animate-loader': loader }"
-    />
-
-    <BulkPublishing
-      v-if="
-        showBulkpublish ||
-        (pa.publishingActivities &&
-          Object.keys(pa.publishingActivities).length > 0)
-      "
-      :published="published"
-      @close="
-        {
-          showBulkpublish = false;
-        }
-      "
     />
   </div>
 </template>
@@ -245,7 +231,7 @@ import BtnComponent from 'Components/ButtonComponent.vue';
 import Modal from 'Components/PopupModal.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 import ValidationErrors from './ValidationErrors.vue';
-import BulkPublishing from './BulkPublishing.vue';
+import PageLoader from 'Components/Loader.vue';
 
 // Vuex Store
 import { useStore } from 'Store/activities/index';
@@ -266,7 +252,7 @@ let [publishAlertValue, publishAlertToggle] = useToggle();
 // state for step of the flow
 const bulkPublishStep = ref(1);
 const bulkPublishStatus = reactive({});
-const showBulkpublish = ref(false);
+const isLoading = ref(false);
 const startPublish = ref(false);
 
 const published = ref(false);
@@ -328,21 +314,25 @@ const emptybulkPublishStatus = () => {
  * check publish status
  */
 const checkPublish = () => {
-  axios.get(`/activities/checks-for-activity-bulk-publish`).then((res) => {
-    const response = res.data;
+  isLoading.value = true;
+  axios
+    .get(`/activities/checks-for-activity-bulk-publish`)
+    .then((res) => {
+      const response = res.data;
 
-    if (response.success === true) {
-      publishAlertValue.value = true;
-    } else {
-      if (response?.in_progress) {
-        emptybulkPublishStatus();
-        Object.assign(bulkPublishStatus, response.data.activities);
-        showCancelConfirmationModal();
+      if (response.success === true) {
+        publishAlertValue.value = true;
       } else {
-        displayToast(response.message, response.success);
+        if (response?.in_progress) {
+          emptybulkPublishStatus();
+          Object.assign(bulkPublishStatus, response.data.activities);
+          showCancelConfirmationModal();
+        } else {
+          displayToast(response.message, response.success);
+        }
       }
-    }
-  });
+    })
+    .finally(() => (isLoading.value = false));
 };
 
 /**
@@ -377,6 +367,7 @@ const verifyCoreElements = () => {
         if (response?.in_progress) {
           emptybulkPublishStatus();
           Object.assign(bulkPublishStatus, response.data.activities);
+
           showCancelConfirmationModal();
         } else {
           displayToast(response.message, response.success);
@@ -396,13 +387,10 @@ let validationErrors = ref({});
 onMounted(() => {
   axios
     .get(
-      `activities/bulk-publish-status?organization_id=${pa.value.publishingActivities.organization_id}&&uuid=${pa.value.publishingActivities.job_batch_uuid}`
+      `activities/bulk-publish-status?organization_id=${pa.value?.publishingActivities.organization_id}&&uuid=${pa.value?.publishingActivities.job_batch_uuid}`
     )
     .then((res) => {
-      pa.value.publishingActivities.activities = res.data?.data?.activities;
-      pa.value.publishingActivities.status = res?.data?.data?.status;
-      pa.value.publishingActivities.message = res?.data?.data?.message;
-      showBulkpublish.value = res.data.publishing;
+      Object.assign(pa.value?.publishingActivities, res.data?.data);
     });
 });
 const validateActivities = () => {
@@ -451,6 +439,8 @@ const pa: Ref<paType> = useStorage('vue-use-local-storage', {
 });
 
 const startBulkPublish = () => {
+  store.dispatch('updateStartBulkPublish', true);
+
   loader.value = true;
   loaderText.value = 'Starting to publish';
   pa.value.publishingActivities = {};
@@ -460,7 +450,10 @@ const startBulkPublish = () => {
       `activities/start-bulk-publish?activities=[${selectedActivities.value}]`
     )
     .then((res) => {
+      store.dispatch('updateStartBulkPublish', true);
+
       startPublish.value = true;
+
       const response = res.data;
       if (response.success) {
         bulkPublishStep.value = 1;
@@ -473,6 +466,15 @@ const startBulkPublish = () => {
         if (response?.in_progress) {
           emptybulkPublishStatus();
           Object.assign(bulkPublishStatus, response.data.activities);
+          Object.assign(
+            pa.value.publishingActivities,
+            response.data.activities
+          );
+          store.dispatch(
+            'updateBulkpublishActivities',
+            response.data.activities
+          );
+
           showCancelConfirmationModal();
         } else {
           displayToast(response.message, response.success);
@@ -494,6 +496,7 @@ watch(
         Object.keys(pa?.value?.publishingActivities?.activities as string[])
           .length
     );
+    store.dispatch('updateBulkpublishActivities', pa?.value);
   },
   { deep: true }
 );

@@ -1,0 +1,514 @@
+{
+  "activity": {
+    "activity_identifier": {
+      "index": "A",
+      "max_row": null
+    },
+    "default_currency": {
+      "index": "Q",
+      "max_row": "162"
+    },
+    "default_language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "default_humanitarian": {
+      "index": "C",
+      "max_row": "4"
+    },
+    "budget_not_provided": {
+      "index": "AG",
+      "max_row": "5"
+    },
+    "secondary_reporter": {
+      "index": "BO",
+      "max_row": "4"
+    },
+    "activity_status": {
+      "index": "Y",
+      "max_row": "8"
+    },
+    "activity_scope": {
+      "index": "AA",
+      "max_row": "10"
+    },
+    "activity_date type": {
+      "index": "BQ",
+      "max_row": "6"
+    },
+    "collaboration_type": {
+      "index": "AC",
+      "max_row": "9"
+    },
+    "default_flow_type": {
+      "index": "I",
+      "max_row": "10"
+    },
+    "default_finance_type": {
+      "index": "AE",
+      "max_row": "49"
+    },
+    "default_tied_status": {
+      "index": "BG",
+      "max_row": "5"
+    },
+    "language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "type": {
+      "index": "A",
+      "max_row": "6"
+    },
+    "narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "condition_attached": {
+      "index": "CC",
+      "max_row": "4"
+    },
+    "condition condition_type": {
+      "index": "CE",
+      "max_row": "5"
+    },
+    "condition narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "contact_info type": {
+      "index": "CG",
+      "max_row": "6"
+    },
+    "budget_status": {
+      "index": "CO",
+      "max_row": "4"
+    },
+    "budget_type": {
+      "index": "CI",
+      "max_row": "4"
+    },
+    "budget_value currency": {
+      "index": "Q",
+      "max_row": "162"
+    },
+    "sector_vocabulary": {
+      "index": "AO",
+      "max_row": "16"
+    },
+    "code": {
+      "index": "AI",
+      "max_row": "523"
+    },
+    "tag_vocabulary": {
+      "index": "CU",
+      "max_row": "6"
+    },
+    "tag code": {
+      "index": "CW",
+      "max_row": "188"
+    },
+    "location_reach code": {
+      "index": "AW",
+      "max_row": "4"
+    },
+    "location_id vocabulary": {
+      "index": "BA",
+      "max_row": "8"
+    },
+    "name narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "description narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "activity_description narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "administrative vocabulary": {
+      "index": "BA",
+      "max_row": "8"
+    },
+    "administrative code": {
+      "index": "U",
+      "max_row": "253"
+    },
+    "exactness code": {
+      "index": "BC",
+      "max_row": "4"
+    },
+    "location_class code": {
+      "index": "BE",
+      "max_row": "6"
+    },
+    "feature_designation code": {
+      "index": "AY",
+      "max_row": "684"
+    },
+    "country_code": {
+      "index": "U",
+      "max_row": "253"
+    },
+    "region_vocabulary": {
+      "index": "G",
+      "max_row": "5"
+    },
+    "organisation narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "department narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "person_name narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "job_title narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "mailing_address narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "planned_disbursement_type": {
+      "index": "CI",
+      "max_row": "4"
+    },
+    "participating_org type": {
+      "index": "E",
+      "max_row": "18"
+    },
+    "value currency": {
+      "index": "Q",
+      "max_row": "162"
+    },
+    "provider_org type": {
+      "index": "E",
+      "max_row": "18"
+    },
+    "provider_org narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "receiver_org type": {
+      "index": "E",
+      "max_row": "18"
+    },
+    "receiver_org narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "organization_role": {
+      "index": "CK",
+      "max_row": "6"
+    },
+    "crs_channel_code": {
+      "index": "CM",
+      "max_row": "357"
+    },
+    "vocabulary": {
+      "index": "BY",
+      "max_row": "5"
+    },
+    "relationship_type": {
+      "index": "CA",
+      "max_row": "7"
+    },
+    "reference_type": {
+      "index": "BK",
+      "max_row": "8"
+    },
+    "owner_org narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "policy_marker_vocabulary": {
+      "index": "CY",
+      "max_row": "4"
+    },
+    "policy_marker code": {
+      "index": "DA",
+      "max_row": "14"
+    },
+    "default_aid_type_vocabulary": {
+      "index": "DE",
+      "max_row": "6"
+    },
+    "default_aid_type code": {
+      "index": "DG",
+      "max_row": "44"
+    },
+    "country_budget_vocabulary": {
+      "index": "BI",
+      "max_row": "6"
+    },
+    "budget_item code": {
+      "index": "BM",
+      "max_row": "154"
+    },
+    "budget_item description narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "significance": {
+      "index": "DC",
+      "max_row": "7"
+    },
+    "format": {
+      "index": "DI",
+      "max_row": "1633"
+    },
+    "title narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "category code": {
+      "index": "DK",
+      "max_row": "32"
+    },
+    "language code": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "humanitarian": {
+      "index": "C",
+      "max_row": "4"
+    },
+    "transaction_type transaction_type_code": {
+      "index": "O",
+      "max_row": "15"
+    },
+    "provider_organization type": {
+      "index": "E",
+      "max_row": "18"
+    },
+    "provider_organization narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "receiver_organization type": {
+      "index": "E",
+      "max_row": "18"
+    },
+    "receiver_organization narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "disbursement_channel disbursement_channel_code": {
+      "index": "M",
+      "max_row": "6"
+    },
+    "sector sdg_target": {
+      "index": "AU",
+      "max_row": "171"
+    },
+    "sector sector_vocabulary": {
+      "index": "AO",
+      "max_row": "16"
+    },
+    "sector code": {
+      "index" : "AI",
+      "max_row": "524"
+    },
+    "sector narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "recipient_country country_code": {
+      "index": "U",
+      "max_row": "253"
+    },
+    "recipient_country narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "recipient_region region_vocabulary": {
+      "index": "G",
+      "max_row": "5"
+    },
+    "recipient_region code": {
+      "index": "W",
+      "max_row": "27"
+    },
+    "recipient_region region_code": {
+      "index": "W",
+      "max_row": "27"
+    },
+    "recipient_region narrative language": {
+      "index": "S",
+      "max_row": "183"
+    },
+    "flow_type flow_type": {
+      "index": "I",
+      "max_row": "10"
+    },
+    "finance_type finance_type": {
+      "index": "AE",
+      "max_row": "49"
+    },
+    "aid_type cash_and_voucher_modalities": {
+      "index": "AM",
+      "max_row": "26"
+    },
+    "aid_type aid_type_code": {
+      "index": "DG",
+      "max_row": "45"
+    },
+    "aid_type aid_type_vocabulary": {
+      "index": "K",
+      "max_row": "6"
+    },
+    "tied_status tied_status_code": {
+      "index": "BG",
+      "max_row": "5"
+    },
+    "humanitarian_scope type": {
+      "index": "BW",
+      "max_row": "4"
+    }
+  },
+  "result": {
+    "result_identifier": {
+      "index": "C",
+      "max_row": null
+    },
+    "activity_identifier": {
+      "index": "B",
+      "max_row": null
+    },
+    "aggregation_status": {
+      "index": "I",
+      "max_row": "4"
+    },
+    "type": {
+      "index": "K",
+      "max_row": "6"
+    },
+    "title narrative language": {
+      "index": "A",
+      "max_row": "183"
+    },
+    "description narrative language": {
+      "index": "A",
+      "max_row": "183"
+    },
+    "reference vocabulary": {
+      "index": "G",
+      "max_row": "3"
+    },
+    "format": {
+      "index": "C",
+      "max_row": "1633"
+    },
+    "category code": {
+      "index": "E",
+      "max_row": "32"
+    },
+    "language language": {
+      "index": "A",
+      "max_row": "183"
+    }
+  },
+  "indicator": {
+    "indicator_baseline_identifier": {
+      "index": "C",
+      "max_row": null
+    },
+    "indicator_identifier": {
+      "index": "C",
+      "max_row": null
+    },
+    "result_identifier": {
+      "index": "C",
+      "max_row": null
+    },
+    "measure": {
+      "index": "C",
+      "max_row": "7"
+    },
+    "ascending": {
+      "index": "E",
+      "max_row": "4"
+    },
+    "aggregation_status": {
+      "index": "G",
+      "max_row": "4"
+    },
+    "title narrative language": {
+      "index": "I",
+      "max_row": "183"
+    },
+    "description narrative language": {
+      "index": "I",
+      "max_row": "183"
+    },
+    "reference vocabulary": {
+      "index": "A",
+      "max_row": "12"
+    },
+    "comment narrative language": {
+      "index": "I",
+      "max_row": "183"
+    },
+    "format": {
+      "index": "K",
+      "max_row": "1633"
+    },
+    "category code": {
+      "index": "M",
+      "max_row": "32"
+    },
+    "language language": {
+      "index": "I",
+      "max_row": "183"
+    },
+    "language code": {
+      "index": "I",
+      "max_row": "183"
+    }
+  },
+  "period": {
+    "period_identifier": {
+      "index": "C",
+      "max_row": null
+    },
+    "target_identifier": {
+      "index": "C",
+      "max_row": null
+    },
+    "actual_identifier": {
+      "index": "C",
+      "max_row": null
+    },
+    "comment narrative language": {
+      "index": "A",
+      "max_row": "183"
+    },
+    "format": {
+      "index": "C",
+      "max_row": "1633"
+    },
+    "title narrative language": {
+      "index": "A",
+      "max_row": "183"
+    },
+    "description narrative language": {
+      "index": "A",
+      "max_row": "183"
+    },
+    "category code": {
+      "index": "E",
+      "max_row": "32"
+    },
+    "language code": {
+      "index": "A",
+      "max_row": "183"
+    }
+  }
+}

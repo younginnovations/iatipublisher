@@ -7,6 +7,7 @@ namespace App\IATI\Repositories\Activity;
 use App\IATI\Models\Activity\Result;
 use App\IATI\Repositories\Repository;
 use App\IATI\Traits\FillDefaultValuesTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -139,5 +140,17 @@ class ResultRepository extends Repository
     public function insert($results): bool
     {
         return $this->model->insert($results);
+    }
+
+    /**
+     * get result with indicator from an array of result ids.
+     *
+     * @param array $resultIds
+     *
+     * @return Builder
+     */
+    public function getResultsWithIndicatorQueryToDownload(array $resultIds): Builder
+    {
+        return $this->model->has('indicators')->with('indicators')->whereIn('id', $resultIds);
     }
 }

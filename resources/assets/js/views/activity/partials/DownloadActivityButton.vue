@@ -7,6 +7,7 @@
       @click="toggle"
     >
       <svg-vue icon="download-file" /> Download All
+      <svg-vue icon="dropdown-arrow" class="text-blue-coral !text-[6px]" />
     </button>
     <button
       v-if="store.state.selectedActivities.length > 0"
@@ -15,7 +16,9 @@
       @click="toggle"
     >
       <svg-vue icon="download-file" />
+      <svg-vue icon="dropdown-arrow" class="text-blue-coral !text-[6px]" />
     </button>
+
     <div
       v-if="state.isVisible"
       class="button__dropdown absolute left-0 top-[calc(100%_+_8px)] z-10 w-56 bg-white p-2 text-left shadow-dropdown"
@@ -36,6 +39,9 @@
             @click="downloadXml(store.state.selectedActivities.length)"
             >Download XML</a
           >
+        </li>
+        <li>
+          <a href="#" :class="liClass" @click="checkDownload">Download XLS</a>
         </li>
       </ul>
     </div>
@@ -94,11 +100,85 @@
       @close="modalToggle"
       @close-modal="modalToggle"
     />
+    <Modal :modal-active="downloadingBackgroundMessage" width="583">
+      <div class="modal-inner">
+        <div class="mb-4 flex items-center space-x-1">
+          <svg-vue icon="warning-fill" class="text-camel-50"></svg-vue>
+          <span class="text-sm font-bold text-n-50"
+            >Preparing activities for download</span
+          >
+        </div>
+        <div class="mb-4 rounded-lg bg-eggshell p-4 text-sm text-n-50">
+          <p class="mb-4">
+            Please be advised that we are currently zipping your activities for
+            a seamless download experience. This process will run in the
+            background and may require some time to complete.
+          </p>
+          <p>
+            To monitor the progress, kindly refer to the status bar at the
+            bottom of the screen. Upon completion, a notification email will be
+            sent to you, confirming that the file is ready for download.
+          </p>
+        </div>
+        <div class="flex justify-end space-x-5">
+          <button
+            class="ghost-btn"
+            @click="downloadingBackgroundMessage = false"
+          >
+            cancel download
+          </button>
+          <button
+            class="primary-btn"
+            @click="downloadXls(store.state.selectedActivities.length)"
+          >
+            Continue
+          </button>
+        </div>
+      </div>
+    </Modal>
+    <Modal :modal-active="downloadingInProcess" width="583">
+      <div class="modal-inner">
+        <div class="mb-4 flex items-center space-x-1">
+          <svg-vue icon="warning-fill" class="text-crimson-50"></svg-vue>
+          <span class="text-sm font-bold text-n-50"
+            >Preparation for download already in progress</span
+          >
+        </div>
+        <div class="mb-4 rounded-lg bg-rose p-4 text-sm text-n-50">
+          <p>
+            We are currently preparing the activities for download. This may
+            take a few minutes.
+          </p>
+          <p>
+            If you would like to proceed with the new download, the prior
+            download will be cancelled and your new download will start zipping.
+          </p>
+          <p>Would you like to proceed with the new download?</p>
+        </div>
+        <div class="flex justify-end space-x-5">
+          <button class="ghost-btn" @click="downloadingInProcess = false">
+            go back
+          </button>
+          <button class="primary-btn" @click="downloadAnyway">
+            Download Anyway
+          </button>
+        </div>
+      </div>
+    </Modal>
+    <div
+      v-if="isLoading"
+      class="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black opacity-40"
+    >
+      <div>
+        <span class="spinner" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { useStore } from 'Store/activities/index';
+
 import { reactive, defineComponent, ref, onMounted } from 'vue';
 import CreateModal from '../CreateModal.vue';
 import { useToggle } from '@vueuse/core';
@@ -132,7 +212,9 @@ export default defineComponent({
     const toastmessageType = ref(false);
     const showErrorpopup = ref(false);
     const message = ref('');
-
+    const downloadingBackgroundMessage = ref(false);
+    const downloadingInProcess = ref(false);
+    const isLoading = ref(false);
     const toggleModel = (value: boolean) => {
       modelVisible.value = value;
     };
@@ -166,6 +248,32 @@ export default defineComponent({
     const toggle = () => {
       state.isVisible = !state.isVisible;
     };
+    const checkDownload = () => {
+      isLoading.value = true;
+      axios.get('/activities/download-xls-progress-status').then((res) => {
+        if (res.data.status) {
+          isLoading.value = false;
+          downloadingInProcess.value = true;
+        } else {
+          isLoading.value = false;
+          downloadingBackgroundMessage.value = true;
+        }
+      });
+    };
+
+    const downloadAnyway = () => {
+      store.dispatch('updateCancelDownload', true);
+      isLoading.value = true;
+      downloadingInProcess.value = false;
+      store.dispatch('updateCancelDownload', true);
+
+      store.dispatch('updateStartXlsDownload', false);
+
+      axios.get('/activities/cancel-xls-download').then(() => {
+        checkDownload();
+      });
+    };
+
     const downloadErrorxml = (countActivities) => {
       showErrorpopup.value = false;
       let queryParameters = window.location.href.split('?');
@@ -196,13 +304,13 @@ export default defineComponent({
           });
           let link = document.createElement('a');
           link.href = window.URL.createObjectURL(blob);
-          link.download = res.headers['content-disposition'].split('=')[1];
+          link.download = res.headers['content-disposition']?.split('=')[1];
           link.click();
         }
       });
     };
     const downloadXml = (countActivities) => {
-      let queryParameters = window.location.href.split('?');
+      let queryParameters = window.location.href?.split('?');
       let addQueryParams = '';
 
       if (queryParameters.length === 2) {
@@ -234,14 +342,37 @@ export default defineComponent({
           });
           let link = document.createElement('a');
           link.href = window.URL.createObjectURL(blob);
-          link.download = res.headers['content-disposition'].split('=')[1];
+          link.download = res.headers['content-disposition']?.split('=')[1];
           link.click();
         }
       });
     };
 
+    const downloadXls = (countActivities) => {
+      isLoading.value = true;
+      store.dispatch('updateStartXlsDownload', true);
+      store.dispatch('updateCancelDownload', false);
+
+      downloadingBackgroundMessage.value = false;
+      let queryParameters = window.location.href?.split('?');
+      let addQueryParams = '';
+
+      if (queryParameters.length === 2) {
+        addQueryParams = '&' + queryParameters[1];
+      }
+
+      let apiUrl = '/activities/prepare-xls?activities=all' + addQueryParams;
+
+      if (countActivities > 0) {
+        const activities = store.state.selectedActivities.join(',');
+        apiUrl = `/activities/prepare-xls?activities=[${activities}]`;
+      }
+
+      axios.get(apiUrl).finally(() => (isLoading.value = false));
+    };
+
     const downloadCsv = (countActivities) => {
-      let queryParameters = window.location.href.split('?');
+      let queryParameters = window.location.href?.split('?');
       let addQueryParams = '';
 
       if (queryParameters.length === 2) {
@@ -268,7 +399,7 @@ export default defineComponent({
           });
           let link = document.createElement('a');
           link.href = window.URL.createObjectURL(blob);
-          link.download = res.headers['content-disposition'].split('=')[1];
+          link.download = res.headers['content-disposition']?.split('=')[1];
           link.click();
         }
       });
@@ -286,15 +417,29 @@ export default defineComponent({
       dropdownBtn,
       downloadCsv,
       toastVisibility,
+      downloadingBackgroundMessage,
       toastMessage,
       toastmessageType,
       downloadXml,
       Modal,
       showErrorpopup,
+      checkDownload,
       downloadErrorxml,
       message,
       downloadError,
+      downloadXls,
+      downloadingInProcess,
+      isLoading,
+      downloadAnyway,
     };
   },
 });
 </script>
+<style scoped lang="scss">
+.spinner {
+  @apply inline-block  animate-spin rounded-full border-2 border-n-10 border-opacity-5;
+  width: 75px;
+  height: 75px;
+  border-top-color: white;
+}
+</style>

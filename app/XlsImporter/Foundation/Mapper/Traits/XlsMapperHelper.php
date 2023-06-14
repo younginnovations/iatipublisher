@@ -82,20 +82,25 @@ trait XlsMapperHelper
     /**
      * Maps the dropdown values to their corresponding keys.
      *
+     * @param $value
+     * @param $location
+     * @param $fieldName
+     *
      * @return mixed
+     *
+     * @throws \JsonException
      */
     public function mapDropDownValueToKey($value, $location, $fieldName): mixed
     {
         $booleanFieldList = readJsonFile('XlsImporter/Templates/boolean-field-list.json');
-
         // should we consider case(capital and lower)?
         if (is_null($value)) {
-            return $value;
+            return null;
         }
 
         if (is_array($location)) {
             if (is_bool($value)) {
-                return (int) $value;
+                return (int) filter_var($value, FILTER_VALIDATE_BOOLEAN);
             }
 
             if (array_key_exists($fieldName, $booleanFieldList) && is_string($value) && in_array(strtolower($value), ['false', 'true', 'no', 'yes', '0', '1'])) {
@@ -111,12 +116,16 @@ trait XlsMapperHelper
             return $value;
         }
 
-        $locationArr = explode('/', $location);
+        if (is_string($location)) {
+            $locationArr = explode('/', $location);
 
-        $dropDownValues = array_flip(getCodeList(explode('.', $locationArr[1])[0], $locationArr[0]));
-        $key = Arr::get($dropDownValues, $value, $value);
+            $dropDownValues = array_flip(getCodeList(explode('.', $locationArr[1])[0], $locationArr[0]));
+            $key = Arr::get($dropDownValues, $value, $value);
 
-        return $key;
+            return $key;
+        }
+
+        return $value;
     }
 
     /**

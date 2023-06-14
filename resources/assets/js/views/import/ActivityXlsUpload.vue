@@ -270,13 +270,16 @@
       </div>
     </div>
     <XlsUploadIndicator
-      v-if="xlsData"
+      v-if="
+        xlsData || (downloading && !downloadCompleted) || publishingActivities
+      "
       :total-count="totalCount"
       :processed-count="processedCount"
       :xls-failed="xlsFailed"
       :activity-name="activityName"
       :xls-data="xlsData"
       :completed="uploadComplete"
+      :publishing-activities="publishingActivities"
     />
   </div>
   <Loader
@@ -476,7 +479,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, provide, computed, reactive, watch, Ref } from 'vue';
+import {
+  ref,
+  onMounted,
+  provide,
+  computed,
+  reactive,
+  watch,
+  Ref,
+  onUnmounted,
+} from 'vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import HoverText from 'Components/HoverText.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
@@ -487,16 +499,34 @@ import Toast from 'Components/ToastMessage.vue';
 import dateFormat from 'Composable/dateFormat';
 import Pagination from 'Components/TablePagination.vue';
 import { useStore } from 'Store/activities/index';
+import { useStorage } from '@vueuse/core';
 
 interface ActivitiesInterface {
   last_page: number;
   data: object;
 }
+// local storage for publishing
+interface paType {
+  publishingActivities: {
+    organization_id?: string;
+    job_batch_uuid?: string;
+    activities?: object;
+    status?: string;
+    message?: string;
+  };
+}
+
+const xlsIndicatorMounted = ref(false);
 
 const xlsFailedMessage = ref('');
 const uploadType = ref();
 const showDownloadDropdown = ref(false);
 const activityName = ref('');
+const fileCount = ref(0);
+const xlsDownloadStatus = ref('');
+const downloadCompleted = ref(false);
+const publishingActivities = ref();
+
 const toastMessage = ref('');
 const toastType = ref(false);
 const showDownloadCode = ref(false);
@@ -527,6 +557,13 @@ const sortingDirection = () => {
   fetchActivities(1, direction.value);
 };
 
+const downloadApiUrl = ref('');
+const downloading = ref(false);
+
+const pa: Ref<paType> = useStorage('vue-use-local-storage', {
+  publishingActivities: localStorage.getItem('publishingActivities') ?? {},
+});
+
 onMounted(() => {
   fetchActivities(1);
   checkXlsstatus();
@@ -556,9 +593,59 @@ const mapActivityName = (name) => {
   }
 };
 
+watch(
+  () => store.state.startBulkPublish,
+  (value) => {
+    console.log(';from watcher');
+    if (value) {
+      publishingActivities.value =
+        pa.value.publishingActivities &&
+        Object.keys(pa.value.publishingActivities);
+      return;
+    }
+  },
+  { deep: true }
+);
+
 const activityLength = computed(() => {
   return !uploadType?.value?.length;
 });
+watch(
+  () => store.state.startXlsDownload,
+  (value) => {
+    if (value) {
+      checkDownloadStatus();
+    }
+  },
+  { deep: true }
+);
+watch(
+  () => store.state.closeXlsModel,
+  () => {
+    checkDownloadStatus();
+  }
+);
+
+const checkDownloadStatus = () => {
+  downloading.value = false;
+
+  const checkDownload = setInterval(function () {
+    axios.get('/activities/download-xls-progress-status').then((res) => {
+      fileCount.value = res.data.file_count;
+      xlsDownloadStatus.value = res.data.status;
+      downloadApiUrl.value = res.data.url;
+      downloading.value = !!res.data.status;
+
+      if (
+        xlsDownloadStatus.value === 'completed' ||
+        xlsDownloadStatus.value === 'failed' ||
+        !res.data.status
+      ) {
+        clearInterval(checkDownload);
+      }
+    });
+  }, 3000);
+};
 
 const downloadCode = async () => {
   let apiUrl = '/activities/download-codes/?activities=all';
@@ -763,4 +850,37 @@ provide('xlsFailedMessage', xlsFailedMessage);
 provide('activityLength', activityLength);
 provide('completed', uploadComplete);
 provide('processing', processing);
+watch(
+  () => store.state.completeXlsDownload,
+  (value) => {
+    if (value) {
+      downloadCompleted.value = true;
+      store.dispatch('updateStartXlsDownload', false);
+    }
+  },
+  { deep: true }
+);
+
+onUnmounted(() => {
+  xlsIndicatorMounted.value = false;
+});
+
+onMounted(() => {
+  fetchActivities(1);
+  checkXlsstatus();
+  checkDownloadStatus();
+  publishingActivities.value =
+    pa.value.publishingActivities && Object.keys(pa.value.publishingActivities);
+
+  xlsIndicatorMounted.value = true;
+});
+provide('xlsFailedMessage', xlsFailedMessage);
+provide('activityLength', activityLength);
+provide('xlsIndicatorMounted', xlsIndicatorMounted as Ref);
+provide('downloading', downloading);
+provide('xlsDownloadStatus', xlsDownloadStatus as Ref);
+provide('downloadApiUrl', downloadApiUrl as Ref);
+provide('activities', publishingActivities as Ref);
+
+provide('fileCount', fileCount as Ref);
 </script>

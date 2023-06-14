@@ -9,16 +9,58 @@ namespace App\Constants;
  */
 abstract class DBTables
 {
-    const ORGANIZATIONS = 'organizations';
-    const ORGANIZATION_PUBLISH = 'organization_published';
-    const USERS = 'users';
-    const SETTINGS = 'settings';
-    const DOCUMENTS = 'documents';
-    const ACTIVITY = 'activities';
+    /**
+     * For Migration File.
+     */
+    public const ORGANIZATIONS = 'organizations';
 
-    const RESULT = 'activity_results';
-    const INDICATOR = 'activity_result_indicators';
-    const PERIOD = 'result_indicator_periods';
+    /**
+     * For Migration File.
+     */
+    public const ORGANIZATION_PUBLISH = 'organization_published';
 
-    const IMPORT_STATUS = 'import_status';
+    /**
+     * For Migration File.
+     */
+    public const USERS = 'users';
+
+    /**
+     * For Migration File.
+     */
+    public const SETTINGS = 'settings';
+
+    /**
+     * For Migration File.
+     */
+    public const DOCUMENTS = 'documents';
+
+    /**
+     * For Migration File.
+     */
+    public const ACTIVITY = 'activities';
+
+    /**
+     * For Migration File.
+     */
+    public const RESULT = 'activity_results';
+
+    /**
+     * For Migration File.
+     */
+    public const INDICATOR = 'activity_result_indicators';
+
+    /**
+     * For Migration File.
+     */
+    public const PERIOD = 'result_indicator_periods';
+
+    /**
+     * For Migration File.
+     */
+    public const IMPORT_STATUS = 'import_status';
+
+    /**
+     * For Migration File.
+     */
+    public const DOWNLOAD_STATUS = 'download_status';
 }

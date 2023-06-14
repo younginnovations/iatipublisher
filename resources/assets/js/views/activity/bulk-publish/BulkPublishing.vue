@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="!xlsData"
+    v-if="!xlsData && !(downloading && !downloadCompleted)"
     id="publishing_activities"
     :class="isLoading && 'hidden'"
     class="z-50 w-[366px]"
@@ -11,14 +11,12 @@
       </div>
       <div class="flex shrink-0">
         <div
-          v-if="hasFailedActivities.ids.length > 0"
           class="retry flex cursor-pointer items-center text-crimson-50"
           @click="retryPublishing"
         >
           <svg-vue class="mr-1" icon="redo" />
           <span class="text-xs uppercase">Retry</span>
         </div>
-        <div v-else class="minus cursor-pointer" @click="toggleWindow"></div>
         <div
           v-if="completed === 'completed'"
           class="cross cursor-pointer"
@@ -68,9 +66,13 @@ import {
 } from 'vue';
 import axios from 'axios';
 import { detailStore } from 'Store/activities/show';
+import { useStore } from 'Store/activities/index';
+const singleStore = useStore();
 const emit = defineEmits(['close']);
 const store = detailStore();
 const xlsData = ref(false);
+const downloading = ref(false);
+const downloadCompleted = ref(false);
 
 const isLoading = ref(false);
 
@@ -122,34 +124,44 @@ let intervalID;
 onMounted(() => {
   completed.value = paStorage.value.publishingActivities.status ?? 'processing';
   bulkPublishStatus();
-
   if (!(activities.value && Object.keys(activities.value).length > 0)) {
     closeWindow();
   }
 
   //check constantly in a inter for when support button enters the dom
-  const checkSupportButton = setInterval(() => {
-    const supportButton: HTMLElement = document.querySelector(
-      '#launcher'
-    ) as HTMLElement;
+  if (!xlsData.value && !(downloading.value && !downloadCompleted.value)) {
+    const checkSupportButton = setInterval(() => {
+      const supportButton: HTMLElement = document.querySelector(
+        '#launcher'
+      ) as HTMLElement;
 
-    if (
-      supportButton !== null &&
-      activities.value &&
-      Object.keys(activities.value).length > 0
-    ) {
-      supportButton.style.transform = 'translate(-350px ,-20px)';
+      if (
+        supportButton !== null &&
+        activities.value &&
+        Object.keys(activities.value).length > 0
+      ) {
+        supportButton.style.transform = 'translate(-350px ,-20px)';
 
-      supportButton.style.opacity = '0';
-      setTimeout(() => {
-        supportButton.style.opacity = '1';
-      }, 300);
-      clearInterval(checkSupportButton);
-    }
-  }, 10);
+        supportButton.style.opacity = '0';
+        setTimeout(() => {
+          supportButton.style.opacity = '1';
+        }, 300);
+        clearInterval(checkSupportButton);
+      }
+    }, 10);
+  }
 
   checkXlsstatus();
+  checkDownloadStatus();
 });
+
+watch(
+  () => singleStore.state.bulkPublishLength,
+  () => {
+    bulkPublishStatus();
+  },
+  { deep: true }
+);
 
 setTimeout(() => {
   const supportButton: HTMLElement = document.querySelector(
@@ -165,7 +177,15 @@ setTimeout(() => {
     supportButton.style.opacity = '1';
   }
 }, 720);
-
+watch(
+  () => singleStore.state.completeXlsDownload,
+  (value) => {
+    if (value) {
+      downloadCompleted.value = true;
+    }
+  },
+  { deep: true }
+);
 onUnmounted(() => {
   const supportButton: HTMLElement = document.querySelector(
     '#launcher'
@@ -181,6 +201,16 @@ const checkXlsstatus = () => {
   axios.get('/import/xls/progress_status').then((res) => {
     xlsData.value = Object.keys(res.data.status).length > 0;
   });
+};
+const checkDownloadStatus = () => {
+  const checkDownload = setInterval(function () {
+    axios.get('/activities/download-xls-progress-status').then((res) => {
+      downloading.value = !!res.data.status;
+      if (res.data.status === 'completed' || !res.data.status) {
+        clearInterval(checkDownload);
+      }
+    });
+  }, 500);
 };
 
 // watching change in value of completed
@@ -211,6 +241,9 @@ const bulkPublishStatus = () => {
       .then((res) => {
         const response = res.data;
 
+        if (!response.publishing) {
+          clearInterval(intervalID);
+        }
         if ('data' in response) {
           activities.value = response.data.activities;
           completed.value = response.data.status;
@@ -220,7 +253,6 @@ const bulkPublishStatus = () => {
             response.data.activities;
           paStorage.value.publishingActivities.status = response.data.status;
           paStorage.value.publishingActivities.message = response.data.message;
-
           if (completed.value === 'completed') {
             clearInterval(intervalID);
 
@@ -235,61 +267,6 @@ const bulkPublishStatus = () => {
         }
       });
   }, 2000);
-};
-
-/**
- * Minimize or maximize window
- */
-const open = ref(true);
-const toggleWindow = (e: Event) => {
-  const currentTarget = e.currentTarget as HTMLElement;
-  const target = (
-    currentTarget.closest('#publishing_activities') as HTMLElement
-  ).querySelector<HTMLElement>('.bulk-activities');
-  const elHeight = target?.querySelector('div')?.clientHeight;
-
-  if (open.value) {
-    if (target != null) {
-      target.style.cssText = `height: ${elHeight}px;`;
-      setTimeout(function () {
-        target.style.cssText = `height: 0px; overflow: hidden;`;
-      }, 100);
-      open.value = false;
-      setTimeout(() => {
-        const supportButton: HTMLElement = document.querySelector(
-          '#launcher'
-        ) as HTMLElement;
-
-        if (supportButton !== null) {
-          supportButton.style.transform = 'translateX(0px)';
-          supportButton.style.transform = 'translateY(-20px)';
-        }
-      }, 400);
-    }
-  } else {
-    if (target != null) {
-      target.style.cssText = `height: ${elHeight}px; overflow:hidden;`;
-
-      setTimeout(function () {
-        target.style.cssText = `height: auto;`;
-      }, 600);
-      const supportButton: HTMLElement = document.querySelector(
-        '#launcher'
-      ) as HTMLElement;
-
-      if (
-        supportButton !== null &&
-        activities.value &&
-        Object.keys(activities.value).length > 0
-      ) {
-        supportButton.style.transform = 'translate(-350px ,-20px)';
-
-        supportButton.style.opacity = '1';
-      }
-
-      open.value = true;
-    }
-  }
 };
 
 /**
