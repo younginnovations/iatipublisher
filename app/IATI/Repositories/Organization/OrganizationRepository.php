@@ -217,13 +217,34 @@ class OrganizationRepository extends Repository
      *
      * @param $queryParams
      */
-    protected function filterPublisher($query, $queryParams)
+    protected function filterPublisher($query, $queryParams, $type = null)
     {
         $filteredQuery = $query;
 
-        if ($queryParams['start_date'] && $queryParams['end_date']) {
+        if (isset($queryParams['start_date']) && isset($queryParams['end_date'])) {
             $filteredQuery = $query->where('created_at', '>=', $queryParams['start_date'])
                 ->where('created_at', '<=', $queryParams['end_date']);
+        }
+
+        $direction = 'asc';
+        $orderBy = 'count';
+
+        if (isset($queryParams['order_by'])) {
+            $orderBy = $queryParams['order_by'];
+        }
+
+        if (isset($queryParams['sort'])) {
+            $direction = $queryParams['sort'];
+        }
+
+        $filteredQuery = $filteredQuery->orderBy($orderBy, $direction);
+
+        if ($type) {
+            $filteredQuery = $filteredQuery->groupBy($type);
+        }
+
+        if (isset($queryParams['page'])) {
+            $filteredQuery = $filteredQuery->paginate(10, ['*'], 'publisher', $queryParams['page']);
         }
 
         return $filteredQuery;
@@ -243,16 +264,16 @@ class OrganizationRepository extends Repository
         ];
     }
 
-    public function getPublisherBy($queryParams, $type): array
+    public function getPublisherBy($queryParams, $type, $page = 1): array
     {
         $query = $this->model->select(DB::raw('count(*) as count, ' . $type));
 
         if ($queryParams) {
-            $query = $this->filterPublisher($query, $queryParams);
+            $query = $this->filterPublisher($query, $queryParams, $type);
         }
 
         return [
-            $type => $query->groupBy($type)->pluck('count', $type),
+            $type => $query->pluck('count', $type),
         ];
     }
 

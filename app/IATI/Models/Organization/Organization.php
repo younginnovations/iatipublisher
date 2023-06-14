@@ -46,6 +46,7 @@ class Organization extends Model implements Auditable
         'is_published',
         'registration_agency',
         'registration_number',
+        'registration_type',
         'reporting_org',
         'total_budget',
         'recipient_org_budget',

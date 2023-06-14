@@ -57,7 +57,10 @@ class DashboardService
      */
     public function getPublisherStats($queryParams): array
     {
-        return $this->organizationRepo->getPublisherStats($queryParams);
+        $publisherStat = $this->organizationRepo->getPublisherStats($queryParams);
+        $publisherStat['lastRegisteredPublisher']['user_id'] = $this->userRepo->findBy('organization_id', $publisherStat['lastRegisteredPublisher']['id'])->first()->id;
+
+        return $publisherStat;
     }
 
     /**

@@ -97,7 +97,7 @@ class DashboardController extends Controller
 
     protected function getQueryParams($request): array
     {
-        $validParameters = ['start_date', 'end_date', 'order_by'];
+        $validParameters = ['start_date', 'end_date', 'order_by', 'direction', 'page'];
         $queryParams = [];
         // list($fixed, $startDateString, $endDateString, $column) = $this->resolveDateRangeFromRequest($request);
         // list($startDate, $endDate, $groupBy) = $this->resolveFixedRangeParams($fixed);
@@ -235,6 +235,8 @@ class DashboardController extends Controller
                 'data' => $publisherStat,
             ]);
         } catch (\Exception $e) {
+            dd($e);
+            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher grouped by type.']);
