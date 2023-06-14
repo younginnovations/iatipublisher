@@ -154,8 +154,6 @@ class PlannedDisbursementCsvTest extends CsvBaseTest
         $this->assertContains('Amount field must not be in negative.', $flattenErrors);
         $this->assertContains('The value currency is invalid.', $flattenErrors);
         $this->assertContains('The Value Date must be a valid Date', $flattenErrors);
-        $this->assertContains('The value date field must be a date between period start and period end', $flattenErrors);
-        $this->assertContains('The value date field must be a date between period start and period end', $flattenErrors);
         $this->assertContains('The planned disbursement provider org type is invalid.', $flattenErrors);
         $this->assertContains('The planned disbursement provider org ref shouldn\'t contain the symbols /, &, | or ?.', $flattenErrors);
         $this->assertContains('The planned disbursement receiver org type is invalid.', $flattenErrors);

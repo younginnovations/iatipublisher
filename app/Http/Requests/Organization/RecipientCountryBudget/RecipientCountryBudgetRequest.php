@@ -66,6 +66,31 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
     }
 
     /**
+     * returns rules for value form.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    public function getWarningForValue($formFields, $formBase): array
+    {
+        $rules = [];
+        $periodStartFormBase = sprintf('%s.period_start.0.date', $formBase);
+        $periodEndFormBase = sprintf('%s.period_end.0.date', $formBase);
+        $valueDateRule = sprintf('nullable|date|after_or_equal:%s|before_or_equal:%s', $periodStartFormBase, $periodEndFormBase);
+
+        foreach ($formFields as $valueKey => $valueVal) {
+            $valueForm = $formBase . '.value.' . $valueKey;
+            $rules[$valueForm . '.amount'] = 'nullable|numeric|min:0';
+            $rules[$valueForm . '.currency'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Currency', 'Activity'))));
+            $rules[$valueForm . '.value_date'] = $valueDateRule;
+        }
+
+        return $rules;
+    }
+
+    /**
      * return validation messages to the rules.
      *
      * @return array
