@@ -90,6 +90,56 @@ class RecipientCountryBudgetRequest extends OrganizationBaseRequest
         return $rules;
     }
 
+    /** returns rules for budget line value or expense line value.
+     *
+     * @param $formField
+     * @param $formBase
+     * @param $parentFormBase
+     *
+     * @return array
+     */
+    public function getWarningForBudgetOrExpenseLineValue($formField, $formBase, $parentFormBase): array
+    {
+        $rules = [];
+        $periodStartFormBase = sprintf('%s.period_start.0.date', $parentFormBase);
+        $periodEndFormBase = sprintf('%s.period_end.0.date', $parentFormBase);
+        $valueDateRule = sprintf('nullable|date|after_or_equal:%s|before_or_equal:%s', $periodStartFormBase, $periodEndFormBase);
+
+        foreach ($formField as $budgetLineIndex => $budgetLine) {
+            $rules[$formBase . '.value.' . $budgetLineIndex . '.amount'] = 'nullable|numeric|min:0';
+            $rules[$formBase . '.value.' . $budgetLineIndex . '.currency'] = sprintf('nullable|in:%s', implode(',', array_keys(getCodeList('Currency', 'Activity'))));
+            $rules[$formBase . '.value.' . $budgetLineIndex . '.value_date'] = $valueDateRule;
+        }
+
+        return $rules;
+    }
+
+    /**
+     * returns messages for value form.
+     *
+     * @param $formFields
+     * @param $formBase
+     *
+     * @return array
+     */
+    public function getMessagesForValue($formFields, $formBase): array
+    {
+        $messages = [];
+
+        foreach ($formFields as $valueKey => $valueVal) {
+            $valueForm = $formBase . '.value.' . $valueKey;
+            $messages[$valueForm . '.amount.required'] = 'The amount field is required.';
+            $messages[$valueForm . '.amount.numeric'] = 'The amount must be numeric.';
+            $messages[$valueForm . '.amount.min'] = 'The amount must not be in negative.';
+            $messages[$valueForm . '.value_date.required'] = 'The @value-date field is required.';
+            $messages[$valueForm . '.value_date.date'] = 'The @value-date must be date.';
+            $messages[sprintf('%s.value_date.after_or_equal', $valueForm)] = 'The value date field must be a date between period start and period end';
+            $messages[sprintf('%s.value_date.before_or_equal', $valueForm)] = 'The value date field must be a date between period start and period end';
+        }
+
+        return $messages;
+    }
+
     /**
      * return validation messages to the rules.
      *
