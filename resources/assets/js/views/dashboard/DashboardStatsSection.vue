@@ -1,5 +1,5 @@
 <template>
-  <section class="flex space-x-6">
+  <section class="flex flex-col gap-6 lg:flex-row">
     <div class="min-w-[450px] rounded bg-white p-4">
       <div v-if="currentView !== 'user'">
         <div class="border-b border-n-20 pb-4">

@@ -19,17 +19,17 @@
 
       <div class="my-1">
         <ul>
-          <li v-for="(item, key) in tempListItems" :key="item">
+          <li v-for="(item, key) in tempListItems" :key="item.label">
             <div v-if="item.show" class="mt-2">
               <span class="m-2">
                 <input
+                  :id="key.toString()"
                   v-model="checkedBoxes"
                   type="checkbox"
                   :value="key"
-                  :id="key"
                 />
               </span>
-              <label class="m-2 px-3 text-n-40" :for="key">{{
+              <label class="m-2 px-3 text-n-40" :for="key.toString()">{{
                 item.label
               }}</label>
             </div>
@@ -62,11 +62,15 @@ const props = defineProps({
     required: true,
   },
 });
+interface TemplateListInterface {
+  show: string;
+  label: string;
+}
 
 const emit = defineEmits(['changeSelectedPublisher']);
 let keys = Object.keys(props.listItems);
 let searchInput = ref('');
-let tempListItems = ref({});
+let tempListItems = ref<TemplateListInterface[]>([]);
 let checkedBoxes = ref([]);
 
 let changeSelectedPublisher = (selectedPublisherType) => {

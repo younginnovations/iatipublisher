@@ -16,6 +16,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use JsonException;
 
 /**
  * Class SuperAdminController.
@@ -40,15 +41,15 @@ class SuperAdminController extends Controller
      *
      * @return Application|Factory|View|JsonResponse
      */
-    public function listOrganizations(): View | Factory | JsonResponse | Application
+    public function listOrganizations(): View|Factory|JsonResponse|Application
     {
         try {
             $country = getCodeList('Country', 'Activity', false);
             $setupCompleteness = [
-                'Publisher with complete setup',
-                'Publisher setting not completed',
-                'Default values not completed',
-                'Both publishing settings and default values not completed',
+                'Publisher_with_complete_setup' => 'Publisher with complete setup',
+                'Publisher_setting_not_completed' => 'Publisher setting not completed',
+                'Default_values_not_completed' => 'Default values not completed',
+                'Both_publishing_settings_and_default_values_not_completed' => 'Both publishing settings and default values not completed',
             ];
             $registrationType = Enums::ORGANIZATION_REGISTRATION_METHOD;
             $publisherType = getCodeList('OrganizationType', 'Organization');
@@ -83,10 +84,10 @@ class SuperAdminController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Organizations fetched successfully',
-                'data'    => $organizations,
+                'data' => $organizations,
             ]);
         } catch (Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
         }
@@ -99,7 +100,7 @@ class SuperAdminController extends Controller
      *
      * @return array
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function sanitizeRequest($request): array
     {
@@ -131,7 +132,7 @@ class SuperAdminController extends Controller
                 $value = Arr::get($request, $filterKey, false);
 
                 if ($value) {
-                    if (in_array($filterKey, ['publisherType', 'dataLicense', 'country'])) {
+                    if ($filterMode === 'multiple') {
                         $exploded = explode(',', $value);
                         $queryParams['filters'][$filterKey] = $exploded;
                     } else {
@@ -177,7 +178,7 @@ class SuperAdminController extends Controller
      *
      * @return View|Factory|JsonResponse|Application
      */
-    public function listSystemVersion(): View | Factory | JsonResponse | Application
+    public function listSystemVersion(): View|Factory|JsonResponse|Application
     {
         try {
             $composerPackageDetails = json_decode(file_get_contents('../app_versions/composer_package_versions.json'));
@@ -201,7 +202,7 @@ class SuperAdminController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return  redirect('listOrganizations')->with('error', 'Failed opening System Version page.');
+            return redirect('listOrganizations')->with('error', 'Failed opening System Version page.');
         }
     }
 }

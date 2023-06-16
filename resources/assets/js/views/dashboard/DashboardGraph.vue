@@ -1,6 +1,8 @@
 <template>
   <div class="chart-wrapper">
     <apexchart
+      id="chart"
+      ref="chart"
       height="210"
       type="line"
       :options="chartOptions"
@@ -24,10 +26,24 @@ import {
   computed,
   defineProps,
 } from 'vue';
+
+interface yAxisInterface {
+  result: number[];
+}
+
+interface ChartInterface {
+  chart?: { w: { globals: { yAxisScale: yAxisInterface[] } } };
+}
+
 const xAxisCounter = ref(0);
+const labels = ref<number[]>([]);
+const roundedLabels = ref<number[]>([]);
 const graphDate = inject('graphDate') as Ref;
 const graphAmount = inject('graphAmount') as Ref;
 const xAxisData = ref([]);
+const yaxisTicks = ref([]);
+const maxValue = ref(0);
+const chart = ref<ChartInterface>({});
 const props = defineProps({
   currentView: {
     type: String,
@@ -50,6 +66,7 @@ let chartOptions = computed(() => ({
   chart: {
     height: 210,
     type: 'line',
+    offsetY: 5,
     zoom: {
       enabled: false,
     },
@@ -57,18 +74,22 @@ let chartOptions = computed(() => ({
       show: false,
     },
   },
+  markers: {
+    size: graphAmount.value.length > 1 ? 0 : 2, // Customize the marker size
+    strokeWidth: 0, // Remove the stroke around the marker
+    colors: ['#17997B'], // Customize the marker color
+    hover: {
+      size: 6, // Customize the marker size on hover
+    },
+  },
   stroke: {
     curve: 'straight',
     width: 1,
   },
+
   colors: ['#17997B'],
   tooltip: {
     custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-      console.log(
-        'from graph',
-
-        w.globals.categoryLabels[seriesIndex]
-      );
       const monthReverter = (month) => {
         switch (month) {
           case 'Jan':
@@ -105,7 +126,6 @@ let chartOptions = computed(() => ({
           formattedDaye.split(' ')[0]
         )}-${formattedDaye.split(' ')[1]}
         `);
-        console.log(orginal);
 
         return `${orginal.toString().split(' ')[0]} ${
           orginal.toString().split(' ')[1]
@@ -132,34 +152,28 @@ let chartOptions = computed(() => ({
       rotate: 0,
     },
   },
+
+  yaxis: {
+    min: 0, // minimum value on the y-axis
+    max: maxValue.value + 4, // maximum value on the y-axis
+    tickAmount: maxValue.value > 4 ? 6 : maxValue.value + 5, // number of ticks to display on the y-axis
+    labels: {
+      formatter: function (value, index) {
+        labels.value =
+          chart.value &&
+          (chart.value?.chart?.w.globals.yAxisScale[0].result as number[]);
+
+        roundedLabels.value = [];
+        for (let count = 0; count < labels.value.length; count++) {
+          if (!roundedLabels.value.includes(Math.round(labels.value[count]))) {
+            roundedLabels.value.push(Math.round(labels.value[count]));
+          }
+        }
+        return roundedLabels.value[index];
+      },
+    },
+  },
 }));
-
-// let chartOptions = reactive({
-//   chart: {
-//     height: 210,
-//     type: 'line',
-//     zoom: {
-//       enabled: false,
-//     },
-//   },
-//   stroke: {
-//     curve: 'straight',
-//     width: 1,
-//   },
-//   colors: ['#17997B'],
-//   tooltip: {
-//     custom: function ({ series, seriesIndex, dataPointIndex, w, xaxis }) {
-//       return `<div class="p-4">
-//                 <div> ${xaxis}</div>
-//                 <div>${series[seriesIndex][dataPointIndex]}</div>
-//               </div>`;
-//     },
-//   },
-
-//   xaxis: {
-//     tickAmount: 3,
-//   },
-// });
 
 let series = reactive([
   {
@@ -171,6 +185,14 @@ let series = reactive([
 watch(
   () => graphAmount.value,
   () => {
+    maxValue.value = 0;
+    yaxisTicks.value.length = 0;
+    for (let i = 0; i < graphAmount.value.length; i++) {
+      if (maxValue.value < graphAmount.value[i]['y']) {
+        maxValue.value = graphAmount.value[i]['y'];
+      }
+    }
+
     series['data'] = graphAmount.value;
   },
   { deep: true }

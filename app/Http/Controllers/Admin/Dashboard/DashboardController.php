@@ -73,6 +73,7 @@ class DashboardController extends Controller
     public function getUserCountByOrganization(Request $request, int $page = 1): JsonResponse
     {
         try {
+            $page = (int) $request->get('page') ?? 1;
             $tableConfig = getTableConfig('user_dashboard');
             $queryParams = [];
 
@@ -158,6 +159,7 @@ class DashboardController extends Controller
                 'data' => $publisherStat,
             ]);
         } catch (\Exception $e) {
+            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
@@ -235,7 +237,6 @@ class DashboardController extends Controller
                 'data' => $publisherStat,
             ]);
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e);
             logger()->error($e->getMessage());
 

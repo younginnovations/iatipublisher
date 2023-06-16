@@ -34,7 +34,7 @@
       <span class="organization">
         <Multiselect
           id="setup-completeness"
-          v-model="filter.registrationType"
+          v-model="filter.registration_type"
           placeholder="REGISTRATION TYPE"
           :options="registrationTypes"
           :taggable="true"
@@ -72,7 +72,7 @@
       <span class="organization">
         <Multiselect
           id="dataLicense"
-          v-model="filter.dataLicense"
+          v-model="filter.data_license"
           :options="dataLicenses"
           placeholder="DATA LICENSE"
           mode="multiple"
@@ -131,7 +131,7 @@
         <span class="text-n-40">Setup Completeness:</span>
         <span
           class="max-w-[500px] overflow-x-hidden text-ellipsis whitespace-nowrap"
-          >{{ filter.completeness }}</span
+          >{{ snakeCaseToSentenceCase(filter.completeness) }}</span
         >
         <svg-vue
           class="mx-2 mt-1 cursor-pointer text-xs"
@@ -141,26 +141,26 @@
       </span>
     </span>
 
-    <span v-if="filter.registrationType" class="inline-flex flex-wrap gap-2">
+    <span v-if="filter.registration_type" class="inline-flex flex-wrap gap-2">
       <span
         class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
       >
         <span class="text-n-40">Registration Type:</span>
         <span
           class="max-w-[500px] overflow-x-hidden text-ellipsis whitespace-nowrap"
-          >{{ filter.registrationType }}</span
+          >{{ snakeCaseToSentenceCase(filter.registration_type) }}</span
         >
         <svg-vue
           class="mx-2 mt-1 cursor-pointer text-xs"
           icon="cross"
-          @click="filter.registrationType = ''"
+          @click="filter.registration_type = ''"
         />
       </span>
     </span>
 
-    <span v-if="filter.publisherType" class="inline-flex flex-wrap gap-2">
+    <span v-if="filter.publisher_type" class="inline-flex flex-wrap gap-2">
       <span
-        v-for="(item, index) in filter.publisherType"
+        v-for="(item, index) in filter.publisher_type"
         :key="index"
         class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
       >
@@ -172,13 +172,13 @@
         <svg-vue
           class="mx-2 mt-1 cursor-pointer text-xs"
           icon="cross"
-          @click="filter.publisherType.splice(index, 1)"
+          @click="filter.publisher_type.splice(index, 1)"
         />
       </span>
     </span>
-    <span v-if="filter.dataLicense" class="inline-flex flex-wrap gap-2">
+    <span v-if="filter.data_license" class="inline-flex flex-wrap gap-2">
       <span
-        v-for="(item, index) in filter.dataLicense"
+        v-for="(item, index) in filter.data_license"
         :key="index"
         class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
       >
@@ -190,7 +190,7 @@
         <svg-vue
           class="mx-2 mt-1 cursor-pointer text-xs"
           icon="cross"
-          @click="filter.dataLicense.splice(index, 1)"
+          @click="filter.data_license.splice(index, 1)"
         />
       </span>
     </span>
@@ -539,6 +539,10 @@ import axios from 'axios';
 import MultiSelectWithSearch from 'Components/MultiSelectWithSearch.vue';
 
 import dateFormat from 'Composable/dateFormat';
+import {
+  kebabCaseToSnakecase,
+  snakeCaseToSentenceCase,
+} from 'Composable/utils';
 
 import BtnComponent from 'Components/ButtonComponent.vue';
 import Pagination from 'Components/TablePagination.vue';
@@ -599,11 +603,11 @@ const props = defineProps({
 });
 
 let filter = reactive({
+  publisher_type: [],
+  data_license: [],
   country: [],
   completeness: '',
-  registrationType: '',
-  publisherType: [],
-  dataLicense: [],
+  registration_type: '',
   start_date: '',
   end_date: '',
   date_type: 'created_at',
@@ -614,32 +618,54 @@ let defaultValueStatus: boolean[] = reactive([]);
 let showMultiSelectWithSearch = ref(false);
 let dropdownRange = {
   created_at: 'User registered date',
-  // last_logged_in: 'Last Logged in'
-  //there is no last logged in column in organisation
+  last_logged_in: 'Last Logged in',
 };
+
+const { ignoreUpdates } = watchIgnorable(filter, () => undefined);
 
 //lifecycle
 onMounted(() => {
-  let filterparams =
-    window.location.href.toString().split('?')[1] &&
-    window.location.href.toString().split('?')[1].split('=');
-  console.log(filterparams, 'route');
-  if (filterparams) {
-    if (filterparams[0] === 'country') {
-      filter[filterparams[0] as string] = [filterparams[1]];
-    } else if (filterparams[0] === 'data-license') {
-      filter['dataLicense' as string] = [filterparams[1]];
-    } else if (filterparams[0] === 'type') {
-      filter['publisherType' as string] = [filterparams[1]];
-    } else if (filterparams[0] === 'completeness') {
-      filter[filterparams[0]] = filterparams[1].split('_').join(' ');
-    } else {
-      filter[filterparams[0]] = filterparams[1];
+  let filterParams = getFilterParamsFromPreviousPage();
+
+  if (filterParams) {
+    for (let i = 0; i < filterParams.length; i++) {
+      let key = kebabCaseToSnakecase(filterParams[i][0]);
+      let value = filterParams[i][1];
+
+      if (['publisher_type', 'data_license', 'country'].includes(key)) {
+        filter[key].push(value);
+      } else {
+        filter[key] = value;
+      }
     }
   }
-  console.log(filter);
+
   fetchOrganisation(1);
 });
+
+const getFilterParamsFromPreviousPage = () => {
+  let queryString = window.location.href?.toString();
+
+  if (queryString) {
+    queryString = queryString.split('?')[1];
+
+    let queryParamsInKeyVal: object[] = [];
+    const queryParams = queryString?.split('&');
+
+    if (queryParams) {
+      for (let i = 0; i < queryParams.length; i++) {
+        let [key, value] = queryParams[i].split('=');
+        if (key) {
+          queryParamsInKeyVal.push([key, value ?? '']);
+        }
+      }
+    }
+
+    return queryParamsInKeyVal;
+  }
+
+  return false;
+};
 
 /**
  * Fetching organization list
@@ -651,31 +677,30 @@ const fetchOrganisation = (active_page: number) => {
   if (currentURL.includes('?')) {
     queryString = window.location.search;
   }
+
   active_page = active_page ?? 1;
   let endpoint = `/list-organisations/page/${active_page}${queryString}`;
 
   if (isFilterApplied.value) {
     queryString = queryString ?? '&q=';
     endpoint = queryString !== '' ? endpoint : `${endpoint}`;
-
-    for (const filter_key in filter) {
-      if (filter[filter_key]) {
-        if (filter[filter_key].length > 0) {
-          urlParams.append(filter_key, filter[filter_key]);
-        }
+    console.log('if vitra');
+    for (const filterKey in filter) {
+      console.log(filterKey);
+      if (filter[filterKey] && filter[filterKey].length > 0) {
+        urlParams.append(filterKey, filter[filterKey]);
       }
     }
   }
 
-  onUpdated(() => {
-    console.log(filter);
-  });
+  // onUpdated(() => {
+  //   console.log(filter);
+  // });
 
   axios
     .get(endpoint, { params: isFilterApplied.value ? urlParams : '' })
     .then((res) => {
       const response = res.data;
-
       if (response.success) {
         if (response.data.data.length === 0) {
           organisationData.status = 'empty';
@@ -685,6 +710,7 @@ const fetchOrganisation = (active_page: number) => {
           refreshStatusArrays(organisationData.data);
         }
       }
+      urlParams = new URLSearchParams(queryString);
     });
 };
 
@@ -719,19 +745,16 @@ let query = '',
   defaultSortDirection = 'ascending',
   sortDirection = 'desc';
 
+const queryString = window.location.search;
+
+let urlParams = new URLSearchParams(queryString);
 let orderType = ref('');
-
-const queryString = window.location.search,
-  urlParams = new URLSearchParams(queryString);
 orderType.value = urlParams.get('orderBy') ?? '';
-
 let range = '';
 
 const sortingDirection = () => {
   return sortDirection === 'asc' ? 'descending' : 'ascending';
 };
-
-const { ignoreUpdates } = watchIgnorable(filter, () => undefined);
 
 const sortBy = (order) => {
   if (currentURL.includes('?')) {
@@ -757,26 +780,27 @@ watch(
   () => [
     filter.country,
     filter.completeness,
-    filter.registrationType,
-    filter.publisherType,
-    filter.dataLicense,
+    filter.registration_type,
+    filter.publisher_type,
+    filter.data_license,
     filter.start_date,
     filter.end_date,
     filter.date_type,
   ],
   () => {
+    console.log('date change vayo');
     fetchOrganisation(organisationData.data['current_page']);
   },
   { deep: true }
 );
 
-let resetAllFilters = () => {
+const resetAllFilters = () => {
   ignoreUpdates(() => {
     filter.country = [];
     filter.completeness = '';
-    filter.registrationType = '';
-    filter.publisherType = [];
-    filter.dataLicense = [];
+    filter.registration_type = '';
+    filter.publisher_type = [];
+    filter.data_license = [];
     filter.start_date = '';
     filter.end_date = '';
     filter.date_type = 'created_at';
@@ -786,13 +810,14 @@ let resetAllFilters = () => {
 const isFilterApplied = computed(() => {
   return (
     filter.country.length +
-      filter.publisherType.length +
-      filter.dataLicense.length !=
+      filter.publisher_type.length +
+      filter.data_license.length !=
       0 ||
     filter.completeness !== '' ||
-    filter.registrationType !== '' ||
+    filter.registration_type !== '' ||
     filter.start_date != '' ||
-    filter.end_date != ''
+    filter.end_date != '' ||
+    filter.date_type != ''
   );
 });
 
@@ -845,7 +870,7 @@ const toggleShowMultiSelect = () => {
 };
 
 const setSelectedPublisher = (publisherTypes) => {
-  filter.publisherType = publisherTypes;
+  filter.publisher_type = publisherTypes;
 };
 </script>
 

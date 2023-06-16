@@ -133,9 +133,17 @@ class OrganizationRepository extends Repository
         }
 
         if (Arr::get($queryParams, 'start_date', false) && Arr::get($queryParams, 'end_date', false)) {
-            $organizations
-                ->whereDate(Arr::get($queryParams, 'date_column', 'created_at'), '>=', $queryParams['start_date'])
-                ->whereDate(Arr::get($queryParams, 'date_column', 'created_at'), '<=', $queryParams['end_date']);
+            $dateColumn = Arr::get($queryParams, 'date_column', 'created_at');
+            if ($dateColumn === 'last_logged_in') {
+                $organizations->whereHas('latestLoggedInUser', function ($user) use ($queryParams) {
+                    $user->whereDate('last_logged_in', '>=', $queryParams['start_date'])
+                        ->whereDate('last_logged_in', '<=', $queryParams['end_date']);
+                });
+            } else {
+                $organizations
+                      ->whereDate("organizations.$dateColumn", '>=', $queryParams['start_date'])
+                      ->whereDate("organizations.$dateColumn", '<=', $queryParams['end_date']);
+            }
         }
 
         if (Arr::get($queryParams, 'filters', false)) {
@@ -143,7 +151,7 @@ class OrganizationRepository extends Repository
         }
 
         if ($orderBy === 'name') {
-            return $organizations->orderByRaw("name->0->>'narrative'" . $direction)
+            return $organizations->orderByRaw("organizations.name->0->>'narrative'" . $direction)
                 ->paginate(10, ['*'], 'organization', $page);
         }
 
@@ -229,17 +237,17 @@ class OrganizationRepository extends Repository
         $direction = 'asc';
         $orderBy = 'count';
 
-        if (isset($queryParams['order_by'])) {
-            $orderBy = $queryParams['order_by'];
-        }
-
-        if (isset($queryParams['sort'])) {
-            $direction = $queryParams['sort'];
-        }
-
-        $filteredQuery = $filteredQuery->orderBy($orderBy, $direction);
-
         if ($type) {
+            if (isset($queryParams['order_by'])) {
+                $orderBy = $queryParams['order_by'];
+            }
+
+            if (isset($queryParams['sort'])) {
+                $direction = $queryParams['sort'];
+            }
+
+            $filteredQuery = $filteredQuery->orderBy($orderBy, $direction);
+
             $filteredQuery = $filteredQuery->groupBy($type);
         }
 
@@ -392,25 +400,15 @@ class OrganizationRepository extends Repository
         $tableConfig = getTableConfig('organisation');
         $filterMode = $tableConfig['filters'];
         $queryMap = $this->getCompletenessMap();
-        $filterColumnMap = [
-            'country' => 'country',
-            'registrationType' => 'registration_type',
-            'publisherType' => 'publisher_type',
-            'dataLicense' => 'data_license',
-        ];
 
         foreach ($filters as $filterName => $filterValue) {
             if ($filterName !== 'completeness') {
                 if (Arr::get($filterMode, $filterName) === 'single') {
-                    $organizations->where($filterColumnMap[$filterName], $filterValue);
+                    $organizations->where($filterName, $filterValue);
                 } else {
-                    $organizations->whereIn($filterColumnMap[$filterName], $filterValue);
+                    $organizations->whereIn($filterName, $filterValue);
                 }
             } else {
-                // Review this  agian @momik
-//                $organizations->whereHas('settings', function ($query) use ($queryMap, $filterValue) {
-//                    return $query->whereRaw($queryMap[$filterValue]);
-//                });
                 $organizations->leftJoin('settings', 'settings.organization_id', 'organizations.id')->whereRaw($queryMap[$filterValue]);
             }
         }
@@ -426,26 +424,26 @@ class OrganizationRepository extends Repository
     private function getCompletenessMap(): array
     {
         return [
-            'Publisher with complete setup' => "
+            'Publisher_with_complete_setup' => "
                     CAST(settings.publishing_info->>'publisher_verification' as bool) = true and
                     settings.publishing_info->>'publisher_id' notnull and
                     CAST(settings.publishing_info->>'token_verification' as bool) = true and
                     settings.publishing_info->>'api_token' notnull
                 ",
-            'Publisher setting not completed' => "
+            'Publisher_setting_not_completed' => "
                     CAST(settings.publishing_info->>'publisher_verification' as bool) = false or
                     settings.publishing_info->>'publisher_id' isnull  or
                     CAST(settings.publishing_info->>'token_verification' as bool) = false or
                     settings.publishing_info->>'api_token' isnull
                 ",
-            'Default values not completed' => "
+            'Default_values_not_completed' => "
                     settings.default_values->>'default_currency' isnull or
                     settings.default_values->>'default_language' isnull or
                     settings.activity_default_values->>'hierarchy' isnull or
                     settings.activity_default_values->>'humanitarian' isnull or
                     settings.activity_default_values->>'budget_not_provided' isnull
                 ",
-            'Both publishing settings and default values not completed' => "
+            'Both_publishing_settings_and_default_values_not_completed' => "
                     (
                         CAST(settings.publishing_info->>'publisher_verification' as bool) = false or
                         settings.publishing_info->>'publisher_id' isnull  or

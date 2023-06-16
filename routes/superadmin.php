@@ -21,14 +21,3 @@ Route::group(['namespace' => 'SuperAdmin', 'middleware' => ['can:list_organizati
     Route::get('/system-version', [SuperAdminController::class, 'listSystemVersion'])->name('systemVersion');
     Route::get('/api-log', [ApiLogController::class, 'getData'])->name('getData');
 });
-
-//
-//[
-//"today" => 'start date and end date is today'
-//"this-week" => 'end date is today and start day is within this week (sun - sat)'
-//"last-7-days" => 'end date is today and start day is today minus 7days'
-//"this-month" => 'start month and end month is current month '
-//"last-6-months" => 'end month is current and start month is current minus 6 months'
-//"this-year" => 'end year is current year and start year is current year as well '
-//"all-time" => 'any date besides above is all time'
-//]

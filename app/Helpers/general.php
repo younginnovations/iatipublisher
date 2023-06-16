@@ -585,15 +585,15 @@ if (!function_exists('getTableConfig')) {
                 'orderBy'   => ['updated_at', 'all_activities_count', 'name', 'registered_on', 'publisher_type', 'data_license', 'country'],
                 'direction' => ['asc', 'desc'],
                 'filters'=>[
-                    'country'          => 'multiple',
-                    'completeness'     => 'single',
-                    'registrationType' => 'single',
-                    'publisherType'    => 'multiple',
-                    'dataLicense'      => 'multiple',
+                    'completeness'      => 'single',
+                    'registration_type' => 'single',
+                    'country'           => 'multiple',
+                    'publisher_type'    => 'multiple',
+                    'data_license'      => 'multiple',
                 ],
             ],
             'user' => ['orderBy' => ['username', 'publisher_name', 'created_at'], 'direction' => ['asc', 'desc']],
-            'user_dashboard' => ['orderBy' => ['publisher_name', 'admin', 'general', 'active', 'deactivated', 'total'], 'direction' => ['asc', 'desc']],
+            'user_dashboard' => ['orderBy' => ['organisation', 'admin', 'general', 'active', 'deactivated', 'total'], 'direction' => ['asc', 'desc']],
             'audit' => ['orderBy' => ['user_id', 'user_type', 'event', 'auditable_type', 'created_at'], 'direction' => ['asc', 'desc']],
         ];
 

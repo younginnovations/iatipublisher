@@ -93,20 +93,20 @@ class UserRepository extends Repository
     {
         $query = $this->model::query()
             ->join('organizations', 'organizations.id', '=', 'users.organization_id')
-            ->selectRaw('organizations.id as organization_id,
-                organizations.publisher_name,
-                count(Case when users.role_id = 3 and users.organization_id = organizations.id then 1 end) as admin_user_count,
-                count(Case when users.role_id = 4 and users.organization_id = organizations.id then 1 end) as general_user_count,
-                count(Case when users.status = true and users.organization_id = organizations.id then 1 end) as active_user_count,
-                count(Case when users.status = false and users.organization_id = organizations.id then 1 end) as deactivated_user_count,
-                count(organizations.id) as total_user_count')
-            ->groupBy('organizations.id', 'organizations.publisher_name');
+            ->selectRaw("organizations.id as organization_id,
+                         COALESCE(organizations.name->0->>'narrative', organizations.publisher_name) as organisation,
+                         count(Case when users.role_id = 3 and users.organization_id = organizations.id then 1 end) as admin_user_count,
+                         count(Case when users.role_id = 4 and users.organization_id = organizations.id then 1 end) as general_user_count,
+                         count(Case when users.status = true and users.organization_id = organizations.id then 1 end) as active_user_count,
+                         count(Case when users.status = false and users.organization_id = organizations.id then 1 end) as deactivated_user_count,
+                         count(organizations.id) as total_user_count")
+            ->groupBy('organizations.id', 'organisation');
 
         $direction = Arr::get($queryParam, 'direction', 'asc');
-        $orderBy = Arr::get($queryParam, 'orderBy', 'publisher_name');
+        $orderBy = Arr::get($queryParam, 'orderBy', 'organisation');
 
-        if ($orderBy === 'publisher_name') {
-            $query->orderBy('organizations.publisher_name', $direction);
+        if ($orderBy === 'organisation') {
+            $query->orderBy('organisation', $direction);
         } else {
             $orderBy = $orderBy . '_user_count';
             $query->orderBy($orderBy, $direction);
@@ -179,10 +179,10 @@ class UserRepository extends Repository
             }
         }
 
-        if (Arr::get($queryParams, 'start_date', false) && Arr::get($queryParams, 'end_date', false)) {
+        if (Arr::get($queryParams, 'startDate', false) && Arr::get($queryParams, 'endDate', false)) {
             $query
-                ->whereDate(Arr::get($queryParams, 'event_type', 'created_at'), '>=', $queryParams['start_date'])
-                ->whereDate(Arr::get($queryParams, 'event_type', 'created_at'), '<=', $queryParams['end_date']);
+                ->whereDate(Arr::get($queryParams, 'date_type', 'created_at'), '>=', $queryParams['startDate'])
+                ->whereDate(Arr::get($queryParams, 'date_type', 'created_at'), '<=', $queryParams['endDate']);
         }
 
         return $query->whereNull('deleted_at')->orderBy($orderBy, $direction)->orderBy('users.id', $direction);

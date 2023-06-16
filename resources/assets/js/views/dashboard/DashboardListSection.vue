@@ -5,232 +5,316 @@
   >
     <div v-if="currentView === 'user'">
       <h6 class="text-xs uppercase text-n-40">users by organisation</h6>
-
-      <table class="mt-2 mb-8 w-full text-left">
-        <thead class="bg-n-10 text-xs font-bold uppercase text-n-40">
-          <tr>
-            <th>
-              <div class="flex min-w-[400px] items-center space-x-2 py-3 px-8">
-                <button
-                  class="p-1"
-                  @click="
-                    () => {
-                      filter.sort === 'asc'
-                        ? (filter.sort = 'desc')
-                        : (filter.sort = 'asc');
-                      filter.orderBy = 'organisation';
-                      sortTable();
-                    }
-                  "
+      <div class="w-full overflow-x-scroll">
+        <table class="mt-2 mb-8 w-full overflow-x-scroll text-left">
+          <thead class="bg-n-10 text-xs font-bold uppercase text-n-40">
+            <tr>
+              <th>
+                <div
+                  class="flex min-w-[400px] items-center space-x-2 py-3 px-8"
                 >
-                  <svg-vue
-                    v-if="
-                      filter.sort === 'asc' && filter.orderBy === 'organisation'
+                  <button
+                    class="p-1"
+                    @click="
+                      () => {
+                        filter.sort === 'asc'
+                          ? (filter.sort = 'desc')
+                          : (filter.sort = 'asc');
+                        filter.orderBy = 'organisation';
+                        sortTable();
+                      }
                     "
-                    class="text-sm"
-                    icon="ascending-arrow"
-                  ></svg-vue>
-                  <svg-vue
-                    v-else
-                    class="text-sm"
-                    icon="descending-arrow"
-                  ></svg-vue>
-                </button>
-                <span>Organisation</span>
-              </div>
-            </th>
-            <th>
-              <div class="flex items-center space-x-2 py-3 px-8">
-                <button
-                  class="p-1"
-                  @click="
-                    () => {
-                      filter.sort === 'asc'
-                        ? (filter.sort = 'desc')
-                        : (filter.sort = 'asc');
-                      filter.orderBy = 'admin';
-                      sortTable();
-                    }
-                  "
-                >
-                  <svg-vue
-                    v-if="filter.sort === 'asc' && filter.orderBy === 'admin'"
-                    class="text-sm"
-                    icon="ascending-arrow"
-                  ></svg-vue>
-                  <svg-vue
-                    v-else
-                    class="text-sm"
-                    icon="descending-arrow"
-                  ></svg-vue>
-                </button>
-                <span>admin</span>
-              </div>
-            </th>
-            <th>
-              <div class="flex items-center space-x-2 py-3 px-8">
-                <button
-                  class="p-1"
-                  @click="
-                    () => {
-                      filter.sort === 'asc'
-                        ? (filter.sort = 'desc')
-                        : (filter.sort = 'asc');
-                      filter.orderBy = 'general';
-                      sortTable();
-                    }
-                  "
-                >
-                  <svg-vue
-                    v-if="filter.sort === 'asc' && filter.orderBy === 'general'"
-                    class="text-sm"
-                    icon="ascending-arrow"
-                  ></svg-vue>
-                  <svg-vue
-                    v-else
-                    class="text-sm"
-                    icon="descending-arrow"
-                  ></svg-vue>
-                </button>
-                <span>general</span>
-              </div>
-            </th>
-            <th>
-              <div class="flex items-center space-x-2 py-3 px-8">
-                <button
-                  class="p-1"
-                  @click="
-                    () => {
-                      filter.sort === 'asc'
-                        ? (filter.sort = 'desc')
-                        : (filter.sort = 'asc');
-                      filter.orderBy = 'active';
-                      sortTable();
-                    }
-                  "
-                >
-                  <svg-vue
-                    v-if="filter.sort === 'asc' && filter.orderBy === 'active'"
-                    class="text-sm"
-                    icon="ascending-arrow"
-                  ></svg-vue>
-                  <svg-vue
-                    v-else
-                    class="text-sm"
-                    icon="descending-arrow"
-                  ></svg-vue>
-                </button>
-                <span>active</span>
-              </div>
-            </th>
-            <th>
-              <div class="flex items-center space-x-2 py-3 px-8">
-                <button
-                  class="p-1"
-                  @click="
-                    () => {
-                      filter.sort === 'asc'
-                        ? (filter.sort = 'desc')
-                        : (filter.sort = 'asc');
-                      filter.orderBy = 'deactivated';
-                      sortTable();
-                    }
-                  "
-                >
-                  <svg-vue
-                    v-if="
-                      filter.sort === 'asc' && filter.orderBy === 'deactivated'
+                  >
+                    <svg-vue
+                      v-if="
+                        filter.sort === 'asc' &&
+                        filter.orderBy === 'organisation'
+                      "
+                      class="text-sm"
+                      icon="ascending-arrow"
+                    ></svg-vue>
+                    <svg-vue
+                      v-else
+                      class="text-sm"
+                      icon="descending-arrow"
+                    ></svg-vue>
+                  </button>
+                  <span>Organisation</span>
+                </div>
+              </th>
+              <th>
+                <div class="flex items-center space-x-2 py-3 px-8">
+                  <button
+                    class="p-1"
+                    @click="
+                      () => {
+                        filter.sort === 'asc'
+                          ? (filter.sort = 'desc')
+                          : (filter.sort = 'asc');
+                        filter.orderBy = 'admin';
+                        sortTable();
+                      }
                     "
-                    class="text-sm"
-                    icon="ascending-arrow"
-                  ></svg-vue>
-                  <svg-vue
-                    v-else
-                    class="text-sm"
-                    icon="descending-arrow"
-                  ></svg-vue>
-                </button>
-                <span>deactivated</span>
-              </div>
-            </th>
-            <th>
-              <div class="flex items-center space-x-2 py-3 px-8">
-                <button
-                  class="p-1"
-                  @click="
-                    () => {
-                      filter.sort === 'asc'
-                        ? (filter.sort = 'desc')
-                        : (filter.sort = 'asc');
-                      filter.orderBy = 'total';
-                      sortTable();
-                    }
-                  "
+                  >
+                    <svg-vue
+                      v-if="filter.sort === 'asc' && filter.orderBy === 'admin'"
+                      class="text-sm"
+                      icon="ascending-arrow"
+                    ></svg-vue>
+                    <svg-vue
+                      v-else
+                      class="text-sm"
+                      icon="descending-arrow"
+                    ></svg-vue>
+                  </button>
+                  <span>admin</span>
+                </div>
+              </th>
+              <th>
+                <div class="flex items-center space-x-2 py-3 px-8">
+                  <button
+                    class="p-1"
+                    @click="
+                      () => {
+                        filter.sort === 'asc'
+                          ? (filter.sort = 'desc')
+                          : (filter.sort = 'asc');
+                        filter.orderBy = 'general';
+                        sortTable();
+                      }
+                    "
+                  >
+                    <svg-vue
+                      v-if="
+                        filter.sort === 'asc' && filter.orderBy === 'general'
+                      "
+                      class="text-sm"
+                      icon="ascending-arrow"
+                    ></svg-vue>
+                    <svg-vue
+                      v-else
+                      class="text-sm"
+                      icon="descending-arrow"
+                    ></svg-vue>
+                  </button>
+                  <span>general</span>
+                </div>
+              </th>
+              <th>
+                <div class="flex items-center space-x-2 py-3 px-8">
+                  <button
+                    class="p-1"
+                    @click="
+                      () => {
+                        filter.sort === 'asc'
+                          ? (filter.sort = 'desc')
+                          : (filter.sort = 'asc');
+                        filter.orderBy = 'active';
+                        sortTable();
+                      }
+                    "
+                  >
+                    <svg-vue
+                      v-if="
+                        filter.sort === 'asc' && filter.orderBy === 'active'
+                      "
+                      class="text-sm"
+                      icon="ascending-arrow"
+                    ></svg-vue>
+                    <svg-vue
+                      v-else
+                      class="text-sm"
+                      icon="descending-arrow"
+                    ></svg-vue>
+                  </button>
+                  <span>active</span>
+                </div>
+              </th>
+              <th>
+                <div class="flex items-center space-x-2 py-3 px-8">
+                  <button
+                    class="p-1"
+                    @click="
+                      () => {
+                        filter.sort === 'asc'
+                          ? (filter.sort = 'desc')
+                          : (filter.sort = 'asc');
+                        filter.orderBy = 'deactivated';
+                        sortTable();
+                      }
+                    "
+                  >
+                    <svg-vue
+                      v-if="
+                        filter.sort === 'asc' &&
+                        filter.orderBy === 'deactivated'
+                      "
+                      class="text-sm"
+                      icon="ascending-arrow"
+                    ></svg-vue>
+                    <svg-vue
+                      v-else
+                      class="text-sm"
+                      icon="descending-arrow"
+                    ></svg-vue>
+                  </button>
+                  <span>deactivated</span>
+                </div>
+              </th>
+              <th>
+                <div class="flex items-center space-x-2 py-3 px-8">
+                  <button
+                    class="p-1"
+                    @click="
+                      () => {
+                        filter.sort === 'asc'
+                          ? (filter.sort = 'desc')
+                          : (filter.sort = 'asc');
+                        filter.orderBy = 'total';
+                        sortTable();
+                      }
+                    "
+                  >
+                    <svg-vue
+                      v-if="filter.sort === 'asc' && filter.orderBy === 'total'"
+                      class="text-sm"
+                      icon="ascending-arrow"
+                    ></svg-vue>
+                    <svg-vue
+                      v-else
+                      class="text-sm"
+                      icon="descending-arrow"
+                    ></svg-vue></button
+                  ><span>total </span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody v-if="showTableLoader">
+            <tr>
+              <td class="py-3 px-8">
+                <ShimmerLoading class="!rounded-sm" />
+              </td>
+              <td class="py-3 px-8">
+                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
+              </td>
+              <td class="py-3 px-8">
+                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
+              </td>
+              <td class="py-3 px-8">
+                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
+              </td>
+              <td class="py-3 px-8">
+                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
+              </td>
+              <td class="py-3 px-8">
+                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
+              </td>
+            </tr>
+            <tr>
+              <td class="py-3 px-8">
+                <ShimmerLoading class="!rounded-sm" />
+              </td>
+              <td class="py-3 px-8">
+                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
+              </td>
+              <td class="py-3 px-8">
+                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
+              </td>
+              <td class="py-3 px-8">
+                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
+              </td>
+              <td class="py-3 px-8">
+                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
+              </td>
+              <td class="py-3 px-8">
+                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
+              </td>
+            </tr>
+            <tr>
+              <td class="py-3 px-8">
+                <ShimmerLoading class="!rounded-sm" />
+              </td>
+              <td class="py-3 px-8">
+                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
+              </td>
+              <td class="py-3 px-8">
+                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
+              </td>
+              <td class="py-3 px-8">
+                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
+              </td>
+              <td class="py-3 px-8">
+                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
+              </td>
+              <td class="py-3 px-8">
+                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
+              </td>
+            </tr>
+          </tbody>
+          <tbody v-else-if="tableData.length === 0">
+            <tr class="w-full">
+              <div class="p-10 text-center text-n-50">No data found</div>
+            </tr>
+          </tbody>
+          <tbody v-else>
+            <tr
+              v-for="organisation in tableData.data"
+              :key="organisation?.id"
+              class="border-b border-n-20 text-sm text-bluecoral"
+            >
+              <td>
+                <a
+                  class="block py-3 px-8"
+                  :href="`/users?organization=${organisation.organization_id}`"
+                  >{{ organisation.organisation }}</a
                 >
-                  <svg-vue
-                    v-if="filter.sort === 'asc' && filter.orderBy === 'total'"
-                    class="text-sm"
-                    icon="ascending-arrow"
-                  ></svg-vue>
-                  <svg-vue
-                    v-else
-                    class="text-sm"
-                    icon="descending-arrow"
-                  ></svg-vue></button
-                ><span>total </span>
-              </div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="organisation in tableData.data"
-            :key="organisation?.id"
-            class="border-b border-n-20 text-sm text-bluecoral"
-          >
-            <td>
-              <a
-                class="block py-3 px-8"
-                :href="`/users?organization=${organisation.organization_id}`"
-                >{{ organisation.publisher_name }}</a
-              >
-            </td>
-            <td>
-              <a class="block py-3 px-8 text-center" :href="`/users?roles=3`">
-                {{ organisation.admin_user_count }}
-              </a>
-            </td>
+              </td>
+              <td>
+                <a class="block py-3 px-8 text-center" :href="`/users?roles=3`">
+                  {{ organisation.admin_user_count }}
+                </a>
+              </td>
 
-            <td>
-              <a class="block py-3 px-8 text-center" :href="`/users?roles=4`">
-                {{ organisation.general_user_count }}
-              </a>
-            </td>
+              <td>
+                <a class="block py-3 px-8 text-center" :href="`/users?roles=4`">
+                  {{ organisation.general_user_count }}
+                </a>
+              </td>
 
-            <td>
-              <a class="block py-3 px-8 text-center" :href="`/users?status=1`">
-                {{ organisation.active_user_count }}
-              </a>
-            </td>
+              <td>
+                <a
+                  class="block py-3 px-8 text-center"
+                  :href="`/users?status=1`"
+                >
+                  {{ organisation.active_user_count }}
+                </a>
+              </td>
 
-            <td>
-              <a class="block py-3 px-8 text-center" :href="`/users?status=0`">
-                {{ organisation.deactivated_user_count }}
-              </a>
-            </td>
+              <td>
+                <a
+                  class="block py-3 px-8 text-center"
+                  :href="`/users?status=0`"
+                >
+                  {{ organisation.deactivated_user_count }}
+                </a>
+              </td>
 
-            <td>
-              <a class="block py-3 px-8 text-center" :href="`/users`">
-                {{ organisation.total_user_count }}
-              </a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              <td>
+                <a class="block py-3 px-8 text-center" :href="`/users`">
+                  {{ organisation.total_user_count }}
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <Pagination
+        v-if="tableData.last_page > 1"
         :data="tableData"
-        @fetch-activities="triggerpagination(page)"
+        @fetch-activities="(page) => triggerpagination(page)"
       />
+
       <p class="mt-10 text-xs italic text-n-40">
         This widget is not affected by the date range
       </p>
@@ -365,8 +449,39 @@
                 </td>
               </tr>
             </thead>
+            <tbody v-if="showTableLoader">
+              <tr>
+                <td class="py-3 px-8">
+                  <ShimmerLoading class="!rounded-sm" />
+                </td>
+                <td class="py-3 px-8">
+                  <ShimmerLoading class="!w-10 !rounded-sm" />
+                </td>
+              </tr>
+              <tr>
+                <td class="py-3 px-8">
+                  <ShimmerLoading class="!rounded-sm" />
+                </td>
+                <td class="py-3 px-8">
+                  <ShimmerLoading class="!w-10 !rounded-sm" />
+                </td>
+              </tr>
+              <tr>
+                <td class="py-3 px-8">
+                  <ShimmerLoading class="!rounded-sm" />
+                </td>
+                <td class="py-3 px-8">
+                  <ShimmerLoading class="!w-10 !rounded-sm" />
+                </td>
+              </tr>
+            </tbody>
+            <tbody v-else-if="tableData.length === 0">
+              <tr class="w-full">
+                <div class="p-10 text-center text-n-50">No data found</div>
+              </tr>
+            </tbody>
             <tbody
-              v-if="
+              v-else-if="
                 title === 'Setup Completeness' && currentView === 'publisher'
               "
             >
@@ -532,16 +647,16 @@
 import { ref, defineProps, watch, onMounted, inject, Ref } from 'vue';
 import { defineEmits } from 'vue';
 import Pagination from 'Components/TablePagination.vue';
-
+import ShimmerLoading from 'Components/ShimmerLoading.vue';
 const emit = defineEmits(['tableNav']);
 
 const activityNavList = [
   { label: 'Activity Status', apiParams: 'status' },
-  { label: 'Actvity Added', apiParams: 'method' },
+  { label: 'Activity Added', apiParams: 'method' },
   { label: 'Activity Completion', apiParams: 'completeness' },
 ];
 const publisherNavList = [
-  { label: 'Publisher Type', apiParams: 'type' },
+  { label: 'Publisher Type', apiParams: 'publisher-type' },
   { label: 'Data Licence', apiParams: 'data-license' },
   { label: 'Country', apiParams: 'country' },
   { label: 'Registration Type', apiParams: 'registration-type' },
@@ -550,8 +665,11 @@ const publisherNavList = [
 const currentpage = ref(1);
 const filter = ref({ orderBy: '', sort: '' });
 const sortElement = ref({ label: '', apiParams: '' });
-const userNavlist = [{ label: 'user', apiParams: `page/${currentpage.value}` }];
-const currentItem = ref({ label: 'Publisher Type', apiParams: 'type' });
+const userNavlist = [{ label: 'user', apiParams: '' }];
+const currentItem = ref({
+  label: 'Publisher Type',
+  apiParams: 'publisher-type',
+});
 const currentNavList = ref(publisherNavList);
 const title = ref(currentNavList.value[0]?.label);
 onMounted(() => {
@@ -562,7 +680,6 @@ const sortTable = () => {
   fetchTableData(currentItem.value);
 };
 const triggerpagination = (page) => {
-  console.log(page, 'paginate');
   currentpage.value = page;
   fetchTableData(currentItem.value);
 };
@@ -575,14 +692,17 @@ watch(
 
       currentNavList.value = activityNavList;
     } else if (value === 'publisher') {
-      currentItem.value = { label: 'Publisher Type', apiParams: 'type' };
+      currentItem.value = {
+        label: 'Publisher Type',
+        apiParams: 'publisher-type',
+      };
 
       currentNavList.value = publisherNavList;
     } else {
       currentNavList.value = userNavlist;
       currentItem.value = {
         label: 'user',
-        apiParams: `page/${currentpage.value}`,
+        apiParams: '',
       };
     }
     // console.log('table watcher', currentNavList.value[0]);
@@ -614,9 +734,10 @@ const fetchTableData = (item) => {
   title.value = item?.label;
   sortElement.value = item;
 
-  emit('tableNav', item, filter);
+  emit('tableNav', item, filter, currentpage.value);
 };
 const completeNess = inject('completeNess') as Ref;
+const showTableLoader = inject('showTableLoader') as Ref;
 </script>
 <style lang="scss">
 .activeNav {

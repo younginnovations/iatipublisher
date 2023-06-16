@@ -16,8 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::group([], static function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/user/stats', [DashboardController::class, 'getUserCounts'])->name('getUserCounts');
-    Route::get('/dashboard/user/page/{page}', [DashboardController::class, 'getUserCountByOrganization'])->name('getUserCountByOrganization');
-    Route::get('/dashboard/user/download-report', [DashboardController::class, 'downloadUserReport'])->name('downloadUserReport');
+    Route::get('/dashboard/user', [DashboardController::class, 'getUserCountByOrganization'])->name('getUserCountByOrganization');
+    Route::get('/dashboard/user/download', [DashboardController::class, 'downloadUserReport'])->name('downloadUserReport');
     Route::get('/dashboard/user/count', [DashboardController::class, 'getDataInDateRange'])->name('getDataInCustomRange');
     /*
      * Example
@@ -26,7 +26,7 @@ Route::group([], static function () {
      */
 
     // api for publisher data
-    Route::get('/dashboard/publisher/type', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherGroupedByType'])->name('dashboard.publisher.type');
+    Route::get('/dashboard/publisher/publisher-type', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherGroupedByType'])->name('dashboard.publisher.type');
     Route::get('/dashboard/publisher/stats', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherStats'])->name('dashboard.publisher.stats');
     Route::get('/dashboard/publisher/data-license', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherGroupedByDataLicense'])->name('dashboard.publisher.license');
     Route::get('/dashboard/publisher/country', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherGroupedByCountry'])->name('dashboard.publisher.country');

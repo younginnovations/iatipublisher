@@ -51,7 +51,7 @@
       >
     </div>
     <div class="">
-      <div class="relative flex pr-4">
+      <div class="relative flex">
         <VueDatePicker
           ref="datepicker"
           v-model="selectedDate"
@@ -327,8 +327,8 @@ const checkIfThisWeek = (start, current, end) => {
   const currentWeekEnd = current.endOf('week').format('YYYY-MM-DD');
 
   return (
-    currentWeekStart === start.format('YYYY-MM-DD') &&
-    currentWeekEnd === end.format('YYYY-MM-DD')
+    currentWeekStart <= start.format('YYYY-MM-DD') &&
+    currentWeekEnd >= end.format('YYYY-MM-DD')
   );
 };
 const checkIfLast7Days = (start, current, end) => {
@@ -347,8 +347,8 @@ const checkIfThisMonth = (start, current, end) => {
   const currentMonthEnd = current.endOf('month').format('YYYY-MM-DD');
 
   return (
-    currentMonthStart === start.format('YYYY-MM-DD') &&
-    currentMonthEnd === end.format('YYYY-MM-DD')
+    currentMonthStart <= start.format('YYYY-MM-DD') &&
+    currentMonthEnd >= end.format('YYYY-MM-DD')
   );
 };
 const checkIfLast6Months = (start, current) => {

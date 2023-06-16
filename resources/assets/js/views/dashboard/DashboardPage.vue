@@ -1,6 +1,6 @@
 <template>
-  <div class="py-8 px-6">
-    <div class="mb-3 flex justify-between border-b border-n-20 pb-3">
+  <div class="mx-auto w-screen max-w-[1400px] py-8 px-6">
+    <div class="mb-3 flex flex-wrap justify-between border-b border-n-20 pb-3">
       <div class="flex gap-x-2">
         <button
           :class="
@@ -36,7 +36,7 @@
           <span>Users</span>
         </button>
       </div>
-      <div class="flex items-center space-x-2">
+      <div class="flex w-full items-center justify-end space-x-2 xl:w-auto">
         <DateRangeWidget
           :date-label="DateLabel"
           @trigger-set-date-range="setDateRangeDate"
@@ -46,6 +46,7 @@
           text="Download report"
           type="secondary"
           icon="download-file"
+          @click="downloadReport"
         />
       </div>
     </div>
@@ -54,7 +55,7 @@
       :current-view="currentView"
       :table-data="tableData"
       :table-header="currentNav['label']"
-      @table-nav="(n, filter) => handleChangeTableNav(n, filter)"
+      @table-nav="(n, filter, page) => handleChangeTableNav(n, filter, page)"
     />
   </div>
 </template>
@@ -72,20 +73,23 @@ interface tableDataType {
   label: string;
   total: number;
 }
-const currentNav = ref({ label: 'Publisher Type', apiParams: 'type' });
+const currentNav = ref({
+  label: 'Publisher Type',
+  apiParams: 'publisher-type',
+});
 const tableData = ref<any>([]);
 const DateLabel = ref('Registered date:');
 const startDate = ref('1990-12-31');
 const endDate = ref(moment(new Date()).format('YYYY-MM-DD'));
 const graphDate = ref<string[]>([]);
 const graphAmount = ref<object[]>([]);
+const showTableLoader = ref(false);
 
 const currentView = ref('publisher');
 const completeNess = ref();
-const handleChangeTableNav = (item, filter) => {
+const handleChangeTableNav = (item, filter, page) => {
   currentNav.value = item;
-  console.log(filter.value, ';filter');
-  fetchTableData(filter.value);
+  fetchTableData(filter.value, page);
 };
 
 onMounted(() => {
@@ -93,9 +97,20 @@ onMounted(() => {
   fetchTableData();
   fetchGraphData();
 });
+const downloadReport = () => {
+  axios.get(`/dashboard/${currentView.value}/download`).then((res) => {
+    const response = res.data;
+    let blob = new Blob([response], {
+      type: 'application/csv',
+    });
+    let link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = `${currentView.value}-report.csv`;
+    link.click();
+  });
+};
 
 const graphDataFormatter = (item) => {
-  console.log('inside formatter', item);
   const monthConverter = (month) => {
     switch (month) {
       case '01':
@@ -128,7 +143,6 @@ const graphDataFormatter = (item) => {
     }
   };
   for (let x in item) {
-    console.log('formatting date');
     const data = {
       x: `${monthConverter(x.split('-')[1])} ${x.split('-')[2]} ${
         x.split('-')[0]
@@ -136,12 +150,6 @@ const graphDataFormatter = (item) => {
       y: item[x],
     };
     graphAmount.value.push(data);
-
-    // graphDate.value.push(
-    //   `${monthConverter(rawDate[x].split('-')[1])} ${
-    //     rawDate[x].split('-')[2]
-    //   } ${rawDate[x].split('-')[0]}`
-    // );
   }
 };
 
@@ -154,7 +162,6 @@ const fetchGraphData = () => {
     .get(`/dashboard/${currentView.value}/count/`, { params: params })
     .then((res) => {
       graphAmount.value.length = 0;
-      console.log('graph fetched');
       graphDataFormatter(res.data.data);
     });
 };
@@ -168,7 +175,7 @@ const setDateRangeDate = (start, end) => {
 
 const mapApiParamsToVariable = (item) => {
   switch (item) {
-    case 'type':
+    case 'publisher-type':
       return 'publisher_type';
 
     default:
@@ -198,68 +205,76 @@ watch(
   }
 );
 
-const fetchTableData = (filter = { orderBy: '', sort: '' }) => {
+const fetchTableData = (filter = { orderBy: '', sort: '' }, page = '1') => {
+  showTableLoader.value = true;
   let apiUrl = `/dashboard/${currentView.value}/${currentNav.value['apiParams']}`;
   let params = new URLSearchParams();
   params.append('orderBy', filter.orderBy);
+  params.append('page', page);
+
   params.append('direction', filter.sort);
-  console.log(apiUrl);
 
   if (startDate.value && endDate.value && currentNav.value.label !== 'user') {
     apiUrl = `/dashboard/${currentView.value}/${currentNav.value['apiParams']}`;
     params.append('start_date', startDate.value);
     params.append('end_date', endDate.value);
   }
-  axios.get(apiUrl, { params: params }).then((res) => {
-    let response = res.data;
+  axios
+    .get(apiUrl, { params: params })
+    .then((res) => {
+      let response = res.data;
 
-    if (currentView.value === 'publisher') {
-      if (currentNav.value['apiParams'] !== 'setup') {
-        tableData.value = [];
+      if (currentView.value === 'publisher') {
+        if (currentNav.value['apiParams'] !== 'setup') {
+          tableData.value = [];
 
-        response.data?.codelist &&
-          Object.keys(response.data?.codelist)?.map((key) => {
-            tableData.value.push({
-              label: response.data?.codelist[key],
-              id: key,
-              total: null,
+          response.data?.codelist &&
+            Object.keys(response.data?.codelist)?.map((key) => {
+              tableData.value.push({
+                label: response.data?.codelist[key],
+                id: key,
+                total: null,
+              });
             });
-          });
 
-        response.data?.[
-          mapApiParamsToVariable(currentNav.value['apiParams'])
-        ] &&
-          Object.keys(
-            response.data?.[
-              mapApiParamsToVariable(currentNav.value['apiParams'])
-            ]
-          )?.map((key) => {
-            tableData.value.map((item, index) => {
-              if (item.id == key) {
-                tableData.value[index].total =
-                  response.data?.[
-                    mapApiParamsToVariable(currentNav.value['apiParams'])
-                  ][key];
-              }
+          response.data?.[
+            mapApiParamsToVariable(currentNav.value['apiParams'])
+          ] &&
+            Object.keys(
+              response.data?.[
+                mapApiParamsToVariable(currentNav.value['apiParams'])
+              ]
+            )?.map((key) => {
+              tableData.value.map((item, index) => {
+                if (item.id == key) {
+                  tableData.value[index].total =
+                    response.data?.[
+                      mapApiParamsToVariable(currentNav.value['apiParams'])
+                    ][key];
+                }
+              });
             });
-          });
 
-        tableData.value = tableData.value.filter(function (el) {
-          return el.total != null;
-        });
-      } else {
-        completeNess.value = response.data;
+          tableData.value = tableData.value.filter(function (el) {
+            return el.total != null;
+          });
+        } else {
+          completeNess.value = response.data;
+        }
       }
-    }
-    if (currentView.value === 'user') {
-      tableData.value = response.data;
-    }
-    if (currentView.value === 'activity') {
-      tableData.value = response.data;
-    }
-  });
+      if (currentView.value === 'user') {
+        tableData.value = response.data;
+      }
+      if (currentView.value === 'activity') {
+        tableData.value = response.data;
+      }
+    })
+    .finally(() => {
+      showTableLoader.value = false;
+    });
 };
 provide('completeNess', completeNess);
 provide('graphDate', graphDate);
 provide('graphAmount', graphAmount);
+provide('showTableLoader', showTableLoader);
 </script>

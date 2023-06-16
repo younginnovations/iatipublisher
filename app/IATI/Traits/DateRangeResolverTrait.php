@@ -25,7 +25,7 @@ trait DateRangeResolverTrait
         $fixed = $request->get('fixed') ?? false;
         $startDateString = $request->get('start_date') ?? false;
         $endDateString = $request->get('end_date') ?? false;
-        $column = $request->get('event_type') ?? 'created_at';
+        $column = $request->get('date_type') ?? 'created_at';
         $count = $request->get('count_only') ?? false;
 
         return [$fixed, $startDateString, $endDateString, $column, $count];
