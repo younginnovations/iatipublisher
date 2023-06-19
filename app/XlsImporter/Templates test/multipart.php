@@ -1,0 +1,22 @@
+<?php
+
+// alternative, digest, mixed, parallel
+return [
+    'alternative' => 'multipart/alternative',
+    'appledouble' => 'multipart/appledouble',
+    'byteranges' => 'multipart/byteranges',
+    'digest' => 'multipart/digest',
+    'encrypted' => 'multipart/encrypted',
+    'example' => 'multipart/example',
+    'form-data' => 'multipart/form-data',
+    'header-set' => 'multipart/header-set',
+    'mixed' => 'multipart/mixed',
+    'multilingual' => 'multipart/multilingual',
+    'parallel' => 'multipart/parallel',
+    'related' => 'multipart/related',
+    'report' => 'multipart/report',
+    'signed' => 'multipart/signed',
+    'vnd.bint.med-plus' => 'multipart/vnd.bint.med-plus',
+    'voice-message' => 'multipart/voice-message',
+    'x-mixed-replace' => 'multipart/x-mixed-replace',
+];
