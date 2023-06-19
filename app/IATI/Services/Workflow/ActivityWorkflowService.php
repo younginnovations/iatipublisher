@@ -202,6 +202,7 @@ class ActivityWorkflowService
             $settings,
             $organization
         );
+
         awsUploadFile("xmlValidation/$activity->org_id/activity_$activity->id.xml", $xmlData);
 
         return $this->getResponse($xmlData);

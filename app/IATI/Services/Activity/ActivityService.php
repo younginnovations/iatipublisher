@@ -727,7 +727,7 @@ class ActivityService
 
         return $element;
     }
-    
+
     /*
      * @param $activityId
      *
