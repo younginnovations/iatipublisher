@@ -245,7 +245,8 @@
             {{ defaultError.default_collaboration_type }}
           </span>
           <p v-if="!defaultError.default_collaboration_type">
-            add collaboration type text here
+            If selected, then default collaboration type will automatically be
+            populated in activity when created.
           </p>
         </div>
         <!--  Default Collaboration Type  -->
@@ -282,7 +283,8 @@
             {{ defaultError.default_flow_type }}
           </span>
           <p v-if="!defaultError.default_flow_type">
-            add default flow type text here
+            If selected, then default flow type will automatically be populated
+            in activity when created.
           </p>
         </div>
         <!--  Default Flow Type  -->
@@ -319,7 +321,8 @@
             {{ defaultError.default_finance_type }}
           </span>
           <p v-if="!defaultError.default_finance_type">
-            add default finance type text here
+            If selected, then default finance type will automatically be
+            populated in activity when created.
           </p>
         </div>
         <!--  Default Finance Type  -->
@@ -352,7 +355,9 @@
             {{ defaultError.default_aid_type }}
           </span>
           <p v-if="!defaultError.default_aid_type">
-            add default aid type text here
+            If selected, then default aid type will automatically be populated
+            in activity when created. Also, Vocabulary type "OECD DAC" will be
+            chosen by default.
           </p>
         </div>
         <!--  Default Aid Type   -->
@@ -389,7 +394,8 @@
             {{ defaultError.default_tied_status }}
           </span>
           <p v-if="!defaultError.default_tied_status">
-            add default tied status text here
+            If selected, then default tied status will automatically be
+            populated in activity when created.
           </p>
         </div>
         <!--  Default Tied Status      -->
