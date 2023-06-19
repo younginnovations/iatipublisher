@@ -3,9 +3,12 @@
 declare(strict_types=1);
 
 use App\IATI\Models\User\Role;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 if (!function_exists('dashesToCamelCase')) {
     /**
@@ -911,12 +914,37 @@ if (!function_exists('getStringBetween')) {
         $string = ' ' . $string;
         $ini = strpos($string, $start);
 
-        if ($ini === 0) {
+        if (!$ini) {
             return '';
         }
         $ini += strlen($start);
         $len = strpos($string, $end, $ini) - $ini;
 
         return substr($string, $ini, $len);
+    }
+}
+
+if (!function_exists('checkUrlExists')) {
+    /**
+     * Returns if path exists in project.
+     *
+     * @param $path
+     *
+     * @return bool
+     */
+    function checkUrlExists($path): bool
+    {
+        $routes = Route::getRoutes();
+        $request = Request::create($path);
+
+        try {
+            if ($routes->match($request)) {
+                return true;
+            }
+
+            return false;
+        } catch (NotFoundHttpException) {
+            return false;
+        }
     }
 }
