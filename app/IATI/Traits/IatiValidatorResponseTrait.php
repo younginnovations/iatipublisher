@@ -63,7 +63,7 @@ trait IatiValidatorResponseTrait
 
                                 $errorLocation = str_replace('/', '>', $stringBetween);
                             }
-                            $error['response'][$key]['iati_path'] = $nodePath;
+                            $error['response'][$key]['iati_path'] = checkUrlExists($nodePath) ? $nodePath : "/activity/$activity->id";
                             $error['response'][$key]['message'] = $errorLocation;
                         }
                     }
@@ -80,7 +80,7 @@ trait IatiValidatorResponseTrait
                             }
 
                             $errorLocation = str_replace('/', '>', $stringBetween);
-                            $error['response'][$caseContext]['iati_path'] = $nodePath;
+                            $error['response'][$caseContext]['iati_path'] = checkUrlExists($nodePath) ? $nodePath : "/activity/$activity->id";
                             $error['response'][$caseContext]['message'] = $errorLocation;
                         }
                     }
@@ -96,7 +96,7 @@ trait IatiValidatorResponseTrait
                     }
 
                     $errorLocation = str_replace('/', '>', $stringBetween);
-                    $error['response'][0]['iati_path'] = $nodePath;
+                    $error['response'][0]['iati_path'] = checkUrlExists($nodePath) ? $nodePath : "/activity/$activity->id";
                     $error['response'][0]['message'] = $errorLocation;
                 } elseif (isset($details['xpathContext']['lineNumber'])) {
                     $lineNumber = $error['details']['xpathContext']['lineNumber'];
@@ -109,12 +109,12 @@ trait IatiValidatorResponseTrait
                     }
 
                     $errorLocation = str_replace('/', '>', $stringBetween);
-                    $error['response'][0]['iati_path'] = $nodePath;
+                    $error['response'][0]['iati_path'] = checkUrlExists($nodePath) ? $nodePath : "/activity/$activity->id";
                     $error['response'][0]['message'] = $errorLocation;
                 } elseif (isset($error['details']['xpath'])) {
                     $lastSegment = str_replace('//iati-activity/', '', $error['details']['xpath']);
                     $lastSegment = in_array($lastSegment, ['@budget-not-provided', '@humanitarian', '@hierarchy']) ? 'default_values' : $lastSegment;
-                    $error['response'][0]['iati_path'] = "/activity/$activity->id/$lastSegment";
+                    $error['response'][0]['iati_path'] = checkUrlExists("/activity/$activity->id/$lastSegment") ? "/activity/$activity->id/$lastSegment" : "/activity/$activity->id";
                     $error['response'][0]['message'] = "activity>$activity->id";
                 } else {
                     $error['response'][0]['iati_path'] = "/activity/$activity->id";
