@@ -314,7 +314,8 @@ class FormBuilder {
     });
 
     // update format on change of document link
-    $('body').on('keyup', 'input[id*="[url]"]', function () {
+    $('body').on('change', 'input[id*="[url]"]', function () {
+      console.log('removing');
       const filePath = ($(this).val() ?? '').toString();
       var url = `/mimetype?url=${filePath}&type=url`;
       $(this).closest('.form-field').find('.text-danger').remove();
@@ -329,10 +330,8 @@ class FormBuilder {
               .val(format)
               .trigger('change');
           } else {
-            let message =
-              "<div class='text-danger error'>" + response.data.message + "</div>";
+            $(this).closest('.form-field').find('.text-danger').remove();
             $(this).closest('.form-field').append("<div class='text-danger error'>" + response.data.message + "</div>");
-            console.log(message);
 
             $(this)
               .closest('.form-field-group')
@@ -342,18 +341,19 @@ class FormBuilder {
           }
         })
 
-        $(this)
-          .closest('.form-field-group')
-          .find('input[id*="[document]"]')
-          .val('')
-          .trigger('change');
+          $(this)
+            .closest('.form-field-group')
+            .find('input[id*="[document]"]')
+            .val('')
+            .trigger('change');
       }
     });
 
     $('body').on('change', 'input[id*="[document]"]', function () {
-      console.log('changed')
+      console.log('document')
       const filePath = ($(this).val() ?? '').toString();
       var url = `/mimetype?url=${filePath}&&type=document`;
+      $(this).closest('.form-field').find('.text-danger').remove();
 
       if (filePath !== '') {
         axios.get(url).then((response) => {
@@ -377,9 +377,8 @@ class FormBuilder {
           .find('input[id*="[url]"]')
           .val('')
           .trigger('change');
-      } else {
-
-      } $(this)
+      }
+      $(this)
         .closest('.form-field-group')
         .find('select[id*="[format]"]')
         .val('')
