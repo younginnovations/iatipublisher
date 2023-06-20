@@ -105,7 +105,6 @@ class ActivityService
      * @param $input
      *
      * @return Model
-     * @throws \JsonException
      */
     public function store($input): Model
     {
