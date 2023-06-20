@@ -42,7 +42,7 @@ class GeneralController extends Controller
             $fileExtension = $fileFragment ? pathinfo($fileFragment, PATHINFO_EXTENSION) : null;
 
             if (!empty($fileExtension) && (Arr::get($extensions, $fileExtension, false) || Arr::get($additionalExtensions, $fileExtension, false))) {
-                $mimeType = Arr::get($extensions, $fileExtension, false) ?? Arr::get($additionalExtensions, $fileExtension, '');
+                $mimeType = isset($extensions[$fileExtension]) ?Arr::get($extensions, $fileExtension, ''): Arr::get($additionalExtensions, $fileExtension, '');
             } elseif (str_starts_with($fileUrl, url('/'))) {
                 $mimeType = 'text/html';
             } elseif (filter_var($fileUrl, FILTER_VALIDATE_URL)) {
