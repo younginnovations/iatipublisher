@@ -11,6 +11,7 @@ use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Traits\FillDefaultValuesTrait;
 use Auth;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -181,12 +182,11 @@ class ActivityRepository extends Repository
      * @param      $activity_id
      * @param array $mappedActivity
      *
-     * @return mixed
+     * @return Builder|Model|bool
      *
-     * @throws \JsonException
-     * @throws BindingResolutionException
+     * @throws \JsonException | BindingResolutionException
      */
-    public function importXmlActivities($activity_id, array $mappedActivity): mixed
+    public function importXmlActivities($activity_id, array $mappedActivity): Builder|Model|bool
     {
         $mappedActivity = json_decode(json_encode($mappedActivity, JSON_THROW_ON_ERROR | 512), true, 512, JSON_THROW_ON_ERROR);
         $collaborationType = $this->autoFillSettingsValue($this->getSingleValuedActivityElement($mappedActivity, 'collaboration_type'), 'default_collaboration_type');
@@ -343,11 +343,11 @@ class ActivityRepository extends Repository
      * @param $csvValue
      * @param $defaultElementName
      *
-     * @return mixed
+     * @return array|null
      *
      * @throws BindingResolutionException
      */
-    public function autoFillSettingsValue($csvValue, $defaultElementName): mixed
+    public function autoFillSettingsValue($csvValue, $defaultElementName): ?array
     {
         if (!empty($csvValue)) {
             return $csvValue;
