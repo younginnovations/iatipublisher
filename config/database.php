@@ -96,7 +96,8 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'search_path' => 'public',
-            'sslmode' => 'disable',
+            'sslmode' => env('DB_SSLMODE', 'prefer'),
+            'sslrootcert' => env('DB_SSLROOTCERT', './ca-certificate.crt'),
             'pool_size' => 20,
             'options' => [
                 PDO::ATTR_PERSISTENT => true,
