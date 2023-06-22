@@ -19,17 +19,17 @@
 
       <div class="my-1">
         <ul>
-          <li v-for="(item, key) in tempListItems" :key="item.label">
+          <li v-for="item in tempListItems" :key="item.key">
             <div v-if="item.show" class="mt-2">
               <span class="m-2">
                 <input
-                  :id="key.toString()"
+                  :id="item.key"
                   v-model="checkedBoxes"
                   type="checkbox"
-                  :value="key"
+                  :value="item.key"
                 />
               </span>
-              <label class="m-2 px-3 text-n-40" :for="key.toString()">{{
+              <label class="m-2 px-3 text-n-40" :for="item.key">{{
                 item.label
               }}</label>
             </div>
@@ -49,7 +49,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { defineEmits, defineProps, ref } from 'vue';
+import { defineEmits, defineProps, ref, onMounted } from 'vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 
 const props = defineProps({
@@ -62,30 +62,35 @@ const props = defineProps({
     required: true,
   },
 });
-interface TemplateListInterface {
-  show: string;
+interface TempItem {
+  key: string;
   label: string;
+  show: boolean;
 }
+
+let tempListItems = ref<TempItem[]>([]);
 
 const emit = defineEmits(['changeSelectedPublisher']);
 let keys = Object.keys(props.listItems);
 let searchInput = ref('');
-let tempListItems = ref<TemplateListInterface[]>([]);
+
 let checkedBoxes = ref([]);
 
 let changeSelectedPublisher = (selectedPublisherType) => {
+  console.log(selectedPublisherType);
   emit('changeSelectedPublisher', selectedPublisherType);
 };
 
 formatPublisherType();
+
 function formatPublisherType() {
   let keys = Object.keys(props.listItems);
   for (let i = 0; i < keys.length; i++) {
-    let key = keys[i];
-    tempListItems.value[key] = {
-      label: props.listItems[key],
+    tempListItems.value.push({
+      key: keys[i],
+      label: props.listItems[keys[i]],
       show: true,
-    };
+    });
   }
 }
 
@@ -106,6 +111,10 @@ const updateArrayBySearch = () => {
 const applyFilter = () => {
   changeSelectedPublisher(checkedBoxes.value);
 };
+
+onMounted(() => {
+  console.log(tempListItems.value);
+});
 </script>
 <style>
 .border-this {

@@ -580,7 +580,7 @@ if (!function_exists('getTableConfig')) {
     function getTableConfig($module): array
     {
         $tableConfig = [
-            'activity' => ['orderBy' => ['updated_at'], 'direction' => ['asc', 'desc']],
+            'activity' => ['orderBy' => ['updated_at', 'complete_percentage'], 'direction' => ['asc', 'desc']],
             'organisation' => [
                 'orderBy'   => ['updated_at', 'all_activities_count', 'name', 'registered_on', 'publisher_type', 'data_license', 'country'],
                 'direction' => ['asc', 'desc'],
