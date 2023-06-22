@@ -115,6 +115,7 @@
             should only be reported at the lowest hierarchical level.
           </p>
         </div>
+        <!--  Default Hierarchy      -->
         <div>
           <div class="flex justify-between">
             <label for="budget-not-provided">Budget Not Provided</label>
@@ -148,6 +149,7 @@
             {{ defaultError.budget_not_provided }}
           </span>
         </div>
+        <!--  Budget Not Provided      -->
         <div>
           <div class="flex justify-between">
             <label for="humanitarian">Humanitarian</label>
@@ -181,6 +183,222 @@
             If not selected, it will be set to 'Yes' in all the activities.
           </p>
         </div>
+        <!--  Humanitarian      -->
+        <div>
+          <div class="flex justify-between">
+            <label for="default-hierarchy">Linked Data URI</label>
+            <button>
+              <HoverText
+                width="w-64"
+                name="Linked Data URI"
+                hover-text="If a publisher chooses to publish linked data about their IATI activities then allowing them to declare where this data is published would support discovery of it, and any additional information they may choose to publish as Linked Data alongside it."
+                :show-iati-reference="true"
+              />
+            </button>
+          </div>
+          <input
+            id="linked-data-uri"
+            v-model="defaultForm.linked_data_uri"
+            :disabled="userRole !== 'admin' ? true : false"
+            class="register__input mb-2"
+            type="text"
+            placeholder="Type linked data uri here"
+            @input="updateStore('linked_data_uri')"
+          />
+          <span v-if="defaultError.linked_data_uri" class="error" role="alert">
+            {{ defaultError.linked_data_uri }}
+          </span>
+        </div>
+        <!--  Linked Data Uri      -->
+        <div>
+          <div class="flex justify-between">
+            <label for="default-collaboration-type"
+              >Default Collaboration Type</label
+            >
+            <button>
+              <HoverText
+                width="w-72"
+                name="collaboration-type"
+                hover-text="The type of collaboration involved in the activity’s disbursements, e.g. “bilateral” or “multilateral”.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/collaboration-type/'>For more information</a>"
+                :show-iati-reference="true"
+              />
+            </button>
+          </div>
+          <Multiselect
+            id="collaboration-type"
+            v-model="defaultForm.default_collaboration_type"
+            :disabled="userRole !== 'admin' ? true : false"
+            class="vue__select"
+            :class="{
+              error__input: defaultError.default_collaboration_type,
+            }"
+            placeholder="Select Collaboration Type here"
+            :options="props.defaultCollaborationType"
+            :searchable="true"
+            @click="updateStore('default_collaboration_type')"
+          />
+          <span
+            v-if="defaultError.default_collaboration_type"
+            class="error"
+            role="alert"
+          >
+            {{ defaultError.default_collaboration_type }}
+          </span>
+          <p v-if="!defaultError.default_collaboration_type">
+            If selected, then default collaboration type will be automatically
+            populated in activity when created.
+          </p>
+        </div>
+        <!--  Default Collaboration Type  -->
+        <div>
+          <div class="flex justify-between">
+            <label for="default-collaboration-type">Default Flow Type</label>
+            <button>
+              <HoverText
+                width="w-72"
+                name="default-flow-type"
+                hover-text="Whether the activity is funded by Official Development Assistance (ODA), Other Official Flows (OOF), etc. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-flow-type/'>For more information</a>"
+                :show-iati-reference="true"
+              />
+            </button>
+          </div>
+          <Multiselect
+            id="default-flow-type"
+            v-model="defaultForm.default_flow_type"
+            :disabled="userRole !== 'admin' ? true : false"
+            class="vue__select"
+            :class="{
+              error__input: defaultError.default_flow_type,
+            }"
+            placeholder="Select Default Flow Type here"
+            :options="props.defaultFlowType"
+            :searchable="true"
+            @click="updateStore('default_flow_type')"
+          />
+          <span
+            v-if="defaultError.default_flow_type"
+            class="error"
+            role="alert"
+          >
+            {{ defaultError.default_flow_type }}
+          </span>
+          <p v-if="!defaultError.default_flow_type">
+            If selected, then default flow type will be automatically populated
+            in activity when created.
+          </p>
+        </div>
+        <!--  Default Flow Type  -->
+        <div>
+          <div class="flex justify-between">
+            <label for="default-collaboration-type">Default Finance Type</label>
+            <button>
+              <HoverText
+                width="w-72"
+                name="default-finance-type"
+                hover-text="The type of finance (e.g. grant, loan, debt relief, etc). This the default value for all transactions in the activity report; it can be overridden by individual transactions. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-finance-type/'>For more information</a>"
+                :show-iati-reference="true"
+              />
+            </button>
+          </div>
+          <Multiselect
+            id="default-finance-type"
+            v-model="defaultForm.default_finance_type"
+            :disabled="userRole !== 'admin' ? true : false"
+            class="vue__select"
+            :class="{
+              error__input: defaultError.default_finance_type,
+            }"
+            placeholder="Select Default Finance Type here"
+            :options="props.defaultFinanceType"
+            :searchable="true"
+            @click="updateStore('default_finance_type')"
+          />
+          <span
+            v-if="defaultError.default_finance_type"
+            class="error"
+            role="alert"
+          >
+            {{ defaultError.default_finance_type }}
+          </span>
+          <p v-if="!defaultError.default_finance_type">
+            If selected, then default finance type will be automatically
+            populated in activity when created.
+          </p>
+        </div>
+        <!--  Default Finance Type  -->
+        <div>
+          <div class="flex justify-between">
+            <label for="default-collaboration-type">Default Aid Type</label>
+            <button>
+              <HoverText
+                width="w-72"
+                name="default-aid-type"
+                hover-text="The type of aid being supplied (project-type intervention, budget support, debt relief, etc.). This element specifies a default for all the activity’s financial transactions; it can be overridden at the individual transaction level. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-aid-type/'>For more information</a>"
+                :show-iati-reference="true"
+              />
+            </button>
+          </div>
+          <Multiselect
+            id="default-aid-type"
+            v-model="defaultForm.default_aid_type"
+            :disabled="userRole !== 'admin' ? true : false"
+            class="vue__select"
+            :class="{
+              error__input: defaultError.default_aid_type,
+            }"
+            placeholder="Select Default Aid Type here"
+            :options="props.defaultAidType"
+            :searchable="true"
+            @click="updateStore('default_aid_type')"
+          />
+          <span v-if="defaultError.default_aid_type" class="error" role="alert">
+            {{ defaultError.default_aid_type }}
+          </span>
+          <p v-if="!defaultError.default_aid_type">
+            If selected, then default aid type will be automatically populated
+            in activity when created. Also, Vocabulary type "OECD DAC" will be
+            chosen by default.
+          </p>
+        </div>
+        <!--  Default Aid Type   -->
+        <div>
+          <div class="flex justify-between">
+            <label for="default-tied-status">Default Tied Status</label>
+            <button>
+              <HoverText
+                width="w-72"
+                name="default-tied-status"
+                hover-text="Whether the aid is untied, tied, or partially tied. This element specifies a default for all the activity’s financial transactions; it can be overridden at the individual transaction level.<a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/default-tied-status/'>For more information</a>"
+                :show-iati-reference="true"
+              />
+            </button>
+          </div>
+          <Multiselect
+            id="default-tied-status"
+            v-model="defaultForm.default_tied_status"
+            :disabled="userRole !== 'admin' ? true : false"
+            class="vue__select"
+            :class="{
+              error__input: defaultError.default_tied_status,
+            }"
+            placeholder="Select Default Tied Status here"
+            :options="props.defaultTiedStatus"
+            :searchable="true"
+            @click="updateStore('default_tied_status')"
+          />
+          <span
+            v-if="defaultError.default_tied_status"
+            class="error"
+            role="alert"
+          >
+            {{ defaultError.default_tied_status }}
+          </span>
+          <p v-if="!defaultError.default_tied_status">
+            If selected, then default tied status will be automatically
+            populated in activity when created.
+          </p>
+        </div>
+        <!--  Default Tied Status      -->
       </div>
     </div>
   </div>
@@ -198,7 +416,6 @@ export default defineComponent({
     Multiselect,
     HoverText,
   },
-
   props: {
     currencies: {
       type: [String, Object],
@@ -213,6 +430,26 @@ export default defineComponent({
       required: true,
     },
     budgetNotProvided: {
+      type: [String, Object],
+      required: true,
+    },
+    defaultCollaborationType: {
+      type: [String, Object],
+      required: true,
+    },
+    defaultFlowType: {
+      type: [String, Object],
+      required: true,
+    },
+    defaultFinanceType: {
+      type: [String, Object],
+      required: true,
+    },
+    defaultAidType: {
+      type: [String, Object],
+      required: true,
+    },
+    defaultTiedStatus: {
       type: [String, Object],
       required: true,
     },
