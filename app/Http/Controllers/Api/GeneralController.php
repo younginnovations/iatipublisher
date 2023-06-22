@@ -5,20 +5,19 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Arr;
 use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Class GeneralController.
  */
 class GeneralController extends Controller
 {
-
     /**
-     * Extracts mimetype of file or url
-     * 
+     * Extracts mimetype of file or url.
+     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -38,19 +37,19 @@ class GeneralController extends Controller
                         'mimetype' => $mimeType,
                         'type' => $type,
                         'url' => $fileUrl,
-                        'validity' => filter_var($fileUrl, FILTER_VALIDATE_URL)
+                        'validity' => filter_var($fileUrl, FILTER_VALIDATE_URL),
                     ],
                 ]);
             }
 
             $fileFormat = getCodeList('FileFormat', 'Activity');
-            $extensions = array_flip(json_decode(file_get_contents(app_path("Data/Activity/Extension.json")), true, 512, JSON_THROW_ON_ERROR));
-            $additionalExtensions = json_decode(file_get_contents(app_path("Data/Activity/AdditionalExtension.json")), true, 512, JSON_THROW_ON_ERROR);
+            $extensions = array_flip(json_decode(file_get_contents(app_path('Data/Activity/Extension.json')), true, 512, JSON_THROW_ON_ERROR));
+            $additionalExtensions = json_decode(file_get_contents(app_path('Data/Activity/AdditionalExtension.json')), true, 512, JSON_THROW_ON_ERROR);
             $fileFragment = $type === 'url' ? Arr::get(parse_url($fileUrl), 'path', null) : $fileUrl;
             $fileExtension = $fileFragment ? pathinfo($fileFragment, PATHINFO_EXTENSION) : null;
 
             if (!empty($fileExtension) && (Arr::get($extensions, $fileExtension, false) || Arr::get($additionalExtensions, $fileExtension, false))) {
-                $mimeType = isset($extensions[$fileExtension]) ?Arr::get($extensions, $fileExtension, ''): Arr::get($additionalExtensions, $fileExtension, '');
+                $mimeType = isset($extensions[$fileExtension]) ? Arr::get($extensions, $fileExtension, '') : Arr::get($additionalExtensions, $fileExtension, '');
             } elseif (str_starts_with($fileUrl, url('/'))) {
                 $mimeType = 'text/html';
             } elseif (filter_var($fileUrl, FILTER_VALIDATE_URL)) {
@@ -73,7 +72,7 @@ class GeneralController extends Controller
                         'success' => false,
                         'message' => 'Please ensure that url is correct and is publicly accessible.',
                         'data' => [
-                            'mimetype' => $mimeType
+                            'mimetype' => $mimeType,
                         ],
                     ]);
                 }
@@ -87,7 +86,7 @@ class GeneralController extends Controller
                 'success' => true,
                 'message' => 'Mimetype fetched successfully',
                 'data' => [
-                    'mimetype' => $mimeType
+                    'mimetype' => $mimeType,
                 ],
             ]);
         } catch (Exception $e) {
@@ -95,6 +94,5 @@ class GeneralController extends Controller
 
             return response()->json(['success' => false, 'message' => 'Error occurred while mapping the file extension']);
         }
-
     }
 }
