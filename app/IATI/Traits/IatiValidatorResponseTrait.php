@@ -73,13 +73,18 @@ trait IatiValidatorResponseTrait
                             $lineNumber = $detailedErrors['lineNumber'];
                             $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
 
-                            if (strpos($nodePath, 'edit')) {
-                                $stringBetween = getStringBetween($nodePath, '/', '/edit');
+                            if ($lineNumber <= 3 && preg_match('(default currency|default language|default hierarchy|budget not provided|humanitarian)', $errorMessage)) {
+                                $nodePath = "/activity/$activity->id/default_values";
+                                $errorLocation = "activity>$activity->id>default_values";
                             } else {
-                                $stringBetween = getStringBetween($nodePath, '/', '#');
-                            }
+                                if (strpos($nodePath, 'edit')) {
+                                    $stringBetween = getStringBetween($nodePath, '/', '/edit');
+                                } else {
+                                    $stringBetween = getStringBetween($nodePath, '/', '#');
+                                }
 
-                            $errorLocation = str_replace('/', '>', $stringBetween);
+                                $errorLocation = str_replace('/', '>', $stringBetween);
+                            }
                             $error['response'][$caseContext]['iati_path'] = checkUrlExists($nodePath) ? $nodePath : "/activity/$activity->id";
                             $error['response'][$caseContext]['message'] = $errorLocation;
                         }
@@ -89,26 +94,36 @@ trait IatiValidatorResponseTrait
                     $lineNumber = $detailedErrors['lineNumber'];
                     $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
 
-                    if (strpos($nodePath, 'edit')) {
-                        $stringBetween = getStringBetween($nodePath, '/', '/edit');
+                    if ($lineNumber <= 3 && preg_match('(default currency|default language|default hierarchy|budget not provided|humanitarian)', $errorMessage)) {
+                        $nodePath = "/activity/$activity->id/default_values";
+                        $errorLocation = "activity>$activity->id>default_values";
                     } else {
-                        $stringBetween = getStringBetween($nodePath, '/', '#');
+                        if (strpos($nodePath, 'edit')) {
+                            $stringBetween = getStringBetween($nodePath, '/', '/edit');
+                        } else {
+                            $stringBetween = getStringBetween($nodePath, '/', '#');
+                        }
+                        $errorLocation = str_replace('/', '>', $stringBetween);
                     }
 
-                    $errorLocation = str_replace('/', '>', $stringBetween);
                     $error['response'][0]['iati_path'] = checkUrlExists($nodePath) ? $nodePath : "/activity/$activity->id";
                     $error['response'][0]['message'] = $errorLocation;
                 } elseif (isset($details['xpathContext']['lineNumber'])) {
                     $lineNumber = $error['details']['xpathContext']['lineNumber'];
                     $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
 
-                    if (strpos($nodePath, 'edit')) {
-                        $stringBetween = getStringBetween($nodePath, '/', '/edit');
+                    if ($lineNumber <= 3 && preg_match('(default currency|default language|default hierarchy|budget not provided|humanitarian)', $errorMessage)) {
+                        $nodePath = "/activity/$activity->id/default_values";
+                        $errorLocation = "activity>$activity->id>default_values";
                     } else {
-                        $stringBetween = getStringBetween($nodePath, '/', '#');
-                    }
+                        if (strpos($nodePath, 'edit')) {
+                            $stringBetween = getStringBetween($nodePath, '/', '/edit');
+                        } else {
+                            $stringBetween = getStringBetween($nodePath, '/', '#');
+                        }
 
-                    $errorLocation = str_replace('/', '>', $stringBetween);
+                        $errorLocation = str_replace('/', '>', $stringBetween);
+                    }
                     $error['response'][0]['iati_path'] = checkUrlExists($nodePath) ? $nodePath : "/activity/$activity->id";
                     $error['response'][0]['message'] = $errorLocation;
                 } elseif (isset($error['details']['xpath'])) {
@@ -120,6 +135,7 @@ trait IatiValidatorResponseTrait
                     $error['response'][0]['iati_path'] = "/activity/$activity->id";
                     $error['response'][0]['message'] = "activity>$activity->id";
                 }
+
                 $updatedErrors[] = $error;
             }
 
