@@ -233,6 +233,7 @@ trait IatiValidatorResponseTrait
                 $getId[$elementName] = $elementPosition;
             } else {
                 $elementName = str_replace('-', '_', $elementName);
+                $elementName = $this->replaceUrlString($elementName, $explodedPath);
                 $elementName = count($urlPath) ? "[$elementName]" : $elementName;
                 $urlPath[] = $elementName . "[$elementPosition]";
             }
@@ -273,8 +274,51 @@ trait IatiValidatorResponseTrait
 
         $implodedUrlPath = implode('', $urlPath);
         $urlId = $implodedUrlPath !== 'budget_not_provided[0]' ? '#' . $implodedUrlPath : '';
+        $urlId = strReplaceLastOccurrence('[0]', '', $urlId); // removed last extra position
 
         return $url . $urlId;
+    }
+
+    /**
+     * Replaces required url string.
+     *
+     * @param $elementName
+     * @param $explodedPath
+     *
+     * @return string
+     */
+    public function replaceUrlString($elementName, $explodedPath): String
+    {
+        $replaceStringWith = [
+            'vocabulary' => [
+                'sector' => 'sector_vocabulary',
+                'tag'    => 'tag_vocabulary',
+                'default_aid_type' => 'default_aid_type_vocabulary',
+                'recipient_region' => 'region_vocabulary',
+            ],
+            'value' => 'budget_value',
+            'iso_date' => 'date',
+            'code' => [
+                'sector' => 'text',
+                'recipient_country' => 'country_code',
+            ],
+            'xmllang' => 'language',
+        ];
+
+        if (!array_key_exists($elementName, $replaceStringWith) || count($explodedPath) === 1) {
+            return $elementName;
+        }
+
+        $firstKey = str_replace('-', '_', $explodedPath[0]);
+        $firstKeyString = str_contains($firstKey, '[') ? substr($firstKey . '[', 0, strpos($firstKey, '[')) : $firstKey;
+
+        $getReplacement = $replaceStringWith[$elementName];
+
+        if (!is_array($getReplacement)) {
+            return $getReplacement;
+        }
+
+        return $getReplacement[$firstKeyString] ?? $elementName;
     }
 
     /**

@@ -948,3 +948,25 @@ if (!function_exists('checkUrlExists')) {
         }
     }
 }
+
+if (!function_exists('strReplaceLastOccurrence')) {
+    /**
+     * Replaces string of last occurrence.
+     *
+     * @param $search
+     * @param $replace
+     * @param $subject
+     *
+     * @return string
+     */
+    function strReplaceLastOccurrence($search, $replace, $subject): String
+    {
+        $pos = strrpos($subject, $search);
+
+        if ($pos !== false) {
+            $subject = substr_replace($subject, $replace, $pos, strlen($search));
+        }
+
+        return $subject;
+    }
+}
