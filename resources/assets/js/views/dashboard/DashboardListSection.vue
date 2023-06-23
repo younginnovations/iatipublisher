@@ -267,7 +267,7 @@
                 <a
                   class="block py-3 px-8"
                   :href="`/users?organization=${organisation.organization_id}`"
-                  >{{ organisation.organisation }}</a
+                  >{{ truncateText(organisation.organisationm, 25) }}</a
                 >
               </td>
               <td>
@@ -648,6 +648,7 @@ import { ref, defineProps, watch, onMounted, inject, Ref } from 'vue';
 import { defineEmits } from 'vue';
 import Pagination from 'Components/TablePagination.vue';
 import ShimmerLoading from 'Components/ShimmerLoading.vue';
+import { truncateText } from 'Composable/utils';
 const emit = defineEmits(['tableNav']);
 
 const activityNavList = [

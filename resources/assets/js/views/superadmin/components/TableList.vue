@@ -696,7 +696,7 @@ const fetchOrganisation = (active_page: number) => {
   // onUpdated(() => {
   //   console.log(filter);
   // });
-
+  urlParams = new URLSearchParams(queryString);
   axios
     .get(endpoint, { params: isFilterApplied.value ? urlParams : '' })
     .then((res) => {
@@ -710,7 +710,6 @@ const fetchOrganisation = (active_page: number) => {
           refreshStatusArrays(organisationData.data);
         }
       }
-      urlParams = new URLSearchParams(queryString);
     });
 };
 
@@ -824,7 +823,7 @@ const isFilterApplied = computed(() => {
 const refreshStatusArrays = (orgData) => {
   for (let orgDatum of orgData.data) {
     registryApiKeyStatus[orgDatum.id] =
-      orgDatum?.settings.publishing_info.token_verification ?? false;
+      orgDatum?.settings?.publishing_info.token_verification ?? false;
     defaultValueStatus[orgDatum.id] = checkIfDefaultValuesAreValid(
       orgDatum?.settings
     );
