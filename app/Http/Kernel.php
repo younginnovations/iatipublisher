@@ -40,7 +40,6 @@ class Kernel extends HttpKernel
      * @var array<int, class-string|string>
      */
     protected $middleware = [
-        // \App\Http\Middleware\TrustHosts::class,
         TrustProxies::class,
         HandleCors::class,
         PreventRequestsDuringMaintenance::class,
@@ -79,6 +78,10 @@ class Kernel extends HttpKernel
             RedirectActivity::class,
         ],
 
+        'general' => [
+            VerifyCsrfToken::class,
+        ],
+
         'superadmin' => [
             LogoutIfInactive::class,
             SuperAdminMiddleware::class,
@@ -98,16 +101,16 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $routeMiddleware = [
-        'auth'             => Authenticate::class,
-        'auth.basic'       => AuthenticateWithBasicAuth::class,
-        'cache.headers'    => SetCacheHeaders::class,
-        'can'              => Authorize::class,
-        'guest'            => RedirectIfAuthenticated::class,
+        'auth' => Authenticate::class,
+        'auth.basic' => AuthenticateWithBasicAuth::class,
+        'cache.headers' => SetCacheHeaders::class,
+        'can' => Authorize::class,
+        'guest' => RedirectIfAuthenticated::class,
         'password.confirm' => RequirePassword::class,
-        'signed'           => ValidateSignature::class,
-        'throttle'         => ThrottleRequests::class,
-        'verified'         => EnsureEmailIsVerified::class,
-        'activity.auth'    => RedirectActivity::class,
-        'sanitize'         => SanitizeRequest::class,
+        'signed' => ValidateSignature::class,
+        'throttle' => ThrottleRequests::class,
+        'verified' => EnsureEmailIsVerified::class,
+        'activity.auth' => RedirectActivity::class,
+        'sanitize' => SanitizeRequest::class,
     ];
 }
