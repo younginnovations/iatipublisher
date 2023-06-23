@@ -43,10 +43,9 @@ data:
   REDIS_PORT: "25061"
 
   MAIL_MAILER: "smtp"
-  MAIL_HOST: "smtp.sendgrid.net"
+  MAIL_HOST: "email-smtp.us-east-1.amazonaws.com"
   MAIL_PORT: "587"
   MAIL_ENCRYPTION: "tls"
-  MAIL_USERNAME: "apikey"
   MAIL_FROM_ADDRESS: "no-reply@iatipublisher.com"
   MAIL_FROM_NAME: "IATI Publisher"
 
