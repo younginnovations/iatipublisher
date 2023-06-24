@@ -150,15 +150,7 @@ class OrganizationRepository extends Repository
             $organizations = $this->applyFilters($organizations, Arr::get($queryParams, 'filters'));
         }
 
-        if ($orderBy === 'name') {
-            return $organizations->orderByRaw("organizations.name->0->>'narrative'" . $direction)
-                ->paginate(10, ['*'], 'organization', $page);
-        }
-
-        $orderBy = ($orderBy === 'registered_on') ? 'created_at' : $orderBy;
-
-        return $organizations->orderBy($orderBy, $direction)
-            ->paginate(10, ['*'], 'organization', $page);
+        return $this->applyOrderBy($organizations, $orderBy, $direction, $page);
     }
 
     /**
@@ -459,5 +451,32 @@ class OrganizationRepository extends Repository
                     )
                 ",
         ];
+    }
+
+    private function applyOrderBy(mixed $organizations, string $orderBy, string $direction, $page)
+    {
+        if ($orderBy === 'name') {
+            return $organizations->orderByRaw("organizations.name->0->>'narrative'" . $direction)
+                ->paginate(10, ['*'], 'organization', $page);
+        }
+
+        if ($orderBy === 'registered_on') {
+            return $organizations->orderBy('created_at', $direction)
+                ->paginate(10, ['*'], 'organization', $page);
+        }
+
+        if ($orderBy === 'country') {
+            return $organizations->orderByRaw("CASE WHEN {$orderBy} = '' OR {$orderBy} IS NULL THEN 1 ELSE 0 END {$direction}")
+                ->paginate(10, ['*'], 'organization', $page);
+        }
+
+        if ($orderBy === 'last_logged_in') {
+            return $organizations->join('users AS latestLoggedInUser', 'organizations.id', '=', 'latestLoggedInUser.organization_id')
+                ->orderBy('latestLoggedInUser.last_logged_in', $direction)
+                ->paginate(10, ['*'], 'organization', $page);
+        }
+
+        return $organizations->orderBy($orderBy, $direction)
+            ->paginate(10, ['*'], 'organization', $page);
     }
 }

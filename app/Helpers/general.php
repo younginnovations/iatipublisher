@@ -582,7 +582,7 @@ if (!function_exists('getTableConfig')) {
         $tableConfig = [
             'activity' => ['orderBy' => ['updated_at', 'complete_percentage'], 'direction' => ['asc', 'desc']],
             'organisation' => [
-                'orderBy'   => ['updated_at', 'all_activities_count', 'name', 'registered_on', 'publisher_type', 'data_license', 'country'],
+                'orderBy'   => ['updated_at', 'all_activities_count', 'name', 'registered_on', 'publisher_type', 'data_license', 'country', 'last_logged_in'],
                 'direction' => ['asc', 'desc'],
                 'filters'=>[
                     'completeness'      => 'single',

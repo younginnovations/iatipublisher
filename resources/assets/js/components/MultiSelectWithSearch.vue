@@ -77,7 +77,6 @@ let searchInput = ref('');
 let checkedBoxes = ref([]);
 
 let changeSelectedPublisher = (selectedPublisherType) => {
-  console.log(selectedPublisherType);
   emit('changeSelectedPublisher', selectedPublisherType);
 };
 
@@ -111,10 +110,6 @@ const updateArrayBySearch = () => {
 const applyFilter = () => {
   changeSelectedPublisher(checkedBoxes.value);
 };
-
-onMounted(() => {
-  console.log(tempListItems.value);
-});
 </script>
 <style>
 .border-this {

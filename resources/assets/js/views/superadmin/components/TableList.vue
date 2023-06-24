@@ -480,12 +480,14 @@
                   {{ data.all_activities_count }} activities
                 </div>
                 <div class="text-xs">
-                  Last updated on:
                   {{
-                    dateFormat(
-                      data['latest_updated_activity'].updated_at,
-                      'MMMM, DD, YYYY'
-                    )
+                    data['latest_updated_activity']
+                      ? 'Last updated on:' +
+                        dateFormat(
+                          data['latest_updated_activity'].updated_at,
+                          'MMMM, DD, YYYY'
+                        )
+                      : 'Not available'
                   }}
                 </div>
               </div>
@@ -533,7 +535,6 @@ import {
   defineProps,
   watch,
   computed,
-  onUpdated,
 } from 'vue';
 import axios from 'axios';
 import MultiSelectWithSearch from 'Components/MultiSelectWithSearch.vue';
@@ -626,7 +627,6 @@ const { ignoreUpdates } = watchIgnorable(filter, () => undefined);
 //lifecycle
 onMounted(() => {
   let filterParams = getFilterParamsFromPreviousPage();
-
   if (filterParams) {
     for (let i = 0; i < filterParams.length; i++) {
       let key = kebabCaseToSnakecase(filterParams[i][0]);
@@ -674,19 +674,17 @@ const getFilterParamsFromPreviousPage = () => {
 const currentURL = window.location.href;
 const fetchOrganisation = (active_page: number) => {
   let queryString = '';
+
   if (currentURL.includes('?')) {
     queryString = window.location.search;
   }
 
   active_page = active_page ?? 1;
   let endpoint = `/list-organisations/page/${active_page}${queryString}`;
-
   if (isFilterApplied.value) {
     queryString = queryString ?? '&q=';
     endpoint = queryString !== '' ? endpoint : `${endpoint}`;
-    console.log('if vitra');
     for (const filterKey in filter) {
-      console.log(filterKey);
       if (filter[filterKey] && filter[filterKey].length > 0) {
         urlParams.append(filterKey, filter[filterKey]);
       }
@@ -694,9 +692,7 @@ const fetchOrganisation = (active_page: number) => {
   }
 
   // onUpdated(() => {
-  //   console.log(filter);
   // });
-  urlParams = new URLSearchParams(queryString);
   axios
     .get(endpoint, { params: isFilterApplied.value ? urlParams : '' })
     .then((res) => {
@@ -711,6 +707,7 @@ const fetchOrganisation = (active_page: number) => {
         }
       }
     });
+  urlParams = new URLSearchParams(queryString);
 };
 
 /**
@@ -787,7 +784,6 @@ watch(
     filter.date_type,
   ],
   () => {
-    console.log('date change vayo');
     fetchOrganisation(organisationData.data['current_page']);
   },
   { deep: true }
@@ -825,7 +821,7 @@ const refreshStatusArrays = (orgData) => {
     registryApiKeyStatus[orgDatum.id] =
       orgDatum?.settings?.publishing_info.token_verification ?? false;
     defaultValueStatus[orgDatum.id] = checkIfDefaultValuesAreValid(
-      orgDatum?.settings
+      orgDatum ? orgDatum.settings : false
     );
   }
 };
@@ -835,13 +831,13 @@ const checkIfDefaultValuesAreValid = (settings) => {
     let defaultValues = settings.default_values;
     let activityDefaultValues = settings.activity_default_values;
     return !!(
-      (defaultValues.default_currency ?? false) &&
-      (defaultValues.default_language ?? false) &&
-      (activityDefaultValues.hierarchy ?? false) &&
-      (activityDefaultValues.budget_not_provided ?? false) &&
-      (activityDefaultValues.humanitarian != null ||
-        activityDefaultValues.humanitarian != '' ||
-        activityDefaultValues.humanitarian != false)
+      (defaultValues?.default_currency ?? false) &&
+      (defaultValues?.default_language ?? false) &&
+      (activityDefaultValues?.hierarchy ?? false) &&
+      (activityDefaultValues?.budget_not_provided ?? false) &&
+      (activityDefaultValues?.humanitarian != null ||
+        activityDefaultValues?.humanitarian != '' ||
+        activityDefaultValues?.humanitarian != false)
     );
   }
 

@@ -300,9 +300,9 @@ class OrganizationService
         $countryList = getCodeList('Country', 'Activity', false);
 
         foreach ($rawPaginatedData as $organization) {
-            $organization->publisher_type = Arr::get($publisherTypeList, $organization->publisher_type, 'Missing');
-            $organization->data_license = $organization->data_license ? Arr::get($dataLicenseList, $organization->data_license, 'Missing') : 'Missing';
-            $organization->country = Arr::get($countryList, $organization->country, 'Missing');
+            $organization->publisher_type = $organization->publisher_type ? Arr::get($publisherTypeList, $organization->publisher_type, 'Not available') : 'Not available';
+            $organization->data_license = $organization->data_license ? Arr::get($dataLicenseList, $organization->data_license, 'Not available') : 'Not available';
+            $organization->country = $organization->country ? Arr::get($countryList, $organization->country, 'Not available') : 'Not available';
         }
 
         return $rawPaginatedData;

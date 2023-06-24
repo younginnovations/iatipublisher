@@ -463,7 +463,7 @@ class DashboardController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching user count in custom-range.']);
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching user count in date range.']);
         }
     }
 
