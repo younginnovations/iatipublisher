@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\IATI\Services\Audit\AuditService;
 use App\IATI\Services\Dashboard\DashboardService;
 use App\IATI\Services\Download\CsvGenerator;
+use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -100,9 +101,6 @@ class DashboardController extends Controller
     {
         $validParameters = ['start_date', 'end_date', 'order_by', 'direction', 'page'];
         $queryParams = [];
-        // list($fixed, $startDateString, $endDateString, $column) = $this->resolveDateRangeFromRequest($request);
-        // list($startDate, $endDate, $groupBy) = $this->resolveFixedRangeParams($fixed);
-        // $validParameters =
 
         foreach ($validParameters as $parameter) {
             $value = $request->get($parameter);
@@ -112,21 +110,36 @@ class DashboardController extends Controller
             }
         }
 
+        if (isset($queryParams['start_date']) && isset($queryParams['end_date'])) {
+            $startDate = Carbon::parse($queryParams['start_date']);
+            $endDate = Carbon::parse($queryParams['end_date']);
+            $period = [
+                'Y' => 'Y',
+                'Y-m' => 'M',
+                'Y-m-d' => 'D',
+            ];
+
+            $queryParams['range'] = match (true) {
+                $endDate->diffInYears($startDate) > 1 => 'Y',
+                $endDate->diffInMonths($startDate) > 1 => 'Y-m',
+                $endDate->diffInDays($startDate) >= 1 => 'Y-m-d',
+            };
+
+            $queryParams['period'] = $period[$queryParams['range']];
+        }
+
         return $queryParams;
     }
 
     /**
      * Returns json data containing publisher stats.
      *
-     * @param $request
-     *
      * @return JsonResponse
      */
-    public function publisherStats(Request $request): JsonResponse
+    public function publisherStats(): JsonResponse
     {
         try {
-            $params = $this->getQueryParams($request);
-            $publisherStat = $this->dashboardService->getPublisherStats($params);
+            $publisherStat = $this->dashboardService->getPublisherStats();
 
             return response()->json([
                 'success' => true,

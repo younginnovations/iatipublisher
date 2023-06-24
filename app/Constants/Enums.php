@@ -82,8 +82,8 @@ abstract class Enums
      * @var array
      */
     const ORGANIZATION_REGISTRATION_METHOD = [
-        'new_org'=>'New org',
-        'existing_org'=>'Existing org',
+        'new_org',
+        'existing_org',
     ];
 
     /**

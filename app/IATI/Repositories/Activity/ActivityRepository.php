@@ -647,23 +647,32 @@ class ActivityRepository extends Repository
     public function getActivityCount($queryParams)
     {
         $query = $this->model;
-        $queryType = 'day';
-
-        $formats = [
-            'day' => 'Y-m-d',
-            'month' => 'Y-m',
-        ];
+        $format = $queryParams['range'] ?? 'Y-m-d';
+        $startDate = date_create($queryParams['start_date']);
+        $endDate = date_create($queryParams['end_date']);
+        $data = [];
 
         if ($queryParams) {
             $query = $this->filterActivity($query, $queryParams);
         }
 
-        return
-            $query->get()->groupBy(
-                function ($q) use ($formats, $queryType) {
-                    return $q->created_at->format($formats[$queryType]);
-                }
-            )->map(fn ($d) => count($d));
+        $activityCount = $query->get()->groupBy(
+            function ($q) use ($format) {
+                return $q->created_at->format($format);
+            }
+        )->map(fn ($d) => count($d));
+
+        $period = new \DatePeriod($startDate, new \DateInterval(sprintf('P1%s', $queryParams['period'])), $endDate);
+        $data['count'] = 0;
+
+        foreach ($period as $date) {
+            $data['graph'][$date->format('Y-m-d')] = Arr::get($activityCount, $date->format($format), 0);
+            $data['count'] += $data['graph'][$date->format('Y-m-d')];
+        }
+
+        $data['graph'][$queryParams['end_date']] = Arr::get($activityCount, $date->format($format), 0);
+
+        return $data;
     }
 
     public function getActivityBy($queryParams, $type): array

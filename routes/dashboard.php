@@ -30,7 +30,7 @@ Route::group([], static function () {
     Route::get('/dashboard/publisher/stats', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherStats'])->name('dashboard.publisher.stats');
     Route::get('/dashboard/publisher/data-license', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherGroupedByDataLicense'])->name('dashboard.publisher.license');
     Route::get('/dashboard/publisher/country', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherGroupedByCountry'])->name('dashboard.publisher.country');
-    Route::get('/dashboard/publisher/registration-type', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherType'])->name('dashboard.publisher.registration');
+    Route::get('/dashboard/publisher/registration-type', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherRegistrationType'])->name('dashboard.publisher.registration');
     Route::get('/dashboard/publisher/setup', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherGroupedBySetupCompleteness'])->name('dashboard.publisher.setup');
     Route::get('/dashboard/publisher/count', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'publisherRegistrationCount'])->name('dashboard.publisher.registration_count');
     Route::get('/dashboard/publisher/download', [App\Http\Controllers\Admin\Dashboard\DashboardController::class, 'downloadOrganization'])->name('dashboard.publisher.download');

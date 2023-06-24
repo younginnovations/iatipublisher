@@ -9,6 +9,7 @@ use App\IATI\Models\Setting\Setting;
 use App\IATI\Models\User\Role;
 use App\IATI\Repositories\Repository;
 use App\IATI\Traits\FillDefaultValuesTrait;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -141,8 +142,8 @@ class OrganizationRepository extends Repository
                 });
             } else {
                 $organizations
-                      ->whereDate("organizations.$dateColumn", '>=', $queryParams['start_date'])
-                      ->whereDate("organizations.$dateColumn", '<=', $queryParams['end_date']);
+                    ->whereDate("organizations.$dateColumn", '>=', $queryParams['start_date'])
+                    ->whereDate("organizations.$dateColumn", '<=', $queryParams['end_date']);
             }
         }
 
@@ -250,14 +251,14 @@ class OrganizationRepository extends Repository
         return $filteredQuery;
     }
 
-    public function getPublisherStats($queryParams): array
+    public function getPublisherStats(): array
     {
         return [
             'totalCount' => $this->model->count(),
             'lastRegisteredPublisher' => $this->model->select('id', 'created_at', 'name')->latest('created_at')->first(),
             'inActivePublisher' => $this->model->with('latestLoggedInUser')
                 ->whereHas('latestLoggedInUser', function (Builder $q) {
-                    $q->where('last_logged_in', '<', '2023-05-03 04:14:12');
+                    $q->where('last_logged_in', '<', Carbon::today());
                 })
                 ->orDoesntHave('latestLoggedInUser')
                 ->count(),
@@ -343,22 +344,32 @@ class OrganizationRepository extends Repository
     public function getPublisherGroupedByDate($queryParams, $type)
     {
         $query = $this->model;
-        $queryType = 'day';
-
-        $formats = [
-            'day' => 'Y-m-d',
-            'month' => 'Y-m',
-        ];
+        $format = $queryParams['range'] ?? 'Y-m-d';
+        $startDate = date_create($queryParams['start_date']);
+        $endDate = date_create($queryParams['end_date']);
+        $data = [];
 
         if ($queryParams) {
             $query = $this->filterPublisher($query, $queryParams);
         }
 
-        return $query->get()->groupBy(
-            function ($q) use ($formats, $queryType) {
-                return $q->created_at->format($formats[$queryType]);
+        $publisherCount = $query->get()->groupBy(
+            function ($q) use ($format) {
+                return $q->created_at->format($format);
             }
         )->map(fn ($d) => count($d));
+
+        $period = new \DatePeriod($startDate, new \DateInterval(sprintf('P1%s', $queryParams['period'])), $endDate);
+        $data['count'] = 0;
+
+        foreach ($period as $date) {
+            $data['graph'][$date->format('Y-m-d')] = Arr::get($publisherCount, $date->format($format), 0);
+            $data['count'] += $data['graph'][$date->format('Y-m-d')];
+        }
+
+        $data['graph'][$queryParams['end_date']] = Arr::get($publisherCount, $date->format($format), 0);
+
+        return $data;
     }
 
     public function publisherWithoutActivity()

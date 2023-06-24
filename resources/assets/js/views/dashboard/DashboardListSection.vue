@@ -190,6 +190,7 @@
               </th>
             </tr>
           </thead>
+          <!-- change this code -->
           <tbody v-if="showTableLoader">
             <tr>
               <td class="py-3 px-8">
@@ -426,14 +427,14 @@
                           filter.sort === 'asc'
                             ? (filter.sort = 'desc')
                             : (filter.sort = 'asc');
-                          filter.orderBy = 'total';
+                          filter.orderBy = 'count';
                           sortTable();
                         }
                       "
                     >
                       <svg-vue
                         v-if="
-                          filter.sort === 'asc' && filter.orderBy === 'total'
+                          filter.sort === 'asc' && filter.orderBy === 'count'
                         "
                         class="text-sm"
                         icon="ascending-arrow"
@@ -706,7 +707,6 @@ watch(
         apiParams: '',
       };
     }
-    // console.log('table watcher', currentNavList.value[0]);
     fetchTableData(currentNavList.value[0]);
 
     activeClass.value = currentNavList.value[0]?.label;
@@ -734,6 +734,7 @@ const fetchTableData = (item) => {
   activeClass.value = item?.label;
   title.value = item?.label;
   sortElement.value = item;
+  console.log('fetch', item);
 
   emit('tableNav', item, filter, currentpage.value);
 };

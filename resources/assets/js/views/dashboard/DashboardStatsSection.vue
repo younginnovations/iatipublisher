@@ -51,7 +51,7 @@
             <button
               v-else
               class="mb-1 mt-2 text-2xl text-bluecoral"
-              @click="proxyUser(lastPubActivityUpdate.id)"
+              @click="proxyUser(lastPubActivityUpdate.user_id)"
             >
               <!-- latest registered -->
 
@@ -195,7 +195,7 @@
 
           <svg-vue icon="question-mark" class="text-base text-n-40" />
         </div>
-        <div class="my-1 px-2 text-3xl text-bluecoral">{{ total }}</div>
+        <div class="my-1 px-2 text-3xl text-bluecoral">{{ graphTotal }}</div>
       </div>
       <DashboardGraph :current-view="currentView" />
     </div>
@@ -208,7 +208,7 @@
   </section>
 </template>
 <script lang="ts" setup>
-import { ref, defineProps, onMounted, watch } from 'vue';
+import { ref, defineProps, onMounted, watch, inject, Ref } from 'vue';
 import DashboardGraph from './DashboardGraph.vue';
 import axios from 'axios';
 import moment from 'moment';
@@ -230,6 +230,7 @@ const loader = ref({ status: false, text: '' });
 const iatiAdminStats = ref({ active: 0, disabled: 0 });
 const orgAdminStats = ref({ active: 0, disabled: 0 });
 const genUserStats = ref({ active: 0, disabled: 0 });
+const graphTotal = inject('graphTotal') as Ref;
 
 onMounted(() => {
   fetchStatsData();
@@ -240,7 +241,6 @@ const formatDate = (date) => {
 };
 
 const proxyUser = (id: number) => {
-  console.log('proxy user', id);
   loader.value.status = true;
   loader.value.text = 'Proxy Login';
   const endpoint = `/proxy-organisation/${id}`;

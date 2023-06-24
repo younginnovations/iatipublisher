@@ -7,15 +7,13 @@
       type="line"
       :options="chartOptions"
       :series="series"
-    >
-    </apexchart>
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import moment from 'moment';
 
-import dateFormat from 'Composable/dateFormat';
 import {
   reactive,
   ref,
@@ -38,9 +36,7 @@ interface ChartInterface {
 const xAxisCounter = ref(0);
 const labels = ref<number[]>([]);
 const roundedLabels = ref<number[]>([]);
-const graphDate = inject('graphDate') as Ref;
 const graphAmount = inject('graphAmount') as Ref;
-const xAxisData = ref([]);
 const yaxisTicks = ref([]);
 const maxValue = ref(0);
 const chart = ref<ChartInterface>({});
@@ -90,46 +86,8 @@ let chartOptions = computed(() => ({
   colors: ['#17997B'],
   tooltip: {
     custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-      const monthReverter = (month) => {
-        switch (month) {
-          case 'Jan':
-            return '01';
-
-          case 'Feb':
-            return '02';
-          case 'Mar':
-            return '03';
-          case 'Apr':
-            return '04';
-          case 'May':
-            return '05';
-          case 'June':
-            return '06';
-          case 'July':
-            return '07';
-          case 'Aug':
-            return '08';
-          case 'Sep':
-            return '09';
-          case 'Oct':
-            return '10';
-          case 'Nov':
-            return '11';
-          case 'Dec':
-            return '12';
-          default:
-            break;
-        }
-      };
-      const getDay = (formattedDaye) => {
-        let orginal = new Date(`${formattedDaye.split(' ')[2]}-${monthReverter(
-          formattedDaye.split(' ')[0]
-        )}-${formattedDaye.split(' ')[1]}
-        `);
-
-        return `${orginal.toString().split(' ')[0]} ${
-          orginal.toString().split(' ')[1]
-        } ${orginal.toString().split(' ')[2]}`;
+      const getDay = (formattedDate) => {
+        return moment(formattedDate).format('LL');
       };
 
       return `<div class="p-4">

@@ -92,13 +92,12 @@ function () {
       index.closest('.form-field-group').find(humanitarianScopeHideVocabularyUri).val('').trigger('change').hide().attr('disabled', 'disabled').closest('.form-field').hide();
     }
   };
+  
   /**
    * Humanitarian Scope Form Page
    *
    * @Logic hide vocabulary-uri field based on '@vocabulary' field value
    */
-
-
   DynamicField.prototype.indicatorReferenceHideFieldUri = function () {
     var _this = this;
 
