@@ -367,7 +367,8 @@ class OrganizationRepository extends Repository
             $data['count'] += $data['graph'][$date->format('Y-m-d')];
         }
 
-        $data['graph'][$queryParams['end_date']] = Arr::get($publisherCount, $date->format($format), 0);
+        $data['graph'][$queryParams['end_date']] = Arr::get($publisherCount, $endDate->format($format), 0);
+        $data['count'] += $data['graph'][$queryParams['end_date']];
 
         return $data;
     }
@@ -377,17 +378,34 @@ class OrganizationRepository extends Repository
         return $this->model->doesntHave('allActivities')->count();
     }
 
-    public function getOrganizationDashboardDownload(): array
+    public function getOrganizationDashboardDownload($queryParams): array
     {
-        // case when linked_to_iati and activities.status='draft' then 'published recently' else activities.status end as case,
-        // upload_medium,
-        dd($this->model->select(DB::raw("name->0->>'narrative' as organization,
-        identifier,
+        $query = $this->model->select(DB::raw("name->0->>'narrative' as organization,organizations.id,
         publisher_type,
          country,
+         registration_type,
+         data_license,
+        case when publishing_info::text=json_strip_nulls(publishing_info)::text 
+        and (publishing_info->'publisher_verification')::text='true'::text 
+        and (publishing_info->'token_verification')::text='true'::text 
+        then 'complete' 
+        else 'incomplete' end as publisher_info,
+          case 
+            when default_values::text=json_strip_nulls(default_values)::text 
+            and activity_default_values::text=json_strip_nulls(activity_default_values)::text 
+            then 'complete' 
+            else 'incomplete' 
+         end as default_values,
          organizations.created_at,
          organizations.updated_at
-         "))->join('settings', 'organizations.id', 'settings.organization_id')->get()->toArray());
+         "))->join('settings', 'organizations.id', 'settings.organization_id');
+
+        if (isset($queryParams['start_date']) && isset($queryParams['end_date'])) {
+            $query = $query->where('created_at', '>=', $queryParams['start_date'])
+                ->where('created_at', '<=', $queryParams['end_date']);
+        }
+
+        return $query->get()->toArray();
     }
 
     /**

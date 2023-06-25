@@ -250,7 +250,6 @@ class DashboardController extends Controller
                 'data' => $publisherStat,
             ]);
         } catch (\Exception $e) {
-            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher grouped by type.']);
@@ -352,7 +351,6 @@ class DashboardController extends Controller
                 'data' => $publisherStat,
             ]);
         } catch (\Exception $e) {
-            dd($e->getMessage());
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
@@ -378,7 +376,6 @@ class DashboardController extends Controller
                 'data' => $publisherStat,
             ]);
         } catch (\Exception $e) {
-            dd($e->getMessage());
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
@@ -429,7 +426,6 @@ class DashboardController extends Controller
                 'data' => $activityStats,
             ]);
         } catch (\Exception $e) {
-            dd($e);
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
@@ -536,16 +532,14 @@ class DashboardController extends Controller
     public function downloadActivity(Request $request): BinaryFileResponse|JsonResponse
     {
         try {
+            $params = $this->getQueryParams($request);
             $headers = ['identifier', 'title', 'organization_name', 'status', 'medium', 'complete_percentage', 'created_at', 'updated_at'];
 
-            $activities = $this->dashboardService->getAllActivitiesToDownload();
-
-            // $this->auditService->auditEvent($activipublisherties, 'download', 'csv');
+            $activities = $this->dashboardService->getAllActivitiesToDownload($params);
 
             return $this->csvGenerator->generateWithHeaders(getTimeStampedText('activities'), $activities, $headers);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            // $this->auditService->auditEvent(null, 'download', 'csv');
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity csv.']);
         }
@@ -561,20 +555,15 @@ class DashboardController extends Controller
     public function downloadOrganization(Request $request): BinaryFileResponse|JsonResponse
     {
         try {
-            $headers = ['organization', 'organization_name', 'publisher_id', 'country', 'status', 'medium', 'created_at', 'updated_at'];
+            $params = $this->getQueryParams($request);
 
-            $organizations = $this->dashboardService->getOrganizationToDownload();
+            $headers = ['organization', 'organization_name', 'publisher_id', 'country', 'registration_type', 'data_license', 'publisher setting', 'default values', 'created_at', 'updated_at'];
 
-            // if (!isset($activities) || !count($activities)) {
-            //     return response()->json(['success' => false, 'message' => 'No activities selected.']);
-            // }
-
-            // $this->auditService->auditEvent($activities, 'download', 'csv');
+            $organizations = $this->dashboardService->getOrganizationToDownload($params);
 
             return $this->csvGenerator->generateWithHeaders(getTimeStampedText('organizations'), $organizations, $headers);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
-            // $this->auditService->auditEvent(null, 'download', 'csv');
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity csv.']);
         }

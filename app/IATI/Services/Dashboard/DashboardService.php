@@ -214,7 +214,7 @@ class DashboardService
                     $processedStatus['By importing via XLS'] = $count;
                     break;
                 case 'xml':
-                    $processedStatus['By importing via xml'] = $count;
+                    $processedStatus['By importing via XML'] = $count;
                     break;
                 case 'csv':
                     $processedStatus['By importing via CSV'] = $count;
@@ -225,7 +225,7 @@ class DashboardService
         return $processedStatus;
     }
 
-    public function getAllActivitiesToDownload(): array
+    public function getAllActivitiesToDownload($params): array
     {
         return $this->activityRepo->getActivitiesDashboardDownload();
     }
@@ -251,9 +251,9 @@ class DashboardService
         return $processedCompleteness;
     }
 
-    public function getOrganizationToDownload(): array
+    public function getOrganizationToDownload($params): array
     {
-        return $this->organizationRepo->getOrganizationDashboardDownload();
+        return $this->organizationRepo->getOrganizationDashboardDownload($params);
     }
 
     /**

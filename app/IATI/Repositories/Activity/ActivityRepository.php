@@ -381,10 +381,10 @@ class ActivityRepository extends Repository
         }
 
         return [
-          [
-              'default_aid_type_vocabulary' => '1',
-              'default_aid_type' => $defaultValues['default_aid_type'],
-          ],
+            [
+                'default_aid_type_vocabulary' => '1',
+                'default_aid_type' => $defaultValues['default_aid_type'],
+            ],
         ];
     }
 
@@ -670,7 +670,8 @@ class ActivityRepository extends Repository
             $data['count'] += $data['graph'][$date->format('Y-m-d')];
         }
 
-        $data['graph'][$queryParams['end_date']] = Arr::get($activityCount, $date->format($format), 0);
+        $data['graph'][$queryParams['end_date']] = Arr::get($activityCount, $endDate->format($format), 0);
+        $data['count'] += $data['graph'][$queryParams['end_date']];
 
         return $data;
     }
@@ -713,9 +714,10 @@ class ActivityRepository extends Repository
         ];
     }
 
-    public function getActivitiesDashboardDownload(): array
+    public function getActivitiesDashboardDownload($queryParams): array
     {
-        return $this->model->select(DB::raw("(iati_identifier->>'activity_identifier') as identifier,
+        return $this->model->select(
+            DB::raw("(iati_identifier->>'activity_identifier') as identifier,
         title->0->>'narrative' as activity_title,
         name->0->>'narrative' as organization,
          case when linked_to_iati and activities.status='draft' then 'published recently' else activities.status end as case,
@@ -723,6 +725,11 @@ class ActivityRepository extends Repository
          complete_percentage,
          activities.created_at,
          activities.updated_at
-         "))->join('organizations', 'organizations.id', 'activities.org_id')->get()->toArray();
+         ")
+        )
+            ->join('organizations', 'organizations.id', 'activities.org_id')
+            ->where('created_at', '>=', $queryParams['start_date'])
+            ->where('created_at', '<=', $queryParams['end_date'])
+            ->get()->toArray();
     }
 }
