@@ -749,9 +749,9 @@ class ActivityService
      *
      * @param $activityId
      *
-     * @return \Illuminate\Database\Eloquent\Builder|Model|mixed|object|null
+     * @return Model|null
      */
-    public function getActivitityWithRelationsById($activityId)
+    public function getActivitityWithRelationsById($activityId): ?Model
     {
         return $this->activityRepository->getActivitityWithRelationsById($activityId);
     }

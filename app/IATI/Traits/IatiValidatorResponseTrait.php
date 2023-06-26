@@ -8,6 +8,9 @@ use App\IATI\Services\Activity\ActivityService;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
+/**
+ * IatiValidatorResponseTrait.
+ */
 trait IatiValidatorResponseTrait
 {
     /**
@@ -28,7 +31,7 @@ trait IatiValidatorResponseTrait
      * @param $response
      * @param $activity
      *
-     * @return mixed
+     * @return array
      *
      * @throws \JsonException
      */
@@ -424,6 +427,8 @@ trait IatiValidatorResponseTrait
     }
 
     /**
+     * Get activity element by id with relations.
+     *
      * @param $idPath
      * @param $activityId
      *

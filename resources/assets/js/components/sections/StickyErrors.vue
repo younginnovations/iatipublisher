@@ -168,16 +168,12 @@ const updateTempMessage = () => {
     const severity = data.severity;
     switch (severity) {
       case 'critical':
-        // = data;
-        // =  data.context;
         tempData.critical.push(data);
         break;
       case 'error':
-        // tempData['errors'][data.message] =  data.context;
         tempData.errors.push(data);
         break;
       case 'warning':
-        // tempData['warnings'][data.message] =  data.context;
         tempData.warnings.push(data);
         break;
     }

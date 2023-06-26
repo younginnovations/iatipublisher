@@ -611,9 +611,9 @@ class ActivityRepository extends Repository
      *
      * @param $activityId
      *
-     * @return \Illuminate\Database\Eloquent\Builder|Model|mixed|object|null
+     * @return Model|null
      */
-    public function getActivitityWithRelationsById($activityId)
+    public function getActivitityWithRelationsById($activityId): ?Model
     {
         return $this->model->with('results.indicators.periods', 'transactions')->where('id', $activityId)->first();
     }
