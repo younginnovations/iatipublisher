@@ -61,7 +61,7 @@
               data-prototype="{{ str_replace('actual[0]','actual[__PARENT_NAME__]',form_row($form->actual->getChildren()[0]->getChild('comment')->getChildren()[0]->getChild('narrative')->prototype())) }}">
             </div>
             <div class="hidden collection-container title_narrative" form_type="actual_dimension"
-              data-prototype="{{ str_replace('actual[0]','actual[__PARENT_NAME__]',form_row($form->target->getChildren()[0]->getChild('dimension')->prototype())) }}">
+              data-prototype="{{ str_replace('actual[0]','actual[__PARENT_NAME__]',form_row($form->actual->getChildren()[0]->getChild('dimension')->prototype())) }}">
             </div>
             {{-- period document link --}}
             <div class="hidden collection-container title" form_type="target_document_link"
