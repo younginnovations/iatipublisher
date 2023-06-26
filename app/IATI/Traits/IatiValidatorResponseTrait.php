@@ -30,7 +30,6 @@ trait IatiValidatorResponseTrait
      *
      * @return mixed
      *
-     * @throws BindingResolutionException
      * @throws \JsonException
      */
     public function addElementOnIatiValidatorResponse($response, $activity): array
@@ -41,97 +40,7 @@ trait IatiValidatorResponseTrait
 
         if (!empty($errors)) {
             foreach ($errors as $error) {
-                $errorMessage = $error['message'];
-                $details = $error['details'];
-
-                if (isset($details[0])) {
-                    foreach ($error['details'] as $key => $detailedError) {
-                        if (isset($detailedError['error']['line'])) {
-//                            $missingSegment = str_replace('-', '_', trim(getStringBetween($errorMessage, 'Expected is (', ').')));
-                            $lineNumber = $detailedError['error']['line'];
-                            $nodePath = $this->getNodeByLineNumber($lineNumber + 1, $activity);
-
-                            if (strpos($nodePath, 'edit')) {
-                                $stringBetween = getStringBetween($nodePath, '/', '/edit');
-                            } else {
-                                $stringBetween = getStringBetween($nodePath, '/', '#');
-                            }
-
-                            $errorLocation = str_replace('/', '>', $stringBetween);
-                            $error['response'][$key]['iati_path'] = checkUrlExists($nodePath) ? $nodePath : "/activity/$activity->id";
-                            $error['response'][$key]['message'] = $errorLocation;
-                        }
-                    }
-                } elseif (isset($details['caseContext']['paths']) && !empty($details['caseContext']['paths'])) {
-                    foreach ($error['details']['caseContext']['paths'] as $caseContext => $detailedErrors) {
-                        if (isset($detailedErrors['lineNumber'])) {
-                            $lineNumber = $detailedErrors['lineNumber'];
-                            $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
-
-                            if ($lineNumber <= 3 && preg_match('(default currency|default language|default hierarchy|budget not provided|humanitarian)', $errorMessage)) {
-                                $nodePath = "/activity/$activity->id/default_values";
-                                $errorLocation = "activity>$activity->id>default_values";
-                            } else {
-                                if (strpos($nodePath, 'edit')) {
-                                    $stringBetween = getStringBetween($nodePath, '/', '/edit');
-                                } else {
-                                    $stringBetween = getStringBetween($nodePath, '/', '#');
-                                }
-
-                                $errorLocation = str_replace('/', '>', $stringBetween);
-                            }
-                            $error['response'][$caseContext]['iati_path'] = checkUrlExists($nodePath) ? $nodePath : "/activity/$activity->id";
-                            $error['response'][$caseContext]['message'] = $errorLocation;
-                        }
-                    }
-                } elseif (!empty($details['caseContext']['less']) || !empty($details['caseContext']['start'])) {
-                    $detailedErrors = $error['details']['caseContext']['less'] ?? $error['details']['caseContext']['start'];
-                    $lineNumber = $detailedErrors['lineNumber'];
-                    $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
-
-                    if ($lineNumber <= 3 && preg_match('(default currency|default language|default hierarchy|budget not provided|humanitarian)', $errorMessage)) {
-                        $nodePath = "/activity/$activity->id/default_values";
-                        $errorLocation = "activity>$activity->id>default_values";
-                    } else {
-                        if (strpos($nodePath, 'edit')) {
-                            $stringBetween = getStringBetween($nodePath, '/', '/edit');
-                        } else {
-                            $stringBetween = getStringBetween($nodePath, '/', '#');
-                        }
-                        $errorLocation = str_replace('/', '>', $stringBetween);
-                    }
-
-                    $error['response'][0]['iati_path'] = checkUrlExists($nodePath) ? $nodePath : "/activity/$activity->id";
-                    $error['response'][0]['message'] = $errorLocation;
-                } elseif (isset($details['xpathContext']['lineNumber'])) {
-                    $lineNumber = $error['details']['xpathContext']['lineNumber'];
-                    $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
-
-                    if ($lineNumber <= 3 && preg_match('(default currency|default language|default hierarchy|budget not provided|humanitarian)', $errorMessage)) {
-                        $nodePath = "/activity/$activity->id/default_values";
-                        $errorLocation = "activity>$activity->id>default_values";
-                    } else {
-                        if (strpos($nodePath, 'edit')) {
-                            $stringBetween = getStringBetween($nodePath, '/', '/edit');
-                        } else {
-                            $stringBetween = getStringBetween($nodePath, '/', '#');
-                        }
-
-                        $errorLocation = str_replace('/', '>', $stringBetween);
-                    }
-                    $error['response'][0]['iati_path'] = checkUrlExists($nodePath) ? $nodePath : "/activity/$activity->id";
-                    $error['response'][0]['message'] = $errorLocation;
-                } elseif (isset($error['details']['xpath'])) {
-                    $lastSegment = str_replace('//iati-activity/', '', $error['details']['xpath']);
-                    $lastSegment = in_array($lastSegment, ['@budget-not-provided', '@humanitarian', '@hierarchy']) ? 'default_values' : $lastSegment;
-                    $error['response'][0]['iati_path'] = checkUrlExists("/activity/$activity->id/$lastSegment") ? "/activity/$activity->id/$lastSegment" : "/activity/$activity->id";
-                    $error['response'][0]['message'] = "activity>$activity->id";
-                } else {
-                    $error['response'][0]['iati_path'] = "/activity/$activity->id";
-                    $error['response'][0]['message'] = "activity>$activity->id";
-                }
-
-                $updatedErrors[] = $error;
+                $updatedErrors[] = $this->getValidatorErrors($activity, $error);
             }
 
             $response['errors'] = $updatedErrors;
@@ -139,6 +48,188 @@ trait IatiValidatorResponseTrait
         }
 
         return $response;
+    }
+
+    /**
+     * Validator Error message with path and message.
+     *
+     * @param $activity
+     * @param $error
+     *
+     * @return array
+     */
+    public function getValidatorErrors($activity, $error): array
+    {
+        $errorMessage = $error['message'];
+        $details = $error['details'];
+
+        if (isset($details[0])) {
+            foreach ($error['details'] as $key => $detailedError) {
+                if (isset($detailedError['error']['line'])) {
+                    $detailWithErrorLine = $this->getDetailWithErrorLineResponse($detailedError, $activity);
+                    $error['response'][$key]['iati_path'] = $detailWithErrorLine['iati_path'];
+                    $error['response'][$key]['message'] = $detailWithErrorLine['message'];
+                }
+            }
+        } elseif (isset($details['caseContext']['paths']) && !empty($details['caseContext']['paths'])) {
+            foreach ($error['details']['caseContext']['paths'] as $caseContext => $detailedErrors) {
+                if (isset($detailedErrors['lineNumber'])) {
+                    $caseContextErrorResponse = $this->getCaseContextErrorResponse($detailedErrors, $activity, $errorMessage);
+                    $error['response'][$caseContext]['iati_path'] = $caseContextErrorResponse['iati_path'];
+                    $error['response'][$caseContext]['message'] = $caseContextErrorResponse['message'];
+                }
+            }
+        } elseif (!empty($details['caseContext']['less']) || !empty($details['caseContext']['start'])) {
+            $getCaseContextStartErrorResponse = $this->getCaseContextStartErrorResponse($error, $activity, $errorMessage);
+            $error['response'][0]['iati_path'] = $getCaseContextStartErrorResponse['iati_path'];
+            $error['response'][0]['message'] = $getCaseContextStartErrorResponse['message'];
+        } elseif (isset($details['xpathContext']['lineNumber'])) {
+            $errorResponse = $this->getXpathContextWithLineNumberErrorResponse($error, $activity, $errorMessage);
+            $error['response'][0]['iati_path'] = $errorResponse['iati_path'];
+            $error['response'][0]['message'] = $errorResponse['message'];
+        } elseif (isset($error['details']['xpath'])) {
+            $lastSegment = str_replace('//iati-activity/', '', $error['details']['xpath']);
+            $lastSegment = in_array($lastSegment, ['@budget-not-provided', '@humanitarian', '@hierarchy']) ? 'default_values' : $lastSegment;
+            $error['response'][0]['iati_path'] = checkUrlExists("/activity/$activity->id/$lastSegment") ? "/activity/$activity->id/$lastSegment" : "/activity/$activity->id";
+            $error['response'][0]['message'] = "activity>$activity->id";
+        } else {
+            $error['response'][0]['iati_path'] = "/activity/$activity->id";
+            $error['response'][0]['message'] = "activity>$activity->id";
+        }
+
+        return $error;
+    }
+
+    /**
+     * Returns Node path location.
+     *
+     * @param $nodePath
+     *
+     * @return string
+     */
+    public function getErrorLocation($nodePath): String
+    {
+        if (strpos($nodePath, 'edit')) {
+            $stringBetween = getStringBetween($nodePath, '/', '/edit');
+        } else {
+            $stringBetween = getStringBetween($nodePath, '/', '#');
+        }
+
+        return str_replace('/', '>', $stringBetween);
+    }
+
+    /**
+     * Returns response of a iati validator error whose response has line number in detail.
+     *
+     * @param $detailedError
+     * @param $activity
+     *
+     * @return array
+     *
+     * @throws BindingResolutionException
+     * @throws \JsonException
+     */
+    public function getDetailWithErrorLineResponse($detailedError, $activity): array
+    {
+        $lineNumber = $detailedError['error']['line'];
+        $nodePath = $this->getNodeByLineNumber($lineNumber + 1, $activity);
+        $errorLocation = $this->getErrorLocation($nodePath);
+
+        return [
+            'iati_path' => checkUrlExists($nodePath) ? $nodePath : "/activity/$activity->id",
+            'message' => $errorLocation,
+        ];
+    }
+
+    /**
+     * Returns response of a iati validator error whose response has line number in caseContextPath.
+     *
+     * @param $detailedErrors
+     * @param $activity
+     * @param $errorMessage
+     *
+     * @return array
+     *
+     * @throws BindingResolutionException
+     * @throws \JsonException
+     */
+    public function getCaseContextErrorResponse($detailedErrors, $activity, $errorMessage): array
+    {
+        $lineNumber = $detailedErrors['lineNumber'];
+        $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
+
+        if ($lineNumber <= 3 && preg_match('(default currency|default language|default hierarchy|budget not provided|humanitarian)', $errorMessage)) {
+            $nodePath = "/activity/$activity->id/default_values";
+            $errorLocation = "activity>$activity->id>default_values";
+        } else {
+            $errorLocation = $this->getErrorLocation($nodePath);
+        }
+
+        return [
+            'iati_path' => checkUrlExists($nodePath) ? $nodePath : "/activity/$activity->id",
+            'message' => $errorLocation,
+        ];
+    }
+
+    /**
+     * iati validator error message whose response has start or less in case context path.
+     *
+     * @param $error
+     * @param $activity
+     * @param $errorMessage
+     *
+     * @return array
+     *
+     * @throws BindingResolutionException
+     * @throws \JsonException
+     */
+    public function getCaseContextStartErrorResponse($error, $activity, $errorMessage): array
+    {
+        $detailedErrors = $error['details']['caseContext']['less'] ?? $error['details']['caseContext']['start'];
+        $lineNumber = $detailedErrors['lineNumber'];
+        $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
+
+        if ($lineNumber <= 3 && preg_match('(default currency|default language|default hierarchy|budget not provided|humanitarian)', $errorMessage)) {
+            $nodePath = "/activity/$activity->id/default_values";
+            $errorLocation = "activity>$activity->id>default_values";
+        } else {
+            $errorLocation = $this->getErrorLocation($nodePath);
+        }
+
+        return [
+            'iati_path' => checkUrlExists($nodePath) ? $nodePath : "/activity/$activity->id",
+            'message' => $errorLocation,
+        ];
+    }
+
+    /**
+     * Iati validator error whose response has line number in xpathcontext.
+     *
+     * @param $error
+     * @param $activity
+     * @param $errorMessage
+     *
+     * @return array
+     *
+     * @throws BindingResolutionException
+     * @throws \JsonException
+     */
+    public function getXpathContextWithLineNumberErrorResponse($error, $activity, $errorMessage): array
+    {
+        $lineNumber = $error['details']['xpathContext']['lineNumber'];
+        $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
+
+        if ($lineNumber <= 3 && preg_match('(default currency|default language|default hierarchy|budget not provided|humanitarian)', $errorMessage)) {
+            $nodePath = "/activity/$activity->id/default_values";
+            $errorLocation = "activity>$activity->id>default_values";
+        } else {
+            $errorLocation = $this->getErrorLocation($nodePath);
+        }
+
+        return [
+            'iati_path' => checkUrlExists($nodePath) ? $nodePath : "/activity/$activity->id",
+            'message' => $errorLocation,
+        ];
     }
 
     /**
