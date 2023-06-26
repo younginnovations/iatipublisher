@@ -745,6 +745,8 @@ class ActivityService
     }
 
     /*
+     * Fetch activity with its relation by id
+     *
      * @param $activityId
      *
      * @return \Illuminate\Database\Eloquent\Builder|Model|mixed|object|null

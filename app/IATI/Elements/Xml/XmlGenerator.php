@@ -458,6 +458,7 @@ class XmlGenerator
      * @param $organization
      *
      * @return array
+     *
      * @throws \JsonException
      */
     public function getXmlData($activity, $transaction, $result, $organization): array
@@ -503,6 +504,13 @@ class XmlGenerator
     }
 
     /**
+     * maps transaction and result index.
+     *
+     * @param $xmlActivity
+     * @param $activity
+     *
+     * @return void
+     *
      * @throws \JsonException
      */
     public function mapActivityTransactionAndResultIndex($xmlActivity, $activity): void
