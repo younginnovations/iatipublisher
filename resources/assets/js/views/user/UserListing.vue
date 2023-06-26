@@ -612,7 +612,7 @@
             <td v-if="loader" colspan="5" class="text-center">
               <div colspan="5" class="spin"></div>
             </td>
-            <td colspan="8" class="text-center">Users not found</td>
+            <td v-else colspan="8" class="text-center">Users not found</td>
           </tbody>
         </table>
       </div>
@@ -732,7 +732,6 @@ onMounted(() => {
   let filterparams =
     window.location.href.toString().split('?')[1] &&
     window.location.href.toString().split('?')[1].split('=');
-  console.log(filterparams, 'route');
   if (filterparams) {
     if (filterparams[0] === 'roles' || filterparams[0] === 'organization') {
       filter[filterparams[0] as string] = [filterparams[1]];
@@ -895,7 +894,6 @@ const updateUser = () => {
 watch(
   () => [filter.organization, filter.roles, filter.q, filter.status],
   () => {
-    console.log('watchers called', filter);
     fetchUsersList(usersData['current_page'], true);
   },
   { deep: true }

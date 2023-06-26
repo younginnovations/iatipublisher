@@ -210,7 +210,7 @@ class Organization extends Model implements Auditable
     /**
      * Organization has many users.
      *
-    //  * @return HasMany
+     * @return HasMany
      */
     public function latestLoggedInUser()
     {
@@ -237,7 +237,12 @@ class Organization extends Model implements Auditable
         return $this->hasMany(User::class, 'organization_id', 'id')->withTrashed();
     }
 
-    public function recentlyChangeActivity()
+    /**
+     * Returns recently changed activity.
+     *
+     * @return HasOne
+     */
+    public function recentlyChangeActivity(): HasOne
     {
         return $this->hasOne(Activity::class)->latest('updated_at');
     }

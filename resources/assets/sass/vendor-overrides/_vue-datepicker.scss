@@ -1,7 +1,7 @@
 .dp__input {
   border: none !important;
   position: relative;
-  z-index: 10;
+  z-index: 0;
   background: transparent !important;
   color: #2a2f30 !important;
   padding: 0 8px !important;
@@ -42,11 +42,11 @@
 }
 
 .dp__overlay_cell:hover {
-  background: rgba(var(--spring-10)) !important;
+  background: rgba(var(--spring-50), 1) !important;
 }
 
 .dp__overlay_cell_active {
-  background: rgba(var(--spring-50)) !important;
+  background: rgba(var(--spring-50), 1) !important;
 }
 
 .dp__calendar_row {
@@ -55,26 +55,26 @@
 
 .dp__today {
   border-radius: 50% !important;
-  border: 1px solid rgba(var(--spring-50)) !important;
+  border: 1px solid rgba(var(--spring-50), 1) !important;
   background: transparent !important;
   color: var(--n-40) !important;
 }
 
 .dp__range_end {
-  background: rgba(var(--spring-10)) !important;
+  background: rgba(var(--spring-20), 1) !important;
   color: white !important;
   border-radius: 0 50% 50% 0 !important;
   border: 0 !important;
 }
 
 .dp__range_start {
-  background: rgba(var(--spring-10)) !important;
+  background: rgba(var(--spring-20), 1) !important;
   color: white !important;
   border-radius: 50% 0 0 40% !important;
 }
 
 .dp__range_between {
-  background: rgba(var(--spring-10)) !important;
+  background: rgba(var(--spring-20), 1) !important;
   color: white !important;
 }
 
@@ -92,14 +92,18 @@
 }
 
 .dp__preset_range:hover {
-  background: rgba(var(--spring-10)) !important;
+  background: rgba(var(--spring-20), 1) !important;
   color: white !important;
 }
 
 .font-spring {
-  color: var(--spring-50) !important;
+  color: rgba(var(--spring-50), 1) !important;
 }
 
 .font-neutral {
   color: var(--n-50) !important;
+}
+
+.dp__input {
+  margin-right: 12px !important;
 }

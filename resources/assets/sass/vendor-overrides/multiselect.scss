@@ -30,6 +30,10 @@
   color: rgba(var(--bluecoral), 0) !important;
   text-transform: uppercase;
 }
+
+/*REVIEW AND REFACTOR THIS @salil
+* need to use attributes for content on ::after
+*/
 .organization {
   .multiselect-multiple-label {
     position: relative;
@@ -53,6 +57,99 @@
     }
   }
 }
+.country {
+  .multiselect-multiple-label {
+    position: relative;
+    white-space: nowrap !important;
+    font-size: 12px !important;
+    width: 100px;
+    font-weight: bold !important;
+    color: rgba(var(--bluecoral), 0) !important;
+    text-transform: uppercase;
+    &::after {
+      content: 'country';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 4px;
+      white-space: nowrap !important;
+      font-size: 12px !important;
+      font-weight: bold !important;
+      color: rgba(var(--bluecoral)) !important;
+      text-transform: uppercase;
+    }
+  }
+}
+.setup-completeness {
+  .multiselect-multiple-label {
+    position: relative;
+    white-space: nowrap !important;
+    font-size: 12px !important;
+    width: 100px;
+    font-weight: bold !important;
+    color: rgba(var(--bluecoral), 0) !important;
+    text-transform: uppercase;
+    &::after {
+      content: 'setup completeness';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 4px;
+      white-space: nowrap !important;
+      font-size: 12px !important;
+      font-weight: bold !important;
+      color: rgba(var(--bluecoral)) !important;
+      text-transform: uppercase;
+    }
+  }
+}
+.registration-type {
+  .multiselect-multiple-label {
+    position: relative;
+    white-space: nowrap !important;
+    font-size: 12px !important;
+    width: 100px;
+    font-weight: bold !important;
+    color: rgba(var(--bluecoral), 0) !important;
+    text-transform: uppercase;
+    &::after {
+      content: 'registration type';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 4px;
+      white-space: nowrap !important;
+      font-size: 12px !important;
+      font-weight: bold !important;
+      color: rgba(var(--bluecoral)) !important;
+      text-transform: uppercase;
+    }
+  }
+}
+.data-license {
+  .multiselect-multiple-label {
+    position: relative;
+    white-space: nowrap !important;
+    font-size: 12px !important;
+    width: 100px;
+    font-weight: bold !important;
+    color: rgba(var(--bluecoral), 0) !important;
+    text-transform: uppercase;
+    &::after {
+      content: 'data license';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 4px;
+      white-space: nowrap !important;
+      font-size: 12px !important;
+      font-weight: bold !important;
+      color: rgba(var(--bluecoral)) !important;
+      text-transform: uppercase;
+    }
+  }
+}
+
 .role {
   .multiselect-multiple-label {
     position: relative;

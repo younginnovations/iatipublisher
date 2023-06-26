@@ -46,8 +46,8 @@ class SuperAdminController extends Controller
         try {
             $country = getCodeList('Country', 'Activity', false);
             $setupCompleteness = [
-                'Publisher_with_complete_setup' => 'Publisher with complete setup',
-                'Publisher_setting_not_completed' => 'Publisher setting not completed',
+                'Publishers_with_complete_setup' => 'Publishers with complete setup',
+                'Publishers_settings_not_completed' => 'Publishers setting not completed',
                 'Default_values_not_completed' => 'Default values not completed',
                 'Both_publishing_settings_and_default_values_not_completed' => 'Both publishing settings and default values not completed',
             ];
@@ -118,12 +118,9 @@ class SuperAdminController extends Controller
             }
         }
 
-        list($fixed, $startDateString, $endDateString, $column) = $this->resolveDateRangeFromRequest($request);
+        list($startDateString, $endDateString, $column) = $this->resolveDateRangeFromRequest($request);
         $queryParams['date_column'] = $column;
-
-        if ($fixed) {
-            list($queryParams['start_date'], $queryParams['end_date']) = $this->resolveFixedRangeParams($fixed);
-        } elseif ($startDateString && $endDateString) {
+        if ($startDateString && $endDateString) {
             list($queryParams['start_date'], $queryParams['end_date']) = $this->resolveCustomRangeParams($startDateString, $endDateString);
         }
 

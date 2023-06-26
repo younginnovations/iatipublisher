@@ -1,5 +1,5 @@
 <template>
-  <div id="date-range-main" class="flex space-x-2">
+  <div id="date-range-main" ref="dateRangeMain" class="flex space-x-2">
     <div>
       <div class="relative" style="min-width: 150px">
         <!--Range Dropdown-->
@@ -15,6 +15,7 @@
         </div>
         <ul
           v-show="showRangeDropdown"
+          ref="dateDropdown"
           class="absolute w-fit bg-white p-2 shadow-sm"
           style="top: 32px; right: 8px"
         >
@@ -23,13 +24,14 @@
             :key="key"
             class="daterange-item"
             :class="value === dateType ? 'daterange-item-active' : ''"
+            style="min-width: 160px"
             @click="
               () => {
+                showRangeDropdown = false;
                 dateType = value;
                 dateTypeKey = key;
               }
             "
-            style="min-width: 160px"
           >
             {{ value }}
           </li>
@@ -56,14 +58,15 @@
           ref="datepicker"
           v-model="selectedDate"
           range
+          month-name-format="long"
+          placeholder="Select date"
+          mode-height="650"
+          :clearable="true"
+          :format="format"
           :preset-ranges="presetRanges"
           :enable-time-picker="false"
-          right
-          month-name-format="long"
-          :format="format"
-          placeholder="Select date"
-          :clearable="true"
-          mode-height="650"
+          :teleport="true"
+          :alt-position="customPosition"
           @cleared="clearDate"
         >
           <template #yearly="{ label, range, presetDateRange }">
@@ -130,7 +133,9 @@ const props = defineProps({
   },
 });
 
+const dateRangeMain: any = ref([]);
 const dateType = ref('');
+const dateDropdown = ref();
 dateType.value = props.dropdownRange && Object.values(props.dropdownRange)[0];
 
 const dateTypeKey = ref('');
@@ -144,13 +149,18 @@ const toggleShowRangeDropdown = () => {
 
 const emit = defineEmits(['triggerSetDateRange', 'triggerSetDateType']);
 
-const fixed: Ref<string> = ref('All time');
-
+const fixed = ref('All time');
+const todayDate = moment(new Date()).format('YYYY-MM-DD');
 const selectedDate: Ref<any[]> = ref([
   new Date(),
   new Date(new Date().setDate(new Date().getDate() + 7)),
 ]);
 
+const clearDate = () => {
+  triggerSetDateRange('', '');
+  selectedDate.value[0] = '';
+  selectedDate.value[1] = '';
+};
 const presetRanges = ref([
   {
     label: 'Today',
@@ -186,11 +196,9 @@ const presetRanges = ref([
   },
 ]);
 onMounted(() => {
-  selectedDate.value[0] = '1990-12-31';
-  selectedDate.value[1] = moment(new Date()).format('YYYY-MM-DD');
-
-  // triggerSetDateRange('1990-12-31', moment(new Date()).format('YYYY-MM-DD'));
-  triggerSetDateRange('1990-12-31', '2020-12-31');
+  selectedDate.value[0] = '';
+  selectedDate.value[1] = todayDate;
+  triggerSetDateRange('', todayDate, fixed.value);
 });
 
 const datepicker = ref<DatePickerInstance>(null);
@@ -201,10 +209,6 @@ const convertDate = (date) => {
   const month = String(dateObj.getMonth() + 1).padStart(2, '0');
   const day = String(dateObj.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
-};
-
-const clearDate = () => {
-  triggerSetDateRange('', '');
 };
 
 const openCalendar = () => {
@@ -239,6 +243,26 @@ const format = (dates) => {
   return tempArray.join(' - ');
 };
 
+const closeDateDropdown = () => {
+  showRangeDropdown.value = false;
+};
+
+watch(
+  () => showRangeDropdown.value,
+  (value) => {
+    if (value) {
+      document.addEventListener('click', closeDateDropdown);
+      dateRangeMain.value.addEventListener('click', keepModelOpen);
+    } else {
+      document.removeEventListener('click', closeDateDropdown);
+      dateRangeMain.value.removeEventListener('click', keepModelOpen);
+    }
+  }
+);
+const keepModelOpen = (event) => {
+  event.stopPropagation();
+};
+
 watch(
   () => [selectedDate],
   () => {
@@ -252,7 +276,7 @@ watch(
         : false;
 
     if (startDate && endDate) {
-      triggerSetDateRange(startDate, endDate);
+      triggerSetDateRange(startDate, endDate, fixed.value);
       resolveStartDateAndEndDate(moment(startDate), moment(endDate));
     }
   },
@@ -267,9 +291,27 @@ watch(
   { deep: true }
 );
 
-const triggerSetDateRange = (startDate, endDate) => {
-  emit('triggerSetDateRange', startDate, endDate);
+const triggerSetDateRange = (startDate, endDate, filteredDateType = '') => {
+  emit('triggerSetDateRange', startDate, endDate, filteredDateType);
 };
+
+watch(
+  () => fixed.value,
+  () => {
+    const startDate =
+      selectedDate.value && selectedDate.value[0]
+        ? convertDate(selectedDate.value[0])
+        : false;
+    const endDate =
+      selectedDate.value && selectedDate.value[1]
+        ? convertDate(selectedDate.value[1])
+        : false;
+
+    if (startDate && endDate) {
+      triggerSetDateRange(startDate, endDate, fixed.value);
+    }
+  }
+);
 
 const triggerSetDateType = (eventType) => {
   emit('triggerSetDateType', eventType);
@@ -277,39 +319,37 @@ const triggerSetDateType = (eventType) => {
 
 const resolveStartDateAndEndDate = (startDate, endDate) => {
   const currentDate = moment(convertDate(new Date()));
-  let fixedValue;
 
   if (checkIfToday(startDate.clone(), currentDate.clone(), endDate.clone())) {
-    fixedValue = 'Today';
+    fixed.value = 'Today';
   } else if (
     checkIfThisWeek(startDate.clone(), currentDate.clone(), endDate.clone())
   ) {
-    fixedValue = 'This week';
+    fixed.value = 'This week';
   } else if (
     checkIfLast7Days(startDate.clone(), currentDate.clone(), endDate.clone())
   ) {
-    fixedValue = 'Last 7 days';
+    fixed.value = 'Last 7 days';
   } else if (
     checkIfThisMonth(startDate.clone(), currentDate.clone(), endDate.clone())
   ) {
-    fixedValue = 'This Month';
+    fixed.value = 'This Month';
   } else if (checkIfLast6Months(startDate.clone(), currentDate.clone())) {
-    fixedValue = 'Last 6 months';
+    fixed.value = 'Last 6 months';
   } else if (
     checkIfThisYear(startDate.clone(), currentDate.clone(), endDate.clone())
   ) {
-    fixedValue = 'This year';
+    fixed.value = 'This year';
   } else if (checkIfLast12Months(startDate.clone(), currentDate.clone())) {
-    fixedValue = 'Last 12 months';
+    fixed.value = 'Last 12 months';
   } else if (
     checkIfAllTime(startDate.clone(), currentDate.clone(), endDate.clone())
   ) {
-    fixedValue = 'All Time';
+    fixed.value = 'All time';
+    clearDate();
   } else {
-    fixedValue = 'Custom';
+    fixed.value = 'Custom';
   }
-
-  fixed.value = fixedValue;
 };
 
 const checkIfToday = (start, current, end) => {
@@ -327,8 +367,8 @@ const checkIfThisWeek = (start, current, end) => {
   const currentWeekEnd = current.endOf('week').format('YYYY-MM-DD');
 
   return (
-    currentWeekStart <= start.format('YYYY-MM-DD') &&
-    currentWeekEnd >= end.format('YYYY-MM-DD')
+    currentWeekStart == start.startOf('week').format('YYYY-MM-DD') &&
+    currentWeekEnd == end.endOf('week').format('YYYY-MM-DD')
   );
 };
 const checkIfLast7Days = (start, current, end) => {
@@ -347,8 +387,8 @@ const checkIfThisMonth = (start, current, end) => {
   const currentMonthEnd = current.endOf('month').format('YYYY-MM-DD');
 
   return (
-    currentMonthStart <= start.format('YYYY-MM-DD') &&
-    currentMonthEnd >= end.format('YYYY-MM-DD')
+    currentMonthStart == start.format('YYYY-MM-DD') &&
+    currentMonthEnd == end.format('YYYY-MM-DD')
   );
 };
 const checkIfLast6Months = (start, current) => {
@@ -384,6 +424,13 @@ const checkIfAllTime = (start, current, end) => {
     end.format('YYYY-MM-DD') == current.format('YYYY-MM-DD')
   );
 };
+
+const customPosition = () => {
+  return {
+    top: Number(dateRangeMain.value?.getBoundingClientRect().bottom) + 65,
+    left: Number(dateRangeMain.value?.getBoundingClientRect().left),
+  };
+};
 </script>
 
 <style lang="scss" scoped>
@@ -399,12 +446,12 @@ const checkIfAllTime = (start, current, end) => {
 }
 
 .daterange-item:hover {
-  @apply bg-spring-10;
+  @apply bg-spring-20;
   cursor: pointer;
   color: white;
 }
 .daterange-item-active {
-  @apply bg-spring-10;
+  @apply bg-spring-20;
   color: white;
 }
 </style>

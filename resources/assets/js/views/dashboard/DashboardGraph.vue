@@ -1,10 +1,14 @@
 <template>
-  <div class="chart-wrapper">
+  <div class="chart-wrapper h-[280px]">
+    <div v-if="showGraphLoader" class="mx-auto mt-20 h-[100px] w-[100px]">
+      <spinnerLoader class="!h-[100px] !w-[100px]" />
+    </div>
+
     <apexchart
       id="chart"
       ref="chart"
-      height="210"
       type="line"
+      :class="{ 'opacity-0': showGraphLoader }"
       :options="chartOptions"
       :series="series"
     />
@@ -13,7 +17,7 @@
 
 <script setup lang="ts">
 import moment from 'moment';
-
+import spinnerLoader from 'Components/spinnerLoader.vue';
 import {
   reactive,
   ref,
@@ -36,6 +40,8 @@ interface ChartInterface {
 const xAxisCounter = ref(0);
 const labels = ref<number[]>([]);
 const roundedLabels = ref<number[]>([]);
+const showGraphLoader = inject('showGraphLoader') as Ref;
+
 const graphAmount = inject('graphAmount') as Ref;
 const yaxisTicks = ref([]);
 const maxValue = ref(0);
@@ -60,11 +66,21 @@ const tooltipText = computed(() => {
 });
 let chartOptions = computed(() => ({
   chart: {
-    height: 210,
+    height: '100%', // Set the height to 100% to cover the full space
+
     type: 'line',
     offsetY: 5,
     zoom: {
       enabled: false,
+    },
+    options: {
+      xaxis: {
+        labels: {
+          padding: {
+            left: 50, // Adjust the left padding value as needed
+          },
+        },
+      },
     },
     toolbar: {
       show: false,
@@ -87,12 +103,11 @@ let chartOptions = computed(() => ({
   tooltip: {
     custom: function ({ series, seriesIndex, dataPointIndex, w }) {
       const getDay = (formattedDate) => {
-        return moment(formattedDate).format('LL');
+        return moment(formattedDate).format('ddd MMM DD YYYY');
       };
-
       return `<div class="p-4">
                 <div class="text-n-40"> ${getDay(
-                  w.globals.categoryLabels[seriesIndex]
+                  w.globals.categoryLabels[dataPointIndex]
                 )}</div>
                 <div class="flex text-n-50 space-x-4 justify-between"><div>${
                   tooltipText.value
@@ -106,6 +121,10 @@ let chartOptions = computed(() => ({
 
   xaxis: {
     tickAmount: 3,
+    padding: {
+      left: 100, // Increase the space between the left edge of the chart and the first tick
+      right: 20, // Increase the space between the last tick and the right edge of the chart
+    },
     labels: {
       rotate: 0,
     },
@@ -113,9 +132,15 @@ let chartOptions = computed(() => ({
 
   yaxis: {
     min: 0, // minimum value on the y-axis
-    max: maxValue.value + 4, // maximum value on the y-axis
-    tickAmount: maxValue.value > 4 ? 6 : maxValue.value + 5, // number of ticks to display on the y-axis
+    max: maxValue.value + 3, // maximum value on the y-axis
+    tickAmount: maxValue.value > 4 ? 5 : maxValue.value + 3, // number of ticks to display on the y-axis
+
+    // Additional spacing options
+    offsetY: 10, // Increase the spacing between the y-axis line and the tick labels
+
     labels: {
+      offsetY: 10, // Increase the spacing between the tick labels and the plot area
+
       formatter: function (value, index) {
         labels.value =
           chart.value &&

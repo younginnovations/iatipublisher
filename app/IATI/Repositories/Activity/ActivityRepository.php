@@ -10,13 +10,14 @@ use App\IATI\Repositories\Repository;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Traits\FillDefaultValuesTrait;
 use Auth;
-use DB;
+use Carbon\Carbon;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ActivityRepository.
@@ -596,6 +597,14 @@ class ActivityRepository extends Repository
             ->orderBy('id', $direction);
     }
 
+    /**
+     * Return all result, indicator and period codes to download.
+     *
+     * @param $organizationId
+     * @param $activitiesId
+     *
+     * @return object
+     */
     public function getCodesToDownload($organizationId, $activitiesId): object
     {
         $query = $this->model->with(['results'])->select('id', 'iati_identifier')->where('org_id', $organizationId);
@@ -637,14 +646,24 @@ class ActivityRepository extends Repository
         $filteredQuery = $query;
 
         if ($queryParams['start_date'] && $queryParams['end_date']) {
-            $filteredQuery = $query->where('created_at', '>=', $queryParams['start_date'])
-                ->where('created_at', '<=', $queryParams['end_date']);
+            $date_from = Carbon::parse($queryParams['start_date'])->startOfDay();
+            $date_to = Carbon::parse($queryParams['end_date'])->endOfDay();
+
+            $filteredQuery = $query->where('created_at', '>=', $date_from)
+                ->where('created_at', '<=', $date_to);
         }
 
         return $filteredQuery;
     }
 
-    public function getActivityCount($queryParams)
+    /**
+     * Return activity count for activity dashboard graph.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     */
+    public function getActivityCount($queryParams): array
     {
         $query = $this->model;
         $format = $queryParams['range'] ?? 'Y-m-d';
@@ -676,6 +695,14 @@ class ActivityRepository extends Repository
         return $data;
     }
 
+    /**
+     * Returns activity by type.
+     *
+     * @param $queryParams
+     * @param $type
+     *
+     * @return array
+     */
     public function getActivityBy($queryParams, $type): array
     {
         $query = $this->model->select(DB::raw('count(*) as count, ' . $type));
@@ -687,6 +714,13 @@ class ActivityRepository extends Repository
         return $query->groupBy($type)->pluck('count', $type)->toArray();
     }
 
+    /**
+     * Return activity status based on publish.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     */
     public function getActivityStatus($queryParams): array
     {
         $query = $this->model->select(DB::raw('count(*) as count,status,linked_to_iati'));
@@ -698,38 +732,57 @@ class ActivityRepository extends Repository
         return $query->groupBy('status', 'linked_to_iati')->get()->toArray();
     }
 
+    /**
+     * Returns array with complete status of activities.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     */
     public function getCompleteStatus($queryParams): array
     {
-        $completeQuery = $this->model->select(DB::raw('count(*) as count,status,linked_to_iati,complete_percentage'))->where('complete_percentage', 100);
-        $incompleteQuery = $this->model->select(DB::raw('count(*) as count,status'))->where('complete_percentage', '<>', 100);
+        $completeQuery = $this->model->select(DB::raw('count(*) as count, status'))->where('complete_percentage', 100);
+        $incompleteQuery = $this->model->select(DB::raw('count(*) as count, status'))->where('complete_percentage', '!=', 100);
 
         if ($queryParams) {
             $completeQuery = $this->filterActivity($completeQuery, $queryParams);
-            $incompleteQuery = $this->filterActivity($completeQuery, $queryParams);
+            $incompleteQuery = $this->filterActivity($incompleteQuery, $queryParams);
         }
 
         return [
-            'complete' => $completeQuery->groupBy('status', 'linked_to_iati', 'complete_percentage')->get()->toArray(),
+            'complete' => $completeQuery->groupBy('status')->get()->toArray(),
             'incomplete' => $incompleteQuery->groupBy('status')->get()->toArray(),
         ];
     }
 
+    /**
+     * Returns array of data for activities dashboard download.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     */
     public function getActivitiesDashboardDownload($queryParams): array
     {
         return $this->model->select(
-            DB::raw("(iati_identifier->>'activity_identifier') as identifier,
-        title->0->>'narrative' as activity_title,
-        name->0->>'narrative' as organization,
-         case when linked_to_iati and activities.status='draft' then 'published recently' else activities.status end as case,
-         upload_medium,
-         complete_percentage,
-         activities.created_at,
-         activities.updated_at
-         ")
-        )
-            ->join('organizations', 'organizations.id', 'activities.org_id')
-            ->where('created_at', '>=', $queryParams['start_date'])
-            ->where('created_at', '<=', $queryParams['end_date'])
+            DB::raw(
+                "
+            (iati_identifier->>'activity_identifier') as identifier,
+             title->0->>'narrative' as activity_title,
+             name->0->>'narrative' as organization,
+             case when linked_to_iati and activities.status='draft'
+             then 'published recently'
+             else activities.status
+             end as case,
+             upload_medium,
+             complete_percentage,
+             activities.created_at,
+             activities.updated_at
+         "
+            )
+        )->leftJoin('organizations', 'organizations.id', 'activities.org_id')
+            ->whereDate('activities.created_at', '>=', $queryParams['start_date'])
+            ->whereDate('activities.created_at', '<=', $queryParams['end_date'])
             ->get()->toArray();
     }
 }

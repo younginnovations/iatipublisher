@@ -1,7 +1,7 @@
 <template>
   <nav class="pagination" aria-label="Pagination">
     <a
-      href="#"
+      href="javascript:void(0)"
       class="prev-btn"
       :class="{
         'pointer-events-none': data.last_page <= 1,
@@ -17,7 +17,7 @@
       ><a
         v-for="(index, i) in data.last_page"
         :key="index"
-        href="#"
+        href="javascript:void(0)"
         :class="active_page === index ? 'current' : ''"
         @click="changePage(i + 1)"
       >
@@ -26,7 +26,7 @@
     >
     <span v-else class="flex">
       <a
-        href="#"
+        href="javascript:void(0)"
         :class="active_page === 1 ? 'current' : ''"
         @click="changePage(1)"
       >
@@ -36,7 +36,7 @@
         <a
           v-for="(index, i) in 4"
           :key="index"
-          href="#"
+          href="javascript:void(0)"
           :class="active_page === index + 1 ? 'current' : ''"
           @click="changePage(i + 2)"
         >
@@ -49,7 +49,7 @@
         <a
           v-for="index in lastpages"
           :key="index"
-          href="#"
+          href="javascript:void(0)"
           :class="active_page === index ? 'current' : ''"
           @click="changePage(+index)"
         >
@@ -61,7 +61,7 @@
         <a
           v-for="index in midpages"
           :key="index"
-          href="#"
+          href="javascript:void(0)"
           :class="active_page === index ? 'current' : ''"
           @click="changePage(+index)"
         >
@@ -71,7 +71,7 @@
       </span>
 
       <a
-        href="#"
+        href="javascript:void(0)"
         :class="active_page === data.last_page ? 'current' : ''"
         @click="changePage(data.last_page)"
       >
@@ -79,7 +79,7 @@
       </a>
     </span>
     <a
-      href="#"
+      href="javascript:void(0)"
       class="next-btn"
       :class="{
         'pointer-events-none': data.last_page <= 1,
@@ -103,12 +103,26 @@ export default defineComponent({
       type: [Object],
       required: true,
     },
+    reset: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   emits: ['fetchActivities'],
   setup(props, { emit }) {
     const active_page = ref(1);
     const last_pagelist = ref();
     const mid_pagelist = ref();
+
+    watch(
+      () => props.reset,
+      (value) => {
+        if (value) {
+          active_page.value = 1;
+        }
+      }
+    );
 
     watch(active_page, () => {
       emit('fetchActivities', active_page.value);

@@ -20,8 +20,19 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  */
 class DashboardController extends Controller
 {
+    /**
+     * @var DashboardService
+     */
     public DashboardService $dashboardService;
+
+    /**
+     * @var CSVGenerator
+     */
     public CsvGenerator $csvGenerator;
+
+    /**
+     * @var AuditService
+     */
     public AuditService $auditService;
 
     /**
@@ -71,15 +82,24 @@ class DashboardController extends Controller
         }
     }
 
+    /**
+     * Returns user count grouped by organization for dashboard user table.
+     *
+     * @param $request
+     * @param $page
+     *
+     * @return JsonResponse
+     */
     public function getUserCountByOrganization(Request $request, int $page = 1): JsonResponse
     {
         try {
-            $page = (int) $request->get('page') ?? 1;
-            $tableConfig = getTableConfig('user_dashboard');
+            $page = (int) $request->get('page') ?? $page;
+            $tableConfig = getTableConfig('user');
             $queryParams = [];
 
             if (in_array($request->get('orderBy'), $tableConfig['orderBy'], true)) {
                 $queryParams['orderBy'] = $request->get('orderBy');
+
                 if (in_array($request->get('direction'), $tableConfig['direction'], true)) {
                     $queryParams['direction'] = $request->get('direction');
                 }
@@ -97,9 +117,16 @@ class DashboardController extends Controller
         }
     }
 
+    /**
+     * Gets query params.
+     *
+     * @param $request
+     *
+     * @return array
+     */
     protected function getQueryParams($request): array
     {
-        $validParameters = ['start_date', 'end_date', 'order_by', 'direction', 'page'];
+        $validParameters = ['start_date', 'end_date', 'orderBy', 'direction', 'page'];
         $queryParams = [];
 
         foreach ($validParameters as $parameter) {
@@ -122,7 +149,7 @@ class DashboardController extends Controller
             $queryParams['range'] = match (true) {
                 $endDate->diffInYears($startDate) > 1 => 'Y',
                 $endDate->diffInMonths($startDate) > 1 => 'Y-m',
-                $endDate->diffInDays($startDate) >= 1 => 'Y-m-d',
+                default => 'Y-m-d',
             };
 
             $queryParams['period'] = $period[$queryParams['range']];
@@ -164,16 +191,25 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
+            list($startDateString, $endDateString) = $this->dashboardService->resolveDateRangeFromRequest($request);
+
+            if (!$startDateString || !$endDateString) {
+                list($startDateString, $endDateString) = $this->dashboardService->getStartAndEndDateForAlltime('organizations');
+                $params['start_date'] = $startDateString;
+                $params['end_date'] = $endDateString;
+            }
+
             $publisherStat = $this->dashboardService->getPublisherGroupedByDate($params, 'created_at');
 
             return response()->json([
                 'success' => true,
                 'message' => 'Publisher registration count fetched successfully',
-                'data' => $publisherStat,
+                'data' => [
+                    'count'=>array_sum($publisherStat),
+                    'graph'=>$publisherStat, ],
             ]);
         } catch (\Exception $e) {
             logger()->error($e);
-            logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
         }
@@ -190,6 +226,14 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
+            list($startDateString, $endDateString) = $this->dashboardService->resolveDateRangeFromRequest($request);
+
+            if (!$startDateString || !$endDateString) {
+                list($startDateString, $endDateString) = $this->dashboardService->getStartAndEndDateForAlltime('organizations');
+                $params['start_date'] = $startDateString;
+                $params['end_date'] = $endDateString;
+            }
+
             $publisherStat = $this->dashboardService->getPublisherBy($params, 'registration_type');
 
             return response()->json([
@@ -215,6 +259,14 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
+            list($startDateString, $endDateString) = $this->dashboardService->resolveDateRangeFromRequest($request);
+
+            if (!$startDateString || !$endDateString) {
+                list($startDateString, $endDateString) = $this->dashboardService->getStartAndEndDateForAlltime('organizations');
+                $params['start_date'] = $startDateString;
+                $params['end_date'] = $endDateString;
+            }
+
             $publisherStat = $this->dashboardService->getPublisherBy($params, 'country');
             $publisherStat['codelist'] = getCodeList('Country', 'Activity');
 
@@ -241,6 +293,14 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
+            list($startDateString, $endDateString) = $this->dashboardService->resolveDateRangeFromRequest($request);
+
+            if (!$startDateString || !$endDateString) {
+                list($startDateString, $endDateString) = $this->dashboardService->getStartAndEndDateForAlltime('organizations');
+                $params['start_date'] = $startDateString;
+                $params['end_date'] = $endDateString;
+            }
+
             $publisherStat = $this->dashboardService->getPublisherBy($params, 'publisher_type');
             $publisherStat['codelist'] = getCodeList('OrganizationType', 'Organization');
 
@@ -267,6 +327,14 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
+            list($startDateString, $endDateString) = $this->dashboardService->resolveDateRangeFromRequest($request);
+
+            if (!$startDateString || !$endDateString) {
+                list($startDateString, $endDateString) = $this->dashboardService->getStartAndEndDateForAlltime('organizations');
+                $params['start_date'] = $startDateString;
+                $params['end_date'] = $endDateString;
+            }
+
             $publisherStat = $this->dashboardService->getPublisherBy($params, 'data_license');
             $publisherStat['codelist'] = getCodeList('DataLicense', 'Activity');
 
@@ -293,6 +361,14 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
+            list($startDateString, $endDateString) = $this->dashboardService->resolveDateRangeFromRequest($request);
+
+            if (!$startDateString || !$endDateString) {
+                list($startDateString, $endDateString) = $this->dashboardService->getStartAndEndDateForAlltime('organizations');
+                $params['start_date'] = $startDateString;
+                $params['end_date'] = $endDateString;
+            }
+
             $publisherStat = $this->dashboardService->getPublisherBySetup($params);
 
             return response()->json([
@@ -343,12 +419,14 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            $publisherStat = $this->dashboardService->getActivityCount($params);
+            $activityData = $this->dashboardService->getActivityCount($params);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Publisher grouped by setup completeness fetched successfully',
-                'data' => $publisherStat,
+                'message' => 'Activity time range data fetched successfully',
+                'data' => [
+                    'count'=>array_sum($activityData),
+                    'graph'=>$activityData, ],
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
@@ -425,7 +503,7 @@ class DashboardController extends Controller
                 'message' => 'Publisher grouped by setup completeness fetched successfully',
                 'data' => $activityStats,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
@@ -442,28 +520,20 @@ class DashboardController extends Controller
     public function getDataInDateRange(Request $request): JsonResponse
     {
         try {
-            list($fixedRangeString, $startDateString, $endDateString, $column) = $this->dashboardService->resolveDateRangeFromRequest($request);
+            list($startDateString, $endDateString, $column) = $this->dashboardService->resolveDateRangeFromRequest($request);
 
-            if (!$fixedRangeString && (!$startDateString || !$endDateString)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Invalid date range.',
-                ]);
+            if (!$startDateString || !$endDateString) {
+                list($startDateString, $endDateString) = $this->dashboardService->getStartAndEndDateForAlltime();
             }
 
-            if ($fixedRangeString) {
-                list($startDate, $endDate, $groupBy) = $this->dashboardService->resolveFixedRangeParams($fixedRangeString);
-            } elseif ($startDateString && $endDateString) {
-                list($startDate, $endDate, $groupBy) = $this->dashboardService->resolveCustomRangeParams($startDateString, $endDateString);
-            }
-
+            list($startDate, $endDate, $groupBy) = $this->dashboardService->resolveCustomRangeParams($startDateString, $endDateString);
             $unformattedResults = $this->dashboardService->getDataCountInRange($startDate, $endDate, $groupBy, $column);
-            $results = $this->dashboardService->fillDataToMissingDates($startDate, $endDate, $unformattedResults);
+            $results = $this->dashboardService->fillDataToMissingDates($startDate, $endDate, $unformattedResults, $groupBy);
 
             return response()->json([
                 'success' => true,
                 'message' => 'User count in date range fetched successfully',
-                'data' => $results,
+                'data' => ['graph'=>$results, 'count'=>array_sum($results)],
             ]);
         } catch (InvalidFormatException $e) {
             logger()->error($e->getMessage());
@@ -472,7 +542,7 @@ class DashboardController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching user count in date range.']);
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching user count in custom-range.']);
         }
     }
 
@@ -486,21 +556,13 @@ class DashboardController extends Controller
     public function downloadUserReport(Request $request): BinaryFileResponse|JsonResponse
     {
         try {
-            list($fixedRangeString, $startDateString, $endDateString) = $this->dashboardService->resolveDateRangeFromRequest($request);
+            list($startDateString, $endDateString) = $this->dashboardService->resolveDateRangeFromRequest($request);
 
-            if (!$fixedRangeString && (!$startDateString || !$endDateString)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Invalid date range.',
-                ]);
+            if (!$startDateString || !$endDateString) {
+                list($startDateString, $endDateString) = $this->dashboardService->getStartAndEndDateForAlltime();
             }
 
-            if ($fixedRangeString) {
-                list($startDate, $endDate) = $this->dashboardService->resolveFixedRangeParams($fixedRangeString);
-            } elseif ($startDateString && $endDateString) {
-                list($startDate, $endDate) = $this->dashboardService->resolveCustomRangeParams($startDateString, $endDateString);
-            }
-
+            list($startDate, $endDate) = $this->dashboardService->resolveCustomRangeParams($startDateString, $endDateString);
             $userData = $this->dashboardService->getUserDataForReportDownload($startDate, $endDate);
 
             if (count($userData)) {
@@ -556,14 +618,21 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
+            list($startDateString, $endDateString) = $this->dashboardService->resolveDateRangeFromRequest($request);
 
-            $headers = ['organization', 'organization_name', 'publisher_id', 'country', 'registration_type', 'data_license', 'publisher setting', 'default values', 'created_at', 'updated_at'];
+            if (!$startDateString || !$endDateString) {
+                list($startDateString, $endDateString) = $this->dashboardService->getStartAndEndDateForAlltime('organizations');
+                $params['start_date'] = Carbon::parse($startDateString);
+                $params['end_date'] = Carbon::parse($endDateString);
+            }
+
+            $headers = ['organization', 'identifier', 'publisher_type', 'country', 'registration_type', 'data_license', 'publisher setting', 'default values', 'created_at', 'updated_at'];
 
             $organizations = $this->dashboardService->getOrganizationToDownload($params);
 
             return $this->csvGenerator->generateWithHeaders(getTimeStampedText('organizations'), $organizations, $headers);
         } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity csv.']);
         }

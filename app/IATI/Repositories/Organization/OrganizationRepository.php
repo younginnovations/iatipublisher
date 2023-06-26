@@ -133,18 +133,19 @@ class OrganizationRepository extends Repository
                 });
         }
 
-        if (Arr::get($queryParams, 'start_date', false) && Arr::get($queryParams, 'end_date', false)) {
-            $dateColumn = Arr::get($queryParams, 'date_column', 'created_at');
-            if ($dateColumn === 'last_logged_in') {
-                $organizations->whereHas('latestLoggedInUser', function ($user) use ($queryParams) {
-                    $user->whereDate('last_logged_in', '>=', $queryParams['start_date'])
-                        ->whereDate('last_logged_in', '<=', $queryParams['end_date']);
-                });
-            } else {
-                $organizations
-                    ->whereDate("organizations.$dateColumn", '>=', $queryParams['start_date'])
-                    ->whereDate("organizations.$dateColumn", '<=', $queryParams['end_date']);
-            }
+        $startDate = Arr::get($queryParams, 'start_date', ($this->getOldestData()?->created_at ?? false));
+        $endDate = Arr::get($queryParams, 'end_date', now()->endOfDay());
+        $dateColumn = Arr::get($queryParams, 'date_column', 'created_at');
+
+        if ($dateColumn === 'last_logged_in') {
+            $organizations->whereHas('latestLoggedInUser', function ($user) use ($startDate, $endDate) {
+                $user->whereDate('last_logged_in', '>=', $startDate)
+                    ->whereDate('last_logged_in', '<=', $endDate);
+            });
+        } else {
+            $organizations
+                ->whereDate("organizations.$dateColumn", '>=', $startDate)
+                ->whereDate("organizations.$dateColumn", '<=', $endDate);
         }
 
         if (Arr::get($queryParams, 'filters', false)) {
@@ -223,25 +224,23 @@ class OrganizationRepository extends Repository
         $filteredQuery = $query;
 
         if (isset($queryParams['start_date']) && isset($queryParams['end_date'])) {
-            $filteredQuery = $query->where('created_at', '>=', $queryParams['start_date'])
-                ->where('created_at', '<=', $queryParams['end_date']);
+            $filteredQuery = $query->whereDate('organizations.created_at', '>=', $queryParams['start_date'])
+                ->whereDate('organizations.created_at', '<=', $queryParams['end_date']);
         }
 
         $direction = 'asc';
         $orderBy = 'count';
 
         if ($type) {
-            if (isset($queryParams['order_by'])) {
-                $orderBy = $queryParams['order_by'];
+            if (isset($queryParams['orderBy']) && $queryParams['orderBy'] !== 'count') {
+                $orderBy = str_replace('-', '_', $type);
             }
 
             if (isset($queryParams['sort'])) {
                 $direction = $queryParams['sort'];
             }
 
-            $filteredQuery = $filteredQuery->orderBy($orderBy, $direction);
-
-            $filteredQuery = $filteredQuery->groupBy($type);
+            $filteredQuery = $filteredQuery->orderBy($orderBy, $direction)->groupBy($type);
         }
 
         if (isset($queryParams['page'])) {
@@ -251,6 +250,11 @@ class OrganizationRepository extends Repository
         return $filteredQuery;
     }
 
+    /**
+     * Return publisher stats for dashboard.
+     *
+     * @return array
+     */
     public function getPublisherStats(): array
     {
         return [
@@ -265,83 +269,105 @@ class OrganizationRepository extends Repository
         ];
     }
 
+    /**
+     * Get publisher by type.
+     *
+     * @param $queryParams
+     * @param $type
+     * @param $page
+     *
+     * @return LengthAwarePaginator|array
+     */
+    public function getPublisherByPagination($queryParams, $type, $page = 1): LengthAwarePaginator|array
+    {
+        $query = $this->model->select(DB::raw('count(*) as count, ' . $type))->whereNotNull($type)->where($type, '<>', '');
+
+        if ($queryParams) {
+            $query = $this->filterPublisher($query, $queryParams, $type);
+        }
+
+        $data = $query->toArray();
+        $data['data'] = $query->pluck('count', $type);
+
+        return $data;
+    }
+
+    /**
+     * Get publisher by type.
+     *
+     * @param $queryParams
+     * @param $type
+     * @param $page
+     *
+     * @return array
+     */
     public function getPublisherBy($queryParams, $type, $page = 1): array
     {
-        $query = $this->model->select(DB::raw('count(*) as count, ' . $type));
+        $query = $this->model->select(DB::raw('count(*) as count, ' . $type))->whereNotNull($type)->where($type, '<>', '');
 
         if ($queryParams) {
             $query = $this->filterPublisher($query, $queryParams, $type);
         }
 
         return [
-            $type => $query->pluck('count', $type),
+            $type = $query->pluck('count', $type),
         ];
     }
 
+    /**
+     * Returns array of publisher grouped by setup.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     */
     public function getPublisherBySetup($queryParams): array
     {
-        // need code refactor and optimization
-        $completedSetting = $this->model->select('publisher_name', 'id')->whereHas('settings', function (Builder $q) {
-            $q->whereJsonContains('publishing_info->publisher_verification', true)
-                ->whereJsonContains('publishing_info->token_verification', true)
-                ->whereNotNull('default_values->default_currency')
-                ->whereJsonDoesntContain('default_values->default_currency', '')
-                ->whereJsonDoesntContain('default_values->default_language', '')
-                ->whereNotNull('default_values->default_language')
-                ->whereJsonDoesntContain('default_values->default_language', '')
-                ->whereNotNull('default_values->default_language')
-                ->whereJsonDoesntContain('default_values->default_language', '')
-                ->whereNotNull('default_values->default_language')
-                ->whereJsonDoesntContain('default_values->default_language', '')
-                ->whereNotNull('default_values->default_language');
-        })->pluck('id');
+        $data = [];
+        $queryMap = $this->getCompletenessMap();
 
-        $incompletePublisherSetting = $this->model->select('id')->with('settings')->whereNotIn('id', $completedSetting)->whereHas('settings', function (Builder $q) {
-            $q->whereJsonContains('publishing_info->publisher_verification', false)
-                ->orWhereJsonContains('publishing_info->token_verification', false)
-                ->orWhereNull('publishing_info');
-        })->count();
-        $incompleteDefaultValues = $this->model->select('id')->with('settings')->whereNotIn('id', $completedSetting)->whereHas('settings', function (Builder $q) {
-            $q->whereNull('default_values->default_currency')
-                ->orwhereNull('default_values->default_language')
-                ->orwhereNull('default_values')
-                ->orwhereNull('activity_default_values')
-                ->orwhereNull('activity_default_values->token_verification')
-                ->orwhereNull('activity_default_values->token_verification');
-        })->count();
-        $incompleteBothSettings = $this->model->select('id')->with('settings')->whereNotIn('id', $completedSetting)->whereHas('settings', function (Builder $q) {
-            $q->whereNull('default_values->default_currency')
-                ->orwhereNull('default_values->default_language')
-                ->orwhereNull('default_values')
-                ->orwhereNull('activity_default_values')
-                ->orwhereNull('activity_default_values->token_verification')
-                ->orwhereNull('activity_default_values->token_verification')
-                ->WhereJsonContains('publishing_info->publisher_verification', false)
-                ->orWhereJsonContains('publishing_info->token_verification', false)
-                ->WhereNull('publishing_info');
-        })->count();
-        $incompleteCount = $this->model->select('id')->whereNotIn('id', $completedSetting)->count();
+        foreach ($queryMap as $completenessStatus => $completenessStatusQuery) {
+            $publisher = $this->model->select(DB::raw('publisher_name, organizations.id'))
+                ->leftJoin('settings', 'settings.organization_id', 'organizations.id');
 
-        if ($queryParams) {
+            if (Arr::get($queryParams, 'start_date', false) && Arr::get($queryParams, 'end_date', false)) {
+                $startDate = Carbon::parse($queryParams['start_date'])->startOfDay();
+                $endDate = Carbon::parse($queryParams['end_date'])->endOfDay();
+                $publisher->whereRaw("($completenessStatusQuery)
+                 AND organizations.created_at >= '$startDate'
+                 AND organizations.created_at <= '$endDate'");
+            } else {
+                $publisher->whereRaw($completenessStatusQuery);
+            }
+
+            $data[$completenessStatus] = $publisher->count();
         }
 
         return [
             'completeSetup' => [
-                'count' => $completedSetting->count(),
+                'count' => $data['Publishers_with_complete_setup'],
                 'types' => [],
             ],
             'incompleteSetup' => [
-                'count' => $incompleteCount,
+                'count' => $data['Publishers_with_incomplete_setup'],
                 'types' => [
-                    'publisher' => $incompletePublisherSetting,
-                    'defaultValue' => $incompleteDefaultValues,
-                    'both' => $incompleteBothSettings,
+                    'publisher' => $data['Publishers_settings_not_completed'],
+                    'defaultValue' => $data['Default_values_not_completed'],
+                    'both' => $data['Both_publishing_settings_and_default_values_not_completed'],
                 ],
             ],
         ];
     }
 
-    public function getPublisherGroupedByDate($queryParams, $type)
+    /**
+     * Returns publishers grouped by date.
+     *
+     * @param $queryParams
+     * @param $type
+     *
+     * @return array
+     */
+    public function getPublisherGroupedByDate($queryParams, $type): array
     {
         $query = $this->model;
         $format = $queryParams['range'] ?? 'Y-m-d';
@@ -373,36 +399,50 @@ class OrganizationRepository extends Repository
         return $data;
     }
 
-    public function publisherWithoutActivity()
+    /**
+     * Returns count of publisher without activity.
+     *
+     * @return int
+     */
+    public function publisherWithoutActivity(): int
     {
         return $this->model->doesntHave('allActivities')->count();
     }
 
+    /**
+     * Organizations for dashboard download.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     */
     public function getOrganizationDashboardDownload($queryParams): array
     {
-        $query = $this->model->select(DB::raw("name->0->>'narrative' as organization,organizations.id,
+        $query = $this->model->select(DB::raw("name->0->>'narrative' as organization,
+        identifier,
         publisher_type,
-         country,
-         registration_type,
-         data_license,
-        case when publishing_info::text=json_strip_nulls(publishing_info)::text 
-        and (publishing_info->'publisher_verification')::text='true'::text 
-        and (publishing_info->'token_verification')::text='true'::text 
-        then 'complete' 
-        else 'incomplete' end as publisher_info,
-          case 
-            when default_values::text=json_strip_nulls(default_values)::text 
-            and activity_default_values::text=json_strip_nulls(activity_default_values)::text 
-            then 'complete' 
-            else 'incomplete' 
-         end as default_values,
-         organizations.created_at,
-         organizations.updated_at
-         "))->join('settings', 'organizations.id', 'settings.organization_id');
+        country,
+        registration_type,
+        data_license,
+        case when publishing_info::text=json_strip_nulls(publishing_info)::text
+            and (publishing_info->'publisher_verification')::text='true'::text
+            and (publishing_info->'token_verification')::text='true'::text
+        then 'complete'
+        else 'incomplete'
+        end as publisher_info,
+          case
+            when default_values::text=json_strip_nulls(default_values)::text
+            and activity_default_values::text=json_strip_nulls(activity_default_values)::text
+          then 'complete'
+          else 'incomplete'
+        end as default_values,
+        organizations.created_at,
+        organizations.updated_at
+         "))->leftJoin('settings', 'organizations.id', 'settings.organization_id');
 
         if (isset($queryParams['start_date']) && isset($queryParams['end_date'])) {
-            $query = $query->where('created_at', '>=', $queryParams['start_date'])
-                ->where('created_at', '<=', $queryParams['end_date']);
+            $query = $query->whereDate('organizations.created_at', '>=', $queryParams['start_date'])
+                ->whereDate('organizations.created_at', '<=', $queryParams['end_date']);
         }
 
         return $query->get()->toArray();
@@ -426,6 +466,7 @@ class OrganizationRepository extends Repository
             if ($filterName !== 'completeness') {
                 if (Arr::get($filterMode, $filterName) === 'single') {
                     $organizations->where($filterName, $filterValue);
+                    logger($organizations->toSql());
                 } else {
                     $organizations->whereIn($filterName, $filterValue);
                 }
@@ -445,40 +486,70 @@ class OrganizationRepository extends Repository
     private function getCompletenessMap(): array
     {
         return [
-            'Publisher_with_complete_setup' => "
-                    CAST(settings.publishing_info->>'publisher_verification' as bool) = true and
-                    settings.publishing_info->>'publisher_id' notnull and
-                    CAST(settings.publishing_info->>'token_verification' as bool) = true and
-                    settings.publishing_info->>'api_token' notnull
-                ",
-            'Publisher_setting_not_completed' => "
-                    CAST(settings.publishing_info->>'publisher_verification' as bool) = false or
-                    settings.publishing_info->>'publisher_id' isnull  or
-                    CAST(settings.publishing_info->>'token_verification' as bool) = false or
-                    settings.publishing_info->>'api_token' isnull
-                ",
+            'Publishers_with_complete_setup' => "
+                ((
+                    (settings.publishing_info->>'publisher_id' IS NOT NULL AND settings.publishing_info->>'publisher_id' <> '') AND
+                    (settings.publishing_info->>'api_token' IS NOT NULL AND settings.publishing_info->>'api_token' <> '') AND
+                    (settings.publishing_info->>'publisher_verification' IS NOT NULL) AND
+                    (CAST(settings.publishing_info->>'publisher_verification' as bool) = true) AND
+                    (settings.publishing_info->>'token_verification' IS NOT NULL) AND
+                    (CAST(settings.publishing_info->>'token_verification' as bool) = true)
+                )
+                AND
+                (
+                    (settings.default_values->>'default_currency' IS NOT NULL AND settings.default_values->>'default_currency' <> '') AND
+                    (settings.default_values->>'default_language' IS NOT NULL AND settings.default_values->>'default_language' <> '') AND
+                    (settings.activity_default_values->>'hierarchy' IS NOT NULL AND settings.activity_default_values->>'hierarchy' <> '') AND
+                    (settings.activity_default_values->>'humanitarian' IS NOT NULL AND settings.activity_default_values->>'humanitarian' <> '') AND
+                    (settings.activity_default_values->>'budget_not_provided' IS NOT NULL AND settings.activity_default_values->>'budget_not_provided' <> '')
+                ))
+            ",
+            'Publishers_settings_not_completed' => "
+                    ((settings.publishing_info->>'publisher_id' IS NULL OR settings.publishing_info->>'publisher_id' = '') OR
+                    (settings.publishing_info->>'api_token' IS NULL OR settings.publishing_info->>'api_token' = '') OR
+                    (settings.publishing_info->>'publisher_verification' IS NULL OR (CAST(settings.publishing_info->>'publisher_verification' as bool) = false)) OR
+                    (settings.publishing_info->>'token_verification' IS NULL OR (CAST(settings.publishing_info->>'token_verification' as bool) = false)))
+             ",
             'Default_values_not_completed' => "
-                    settings.default_values->>'default_currency' isnull or
-                    settings.default_values->>'default_language' isnull or
-                    settings.activity_default_values->>'hierarchy' isnull or
-                    settings.activity_default_values->>'humanitarian' isnull or
-                    settings.activity_default_values->>'budget_not_provided' isnull
-                ",
+                    ((settings.default_values->>'default_currency' IS NULL OR settings.default_values->>'default_currency' = '') OR
+                    (settings.default_values->>'default_language' IS NULL OR settings.default_values->>'default_language' = '') OR
+                    (settings.activity_default_values->>'hierarchy' IS NULL OR settings.activity_default_values->>'hierarchy' = '') OR
+                    (settings.activity_default_values->>'humanitarian' IS NULL OR settings.activity_default_values->>'humanitarian' = '') OR
+                    (settings.activity_default_values->>'budget_not_provided' IS NULL OR settings.activity_default_values->>'budget_not_provided' = ''))
+            ",
             'Both_publishing_settings_and_default_values_not_completed' => "
+                ((
+                    (settings.publishing_info->>'publisher_id' IS NULL OR settings.publishing_info->>'publisher_id' = '') OR
+                    (settings.publishing_info->>'api_token' IS NULL OR settings.publishing_info->>'api_token' = '') OR
+                    (settings.publishing_info->>'publisher_verification' IS NULL) OR
+                    (CAST(settings.publishing_info->>'publisher_verification' as bool) = false) OR
+                    (settings.publishing_info->>'token_verification' IS NULL) OR
+                    (CAST(settings.publishing_info->>'token_verification' as bool) = false)
+                )
+                 AND
+                (
+                    (settings.default_values->>'default_currency' IS NULL OR settings.default_values->>'default_currency' = '') OR
+                    (settings.default_values->>'default_language' IS NULL OR settings.default_values->>'default_language' = '') OR
+                    (settings.activity_default_values->>'hierarchy' IS NULL OR settings.activity_default_values->>'hierarchy' = '') OR
+                    (settings.activity_default_values->>'humanitarian' IS NULL OR settings.activity_default_values->>'humanitarian' = '') OR
+                    (settings.activity_default_values->>'budget_not_provided' IS NULL OR settings.activity_default_values->>'budget_not_provided' = '')
+                ))
+            ",
+            'Publishers_with_incomplete_setup' => "
                     (
-                        CAST(settings.publishing_info->>'publisher_verification' as bool) = false or
-                        settings.publishing_info->>'publisher_id' isnull  or
-                        CAST(settings.publishing_info->>'token_verification' as bool) = false or
-                        settings.publishing_info->>'api_token' isnull
-                    ) and
-                    (
-                        settings.default_values->>'default_currency' isnull or
-                        settings.default_values->>'default_language' isnull or
-                        settings.activity_default_values->>'hierarchy' isnull or
-                        settings.activity_default_values->>'humanitarian' isnull or
-                        settings.activity_default_values->>'budget_not_provided' isnull
+                    (settings.publishing_info->>'publisher_id' IS NULL OR settings.publishing_info->>'publisher_id' = '') OR
+                    (settings.publishing_info->>'api_token' IS NULL OR settings.publishing_info->>'api_token' = '') OR
+                    (settings.publishing_info->>'publisher_verification' IS NULL) OR
+                    (CAST(settings.publishing_info->>'publisher_verification' as bool) = false) OR
+                    (settings.publishing_info->>'token_verification' IS NULL) OR
+                    (CAST(settings.publishing_info->>'token_verification' as bool) = false) OR
+                    (settings.default_values->>'default_currency' IS NULL OR settings.default_values->>'default_currency' = '') OR
+                    (settings.default_values->>'default_language' IS NULL OR settings.default_values->>'default_language' = '') OR
+                    (settings.activity_default_values->>'hierarchy' IS NULL OR settings.activity_default_values->>'hierarchy' = '') OR
+                    (settings.activity_default_values->>'humanitarian' IS NULL OR settings.activity_default_values->>'humanitarian' = '') OR
+                    (settings.activity_default_values->>'budget_not_provided' IS NULL OR settings.activity_default_values->>'budget_not_provided' = '')
                     )
-                ",
+            ",
         ];
     }
 

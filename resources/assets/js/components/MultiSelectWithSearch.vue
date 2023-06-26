@@ -1,5 +1,5 @@
 <template>
-  <div style="position: relative">
+  <div ref="publisherTypeMultiselect">
     <div class="margin-20">
       <p class="m-2 pb-2 text-xs font-bold uppercase text-n-50">
         {{ props.header }}
@@ -49,7 +49,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { defineEmits, defineProps, ref, onMounted } from 'vue';
+import { defineEmits, defineProps, ref, onMounted, onBeforeUnmount } from 'vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 
 const props = defineProps({
@@ -69,6 +69,7 @@ interface TempItem {
 }
 
 let tempListItems = ref<TempItem[]>([]);
+const publisherTypeMultiselect = ref();
 
 const emit = defineEmits(['changeSelectedPublisher']);
 let keys = Object.keys(props.listItems);
@@ -92,21 +93,33 @@ function formatPublisherType() {
     });
   }
 }
+onMounted(() => {
+  publisherTypeMultiselect.value.addEventListener(
+    'click',
+    keepPublisherModelOpen
+  );
+});
+
+onBeforeUnmount(() => {
+  publisherTypeMultiselect.value.removeEventListener(
+    'click',
+    keepPublisherModelOpen
+  );
+});
 
 const updateArrayBySearch = () => {
   let searchString = searchInput.value.toLowerCase();
 
   for (let i = 0; i < keys.length; i++) {
-    let key = keys[i];
-    let item = tempListItems.value[key];
-    if (item.label.toLowerCase().includes(searchString)) {
-      tempListItems.value[key].show = true;
-    } else {
-      tempListItems.value[key].show = false;
-    }
+    let item = tempListItems.value[i];
+    tempListItems.value[i].show = item.label
+      .toLowerCase()
+      .includes(searchString);
   }
 };
-
+const keepPublisherModelOpen = (event) => {
+  event.stopPropagation();
+};
 const applyFilter = () => {
   changeSelectedPublisher(checkedBoxes.value);
 };

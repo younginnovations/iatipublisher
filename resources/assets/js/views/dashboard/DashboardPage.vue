@@ -36,7 +36,6 @@
           <span>Users</span>
         </button>
       </div>
-
       <div class="flex w-full items-center justify-end space-x-2 xl:w-auto">
         <DateRangeWidget
           :date-label="DateLabel"
@@ -80,11 +79,13 @@ const currentNav = ref({
 });
 const tableData = ref<any>([]);
 const DateLabel = ref('Registered date:');
-const startDate = ref('1990-12-31');
-const endDate = ref(moment(new Date()).format('YYYY-MM-DD'));
+const startDate = ref('');
+const endDate = ref('');
 const graphAmount = ref<object[]>([]);
 const graphTotal = ref(0);
 const showTableLoader = ref(false);
+const showGraphLoader = ref(false);
+
 const dateLabel = {
   publisher: 'Registered date:',
   activity: 'Activity Added on:',
@@ -99,27 +100,35 @@ const handleChangeTableNav = (item, filter, page) => {
 };
 
 onMounted(() => {
-  setDateRangeDate('1990-12-31', moment(new Date()).format('YYYY-MM-DD'));
+  setDateRangeDate('', '');
   fetchTableData();
   fetchGraphData();
 });
 const downloadReport = () => {
-  axios.get(`/dashboard/${currentView.value}/download`).then((res) => {
-    const response = res.data;
-    let blob = new Blob([response], {
-      type: 'application/csv',
+  let params = new URLSearchParams();
+  if (startDate.value && endDate.value) {
+    params.append('start_date', startDate.value);
+    params.append('end_date', endDate.value);
+  }
+
+  axios
+    .get(`/dashboard/${currentView.value}/download`, { params: params })
+    .then((res) => {
+      const response = res.data;
+      let blob = new Blob([response], {
+        type: 'application/csv',
+      });
+      let link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = `${currentView.value}-report.csv`;
+      link.click();
     });
-    let link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = `${currentView.value}-report.csv`;
-    link.click();
-  });
 };
 
 const graphDataFormatter = (graphData) => {
   for (let date in graphData) {
     const data = {
-      x: moment(date).format('LL'),
+      x: moment(date).format('MMM DD YYYY'),
       y: graphData[date],
     };
     graphAmount.value.push(data);
@@ -127,6 +136,7 @@ const graphDataFormatter = (graphData) => {
 };
 
 const fetchGraphData = () => {
+  showGraphLoader.value = true;
   let params = new URLSearchParams();
   params.append('start_date', startDate.value);
   params.append('end_date', endDate.value);
@@ -137,6 +147,9 @@ const fetchGraphData = () => {
       graphAmount.value.length = 0;
       graphTotal.value = res.data.data['count'];
       graphDataFormatter(res.data.data['graph']);
+    })
+    .finally(() => {
+      showGraphLoader.value = false;
     });
 };
 
@@ -158,9 +171,13 @@ watch(
 const fetchTableData = (filter = { orderBy: '', sort: '' }, page = '1') => {
   showTableLoader.value = true;
   let params = new URLSearchParams();
-  params.append('orderBy', filter.orderBy);
+  if (filter.orderBy) {
+    params.append('orderBy', filter.orderBy);
+  }
   params.append('page', page);
-  params.append('direction', filter.sort);
+  if (filter.sort) {
+    params.append('direction', filter.sort);
+  }
 
   if (startDate.value && endDate.value && currentNav.value.label !== 'user') {
     params.append('start_date', startDate.value);
@@ -175,30 +192,32 @@ const fetchTableData = (filter = { orderBy: '', sort: '' }, page = '1') => {
       let response = res.data;
 
       if (currentView.value === 'publisher') {
-        console.log(currentNav.value['apiParams']);
         if (currentNav.value['apiParams'] !== 'setup') {
           tableData.value = [];
+          let tempData: Array<object> = [];
           const dataType = currentNav.value['apiParams']
             .toString()
             .replace('-', '_');
           const codeList = response.data?.codelist;
 
-          for (let key in response.data?.[dataType]) {
-            const value = response.data?.[dataType][key];
+          for (let key in response.data?.data) {
+            const value = response.data?.data[key];
             let label = key;
 
             if (codeList) {
               label = codeList[key] ?? 'Unknown';
             }
 
-            tableData.value.push({
+            tempData.push({
               label: label,
               id: key,
               total: value,
             });
           }
+
+          tableData.value = response.data;
+          tableData.value.data = tempData;
         } else {
-          console.log('here');
           completeNess.value = response.data;
         }
       }
@@ -215,4 +234,5 @@ provide('completeNess', completeNess);
 provide('graphAmount', graphAmount);
 provide('graphTotal', graphTotal);
 provide('showTableLoader', showTableLoader);
+provide('showGraphLoader', showGraphLoader);
 </script>

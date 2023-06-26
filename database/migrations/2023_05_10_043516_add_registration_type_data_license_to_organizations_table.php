@@ -15,7 +15,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::table(DBTables::ORGANIZATIONS, function (Blueprint $table) {
-            $table->enum('registration_type', Enums::ORGANIZATION_REGISTRATION_METHOD)->nullable();
+            $table->enum('registration_type', array_keys(Enums::ORGANIZATION_REGISTRATION_METHOD))->nullable();
             $table->string('data_license')->nullable();
         });
     }

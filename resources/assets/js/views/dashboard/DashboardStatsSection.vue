@@ -1,6 +1,15 @@
 <template>
   <section class="flex flex-col gap-6 lg:flex-row">
-    <div class="min-w-[450px] rounded bg-white p-4">
+    <div v-if="showStatsLoader" class="min-w-[450px] rounded bg-white p-4">
+      <div v-for="n in 3" :key="n" class="my-8">
+        <div class="my-5">
+          <ShimmerLoading class="mx-auto !w-[200px] !rounded-sm" />
+        </div>
+        <ShimmerLoading class="mx-auto my-4 !w-[380px] !rounded-sm" />
+      </div>
+      <ShimmerLoading class="mx-auto my-4 !w-[380px] !rounded-sm" />
+    </div>
+    <div v-else class="min-w-[450px] rounded bg-white p-4">
       <div v-if="currentView !== 'user'">
         <div class="border-b border-n-20 pb-4">
           <div class="flex items-center justify-between">
@@ -12,13 +21,11 @@
             <span v-else class="text-xs uppercase text-n-40"
               >Total No. of Activities in IATI</span
             >
-
-            <svg-vue icon="question-mark" class="text-base text-n-40" />
           </div>
-          <a class="my-1 text-2xl text-bluecoral" :href="`/list-organisations`">
+          <p class="my-1 text-2xl text-bluecoral">
             <!-- total count -->
             {{ total }}
-          </a>
+          </p>
         </div>
         <div class="border-b border-n-20 py-4">
           <div class="flex items-center justify-between">
@@ -30,42 +37,55 @@
             <span v-else class="text-xs uppercase text-n-40">
               Last Publisher with Activity Update
             </span>
-
-            <svg-vue icon="question-mark" class="text-base text-n-40" />
           </div>
           <div>
             <button
               v-if="currentView === 'publisher'"
               class="mb-1 mt-2 text-2xl text-bluecoral"
-              @click="proxyUser(lastRegistered.id)"
+              @click="proxyUser()"
             >
               <!-- latest registered -->
               {{
-                lastRegistered?.name
-                  ? lastRegistered?.name[0].narrative
-                  : lastRegistered?.publisher_name
-                  ? lastRegistered?.publisher_name
-                  : 'untitled'
+                truncateText(
+                  lastRegistered?.name
+                    ? lastRegistered?.name[0].narrative
+                    : lastRegistered?.publisher_name
+                    ? lastRegistered?.publisher_name
+                    : 'untitled',
+                  30
+                )
               }}
             </button>
             <button
               v-else
               class="mb-1 mt-2 text-2xl text-bluecoral"
-              @click="proxyUser(lastPubActivityUpdate.user_id)"
+              @click="proxyUser()"
             >
-              <!-- latest registered -->
+              <!-- latest registered-->
 
               {{
-                lastPubActivityUpdate?.name
-                  ? lastPubActivityUpdate?.name[0].narrative
-                  : lastPubActivityUpdate?.publisher_name
-                  ? lastPubActivityUpdate?.publisher_name
-                  : 'untitled'
+                truncateText(
+                  lastPubActivityUpdate?.name
+                    ? lastPubActivityUpdate?.name[0].narrative
+                    : lastPubActivityUpdate?.publisher_name
+                    ? lastPubActivityUpdate?.publisher_name
+                    : 'untitled',
+                  30
+                )
               }}
             </button>
-            <div class="my-1 text-xs italic text-n-40">
+            <div
+              v-if="currentView === 'publisher'"
+              class="my-1 text-xs italic text-n-40"
+            >
               <!-- latest registered date -->
-              Registered Date: {{ formatDate(lastRegistered?.created_at) }}
+              Registered On:
+              {{ formatDate(lastRegistered?.created_at) }}
+            </div>
+            <div v-else class="my-1 text-xs italic text-n-40">
+              <!-- latest registered date -->
+              Last updated on:
+              {{ formatDate(lastUpdatedActivity?.updated_at) }}
             </div>
           </div>
         </div>
@@ -80,18 +100,14 @@
             <span v-else class="text-xs uppercase text-n-40">
               Total No. of Publishers with No Activity in IATI
             </span>
-            <div>
-              <svg-vue icon="question-mark" class="text-base text-n-40" />
-            </div>
           </div>
-          <a
+          <p
             v-if="currentView === 'publisher'"
             class="my-1 text-2xl text-bluecoral"
-            :href="`/users?status=0`"
           >
             <!-- total count -->
             {{ inactivePublisher }}
-          </a>
+          </p>
           <div v-else class="my-1 text-2xl text-bluecoral">
             <!-- total count -->
             {{ publisherWithoutActivity }}
@@ -103,7 +119,6 @@
           <span class="text-sm text-bluecoral"
             >Different users in IATI Publishers</span
           >
-          <svg-vue icon="question-mark" class="text-base text-n-40" />
         </div>
         <table class="w-full">
           <thead>
@@ -118,47 +133,41 @@
               <td class="py-3 text-xs font-bold uppercase text-n-40">total</td>
             </tr>
           </thead>
-          <tbody>
-            <tr class="border-b border-n-20">
+          <tbody v-if="showPublisherStats">
+            <tr
+              v-for="(value, key) in publisherStats"
+              :key="key"
+              class="border-b border-n-20"
+            >
               <td class="px-6 py-2.5 text-sm text-bluecoral">
-                <a :href="`/users?roles=2`"> IATI Admin</a>
+                <a :href="`/users?roles=${value.roleId}`">{{
+                  value.display
+                }}</a>
               </td>
               <td class="px-6 py-2.5 text-sm text-n-50">
-                {{ iatiAdminStats?.active }}
+                {{ value.active }}
               </td>
               <td class="px-6 py-2.5 text-sm text-n-50">
-                {{ iatiAdminStats?.disabled }}
+                {{ value.disabled }}
               </td>
               <td class="px-6 py-2.5 text-sm text-n-50">
-                {{ iatiAdminStats?.active + iatiAdminStats?.disabled }}
+                {{ value.active + value.disabled }}
               </td>
             </tr>
-            <tr class="border-b border-n-20">
-              <td class="px-6 py-2.5 text-sm text-bluecoral">
-                <a :href="`/users?roles=3`">Organisation Admin</a>
+          </tbody>
+          <tbody v-else>
+            <tr v-for="i in 3" :key="i">
+              <td class="px-6 py-2.5">
+                <ShimmerLoading class="!rounded-sm" />
               </td>
-              <td class="px-6 py-2.5 text-sm text-n-50">
-                {{ orgAdminStats?.active }}
+              <td class="px-6 py-2.5">
+                <ShimmerLoading class="!rounded-sm" />
               </td>
-              <td class="px-6 py-2.5 text-sm text-n-50">
-                {{ orgAdminStats?.disabled }}
+              <td class="px-6 py-2.5">
+                <ShimmerLoading class="!rounded-sm" />
               </td>
-              <td class="px-6 py-2.5 text-sm text-n-50">
-                {{ orgAdminStats?.active + orgAdminStats?.disabled }}
-              </td>
-            </tr>
-            <tr class="border-b border-n-20">
-              <td class="px-6 py-2.5 text-sm text-bluecoral">
-                <a :href="`/users?roles=4`">General Users</a>
-              </td>
-              <td class="px-6 py-2.5 text-sm text-n-50">
-                {{ genUserStats?.active }}
-              </td>
-              <td class="px-6 py-2.5 text-sm text-n-50">
-                {{ genUserStats?.disabled }}
-              </td>
-              <td class="px-6 py-2.5 text-sm text-n-50">
-                {{ genUserStats?.active + genUserStats?.disabled }}
+              <td class="px-6 py-2.5">
+                <ShimmerLoading class="!rounded-sm" />
               </td>
             </tr>
           </tbody>
@@ -172,18 +181,14 @@
       <div v-if="currentView === 'user'">
         <div class="flex space-x-2.5 px-2 text-xs uppercase text-n-40">
           <p>Total Number of Users</p>
-
-          <svg-vue icon="question-mark" class="text-base text-n-40" />
         </div>
-        <div class="my-1 px-2 text-3xl text-bluecoral">
-          {{
-            genUserStats?.active +
-            genUserStats?.disabled +
-            orgAdminStats?.active +
-            orgAdminStats?.disabled +
-            iatiAdminStats?.active +
-            iatiAdminStats?.disabled
-          }}
+        <ShimmerLoading
+          v-if="showGraphLoader"
+          class="mx-auto !mt-3 !h-10 !w-[100px] !rounded-sm"
+        />
+
+        <div v-else class="my-1 px-2 text-3xl text-bluecoral">
+          {{ graphTotal }}
         </div>
       </div>
       <div v-else>
@@ -192,10 +197,15 @@
             Total No. of Publisher Registration
           </p>
           <p v-else>Total No. of Activities Added</p>
-
-          <svg-vue icon="question-mark" class="text-base text-n-40" />
         </div>
-        <div class="my-1 px-2 text-3xl text-bluecoral">{{ graphTotal }}</div>
+        <ShimmerLoading
+          v-if="showGraphLoader"
+          class="mx-auto !mt-3 !h-10 !w-[100px] !rounded-sm"
+        />
+
+        <div v-else class="my-1 px-2 text-3xl text-bluecoral">
+          {{ graphTotal }}
+        </div>
       </div>
       <DashboardGraph :current-view="currentView" />
     </div>
@@ -203,17 +213,24 @@
       v-if="loader.status"
       :text="loader.text"
       :class="{ 'animate-loader': loader }"
-      class="-translate-x-6 outline"
     />
   </section>
 </template>
 <script lang="ts" setup>
 import { ref, defineProps, onMounted, watch, inject, Ref } from 'vue';
 import DashboardGraph from './DashboardGraph.vue';
+
 import axios from 'axios';
 import moment from 'moment';
 import Loader from 'Components/sections/ProgressLoader.vue';
-
+import { truncateText } from '../../composable/utils';
+import ShimmerLoading from 'Components/ShimmerLoading.vue';
+interface PublisherStat {
+  active: number;
+  disabled: number;
+  display: boolean;
+  roleId: string;
+}
 const props = defineProps({
   currentView: {
     type: String,
@@ -224,13 +241,15 @@ const total = ref();
 const inactivePublisher = ref();
 const publisherWithoutActivity = ref();
 const lastRegistered = ref();
-const lastPubActivityUpdate = ref();
+const lastUpdatedPublisher = ref();
+const lastUpdatedActivity = ref();
 const loader = ref({ status: false, text: '' });
-
-const iatiAdminStats = ref({ active: 0, disabled: 0 });
-const orgAdminStats = ref({ active: 0, disabled: 0 });
-const genUserStats = ref({ active: 0, disabled: 0 });
+const showStatsLoader = ref(false);
 const graphTotal = inject('graphTotal') as Ref;
+const publisherStats = ref<PublisherStat[]>([]);
+const showPublisherStats = ref(true);
+const showGraphLoader = inject('showGraphLoader') as Ref;
+const userId = ref();
 
 onMounted(() => {
   fetchStatsData();
@@ -240,15 +259,15 @@ const formatDate = (date) => {
   return moment(date).format('MMMM DD, YYYY');
 };
 
-const proxyUser = (id: number) => {
+const proxyUser = () => {
   loader.value.status = true;
   loader.value.text = 'Proxy Login';
-  const endpoint = `/proxy-organisation/${id}`;
+  const endpoint = `/proxy-organisation/${userId.value}`;
 
   axios.get(endpoint).then((res) => {
     const response = res.data;
 
-    if (response.success) {
+    if (response.success === true) {
       setTimeout(() => {
         window.location.replace('/activities');
       }, 1000);
@@ -265,26 +284,32 @@ watch(
   }
 );
 const fetchStatsData = () => {
-  axios.get(`/dashboard/${props.currentView}/stats`).then((res) => {
-    const response = res.data;
-    console.log(response);
-    total.value = response.data.totalCount;
-    lastRegistered.value = response.data.lastRegisteredPublisher;
-    lastPubActivityUpdate.value = response.data.lastUpdatedPublisher;
+  showStatsLoader.value = true;
+  axios
+    .get(`/dashboard/${props.currentView}/stats`)
+    .then((res) => {
+      const response = res.data;
+      total.value = response.data.totalCount;
+      lastRegistered.value = response.data.lastRegisteredPublisher;
+      lastUpdatedPublisher.value = response.data.lastUpdatedPublisher;
+      lastUpdatedActivity.value = response.data.lastUpdatedActivity;
 
-    if (props.currentView === 'publisher') {
-      inactivePublisher.value = response.data.inActivePublisher;
-    }
-    if (props.currentView === 'activity') {
-      publisherWithoutActivity.value = response.data.publisherWithoutActivity;
-    }
-    if (props.currentView === 'user') {
-      iatiAdminStats.value = response.data.iati_admin;
-      orgAdminStats.value = response.data.admin;
-      genUserStats.value = response.data.general_user;
-      console.log(iatiAdminStats.value?.active);
-    }
-  });
+      if (props.currentView === 'publisher') {
+        userId.value = lastRegistered.value.user_id;
+        inactivePublisher.value = response.data.inActivePublisher;
+      }
+      if (props.currentView === 'activity') {
+        userId.value = response.data.userId;
+        publisherWithoutActivity.value = response.data.publisherWithoutActivity;
+      }
+      if (props.currentView === 'user') {
+        showPublisherStats.value = true;
+        publisherStats.value = response.data;
+      }
+    })
+    .finally(() => {
+      showStatsLoader.value = false;
+    });
 };
 </script>
 <style></style>

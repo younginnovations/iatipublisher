@@ -256,6 +256,7 @@ class UserController extends Controller
                 'data' => $users,
             ]);
         } catch (\Exception $e) {
+            logger()->error($e);
             logger()->error($e->getMessage());
 
             return response()->json([

@@ -3,7 +3,7 @@
     <!--Filter options start-->
     <div class="select filters inline-flex items-center space-x-2">
       <svg-vue class="w-10 text-lg" icon="funnel" />
-      <span class="organization">
+      <span class="country">
         <Multiselect
           id="country-filter"
           v-model="filter.country"
@@ -18,7 +18,7 @@
           label="country"
         />
       </span>
-      <span class="organization">
+      <span class="setup-completeness">
         <Multiselect
           id="setup-completeness"
           v-model="filter.completeness"
@@ -31,9 +31,9 @@
           label="setupCompleteness"
         />
       </span>
-      <span class="organization">
+      <span class="registration-type">
         <Multiselect
-          id="setup-completeness"
+          id="registration-type"
           v-model="filter.registration_type"
           placeholder="REGISTRATION TYPE"
           :options="registrationTypes"
@@ -50,7 +50,7 @@
         <div
           class="flex justify-between align-middle text-xs font-bold uppercase text-bluecoral"
           style="width: 100%; height: 100%"
-          @click="toggleShowMultiSelect"
+          @click="toggleShowMultiSelect($event)"
         >
           <span style="height: fit-content">Publisher Type</span>
           <span
@@ -60,18 +60,26 @@
             <svg-vue icon="arrow-down"></svg-vue>
           </span>
         </div>
-        <div v-show="showMultiSelectWithSearch" class="multiselect-wrapper">
-          <MultiSelectWithSearch
-            header="Publisher Type"
-            :list-items="props.publisherTypes"
-            @change-selected-publisher="setSelectedPublisher"
-          ></MultiSelectWithSearch>
-        </div>
+
+        <Teleport to="body">
+          <div
+            v-if="showMultiSelectWithSearch"
+            class="multiselect-wrapper"
+            :style="multiselectStyle"
+          >
+            <MultiSelectWithSearch
+              class="relative !z-[1000]"
+              header="Publisher Type"
+              :list-items="publisherTypes"
+              @change-selected-publisher="setSelectedPublisher"
+            ></MultiSelectWithSearch>
+          </div>
+        </Teleport>
       </div>
 
-      <span class="organization">
+      <span class="data-license">
         <Multiselect
-          id="dataLicense"
+          id="data-license"
           v-model="filter.data_license"
           :options="dataLicenses"
           placeholder="DATA LICENSE"
@@ -88,7 +96,7 @@
     <!--Filter options end-->
 
     <!--Date range start-->
-    <div class="h-[38px] px-4">
+    <div class="flex h-[38px] w-full items-center justify-end px-4 2xl:w-auto">
       <DateRangeWidget
         :dropdown-range="dropdownRange"
         @trigger-set-date-range="setDateRangeDate"
@@ -201,7 +209,10 @@
       <span
         class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
       >
-        <span class="text-n-40">Date range</span>
+        <span>
+          <span class="text-n-40"> Date range: </span>
+          {{ filter.selected_date_filter }}
+        </span>
         <svg-vue
           class="mx-2 mt-1 cursor-pointer text-xs"
           icon="cross"
@@ -209,6 +220,7 @@
             () => {
               filter.start_date = '';
               filter.end_date = '';
+              filter.selected_date_filter = '';
             }
           "
         />
@@ -228,18 +240,18 @@
           <tr class="bg-n-10">
             <th id="organisation_name" scope="col">
               <a
-                class="text-n-50 transition duration-500 hover:text-spring-50"
+                class="cursor-pointer text-n-50 transition duration-500 hover:text-spring-50"
                 :class="
-                  orderType === 'name'
+                  sortParams.orderBy === 'name'
                     ? sortingDirection()
                     : defaultSortDirection
                 "
-                :href="sortBy('name')"
+                @click="sortBy('name')"
               >
                 <span class="sorting-indicator">
                   <svg-vue
                     :icon="`${
-                      orderType === 'name'
+                      sortParams.orderBy === 'name'
                         ? sortingDirection()
                         : defaultSortDirection
                     }-arrow`"
@@ -250,18 +262,18 @@
             </th>
             <th id="country" scope="col" style="width: 173px">
               <a
-                class="text-n-50 transition duration-500 hover:text-spring-50"
+                class="cursor-pointer text-n-50 transition duration-500 hover:text-spring-50"
                 :class="
-                  orderType === 'country'
+                  sortParams.orderBy === 'country'
                     ? sortingDirection()
                     : defaultSortDirection
                 "
-                :href="sortBy('country')"
+                @click="sortBy('country')"
               >
                 <span class="sorting-indicator">
                   <svg-vue
                     :icon="`${
-                      orderType === 'country'
+                      sortParams.orderBy === 'country'
                         ? sortingDirection()
                         : defaultSortDirection
                     }-arrow`"
@@ -272,18 +284,18 @@
             </th>
             <th id="registered_on" scope="col" style="width: 173px">
               <a
-                class="text-n-50 transition duration-500 hover:text-spring-50"
+                class="cursor-pointer text-n-50 transition duration-500 hover:text-spring-50"
                 :class="
-                  orderType === 'registered_on'
+                  sortParams.orderBy === 'registered_on'
                     ? sortingDirection()
                     : defaultSortDirection
                 "
-                :href="sortBy('registered_on')"
+                @click="sortBy('registered_on')"
               >
                 <span class="sorting-indicator">
                   <svg-vue
                     :icon="`${
-                      orderType === 'registered_on'
+                      sortParams.orderBy === 'registered_on'
                         ? sortingDirection()
                         : defaultSortDirection
                     }-arrow`"
@@ -294,40 +306,39 @@
             </th>
             <th id="last_login" scope="col" style="width: 173px">
               <a
-                class="text-n-50 transition duration-500 hover:text-spring-50"
+                class="cursor-pointer text-n-50 transition duration-500 hover:text-spring-50"
                 :class="
-                  orderType === 'last_logged_in'
+                  sortParams.orderBy === 'last_logged_in'
                     ? sortingDirection()
                     : defaultSortDirection
                 "
-                :href="sortBy('last_logged_in')"
               >
-                <span class="sorting-indicator">
+                <!-- <span class="sorting-indicator">
                   <svg-vue
                     :icon="`${
-                      orderType === 'last_logged_in'
+                      sortParams.orderBy === 'last_logged_in'
                         ? sortingDirection()
                         : defaultSortDirection
                     }-arrow`"
                   />
-                </span>
+                </span> -->
                 <span>Last Login</span>
               </a>
             </th>
             <th id="activities" scope="col" style="width: 173px">
               <a
-                class="text-n-50 transition duration-500 hover:text-spring-50"
+                class="cursor-pointer text-n-50 transition duration-500 hover:text-spring-50"
                 :class="
-                  orderType === 'all_activities_count'
+                  sortParams.orderBy === 'all_activities_count'
                     ? sortingDirection()
                     : defaultSortDirection
                 "
-                :href="sortBy('all_activities_count')"
+                @click="sortBy('all_activities_count')"
               >
                 <span class="sorting-indicator">
                   <svg-vue
                     :icon="`${
-                      orderType === 'all_activities_count'
+                      sortParams.orderBy === 'all_activities_count'
                         ? sortingDirection()
                         : defaultSortDirection
                     }-arrow`"
@@ -338,18 +349,18 @@
             </th>
             <th id="publisher_type" scope="col" style="width: 173px">
               <a
-                class="text-n-50 transition duration-500 hover:text-spring-50"
+                class="cursor-pointer text-n-50 transition duration-500 hover:text-spring-50"
                 :class="
-                  orderType === 'publisher_type'
+                  sortParams.orderBy === 'publisher_type'
                     ? sortingDirection()
                     : defaultSortDirection
                 "
-                :href="sortBy('publisher_type')"
+                @click="sortBy('publisher_type')"
               >
                 <span class="sorting-indicator">
                   <svg-vue
                     :icon="`${
-                      orderType === 'publisher_type'
+                      sortParams.orderBy === 'publisher_type'
                         ? sortingDirection()
                         : defaultSortDirection
                     }-arrow`"
@@ -360,24 +371,24 @@
             </th>
             <th id="data_licence" scope="col" style="width: 173px">
               <a
-                class="text-n-50 transition duration-500 hover:text-spring-50"
+                class="cursor-pointer text-n-50 transition duration-500 hover:text-spring-50"
                 :class="
-                  orderType === 'data_license'
+                  sortParams.orderBy === 'data_license'
                     ? sortingDirection()
                     : defaultSortDirection
                 "
-                :href="sortBy('data_license')"
+                @click="sortBy('data_license')"
               >
                 <span class="sorting-indicator">
                   <svg-vue
                     :icon="`${
-                      orderType === 'data_license'
+                      sortParams.orderBy === 'data_license'
                         ? sortingDirection()
                         : defaultSortDirection
                     }-arrow`"
                   />
                 </span>
-                <span>Data licence</span>
+                <span>Data licence </span>
               </a>
             </th>
             <th id="proxy" scope="col" style="width: 158px">
@@ -456,7 +467,7 @@
                 <div class="text-xs">
                   Previously
                   {{
-                    data['registration_type'] !== 'registry-wala' ? 'not' : ''
+                    data['registration_type'] !== 'existing_org' ? 'not' : ''
                   }}
                   registered in IATI platform
                 </div>
@@ -520,21 +531,21 @@
       <Pagination
         v-if="organisationData.data && organisationData.data.last_page > 1"
         :data="organisationData.data"
-        @fetch-activities="fetchOrganisation"
+        @fetch-activities="fetchOrganisation()"
       />
     </div>
     <div></div>
   </div>
 </template>
-<script setup lang="ts">
+<script lang="ts">
 import {
   reactive,
   onMounted,
   inject,
   ref,
-  defineProps,
   watch,
   computed,
+  defineComponent,
 } from 'vue';
 import axios from 'axios';
 import MultiSelectWithSearch from 'Components/MultiSelectWithSearch.vue';
@@ -550,323 +561,428 @@ import Pagination from 'Components/TablePagination.vue';
 import Multiselect from '@vueform/multiselect';
 import { watchIgnorable } from '@vueuse/core';
 import DateRangeWidget from 'Components/DateRangeWidget.vue';
-
-// inject
-interface ToastInterface {
-  visibility: boolean;
-  message: string;
-  type: boolean;
-}
-const toastMessage = inject('toastData') as ToastInterface;
-
-interface LoaderInterface {
-  status: boolean;
-  text: string;
-}
-
-const loader = inject('loader') as LoaderInterface;
-
-//typeface
-interface organizationInterface {
-  data: oDataInterface;
-  status: string;
-}
-
-interface oDataInterface {
-  data: {
-    id: number;
-    name: {
-      narrative: string;
-    }[];
-    organization_url: string;
-    user: {
-      email: string;
-      id: number;
-    };
-    all_activities_count: number;
-    updated_at: Date;
-  }[];
-  last_page: number;
-}
-
-// reactivity
-let organisationData: organizationInterface = reactive({
-  data: {} as oDataInterface,
-  status: 'fetching',
-});
-
-const props = defineProps({
-  countries: { type: Object, required: true },
-  setupCompleteness: { type: Object, required: true },
-  registrationTypes: { type: Object, required: true },
-  publisherTypes: { type: Object, required: true },
-  dataLicenses: { type: Object, required: true },
-});
-
-let filter = reactive({
-  publisher_type: [],
-  data_license: [],
-  country: [],
-  completeness: '',
-  registration_type: '',
-  start_date: '',
-  end_date: '',
-  date_type: 'created_at',
-});
-
-let registryApiKeyStatus: boolean[] = reactive([]);
-let defaultValueStatus: boolean[] = reactive([]);
-let showMultiSelectWithSearch = ref(false);
-let dropdownRange = {
-  created_at: 'User registered date',
-  last_logged_in: 'Last Logged in',
-};
-
-const { ignoreUpdates } = watchIgnorable(filter, () => undefined);
-
-//lifecycle
-onMounted(() => {
-  let filterParams = getFilterParamsFromPreviousPage();
-  if (filterParams) {
-    for (let i = 0; i < filterParams.length; i++) {
-      let key = kebabCaseToSnakecase(filterParams[i][0]);
-      let value = filterParams[i][1];
-
-      if (['publisher_type', 'data_license', 'country'].includes(key)) {
-        filter[key].push(value);
-      } else {
-        filter[key] = value;
-      }
-    }
-  }
-
-  fetchOrganisation(1);
-});
-
-const getFilterParamsFromPreviousPage = () => {
-  let queryString = window.location.href?.toString();
-
-  if (queryString) {
-    queryString = queryString.split('?')[1];
-
-    let queryParamsInKeyVal: object[] = [];
-    const queryParams = queryString?.split('&');
-
-    if (queryParams) {
-      for (let i = 0; i < queryParams.length; i++) {
-        let [key, value] = queryParams[i].split('=');
-        if (key) {
-          queryParamsInKeyVal.push([key, value ?? '']);
-        }
-      }
-    }
-
-    return queryParamsInKeyVal;
-  }
-
-  return false;
-};
-
-/**
- * Fetching organization list
- *
- */
-const currentURL = window.location.href;
-const fetchOrganisation = (active_page: number) => {
-  let queryString = '';
-
-  if (currentURL.includes('?')) {
-    queryString = window.location.search;
-  }
-
-  active_page = active_page ?? 1;
-  let endpoint = `/list-organisations/page/${active_page}${queryString}`;
-  if (isFilterApplied.value) {
-    queryString = queryString ?? '&q=';
-    endpoint = queryString !== '' ? endpoint : `${endpoint}`;
-    for (const filterKey in filter) {
-      if (filter[filterKey] && filter[filterKey].length > 0) {
-        urlParams.append(filterKey, filter[filterKey]);
-      }
-    }
-  }
-
-  // onUpdated(() => {
-  // });
-  axios
-    .get(endpoint, { params: isFilterApplied.value ? urlParams : '' })
-    .then((res) => {
-      const response = res.data;
-      if (response.success) {
-        if (response.data.data.length === 0) {
-          organisationData.status = 'empty';
-        } else {
-          organisationData.status = 'success';
-          organisationData.data = response.data;
-          refreshStatusArrays(organisationData.data);
-        }
-      }
-    });
-  urlParams = new URLSearchParams(queryString);
-};
-
-/**
- * Proxy User
- */
-// display/hide validator loader
-const proxyUser = (id: number) => {
-  loader.status = true;
-  loader.text = 'Proxy Login';
-  const endpoint = `/proxy-organisation/${id}`;
-
-  axios.get(endpoint).then((res) => {
-    const response = res.data;
-
-    if (response.success) {
-      setTimeout(() => {
-        window.location.replace('/activities');
-      }, 1000);
-    } else {
-      loader.status = false;
-      toastMessage.message = response.message;
-      toastMessage.type = response.success;
-    }
-  });
-};
-
-/**
- * Sorting By update on
- */
-let query = '',
-  defaultSortDirection = 'ascending',
-  sortDirection = 'desc';
-
-const queryString = window.location.search;
-
-let urlParams = new URLSearchParams(queryString);
-let orderType = ref('');
-orderType.value = urlParams.get('orderBy') ?? '';
-let range = '';
-
-const sortingDirection = () => {
-  return sortDirection === 'asc' ? 'descending' : 'ascending';
-};
-
-const sortBy = (order) => {
-  if (currentURL.includes('?')) {
-    query = urlParams.get('q') ?? '';
-    sortDirection = urlParams.get('direction') === 'desc' ? 'asc' : 'desc';
-
-    if (urlParams.get('fixed') ?? false) {
-      range = `&fixed=${urlParams.get('fixed')}`;
-    } else {
-      let startDate = urlParams.get('start_date') ?? false;
-      let endDate = urlParams.get('end_date') ?? false;
-
-      if (startDate && endDate) {
-        range = `&start_date=${startDate}&end_date=${endDate}`;
-      }
-    }
-  }
-
-  return `?q=${query}&orderBy=${order}&direction=${sortDirection}${range}`;
-};
-
-watch(
-  () => [
-    filter.country,
-    filter.completeness,
-    filter.registration_type,
-    filter.publisher_type,
-    filter.data_license,
-    filter.start_date,
-    filter.end_date,
-    filter.date_type,
-  ],
-  () => {
-    fetchOrganisation(organisationData.data['current_page']);
+export default defineComponent({
+  name: 'TableList',
+  components: {
+    BtnComponent: BtnComponent,
+    Pagination: Pagination,
+    Multiselect: Multiselect,
+    DateRangeWidget: DateRangeWidget,
+    MultiSelectWithSearch: MultiSelectWithSearch,
   },
-  { deep: true }
-);
+  props: {
+    countries: { type: Object, required: true },
+    setupCompleteness: { type: Object, required: true },
+    registrationTypes: { type: Object, required: true },
+    publisherTypes: { type: Object, required: true },
+    dataLicenses: { type: Object, required: true },
+  },
 
-const resetAllFilters = () => {
-  ignoreUpdates(() => {
-    filter.country = [];
-    filter.completeness = '';
-    filter.registration_type = '';
-    filter.publisher_type = [];
-    filter.data_license = [];
-    filter.start_date = '';
-    filter.end_date = '';
-    filter.date_type = 'created_at';
-  });
-};
+  setup(props) {
+    // inject
+    interface ToastInterface {
+      visibility: boolean;
+      message: string;
+      type: boolean;
+    }
+    const toastMessage = inject('toastData') as ToastInterface;
 
-const isFilterApplied = computed(() => {
-  return (
-    filter.country.length +
-      filter.publisher_type.length +
-      filter.data_license.length !=
-      0 ||
-    filter.completeness !== '' ||
-    filter.registration_type !== '' ||
-    filter.start_date != '' ||
-    filter.end_date != '' ||
-    filter.date_type != ''
-  );
+    interface LoaderInterface {
+      status: boolean;
+      text: string;
+    }
+
+    const loader = inject('loader') as LoaderInterface;
+    const dateDropdown = ref();
+
+    //typeface
+    interface organizationInterface {
+      data: oDataInterface;
+      status: string;
+    }
+
+    interface oDataInterface {
+      data: {
+        id: number;
+        name: {
+          narrative: string;
+        }[];
+        organization_url: string;
+        user: {
+          email: string;
+          id: number;
+        };
+        all_activities_count: number;
+        updated_at: Date;
+      }[];
+      last_page: number;
+      current_page: number;
+    }
+
+    // reactivity
+    let organisationData: organizationInterface = reactive({
+      data: {} as oDataInterface,
+      status: 'fetching',
+    });
+
+    let multiselectStyle = ref({});
+
+    let filter = reactive({
+      publisher_type: [],
+      data_license: [],
+      country: [],
+      completeness: '',
+      registration_type: '',
+      start_date: '',
+      end_date: '',
+      date_type: 'created_at',
+      selected_date_filter: '',
+    });
+
+    let registryApiKeyStatus: boolean[] = reactive([]);
+    let defaultValueStatus: boolean[] = reactive([]);
+    const showMultiSelectWithSearch = ref(false);
+    let dropdownRange = {
+      created_at: 'User registered date',
+      last_logged_in: 'Last logged in',
+    };
+    const sortParams = ref({ orderBy: '', direction: '' });
+
+    const { ignoreUpdates } = watchIgnorable(filter, () => undefined);
+    watch(
+      () => showMultiSelectWithSearch.value,
+      (value) => {
+        if (value) {
+          rotateClass.value = 'rotate-180';
+        } else {
+          rotateClass.value = 'rotate-0';
+        }
+        if (value) {
+          document.addEventListener('click', closePublisherModel);
+          // let Multiselect = setInterval(() => {
+          //   if (publisherTypeMultiselect.value) {
+          //     publisherTypeMultiselect.value.addEventListener(
+          //       'click',
+          //       keepPublisherModelOpen
+          //     );
+          //     clearInterval(Multiselect);
+          //   }
+          // }, 20);
+        } else {
+          document.removeEventListener('click', closePublisherModel);
+          // publisherTypeMultiselect.value.removeEventListener(
+          //   'click',
+          //   keepPublisherModelOpen
+          // );
+        }
+      }
+    );
+    const keepPublisherModelOpen = (event) => {
+      event.stopPropagation();
+    };
+
+    const closePublisherModel = () => {
+      showMultiSelectWithSearch.value = false;
+    };
+
+    //lifecycle
+    onMounted(() => {
+      let filterParams = getFilterParamsFromPreviousPage();
+      if (filterParams) {
+        for (let i = 0; i < filterParams.length; i++) {
+          let key = kebabCaseToSnakecase(filterParams[i][0]);
+          let value = filterParams[i][1];
+
+          if (['publisher_type', 'data_license', 'country'].includes(key)) {
+            filter[key].push(value);
+          } else {
+            filter[key] = value;
+          }
+        }
+      }
+
+      fetchOrganisation(1);
+    });
+
+    const getFilterParamsFromPreviousPage = () => {
+      let queryString = window.location.href?.toString();
+
+      if (queryString) {
+        queryString = queryString.split('?')[1];
+
+        let queryParamsInKeyVal: object[] = [];
+        const queryParams = queryString?.split('&');
+
+        if (queryParams) {
+          for (let i = 0; i < queryParams.length; i++) {
+            let [key, value] = queryParams[i].split('=');
+            if (key) {
+              queryParamsInKeyVal.push([key, value ?? '']);
+            }
+          }
+        }
+
+        return queryParamsInKeyVal;
+      }
+
+      return false;
+    };
+
+    /**
+     * Fetching organization list
+     *
+     */
+    const currentURL = window.location.href;
+    const fetchOrganisation = (
+      active_page = 1,
+      sortParams = { orderBy: '', direction: '' }
+    ) => {
+      let queryString = '';
+
+      if (currentURL.includes('?')) {
+        queryString = window.location.search;
+      }
+
+      active_page = active_page ?? 1;
+      let endpoint = `/list-organisations/page/${active_page}${queryString}`;
+
+      if (sortParams.orderBy) {
+        urlParams.append('orderBy', sortParams.orderBy);
+        urlParams.append('direction', sortParams.direction);
+      }
+
+      if (
+        isFilterApplied.value ||
+        Boolean(sortParams.orderBy && sortParams.direction)
+      ) {
+        queryString = queryString ?? '&q=';
+        endpoint = queryString !== '' ? endpoint : `${endpoint}`;
+        for (const filterKey in filter) {
+          if (filter[filterKey] && filter[filterKey].length > 0) {
+            urlParams.append(filterKey, filter[filterKey]);
+          }
+        }
+      }
+
+      axios
+        .get(endpoint, {
+          params:
+            isFilterApplied.value ||
+            Boolean(sortParams.orderBy && sortParams.direction)
+              ? urlParams
+              : '',
+        })
+        .then((res) => {
+          const response = res.data;
+          if (response.success) {
+            if (response.data.data.length === 0) {
+              organisationData.status = 'empty';
+            } else {
+              organisationData.status = 'success';
+              organisationData.data = response.data;
+              refreshStatusArrays(organisationData.data);
+            }
+          }
+        });
+      urlParams = new URLSearchParams(queryString);
+    };
+
+    /**
+     * Proxy User
+     */
+    // display/hide validator loader
+    const proxyUser = (id: number) => {
+      loader.status = true;
+      loader.text = 'Proxy Login';
+      const endpoint = `/proxy-organisation/${id}`;
+
+      axios.get(endpoint).then((res) => {
+        const response = res.data;
+
+        if (response.success) {
+          setTimeout(() => {
+            window.location.replace('/activities');
+          }, 1000);
+        } else {
+          loader.status = false;
+          toastMessage.message = response.message;
+          toastMessage.type = response.success;
+        }
+      });
+    };
+
+    /**
+     * Sorting By update on
+     */
+    let query = '',
+      defaultSortDirection = 'descending',
+      sortDirection = 'desc';
+
+    const queryString = window.location.search;
+
+    let urlParams = new URLSearchParams(queryString);
+    let orderType = ref('');
+    orderType.value = urlParams.get('orderBy') ?? '';
+    let range = '';
+
+    const sortingDirection = () => {
+      return sortParams.value.direction === 'asc' ? 'descending' : 'ascending';
+    };
+
+    const sortBy = (order) => {
+      sortParams.value.orderBy = order;
+      sortParams.value.direction =
+        sortParams.value.direction === 'desc' ? 'asc' : 'desc';
+
+      if (currentURL.includes('?')) {
+        query = urlParams.get('q') ?? '';
+        sortDirection = urlParams.get('direction') === 'desc' ? 'asc' : 'desc';
+
+        let startDate = urlParams.get('start_date') ?? false;
+        let endDate = urlParams.get('end_date') ?? false;
+
+        if (startDate && endDate) {
+          range = `&start_date=${startDate}&end_date=${endDate}`;
+        }
+      }
+
+      fetchOrganisation(1, {
+        orderBy: sortParams.value.orderBy,
+        direction: sortParams.value.direction,
+      });
+    };
+
+    watch(
+      () => [
+        filter.country,
+        filter.completeness,
+        filter.registration_type,
+        filter.publisher_type,
+        filter.data_license,
+        filter.start_date,
+        filter.end_date,
+        filter.date_type,
+      ],
+      () => {
+        fetchOrganisation(organisationData.data['current_page']);
+      },
+      { deep: true }
+    );
+
+    const resetAllFilters = () => {
+      ignoreUpdates(() => {
+        filter.country = [];
+        filter.publisher_type = [];
+        filter.data_license = [];
+        filter.completeness = '';
+        filter.registration_type = '';
+        filter.start_date = '';
+        filter.end_date = '';
+        filter.date_type = 'created_at';
+        filter.selected_date_filter = '';
+      });
+    };
+
+    const isFilterApplied = computed(() => {
+      return (
+        filter.country.length +
+          filter.publisher_type.length +
+          filter.data_license.length !=
+          0 ||
+        filter.completeness !== '' ||
+        filter.registration_type !== '' ||
+        filter.start_date != '' ||
+        filter.end_date != '' ||
+        filter.selected_date_filter != ''
+      );
+    });
+
+    const refreshStatusArrays = (orgData) => {
+      for (let orgDatum of orgData.data) {
+        registryApiKeyStatus[orgDatum.id] =
+          orgDatum?.settings?.publishing_info?.token_verification ?? false;
+        defaultValueStatus[orgDatum.id] = checkIfDefaultValuesAreValid(
+          orgDatum ? orgDatum.settings : false
+        );
+      }
+    };
+
+    const checkIfDefaultValuesAreValid = (settings) => {
+      if (settings) {
+        let defaultValues = settings.default_values;
+        let activityDefaultValues = settings.activity_default_values;
+        return !!(
+          (defaultValues?.default_currency ?? false) &&
+          (defaultValues?.default_language ?? false) &&
+          (activityDefaultValues?.hierarchy ?? false) &&
+          (activityDefaultValues?.budget_not_provided ?? false) &&
+          (activityDefaultValues?.humanitarian != null ||
+            activityDefaultValues?.humanitarian != '' ||
+            activityDefaultValues?.humanitarian != false)
+        );
+      }
+
+      return false;
+    };
+
+    const setDateRangeDate = (startDate, endDate, selectedDateFilter = '') => {
+      filter.start_date = startDate;
+      filter.end_date = endDate;
+      filter.selected_date_filter = selectedDateFilter;
+    };
+
+    const setDateType = (dateType) => {
+      filter.date_type = dateType;
+    };
+
+    const rotateClass = ref('');
+
+    const toggleShowMultiSelect = (event) => {
+      event.stopPropagation();
+      const rect = event.target.getBoundingClientRect();
+      multiselectStyle.value = {
+        top: Number(rect.top) + 40 + 'px',
+        left: Number(rect.left) - 12 + 'px',
+      };
+      showMultiSelectWithSearch.value = !showMultiSelectWithSearch.value;
+    };
+
+    const setSelectedPublisher = (publisherTypes) => {
+      filter.publisher_type = publisherTypes;
+    };
+    return {
+      BtnComponent,
+      Multiselect,
+      DateRangeWidget,
+      MultiSelectWithSearch,
+      organisationData,
+      dropdownRange,
+      setSelectedPublisher,
+      toggleShowMultiSelect,
+      setDateType,
+      setDateRangeDate,
+      sortBy,
+      resetAllFilters,
+      sortingDirection,
+      defaultSortDirection,
+      proxyUser,
+      dateFormat,
+      fetchOrganisation,
+      defaultValueStatus,
+      registryApiKeyStatus,
+      orderType,
+      filter,
+      snakeCaseToSentenceCase,
+      isFilterApplied,
+      props,
+      showMultiSelectWithSearch,
+      rotateClass,
+      multiselectStyle,
+      dateDropdown,
+      sortParams,
+    };
+  },
 });
-
-const refreshStatusArrays = (orgData) => {
-  for (let orgDatum of orgData.data) {
-    registryApiKeyStatus[orgDatum.id] =
-      orgDatum?.settings?.publishing_info.token_verification ?? false;
-    defaultValueStatus[orgDatum.id] = checkIfDefaultValuesAreValid(
-      orgDatum ? orgDatum.settings : false
-    );
-  }
-};
-
-const checkIfDefaultValuesAreValid = (settings) => {
-  if (settings) {
-    let defaultValues = settings.default_values;
-    let activityDefaultValues = settings.activity_default_values;
-    return !!(
-      (defaultValues?.default_currency ?? false) &&
-      (defaultValues?.default_language ?? false) &&
-      (activityDefaultValues?.hierarchy ?? false) &&
-      (activityDefaultValues?.budget_not_provided ?? false) &&
-      (activityDefaultValues?.humanitarian != null ||
-        activityDefaultValues?.humanitarian != '' ||
-        activityDefaultValues?.humanitarian != false)
-    );
-  }
-
-  return false;
-};
-
-const setDateRangeDate = (startDate, endDate) => {
-  filter.start_date = startDate;
-  filter.end_date = endDate;
-};
-
-const setDateType = (dateType) => {
-  filter.date_type = dateType;
-};
-
-const rotateClass = ref('');
-
-const toggleShowMultiSelect = () => {
-  showMultiSelectWithSearch.value = !showMultiSelectWithSearch.value;
-  if (showMultiSelectWithSearch.value) {
-    rotateClass.value = 'rotate-180';
-  } else {
-    rotateClass.value = 'rotate-0';
-  }
-};
-
-const setSelectedPublisher = (publisherTypes) => {
-  filter.publisher_type = publisherTypes;
-};
 </script>
 
 <style>
@@ -885,8 +1001,6 @@ const setSelectedPublisher = (publisherTypes) => {
   height: fit-content;
   background: white;
   overflow-y: auto;
-  top: 42px;
-  left: 0;
 }
 .multiselect-lookalike {
   position: relative;

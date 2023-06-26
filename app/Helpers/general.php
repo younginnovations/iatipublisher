@@ -592,8 +592,7 @@ if (!function_exists('getTableConfig')) {
                     'data_license'      => 'multiple',
                 ],
             ],
-            'user' => ['orderBy' => ['username', 'publisher_name', 'created_at'], 'direction' => ['asc', 'desc']],
-            'user_dashboard' => ['orderBy' => ['organisation', 'admin', 'general', 'active', 'deactivated', 'total'], 'direction' => ['asc', 'desc']],
+            'user' => ['orderBy' => ['username', 'publisher_name', 'created_at', 'organisation', 'admin', 'general', 'active', 'deactivated', 'total'], 'direction' => ['asc', 'desc']],
             'audit' => ['orderBy' => ['user_id', 'user_type', 'event', 'auditable_type', 'created_at'], 'direction' => ['asc', 'desc']],
         ];
 

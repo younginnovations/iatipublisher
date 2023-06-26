@@ -266,45 +266,39 @@
             >
               <td>
                 <a
-                  class="block py-3 px-8"
+                  class="... block truncate py-3 px-8"
                   :href="`/users?organization=${organisation.organization_id}`"
-                  >{{ truncateText(organisation.organisationm, 25) }}</a
+                  >{{ truncateText(organisation.organisation, 50) }}</a
                 >
               </td>
               <td>
-                <a class="block py-3 px-8 text-center" :href="`/users?roles=3`">
+                <p class="block py-3 px-8 text-center">
                   {{ organisation.admin_user_count }}
-                </a>
+                </p>
               </td>
 
               <td>
-                <a class="block py-3 px-8 text-center" :href="`/users?roles=4`">
+                <p class="block py-3 px-8 text-center">
                   {{ organisation.general_user_count }}
-                </a>
+                </p>
               </td>
 
               <td>
-                <a
-                  class="block py-3 px-8 text-center"
-                  :href="`/users?status=1`"
-                >
+                <p class="block py-3 px-8 text-center">
                   {{ organisation.active_user_count }}
-                </a>
+                </p>
               </td>
 
               <td>
-                <a
-                  class="block py-3 px-8 text-center"
-                  :href="`/users?status=0`"
-                >
+                <p class="block py-3 px-8 text-center">
                   {{ organisation.deactivated_user_count }}
-                </a>
+                </p>
               </td>
 
               <td>
-                <a class="block py-3 px-8 text-center" :href="`/users`">
+                <p class="block py-3 px-8 text-center">
                   {{ organisation.total_user_count }}
-                </a>
+                </p>
               </td>
             </tr>
           </tbody>
@@ -341,8 +335,11 @@
               :class="activeClass === item?.label ? 'activeNav' : ''"
               @click="
                 () => {
+                  currentpage = 1;
+
                   fetchTableData(item);
                   currentItem = item;
+                  resetpagination = true;
                 }
               "
             >
@@ -366,7 +363,7 @@
                   <div class="px-4 py-3 text-right">published</div>
                 </td>
                 <td class="mx-8 my-3 w-[100px]">
-                  <div class="px-4 py-3 text-right">unpublished</div>
+                  <div class="px-4 py-3 text-right">draft</div>
                 </td>
                 <td class="mx-8 my-3 w-[100px]">
                   <div class="px-4 py-3 text-right">total</div>
@@ -383,7 +380,8 @@
                     <button
                       v-if="
                         currentView === 'publisher' &&
-                        title !== 'Setup Completeness'
+                        title !== 'Setup Completeness' &&
+                        title !== 'Registration Type'
                       "
                       class="p-1"
                       @click="
@@ -476,7 +474,11 @@
                 </td>
               </tr>
             </tbody>
-            <tbody v-else-if="tableData.length === 0">
+            <tbody
+              v-else-if="
+                tableData.length === 0 || tableData?.data?.length === 0
+              "
+            >
               <tr class="w-full">
                 <div class="p-10 text-center text-n-50">No data found</div>
               </tr>
@@ -509,7 +511,7 @@
                 </td>
                 <td class="text-sm text-[#2A2F30]">
                   <div class="px-4 py-3 text-right">
-                    {{ completeNess?.completeSetup?.count }}
+                    {{ completeNess?.incompleteSetup?.count }}
                   </div>
                 </td>
               </tr>
@@ -517,7 +519,7 @@
                 <td class="text-sm text-bluecoral">
                   <a
                     class="py-3 pl-8 text-left"
-                    :href="`/list-organisations?completeness=Publisher_settings_not_completed`"
+                    :href="`/list-organisations?completeness=Publishers_settings_not_completed`"
                   >
                     Publisher settings not completed
                   </a>
@@ -565,7 +567,7 @@
               "
             >
               <tr
-                v-for="item in tableData"
+                v-for="item in tableData.data"
                 :key="item?.id"
                 class="border-b border-n-20"
               >
@@ -617,22 +619,32 @@
                   </div>
                 </td>
                 <td class="text-center text-sm text-[#2A2F30]">
-                  <div class="px-4 py-3">{{ item.published }}</div>
+                  <div class="px-4 py-3">
+                    {{ Number(item?.published ?? 0) }}
+                  </div>
                 </td>
                 <td class="text-center text-sm text-[#2A2F30]">
-                  <div class="px-4 py-3">{{ item.draft }}</div>
+                  <div class="px-4 py-3">{{ Number(item?.draft ?? 0) }}</div>
                 </td>
                 <td class="text-center text-sm text-[#2A2F30]">
                   <div class="px-4 py-3">
-                    {{ item.published + item.draft }}
+                    {{
+                      Number(item?.published ?? 0) + Number(item?.draft ?? 0)
+                    }}
                   </div>
                 </td>
               </tr>
             </tbody>
           </table>
           <Pagination
-            v-if="title !== 'Setup Completeness' && currentView === 'publisher'"
+            v-if="
+              title !== 'Setup Completeness' &&
+              title !== 'Registration Type' &&
+              title !== 'Data Licence' &&
+              currentView === 'publisher'
+            "
             class="mt-4"
+            :reset="resetpagination"
             :data="tableData"
             @fetch-activities="(page) => triggerpagination(page)"
           />
@@ -665,6 +677,7 @@ const publisherNavList = [
   { label: 'Setup Completeness', apiParams: 'setup' },
 ];
 const currentpage = ref(1);
+const resetpagination = ref(false);
 const filter = ref({ orderBy: '', sort: '' });
 const sortElement = ref({ label: '', apiParams: '' });
 const userNavlist = [{ label: 'user', apiParams: '' }];
@@ -678,11 +691,11 @@ onMounted(() => {
   fetchTableData(currentNavList.value[0]);
 });
 const sortTable = () => {
-  console.log(currentItem.value, 'current item');
   fetchTableData(currentItem.value);
 };
 const triggerpagination = (page) => {
   currentpage.value = page;
+  resetpagination.value = false;
   fetchTableData(currentItem.value);
 };
 
@@ -734,8 +747,6 @@ const fetchTableData = (item) => {
   activeClass.value = item?.label;
   title.value = item?.label;
   sortElement.value = item;
-  console.log('fetch', item);
-
   emit('tableNav', item, filter, currentpage.value);
 };
 const completeNess = inject('completeNess') as Ref;

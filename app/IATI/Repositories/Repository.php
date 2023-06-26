@@ -227,4 +227,43 @@ abstract class Repository implements RepositoryInterface
             ->groupBy('month_string')
             ->pluck('count_value', 'month_string')->toArray();
     }
+
+    /**
+     * Return time series data grouped by interval.
+     *
+     * @param $startDate
+     * @param $endDate
+     * @param $interval
+     * @param $column
+     *
+     * @return array
+     */
+    public function getTimeSeriesDataGroupedByInterval(Carbon $startDate, Carbon $endDate, $interval, $column): array
+    {
+        $dateFormat = match ($interval) {
+            'day'=>'YYYY-MM-DD',
+            'month'=>'YYYY-MM',
+            default=>'YYYY'
+        };
+
+        $query = $this->model
+            ->select(DB::raw("TO_CHAR($column, '" . $dateFormat . "') AS date_string"), DB::raw('COUNT(*) AS count_value'))
+            ->whereDate($column, '>=', $startDate)
+            ->whereDate($column, '<=', $endDate);
+        $query = $this->getModel() === "App\IATI\Models\User\User" ? $query->whereNull('deleted_at') : $query;
+
+        return $query->groupBy('date_string')
+            ->pluck('count_value', 'date_string')
+            ->toArray();
+    }
+
+    /**
+     * Returns the oldest data.
+     *
+     * @return Model|null
+     */
+    public function getOldestData(): Model|null
+    {
+        return $this->model->oldest()->first();
+    }
 }

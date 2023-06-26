@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\IATI\Repositories\User;
 
+use App\IATI\Models\User\Role;
 use App\IATI\Models\User\User;
 use App\IATI\Repositories\Repository;
 use Carbon\Carbon;
+use DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -89,17 +91,18 @@ class UserRepository extends Repository
      *
      * @return LengthAwarePaginator
      */
-    public function getUserCountByOrganization($page, $queryParam):LengthAwarePaginator
+    public function getUserCountByOrganization($page, $queryParam): LengthAwarePaginator
     {
+        $roles = Role::all()->pluck('id', 'role');
         $query = $this->model::query()
             ->join('organizations', 'organizations.id', '=', 'users.organization_id')
             ->selectRaw("organizations.id as organization_id,
                          COALESCE(organizations.name->0->>'narrative', organizations.publisher_name) as organisation,
-                         count(Case when users.role_id = 3 and users.organization_id = organizations.id then 1 end) as admin_user_count,
-                         count(Case when users.role_id = 4 and users.organization_id = organizations.id then 1 end) as general_user_count,
+                         count(Case when users.role_id = " . $roles['admin'] . ' and users.organization_id = organizations.id then 1 end) as admin_user_count,
+                         count(Case when users.role_id = ' . $roles['general_user'] . ' and users.organization_id = organizations.id then 1 end) as general_user_count,
                          count(Case when users.status = true and users.organization_id = organizations.id then 1 end) as active_user_count,
                          count(Case when users.status = false and users.organization_id = organizations.id then 1 end) as deactivated_user_count,
-                         count(organizations.id) as total_user_count")
+                         count(organizations.id) as total_user_count')
             ->groupBy('organizations.id', 'organisation');
 
         $direction = Arr::get($queryParam, 'direction', 'asc');
@@ -122,7 +125,7 @@ class UserRepository extends Repository
      *
      * @return Collection|array
      */
-    public function getUserDownloadData($queryParams): Collection | array
+    public function getUserDownloadData($queryParams): Collection|array
     {
         $query = $this->model
             ->leftJoin('organizations', 'organizations.id', 'users.organization_id')
@@ -167,7 +170,7 @@ class UserRepository extends Repository
         if (array_key_exists('q', $queryParams)) {
             $query = $query->where(function ($query) use ($queryParams) {
                 $query->where('username', 'ilike', '%' . Arr::get($queryParams, 'q') . '%')
-                ->orWhere('full_name', 'ilike', '%' . Arr::get($queryParams, 'q') . '%');
+                    ->orWhere('full_name', 'ilike', '%' . Arr::get($queryParams, 'q') . '%');
             });
         }
 
@@ -195,9 +198,9 @@ class UserRepository extends Repository
      */
     public function getUserCounts(): Collection
     {
-        $query = User::query()
-            ->selectRaw('role_id, status, COUNT(*) as count')
-            ->groupBy(['role_id', 'status']);
+        $query = $this->model->selectRaw('users.role_id, users.status, roles.role, count(*)')
+            ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+            ->groupBy(['role_id', 'status', 'role']);
 
         return $query->get();
     }
@@ -213,20 +216,20 @@ class UserRepository extends Repository
      */
     public function getBasicUserDataInRange(Carbon $startDate, Carbon $endDate, string $column): Collection|array
     {
-        return $this->model
-            ->join('roles', 'users.role_id', '=', 'roles.id')
-            ->join('organizations', 'users.organization_id', '=', 'organizations.id')
+        $superadminId = Role::where('role', 'superadmin')->first()->id;
+
+        return $this->model->select(DB::raw("users.username,
+        case when organizations.name::text!='' then ((organizations.name->>0)::json)->>'narrative' else 'Untitled' end as publisher_name,
+        users.email,
+        users.created_at,
+        users.last_logged_in,
+        roles.role,
+        case when users.status = true then 'active' else 'inactive' end as user_status"))
+            ->leftJoin('roles', 'users.role_id', '=', 'roles.id')
+            ->leftJoin('organizations', 'users.organization_id', '=', 'organizations.id')
             ->whereDate("users.{$column}", '>=', $startDate)
             ->whereDate("users.{$column}", '<=', $endDate)
-            ->whereNot('users.role_id', '1')
-            ->get([
-                'users.username',
-                'organizations.name->0->narrative as publisher_name',
-                'users.email',
-                'users.created_at',
-                'users.last_logged_in',
-                'roles.role',
-                'users.status',
-            ]);
+            ->whereNot('users.role_id', $superadminId)
+            ->get();
     }
 }

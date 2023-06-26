@@ -111,7 +111,6 @@ export default defineComponent({
     const mid_pagelist = ref();
 
     watch(active_page, () => {
-      console.log('page changed');
       emit('fetchData', active_page.value);
     });
 

@@ -52,7 +52,7 @@
                 :languages="{{ json_encode(getCodeListArray('Languages', 'ActivityArray'), JSON_THROW_ON_ERROR) }}"
                 v-bind:super-admin="{{ isSuperAdminRoute() ? 1 : 0 }}"> </loggedin-header>
         @else
-            <loggedin-header 
+            <loggedin-header
                 :user="{{ Auth::user() }}" :organization="{{ Auth::user()->organization }}"
                 :languages="{{ json_encode(getCodeListArray('Languages', 'ActivityArray'), JSON_THROW_ON_ERROR) }}"
                 v-bind:super-admin="{{ isSuperAdminRoute() ? 1 : 0 }}"></loggedin-header>
@@ -63,7 +63,7 @@
         </main>
         <admin-footer v-bind:super-admin={{ (int) isSuperAdmin() }}></admin-footer>
     </div>
-
+    <div id="app-after"></div>
     <script defer src="{{ mix('/manifest.js') }}"></script>
     <script defer src="{{ mix('/js/vendor.js') }}"></script>
     <script defer src="{{ mix('/js/app.js') }}"></script>
@@ -75,8 +75,8 @@
         window.zESettings = {
             webWidget: {
                 color: { theme: '#FFFFFF',
-                launcherText: '#155366'},             
-               
+                launcherText: '#155366'},
+
                 contactForm: {
                     attachments: true,
                 }

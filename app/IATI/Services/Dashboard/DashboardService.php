@@ -10,6 +10,7 @@ use App\IATI\Repositories\User\UserRepository;
 use App\IATI\Traits\DateRangeResolverTrait;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 /**
@@ -39,7 +40,6 @@ class DashboardService
      *
      * @param OrganizationRepository $organizationRepo
      * @param ActivityRepository $activityRepo
-     * @param UserRepository $userRepo
      */
     public function __construct(OrganizationRepository $organizationRepo, ActivityRepository $activityRepo, UserRepository $userRepo)
     {
@@ -56,7 +56,7 @@ class DashboardService
     public function getPublisherStats(): array
     {
         $publisherStat = $this->organizationRepo->getPublisherStats();
-        $publisherStat['lastRegisteredPublisher']['user_id'] = $this->userRepo->findBy('organization_id', $publisherStat['lastRegisteredPublisher']['id'])->first()->id;
+        $publisherStat['lastRegisteredPublisher']['user_id'] = $this->userRepo->findBy('organization_id', (int) $publisherStat['lastRegisteredPublisher']['id'])->id;
 
         return $publisherStat;
     }
@@ -67,28 +67,66 @@ class DashboardService
      * @param $queryParams
      * @param $type
      *
-     * @return array
+     * @return array|LengthAwarePaginator
      */
-    public function getPublisherBy($queryParams, $type): array
+    public function getPublisherBy($queryParams, $type): array|LengthAwarePaginator
     {
-        return $this->organizationRepo->getPublisherBy($queryParams, $type);
+        return $this->organizationRepo->getPublisherByPagination($queryParams, $type);
     }
 
+    /**
+     * Return publisher by setup.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     */
     public function getPublisherBySetup($queryParams): array
     {
         return $this->organizationRepo->getPublisherBySetup($queryParams);
     }
 
-    public function getPublisherGroupedByDate($queryParams, $type)
+    /**
+     * Return publisher grouped by date.
+     *
+     * @param $queryParams
+     * @param $column
+     *
+     * @return array
+     */
+    public function getPublisherGroupedByDate($queryParams, $column): array
     {
-        return $this->organizationRepo->getPublisherGroupedByDate($queryParams, $type);
+        if (!$this->startAndEndDateAreSet($queryParams)) {
+            list($startDate, $endDate) = $this->getStartAndEndDateForAlltime('activities');
+            $queryParams['start_date'] = $startDate;
+            $queryParams['end_date'] = $endDate;
+        }
+
+        list($startDate, $endDate, $groupBy) = $this->resolveCustomRangeParams($queryParams['start_date'], $queryParams['end_date']);
+
+        $unformattedResults = $this->organizationRepo->getTimeSeriesDataGroupedByInterval($startDate, $endDate, $groupBy, $column);
+
+        return $this->fillDataToMissingDates($startDate, $endDate, $unformattedResults, $groupBy);
     }
 
-    public function getActivityStats($queryParams)
+    /**
+     * Returns activity stats.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     */
+    public function getActivityStats($queryParams): array
     {
+        $latestUpdatedActivity = ($this->activityRepo->find($this->activityRepo->getLastUpdatedActivity()->id))->toArray();
+        $latestUpdateOrganization = ($this->activityRepo->getLastUpdatedActivity())->organization->toArray();
+        $userId = $this->userRepo->findBy('organization_id', $latestUpdateOrganization['id'])->id;
+
         return [
             'totalCount' => $this->activityRepo->all()->count(),
-            'lastUpdatedPublisher' => ($this->activityRepo->getLastUpdatedActivity())->organization->toArray(),
+            'lastUpdatedPublisher' => $latestUpdateOrganization,
+            'lastUpdatedActivity'=> $latestUpdatedActivity,
+            'userId'=> $userId,
             'publisherWithoutActivity' => $this->organizationRepo->publisherWithoutActivity(),
         ];
     }
@@ -101,23 +139,16 @@ class DashboardService
     public function getUserCounts(): array
     {
         $results = $this->userRepo->getUserCounts();
-
         $userCounts = [
-            'general_user' => ['active' => 0, 'disabled' => 0],
-            'admin' => ['active' => 0, 'disabled' => 0],
-            'iati_admin' => ['active' => 0, 'disabled' => 0],
+            'iati_admin' => ['active' => 0, 'disabled' => 0, 'display'=>'IATI Admin', 'roleId'=>''],
+            'admin' => ['active' => 0, 'disabled' => 0, 'display'=>'Organisation Admin', 'roleId'=>''],
+            'general_user' => ['active' => 0, 'disabled' => 0, 'display'=>'General Users', 'roleId'=>''],
         ];
 
         foreach ($results as $result) {
-            $status = $result->status ? 'active' : 'disabled';
-            $count = $result->count;
-
-            if ($result->role_id === 4) {
-                $userCounts['general_user'][$status] = $count;
-            } elseif ($result->role_id === 3) {
-                $userCounts['admin'][$status] = $count;
-            } elseif ($result->role_id === 2) {
-                $userCounts['iati_admin'][$status] = $count;
+            if ($result->role !== 'superadmin') {
+                $userCounts[$result->role][$result->status ? 'active' : 'disabled'] = $result->count;
+                $userCounts[$result->role]['roleId'] = $result->role_id;
             }
         }
 
@@ -137,11 +168,7 @@ class DashboardService
     public function getDataCountInRange($startDate, $endDate, bool|string $groupBy = false, string $activeColumn = 'created_at'): Collection|array
     {
         if ($groupBy) {
-            if ($groupBy === 'days') {
-                return $this->userRepo->getDataCountInRangeGroupedByDay($startDate, $endDate, $activeColumn);
-            }
-
-            return $this->userRepo->getDataCountInRangeGroupedByMonth($startDate, $endDate, $activeColumn);
+            return $this->userRepo->getTimeSeriesDataGroupedByInterval($startDate, $endDate, $groupBy, $activeColumn);
         }
 
         return $this->userRepo->getBasicUserDataInRange($startDate, $endDate, $activeColumn);
@@ -160,13 +187,43 @@ class DashboardService
         return $this->getDataCountInRange($startDate, $endDate);
     }
 
-    public function getActivityCount($queryParams)
+    /**
+     * Return activity count.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     */
+    public function getActivityCount($queryParams): array
     {
-        return $this->activityRepo->getActivityCount($queryParams);
+        if (!$this->startAndEndDateAreSet($queryParams)) {
+            list($startDate, $endDate) = $this->getStartAndEndDateForAlltime('activities');
+            $queryParams['start_date'] = $startDate;
+            $queryParams['end_date'] = $endDate;
+        }
+
+        list($startDate, $endDate, $groupBy) = $this->resolveCustomRangeParams($queryParams['start_date'], $queryParams['end_date']);
+
+        $unformattedResults = $this->activityRepo->getTimeSeriesDataGroupedByInterval($startDate, $endDate, $groupBy, 'created_at');
+
+        return $this->fillDataToMissingDates($startDate, $endDate, $unformattedResults, $groupBy);
     }
 
-    public function getActivityStatus($queryParams)
+    /**
+     * Return activity status.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     */
+    public function getActivityStatus($queryParams): array
     {
+        if (!$this->startAndEndDateAreSet($queryParams)) {
+            list($startDate, $endDate) = $this->getStartAndEndDateForAlltime('activities');
+            $queryParams['start_date'] = $startDate;
+            $queryParams['end_date'] = $endDate;
+        }
+
         $activityStatus = $this->activityRepo->getActivityStatus($queryParams);
         $processedStatus = [
             'Published' => 0,
@@ -178,9 +235,9 @@ class DashboardService
             if ($status['status'] === 'published') {
                 $processedStatus['Published'] = $status['count'];
             } elseif ($status['linked_to_iati'] === true) {
-                $processedStatus['Draft (Not Published)'] = $status['count'];
-            } else {
                 $processedStatus['Draft (Need to republish)'] = $status['count'];
+            } else {
+                $processedStatus['Draft (Not Published)'] = $status['count'];
             }
         }
 
@@ -197,6 +254,12 @@ class DashboardService
      */
     public function getActivityBy($queryParams, $type): array
     {
+        if (!$this->startAndEndDateAreSet($queryParams)) {
+            list($startDate, $endDate) = $this->getStartAndEndDateForAlltime('activities');
+            $queryParams['start_date'] = $startDate;
+            $queryParams['end_date'] = $endDate;
+        }
+
         $activityStatus = $this->activityRepo->getActivityBy($queryParams, $type);
         $processedStatus = [
             'By importing via CSV' => 0,
@@ -225,13 +288,39 @@ class DashboardService
         return $processedStatus;
     }
 
-    public function getAllActivitiesToDownload($params): array
+    /**
+     * Return activities for download.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     */
+    public function getAllActivitiesToDownload($queryParams): array
     {
-        return $this->activityRepo->getActivitiesDashboardDownload();
+        if (!$this->startAndEndDateAreSet($queryParams)) {
+            list($startDate, $endDate) = $this->getStartAndEndDateForAlltime('activities');
+            $queryParams['start_date'] = $startDate;
+            $queryParams['end_date'] = $endDate;
+        }
+
+        return $this->activityRepo->getActivitiesDashboardDownload($queryParams);
     }
 
+    /**
+     * Returns completeness status of activity.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     */
     public function getActivityCompleteness($queryParams): array
     {
+        if (!$this->startAndEndDateAreSet($queryParams)) {
+            list($startDate, $endDate) = $this->getStartAndEndDateForAlltime('activities');
+            $queryParams['start_date'] = $startDate;
+            $queryParams['end_date'] = $endDate;
+        }
+
         $activityCompleteness = $this->activityRepo->getCompleteStatus($queryParams);
         $processedCompleteness = [];
 
@@ -251,6 +340,13 @@ class DashboardService
         return $processedCompleteness;
     }
 
+    /**
+     * Return organization data for download.
+     *
+     * @param $params
+     *
+     * @return array
+     */
     public function getOrganizationToDownload($params): array
     {
         return $this->organizationRepo->getOrganizationDashboardDownload($params);
@@ -267,5 +363,37 @@ class DashboardService
     public function getUserCountByOrganization(int $page, array $queryParams): LengthAwarePaginator
     {
         return $this->userRepo->getUserCountByOrganization($page, $queryParams);
+    }
+
+    /**
+     * Returns start and end data for All time filter.
+     *
+     * @param $tablename
+     *
+     * @return array
+     */
+    public function getStartAndEndDateForAlltime(string $tablename = 'users'): array
+    {
+        $oldestData = match ($tablename) {
+            'organizations'=> $this->organizationRepo->getOldestData(),
+            'activities'=> $this->activityRepo->getOldestData(),
+            default=> $this->userRepo->getOldestData(),
+        };
+        $startDate = $oldestData->created_at->format('Y-m-d');
+        $endDate = today()->format('Y-m-d');
+
+        return [$startDate, $endDate];
+    }
+
+    /**
+     * Check if start and end date are set.
+     *
+     * @param $params
+     *
+     * @return bool
+     */
+    public function startAndEndDateAreSet($params): bool
+    {
+        return Arr::get($params, 'start_date', false) && Arr::get($params, 'end_date', false);
     }
 }

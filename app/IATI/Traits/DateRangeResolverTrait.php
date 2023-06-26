@@ -22,13 +22,12 @@ trait DateRangeResolverTrait
      */
     public function resolveDateRangeFromRequest($request): array
     {
-        $fixed = $request->get('fixed') ?? false;
         $startDateString = $request->get('start_date') ?? false;
         $endDateString = $request->get('end_date') ?? false;
         $column = $request->get('date_type') ?? 'created_at';
         $count = $request->get('count_only') ?? false;
 
-        return [$fixed, $startDateString, $endDateString, $column, $count];
+        return [$startDateString, $endDateString, $column, $count];
     }
 
     /**
@@ -88,8 +87,12 @@ trait DateRangeResolverTrait
         $carbon = new Carbon();
         $startDate = $carbon->parse($startDateString);
         $endDateString = $carbon->parse($endDateString);
+        $interval = $startDate->diff($endDateString);
+        $groupBy = 'day';
+        $groupBy = $interval->y || $interval->m > 1 ? 'month' : $groupBy;
+        $groupBy = $interval->y > 1 ? 'year' : $groupBy;
 
-        return [$startDate, $endDateString, 'days'];
+        return [$startDate, $endDateString, $groupBy];
     }
 
     /**
@@ -98,64 +101,32 @@ trait DateRangeResolverTrait
      * @param Carbon $startDate
      * @param Carbon $endDate
      * @param $unformattedResults
+     * @param $groupBy
      *
      * @return array
      */
-    public function fillDataToMissingDates(Carbon $startDate, Carbon $endDate, $unformattedResults): array
-    {
-        $interval = $startDate->diff($endDate);
-        $intervalYear = $interval->y;
-        $intervalMonth = $interval->m;
-
-        if ($intervalYear || $intervalMonth > 1) {
-            $results = $this->fillMissingMonthToData($startDate->startOfMonth(), $endDate->startOfMonth(), $unformattedResults);
-        } else {
-            $results = $this->fillMissingDaysToData($startDate, $endDate, $unformattedResults);
-        }
-
-        return $results;
-    }
-
-    /**
-     * Sets count to 0 for months that are missing.
-     *
-     * @param $startDate
-     * @param $endDate
-     * @param $results
-     *
-     * @return array
-     */
-    public function fillMissingMonthToData($startDate, $endDate, $results): array
+    public function fillDataToMissingDates(Carbon $startDate, Carbon $endDate, $unformattedResults, $groupBy): array
     {
         $formattedResults = [];
-        $currentDate = $startDate;
+        $currentDate = clone $startDate;
+        $endDate = $endDate->endOfDay();
 
         while ($currentDate <= $endDate) {
-            $monthStringComplete = $currentDate->format('Y-m-d H:i:s');
-            $monthString = $currentDate->format('Y-m-d');
-            $formattedResults[$monthString] = Arr::get($results, $monthStringComplete, 0);
-            $currentDate->addMonth();
-        }
-
-        return $formattedResults;
-    }
-
-    /**
-     * Sets count to 0 for days that are missing.
-     *
-     * @param Carbon $startDate
-     * @param Carbon $endDate
-     * @param array $results
-     * @return array
-     */
-    public function fillMissingDaysToData(Carbon $startDate, Carbon $endDate, array $results): array
-    {
-        $formattedResults = [];
-        $currentDate = $startDate;
-
-        while ($currentDate <= $endDate) {
-            $dateString = $currentDate->format('Y-m-d');
-            $formattedResults[$dateString] = Arr::get($results, $dateString, 0);
+            switch ($groupBy) {
+                case 'day':
+                    $dateString = $currentDate->format('Y-m-d');
+                    $dateKey = $currentDate->format('Y-m-d');
+                    break;
+                case 'month':
+                    $dateString = $currentDate->format('Y-m');
+                    $dateKey = $currentDate->endOfMonth()->format('Y-m-d');
+                    break;
+                default:
+                    $dateString = $currentDate->format('Y');
+                    $dateKey = $currentDate->endOfYear()->format('Y-m-d');
+                    break;
+            }
+            $formattedResults[$dateKey] = Arr::get($unformattedResults, $dateString, 0);
             $currentDate->addDay();
         }
 
