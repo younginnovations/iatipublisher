@@ -47,22 +47,17 @@ trait IatiValidatorResponseTrait
                 if (isset($details[0])) {
                     foreach ($error['details'] as $key => $detailedError) {
                         if (isset($detailedError['error']['line'])) {
-                            $missingSegment = str_replace('-', '_', trim(getStringBetween($errorMessage, 'Expected is (', ').')));
+//                            $missingSegment = str_replace('-', '_', trim(getStringBetween($errorMessage, 'Expected is (', ').')));
                             $lineNumber = $detailedError['error']['line'];
                             $nodePath = $this->getNodeByLineNumber($lineNumber + 1, $activity);
 
-                            if (!empty($missingSegment) && !str_contains($errorMessage, 'child element(s)')) {
-                                $nodePath = "/activity/$activity->id/$missingSegment";
-                                $errorLocation = "activity>$activity->id>$missingSegment";
+                            if (strpos($nodePath, 'edit')) {
+                                $stringBetween = getStringBetween($nodePath, '/', '/edit');
                             } else {
-                                if (strpos($nodePath, 'edit')) {
-                                    $stringBetween = getStringBetween($nodePath, '/', '/edit');
-                                } else {
-                                    $stringBetween = getStringBetween($nodePath, '/', '#');
-                                }
-
-                                $errorLocation = str_replace('/', '>', $stringBetween);
+                                $stringBetween = getStringBetween($nodePath, '/', '#');
                             }
+
+                            $errorLocation = str_replace('/', '>', $stringBetween);
                             $error['response'][$key]['iati_path'] = checkUrlExists($nodePath) ? $nodePath : "/activity/$activity->id";
                             $error['response'][$key]['message'] = $errorLocation;
                         }
