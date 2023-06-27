@@ -11,7 +11,7 @@
     "prepare": "husky install",
     "lint": "eslint . --ext resources/.js,.vue,.ts",
     "lint:fix": "eslint . --ext ./resources/.js,.vue,.ts --fix",
-    "prettier:format": "prettier --write \"./**/*.{scss,js,vue}\" --allow-empty"
+    "prettier:format": "prettier --write \"./**/*.{scss,js,vue,ts}\" --allow-empty"
   },
   "lint-staged": {
     "*.{scss,js,vue}": [

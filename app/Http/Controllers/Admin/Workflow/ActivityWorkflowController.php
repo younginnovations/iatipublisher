@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\IATI\Services\ApiLog\ApiLogService;
 use App\IATI\Services\Validator\ActivityValidatorResponseService;
 use App\IATI\Services\Workflow\ActivityWorkflowService;
+use App\IATI\Traits\IatiValidatorResponseTrait;
 use GuzzleHttp\Exception\BadResponseException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +20,8 @@ use Illuminate\Support\Facades\Session;
  */
 class ActivityWorkflowController extends Controller
 {
+    use IatiValidatorResponseTrait;
+
     /**
      * @var ActivityWorkflowService
      */
@@ -128,7 +131,8 @@ class ActivityWorkflowController extends Controller
      * @param $id
      *
      * @return JsonResponse
-     * @throws \JsonException
+     *
+     * @throws \JsonException|\GuzzleHttp\Exception\GuzzleException
      */
     public function validateActivity($id): JsonResponse
     {
@@ -143,20 +147,23 @@ class ActivityWorkflowController extends Controller
             }
 
             $response = $this->activityWorkflowService->validateActivityOnIATIValidator($activity);
+            $response = $this->addElementOnIatiValidatorResponse($response, $activity);
             $this->apiLogService->store(generateApiInfo('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)], json_encode($response)));
 
-            if ($this->validatorService->updateOrCreateresponse($id, json_decode($response, true, 512, JSON_THROW_ON_ERROR))) {
-                return response()->json(json_decode($response, true, 512, JSON_THROW_ON_ERROR));
+            if ($this->validatorService->updateOrCreateresponse($id, $response)) {
+                return response()->json($response);
             }
 
             return response()->json(['success' => false, 'error' => 'Error has occurred while validating activity.']);
         } catch (BadResponseException $ex) {
             if ($ex->getCode() === 422) {
                 $response = $ex->getResponse()->getBody()->getContents();
+                $response = $this->addElementOnIatiValidatorResponse($response, $activity);
+
                 $this->apiLogService->store(generateApiInfo('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)], json_encode($response)));
 
-                if ($this->validatorService->updateOrCreateResponse($id, json_decode($response, true, 512, JSON_THROW_ON_ERROR))) {
-                    return response()->json(json_decode($response, true, 512, JSON_THROW_ON_ERROR));
+                if ($this->validatorService->updateOrCreateResponse($id, $response)) {
+                    return response()->json($response);
                 }
             }
 

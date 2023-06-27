@@ -17,8 +17,23 @@
     </div>
     <div class="errors__list">
       <ul>
-        <li v-for="(error, e) in errors" :key="e">
-          {{ error }}
+        <li v-for="(error, e) in errors" :key="e" class="errors__item">
+          <div v-if="error.response.length > 1">
+            {{ error.message }}
+            <ul class="errors__element">
+              <li v-for="(element, index) in error.response" :key="index">
+                <a :href="error.response[index].iati_path">{{
+                  element.message
+                }}</a>
+              </li>
+            </ul>
+          </div>
+          <div v-else-if="error.response.length === 1">
+            <a :href="error.response['0'].iati_path">{{ error.message }}</a>
+          </div>
+          <div v-else>
+            {{ error.message }}
+          </div>
         </li>
       </ul>
     </div>
@@ -110,6 +125,7 @@ watch(
 <style lang="scss" scoped>
 .errors {
   @apply border-l-2;
+
   &__head {
     @apply flex justify-between p-4;
 
@@ -120,15 +136,22 @@ watch(
 
   &__list {
     @apply h-0 overflow-hidden px-4 transition-all duration-500;
+
     ul {
       @apply px-6;
     }
-    li {
-      @apply py-4 text-sm leading-normal;
-    }
-    li:not(:last-child) {
-      @apply border-b border-n-20;
-    }
+  }
+
+  &__item {
+    @apply py-4 text-sm leading-normal;
+  }
+
+  &__item:not(:last-child) {
+    @apply border-b border-n-20;
+  }
+
+  &__element {
+    @apply list-disc px-4 text-blue-50;
   }
 }
 </style>

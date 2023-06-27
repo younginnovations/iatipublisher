@@ -743,4 +743,16 @@ class ActivityService
 
         return $element;
     }
+
+    /*
+     * Fetch activity with its relation by id
+     *
+     * @param $activityId
+     *
+     * @return Model|null
+     */
+    public function getActivitityWithRelationsById($activityId): ?Model
+    {
+        return $this->activityRepository->getActivitityWithRelationsById($activityId);
+    }
 }

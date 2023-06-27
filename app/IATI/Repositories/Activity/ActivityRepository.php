@@ -457,7 +457,7 @@ class ActivityRepository extends Repository
      */
     public function getActivityWithIdentifier($org_id, $identifier): mixed
     {
-        $activities = $this->model->where('org_id', $org_id)->whereJsonContains('iati_identifier->activity_identifier', $identifier)->get();
+        $activities = $this->model->where('org_id', $org_id)->whereJsonContains('iati_identifier->activity_identifier', trim((string) $identifier))->get();
 
         if ($activities) {
             return $activities->first();
@@ -604,5 +604,17 @@ class ActivityRepository extends Repository
         }
 
         return $query->get();
+    }
+
+    /**
+     * returns with Nested relation.
+     *
+     * @param $activityId
+     *
+     * @return Model|null
+     */
+    public function getActivitityWithRelationsById($activityId): ?Model
+    {
+        return $this->model->with('results.indicators.periods', 'transactions')->where('id', $activityId)->first();
     }
 }

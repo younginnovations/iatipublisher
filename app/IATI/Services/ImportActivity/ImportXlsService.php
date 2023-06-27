@@ -207,7 +207,7 @@ class ImportXlsService
             $organizationId = Auth::user()->organization->id;
             $existingId = Arr::get($activity, 'existing', false);
 
-            if ($existingId && $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'))) {
+            if ($existingId || $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'))) {
                 $activityData = $this->fillActivityData($activityData);
                 $activityData['upload_medium'] = 'xls';
                 $this->activityRepository->update($existingId, $activityData);

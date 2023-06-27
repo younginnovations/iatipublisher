@@ -112,8 +112,8 @@ class FormBuilder {
     const count = $(target).attr('parent_count')
       ? parseInt($(target).attr('parent_count') as string) + 1
       : ($(target).prev().find('.multi-form').length
-        ? $(target).prev().find('.multi-form').length
-        : $(target).prev().find('.wrapped-child-body').length) + 1;
+          ? $(target).prev().find('.multi-form').length
+          : $(target).prev().find('.wrapped-child-body').length) + 1;
 
     let proto = container.data('prototype').replace(/__PARENT_NAME__/g, count);
     proto = proto.replace(/__NAME__/g, 0);
@@ -316,7 +316,10 @@ class FormBuilder {
     // update format on change of document link
     $('body').on('change', 'input[id*="[url]"]', function () {
       const filePath = ($(this).val() ?? '').toString();
-      const document = $(this).closest('.form-field-group').find('input[id*="[document]"]').val();
+      const document = $(this)
+        .closest('.form-field-group')
+        .find('input[id*="[document]"]')
+        .val();
       const url = `/mimetype?url=${filePath}&type=url`;
       $(this).closest('.form-field').find('.text-danger').remove();
 
@@ -331,7 +334,13 @@ class FormBuilder {
               .trigger('change');
           } else {
             $(this).closest('.form-field').find('.text-danger').remove();
-            $(this).closest('.form-field').append("<div class='text-danger error'>" + response.data.message + "</div>");
+            $(this)
+              .closest('.form-field')
+              .append(
+                "<div class='text-danger error'>" +
+                  response.data.message +
+                  '</div>'
+              );
 
             $(this)
               .closest('.form-field-group')
@@ -344,7 +353,7 @@ class FormBuilder {
             .find('input[id*="[document]"]')
             .val('')
             .trigger('change');
-        })
+        });
       } else if (!document || document === '') {
         $(this)
           .closest('.form-field-group')
@@ -352,7 +361,6 @@ class FormBuilder {
           .val('')
           .trigger('change');
       }
-
     });
 
     $('body').on('change', 'input[id*="[document]"]', function () {
@@ -360,7 +368,8 @@ class FormBuilder {
       const url = `/mimetype?url=${filePath}&&type=document`;
       const fileUrl = $(this)
         .closest('.form-field-group')
-        .find('input[id*="[url]"]').val();
+        .find('input[id*="[url]"]')
+        .val();
 
       $(this).closest('.form-field').find('.text-danger').remove();
 
@@ -380,7 +389,7 @@ class FormBuilder {
               .val('')
               .trigger('change');
           }
-        })
+        });
         $(this)
           .closest('.form-field-group')
           .find('input[id*="[url]"]')
@@ -506,14 +515,13 @@ $(function () {
   const readOnlySelects = document.querySelectorAll(
     'select.cursor-not-allowed'
   );
-
   for (let i = 0; i < readOnlySelects.length; i++) {
     const select = readOnlySelects[i];
     const selectElementParentWrapper = select.nextSibling;
     const selectElementParent = selectElementParentWrapper?.firstChild;
     const selectElement = selectElementParent?.firstChild as HTMLElement;
     if (selectElement) {
-      selectElement.style.cursor = "not-allowed";
+      selectElement.style.cursor = 'not-allowed';
     }
   }
 });

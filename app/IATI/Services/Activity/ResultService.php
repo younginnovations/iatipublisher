@@ -301,7 +301,6 @@ class ResultService
         if (count($results)) {
             foreach ($results as $totalResult) {
                 $result = $totalResult->result;
-
                 $resultData[] = [
                     '@attributes'   => [
                         'type'               => Arr::get($result, 'type', null),
@@ -315,7 +314,7 @@ class ResultService
                     ],
                     'document-link' => $this->buildDocumentLink(Arr::get($result, 'document_link', [])),
                     'reference'     => $this->buildReference(Arr::get($result, 'reference', []), 'vocabulary-uri'),
-                    'indicator'     => $this->buildIndicator($totalResult->indicators),
+                    'indicator'     => $this->buildIndicator($totalResult->indicators()->orderBy('created_at', 'asc')->get()),
                 ];
             }
         }
@@ -337,7 +336,6 @@ class ResultService
         if (count($indicators)) {
             foreach ($indicators as $totalIndicator) {
                 $indicator = $totalIndicator->indicator;
-
                 $indicatorData[] = [
                     '@attributes'   => [
                         'measure'            => Arr::get($indicator, 'measure', null),
@@ -353,7 +351,7 @@ class ResultService
                     'document-link' => $this->buildDocumentLink(Arr::get($indicator, 'document_link', [])),
                     'reference'     => $this->buildReference(Arr::get($indicator, 'reference', []), 'indicator-uri', 'indicator_uri'),
                     'baseline'      => $this->buildBaseline(Arr::get($indicator, 'baseline', []), Arr::get($indicator, 'measure', null)),
-                    'period'        => $this->buildPeriod($totalIndicator->periods, Arr::get($indicator, 'measure', null)),
+                    'period'        => $this->buildPeriod($totalIndicator->periods()->orderBy('created_at', 'asc')->get(), Arr::get($indicator, 'measure', null)),
                 ];
             }
         }
