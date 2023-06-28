@@ -1,5 +1,7 @@
 name: cleanup caches by a branch
 on:
+  push:
+    branches: [ clean-runner-cache ]
   workflow_dispatch:
 
 jobs:
