@@ -343,11 +343,11 @@ class ActivityRepository extends Repository
      * @param $csvValue
      * @param $defaultElementName
      *
-     * @return array|null
+     * @return int|string|null
      *
      * @throws BindingResolutionException
      */
-    public function autoFillSettingsValue($csvValue, $defaultElementName): ?array
+    public function autoFillSettingsValue($csvValue, $defaultElementName): int|string|null
     {
         if (!empty($csvValue)) {
             return $csvValue;
