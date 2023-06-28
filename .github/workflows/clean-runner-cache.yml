@@ -18,7 +18,7 @@ jobs:
           REPO=${{ github.repository }}
           BRANCH="devops"
 
-          gh actions-cache delete -R $REPO --confirm
+          gh actions-cache delete -R $REPO -B $BRANCH --confirm
           echo "Done"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
