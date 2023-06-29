@@ -74,7 +74,7 @@
     "vue3-apexcharts": "^1.4.4",
     "vue3-radial-progress": "^1.1.1",
     "vue3-smooth-scroll": "^0.8.1",
-    "vuex": "^4.0.2",
+    "vuex": "^4.1.0",
     "vuex-map-fields": "^1.4.1"
   },
   "engines": {
