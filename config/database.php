@@ -96,7 +96,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'search_path' => 'public',
-            'sslmode' => 'disable',
+            'sslmode' => env('DB_SSLMODE', 'prefer'),
             'pool_size' => 20,
             'options' => [
                 PDO::ATTR_PERSISTENT => true,
