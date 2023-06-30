@@ -69,10 +69,6 @@ import ButtonComponent from 'Components/ButtonComponent.vue';
 import axios from 'axios';
 import moment from 'moment';
 
-interface tableDataType {
-  label: string;
-  total: number;
-}
 const currentNav = ref({
   label: 'Publisher Type',
   apiParams: 'publisher-type',
@@ -195,9 +191,6 @@ const fetchTableData = (filter = { orderBy: '', sort: '' }, page = '1') => {
         if (currentNav.value['apiParams'] !== 'setup') {
           tableData.value = [];
           let tempData: Array<object> = [];
-          const dataType = currentNav.value['apiParams']
-            .toString()
-            .replace('-', '_');
           const codeList = response.data?.codelist;
 
           for (let key in response.data?.data) {

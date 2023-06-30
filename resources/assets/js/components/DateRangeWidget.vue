@@ -133,7 +133,7 @@ const props = defineProps({
   },
 });
 
-const dateRangeMain: any = ref([]);
+const dateRangeMain: Ref<Element | null> = ref(null);
 const dateType = ref('');
 const dateDropdown = ref();
 dateType.value = props.dropdownRange && Object.values(props.dropdownRange)[0];
@@ -151,7 +151,7 @@ const emit = defineEmits(['triggerSetDateRange', 'triggerSetDateType']);
 
 const fixed = ref('All time');
 const todayDate = moment(new Date()).format('YYYY-MM-DD');
-const selectedDate: Ref<any[]> = ref([
+const selectedDate: Ref<Date[] | string[]> = ref([
   new Date(),
   new Date(new Date().setDate(new Date().getDate() + 7)),
 ]);
@@ -230,7 +230,7 @@ const selectDate = () => {
 };
 
 const format = (dates) => {
-  var tempArray: any = [];
+  const tempArray: string | number[] = [];
 
   for (let i = 0; i < dates.length; i++) {
     tempArray[i] = dates[i].toLocaleDateString('en-US', {
@@ -252,10 +252,10 @@ watch(
   (value) => {
     if (value) {
       document.addEventListener('click', closeDateDropdown);
-      dateRangeMain.value.addEventListener('click', keepModelOpen);
+      dateRangeMain.value?.addEventListener('click', keepModelOpen);
     } else {
       document.removeEventListener('click', closeDateDropdown);
-      dateRangeMain.value.removeEventListener('click', keepModelOpen);
+      dateRangeMain.value?.removeEventListener('click', keepModelOpen);
     }
   }
 );

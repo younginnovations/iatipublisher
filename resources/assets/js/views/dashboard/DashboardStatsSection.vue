@@ -65,10 +65,10 @@
 
               {{
                 truncateText(
-                  lastPubActivityUpdate?.name
-                    ? lastPubActivityUpdate?.name[0].narrative
-                    : lastPubActivityUpdate?.publisher_name
-                    ? lastPubActivityUpdate?.publisher_name
+                  lastUpdatedPublisher?.name
+                    ? lastUpdatedPublisher?.name[0].narrative
+                    : lastUpdatedPublisher?.publisher_name
+                    ? lastUpdatedPublisher?.publisher_name
                     : 'untitled',
                   30
                 )

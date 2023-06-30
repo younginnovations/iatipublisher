@@ -677,9 +677,6 @@ export default defineComponent({
         }
       }
     );
-    const keepPublisherModelOpen = (event) => {
-      event.stopPropagation();
-    };
 
     const closePublisherModel = () => {
       showMultiSelectWithSearch.value = false;
@@ -814,8 +811,10 @@ export default defineComponent({
     /**
      * Sorting By update on
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let query = '',
       defaultSortDirection = 'descending',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       sortDirection = 'desc';
 
     const queryString = window.location.search;
@@ -823,6 +822,7 @@ export default defineComponent({
     let urlParams = new URLSearchParams(queryString);
     let orderType = ref('');
     orderType.value = urlParams.get('orderBy') ?? '';
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let range = '';
 
     const sortingDirection = () => {

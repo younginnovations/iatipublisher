@@ -52,9 +52,10 @@ export function isJson(str) {
   return true;
 }
 
-export function snakeCaseToSentenceCase(str){
+export function snakeCaseToSentenceCase(str) {
   const words = str.split('_');
-  let sentence = words[0].charAt(0).toUpperCase() + words[0].slice(1).toLowerCase();
+  let sentence =
+    words[0].charAt(0).toUpperCase() + words[0].slice(1).toLowerCase();
 
   for (let i = 1; i < words.length; i++) {
     sentence += ' ' + words[i].toLowerCase();
@@ -63,8 +64,8 @@ export function snakeCaseToSentenceCase(str){
   return sentence;
 }
 
-export function  kebabCaseToSnakecase(str){
-  return str.replace(/-/g, "_");
+export function kebabCaseToSnakecase(str) {
+  return str.replace(/-/g, '_');
 }
 
 export function truncateText(text, maxLength) {

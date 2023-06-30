@@ -18,16 +18,7 @@
 <script setup lang="ts">
 import moment from 'moment';
 import spinnerLoader from 'Components/spinnerLoader.vue';
-import {
-  reactive,
-  ref,
-  inject,
-  Ref,
-  onUpdated,
-  watch,
-  computed,
-  defineProps,
-} from 'vue';
+import { reactive, ref, inject, Ref, watch, computed, defineProps } from 'vue';
 
 interface yAxisInterface {
   result: number[];
@@ -37,7 +28,6 @@ interface ChartInterface {
   chart?: { w: { globals: { yAxisScale: yAxisInterface[] } } };
 }
 
-const xAxisCounter = ref(0);
 const labels = ref<number[]>([]);
 const roundedLabels = ref<number[]>([]);
 const showGraphLoader = inject('showGraphLoader') as Ref;
