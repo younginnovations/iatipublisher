@@ -217,9 +217,13 @@ class OrganizationRepository extends Repository
     /**
      * Applies filter to the publisher query.
      *
+     * @param $query
      * @param $queryParams
+     * @param null $type
+     *
+     * @return LengthAwarePaginator
      */
-    protected function filterPublisher($query, $queryParams, $type = null)
+    protected function filterPublisher($query, $queryParams, $type = null): LengthAwarePaginator
     {
         $filteredQuery = $query;
 
@@ -243,11 +247,7 @@ class OrganizationRepository extends Repository
             $filteredQuery = $filteredQuery->orderBy($orderBy, $direction)->groupBy($type);
         }
 
-        if (isset($queryParams['page'])) {
-            $filteredQuery = $filteredQuery->paginate(10, ['*'], 'publisher', $queryParams['page']);
-        }
-
-        return $filteredQuery;
+        return $filteredQuery->paginate(10, ['*'], 'publisher', Arr::get($queryParams, 'page', 1));
     }
 
     /**
@@ -274,11 +274,10 @@ class OrganizationRepository extends Repository
      *
      * @param $queryParams
      * @param $type
-     * @param $page
      *
-     * @return LengthAwarePaginator|array
+     * @return array
      */
-    public function getPublisherByPagination($queryParams, $type, $page = 1): LengthAwarePaginator|array
+    public function getPublisherByPagination($queryParams, $type): array
     {
         $query = $this->model->select(DB::raw('count(*) as count, ' . $type))->whereNotNull($type)->where($type, '<>', '');
 

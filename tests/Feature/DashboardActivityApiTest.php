@@ -49,7 +49,16 @@ class DashboardActivityApiTest extends TestCase
     {
         $response = $this->actingAs($this->user)->get(url('/dashboard/activity/stats'));
 
-        $response->assertStatus(200)->assertJsonStructure(['totalCount'=>[], 'lastUpdatedPublisher'=>[], 'publisherWithoutActivity'=>[]], $response['data']);
+        $response->assertStatus(200)->assertJsonStructure(
+            [
+                'totalCount',
+                'lastUpdatedPublisher',
+                'lastUpdatedActivity',
+                'userId',
+                'publisherWithoutActivity',
+            ],
+            $response['data']
+        );
     }
 
     /**
@@ -74,7 +83,7 @@ class DashboardActivityApiTest extends TestCase
         $response = $this->actingAs($this->user)->get(url('/dashboard/activity/count'));
 
         $expectedCount = 25;
-        $testCount = Arr::get(array_values($response['data']), 0, 0);
+        $testCount = Arr::get($response, 'data.count', 0);
 
         $this->assertTrue($expectedCount === $testCount);
     }
@@ -88,7 +97,11 @@ class DashboardActivityApiTest extends TestCase
     {
         $response = $this->actingAs($this->user)->get(url('/dashboard/activity/status'));
 
-        $response->assertStatus(200)->assertJsonStructure(['*'=>['count'=>[], 'status'=>[], 'linked_to_iati'=>[]]], $response['data']);
+        $response->assertStatus(200)->assertJsonStructure([
+            'Published',
+            'Draft (Not Published)',
+            'Draft (Need to republish)',
+            ], $response['data']);
     }
 
     /**
@@ -100,22 +113,28 @@ class DashboardActivityApiTest extends TestCase
     {
         $response = $this->actingAs($this->user)->get(url('/dashboard/activity/method'));
 
-        $response->assertStatus(200)->assertJsonStructure(['upload_medium'=>[]], $response['data']);
+        $response->assertStatus(200)->assertJsonStructure([
+            'By importing via CSV',
+            'By importing via XML',
+            'By importing via XLS',
+            'Manually',
+        ], $response['data']);
     }
 
-//    /**
-//     * Test status 200 and data structure in dashboard data grouped by registration count api.
-//     *
-//     * @return void
-//     */
-//    public function test_dashboard_activity_api_for_completeness()
-//    {
-//        $response = $this->actingAs($this->user)->get(url('/dashboard/activity/completeness'));
-//
-//        Review this @momik. the api code is in dashboard controller is incomplete.
-//        $response->assertStatus(200)->assertJsonStructure(['created_at'=>[]], $response['data']);
-//    }
-//
+    /**
+     * Test status 200 and data structure in dashboard data grouped by registration count api.
+     *
+     * @return void
+     */
+    public function test_dashboard_activity_api_for_completeness()
+    {
+        $response = $this->actingAs($this->user)->get(url('/dashboard/activity/completeness'));
+
+        $response->assertStatus(200)->assertJsonStructure([
+            'Activities with complete core element data',
+            'Activities with incomplete core element data',
+        ], $response['data']);
+    }
 
     /**
      * Test status 200 at download endpoint.
@@ -126,7 +145,7 @@ class DashboardActivityApiTest extends TestCase
     {
         $response = $this->actingAs($this->user)->get(url('/dashboard/activity/download'));
 
-        $response->assertStatus(200);
+        $response->assertDownload();
     }
 
     /**

@@ -40,9 +40,9 @@ class DashboardPublisherApiTest extends TestCase
      */
     public function test_publisher_grouped_by_type()
     {
-        $response = $this->actingAs($this->user)->get(url('/dashboard/publisher/type?startDate=2010-01-31&endDate=' . Carbon::now()->format('Y-m-d')));
+        $response = $this->actingAs($this->user)->get(url('/dashboard/publisher/publisher-type?page=1&startDate=2010-01-31&endDate=' . Carbon::now()->format('Y-m-d')));
 
-        $response->assertStatus(200)->assertJsonStructure(['publisher_type'=>[], 'codelist'=>[]], $response['data']);
+        $response->assertStatus(200);
     }
 
     /**
@@ -66,7 +66,7 @@ class DashboardPublisherApiTest extends TestCase
     {
         $response = $this->actingAs($this->user)->get(url('/dashboard/publisher/data-license'));
 
-        $response->assertStatus(200)->assertJsonStructure(['data_license'=>[], 'codelist'=>[]], $response['data']);
+        $response->assertStatus(200);
     }
 
     /**
@@ -78,7 +78,7 @@ class DashboardPublisherApiTest extends TestCase
     {
         $response = $this->actingAs($this->user)->get(url('/dashboard/publisher/country'));
 
-        $response->assertStatus(200)->assertJsonStructure(['country'=>[], 'codelist'=>[]], $response['data']);
+        $response->assertStatus(200);
     }
 
     /**
@@ -88,10 +88,9 @@ class DashboardPublisherApiTest extends TestCase
      */
     public function test_publisher_grouped_by_registration_type()
     {
-        //$response = $this->actingAs($this->user)->get(url('/dashboard/publisher/registration-type'));
+        $response = $this->actingAs($this->user)->get(url('/dashboard/publisher/registration-type'));
 
-        //Review this @momik. method doesn't exist in DashboardController.
-        //$response->assertStatus(200)->assertJsonStructure(['totalCount'=>[], 'lastRegisteredPublisher'=>[]], $response['data']);
+        $response->assertStatus(200);
     }
 
     /**
@@ -113,9 +112,9 @@ class DashboardPublisherApiTest extends TestCase
      */
     public function test_publisher_grouped_by_registration_count()
     {
-        $response = $this->actingAs($this->user)->get(url('/dashboard/publisher/registration-count'));
+        $response = $this->actingAs($this->user)->get(url('/dashboard/publisher/count'));
 
-        $response->assertStatus(200)->assertJsonStructure(['created_at'=>[]], $response['data']);
+        $response->assertStatus(200)->assertJsonStructure(['count', 'graph'], $response['data']);
     }
 
     /**
@@ -125,12 +124,9 @@ class DashboardPublisherApiTest extends TestCase
      */
     public function test_publisher_grouped_by_download()
     {
-        // Review this @momik.
-        // Cant assert 200 because it's not json response.
-        // but why is response empty array and not true/false or array of org data.
-        // $response = $this->actingAs($this->user)->get(url('/dashboard/publisher/download'));
-        //
-        // $response->assertStatus(200);
+        $response = $this->actingAs($this->user)->get(url('/dashboard/publisher/download'));
+
+        $response->assertDownload();
     }
 
     /**

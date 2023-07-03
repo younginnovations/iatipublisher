@@ -236,15 +236,22 @@ class DashboardController extends Controller
 
             $publisherStat = $this->dashboardService->getPublisherBy($params, 'registration_type');
 
+            if (count($publisherStat['data']) === 0) {
+                $publisherStat['data'] = [
+                    'new_org'=>0,
+                    'existing_org'=>0,
+                ];
+            }
+
             return response()->json([
                 'success' => true,
-                'message' => 'Publisher by type fetched successfully',
+                'message' => 'Publisher by registration type fetched successfully',
                 'data' => $publisherStat,
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher by type.']);
+            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher by registration type.']);
         }
     }
 

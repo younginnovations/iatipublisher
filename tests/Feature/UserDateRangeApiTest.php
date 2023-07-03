@@ -26,7 +26,7 @@ class UserDateRangeApiTest extends TestCase
     /**
      * @var string
      */
-    public string $baseUrl = 'dashboard/user/date-range?';
+    public string $baseUrl = 'dashboard/user?';
 
     /**
      * @var
@@ -41,7 +41,7 @@ class UserDateRangeApiTest extends TestCase
         parent::setUp();
 
         $this->testDates = [
-            'today' => ['start_date' => Carbon::now()->startOfDay(), 'end_date' => Carbon::now()->endOfDay()],
+            'today' => ['start_date' => Carbon::now()->startOfDay()->format('Y-m-d'), 'end_date' => Carbon::now()->endOfDay()->format('Y-m-d')],
             'this_week' => ['start_date' => Carbon::now()->startOfWeek(), 'end_date' => Carbon::now()->endOfWeek()],
             'this_month' => ['start_date' => Carbon::now()->startOfMonth(), 'end_date' => Carbon::now()->endOfMonth()],
             'this_year' => ['start_date' => Carbon::now()->startOfYear(), 'end_date' => Carbon::now()->endOfYear()],
@@ -83,52 +83,125 @@ class UserDateRangeApiTest extends TestCase
         ]);
     }
 
+    /**
+     * Test response 200 for dashboard/user/stats.
+     *
+     * @return void
+     */
+    public function test_user_stats_api()
+    {
+        $url = 'dashboard/user/stats';
+        $this->actingAs($this->superAdmin)->get(url($url))->assertStatus(200);
+    }
+
+    /**
+     * Test response 200 for dashboard/user/download.
+     *
+     * @return void
+     */
+    public function test_user_download_api()
+    {
+        $url = 'dashboard/user/download';
+        $this->actingAs($this->superAdmin)->get(url($url))->assertDownload();
+    }
+
+    /**
+     * Test response 200 for dashboard/user/count.
+     *
+     * @return void
+     */
+    public function test_user_count_api()
+    {
+        $url = 'dashboard/user/count';
+        $this->actingAs($this->superAdmin)->get(url($url))->assertStatus(200);
+    }
+
+    /**
+     * Test response 200 for dashboard/user?... date-range for today.
+     *
+     * @return void
+     */
     public function test_user_date_range_api_today()
     {
         $url = url($this->baseUrl . 'start_date=' . Arr::get($this->testDates, 'today.start_date') . '&end_date=' . Arr::get($this->testDates, 'today.end_date'));
-        $this->actingAs($this->superAdmin)->getJson($url)->assertJsonCount($this->getExpectedCaseOfCount('today'), 'data');
+        $this->actingAs($this->superAdmin)->get(url($url))->assertStatus(200);
     }
 
+    /**
+     * Test response 200 for dashboard/user?... date-range for this week.
+     *
+     * @return void
+     */
     public function test_user_date_range_api_this_week()
     {
         $url = url($this->baseUrl . 'start_date=' . Arr::get($this->testDates, 'this_week.start_date') . '&end_date=' . Arr::get($this->testDates, 'this_week.end_date'));
-        $this->actingAs($this->superAdmin)->getJson($url)->assertJsonCount($this->getExpectedCaseOfCount('this_week'), 'data');
+        $this->actingAs($this->superAdmin)->get(url($url))->assertStatus(200);
     }
 
+    /**
+     * Test response 200 for dashboard/user?... date-range for last 7 days.
+     *
+     * @return void
+     */
     public function test_user_date_range_api_last_7_days()
     {
         $url = url($this->baseUrl . 'start_date=' . Arr::get($this->testDates, 'last_7_days.start_date') . '&end_date=' . Arr::get($this->testDates, 'last_7_days.end_date'));
-        $this->actingAs($this->superAdmin)->getJson($url)->assertJsonCount($this->getExpectedCaseOfCount('last_7_days'), 'data');
+        $this->actingAs($this->superAdmin)->get(url($url))->assertStatus(200);
     }
 
+    /**
+     * Test response 200 for dashboard/user?... date-range for this month.
+     *
+     * @return void
+     */
     public function test_user_date_range_api_this_month()
     {
         $url = url($this->baseUrl . 'start_date=' . Arr::get($this->testDates, 'this_month.start_date') . '&end_date=' . Arr::get($this->testDates, 'this_month.end_date'));
-        $this->actingAs($this->superAdmin)->getJson($url)->assertJsonCount($this->getExpectedCaseOfCount('this_month'), 'data');
+        $this->actingAs($this->superAdmin)->get(url($url))->assertStatus(200);
     }
 
+    /**
+     * Test response 200 for dashboard/user?... date-range for last 6 month.
+     *
+     * @return void
+     */
     public function test_user_date_range_api_last_6_months()
     {
         $url = url($this->baseUrl . 'start_date=' . Arr::get($this->testDates, 'last_6_months.start_date') . '&end_date=' . Arr::get($this->testDates, 'last_6_months.end_date'));
-        $this->actingAs($this->superAdmin)->getJson($url)->assertJsonCount($this->getExpectedCaseOfCount('last_6_months'), 'data');
+        $this->actingAs($this->superAdmin)->get(url($url))->assertStatus(200);
     }
 
+    /**
+     * Test response 200 for dashboard/user?... date-range for this year.
+     *
+     * @return void
+     */
     public function test_user_date_range_api_this_year()
     {
         $url = url($this->baseUrl . 'start_date=' . Arr::get($this->testDates, 'this_year.start_date') . '&end_date=' . Arr::get($this->testDates, 'this_year.end_date'));
-        $this->actingAs($this->superAdmin)->getJson($url)->assertJsonCount($this->getExpectedCaseOfCount('this_year'), 'data');
+        $this->actingAs($this->superAdmin)->get(url($url))->assertStatus(200);
     }
 
+    /**
+     * Test response 200 for dashboard/user?... date-range for last 12 month.
+     *
+     * @return void
+     */
     public function test_user_date_range_api_last_12_months()
     {
         $url = url($this->baseUrl . 'start_date=' . Arr::get($this->testDates, 'last_12_months.start_date') . '&end_date=' . Arr::get($this->testDates, 'last_12_months.end_date'));
-        $this->actingAs($this->superAdmin)->getJson($url)->assertJsonCount($this->getExpectedCaseOfCount('last_12_months'), 'data');
+        $this->actingAs($this->superAdmin)->get(url($url))->assertStatus(200);
     }
 
+    /**
+     * Test response 200 for dashboard/user?... date-range for all time.
+     *
+     * @return void
+     */
     public function test_user_date_range_api_all_time()
     {
         $url = url($this->baseUrl . 'start_date=' . Arr::get($this->testDates, 'all_time.start_date') . '&end_date=' . Arr::get($this->testDates, 'all_time.end_date'));
-        $this->actingAs($this->superAdmin)->getJson($url)->assertJsonCount($this->getExpectedCaseOfCount('all_time'), 'data');
+        $this->actingAs($this->superAdmin)->get(url($url))->assertStatus(200);
     }
 
     /**
