@@ -150,7 +150,11 @@ const fetchGraphData = () => {
 };
 
 const setDateRangeDate = (start, end) => {
-  startDate.value = start;
+  console.log(start, 'split');
+  startDate.value = '';
+  if (start != '1990-12-31') {
+    startDate.value = start;
+  }
   endDate.value = end;
   fetchTableData();
   fetchGraphData();
