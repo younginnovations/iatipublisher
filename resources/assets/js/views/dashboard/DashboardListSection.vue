@@ -574,8 +574,8 @@
                 <td class="text-sm text-bluecoral">
                   <a
                     :href="`/list-organisations?${currentItem?.apiParams}=${item.id}`"
-                    class="px-4 py-3 text-left"
-                    >{{ item?.label }}
+                    class="px-4 py-3 text-left capitalize"
+                    >{{ item?.label.split('_').join(' ') }}
                   </a>
                 </td>
                 <td class="text-sm text-[#2A2F30]">
