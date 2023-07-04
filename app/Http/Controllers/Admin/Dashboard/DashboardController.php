@@ -236,13 +236,6 @@ class DashboardController extends Controller
 
             $publisherStat = $this->dashboardService->getPublisherBy($params, 'registration_type');
 
-            if (count($publisherStat['data']) === 0) {
-                $publisherStat['data'] = [
-                    'new_org'=>0,
-                    'existing_org'=>0,
-                ];
-            }
-
             return response()->json([
                 'success' => true,
                 'message' => 'Publisher by registration type fetched successfully',

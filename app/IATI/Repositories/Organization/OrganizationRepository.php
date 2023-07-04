@@ -85,35 +85,12 @@ class OrganizationRepository extends Repository
      */
     public function getPaginatedOrganizations($page, $queryParams): ?LengthAwarePaginator
     {
-        $whereSql = '1=1';
-        $bindParams = [];
         $adminRoleId = app(Role::class)->getOrganizationAdminId();
+        $whereSql = '1=1';
+        $organizations = $this->model->select('organizations.id', 'organizations.name', 'organizations.country', 'organizations.created_at', 'organizations.publisher_type', 'organizations.data_license');
 
-        if (
-            array_key_exists(
-                'q',
-                $queryParams
-            ) && !empty($queryParams['q'])
-        ) {
-            $query = $queryParams['q'];
-            $innerSql = 'select id, json_array_elements(name) name_array from organizations';
-
-            $whereSql .= " AND id in (select x1.id from ($innerSql)x1 where (x1.name_array->>'narrative')::text ilike ?)";
-            $bindParams[] = "%$query%";
-        }
-
-        $orderBy = 'updated_at';
-        $direction = 'desc';
-
-        if (array_key_exists('orderBy', $queryParams) && !empty($queryParams['orderBy'])) {
-            $orderBy = $queryParams['orderBy'];
-
-            if (array_key_exists('direction', $queryParams) && !empty($queryParams['direction'])) {
-                $direction = $queryParams['direction'];
-            }
-        }
-
-        $organizations = $this->model
+        $organizations
+            ->whereRaw($whereSql)
             ->withCount('allActivities')
             ->with([
                 'user' => function ($user) use ($adminRoleId) {
@@ -126,33 +103,133 @@ class OrganizationRepository extends Repository
             ->with('latestLoggedInUser')
             ->with('settings');
 
-        if (array_key_exists('q', $queryParams) && !empty($queryParams['q'])) {
-            $organizations->whereRaw($whereSql, $bindParams)
-                ->orWhereHas('user', function ($q) use ($bindParams) {
-                    $q->where('email', 'ilike', $bindParams);
-                });
-        }
+        $organizations = $this->applyDateRange($organizations, $queryParams);
 
-        $startDate = Arr::get($queryParams, 'start_date', ($this->getOldestData()?->created_at ?? false));
-        $endDate = Arr::get($queryParams, 'end_date', now()->endOfDay());
-        $dateColumn = Arr::get($queryParams, 'date_column', 'created_at');
-
-        if ($dateColumn === 'last_logged_in') {
-            $organizations->whereHas('latestLoggedInUser', function ($user) use ($startDate, $endDate) {
-                $user->whereDate('last_logged_in', '>=', $startDate)
-                    ->whereDate('last_logged_in', '<=', $endDate);
-            });
-        } else {
-            $organizations
-                ->whereDate("organizations.$dateColumn", '>=', $startDate)
-                ->whereDate("organizations.$dateColumn", '<=', $endDate);
+        if (Arr::get($queryParams, 'q', false)) {
+            $organizations = $this->applySearch($organizations, $queryParams['q']);
         }
 
         if (Arr::get($queryParams, 'filters', false)) {
-            $organizations = $this->applyFilters($organizations, Arr::get($queryParams, 'filters'));
+            $organizations = $this->applyFilters($organizations, $queryParams['filters']);
         }
 
-        return $this->applyOrderBy($organizations, $orderBy, $direction, $page);
+        return $this->applyOrderBy($organizations, $queryParams, $page);
+    }
+
+    /**
+     * Apply order by for sorting.
+     *
+     * @param mixed $organizations
+     * @param $queryParams
+     * @param $page
+     *
+     * @return LengthAwarePaginator
+     */
+    private function applyOrderBy(mixed $organizations, $queryParams, $page):LengthAwarePaginator
+    {
+        $orderBy = Arr::get($queryParams, 'orderBy', 'organizations.updated_at');
+        $direction = Arr::get($queryParams, 'direction', 'desc');
+
+        if ($orderBy === 'name') {
+            return $organizations->orderByRaw("organizations.name->0->>'narrative' $direction")
+                ->paginate(10, ['*'], 'organization', $page);
+        }
+
+        if ($orderBy === 'country') {
+            return $organizations
+                ->orderByRaw("CASE WHEN {$orderBy} = '' OR {$orderBy} IS NULL THEN 1 ELSE 0 END {$direction}")
+                ->paginate(10, ['*'], 'organization', $page);
+        }
+
+        if ($orderBy === 'registered_on') {
+            return $organizations->orderBy('created_at', $direction)
+                ->paginate(10, ['*'], 'organization', $page);
+        }
+
+//        if ($orderBy === 'last_logged_in') {
+//            logger('eta');
+//            return $organizations->whereHas('latestLoggedInUser', function ($user) use ($direction){
+//                $user->orderBy('last_logged_in', $direction);
+//            })->paginate(100, ['*'], 'organization', $page);
+//        }
+
+        return $organizations->orderBy($orderBy, $direction)
+            ->paginate(10, ['*'], 'organization', $page);
+    }
+
+    /**
+     * Apply where query for search.
+     *
+     * @param $organizations
+     * @param $searchString
+     *
+     * @return Builder
+     */
+    private function applySearch($organizations, $searchString):Builder
+    {
+        $organizations->where('organizations.name->0->>narrative', 'LIKE', "%$searchString%")
+            ->orWhereHas('user', function ($user) use ($searchString) {
+                $user->where('email', 'LIKE', "%$searchString%");
+            });
+
+        return $organizations;
+    }
+
+    /**
+     * Apply where query for  date range.
+     *
+     * @param $organizations
+     * @param $queryParams
+     *
+     * @return Builder
+     */
+    private function applyDateRange($organizations, $queryParams):Builder
+    {
+        $dateColumn = Arr::get($queryParams, 'date_column', 'created_at');
+        $startDate = Arr::get($queryParams, 'start_date', ($this->getOldestData()?->created_at ?? false));
+        $endDate = Arr::get($queryParams, 'end_date', now()->endOfDay());
+
+        if ($dateColumn === 'last_logged_in') {
+            $organizations->whereHas('latestLoggedInUser', function ($user) use ($startDate, $endDate) {
+                $user->whereDate('last_logged_in', '>=', $startDate)->whereDate('last_logged_in', '<=', $endDate);
+            });
+        } else {
+            $organizations->whereDate("organizations.$dateColumn", '>=', $startDate)
+                ->whereDate("organizations.$dateColumn", '<=', $endDate);
+        }
+
+        return $organizations;
+    }
+
+    /**
+     * Applies filters to organization listing page.
+     *
+     * @param mixed $organizations
+     * @param array $filters
+     *
+     * @return Builder
+     */
+    private function applyFilters(mixed $organizations, array $filters = []): Builder
+    {
+        $tableConfig = getTableConfig('organisation');
+        $filterMode = $tableConfig['filters'];
+        $queryMap = $this->getCompletenessMap();
+
+        foreach ($filters as $filterName => $filterValue) {
+            if ($filterName !== 'completeness') {
+                if (Arr::get($filterMode, $filterName) === 'single') {
+                    $organizations->where($filterName, $filterValue);
+                } else {
+                    $organizations->whereIn($filterName, $filterValue);
+                }
+            } else {
+                $organizations
+                    ->leftJoin('settings', 'settings.organization_id', 'organizations.id')
+                    ->whereRaw($queryMap[$filterValue]);
+            }
+        }
+
+        return $organizations;
     }
 
     /**
@@ -448,36 +525,6 @@ class OrganizationRepository extends Repository
     }
 
     /**
-     * Applies filters to organization listing page.
-     *
-     * @param mixed $organizations
-     * @param mixed $filters
-     *
-     * @return mixed
-     */
-    private function applyFilters(mixed $organizations, mixed $filters): mixed
-    {
-        $tableConfig = getTableConfig('organisation');
-        $filterMode = $tableConfig['filters'];
-        $queryMap = $this->getCompletenessMap();
-
-        foreach ($filters as $filterName => $filterValue) {
-            if ($filterName !== 'completeness') {
-                if (Arr::get($filterMode, $filterName) === 'single') {
-                    $organizations->where($filterName, $filterValue);
-                    logger($organizations->toSql());
-                } else {
-                    $organizations->whereIn($filterName, $filterValue);
-                }
-            } else {
-                $organizations->leftJoin('settings', 'settings.organization_id', 'organizations.id')->whereRaw($queryMap[$filterValue]);
-            }
-        }
-
-        return $organizations;
-    }
-
-    /**
      * Returns where conditions for querying completeness based data.
      *
      * @return string[]
@@ -550,32 +597,5 @@ class OrganizationRepository extends Repository
                     )
             ",
         ];
-    }
-
-    private function applyOrderBy(mixed $organizations, string $orderBy, string $direction, $page)
-    {
-        if ($orderBy === 'name') {
-            return $organizations->orderByRaw("organizations.name->0->>'narrative'" . $direction)
-                ->paginate(10, ['*'], 'organization', $page);
-        }
-
-        if ($orderBy === 'registered_on') {
-            return $organizations->orderBy('created_at', $direction)
-                ->paginate(10, ['*'], 'organization', $page);
-        }
-
-        if ($orderBy === 'country') {
-            return $organizations->orderByRaw("CASE WHEN {$orderBy} = '' OR {$orderBy} IS NULL THEN 1 ELSE 0 END {$direction}")
-                ->paginate(10, ['*'], 'organization', $page);
-        }
-
-        if ($orderBy === 'last_logged_in') {
-            return $organizations->join('users AS latestLoggedInUser', 'organizations.id', '=', 'latestLoggedInUser.organization_id')
-                ->orderBy('latestLoggedInUser.last_logged_in', $direction)
-                ->paginate(10, ['*'], 'organization', $page);
-        }
-
-        return $organizations->orderBy($orderBy, $direction)
-            ->paginate(10, ['*'], 'organization', $page);
     }
 }
