@@ -368,7 +368,7 @@ class DashboardService
     /**
      * Returns start and end data for All time filter.
      *
-     * @param $tablename
+     * @param string $tablename
      *
      * @return array
      */
@@ -395,5 +395,27 @@ class DashboardService
     public function startAndEndDateAreSet($params): bool
     {
         return Arr::get($params, 'start_date', false) && Arr::get($params, 'end_date', false);
+    }
+
+    /**
+     * Sets start date and end date.
+     *
+     * @param $request
+     * @param array $params
+     * @param string $tablename
+     *
+     * @return mixed
+     */
+    public function resolveStartDateAndEndDate($request, array $params, string $tablename): array
+    {
+        list($startDateString, $endDateString) = $this->resolveDateRangeFromRequest($request);
+
+        if (!$startDateString || !$endDateString) {
+            list($startDateString, $endDateString) = $this->getStartAndEndDateForAlltime($tablename);
+            $params['start_date'] = $startDateString;
+            $params['end_date'] = $endDateString;
+        }
+
+        return $params;
     }
 }

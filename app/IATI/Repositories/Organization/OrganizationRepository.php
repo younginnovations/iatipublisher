@@ -339,7 +339,7 @@ class OrganizationRepository extends Repository
             'lastRegisteredPublisher' => $this->model->select('id', 'created_at', 'name')->latest('created_at')->first(),
             'inActivePublisher' => $this->model->with('latestLoggedInUser')
                 ->whereHas('latestLoggedInUser', function (Builder $q) {
-                    $q->where('last_logged_in', '<', Carbon::today()->subMonth(6));
+                    $q->where('last_logged_in', '<', Carbon::today()->subMonths(6));
                 })
                 ->orDoesntHave('latestLoggedInUser')
                 ->count(),
@@ -373,11 +373,11 @@ class OrganizationRepository extends Repository
      *
      * @param $queryParams
      * @param $type
-     * @param $page
+     * @param int $page
      *
      * @return array
      */
-    public function getPublisherBy($queryParams, $type, $page = 1): array
+    public function getPublisherBy($queryParams, $type, int $page = 1): array
     {
         $query = $this->model->select(DB::raw('count(*) as count, ' . $type))->whereNotNull($type)->where($type, '<>', '');
 
@@ -442,6 +442,7 @@ class OrganizationRepository extends Repository
      * @param $type
      *
      * @return array
+     * @throws \Exception
      */
     public function getPublisherGroupedByDate($queryParams, $type): array
     {

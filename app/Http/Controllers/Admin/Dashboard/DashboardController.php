@@ -11,6 +11,7 @@ use App\IATI\Services\Download\CsvGenerator;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use Exception;
+use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -55,9 +56,9 @@ class DashboardController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return Renderable
      */
-    public function index(): \Illuminate\Contracts\Support\Renderable
+    public function index(): Renderable
     {
         return view('admin.dashboard.index');
     }
@@ -85,8 +86,8 @@ class DashboardController extends Controller
     /**
      * Returns user count grouped by organization for dashboard user table.
      *
-     * @param $request
-     * @param $page
+     * @param Request $request
+     * @param int $page
      *
      * @return JsonResponse
      */
@@ -110,7 +111,7 @@ class DashboardController extends Controller
                 'message' => 'Paginated users fetched successfully',
                 'data' => $this->dashboardService->getUserCountByOrganization($page, $queryParams),
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the paginated users.']);
@@ -191,13 +192,7 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            list($startDateString, $endDateString) = $this->dashboardService->resolveDateRangeFromRequest($request);
-
-            if (!$startDateString || !$endDateString) {
-                list($startDateString, $endDateString) = $this->dashboardService->getStartAndEndDateForAlltime('organizations');
-                $params['start_date'] = $startDateString;
-                $params['end_date'] = $endDateString;
-            }
+            $params = $this->dashboardService->resolveStartDateAndEndDate($request, $params, 'organizations');
 
             $publisherStat = $this->dashboardService->getPublisherGroupedByDate($params, 'created_at');
 
@@ -208,7 +203,7 @@ class DashboardController extends Controller
                     'count'=>array_sum($publisherStat),
                     'graph'=>$publisherStat, ],
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
@@ -226,13 +221,7 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            list($startDateString, $endDateString) = $this->dashboardService->resolveDateRangeFromRequest($request);
-
-            if (!$startDateString || !$endDateString) {
-                list($startDateString, $endDateString) = $this->dashboardService->getStartAndEndDateForAlltime('organizations');
-                $params['start_date'] = $startDateString;
-                $params['end_date'] = $endDateString;
-            }
+            $params = $this->dashboardService->resolveStartDateAndEndDate($request, $params, 'organizations');
 
             $publisherStat = $this->dashboardService->getPublisherBy($params, 'registration_type');
 
@@ -241,7 +230,7 @@ class DashboardController extends Controller
                 'message' => 'Publisher by registration type fetched successfully',
                 'data' => $publisherStat,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher by registration type.']);
@@ -259,13 +248,7 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            list($startDateString, $endDateString) = $this->dashboardService->resolveDateRangeFromRequest($request);
-
-            if (!$startDateString || !$endDateString) {
-                list($startDateString, $endDateString) = $this->dashboardService->getStartAndEndDateForAlltime('organizations');
-                $params['start_date'] = $startDateString;
-                $params['end_date'] = $endDateString;
-            }
+            $params = $this->dashboardService->resolveStartDateAndEndDate($request, $params, 'organizations');
 
             $publisherStat = $this->dashboardService->getPublisherBy($params, 'country');
             $publisherStat['codelist'] = getCodeList('Country', 'Activity');
@@ -275,7 +258,7 @@ class DashboardController extends Controller
                 'message' => 'Publisher grouped by country fetched successfully',
                 'data' => $publisherStat,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
@@ -285,7 +268,7 @@ class DashboardController extends Controller
     /**
      * Returns json data containing publisher stats.
      *
-     * @param $request
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -293,13 +276,7 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            list($startDateString, $endDateString) = $this->dashboardService->resolveDateRangeFromRequest($request);
-
-            if (!$startDateString || !$endDateString) {
-                list($startDateString, $endDateString) = $this->dashboardService->getStartAndEndDateForAlltime('organizations');
-                $params['start_date'] = $startDateString;
-                $params['end_date'] = $endDateString;
-            }
+            $params = $this->dashboardService->resolveStartDateAndEndDate($request, $params, 'organizations');
 
             $publisherStat = $this->dashboardService->getPublisherBy($params, 'publisher_type');
             $publisherStat['codelist'] = getCodeList('OrganizationType', 'Organization');
@@ -309,7 +286,7 @@ class DashboardController extends Controller
                 'message' => 'Publisher grouped by type fetched successfully',
                 'data' => $publisherStat,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher grouped by type.']);
@@ -319,7 +296,7 @@ class DashboardController extends Controller
     /**
      * Returns json data containing publisher stats.
      *
-     * @param $request
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -327,13 +304,7 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            list($startDateString, $endDateString) = $this->dashboardService->resolveDateRangeFromRequest($request);
-
-            if (!$startDateString || !$endDateString) {
-                list($startDateString, $endDateString) = $this->dashboardService->getStartAndEndDateForAlltime('organizations');
-                $params['start_date'] = $startDateString;
-                $params['end_date'] = $endDateString;
-            }
+            $params = $this->dashboardService->resolveStartDateAndEndDate($request, $params, 'organizations');
 
             $publisherStat = $this->dashboardService->getPublisherBy($params, 'data_license');
             $publisherStat['codelist'] = getCodeList('DataLicense', 'Activity');
@@ -343,7 +314,7 @@ class DashboardController extends Controller
                 'message' => 'Publisher grouped by type fetched successfully',
                 'data' => $publisherStat,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher grouped by type.']);
@@ -361,13 +332,7 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            list($startDateString, $endDateString) = $this->dashboardService->resolveDateRangeFromRequest($request);
-
-            if (!$startDateString || !$endDateString) {
-                list($startDateString, $endDateString) = $this->dashboardService->getStartAndEndDateForAlltime('organizations');
-                $params['start_date'] = $startDateString;
-                $params['end_date'] = $endDateString;
-            }
+            $params = $this->dashboardService->resolveStartDateAndEndDate($request, $params, 'organizations');
 
             $publisherStat = $this->dashboardService->getPublisherBySetup($params);
 
@@ -376,7 +341,7 @@ class DashboardController extends Controller
                 'message' => 'Publisher grouped by setup completeness fetched successfully',
                 'data' => $publisherStat,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
@@ -401,7 +366,7 @@ class DashboardController extends Controller
                 'message' => 'Activity stats fetched successfully',
                 'data' => $publisherStat,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the activity stats.']);
@@ -411,7 +376,7 @@ class DashboardController extends Controller
     /**
      * Returns json data containing publisher stats.
      *
-     * @param $request
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -428,7 +393,7 @@ class DashboardController extends Controller
                     'count'=>array_sum($activityData),
                     'graph'=>$activityData, ],
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
@@ -438,7 +403,7 @@ class DashboardController extends Controller
     /**
      * Returns json data containing publisher stats.
      *
-     * @param $request
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -453,7 +418,7 @@ class DashboardController extends Controller
                 'message' => 'Publisher grouped by setup completeness fetched successfully',
                 'data' => $publisherStat,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
@@ -463,7 +428,7 @@ class DashboardController extends Controller
     /**
      * Returns json data containing publisher stats.
      *
-     * @param $request
+     * @param Request $request
      *
      * @return JsonResponse
      */
@@ -478,7 +443,7 @@ class DashboardController extends Controller
                 'message' => 'Publisher grouped by setup completeness fetched successfully',
                 'data' => $activityStats,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the publisher stats.']);
@@ -539,7 +504,7 @@ class DashboardController extends Controller
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Invalid date value entered in date range.']);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching user count in custom-range.']);
@@ -577,7 +542,7 @@ class DashboardController extends Controller
             logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Invalid date value entered in date range.']);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Error occurred while downloading user report.']);
@@ -600,7 +565,7 @@ class DashboardController extends Controller
             $activities = $this->dashboardService->getAllActivitiesToDownload($params);
 
             return $this->csvGenerator->generateWithHeaders(getTimeStampedText('activities'), $activities, $headers);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity csv.']);
@@ -618,20 +583,14 @@ class DashboardController extends Controller
     {
         try {
             $params = $this->getQueryParams($request);
-            list($startDateString, $endDateString) = $this->dashboardService->resolveDateRangeFromRequest($request);
-
-            if (!$startDateString || !$endDateString) {
-                list($startDateString, $endDateString) = $this->dashboardService->getStartAndEndDateForAlltime('organizations');
-                $params['start_date'] = Carbon::parse($startDateString);
-                $params['end_date'] = Carbon::parse($endDateString);
-            }
+            $params = $this->dashboardService->resolveStartDateAndEndDate($request, $params, 'organizations');
 
             $headers = ['organization', 'identifier', 'publisher_type', 'country', 'registration_type', 'data_license', 'publisher setting', 'default values', 'created_at', 'updated_at'];
 
             $organizations = $this->dashboardService->getOrganizationToDownload($params);
 
             return $this->csvGenerator->generateWithHeaders(getTimeStampedText('organizations'), $organizations, $headers);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while downloading activity csv.']);
