@@ -18,7 +18,10 @@
       </div>
 
       <div class="my-1">
-        <ul>
+        <div v-if="showNodataComponent" class="p-5 text-center capitalize">
+          no data found
+        </div>
+        <ul v-else class="max-h-[350px] overflow-y-scroll">
           <li v-for="item in tempListItems" :key="item.key">
             <div v-if="item.show" class="mt-2">
               <span class="m-2">
@@ -49,7 +52,14 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { defineEmits, defineProps, ref, onMounted, onBeforeUnmount } from 'vue';
+import {
+  defineEmits,
+  defineProps,
+  ref,
+  onMounted,
+  onBeforeUnmount,
+  computed,
+} from 'vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
 
 const props = defineProps({
@@ -71,10 +81,9 @@ interface TempItem {
 let tempListItems = ref<TempItem[]>([]);
 const publisherTypeMultiselect = ref();
 
-const emit = defineEmits(['changeSelectedPublisher']);
+const emit = defineEmits(['changeSelectedPublisher', 'close']);
 let keys = Object.keys(props.listItems);
 let searchInput = ref('');
-
 let checkedBoxes = ref([]);
 
 let changeSelectedPublisher = (selectedPublisherType) => {
@@ -107,6 +116,19 @@ onBeforeUnmount(() => {
   );
 });
 
+const showNodataComponent = computed(() => {
+  let count = 0;
+  tempListItems.value.map((item) => {
+    console.log(item.show, 'item');
+    if (item.show) {
+      console.log(count, 'count');
+      count++;
+    }
+  });
+  console.log(count, 'from computed');
+  return !count;
+});
+
 const updateArrayBySearch = () => {
   let searchString = searchInput.value.toLowerCase();
 
@@ -121,6 +143,8 @@ const keepPublisherModelOpen = (event) => {
   event.stopPropagation();
 };
 const applyFilter = () => {
+  emit('close');
+
   changeSelectedPublisher(checkedBoxes.value);
 };
 </script>

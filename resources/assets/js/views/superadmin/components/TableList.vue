@@ -46,11 +46,12 @@
       </span>
 
       <!--Multiselect with search -->
-      <div class="organization multiselect-lookalike">
+      <div
+        class="organization multiselect-lookalike"
+        @click="toggleShowMultiSelect($event)"
+      >
         <div
-          class="flex justify-between align-middle text-xs font-bold uppercase text-bluecoral"
-          style="width: 100%; height: 100%"
-          @click="toggleShowMultiSelect($event)"
+          class="flex h-full w-full justify-between align-middle text-xs font-bold uppercase text-bluecoral"
         >
           <span style="height: fit-content">Publisher Type</span>
           <span
@@ -72,6 +73,7 @@
               header="Publisher Type"
               :list-items="publisherTypes"
               @change-selected-publisher="setSelectedPublisher"
+              @close="showMultiSelectWithSearch = false"
             ></MultiSelectWithSearch>
           </div>
         </Teleport>
@@ -735,7 +737,6 @@ export default defineComponent({
       sortParams = { orderBy: '', direction: '' }
     ) => {
       let queryString = '';
-
       if (currentURL.includes('?')) {
         queryString = window.location.search;
       }
@@ -771,12 +772,14 @@ export default defineComponent({
         })
         .then((res) => {
           const response = res.data;
+
           if (response.success) {
             if (response.data.data.length === 0) {
               organisationData.status = 'empty';
             } else {
               organisationData.status = 'success';
               organisationData.data = response.data;
+
               refreshStatusArrays(organisationData.data);
             }
           }
@@ -864,7 +867,7 @@ export default defineComponent({
         filter.date_type,
       ],
       () => {
-        fetchOrganisation(organisationData.data['current_page']);
+        fetchOrganisation();
       },
       { deep: true }
     );
@@ -941,9 +944,10 @@ export default defineComponent({
       event.stopPropagation();
       const rect = event.target.getBoundingClientRect();
       multiselectStyle.value = {
-        top: Number(rect.top) + 40 + 'px',
+        top: Number(rect.top) < 100 ? 200 + 'px' : Number(rect.top) + 40 + 'px',
         left: Number(rect.left) - 12 + 'px',
       };
+      console.log(rect, 'top', event.target);
       showMultiSelectWithSearch.value = !showMultiSelectWithSearch.value;
     };
 
