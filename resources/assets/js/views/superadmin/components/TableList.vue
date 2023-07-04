@@ -531,7 +531,7 @@
       <Pagination
         v-if="organisationData.data && organisationData.data.last_page > 1"
         :data="organisationData.data"
-        @fetch-activities="fetchOrganisation()"
+        @fetch-activities="(n) => fetchOrganisation(n)"
       />
     </div>
     <div></div>
