@@ -476,12 +476,12 @@
             </tbody>
             <tbody
               v-else-if="
-                tableData.length === 0 || tableData?.data?.length === 0
+                tableData?.data?.length === 0 &&
+                currentItem.apiParams !== 'setup'
               "
+              class="text-center shadow-md"
             >
-              <tr class="w-full">
-                <div class="p-10 text-center text-n-50">No data found</div>
-              </tr>
+              <div class="p-10">No data found</div>
             </tbody>
             <tbody
               v-else-if="
@@ -641,6 +641,7 @@
               title !== 'Setup Completeness' &&
               title !== 'Registration Type' &&
               title !== 'Data Licence' &&
+              tableData.last_page > 1 &&
               currentView === 'publisher'
             "
             class="mt-4"
@@ -744,6 +745,7 @@ const props = defineProps({
 const activeClass = ref(currentNavList.value[0]?.label);
 
 const fetchTableData = (item) => {
+  console.log(props.tableData, 'props.tabledata');
   activeClass.value = item?.label;
   title.value = item?.label;
   sortElement.value = item;
