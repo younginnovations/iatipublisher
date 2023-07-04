@@ -339,7 +339,7 @@ class OrganizationRepository extends Repository
             'lastRegisteredPublisher' => $this->model->select('id', 'created_at', 'name')->latest('created_at')->first(),
             'inActivePublisher' => $this->model->with('latestLoggedInUser')
                 ->whereHas('latestLoggedInUser', function (Builder $q) {
-                    $q->where('last_logged_in', '<', Carbon::today());
+                    $q->where('last_logged_in', '<', Carbon::today()->subMonth(6));
                 })
                 ->orDoesntHave('latestLoggedInUser')
                 ->count(),
