@@ -119,13 +119,10 @@ onBeforeUnmount(() => {
 const showNodataComponent = computed(() => {
   let count = 0;
   tempListItems.value.map((item) => {
-    console.log(item.show, 'item');
     if (item.show) {
-      console.log(count, 'count');
       count++;
     }
   });
-  console.log(count, 'from computed');
   return !count;
 });
 

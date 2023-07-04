@@ -123,14 +123,14 @@
         <table class="w-full">
           <thead>
             <tr class="bg-n-10">
-              <td class="py-3 px-6 text-xs font-bold uppercase text-n-40">
+              <td class="py-4 px-6 text-xs font-bold uppercase text-n-40">
                 users
               </td>
-              <td class="py-3 text-xs font-bold uppercase text-n-40">active</td>
-              <td class="py-3 text-xs font-bold uppercase text-n-40">
+              <td class="py-4 text-xs font-bold uppercase text-n-40">active</td>
+              <td class="py-4 text-xs font-bold uppercase text-n-40">
                 disabled
               </td>
-              <td class="py-3 text-xs font-bold uppercase text-n-40">total</td>
+              <td class="py-4 text-xs font-bold uppercase text-n-40">total</td>
             </tr>
           </thead>
           <tbody v-if="showPublisherStats">
@@ -139,18 +139,18 @@
               :key="key"
               class="border-b border-n-20"
             >
-              <td class="px-6 py-2.5 text-sm text-bluecoral">
+              <td class="px-6 py-4 text-sm text-bluecoral">
                 <a :href="`/users?roles=${value.roleId}`">{{
                   value.display
                 }}</a>
               </td>
-              <td class="px-6 py-2.5 text-sm text-n-50">
+              <td class="px-6 py-4 text-sm text-n-50">
                 {{ value.active }}
               </td>
-              <td class="px-6 py-2.5 text-sm text-n-50">
+              <td class="px-6 py-4 text-sm text-n-50">
                 {{ value.disabled }}
               </td>
-              <td class="px-6 py-2.5 text-sm text-n-50">
+              <td class="px-6 py-4 text-sm text-n-50">
                 {{ value.active + value.disabled }}
               </td>
             </tr>
@@ -173,7 +173,7 @@
           </tbody>
         </table>
       </div>
-      <p class="mt-10 text-xs italic text-n-40">
+      <p class="mt-24 text-xs italic text-n-40">
         This widget is not affected by the date range
       </p>
     </div>

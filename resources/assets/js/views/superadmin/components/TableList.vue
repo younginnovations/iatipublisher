@@ -25,7 +25,7 @@
           placeholder="SETUP COMPLETENESS"
           :options="setupCompleteness"
           :taggable="true"
-          :close-on-select="false"
+          :close-on-select="true"
           :clear-on-select="false"
           :hide-selected="false"
           label="setupCompleteness"
@@ -38,7 +38,7 @@
           placeholder="REGISTRATION TYPE"
           :options="registrationTypes"
           :taggable="true"
-          :close-on-select="false"
+          :close-on-select="true"
           :clear-on-select="false"
           :hide-selected="false"
           label="registrationType"
@@ -87,7 +87,7 @@
           placeholder="DATA LICENSE"
           mode="multiple"
           :taggable="true"
-          :close-on-select="false"
+          :close-on-select="true"
           :clear-on-select="false"
           :hide-selected="false"
           label="dataLicense"
@@ -887,6 +887,7 @@ export default defineComponent({
     };
 
     const isFilterApplied = computed(() => {
+      console.log(filter.selected_date_filter, 'is filter applied');
       return (
         filter.country.length +
           filter.publisher_type.length +
@@ -894,9 +895,7 @@ export default defineComponent({
           0 ||
         filter.completeness !== '' ||
         filter.registration_type !== '' ||
-        filter.start_date != '' ||
-        filter.end_date != '' ||
-        filter.selected_date_filter != ''
+        (filter.start_date !== '' && filter.end_date !== '')
       );
     });
 
