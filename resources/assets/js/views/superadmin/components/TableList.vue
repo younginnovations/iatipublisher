@@ -943,10 +943,9 @@ export default defineComponent({
       event.stopPropagation();
       const rect = event.target.getBoundingClientRect();
       multiselectStyle.value = {
-        top: Number(rect.top) < 100 ? 200 + 'px' : Number(rect.top) + 40 + 'px',
-        left: Number(rect.left) - 12 + 'px',
+        top: Number(rect.top) < 100 ? 210 + 'px' : Number(rect.top) + 50 + 'px',
+        left: Number(rect.left) + 'px',
       };
-      console.log(rect, 'top', event.target);
       showMultiSelectWithSearch.value = !showMultiSelectWithSearch.value;
     };
 

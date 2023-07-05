@@ -426,18 +426,20 @@ const checkIfAllTime = (start, current, end) => {
 };
 
 const customPosition = () => {
+  console.log(dateRangeMain.value?.getBoundingClientRect(), 'width');
   return {
-    top: Number(dateRangeMain.value?.getBoundingClientRect().bottom) + 65,
-    left: Number(dateRangeMain.value?.getBoundingClientRect().left),
+    top: Number(dateRangeMain.value?.getBoundingClientRect().bottom) + 20,
+    left:
+      Number(dateRangeMain.value?.getBoundingClientRect().left) +
+      (dateRangeMain.value &&
+      dateRangeMain.value?.getBoundingClientRect()?.width > 500
+        ? 140
+        : 50),
   };
 };
 </script>
 
 <style lang="scss" scoped>
-.border {
-  border: 1px solid red;
-}
-
 .daterange-item {
   padding: 8px;
   border-radius: 4px;
