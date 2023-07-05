@@ -533,6 +533,7 @@
       <Pagination
         v-if="organisationData.data && organisationData.data.last_page > 1"
         :data="organisationData.data"
+        :reset="resetPagination"
         @fetch-activities="(n) => fetchOrganisation(n)"
       />
     </div>
@@ -640,6 +641,7 @@ export default defineComponent({
       date_type: 'created_at',
       selected_date_filter: '',
     });
+    const resetPagination = ref(false);
 
     let registryApiKeyStatus: boolean[] = reactive([]);
     let defaultValueStatus: boolean[] = reactive([]);
@@ -732,10 +734,7 @@ export default defineComponent({
      *
      */
     const currentURL = window.location.href;
-    const fetchOrganisation = (
-      active_page = 1,
-      sortParams = { orderBy: '', direction: '' }
-    ) => {
+    const fetchOrganisation = (active_page = 1) => {
       let queryString = '';
       if (currentURL.includes('?')) {
         queryString = window.location.search;
@@ -744,14 +743,14 @@ export default defineComponent({
       active_page = active_page ?? 1;
       let endpoint = `/list-organisations/page/${active_page}${queryString}`;
 
-      if (sortParams.orderBy) {
-        urlParams.append('orderBy', sortParams.orderBy);
-        urlParams.append('direction', sortParams.direction);
+      if (sortParams.value.orderBy) {
+        urlParams.append('orderBy', sortParams.value.orderBy);
+        urlParams.append('direction', sortParams.value.direction);
       }
 
       if (
         isFilterApplied.value ||
-        Boolean(sortParams.orderBy && sortParams.direction)
+        Boolean(sortParams.value.orderBy && sortParams.value.direction)
       ) {
         queryString = queryString ?? '&q=';
         endpoint = queryString !== '' ? endpoint : `${endpoint}`;
@@ -766,7 +765,7 @@ export default defineComponent({
         .get(endpoint, {
           params:
             isFilterApplied.value ||
-            Boolean(sortParams.orderBy && sortParams.direction)
+            Boolean(sortParams.value.orderBy && sortParams.value.direction)
               ? urlParams
               : '',
         })
@@ -832,7 +831,8 @@ export default defineComponent({
       return sortParams.value.direction === 'asc' ? 'descending' : 'ascending';
     };
 
-    const sortBy = (order) => {
+    const sortBy = async (order) => {
+      resetPagination.value = true;
       sortParams.value.orderBy = order;
       sortParams.value.direction =
         sortParams.value.direction === 'desc' ? 'asc' : 'desc';
@@ -849,10 +849,8 @@ export default defineComponent({
         }
       }
 
-      fetchOrganisation(1, {
-        orderBy: sortParams.value.orderBy,
-        direction: sortParams.value.direction,
-      });
+      await fetchOrganisation(1);
+      resetPagination.value = false;
     };
 
     watch(
@@ -887,7 +885,6 @@ export default defineComponent({
     };
 
     const isFilterApplied = computed(() => {
-      console.log(filter.selected_date_filter, 'is filter applied');
       return (
         filter.country.length +
           filter.publisher_type.length +
@@ -982,6 +979,7 @@ export default defineComponent({
       multiselectStyle,
       dateDropdown,
       sortParams,
+      resetPagination,
     };
   },
 });

@@ -119,6 +119,7 @@ export default defineComponent({
       () => props.reset,
       (value) => {
         if (value) {
+          console.log(active_page.value, 'reset');
           active_page.value = 1;
         }
       }
