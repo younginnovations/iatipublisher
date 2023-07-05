@@ -430,7 +430,18 @@
                 </div>
 
                 <div v-else>Name Missing</div>
-                <div class="text-blue-40">{{ data?.user?.email }}</div>
+                <div class="group relative">
+                  <div
+                    class="w-full overflow-x-hidden text-ellipsis text-blue-40"
+                  >
+                    {{ data?.user?.email }}
+                  </div>
+                  <div
+                    class="absolute top-full left-0 hidden rounded bg-eggshell p-2 shadow-sm group-hover:block"
+                  >
+                    {{ data?.user?.email }}
+                  </div>
+                </div>
                 <div class="flex">
                   <span
                     class="flex w-fit"
