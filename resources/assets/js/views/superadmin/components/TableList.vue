@@ -53,13 +53,28 @@
         <div
           class="flex h-full w-full justify-between align-middle text-xs font-bold uppercase text-bluecoral"
         >
-          <span style="height: fit-content">Publisher Type</span>
-          <span
-            :class="rotateClass"
-            style="height: fit-content; font-size: 20px; margin-top: -2px"
-          >
-            <svg-vue icon="arrow-down"></svg-vue>
-          </span>
+          <span>Publisher Type</span>
+          <span class="flex items-center">
+            <span
+              v-if="filter.publisher_type.length"
+              @click="
+                (event) => {
+                  event.stopPropagation();
+                  filter.publisher_type.length = 0;
+                }
+              "
+            >
+              <svg-vue
+                icon="cross"
+                class="mt-2.5 translate-x-1 text-[16px] text-n-30"
+              ></svg-vue>
+            </span>
+            <span
+              :class="rotateClass"
+              style="height: fit-content; font-size: 20px; margin-top: -2px"
+            >
+              <svg-vue icon="arrow-down"></svg-vue> </span
+          ></span>
         </div>
 
         <Teleport to="body">
@@ -564,6 +579,7 @@ import Pagination from 'Components/TablePagination.vue';
 import Multiselect from '@vueform/multiselect';
 import { watchIgnorable } from '@vueuse/core';
 import DateRangeWidget from 'Components/DateRangeWidget.vue';
+import { event } from 'jquery';
 export default defineComponent({
   name: 'TableList',
   components: {
