@@ -182,7 +182,7 @@ const fetchTableData = (filter = { orderBy: '', sort: '' }, page = '1') => {
   const activeTab = currentNav.value['apiParams'];
 
   if (filter.orderBy) {
-    params.append('orderBy', filter.orderBy);
+    params.append('orderBy', kebabCaseToSnakecase(filter.orderBy));
   }
   params.append('page', page);
   if (filter.sort) {
