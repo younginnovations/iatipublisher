@@ -55,7 +55,10 @@
       :current-view="currentView"
       :table-data="tableData"
       :table-header="currentNav['label']"
-      @table-nav="(n, filter, page) => handleChangeTableNav(n, filter, page)"
+      @table-nav="
+        (n, filter, page, tabChange) =>
+          handleChangeTableNav(n, filter, page, tabChange)
+      "
     />
   </div>
 </template>
@@ -68,6 +71,7 @@ import { ref, onMounted, provide, watch } from 'vue';
 import ButtonComponent from 'Components/ButtonComponent.vue';
 import axios from 'axios';
 import moment from 'moment';
+import { kebabCaseToSnakecase } from 'Composable/utils';
 
 const currentNav = ref({
   label: 'Publisher Type',
@@ -90,7 +94,12 @@ const dateLabel = {
 
 const currentView = ref('publisher');
 const completeNess = ref();
-const handleChangeTableNav = (item, filter, page) => {
+const registrationType = ref();
+const handleChangeTableNav = (item, filter, page, tabChange = true) => {
+  if (tabChange) {
+    filter.value.orderBy = '';
+    filter.value.direction = '';
+  }
   currentNav.value = item;
   fetchTableData(filter.value, page);
 };
@@ -170,6 +179,8 @@ watch(
 const fetchTableData = (filter = { orderBy: '', sort: '' }, page = '1') => {
   showTableLoader.value = true;
   let params = new URLSearchParams();
+  const activeTab = currentNav.value['apiParams'];
+
   if (filter.orderBy) {
     params.append('orderBy', filter.orderBy);
   }
@@ -183,7 +194,7 @@ const fetchTableData = (filter = { orderBy: '', sort: '' }, page = '1') => {
     params.append('end_date', endDate.value);
   }
 
-  const apiUrl = `/dashboard/${currentView.value}/${currentNav.value['apiParams']}`;
+  const apiUrl = `/dashboard/${currentView.value}/${activeTab}`;
 
   axios
     .get(apiUrl, { params: params })
@@ -191,28 +202,27 @@ const fetchTableData = (filter = { orderBy: '', sort: '' }, page = '1') => {
       let response = res.data;
 
       if (currentView.value === 'publisher') {
-        if (currentNav.value['apiParams'] !== 'setup') {
+        if (activeTab !== 'setup' && activeTab !== 'registration-type') {
           tableData.value = [];
           let tempData: Array<object> = [];
-          const codeList = response.data?.codelist;
+          const codeList = response.data?.codeList;
+          const objectLength = response.data?.paginatedData.data.length ?? 0;
 
-          for (let key in response.data?.data) {
-            const value = response.data?.data[key];
-            let label = key;
-
-            if (codeList) {
-              label = codeList[key] ?? 'Unknown';
-            }
-
+          for (let i = 0; i < objectLength; i++) {
+            const itemInPaginatedData = response.data?.paginatedData.data[i];
+            const publisherTypeKey =
+              itemInPaginatedData[kebabCaseToSnakecase(activeTab)];
             tempData.push({
-              label: label,
-              id: key,
-              total: value,
+              label: codeList[publisherTypeKey],
+              id: publisherTypeKey,
+              total: itemInPaginatedData.count,
             });
           }
 
           tableData.value = response.data;
           tableData.value.data = tempData;
+        } else if (activeTab === 'registration-type') {
+          registrationType.value = response.data.data;
         } else {
           completeNess.value = response.data;
         }
@@ -227,6 +237,7 @@ const fetchTableData = (filter = { orderBy: '', sort: '' }, page = '1') => {
     });
 };
 provide('completeNess', completeNess);
+provide('registrationType', registrationType);
 provide('graphAmount', graphAmount);
 provide('graphTotal', graphTotal);
 provide('showTableLoader', showTableLoader);

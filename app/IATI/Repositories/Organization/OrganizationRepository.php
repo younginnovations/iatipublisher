@@ -302,29 +302,22 @@ class OrganizationRepository extends Repository
      */
     protected function filterPublisher($query, $queryParams, $type = null): LengthAwarePaginator
     {
-        $filteredQuery = $query;
+        $direction = 'desc';
+        $orderBy = 'count';
 
-        if (isset($queryParams['start_date']) && isset($queryParams['end_date'])) {
-            $filteredQuery = $query->whereDate('organizations.created_at', '>=', $queryParams['start_date'])
+        if (Arr::get($queryParams, 'start_date', false) && Arr::get($queryParams, 'end_date', false)) {
+            $query = $query->whereDate('organizations.created_at', '>=', $queryParams['start_date'])
                 ->whereDate('organizations.created_at', '<=', $queryParams['end_date']);
         }
 
-        $direction = 'asc';
-        $orderBy = 'count';
-
         if ($type) {
-            if (isset($queryParams['orderBy']) && $queryParams['orderBy'] !== 'count') {
-                $orderBy = str_replace('-', '_', $type);
-            }
+            $orderBy = Arr::get($queryParams, 'orderBy', $orderBy);
+            $direction = Arr::get($queryParams, 'direction', $direction);
 
-            if (isset($queryParams['sort'])) {
-                $direction = $queryParams['sort'];
-            }
-
-            $filteredQuery = $filteredQuery->orderBy($orderBy, $direction)->groupBy($type);
+            $query = $query->orderBy($orderBy, $direction)->groupBy($type);
         }
 
-        return $filteredQuery->paginate(10, ['*'], 'publisher', Arr::get($queryParams, 'page', 1));
+        return $query->paginate(10, ['*'], 'publisher', Arr::get($queryParams, 'page', 1));
     }
 
     /**
@@ -352,20 +345,13 @@ class OrganizationRepository extends Repository
      * @param $queryParams
      * @param $type
      *
-     * @return array
+     * @return LengthAwarePaginator
      */
-    public function getPublisherByPagination($queryParams, $type): array
+    public function getPublisherByPagination($queryParams, $type): LengthAwarePaginator
     {
         $query = $this->model->select(DB::raw('count(*) as count, ' . $type))->whereNotNull($type)->where($type, '<>', '');
 
-        if ($queryParams) {
-            $query = $this->filterPublisher($query, $queryParams, $type);
-        }
-
-        $data = $query->toArray();
-        $data['data'] = $query->pluck('count', $type);
-
-        return $data;
+        return $this->filterPublisher($query, $queryParams, $type);
     }
 
     /**

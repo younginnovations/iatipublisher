@@ -426,7 +426,6 @@ const checkIfAllTime = (start, current, end) => {
 };
 
 const customPosition = () => {
-  console.log(dateRangeMain.value?.getBoundingClientRect(), 'width');
   return {
     top: Number(dateRangeMain.value?.getBoundingClientRect().bottom) + 20,
     left:

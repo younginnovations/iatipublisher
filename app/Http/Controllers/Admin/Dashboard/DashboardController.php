@@ -250,13 +250,13 @@ class DashboardController extends Controller
             $params = $this->getQueryParams($request);
             $params = $this->dashboardService->resolveStartDateAndEndDate($request, $params, 'organizations');
 
-            $publisherStat = $this->dashboardService->getPublisherBy($params, 'country');
-            $publisherStat['codelist'] = getCodeList('Country', 'Activity');
+            $paginatedData = $this->dashboardService->getPublisherBy($params, 'country');
+            $codeList = getCodeList('Country', 'Activity');
 
             return response()->json([
                 'success' => true,
                 'message' => 'Publisher grouped by country fetched successfully',
-                'data' => $publisherStat,
+                'data' => ['paginatedData'=>$paginatedData, 'codeList'=>$codeList],
             ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
@@ -278,13 +278,13 @@ class DashboardController extends Controller
             $params = $this->getQueryParams($request);
             $params = $this->dashboardService->resolveStartDateAndEndDate($request, $params, 'organizations');
 
-            $publisherStat = $this->dashboardService->getPublisherBy($params, 'publisher_type');
-            $publisherStat['codelist'] = getCodeList('OrganizationType', 'Organization');
+            $paginatedData = $this->dashboardService->getPublisherBy($params, 'publisher_type');
+            $codeList = getCodeList('OrganizationType', 'Organization');
 
             return response()->json([
                 'success' => true,
                 'message' => 'Publisher grouped by type fetched successfully',
-                'data' => $publisherStat,
+                'data' => ['paginatedData'=>$paginatedData, 'codeList'=>$codeList],
             ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
@@ -306,13 +306,13 @@ class DashboardController extends Controller
             $params = $this->getQueryParams($request);
             $params = $this->dashboardService->resolveStartDateAndEndDate($request, $params, 'organizations');
 
-            $publisherStat = $this->dashboardService->getPublisherBy($params, 'data_license');
-            $publisherStat['codelist'] = getCodeList('DataLicense', 'Activity');
+            $paginatedData = $this->dashboardService->getPublisherBy($params, 'data_license');
+            $codeList = getCodeList('DataLicense', 'Activity');
 
             return response()->json([
                 'success' => true,
                 'message' => 'Publisher grouped by type fetched successfully',
-                'data' => $publisherStat,
+                'data' => ['paginatedData'=>$paginatedData, 'codeList'=>$codeList],
             ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());

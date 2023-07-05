@@ -417,7 +417,8 @@
                     <button
                       v-if="
                         currentView === 'publisher' &&
-                        title !== 'Setup Completeness'
+                        title !== 'Setup Completeness' &&
+                        title !== 'Registration Type'
                       "
                       class="p-1"
                       @click="
@@ -476,8 +477,7 @@
             </tbody>
             <tbody
               v-else-if="
-                tableData?.data?.length === 0 &&
-                currentItem.apiParams !== 'setup'
+                tableData.length === 0 || tableData?.data?.length === 0
               "
               class="text-center shadow-md"
             >
@@ -563,6 +563,45 @@
             </tbody>
             <tbody
               v-else-if="
+                title === 'Registration Type' &&
+                currentView === 'publisher' &&
+                registrationType.length == 0
+              "
+              class="text-center shadow-md"
+            >
+              <div class="p-10">No data found</div>
+            </tbody>
+            <tbody
+              v-else-if="
+                title === 'Registration Type' && currentView === 'publisher'
+              "
+            >
+              <tr
+                v-for="item in registrationType"
+                :key="item?.id"
+                class="border-b border-n-20"
+              >
+                <td class="text-sm text-bluecoral">
+                  <a
+                    class="py-3 pl-8 text-left"
+                    :href="`/list-organisations?registration-type=${item?.registration_type}`"
+                  >
+                    {{
+                      item?.registration_type === 'new_org'
+                        ? 'New Organisation'
+                        : 'Existing Organisation'
+                    }}
+                  </a>
+                </td>
+                <td class="text-sm text-[#2A2F30]">
+                  <div class="px-4 py-3 text-right">
+                    {{ item.count }}
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+            <tbody
+              v-else-if="
                 title !== 'Setup Completeness' && currentView === 'publisher'
               "
             >
@@ -635,13 +674,15 @@
                 </td>
               </tr>
             </tbody>
+            <tbody v-else class="text-center shadow-md">
+              <div class="p-10">No data found</div>
+            </tbody>
           </table>
           <Pagination
             v-if="
               title !== 'Setup Completeness' &&
               title !== 'Registration Type' &&
-              title !== 'Data Licence' &&
-              tableData.last_page > 1 &&
+              tableData.value?.paginatedData.last_page > 1 &&
               currentView === 'publisher'
             "
             class="mt-4"
@@ -692,7 +733,7 @@ onMounted(() => {
   fetchTableData(currentNavList.value[0]);
 });
 const sortTable = () => {
-  fetchTableData(currentItem.value);
+  fetchTableData(currentItem.value, false);
 };
 const triggerpagination = (page) => {
   currentpage.value = page;
@@ -744,14 +785,14 @@ const props = defineProps({
 });
 const activeClass = ref(currentNavList.value[0]?.label);
 
-const fetchTableData = (item) => {
-  console.log(props.tableData, 'props.tabledata');
+const fetchTableData = (item, tabChange = true) => {
   activeClass.value = item?.label;
   title.value = item?.label;
   sortElement.value = item;
-  emit('tableNav', item, filter, currentpage.value);
+  emit('tableNav', item, filter, currentpage.value, tabChange);
 };
 const completeNess = inject('completeNess') as Ref;
+const registrationType = inject('registrationType') as Ref;
 const showTableLoader = inject('showTableLoader') as Ref;
 </script>
 <style lang="scss">
