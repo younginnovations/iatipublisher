@@ -640,8 +640,13 @@ export default defineComponent({
           email: string;
           id: number;
         };
-        all_activities_count: number;
         updated_at: Date;
+        country: string;
+        created_at: Date;
+        last_logged_in: Date;
+        all_activities_count: number;
+        publisher_type: string | number;
+        data_license: string;
       }[];
       last_page: number;
       current_page: number;
@@ -747,6 +752,7 @@ export default defineComponent({
      */
     const currentURL = window.location.href;
     const fetchOrganisation = (active_page = 1) => {
+      organisationData.status = 'fetching';
       let queryString = '';
       if (currentURL.includes('?')) {
         queryString = window.location.search;
