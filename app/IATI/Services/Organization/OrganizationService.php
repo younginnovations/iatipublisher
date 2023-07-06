@@ -174,14 +174,10 @@ class OrganizationService
      * @param $request
      *
      * @return null|LengthAwarePaginator
-     *
-     * @throws \JsonException
      */
     public function getPaginatedOrganizations($page, $request): ?LengthAwarePaginator
     {
-        $rawPaginatedData = $this->organizationRepo->getPaginatedOrganizations($page, $request);
-
-        return $this->resolvePaginatedOrganizationData($rawPaginatedData);
+        return $this->organizationRepo->getPaginatedOrganizations($page, $request);
     }
 
     /**

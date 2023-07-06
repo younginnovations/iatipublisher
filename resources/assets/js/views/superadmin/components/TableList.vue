@@ -329,8 +329,9 @@
                     ? sortingDirection()
                     : defaultSortDirection
                 "
+                @click="sortBy('last_logged_in')"
               >
-                <!-- <span class="sorting-indicator">
+                <span class="sorting-indicator">
                   <svg-vue
                     :icon="`${
                       sortParams.orderBy === 'last_logged_in'
@@ -338,7 +339,7 @@
                         : defaultSortDirection
                     }-arrow`"
                   />
-                </span> -->
+                </span>
                 <span>Last Login</span>
               </a>
             </th>
@@ -484,7 +485,7 @@
             </td>
             <td class="text-n-40">
               <div>
-                {{ data['country'] }}
+                {{ showMappedData('country', data, countries) }}
               </div>
             </td>
             <td class="text-n-40">
@@ -504,11 +505,8 @@
             <td class="text-n-40">
               <div>
                 {{
-                  data['latest_logged_in_user']
-                    ? dateFormat(
-                        data['latest_logged_in_user'].last_logged_in,
-                        'MMMM, DD,YYYY'
-                      )
+                  data.last_logged_in
+                    ? dateFormat(data.last_logged_in, 'MMMM, DD,YYYY')
                     : 'Not Available'
                 }}
               </div>
@@ -533,12 +531,12 @@
             </td>
             <td class="text-n-40">
               <div>
-                {{ data['publisher_type'] }}
+                {{ showMappedData('publisher_type', data, publisherTypes) }}
               </div>
             </td>
             <td class="text-n-40">
               <div>
-                {{ data['data_license'] }}
+                {{ showMappedData('data_license', data, dataLicenses) }}
               </div>
             </td>
             <td>
@@ -690,21 +688,8 @@ export default defineComponent({
         }
         if (value) {
           document.addEventListener('click', closePublisherModel);
-          // let Multiselect = setInterval(() => {
-          //   if (publisherTypeMultiselect.value) {
-          //     publisherTypeMultiselect.value.addEventListener(
-          //       'click',
-          //       keepPublisherModelOpen
-          //     );
-          //     clearInterval(Multiselect);
-          //   }
-          // }, 20);
         } else {
           document.removeEventListener('click', closePublisherModel);
-          // publisherTypeMultiselect.value.removeEventListener(
-          //   'click',
-          //   keepPublisherModelOpen
-          // );
         }
       }
     );
@@ -976,6 +961,29 @@ export default defineComponent({
     const setSelectedPublisher = (publisherTypes) => {
       filter.publisher_type = publisherTypes;
     };
+
+    /*
+     * For mapping country, publisher_type and data license
+     */
+    const showMappedData = (key, data, map) => {
+      if (data) {
+        if (key == 'country') {
+          return data[key]
+            ? `${data[key]} - ${map[data[key]]}`
+            : 'Not available';
+        }
+
+        if (key == 'data_license') {
+          let license = data[key];
+          license = license?.trim();
+          return license ? map[license] : 'Not available';
+        }
+
+        return data[key] ? map[data[key]] : 'Not available';
+      }
+      return 'Not available';
+    };
+
     return {
       BtnComponent,
       Multiselect,
@@ -1007,6 +1015,7 @@ export default defineComponent({
       dateDropdown,
       sortParams,
       resetPagination,
+      showMappedData,
     };
   },
 });

@@ -87,9 +87,17 @@ class OrganizationRepository extends Repository
     {
         $adminRoleId = app(Role::class)->getOrganizationAdminId();
         $whereSql = '1=1';
-        $organizations = $this->model->select('organizations.id', 'organizations.name', 'organizations.country', 'organizations.created_at', 'organizations.publisher_type', 'organizations.data_license');
-
-        $organizations
+        $organizations = $this->model->selectRaw(
+            'organizations.id,
+            organizations.name,
+            organizations.country,
+            organizations.created_at,
+            organizations.publisher_type,
+            organizations.data_license,
+            MAX(usr.id) AS usr_id,
+            MAX(usr.last_logged_in) AS last_logged_in'
+        )
+            ->leftJoin('users AS usr', 'usr.organization_id', '=', 'organizations.id')
             ->whereRaw($whereSql)
             ->withCount('allActivities')
             ->with([
@@ -100,7 +108,6 @@ class OrganizationRepository extends Repository
                 },
             ])
             ->with('latestUpdatedActivity')
-            ->with('latestLoggedInUser')
             ->with('settings');
 
         $organizations = $this->applyDateRange($organizations, $queryParams);
@@ -112,6 +119,8 @@ class OrganizationRepository extends Repository
         if (Arr::get($queryParams, 'filters', false)) {
             $organizations = $this->applyFilters($organizations, $queryParams['filters']);
         }
+
+        $organizations = $organizations->groupBy('organizations.id', 'last_logged_in');
 
         return $this->applyOrderBy($organizations, $queryParams, $page);
     }
@@ -135,10 +144,19 @@ class OrganizationRepository extends Repository
                 ->paginate(10, ['*'], 'organization', $page);
         }
 
-        if ($orderBy === 'country') {
-            return $organizations
-                ->orderByRaw("CASE WHEN {$orderBy} = '' OR {$orderBy} IS NULL THEN 1 ELSE 0 END {$direction}")
-                ->paginate(10, ['*'], 'organization', $page);
+//        if ($orderBy === 'country' || $orderBy === 'data_license') {
+        if ($orderBy === 'country' || $orderBy === 'data_license') {
+            if ($direction == 'asc') {
+                return $organizations
+                    ->orderByRaw("CASE WHEN $orderBy IS NULL OR $orderBy = '' THEN 'zzz' ELSE $orderBy END asc")
+                    ->orderBy($orderBy, $direction)
+                    ->paginate(10, ['*'], 'organization', $page);
+            } else {
+                return $organizations
+                    ->orderByRaw("CASE WHEN $orderBy IS NULL OR $orderBy = '' THEN '' ELSE $orderBy END desc")
+                    ->orderBy($orderBy, $direction)
+                    ->paginate(10, ['*'], 'organization', $page);
+            }
         }
 
         if ($orderBy === 'registered_on') {
@@ -146,12 +164,17 @@ class OrganizationRepository extends Repository
                 ->paginate(10, ['*'], 'organization', $page);
         }
 
-//        if ($orderBy === 'last_logged_in') {
-//            logger('eta');
-//            return $organizations->whereHas('latestLoggedInUser', function ($user) use ($direction){
-//                $user->orderBy('last_logged_in', $direction);
-//            })->paginate(100, ['*'], 'organization', $page);
-//        }
+        if ($orderBy === 'last_logged_in') {
+            if ($direction == 'asc') {
+                return $organizations
+                    ->orderByRaw("CASE WHEN last_logged_in IS NULL THEN '9999-01-31 00:00:00' ELSE last_logged_in END asc")
+                    ->paginate(10, ['*'], 'organization', $page);
+            } else {
+                return $organizations
+                    ->orderByRaw("CASE WHEN last_logged_in IS NULL THEN '1753-01-01 00:00:00' ELSE last_logged_in END desc")
+                    ->paginate(10, ['*'], 'organization', $page);
+            }
+        }
 
         return $organizations->orderBy($orderBy, $direction)
             ->paginate(10, ['*'], 'organization', $page);
