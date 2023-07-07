@@ -104,7 +104,8 @@ class OrganizationRepository extends Repository
                 'user' => function ($user) use ($adminRoleId) {
                     return $user->where('role_id', $adminRoleId)
                         ->where('status', 1)
-                        ->whereNull('deleted_at');
+                        ->whereNull('deleted_at')
+                        ->whereNotNull('last_logged_in');
                 },
             ])
             ->with('latestUpdatedActivity')
@@ -120,7 +121,7 @@ class OrganizationRepository extends Repository
             $organizations = $this->applyFilters($organizations, $queryParams['filters']);
         }
 
-        $organizations = $organizations->groupBy('organizations.id', 'last_logged_in');
+        $organizations = $organizations->groupBy('organizations.id');
 
         return $this->applyOrderBy($organizations, $queryParams, $page);
     }
@@ -176,7 +177,7 @@ class OrganizationRepository extends Repository
             }
         }
 
-        return $organizations->orderBy($orderBy, $direction)
+        return $organizations->orderBy($orderBy, $direction)->orderBy('organizations.id', 'desc')
             ->paginate(10, ['*'], 'organization', $page);
     }
 

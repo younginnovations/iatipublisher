@@ -614,7 +614,9 @@
                   <a
                     :href="`/list-organisations?${currentItem?.apiParams}=${item.id}`"
                     class="px-4 py-3 text-left capitalize"
-                    >{{ item?.label.split('_').join(' ') }}
+                  >
+                    <!-- {{ item?.label.replace(/_/g, ' ') }} -->
+                    {{ item['label'] }}
                   </a>
                 </td>
                 <td class="text-sm text-[#2A2F30]">
@@ -682,12 +684,12 @@
             v-if="
               title !== 'Setup Completeness' &&
               title !== 'Registration Type' &&
-              tableData.value?.paginatedData.last_page > 1 &&
+              tableData.paginatedData?.last_page > 1 &&
               currentView === 'publisher'
             "
             class="mt-4"
             :reset="resetpagination"
-            :data="tableData"
+            :data="tableData.paginatedData"
             @fetch-activities="(page) => triggerpagination(page)"
           />
         </div>
@@ -704,6 +706,22 @@ import { defineEmits } from 'vue';
 import Pagination from 'Components/TablePagination.vue';
 import ShimmerLoading from 'Components/ShimmerLoading.vue';
 import { truncateText } from 'Composable/utils';
+
+const props = defineProps({
+  currentView: {
+    type: String,
+    required: true,
+  },
+  tableData: {
+    type: [Object],
+    required: true,
+  },
+  tableHeader: {
+    type: String,
+    required: true,
+  },
+});
+
 const emit = defineEmits(['tableNav']);
 
 const activityNavList = [
@@ -769,20 +787,6 @@ watch(
   }
 );
 
-const props = defineProps({
-  currentView: {
-    type: String,
-    required: true,
-  },
-  tableData: {
-    type: [Object],
-    required: true,
-  },
-  tableHeader: {
-    type: String,
-    required: true,
-  },
-});
 const activeClass = ref(currentNavList.value[0]?.label);
 
 const fetchTableData = (item, tabChange = true) => {
