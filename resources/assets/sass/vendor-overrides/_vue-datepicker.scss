@@ -12,6 +12,11 @@
 .dp__selection_preview {
   display: none !important;
 }
+.empty {
+  .dp__input_wrap {
+    max-width: 110px !important;
+  }
+}
 
 .dp__input::placeholder {
   font-size: 14px !important;

@@ -331,8 +331,7 @@
             <li
               v-for="item in currentNavList"
               :key="item.label"
-              class="w-[270px] cursor-pointer p-3 text-sm text-n-50"
-              :class="activeClass === item?.label ? 'activeNav' : ''"
+              class="w-[270px] cursor-pointer border-b border-n-30 py-2 text-sm text-n-50"
               @click="
                 () => {
                   currentpage = 1;
@@ -343,7 +342,12 @@
                 }
               "
             >
-              {{ item?.label }}
+              <div
+                class="py-4 px-3"
+                :class="activeClass === item?.label ? 'activeNav' : ''"
+              >
+                {{ item?.label }}
+              </div>
             </li>
           </ul>
         </div>
@@ -762,6 +766,7 @@ const triggerpagination = (page) => {
 watch(
   () => props.currentView,
   (value) => {
+    currentpage.value = 1;
     if (value === 'activity') {
       currentItem.value = { label: 'Activity Status', apiParams: 'status' };
 
@@ -801,16 +806,6 @@ const showTableLoader = inject('showTableLoader') as Ref;
 </script>
 <style lang="scss">
 .activeNav {
-  @apply relative mb-2 rounded bg-bluecoral text-white;
-
-  &::after {
-    content: ' ';
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background-color: #d5dcde;
-  }
+  @apply relative  rounded bg-bluecoral text-white;
 }
 </style>

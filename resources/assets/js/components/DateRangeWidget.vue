@@ -1,14 +1,14 @@
 <template>
-  <div id="date-range-main" ref="dateRangeMain" class="flex space-x-2">
+  <div id="date-range-main" ref="dateRangeMain" class="flex space-x-1">
     <div>
-      <div class="relative" style="min-width: 150px">
+      <div class="relative min-w-[150px]">
         <!--Range Dropdown-->
         <div
           v-if="dropdownRange && Object.keys(dropdownRange).length"
           class="flex hover:cursor-pointer"
           @click="toggleShowRangeDropdown"
         >
-          <span>{{ dateType }}</span>
+          <span>{{ dateType }} </span>
           <span style="height: fit-content; font-size: 20px; margin-top: 2px">
             <svg-vue icon="arrow-down"></svg-vue>
           </span>
@@ -46,14 +46,13 @@
 
       <span
         id="fixed-date-range"
-        class="w-fit bg-n-10 py-1 px-2 text-center text-xs font-semibold text-bluecoral hover:cursor-pointer"
-        style="border-radius: 4px"
+        class="w-fit rounded bg-n-10 py-1 px-2 text-center text-xs text-bluecoral hover:cursor-pointer"
         @click="openCalendar"
-        >{{ fixed }}</span
-      >
+        >{{ fixed }}
+      </span>
     </div>
     <div class="">
-      <div class="relative flex">
+      <div :class="{ empty: !selectedDate[0] }" class="relative flex">
         <VueDatePicker
           ref="datepicker"
           v-model="selectedDate"
@@ -93,8 +92,9 @@
           </template>
         </VueDatePicker>
         <span
-          class="absolute top-1/2 right-0 -translate-y-1/2"
+          class="absolute top-1/2 right-0 -translate-y-1/2 cursor-pointer"
           style="height: fit-content; font-size: 20px; margin-top: 2px"
+          @click="openCalendar"
         >
           <svg-vue icon="arrow-down"></svg-vue>
         </span>
@@ -104,7 +104,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, defineEmits, Ref, defineProps, onMounted } from 'vue';
+import {
+  ref,
+  watch,
+  defineEmits,
+  Ref,
+  defineProps,
+  onMounted,
+  computed,
+} from 'vue';
 import {
   subDays,
   startOfWeek,
@@ -195,6 +203,7 @@ const presetRanges = ref([
     range: [new Date('1990-12-31'), new Date()],
   },
 ]);
+
 onMounted(() => {
   selectedDate.value[0] = '';
   selectedDate.value[1] = todayDate;
@@ -334,18 +343,18 @@ const resolveStartDateAndEndDate = (startDate, endDate) => {
     checkIfThisMonth(startDate.clone(), currentDate.clone(), endDate.clone())
   ) {
     fixed.value = 'This Month';
-  } else if (checkIfLast6Months(startDate.clone(), currentDate.clone())) {
-    fixed.value = 'Last 6 months';
   } else if (
     checkIfThisYear(startDate.clone(), currentDate.clone(), endDate.clone())
   ) {
-    fixed.value = 'This year';
+    fixed.value = 'This year (Jan-Today)';
+  } else if (checkIfLast6Months(startDate.clone(), currentDate.clone())) {
+    fixed.value = 'Last 6 months';
   } else if (checkIfLast12Months(startDate.clone(), currentDate.clone())) {
     fixed.value = 'Last 12 months';
   } else if (
     checkIfAllTime(startDate.clone(), currentDate.clone(), endDate.clone())
   ) {
-    fixed.value = 'All time';
+    fixed.value = 'All time ';
     clearDate();
   } else {
     fixed.value = 'Custom';
@@ -403,7 +412,7 @@ const checkIfLast6Months = (start, current) => {
 const checkIfThisYear = (start, current, end) => {
   const currentYearStart = current.startOf('year').format('YYYY-MM-DD');
   const currentYearEnd = current.endOf('year').format('YYYY-MM-DD');
-
+  console.log('this year', start, end);
   return (
     currentYearStart === start.format('YYYY-MM-DD') &&
     currentYearEnd === end.format('YYYY-MM-DD')
@@ -426,6 +435,7 @@ const checkIfAllTime = (start, current, end) => {
 };
 
 const customPosition = () => {
+  console.log(dateRangeMain.value?.getBoundingClientRect(), 'width');
   return {
     top: Number(dateRangeMain.value?.getBoundingClientRect().bottom) + 20,
     left:

@@ -418,7 +418,7 @@
           Clear Filter
         </button>
       </div>
-
+      <p class="py-1">Total Number of Users: {{ usersData['total'] }}</p>
       <div class="iati-list-table user-list-table text-n-40">
         <table>
           <thead>

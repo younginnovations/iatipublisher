@@ -251,6 +251,9 @@
   <!--Filter tag pills end-->
 
   <div>
+    <p class="py-1">
+      Total Number of Organisation: {{ organisationData.data['total'] }}
+    </p>
     <div class="iati-list-table">
       <table>
         <thead>
@@ -631,6 +634,8 @@ export default defineComponent({
 
     interface oDataInterface {
       data: {
+        total: number;
+
         id: number;
         name: {
           narrative: string;
