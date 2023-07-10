@@ -1,5 +1,5 @@
 <template>
-  <div id="date-range-main" ref="dateRangeMain" class="flex space-x-1 outline">
+  <div id="date-range-main" ref="dateRangeMain" class="flex space-x-1">
     <div>
       <div class="relative min-w-[150px]">
         <!--Range Dropdown-->
@@ -435,20 +435,16 @@ const checkIfAllTime = (start, current, end) => {
 };
 
 const customPosition = () => {
-  console.log(
-    dateRangeMain.value?.getBoundingClientRect()?.right,
-    'width',
-    window.innerWidth,
-    window.innerWidth - dateRangeMain.value?.getBoundingClientRect()?.right
-  );
   return {
     top: Number(dateRangeMain.value?.getBoundingClientRect().bottom) + 20,
-    left:
-      Number(dateRangeMain.value?.getBoundingClientRect().left) +
-      (dateRangeMain.value &&
-      dateRangeMain.value?.getBoundingClientRect()?.width > 500
-        ? 140
-        : -90),
+    left: dateRangeMain.value
+      ? Number(dateRangeMain.value?.getBoundingClientRect().left) +
+        (window.innerWidth -
+          dateRangeMain.value?.getBoundingClientRect()?.right >
+        150
+          ? 140
+          : -90)
+      : 0,
   };
 };
 </script>
