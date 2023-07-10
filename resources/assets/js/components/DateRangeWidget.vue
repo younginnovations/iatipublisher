@@ -24,7 +24,7 @@
             :key="key"
             class="daterange-item"
             :class="value === dateType ? 'daterange-item-active' : ''"
-            style="min-width: 160px"
+            style="min-width: 180px"
             @click="
               () => {
                 showRangeDropdown = false;

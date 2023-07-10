@@ -140,24 +140,18 @@ class OrganizationRepository extends Repository
         $orderBy = Arr::get($queryParams, 'orderBy', 'organizations.updated_at');
         $direction = Arr::get($queryParams, 'direction', 'desc');
 
-        if ($orderBy === 'name') {
-            return $organizations->orderByRaw("organizations.name->0->>'narrative' $direction")
-                ->paginate(10, ['*'], 'organization', $page);
-        }
+        if (in_array($orderBy, ['country', 'data_license', 'name'])) {
+            $mappedOrderBy = $this->orderByMap($orderBy);
 
-//        if ($orderBy === 'country' || $orderBy === 'data_license') {
-        if ($orderBy === 'country' || $orderBy === 'data_license') {
             if ($direction == 'asc') {
                 return $organizations
-                    ->orderByRaw("CASE WHEN $orderBy IS NULL OR $orderBy = '' THEN 'zzz' ELSE $orderBy END asc")
-                    ->orderBy($orderBy, $direction)
-                    ->paginate(10, ['*'], 'organization', $page);
-            } else {
-                return $organizations
-                    ->orderByRaw("CASE WHEN $orderBy IS NULL OR $orderBy = '' THEN '' ELSE $orderBy END desc")
-                    ->orderBy($orderBy, $direction)
+                    ->orderByRaw("CASE WHEN $mappedOrderBy IS NULL OR $mappedOrderBy = '' THEN 'zzz' ELSE $mappedOrderBy END asc")
                     ->paginate(10, ['*'], 'organization', $page);
             }
+
+            return $organizations
+                ->orderByRaw("CASE WHEN $mappedOrderBy IS NULL OR $mappedOrderBy = '' THEN '' ELSE $mappedOrderBy END desc")
+                ->paginate(10, ['*'], 'organization', $page);
         }
 
         if ($orderBy === 'registered_on') {
@@ -168,13 +162,13 @@ class OrganizationRepository extends Repository
         if ($orderBy === 'last_logged_in') {
             if ($direction == 'asc') {
                 return $organizations
-                    ->orderByRaw("CASE WHEN last_logged_in IS NULL THEN '9999-01-31 00:00:00' ELSE last_logged_in END asc")
-                    ->paginate(10, ['*'], 'organization', $page);
-            } else {
-                return $organizations
-                    ->orderByRaw("CASE WHEN last_logged_in IS NULL THEN '1753-01-01 00:00:00' ELSE last_logged_in END desc")
+                    ->orderByRaw("CASE WHEN MAX(usr.last_logged_in) IS NULL THEN '9999-01-31 00:00:00' ELSE MAX(usr.last_logged_in) END asc")
                     ->paginate(10, ['*'], 'organization', $page);
             }
+
+            return $organizations
+                ->orderByRaw("CASE WHEN MAX(usr.last_logged_in) IS NULL THEN '1753-01-01 00:00:00' ELSE MAX(usr.last_logged_in) END desc")
+                ->paginate(10, ['*'], 'organization', $page);
         }
 
         return $organizations->orderBy($orderBy, $direction)->orderBy('organizations.id', 'desc')
@@ -608,5 +602,22 @@ class OrganizationRepository extends Repository
                     )
             ",
         ];
+    }
+
+    /**
+     * Returns mapped orderBy.
+     *
+     * @param $orderBy
+     * @return string
+     */
+    public function orderByMap($orderBy): string
+    {
+        $orderByMap = [
+            'country'     =>'country',
+            'data_license'=>'data_license',
+            'name'        =>"organizations.name->0->>'narrative'",
+        ];
+
+        return Arr::get($orderByMap, $orderBy);
     }
 }
