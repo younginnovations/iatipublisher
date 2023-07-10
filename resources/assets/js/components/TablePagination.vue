@@ -1,7 +1,6 @@
 <template>
   <nav class="pagination" aria-label="Pagination">
     <a
-      href="javascript:void(0)"
       class="prev-btn"
       :class="{
         'pointer-events-none': data.last_page <= 1,
@@ -17,7 +16,6 @@
       ><a
         v-for="(index, i) in data.last_page"
         :key="index"
-        href="javascript:void(0)"
         :class="active_page === index ? 'current' : ''"
         @click="changePage(i + 1)"
       >
@@ -25,18 +23,13 @@
       </a></span
     >
     <span v-else class="flex">
-      <a
-        href="javascript:void(0)"
-        :class="active_page === 1 ? 'current' : ''"
-        @click="changePage(1)"
-      >
+      <a :class="active_page === 1 ? 'current' : ''" @click="changePage(1)">
         1
       </a>
       <span v-if="active_page < 5" class="flex">
         <a
           v-for="(index, i) in 4"
           :key="index"
-          href="javascript:void(0)"
           :class="active_page === index + 1 ? 'current' : ''"
           @click="changePage(i + 2)"
         >
@@ -49,7 +42,6 @@
         <a
           v-for="index in lastpages"
           :key="index"
-          href="javascript:void(0)"
           :class="active_page === index ? 'current' : ''"
           @click="changePage(+index)"
         >
@@ -61,7 +53,6 @@
         <a
           v-for="index in midpages"
           :key="index"
-          href="javascript:void(0)"
           :class="active_page === index ? 'current' : ''"
           @click="changePage(+index)"
         >
@@ -71,7 +62,6 @@
       </span>
 
       <a
-        href="javascript:void(0)"
         :class="active_page === data.last_page ? 'current' : ''"
         @click="changePage(data.last_page)"
       >
@@ -79,7 +69,6 @@
       </a>
     </span>
     <a
-      href="javascript:void(0)"
       class="next-btn"
       :class="{
         'pointer-events-none': data.last_page <= 1,
