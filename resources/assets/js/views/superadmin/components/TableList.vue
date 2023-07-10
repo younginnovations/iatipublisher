@@ -422,6 +422,9 @@
           <tr v-if="organisationData.status === 'fetching'">
             <td colspan="4">Fetching Data...</td>
           </tr>
+          <tr v-if="organisationData.status === 'failed to retrieve data'">
+            <td colspan="4">Failed to retrieve data...</td>
+          </tr>
           <tr v-else-if="organisationData.status === 'empty'">
             <td colspan="4">No Data Available</td>
           </tr>
@@ -809,6 +812,8 @@ export default defineComponent({
 
               refreshStatusArrays(organisationData.data);
             }
+          } else {
+            organisationData.status = 'failed to retrieve data';
           }
         });
       urlParams = new URLSearchParams(queryString);
