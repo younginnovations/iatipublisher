@@ -9,8 +9,10 @@
   font-family: inherit !important;
   padding-right: 16px !important;
 }
-.dp__selection_preview {
-  display: none !important;
+.all-time {
+  .dp__selection_preview {
+    display: none !important;
+  }
 }
 .empty {
   .dp__input_wrap {

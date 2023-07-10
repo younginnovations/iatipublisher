@@ -52,7 +52,10 @@
       </span>
     </div>
     <div class="">
-      <div :class="{ empty: !selectedDate[0] }" class="relative flex">
+      <div
+        :class="{ empty: !selectedDate[0], 'all-time': fixed === 'All time ' }"
+        class="relative flex"
+      >
         <VueDatePicker
           ref="datepicker"
           v-model="selectedDate"
@@ -91,6 +94,7 @@
             </div>
           </template>
         </VueDatePicker>
+
         <span
           class="absolute top-1/2 right-0 -translate-y-1/2 cursor-pointer"
           style="height: fit-content; font-size: 20px; margin-top: 2px"
@@ -104,15 +108,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  ref,
-  watch,
-  defineEmits,
-  Ref,
-  defineProps,
-  onMounted,
-  computed,
-} from 'vue';
+import { ref, watch, defineEmits, Ref, defineProps, onMounted } from 'vue';
 import {
   subDays,
   startOfWeek,
@@ -412,7 +408,6 @@ const checkIfLast6Months = (start, current) => {
 const checkIfThisYear = (start, current, end) => {
   const currentYearStart = current.startOf('year').format('YYYY-MM-DD');
   const currentYearEnd = current.endOf('year').format('YYYY-MM-DD');
-  console.log('this year', start, end);
   return (
     currentYearStart === start.format('YYYY-MM-DD') &&
     currentYearEnd === end.format('YYYY-MM-DD')
