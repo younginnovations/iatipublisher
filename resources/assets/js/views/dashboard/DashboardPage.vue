@@ -98,8 +98,9 @@ const registrationType = ref();
 const handleChangeTableNav = (item, filter, page, tabChange = true) => {
   if (tabChange) {
     filter.value.orderBy = '';
-    filter.value.direction = '';
+    filter.value.sort = '';
   }
+  console.log(filter.value, 'from tab change');
   currentNav.value = item;
   fetchTableData(filter.value, page);
 };
@@ -180,6 +181,7 @@ const fetchTableData = (filter = { orderBy: '', sort: '' }, page = '1') => {
   showTableLoader.value = true;
   let params = new URLSearchParams();
   const activeTab = currentNav.value['apiParams'];
+  console.log(filter, 'filter outside');
 
   if (filter.orderBy) {
     params.append('orderBy', kebabCaseToSnakecase(filter.orderBy));

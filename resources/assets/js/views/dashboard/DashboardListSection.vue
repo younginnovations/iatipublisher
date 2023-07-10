@@ -760,8 +760,18 @@ const sortTable = () => {
 const triggerpagination = (page) => {
   currentpage.value = page;
   resetpagination.value = false;
-  fetchTableData(currentItem.value);
+  fetchTableData(currentItem.value, false);
 };
+
+watch(
+  () => filter.value,
+  () => {
+    console.log('sort');
+    resetpagination.value = true;
+    currentpage.value = 1;
+  },
+  { deep: true }
+);
 
 watch(
   () => props.currentView,
@@ -798,7 +808,9 @@ const fetchTableData = (item, tabChange = true) => {
   activeClass.value = item?.label;
   title.value = item?.label;
   sortElement.value = item;
+  console.log(filter.value, 'filter inside');
   emit('tableNav', item, filter, currentpage.value, tabChange);
+  resetpagination.value = false;
 };
 const completeNess = inject('completeNess') as Ref;
 const registrationType = inject('registrationType') as Ref;
