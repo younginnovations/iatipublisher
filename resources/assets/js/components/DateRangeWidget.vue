@@ -108,7 +108,15 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, defineEmits, Ref, defineProps, onMounted } from 'vue';
+import {
+  ref,
+  watch,
+  defineEmits,
+  Ref,
+  defineProps,
+  onMounted,
+  computed,
+} from 'vue';
 import {
   subDays,
   startOfWeek,
@@ -129,6 +137,10 @@ const props = defineProps({
     type: Object,
     required: false,
     default: () => ({}),
+  },
+  firstDate: {
+    type: String,
+    required: true,
   },
   dateLabel: {
     type: String,
@@ -152,6 +164,7 @@ const toggleShowRangeDropdown = () => {
 };
 
 const emit = defineEmits(['triggerSetDateRange', 'triggerSetDateType']);
+const initialDate = computed(() => props.firstDate);
 
 const fixed = ref('All time');
 const todayDate = moment(new Date()).format('YYYY-MM-DD');
@@ -165,7 +178,8 @@ const clearDate = () => {
   selectedDate.value[0] = '';
   selectedDate.value[1] = '';
 };
-const presetRanges = ref([
+
+const presetRanges = computed(() => [
   {
     label: 'Today',
     range: [new Date(), new Date()],
@@ -188,7 +202,7 @@ const presetRanges = ref([
   },
   {
     label: 'This year',
-    range: [startOfYear(new Date()), endOfYear(new Date())],
+    range: [startOfYear(new Date()), new Date()],
   },
   {
     label: 'Last 12 months',
@@ -196,11 +210,47 @@ const presetRanges = ref([
   },
   {
     label: 'All time',
-    range: [new Date('1990-12-31'), new Date()],
+    range: [new Date(initialDate.value), new Date()],
   },
 ]);
 
+// const presetRanges = ref([
+//   {
+//     label: 'Today',
+//     range: [new Date(), new Date()],
+//   },
+//   {
+//     label: 'This week',
+//     range: [startOfWeek(new Date()), new Date()],
+//   },
+//   {
+//     label: 'Last 7 days',
+//     range: [subDays(new Date(), 6), new Date()],
+//   },
+//   {
+//     label: 'This month',
+//     range: [startOfMonth(new Date()), endOfMonth(new Date())],
+//   },
+//   {
+//     label: 'Last 6 months',
+//     range: [startOfMonth(subMonths(new Date(), 6)), new Date()],
+//   },
+//   {
+//     label: 'This year',
+//     range: [startOfYear(new Date()), endOfYear(new Date())],
+//   },
+//   {
+//     label: 'Last 12 months',
+//     range: [startOfMonth(subMonths(new Date(), 12)), new Date()],
+//   },
+//   {
+//     label: 'All time',
+//     range: [new Date(initialDate.value), new Date()],
+//   },
+// ]);
+
 onMounted(() => {
+  console.log(props.firstDate, 'date range wodget first date');
   selectedDate.value[0] = '';
   selectedDate.value[1] = todayDate;
   triggerSetDateRange('', todayDate, fixed.value);

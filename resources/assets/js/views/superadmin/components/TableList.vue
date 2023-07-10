@@ -116,6 +116,7 @@
     <div class="flex h-[38px] w-full items-center justify-end px-4 2xl:w-auto">
       <DateRangeWidget
         :dropdown-range="dropdownRange"
+        :first-date="oldestDates"
         @trigger-set-date-range="setDateRangeDate"
         @trigger-set-date-type="setDateType"
       />
@@ -607,6 +608,10 @@ export default defineComponent({
     registrationTypes: { type: Object, required: true },
     publisherTypes: { type: Object, required: true },
     dataLicenses: { type: Object, required: true },
+    oldestDates: {
+      type: String,
+      required: true,
+    },
   },
 
   setup(props) {

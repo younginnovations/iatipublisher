@@ -18,6 +18,7 @@
         :registration-types="props.registrationTypes"
         :publisher-types="props.publisherTypes"
         :data-licenses="props.dataLicenses"
+        :oldest-dates="props.oldestDates"
       />
     </div>
     <Loader
@@ -42,9 +43,14 @@ const props = defineProps({
   registrationTypes: { type: Object, required: true },
   publisherTypes: { type: Object, required: true },
   dataLicenses: { type: Object, required: true },
+  oldestDates: {
+    type: String,
+    required: true,
+  },
 });
 
-// ref
+console.log(props.oldestDates, 'old dates');
+
 const loader = reactive({
   status: false,
   text: 'Please Wait',

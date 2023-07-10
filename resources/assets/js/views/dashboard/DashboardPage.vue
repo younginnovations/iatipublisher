@@ -39,6 +39,7 @@
       <div class="flex w-full items-center justify-end space-x-2 xl:w-auto">
         <DateRangeWidget
           :date-label="DateLabel"
+          :first-date="oldestDates[currentView]"
           @trigger-set-date-range="setDateRangeDate"
         />
         <ButtonComponent
@@ -67,7 +68,7 @@
 import DashboardStatsSection from './DashboardStatsSection.vue';
 import DashboardListSection from './DashboardListSection.vue';
 import DateRangeWidget from 'Components/DateRangeWidget.vue';
-import { ref, onMounted, provide, watch } from 'vue';
+import { ref, onMounted, provide, watch, defineProps } from 'vue';
 import ButtonComponent from 'Components/ButtonComponent.vue';
 import axios from 'axios';
 import moment from 'moment';
@@ -106,10 +107,19 @@ const handleChangeTableNav = (item, filter, page, tabChange = true) => {
 };
 
 onMounted(() => {
+  console.log(props.oldestDates, 'old dates');
   setDateRangeDate('', '');
   fetchTableData();
   fetchGraphData();
 });
+
+const props = defineProps({
+  oldestDates: {
+    type: Object,
+    required: true,
+  },
+});
+
 const downloadReport = () => {
   let params = new URLSearchParams();
   if (startDate.value && endDate.value) {
