@@ -6,6 +6,7 @@ namespace App\Http\Controllers\SuperAdmin;
 
 use App\Constants\Enums;
 use App\Http\Controllers\Controller;
+use App\IATI\Services\Dashboard\DashboardService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
 use App\IATI\Traits\DateRangeResolverTrait;
@@ -30,8 +31,9 @@ class SuperAdminController extends Controller
      *
      * @param OrganizationService $organizationService
      * @param UserService $userService
+     * @param DashboardService $dashboardService
      */
-    public function __construct(public OrganizationService $organizationService, public UserService $userService)
+    public function __construct(public OrganizationService $organizationService, public UserService $userService, public DashboardService $dashboardService)
     {
         //
     }
@@ -54,8 +56,9 @@ class SuperAdminController extends Controller
             $registrationType = Enums::ORGANIZATION_REGISTRATION_METHOD;
             $publisherType = getCodeList('OrganizationType', 'Organization');
             $dataLicense = getCodeList('DataLicense', 'Activity', false);
+            $oldestDates = $this->dashboardService->getOldestDate();
 
-            return view('superadmin.organisationsList', compact('country', 'setupCompleteness', 'registrationType', 'publisherType', 'dataLicense'));
+            return view('superadmin.organisationsList', compact('country', 'setupCompleteness', 'registrationType', 'publisherType', 'dataLicense', 'oldestDates'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 

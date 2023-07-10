@@ -682,8 +682,8 @@ export default defineComponent({
     let defaultValueStatus: boolean[] = reactive([]);
     const showMultiSelectWithSearch = ref(false);
     let dropdownRange = {
-      created_at: 'User registered date',
-      last_logged_in: 'Last logged in',
+      created_at: 'Registered date range',
+      last_logged_in: 'Last login date range',
     };
     const sortParams = ref({ orderBy: '', direction: '' });
 

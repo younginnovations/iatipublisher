@@ -419,6 +419,11 @@ class DashboardService
         return $params;
     }
 
+    /**
+     * Returns oldest created_at date.
+     *
+     * @return array
+     */
     public function getOldestDate(): array
     {
         return [
