@@ -334,15 +334,24 @@
           </span>
           <span></span>
         </div>
-        <div class="open-text h-[38px]">
-          <svg-vue
-            class="absolute top-1/2 left-2 w-10 -translate-y-1/2 text-base"
-            icon="magnifying-glass"
-          />
-          <input
-            v-model="filter.q"
-            type="text"
-            placeholder="Search for users"
+        <div
+          class="flex h-[38px] w-full items-center justify-end space-x-2 px-4 2xl:w-auto"
+        >
+          <div class="open-text h-[38px]">
+            <svg-vue
+              class="absolute top-1/2 left-2 w-10 -translate-y-1/2 text-base"
+              icon="magnifying-glass"
+            />
+            <input
+              v-model="filter.q"
+              type="text"
+              placeholder="Search for users"
+            />
+          </div>
+          <DateRangeWidget
+            :dropdown-range="dropdownRange"
+            @trigger-set-date-range="setDateRangeDate"
+            @trigger-set-date-type="setDateType"
           />
         </div>
       </div>
@@ -638,6 +647,7 @@ import Multiselect from '@vueform/multiselect';
 import moment from 'moment';
 import Pagination from 'Components/TablePagination.vue';
 import { watchIgnorable } from '@vueuse/core';
+import DateRangeWidget from 'Components/DateRangeWidget.vue';
 
 const props = defineProps({
   organizations: { type: Object, required: true },
@@ -659,6 +669,10 @@ const filter = reactive({
   orderBy: '',
   direction: '',
   q: '',
+  start_date: '',
+  end_date: '',
+  date_type: 'created_at',
+  selected_date_filter: '',
 });
 
 const isLoaderVisible = ref(false);
@@ -681,6 +695,10 @@ const checklist = ref([]);
 const currentpageData = ref([]);
 
 const editUserId = ref('');
+const dropdownRange = {
+  created_at: 'User registered date',
+  last_logged_in: 'Last logged in',
+};
 
 const formData = reactive({
   username: '',
@@ -777,6 +795,15 @@ const clearFilter = () => {
   filter.direction = '';
   filter.orderBy = '';
   filter.q = '';
+};
+
+const setDateRangeDate = (startDate, endDate, selectedDateFilter = '') => {
+  filter.start_date = startDate;
+  filter.end_date = endDate;
+  filter.selected_date_filter = selectedDateFilter;
+};
+const setDateType = (dateType) => {
+  filter.date_type = dateType;
 };
 
 const createUser = () => {
