@@ -56,7 +56,7 @@ class SuperAdminController extends Controller
             $registrationType = Enums::ORGANIZATION_REGISTRATION_METHOD;
             $publisherType = getCodeList('OrganizationType', 'Organization');
             $dataLicense = getCodeList('DataLicense', 'Activity', false);
-            $oldestDates = $this->dashboardService->getOldestDate();
+            $oldestDates = $this->dashboardService->getOldestDate('publisher');
 
             return view('superadmin.organisationsList', compact('country', 'setupCompleteness', 'registrationType', 'publisherType', 'dataLicense', 'oldestDates'));
         } catch (Exception $e) {

@@ -422,14 +422,21 @@ class DashboardService
     /**
      * Returns oldest created_at date.
      *
+     * @param string $select
+     *
      * @return array
      */
-    public function getOldestDate(): array
+    public function getOldestDate(string $select = '*'): array
     {
-        return [
-            'user'=> $this->userRepo->getOldestData()?->created_at->format('Y-m-d') ?? '',
-            'activity'=> $this->activityRepo->getOldestData()?->created_at->format('Y-m-d') ?? '',
-            'publisher'=> $this->organizationRepo->getOldestData()?->created_at->format('Y-m-d') ?? '',
-        ];
+        return match ($select) {
+            'publisher'=> [$this->organizationRepo->getOldestData()?->created_at->format('Y-m-d') ?? ''],
+            'activity'=> [$this->activityRepo->getOldestData()?->created_at->format('Y-m-d') ?? ''],
+            'user'=> [$this->userRepo->getOldestData()?->created_at->format('Y-m-d') ?? ''],
+            default => [
+                'user'=> $this->userRepo->getOldestData()?->created_at->format('Y-m-d') ?? '',
+                'activity'=> $this->activityRepo->getOldestData()?->created_at->format('Y-m-d') ?? '',
+                'publisher'=> $this->organizationRepo->getOldestData()?->created_at->format('Y-m-d') ?? '',
+            ],
+        };
     }
 }

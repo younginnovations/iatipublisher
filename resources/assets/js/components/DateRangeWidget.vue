@@ -125,6 +125,9 @@ import {
   startOfMonth,
   startOfYear,
   subMonths,
+  startOfDay,
+  endOfDay,
+  format as dateFormat,
 } from 'date-fns';
 
 import VueDatePicker from '@vuepic/vue-datepicker';
@@ -182,75 +185,104 @@ const clearDate = () => {
 const presetRanges = computed(() => [
   {
     label: 'Today',
-    range: [new Date(), new Date()],
+    range: [startOfDay(new Date()), endOfDay(new Date())],
   },
   {
     label: 'This week',
-    range: [startOfWeek(new Date()), new Date()],
+    range: [startOfWeek(new Date()), endOfDay(new Date())],
   },
   {
     label: 'Last 7 days',
-    range: [subDays(new Date(), 6), new Date()],
+    range: [subDays(new Date(), 6), endOfDay(new Date())],
   },
   {
     label: 'This month',
     range: [startOfMonth(new Date()), endOfMonth(new Date())],
   },
   {
-    label: 'Last 6 months',
-    range: [startOfMonth(subMonths(new Date(), 6)), new Date()],
+    label: 'Last 6 month',
+    range: [startOfMonth(subMonths(new Date(), 6)), endOfMonth(new Date())],
   },
   {
     label: 'This year',
-    range: [startOfYear(new Date()), new Date()],
+    range: [startOfYear(new Date()), endOfDay(new Date())],
   },
   {
     label: 'Last 12 months',
-    range: [startOfMonth(subMonths(new Date(), 12)), new Date()],
+    range: [startOfMonth(subMonths(new Date(), 12)), endOfDay(new Date())],
   },
   {
     label: 'All time',
-    range: [new Date(initialDate.value), new Date()],
+    range: [new Date(initialDate.value), endOfDay(new Date())],
   },
 ]);
 
-// const presetRanges = ref([
-//   {
-//     label: 'Today',
-//     range: [new Date(), new Date()],
-//   },
-//   {
-//     label: 'This week',
-//     range: [startOfWeek(new Date()), new Date()],
-//   },
-//   {
-//     label: 'Last 7 days',
-//     range: [subDays(new Date(), 6), new Date()],
-//   },
-//   {
-//     label: 'This month',
-//     range: [startOfMonth(new Date()), endOfMonth(new Date())],
-//   },
-//   {
-//     label: 'Last 6 months',
-//     range: [startOfMonth(subMonths(new Date(), 6)), new Date()],
-//   },
-//   {
-//     label: 'This year',
-//     range: [startOfYear(new Date()), endOfYear(new Date())],
-//   },
-//   {
-//     label: 'Last 12 months',
-//     range: [startOfMonth(subMonths(new Date(), 12)), new Date()],
-//   },
-//   {
-//     label: 'All time',
-//     range: [new Date(initialDate.value), new Date()],
-//   },
-// ]);
+const isToday = (start, end) => {
+  return (
+    dateFormat(startOfDay(new Date()), 'yyyy-MM-dd') ===
+      dateFormat(start, 'yyyy-MM-dd') &&
+    dateFormat(endOfDay(new Date()), 'yyyy-MM-dd') ===
+      dateFormat(end, 'yyyy-MM-dd')
+  );
+};
+const isThisWeek = (start, end) => {
+  return (
+    dateFormat(startOfWeek(new Date()), 'yyyy-MM-dd') ===
+      dateFormat(start, 'yyyy-MM-dd') &&
+    dateFormat(end, 'yyyy-MM-dd') ===
+      dateFormat(endOfDay(new Date()), 'yyyy-MM-dd')
+  );
+};
+const isLast7Days = (start, end) => {
+  return (
+    dateFormat(subDays(new Date(), 6), 'yyyy-MM-dd') ===
+      dateFormat(start, 'yyyy-MM-dd') &&
+    dateFormat(end, 'yyyy-MM-dd') ===
+      dateFormat(endOfDay(new Date()), 'yyyy-MM-dd')
+  );
+};
+const isThisMonth = (start, end) => {
+  return (
+    dateFormat(startOfMonth(new Date()), 'yyyy-MM-dd') ===
+      dateFormat(start, 'yyyy-MM-dd') &&
+    dateFormat(end, 'yyyy-MM-dd') ==
+      dateFormat(endOfMonth(new Date()), 'yyyy-MM-dd')
+  );
+};
+const isLast6Months = (start, end) => {
+  return (
+    dateFormat(startOfMonth(subMonths(new Date(), 6)), 'yyyy-MM-dd') ===
+      dateFormat(start, 'yyyy-MM-dd') &&
+    dateFormat(end, 'yyyy-MM-dd') ===
+      dateFormat(endOfMonth(new Date()), 'yyyy-MM-dd')
+  );
+};
+const isThisYear = (start, end) => {
+  return (
+    dateFormat(startOfYear(new Date()), 'yyyy-MM-dd') ===
+      dateFormat(start, 'yyyy-MM-dd') &&
+    dateFormat(end, 'yyyy-MM-dd') ===
+      dateFormat(endOfDay(new Date()), 'yyyy-MM-dd')
+  );
+};
+const isLast12Months = (start, end) => {
+  return (
+    dateFormat(startOfMonth(subMonths(new Date(), 12)), 'yyyy-MM-dd') ===
+      dateFormat(start, 'yyyy-MM-dd') &&
+    dateFormat(end, 'yyyy-MM-dd') ===
+      dateFormat(endOfDay(new Date()), 'yyyy-MM-dd')
+  );
+};
+const isAllTime = (start, end) => {
+  return (
+    dateFormat(new Date('1990-12-31'), 'yyyy-MM-dd') ===
+      dateFormat(start, 'yyyy-MM-dd') &&
+    dateFormat(end, 'yyyy-MM-dd') ===
+      dateFormat(endOfDay(new Date()), 'yyyy-MM-dd')
+  );
+};
 
 onMounted(() => {
-  console.log(props.firstDate, 'date range wodget first date');
   selectedDate.value[0] = '';
   selectedDate.value[1] = todayDate;
   triggerSetDateRange('', todayDate, fixed.value);
@@ -332,7 +364,7 @@ watch(
 
     if (startDate && endDate) {
       triggerSetDateRange(startDate, endDate, fixed.value);
-      resolveStartDateAndEndDate(moment(startDate), moment(endDate));
+      resolveStartDateAndEndDate(selectedDate.value[0], selectedDate.value[1]);
     }
   },
   { deep: true }
@@ -373,110 +405,25 @@ const triggerSetDateType = (eventType) => {
 };
 
 const resolveStartDateAndEndDate = (startDate, endDate) => {
-  const currentDate = moment(convertDate(new Date()));
-
-  if (checkIfToday(startDate.clone(), currentDate.clone(), endDate.clone())) {
+  if (isToday(startDate, endDate)) {
     fixed.value = 'Today';
-  } else if (
-    checkIfThisWeek(startDate.clone(), currentDate.clone(), endDate.clone())
-  ) {
+  } else if (isThisWeek(startDate, endDate)) {
     fixed.value = 'This week';
-  } else if (
-    checkIfLast7Days(startDate.clone(), currentDate.clone(), endDate.clone())
-  ) {
+  } else if (isLast7Days(startDate, endDate)) {
     fixed.value = 'Last 7 days';
-  } else if (
-    checkIfThisMonth(startDate.clone(), currentDate.clone(), endDate.clone())
-  ) {
-    fixed.value = 'This Month';
-  } else if (
-    checkIfThisYear(startDate.clone(), currentDate.clone(), endDate.clone())
-  ) {
-    fixed.value = 'This year (Jan-Today)';
-  } else if (checkIfLast6Months(startDate.clone(), currentDate.clone())) {
-    fixed.value = 'Last 6 months';
-  } else if (checkIfLast12Months(startDate.clone(), currentDate.clone())) {
+  } else if (isThisMonth(startDate, endDate)) {
+    fixed.value = 'This month';
+  } else if (isLast6Months(startDate, endDate)) {
+    fixed.value = 'Last 6 month';
+  } else if (isThisYear(startDate, endDate)) {
+    fixed.value = 'This year (Jan 1 - Today)';
+  } else if (isLast12Months(startDate, endDate)) {
     fixed.value = 'Last 12 months';
-  } else if (
-    checkIfAllTime(startDate.clone(), currentDate.clone(), endDate.clone())
-  ) {
-    fixed.value = 'All time ';
-    clearDate();
+  } else if (isAllTime(startDate, endDate)) {
+    fixed.value = 'All time';
   } else {
     fixed.value = 'Custom';
   }
-};
-
-const checkIfToday = (start, current, end) => {
-  if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')) {
-    return (
-      start.format('YYYY-MM-DD') == current.format('YYYY-MM-DD') &&
-      end.format('YYYY-MM-DD') == current.format('YYYY-MM-DD')
-    );
-  }
-
-  return false;
-};
-const checkIfThisWeek = (start, current, end) => {
-  const currentWeekStart = current.startOf('week').format('YYYY-MM-DD');
-  const currentWeekEnd = current.endOf('week').format('YYYY-MM-DD');
-
-  return (
-    currentWeekStart == start.startOf('week').format('YYYY-MM-DD') &&
-    currentWeekEnd == end.endOf('week').format('YYYY-MM-DD')
-  );
-};
-const checkIfLast7Days = (start, current, end) => {
-  const sixDaysBefore = current
-    .clone()
-    .subtract(6, 'days')
-    .format('YYYY-MM-DD');
-
-  return (
-    current.format('YYYY-MM-DD') == end.format('YYYY-MM-DD') &&
-    start.format('YYYY-MM-DD') == sixDaysBefore
-  );
-};
-const checkIfThisMonth = (start, current, end) => {
-  const currentMonthStart = current.startOf('month').format('YYYY-MM-DD');
-  const currentMonthEnd = current.endOf('month').format('YYYY-MM-DD');
-
-  return (
-    currentMonthStart == start.format('YYYY-MM-DD') &&
-    currentMonthEnd == end.format('YYYY-MM-DD')
-  );
-};
-const checkIfLast6Months = (start, current) => {
-  const sixMonthBefore = current
-    .clone()
-    .subtract(6, 'months')
-    .startOf('month')
-    .format('YYYY-MM-DD');
-
-  return sixMonthBefore == start.format('YYYY-MM-DD');
-};
-const checkIfThisYear = (start, current, end) => {
-  const currentYearStart = current.startOf('year').format('YYYY-MM-DD');
-  const currentYearEnd = current.endOf('year').format('YYYY-MM-DD');
-  return (
-    currentYearStart === start.format('YYYY-MM-DD') &&
-    currentYearEnd === end.format('YYYY-MM-DD')
-  );
-};
-const checkIfLast12Months = (start, current) => {
-  const startDate = current
-    .clone()
-    .subtract(12, 'months')
-    .startOf('month')
-    .format('YYYY-MM-DD');
-
-  return startDate === start.format('YYYY-MM-DD');
-};
-const checkIfAllTime = (start, current, end) => {
-  return (
-    start.format('YYYY-MM-DD') == '1990-12-31' &&
-    end.format('YYYY-MM-DD') == current.format('YYYY-MM-DD')
-  );
 };
 
 const customPosition = () => {
