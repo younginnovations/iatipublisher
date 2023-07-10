@@ -13,8 +13,9 @@
                         </div>
                     @endif
 
-                 
-                    <dashboard-page></dashboard-page>
+                    <dashboard-page
+                        :oldest-dates="{{ json_encode($oldestDates) }}">
+                    </dashboard-page>
                 </div>
             </div>
         </div>

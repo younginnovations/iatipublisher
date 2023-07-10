@@ -60,7 +60,9 @@ class DashboardController extends Controller
      */
     public function index(): Renderable
     {
-        return view('admin.dashboard.index');
+        $oldestDates = $this->dashboardService->getOldestDate();
+
+        return view('admin.dashboard.index', compact('oldestDates'));
     }
 
     /**

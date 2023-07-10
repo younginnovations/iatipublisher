@@ -418,4 +418,13 @@ class DashboardService
 
         return $params;
     }
+
+    public function getOldestDate(): array
+    {
+        return [
+            'user'=> $this->userRepo->getOldestData()?->created_at->format('Y-m-d') ?? '',
+            'activity'=> $this->activityRepo->getOldestData()?->created_at->format('Y-m-d') ?? '',
+            'publisher'=> $this->organizationRepo->getOldestData()?->created_at->format('Y-m-d') ?? '',
+        ];
+    }
 }
