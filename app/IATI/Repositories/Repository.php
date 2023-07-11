@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\IATI\Repositories;
 
+use App\IATI\Models\User\Role;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -250,7 +251,9 @@ abstract class Repository implements RepositoryInterface
             ->select(DB::raw("TO_CHAR($column, '" . $dateFormat . "') AS date_string"), DB::raw('COUNT(*) AS count_value'))
             ->whereDate($column, '>=', $startDate)
             ->whereDate($column, '<=', $endDate);
-        $query = $this->getModel() === "App\IATI\Models\User\User" ? $query->whereNull('deleted_at') : $query;
+
+        $superadminId = Role::where('role', 'superadmin')->first()->id;
+        $query = $this->getModel() === "App\IATI\Models\User\User" ? $query->whereNull('deleted_at')->where('role_id', '!=', $superadminId) : $query;
 
         return $query->groupBy('date_string')
             ->pluck('count_value', 'date_string')
