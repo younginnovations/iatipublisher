@@ -194,9 +194,10 @@ class UserRepository extends Repository
         }
 
         if (Arr::get($queryParams, 'startDate', false) && Arr::get($queryParams, 'endDate', false)) {
-            $query
-                ->whereDate(Arr::get($queryParams, 'date_type', 'created_at'), '>=', $queryParams['startDate'])
-                ->whereDate(Arr::get($queryParams, 'date_type', 'created_at'), '<=', $queryParams['endDate']);
+            $filterType = 'users.' . Arr::get($queryParams, 'dateType', 'created_at');
+
+            $query->whereDate($filterType, '>=', $queryParams['startDate'])
+                ->whereDate($filterType, '<=', $queryParams['endDate']);
         }
 
         return $query->whereNull('deleted_at')->orderBy($orderBy, $direction)->orderBy('users.id', $direction);

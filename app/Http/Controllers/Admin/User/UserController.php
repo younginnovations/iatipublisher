@@ -314,6 +314,12 @@ class UserController extends Controller
             }
         }
 
+        if (!empty($request->get('date_type'))) {
+            $queryParams['dateType'] = $request->get('date_type');
+            $queryParams['startDate'] = $request->get('start_date');
+            $queryParams['endDate'] = $request->get('end_date');
+        }
+
         return $queryParams;
     }
 

@@ -752,6 +752,7 @@ onMounted(() => {
   let filterparams =
     window.location.href.toString().split('?')[1] &&
     window.location.href.toString().split('?')[1].split('=');
+
   if (filterparams) {
     if (filterparams[0] === 'roles' || filterparams[0] === 'organization') {
       filter[filterparams[0] as string] = [filterparams[1]];
