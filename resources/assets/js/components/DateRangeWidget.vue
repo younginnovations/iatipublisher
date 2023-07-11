@@ -69,7 +69,7 @@
           :enable-time-picker="false"
           :teleport="true"
           :alt-position="customPosition"
-          @open="handleSelectedPresentIndex"
+          @open="addEventsForCalendar"
           @cleared="clearDate"
         >
           <template #yearly="{ label, range, presetDateRange }">
@@ -136,19 +136,51 @@ import moment from 'moment';
 
 const selectedPresentIndex = ref(99);
 
-const handleSelectedPresentIndex = () => {
+const handlePresentRangeItemClick = (index) => {
   const presentRangeItems = document.getElementsByClassName('dp__preset_range');
-  for (let i = 0; i < presentRangeItems.length; i++) {
-    presentRangeItems[i].addEventListener('click', function () {
-      selectedPresentIndex.value = i;
-      presentRangeItems[i].classList.add('bg-spring-20', 'text-white');
+  selectedPresentIndex.value = index;
+  presentRangeItems[index].classList.add('preset-range-item-active');
 
-      for (let j = 0; j < presentRangeItems.length; j++) {
-        if (j !== i) {
-          presentRangeItems[j].classList.remove('bg-spring-20', 'text-white');
-        }
-      }
+  for (let j = 0; j < presentRangeItems.length; j++) {
+    if (j !== index) {
+      presentRangeItems[j].classList.remove('preset-range-item-active');
+    }
+  }
+};
+
+const handleCalendarItemClick = () => {
+  selectedPresentIndex.value = 99;
+};
+
+const addEventsForCalendar = () => {
+  const presentRangeItems = document.getElementsByClassName('dp__preset_range');
+
+  for (let i = 0; i < presentRangeItems.length; i++) {
+    presentRangeItems[i].addEventListener('click', () => {
+      handlePresentRangeItemClick(i);
     });
+  }
+
+  const calendarItems = document.getElementsByClassName('dp__calendar_item');
+
+  for (let i = 0; i < calendarItems.length; i++) {
+    calendarItems[i].addEventListener('click', handleCalendarItemClick);
+  }
+};
+
+const removeEventsOfCalendar = () => {
+  const presentRangeItems = document.getElementsByClassName('dp__preset_range');
+
+  for (let i = 0; i < presentRangeItems.length; i++) {
+    presentRangeItems[i].removeEventListener('click', () => {
+      handlePresentRangeItemClick(i);
+    });
+  }
+
+  const calendarItems = document.getElementsByClassName('dp__calendar_item');
+
+  for (let i = 0; i < calendarItems.length; i++) {
+    calendarItems[i].removeEventListener('click', handleCalendarItemClick);
   }
 };
 
@@ -258,6 +290,7 @@ const openCalendar = () => {
 
 const closeCalendar = () => {
   if (datepicker.value) {
+    removeEventsOfCalendar();
     datepicker.value.closeMenu();
   }
 };
@@ -376,26 +409,3 @@ const customPosition = () => {
   };
 };
 </script>
-
-<style lang="scss" scoped>
-.daterange-item {
-  padding: 8px;
-  border-radius: 4px;
-  margin-top: 2px;
-  margin-bottom: 2px;
-}
-
-.daterange-item:hover {
-  @apply bg-spring-20;
-  cursor: pointer;
-  color: white;
-}
-.daterange-item-active {
-  @apply bg-spring-20;
-  color: white;
-}
-.preset-range-item-active {
-  @apply bg-spring-20;
-  color: white !important;
-}
-</style>

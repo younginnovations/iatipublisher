@@ -53,6 +53,7 @@
 
 .dp__overlay_cell:hover {
   background: rgba(var(--spring-50), 1) !important;
+  color: white !important;
 }
 
 .dp__overlay_cell_active {
@@ -116,4 +117,25 @@
 
 .dp__input {
   margin-right: 12px !important;
+}
+
+.daterange-item {
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.daterange-item:hover {
+  @apply bg-spring-20;
+  cursor: pointer;
+  color: white;
+}
+.daterange-item-active {
+  @apply bg-spring-20;
+  color: white;
+}
+.preset-range-item-active {
+  @apply bg-spring-20;
+  color: white !important;
 }
