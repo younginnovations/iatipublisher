@@ -805,7 +805,6 @@ const clearFilter = () => {
 const setDateRangeDate = (startDate, endDate, selectedDateFilter = '') => {
   filter.start_date = startDate;
   filter.end_date = endDate;
-  filter.selected_date_filter = selectedDateFilter;
 };
 const setDateType = (dateType) => {
   filter.date_type = dateType;
@@ -924,7 +923,15 @@ const updateUser = () => {
 };
 
 watch(
-  () => [filter.organization, filter.roles, filter.q, filter.status],
+  () => [
+    filter.organization,
+    filter.roles,
+    filter.q,
+    filter.status,
+    filter.start_date,
+    filter.end_date,
+    filter.date_type,
+  ],
   () => {
     fetchUsersList(usersData['current_page'], true);
   },
