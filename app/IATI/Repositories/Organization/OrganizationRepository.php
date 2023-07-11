@@ -423,6 +423,10 @@ class OrganizationRepository extends Repository
             $data[$completenessStatus] = $publisher->count();
         }
 
+        if (!array_sum($data)) {
+            return [];
+        }
+
         return [
             'completeSetup' => [
                 'count' => $data['Publishers_with_complete_setup'],

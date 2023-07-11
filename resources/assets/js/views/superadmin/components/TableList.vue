@@ -490,7 +490,7 @@
             </td>
             <td class="text-n-40">
               <div>
-                {{ showMappedData('country', data, countriesWithPrefix) }}
+                {{ countriesWithPrefix[data['country']] }}
               </div>
             </td>
             <td class="text-n-40">
@@ -1000,12 +1000,6 @@ export default defineComponent({
      */
     const showMappedData = (key, data, map) => {
       if (data) {
-        if (key == 'country') {
-          return data[key]
-            ? `${data[key]} - ${map[data[key]]}`
-            : 'Not available';
-        }
-
         if (key == 'data_license') {
           let license = data[key];
           license = license?.trim();
