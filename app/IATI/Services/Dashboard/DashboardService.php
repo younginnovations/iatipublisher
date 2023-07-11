@@ -241,7 +241,10 @@ class DashboardService
             }
         }
 
-        return $processedStatus;
+        $orderBy = Arr::get($queryParams, 'orderBy', false);
+        $direction = Arr::get($queryParams, 'direction', 'asc');
+
+        return $orderBy && $direction ? $this->sortAssocArray($processedStatus, $orderBy, $direction) : $processedStatus;
     }
 
     /**
@@ -285,7 +288,10 @@ class DashboardService
             }
         }
 
-        return $processedStatus;
+        $orderBy = Arr::get($queryParams, 'orderBy', false);
+        $direction = Arr::get($queryParams, 'direction', 'asc');
+
+        return $orderBy && $direction ? $this->sortAssocArray($processedStatus, $orderBy, $direction) : $processedStatus;
     }
 
     /**
@@ -324,20 +330,25 @@ class DashboardService
         $activityCompleteness = $this->activityRepo->getCompleteStatus($queryParams);
         $processedCompleteness = [];
 
-        foreach ($activityCompleteness as $status => $data) {
-            $type = sprintf('Activities with %s core element data', $status);
-
-            if (!empty($data)) {
-                foreach ($data as $countArray) {
-                    $processedCompleteness[$type][$countArray['status']] = $countArray['count'];
+        foreach ($activityCompleteness as $completeness => $dataOfCompleteness) {
+            $type = sprintf('Activities with %s core element data', $completeness);
+            foreach ($dataOfCompleteness as $item) {
+                if ($item['status'] == 'published') {
+                    $processedCompleteness[$type]['published'] = $item['count'];
+                } else {
+                    $processedCompleteness[$type]['draft'] = $item['count'];
                 }
-            } else {
-                $processedCompleteness[$type]['published'] = 0;
-                $processedCompleteness[$type]['draft'] = 0;
             }
+
+            $processedCompleteness[$type]['draft'] = Arr::get($processedCompleteness, "$type.draft", 0);
+            $processedCompleteness[$type]['published'] = Arr::get($processedCompleteness, "$type.published", 0);
+            $processedCompleteness[$type]['total'] = array_sum($processedCompleteness[$type]);
         }
 
-        return $processedCompleteness;
+        $orderBy = Arr::get($queryParams, 'orderBy', false);
+        $direction = Arr::get($queryParams, 'direction', 'asc');
+
+        return $orderBy && $direction ? $this->sortCompletenessStatus($processedCompleteness, $orderBy, $direction) : $processedCompleteness;
     }
 
     /**
@@ -438,5 +449,55 @@ class DashboardService
                 'publisher'=> $this->organizationRepo->getOldestData()?->created_at->format('Y-m-d') ?? '',
             ],
         };
+    }
+
+    /**
+     * Sorts assco array by order by and direction.
+     *
+     * @param array $array
+     * @param string $orderBy
+     * @param string $direction
+     *
+     * @return array
+     */
+    public function sortAssocArray(array $array, string $orderBy, string $direction = 'asc'): array
+    {
+        $direction = strtolower($direction);
+
+        if ($orderBy === 'count') {
+            $direction === 'asc' ? asort($array) : arsort($array);
+        } else {
+            $direction === 'asc' ? ksort($array) : krsort($array);
+        }
+
+        return $array;
+    }
+
+    /**
+     * Sort nested array by top level keys or children's value.
+     *
+     * @param array $array
+     * @param string $orderBy
+     * @param string $direction
+     *
+     * @return array
+     */
+    public function sortCompletenessStatus(array $array, string $orderBy, string $direction = 'asc'): array
+    {
+        $direction = strtolower($direction);
+
+        if ($orderBy === 'completeness') {
+            $direction === 'asc' ? ksort($array) : krsort($array);
+        } else {
+            uasort($array, function ($a, $b) use ($orderBy, $direction) {
+                if (array_key_exists($orderBy, $a) && array_key_exists($orderBy, $b)) {
+                    return $direction === 'asc' ? $a[$orderBy] <=> $b[$orderBy] : $b[$orderBy] <=> $a[$orderBy];
+                }
+
+                return 0;
+            });
+        }
+
+        return $array;
     }
 }
