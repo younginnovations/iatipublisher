@@ -293,8 +293,6 @@ const openCalendar = () => {
 const closeCalendar = () => {
   if (datepicker.value) {
     removeEventsOfCalendar();
-    clearDate();
-
     datepicker.value.closeMenu();
   }
 };

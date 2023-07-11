@@ -351,7 +351,7 @@
           <!-- need to add oldest date -->
           <DateRangeWidget
             :dropdown-range="dropdownRange"
-            :first-date="'2015-5-5'"
+            :first-date="oldestDates"
             @trigger-set-date-range="setDateRangeDate"
             @trigger-set-date-type="setDateType"
           />
@@ -802,7 +802,7 @@ const clearFilter = () => {
   filter.q = '';
 };
 
-const setDateRangeDate = (startDate, endDate, selectedDateFilter = '') => {
+const setDateRangeDate = (startDate, endDate) => {
   filter.start_date = startDate;
   filter.end_date = endDate;
 };
