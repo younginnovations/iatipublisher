@@ -907,6 +907,7 @@ watch(
         apiParams: '',
       };
     }
+
     fetchTableData(currentNavList.value[0]);
 
     activeClass.value = currentNavList.value[0]?.label;

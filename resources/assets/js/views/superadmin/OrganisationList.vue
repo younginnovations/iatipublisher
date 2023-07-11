@@ -49,8 +49,6 @@ const props = defineProps({
   },
 });
 
-console.log(props.oldestDates, 'old dates');
-
 const loader = reactive({
   status: false,
   text: 'Please Wait',

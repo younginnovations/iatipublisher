@@ -40,6 +40,7 @@
         <DateRangeWidget
           :date-label="DateLabel"
           :first-date="oldestDates[currentView]"
+          :current-view="currentView"
           @trigger-set-date-range="setDateRangeDate"
         />
         <ButtonComponent
@@ -96,18 +97,18 @@ const dateLabel = {
 const currentView = ref('publisher');
 const completeNess = ref();
 const registrationType = ref();
+
 const handleChangeTableNav = (item, filter, page, tabChange = true) => {
   if (tabChange) {
     filter.value.orderBy = '';
     filter.value.sort = '';
   }
-  console.log(filter.value, 'from tab change');
+
   currentNav.value = item;
   fetchTableData(filter.value, page);
 };
 
 onMounted(() => {
-  console.log(props.oldestDates, 'old dates');
   setDateRangeDate('', '');
   fetchTableData();
   fetchGraphData();
@@ -171,10 +172,13 @@ const fetchGraphData = () => {
 
 const setDateRangeDate = (start, end) => {
   startDate.value = '';
+
   if (start != '1990-12-31') {
     startDate.value = start;
   }
+
   endDate.value = end;
+
   fetchTableData();
   fetchGraphData();
 };
@@ -183,6 +187,8 @@ watch(
   () => currentView.value,
   () => {
     DateLabel.value = dateLabel[currentView.value] ?? currentView.value;
+    startDate.value = '';
+    endDate.value = '';
     fetchGraphData();
   }
 );
@@ -191,7 +197,6 @@ const fetchTableData = (filter = { orderBy: '', sort: '' }, page = '1') => {
   showTableLoader.value = true;
   let params = new URLSearchParams();
   const activeTab = currentNav.value['apiParams'];
-  console.log(filter, 'filter outside');
 
   if (filter.orderBy) {
     params.append('orderBy', kebabCaseToSnakecase(filter.orderBy));

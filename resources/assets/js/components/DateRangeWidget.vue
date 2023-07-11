@@ -135,7 +135,56 @@ import '@vuepic/vue-datepicker/dist/main.css';
 import type { DatePickerInstance } from '@vuepic/vue-datepicker';
 import moment from 'moment';
 
+const props = defineProps({
+  dropdownRange: {
+    type: Object,
+    required: false,
+    default: () => ({}),
+  },
+  firstDate: {
+    type: String,
+    required: true,
+  },
+  dateLabel: {
+    type: String,
+    required: false,
+    default: '',
+  },
+  currentView: {
+    type: String,
+    required: false,
+    default: '',
+  },
+});
+
 const selectedPresentIndex = ref(99);
+const dateRangeMain: Ref<Element | null> = ref(null);
+const dateType = ref('');
+const dateDropdown = ref();
+dateType.value = props.dropdownRange && Object.values(props.dropdownRange)[0];
+
+const dateTypeKey = ref('');
+dateTypeKey.value = props.dropdownRange && Object.keys(props.dropdownRange)[0];
+
+const showRangeDropdown = ref(false);
+
+const emit = defineEmits(['triggerSetDateRange', 'triggerSetDateType']);
+const initialDate = computed(() => props.firstDate);
+
+const fixed = ref('All time');
+const todayDate = moment(new Date()).format('YYYY-MM-DD');
+const selectedDate: Ref<Date[] | string[]> = ref([
+  new Date(),
+  new Date(new Date().setDate(new Date().getDate() + 7)),
+]);
+
+const datepicker = ref<DatePickerInstance>(null);
+
+onMounted(() => {
+  selectedDate.value[0] = '';
+  selectedDate.value[1] = todayDate;
+  triggerSetDateRange('', todayDate, fixed.value);
+});
 
 const handlePresentRangeItemClick = (index) => {
   const presentRangeItems = document.getElementsByClassName('dp__preset_range');
@@ -185,47 +234,9 @@ const removeEventsOfCalendar = () => {
   }
 };
 
-const props = defineProps({
-  dropdownRange: {
-    type: Object,
-    required: false,
-    default: () => ({}),
-  },
-  firstDate: {
-    type: String,
-    required: true,
-  },
-  dateLabel: {
-    type: String,
-    required: false,
-    default: '',
-  },
-});
-const currentView = inject('currentView') as Ref;
-
-const dateRangeMain: Ref<Element | null> = ref(null);
-const dateType = ref('');
-const dateDropdown = ref();
-dateType.value = props.dropdownRange && Object.values(props.dropdownRange)[0];
-
-const dateTypeKey = ref('');
-dateTypeKey.value = props.dropdownRange && Object.keys(props.dropdownRange)[0];
-
-const showRangeDropdown = ref(false);
-
 const toggleShowRangeDropdown = () => {
   showRangeDropdown.value = !showRangeDropdown.value;
 };
-
-const emit = defineEmits(['triggerSetDateRange', 'triggerSetDateType']);
-const initialDate = computed(() => props.firstDate);
-
-const fixed = ref('All time');
-const todayDate = moment(new Date()).format('YYYY-MM-DD');
-const selectedDate: Ref<Date[] | string[]> = ref([
-  new Date(),
-  new Date(new Date().setDate(new Date().getDate() + 7)),
-]);
 
 const clearDate = () => {
   triggerSetDateRange('', '');
@@ -267,14 +278,6 @@ const presetRanges = computed(() => [
     range: [new Date(initialDate.value), endOfDay(new Date())],
   },
 ]);
-
-onMounted(() => {
-  selectedDate.value[0] = '';
-  selectedDate.value[1] = todayDate;
-  triggerSetDateRange('', todayDate, fixed.value);
-});
-
-const datepicker = ref<DatePickerInstance>(null);
 
 const convertDate = (date) => {
   const dateObj = new Date(date);
@@ -365,17 +368,19 @@ watch(
   { deep: true }
 );
 
+watch(
+  () => [props.currentView],
+  () => {
+    selectedDate.value[0] = '';
+    selectedDate.value[1] = '';
+    fixed.value = 'All time';
+  },
+  { deep: true }
+);
+
 const triggerSetDateRange = (startDate, endDate, filteredDateType = '') => {
   emit('triggerSetDateRange', startDate, endDate, filteredDateType);
 };
-
-// watch(
-//   () => currentView?.value,
-//   () => {
-//     clearDate();
-//     console.log('changed');
-//   }
-// );
 
 watch(
   () => fixed.value,
