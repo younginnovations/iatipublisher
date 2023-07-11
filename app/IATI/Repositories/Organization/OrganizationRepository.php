@@ -499,24 +499,21 @@ class OrganizationRepository extends Repository
      */
     public function getOrganizationDashboardDownload($queryParams): array
     {
+    //    case when publishing_info::text=json_strip_nulls(publishing_info)::text and (publishing_info->'publisher_verification')::text='true'::text and (publishing_info->'token_verification')::text='true'::text then 'complete' else 'incomplete' end as publisher_info,
+    //    case when default_values::text=json_strip_nulls(default_values)::text and activity_default_values::text=json_strip_nulls(activity_default_values)::text then 'complete' else 'incomplete' end as default_values,
+
+        $completenessMap = $this->getCompletenessMap();
+        $statementForPublisher_info = 'case when ' . $completenessMap['Publishers_settings_not_completed'] . " then 'incomplete' else 'complete' end as publisher_info";
+        $statementForDefault_values = 'case when ' . $completenessMap['Default_values_not_completed'] . " then 'incomplete' else 'complete' end as default_values";
+
         $query = $this->model->select(DB::raw("name->0->>'narrative' as organization,
         identifier,
         publisher_type,
         country,
         registration_type,
         data_license,
-        case when publishing_info::text=json_strip_nulls(publishing_info)::text
-            and (publishing_info->'publisher_verification')::text='true'::text
-            and (publishing_info->'token_verification')::text='true'::text
-        then 'complete'
-        else 'incomplete'
-        end as publisher_info,
-          case
-            when default_values::text=json_strip_nulls(default_values)::text
-            and activity_default_values::text=json_strip_nulls(activity_default_values)::text
-          then 'complete'
-          else 'incomplete'
-        end as default_values,
+        $statementForPublisher_info,
+        $statementForDefault_values,
         organizations.created_at,
         organizations.updated_at
          "))->leftJoin('settings', 'organizations.id', 'settings.organization_id');
