@@ -252,9 +252,7 @@
   <!--Filter tag pills end-->
 
   <div>
-    <p class="py-1">
-      Total Number of Organisation: {{ organisationData.data['total'] }}
-    </p>
+    <p class="py-1">Total Number of Organisation: {{ totalOrganisation }}</p>
     <div class="iati-list-table">
       <table>
         <thead>
@@ -685,7 +683,7 @@ export default defineComponent({
       selected_date_filter: '',
     });
     const resetPagination = ref(false);
-
+    const totalOrganisation = ref(0);
     let registryApiKeyStatus: boolean[] = reactive([]);
     let defaultValueStatus: boolean[] = reactive([]);
     const showMultiSelectWithSearch = ref(false);
@@ -802,6 +800,7 @@ export default defineComponent({
         })
         .then((res) => {
           const response = res.data;
+          totalOrganisation.value = response.data.total;
 
           if (response.success) {
             if (response.data.data.length === 0) {
@@ -1037,6 +1036,7 @@ export default defineComponent({
       sortParams,
       resetPagination,
       showMappedData,
+      totalOrganisation,
     };
   },
 });

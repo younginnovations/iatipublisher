@@ -348,6 +348,7 @@
               placeholder="Search for users"
             />
           </div>
+          <!-- need to add oldest date -->
           <DateRangeWidget
             :dropdown-range="dropdownRange"
             @trigger-set-date-range="setDateRangeDate"
@@ -427,7 +428,7 @@
           Clear Filter
         </button>
       </div>
-      <p class="py-1">Total Number of Users: {{ usersData['total'] }}</p>
+      <p class="py-1">Total Number of Users: {{ totalUser }}</p>
       <div class="iati-list-table user-list-table text-n-40">
         <table>
           <thead>
@@ -683,7 +684,7 @@ const isEmpty = ref(true);
 const allSelected = ref<boolean[]>([]);
 const deleteModal = ref(false);
 const deleteId = ref();
-
+const totalUser = ref(0);
 const statusId = ref();
 const statusModal = ref(false);
 const statusValue = ref();
@@ -943,6 +944,7 @@ function fetchUsersList(active_page: number, filtered = false) {
     const response = res.data;
     Object.assign(usersData, response.data);
     isEmpty.value = response.data ? false : true;
+    totalUser.value = response.data.total;
   });
 }
 
