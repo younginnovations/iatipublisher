@@ -26,6 +26,6 @@ defineProps({
  * Switch Back
  */
 const switchBack = () => {
-  window.location.replace('/dashboard');
+  window.location.replace('/list-organisations');
 };
 </script>

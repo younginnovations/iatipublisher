@@ -252,7 +252,7 @@ class UserController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Paginated users fetch successfully.',
+                'message' => 'Paginated users fetched successfully.',
                 'data' => $users,
             ]);
         } catch (\Exception $e) {

@@ -105,7 +105,7 @@ class OrganizationRepository extends Repository
                     return $user->where('role_id', $adminRoleId)
                         ->where('status', 1)
                         ->whereNull('deleted_at')
-                        ->whereNotNull('last_logged_in');
+                        ->min('created_at');
                 },
             ])
             ->with('latestUpdatedActivity')
@@ -257,7 +257,7 @@ class OrganizationRepository extends Repository
      */
     public function pluckAllOrganizations(): Collection
     {
-        return $this->model->get()->where('name', '!=', null)->pluck('name.0.narrative', 'id');
+        return $this->model->select(DB::raw("case when name::text!='' and ((name->>0)::json)->>'narrative'!=null then ((name->>0)::json)->>'narrative' else publisher_name end as pub_name,id"))->get()->pluck('pub_name', 'id');
     }
 
     /**

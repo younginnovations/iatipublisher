@@ -73,7 +73,18 @@ class UserRepository extends Repository
         $query = $this->model
             ->leftJoin('organizations', 'organizations.id', 'users.organization_id')
             ->join('roles', 'roles.id', 'users.role_id')
-            ->select('users.id', 'username', 'full_name', 'name->0->narrative as publisher_name', 'email', 'users.status', 'roles.role', 'role_id', 'users.created_at')
+            ->select(
+                DB::raw(
+                    "users.id,username, 
+                    full_name, 
+                    case when organizations.name::text!='' and ((organizations.name->>0)::json)->>'narrative'!=null then ((organizations.name->>0)::json)->>'narrative' else publisher_name end as publisher_name,
+                    email, 
+                    users.status, 
+                    roles.role, 
+                    role_id, 
+                    users.created_at"
+                )
+            )
             ->where('users.id', '!=', Auth::user()->id);
 
         if (!empty($queryParams)) {
@@ -219,7 +230,7 @@ class UserRepository extends Repository
         $superadminId = Role::where('role', 'superadmin')->first()->id;
 
         return $this->model->select(DB::raw("users.username,
-        case when organizations.name::text!='' then ((organizations.name->>0)::json)->>'narrative' else 'Untitled' end as publisher_name,
+        case when organizations.name::text!='' and ((organizations.name->>0)::json)->>'narrative'!=null then ((organizations.name->>0)::json)->>'narrative' else 'Untitled' end as publisher_name,
         users.email,
         users.created_at,
         users.last_logged_in,

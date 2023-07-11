@@ -554,6 +554,7 @@
                   <p
                     class="w-32 overflow-x-hidden overflow-ellipsis whitespace-nowrap"
                   >
+                    {{ user['name'] }}
                     {{
                       user['publisher_name'] ? user['publisher_name'] : '- -'
                     }}
