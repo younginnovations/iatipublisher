@@ -360,17 +360,127 @@
               class="bg-[#F1F7F9] text-xs font-bold uppercase text-[#68797E]"
             >
               <tr>
-                <th>
-                  <div class="px-4 py-3 text-left">{{ title }}</div>
+                <th class="inline-flex items-center space-x-1">
+                  <div class="flex space-x-1">
+                    <button
+                      class="p-1"
+                      @click="
+                        () => {
+                          filter.sort === 'asc'
+                            ? (filter.sort = 'desc')
+                            : (filter.sort = 'asc');
+                          filter.orderBy = sortElement.apiParams;
+                          sortTable();
+                        }
+                      "
+                    >
+                      <svg-vue
+                        v-if="
+                          filter.sort === 'asc' &&
+                          filter.orderBy === sortElement.apiParams
+                        "
+                        class="text-sm"
+                        icon="ascending-arrow"
+                      ></svg-vue>
+                      <svg-vue
+                        v-else
+                        class="text-sm"
+                        icon="descending-arrow"
+                      ></svg-vue>
+                    </button>
+                    <span class="py-3 pr-4 text-left">{{ title }}</span>
+                  </div>
+                </th>
+                <th class="mx-8 my-3 w-[100px]">
+                  <div class="flex space-x-1">
+                    <button
+                      class="inline p-1"
+                      @click="
+                        () => {
+                          filter.sort === 'asc'
+                            ? (filter.sort = 'desc')
+                            : (filter.sort = 'asc');
+                          filter.orderBy = 'published';
+                          sortTable();
+                        }
+                      "
+                    >
+                      <svg-vue
+                        v-if="
+                          filter.sort === 'asc' &&
+                          filter.orderBy === 'published'
+                        "
+                        class="text-sm"
+                        icon="ascending-arrow"
+                      ></svg-vue>
+                      <svg-vue
+                        v-else
+                        class="text-sm"
+                        icon="descending-arrow"
+                      ></svg-vue>
+                    </button>
+                    <span class="py-3 pr-4 text-right">published</span>
+                  </div>
                 </th>
                 <td class="mx-8 my-3 w-[100px]">
-                  <div class="px-4 py-3 text-right">published</div>
+                  <div class="flex space-x-1">
+                    <button
+                      class="p-1"
+                      @click="
+                        () => {
+                          filter.sort === 'asc'
+                            ? (filter.sort = 'desc')
+                            : (filter.sort = 'asc');
+                          filter.orderBy = 'draft';
+                          sortTable();
+                        }
+                      "
+                    >
+                      <svg-vue
+                        v-if="
+                          filter.sort === 'asc' && filter.orderBy === 'draft'
+                        "
+                        class="text-sm"
+                        icon="ascending-arrow"
+                      ></svg-vue>
+                      <svg-vue
+                        v-else
+                        class="text-sm"
+                        icon="descending-arrow"
+                      ></svg-vue>
+                    </button>
+                    <div class="py-3 pr-4 text-right">draft</div>
+                  </div>
                 </td>
                 <td class="mx-8 my-3 w-[100px]">
-                  <div class="px-4 py-3 text-right">draft</div>
-                </td>
-                <td class="mx-8 my-3 w-[100px]">
-                  <div class="px-4 py-3 text-right">total</div>
+                  <div class="flex space-x-1">
+                    <button
+                      class="p-1"
+                      @click="
+                        () => {
+                          filter.sort === 'asc'
+                            ? (filter.sort = 'desc')
+                            : (filter.sort = 'asc');
+                          filter.orderBy = 'total';
+                          sortTable();
+                        }
+                      "
+                    >
+                      <svg-vue
+                        v-if="
+                          filter.sort === 'asc' && filter.orderBy === 'total'
+                        "
+                        class="text-sm"
+                        icon="ascending-arrow"
+                      ></svg-vue>
+                      <svg-vue
+                        v-else
+                        class="text-sm"
+                        icon="descending-arrow"
+                      ></svg-vue>
+                    </button>
+                    <div class="py-3 pr-4 text-right">total</div>
+                  </div>
                 </td>
               </tr>
             </thead>
@@ -383,7 +493,6 @@
                   <div class="flex items-center space-x-2 px-4 py-3 text-left">
                     <button
                       v-if="
-                        currentView === 'publisher' &&
                         title !== 'Setup Completeness' &&
                         title !== 'Registration Type'
                       "
@@ -420,7 +529,6 @@
                   <div class="flex items-center space-x-2 px-4 py-3 text-right">
                     <button
                       v-if="
-                        currentView === 'publisher' &&
                         title !== 'Setup Completeness' &&
                         title !== 'Registration Type'
                       "
@@ -481,7 +589,12 @@
             </tbody>
             <tbody
               v-else-if="
-                tableData.length === 0 || tableData?.data?.length === 0
+                tableData.length === 0 ||
+                (!(
+                  title === 'Registration Type' ||
+                  title === 'Setup Completeness'
+                ) &&
+                  tableData?.data?.length === 0)
               "
               class="text-center shadow-md"
             >
@@ -565,7 +678,7 @@
                 </td>
               </tr>
             </tbody>
-            <tbody
+            <!-- <tbody
               v-else-if="
                 title === 'Registration Type' &&
                 currentView === 'publisher' &&
@@ -574,7 +687,7 @@
               class="text-center shadow-md"
             >
               <div class="p-10">No data found</div>
-            </tbody>
+            </tbody> -->
             <tbody
               v-else-if="
                 title === 'Registration Type' && currentView === 'publisher'
