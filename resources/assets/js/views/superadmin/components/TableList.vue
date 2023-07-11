@@ -10,7 +10,7 @@
           placeholder="COUNTRY"
           mode="multiple"
           :searchable="true"
-          :options="countries"
+          :options="countriesWithPrefix"
           :taggable="true"
           :close-on-select="false"
           :clear-on-select="false"
@@ -490,7 +490,7 @@
             </td>
             <td class="text-n-40">
               <div>
-                {{ showMappedData('country', data, countries) }}
+                {{ showMappedData('country', data, countriesWithPrefix) }}
               </div>
             </td>
             <td class="text-n-40">
@@ -662,6 +662,19 @@ export default defineComponent({
       last_page: number;
       current_page: number;
     }
+
+    const getCountriesWithPrefix = () => {
+      const returnValueForCountries = {};
+      const countryCodes = Object.keys(props.countries);
+      for (let i = 0; i < countryCodes.length; i++) {
+        returnValueForCountries[countryCodes[i]] = `${countryCodes[i]} - ${
+          props.countries[countryCodes[i]]
+        }`;
+      }
+      return returnValueForCountries;
+    };
+
+    const countriesWithPrefix = getCountriesWithPrefix();
 
     // reactivity
     let organisationData: organizationInterface = reactive({
@@ -1037,6 +1050,7 @@ export default defineComponent({
       resetPagination,
       showMappedData,
       totalOrganisation,
+      countriesWithPrefix,
     };
   },
 });
