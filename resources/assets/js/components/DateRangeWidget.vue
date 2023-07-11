@@ -69,6 +69,7 @@
           :enable-time-picker="false"
           :teleport="true"
           :alt-position="customPosition"
+          @open="handleSelectedPresentIndex"
           @cleared="clearDate"
         >
           <template #yearly="{ label, range, presetDateRange }">
@@ -121,19 +122,35 @@ import {
   subDays,
   startOfWeek,
   endOfMonth,
-  endOfYear,
   startOfMonth,
   startOfYear,
   subMonths,
   startOfDay,
   endOfDay,
-  format as dateFormat,
 } from 'date-fns';
 
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import type { DatePickerInstance } from '@vuepic/vue-datepicker';
 import moment from 'moment';
+
+const selectedPresentIndex = ref(99);
+
+const handleSelectedPresentIndex = () => {
+  const presentRangeItems = document.getElementsByClassName('dp__preset_range');
+  for (let i = 0; i < presentRangeItems.length; i++) {
+    presentRangeItems[i].addEventListener('click', function () {
+      selectedPresentIndex.value = i;
+      presentRangeItems[i].classList.add('bg-spring-20', 'text-white');
+
+      for (let j = 0; j < presentRangeItems.length; j++) {
+        if (j !== i) {
+          presentRangeItems[j].classList.remove('bg-spring-20', 'text-white');
+        }
+      }
+    });
+  }
+};
 
 const props = defineProps({
   dropdownRange: {
@@ -217,71 +234,6 @@ const presetRanges = computed(() => [
   },
 ]);
 
-const isToday = (start, end) => {
-  return (
-    dateFormat(startOfDay(new Date()), 'yyyy-MM-dd') ===
-      dateFormat(start, 'yyyy-MM-dd') &&
-    dateFormat(endOfDay(new Date()), 'yyyy-MM-dd') ===
-      dateFormat(end, 'yyyy-MM-dd')
-  );
-};
-const isThisWeek = (start, end) => {
-  return (
-    dateFormat(startOfWeek(new Date()), 'yyyy-MM-dd') ===
-      dateFormat(start, 'yyyy-MM-dd') &&
-    dateFormat(end, 'yyyy-MM-dd') ===
-      dateFormat(endOfDay(new Date()), 'yyyy-MM-dd')
-  );
-};
-const isLast7Days = (start, end) => {
-  return (
-    dateFormat(subDays(new Date(), 6), 'yyyy-MM-dd') ===
-      dateFormat(start, 'yyyy-MM-dd') &&
-    dateFormat(end, 'yyyy-MM-dd') ===
-      dateFormat(endOfDay(new Date()), 'yyyy-MM-dd')
-  );
-};
-const isThisMonth = (start, end) => {
-  return (
-    dateFormat(startOfMonth(new Date()), 'yyyy-MM-dd') ===
-      dateFormat(start, 'yyyy-MM-dd') &&
-    dateFormat(end, 'yyyy-MM-dd') ==
-      dateFormat(endOfMonth(new Date()), 'yyyy-MM-dd')
-  );
-};
-const isLast6Months = (start, end) => {
-  return (
-    dateFormat(startOfMonth(subMonths(new Date(), 6)), 'yyyy-MM-dd') ===
-      dateFormat(start, 'yyyy-MM-dd') &&
-    dateFormat(end, 'yyyy-MM-dd') ===
-      dateFormat(endOfMonth(new Date()), 'yyyy-MM-dd')
-  );
-};
-const isThisYear = (start, end) => {
-  return (
-    dateFormat(startOfYear(new Date()), 'yyyy-MM-dd') ===
-      dateFormat(start, 'yyyy-MM-dd') &&
-    dateFormat(end, 'yyyy-MM-dd') ===
-      dateFormat(endOfDay(new Date()), 'yyyy-MM-dd')
-  );
-};
-const isLast12Months = (start, end) => {
-  return (
-    dateFormat(startOfMonth(subMonths(new Date(), 12)), 'yyyy-MM-dd') ===
-      dateFormat(start, 'yyyy-MM-dd') &&
-    dateFormat(end, 'yyyy-MM-dd') ===
-      dateFormat(endOfDay(new Date()), 'yyyy-MM-dd')
-  );
-};
-const isAllTime = (start, end) => {
-  return (
-    dateFormat(new Date('1990-12-31'), 'yyyy-MM-dd') ===
-      dateFormat(start, 'yyyy-MM-dd') &&
-    dateFormat(end, 'yyyy-MM-dd') ===
-      dateFormat(endOfDay(new Date()), 'yyyy-MM-dd')
-  );
-};
-
 onMounted(() => {
   selectedDate.value[0] = '';
   selectedDate.value[1] = todayDate;
@@ -364,7 +316,7 @@ watch(
 
     if (startDate && endDate) {
       triggerSetDateRange(startDate, endDate, fixed.value);
-      resolveStartDateAndEndDate(selectedDate.value[0], selectedDate.value[1]);
+      setSelectedPresentDayText();
     }
   },
   { deep: true }
@@ -404,26 +356,10 @@ const triggerSetDateType = (eventType) => {
   emit('triggerSetDateType', eventType);
 };
 
-const resolveStartDateAndEndDate = (startDate, endDate) => {
-  if (isToday(startDate, endDate)) {
-    fixed.value = 'Today';
-  } else if (isThisWeek(startDate, endDate)) {
-    fixed.value = 'This week';
-  } else if (isLast7Days(startDate, endDate)) {
-    fixed.value = 'Last 7 days';
-  } else if (isThisMonth(startDate, endDate)) {
-    fixed.value = 'This month';
-  } else if (isLast6Months(startDate, endDate)) {
-    fixed.value = 'Last 6 month';
-  } else if (isThisYear(startDate, endDate)) {
-    fixed.value = 'This year (Jan 1 - Today)';
-  } else if (isLast12Months(startDate, endDate)) {
-    fixed.value = 'Last 12 months';
-  } else if (isAllTime(startDate, endDate)) {
-    fixed.value = 'All time';
-  } else {
-    fixed.value = 'Custom';
-  }
+const setSelectedPresentDayText = () => {
+  fixed.value =
+    presetRanges.value[selectedPresentIndex.value]?.label ?? 'Custom';
+  selectedPresentIndex.value = 99;
 };
 
 const customPosition = () => {
@@ -457,5 +393,9 @@ const customPosition = () => {
 .daterange-item-active {
   @apply bg-spring-20;
   color: white;
+}
+.preset-range-item-active {
+  @apply bg-spring-20;
+  color: white !important;
 }
 </style>
