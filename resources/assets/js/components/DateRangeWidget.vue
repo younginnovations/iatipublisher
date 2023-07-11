@@ -117,6 +117,7 @@ import {
   defineProps,
   onMounted,
   computed,
+  inject,
 } from 'vue';
 import {
   subDays,
@@ -200,6 +201,7 @@ const props = defineProps({
     default: '',
   },
 });
+const currentView = inject('currentView') as Ref;
 
 const dateRangeMain: Ref<Element | null> = ref(null);
 const dateType = ref('');
@@ -291,6 +293,8 @@ const openCalendar = () => {
 const closeCalendar = () => {
   if (datepicker.value) {
     removeEventsOfCalendar();
+    clearDate();
+
     datepicker.value.closeMenu();
   }
 };
@@ -366,6 +370,14 @@ watch(
 const triggerSetDateRange = (startDate, endDate, filteredDateType = '') => {
   emit('triggerSetDateRange', startDate, endDate, filteredDateType);
 };
+
+// watch(
+//   () => currentView?.value,
+//   () => {
+//     clearDate();
+//     console.log('changed');
+//   }
+// );
 
 watch(
   () => fixed.value,

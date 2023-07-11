@@ -879,7 +879,6 @@ const triggerpagination = (page) => {
 watch(
   () => filter.value,
   () => {
-    console.log('sort');
     resetpagination.value = true;
     currentpage.value = 1;
   },
@@ -921,7 +920,6 @@ const fetchTableData = (item, tabChange = true) => {
   activeClass.value = item?.label;
   title.value = item?.label;
   sortElement.value = item;
-  console.log(filter.value, 'filter inside');
   emit('tableNav', item, filter, currentpage.value, tabChange);
   resetpagination.value = false;
 };

@@ -351,6 +351,7 @@
           <!-- need to add oldest date -->
           <DateRangeWidget
             :dropdown-range="dropdownRange"
+            :first-date="'2015-5-5'"
             @trigger-set-date-range="setDateRangeDate"
             @trigger-set-date-type="setDateType"
           />
@@ -656,6 +657,7 @@ const props = defineProps({
   status: { type: Object, required: true },
   roles: { type: Object, required: true },
   userRole: { type: String, required: true },
+  oldestDates: { type: String, required: true },
 });
 
 const toastData = reactive({

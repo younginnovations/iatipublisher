@@ -254,4 +254,5 @@ provide('graphAmount', graphAmount);
 provide('graphTotal', graphTotal);
 provide('showTableLoader', showTableLoader);
 provide('showGraphLoader', showGraphLoader);
+provide('currentView', currentView);
 </script>
