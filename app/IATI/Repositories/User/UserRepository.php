@@ -78,12 +78,21 @@ class UserRepository extends Repository
                 DB::raw(
                     "users.id,username,
                     full_name,
-                    case when organizations.name::text!='' and ((organizations.name->>0)::json)->>'narrative'!=null then ((organizations.name->>0)::json)->>'narrative' else publisher_name end as publisher_name,
+                    case when organizations.name::text!='' and
+                    (
+                     ((organizations.name->>0)::json)->>'narrative'!= null
+                     AND
+                     ((organizations.name->>0)::json)->>'narrative'!= ''
+                    )
+                    then ((organizations.name->>0)::json)->>'narrative' else publisher_name end as publisher_name,
                     email,
                     users.status,
                     roles.role,
                     role_id,
-                    users.created_at"
+                    users.created_at,
+                    last_logged_in,
+                    email_verified_at
+                    "
                 )
             )
             ->where('users.id', '!=', Auth::user()->id);
@@ -186,22 +195,17 @@ class UserRepository extends Repository
             });
         }
 
-        if (array_key_exists('orderBy', $queryParams) && !empty($queryParams['orderBy'])) {
-            $orderBy = $queryParams['orderBy'];
-
-            if (array_key_exists('direction', $queryParams) && !empty($queryParams['direction'])) {
-                $direction = $queryParams['direction'];
-            }
-        }
-
         if (Arr::get($queryParams, 'startDate', false) && Arr::get($queryParams, 'endDate', false)) {
             $filterType = 'users.' . Arr::get($queryParams, 'dateType', 'created_at');
 
             $query->whereDate($filterType, '>=', $queryParams['startDate'])
                 ->whereDate($filterType, '<=', $queryParams['endDate']);
         }
+        $orderBy = Arr::get($queryParams, 'orderBy', $orderBy);
+        $direction = Arr::get($queryParams, 'direction', $direction);
+        $query = $query->whereNull('deleted_at');
 
-        return $query->whereNull('deleted_at')->orderBy($orderBy, $direction)->orderBy('users.id', $direction);
+        return $this->applyOrderBy($query, $orderBy, $direction);
     }
 
     /**
@@ -278,5 +282,43 @@ class UserRepository extends Repository
         return $query->groupBy('date_string')
             ->pluck('count_value', 'date_string')
             ->toArray();
+    }
+
+    /**
+     * Apply order by.
+     *
+     * @param $query
+     * @param $orderBy
+     * @param $direction
+     *
+     * @return Builder
+     */
+    private function applyOrderBy($query, $orderBy, $direction):Builder
+    {
+        $nullableColumnWithType = [
+            'username'       =>'string',
+            'publisher_name' =>'string',
+            'last_logged_in' =>'date',
+        ];
+
+        if (array_key_exists($orderBy, $nullableColumnWithType)) {
+            $valuesForHandlingSortingForNullableColumns = [
+                'date'  =>['asc'=>'9999-01-31 00:00:00', 'desc'=>'1753-01-01 00:00:00'],
+                'string'=>['asc'=>'zzz', 'desc'=>''],
+            ];
+
+            $sortingFieldType = Arr::get($nullableColumnWithType, $orderBy);
+            $fixedValue = Arr::get($valuesForHandlingSortingForNullableColumns, "$sortingFieldType.$direction", 'string.asc');
+
+            if ($sortingFieldType === 'string') {
+                return $query->orderByRaw("CASE WHEN $orderBy IS NULL OR $orderBy = '' THEN '$fixedValue' ELSE $orderBy END $direction")
+                 ->orderBy('users.id', $direction);
+            }
+
+            return $query->orderByRaw("CASE WHEN $orderBy IS NULL THEN '$fixedValue' ELSE $orderBy END $direction")
+                 ->orderBy('users.id', $direction);
+        }
+
+        return $query->orderBy($orderBy, $direction)->orderBy('users.id', $direction);
     }
 }

@@ -335,7 +335,7 @@
           <span></span>
         </div>
         <div
-          class="flex h-[38px] w-full items-center justify-end space-x-2 px-4 2xl:w-auto"
+          class="flex h-[38px] w-full items-center justify-end gap-3 space-x-2 px-4 2xl:w-auto"
         >
           <div class="open-text h-[38px]">
             <svg-vue
@@ -349,14 +349,16 @@
             />
           </div>
           <!-- need to add oldest date -->
-          <DateRangeWidget
-            :dropdown-range="dropdownRange"
-            :first-date="oldestDates"
-            :clear-date="clearDate"
-            @trigger-set-date-range="setDateRangeDate"
-            @trigger-set-date-type="setDateType"
-            @date-cleared="clearDate = false"
-          />
+          <span>
+            <DateRangeWidget
+              :dropdown-range="dropdownRange"
+              :first-date="oldestDates"
+              :clear-date="clearDate"
+              @trigger-set-date-range="setDateRangeDate"
+              @trigger-set-date-type="setDateType"
+              @date-cleared="clearDate = false"
+            />
+          </span>
         </div>
       </div>
 
@@ -419,7 +421,7 @@
           </span>
         </span>
         <span
-          v-if="filter.selected_date_filter"
+          v-if="filter.start_date && filter.end_date"
           class="inline-flex flex-wrap gap-2"
         >
           <span
@@ -484,27 +486,36 @@
                   <span>Users</span>
                 </span>
               </th>
-              <th id="measure" scope="col" width="190px">
+              <th id="measure" scope="col" style="width: 210px">
                 <span>Email</span>
               </th>
-              <th
-                v-if="userRole === 'superadmin' || userRole === 'iati_admin'"
-                id="aggregation_status"
-                scope="col"
-                width=" 208px"
-              >
+
+              <th id="title" scope="col">
                 <span class="inline-flex items-center">
                   <span
                     v-if="
-                      filter.orderBy === 'publisher_name' &&
-                      filter.direction === 'desc'
+                      filter.direction === 'desc' &&
+                      filter.orderBy === 'publisher_name'
                     "
-                    class="mx-2 h-3 w-2 cursor-pointer"
-                    @click="sort('publisher_name')"
-                  />
+                  >
+                    <svg-vue
+                      class="mx-2 h-3 w-2 cursor-pointer"
+                      icon="sort-descending"
+                      @click="sort('publisher_name')"
+                    />
+                  </span>
+                  <span v-else>
+                    <svg-vue
+                      class="mx-2 h-3 w-2 cursor-pointer"
+                      icon="sort-ascending"
+                      @click="sort('publisher_name')"
+                    />
+                  </span>
+
+                  <span>Organisation name</span>
                 </span>
-                <span class="whitespace-nowrap">Organisation Name</span>
               </th>
+
               <th id="title" scope="col">
                 <span>User Role</span>
               </th>
@@ -534,10 +545,10 @@
                   <svg-vue
                     class="mx-2 h-3 w-2 cursor-pointer"
                     icon="sort-ascending"
-                    @click="sort('created_at')"
+                    @click="sort('last_logged_in')"
                   />
                 </span>
-                <span class="whitespace-nowrap">Joined On</span>
+                <span class="whitespace-nowrap">Last Login</span>
               </th>
               <th
                 v-if="userRole !== 'general_user'"
@@ -572,8 +583,20 @@
                   </p>
                 </div>
               </td>
-              <td>
-                {{ user['email'] }}
+              <td class="flex justify-between">
+                <span class="... truncate">
+                  {{ user['email'] }}
+                </span>
+                <span class="ms-1">
+                  <svg-vue
+                    class="mt-1 cursor-pointer text-base text-[16px]"
+                    :icon="
+                      user['email_verified_at']
+                        ? 'tick-outline'
+                        : 'alert-outline'
+                    "
+                  />
+                </span>
               </td>
               <td v-if="userRole === 'superadmin' || userRole === 'iati_admin'">
                 <div class="ellipsis relative">
@@ -601,7 +624,13 @@
               <td :class="user['status'] ? 'text-spring-50' : 'text-n-40'">
                 {{ user['status'] ? 'Active' : 'Inactive' }}
               </td>
-              <td>{{ formatDate(user['created_at']) }}</td>
+              <td>
+                {{
+                  user['last_logged_in']
+                    ? formatDate(user['last_logged_in'])
+                    : 'Not available'
+                }}
+              </td>
               <td
                 v-if="userRole !== 'general_user'"
                 class="flex h-full items-center space-x-6"
@@ -753,7 +782,7 @@ const isFilterApplied = computed(() => {
   return (
     filter.organization.length + filter.roles.length != 0 ||
     filter.status != '' ||
-    filter.selected_date_filter != ''
+    (filter.start_date && filter.end_date)
   );
 });
 
