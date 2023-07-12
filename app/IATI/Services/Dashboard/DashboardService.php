@@ -40,6 +40,7 @@ class DashboardService
      *
      * @param OrganizationRepository $organizationRepo
      * @param ActivityRepository $activityRepo
+     * @param UserRepository $userRepo
      */
     public function __construct(OrganizationRepository $organizationRepo, ActivityRepository $activityRepo, UserRepository $userRepo)
     {
@@ -452,7 +453,7 @@ class DashboardService
     }
 
     /**
-     * Sorts assco array by order by and direction.
+     * Sorts assoc array by order by and direction.
      *
      * @param array $array
      * @param string $orderBy

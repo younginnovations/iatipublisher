@@ -8,12 +8,13 @@ use App\IATI\Models\User\Role;
 use App\IATI\Models\User\User;
 use App\IATI\Repositories\Repository;
 use Carbon\Carbon;
-use DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class UserRepository.
@@ -75,13 +76,13 @@ class UserRepository extends Repository
             ->join('roles', 'roles.id', 'users.role_id')
             ->select(
                 DB::raw(
-                    "users.id,username, 
-                    full_name, 
+                    "users.id,username,
+                    full_name,
                     case when organizations.name::text!='' and ((organizations.name->>0)::json)->>'narrative'!=null then ((organizations.name->>0)::json)->>'narrative' else publisher_name end as publisher_name,
-                    email, 
-                    users.status, 
-                    roles.role, 
-                    role_id, 
+                    email,
+                    users.status,
+                    roles.role,
+                    role_id,
                     users.created_at"
                 )
             )
@@ -228,7 +229,7 @@ class UserRepository extends Repository
      */
     public function getBasicUserDataInRange(Carbon $startDate, Carbon $endDate, string $column): Collection|array
     {
-        $superadminId = Role::where('role', 'superadmin')->first()->id;
+        $superadminId = App::make(RoleRepository::class)->getSuperAdminId();
 
         return $this->model->select(DB::raw("users.username,
         case when organizations.name::text!='' and ((organizations.name->>0)::json)->>'narrative'!=null then ((organizations.name->>0)::json)->>'narrative' else 'Untitled' end as publisher_name,
@@ -243,5 +244,39 @@ class UserRepository extends Repository
             ->whereDate("users.{$column}", '<=', $endDate)
             ->whereNot('users.role_id', $superadminId)
             ->get();
+    }
+
+    /**
+     * Overriding base repository function to better suit user repository.
+     *
+     * {@inheritDoc}
+     *
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     * @param $interval
+     * @param $column
+     *
+     * @return array
+     */
+    public function getTimeSeriesDataGroupedByInterval(Carbon $startDate, Carbon $endDate, $interval, $column): array
+    {
+        $superadminId = App::make(RoleRepository::class)->getSuperAdminId();
+
+        $dateFormat = match ($interval) {
+            'day'=>'YYYY-MM-DD',
+            'month'=>'YYYY-MM',
+            default=>'YYYY'
+        };
+
+        $query = $this->model
+            ->select(DB::raw("TO_CHAR($column, '" . $dateFormat . "') AS date_string"), DB::raw('COUNT(*) AS count_value'))
+            ->whereDate($column, '>=', $startDate)
+            ->whereDate($column, '<=', $endDate)
+            ->whereNull('deleted_at')
+            ->where('role_id', '!=', $superadminId);
+
+        return $query->groupBy('date_string')
+            ->pluck('count_value', 'date_string')
+            ->toArray();
     }
 }

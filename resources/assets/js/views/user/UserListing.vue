@@ -725,8 +725,8 @@ const currentpageData = ref([]);
 const clearDate = ref(false);
 const editUserId = ref('');
 const dropdownRange = {
-  created_at: 'User registered date',
-  last_logged_in: 'Last logged in',
+  created_at: 'User created date',
+  last_logged_in: 'Last logged date',
 };
 
 const formData = reactive({

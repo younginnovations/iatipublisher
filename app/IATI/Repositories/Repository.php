@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\IATI\Repositories;
 
-use App\IATI\Models\User\Role;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -192,48 +191,10 @@ abstract class Repository implements RepositoryInterface
     }
 
     /**
-     * Returns count of data grouped by day/date.
-     *
-     * @param Carbon $startDate
-     * @param Carbon $endDate
-     * @param string $column
-     *
-     * @return array
-     */
-    public function getDataCountInRangeGroupedByDay(Carbon $startDate, Carbon $endDate, string $column): array
-    {
-        return $this->model->select(DB::raw('DATE(created_at) as date_string, COUNT(*) as count_value'))
-            ->whereDate($column, '>=', $startDate)
-            ->whereDate($column, '<=', $endDate)
-            ->groupBy(DB::raw('DATE(created_at)'))
-            ->pluck('count_value', 'date_string')
-            ->toArray();
-    }
-
-    /**
-     * Returns count of data grouped by month.
-     *
-     * @param Carbon $startDate
-     * @param Carbon $endDate
-     * @param string $column
-     *
-     * @return array
-     */
-    public function getDataCountInRangeGroupedByMonth(Carbon $startDate, Carbon $endDate, string $column): array
-    {
-        return $this->model
-            ->select(DB::raw('DATE_TRUNC(\'month\', created_at) AS month_string, COUNT(*) AS count_value'))
-            ->whereDate($column, '>=', $startDate)
-            ->whereDate($column, '<=', $endDate)
-            ->groupBy('month_string')
-            ->pluck('count_value', 'month_string')->toArray();
-    }
-
-    /**
      * Return time series data grouped by interval.
      *
-     * @param $startDate
-     * @param $endDate
+     * @param Carbon $startDate
+     * @param Carbon $endDate
      * @param $interval
      * @param $column
      *
@@ -251,9 +212,6 @@ abstract class Repository implements RepositoryInterface
             ->select(DB::raw("TO_CHAR($column, '" . $dateFormat . "') AS date_string"), DB::raw('COUNT(*) AS count_value'))
             ->whereDate($column, '>=', $startDate)
             ->whereDate($column, '<=', $endDate);
-
-        $superadminId = Role::where('role', 'superadmin')->first()->id;
-        $query = $this->getModel() === "App\IATI\Models\User\User" ? $query->whereNull('deleted_at')->where('role_id', '!=', $superadminId) : $query;
 
         return $query->groupBy('date_string')
             ->pluck('count_value', 'date_string')
