@@ -117,7 +117,6 @@ import {
   defineProps,
   onMounted,
   computed,
-  inject,
 } from 'vue';
 import {
   subDays,
@@ -155,6 +154,11 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  clearDate: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
 const selectedPresentIndex = ref(99);
@@ -168,7 +172,11 @@ dateTypeKey.value = props.dropdownRange && Object.keys(props.dropdownRange)[0];
 
 const showRangeDropdown = ref(false);
 
-const emit = defineEmits(['triggerSetDateRange', 'triggerSetDateType']);
+const emit = defineEmits([
+  'triggerSetDateRange',
+  'triggerSetDateType',
+  'dateCleared',
+]);
 const initialDate = computed(() => props.firstDate);
 
 const fixed = ref('All time');
@@ -197,6 +205,18 @@ const handlePresentRangeItemClick = (index) => {
     }
   }
 };
+
+watch(
+  () => props.clearDate,
+  () => {
+    clearDate().then(() => {
+      emit('dateCleared');
+
+      console.log('clear');
+    });
+  },
+  { deep: true }
+);
 
 const handleCalendarItemClick = () => {
   selectedPresentIndex.value = 99;
@@ -238,10 +258,12 @@ const toggleShowRangeDropdown = () => {
   showRangeDropdown.value = !showRangeDropdown.value;
 };
 
-const clearDate = () => {
+const clearDate = async () => {
   triggerSetDateRange('', '');
   selectedDate.value[0] = '';
   selectedDate.value[1] = '';
+  fixed.value = 'All time';
+  return { success: true };
 };
 
 const presetRanges = computed(() => [

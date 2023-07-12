@@ -352,8 +352,10 @@
           <DateRangeWidget
             :dropdown-range="dropdownRange"
             :first-date="oldestDates"
+            :clear-date="clearDate"
             @trigger-set-date-range="setDateRangeDate"
             @trigger-set-date-type="setDateType"
+            @date-cleared="clearDate = false"
           />
         </div>
       </div>
@@ -416,13 +418,36 @@
             />
           </span>
         </span>
+        <span
+          v-if="filter.selected_date_filter"
+          class="inline-flex flex-wrap gap-2"
+        >
+          <span
+            class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+          >
+            <span class="text-n-40">Date:</span
+            ><span>{{
+              textBubbledata(
+                filter.selected_date_filter,
+                filter.selected_date_filter
+              )
+            }}</span>
+            <svg-vue
+              class="mx-2 mt-1 cursor-pointer text-xs"
+              icon="cross"
+              @click="
+                () => {
+                  clearDateFilter();
+                }
+              "
+            />
+          </span>
+        </span>
         <button
           class="font-bold uppercase text-bluecoral"
           @click="
             () => {
-              filter.organization = [];
-              filter.roles = [];
-              filter.status = '';
+              clearFilter();
             }
           "
         >
@@ -697,7 +722,7 @@ const loader = ref(true);
 const selectedIds = ref({});
 const checklist = ref([]);
 const currentpageData = ref([]);
-
+const clearDate = ref(false);
 const editUserId = ref('');
 const dropdownRange = {
   created_at: 'User registered date',
@@ -726,7 +751,9 @@ const formError = reactive({
 
 const isFilterApplied = computed(() => {
   return (
-    filter.organization.length + filter.roles.length != 0 || filter.status != ''
+    filter.organization.length + filter.roles.length != 0 ||
+    filter.status != '' ||
+    filter.selected_date_filter != ''
   );
 });
 
@@ -748,6 +775,11 @@ const ignoreToastUpdate = () => {
   ignoreUpdates(() => {
     toastData.message = '';
   });
+};
+
+const clearDateFilter = () => {
+  filter.selected_date_filter = '';
+  clearDateRangeFilter();
 };
 
 onMounted(() => {
@@ -790,6 +822,8 @@ const textBubbledata = (id, field) => {
       return props.roles[+id];
     case 'status':
       return props.status[+id];
+    default:
+      return field;
   }
 };
 
@@ -800,11 +834,18 @@ const clearFilter = () => {
   filter.direction = '';
   filter.orderBy = '';
   filter.q = '';
+  filter.selected_date_filter = '';
+  clearDateRangeFilter();
 };
 
-const setDateRangeDate = (startDate, endDate) => {
+const clearDateRangeFilter = () => {
+  clearDate.value = true;
+};
+
+const setDateRangeDate = (startDate, endDate, selectedDate) => {
   filter.start_date = startDate;
   filter.end_date = endDate;
+  filter.selected_date_filter = selectedDate;
 };
 const setDateType = (dateType) => {
   filter.date_type = dateType;

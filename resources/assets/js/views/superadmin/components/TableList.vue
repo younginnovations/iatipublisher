@@ -117,8 +117,10 @@
       <DateRangeWidget
         :dropdown-range="dropdownRange"
         :first-date="oldestDates"
+        :clear-date="clearDate"
         @trigger-set-date-range="setDateRangeDate"
         @trigger-set-date-type="setDateType"
+        @date-cleared="clearDate = false"
       />
     </div>
     <!--Date range start-->
@@ -236,9 +238,7 @@
           icon="cross"
           @click="
             () => {
-              filter.start_date = '';
-              filter.end_date = '';
-              filter.selected_date_filter = '';
+              clearDateFilter();
             }
           "
         />
@@ -631,6 +631,7 @@ export default defineComponent({
 
     const loader = inject('loader') as LoaderInterface;
     const dateDropdown = ref();
+    const clearDate = ref(false);
 
     //typeface
     interface organizationInterface {
@@ -722,6 +723,13 @@ export default defineComponent({
         }
       }
     );
+
+    const clearDateFilter = () => {
+      filter.start_date = '';
+      filter.end_date = '';
+      filter.selected_date_filter = '';
+      clearDate.value = true;
+    };
 
     const closePublisherModel = () => {
       showMultiSelectWithSearch.value = false;
@@ -926,6 +934,7 @@ export default defineComponent({
         filter.end_date = '';
         filter.date_type = 'created_at';
         filter.selected_date_filter = '';
+        clearDate.value = true;
       });
     };
 
@@ -1032,6 +1041,7 @@ export default defineComponent({
       defaultValueStatus,
       registryApiKeyStatus,
       orderType,
+      clearDate,
       filter,
       snakeCaseToSentenceCase,
       isFilterApplied,
@@ -1039,6 +1049,7 @@ export default defineComponent({
       showMultiSelectWithSearch,
       rotateClass,
       multiselectStyle,
+      clearDateFilter,
       dateDropdown,
       sortParams,
       resetPagination,

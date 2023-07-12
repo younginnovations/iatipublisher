@@ -602,7 +602,9 @@
             </tbody>
             <tbody
               v-else-if="
-                title === 'Setup Completeness' && currentView === 'publisher'
+                title === 'Setup Completeness' &&
+                currentView === 'publisher' &&
+                Object.keys(completeNess).length
               "
             >
               <tr class="border-b border-n-20">
@@ -678,19 +680,31 @@
                 </td>
               </tr>
             </tbody>
-            <!-- <tbody
-              v-else-if="
-                title === 'Registration Type' &&
-                currentView === 'publisher' &&
-                registrationType.length == 0
-              "
-              class="text-center shadow-md"
-            >
-              <div class="p-10">No data found</div>
-            </tbody> -->
             <tbody
               v-else-if="
-                title === 'Registration Type' && currentView === 'publisher'
+                title === 'Setup Completeness' &&
+                currentView === 'publisher' &&
+                !Object.keys(completeNess).length
+              "
+            >
+              <div class="p-10 text-center">No data found</div>
+            </tbody>
+
+            <tbody
+              v-else-if="
+                registrationType &&
+                title === 'Registration Type' &&
+                !registrationType.length &&
+                currentView === 'publisher'
+              "
+            >
+              <div class="p-10 text-center">No data found</div>
+            </tbody>
+            <tbody
+              v-else-if="
+                title === 'Registration Type' &&
+                registrationType.length &&
+                currentView === 'publisher'
               "
             >
               <tr
