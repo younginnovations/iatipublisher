@@ -427,16 +427,17 @@ const setSelectedPresentDayText = () => {
 };
 
 const customPosition = () => {
+  let leftPosition = 0;
+  if (dateRangeMain.value) {
+    leftPosition =
+      window.innerWidth - dateRangeMain.value?.getBoundingClientRect()?.right >
+      150
+        ? Number(dateRangeMain.value?.getBoundingClientRect().right) - 300
+        : Number(dateRangeMain.value?.getBoundingClientRect().right) - 420;
+  }
   return {
     top: Number(dateRangeMain.value?.getBoundingClientRect().bottom) + 20,
-    left: dateRangeMain.value
-      ? Number(dateRangeMain.value?.getBoundingClientRect().left) +
-        (window.innerWidth -
-          dateRangeMain.value?.getBoundingClientRect()?.right >
-        150
-          ? 140
-          : -90)
-      : 0,
+    left: leftPosition,
   };
 };
 

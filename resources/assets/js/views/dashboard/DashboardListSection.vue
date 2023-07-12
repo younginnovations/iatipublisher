@@ -688,6 +688,7 @@
                 currentView === 'publisher' &&
                 !Object.keys(completeNess).length
               "
+              class="text-center shadow-md"
             >
               <div class="p-10 text-center">No data found</div>
             </tbody>
@@ -699,6 +700,7 @@
                 !registrationType.length &&
                 currentView === 'publisher'
               "
+              class="text-center shadow-md"
             >
               <div class="p-10 text-center">No data found</div>
             </tbody>

@@ -337,6 +337,16 @@
         <div
           class="flex h-[38px] w-full items-center justify-end gap-3 space-x-2 px-4 2xl:w-auto"
         >
+          <span>
+            <DateRangeWidget
+              :dropdown-range="dropdownRange"
+              :first-date="oldestDates"
+              :clear-date="clearDate"
+              @trigger-set-date-range="setDateRangeDate"
+              @trigger-set-date-type="setDateType"
+              @date-cleared="clearDate = false"
+            />
+          </span>
           <div class="open-text h-[38px]">
             <svg-vue
               class="absolute top-1/2 left-2 w-10 -translate-y-1/2 text-base"
@@ -348,17 +358,6 @@
               placeholder="Search for users"
             />
           </div>
-          <!-- need to add oldest date -->
-          <span>
-            <DateRangeWidget
-              :dropdown-range="dropdownRange"
-              :first-date="oldestDates"
-              :clear-date="clearDate"
-              @trigger-set-date-range="setDateRangeDate"
-              @trigger-set-date-type="setDateType"
-              @date-cleared="clearDate = false"
-            />
-          </span>
         </div>
       </div>
 
@@ -583,19 +582,19 @@
                   </p>
                 </div>
               </td>
-              <td class="flex justify-between">
-                <span class="... truncate">
-                  {{ user['email'] }}
-                </span>
+              <td class="flex space-x-2">
                 <span class="ms-1">
                   <svg-vue
-                    class="mt-1 cursor-pointer text-base text-[16px]"
+                    class="mt-1 cursor-pointer text-base"
                     :icon="
                       user['email_verified_at']
                         ? 'tick-outline'
                         : 'alert-outline'
                     "
                   />
+                </span>
+                <span class="... truncate">
+                  {{ user['email'] }}
                 </span>
               </td>
               <td v-if="userRole === 'superadmin' || userRole === 'iati_admin'">
