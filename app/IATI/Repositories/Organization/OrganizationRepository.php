@@ -185,10 +185,16 @@ class OrganizationRepository extends Repository
      */
     private function applySearch($organizations, $searchString):Builder
     {
-        $organizations->where('organizations.name->0->>narrative', 'LIKE', "%$searchString%")
-            ->orWhereHas('user', function ($user) use ($searchString) {
-                $user->where('email', 'LIKE', "%$searchString%");
-            });
+        $searchString = strtolower($searchString);
+        $searchString = '%' . $searchString . '%';
+
+        $organizations->where(function ($query) use ($searchString) {
+            $query->whereRaw("LOWER(organizations.name->0->>'narrative') LIKE ?", [$searchString])
+                ->orWhereRaw('LOWER(organizations.publisher_name) LIKE ?', [$searchString])
+                ->orWhereHas('user', function ($user) use ($searchString) {
+                    $user->whereRaw('LOWER(email) LIKE ?', [$searchString]);
+                });
+        });
 
         return $organizations;
     }
