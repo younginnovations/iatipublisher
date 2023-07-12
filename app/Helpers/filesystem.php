@@ -211,39 +211,3 @@ if (!function_exists('getFileNameExtension')) {
         return $explodedFileName[1] ?? null;
     }
 }
-
-if (!function_exists('arraysHaveCommonKey')) {
-    /**
-     * Checks if 2 arrays share common keys.
-     *
-     * @param array $array1
-     * @param array $array2
-     * @param bool $returnKeys
-     *
-     * @return bool|array
-     */
-    function arraysHaveCommonKey(array $array1, array $array2, bool $returnKeys = false): bool | array
-    {
-        if (empty($array1) || empty($array2)) {
-            return false;
-        }
-
-        $commonKeys = [];
-
-        foreach ($array1 as $key => $value) {
-            if (array_key_exists($key, $array2)) {
-                if ($returnKeys) {
-                    $commonKeys[] = $key;
-                } else {
-                    return true;
-                }
-            }
-        }
-
-        if ($returnKeys) {
-            return $commonKeys;
-        }
-
-        return false;
-    }
-}

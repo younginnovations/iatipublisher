@@ -2507,6 +2507,9 @@ video {
 .text-heading-5 {
   font-size: 24px;
 }
+.text-\[16px\] {
+  font-size: 16px;
+}
 .text-\[30px\] {
   font-size: 30px;
 }
@@ -2515,9 +2518,6 @@ video {
 }
 .text-\[94px\] {
   font-size: 94px;
-}
-.text-\[16px\] {
-  font-size: 16px;
 }
 .text-6xl {
   font-size: 3.75rem;

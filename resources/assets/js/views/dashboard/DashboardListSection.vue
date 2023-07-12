@@ -618,7 +618,7 @@
                     Publishers with complete setup
                   </a>
                 </td>
-                <td class="text-sm text-[#2A2F30]">
+                <td class="text-semi-dark text-sm">
                   <div class="px-4 py-3 text-right">
                     {{ completeNess?.completeSetup?.count }}
                   </div>
@@ -630,7 +630,7 @@
                     Publishers with incomplete setup
                   </div>
                 </td>
-                <td class="text-sm text-[#2A2F30]">
+                <td class="text-semi-dark text-sm">
                   <div class="px-4 py-3 text-right">
                     {{ completeNess?.incompleteSetup?.count }}
                   </div>
@@ -645,7 +645,7 @@
                     Publisher settings not completed
                   </a>
                 </td>
-                <td class="text-sm text-[#2A2F30]">
+                <td class="text-semi-dark text-sm">
                   <div class="px-4 py-3 text-right">
                     {{ completeNess?.incompleteSetup?.types?.publisher }}
                   </div>
@@ -660,7 +660,7 @@
                     Default values not completed
                   </a>
                 </td>
-                <td class="text-sm text-[#2A2F30]">
+                <td class="text-semi-dark text-sm">
                   <div class="px-4 py-3 text-right">
                     {{ completeNess?.incompleteSetup?.types?.defaultValue }}
                   </div>
@@ -675,7 +675,7 @@
                     Both publishing settings and default value not completed
                   </a>
                 </td>
-                <td class="text-sm text-[#2A2F30]">
+                <td class="text-semi-dark text-sm">
                   <div class="px-4 py-3 text-right">
                     {{ completeNess?.incompleteSetup?.types?.both }}
                   </div>
@@ -726,7 +726,7 @@
                     }}
                   </a>
                 </td>
-                <td class="text-sm text-[#2A2F30]">
+                <td class="text-semi-dark text-sm">
                   <div class="px-4 py-3 text-right">
                     {{ item.count }}
                   </div>
@@ -752,7 +752,7 @@
                     {{ item['label'] }}
                   </a>
                 </td>
-                <td class="text-sm text-[#2A2F30]">
+                <td class="text-semi-dark text-sm">
                   <div class="px-4 py-3 text-right">{{ item?.total }}</div>
                 </td>
               </tr>
@@ -772,7 +772,7 @@
                     {{ index }}
                   </div>
                 </td>
-                <td class="text-center text-sm text-[#2A2F30]">
+                <td class="text-semi-dark text-center text-sm">
                   <div class="px-4 py-3">{{ item }}</div>
                 </td>
               </tr>
@@ -792,15 +792,15 @@
                     {{ index }}
                   </div>
                 </td>
-                <td class="text-center text-sm text-[#2A2F30]">
+                <td class="text-semi-dark text-center text-sm">
                   <div class="px-4 py-3">
                     {{ Number(item?.published ?? 0) }}
                   </div>
                 </td>
-                <td class="text-center text-sm text-[#2A2F30]">
+                <td class="text-semi-dark text-center text-sm">
                   <div class="px-4 py-3">{{ Number(item?.draft ?? 0) }}</div>
                 </td>
-                <td class="text-center text-sm text-[#2A2F30]">
+                <td class="text-semi-dark text-center text-sm">
                   <div class="px-4 py-3">
                     {{
                       Number(item?.published ?? 0) + Number(item?.draft ?? 0)
@@ -947,5 +947,8 @@ const showTableLoader = inject('showTableLoader') as Ref;
 <style lang="scss">
 .activeNav {
   @apply relative  rounded bg-bluecoral text-white;
+}
+.text-semi-dark {
+  color: #2a2f30 !important;
 }
 </style>

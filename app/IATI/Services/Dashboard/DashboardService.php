@@ -172,7 +172,7 @@ class DashboardService
             return $this->userRepo->getTimeSeriesDataGroupedByInterval($startDate, $endDate, $groupBy, $activeColumn);
         }
 
-        return $this->userRepo->getBasicUserDataInRange($startDate, $endDate, $activeColumn);
+        return $this->userRepo->getUserDataForDownloadOnly($startDate, $endDate, $activeColumn);
     }
 
     /**
@@ -431,26 +431,30 @@ class DashboardService
         return $params;
     }
 
-    /**
-     * Returns oldest created_at date.
-     *
-     * @param string $select
-     *
-     * @return array
-     */
-    public function getOldestDate(string $select = '*'): array
-    {
-        return match ($select) {
-            'publisher'=> [$this->organizationRepo->getOldestData()?->created_at->format('Y-m-d') ?? ''],
-            'activity'=> [$this->activityRepo->getOldestData()?->created_at->format('Y-m-d') ?? ''],
-            'user'=> [$this->userRepo->getOldestData()?->created_at->format('Y-m-d') ?? ''],
-            default => [
-                'user'=> $this->userRepo->getOldestData()?->created_at->format('Y-m-d') ?? '',
-                'activity'=> $this->activityRepo->getOldestData()?->created_at->format('Y-m-d') ?? '',
-                'publisher'=> $this->organizationRepo->getOldestData()?->created_at->format('Y-m-d') ?? '',
-            ],
-        };
-    }
+     /**
+      * Returns oldest created_at date.
+      *
+      * @param string $select
+      *
+      * @return array
+      */
+     public function getOldestDate(string $select = '*'): array
+     {
+         $userDate = $this->userRepo->getOldestData()?->created_at->format('Y-m-d') ?? '';
+         $activityDate = $this->activityRepo->getOldestData()?->created_at->format('Y-m-d') ?? '';
+         $publisherDate = $this->organizationRepo->getOldestData()?->created_at->format('Y-m-d') ?? '';
+
+         return match ($select) {
+             'publisher' => [$publisherDate],
+             'activity' => [$activityDate],
+             'user' => [$userDate],
+             default => [
+                 'user' => $userDate,
+                 'activity' => $activityDate,
+                 'publisher' => $publisherDate,
+             ],
+         };
+     }
 
     /**
      * Sorts assoc array by order by and direction.

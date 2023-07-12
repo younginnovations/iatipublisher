@@ -110,22 +110,15 @@ trait DateRangeResolverTrait
         $formattedResults = [];
         $currentDate = clone $startDate;
         $endDate = $endDate->endOfDay();
+        $dateFormat = match ($groupBy) {
+            'year'=>'Y',
+            'month'=>'Y-m',
+            default=>'Y-m-d'
+        };
 
         while ($currentDate <= $endDate) {
-            switch ($groupBy) {
-                case 'day':
-                    $dateString = $currentDate->format('Y-m-d');
-                    $dateKey = $currentDate->format('Y-m-d');
-                    break;
-                case 'month':
-                    $dateString = $currentDate->format('Y-m');
-                    $dateKey = $currentDate->endOfMonth()->format('Y-m-d');
-                    break;
-                default:
-                    $dateString = $currentDate->format('Y');
-                    $dateKey = $currentDate->endOfYear()->format('Y-m-d');
-                    break;
-            }
+            $dateString = $currentDate->format($dateFormat);
+            $dateKey = $groupBy !== 'day' ? $currentDate->endOf($groupBy)->format('Y-m-d') : $currentDate->format('Y-m-d');
             $formattedResults[$dateKey] = Arr::get($unformattedResults, $dateString, 0);
             $currentDate->addDay();
         }

@@ -25,13 +25,7 @@
             class="daterange-item"
             :class="value === dateType ? 'daterange-item-active' : ''"
             style="min-width: 180px"
-            @click="
-              () => {
-                showRangeDropdown = false;
-                dateType = value;
-                dateTypeKey = key;
-              }
-            "
+            @click="setDateRangeTypeInDropdown(value, key)"
           >
             {{ value }}
           </li>
@@ -70,7 +64,7 @@
           :teleport="true"
           :alt-position="customPosition"
           @open="addEventsForCalendar"
-          @cleared="clearDate"
+          @cleared="resetDate"
         >
           <template #yearly="{ label, range, presetDateRange }">
             <span @click="presetDateRange(range)">
@@ -209,7 +203,7 @@ const handlePresentRangeItemClick = (index) => {
 watch(
   () => props.clearDate,
   () => {
-    clearDate().then(() => {
+    resetDate().then(() => {
       emit('dateCleared');
 
       console.log('clear');
@@ -258,7 +252,7 @@ const toggleShowRangeDropdown = () => {
   showRangeDropdown.value = !showRangeDropdown.value;
 };
 
-const clearDate = async () => {
+const resetDate = async () => {
   triggerSetDateRange('', '');
   selectedDate.value[0] = '';
   selectedDate.value[1] = '';
@@ -444,5 +438,11 @@ const customPosition = () => {
           : -90)
       : 0,
   };
+};
+
+const setDateRangeTypeInDropdown = (value, key) => {
+  showRangeDropdown.value = false;
+  dateType.value = value;
+  dateTypeKey.value = key;
 };
 </script>

@@ -231,7 +231,7 @@ class UserRepository extends Repository
      *
      * @return Collection|array
      */
-    public function getBasicUserDataInRange(Carbon $startDate, Carbon $endDate, string $column): Collection|array
+    public function getUserDataForDownloadOnly(Carbon $startDate, Carbon $endDate, string $column): Collection|array
     {
         $superadminId = App::make(RoleRepository::class)->getSuperAdminId();
 

@@ -114,6 +114,7 @@ onMounted(() => {
   fetchGraphData();
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const props = defineProps({
   oldestDates: {
     type: Object,

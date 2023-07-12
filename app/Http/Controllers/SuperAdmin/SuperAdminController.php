@@ -127,7 +127,7 @@ class SuperAdminController extends Controller
             list($queryParams['start_date'], $queryParams['end_date']) = $this->resolveCustomRangeParams($startDateString, $endDateString);
         }
 
-        if (arraysHaveCommonKey($request->toArray(), $tableConfig['filters'])) {
+        if (array_intersect_key($request->toArray(), $tableConfig['filters'])) {
             foreach ($tableConfig['filters'] as $filterKey => $filterMode) {
                 $value = Arr::get($request, $filterKey, false);
 

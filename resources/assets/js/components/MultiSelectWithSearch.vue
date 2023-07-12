@@ -18,7 +18,7 @@
       </div>
 
       <div class="my-1">
-        <div v-if="showNodataComponent" class="p-5 text-center capitalize">
+        <div v-if="showNoDataComponent" class="p-5 text-center capitalize">
           no data found
         </div>
         <ul v-else class="max-h-[350px] overflow-y-scroll">
@@ -116,7 +116,7 @@ onBeforeUnmount(() => {
   );
 });
 
-const showNodataComponent = computed(() => {
+const showNoDataComponent = computed(() => {
   let count = 0;
   tempListItems.value.map((item) => {
     if (item.show) {

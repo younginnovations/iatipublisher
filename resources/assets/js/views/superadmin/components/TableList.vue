@@ -593,7 +593,7 @@ import Pagination from 'Components/TablePagination.vue';
 import Multiselect from '@vueform/multiselect';
 import { watchIgnorable } from '@vueuse/core';
 import DateRangeWidget from 'Components/DateRangeWidget.vue';
-import { event } from 'jquery';
+
 export default defineComponent({
   name: 'TableList',
   components: {
