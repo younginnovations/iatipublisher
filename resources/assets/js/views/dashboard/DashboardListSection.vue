@@ -526,7 +526,9 @@
                   </div>
                 </th>
                 <td class="mx-8 my-3 w-[100px]">
-                  <div class="flex items-center space-x-2 px-4 py-3 text-right">
+                  <div
+                    class="flex items-center justify-end space-x-2 px-4 py-3 text-right"
+                  >
                     <button
                       v-if="
                         title !== 'Setup Completeness' &&
