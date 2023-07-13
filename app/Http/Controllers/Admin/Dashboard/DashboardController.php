@@ -184,7 +184,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Returns json data containing publisher stats.
+     * Returns json data containing publisher registration count.
      *
      * @param Request $request
      *
@@ -202,8 +202,9 @@ class DashboardController extends Controller
                 'success' => true,
                 'message' => 'Publisher registration count fetched successfully',
                 'data' => [
-                    'count'=>array_sum($publisherStat),
-                    'graph'=>$publisherStat, ],
+                    'count' => array_sum($publisherStat),
+                    'graph' => $publisherStat,
+                ],
             ]);
         } catch (Exception $e) {
             logger()->error($e);
@@ -213,7 +214,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Returns json data containing publisher stats.
+     * Returns json data containing registration type.
      *
      * @param Request $request
      *
@@ -240,7 +241,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Returns json data containing publisher stats.
+     * Returns json data containing publisher grouped by country.
      *
      * @param Request $request
      *
@@ -258,7 +259,7 @@ class DashboardController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Publisher grouped by country fetched successfully',
-                'data' => ['paginatedData'=>$paginatedData, 'codeList'=>$codeList],
+                'data' => ['paginatedData' => $paginatedData, 'codeList' => $codeList],
             ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
@@ -268,7 +269,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Returns json data containing publisher stats.
+     * Returns json data containing grouped by type.
      *
      * @param Request $request
      *
@@ -286,7 +287,7 @@ class DashboardController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Publisher grouped by type fetched successfully',
-                'data' => ['paginatedData'=>$paginatedData, 'codeList'=>$codeList],
+                'data' => ['paginatedData' => $paginatedData, 'codeList' => $codeList],
             ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
@@ -296,7 +297,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Returns json data containing publisher stats.
+     * Returns json data containing publisher grouped by data license.
      *
      * @param Request $request
      *
@@ -314,7 +315,7 @@ class DashboardController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Publisher grouped by type fetched successfully',
-                'data' => ['paginatedData'=>$paginatedData, 'codeList'=>$codeList],
+                'data' => ['paginatedData' => $paginatedData, 'codeList' => $codeList],
             ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
@@ -324,7 +325,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Returns json data containing publisher stats.
+     * Returns json data containing publisher grouped by setup completeness.
      *
      * @param Request $request
      *
@@ -351,7 +352,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Returns json data containing publisher stats.
+     * Returns json data containing activity stats.
      *
      * @param Request $request
      *
@@ -376,7 +377,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Returns json data containing publisher stats.
+     * Returns json data containing activity count.
      *
      * @param Request $request
      *
@@ -392,8 +393,9 @@ class DashboardController extends Controller
                 'success' => true,
                 'message' => 'Activity time range data fetched successfully',
                 'data' => [
-                    'count'=>array_sum($activityData),
-                    'graph'=>$activityData, ],
+                    'count' => array_sum($activityData),
+                    'graph' => $activityData,
+                ],
             ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
@@ -403,7 +405,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Returns json data containing publisher stats.
+     * Returns json data containing activity status(draft, published, need to republish).
      *
      * @param Request $request
      *
@@ -428,7 +430,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Returns json data containing publisher stats.
+     * Returns json data containing activity count group by method of creation.
      *
      * @param Request $request
      *
@@ -453,7 +455,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Returns json data containing publisher stats.
+     * Returns json data containing activity completeness.
      *
      * @param Request $request
      *
@@ -500,7 +502,7 @@ class DashboardController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'User count in date range fetched successfully',
-                'data' => ['graph'=>$results, 'count'=>array_sum($results)],
+                'data' => ['graph' => $results, 'count' => array_sum($results)],
             ]);
         } catch (InvalidFormatException $e) {
             logger()->error($e->getMessage());

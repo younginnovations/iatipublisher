@@ -123,6 +123,7 @@ class SuperAdminController extends Controller
 
         list($startDateString, $endDateString, $column) = $this->resolveDateRangeFromRequest($request);
         $queryParams['date_column'] = $column;
+
         if ($startDateString && $endDateString) {
             list($queryParams['start_date'], $queryParams['end_date']) = $this->resolveCustomRangeParams($startDateString, $endDateString);
         }
