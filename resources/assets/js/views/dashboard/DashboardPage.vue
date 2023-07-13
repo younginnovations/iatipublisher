@@ -74,12 +74,17 @@ import ButtonComponent from 'Components/ButtonComponent.vue';
 import axios from 'axios';
 import moment from 'moment';
 import { kebabCaseToSnakecase } from 'Composable/utils';
+interface tableDaypeteType {
+  data?: object;
+  codeList?: object;
+  paginatedData?: object;
+}
 
 const currentNav = ref({
   label: 'Publisher Type',
   apiParams: 'publisher-type',
 });
-const tableData = ref<any>([]);
+const tableData = ref<tableDaypeteType>({});
 const DateLabel = ref('Registered date:');
 const startDate = ref('');
 const endDate = ref('');
@@ -221,7 +226,7 @@ const fetchTableData = (filter = { orderBy: '', sort: '' }, page = '1') => {
 
       if (currentView.value === 'publisher') {
         if (activeTab !== 'setup' && activeTab !== 'registration-type') {
-          tableData.value = [];
+          tableData.value = {};
           let tempData: Array<object> = [];
           const codeList = response.data?.codeList;
           const objectLength = response.data?.paginatedData.data.length ?? 0;
