@@ -236,14 +236,4 @@ class Organization extends Model implements Auditable
     {
         return $this->hasMany(User::class, 'organization_id', 'id')->withTrashed();
     }
-
-    /**
-     * Returns recently changed activity.
-     *
-     * @return HasOne
-     */
-    public function recentlyChangeActivity(): HasOne
-    {
-        return $this->hasOne(Activity::class)->latest('updated_at');
-    }
 }

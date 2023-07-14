@@ -63,7 +63,6 @@
         </main>
         <admin-footer v-bind:super-admin={{ (int) isSuperAdmin() }}></admin-footer>
     </div>
-    <div id="app-after"></div>
     <script defer src="{{ mix('/manifest.js') }}"></script>
     <script defer src="{{ mix('/js/vendor.js') }}"></script>
     <script defer src="{{ mix('/js/app.js') }}"></script>

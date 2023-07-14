@@ -116,6 +116,7 @@ class SuperAdminController extends Controller
 
         if (in_array($request->get('orderBy'), $tableConfig['orderBy'], true)) {
             $queryParams['orderBy'] = $request->get('orderBy');
+
             if (in_array($request->get('direction'), $tableConfig['direction'], true)) {
                 $queryParams['direction'] = $request->get('direction');
             }

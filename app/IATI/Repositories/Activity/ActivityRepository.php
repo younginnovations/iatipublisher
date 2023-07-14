@@ -603,9 +603,9 @@ class ActivityRepository extends Repository
      * @param $organizationId
      * @param $activitiesId
      *
-     * @return object
+     * @return Collection
      */
-    public function getCodesToDownload($organizationId, $activitiesId): object
+    public function getCodesToDownload($organizationId, $activitiesId): Collection
     {
         $query = $this->model->with(['results'])->select('id', 'iati_identifier')->where('org_id', $organizationId);
 
@@ -630,8 +630,10 @@ class ActivityRepository extends Repository
 
     /*
      * Updates specific key inside reporting_org (json field).
+     *
+     * @return Model|null
      */
-    public function getLastUpdatedActivity()
+    public function getLastUpdatedActivity(): ?Model
     {
         return $this->model->select('id', 'org_id')->latest('updated_at')->first();
     }
@@ -639,9 +641,12 @@ class ActivityRepository extends Repository
     /**
      * Applies filter to the activity query.
      *
+     * @param $query
      * @param $queryParams
+     *
+     * @return Builder
      */
-    protected function filterActivity($query, $queryParams)
+    protected function filterActivity($query, $queryParams): Builder
     {
         $filteredQuery = $query;
 
@@ -662,6 +667,8 @@ class ActivityRepository extends Repository
      * @param $queryParams
      *
      * @return array
+     *
+     * @throws \Exception
      */
     public function getActivityCount($queryParams): array
     {

@@ -16,6 +16,7 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notifiable;
@@ -239,9 +240,9 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
      *
      * @param $query
      *
-     * @return mixed
+     * @return Builder
      */
-    public function scopeRegisteredToday($query): mixed
+    public function scopeRegisteredToday($query): Builder
     {
         return $query->whereDate('created_at', Carbon::today());
     }
