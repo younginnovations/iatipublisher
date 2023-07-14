@@ -94,6 +94,7 @@ class OrganizationRepository extends Repository
             organizations.created_at,
             organizations.publisher_type,
             organizations.data_license,
+            organizations.registration_type,
             MAX(usr.id) AS usr_id,
             MAX(usr.last_logged_in) AS last_logged_in'
         )

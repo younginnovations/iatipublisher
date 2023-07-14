@@ -153,6 +153,16 @@ const props = defineProps({
     required: false,
     default: false,
   },
+  startingDate: {
+    type: String,
+    required: false,
+    default: '',
+  },
+  endingDate: {
+    type: String,
+    required: false,
+    default: '',
+  },
 });
 
 const selectedPresentIndex = ref(99);
@@ -186,7 +196,18 @@ onMounted(() => {
   selectedDate.value[0] = '';
   selectedDate.value[1] = todayDate;
   triggerSetDateRange('', todayDate, fixed.value);
+  console.log('inside', props.endingDate, props.startingDate);
 });
+watch(
+  () => [props.endingDate, props.startingDate],
+  () => {
+    if (props.endingDate && props.startingDate) {
+      selectedDate.value[0] = props.startingDate;
+      selectedDate.value[1] = props.endingDate;
+    }
+  },
+  { deep: true }
+);
 
 const handlePresentRangeItemClick = (index) => {
   const presentRangeItems = document.getElementsByClassName('dp__preset_range');

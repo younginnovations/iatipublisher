@@ -15,6 +15,7 @@
           :close-on-select="false"
           :clear-on-select="false"
           :hide-selected="false"
+          :can-clear="false"
           label="country"
         />
       </span>
@@ -31,6 +32,7 @@
           :close-on-select="true"
           :clear-on-select="false"
           :hide-selected="false"
+          :can-clear="false"
           label="setupCompleteness"
         />
       </span>
@@ -47,6 +49,7 @@
           :close-on-select="true"
           :clear-on-select="false"
           :hide-selected="false"
+          :can-clear="false"
           label="registrationType"
         />
       </span>
@@ -115,6 +118,7 @@
           :close-on-select="true"
           :clear-on-select="false"
           :hide-selected="false"
+          :can-clear="false"
           label="dataLicense"
         />
       </span>
@@ -128,6 +132,8 @@
         :dropdown-range="dropdownRange"
         :first-date="oldestDates"
         :clear-date="clearDate"
+        :starting-date="filter.start_date"
+        :ending-date="filter.end_date"
         @trigger-set-date-range="setDateRangeDate"
         @trigger-set-date-type="setDateType"
         @date-cleared="clearDate = false"
@@ -143,7 +149,7 @@
   >
     <span class="text-sm font-bold uppercase text-n-40">Filtered by: </span>
 
-    <span v-if="filter.country" class="inline-flex flex-wrap gap-2">
+    <span v-show="filter.country" class="inline-flex flex-wrap gap-2">
       <span
         v-for="(item, index) in filter.country"
         :key="index"
@@ -162,7 +168,7 @@
       </span>
     </span>
 
-    <span v-if="filter.completeness" class="inline-flex flex-wrap gap-2">
+    <span v-show="filter.completeness" class="inline-flex flex-wrap gap-2">
       <span
         class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
       >
@@ -179,7 +185,7 @@
       </span>
     </span>
 
-    <span v-if="filter.registration_type" class="inline-flex flex-wrap gap-2">
+    <span v-show="filter.registration_type" class="inline-flex flex-wrap gap-2">
       <span
         class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
       >
@@ -196,7 +202,7 @@
       </span>
     </span>
 
-    <span v-if="filter.publisher_type" class="inline-flex flex-wrap gap-2">
+    <span v-show="filter.publisher_type" class="inline-flex flex-wrap gap-2">
       <span
         v-for="(item, index) in filter.publisher_type"
         :key="index"
@@ -214,7 +220,7 @@
         />
       </span>
     </span>
-    <span v-if="filter.data_license" class="inline-flex flex-wrap gap-2">
+    <span v-show="filter.data_license" class="inline-flex flex-wrap gap-2">
       <span
         v-for="(item, index) in filter.data_license"
         :key="index"
@@ -233,7 +239,7 @@
       </span>
     </span>
     <span
-      v-if="filter.start_date && filter.end_date"
+      v-show="filter.start_date && filter.end_date"
       class="inline-flex flex-wrap gap-2"
     >
       <span
@@ -430,7 +436,7 @@
           <tr v-if="organisationData.status === 'fetching'">
             <td colspan="4">Fetching Data...</td>
           </tr>
-          <tr v-if="organisationData.status === 'failed to retrieve data'">
+          <tr v-else-if="organisationData.status === 'failed to retrieve data'">
             <td colspan="4">Failed to retrieve data...</td>
           </tr>
           <tr v-else-if="organisationData.status === 'empty'">
@@ -842,6 +848,7 @@ export default defineComponent({
             } else {
               organisationData.status = 'success';
               organisationData.data = response.data;
+              console.log(organisationData.data, 'org');
 
               refreshStatusArrays(organisationData.data);
             }

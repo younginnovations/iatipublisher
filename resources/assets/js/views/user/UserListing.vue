@@ -570,8 +570,11 @@
               </th>
             </tr>
           </thead>
-          <tbody v-if="usersData?.data.length > 0">
-            <tr v-for="(user, index) in usersData?.data" :key="index">
+          <tbody v-if="usersData?.data.length > 0 || fetchingTableData">
+            <tr v-if="fetchingTableData">
+              <td colspan="4">Fetching Data...</td>
+            </tr>
+            <tr v-for="(user, index) in usersData?.data" v-else :key="index">
               <td>
                 <div class="ellipsis relative">
                   <p
@@ -753,6 +756,7 @@ const statusValue = ref();
 const statusUsername = ref();
 const deleteUsername = ref();
 const loader = ref(true);
+const fetchingTableData = ref(false);
 const selectedIds = ref({});
 const checklist = ref([]);
 const currentpageData = ref([]);
@@ -1015,7 +1019,7 @@ watch(
 
 function fetchUsersList(active_page: number, filtered = false) {
   let route = `/users/page/${filtered ? '1' : active_page}`;
-
+  fetchingTableData.value = true;
   let params = new URLSearchParams();
 
   for (const filter_key in filter) {
@@ -1026,12 +1030,17 @@ function fetchUsersList(active_page: number, filtered = false) {
     }
   }
 
-  axios.get(route, { params: params }).then((res) => {
-    const response = res.data;
-    Object.assign(usersData, response.data);
-    isEmpty.value = response.data ? false : true;
-    totalUser.value = response.data.total;
-  });
+  axios
+    .get(route, { params: params })
+    .then((res) => {
+      const response = res.data;
+      Object.assign(usersData, response.data);
+      isEmpty.value = response.data ? false : true;
+      totalUser.value = response.data.total;
+    })
+    .finally(() => {
+      fetchingTableData.value = false;
+    });
 }
 
 const openDeletemodel = (user) => {

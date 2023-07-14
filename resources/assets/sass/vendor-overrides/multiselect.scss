@@ -34,12 +34,11 @@
 }
 
 .multiselect-label-wrapper {
+  position: relative;
+
   .multiselect-multiple-label {
-    position: relative;
     white-space: nowrap !important;
     font-size: 12px !important;
-    min-width: 100px;
-    max-width: 150px;
     font-weight: bold !important;
     color: rgba(var(--bluecoral), 0) !important;
     text-transform: uppercase;
@@ -48,7 +47,8 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      left: 4px;
+      left: 14px;
+      white-space: nowrap !important;
       white-space: nowrap !important;
       font-size: 12px !important;
       font-weight: bold !important;
@@ -56,12 +56,12 @@
       text-transform: uppercase;
     }
   }
-
+  .multiselect-single-label-text {
+    display: none !important;
+  }
   .multiselect-single-label {
-    position: relative;
+    // position: relative;
     white-space: nowrap !important;
-    min-width: 100px;
-    max-width: 150px;
     font-size: 12px !important;
     font-weight: bold !important;
     color: rgba(var(--bluecoral), 0) !important;
@@ -71,7 +71,7 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      left: 4px;
+      left: 14px;
       white-space: nowrap !important;
       font-size: 12px !important;
       font-weight: bold !important;

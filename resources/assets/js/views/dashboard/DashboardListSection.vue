@@ -141,8 +141,14 @@
             >
               <td>
                 <a
-                  class="... block truncate py-3 px-8"
-                  :href="`/users?organization=${organisation.organization_id}`"
+                  class="... block cursor-pointer truncate py-3 px-8"
+                  @click="
+                    NavigateWithFilter(
+                      'users',
+                      'organization',
+                      organisation.organization_id
+                    )
+                  "
                   >{{ truncateText(organisation.organisation, 50) }}</a
                 >
               </td>
@@ -397,8 +403,14 @@
               <tr class="border-b border-n-20">
                 <td class="text-sm text-bluecoral">
                   <a
-                    class="px-4 py-3 text-left"
-                    :href="`/list-organisations?completeness=Publishers_with_complete_setup`"
+                    class="cursor-pointer px-4 py-3 text-left"
+                    @click="
+                      NavigateWithFilter(
+                        'list-organisations',
+                        'completeness',
+                        'Publishers_with_complete_setup'
+                      )
+                    "
                   >
                     Publishers with complete setup
                   </a>
@@ -424,8 +436,14 @@
               <tr>
                 <td class="text-sm text-bluecoral">
                   <a
-                    class="py-3 pl-8 text-left"
-                    :href="`/list-organisations?completeness=Publishers_settings_not_completed`"
+                    class="cursor-pointer py-3 pl-8 text-left"
+                    @click="
+                      NavigateWithFilter(
+                        'list-organisations',
+                        'completeness',
+                        'Publishers_settings_not_completed'
+                      )
+                    "
                   >
                     Publisher settings not completed
                   </a>
@@ -439,8 +457,14 @@
               <tr>
                 <td class="text-sm text-bluecoral">
                   <a
-                    class="py-3 pl-8 text-left"
-                    :href="`/list-organisations?completeness=Default_values_not_completed`"
+                    class="cursor-pointer py-3 pl-8 text-left"
+                    @click="
+                      NavigateWithFilter(
+                        'list-organisations',
+                        'completeness',
+                        'Default_values_not_completed'
+                      )
+                    "
                   >
                     Default values not completed
                   </a>
@@ -454,8 +478,14 @@
               <tr class="border-b border-n-20">
                 <td class="text-sm text-bluecoral">
                   <a
-                    class="py-3 pl-8 text-left"
-                    :href="`/list-organisations?completeness=Both_publishing_settings_and_default_values_not_completed`"
+                    class="cursor-pointer py-3 pl-8 text-left"
+                    @click="
+                      NavigateWithFilter(
+                        'list-organisations',
+                        'completeness',
+                        'Both_publishing_settings_and_default_values_not_completed'
+                      )
+                    "
                   >
                     Both publishing settings and default value not completed
                   </a>
@@ -503,8 +533,14 @@
               >
                 <td class="text-sm text-bluecoral">
                   <a
-                    class="py-3 pl-8 text-left"
-                    :href="`/list-organisations?registration-type=${item?.registration_type}`"
+                    class="cursor-pointer py-3 pl-8 text-left"
+                    @click="
+                      NavigateWithFilter(
+                        'list-organisations',
+                        'registration-type',
+                        item?.registration_type
+                      )
+                    "
                   >
                     {{
                       item?.registration_type === 'new_org'
@@ -532,8 +568,14 @@
               >
                 <td class="text-sm text-bluecoral">
                   <a
-                    :href="`/list-organisations?${currentItem?.apiParams}=${item.id}`"
-                    class="px-4 py-3 text-left capitalize"
+                    class="cursor-pointer px-4 py-3 text-left capitalize"
+                    @click="
+                      NavigateWithFilter(
+                        'list-organisations',
+                        currentItem?.apiParams,
+                        item.id
+                      )
+                    "
                   >
                     <!-- {{ item?.label.replace(/_/g, ' ') }} -->
                     {{ item['label'] }}
@@ -637,6 +679,14 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  startDate: {
+    type: String,
+    required: true,
+  },
+  endDate: {
+    type: String,
+    required: true,
+  },
 });
 
 const emit = defineEmits(['tableNav']);
@@ -727,6 +777,16 @@ const showNoDataComponent = computed(() => {
 });
 
 const activeClass = ref(currentNavList.value[0]?.label);
+
+const NavigateWithFilter = (page, key, value) => {
+  console.log(!!props.startDate && !!props.endDate);
+  if (!!props.startDate && !!props.endDate) {
+    console.log('inside');
+    window.location.href = `/${page}?${key}=${value}&start-date=${props.startDate}&end-date=${props.endDate}`;
+    return;
+  }
+  window.location.href = `/${page}?${key}=${value}`;
+};
 
 const fetchTableData = (item, tabChange = true) => {
   activeClass.value = item?.label;

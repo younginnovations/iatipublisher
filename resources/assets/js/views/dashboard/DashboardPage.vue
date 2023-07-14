@@ -57,6 +57,8 @@
       :current-view="currentView"
       :table-data="tableData"
       :table-header="currentNav['label']"
+      :start-date="startDate"
+      :end-date="endDate"
       @table-nav="
         (n, filter, page, tabChange) =>
           handleChangeTableNav(n, filter, page, tabChange)
