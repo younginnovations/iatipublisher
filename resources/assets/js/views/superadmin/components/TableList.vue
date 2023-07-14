@@ -3,7 +3,7 @@
     <!--Filter options start-->
     <div class="select filters inline-flex items-center space-x-2">
       <svg-vue class="w-10 text-lg" icon="funnel" />
-      <span class="country">
+      <span class="multiselect-label-wrapper" :style="generateLabel('country')">
         <Multiselect
           id="country-filter"
           v-model="filter.country"
@@ -18,7 +18,10 @@
           label="country"
         />
       </span>
-      <span class="setup-completeness">
+      <span
+        class="multiselect-label-wrapper"
+        :style="generateLabel('setup completeness')"
+      >
         <Multiselect
           id="setup-completeness"
           v-model="filter.completeness"
@@ -31,7 +34,10 @@
           label="setupCompleteness"
         />
       </span>
-      <span class="registration-type">
+      <span
+        class="multiselect-label-wrapper"
+        :style="generateLabel('registration type')"
+      >
         <Multiselect
           id="registration-type"
           v-model="filter.registration_type"
@@ -71,6 +77,7 @@
             </span>
             <span
               :class="rotateClass"
+              class="duration-200"
               style="height: fit-content; font-size: 20px; margin-top: -2px"
             >
               <svg-vue icon="arrow-down"></svg-vue> </span
@@ -94,7 +101,10 @@
         </Teleport>
       </div>
 
-      <span class="data-license">
+      <span
+        class="multiselect-label-wrapper"
+        :style="generateLabel('data license')"
+      >
         <Multiselect
           id="data-license"
           v-model="filter.data_license"
@@ -734,6 +744,9 @@ export default defineComponent({
     const closePublisherModel = () => {
       showMultiSelectWithSearch.value = false;
     };
+    const generateLabel = (label) => {
+      return { '--label': `'${label}'` };
+    };
 
     //lifecycle
     onMounted(() => {
@@ -1056,20 +1069,13 @@ export default defineComponent({
       showMappedData,
       totalOrganisation,
       countriesWithPrefix,
+      generateLabel,
     };
   },
 });
 </script>
 
 <style>
-.rotate-180 {
-  transform: rotate(180deg);
-  transition: 300ms;
-}
-.rotate-0 {
-  transform: rotate(0deg);
-  transition: 300ms;
-}
 .multiselect-wrapper {
   position: absolute;
   z-index: 5;

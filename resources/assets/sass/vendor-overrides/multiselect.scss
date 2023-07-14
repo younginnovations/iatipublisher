@@ -1,6 +1,7 @@
 .multiselect {
-  min-width: 160px !important;
+  min-width: 180px !important;
   cursor: pointer !important;
+  white-space: nowrap !important;
 }
 .multiselect.is-active {
   box-shadow: none !important;
@@ -32,20 +33,18 @@
   text-transform: uppercase;
 }
 
-/*REVIEW AND REFACTOR THIS @salil
-* need to use attributes for content on ::after
-*/
-.organization {
+.multiselect-label-wrapper {
   .multiselect-multiple-label {
     position: relative;
     white-space: nowrap !important;
     font-size: 12px !important;
-    width: 100px;
+    min-width: 100px;
+    max-width: 150px;
     font-weight: bold !important;
     color: rgba(var(--bluecoral), 0) !important;
     text-transform: uppercase;
     &::after {
-      content: 'organization';
+      content: var(--label);
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
@@ -57,87 +56,18 @@
       text-transform: uppercase;
     }
   }
-}
-.country {
-  .multiselect-multiple-label {
+
+  .multiselect-single-label {
     position: relative;
     white-space: nowrap !important;
+    min-width: 100px;
+    max-width: 150px;
     font-size: 12px !important;
-    width: 100px;
     font-weight: bold !important;
     color: rgba(var(--bluecoral), 0) !important;
     text-transform: uppercase;
     &::after {
-      content: 'country';
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      left: 4px;
-      white-space: nowrap !important;
-      font-size: 12px !important;
-      font-weight: bold !important;
-      color: rgba(var(--bluecoral)) !important;
-      text-transform: uppercase;
-    }
-  }
-}
-.setup-completeness {
-  .multiselect-multiple-label {
-    position: relative;
-    white-space: nowrap !important;
-    font-size: 12px !important;
-    width: 100px;
-    font-weight: bold !important;
-    color: rgba(var(--bluecoral), 0) !important;
-    text-transform: uppercase;
-    &::after {
-      content: 'setup completeness';
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      left: 4px;
-      white-space: nowrap !important;
-      font-size: 12px !important;
-      font-weight: bold !important;
-      color: rgba(var(--bluecoral)) !important;
-      text-transform: uppercase;
-    }
-  }
-}
-.registration-type {
-  .multiselect-multiple-label {
-    position: relative;
-    white-space: nowrap !important;
-    font-size: 12px !important;
-    width: 100px;
-    font-weight: bold !important;
-    color: rgba(var(--bluecoral), 0) !important;
-    text-transform: uppercase;
-    &::after {
-      content: 'registration type';
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      left: 4px;
-      white-space: nowrap !important;
-      font-size: 12px !important;
-      font-weight: bold !important;
-      color: rgba(var(--bluecoral)) !important;
-      text-transform: uppercase;
-    }
-  }
-}
-.data-license {
-  .multiselect-multiple-label {
-    position: relative;
-    white-space: nowrap !important;
-    font-size: 12px !important;
-    width: 100px;
-    font-weight: bold !important;
-    color: rgba(var(--bluecoral), 0) !important;
-    text-transform: uppercase;
-    &::after {
-      content: 'data license';
+      content: var(--label);
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
@@ -151,52 +81,6 @@
   }
 }
 
-.role {
-  .multiselect-multiple-label {
-    position: relative;
-    white-space: nowrap !important;
-    width: 100px;
-    font-size: 12px !important;
-    font-weight: bold !important;
-    color: rgba(var(--bluecoral), 0) !important;
-    text-transform: uppercase;
-    &::after {
-      content: 'role';
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      left: 4px;
-      white-space: nowrap !important;
-      font-size: 12px !important;
-      font-weight: bold !important;
-      color: rgba(var(--bluecoral)) !important;
-      text-transform: uppercase;
-    }
-  }
-}
-.status {
-  .multiselect-single-label {
-    position: relative;
-    white-space: nowrap !important;
-    width: 100px;
-    font-size: 12px !important;
-    font-weight: bold !important;
-    color: rgba(var(--bluecoral), 0) !important;
-    text-transform: uppercase;
-    &::after {
-      content: 'status';
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      left: 4px;
-      white-space: nowrap !important;
-      font-size: 12px !important;
-      font-weight: bold !important;
-      color: rgba(var(--bluecoral)) !important;
-      text-transform: uppercase;
-    }
-  }
-}
 .multiselect-caret {
   background-color: rgb(var(--bluecoral)) !important ;
   &::after {

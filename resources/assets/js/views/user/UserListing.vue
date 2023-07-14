@@ -290,7 +290,8 @@
           <svg-vue class="w-10 text-lg" icon="funnel" />
           <span
             v-if="userRole === 'superadmin' || userRole === 'iati_admin'"
-            class="organization"
+            class="multiselect-label-wrapper"
+            :style="generateLabel('organisation')"
             ><Multiselect
               id="organization-filter"
               v-model="filter.organization"
@@ -306,7 +307,10 @@
             />
           </span>
 
-          <span class="role">
+          <span
+            class="multiselect-label-wrapper"
+            :style="generateLabel('role')"
+          >
             <Multiselect
               id="role-filter"
               v-model="filter.roles"
@@ -323,7 +327,9 @@
               <!-- role -->
             </span></span
           >
-          <span class="status"
+          <span
+            class="multiselect-label-wrapper"
+            :style="generateLabel('status')"
             ><Multiselect
               id="status-filter"
               v-model="filter.status"
@@ -1124,6 +1130,10 @@ watch(
     });
   }
 );
+
+const generateLabel = (label) => {
+  return { '--label': `'${label}'` };
+};
 
 const downloadAll = () => {
   let route = `/users/download/`;

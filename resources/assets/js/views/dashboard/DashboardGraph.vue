@@ -36,6 +36,7 @@ const graphAmount = inject('graphAmount') as Ref;
 const yaxisTicks = ref([]);
 const maxValue = ref(0);
 const chart = ref<ChartInterface>({});
+const graphColor = '#17997B';
 const props = defineProps({
   currentView: {
     type: String,
@@ -89,7 +90,7 @@ let chartOptions = computed(() => ({
     width: 1,
   },
 
-  colors: ['#17997B'],
+  colors: [graphColor],
   tooltip: {
     custom: function ({ series, seriesIndex, dataPointIndex, w }) {
       const getDay = (formattedDate) => {

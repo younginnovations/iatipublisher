@@ -13,18 +13,7 @@
                 <div
                   class="flex min-w-[400px] items-center space-x-2 py-3 px-8"
                 >
-                  <button
-                    class="p-1"
-                    @click="
-                      () => {
-                        filter.sort === 'asc'
-                          ? (filter.sort = 'desc')
-                          : (filter.sort = 'asc');
-                        filter.orderBy = 'organisation';
-                        sortTable();
-                      }
-                    "
-                  >
+                  <button class="p-1" @click="toggleSort('organisation')">
                     <svg-vue
                       v-if="
                         filter.sort === 'asc' &&
@@ -44,18 +33,7 @@
               </th>
               <th>
                 <div class="flex items-center space-x-2 py-3 px-8">
-                  <button
-                    class="p-1"
-                    @click="
-                      () => {
-                        filter.sort === 'asc'
-                          ? (filter.sort = 'desc')
-                          : (filter.sort = 'asc');
-                        filter.orderBy = 'admin';
-                        sortTable();
-                      }
-                    "
-                  >
+                  <button class="p-1" @click="toggleSort('admin')">
                     <svg-vue
                       v-if="filter.sort === 'asc' && filter.orderBy === 'admin'"
                       class="text-sm"
@@ -72,18 +50,7 @@
               </th>
               <th>
                 <div class="flex items-center space-x-2 py-3 px-8">
-                  <button
-                    class="p-1"
-                    @click="
-                      () => {
-                        filter.sort === 'asc'
-                          ? (filter.sort = 'desc')
-                          : (filter.sort = 'asc');
-                        filter.orderBy = 'general';
-                        sortTable();
-                      }
-                    "
-                  >
+                  <button class="p-1" @click="toggleSort('general')">
                     <svg-vue
                       v-if="
                         filter.sort === 'asc' && filter.orderBy === 'general'
@@ -102,18 +69,7 @@
               </th>
               <th>
                 <div class="flex items-center space-x-2 py-3 px-8">
-                  <button
-                    class="p-1"
-                    @click="
-                      () => {
-                        filter.sort === 'asc'
-                          ? (filter.sort = 'desc')
-                          : (filter.sort = 'asc');
-                        filter.orderBy = 'active';
-                        sortTable();
-                      }
-                    "
-                  >
+                  <button class="p-1" @click="toggleSort('active')">
                     <svg-vue
                       v-if="
                         filter.sort === 'asc' && filter.orderBy === 'active'
@@ -132,18 +88,7 @@
               </th>
               <th>
                 <div class="flex items-center space-x-2 py-3 px-8">
-                  <button
-                    class="p-1"
-                    @click="
-                      () => {
-                        filter.sort === 'asc'
-                          ? (filter.sort = 'desc')
-                          : (filter.sort = 'asc');
-                        filter.orderBy = 'deactivated';
-                        sortTable();
-                      }
-                    "
-                  >
+                  <button class="p-1" @click="toggleSort('deactivated')">
                     <svg-vue
                       v-if="
                         filter.sort === 'asc' &&
@@ -163,18 +108,7 @@
               </th>
               <th>
                 <div class="flex items-center space-x-2 py-3 px-8">
-                  <button
-                    class="p-1"
-                    @click="
-                      () => {
-                        filter.sort === 'asc'
-                          ? (filter.sort = 'desc')
-                          : (filter.sort = 'asc');
-                        filter.orderBy = 'total';
-                        sortTable();
-                      }
-                    "
-                  >
+                  <button class="p-1" @click="toggleSort('total')">
                     <svg-vue
                       v-if="filter.sort === 'asc' && filter.orderBy === 'total'"
                       class="text-sm"
@@ -192,66 +126,7 @@
           </thead>
           <!-- change this code -->
           <tbody v-if="showTableLoader">
-            <tr>
-              <td class="py-3 px-8">
-                <ShimmerLoading class="!rounded-sm" />
-              </td>
-              <td class="py-3 px-8">
-                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
-              </td>
-              <td class="py-3 px-8">
-                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
-              </td>
-              <td class="py-3 px-8">
-                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
-              </td>
-              <td class="py-3 px-8">
-                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
-              </td>
-              <td class="py-3 px-8">
-                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
-              </td>
-            </tr>
-            <tr>
-              <td class="py-3 px-8">
-                <ShimmerLoading class="!rounded-sm" />
-              </td>
-              <td class="py-3 px-8">
-                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
-              </td>
-              <td class="py-3 px-8">
-                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
-              </td>
-              <td class="py-3 px-8">
-                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
-              </td>
-              <td class="py-3 px-8">
-                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
-              </td>
-              <td class="py-3 px-8">
-                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
-              </td>
-            </tr>
-            <tr>
-              <td class="py-3 px-8">
-                <ShimmerLoading class="!rounded-sm" />
-              </td>
-              <td class="py-3 px-8">
-                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
-              </td>
-              <td class="py-3 px-8">
-                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
-              </td>
-              <td class="py-3 px-8">
-                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
-              </td>
-              <td class="py-3 px-8">
-                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
-              </td>
-              <td class="py-3 px-8">
-                <ShimmerLoading class="mx-auto !w-20 !rounded-sm" />
-              </td>
-            </tr>
+            <TableLoaderComponent :row-count="4" :col-count="6" />
           </tbody>
           <tbody v-else-if="tableData.length === 0">
             <tr class="w-full">
@@ -357,22 +232,14 @@
               v-if="
                 currentView === 'activity' && title === 'Activity Completion'
               "
-              class="bg-[#F1F7F9] text-xs font-bold uppercase text-[#68797E]"
+              class="bg-n-10 text-xs font-bold uppercase text-n-40"
             >
               <tr>
                 <th class="inline-flex items-center space-x-1">
                   <div class="flex space-x-1">
                     <button
                       class="p-1"
-                      @click="
-                        () => {
-                          filter.sort === 'asc'
-                            ? (filter.sort = 'desc')
-                            : (filter.sort = 'asc');
-                          filter.orderBy = sortElement.apiParams;
-                          sortTable();
-                        }
-                      "
+                      @click="toggleSort(sortElement.apiParams)"
                     >
                       <svg-vue
                         v-if="
@@ -391,20 +258,9 @@
                     <span class="py-3 pr-4 text-left">{{ title }}</span>
                   </div>
                 </th>
-                <th class="mx-8 my-3 w-[100px]">
+                <th class="navlist-width mx-8 my-3">
                   <div class="flex space-x-1">
-                    <button
-                      class="inline p-1"
-                      @click="
-                        () => {
-                          filter.sort === 'asc'
-                            ? (filter.sort = 'desc')
-                            : (filter.sort = 'asc');
-                          filter.orderBy = 'published';
-                          sortTable();
-                        }
-                      "
-                    >
+                    <button class="inline p-1" @click="toggleSort('published')">
                       <svg-vue
                         v-if="
                           filter.sort === 'asc' &&
@@ -422,20 +278,9 @@
                     <span class="py-3 pr-4 text-right">published</span>
                   </div>
                 </th>
-                <td class="mx-8 my-3 w-[100px]">
+                <td class="navlist-width mx-8 my-3">
                   <div class="flex space-x-1">
-                    <button
-                      class="p-1"
-                      @click="
-                        () => {
-                          filter.sort === 'asc'
-                            ? (filter.sort = 'desc')
-                            : (filter.sort = 'asc');
-                          filter.orderBy = 'draft';
-                          sortTable();
-                        }
-                      "
-                    >
+                    <button class="p-1" @click="toggleSort('draft')">
                       <svg-vue
                         v-if="
                           filter.sort === 'asc' && filter.orderBy === 'draft'
@@ -452,20 +297,9 @@
                     <div class="py-3 pr-4 text-right">draft</div>
                   </div>
                 </td>
-                <td class="mx-8 my-3 w-[100px]">
+                <td class="navlist-width mx-8 my-3">
                   <div class="flex space-x-1">
-                    <button
-                      class="p-1"
-                      @click="
-                        () => {
-                          filter.sort === 'asc'
-                            ? (filter.sort = 'desc')
-                            : (filter.sort = 'asc');
-                          filter.orderBy = 'total';
-                          sortTable();
-                        }
-                      "
-                    >
+                    <button class="p-1" @click="toggleSort('total')">
                       <svg-vue
                         v-if="
                           filter.sort === 'asc' && filter.orderBy === 'total'
@@ -484,10 +318,7 @@
                 </td>
               </tr>
             </thead>
-            <thead
-              v-else
-              class="bg-[#F1F7F9] text-xs font-bold uppercase text-[#68797E]"
-            >
+            <thead v-else class="bg-n-10 text-xs font-bold uppercase text-n-40">
               <tr>
                 <th>
                   <div class="flex items-center space-x-2 px-4 py-3 text-left">
@@ -497,15 +328,7 @@
                         title !== 'Registration Type'
                       "
                       class="p-1"
-                      @click="
-                        () => {
-                          filter.sort === 'asc'
-                            ? (filter.sort = 'desc')
-                            : (filter.sort = 'asc');
-                          filter.orderBy = sortElement.apiParams;
-                          sortTable();
-                        }
-                      "
+                      @click="toggleSort(sortElement.apiParams)"
                     >
                       <svg-vue
                         v-if="
@@ -525,7 +348,7 @@
                     <span>{{ title }} </span>
                   </div>
                 </th>
-                <td class="mx-8 my-3 w-[100px]">
+                <td class="navlist-width mx-8 my-3">
                   <div
                     class="flex items-center justify-end space-x-2 px-4 py-3 text-right"
                   >
@@ -535,15 +358,7 @@
                         title !== 'Registration Type'
                       "
                       class="p-1"
-                      @click="
-                        () => {
-                          filter.sort === 'asc'
-                            ? (filter.sort = 'desc')
-                            : (filter.sort = 'asc');
-                          filter.orderBy = 'count';
-                          sortTable();
-                        }
-                      "
+                      @click="toggleSort('count')"
                     >
                       <svg-vue
                         v-if="
@@ -564,40 +379,10 @@
               </tr>
             </thead>
             <tbody v-if="showTableLoader">
-              <tr>
-                <td class="py-3 px-8">
-                  <ShimmerLoading class="!rounded-sm" />
-                </td>
-                <td class="py-3 px-8">
-                  <ShimmerLoading class="!w-10 !rounded-sm" />
-                </td>
-              </tr>
-              <tr>
-                <td class="py-3 px-8">
-                  <ShimmerLoading class="!rounded-sm" />
-                </td>
-                <td class="py-3 px-8">
-                  <ShimmerLoading class="!w-10 !rounded-sm" />
-                </td>
-              </tr>
-              <tr>
-                <td class="py-3 px-8">
-                  <ShimmerLoading class="!rounded-sm" />
-                </td>
-                <td class="py-3 px-8">
-                  <ShimmerLoading class="!w-10 !rounded-sm" />
-                </td>
-              </tr>
+              <TableLoaderComponent :row-count="4" :col-count="2" />
             </tbody>
             <tbody
-              v-else-if="
-                tableData.length === 0 ||
-                (!(
-                  title === 'Registration Type' ||
-                  title === 'Setup Completeness'
-                ) &&
-                  tableData?.data?.length === 0)
-              "
+              v-else-if="showNoDataComponent"
               class="text-center shadow-md"
             >
               <div class="p-10">No data found</div>
@@ -829,18 +614,15 @@
           />
         </div>
       </div>
-      <!-- <div v-else>
-        <h6 class="text-xs uppercase text-n-40">Publisher segregated by</h6>
-      </div> -->
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, defineProps, watch, onMounted, inject, Ref } from 'vue';
+import { ref, defineProps, watch, onMounted, inject, Ref, computed } from 'vue';
 import { defineEmits } from 'vue';
 import Pagination from 'Components/TablePagination.vue';
-import ShimmerLoading from 'Components/ShimmerLoading.vue';
 import { truncateText } from 'Composable/utils';
+import TableLoaderComponent from 'Components/TableLoaderComponent.vue';
 
 const props = defineProps({
   currentView: {
@@ -933,6 +715,17 @@ watch(
   }
 );
 
+const showNoDataComponent = computed(() => {
+  return (
+    props.tableData.length === 0 ||
+    (!(
+      title.value === 'Registration Type' ||
+      title.value === 'Setup Completeness'
+    ) &&
+      props.tableData?.data?.length === 0)
+  );
+});
+
 const activeClass = ref(currentNavList.value[0]?.label);
 
 const fetchTableData = (item, tabChange = true) => {
@@ -942,6 +735,15 @@ const fetchTableData = (item, tabChange = true) => {
   emit('tableNav', item, filter, currentpage.value, tabChange);
   resetpagination.value = false;
 };
+
+const toggleSort = (order) => {
+  filter.value.sort === 'asc'
+    ? (filter.value.sort = 'desc')
+    : (filter.value.sort = 'asc');
+  filter.value.orderBy = order;
+  sortTable();
+};
+
 const completeNess = inject('completeNess') as Ref;
 const registrationType = inject('registrationType') as Ref;
 const showTableLoader = inject('showTableLoader') as Ref;
@@ -950,6 +752,11 @@ const showTableLoader = inject('showTableLoader') as Ref;
 .activeNav {
   @apply relative  rounded bg-bluecoral text-white;
 }
+
+.navlist-width {
+  width: 100px;
+}
+
 .text-semi-dark {
   color: #2a2f30 !important;
 }
