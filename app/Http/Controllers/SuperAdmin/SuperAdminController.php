@@ -4,41 +4,61 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\SuperAdmin;
 
+use App\Constants\Enums;
 use App\Http\Controllers\Controller;
+use App\IATI\Services\Dashboard\DashboardService;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
+use App\IATI\Traits\DateRangeResolverTrait;
 use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use JsonException;
 
 /**
  * Class SuperAdminController.
  */
 class SuperAdminController extends Controller
 {
+    use DateRangeResolverTrait;
+
     /**
      * SuperAdminController Constructor.
      *
      * @param OrganizationService $organizationService
      * @param UserService $userService
+     * @param DashboardService $dashboardService
      */
-    public function __construct(public OrganizationService $organizationService, public UserService $userService)
+    public function __construct(public OrganizationService $organizationService, public UserService $userService, public DashboardService $dashboardService)
     {
         //
     }
 
     /**
-     * Returns superadmin page for viewing all organisations.
+     * Returns super-admin page for viewing all organisations.
      *
      * @return Application|Factory|View|JsonResponse
      */
-    public function listOrganizations(): View | Factory | JsonResponse | Application
+    public function listOrganizations(): View|Factory|JsonResponse|Application
     {
         try {
-            return view('superadmin.organisationsList');
+            $country = getCodeList('Country', 'Activity', false);
+            $setupCompleteness = [
+                'Publishers_with_complete_setup' => 'Publishers with complete setup',
+                'Publishers_settings_not_completed' => 'Publishers setting not completed',
+                'Default_values_not_completed' => 'Default values not completed',
+                'Both_publishing_settings_and_default_values_not_completed' => 'Both publishing settings and default values not completed',
+            ];
+            $registrationType = Enums::ORGANIZATION_REGISTRATION_METHOD;
+            $publisherType = getCodeList('OrganizationType', 'Organization');
+            $dataLicense = getCodeList('DataLicense', 'Activity', false);
+            $oldestDates = $this->dashboardService->getOldestDate('publisher');
+
+            return view('superadmin.organisationsList', compact('country', 'setupCompleteness', 'registrationType', 'publisherType', 'dataLicense', 'oldestDates'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
@@ -67,10 +87,10 @@ class SuperAdminController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Organizations fetched successfully',
-                'data'    => $organizations,
+                'data' => $organizations,
             ]);
         } catch (Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
         }
@@ -82,6 +102,8 @@ class SuperAdminController extends Controller
      * @param $request
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function sanitizeRequest($request): array
     {
@@ -100,11 +122,33 @@ class SuperAdminController extends Controller
             }
         }
 
+        list($startDateString, $endDateString, $column) = $this->resolveDateRangeFromRequest($request);
+        $queryParams['date_column'] = $column;
+
+        if ($startDateString && $endDateString) {
+            list($queryParams['start_date'], $queryParams['end_date']) = $this->resolveCustomRangeParams($startDateString, $endDateString);
+        }
+
+        if (array_intersect_key($request->toArray(), $tableConfig['filters'])) {
+            foreach ($tableConfig['filters'] as $filterKey => $filterMode) {
+                $value = Arr::get($request, $filterKey, false);
+
+                if ($value) {
+                    if ($filterMode === 'multiple') {
+                        $exploded = explode(',', $value);
+                        $queryParams['filters'][$filterKey] = $exploded;
+                    } else {
+                        $queryParams['filters'][$filterKey] = $value;
+                    }
+                }
+            }
+        }
+
         return $queryParams;
     }
 
     /**
-     * Allows superadmin to masquerade as a user of an organization.
+     * Allows super-admin to masquerade as a user of an organization.
      *
      * @param $userId
      *
@@ -136,7 +180,7 @@ class SuperAdminController extends Controller
      *
      * @return View|Factory|JsonResponse|Application
      */
-    public function listSystemVersion(): View | Factory | JsonResponse | Application
+    public function listSystemVersion(): View|Factory|JsonResponse|Application
     {
         try {
             $composerPackageDetails = json_decode(file_get_contents('../app_versions/composer_package_versions.json'));
@@ -160,7 +204,7 @@ class SuperAdminController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return  redirect('listOrganizations')->with('error', 'Failed opening System Version page.');
+            return redirect('listOrganizations')->with('error', 'Failed opening System Version page.');
         }
     }
 }

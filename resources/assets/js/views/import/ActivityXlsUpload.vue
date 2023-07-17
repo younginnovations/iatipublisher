@@ -596,7 +596,6 @@ const mapActivityName = (name) => {
 watch(
   () => store.state.startBulkPublish,
   (value) => {
-    console.log(';from watcher');
     if (value) {
       publishingActivities.value =
         pa.value.publishingActivities &&

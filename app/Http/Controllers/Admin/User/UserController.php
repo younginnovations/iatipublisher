@@ -9,6 +9,7 @@ use App\Http\Requests\User\UserProfileRequest;
 use App\Http\Requests\User\UserRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\IATI\Services\Audit\AuditService;
+use App\IATI\Services\Dashboard\DashboardService;
 use App\IATI\Services\Download\CsvGenerator;
 use App\IATI\Services\Organization\OrganizationService;
 use App\IATI\Services\User\UserService;
@@ -53,6 +54,11 @@ class UserController extends Controller
     protected DatabaseManager $db;
 
     /**
+     * @var DashboardService
+     */
+    protected DashboardService $dashboardService;
+
+    /**
      * Create a new controller instance.
      *
      * @param UserService $userService
@@ -60,14 +66,16 @@ class UserController extends Controller
      * @param AuditService $auditService
      * @param CsvGenerator $csvGenerator
      * @param DatabaseManager $db
+     * @param DashboardService $dashboardService
      */
-    public function __construct(UserService $userService, OrganizationService $organizationService, AuditService $auditService, CSVGenerator $csvGenerator, DatabaseManager $db)
+    public function __construct(UserService $userService, OrganizationService $organizationService, AuditService $auditService, CSVGenerator $csvGenerator, DatabaseManager $db, DashboardService $dashboardService)
     {
         $this->userService = $userService;
         $this->organizationService = $organizationService;
         $this->auditService = $auditService;
         $this->csvGenerator = $csvGenerator;
         $this->db = $db;
+        $this->dashboardService = $dashboardService;
     }
 
     /**
@@ -82,8 +90,9 @@ class UserController extends Controller
             $status = getUserStatus();
             $roles = $this->userService->getRoles();
             $userRole = Auth::user()->role->role;
+            $oldestDates = $this->dashboardService->getOldestDate('user');
 
-            return view('admin.user.index', compact('status', 'organizations', 'roles', 'userRole'));
+            return view('admin.user.index', compact('status', 'organizations', 'roles', 'userRole', 'oldestDates'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -252,7 +261,7 @@ class UserController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Paginated users fetch successfully.',
+                'message' => 'Paginated users fetched successfully.',
                 'data' => $users,
             ]);
         } catch (\Exception $e) {
@@ -311,6 +320,12 @@ class UserController extends Controller
             if (in_array($request->get('direction'), $tableConfig['direction'], true)) {
                 $queryParams['direction'] = $request->get('direction');
             }
+        }
+
+        if (!empty($request->get('date_type'))) {
+            $queryParams['dateType'] = $request->get('date_type');
+            $queryParams['startDate'] = $request->get('start_date');
+            $queryParams['endDate'] = $request->get('end_date');
         }
 
         return $queryParams;

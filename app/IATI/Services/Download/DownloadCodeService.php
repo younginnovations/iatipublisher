@@ -67,7 +67,7 @@ class DownloadCodeService
      *
      * @param $activityIds
      *
-     * @return object
+     * @return array
      */
     public function getActivitiesToDownload($activityIds): array
     {

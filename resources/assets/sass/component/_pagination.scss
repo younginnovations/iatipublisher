@@ -1,6 +1,10 @@
 .pagination {
   @apply relative z-0 inline-flex items-center justify-center bg-white text-sm leading-relaxed text-n-40;
 
+  a {
+    cursor: pointer;
+  }
+
   a,
   .pagination-dots {
     @apply flex border-y border-l border-n-20 py-1.5 px-3;

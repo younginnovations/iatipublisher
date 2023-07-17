@@ -12,7 +12,14 @@
       </div>
     </div>
     <div class="organization-list overflow-hidden">
-      <TableList />
+      <TableList
+        :countries="props.countries"
+        :setup-completeness="props.setupCompleteness"
+        :registration-types="props.registrationTypes"
+        :publisher-types="props.publisherTypes"
+        :data-licenses="props.dataLicenses"
+        :oldest-dates="props.oldestDates"
+      />
     </div>
     <Loader
       v-if="loader.status"
@@ -23,15 +30,25 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, provide } from 'vue';
+import { reactive, provide, defineProps } from 'vue';
 
 // Components
 import Loader from 'Components/sections/ProgressLoader.vue';
 import Toast from 'Components/ToastMessage.vue';
-
 import TableList from './components/TableList.vue';
 
-// ref
+const props = defineProps({
+  countries: { type: Object, required: true },
+  setupCompleteness: { type: Object, required: true },
+  registrationTypes: { type: Object, required: true },
+  publisherTypes: { type: Object, required: true },
+  dataLicenses: { type: Object, required: true },
+  oldestDates: {
+    type: String,
+    required: true,
+  },
+});
+
 const loader = reactive({
   status: false,
   text: 'Please Wait',

@@ -25,7 +25,7 @@ class RedirectIfAuthenticated
             if (Auth::guard($guard)->check()) {
                 $role = Auth::user()->role->role;
 
-                return in_array($role, ['iati_admin', 'superadmin']) ? redirect('/list-organisations') : redirect(RouteServiceProvider::HOME);
+                return in_array($role, ['iati_admin', 'superadmin']) ? redirect('/dashboard') : redirect(RouteServiceProvider::HOME);
             }
         }
 

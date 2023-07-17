@@ -31,6 +31,8 @@ class OrganizationFactory extends Factory
             'identifier'          => env('IATI_YIPL_IDENTIFIER'),
             'iati_status'         => 'pending',
             'status'              => 'draft',
+            'data_license' => 'odc-pddl',
+            'registration_type'=>'new_org',
             'reporting_org'=>[
                 [
                     'ref'                => 'NP-SWC-0987',

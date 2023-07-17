@@ -10,12 +10,14 @@ use App\IATI\Repositories\Repository;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Traits\FillDefaultValuesTrait;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ActivityRepository.
@@ -380,10 +382,10 @@ class ActivityRepository extends Repository
         }
 
         return [
-          [
-              'default_aid_type_vocabulary' => '1',
-              'default_aid_type' => $defaultValues['default_aid_type'],
-          ],
+            [
+                'default_aid_type_vocabulary' => '1',
+                'default_aid_type' => $defaultValues['default_aid_type'],
+            ],
         ];
     }
 
@@ -595,7 +597,15 @@ class ActivityRepository extends Repository
             ->orderBy('id', $direction);
     }
 
-    public function getCodesToDownload($organizationId, $activitiesId): object
+    /**
+     * Return all result, indicator and period codes to download.
+     *
+     * @param $organizationId
+     * @param $activitiesId
+     *
+     * @return Collection
+     */
+    public function getCodesToDownload($organizationId, $activitiesId): Collection
     {
         $query = $this->model->with(['results'])->select('id', 'iati_identifier')->where('org_id', $organizationId);
 
@@ -616,5 +626,170 @@ class ActivityRepository extends Repository
     public function getActivitityWithRelationsById($activityId): ?Model
     {
         return $this->model->with('results.indicators.periods', 'transactions')->where('id', $activityId)->first();
+    }
+
+    /*
+     * Updates specific key inside reporting_org (json field).
+     *
+     * @return Model|null
+     */
+    public function getLastUpdatedActivity(): ?Model
+    {
+        return $this->model->select('id', 'org_id')->latest('updated_at')->first();
+    }
+
+    /**
+     * Applies filter to the activity query.
+     *
+     * @param $query
+     * @param $queryParams
+     *
+     * @return Builder
+     */
+    protected function filterActivity($query, $queryParams): Builder
+    {
+        $filteredQuery = $query;
+
+        if ($queryParams['start_date'] && $queryParams['end_date']) {
+            $date_from = Carbon::parse($queryParams['start_date'])->startOfDay();
+            $date_to = Carbon::parse($queryParams['end_date'])->endOfDay();
+
+            $filteredQuery = $query->where('created_at', '>=', $date_from)
+                ->where('created_at', '<=', $date_to);
+        }
+
+        return $filteredQuery;
+    }
+
+    /**
+     * Return activity count for activity dashboard graph.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     *
+     * @throws \Exception
+     */
+    public function getActivityCount($queryParams): array
+    {
+        $query = $this->model;
+        $format = $queryParams['range'] ?? 'Y-m-d';
+        $startDate = date_create($queryParams['start_date']);
+        $endDate = date_create($queryParams['end_date']);
+        $data = [];
+
+        if ($queryParams) {
+            $query = $this->filterActivity($query, $queryParams);
+        }
+
+        $activityCount = $query->get()->groupBy(
+            function ($q) use ($format) {
+                return $q->created_at->format($format);
+            }
+        )->map(fn ($d) => count($d));
+
+        $period = new \DatePeriod($startDate, new \DateInterval(sprintf('P1%s', $queryParams['period'])), $endDate);
+        $data['count'] = 0;
+
+        foreach ($period as $date) {
+            $data['graph'][$date->format('Y-m-d')] = Arr::get($activityCount, $date->format($format), 0);
+            $data['count'] += $data['graph'][$date->format('Y-m-d')];
+        }
+
+        $data['graph'][$queryParams['end_date']] = Arr::get($activityCount, $endDate->format($format), 0);
+        $data['count'] += $data['graph'][$queryParams['end_date']];
+
+        return $data;
+    }
+
+    /**
+     * Returns activity by type.
+     *
+     * @param $queryParams
+     * @param $type
+     *
+     * @return array
+     */
+    public function getActivityBy($queryParams, $type): array
+    {
+        $query = $this->model->select(DB::raw('count(*) as count, ' . $type));
+
+        if ($queryParams) {
+            $query = $this->filterActivity($query, $queryParams);
+        }
+
+        return $query->groupBy($type)->pluck('count', $type)->toArray();
+    }
+
+    /**
+     * Return activity status based on publish.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     */
+    public function getActivityStatus($queryParams): array
+    {
+        $query = $this->model->select(DB::raw('count(*) as count,status,linked_to_iati'));
+
+        if ($queryParams) {
+            $query = $this->filterActivity($query, $queryParams);
+        }
+
+        return $query->groupBy('status', 'linked_to_iati')->get()->toArray();
+    }
+
+    /**
+     * Returns array with complete status of activities.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     */
+    public function getCompleteStatus($queryParams): array
+    {
+        $completeQuery = $this->model->select(DB::raw('count(*) as count, status'))->where('complete_percentage', 100);
+        $incompleteQuery = $this->model->select(DB::raw('count(*) as count, status'))->where('complete_percentage', '!=', 100);
+
+        if ($queryParams) {
+            $completeQuery = $this->filterActivity($completeQuery, $queryParams);
+            $incompleteQuery = $this->filterActivity($incompleteQuery, $queryParams);
+        }
+
+        return [
+            'complete' => $completeQuery->groupBy('status')->get()->toArray(),
+            'incomplete' => $incompleteQuery->groupBy('status')->get()->toArray(),
+        ];
+    }
+
+    /**
+     * Returns array of data for activities dashboard download.
+     *
+     * @param $queryParams
+     *
+     * @return array
+     */
+    public function getActivitiesDashboardDownload($queryParams): array
+    {
+        return $this->model->select(
+            DB::raw(
+                "
+            (iati_identifier->>'activity_identifier') as identifier,
+             title->0->>'narrative' as activity_title,
+             name->0->>'narrative' as organization,
+             case when linked_to_iati and activities.status='draft'
+             then 'published recently'
+             else activities.status
+             end as case,
+             upload_medium,
+             complete_percentage,
+             activities.created_at,
+             activities.updated_at
+         "
+            )
+        )->leftJoin('organizations', 'organizations.id', 'activities.org_id')
+            ->whereDate('activities.created_at', '>=', $queryParams['start_date'])
+            ->whereDate('activities.created_at', '<=', $queryParams['end_date'])
+            ->get()->toArray();
     }
 }

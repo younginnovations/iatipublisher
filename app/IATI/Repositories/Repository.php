@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\IATI\Repositories;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class Repository.
@@ -186,5 +188,43 @@ abstract class Repository implements RepositoryInterface
     public function insertGetId($data): array
     {
         return $this->model->insertGetId($data, 'id');
+    }
+
+    /**
+     * Return time series data grouped by interval.
+     *
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     * @param $interval
+     * @param $column
+     *
+     * @return array
+     */
+    public function getTimeSeriesDataGroupedByInterval(Carbon $startDate, Carbon $endDate, $interval, $column): array
+    {
+        $dateFormat = match ($interval) {
+            'day'=>'YYYY-MM-DD',
+            'month'=>'YYYY-MM',
+            default=>'YYYY'
+        };
+
+        $query = $this->model
+            ->select(DB::raw("TO_CHAR($column, '" . $dateFormat . "') AS date_string"), DB::raw('COUNT(*) AS count_value'))
+            ->whereDate($column, '>=', $startDate)
+            ->whereDate($column, '<=', $endDate);
+
+        return $query->groupBy('date_string')
+            ->pluck('count_value', 'date_string')
+            ->toArray();
+    }
+
+    /**
+     * Returns the oldest data.
+     *
+     * @return Model|null
+     */
+    public function getOldestData(): Model|null
+    {
+        return $this->model->oldest()->first();
     }
 }

@@ -396,7 +396,6 @@ class FormBuilder {
           .val('')
           .trigger('change');
       } else if (!fileUrl || fileUrl === '') {
-        console.log('empty url');
         $(this)
           .closest('.form-field-group')
           .find('select[id*="[format]"]')

@@ -77,11 +77,21 @@ abstract class Enums
     ];
 
     /**
+     * Enum for Organization registration method.
+     *
+     * @var array
+     */
+    const ORGANIZATION_REGISTRATION_METHOD = [
+        'new_org'=>'New org',
+        'existing_org'=>'Existing org',
+    ];
+
+    /**
      * Enum for language preference of user.
      *
      * @var array
      */
-    public const LANGUAGE_PREFERENCE = [
+    const LANGUAGE_PREFERENCE = [
         'en',
         'fr',
         'es',

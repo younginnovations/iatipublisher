@@ -36,6 +36,7 @@ import ActivitiesDetail from './views/activity/ActivityDetail.vue';
 import SidebarHelpBlock from './views/activity/partials/SidebarHelpBlock.vue';
 import ActivityUpload from './views/import/ActivityUpload.vue';
 import ActivityXlsUpload from './views/import/ActivityXlsUpload.vue';
+import DashboardPage from './views/dashboard/DashboardPage.vue';
 import ImportList from './views/import/ImportList.vue';
 import XlsList from './views/import/XlsList.vue';
 
@@ -83,8 +84,10 @@ import HoverText from './components/HoverText.vue';
 import PageTitle from './components/sections/PageTitle.vue';
 import LoadingState from './components/Loader.vue';
 import SystemVersion from './views/superadmin/SystemVersion.vue';
+import VueApexCharts from 'vue3-apexcharts';
 
 const app = createApp({});
+app.use(VueApexCharts);
 
 /**
  * Global Components
@@ -136,6 +139,9 @@ app
   .component('ActivityXlsUpload', ActivityXlsUpload)
   .component('ImportList', ImportList)
   .component('XlsList', XlsList);
+
+// dashboard page
+app.component('DashboardPage', DashboardPage);
 
 /*
  * Setting page

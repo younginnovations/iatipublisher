@@ -290,7 +290,8 @@
           <svg-vue class="w-10 text-lg" icon="funnel" />
           <span
             v-if="userRole === 'superadmin' || userRole === 'iati_admin'"
-            class="organization"
+            class="multiselect-label-wrapper"
+            :style="generateLabel('organisation')"
             ><Multiselect
               id="organization-filter"
               v-model="filter.organization"
@@ -306,7 +307,10 @@
             />
           </span>
 
-          <span class="role">
+          <span
+            class="multiselect-label-wrapper"
+            :style="generateLabel('role')"
+          >
             <Multiselect
               id="role-filter"
               v-model="filter.roles"
@@ -323,7 +327,9 @@
               <!-- role -->
             </span></span
           >
-          <span class="status"
+          <span
+            class="multiselect-label-wrapper"
+            :style="generateLabel('status')"
             ><Multiselect
               id="status-filter"
               v-model="filter.status"
@@ -334,16 +340,33 @@
           </span>
           <span></span>
         </div>
-        <div class="open-text h-[38px]">
-          <svg-vue
-            class="absolute top-1/2 left-2 w-10 -translate-y-1/2 text-base"
-            icon="magnifying-glass"
-          />
-          <input
-            v-model="filter.q"
-            type="text"
-            placeholder="Search for users"
-          />
+        <div
+          class="flex h-[38px] w-full items-center justify-end gap-3 space-x-2 px-4 2xl:w-auto"
+        >
+          <span>
+            <DateRangeWidget
+              :dropdown-range="dropdownRange"
+              :first-date="oldestDates"
+              :clear-date="clearDate"
+              :starting-date="filter.start_date"
+              :date-name="dateType"
+              :ending-date="filter.end_date"
+              @trigger-set-date-range="setDateRangeDate"
+              @trigger-set-date-type="setDateType"
+              @date-cleared="clearDate = false"
+            />
+          </span>
+          <div class="open-text h-[38px]">
+            <svg-vue
+              class="absolute top-1/2 left-2 w-10 -translate-y-1/2 text-base"
+              icon="magnifying-glass"
+            />
+            <input
+              v-model="filter.q"
+              type="text"
+              placeholder="Search for users"
+            />
+          </div>
         </div>
       </div>
 
@@ -353,7 +376,10 @@
       >
         <span class="text-sm font-bold uppercase text-n-40">filtered by: </span>
 
-        <span v-if="filter.organization" class="inline-flex flex-wrap gap-2">
+        <span
+          v-if="filter.organization.length"
+          class="inline-flex flex-wrap gap-2"
+        >
           <span
             v-for="(item, index) in filter.organization"
             :key="index"
@@ -371,7 +397,7 @@
             />
           </span>
         </span>
-        <span v-if="filter.roles" class="inline-flex flex-wrap gap-2">
+        <span v-if="filter.roles.length" class="inline-flex flex-wrap gap-2">
           <span
             v-for="(item, index) in filter.roles"
             :key="index"
@@ -386,7 +412,7 @@
             />
           </span>
         </span>
-        <span v-if="filter.status" class="inline-flex flex-wrap gap-2">
+        <span v-if="filter.status.length" class="inline-flex flex-wrap gap-2">
           <span
             v-for="(item, index) in filter.status"
             :key="index"
@@ -405,20 +431,43 @@
             />
           </span>
         </span>
+        <span
+          v-if="filter.start_date && filter.end_date"
+          class="inline-flex flex-wrap gap-2"
+        >
+          <span
+            class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
+          >
+            <span class="text-n-40">Date:</span
+            ><span>{{
+              textBubbledata(
+                filter.selected_date_filter,
+                filter.selected_date_filter
+              )
+            }}</span>
+            <svg-vue
+              class="mx-2 mt-1 cursor-pointer text-xs"
+              icon="cross"
+              @click="
+                () => {
+                  clearDateFilter();
+                }
+              "
+            />
+          </span>
+        </span>
         <button
           class="font-bold uppercase text-bluecoral"
           @click="
             () => {
-              filter.organization = [];
-              filter.roles = [];
-              filter.status = '';
+              clearFilter();
             }
           "
         >
           Clear Filter
         </button>
       </div>
-
+      <p class="py-1">Total Number of Users: {{ totalUser }}</p>
       <div class="iati-list-table user-list-table text-n-40">
         <table>
           <thead>
@@ -448,27 +497,36 @@
                   <span>Users</span>
                 </span>
               </th>
-              <th id="measure" scope="col" width="190px">
+              <th id="measure" scope="col" style="width: 210px">
                 <span>Email</span>
               </th>
-              <th
-                v-if="userRole === 'superadmin' || userRole === 'iati_admin'"
-                id="aggregation_status"
-                scope="col"
-                width=" 208px"
-              >
+
+              <th id="title" scope="col">
                 <span class="inline-flex items-center">
                   <span
                     v-if="
-                      filter.orderBy === 'publisher_name' &&
-                      filter.direction === 'desc'
+                      filter.direction === 'desc' &&
+                      filter.orderBy === 'publisher_name'
                     "
-                    class="mx-2 h-3 w-2 cursor-pointer"
-                    @click="sort('publisher_name')"
-                  />
+                  >
+                    <svg-vue
+                      class="mx-2 h-3 w-2 cursor-pointer"
+                      icon="sort-descending"
+                      @click="sort('publisher_name')"
+                    />
+                  </span>
+                  <span v-else>
+                    <svg-vue
+                      class="mx-2 h-3 w-2 cursor-pointer"
+                      icon="sort-ascending"
+                      @click="sort('publisher_name')"
+                    />
+                  </span>
+
+                  <span>Organisation name</span>
                 </span>
-                <span class="whitespace-nowrap">Organisation Name</span>
               </th>
+
               <th id="title" scope="col">
                 <span>User Role</span>
               </th>
@@ -498,10 +556,10 @@
                   <svg-vue
                     class="mx-2 h-3 w-2 cursor-pointer"
                     icon="sort-ascending"
-                    @click="sort('created_at')"
+                    @click="sort('last_logged_in')"
                   />
                 </span>
-                <span class="whitespace-nowrap">Joined On</span>
+                <span class="whitespace-nowrap">Last Login</span>
               </th>
               <th
                 v-if="userRole !== 'general_user'"
@@ -518,8 +576,11 @@
               </th>
             </tr>
           </thead>
-          <tbody v-if="usersData?.data.length > 0">
-            <tr v-for="(user, index) in usersData?.data" :key="index">
+          <tbody v-if="usersData?.data.length > 0 || fetchingTableData">
+            <tr v-if="fetchingTableData">
+              <td colspan="4">Fetching Data...</td>
+            </tr>
+            <tr v-for="(user, index) in usersData?.data" v-else :key="index">
               <td>
                 <div class="ellipsis relative">
                   <p
@@ -536,14 +597,27 @@
                   </p>
                 </div>
               </td>
-              <td>
-                {{ user['email'] }}
+              <td class="flex space-x-2">
+                <span class="ms-1">
+                  <svg-vue
+                    class="mt-1 cursor-pointer text-base"
+                    :icon="
+                      user['email_verified_at']
+                        ? 'tick-outline'
+                        : 'alert-outline'
+                    "
+                  />
+                </span>
+                <span class="... truncate">
+                  {{ user['email'] }}
+                </span>
               </td>
               <td v-if="userRole === 'superadmin' || userRole === 'iati_admin'">
                 <div class="ellipsis relative">
                   <p
                     class="w-32 overflow-x-hidden overflow-ellipsis whitespace-nowrap"
                   >
+                    {{ user['name'] }}
                     {{
                       user['publisher_name'] ? user['publisher_name'] : '- -'
                     }}
@@ -564,7 +638,13 @@
               <td :class="user['status'] ? 'text-spring-50' : 'text-n-40'">
                 {{ user['status'] ? 'Active' : 'Inactive' }}
               </td>
-              <td>{{ formatDate(user['created_at']) }}</td>
+              <td>
+                {{
+                  user['last_logged_in']
+                    ? formatDate(user['last_logged_in'])
+                    : 'Not available'
+                }}
+              </td>
               <td
                 v-if="userRole !== 'general_user'"
                 class="flex h-full items-center space-x-6"
@@ -612,7 +692,7 @@
             <td v-if="loader" colspan="5" class="text-center">
               <div colspan="5" class="spin"></div>
             </td>
-            <td colspan="8" class="text-center">Users not found</td>
+            <td v-else colspan="8" class="text-center">Users not found</td>
           </tbody>
         </table>
       </div>
@@ -638,12 +718,14 @@ import Multiselect from '@vueform/multiselect';
 import moment from 'moment';
 import Pagination from 'Components/TablePagination.vue';
 import { watchIgnorable } from '@vueuse/core';
+import DateRangeWidget from 'Components/DateRangeWidget.vue';
 
 const props = defineProps({
   organizations: { type: Object, required: true },
   status: { type: Object, required: true },
   roles: { type: Object, required: true },
   userRole: { type: String, required: true },
+  oldestDates: { type: String, required: true },
 });
 
 const toastData = reactive({
@@ -659,6 +741,10 @@ const filter = reactive({
   orderBy: '',
   direction: '',
   q: '',
+  start_date: '',
+  end_date: '',
+  date_type: 'created_at',
+  selected_date_filter: '',
 });
 
 const isLoaderVisible = ref(false);
@@ -669,18 +755,25 @@ const isEmpty = ref(true);
 const allSelected = ref<boolean[]>([]);
 const deleteModal = ref(false);
 const deleteId = ref();
-
+const totalUser = ref(0);
 const statusId = ref();
 const statusModal = ref(false);
 const statusValue = ref();
 const statusUsername = ref();
 const deleteUsername = ref();
 const loader = ref(true);
+const fetchingTableData = ref(false);
 const selectedIds = ref({});
 const checklist = ref([]);
 const currentpageData = ref([]);
-
+const clearDate = ref(false);
 const editUserId = ref('');
+const dateType = ref('All Time');
+
+const dropdownRange = {
+  created_at: 'User created date',
+  last_logged_in: 'Last login date',
+};
 
 const formData = reactive({
   username: '',
@@ -701,10 +794,13 @@ const formError = reactive({
   password: '',
   password_confirmation: '',
 });
+import { kebabCaseToSnakecase } from 'Composable/utils';
 
 const isFilterApplied = computed(() => {
   return (
-    filter.organization.length + filter.roles.length != 0 || filter.status != ''
+    filter.organization.length + filter.roles.length != 0 ||
+    filter.status != '' ||
+    (filter.start_date && filter.end_date)
   );
 });
 
@@ -726,6 +822,51 @@ const ignoreToastUpdate = () => {
   ignoreUpdates(() => {
     toastData.message = '';
   });
+};
+
+const clearDateFilter = () => {
+  filter.selected_date_filter = '';
+  clearDateRangeFilter();
+};
+
+onMounted(() => {
+  let filterParams = getFilterParamsFromPreviousPage();
+  if (filterParams) {
+    for (let i = 0; i < filterParams.length; i++) {
+      let key = kebabCaseToSnakecase(filterParams[i][0]);
+      let value = filterParams[i][1];
+      if (['roles', 'organization'].includes(key)) {
+        filter[key].push(value);
+      } else if (key === 'date_type') {
+        dateType.value = value.split('-').join(' ');
+      } else {
+        filter[key] = value;
+      }
+    }
+  }
+});
+const getFilterParamsFromPreviousPage = () => {
+  let queryString = window.location.href?.toString();
+
+  if (queryString) {
+    queryString = queryString.split('?')[1];
+
+    let queryParamsInKeyVal: object[] = [];
+    const queryParams = queryString?.split('&');
+
+    if (queryParams) {
+      for (let i = 0; i < queryParams.length; i++) {
+        let [key, value] = queryParams[i].split('=');
+        if (key) {
+          queryParamsInKeyVal.push([key, value ?? '']);
+        }
+      }
+    }
+
+    return queryParamsInKeyVal;
+  }
+
+  return false;
 };
 
 onMounted(async () => {
@@ -754,6 +895,8 @@ const textBubbledata = (id, field) => {
       return props.roles[+id];
     case 'status':
       return props.status[+id];
+    default:
+      return field;
   }
 };
 
@@ -764,6 +907,21 @@ const clearFilter = () => {
   filter.direction = '';
   filter.orderBy = '';
   filter.q = '';
+  filter.selected_date_filter = '';
+  clearDateRangeFilter();
+};
+
+const clearDateRangeFilter = () => {
+  clearDate.value = true;
+};
+
+const setDateRangeDate = (startDate, endDate, selectedDate) => {
+  filter.start_date = startDate;
+  filter.end_date = endDate;
+  filter.selected_date_filter = selectedDate;
+};
+const setDateType = (dateType) => {
+  filter.date_type = dateType;
 };
 
 const createUser = () => {
@@ -879,7 +1037,15 @@ const updateUser = () => {
 };
 
 watch(
-  () => [filter.organization, filter.roles, filter.q, filter.status],
+  () => [
+    filter.organization,
+    filter.roles,
+    filter.q,
+    filter.status,
+    filter.start_date,
+    filter.end_date,
+    filter.date_type,
+  ],
   () => {
     fetchUsersList(usersData['current_page'], true);
   },
@@ -888,7 +1054,7 @@ watch(
 
 function fetchUsersList(active_page: number, filtered = false) {
   let route = `/users/page/${filtered ? '1' : active_page}`;
-
+  fetchingTableData.value = true;
   let params = new URLSearchParams();
 
   for (const filter_key in filter) {
@@ -899,11 +1065,17 @@ function fetchUsersList(active_page: number, filtered = false) {
     }
   }
 
-  axios.get(route, { params: params }).then((res) => {
-    const response = res.data;
-    Object.assign(usersData, response.data);
-    isEmpty.value = response.data ? false : true;
-  });
+  axios
+    .get(route, { params: params })
+    .then((res) => {
+      const response = res.data;
+      Object.assign(usersData, response.data);
+      isEmpty.value = response.data ? false : true;
+      totalUser.value = response.data.total;
+    })
+    .finally(() => {
+      fetchingTableData.value = false;
+    });
 }
 
 const openDeletemodel = (user) => {
@@ -1002,6 +1174,10 @@ watch(
     });
   }
 );
+
+const generateLabel = (label) => {
+  return { '--label': `'${label}'` };
+};
 
 const downloadAll = () => {
   let route = `/users/download/`;

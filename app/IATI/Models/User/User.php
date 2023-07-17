@@ -8,6 +8,7 @@ use App\IATI\Models\Organization\Organization;
 use App\IATI\Services\Download\DownloadXlsService;
 use App\Mail\NewUserEmail;
 use App\Mail\XlsDownloadMail;
+use Carbon\Carbon;
 use Database\Factories\IATI\Models\User\UserFactory;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -15,6 +16,7 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notifiable;
@@ -55,6 +57,7 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
         'migrated_from_aidstream',
         'created_at',
         'updated_at',
+        'registration_method',
         'last_logged_in',
     ];
 
@@ -129,7 +132,7 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
     /**
      * @return BelongsTo
      */
-    protected function organization(): BelongsTo
+    public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class, 'organization_id');
     }
@@ -230,5 +233,17 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
         }
 
         return $data;
+    }
+
+    /**
+     * Returns users registered today.
+     *
+     * @param $query
+     *
+     * @return Builder
+     */
+    public function scopeRegisteredToday($query): Builder
+    {
+        return $query->whereDate('created_at', Carbon::today());
     }
 }

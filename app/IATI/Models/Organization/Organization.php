@@ -46,6 +46,7 @@ class Organization extends Model implements Auditable
         'is_published',
         'registration_agency',
         'registration_number',
+        'registration_type',
         'reporting_org',
         'total_budget',
         'recipient_org_budget',
@@ -104,7 +105,7 @@ class Organization extends Model implements Auditable
      */
     public function activities(): HasMany
     {
-        return $this->hasMany(ActivityPublished::class, 'organization_id', 'id');
+        return $this->hasMany(ActivityPublished::class, 'org_id', 'id');
     }
 
     /**
@@ -204,6 +205,26 @@ class Organization extends Model implements Auditable
     public function users(): HasMany
     {
         return $this->hasMany(User::class, 'organization_id', 'id');
+    }
+
+    /**
+     * Organization has many users.
+     *
+     * @return HasOne
+     */
+    public function latestLoggedInUser():HasOne
+    {
+        return $this->hasOne(User::class)->ofMany('last_logged_in', 'max');
+    }
+
+    /**
+     * Organization has one latest updated activity.
+     *
+     * @return HasOne
+     */
+    public function latestUpdatedActivity(): HasOne
+    {
+        return $this->hasOne(Activity::class, 'org_id')->ofMany('updated_at', 'max');
     }
 
     /**

@@ -171,9 +171,7 @@ trait MigrateActivityPublishedTrait
 
         if (count($latestActivityPublished)) {
             $activitiesPublished = new ActivityPublished();
-
             $publishedRows = $iatiOrganization->activities;
-
             if ($publishedRows && count($publishedRows)) {
                 $publishedData = $publishedRows->first();
 
