@@ -768,7 +768,7 @@ const checklist = ref([]);
 const currentpageData = ref([]);
 const clearDate = ref(false);
 const editUserId = ref('');
-const dateType = ref('');
+const dateType = ref('All Time');
 
 const dropdownRange = {
   created_at: 'User created date',

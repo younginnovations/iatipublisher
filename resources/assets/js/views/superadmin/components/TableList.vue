@@ -681,7 +681,7 @@ export default defineComponent({
     const loader = inject('loader') as LoaderInterface;
     const dateDropdown = ref();
     const clearDate = ref(false);
-    const dateType = ref('');
+    const dateType = ref('All Time');
 
     //typeface
     interface organizationInterface {

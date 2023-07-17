@@ -243,6 +243,7 @@ const handleCalendarItemClick = () => {
 };
 
 const addEventsForCalendar = () => {
+  showRangeDropdown.value = false;
   const presentRangeItems = document.getElementsByClassName('dp__preset_range');
 
   for (let i = 0; i < presentRangeItems.length; i++) {
