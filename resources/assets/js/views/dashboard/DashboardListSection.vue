@@ -785,11 +785,7 @@ const activeClass = ref(currentNavList.value[0]?.label);
 
 const NavigateWithFilter = (page, key, value) => {
   if (!!props.startDate && !!props.endDate) {
-    window.location.href = `/${page}?${key}=${value}&start-date=${
-      props.startDate
-    }&end-date=${props.endDate}&date-type=${sentenceCaseToKebabCase(
-      props.dateType
-    )}`;
+    window.location.href = `/${page}?${key}=${value}`;
     return;
   }
   window.location.href = `/${page}?${key}=${value}`;

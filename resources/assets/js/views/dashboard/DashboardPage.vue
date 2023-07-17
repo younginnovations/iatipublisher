@@ -41,6 +41,7 @@
           :date-label="DateLabel"
           :first-date="oldestDates[currentView]"
           :current-view="currentView"
+          :date-name="'All time'"
           @trigger-set-date-range="setDateRangeDate"
         />
         <ButtonComponent

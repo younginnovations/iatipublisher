@@ -167,10 +167,7 @@
   >
     <span class="text-sm font-bold uppercase text-n-40">Filtered by: </span>
 
-    <span
-      v-show="filter.country"
-      class="inline-flex flex-wrap space-x-2 space-y-2"
-    >
+    <span v-show="filter.country" class="inline-flex flex-wrap gap-2">
       <span
         v-for="(item, index) in filter.country"
         :key="index"
@@ -189,10 +186,7 @@
       </span>
     </span>
 
-    <span
-      v-show="filter.completeness"
-      class="inline-flex flex-wrap space-x-2 space-y-2"
-    >
+    <span v-show="filter.completeness" class="inline-flex flex-wrap gap-2">
       <span
         class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
       >
@@ -209,10 +203,7 @@
       </span>
     </span>
 
-    <span
-      v-show="filter.registration_type"
-      class="inline-flex flex-wrap space-x-2 space-y-2"
-    >
+    <span v-show="filter.registration_type" class="inline-flex flex-wrap gap-2">
       <span
         class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
       >
@@ -231,7 +222,7 @@
 
     <span
       v-show="filter.publisher_type.length"
-      class="inline-flex flex-wrap space-x-2 space-y-2"
+      class="inline-flex flex-wrap gap-2"
     >
       <span
         v-for="(item, index) in filter.publisher_type"
@@ -253,7 +244,7 @@
 
     <span
       v-show="filter.data_license.length"
-      class="inline-flex flex-wrap space-x-2 space-y-2"
+      class="inline-flex flex-wrap gap-2"
     >
       <span
         v-for="(item, index) in filter.data_license"
@@ -274,7 +265,7 @@
     </span>
     <span
       v-show="filter.start_date && filter.end_date"
-      class="inline-flex flex-wrap space-x-2 space-y-2"
+      class="inline-flex flex-wrap gap-2"
     >
       <span
         class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
