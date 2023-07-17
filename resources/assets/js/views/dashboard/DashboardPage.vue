@@ -190,8 +190,9 @@ const setDateRangeDate = (start, end, type = '') => {
   }
 
   endDate.value = end;
-
-  fetchTableData();
+  if (currentView.value !== 'user') {
+    fetchTableData();
+  }
   fetchGraphData();
 };
 
