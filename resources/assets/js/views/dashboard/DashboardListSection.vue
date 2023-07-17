@@ -665,7 +665,6 @@ import { defineEmits } from 'vue';
 import Pagination from 'Components/TablePagination.vue';
 import { truncateText } from 'Composable/utils';
 import TableLoaderComponent from 'Components/TableLoaderComponent.vue';
-import { sentenceCaseToKebabCase } from 'Composable/utils';
 
 const props = defineProps({
   currentView: {
