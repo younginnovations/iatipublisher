@@ -37,7 +37,7 @@
         />
       </span>
       <span
-        class="multiselect-label-wrapper"
+        class="multiselect-label-wrapper whitespace-nowrap"
         :style="generateLabel('registration type')"
       >
         <Multiselect
@@ -55,7 +55,8 @@
       </span>
 
       <!--Multiselect with search -->
-      <div
+      <!-- to be implemented -->
+      <!-- <div
         class="organization multiselect-lookalike"
         @click="toggleShowMultiSelect($event)"
       >
@@ -102,8 +103,25 @@
             ></MultiSelectWithSearch>
           </div>
         </Teleport>
-      </div>
-
+      </div> -->
+      <span
+        class="multiselect-label-wrapper"
+        :style="generateLabel('publisher type')"
+      >
+        <Multiselect
+          id="publisher-type"
+          v-model="filter.publisher_type"
+          :options="publisherTypes"
+          placeholder="PUBLISHER TYPE"
+          mode="multiple"
+          :taggable="true"
+          :close-on-select="true"
+          :clear-on-select="false"
+          :hide-selected="false"
+          :can-clear="false"
+          label="publisherType"
+        />
+      </span>
       <span
         class="multiselect-label-wrapper"
         :style="generateLabel('data license')"
@@ -122,7 +140,6 @@
           label="dataLicense"
         />
       </span>
-      <span></span>
     </div>
     <!--Filter options end-->
 
@@ -134,6 +151,7 @@
         :clear-date="clearDate"
         :starting-date="filter.start_date"
         :ending-date="filter.end_date"
+        :date-name="dateType"
         @trigger-set-date-range="setDateRangeDate"
         @trigger-set-date-type="setDateType"
         @date-cleared="clearDate = false"
@@ -145,11 +163,14 @@
   <!--Filter tag pills start-->
   <div
     v-if="isFilterApplied"
-    class="mb-4 flex max-w-full flex-wrap items-center gap-2"
+    class="mb-4 flex max-w-full flex-wrap items-center space-x-2"
   >
     <span class="text-sm font-bold uppercase text-n-40">Filtered by: </span>
 
-    <span v-show="filter.country" class="inline-flex flex-wrap gap-2">
+    <span
+      v-show="filter.country"
+      class="inline-flex flex-wrap space-x-2 space-y-2"
+    >
       <span
         v-for="(item, index) in filter.country"
         :key="index"
@@ -168,7 +189,10 @@
       </span>
     </span>
 
-    <span v-show="filter.completeness" class="inline-flex flex-wrap gap-2">
+    <span
+      v-show="filter.completeness"
+      class="inline-flex flex-wrap space-x-2 space-y-2"
+    >
       <span
         class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
       >
@@ -185,7 +209,10 @@
       </span>
     </span>
 
-    <span v-show="filter.registration_type" class="inline-flex flex-wrap gap-2">
+    <span
+      v-show="filter.registration_type"
+      class="inline-flex flex-wrap space-x-2 space-y-2"
+    >
       <span
         class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
       >
@@ -202,7 +229,10 @@
       </span>
     </span>
 
-    <span v-show="filter.publisher_type" class="inline-flex flex-wrap gap-2">
+    <span
+      v-show="filter.publisher_type.length"
+      class="inline-flex flex-wrap space-x-2 space-y-2"
+    >
       <span
         v-for="(item, index) in filter.publisher_type"
         :key="index"
@@ -211,8 +241,8 @@
         <span class="text-n-40">Publisher type:</span>
         <span
           class="max-w-[500px] overflow-x-hidden text-ellipsis whitespace-nowrap"
-          >{{ item }}</span
-        >
+          >{{ publisherTypes[item] }}
+        </span>
         <svg-vue
           class="mx-2 mt-1 cursor-pointer text-xs"
           icon="cross"
@@ -220,7 +250,11 @@
         />
       </span>
     </span>
-    <span v-show="filter.data_license" class="inline-flex flex-wrap gap-2">
+
+    <span
+      v-show="filter.data_license.length"
+      class="inline-flex flex-wrap space-x-2 space-y-2"
+    >
       <span
         v-for="(item, index) in filter.data_license"
         :key="index"
@@ -240,7 +274,7 @@
     </span>
     <span
       v-show="filter.start_date && filter.end_date"
-      class="inline-flex flex-wrap gap-2"
+      class="inline-flex flex-wrap space-x-2 space-y-2"
     >
       <span
         class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
@@ -617,7 +651,6 @@ export default defineComponent({
     Pagination: Pagination,
     Multiselect: Multiselect,
     DateRangeWidget: DateRangeWidget,
-    MultiSelectWithSearch: MultiSelectWithSearch,
   },
   props: {
     countries: { type: Object, required: true },
@@ -648,6 +681,7 @@ export default defineComponent({
     const loader = inject('loader') as LoaderInterface;
     const dateDropdown = ref();
     const clearDate = ref(false);
+    const dateType = ref('');
 
     //typeface
     interface organizationInterface {
@@ -757,6 +791,7 @@ export default defineComponent({
     //lifecycle
     onMounted(() => {
       let filterParams = getFilterParamsFromPreviousPage();
+
       if (filterParams) {
         for (let i = 0; i < filterParams.length; i++) {
           let key = kebabCaseToSnakecase(filterParams[i][0]);
@@ -764,6 +799,8 @@ export default defineComponent({
 
           if (['publisher_type', 'data_license', 'country'].includes(key)) {
             filter[key].push(value);
+          } else if (key === 'date_type') {
+            dateType.value = value.split('-').join(' ');
           } else {
             filter[key] = value;
           }
@@ -840,7 +877,7 @@ export default defineComponent({
         })
         .then((res) => {
           const response = res.data;
-          totalOrganisation.value = response.data.total;
+          totalOrganisation.value = response.data?.total;
 
           if (response.success) {
             if (response.data.data.length === 0) {
@@ -848,7 +885,6 @@ export default defineComponent({
             } else {
               organisationData.status = 'success';
               organisationData.data = response.data;
-              console.log(organisationData.data, 'org');
 
               refreshStatusArrays(organisationData.data);
             }
@@ -1067,6 +1103,7 @@ export default defineComponent({
       isFilterApplied,
       props,
       showMultiSelectWithSearch,
+      dateType,
       rotateClass,
       multiselectStyle,
       clearDateFilter,

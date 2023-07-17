@@ -51,6 +51,9 @@ export function isJson(str) {
   }
   return true;
 }
+export function sentenceCaseToKebabCase(str) {
+  return str.split(' ').join('-');
+}
 
 export function snakeCaseToSentenceCase(str) {
   const words = str.split('_');

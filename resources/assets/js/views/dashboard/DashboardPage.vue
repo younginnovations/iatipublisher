@@ -59,6 +59,7 @@
       :table-header="currentNav['label']"
       :start-date="startDate"
       :end-date="endDate"
+      :date-type="dateType"
       @table-nav="
         (n, filter, page, tabChange) =>
           handleChangeTableNav(n, filter, page, tabChange)
@@ -94,6 +95,7 @@ const graphAmount = ref<object[]>([]);
 const graphTotal = ref(0);
 const showTableLoader = ref(false);
 const showGraphLoader = ref(false);
+const dateType = ref('');
 
 const dateLabel = {
   publisher: 'Registered date:',
@@ -178,8 +180,9 @@ const fetchGraphData = () => {
     });
 };
 
-const setDateRangeDate = (start, end) => {
+const setDateRangeDate = (start, end, type = '') => {
   startDate.value = '';
+  dateType.value = type;
 
   if (start != '1990-12-31') {
     startDate.value = start;

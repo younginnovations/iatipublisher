@@ -665,6 +665,7 @@ import { defineEmits } from 'vue';
 import Pagination from 'Components/TablePagination.vue';
 import { truncateText } from 'Composable/utils';
 import TableLoaderComponent from 'Components/TableLoaderComponent.vue';
+import { sentenceCaseToKebabCase } from 'Composable/utils';
 
 const props = defineProps({
   currentView: {
@@ -684,6 +685,10 @@ const props = defineProps({
     required: true,
   },
   endDate: {
+    type: String,
+    required: true,
+  },
+  dateType: {
     type: String,
     required: true,
   },
@@ -779,10 +784,12 @@ const showNoDataComponent = computed(() => {
 const activeClass = ref(currentNavList.value[0]?.label);
 
 const NavigateWithFilter = (page, key, value) => {
-  console.log(!!props.startDate && !!props.endDate);
   if (!!props.startDate && !!props.endDate) {
-    console.log('inside');
-    window.location.href = `/${page}?${key}=${value}&start-date=${props.startDate}&end-date=${props.endDate}`;
+    window.location.href = `/${page}?${key}=${value}&start-date=${
+      props.startDate
+    }&end-date=${props.endDate}&date-type=${sentenceCaseToKebabCase(
+      props.dateType
+    )}`;
     return;
   }
   window.location.href = `/${page}?${key}=${value}`;

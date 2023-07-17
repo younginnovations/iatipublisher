@@ -348,6 +348,9 @@
               :dropdown-range="dropdownRange"
               :first-date="oldestDates"
               :clear-date="clearDate"
+              :starting-date="filter.start_date"
+              :date-name="dateType"
+              :ending-date="filter.end_date"
               @trigger-set-date-range="setDateRangeDate"
               @trigger-set-date-type="setDateType"
               @date-cleared="clearDate = false"
@@ -373,7 +376,10 @@
       >
         <span class="text-sm font-bold uppercase text-n-40">filtered by: </span>
 
-        <span v-if="filter.organization" class="inline-flex flex-wrap gap-2">
+        <span
+          v-if="filter.organization.length"
+          class="inline-flex flex-wrap gap-2"
+        >
           <span
             v-for="(item, index) in filter.organization"
             :key="index"
@@ -391,7 +397,7 @@
             />
           </span>
         </span>
-        <span v-if="filter.roles" class="inline-flex flex-wrap gap-2">
+        <span v-if="filter.roles.length" class="inline-flex flex-wrap gap-2">
           <span
             v-for="(item, index) in filter.roles"
             :key="index"
@@ -406,7 +412,7 @@
             />
           </span>
         </span>
-        <span v-if="filter.status" class="inline-flex flex-wrap gap-2">
+        <span v-if="filter.status.length" class="inline-flex flex-wrap gap-2">
           <span
             v-for="(item, index) in filter.status"
             :key="index"
@@ -762,6 +768,8 @@ const checklist = ref([]);
 const currentpageData = ref([]);
 const clearDate = ref(false);
 const editUserId = ref('');
+const dateType = ref('');
+
 const dropdownRange = {
   created_at: 'User created date',
   last_logged_in: 'Last login date',
@@ -786,6 +794,7 @@ const formError = reactive({
   password: '',
   password_confirmation: '',
 });
+import { kebabCaseToSnakecase } from 'Composable/utils';
 
 const isFilterApplied = computed(() => {
   return (
@@ -821,18 +830,44 @@ const clearDateFilter = () => {
 };
 
 onMounted(() => {
-  let filterparams =
-    window.location.href.toString().split('?')[1] &&
-    window.location.href.toString().split('?')[1].split('=');
-
-  if (filterparams) {
-    if (filterparams[0] === 'roles' || filterparams[0] === 'organization') {
-      filter[filterparams[0] as string] = [filterparams[1]];
-    } else {
-      filter[filterparams[0]] = filterparams[1];
+  let filterParams = getFilterParamsFromPreviousPage();
+  if (filterParams) {
+    for (let i = 0; i < filterParams.length; i++) {
+      let key = kebabCaseToSnakecase(filterParams[i][0]);
+      let value = filterParams[i][1];
+      if (['roles', 'organization'].includes(key)) {
+        filter[key].push(value);
+      } else if (key === 'date_type') {
+        dateType.value = value.split('-').join(' ');
+      } else {
+        filter[key] = value;
+      }
     }
   }
 });
+const getFilterParamsFromPreviousPage = () => {
+  let queryString = window.location.href?.toString();
+
+  if (queryString) {
+    queryString = queryString.split('?')[1];
+
+    let queryParamsInKeyVal: object[] = [];
+    const queryParams = queryString?.split('&');
+
+    if (queryParams) {
+      for (let i = 0; i < queryParams.length; i++) {
+        let [key, value] = queryParams[i].split('=');
+        if (key) {
+          queryParamsInKeyVal.push([key, value ?? '']);
+        }
+      }
+    }
+
+    return queryParamsInKeyVal;
+  }
+
+  return false;
+};
 
 onMounted(async () => {
   axios.get(`/users/page/1`).then((res) => {

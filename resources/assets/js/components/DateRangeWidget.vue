@@ -163,15 +163,22 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  dateName: {
+    type: String,
+    required: false,
+    default: '',
+  },
 });
 
 const selectedPresentIndex = ref(99);
 const dateRangeMain: Ref<Element | null> = ref(null);
 const dateType = ref('');
 const dateDropdown = ref();
+const dateTypeName = ref(props.dateName);
 dateType.value = props.dropdownRange && Object.values(props.dropdownRange)[0];
 
 const dateTypeKey = ref('');
+
 dateTypeKey.value = props.dropdownRange && Object.keys(props.dropdownRange)[0];
 
 const showRangeDropdown = ref(false);
@@ -183,7 +190,7 @@ const emit = defineEmits([
 ]);
 const initialDate = computed(() => props.firstDate);
 
-const fixed = ref('All time');
+const fixed = ref(props.dateName);
 const todayDate = moment(new Date()).format('YYYY-MM-DD');
 const selectedDate: Ref<Date[] | string[]> = ref([
   new Date(),
@@ -196,8 +203,8 @@ onMounted(() => {
   selectedDate.value[0] = '';
   selectedDate.value[1] = todayDate;
   triggerSetDateRange('', todayDate, fixed.value);
-  console.log('inside', props.endingDate, props.startingDate);
 });
+
 watch(
   () => [props.endingDate, props.startingDate],
   () => {
@@ -226,8 +233,6 @@ watch(
   () => {
     resetDate().then(() => {
       emit('dateCleared');
-
-      console.log('clear');
     });
   },
   { deep: true }
@@ -390,8 +395,9 @@ watch(
         : false;
 
     if (startDate && endDate) {
-      triggerSetDateRange(startDate, endDate, fixed.value);
       setSelectedPresentDayText();
+
+      triggerSetDateRange(startDate, endDate, fixed.value);
     }
   },
   { deep: true }
@@ -418,6 +424,12 @@ watch(
 const triggerSetDateRange = (startDate, endDate, filteredDateType = '') => {
   emit('triggerSetDateRange', startDate, endDate, filteredDateType);
 };
+watch(
+  () => props.dateName,
+  (value) => {
+    dateTypeName.value = value;
+  }
+);
 
 watch(
   () => fixed.value,
@@ -444,7 +456,13 @@ const triggerSetDateType = (eventType) => {
 const setSelectedPresentDayText = () => {
   fixed.value =
     presetRanges.value[selectedPresentIndex.value]?.label ?? 'Custom';
-  selectedPresentIndex.value = 99;
+
+  // selectedPresentIndex.value = 99;
+
+  if (dateTypeName.value) {
+    fixed.value = dateTypeName.value;
+    dateTypeName.value = '';
+  }
 };
 
 const customPosition = () => {

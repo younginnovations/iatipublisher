@@ -1,7 +1,6 @@
 .multiselect {
   min-width: 180px !important;
   cursor: pointer !important;
-  white-space: nowrap !important;
 }
 .multiselect.is-active {
   box-shadow: none !important;
@@ -18,6 +17,7 @@
     font-size: 12px !important;
     font-weight: bold !important;
     color: rgb(var(--bluecoral)) !important;
+    white-space: nowrap !important;
   }
 }
 .multiselect-search {
@@ -114,8 +114,9 @@
   background-color: white !important;
 }
 .multiselect-dropdown {
-  overflow: overlay !important;
+  overflow-x: hidden !important;
   z-index: 50 !important;
+  word-break: break-all !important;
 }
 
 .multiselect-option {
