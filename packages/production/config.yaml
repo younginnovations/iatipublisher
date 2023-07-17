@@ -46,7 +46,7 @@ data:
   MAIL_HOST: "email-smtp.us-east-1.amazonaws.com"
   MAIL_PORT: "587"
   MAIL_ENCRYPTION: "tls"
-  MAIL_FROM_ADDRESS: "shreeja.shrestha@yipl.com.np"
+  MAIL_FROM_ADDRESS: "no-reply@notifications.publisher.iatistandard.org"
   MAIL_FROM_NAME: "IATI Publisher"
 
   IATI_VALIDATOR_ENDPOINT: "https://api.iatistandard.org/validator/validate"
