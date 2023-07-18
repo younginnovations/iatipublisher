@@ -2,6 +2,11 @@
   min-width: 180px !important;
   cursor: pointer !important;
 }
+
+.vue__select {
+  max-height: 52px !important;
+}
+
 .multiselect.is-active {
   box-shadow: none !important;
 }

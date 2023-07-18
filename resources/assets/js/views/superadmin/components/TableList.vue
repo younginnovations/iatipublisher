@@ -91,7 +91,7 @@
         <Teleport to="body">
           <div
             v-if="showMultiSelectWithSearch"
-            class="multiselect-wrapper"
+            class="multiselect-lookalike-wrapper"
             :style="multiselectStyle"
           >
             <MultiSelectWithSearch
@@ -1111,7 +1111,7 @@ export default defineComponent({
 </script>
 
 <style>
-.multiselect-wrapper {
+.multiselect-lookalike-wrapper {
   position: absolute;
   z-index: 5;
   width: 424px;
