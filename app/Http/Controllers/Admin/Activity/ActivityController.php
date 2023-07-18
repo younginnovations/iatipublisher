@@ -142,10 +142,7 @@ class ActivityController extends Controller
             $this->db->beginTransaction();
             $activity = $this->activityService->store($input);
             $this->db->commit();
-            Session::put(
-                'success',
-                translateElementHasBeenSuccessfully('activity', 'created')
-            );
+            Session::put('success', translateElementHasBeenSuccessfully('activity', 'created'));
 
             return response()->json([
                 'success' => true,
@@ -212,10 +209,11 @@ class ActivityController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.index')->with(
-                'error',
-                translateErrorHasOccurred('elements_common.activity_detail', 'opening', 'page')
-            );
+            return redirect()->route('admin.activities.index')
+                ->with(
+                    'error',
+                    translateErrorHasOccurred('elements_common.activity_detail', 'opening', 'page')
+                );
         }
     }
 

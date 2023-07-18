@@ -257,7 +257,7 @@ class IndicatorController extends Controller
             $result = $indicator->result;
 
             if (!$this->indicatorService->update($indicatorId, ['result_id' => $result->id, 'indicator' => $indicatorData])) {
-                return redirect()->route('admin.activity.show', $resultId)
+                return redirect()->route('admin.result.indicator.index', $resultId)
                     ->with('error', translateErrorHasOccurred('elements_common.indicator', 'updating'));
             }
 

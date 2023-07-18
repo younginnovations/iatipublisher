@@ -173,10 +173,7 @@ class PeriodController extends Controller
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.indicator.period.index', $indicatorId)
-                ->with(
-                    'error',
-                    translateErrorHasOccurred('responses.indicator_period', 'creating')
-                );
+                ->with('error', translateErrorHasOccurred('responses.indicator_period', 'creating'));
         }
     }
 
@@ -215,10 +212,7 @@ class PeriodController extends Controller
             logger()->error($e->getMessage());
 
             return redirect()->route('admin.indicator.period.index', [$indicatorId])
-                ->with(
-                    'error',
-                    translateErrorHasOccurred('responses.result_detail', 'rendering', 'page')
-                );
+                ->with('error', translateErrorHasOccurred('responses.result_detail', 'rendering', 'page'));
         }
     }
 
