@@ -278,4 +278,8 @@ return array (
   'publisher_settings' => 'configuration du signataire',
   'api_token' => 'jeton d’API.',
   'settings_label' => 'paramètres',
+  'start_date' => 'date de début',
+  'end_date' => 'date de fin',
+  'provider_organization' => 'organisation-responsable-octroi-fonds',
+  'receiver_organization' => 'organisation-bénéficiaire',
 );

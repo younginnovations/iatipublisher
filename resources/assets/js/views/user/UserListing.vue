@@ -404,7 +404,7 @@
             <input
               v-model="filter.q"
               type="text"
-              placeholder="language.user_lang.search_for_users"
+              :placeholder="language.user_lang.search_for_users"
             />
           </div>
         </div>

@@ -104,8 +104,8 @@
                   ? 'True'
                   : indicator.indicator.aggregation_status
                   ? 'False'
-                  : 'Missing'
-              }}
+                  : language.common_lang.missing.default
+               }}
             </td>
             <td>
               <div class="flex text-n-40">
@@ -121,7 +121,9 @@
           </tr>
         </tbody>
         <tbody v-else>
-          <td colspan="5" class="text-center">Indicators not found</td>
+          <td colspan="5" class="text-center">
+            {{snakeCaseToSentenceCase(language.elements_common_lang.indicators)}}
+            {{ language.common_lang.missing.not_found }} </td>
         </tbody>
       </table>
     </div>
@@ -157,9 +159,11 @@ import DeleteAction from 'Components/sections/DeleteAction.vue';
 // composable
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
+import {snakeCaseToSentenceCase} from "../../../composable/utils";
 
 export default defineComponent({
   name: 'IndicatorList',
+  methods: {snakeCaseToSentenceCase},
   components: {
     Btn,
     Pagination,

@@ -167,7 +167,7 @@ class IndicatorController extends Controller
             ]);
 
             return redirect()->route('admin.result.indicator.show', [$resultId, $indicator['id']])
-                ->with('error', translateElementSuccessfully('result_indicator', 'created'));
+                ->with('success', translateElementSuccessfully('result_indicator', 'created'));
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 

@@ -3334,7 +3334,7 @@
                         "name": "document_date",
                         "label": "element_labels.activities.document_date",
                         "add_more": false,
-                        "hover_text": "elements.activities.indicator.document_link.document_date.hover_text",
+                        "hover_text": "elements.activities.indicator.document_date.hover_text",
                         "attributes": {
                             "date": {
                                 "name": "date",
@@ -3343,8 +3343,8 @@
                                 "placeholder": "elements_common.yyyy_mm_dd",
                                 "required": true,
                                 "criteria": "mandatory",
-                                "hover_text": "elements.activities.indicator.document_link.document_date.date.hover_text",
-                                "help_text": "elements.activities.indicator.document_link.document_date.date.help_text"
+                                "hover_text": "elements.activities.indicator.document_date.date.hover_text",
+                                "help_text": "elements.activities.indicator.document_date.date.help_text"
                             }
                         },
                         "sub_elements": []

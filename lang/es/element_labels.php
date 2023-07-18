@@ -123,6 +123,8 @@ return [
         'value_date_spaced'=>'fecha valor',
         'receiver_org_spaced' => 'Org receptora',
         'provider_org_spaced' => 'Org proveedora',
+        'provider_organization' => 'organización proveedora',
+        'receiver_organization' => 'organización receptora',
     ],
     'organization' => [
         'document_link' => 'enlace-documento',

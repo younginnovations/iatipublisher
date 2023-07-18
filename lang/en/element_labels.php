@@ -123,7 +123,8 @@ return [
         'value_date_spaced'=>'value date',
         'receiver_org_spaced' => 'Receiver org',
         'provider_org_spaced' => 'Provider org',
-
+        'provider_organization' => 'provider organisation',
+        'receiver_organization' => 'receiver organisation',
 
     ],
     'organization' => [

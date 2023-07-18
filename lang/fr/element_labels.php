@@ -123,6 +123,8 @@ return [
         'value_date_spaced'=>'date-valeur',
         'provider_org_spaced' => 'Org responsable-octroi-fonds',
         'receiver_org_spaced' => 'Org bénéficiaire',
+        'provider_organization' => 'organisation responsable octroi fonds',
+        'receiver_organization' => 'organisation bénéficiaire',
     ],
     'organization' => [
         'document_link' => 'lien-document',

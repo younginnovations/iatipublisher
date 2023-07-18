@@ -278,5 +278,10 @@ return array (
   'publisher_settings' => 'configuración de la entidad que publica',
   'api_token' => 'token de API.',
   'settings_label' => 'ajustes',
+  'start_date' => 'fecha de inicio',
+  'end_date' => 'fecha de finalización',
+  'provider_organization' => 'organización-proveedora',
+  'receiver_organization' => 'organización-receptora',
+
 
 );
