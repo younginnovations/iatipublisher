@@ -80,11 +80,9 @@
     </div>
     <div v-if="post.provider_org" class="mb-4 ml-5">
       <div class="category">
-        <span
-          >
-        {{language.element_labels_lang.activities.provider_org_spaced}}
-        </span
-        >
+        <span>
+          {{ language.element_labels_lang.activities.provider_org_spaced }}
+        </span>
       </div>
       <table class="ml-5">
         <tbody>
@@ -150,9 +148,9 @@
     </div>
     <div v-if="post.receiver_org" class="ml-5">
       <div class="category">
-        <span
-          >{{language.element_labels_lang.activities.receiver_org_spaced}}</span
-        >
+        <span>{{
+          language.element_labels_lang.activities.receiver_org_spaced
+        }}</span>
       </div>
       <table class="ml-5">
         <tbody>

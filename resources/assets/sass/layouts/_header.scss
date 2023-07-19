@@ -152,7 +152,7 @@
 }
 
 #activity-menu-overlay {
-  @media screen and (min-width: 1190px) {
+  @media screen and (min-width: 1420px) {
     @apply hidden;
   }
 }
@@ -168,13 +168,13 @@
   transition: all 0.3s ease;
 }
 .activity-nav-menu {
-  @media screen and (max-width: 1190px) {
+  @media screen and (max-width: 1420px) {
     position: fixed;
     top: 0;
     left: 0;
     width: 300px;
     height: 100vh;
-    padding: 30px;
+    padding: 100px 30px;
     @apply bg-bluecoral text-white;
     font-size: 16px;
     text-align: center;
@@ -183,11 +183,37 @@
     transition: 0.3s;
     z-index: 100;
     flex-direction: column;
-    justify-content: start;
     filter: drop-shadow(0px 0px 8px #000);
 
     .activity-nav-list {
-      @apply mt-56 flex flex-col space-y-9;
+      @apply flex flex-col gap-y-4 pl-4 text-sm;
+    }
+    .activity-nav-list.language-nav-list {
+      flex-direction: row;
+      margin-bottom: 20px;
+      padding-bottom: 28px;
+      padding-left: 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.24);
+
+      .nav__pointer,
+      .nav__pointer-hover {
+        @apply relative;
+        &:after {
+          content: '';
+          @apply absolute bottom-0 left-0 h-1 w-full scale-x-0 scale-y-100 rounded-sm bg-turquoise transition-all duration-500;
+
+          @media screen and (max-width: 1420px) {
+            @apply -bottom-2  h-1 w-full;
+          }
+        }
+
+        &:hover:after {
+          @apply scale-x-100;
+        }
+      }
+      .nav__pointer:after {
+        @apply scale-x-100;
+      }
     }
   }
 }
@@ -203,8 +229,8 @@
       content: '';
       @apply absolute bottom-0 left-0 h-1 w-full scale-x-0 scale-y-100 rounded-sm bg-turquoise transition-all duration-500;
 
-      @media screen and (max-width: 1190px) {
-        @apply -bottom-3;
+      @media screen and (max-width: 1420px) {
+        @apply -left-4 h-full w-1;
       }
     }
 
@@ -221,7 +247,7 @@
 .activity-nav {
   @apply flex grow;
 
-  @media screen and (min-width: 1190px) {
+  @media screen and (min-width: 1420px) {
     @apply justify-end;
   }
 }

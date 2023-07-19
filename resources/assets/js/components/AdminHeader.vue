@@ -41,8 +41,8 @@
     <div id="nav-list" class="activity-nav-menu flex w-full">
       <!-- commented to temporarily hide language buttons , remove width later -->
       <!-- Need to fix flex direction for smaller screens @momik -->
-      <nav class="flex w-full justify-between">
-        <ul class="activity-nav-list -mx-4">
+      <nav>
+        <ul class="activity-nav-list language-nav-list space-x-4">
           <li
             v-for="(language, index) in data.languages"
             :key="index"
@@ -620,6 +620,13 @@ onUnmounted(() => {
 
   nav {
     display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+    @media screen and (max-width: 1420px) {
+      flex-direction: column;
+      justify-content: center;
+    }
 
     a:hover {
       @apply text-white;
