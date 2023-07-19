@@ -215,7 +215,7 @@ return array (
   'this_is_help_text' => 'This is a help text',
   'indicator_list' => 'Indicator List',
   'alert' => 'Alert',
-  'item' => 'Item',
+  'item' => 'item',
   'help' => 'Help',
   'country' => 'Country',
   'activity_detail_page' => 'Activity Detail Page',

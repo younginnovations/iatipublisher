@@ -148,8 +148,7 @@
         </tbody>
         <tbody v-else>
           <td colspan="5" class="text-center">
-            {{ language.elements_common_lang.transactions }}
-            {{ language.common_lang.missing.not_found }}
+            {{ createCapitalizedSentence( language.elements_common_lang.transactions, language.common_lang.missing.not_found)}}
           </td>
         </tbody>
       </table>
@@ -179,12 +178,14 @@ import DeleteAction from 'Components/sections/DeleteAction.vue';
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
 import { useToggle } from '@vueuse/core';
+import {createCapitalizedSentence} from "../../../composable/utils";
 
 // toggle state for modal popup
 let [deleteValue, deleteToggle] = useToggle();
 
 export default defineComponent({
   name: 'TransactionList',
+  methods: {createCapitalizedSentence},
   components: {
     Btn,
     Pagination,

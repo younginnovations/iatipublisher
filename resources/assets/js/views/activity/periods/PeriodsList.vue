@@ -83,8 +83,7 @@
         </tbody>
         <tbody v-else>
           <td colspan="5" class="text-center">
-            {{ language.elements_common_lang.periods }}
-            {{ language.common_lang.missing.not_found }}
+            {{ createCapitalizedSentence(language.elements_common_lang.periods, language.common_lang.missing.not_found) }}
           </td>
         </tbody>
       </table>
@@ -120,9 +119,11 @@ import DeleteAction from 'Components/sections/DeleteAction.vue';
 // composable
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
+import {createCapitalizedSentence} from "Composable/utils";
 
 export default defineComponent({
   name: 'PeriodList',
+  methods: {createCapitalizedSentence},
   components: {
     Btn,
     Pagination,

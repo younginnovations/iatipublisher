@@ -215,7 +215,7 @@ return array (
   'this_is_help_text' => 'Ceci est un texte d’aide',
   'indicator_list' => 'Liste d’indicateurs',
   'alert' => 'Alerte',
-  'item' => 'Élément',
+  'item' => 'élément',
   'help' => 'Aide',
   'country' => 'Pays',
   'activity_detail_page' => 'Page d’information sur les activités',

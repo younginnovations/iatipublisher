@@ -2,7 +2,7 @@
   <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      :text="language.common_lang.result_list"
+      :title="language.common_lang.result_list"
       :back-link="activityLink"
     >
       <div class="flex items-center space-x-3">
@@ -106,8 +106,7 @@
         </tbody>
         <tbody v-else>
           <td colspan="5" class="text-center">
-            {{ language.elements_common_lang.results }}
-            {{ language.common_lang.missing.not_found }}
+            {{ createCapitalizedSentence(language.elements_common_lang.results, language.common_lang.missing.not_found) }}
           </td>
         </tbody>
       </table>
@@ -144,9 +143,11 @@ import DeleteAction from 'Components/sections/DeleteAction.vue';
 // composable
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
+import {createCapitalizedSentence} from "../../../composable/utils";
 
 export default defineComponent({
   name: 'ResultsList',
+  methods: {createCapitalizedSentence},
   components: {
     Btn,
     Pagination,

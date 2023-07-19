@@ -2,7 +2,7 @@
   <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      :text="language.common_lang.indicator_link"
+      :title="language.common_lang.indicator_list"
       :back-link="`${resultLink}`"
     >
       <div class="flex items-center space-x-3">
@@ -122,8 +122,8 @@
         </tbody>
         <tbody v-else>
           <td colspan="5" class="text-center">
-            {{snakeCaseToSentenceCase(language.elements_common_lang.indicators)}}
-            {{ language.common_lang.missing.not_found }} </td>
+            {{ createCapitalizedSentence(language.elements_common_lang.indicators, language.common_lang.missing.not_found) }}
+          </td>
         </tbody>
       </table>
     </div>
@@ -159,11 +159,11 @@ import DeleteAction from 'Components/sections/DeleteAction.vue';
 // composable
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
-import {snakeCaseToSentenceCase} from "../../../composable/utils";
+import {snakeCaseToSentenceCase, createCapitalizedSentence} from "../../../composable/utils";
 
 export default defineComponent({
   name: 'IndicatorList',
-  methods: {snakeCaseToSentenceCase},
+  methods: {snakeCaseToSentenceCase, createCapitalizedSentence},
   components: {
     Btn,
     Pagination,

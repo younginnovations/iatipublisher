@@ -166,7 +166,7 @@ const asArrayData = Object.entries(props.data);
 const filteredElements = computed(() => {
   const filtered = asArrayData.filter(([key, value]) => {
     if (!elements.status) {
-      return key
+      return language.elements_common_lang[key]
         .toLowerCase()
         .includes(
           elements.search.toLowerCase().replace(/_/g, ' ').replace(/-/g, '_')

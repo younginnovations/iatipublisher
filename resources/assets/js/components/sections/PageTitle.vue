@@ -49,8 +49,10 @@ export default defineComponent({
       required: true,
     },
   },
-  setup() {
+  setup(props) {
+    console.log(props.title, 'title');
     return {};
   },
 });
+
 </script>

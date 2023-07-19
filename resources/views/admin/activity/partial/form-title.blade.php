@@ -9,7 +9,7 @@
                     <svg-vue icon="alert" class="mr-2 mt-0.5 text-lg text-crimson-40"></svg-vue>
                     <b>{{ucwords(trans('buttons.delete_element', ["element"=>trans('common.alert')]))}}</b>
                 </div>
-                <div class="p-4 rounded-lg bg-rose">{{trans('buttons.delete_confirmation', ['element'=>trans('common.item')])}}</div>
+                <div class="p-4 rounded-lg bg-rose">{{trans('buttons.delete_confirmation', ['element'=>trans('common.item')])}} ? </div>
             </div>
             <div class="flex justify-end">
                 <div class="inline-flex">
