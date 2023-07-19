@@ -309,23 +309,25 @@ class OrganizationElementCompleteService
      */
     public function setOrganizationDefaultValues(&$data, $organization): mixed
     {
-        if (is_string($data)) {
-            $data = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
-        }
+        if ($data) {
+            if (is_string($data)) {
+                $data = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
+            }
 
-        if ($data && !is_string($data)) {
-            foreach ($data as $key => &$datum) {
-                if (is_array($datum)) {
-                    $this->setOrganizationDefaultValues($datum, $organization);
-                }
+            if (!is_string($data)) {
+                foreach ($data as $key => &$datum) {
+                    if (is_array($datum)) {
+                        $this->setOrganizationDefaultValues($datum, $organization);
+                    }
 
-                $this->setTempNarrative((string) $key, $datum);
-                $this->setTempAmount((string) $key, $datum);
+                    $this->setTempNarrative((string) $key, $datum);
+                    $this->setTempAmount((string) $key, $datum);
 
-                if ($organization->settings) {
-                    $this->updateLanguage($data, (string) $key, $datum, $organization);
+                    if ($organization->settings) {
+                        $this->updateLanguage($data, (string) $key, $datum, $organization);
 
-                    $this->updateCurrency($data, (string) $key, $datum, $organization);
+                        $this->updateCurrency($data, (string) $key, $datum, $organization);
+                    }
                 }
             }
         }
