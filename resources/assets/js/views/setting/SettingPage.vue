@@ -284,6 +284,7 @@ export default defineComponent({
         })
         .then((res) => {
           const response = res.data;
+          toastType.value = response.success;
 
           if (response.success) {
             updateStore(
@@ -303,13 +304,16 @@ export default defineComponent({
               'isVerificationRequested',
               true
             );
+
+            toastType.value =
+              response.data.publisher_verification &&
+              response.data.token_verification;
           }
 
           loaderVisibility.value = false;
           toastVisibility.value = true;
           setTimeout(() => (toastVisibility.value = false), 5000);
           toastMessage.value = response.message;
-          toastType.value = response.success;
         })
         .catch((error) => {
           const { errors } = error.response.data;
