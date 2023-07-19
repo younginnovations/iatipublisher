@@ -68,11 +68,11 @@ class LegacyDataController extends Controller
         try {
             if ($this->activityLegacyDataService->update($id, $request->all())) {
                 return redirect()->route('admin.activity.show', $id)
-                    ->with('error', translateErrorHasOccurred('elements_common.legacy_data', 'updating'));
+                    ->with('success', translateElementSuccessfully('legacy_data', 'updated'));
             }
 
             return redirect()->route('admin.activity.show', $id)
-                ->with('success', translateElementSuccessfully('legacy_data', 'updated'));
+                ->with('error', translateErrorHasOccurred('elements_common.legacy_data', 'updating'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

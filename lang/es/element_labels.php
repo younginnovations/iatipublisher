@@ -151,7 +151,7 @@ return [
         'title' => 'título',
         'vocabulary_uri' => 'vocabulario_uri',
         'recipient_country_budget' => 'presupuesto país receptor',
-        'reporting_organisation' => 'organicountryzación notificadora',
+        'reporting_organisation' => 'organiación notificadora',
         'description' => 'Descripción',
         'format' => 'formato',
         'organisation_identifier' => 'identificador-organización',

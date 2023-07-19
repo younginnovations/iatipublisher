@@ -67,10 +67,10 @@ class HumanitarianScopeController extends Controller
     {
         try {
             if ($this->humanitarianScopeService->update($id, $request->except(['_token', '_method']))) {
-                return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.humanitarian_scope', 'updating'));
+                return redirect()->route('admin.activity.show', $id)->with('success', translateElementSuccessfully('humanitarian_scope', 'updated'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', translateElementSuccessfully('humanitarian_scope', 'updated'));
+            return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.humanitarian_scope', 'updating'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
