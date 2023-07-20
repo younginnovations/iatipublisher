@@ -501,7 +501,7 @@
                 <span>Email</span>
               </th>
 
-              <th id="title" scope="col">
+              <th id="title" v-if="userRole === 'superadmin'" scope="col">
                 <span class="inline-flex items-center">
                   <span
                     v-if="
