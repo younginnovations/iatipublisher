@@ -164,6 +164,15 @@ watch(
     } else if (supportButton !== null) {
       supportButton.style.transform = 'translatey(-50px)';
     }
+    if (showBulkpublish.value) {
+      setTimeout(() => {
+        if (supportButton !== null) {
+          supportButton.style.transform = 'translateX(-350px ,0px)';
+        }
+      }, 100);
+    } else if (supportButton !== null) {
+      supportButton.style.transform = 'translatey(-50px)';
+    }
   }
 );
 
