@@ -574,7 +574,7 @@
             </div>
             <table>
               <tr>
-                <td>{{ translation.common_lang.category }}</td>
+                <td>{{ translation.common_lang.format }}</td>
                 <td v-if="post.format">{{ post.format }}</td>
                 <td v-else class="italic">
                   {{ translation.common_lang.missing.default }}
