@@ -273,7 +273,7 @@
       v-if="
         xlsData || (downloading && !downloadCompleted) || publishingActivities
       "
-      :total-count="totalCount"
+      :total-count="(totalCount as number)"
       :processed-count="processedCount"
       :xls-failed="xlsFailed"
       :activity-name="activityName"
@@ -564,11 +564,6 @@ const pa: Ref<paType> = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
 });
 
-onMounted(() => {
-  fetchActivities(1);
-  checkXlsstatus();
-});
-
 watch(
   () => store.state.selectedActivities,
   (value) => {
@@ -791,6 +786,7 @@ const cancelImport = () => {
 
 const pollingForXlsStatus = () => {
   const checkStatus = setInterval(function () {
+    console.log('polling', xlsData);
     axios.get('/import/xls/status').then((res) => {
       if (res.data.data?.message === 'Started') {
         //reset

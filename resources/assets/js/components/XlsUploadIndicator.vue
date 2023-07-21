@@ -122,6 +122,15 @@ watch(
 );
 
 watch(
+  () => props.xlsData,
+  (value) => {
+    if (value) {
+      showXlsStatus.value = true;
+    }
+  }
+);
+
+watch(
   () => [
     props.xlsData,
     showXlsStatus.value,
@@ -139,6 +148,7 @@ watch(
     const supportButton: HTMLElement = document.querySelector(
       '#launcher'
     ) as HTMLElement;
+
     if (
       !(xlsData && showXlsStatus) &&
       !(downloading && !downloadCompleted && !cancelDownload) &&
