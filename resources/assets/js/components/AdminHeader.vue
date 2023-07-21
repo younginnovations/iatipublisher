@@ -60,7 +60,7 @@
           </li>
         </ul>
 
-        <ul class="activity-nav-list -mx-4">
+        <ul class="activity-nav-list activity-list -mx-4 !text-xs">
           <li
             v-for="(menu, index) in data[
               superAdmin ? 'superadmin_menus' : 'org_menus'
@@ -87,17 +87,29 @@
               ]"
               :href="menu.permalink"
             >
-              <span class="">{{ menu.name }}</span>
+              <span>{{ menu.name }} </span>
             </a>
-            <span
+            <div
               v-if="menu.name === translation.common_lang.add_import_activity"
               :class="[
                 { nav__pointer: menu.active },
                 data.menuNavAnchorClasses,
               ]"
+              class="dropdown-trigger-container"
             >
-              <span class="add-import"
-                >{{ menu.name }}
+              <div
+                class="add-import flex w-full items-center space-x-4"
+                @click="showActivityDropdown = !showActivityDropdown"
+              >
+                <span>{{ menu.name }}</span>
+                <span>
+                  <svg-vue
+                    :class="{ 'rotate-180': showActivityDropdown }"
+                    class="text-[8px] duration-200"
+                    icon="dropdown-arrow"
+                  />
+                </span>
+
                 <div
                   v-if="
                     menu.name === translation.common_lang.add_import_activity
@@ -105,15 +117,15 @@
                   style="visibility: hidden"
                   class="button__dropdown add-import-dropdown absolute top-full z-50 w-56 -translate-y-3 bg-white p-2 text-left shadow-dropdown duration-300"
                 >
-                  <ul class="flex-col">
+                  <ul class="flex flex-col">
                     <li>
                       <a
                         id="header-add-activity-manually"
                         class="cursor-pointer"
                         :class="liClass"
                         @click="modalValue = true"
-                        >{{ translation.common_lang.add_activity_manually }}</a
-                      >
+                        >{{ translation.common_lang.add_activity_manually }}
+                      </a>
                     </li>
                     <li>
                       <a
@@ -137,8 +149,43 @@
                     </li>
                   </ul>
                 </div>
-              </span>
-            </span>
+              </div>
+              <div
+                v-if="showActivityDropdown"
+                class="add-import-sidebar-dropdown"
+              >
+                <ul class="flex flex-col space-y-2 text-left">
+                  <li>
+                    <a
+                      id="header-add-activity-manually"
+                      class="cursor-pointer text-white"
+                      @click="modalValue = true"
+                      >{{ translation.common_lang.add_activity_manually }}
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      id="header-import-activity"
+                      class="cursor-pointer text-white"
+                      href="/import"
+                      >{{
+                        translation.common_lang.import_activities_from_csv
+                      }}</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      id="header-import-xls"
+                      class="cursor-pointer text-white"
+                      href="/import/xls"
+                      >{{
+                        translation.common_lang.import_activities_from_xls
+                      }}</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
 
             <div
               v-if="menu.name === translation.common_lang.logs.default"
@@ -393,7 +440,7 @@ const props = defineProps({
 
 const translation = window['globalLang'];
 const showUserDropdown = ref(false);
-
+const showActivityDropdown = ref(false);
 const toastVisibility = ref(false);
 const isLoading = ref(false);
 
@@ -614,6 +661,12 @@ onUnmounted(() => {
 <style src="@vueform/multiselect/themes/default.css"></style>
 
 <style lang="scss" scoped>
+.add-import-sidebar-dropdown {
+  padding: 8px;
+  @media (min-width: 1420px) {
+    display: none;
+  }
+}
 .activity__header {
   top: 0px;
   z-index: 100;
@@ -717,10 +770,18 @@ onUnmounted(() => {
   visibility: hidden;
   opacity: 0;
 }
+.dropdown-trigger-container {
+  display: block;
+  @media (min-width: 1420px) {
+    display: flex;
+  }
+}
 .add-import:hover .add-import-dropdown {
-  visibility: visible !important;
-  opacity: 1 !important;
-  transform: translateY(0);
+  @media (min-width: 1420px) {
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: translateY(0);
+  }
 }
 
 .spinner {
