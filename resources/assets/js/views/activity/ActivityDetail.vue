@@ -350,7 +350,7 @@
                     :data="element"
                     :types="types"
                     :default-language="
-                      activityProps.default_field_values.default_language
+                      activityProps.default_field_values?.default_language
                     "
                     :title="String(name)"
                     :activity-id="activity.id"
