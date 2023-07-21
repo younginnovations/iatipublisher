@@ -6,6 +6,8 @@ namespace App\IATI\Services\Xml;
 
 use App\IATI\Elements\Xml\XmlGenerator;
 use App\IATI\Traits\XmlServiceTrait;
+use DOMDocument;
+use Exception;
 
 /**
  * Class XmlGeneratorService.
@@ -45,11 +47,27 @@ class XmlGeneratorService
      * @param $settings
      * @param $organization
      *
-     * @return void
+     * @return DomDocument|null
      */
-    public function generateActivityXml($activity, $transaction, $result, $settings, $organization): void
+    public function generateActivityXml($activity, $transaction, $result, $settings, $organization): ?DomDocument
     {
-        $this->xmlGenerator->generateActivityXml($activity, $transaction, $result, $settings, $organization);
+        return $this->xmlGenerator->generateActivityXml($activity, $transaction, $result, $settings, $organization);
+    }
+
+    /**
+     * Generates combines activities xml file and publishes to IATI.
+     *
+     * @param $activities
+     * @param $settings
+     * @param $organization
+     *
+     * @return void
+     *
+     * @throws \JsonException
+     */
+    public function generateActivitiesXml($activities, $settings, $organization): void
+    {
+        $this->xmlGenerator->generateActivitiesXml($activities, $settings, $organization);
     }
 
     /**
@@ -65,18 +83,6 @@ class XmlGeneratorService
     }
 
     /**
-     * Generates new xml file after unpublishing.
-     *
-     * @param $publishedFile
-     *
-     * @return void
-     */
-    public function generateNewXmlFile($publishedFile): void
-    {
-        $this->xmlGenerator->getMergeXml($publishedFile->published_activities, $publishedFile->filename);
-    }
-
-    /**
      * Returns xml data of activity.
      *
      * @param $activity
@@ -86,11 +92,38 @@ class XmlGeneratorService
      * @param $organization
      *
      * @return string
+     *
+     * @throws \JsonException
      */
     public function getActivityXmlData($activity, $transaction, $result, $settings, $organization): string
     {
         $xmlDom = $this->xmlGenerator->getXml($activity, $transaction, $result, $settings, $organization);
 
         return $xmlDom->saveXML();
+    }
+
+    /**
+     * Appends generated/new XML content to merged xml and uploads to S3.
+     *
+     * @param DomDocument $generatedXmlContent
+     * @param $settings
+     *
+     * @return void
+     *
+     * @throws Exception
+     */
+    public function appendCompleteActivityXmlToMergedXml(DomDocument $generatedXmlContent, $settings): void
+    {
+        $this->xmlGenerator->appendCompleteActivityXmlToMergedXml($generatedXmlContent, $settings);
+    }
+
+    /**
+     * Removes given activity from merged xml and re-uploads it to s3.
+     *
+     * @throws Exception
+     */
+    public function removeActivityXmlFromMergedXmlInS3($activity, $organization, $settings): void
+    {
+        $this->xmlGenerator->removeActivityXmlFromMergedXmlInS3($activity, $organization, $settings);
     }
 }

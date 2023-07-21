@@ -123,18 +123,26 @@ class ActivityWorkflowService
      * @param bool $publishFile
      *
      * @return void
+     *
+     * @throws \Exception
      */
     public function publishActivity($activity, bool $publishFile = true): void
     {
         $organization = $activity->organization;
         $settings = $organization->settings;
-        $this->xmlGeneratorService->generateActivityXml(
+        $generatedXmlContent = $this->xmlGeneratorService->generateActivityXml(
             $activity,
             $activity->transactions,
             $activity->results,
             $settings,
             $organization
         );
+
+        if ($generatedXmlContent) {
+            $this->xmlGeneratorService->appendCompleteActivityXmlToMergedXml($generatedXmlContent, $settings);
+        } else {
+            throw new \Exception('Failed appending new activity to merged xml.');
+        }
 
         if ($publishFile) {
             $activityPublished = $this->activityPublishedService->getActivityPublished($organization->id);
@@ -147,21 +155,55 @@ class ActivityWorkflowService
     }
 
     /**
+     * Publish an activities to the IATI registry.
+     *
+     * @param $activities
+     * @param $organization
+     * @param $settings
+     * @param bool $publishFile
+     *
+     * @return void
+     *
+     * @throws \Exception
+     */
+    public function publishActivities($activities, $organization, $settings, bool $publishFile = true): void
+    {
+        $this->xmlGeneratorService->generateActivitiesXml(
+            $activities,
+            $settings,
+            $organization
+        );
+
+        $activityPublished = $this->activityPublishedService->getActivityPublished($organization->id);
+        $publishingInfo = $settings->publishing_info;
+        $this->publisherService->publishFile($publishingInfo, $activityPublished, $organization);
+
+        foreach ($activities as $activity) {
+            $this->activityService->updatePublishedStatus($activity, 'published', true);
+            $this->activitySnapshotService->createOrUpdateActivitySnapshot($activity);
+        }
+    }
+
+    /**
      * Unpublish activity and then republish required file to the IATI registry.
      *
      * @param $activity
      *
      * @return void
+     *
+     * @throws \Exception
      */
     public function unpublishActivity($activity): void
     {
         $organization = $activity->organization;
         $settings = $organization->settings;
         $publishedFile = $this->activityPublishedService->getActivityPublished($activity->org_id);
+        $publishingInfo = $settings->publishing_info;
+
         $this->removeActivityFromPublishedArray($publishedFile, $activity);
         $activityPublished = $this->activityPublishedService->getActivityPublished($organization->id);
-        $this->xmlGeneratorService->generateNewXmlFile($activityPublished);
-        $publishingInfo = $settings->publishing_info;
+
+        $this->xmlGeneratorService->removeActivityXmlFromMergedXmlInS3($activity, $organization, $settings);
         $this->publisherService->publishFile($publishingInfo, $activityPublished, $organization);
         $this->activityService->updatePublishedStatus($activity, 'draft', false);
         $this->validatorService->deleteValidatorResponse($activity->id);
@@ -188,7 +230,9 @@ class ActivityWorkflowService
      * @param $activity
      *
      * @return string
+     *
      * @throws GuzzleException
+     * @throws \JsonException
      */
     public function validateActivityOnIATIValidator($activity): string
     {
@@ -220,6 +264,7 @@ class ActivityWorkflowService
      */
     public function getResponse($xmlData): string
     {
+        file_put_contents(storage_path('test.xml'), $xmlData);
         $client = new Client();
         $URI = env('IATI_VALIDATOR_ENDPOINT');
         $params['headers'] = ['Content-Type' => 'application/json', 'Ocp-Apim-Subscription-Key' => env('IATI_VALIDATOR_KEY')];
@@ -340,7 +385,8 @@ class ActivityWorkflowService
     {
         $data = sectorDefaultValue();
 
-        if ((empty($activity->sector) && !$this->activityService->checkIfTransactionHasSector($activity))
+        if (
+            (empty($activity->sector) && !$this->activityService->checkIfTransactionHasSector($activity))
             || (is_variable_null($activity->sector))
         ) {
             $this->sectorService->update($activity->id, $data);

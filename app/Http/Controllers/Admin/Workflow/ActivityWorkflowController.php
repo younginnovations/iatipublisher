@@ -118,7 +118,7 @@ class ActivityWorkflowController extends Controller
             return response()->json(['success' => true, 'message' => 'Activity has been un-published successfully.']);
         } catch (\Exception $e) {
             DB::rollBack();
-            logger()->error($e->getMessage());
+            logger()->error($e);
             Session::put('error', 'Error has occurred while un-publishing activity.');
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while un-publishing activity.']);

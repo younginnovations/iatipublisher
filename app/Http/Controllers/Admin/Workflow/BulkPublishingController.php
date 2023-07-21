@@ -153,6 +153,7 @@ class BulkPublishingController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
+            logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while validating activities.']);
         }
@@ -171,8 +172,9 @@ class BulkPublishingController extends Controller
     {
         try {
             DB::beginTransaction();
+            $organization = auth()->user()->organization;
 
-            $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization);
+            $message = $this->activityWorkflowService->getPublishErrorMessage($organization);
 
             if (!empty($message)) {
                 Session::put('error', $message);
@@ -180,7 +182,7 @@ class BulkPublishingController extends Controller
                 return response()->json(['success' => false, 'message' => $message]);
             }
 
-            if ($this->publishingStatusService->ongoingBulkPublishing(auth()->user()->organization->id)) {
+            if ($this->publishingStatusService->ongoingBulkPublishing($organization->id)) {
                 $pubishingStatus = $this->bulkPublishingService->getOrganisationBulkPublishingStatus();
 
                 return response()->json([
@@ -202,7 +204,7 @@ class BulkPublishingController extends Controller
 
                 $response = $this->bulkPublishingService->generateInitialBulkPublishingResponse($activities);
                 $this->publishingStatusService->storeProcessingActivities($activities, $response['organization_id'], $response['job_batch_uuid']);
-                dispatch(new BulkPublishActivities($activities, $response['organization_id'], $response['job_batch_uuid']));
+                dispatch(new BulkPublishActivities($activities, $organization, $organization->settings, $response['organization_id'], $response['job_batch_uuid']));
                 DB::commit();
 
                 return response()->json(['success' => true, 'message' => 'Bulk publishing started', 'data' => $response]);
@@ -212,6 +214,7 @@ class BulkPublishingController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
+            logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Bulk publishing failed.']);
         }
@@ -280,6 +283,7 @@ class BulkPublishingController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
+            logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Failed to stop bulk publishing']);
         }
@@ -313,6 +317,7 @@ class BulkPublishingController extends Controller
             return response()->json(['success' => true, 'message' => 'Activity is ready to be published.', 'status' => 'completed']);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
+            logger()->error($e);
 
             return response()->json(['success' => false, 'message' => 'Error has occurred while checking activity.']);
         }
@@ -336,6 +341,7 @@ class BulkPublishingController extends Controller
             return response()->json(['success' => true, 'message' => 'Bulk publishing status successfully deleted.']);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
+            logger()->error($e);
             DB::rollBack();
 
             return response()->json(['success' => false, 'message' => 'Failed to delete bulk publishing status']);

@@ -172,7 +172,7 @@ class BulkPublishingService
         } catch (BadResponseException $ex) {
             if ($ex->getCode() === 422) {
                 $validatorResponse = $ex->getResponse()->getBody()->getContents();
-                $response = $this->addElementOnIatiValidatorResponse($validatorResponse, $activity);
+                $response = json_decode($validatorResponse, true, 512, JSON_THROW_ON_ERROR);
 
                 if ($this->validatorService->updateOrCreateResponse($activity->id, $response)) {
                     return $response;
@@ -182,6 +182,7 @@ class BulkPublishingService
             return ['success' => false, 'error' => 'Error has occurred while validating activity.'];
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
+            logger()->error($e);
 
             throw new \RuntimeException();
         }

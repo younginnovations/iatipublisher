@@ -265,3 +265,25 @@ if (!function_exists('generateRandomCharacters')) {
         return substr(str_shuffle('0123456789abcdefghilkmnopqrstuvwxyz'), 0, $length);
     }
 }
+
+if (!function_exists('removeSingleActivityXmlFromMergedActivitiesXml')) {
+    /**
+     * Given mergedXml and iati-identifier of undesired(to be unpublished) activity, it removes corresponding activity from mergedXml and return the mergedXml.
+     *
+     * @param $mergedXml
+     * @param $targetedIatiIdentifier
+     *
+     * @return object
+     */
+    function removeSingleActivityXmlFromMergedActivitiesXml($mergedXml, $targetedIatiIdentifier): object
+    {
+        $matchingActivity = $mergedXml->xpath("//iati-activity[normalize-space(iati-identifier) = '$targetedIatiIdentifier']");
+
+        if (!empty($matchingActivity)) {
+            $dom = dom_import_simplexml($matchingActivity[0]);
+            $dom->parentNode->removeChild($dom);
+        }
+
+        return $mergedXml;
+    }
+}
