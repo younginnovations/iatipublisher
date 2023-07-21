@@ -6,6 +6,7 @@
           {{ language.email_verification.verify_your_account }}
         </p>
         <p class="text-sm text-n-40 sm:text-base">
+          {{ language.email_verification.a_verification_email_has_been_sent }}
           A verification email has been sent to
           <span class="font-bold text-n-50"> {{ props.email }}</span
           >. {{ language.email_verification.click_and_activate }}

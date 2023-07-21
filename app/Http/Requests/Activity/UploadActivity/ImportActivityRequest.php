@@ -50,7 +50,7 @@ class ImportActivityRequest extends ActivityBaseRequest
      */
     public function messages(): array
     {
-        $messages['activity.required'] = translateRequestMessage('activity_files', 'must_be_uploaded');
+        $messages['activity.required'] = translateRequestMessage('activity_file', 'must_be_uploaded');
         $messages['activity.activity_file'] = translateRequestMessage('either_xml_csv');
         $messages['activity.max'] = translateRequestMessage('greater_than_100mb');
 

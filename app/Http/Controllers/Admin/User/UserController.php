@@ -87,7 +87,10 @@ class UserController extends Controller
     {
         try {
             $organizations = $this->organizationService->pluckAllOrganizations();
-            $status = getUserStatus();
+            $status = array_map(function ($item) {
+                return trans('user.' . strtolower($item));
+            }, getUserStatus());
+
             $roles = $this->userService->getRoles();
             $userRole = Auth::user()->role->role;
             $oldestDates = $this->dashboardService->getOldestDate('user');
