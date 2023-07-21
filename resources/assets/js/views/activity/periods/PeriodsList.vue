@@ -83,7 +83,7 @@
         </tbody>
         <tbody v-else>
           <td colspan="5" class="text-center">
-            {{ createCapitalizedSentence(language.elements_common_lang.periods, language.common_lang.missing.not_found) }}
+            {{ createCapitalizedSentence(language.common_lang.periods, language.common_lang.missing.not_found) }}
           </td>
         </tbody>
       </table>
