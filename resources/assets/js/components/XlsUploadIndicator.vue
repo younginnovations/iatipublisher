@@ -1,14 +1,17 @@
 <template>
   <div class="fixed right-10 bottom-0 z-[1000] flex items-end space-x-5">
     <BulkpublishWithXls
-      v-if="showBulkpublish && activities && Object.keys(activities).length > 0"
+      v-if="showBulkPublishPopup"
+      @toggle="
+        (n) => {
+          toggleBulkPublish = n;
+        }
+      "
       @close="closeBulkpublish"
     />
-    <ActivityDownload
-      v-if="downloading && !downloadCompleted && !cancelDownload"
-    />
+    <ActivityDownload v-if="showDownloadPopup" />
     <XlsLoader
-      v-if="xlsData && showXlsStatus"
+      v-if="showXlsPopup"
       :total-count="totalCount"
       :processed-count="processedCount"
       :xls-failed="xlsFailed"
@@ -30,6 +33,7 @@ import {
   onUnmounted,
   onMounted,
   Ref,
+  computed,
 } from 'vue';
 import axios from 'axios';
 import { useStore } from 'Store/activities/index';
@@ -38,6 +42,8 @@ const showXlsStatus = ref(true);
 import { useStorage } from '@vueuse/core';
 
 const downloadCompleted = ref(false);
+const toggleBulkPublish = ref(false);
+
 const cancelDownload = ref(false);
 const showBulkpublish = ref(true);
 const publishingActivities = ref<string[]>([]);
@@ -88,7 +94,7 @@ onMounted(() => {
         publishingActivities.value &&
         publishingActivities.value.length > 0
       ) {
-        supportButton.style.transform = 'translate(-350px ,0px)';
+        // supportButton.style.transform = 'translate(-350px ,0px)';
       }
 
       clearInterval(checkSupportButton);
@@ -137,44 +143,46 @@ watch(
     downloading,
     downloadCompleted.value,
     cancelDownload.value,
+    toggleBulkPublish.value,
   ],
-  ([
-    xlsData,
-    showXlsStatus,
-    downloading,
-    downloadCompleted,
-    cancelDownload,
-  ]) => {
+  () => {
     const supportButton: HTMLElement = document.querySelector(
       '#launcher'
     ) as HTMLElement;
 
     if (
-      !(xlsData && showXlsStatus) &&
-      !(downloading && !downloadCompleted && !cancelDownload) &&
-      showBulkpublish &&
-      publishingActivities.value &&
-      publishingActivities.value.length > 0
+      !showXlsPopup.value &&
+      !showDownloadPopup.value &&
+      showBulkPublishPopup &&
+      toggleBulkPublish.value
     ) {
       setTimeout(() => {
         if (supportButton !== null) {
           supportButton.style.transform = 'translate(-350px ,0px)';
         }
       }, 100);
-    } else if (supportButton !== null) {
-      supportButton.style.transform = 'translatey(-50px)';
-    }
-    if (showBulkpublish.value) {
-      setTimeout(() => {
-        if (supportButton !== null) {
-          supportButton.style.transform = 'translateX(-350px ,0px)';
-        }
-      }, 100);
-    } else if (supportButton !== null) {
-      supportButton.style.transform = 'translatey(-50px)';
+    } else {
+      if (supportButton !== null) {
+        supportButton.style.transform = 'translatey(-50px)';
+      }
     }
   }
 );
+
+const showBulkPublishPopup = computed(() => {
+  return (
+    showBulkpublish.value &&
+    activities.value &&
+    Object.keys(activities.value).length > 0
+  );
+});
+const showDownloadPopup = computed(() => {
+  return downloading.value && !downloadCompleted.value && !cancelDownload.value;
+});
+
+const showXlsPopup = computed(() => {
+  return props.xlsData && showXlsStatus.value;
+});
 
 onUnmounted(() => {
   const supportButton: HTMLElement = document.querySelector(
@@ -233,6 +241,6 @@ watch(
   },
   { deep: true }
 );
-const downloading = inject('downloading');
+const downloading = inject('downloading') as Ref;
 const activities = inject('activities') as Ref;
 </script>
