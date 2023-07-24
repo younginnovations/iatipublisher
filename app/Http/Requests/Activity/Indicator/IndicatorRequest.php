@@ -6,6 +6,7 @@ namespace App\Http\Requests\Activity\Indicator;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
 use App\IATI\Services\Activity\ResultService;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Psr\Container\ContainerExceptionInterface;
@@ -150,40 +151,61 @@ class IndicatorRequest extends ActivityBaseRequest
      * returns rules for reference.
      *
      * @param $formFields
+     * @param $fileUpload
+     * @param array $result
+     * @param $resultId
      *
      * @return array
+     *
+     * @throws BindingResolutionException
      */
     protected function getWarningForReference($formFields, bool $fileUpload, array $result, $resultId): array
     {
+        $resultService = app()->make(ResultService::class);
         $rules = [];
 
         Validator::extendImplicit(
             'result_ref_code_present',
             function () {
-                $params = $this->route()->parameters();
+                return false;
+            }
+        );
 
-                return !app()->make(ResultService::class)->resultHasRefCode((int) $params['id']);
+        Validator::extendImplicit(
+            'result_ref_vocabulary_present',
+            function () {
+                return false;
             }
         );
 
         foreach ($formFields as $referenceIndex => $reference) {
             $referenceForm = sprintf('reference.%s', $referenceIndex);
 
-            if (!empty($reference['code']) && $reference['code'] && $reference['code'] !== '') {
+            if (!is_array_value_empty($reference)) {
                 if ($fileUpload) {
                     $hasCode = false;
+                    $hasVocabulary = false;
 
                     foreach ((Arr::get($result, 'reference', [])) as $ref) {
-                        if (Arr::get($ref, 'code') && !empty($ref['code'])) {
+                        if (Arr::get($ref, 'code', false)) {
                             $hasCode = true;
+                            break;
+                        }
+
+                        if (Arr::get($ref, 'vocabulary', false)) {
+                            $hasVocabulary = true;
                             break;
                         }
                     }
 
-                    $codeNotPresent = $resultId ? !app()->make(ResultService::class)->resultHasRefCode($resultId) : !$hasCode;
-                    $rules[sprintf('%s.code', $referenceForm)][] = 'result_ref_code_present:' . $codeNotPresent;
+                    $codePresent = $resultId ? $resultService->resultHasRefCode($resultId) : $hasCode;
+                    $vocabularyPresent = $resultId ? $resultService->resultHasRefVocabulary($resultId) : $hasVocabulary;
+
+                    $rules[sprintf('%s.code', $referenceForm)][] = $codePresent ? 'result_ref_code_present' : false;
+                    $rules[sprintf('%s.vocabulary', $referenceForm)][] = $vocabularyPresent ? 'result_ref_vocabulary_present' : false;
                 } else {
-                    $rules[sprintf('%s.code', $referenceForm)][] = 'result_ref_code_present';
+                    $rules[sprintf('%s.code', $referenceForm)][] = Arr::get($result, 'code', false) ? 'result_ref_code_present' : false;
+                    $rules[sprintf('%s.vocabulary', $referenceForm)][] = Arr::get($result, 'vocabulary', false) ? 'result_ref_vocabulary_present' : false;
                 }
             }
         }
@@ -195,8 +217,11 @@ class IndicatorRequest extends ActivityBaseRequest
      * returns rules for reference.
      *
      * @param $formFields
+     * @param $fileUpload
      *
      * @return array
+     *
+     * @throws \JsonException
      */
     protected function getErrorsForReference($formFields, bool $fileUpload): array
     {
@@ -228,6 +253,10 @@ class IndicatorRequest extends ActivityBaseRequest
 
             if (!empty($reference['code'])) {
                 $messages[sprintf('%s.code.result_ref_code_present', $referenceForm)] = 'The code is already defined in its result';
+            }
+
+            if (!empty($reference['vocabulary'])) {
+                $messages[sprintf('%s.vocabulary.result_ref_vocabulary_present', $referenceForm)] = 'The vocabulary is already defined in its result';
             }
         }
 

@@ -185,7 +185,38 @@ class ResultService
 
                 if (!empty($refs)) {
                     foreach ($refs as $ref) {
-                        if (array_key_exists('code', $ref) && $ref['code'] && !empty($ref['code'])) {
+                        if (array_key_exists('code', $ref) && !empty($ref['code'])) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if result indicator has ref code.
+     *
+     * @param $resultId
+     *
+     * @return bool
+     */
+    public function indicatorHasRefVocabulary($resultId): bool
+    {
+        $result = $this->resultRepository->getResultWithIndicator($resultId);
+
+        if (!empty($result['indicators'])) {
+            $indicators = $result['indicators'];
+
+            foreach ($indicators as $item) {
+                $indicator = $item['indicator'];
+                $refs = $indicator['reference'];
+
+                if (!empty($refs)) {
+                    foreach ($refs as $ref) {
+                        if (array_key_exists('vocabulary', $ref) && !empty($ref['vocabulary'])) {
                             return true;
                         }
                     }
@@ -212,6 +243,30 @@ class ResultService
 
             foreach ($refs as $ref) {
                 if (array_key_exists('code', $ref) && $ref['code']) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if result indicator has ref code.
+     *
+     * @param $resultId
+     *
+     * @return bool
+     */
+    public function resultHasRefVocabulary($resultId): bool
+    {
+        $result = $this->resultRepository->getResult($resultId);
+
+        if (!empty($result['result']) && array_key_exists('reference', $result['result']) && !empty($result['result']['reference'])) {
+            $refs = $result['result']['reference'];
+
+            foreach ($refs as $ref) {
+                if (array_key_exists('vocabulary', $ref) && $ref['vocabulary']) {
                     return true;
                 }
             }

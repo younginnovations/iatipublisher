@@ -77,7 +77,6 @@ class SectorRequest extends ActivityBaseRequest
      */
     public function getErrorsForSector($formFields, bool $fileUpload = false): array
     {
-        logger('asd');
         $rules = [];
 
         foreach ($formFields as $sectorIndex => $sector) {
