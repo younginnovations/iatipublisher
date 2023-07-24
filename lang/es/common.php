@@ -245,7 +245,7 @@ return array (
   'core_completed_title' => 'Elementos básicos completados',
   'core_completed_description' => '¡Felicitaciones! Todos los elementos básicos están completos. Continuar para validar esta actividad.',
   'core_not_completed_title' => 'Elementos básicos no completados',
-  'core_not_completed_description' => '<p>Hacen falta datos en algunos de los elementos básicos. Le recomendamos completar todos estos campos de datos con el fin de garantizar la utilidad de sus datos.</p><p>¿Desea continuar de todos modos y realizar comprobaciones de estos datos (validarlos)?</p>',
+  'core_not_completed_description' => '<p>Hacen falta datos en algunos de los elementos básicos. Le recomendamos completar todos estos campos de datos con el fin de garantizar la utilidad de sus datos.</p><p>¿Desea continuar de todos modos y realizar comprobaciones de estos datos (validarlos) ?</p>',
   'add_narrative_in_other_lang' => 'AÑADIR DESCRIPCIÓN EN OTRO IDIOMA',
   'education_and_psychosocial' => 'Apoyo educativo y psicosocial a los niños de la provincia de Alepo',
   'add_additional_description' => 'añadir una descripción adicional',

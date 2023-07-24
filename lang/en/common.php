@@ -245,7 +245,7 @@ return array (
   'core_completed_title' => 'Core Elements Complete',
   'core_completed_description' => 'Congratulations! All the core elements are complete. Continue to Validate this activity.',
   'core_not_completed_title' => 'Core Elements not complete',
-  'core_not_completed_description' => '<p>There is missing data in some of the core elements. We highly recommend that you complete these data fields to help ensure your data is useful.</p><p>Do you want to continue anyway and run checks on (validate) this data.</p>',
+  'core_not_completed_description' => '<p>There is missing data in some of the core elements. We highly recommend that you complete these data fields to help ensure your data is useful.</p><p>Do you want to continue anyway and run checks on (validate) this data ?</p>',
   'add_narrative_in_other_lang' => 'ADD NARRATIVE IN OTHER LANGUAGE',
   'education_and_psychosocial' => 'Education and psychosocial support to children in Aleppo Governorate',
   'add_additional_description' => 'add additional description',
