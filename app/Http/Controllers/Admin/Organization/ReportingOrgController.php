@@ -50,7 +50,8 @@ class ReportingOrgController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.opening'), 'suffix'=>trans('responses.org_reporting_org')]));
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('responses.org_reporting_org', 'opening', 'form'));
         }
     }
 
@@ -67,17 +68,20 @@ class ReportingOrgController extends Controller
             DB::beginTransaction();
 
             if (!$this->reportingOrgService->update(Auth::user()->organization_id, $request->all())) {
-                return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('responses.org_reporting_org')]));
+                return redirect()->route('admin.organisation.index')
+                    ->with('error', translateErrorHasOccurred('responses.org_reporting_org', 'updating'));
             }
 
             DB::commit();
 
-            return redirect()->route('admin.organisation.index')->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.org_reporting_org'), 'event'=>trans('events.updated')])));
+            return redirect()->route('admin.organisation.index')
+                ->with('success', translateElementSuccessfully('responses.org_reporting_org', 'updated'));
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('responses.org_reporting_org')]));
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('responses.org_reporting_org', 'updating'));
         }
     }
 }

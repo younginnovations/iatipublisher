@@ -94,7 +94,8 @@ class OrganizationController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.index')->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.opening'), 'suffix'=>trans('responses.org_detail')]));
+            return redirect()->route('admin.activities.index')
+                ->with('error', translateErrorHasOccurred('responses.org_detail', 'opening', 'form'));
         }
     }
 
@@ -156,7 +157,7 @@ class OrganizationController extends Controller
             }
         }
 
-        return ['message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.filtered_agency'), 'event'=>trans('events.fetched')])), 'data' => $filtered_agency];
+        return ['message' => translateElementSuccessfully('responses.filtered_agency', 'fetched'), 'data' => $filtered_agency];
     }
 
     /**
@@ -172,7 +173,7 @@ class OrganizationController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.publisher_status'), 'suffix'=>trans('responses.retrieved')])),
+                'message' => translateElementSuccessfully('responses.publisher_status', 'retrieved'),
                 'data' => ['publisher_active' => $status],
             ]);
         } catch (\Exception $e) {

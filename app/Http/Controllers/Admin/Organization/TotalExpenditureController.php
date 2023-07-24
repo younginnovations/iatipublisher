@@ -49,7 +49,8 @@ class TotalExpenditureController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.opening'), 'suffix'=>trans('responses.org_total_expenditure')]));
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('responses.org_total_expenditure', 'opening', 'form'));
         }
     }
 
@@ -64,14 +65,17 @@ class TotalExpenditureController extends Controller
     {
         try {
             if (!$this->totalExpenditureService->update(Auth::user()->organization_id, $request->all())) {
-                return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('responses.org_total_expenditure')]));
+                return redirect()->route('admin.organisation.index')
+                    ->with('error', translateErrorHasOccurred('responses.org_total_expenditure', 'updating'));
             }
 
-            return redirect()->route('admin.organisation.index')->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.org_total_expenditure'), 'event'=>trans('events.updated')])));
+            return redirect()->route('admin.organisation.index')
+                ->with('success', translateElementSuccessfully('responses.org_total_expenditure', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('responses.org_total_expenditure')]));
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('responses.org_total_expenditure', 'updating'));
         }
     }
 }

@@ -96,7 +96,7 @@ class RedirectActivity
                 $activity = $this->activityService->getActivity($id);
 
                 if ($activity === null || !$activity->isActivityOfOrg()) {
-                    return redirect(RouteServiceProvider::HOME)->with('error', trans('middleware.does_not_exist', ['prefix'=>trans('common.activity')]));
+                    return redirect(RouteServiceProvider::HOME)->with('error', translateDoesntExist('common.activity'));
                 }
 
                 $byPassResultRoutes = ['admin.activity.result.index', 'admin.activity.results.paginate', 'admin.activity.result.create', 'admin.activity.result.store'];
@@ -105,7 +105,7 @@ class RedirectActivity
                     $resultId = (int) $request->route('resultId');
 
                     if (!$this->resultService->activityResultExists($id, $resultId)) {
-                        return redirect(RouteServiceProvider::HOME)->with('error', trans('middleware.does_not_exist', ['prefix'=>trans('common.result')]));
+                        return redirect(RouteServiceProvider::HOME)->with('error', translateDoesntExist('common.result'));
                     }
                 }
 
@@ -115,18 +115,18 @@ class RedirectActivity
                     $transactionId = (int) $request->route('transactionId');
 
                     if (!$this->transactionService->activityTransactionExists($id, $transactionId)) {
-                        return redirect(RouteServiceProvider::HOME)->with('error', trans('middleware.does_not_exist', ['prefix'=>trans('common.transaction')]));
+                        return redirect(RouteServiceProvider::HOME)->with('error', translateDoesntExist('common.transaction'));
                     }
                 }
             } elseif ($module === 'result') {
                 $result = $this->resultService->getResult($id);
 
                 if ($result === null) {
-                    return redirect(RouteServiceProvider::HOME)->with('error', trans('middleware.does_not_exist', ['prefix'=>trans('common.result')]));
+                    return redirect(RouteServiceProvider::HOME)->with('error', translateDoesntExist('common.result'));
                 }
 
                 if ($result->activity === null || !$result->activity->isActivityOfOrg()) {
-                    return redirect(RouteServiceProvider::HOME)->with('error', trans('middleware.does_not_exist', ['prefix'=>trans('common.activity')]));
+                    return redirect(RouteServiceProvider::HOME)->with('error', translateDoesntExist('common.activity'));
                 }
 
                 $byPassIndicatorRoutes = ['admin.result.indicator.index', 'admin.result.indicators.paginate', 'admin.result.indicator.create', 'admin.result.indicator.store'];
@@ -135,7 +135,7 @@ class RedirectActivity
                     $indicatorId = (int) $request->route('indicatorId');
 
                     if (!$this->indicatorService->resultIndicatorExists($id, $indicatorId)) {
-                        return redirect(RouteServiceProvider::HOME)->with('error', trans('middleware.does_not_exist', ['prefix'=>trans('common.indicator')]));
+                        return redirect(RouteServiceProvider::HOME)->with('error', translateDoesntExist('common.indicator'));
                     }
                 }
 
@@ -144,15 +144,15 @@ class RedirectActivity
                 $indicator = $this->indicatorService->getIndicator($id);
 
                 if ($indicator === null) {
-                    return redirect(RouteServiceProvider::HOME)->with('error', trans('middleware.does_not_exist', ['prefix'=>trans('common.indicator')]));
+                    return redirect(RouteServiceProvider::HOME)->with('error', translateDoesntExist('common.indicator'));
                 }
 
                 if ($indicator->result === null) {
-                    return redirect(RouteServiceProvider::HOME)->with('error', trans('middleware.does_not_exist', ['prefix'=>trans('common.result')]));
+                    return redirect(RouteServiceProvider::HOME)->with('error', translateDoesntExist('common.result'));
                 }
 
                 if ($indicator->result->activity === null || !$indicator->result->activity->isActivityOfOrg()) {
-                    return redirect(RouteServiceProvider::HOME)->with('error', trans('middleware.does_not_exist', ['prefix'=>trans('common.activity')]));
+                    return redirect(RouteServiceProvider::HOME)->with('error', translateDoesntExist('common.activity'));
                 }
 
                 $byPassPeriodRoutes = ['admin.indicator.period.index', 'admin.indicator.periods.paginate', 'admin.indicator.period.create', 'admin.indicator.period.store'];
@@ -161,7 +161,7 @@ class RedirectActivity
                     $periodId = (int) $request->route('periodId');
 
                     if (!$this->periodService->indicatorPeriodExist($id, $periodId)) {
-                        return redirect(RouteServiceProvider::HOME)->with('error', trans('middleware.does_not_exist', ['prefix'=>trans('common.period')]));
+                        return redirect(RouteServiceProvider::HOME)->with('error', translateDoesntExist('common.period'));
                     }
                 }
                 $activity = $indicator->result->activity;
@@ -171,7 +171,7 @@ class RedirectActivity
                 return $next($request);
             }
 
-            return redirect(RouteServiceProvider::HOME)->with('error', trans('middleware.does_not_exist', ['prefix'=>trans('common.activity')]));
+            return redirect(RouteServiceProvider::HOME)->with('error', translateDoesntExist('common.activity'));
         }
 
         return abort(404);

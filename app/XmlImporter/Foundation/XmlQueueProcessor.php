@@ -141,7 +141,7 @@ class XmlQueueProcessor
             ));
 
             awsUploadFile(sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, $orgId, $userId, 'status.json'), json_encode(
-                ['success' => false, 'message' => trans('responses.invalid_xml_or_header')],
+                ['success' => false, 'message' => translateResponses('invalid_xml_or_header')],
                 JSON_THROW_ON_ERROR
             ));
 

@@ -7,17 +7,17 @@
             <div class="mb-4">
                 <div class="flex mb-6 title">
                     <svg-vue icon="alert" class="mr-2 mt-0.5 text-lg text-crimson-40"></svg-vue>
-                    <b>{{ucwords(trans('buttons.delete_element', ["element"=>trans('common.alert')]))}}</b>
+                    <b>{{ translateButton('delete_element', 'common.alert') }}</b>
                 </div>
-                <div class="p-4 rounded-lg bg-rose">{{ trans('buttons.delete_confirmation', ['element'=> trans('common.item')] )}} ?</div>
+                <div class="p-4 rounded-lg bg-rose">{{ translateButton('delete_confirmation', 'common.item') }} ?</div>
             </div>
             <div class="flex justify-end">
                 <div class="inline-flex">
                     <button class="relative px-6 font-bold uppercase bg-white cancel-popup button text-n-40">
-                        <span>{{ trans('buttons.go_back') }}</span>
+                        <span>{{ translateButton('go_back') }}</span>
                     </button>
                     <button class="relative font-bold delete-confirm button text-n-40 primary-btn space">
-                        <span>{{ trans('buttons.delete') }}</span>
+                        <span>{{ translateButton('delete') }}</span>
                     </button>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                     <div>
                         <p
                             class="help-button text-xs text-n-40 hover:text-spring-50 font-normal ml-1.5 cursor-pointer inline-block">
-                            {{ trans('common.help') }}</p>
+                            {{ translateCommon('help') }}</p>
                         <div class="help-button-content hidden">
                             <p class="font-bold text-bluecoral">
                                 {{ $data['name'] }}
@@ -60,7 +60,7 @@
                                 fill="#68797E" stroke="#68797E" stroke-width=".667"></path>
                         </svg>
                         <div class="left-0 help__text w-72">
-                            <p class="text-bluecoral mb-2 italic">{{ trans('common.iati_standard_reference') }}</p>
+                            <p class="text-bluecoral mb-2 italic">{{ translateCommon('iati_standard_reference') }}</p>
                             <span class="font-bold text-bluecoral">{{ $data['name'] }}</span>
                             <p>{!! trans(Arr::get(getOrganizationElementSchema($data['name']), 'hover_text', false)) !!} </p>
                         </div>
@@ -74,7 +74,7 @@
             </div> --}}
         </div>
         <div class="flex icons">
-            <span class="text-xs"><span class="required-icon">*</span> {{ trans('common.mandatory_fields') }}</span>
+            <span class="text-xs"><span class="required-icon">*</span> {{ translateCommon('mandatory_fields') }}</span>
         </div>
     </div>
     <div class="w-full h-px mb-4 divider bg-n-20"></div>

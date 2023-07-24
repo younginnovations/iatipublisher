@@ -229,7 +229,7 @@ return array (
   'valued_at' => 'valued at',
   'in_node' => 'in node',
   'publish' => 'Published',
-    'comment'=>'comment',
+  'comment'=>'comment',
   'missing' =>
   array (
     'default' => 'Missing',

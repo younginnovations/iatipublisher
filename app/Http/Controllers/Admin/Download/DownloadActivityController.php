@@ -280,7 +280,7 @@ class DownloadActivityController extends Controller
             }
 
             if (!isset($activities) || !count($activities)) {
-                return response()->json(['success' => false, 'message' => trans('responses.no_activities_selected')]);
+                return response()->json(['success' => false, 'message' => translateResponses('no_activities_selected')]);
             }
 
             $mergedContent = $this->downloadActivityService->getCombinedXmlFile($activities);

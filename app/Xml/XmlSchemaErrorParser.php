@@ -17,9 +17,9 @@ class XmlSchemaErrorParser
     public function __construct()
     {
         $this->mappings = [
-            '1868'    => trans('requests.xml_parser_1868'),
-            '1871'    => trans('requests.xml_parser_1871'),
-            'default' => trans('requests.xml_parser_default'),
+            '1868'    => translateRequestMessage('xml_parser_1868'),
+            '1871'    => translateRequestMessage('xml_parser_1871'),
+            'default' => translateRequestMessage('xml_parser_default'),
         ];
     }
 

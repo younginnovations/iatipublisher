@@ -49,7 +49,8 @@ class RecipientRegionBudgetController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.opening'), 'suffix'=>trans('responses.org_recipient_region_budget')]));
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('responses.org_recipient_region_budget', 'opening', 'form'));
         }
     }
 
@@ -64,14 +65,17 @@ class RecipientRegionBudgetController extends Controller
     {
         try {
             if (!$this->recipientRegionBudgetService->update(Auth::user()->organization_id, $request->all())) {
-                return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('responses.org_recipient_region_budget')]));
+                return redirect()->route('admin.organisation.index')
+                    ->with('error', translateErrorHasOccurred('responses.org_recipient_region_budget', 'updating'));
             }
 
-            return redirect()->route('admin.organisation.index')->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.org_recipient_region_budget'), 'event'=>trans('events.updated')])));
+            return redirect()->route('admin.organisation.index')
+                ->with('success', translateElementSuccessfully('responses.org_recipient_region_budget', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('responses.org_recipient_region_budget')]));
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('responses.org_recipient_region_budget', 'updating'));
         }
     }
 }

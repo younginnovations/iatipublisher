@@ -8,9 +8,9 @@
             <span class="mx-4 separator"> / </span>
             <div class="breadcrumb__title">
               <span class="overflow-hidden breadcrumb__title last text-n-30"><a
-                  href="/activity/{{ $activity['id'] }}">{{ $activity->default_title_narrative ?? trans('common.untitled') }}</a></span>
+                  href="/activity/{{ $activity['id'] }}">{{ $activity->default_title_narrative ?? translateCommon('untitled') }}</a></span>
               <span
-                class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{ $activity->default_title_narrative ?? trans('common.untitled') }}</span>
+                class="ellipsis__title--hover w-[calc(100%_+_35px)]">{{ $activity->default_title_narrative ?? translateCommon('untitled') }}</span>
             </div>
           </div>
         </nav>
@@ -23,8 +23,8 @@
         </div>
         <div>
           <h4 class="relative mr-4 text-2xl font-bold ellipsis__title">
-            <span class="overflow-hidden ellipsis__title">{{ $activity->default_title_narrative ?? trans('common.untitled') }}</span>
-            <span class="ellipsis__title--hover">{{ $activity->default_title_narrative ?? trans('common.untitled') }}</span>
+            <span class="overflow-hidden ellipsis__title">{{ $activity->default_title_narrative ?? translateCommon('untitled') }}</span>
+            <span class="ellipsis__title--hover">{{ $activity->default_title_narrative ?? translateCommon('untitled') }}</span>
           </h4>
         </div>
       </div>

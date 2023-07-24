@@ -108,7 +108,7 @@ class ParticipatingOrganizationRequest extends ActivityBaseRequest
             $participatingOrgForm = 'participating_org.' . $participatingOrgIndex;
             $messages[$participatingOrgForm . '.organization_role.required'] = trans('validation.required', ['attribute' => trans('elementForm.organisation_role')]);
             $identifier = $participatingOrgForm . '.identifier';
-            $messages[$identifier . '.exclude_operators'] = trans('common.error.identifier_must_not_contain_symbols_or_blank_spaces');
+            $messages[$identifier . '.exclude_operators'] = translateCommonError('identifier_must_not_contain_symbols_or_blank_spaces');
 
             $messages[sprintf('%s.organization_role.in', $participatingOrgForm)] = translateRequestMessage('participating_org', 'role_is_invalid');
             $messages[sprintf('%s.type.in', $participatingOrgForm)] = translateRequestMessage('participating_org', 'type_is_invalid');

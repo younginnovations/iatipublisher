@@ -202,7 +202,7 @@ class UserService
 
         if ($res->getStatusCode() === 404) {
             if ($exists) {
-                $errors['publisher_id'] = [trans('common.error.elements_doesnt_match_iati_registry', ['element'=>trans('register.publisher_id.label')])];
+                $errors['publisher_id'] = [translateCommonError('elements_doesnt_match_iati_registry', 'register.publisher_id.label')];
             }
 
             return $errors;
@@ -211,11 +211,11 @@ class UserService
         $response = json_decode($res->getBody()->getContents())->result;
 
         if (!in_array($publisher_id, $response) && $exists) {
-            $errors['publisher_id'] = [trans('common.error.elements_doesnt_match_iati_registry', ['element'=>trans('register.publisher_id.label')])];
+            $errors['publisher_id'] = [translateCommonError('elements_doesnt_match_iati_registry', 'register.publisher_id.label')];
         }
 
         if (in_array($publisher_id, $response) && !$exists) {
-            $errors['publisher_id'] = [trans('common.error.element_already_exists_in_iati_registry', ['element'=>trans('register.publisher_id.label')])];
+            $errors['publisher_id'] = [translateCommonError('element_already_exists_in_iati_registry', 'register.publisher_id.label')];
         }
 
         return $errors;
@@ -248,7 +248,7 @@ class UserService
         $errors = [];
 
         if ($res->getStatusCode() === 404) {
-            $errors['error'] = [trans('responses.error_has_occurred', ['event'=>trans('events.trying_to'), 'suffix'=>trans('responses.check_user_email')])];
+            $errors['error'] = [translateErrorHasOccurred('responses.check_user_email', 'trying_to')];
 
             return $errors;
         }
@@ -260,7 +260,7 @@ class UserService
                 if ($publisher->publisher_iati_id === $identifier) {
                     return [
                         'identifier' => [
-                            0 => trans('common.error.element_already_exists_in_iati_registry', ['element'=>trans('common.iati_organisational_identifier')]),
+                            0 => translateCommonError('element_already_exists_in_iati_registry', 'common.iati_organisational_identifier'),
                         ],
                     ];
                 }
@@ -299,7 +299,7 @@ class UserService
 
         if ($res->getStatusCode() === 404) {
             if ($exists) {
-                $errors['username'] = [trans('common.error.element_doesnt_exist_in_iati_registry', ['element'=>trans('user.user')])];
+                $errors['username'] = [translateCommonError('element_doesnt_exist_in_iati_registry', 'user.user')];
             }
 
             return $errors;
@@ -309,11 +309,11 @@ class UserService
 
         if ($exists) {
             if ($data['username'] !== $response->name) {
-                $errors['username'] = [trans('common.error.element_already_exists_in_iati_registry', ['element'=>trans('user.user_with_this_name')])];
+                $errors['username'] = [translateCommonError('element_already_exists_in_iati_registry', 'user.user_with_this_name')];
             }
         } else {
             if ($data['username'] === $response->name) {
-                $errors['username'] = [trans('common.error.element_already_exists_in_iati_registry', ['element'=>trans('user.user_name')])];
+                $errors['username'] = [translateCommonError('element_already_exists_in_iati_registry', 'user.user_name')];
             }
         }
 

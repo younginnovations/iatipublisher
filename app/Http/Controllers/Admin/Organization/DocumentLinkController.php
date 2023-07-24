@@ -50,7 +50,8 @@ class DocumentLinkController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.opening'), 'suffix'=>trans('responses.org_document_link')]));
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('responses.org_document_link', 'opening', 'form'));
         }
     }
 
@@ -65,14 +66,17 @@ class DocumentLinkController extends Controller
     {
         try {
             if (!$this->documentLinkService->update(Auth::user()->organization_id, $request->all())) {
-                return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('responses.org_document_link')]));
+                return redirect()->route('admin.organisation.index')
+                    ->with('error', translateErrorHasOccurred('responses.org_document_link', 'updating'));
             }
 
-            return redirect()->route('admin.organisation.index')->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.org_document_link'), 'event'=>trans('events.updated')])));
+            return redirect()->route('admin.organisation.index')
+                ->with('success', translateElementSuccessfully('responses.org_document_link', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('responses.org_document_link')]));
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('responses.org_document_link', 'updating'));
         }
     }
 }

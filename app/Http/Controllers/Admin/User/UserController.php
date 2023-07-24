@@ -99,7 +99,8 @@ class UserController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->back()->with('error', trans('responses.error_has_occurred_page', ['event'=>trans('events.rendering'), ':suffix'=>trans('user.user_listing')]));
+            return redirect()->back()
+                ->with('error', translateErrorHasOccurred('user.user_listing', 'rendering', 'page'));
         }
     }
 
@@ -119,12 +120,12 @@ class UserController extends Controller
             $this->userService->store($formData);
             $this->db->commit();
 
-            return response()->json(['success' => true, 'message' => trans('responses.event_successfully', ['event'=>trans('events.created'), 'prefix'=>trans('user.new_user')])]);
+            return response()->json(['success' => true, 'message' => translateElementSuccessfully('user.new_user', 'created')]);
         } catch (\Exception $e) {
             $this->db->rollback();
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.creating'), ':suffix'=>lcfirst(trans('user.user'))])]);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('user.user', 'creating')]);
         }
     }
 
@@ -148,12 +149,12 @@ class UserController extends Controller
             $this->userService->update($id, $formData);
             $this->db->commit();
 
-            return response()->json(['success' => true, 'message' => trans('responses.event_successfully', ['event'=>trans('events.updated'), 'prefix'=>trans('user.user')])]);
+            return response()->json(['success' => true, 'message' => translateElementSuccessfully('user.user', 'updated')]);
         } catch (\Exception $e) {
             $this->db->rollback();
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.updating'), ':suffix'=>lcfirst(trans('user.user'))])]);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('user.user', 'updating')]);
         }
     }
 
@@ -167,14 +168,14 @@ class UserController extends Controller
     {
         try {
             if ($this->userService->delete($id)) {
-                return response()->json(['success' => true, 'message' => trans('responses.event_successfully', ['event'=>trans('events.deleted'), 'prefix'=>trans('user.user')])]);
+                return response()->json(['success' => true, 'message' => translateElementSuccessfully('user.user', 'deleted')]);
             }
 
             return response()->json(['success' => false, 'message' => trans('user.cannot_be_deleted')]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.deleting'), ':suffix'=>lcfirst(trans('user.user'))])]);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('user.user', 'deleting')]);
         }
     }
 
@@ -190,7 +191,7 @@ class UserController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.user_status'), 'event'=>trans('events.retrieved')])),
+                'message' => translateElementSuccessfully('responses.user_status', 'retrieved'),
                 'data' => ['account_verified' => $status],
             ]);
         } catch (\Exception $e) {
@@ -215,7 +216,7 @@ class UserController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.verification_email'), 'event'=>trans('events.sent')])),
+                'message' => translateElementSuccessfully('responses.verification_email', 'sent'),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
@@ -244,7 +245,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.index')->with('error', trans('responses.error_has_occurred_page', ['event'=>trans('events.rendering'), ':suffix'=>lcfirst(trans('settings.settings_label'))]));
+            return redirect()->route('admin.activities.index')->with('error', translateErrorHasOccurred('settings.settings_label', 'rendering', 'page'));
         }
     }
 
@@ -354,14 +355,14 @@ class UserController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => trans('responses.event_successfully', ['event'=>trans('events.updated'), 'prefix'=>trans('register.password.label')]),
+                'message' => translateElementSuccessfully('register.password.label', 'updated'),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json([
                 'success' => false,
-                'message' => trans('responses.error_has_occurred', ['event'=>trans('events.updating'), ':suffix'=>lcfirst(trans('register.password.label'))]),
+                'message' => translateErrorHasOccurred('register.password.label', 'updating'),
             ]);
         }
     }
@@ -389,7 +390,7 @@ class UserController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => trans('responses.event_successfully', ['event'=>trans('events.updated'), 'prefix'=>trans('user.user_profile')]),
+                'message' => translateElementSuccessfully('user.user_profile', 'updated'),
             ]);
         } catch (\Exception $e) {
             $this->db->rollback();
@@ -397,7 +398,7 @@ class UserController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => trans('responses.error_has_occurred', ['event'=>trans('events.updating'), ':suffix'=>lcfirst(trans('user.user_profile'))]),
+                'message' => translateErrorHasOccurred('user.user_profile', 'updating'),
             ]);
         }
     }
@@ -415,9 +416,12 @@ class UserController extends Controller
             $user = $this->userService->getUser($id);
 
             if ($this->userService->toggleUserStatus($id)) {
-                return response()->json(['success' => true, 'message' => $user->status
-                    ? trans('responses.event_successfully', ['event'=>trans('events.deactivated'), 'prefix'=>trans('user.user')])
-                    : trans('responses.event_successfully', ['event'=>trans('events.activated'), 'prefix'=>trans('user.user')]), ]);
+                return response()->json([
+                    'success' => true,
+                    'message' => $user->status
+                        ? translateElementSuccessfully('user.user', 'deactivated')
+                        : translateElementSuccessfully('user.user', 'activated'),
+                ]);
             }
 
             return response()->json(['success' => false, 'message' => trans('user.status_cannot_be_changed')]);
@@ -426,7 +430,7 @@ class UserController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => trans('responses.error_has_occurred', ['event'=>trans('events.toggle'), ':suffix'=>lcfirst(trans('responses.user_status'))]),
+                'message' => translateErrorHasOccurred('responses.user_status', 'toggle'),
             ]);
         }
     }

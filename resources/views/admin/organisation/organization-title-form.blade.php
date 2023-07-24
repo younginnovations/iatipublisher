@@ -16,7 +16,7 @@
                                         <a href="/activities" class="font-bold">{{ trans('activities.your_activites') }}</a>
                                         <span class="separator mx-4"> / </span>
                                         <span class="last text-n-30"
-                                        >{{ trans('common.partnership_against_children') }}</span
+                                        >{{ translateCommon('partnership_against_children') }}</span
                                         >
                                     </p>
                                 </nav>
@@ -28,7 +28,7 @@
                                     </a>
                                 </div>
                                 <h4 class="mr-4 font-bold">
-                                    {{ trans('common.partnership_against_children') }}
+                                    {{ translateCommon('partnership_against_children') }}
                                 </h4>
                             </div>
                         </div>
@@ -46,17 +46,17 @@
                                     echo file_get_contents(resource_path('assets/images/svg/note.svg'))
                                 @endphp
                                 </span>
-                                <div class="title text-sm font-bold">{{ trans('common.activity_title')  }}</div>
+                                <div class="title text-sm font-bold">{{ translateCommon('activity_title')  }}</div>
                                 <div class="flex status text-xs leading-5 text-crimson-50 ml-2.5 mr-2.5">
                                     <b class="mr-2 text-base leading-3">.</b>
-                                    <span>{{ trans('common.not_completed')  }}</span>
+                                    <span>{{ translateCommon('not_completed')  }}</span>
                                 </div>
                                 @php
                                     echo file_get_contents(resource_path('assets/images/svg/core.svg'))
                                 @endphp
                             </div>
                             <div class="icons flex">
-                                <span class="text-xs"><sup class="text-salmon-50">*</sup> {{ trans('common.mandatory_fields') }}</span>
+                                <span class="text-xs"><sup class="text-salmon-50">*</sup> {{ translateCommon('mandatory_fields') }}</span>
                                 <hover-text hoverText="tooltip" class="ml-1"/>
                             </div>
                         </div>
@@ -70,14 +70,14 @@
                                         <div class="form-field-input">
                                             <div class="form-field-label">
                                                 <label for="">
-                                                        {{ trans('common.narrative') }}
+                                                        {{ translateCommon('narrative') }}
                                                     <sup class="required">*</sup>
                                                 </label>
                                                 <hover-text hoverText="tooltip"/>
                                             </div>
-                                            <input type="text" placeholder={{ trans('common.placeholder.enter_activity_title') }} value="">
+                                            <input type="text" placeholder={{ translateCommon('placeholder.enter_activity_title') }} value="">
                                             <div class="help-text">
-                                                {{ trans('common.this_is_help_text') }}
+                                                {{ translateCommon('this_is_help_text') }}
                                             </div>
                                         </div>
                                     </div>
@@ -91,13 +91,13 @@
                                                 <hover-text hoverText="tooltip"/>
                                             </div>
                                             <select>
-                                                <option>{{ trans('common.placeholder.select_a_lang') }}</option>
+                                                <option>{{ translateCommon('placeholder.select_a_lang') }}</option>
                                                 <option value="en">en - English</option>
                                                 <option value="fr">fr - France</option>
                                                 <option value="es">es - Spanish</option>
                                             </select>
                                             <div class="help-text text-xs leading-relaxed mt-2 text-n-40">
-                                                {{ trans('common.this_is_help_text') }}
+                                                {{ translateCommon('this_is_help_text') }}
                                             </div>
                                         </div>
                                     </div>
@@ -114,14 +114,14 @@
                                         <div class="form-field-input">
                                             <div class="form-field-label">
                                                 <label for="">
-                                                        {{ trans('common.narrative') }}
+                                                        {{ translateCommon('narrative') }}
                                                     <sup class="required">*</sup>
                                                 </label>
                                                 <hover-text hoverText="tooltip"/>
                                             </div>
-                                            <input type="text" placeholder={{ trans('common.placeholder.enter_activity_title') }} value="">
+                                            <input type="text" placeholder={{ translateCommon('placeholder.enter_activity_title') }} value="">
                                             <div class="help-text">
-                                                {{ trans('common.this_is_help_text') }}
+                                                {{ translateCommon('this_is_help_text') }}
                                             </div>
                                         </div>
                                     </div>
@@ -135,13 +135,13 @@
                                                 <hover-text hoverText="tooltip"/>
                                             </div>
                                             <select>
-                                                <option>{{ trans('common.placeholder.select_a_lang') }}</option>
+                                                <option>{{ translateCommon('placeholder.select_a_lang') }}</option>
                                                 <option value="en">en - English</option>
                                                 <option value="fr">fr - France</option>
                                                 <option value="es">es - Spanish</option>
                                             </select>
                                             <div class="help-text text-xs leading-relaxed mt-2 text-n-40">
-                                                {{ trans('common.this_is_help_text') }}
+                                                {{ translateCommon('this_is_help_text') }}
                                             </div>
                                         </div>
                                     </div>
@@ -155,8 +155,8 @@
                         </div>
                         {{-- buttons --}}
                         <div class="fixed left-0 bottom-0 w-full bg-eggshell py-5 pr-40 shadow-dropdown">
-                            <div class="flex items-center justify-end"><a class="ghost-btn mr-8" href="/activities">{{ trans('buttons.cancel') }}</a>
-                                <button class="primary-btn save-btn">{{trans('buttons.save_publishing_settings')}}</button>
+                            <div class="flex items-center justify-end"><a class="ghost-btn mr-8" href="/activities">{{ translateButton('cancel') }}</a>
+                                <button class="primary-btn save-btn">{{translateButton('save_publishing_settings')}}</button>
                             </div>
                         </div>
                     </div>

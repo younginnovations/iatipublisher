@@ -79,7 +79,7 @@ class SubElementForm extends Form
         if (array_key_exists('type', $field) && $field['type'] == 'select') {
             $options['attr']['class'] = 'select2';
             $options['attr']['data-placeholder'] = trans(Arr::get($field, 'placeholder', ''));
-            $options['empty_value'] = $field['empty_value'] ?? trans('common.placeholder.select_a_value');
+            $options['empty_value'] = $field['empty_value'] ?? translateCommon('placeholder.select_a_value');
             $options['choices'] = $field['choices'] ? (is_string($field['choices']) ? ($this->getCodeList($field['choices'])) : $field['choices']) : false;
             $options['default_value'] = $field['default'] ?? '';
 

@@ -286,16 +286,16 @@ class ActivityWorkflowService
         $messages = [];
 
         if (!$this->isUserVerified()) {
-            $messages[] = trans('common.error.you_have_not_verified_your_email');
+            $messages[] = translateCommonError('you_have_not_verified_your_email');
         }
         if ($this->hasNoPublisherInfo($organization->settings)) {
-            $messages[] = trans('common.error.your_api_key_is_not_valid');
+            $messages[] = translateCommonError('your_api_key_is_not_valid');
         }
         if ($type === 'activity' && !$this->isOrganizationPublished($organization)) {
-            $messages[] = trans('common.error.organisation_data_is_not_published');
+            $messages[] = translateCommonError('organisation_data_is_not_published');
         }
         if (!$this->organizationService->isPublisherStateActive($organization['publisher_id'])) {
-            $messages[] = trans('common.error.the_publisher_id_is_not_verified_in_iati_registry');
+            $messages[] = translateCommonError('the_publisher_id_is_not_verified_in_iati_registry');
         }
 
         return $messages;

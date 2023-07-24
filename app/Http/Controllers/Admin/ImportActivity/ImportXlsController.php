@@ -83,7 +83,7 @@ class ImportXlsController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while rendering activity import page.']);
+            return response()->json(['success' => false, 'error' => translateErrorHasOccurred('responses.activity_import', 'rendering', 'page')]);
         }
     }
 

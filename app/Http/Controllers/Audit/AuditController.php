@@ -41,7 +41,7 @@ class AuditController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.index')->with('error', trans('requests.error_while_rendering_audit_listing_page'));
+            return redirect()->route('admin.activities.index')->with('error', translateRequestMessage('error_while_rendering_audit_listing_page'));
         }
     }
 
@@ -63,7 +63,7 @@ class AuditController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success'=>false, 'message'=> trans('requests.error_has_occurred_while_trying_to_fetch_audit_log')]);
+            return response()->json(['success'=>false, 'message'=> translateRequestMessage('error_has_occurred_while_trying_to_fetch_audit_log')]);
         }
     }
 

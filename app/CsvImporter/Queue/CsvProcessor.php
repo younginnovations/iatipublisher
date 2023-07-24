@@ -73,7 +73,7 @@ class CsvProcessor
             $this->activity->locale = $this->locale;
             $this->activity->process();
         } else {
-            throw new \RuntimeException(trans('responses.mismatch_csv_header'));
+            throw new \RuntimeException(translateResponses('mismatch_csv_header'));
         }
     }
 

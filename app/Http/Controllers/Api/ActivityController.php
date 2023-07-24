@@ -49,21 +49,21 @@ class ActivityController extends Controller
     {
         try {
             if (!$this->activityService->deleteElement($id, $element)) {
-                return response(['status' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.deleting'), 'suffix'=>trans('responses.activity_element')])]);
+                return response(['status' => false, 'message' => translateErrorHasOccurred('responses.activity_element', 'deleting')]);
             }
 
             if ($element === 'recipient_country' || $element === 'recipient_region') {
                 $this->elementCompleteService->refreshElementStatus($this->activityService->getActivity($id));
             }
 
-            $message = ucfirst(trans('responses.event_successfully', ['prefix'=> trans('elements_common.' . $element), 'event'=>trans('events.deleted')]));
+            $message = translateElementSuccessfully("elements_common.$element", 'deleted');
             Session::put('success', $message);
 
             return response(['status' => true, 'message' => $message]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response(['status' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.deleting'), 'suffix'=>trans('responses.activity_element')])]);
+            return response(['status' => false, 'message' => translateErrorHasOccurred('responses.activity_element', 'deleting')]);
         }
     }
 }

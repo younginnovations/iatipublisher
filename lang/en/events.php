@@ -36,4 +36,7 @@ return array (
   'imported' => 'imported',
   'stored' => 'stored',
   'delete'=>'delete',
+  'publishing' => 'publishing',
+  'unpublishing' => 'unpublishing',
+  'validating' => 'validating',
 );

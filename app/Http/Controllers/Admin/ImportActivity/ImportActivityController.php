@@ -137,7 +137,7 @@ class ImportActivityController extends Controller
                 }
             }
 
-            return response()->json(['success' => true, 'message' =>ucfirst(trans('responses.event_successfully', ['prefix'=>'', 'event'=>trans('events.uploaded')])), 'type' => $filetype]);
+            return response()->json(['success' => true, 'message' =>translateElementSuccessfully('', 'updated'), 'type' => $filetype]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
@@ -173,12 +173,12 @@ class ImportActivityController extends Controller
 
             Session::forget('import_filetype');
             Session::forget('error');
-            Session::put('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('events.imported'), 'event'=>lcfirst(trans('common.data'))])));
+            Session::put('success', translateElementSuccessfully('common.data', 'imported'));
 
             return response()->json(
                 [
                     'success' => true,
-                    'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>'', 'event'=>lcfirst(trans('events.imported'))])),
+                    'message' => translateElementSuccessfully('common.data', 'imported'),
                     'type' => $filetype,
                 ]
             );
@@ -186,8 +186,7 @@ class ImportActivityController extends Controller
             Session::put('error', translateErrorHasOccurred('elements_common.activity', 'importing'));
             logger()->error($e);
 
-            return redirect()->back()
-                ->withResponse(['success' => false, 'message' => translateErrorHasOccurred('elements_common.activity', 'importing')]);
+            return redirect()->back()->withResponse(['success' => false, 'message' => translateErrorHasOccurred('elements_common.activity', 'importing')]);
         }
     }
 
@@ -321,7 +320,7 @@ class ImportActivityController extends Controller
     /**
      * Delete upload error with activityId.
      *
-     * @param mixed $activityId
+     * @param $activityId
      *
      * @return JsonResponse
      */

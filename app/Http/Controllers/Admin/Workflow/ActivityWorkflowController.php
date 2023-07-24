@@ -73,9 +73,9 @@ class ActivityWorkflowController extends Controller
             DB::beginTransaction();
             $this->activityWorkflowService->publishActivity($activity);
             DB::commit();
-            Session::put('success', trans('responses.event_successfully', ['event'=>trans('events.published'), 'prefix'=>ucfirst(trans('elements_common.activity'))]));
+            Session::put('success', translateElementHasBeenSuccessfully('elements_common.activity', 'published'));
 
-            return response()->json(['success' => true, 'message' => ucfirst(trans('responses.has_been_event_successfully', ['prefix'=>trans('elements_common.activity'), 'event'=>trans('events.published')]))]);
+            return response()->json(['success' => true, 'message' => translateElementHasBeenSuccessfully('elements_common.activity', 'published')]);
         } catch (PublisherNotFound $message) {
             DB::rollBack();
             logger()->error($message->getMessage());
@@ -85,9 +85,9 @@ class ActivityWorkflowController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
-            Session::put('error', trans('responses.error_has_occurred', ['event'=>trans('events.publishing'), 'suffix'=>trans('elements_common.activity')]));
+            Session::put('error', translateErrorHasOccurred('elements_common.activity', 'publishing'));
 
-            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.publishing'), 'suffix'=>trans('elements_common.activity')])]);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('elements_common.activity', 'publishing')]);
         }
     }
 
@@ -105,23 +105,23 @@ class ActivityWorkflowController extends Controller
             $activity = $this->activityWorkflowService->findActivity($id);
 
             if (!$activity->linked_to_iati) {
-                Session::put('error', trans('responses.activity_not_been_published_to_unpublish'));
+                Session::put('error', translateResponses('activity_not_been_published_to_unpublish'));
 
-                return response()->json(['success' => false, 'message' => trans('responses.activity_not_been_published_to_unpublish')]);
+                return response()->json(['success' => false, 'message' => translateResponses('activity_not_been_published_to_unpublish')]);
             }
 
             $this->activityWorkflowService->unpublishActivity($activity);
             DB::commit();
             $this->activityWorkflowService->deletePublishedFile($activity);
-            Session::put('success', ucfirst(trans('responses.has_been_event_successfully', ['prefix'=>trans('elements_common.activity'), 'event'=>trans('events.unpublished')])));
+            Session::put('success', translateElementHasBeenSuccessfully('elements_common.activity', 'unpublished'));
 
-            return response()->json(['success' => true, 'message' => ucfirst(trans('responses.has_been_event_successfully', ['prefix'=>trans('elements_common.activity'), 'event'=>trans('events.unpublished')]))]);
+            return response()->json(['success' => true, 'message' => translateElementHasBeenSuccessfully('elements_common.activity', 'unpublished')]);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
-            Session::put('error', trans('responses.error_has_occurred', ['event'=>trans('events.unpublishing'), 'suffix'=>trans('elements_common.activity')]));
+            Session::put('error', translateErrorHasOccurred('elements_common.activity', 'unpublishing'));
 
-            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.unpublishing'), 'suffix'=>trans('elements_common.activity')])]);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('elements_common.activity', 'unpublishing')]);
         }
     }
 
@@ -154,7 +154,7 @@ class ActivityWorkflowController extends Controller
                 return response()->json($response);
             }
 
-            return response()->json(['success' => false, 'error' => trans('responses.error_has_occurred', ['event'=>trans('events.validating'), 'suffix'=>trans('elements_common.activity')])]);
+            return response()->json(['success' => false, 'error' => translateErrorHasOccurred('elements_common.activity', 'validating')]);
         } catch (BadResponseException $ex) {
             if ($ex->getCode() === 422) {
                 $response = $ex->getResponse()->getBody()->getContents();
@@ -167,11 +167,11 @@ class ActivityWorkflowController extends Controller
                 }
             }
 
-            return response()->json(['success' => false, 'error' => trans('responses.error_has_occured', ['event'=>trans('events.validating'), 'suffix'=>trans('elements_common.activity')])]);
+            return response()->json(['success' => false, 'error' => translateErrorHasOccurred('elements_common.activity', 'validating')]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => trans('responses.error_has_occured', ['event'=>trans('events.validating'), 'suffix'=>trans('elements_common.activity')])]);
+            return response()->json(['success' => false, 'error' => translateErrorHasOccurred('elements_common.activity', 'validating')]);
         }
     }
 
@@ -189,11 +189,11 @@ class ActivityWorkflowController extends Controller
                 return response()->json(['success' => false, 'message' => $message]);
             }
 
-            return response()->json(['success' => true, 'message' => trans('responses.activity_ready_to_publish')]);
+            return response()->json(['success' => true, 'message' => translateResponses('activity_ready_to_publish')]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.checking'), 'suffix'=>trans('elements_common.activity')])]);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('elements_common.activity', 'events.checking')]);
         }
     }
 }

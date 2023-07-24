@@ -13,22 +13,22 @@
           <div class="inline-flex flex-wrap gap-2 mb-5 xl:mb-8">
             <a href='#title' class="tab-btn-anchor" v-smooth-scroll>
               <button class="tab-btn">
-                <span>{{ trans('common.title') }}</span>
+                <span>{{ translateCommon('title') }}</span>
               </button>
             </a>
             <a href="#description" class="tab-btn-anchor" v-smooth-scroll>
               <button class="tab-btn">
-                <span>{{ trans('common.description') }}</span>
+                <span>{{ translateCommon('description') }}</span>
               </button>
             </a>
             <a href="#document_link" class="tab-btn-anchor" v-smooth-scroll>
               <button class="tab-btn">
-                <span>{{ trans('common.document_link') }}</span>
+                <span>{{ translateCommon('document_link') }}</span>
               </button>
             </a>
             <a href="#reference" class="tab-btn-anchor" v-smooth-scroll>
               <button class="tab-btn">
-                <span>{{ trans('common.reference') }}</span>
+                <span>{{ translateCommon('reference') }}</span>
               </button>
             </a>
           </div>

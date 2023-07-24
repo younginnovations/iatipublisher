@@ -33,7 +33,7 @@ class IatiRegisterController extends Controller
     |--------------------------------------------------------------------------
     |
     | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
+    | validation and creation. By default, this controller uses a trait to
     | provide this functionality without requiring any additional code.
     |
     */
@@ -111,7 +111,7 @@ class IatiRegisterController extends Controller
                 ]);
             }
 
-            return response()->json(['success' => true, 'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.publisher'), 'event'=>trans('events.deleted')])), 'data' => $publisherCheck]);
+            return response()->json(['success' => true, 'message' => translateElementSuccessfully('elements_common.publisher', 'deleted'), 'data' => $publisherCheck]);
         } catch (ClientException $e) {
             logger()->error($e->getMessage());
 
@@ -123,7 +123,7 @@ class IatiRegisterController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'errors' => trans('responses.error_has_occurred', ['event'=>trans('events.verifying'), 'suffix'=>trans('elements_common.publisher')])]);
+            return response()->json(['success' => false, 'errors' => translateErrorHasOccurred('elements_common.publisher', 'verifying')]);
         }
     }
 
@@ -139,11 +139,11 @@ class IatiRegisterController extends Controller
     public function verifyContactInfo(IatiRegisterFormRequest $request): JsonResponse|RedirectResponse
     {
         try {
-            return response()->json(['success' => true, 'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.contact_info'), 'event'=>trans('events.verified')]))]);
+            return response()->json(['success' => true, 'message' => translateElementSuccessfully('elements_common.contact_info', 'verified')]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => true, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.verifying'), 'suffix'=>trans('elements_common.contact_info')])]);
+            return response()->json(['success' => true, 'message' => translateErrorHasOccurred('elements_common.contact_info', 'verifying')]);
         }
     }
 
@@ -159,11 +159,11 @@ class IatiRegisterController extends Controller
     public function verifyAdditionalInfo(IatiRegisterFormRequest $request): JsonResponse|RedirectResponse
     {
         try {
-            return response()->json(['success' => true, 'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.additional_info'), 'event'=>trans('events.verified')]))]);
+            return response()->json(['success' => true, 'message' => translateElementSuccessfully('responses.additional_info', 'verified')]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => true, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.verifying'), 'suffix'=>trans('responses.additional_info')])]);
+            return response()->json(['success' => true, 'message' => translateErrorHasOccurred('responses.additional_info', 'verifying')]);
         }
     }
 
@@ -227,11 +227,11 @@ class IatiRegisterController extends Controller
             event(new Registered($createUser['user']));
             Session::put('role_id', app(Role::class)->getOrganizationAdminId());
 
-            return response()->json(['success' => true, 'message' => trans('responses.event_successfully', ['prefix'=>trans('responses.user'), 'event'=>trans('events.registered')])]);
+            return response()->json(['success' => true, 'message' => translateElementSuccessfully('responses.user', 'registered')]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.trying_to'), 'suffix'=>trans('responses.register_user')]) . ' ' . trans('responses.try_again')]);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('responses.register_user', 'trying_to') . ' ' . translateResponses('try_again')]);
         }
     }
 
@@ -280,6 +280,8 @@ class IatiRegisterController extends Controller
             return ['success' => true, 'user' => $user];
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
+
+            return [];
         }
     }
 

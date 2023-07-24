@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin\Organization;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organization\RecipientCountryBudget\RecipientCountryBudgetRequest;
 use App\IATI\Services\Organization\RecipientCountryBudgetService;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +25,7 @@ class RecipientCountryBudgetController extends Controller
     /**
      * RecipientCountryBudgetController Constructor.
      *
-     * @param recipientCountryBudgetService    $recipientCountryBudgetService
+     * @param recipientCountryBudgetService $recipientCountryBudgetService
      */
     public function __construct(RecipientCountryBudgetService $recipientCountryBudgetService)
     {
@@ -46,10 +47,11 @@ class RecipientCountryBudgetController extends Controller
             $data = ['title' => $element['recipient_country_budget']['label'], 'name' => 'recipient_country_budget'];
 
             return view('admin.organisation.forms.recipientCountryBudget.recipientCountryBudget', compact('form', 'organization', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred_form', ['event'=>trans('events.opening'), 'suffix'=>trans('elements_common.org_recipient_country_budget')]));
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('responses.org_recipient_country_budget', 'updating', 'form'));
         }
     }
 
@@ -64,14 +66,17 @@ class RecipientCountryBudgetController extends Controller
     {
         try {
             if (!$this->recipientCountryBudgetService->update(Auth::user()->organization_id, $request->all())) {
-                return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.org_recipient_country_budget')]));
+                return redirect()->route('admin.organisation.index')
+                    ->with('error', translateErrorHasOccurred('responses.org_recipient_country_budget', 'updating'));
             }
 
-            return redirect()->route('admin.organisation.index')->with('success', ucfirst(trans('responses.event_successfully', ['prefix'=>trans('responses.org_recipient_country_budget'), 'event'=>trans('events.updated')])));
-        } catch (\Exception $e) {
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateElementSuccessfully('responses.org_recipient_country_budget', 'updated'));
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', trans('responses.error_has_occurred', ['event'=>trans('events.updating'), 'suffix'=>trans('elements_common.org_recipient_country_budget')]));
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('responses.org_recipient_country_budget', 'updating'));
         }
     }
 }

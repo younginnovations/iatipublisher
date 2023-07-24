@@ -21,6 +21,6 @@ class HeaderMismatchException extends Exception
      */
     public function __construct()
     {
-        $this->message = trans('common.error.header_mismatch_exception');
+        $this->message = translateCommonError('header_mismatch_exception');
     }
 }

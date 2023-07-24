@@ -61,7 +61,7 @@ class OrganizationWorkflowController extends Controller
             $this->organizationWorkflowService->publishOrganization($organization);
             DB::commit();
 
-            return response()->json(['success' => true, 'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.organisation'), 'event'=>trans('events.published')]))]);
+            return response()->json(['success' => true, 'message' => translateElementSuccessfully('elements_common.organisation', 'published')]);
         } catch (PublisherNotFound $message) {
             DB::rollBack();
             logger()->error($message->getMessage());
@@ -71,7 +71,7 @@ class OrganizationWorkflowController extends Controller
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.publishing'), 'suffix'=>trans('elements_common.organisation')])]);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('elements_common.organisation', 'publishing')]);
         }
     }
 
@@ -87,18 +87,18 @@ class OrganizationWorkflowController extends Controller
             $organization = Auth::user()->organization;
 
             if (!$organization->is_published && $organization->status === 'draft') {
-                return redirect()->route('admin.activities.index')->with('error', trans('org_not_been_published_to_unpublish'));
+                return redirect()->route('admin.activities.index')->with('error', translateResponses('org_not_been_published_to_unpublish'));
             }
 
             $this->organizationWorkflowService->unpublishOrganization($organization);
             DB::commit();
 
-            return response()->json(['success' => true, 'message' => ucfirst(trans('responses.event_successfully', ['prefix'=>trans('elements_common.organisation'), 'event'=>trans('events.unpublished')]))]);
+            return response()->json(['success' => true, 'message' => translateElementSuccessfully('elements_common.organisation', 'unpublished')]);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => trans('responses.error_has_occurred', ['event'=>trans('events.unpublishing'), 'suffix'=>trans('elements_common.organisation')])]);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('elements_common.organisation', 'publishing')]);
         }
     }
 
@@ -111,6 +111,8 @@ class OrganizationWorkflowController extends Controller
     {
         $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization, 'organization');
 
-        return !empty($message) ? response()->json(['success' => false, 'message' => $message]) : response()->json(['success' => true, 'message' => trans('responses.organisation_ready_to_publish')]);
+        return !empty($message)
+            ? response()->json(['success' => false, 'message' => $message])
+            : response()->json(['success' => true, 'message' => translateResponses('organisation_ready_to_publish')]);
     }
 }

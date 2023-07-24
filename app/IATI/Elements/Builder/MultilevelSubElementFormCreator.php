@@ -58,7 +58,7 @@ class MultilevelSubElementFormCreator
             ],
             'buttons' => [
                 'clear'    => [
-                    'label'     => trans('buttons.cancel'),
+                    'label'     => translateButton('cancel'),
                     'attr'      => [
                         'type'      => 'anchor',
                         'class'     => 'ghost-btn mr-8',
@@ -66,7 +66,7 @@ class MultilevelSubElementFormCreator
                     ],
                 ],
                 'submit'    => [
-                    'label'     => trans('buttons.save_and_exit'),
+                    'label'     => translateButton('save_and_exit'),
                     'attr'      => [
                         'type'      => 'submit',
                         'class'     => 'primary-btn save-btn',

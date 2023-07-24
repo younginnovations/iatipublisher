@@ -164,8 +164,8 @@ class Title extends Element
      */
     public function messages(): array
     {
-        $messages['activity_title.0.narrative.required'] = trans('common.error.activity_title_is_required');
-        $messages['activity_title'] = trans('common.error.there_should_be_only_one');
+        $messages['activity_title.0.narrative.required'] = translateCommonError('activity_title_is_required');
+        $messages['activity_title'] = translateCommonError('there_should_be_only_one');
 
         return $messages;
     }
