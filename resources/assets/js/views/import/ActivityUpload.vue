@@ -29,6 +29,7 @@
                     >
                       {{ language.activities_lang.what_is_activity.label }}
                     </div>
+                    <!-- eslint-disable vue/no-v-html -->
                     <p
                       v-html="
                         language.activities_lang.what_is_activity.description
@@ -47,6 +48,7 @@
                           .three
                       "
                     ></p>
+                    <!--eslint-enable-->
                   </div>
                 </div>
               </div>

@@ -106,7 +106,12 @@
         </tbody>
         <tbody v-else>
           <td colspan="5" class="text-center">
-            {{ createCapitalizedSentence(language.elements_common_lang.results, language.common_lang.missing.not_found) }}
+            {{
+              createCapitalizedSentence(
+                language.elements_common_lang.results,
+                language.common_lang.missing.not_found
+              )
+            }}
           </td>
         </tbody>
       </table>
@@ -143,11 +148,10 @@ import DeleteAction from 'Components/sections/DeleteAction.vue';
 // composable
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
-import {createCapitalizedSentence} from "../../../composable/utils";
+import { createCapitalizedSentence } from '../../../composable/utils';
 
 export default defineComponent({
   name: 'ResultsList',
-  methods: {createCapitalizedSentence},
   components: {
     Btn,
     Pagination,
@@ -269,5 +273,6 @@ export default defineComponent({
       language,
     };
   },
+  methods: { createCapitalizedSentence },
 });
 </script>

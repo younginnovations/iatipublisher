@@ -2,7 +2,9 @@
   <div class="px-6 py-4 md:px-10">
     <Loader v-if="isLoaderVisible" />
     <div class="my-4 flex justify-between">
-      <h4 class="mr-4 text-3xl font-bold xl:text-heading-4">{{ language.user_lang.users }}</h4>
+      <h4 class="mr-4 text-3xl font-bold xl:text-heading-4">
+        {{ language.user_lang.users }}
+      </h4>
       <div class="inline-flex flex-col items-end justify-end gap-2 md:flex-row">
         <Toast
           v-if="
@@ -252,8 +254,7 @@
         </div>
         <p class="rounded-lg bg-rose p-4">
           {{ language.user_lang.delete_confirmation.replace(':element', ':')
-          }}<b> {{ deleteUsername }}</b
-          > ?
+          }}<b> {{ deleteUsername }}</b> ?
         </p>
         <div class="mt-6 flex justify-end space-x-2">
           <button
@@ -565,7 +566,7 @@
                     />
                   </span>
 
-                  <span>{{language.common_lang.organisation_name}}</span>
+                  <span>{{ language.common_lang.organisation_name }}</span>
                 </span>
               </th>
 

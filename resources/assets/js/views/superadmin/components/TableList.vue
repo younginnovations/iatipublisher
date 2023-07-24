@@ -472,11 +472,14 @@
               <div>
                 <div v-if="data.name" class="ellipsis relative">
                   <span class="ellipsis overflow-hidden">
-                    {{ data?.name[0]?.narrative ?? language.common_lang.missing.name }}
+                    {{
+                      data?.name[0]?.narrative ??
+                      language.common_lang.missing.name
+                    }}
                   </span>
                 </div>
 
-                <div v-else>{{language.common_lang.missing.name}}</div>
+                <div v-else>{{ language.common_lang.missing.name }}</div>
                 <div class="group relative">
                   <div
                     class="w-full overflow-x-hidden text-ellipsis text-blue-40"
@@ -888,14 +891,14 @@ export default defineComponent({
       urlParams = new URLSearchParams(queryString);
     };
 
-/**
- * Proxy User
- */
-// display/hide validator loader
-const proxyUser = (id: number) => {
-  loader.status = true;
-  loader.text = language.button_lang.proxy_login;
-  const endpoint = `/proxy-organisation/${id}`;
+    /**
+     * Proxy User
+     */
+    // display/hide validator loader
+    const proxyUser = (id: number) => {
+      loader.status = true;
+      loader.text = language.button_lang.proxy_login;
+      const endpoint = `/proxy-organisation/${id}`;
 
       axios.get(endpoint).then((res) => {
         const response = res.data;
@@ -1061,10 +1064,14 @@ const proxyUser = (id: number) => {
         if (key == 'data_license') {
           let license = data[key];
           license = license?.trim();
-          return license ? map[license] : language.common_lang.missing.not_available;
+          return license
+            ? map[license]
+            : language.common_lang.missing.not_available;
         }
 
-        return data[key] ? map[data[key]] : language.common_lang.missing.not_available;
+        return data[key]
+          ? map[data[key]]
+          : language.common_lang.missing.not_available;
       }
       return language.common_lang.missing.not_available;
     };
@@ -1107,7 +1114,7 @@ const proxyUser = (id: number) => {
       totalOrganisation,
       countriesWithPrefix,
       generateLabel,
-      language
+      language,
     };
   },
 });

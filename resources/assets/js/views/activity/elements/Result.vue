@@ -126,7 +126,8 @@
                                   : types.languages[
                                       result?.result?.description?.[0]
                                         ?.narrative?.[0]?.language ??
-                                        (defaultLanguage?? 'en')
+                                        defaultLanguage ??
+                                        'en'
                                     ]
                               }})
                             </div>

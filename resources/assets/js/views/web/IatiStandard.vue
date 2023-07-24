@@ -72,8 +72,8 @@
           </h3>
           <p class="text-base">
             {{
-              language.iati_standard.activity_data_description.one
-                .list_items.header
+              language.iati_standard.activity_data_description.one.list_items
+                .header
             }}
           </p>
           <ul class="my-4 ml-4 list-disc text-base text-bluecoral">

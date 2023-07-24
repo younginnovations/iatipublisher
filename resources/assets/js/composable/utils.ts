@@ -79,9 +79,9 @@ export function truncateText(text, maxLength) {
 }
 
 export function createCapitalizedSentence(...words: string[]): string {
-  const capitalizedFirstWord = words[0].charAt(0).toUpperCase() + words[0].slice(1);
+  const capitalizedFirstWord =
+    words[0].charAt(0).toUpperCase() + words[0].slice(1);
   const concatenatedWords = words.slice(1).join(' ');
 
   return `${capitalizedFirstWord} ${concatenatedWords}`;
 }
-

@@ -14,12 +14,12 @@
         <span v-if="item.code">
           {{ types.geographicLocationReach[item.code] }}
         </span>
-        <span v-else class="italic"
-          >{{
-            language.common_lang.missing.element.replace(':element',
-              language.common_lang.location_reached)
-          }}</span
-        >
+        <span v-else class="italic">{{
+          language.common_lang.missing.element.replace(
+            ':element',
+            language.common_lang.location_reached
+          )
+        }}</span>
       </div>
     </div>
     <div
@@ -40,11 +40,12 @@
             {{ types.languages[narrative.language] }})</span
           >
         </div>
-        <span v-else class="italic"
-          >
+        <span v-else class="italic">
           {{
-            language.common_lang.missing.element.replace(':element',
-              language.common_lang.name)
+            language.common_lang.missing.element.replace(
+              ':element',
+              language.common_lang.name
+            )
           }}</span
         >
       </div>
@@ -52,7 +53,7 @@
     <div class="ml-5">
       <table>
         <tr>
-            <td>{{ language.common_lang.reference }}</td>
+          <td>{{ language.common_lang.reference }}</td>
           <td class="text-sm">
             <span v-if="post.ref">{{ post.ref }}</span>
             <span v-else class="italic">{{
