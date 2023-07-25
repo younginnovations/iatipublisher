@@ -559,13 +559,6 @@ function ToggleModel() {
   window.localStorage.removeItem('openAddModel');
 }
 
-// const activityDropdownHeight = computed(() => {
-//   setTimeout(() => {
-//     console.log(dropDownElement.value?.[0]?.clientHeight, 'toggle');
-//   }, 195);
-//   return 5;
-// });
-
 const toggleActivityDropdown = () => {
   showActivityDropdown.value = !showActivityDropdown.value;
   activityDropdownHeight.value = dropDownElement.value?.[0]?.clientHeight;
@@ -575,7 +568,6 @@ const toggleActivityDropdown = () => {
   }, 10);
   setTimeout(() => {
     activityDropdownHeight.value = 'auto';
-    console.log(dropDownElement.value?.[0]?.clientHeight, 'toggle');
   }, 200);
 };
 
