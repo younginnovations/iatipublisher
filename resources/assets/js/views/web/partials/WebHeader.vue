@@ -68,6 +68,7 @@
                           : ''
                       "
                       href="/lang/en"
+                      id="sm-language-en"
                       >EN</a
                     >
                   </li>
@@ -79,6 +80,7 @@
                           : ''
                       "
                       href="/lang/fr"
+                      id="sm-language-fr"
                       >FR</a
                     >
                   </li>
@@ -90,6 +92,7 @@
                           : ''
                       "
                       href="/lang/es"
+                      id="sm-language-es"
                       >ES</a
                     >
                   </li>
@@ -113,6 +116,7 @@
                         : ''
                     "
                     href="/lang/en"
+                    id="language-en"
                     >EN</a
                   >
                 </li>
@@ -124,6 +128,7 @@
                         : ''
                     "
                     href="/lang/fr"
+                    id="language-fr"
                     >FR</a
                   >
                 </li>
@@ -135,6 +140,7 @@
                         : ''
                     "
                     href="/lang/es"
+                    id="language-es"
                     >ES</a
                   >
                 </li>

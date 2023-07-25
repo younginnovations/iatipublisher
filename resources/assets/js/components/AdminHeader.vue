@@ -54,6 +54,7 @@
                 data.languageNavAnchorClasses,
               ]"
               :href="language.permalink"
+              :id="language.id"
             >
               <span>{{ language.language }}</span>
             </a>
@@ -338,10 +339,10 @@
                 class="dropdown__list border-b border-b-n-20"
                 @click="redirectProfile"
               >
-                <a class="flex w-full space-x-4" href="/profile"
-                  ><svg-vue class="mx-1 text-base" icon="user" />
-                  <span>{{ translation.admin.header.your_profile }}</span></a
-                >
+                <a class="flex w-full space-x-4" href="/profile">
+                  <svg-vue class="mx-1 text-base" icon="user" />
+                  <span>{{ translation.admin.header.your_profile }}</span>
+                </a>
               </li>
               <li class="dropdown__list flex" @click="logout">
                 <svg-vue class="mr-3 ml-1" icon="logout"></svg-vue>
@@ -378,10 +379,10 @@
                 class="dropdown__list border-b border-b-n-20"
                 @click="redirectProfile"
               >
-                <a class="flex w-full space-x-4" href="/profile"
-                  ><svg-vue class="mx-1 text-base" icon="user" />
-                  <span>{{ translation.admin.header.your_profile }}</span></a
-                >
+                <a class="flex w-full space-x-4" href="/profile">
+                  <svg-vue class="mx-1 text-base" icon="user" />
+                  <span>{{ translation.admin.header.your_profile }}</span>
+                </a>
               </li>
               <li class="dropdown__list flex" @click="logout">
                 <svg-vue class="mr-3 ml-1" icon="logout"></svg-vue>
@@ -458,16 +459,19 @@ const data = reactive({
     {
       language: 'EN',
       permalink: '/lang/en',
+      id: 'language-en',
       active: translation.web_lang.active === 'en',
     },
     {
       language: 'FR',
       permalink: '/lang/fr',
+      id: 'language-fr',
       active: translation.web_lang.active === 'fr',
     },
     {
       language: 'ES',
       permalink: '/lang/es',
+      id: 'language-es',
       active: translation.web_lang.active === 'es',
     },
   ],
@@ -663,10 +667,12 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .add-import-sidebar-dropdown {
   padding: 8px;
+
   @media (min-width: 1420px) {
     display: none;
   }
 }
+
 .activity__header {
   top: 0px;
   z-index: 100;
@@ -684,23 +690,28 @@ onUnmounted(() => {
     a:hover {
       @apply text-white;
     }
+
     ul {
       @apply flex;
     }
   }
+
   .add-btn {
     @media screen and (max-width: 375px) {
       display: none;
     }
   }
+
   .user-nav {
     @apply flex items-center;
   }
 }
+
 .toast {
-  @apply absolute  left-2/4 z-50;
+  @apply absolute left-2/4 z-50;
   transform: translate(-50%, -50%);
 }
+
 .profile__dropdown {
   @apply invisible absolute right-3 z-20 bg-white text-left text-sm text-bluecoral opacity-0 shadow-dropdown duration-300 sm:right-10;
   top: 50px;
@@ -713,22 +724,27 @@ onUnmounted(() => {
 
   li {
     @apply flex items-center space-x-3 p-3 sm:p-4;
+
     a:hover {
       @apply text-bluecoral;
     }
+
     .user-profile {
       font-size: 26px;
     }
   }
+
   .dropdown__list {
     @apply bg-n-10 hover:bg-n-20 hover:text-bluecoral;
+
     a {
       @apply capitalize;
     }
   }
 }
+
 .profile__dropdown--touch {
-  @apply absolute  right-10 z-20 bg-white text-left text-sm text-bluecoral shadow-dropdown  duration-300;
+  @apply absolute right-10 z-20 bg-white text-left text-sm text-bluecoral shadow-dropdown duration-300;
   top: 50px;
   width: 265px;
   box-shadow: 4px 4px 40px rgba(0, 50, 76, 0.2);
@@ -739,43 +755,54 @@ onUnmounted(() => {
 
   li {
     @apply flex items-center space-x-3 p-3 sm:p-4;
+
     a:hover {
       @apply text-bluecoral;
     }
+
     .user-profile {
       font-size: 26px;
     }
   }
+
   .dropdown__list {
     @apply bg-n-10 hover:bg-n-20 hover:text-bluecoral;
+
     a {
       @apply capitalize;
     }
   }
 }
+
 .dropdown-btn:hover,
 .dropdown-btn:active {
   .profile__dropdown {
     @apply visible opacity-100;
     transform: translateY(10px);
   }
+
   .dropdown__arrow {
     transform: rotate(180deg);
   }
 }
+
 .add-import {
   cursor: pointer;
 }
+
 .add-import-dropdown {
   visibility: hidden;
   opacity: 0;
 }
+
 .dropdown-trigger-container {
   display: block;
+
   @media (min-width: 1420px) {
     display: flex;
   }
 }
+
 .add-import:hover .add-import-dropdown {
   @media (min-width: 1420px) {
     visibility: visible !important;
