@@ -100,7 +100,7 @@
             >
               <div
                 class="add-import flex w-full items-center space-x-4"
-                @click="showActivityDropdown = !showActivityDropdown"
+                @click="toggleActivityDropdown"
               >
                 <span>{{ menu.name }}</span>
                 <span>
@@ -152,10 +152,16 @@
                 </div>
               </div>
               <div
-                v-if="showActivityDropdown"
-                class="add-import-sidebar-dropdown"
+                ref="dropDownElement"
+                :class="[showActivityDropdown ? 'h-auto ' : 'h-0 !py-0']"
+                :style="{
+                  height: `${
+                    showActivityDropdown ? activityDropdownHeight : '0px'
+                  }`,
+                }"
+                class="add-import-sidebar-dropdown px-2 duration-200"
               >
-                <ul class="flex flex-col space-y-2 text-left">
+                <ul class="flex flex-col space-y-3.5 text-left">
                   <li>
                     <a
                       id="header-add-activity-manually"
@@ -444,6 +450,8 @@ const showUserDropdown = ref(false);
 const showActivityDropdown = ref(false);
 const toastVisibility = ref(false);
 const isLoading = ref(false);
+const dropDownElement = ref<HTMLElement | null>(null);
+const activityDropdownHeight: Ref<number | string> = ref(0);
 
 const showSidebar = ref(false);
 const toastMessage = ref('');
@@ -550,6 +558,26 @@ function ToggleModel() {
   modalToggle();
   window.localStorage.removeItem('openAddModel');
 }
+
+// const activityDropdownHeight = computed(() => {
+//   setTimeout(() => {
+//     console.log(dropDownElement.value?.[0]?.clientHeight, 'toggle');
+//   }, 195);
+//   return 5;
+// });
+
+const toggleActivityDropdown = () => {
+  showActivityDropdown.value = !showActivityDropdown.value;
+  activityDropdownHeight.value = dropDownElement.value?.[0]?.clientHeight;
+  // dropDownElement.value?.[0]?.clientHeight
+  setTimeout(function () {
+    activityDropdownHeight.value = '';
+  }, 10);
+  setTimeout(() => {
+    activityDropdownHeight.value = 'auto';
+    console.log(dropDownElement.value?.[0]?.clientHeight, 'toggle');
+  }, 200);
+};
 
 watch(
   () => showSidebar.value,
@@ -666,7 +694,8 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .add-import-sidebar-dropdown {
-  padding: 8px;
+  overflow-y: hidden;
+  padding: 14px 8px;
 
   @media (min-width: 1420px) {
     display: none;
