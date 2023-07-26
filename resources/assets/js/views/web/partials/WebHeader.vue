@@ -8,12 +8,12 @@
           <a class="pb-5" href="/">
             <svg-vue class="w-52 text-6xl sm:w-60" icon="header-logo" />
           </a>
-          <div>
+          <div class="basis-4/6">
             <ul
               id="nav-list"
-              class="nav__list flex pt-10 uppercase leading-5 xl:space-x-3"
+              class="nav__list flex justify-between pt-10 uppercase leading-5 xl:flex-row-reverse"
             >
-              <li class="flex xl:hidden">
+              <li class="flex">
                 <span class="mr-2 pt-5 pb-5 uppercase xl:pt-0"
                   >{{ language.web_lang.language }}:</span
                 >
@@ -54,96 +54,53 @@
                 </ul>
               </li>
 
-              <li class="nav__links active dropdown">
-                <a href="/about">{{ language.web_lang.about }}</a>
-                <NavDropdown
-                  :name="language.web_lang.about"
-                  :text="language.web_lang.header.about_hover_text"
-                  :btn-text="language.button_lang.learn_more"
-                  btn-link="/about"
-                />
-              </li>
-              <li class="nav__links active dropdown">
-                <a href="/publishing-checklist">{{
-                  language.web_lang.publishing_checklist
-                }}</a>
-                <NavDropdown
-                  :name="language.web_lang.publishing_checklist"
-                  :text="
-                    language.web_lang.header.publishing_checklist_hover_text
-                  "
-                  :btn-text="language.button_lang.read_more"
-                  btn-link="/publishing-checklist"
-                />
-              </li>
-              <li class="nav__links active dropdown relative">
-                <a href="/iati-standard">{{
-                  language.web_lang.iati_standard
-                }}</a>
-                <NavDropdown
-                  :name="language.web_lang.iati_standard"
-                  :text="language.web_lang.header.iati_standard_hover_text"
-                  :btn-text="language.button_lang.see_all_data_fields"
-                  btn-link="/iati-standard"
-                />
-              </li>
-              <li class="nav__links active dropdown">
-                <a href="/support">{{ language.web_lang.support }}</a>
-                <NavDropdown
-                  :name="language.web_lang.support"
-                  :text="language.web_lang.header.support_hover_text"
-                  :btn-text="language.button_lang.read_more"
-                  btn-link="/support"
-                />
+              <li>
+                <ul class="flex flex-col xl:flex-row">
+                  <li class="nav__links active dropdown">
+                    <a href="/about">{{ language.web_lang.about }}</a>
+                    <NavDropdown
+                      :name="language.web_lang.about"
+                      :text="language.web_lang.header.about_hover_text"
+                      :btn-text="language.button_lang.learn_more"
+                      btn-link="/about"
+                    />
+                  </li>
+                  <li class="nav__links active dropdown">
+                    <a href="/publishing-checklist">{{
+                      language.web_lang.publishing_checklist
+                    }}</a>
+                    <NavDropdown
+                      :name="language.web_lang.publishing_checklist"
+                      :text="
+                        language.web_lang.header.publishing_checklist_hover_text
+                      "
+                      :btn-text="language.button_lang.read_more"
+                      btn-link="/publishing-checklist"
+                    />
+                  </li>
+                  <li class="nav__links active dropdown relative">
+                    <a href="/iati-standard">{{
+                      language.web_lang.iati_standard
+                    }}</a>
+                    <NavDropdown
+                      :name="language.web_lang.iati_standard"
+                      :text="language.web_lang.header.iati_standard_hover_text"
+                      :btn-text="language.button_lang.see_all_data_fields"
+                      btn-link="/iati-standard"
+                    />
+                  </li>
+                  <li class="nav__links active dropdown">
+                    <a href="/support">{{ language.web_lang.support }}</a>
+                    <NavDropdown
+                      :name="language.web_lang.support"
+                      :text="language.web_lang.header.support_hover_text"
+                      :btn-text="language.button_lang.read_more"
+                      btn-link="/support"
+                    />
+                  </li>
+                </ul>
               </li>
             </ul>
-          </div>
-
-          <!-- remove width later -->
-          <div class="languages hidden w-[170px] pt-11 xl:block">
-            <div class="flex">
-              <span class="mr-2 pt-5 pb-5 uppercase xl:pt-0"
-                >{{ language.web_lang.language }}:</span
-              >
-              <ul class="flex items-center justify-center">
-                <li class="nav__links">
-                  <a
-                    :class="
-                      language.web_lang.active === 'en'
-                        ? 'nav__active links__active'
-                        : ''
-                    "
-                    href="/lang/en"
-                    id="language-en"
-                    >EN</a
-                  >
-                </li>
-                <li class="nav__links">
-                  <a
-                    :class="
-                      language.web_lang.active === 'fr'
-                        ? 'nav__active links__active'
-                        : ''
-                    "
-                    href="/lang/fr"
-                    id="language-fr"
-                    >FR</a
-                  >
-                </li>
-                <li class="nav__links">
-                  <a
-                    :class="
-                      language.web_lang.active === 'es'
-                        ? 'nav__active links__active'
-                        : ''
-                    "
-                    href="/lang/es"
-                    id="language-es"
-                    >ES</a
-                  >
-                </li>
-              </ul>
-            </div>
           </div>
 
           <div id="menu-overlay"></div>
