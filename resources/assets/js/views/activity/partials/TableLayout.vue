@@ -4,7 +4,9 @@
       <thead>
         <tr class="bg-n-10">
           <th id="title" scope="col">
-            <span>{{ translate.commonText('activity_title') }}</span>
+            <span class="activity-translate-text">{{
+              translate.commonText('activity_title')
+            }}</span>
           </th>
           <th id="publishing-progress" scope="col" class="progress-bar-header">
             <a
@@ -14,7 +16,7 @@
               <span class="sorting-indicator" :class="sortingDirection()">
                 <svg-vue :icon="`${sortingDirection()}-arrow`" />
               </span>
-              <span class="">{{
+              <span class="activity-translate-text">{{
                 translate.commonText('publishing_progress')
               }}</span>
             </a>
@@ -27,14 +29,20 @@
               <span class="sorting-indicator" :class="sortingDirection()">
                 <svg-vue :icon="`${sortingDirection()}-arrow`" />
               </span>
-              <span>{{ translate.commonText('updated_on') }}</span>
+              <span class="activity-translate-text">{{
+                translate.commonText('updated_on')
+              }}</span>
             </a>
           </th>
           <th id="status" scope="col">
-            <span class="hidden">{{ translate.commonText('status') }}</span>
+            <span class="activity-translate-text hidden">{{
+              translate.commonText('status')
+            }}</span>
           </th>
           <th id="publish" scope="col">
-            <span class="hidden">{{ translate.commonText('publish') }}</span>
+            <span class="activity-translate-text hidden">{{
+              translate.commonText('publish')
+            }}</span>
           </th>
           <th id="cb" scope="col">
             <span
@@ -66,7 +74,7 @@
               <div class="ellipsis relative w-full">
                 <a
                   :href="'/activity/' + datum['id']"
-                  class="ellipsis w-full !max-w-full overflow-hidden text-n-50"
+                  class="ellipsis translate-text-link w-full !max-w-full overflow-hidden text-n-50"
                   >{{
                     datum['default_title_narrative'] &&
                     datum['default_title_narrative'] !== ''
@@ -75,7 +83,7 @@
                   }}</a
                 >
                 <div class="w-52">
-                  <span class="ellipsis__title--hover">{{
+                  <span class="ellipsis__title--hover translate-text-hover">{{
                     datum['default_title_narrative'] &&
                     datum['default_title_narrative'] !== ''
                       ? datum['default_title_narrative']
@@ -123,7 +131,7 @@
                   "
                 />
               </span>
-              <span class="text-sm leading-relaxed">
+              <span class="activity-translate-text text-sm leading-relaxed">
                 {{
                   translate.textFromKey(
                     `activities.status_labels.${datum['status']}`
@@ -156,7 +164,7 @@
             class="check-column"
             @click="(event: Event) => event.stopPropagation()"
           >
-            <label class="sr-only" for="">
+            <label class="translate-text sr-only" for="">
               {{ translate.commonText('select') }} "{{
                 datum['default_title_narrative']
               }}"
@@ -176,7 +184,7 @@
         <td v-if="loader" colspan="5" class="text-center">
           <div colspan="5" class="spin"></div>
         </td>
-        <td v-else colspan="5" class="text-center">
+        <td v-else colspan="5" class="translate-text text-center">
           {{ translate.commonText('activities_not_found') }}
         </td>
       </tbody>

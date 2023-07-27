@@ -9,7 +9,7 @@
       @click="previousPage"
     >
       <svg-vue icon="arrow-left"></svg-vue>
-      <span class="">{{ translate.button('prev') }}</span>
+      <span class="translate-text-btn">{{ translate.button('prev') }}</span>
     </a>
 
     <span v-if="data.last_page < 6" class="flex"
@@ -75,7 +75,7 @@
       }"
       @click="nextPage"
     >
-      <span class="">{{ translate.button('next') }}</span>
+      <span class="translate-text-btn">{{ translate.button('next') }}</span>
       <svg-vue icon="arrow-right" />
     </a>
   </nav>

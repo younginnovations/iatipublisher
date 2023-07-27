@@ -13,12 +13,12 @@
           class="mr-1 mt-0.5 text-lg text-crimson-40"
           icon="cancel-cloud"
         />
-        <b>
+        <b class="translate-text-btn">
           {{ translate.button('unpublish') }}
           {{ translate.commonText('activity') }}
         </b>
       </div>
-      <div class="rounded-lg bg-rose p-4">
+      <div class="translate-text-btn rounded-lg bg-rose p-4">
         {{ translate.button('unpublish_confirmation', 'common.activity') }}?
       </div>
     </div>
