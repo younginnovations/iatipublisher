@@ -12,45 +12,45 @@
         <span>{{
           sec.sector_vocabulary
             ? type.sectorVocabulary[sec.sector_vocabulary]
-            : language.common_lang.missing.vocabulary
+            : translate.missingText('vocabulary')
         }}</span>
       </div>
       <div class="ml-4">
         <table class="mb-3">
           <tbody>
             <tr>
-              <td>{{ language.common_lang.code }}</td>
+              <td>{{ translate.commonText('code') }}</td>
               <td>
                 <div class="text-sm">
                   <span v-if="sec.text">
-                    {{ sec.text ?? language.common_lang.missing.default }}
+                    {{ sec.text ?? translate.missingText() }}
                   </span>
                   <span v-else-if="sec.code">
                     {{
                       sec.code
                         ? type.sectorCode[sec.code]
-                        : language.common_lang.missing.default
+                        : translate.missingText()
                     }}
                   </span>
                   <span v-else-if="sec.category_code">
                     {{
                       sec.category_code
                         ? type.sectorCategory[sec.category_code]
-                        : language.common_lang.missing.default
+                        : translate.missingText()
                     }}
                   </span>
                   <span v-else-if="sec.sdg_goal">
                     {{
                       sec.sdg_goal
                         ? type.unsdgGoals[sec.sdg_goal]
-                        : language.common_lang.missing.default
+                        : translate.missingText()
                     }}
                   </span>
                   <span v-else-if="sec.sdg_target">
                     {{
                       sec.sdg_target
                         ? type.unsdgTargets[sec.sdg_target]
-                        : language.common_lang.missing.default
+                        : translate.missingText()
                     }}
                   </span>
                 </div>
@@ -61,7 +61,7 @@
                 sec.sector_vocabulary === '98' || sec.sector_vocabulary === '99'
               "
             >
-              <td>{{ language.common_lang.vocabulary_uri }}</td>
+              <td>{{ translate.commonText('vocabulary_uri') }}</td>
               <td>
                 <div class="text-sm">
                   <span v-if="sec.vocabulary_uri">
@@ -69,12 +69,12 @@
                       {{ sec.vocabulary_uri }}
                     </a>
                   </span>
-                  <span v-else>{{ language.common_lang.missing.default }}</span>
+                  <span v-else>{{ translate.missingText() }}</span>
                 </div>
               </td>
             </tr>
             <tr>
-              <td>{{ language.common_lang.description }}</td>
+              <td>{{ translate.commonText('description') }}</td>
               <td>
                 <div
                   v-for="(sd, i) in sec.narrative"
@@ -88,17 +88,14 @@
                     (
                     {{
                       sd.language
-                        ? `${language.common_lang.language}: ${
+                        ? `${translate.commonText('language')}: ${
                             type.languages[sd.language]
                           }`
-                        : language.common_lang.missing.element.replace(
-                            ':element',
-                            language.common_lang.language
-                          )
+                        : translate.missingText('language')
                     }})
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? language.common_lang.missing.narrative }}
+                    {{ sd.narrative ?? translate.missingText('narrative') }}
                   </div>
                 </div>
               </td>
@@ -112,6 +109,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'TransactionSector',
@@ -123,7 +121,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const { data } = toRefs(props);
 
     interface Sector {
@@ -153,7 +151,7 @@ export default defineComponent({
     return {
       sector,
       type,
-      language,
+      translate,
     };
   },
 });

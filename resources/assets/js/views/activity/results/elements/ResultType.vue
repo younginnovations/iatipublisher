@@ -1,11 +1,12 @@
 <template>
   <div class="text-sm">
-    {{ type[typeData] ?? language.common_lang.missing.default }}
+    {{ type[typeData] ?? translate.missingText() }}
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ResultType',
@@ -20,10 +21,10 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     let { data } = toRefs(props);
     const typeData = data.value;
-    return { typeData, language };
+    return { typeData, translate };
   },
 });
 </script>

@@ -64,6 +64,7 @@ import ErrorMessage from 'Components/ErrorMessage.vue';
 import { useStore } from 'Store/activities/index';
 import { detailStore } from 'Store/activities/show';
 import { useStorage } from '@vueuse/core';
+import { Translate } from 'Composable/translationHelper';
 
 const store = useStore();
 const activityStore = detailStore();
@@ -136,7 +137,7 @@ export default defineComponent({
       showEmptyTemplate = true;
     }
 
-    const language = window['globalLang'];
+    const translate = new Translate();
 
     //for session message
     const toastData = reactive({
@@ -360,8 +361,9 @@ export default defineComponent({
     const refreshToastMsg = reactive({
       visibility: false,
       refreshMessageType: true,
-      refreshMessage:
-        language.common_lang.activity_has_been_published_successfully,
+      refreshMessage: translate.error(
+        'activity_has_been_published_successfully'
+      ),
     });
 
     /**
@@ -393,7 +395,7 @@ export default defineComponent({
       refreshToastMsg,
       errorData,
       tableLoader,
-      language,
+      translate,
       xlsData,
       activityName,
       processedCount,

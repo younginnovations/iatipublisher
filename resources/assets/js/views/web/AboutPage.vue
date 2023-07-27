@@ -4,65 +4,82 @@
     <div class="mx-auto max-w-[700px]">
       <section class="rounded bg-white py-4 shadow-textbox sm:py-8">
         <article class="py-4 px-6 sm:py-6 sm:px-12">
-          <h3 class="my-2 text-2xl font-bold text-bluecoral">
-            {{ language.about.what_is_iati_publisher_header }}
+          <h3
+            class="about-translated-text my-2 text-2xl font-bold text-bluecoral"
+          >
+            {{ translate.aboutText('what_is_iati_publisher_header') }}
           </h3>
-          <p class="mt-4 text-base">
-            {{ language.about.what_is_iati_publisher_description.one }}
+          <p class="about-translated-text mt-4 text-base">
+            {{ translate.aboutText('what_is_iati_publisher_description.one') }}
           </p>
         </article>
         <article class="py-4 px-6 sm:py-6 sm:px-12">
-          <h3 class="my-2 text-2xl font-bold text-bluecoral">
-            {{ language.about.use_iati_publisher_to_header }}
+          <h3
+            class="about-translated-text my-2 text-2xl font-bold text-bluecoral"
+          >
+            {{ translate.aboutText('use_iati_publisher_to_header') }}
           </h3>
           <ul class="mt-4 ml-4 list-disc text-base text-bluecoral">
             <li class="text-base">
-              <span class="text-black">{{
-                language.about.use_iati_publisher_to_description.one.list_items
-                  .one
+              <span class="about-translated-text text-black">{{
+                translate.aboutText(
+                  'use_iati_publisher_to_description.one.list_items.one'
+                )
               }}</span>
             </li>
             <li class="text-base">
-              <span class="text-black">{{
-                language.about.use_iati_publisher_to_description.one.list_items
-                  .two
+              <span class="about-translated-text text-black">{{
+                translate.aboutText(
+                  'use_iati_publisher_to_description.one.list_items.two'
+                )
               }}</span>
             </li>
             <li class="text-base">
-              <span class="text-black">{{
-                language.about.use_iati_publisher_to_description.one.list_items
-                  .three
+              <span class="about-translated-text text-black">{{
+                translate.aboutText(
+                  'use_iati_publisher_to_description.one.list_items.three'
+                )
               }}</span>
             </li>
             <li class="text-base">
-              <span class="text-black">{{
-                language.about.use_iati_publisher_to_description.one.list_items
-                  .four
+              <span class="about-translated-text text-black">{{
+                translate.aboutText(
+                  'use_iati_publisher_to_description.one.list_items.four'
+                )
               }}</span>
             </li>
             <li class="text-base">
-              <span class="text-black">{{
-                language.about.use_iati_publisher_to_description.one.list_items
-                  .five
+              <span class="about-translated-text text-black">{{
+                translate.aboutText(
+                  'use_iati_publisher_to_description.one.list_items.five'
+                )
               }}</span>
             </li>
           </ul>
-          <p class="mt-4 text-base">
-            {{ language.about.use_iati_publisher_to_description.two }}
+          <p class="about-translated-text mt-4 text-base">
+            {{ translate.aboutText('use_iati_publisher_to_description.two') }}
           </p>
           <p class="mt-4 text-base">
             <span
-              v-html="language.about.use_iati_publisher_to_description.three"
+              class="about-translated-text"
+              v-html="
+                translate.aboutText('use_iati_publisher_to_description.three')
+              "
             ></span>
           </p>
         </article>
-        <article class="ounded py-4 px-6 sm:py-6 sm:px-12">
-          <h3 class="my-2 text-2xl font-bold text-bluecoral">
-            {{ language.about.development_of_iati_header }}
+        <article class="rounded py-4 px-6 sm:py-6 sm:px-12">
+          <h3
+            class="about-translated-text my-2 text-2xl font-bold text-bluecoral"
+          >
+            {{ translate.aboutText('development_of_iati_header') }}
           </h3>
           <p class="mt-4 text-base">
             <span
-              v-html="language.about.development_of_iati_description.one"
+              class="about-translated-text"
+              v-html="
+                translate.aboutText('development_of_iati_description.one')
+              "
             ></span>
           </p>
         </article>
@@ -70,14 +87,14 @@
     </div>
   </div>
 </template>
-<script lang="ts"></script>
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   setup() {
-    const language = window['globalLang'];
-    return { language };
+    const translate = new Translate();
+    return { translate };
   },
 });
 </script>

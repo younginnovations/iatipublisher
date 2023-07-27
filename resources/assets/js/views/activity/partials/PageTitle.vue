@@ -7,38 +7,48 @@
           <nav aria-label="breadcrumbs" class="breadcrumb">
             <p>
               <span class="last font-bold">{{
-                language.activities_lang.your_activities
+                translate.textFromKey('activities.your_activities')
               }}</span>
             </p>
           </nav>
         </div>
         <div class="inline-flex flex-col space-y-2 md:flex-row md:items-center">
           <h4 class="mr-4 text-3xl font-bold xl:text-heading-4">
-            {{ language.activities_lang.your_activities }}
+            {{ translate.textFromKey('activities.your_activities') }}
           </h4>
           <div class="tooltip-btn">
             <button class="">
               <svg-vue icon="question-mark" />
-              <span>{{ language.activities_lang.what_is_activity.label }}</span>
+              <span>{{
+                translate.textFromKey('activities.what_is_activity.label')
+              }}</span>
             </button>
             <div class="tooltip-btn__content z-[1]">
               <div class="content">
                 <div class="mb-1.5 text-caption-c1 font-bold text-bluecoral">
-                  {{ language.activities_lang.what_is_activity.label }}
+                  {{
+                    translate.textFromKey('activities.what_is_activity.label')
+                  }}
                 </div>
                 <p
                   v-html="
-                    language.activities_lang.what_is_activity.description.one
+                    translate.textFromKey(
+                      'activities.what_is_activity.description.one'
+                    )
                   "
                 ></p>
                 <p
                   v-html="
-                    language.activities_lang.what_is_activity.description.two
+                    translate.textFromKey(
+                      'activities.what_is_activity.description.two'
+                    )
                   "
                 ></p>
                 <p
                   v-html="
-                    language.activities_lang.what_is_activity.description.three
+                    translate.textFromKey(
+                      'activities.what_is_activity.description.three'
+                    )
                   "
                 ></p>
               </div>
@@ -60,7 +70,7 @@
         <ErrorPopUp
           v-if="errorData.visibility"
           :message="errorData.message"
-          :title="language.common_lang.error.activity_could_not_be_published"
+          :title="translate.error('activity_could_not_be_published')"
           @close-popup="
             () => {
               errorData.visibility = false;
@@ -106,6 +116,7 @@ import DeleteButton from 'Components/buttons/DeleteButton.vue';
 // Vuex Store
 import { useStore } from 'Store/activities/index';
 import ErrorPopUp from 'Components/ErrorPopUp.vue';
+import { Translate } from 'Composable/translationHelper';
 
 interface RefreshToastMsgTypeface {
   visibility: boolean;
@@ -119,7 +130,7 @@ interface ToastInterface {
   type: boolean;
 }
 
-const language = window['globalLang'];
+const translate = new Translate();
 const refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
 const toastMessage = inject('toastData') as ToastInterface;
 const errorData = inject('errorData') as ToastInterface;

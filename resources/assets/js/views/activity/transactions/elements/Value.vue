@@ -8,10 +8,7 @@
       {{
         value[0].amount
           ? Number(value[0].amount).toLocaleString()
-          : language.common_lang.missing.element.replace(
-              ':element',
-              language.common_lang.amount
-            )
+          : translate.missingText('amount')
       }}
     </span>
     <span v-if="value[0].amount" class="mb-5">{{ value[0].currency }}</span>
@@ -19,7 +16,7 @@
   <div v-if="value[0].amount" class="text-sm">
     {{
       value[0].date
-        ? `${language.common_lang.valued_at.toLowerCase()} ${dateFormat(
+        ? `${translate.commonText('valued_at').toLowerCase()} ${dateFormat(
             value[0].date
           )}`
         : ''
@@ -30,6 +27,7 @@
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
 import dateFormat from './../../../../composable/dateFormat';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'TransactionValue',
@@ -41,14 +39,14 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const { data } = toRefs(props);
 
     interface ArrayObject {
       [index: number]: { amount: string; currency: string; date: Date };
     }
     const value = data.value as ArrayObject;
-    return { value, dateFormat, language };
+    return { value, dateFormat, translate };
   },
 });
 </script>

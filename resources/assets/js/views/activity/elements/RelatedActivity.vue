@@ -10,10 +10,7 @@
           types.relatedActivityType[post.relationship_type]
         }}</span>
         <span v-else class="italic">{{
-          language.common_lang.missing.element.replace(
-            ':element',
-            language.common_lang.type
-          )
+          translate.missingText('element', 'common.type')
         }}</span>
       </div>
       <div>
@@ -21,10 +18,7 @@
           post.activity_identifier
         }}</span>
         <span v-else class="italic">{{
-          language.common_lang.missing.element.replace(
-            ':element',
-            language.common_lang.reference
-          )
+          translate.missingText('element', 'common.reference')
         }}</span>
       </div>
     </div>
@@ -34,6 +28,7 @@
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
 import dateFormat from 'Composable/dateFormat';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'RelatedActivity',
@@ -50,9 +45,9 @@ export default defineComponent({
     }
 
     const types = inject('types') as Types;
-    const language = window['globalLang'];
+    const translate = new Translate();
 
-    return { types, dateFormat, language };
+    return { types, dateFormat, translate };
   },
 });
 </script>

@@ -11,10 +11,7 @@
       <div class="mb-4 flex">
         <div class="title flex grow">
           <div class="title text-sm font-bold">
-            {{
-              language.elements_common_lang[elementName.toString()] ??
-              elementName.toString().replace(/_/g, '-')
-            }}
+            {{ translate.elementFromElementName(elementName) }}
           </div>
         </div>
         <div class="icons flex items-center">
@@ -48,10 +45,10 @@
           <div class="text-sm">
             {{
               data === '0'
-                ? language.common_lang.false
+                ? translate.commonText('false')
                 : data === '1'
-                ? language.common_lang.true
-                : language.common_lang.missing.default
+                ? translate.commonText('true')
+                : translate.missingText()
             }}
           </div>
         </template>
@@ -93,7 +90,7 @@
         </template>
         <template v-else>
           <div class="text-sm">
-            {{ data ?? language.common_lang.missing.default }}
+            {{ data ?? translate.missingText() }}
           </div>
         </template>
       </div>
@@ -121,6 +118,7 @@ import {
   FinanceType,
   TiedStatus,
 } from './elements/Index';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ActivityElement',
@@ -170,7 +168,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     let { data, types } = toRefs(props),
       elementData = data.value;
 
@@ -192,7 +190,7 @@ export default defineComponent({
       elementData,
       getLanguages,
       dateFormat,
-      language,
+      translate,
     };
   },
 });

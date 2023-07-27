@@ -88,6 +88,7 @@
         'password_recovery': {!! json_encode(trans('password_recovery'), JSON_THROW_ON_ERROR) !!},
         'email_verification': {!! json_encode(trans('email_verification'), JSON_THROW_ON_ERROR) !!},
         'element_labels_lang': {!! json_encode(trans('element_labels'), JSON_THROW_ON_ERROR) !!},
+        'missing_lang': {!!json_encode(trans('missing'), JSON_THROW_ON_ERROR) !!}
     };
 </script>
 

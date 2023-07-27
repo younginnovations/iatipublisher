@@ -2,7 +2,7 @@
   <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      :title="language.common_lang.transaction_list"
+      :title="translate.commonText('transaction_list')"
       :back-link="activityLink"
     >
       <div class="flex items-center space-x-3">
@@ -14,12 +14,7 @@
         />
         <a :href="`${activityLink}/transaction/create`">
           <Btn
-            :text="
-              language.button_lang.add_element.replace(
-                ':element',
-                language.common_lang.transaction
-              )
-            "
+            :text="translate.button('add_element', 'common.transaction')"
             icon="plus"
             type="primary"
           />
@@ -34,26 +29,26 @@
           <tr class="bg-n-10">
             <th id="internal_ref" scope="col">
               <span
-                >{{ language.common_lang.internal }}
-                {{ language.common_lang.ref }}</span
+                >{{ translate.commonText('internal') }}
+                {{ translate.commonText('ref') }}</span
               >
             </th>
             <th id="transaction_type" scope="col">
               <span
-                >{{ language.common_lang.transaction }}
-                {{ language.common_lang.type }}</span
+                >{{ translate.commonText('transaction') }}
+                {{ translate.commonText('type') }}</span
               >
             </th>
             <th id="transaction_value" scope="col">
               <span
-                >{{ language.common_lang.transaction }}
-                {{ language.common_lang.value }}</span
+                >{{ translate.commonText('transaction') }}
+                {{ translate.commonText('value') }}</span
               >
             </th>
             <th id="transaction_date" scope="col">
               <span
-                >{{ language.common_lang.transaction }}
-                {{ language.common_lang.date }}</span
+                >{{ translate.commonText('transaction') }}
+                {{ translate.commonText('date') }}</span
               >
             </th>
             <!--            <th id="status" scope="col">-->
@@ -68,7 +63,7 @@
             <!--              </a>-->
             <!--            </th>-->
             <th id="action" scope="col">
-              <span>{{ language.common_lang.action }}</span>
+              <span>{{ translate.commonText('action') }}</span>
             </th>
           </tr>
         </thead>
@@ -150,8 +145,8 @@
           <td colspan="5" class="text-center">
             {{
               createCapitalizedSentence(
-                language.elements_common_lang.transactions,
-                language.common_lang.missing.not_found
+                translate.element('transactions'),
+                translate.missingText('not_found')
               )
             }}
           </td>
@@ -184,6 +179,7 @@ import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
 import { useToggle } from '@vueuse/core';
 import { createCapitalizedSentence } from '../../../composable/utils';
+import { Translate } from 'Composable/translationHelper';
 
 // toggle state for modal popup
 let [deleteValue, deleteToggle] = useToggle();
@@ -216,7 +212,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const { activity } = toRefs(props);
     const activityId = activity.value.id,
       activityTitle = getActivityTitle(activity.value.title, 'en'),
@@ -287,7 +283,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: language.activities_lang.your_activities,
+        title: translate.textFromKey('activities.your_activities'),
         link: '/activities',
       },
       {
@@ -295,7 +291,7 @@ export default defineComponent({
         link: activityLink,
       },
       {
-        title: language.common_lang.transaction_list,
+        title: translate.commonText('transaction_list'),
         link: '',
       },
     ];
@@ -311,7 +307,7 @@ export default defineComponent({
       deleteValue,
       deleteToggle,
       handleNavigate,
-      language,
+      translate,
     };
   },
   methods: { createCapitalizedSentence },

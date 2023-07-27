@@ -282,6 +282,4 @@ return array (
   'end_date' => 'fecha de finalización',
   'provider_organization' => 'organización-proveedora',
   'receiver_organization' => 'organización-receptora',
-
-
 );

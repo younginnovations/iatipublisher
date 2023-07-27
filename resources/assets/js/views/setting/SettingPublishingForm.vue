@@ -2,13 +2,15 @@
   <div>
     <div class="registry__info">
       <div class="mb-4 text-sm font-bold text-n-50">
-        {{ language.settings_lang.registry_information.label }}
+        {{ translate.textFromKey('settings.registry_information.label') }}
       </div>
       <div class="mb-4 flex items-center text-xs text-n-50">
         <button>
           <HoverText
-            :name="language.settings_lang.registry_information.label"
-            :hover-text="language.settings_lang.registry_information.hover_text"
+            :name="translate.textFromKey('settings.registry_information.label')"
+            :hover-text="
+              translate.textFromKey('settings.registry_information.hover_text')
+            "
           />
         </button>
       </div>
@@ -19,13 +21,15 @@
           <div class="relative">
             <div class="flex justify-between">
               <label for="publisher-id">{{
-                language.settings_lang.publisher_id.label
+                translate.textFromKey('settings.publisher_id.label')
               }}</label>
               <button>
                 <HoverText
                   width="w-72"
-                  :name="language.settings_lang.publisher_id.label"
-                  :hover-text="language.settings_lang.publisher_id.hover_text"
+                  :name="translate.textFromKey('settings.publisher_id.label')"
+                  :hover-text="
+                    translate.textFromKey('settings.publisher_id.hover_text')
+                  "
                   :show-iati-reference="true"
                 />
               </button>
@@ -37,7 +41,9 @@
                 error__input: publishingError.publisher_id,
               }"
               type="text"
-              :placeholder="language.settings_lang.publisher_id.placeholder"
+              :placeholder="
+                translate.textFromKey('settings.publisher_id.placeholder')
+              "
               :value="organization.publisher_id"
               disabled="true"
               @input="updateStore('publisher_id')"
@@ -51,12 +57,14 @@
           <div class="relative">
             <div class="flex justify-between">
               <label for="api-token"
-                >{{ language.settings_lang.api_token.label }}
+                >{{ translate.textFromKey('settings.api_token.label') }}
               </label>
               <button>
                 <HoverText
-                  :name="language.settings_lang.api_token.label"
-                  :hover-text="language.settings_lang.api_token.hover_text"
+                  :name="translate.textFromKey('settings.api_token.label')"
+                  :hover-text="
+                    translate.textFromKey('settings.api_token.hover_text')
+                  "
                   :show-iati-reference="true"
                 />
               </button>
@@ -71,7 +79,9 @@
               }"
               :disabled="userRole !== 'admin' ? true : false"
               type="text"
-              :placeholder="language.settings_lang.api_token.placeholder"
+              :placeholder="
+                translate.textFromKey('settings.api_token.placeholder')
+              "
               @input="updateStore('api_token')"
             />
             <span
@@ -83,8 +93,8 @@
             >
               {{
                 publishingInfo.token_verification
-                  ? language.settings_lang.correct_label
-                  : language.settings_lang.incorrect_label
+                  ? translate.textFromKey('settings.correct_label')
+                  : translate.textFromKey('settings.incorrect_label')
               }}
             </span>
           </div>
@@ -98,7 +108,7 @@
         class="primary-btn verify-btn"
         @click="submitPublishing"
       >
-        {{ language.button_lang.verify }}
+        {{ translate.button('verify') }}
       </button>
     </div>
   </div>
@@ -108,6 +118,7 @@ import { defineComponent, ref, computed, inject } from 'vue';
 import { useStore } from '../../store';
 import { ActionTypes } from '../../store/setting/actions';
 import HoverText from './../../components/HoverText.vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   components: {
@@ -122,7 +133,7 @@ export default defineComponent({
   emits: ['submitPublishing'],
 
   setup(props, { emit }) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const tab = ref('publish');
     const store = useStore();
     const userRole = inject('userRole');
@@ -172,7 +183,7 @@ export default defineComponent({
       toggleTab,
       updateStore,
       autoVerify,
-      language,
+      translate,
     };
   },
 });

@@ -1,6 +1,6 @@
 <template>
   <tr>
-    <td>{{ language.common_lang.baseline }}</td>
+    <td>{{ translate.commonText('baseline') }}</td>
     <td>
       <div
         v-for="(base, b) in baseline"
@@ -11,56 +11,50 @@
       >
         <div :class="elementSpacing">
           <span>
-            {{ language.common_lang.year }}:
+            {{ translate.commonText('year') }}:
             <template v-if="base.year">
               {{ base.year }}
             </template>
-            <template v-else>{{
-              language.common_lang.missing.default
-            }}</template>
+            <template v-else>{{ translate.missingText() }}</template>
             ,
           </span>
           <span>
-            {{ language.common_lang.date }}:
+            {{ translate.commonText('date') }}:
             <template v-if="base.date">
               {{ base.date }}
             </template>
-            <template v-else>{{
-              language.common_lang.missing.default
-            }}</template>
+            <template v-else>{{ translate.missingText() }}</template>
             ,
           </span>
           <span>
-            {{ language.common_lang.value }}:
+            {{ translate.commonText('value') }}:
             <template v-if="base.value">
               {{ base.value }}
             </template>
-            <template v-else>{{
-              language.common_lang.missing.default
-            }}</template>
+            <template v-else>{{ translate.missingText() }}</template>
           </span>
         </div>
 
         <div class="flex" :class="elementSpacing">
-          <div>{{ language.common_lang.location }}:&nbsp;</div>
+          <div>{{ translate.commonText('location') }}:&nbsp;</div>
           <div>
             {{
               location(base.location)
                 ? location(base.location)
-                : language.common_lang.baseline.default
+                : translate.missingText()
             }}
           </div>
         </div>
 
         <div class="flex" :class="elementSpacing">
-          <div>{{ language.common_lang.dimension }}:&nbsp;</div>
+          <div>{{ translate.commonText('dimension') }}:&nbsp;</div>
           <div class="description">
             {{ dimensions(base.dimension) }}
           </div>
         </div>
 
         <div class="flex" :class="elementSpacing">
-          <div>{{ language.common_lang.comment }}:&nbsp;</div>
+          <div>{{ translate.commonText('comment') }}:&nbsp;</div>
           <div>
             <div
               v-for="(com, c) in base.comment[0].narrative"
@@ -72,17 +66,13 @@
             >
               <div>
                 <div class="description">
-                  {{
-                    com.narrative
-                      ? com.narrative
-                      : language.common_lang.missing.default
-                  }}
+                  {{ com.narrative ? com.narrative : translate.missingText() }}
                   <span class="text-n-30">
-                    (Language:
+                    ({{ translate.commonText('language') }}:
                     {{
                       com.language
                         ? baseType.language[com.language]
-                        : language.common_lang.missing.default
+                        : translate.missingText()
                     }})</span
                   >
                 </div>
@@ -93,7 +83,7 @@
 
         <div>
           <div class="mb-2.5 flex">
-            <div>{{ language.common_lang.document_link }}:&nbsp;</div>
+            <div>{{ translate.commonText('document_link') }} }}:&nbsp;</div>
             <div></div>
           </div>
           <div class="divider mb-4 h-px w-full border-b border-n-20"></div>
@@ -112,6 +102,7 @@
 import { defineComponent, toRefs } from 'vue';
 import { DocumentLink } from './Index';
 import { countDocumentLink } from 'Composable/utils';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'IndicatorBaseline',
@@ -159,7 +150,7 @@ export default defineComponent({
       year: number;
     }
 
-    const language = window['globalLang'];
+    const translate = new Translate();
     const baseline = data.value as BaselineElements[];
 
     /**
@@ -185,7 +176,7 @@ export default defineComponent({
         return (
           locations.join(', ') +
           ' ' +
-          language.common_lang.sticky.common.and +
+          translate.stickyText('and', 'common') +
           ' ' +
           lastLocation
         );
@@ -202,9 +193,11 @@ export default defineComponent({
       let dimensions: string[] = [];
 
       dimensions = data.map((item) => {
-        const name = item.name ?? language.common_lang.missing.default,
-          value = item.value ?? language.common_lang.missing.default;
-        return `${language.common_lang.code} - ${name}, ${language.common_lang.value} - (${value})`;
+        const name = item.name ?? translate.missingText(),
+          value = item.value ?? translate.missingText();
+        return `${translate.commonText(
+          'code'
+        )} - ${name}, ${translate.commonText('value')} - (${value})`;
       });
 
       return dimensions.join('; ');
@@ -215,7 +208,7 @@ export default defineComponent({
       dimensions,
       elementSpacing,
       countDocumentLink,
-      language,
+      translate,
     };
   },
 });

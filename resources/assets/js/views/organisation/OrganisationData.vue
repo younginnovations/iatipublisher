@@ -25,7 +25,7 @@
               <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
                 <div class="flex">
                   <a class="whitespace-nowrap font-bold" href="/activities">{{
-                    language.org_lang.your_organisation
+                    translate.textFromKey('organisation.your_organisation')
                   }}</a>
                   <span class="separator mx-4"> / </span>
                   <div class="breadcrumb__title">
@@ -34,16 +34,16 @@
                       >{{
                         organization.name
                           ? organization.name['0'].narrative ??
-                            language.common_lang.untitled
-                          : language.common_lang.untitled
+                            translate.commonText('untitled')
+                          : translate.commonText('untitled')
                       }}</span
                     >
                     <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
                       {{
                         organization.name
                           ? organization.name['0'].narrative ??
-                            language.common_lang.untitled
-                          : language.common_lang.untitled
+                            translate.commonText('untitled')
+                          : translate.commonText('untitled')
                       }}
                     </span>
                   </div>
@@ -64,16 +64,16 @@
                     {{
                       organization.name
                         ? organization.name['0'].narrative ??
-                          language.common_lang.untitled
-                        : language.common_lang.untitled
+                          translate.commonText('untitled')
+                        : translate.commonText('untitled')
                     }}
                   </span>
                   <span class="ellipsis__title--hover w-[calc(100%_+_35px)]">
                     {{
                       organization.name
                         ? organization.name['0'].narrative ??
-                          language.common_lang.untitled
-                        : language.common_lang.untitled
+                          translate.commonText('untitled')
+                        : translate.commonText('untitled')
                     }}
                   </span>
                 </h4>
@@ -92,7 +92,7 @@
             <ErrorPopUp
               v-if="errorData.visibility"
               :message="errorData.message"
-              :title="language.common_lang.error.org_could_not_be_published"
+              :title="translate.error('org_could_not_be_published')"
               @close-popup="
                 () => {
                   errorData.visibility = false;
@@ -116,11 +116,13 @@
             <div class="activities__card progress mr-1">
               <div class="mb-2 flex items-center justify-between">
                 <span class="mr-2">{{
-                  language.common_lang.publishing_progress
+                  translate.commonText('publishing_progress')
                 }}</span>
                 <HoverText
                   :hover-text="
-                    language.common_lang.cannot_publish_activity_until_mandatory
+                    translate.commonText(
+                      'cannot_publish_activity_until_mandatory'
+                    )
                   "
                   name=""
                   class="hover-text"
@@ -132,14 +134,16 @@
                 :is-percent="true"
                 :percent="progress"
               ></RadialProgressBar>
-              <span>{{ language.common_lang.fill_mandatory_fields }}</span>
+              <span>{{ translate.commonText('fill_mandatory_fields') }}</span>
             </div>
             <div class="activities__card elements">
               <div class="mb-7 flex items-center justify-between">
-                <span>{{ language.common_lang.elements }}</span>
+                <span>{{ translate.commonText('elements') }}</span>
                 <HoverText
                   :hover-text="
-                    language.common_lang.cannot_publish_activity_until_mandatory
+                    translate.commonText(
+                      'cannot_publish_activity_until_mandatory'
+                    )
                   "
                   name=""
                   class="hover-text"
@@ -148,11 +152,13 @@
               <div class="mb-3 flex justify-between">
                 <div class="flex items-center space-x-1">
                   <svg-vue icon="core" />
-                  <span>{{ language.common_lang.core }}</span>
+                  <span>{{ translate.commonText('core') }}</span>
                 </div>
                 <HoverText
                   :hover-text="
-                    language.common_lang.cannot_publish_activity_until_mandatory
+                    translate.commonText(
+                      'cannot_publish_activity_until_mandatory'
+                    )
                   "
                   name=""
                   class="hover-text"
@@ -161,11 +167,13 @@
               <div class="flex justify-between">
                 <div class="flex items-center space-x-1">
                   <svg-vue icon="double-tick" class="text-spring-50"></svg-vue>
-                  <span>{{ language.common_lang.completed }}</span>
+                  <span>{{ translate.commonText('completed') }}</span>
                 </div>
                 <HoverText
                   :hover-text="
-                    language.common_lang.cannot_publish_activity_until_mandatory
+                    translate.commonText(
+                      'cannot_publish_activity_until_mandatory'
+                    )
                   "
                   name=""
                   class="hover-text"
@@ -201,12 +209,13 @@
               <div class="activities__card progress mr-1">
                 <div class="mb-2 flex items-center justify-between">
                   <span class="mr-2">{{
-                    language.common_lang.publishing_progress
+                    translate.commonText('publishing_progress')
                   }}</span>
                   <HoverText
                     :hover-text="
-                      language.common_lang
-                        .cannot_publish_activity_until_mandatory
+                      translate.commonText(
+                        'cannot_publish_activity_until_mandatory'
+                      )
                     "
                     name=""
                     class="hover-text"
@@ -218,15 +227,16 @@
                   :is-percent="true"
                   :percent="progress"
                 ></RadialProgressBar>
-                <span>{{ language.common_lang.fill_mandatory_fields }}</span>
+                <span>{{ translate.commonText('fill_mandatory_fields') }}</span>
               </div>
               <div class="activities__card elements">
                 <div class="mb-7 flex items-center justify-between">
-                  <span>{{ language.common_lang.elements }}</span>
+                  <span>{{ translate.commonText('elements') }}</span>
                   <HoverText
                     :hover-text="
-                      language.common_lang
-                        .cannot_publish_activity_until_mandatory
+                      translate.commonText(
+                        'cannot_publish_activity_until_mandatory'
+                      )
                     "
                     name=""
                     class="hover-text"
@@ -235,12 +245,13 @@
                 <div class="mb-3 flex justify-between">
                   <div class="flex items-center space-x-1">
                     <svg-vue icon="core" />
-                    <span>{{ language.common_lang.core }}</span>
+                    <span>{{ translate.commonText('core') }}</span>
                   </div>
                   <HoverText
                     :hover-text="
-                      language.common_lang
-                        .cannot_publish_activity_until_mandatory
+                      translate.commonText(
+                        'cannot_publish_activity_until_mandatory'
+                      )
                     "
                     name=""
                     class="hover-text"
@@ -252,12 +263,13 @@
                       icon="double-tick"
                       class="text-spring-50"
                     ></svg-vue>
-                    <span>{{ language.common_lang.completed }}</span>
+                    <span>{{ translate.commonText('completed') }}</span>
                   </div>
                   <HoverText
                     :hover-text="
-                      language.common_lang
-                        .cannot_publish_activity_until_mandatory
+                      translate.commonText(
+                        'cannot_publish_activity_until_mandatory'
+                      )
                     "
                     name=""
                     class="hover-text"
@@ -331,6 +343,7 @@ import PublishUnpublish from 'Components/sections/OrganizationPublishUnpublishBu
 import { useToggle } from '@vueuse/core';
 import { watchIgnorable } from '@vueuse/core';
 import ErrorPopUp from 'Components/ErrorPopUp.vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'OrganisationData',
@@ -383,7 +396,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const toastData = reactive({
       visibility: false,
       message: '',
@@ -565,7 +578,7 @@ export default defineComponent({
       toggleSidebar,
       showSidebar,
       istopVisible,
-      language,
+      translate,
     };
   },
 });

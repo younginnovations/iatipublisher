@@ -22,7 +22,7 @@
     </div>
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      :title="`${indicatorTitle} - ${language.common_lang.indicator_detail}`"
+      :title="`${indicatorTitle} - ${translate.commonText('indicator_detail')}`"
       :back-link="`${indicatorLink}`"
     >
       <div class="flex justify-end">
@@ -34,34 +34,19 @@
         />
         <!-- <Status class="mr-2.5" :data="false" /> -->
         <Btn
-          :text="
-            language.button_lang.add_element.replace(
-              ':element',
-              language.common_lang.indicator
-            )
-          "
+          :text="translate.button('add_element', 'common.indicator')"
           icon="add"
           :link="`${indicatorLink}/create`"
           class="mr-2.5"
         />
         <Btn
-          :text="
-            language.button_lang.add_element.replace(
-              ':element',
-              language.common_lang.period
-            )
-          "
+          :text="translate.button('add_element', 'common.period')"
           icon="add"
           :link="`/indicator/${indicator.id}/period/create`"
           class="mr-2.5"
         />
         <Btn
-          :text="
-            language.button_lang.edit_element.replace(
-              ':element',
-              language.common_lang.indicator
-            )
-          "
+          :text="translate.button('edit_element', 'common.period')"
           :link="`${indicatorLink}/${indicator.id}/edit`"
         />
       </div>
@@ -133,7 +118,7 @@
             <li v-for="(rData, r, ri) in indicatorData" :key="ri">
               <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
                 <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
-                {{ language.elements_common_lang[r] ?? r }}
+                {{ translate.element(r) ?? r }}
               </a>
             </li>
 
@@ -145,16 +130,14 @@
               >
                 <svg-vue icon="add" class="mr-2 text-n-40"></svg-vue>
                 {{
-                  language.button_lang.add_element
-                    .replace(':element', language.common_lang.period)
-                    .toLowerCase()
+                  translate.button('add_element', 'common.period').toLowerCase()
                 }}
               </a>
             </li>
             <li v-else>
               <a v-smooth-scroll href="#period" :class="linkClasses">
                 <svg-vue icon="core" class="mr-2 text-base"></svg-vue>
-                {{ language.button_lang.period_nocase }}
+                {{ translate.button('period_nocase') }}
               </a>
             </li>
           </ul>
@@ -236,7 +219,7 @@
                   <table class="mb-2">
                     <tr>
                       <td class="pl-4">
-                        {{ language.common_lang.document_link }}
+                        {{ translate.commonText('document_link') }} }}
                       </td>
                     </tr>
                   </table>
@@ -294,6 +277,7 @@ import {
 
 //composable
 import getActivityTitle from 'Composable/title';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'IndicatorDetail',
@@ -342,7 +326,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
 
@@ -400,7 +384,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: language.activities_lang.your_activities,
+        title: translate.textFromKey('activities.your_activities'),
         link: '/activities',
       },
       {
@@ -465,7 +449,7 @@ export default defineComponent({
       showSidebar,
       istopVisible,
       countDocumentLink,
-      language,
+      translate,
     };
   },
 });

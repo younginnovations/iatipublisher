@@ -1,6 +1,6 @@
 <template>
   <tr>
-    <td>{{ language.common_lang.reference }}</td>
+    <td>{{ translate.commonText('reference') }}</td>
     <td>
       <div
         v-for="(ref, r) in refData"
@@ -10,18 +10,18 @@
         }"
       >
         <span>
-          {{ language.common_lang.vocabulary }}:
+          {{ translate.commonText('vocabulary') }}:
           {{
             refType.indicatorVocabulary[ref.vocabulary] ??
-            language.common_lang.missing.default
+            translate.missingText()
           }},
         </span>
         <span>
-          {{ language.common_lang.code }}:
-          {{ ref.code ?? language.common_lang.missing.default }},
+          {{ translate.commonText('code') }}:
+          {{ ref.code ?? translate.missingText() }},
         </span>
         <span v-if="ref.indicator_uri">
-          {{ language.common_lang.indicator_uri }}:
+          {{ translate.commonText('indicator_uri') }}:
           <a target="_blank" :href="ref.indicator_uri">
             {{ ref.indicator_uri }}
           </a>
@@ -33,6 +33,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'IndicatorReference',
@@ -48,7 +49,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     let { data } = toRefs(props);
 
     /**
@@ -62,7 +63,7 @@ export default defineComponent({
       };
     }
     const refData = data.value as ReferenceArray;
-    return { refData, language };
+    return { refData, translate };
   },
 });
 </script>

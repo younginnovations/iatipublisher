@@ -4,7 +4,7 @@
     <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
       <div class="flex">
         <a class="whitespace-nowrap font-bold text-n-40" href="/audits">
-          {{ language.common_lang.audits }}
+          {{ translate.commonText('audits') }}
         </a>
       </div>
     </nav>
@@ -23,8 +23,9 @@ import { onMounted, reactive, ref } from 'vue';
 import axios from 'axios';
 import Loader from '../../components/Loader.vue';
 import PageTitle from 'Components/sections/PageTitle.vue';
+import { Translate } from 'Composable/translationHelper';
 
-const language = window['globalLang'];
+const translate = new Translate();
 const auditData = reactive({});
 const isEmpty = ref(false);
 

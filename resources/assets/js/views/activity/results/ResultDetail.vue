@@ -22,7 +22,7 @@
     </div>
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      :title="language.common_lang.result_detail"
+      :title="translate.commonText('result_detail')"
       :back-link="`${activityLink}/result`"
     >
       <div class="flex items-center space-x-3">
@@ -34,12 +34,7 @@
         />
         <a :href="`${activityLink}/result/create`">
           <Btn
-            :text="
-              language.button_lang.edit_element.replace(
-                ':element',
-                language.common_lang.result
-              )
-            "
+            :text="translate.button('edit_element', 'common.result')"
             :link="`${resultLink}/edit`"
             icon="edit"
           />
@@ -88,7 +83,7 @@
           <li v-if="hasIndicators">
             <a v-smooth-scroll href="#indicator" :class="linkClasses">
               <!-- <svg-vue icon="moon" class="mr-2 text-base"></svg-vue> -->
-              {{ language.elements_common_lang.indicator }}
+              {{ translate.elementLabel('indicator') }}
             </a>
           </li>
           <li v-if="!hasIndicators">
@@ -98,12 +93,7 @@
               class="border border-dashed border-n-40"
             >
               <svg-vue icon="add" class="mr-2 text-n-40"></svg-vue>
-              {{
-                language.button_lang.add_element.replace(
-                  ':element',
-                  language.elements_common_lang.indicator
-                )
-              }}
+              {{ translate.button('add_element', 'element_labels.indicator') }}
             </a>
           </li>
         </ul>
@@ -118,13 +108,13 @@
             <li v-for="(rData, r, ri) in resultsData" :key="ri">
               <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
                 <!-- <svg-vue icon="moon" class="mr-2 text-base"></svg-vue> -->
-                {{ language.elements_common_lang[r] ?? r }}
+                {{ translate.elementLabel(r) ?? r }}
               </a>
             </li>
             <li v-if="hasIndicators">
               <a v-smooth-scroll href="#indicator" :class="linkClasses">
                 <!-- <svg-vue icon="moon" class="mr-2 text-base"></svg-vue> -->
-                {{ language.common_lang.indicator_nocase }}
+                {{ translate.commonText('indicator_nocase') }}
               </a>
             </li>
             <li v-if="!hasIndicators">
@@ -134,7 +124,7 @@
                 class="border border-dashed border-n-40"
               >
                 <svg-vue icon="add" class="mr-2 text-n-40"></svg-vue>
-                {{ language.common_lang.add_indicator_nocase }}
+                {{ translate.commonText('add_indicator_nocase') }}
               </a>
             </li>
           </ul>
@@ -181,17 +171,14 @@
           class="add_indicator flex w-full rounded border border-dashed border-n-40 bg-white px-4 py-3 text-xs leading-normal"
         >
           <div class="grow text-left italic">
-            {{ language.button_lang.not_yet_added_indicator }}
+            {{ translate.commonText('not_yet_added_indicator') }}
           </div>
           <div
             class="flex shrink-0 items-center font-bold uppercase text-bluecoral"
           >
             <svg-vue icon="add" class="mr-1 shrink-0 text-base"></svg-vue>
             <span class="grow text-[10px]">{{
-              language.button_lang.add_element.replace(
-                ':element',
-                language.common_lang.new_indicator
-              )
+              translate.button('add_element', 'common.new_indicator')
             }}</span>
           </div>
         </a>
@@ -222,6 +209,7 @@ import Toast from 'Components/ToastMessage.vue';
 //composable
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ResultDetail',
@@ -256,7 +244,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
     const positionY = ref(0);
@@ -287,7 +275,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: language.activities_lang.your_activities,
+        title: translate.textFromKey('activities.your_activities'),
         link: '/activities',
       },
       {
@@ -354,7 +342,7 @@ export default defineComponent({
       toastData,
       showSidebar,
       istopVisible,
-      language,
+      translate,
     };
   },
 });

@@ -9,68 +9,59 @@
       <span>
         {{
           types.budgetType[post.planned_disbursement_type] ??
-          language.common_lang.missing.element.replace(
-            ':element',
-            language.common_lang.type
-          )
+          translate.missingText('type')
         }}
       </span>
     </div>
 
     <div class="mb-4 ml-5">
       <div class="category">
-        <span>{{ language.common_lang.value }}</span>
+        <span>{{ translate.commonText('value') }}</span>
       </div>
       <table class="ml-5">
         <tbody>
           <tr>
-            <td>{{ language.common_lang.value_amount }}</td>
+            <td>{{ translate.commonText('value_amount') }}</td>
             <td>
               {{
                 post.value[0].amount
                   ? Number(post.value[0].amount).toLocaleString() +
                     ' ' +
                     types.currency[post.value[0].currency]
-                  : language.common_lang.missing.default
+                  : translate.missingText()
               }}
             </td>
           </tr>
           <tr>
-            <td>{{ language.common_lang.value_date }}</td>
+            <td>{{ translate.commonText('value_date') }}</td>
             <td>
               {{
                 post.value[0].value_date
                   ? formatDate(post.value[0].value_date)
-                  : language.common_lang.missing.default
+                  : translate.missingText()
               }}
             </td>
           </tr>
           <tr>
-            <td>{{ language.common_lang.period_start }}</td>
+            <td>{{ translate.commonText('period_start') }}</td>
             <td>
               <span>
                 {{
                   post.period_start[0].date
                     ? formatDate(post.period_start[0].date)
-                    : language.common_lang.missing.element.replace(
-                        ':element',
-                        language.common_lang.date
-                      )
+                    : translate.missingText('type')
                 }}
               </span>
             </td>
           </tr>
           <tr>
-            <td>{{ language.common_lang.period_end }}</td>
+            <td>{{ translate.commonText('period_end') }}</td>
             <td>
               <span>
                 {{
                   post.period_end[0].date
                     ? formatDate(post.period_end[0].date)
-                    : language.common_lang.missing.element.replace(
-                        ':element',
-                        language.common_lang.date
-                      )
+                    : translate.missingText('type')
                 }}
               </span>
             </td>
@@ -81,43 +72,41 @@
     <div v-if="post.provider_org" class="mb-4 ml-5">
       <div class="category">
         <span>
-          {{ language.element_labels_lang.activities.provider_org_spaced }}
+          {{ translate.elementLabel('activities.provider_org_spaced ') }}
         </span>
       </div>
       <table class="ml-5">
         <tbody>
           <tr>
             <td>
-              {{ language.common_lang.provider
-              }}{{ language.common_lang.activity_id }}
+              {{ translate.commonText('provider')
+              }}{{ translate.commonText('activity_id') }}
             </td>
             <td>
               {{
                 post.provider_org[0].type
                   ? types.organizationType[post.provider_org[0].type]
-                  : language.common_lang.missing.default
+                  : translate.missingText()
               }}
             </td>
           </tr>
           <tr>
-            <td>{{ language.common_lang.reference }}</td>
+            <td>{{ translate.commonText('reference') }}</td>
             <td>
               {{
                 post.provider_org[0].provider_activity_id ??
-                language.common_lang.missing.default
+                translate.missingText()
               }}
             </td>
           </tr>
           <tr>
-            <td>{{ language.common_lang.reference }}</td>
+            <td>{{ translate.commonText('reference') }}</td>
             <td>
-              {{
-                post.provider_org[0].ref ?? language.common_lang.missing.default
-              }}
+              {{ post.provider_org[0].ref ?? translate.missingText() }}
             </td>
           </tr>
           <tr>
-            <td>{{ language.common_lang.narrative }}</td>
+            <td>{{ translate.commonText('narrative') }}</td>
             <td>
               <div
                 v-for="(narrative, k) in post.provider_org[0].narrative"
@@ -128,17 +117,15 @@
                 }"
               >
                 <div class="language mb-1.5">
-                  ({{ language.common_lang.language }}
+                  ({{ translate.commonText('language') }}
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : language.common_lang.missing.default
+                      : translate.missingText()
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{
-                    narrative.narrative ?? language.common_lang.missing.default
-                  }}
+                  {{ narrative.narrative ?? translate.missingText() }}
                 </div>
               </div>
             </td>
@@ -149,43 +136,41 @@
     <div v-if="post.receiver_org" class="ml-5">
       <div class="category">
         <span>{{
-          language.element_labels_lang.activities.receiver_org_spaced
+          translate.elementLabel('activities.receiver_org_spaced')
         }}</span>
       </div>
       <table class="ml-5">
         <tbody>
           <tr>
-            <td>{{ language.common_lang.type }}</td>
+            <td>{{ translate.commonText('type') }}</td>
             <td>
               {{
                 post.receiver_org[0].type
                   ? types.organizationType[post.receiver_org[0].type]
-                  : language.common_lang.missing.default
+                  : translate.missingText()
               }}
             </td>
           </tr>
           <tr>
             <td>
-              {{ language.common_lang.receiver
-              }}{{ language.common_lang.activity_id }}
+              {{ translate.commonText('receiver')
+              }}{{ translate.commonText('activity_id') }}
             </td>
             <td>
               {{
                 post.receiver_org[0].receiver_activity_id ??
-                language.common_lang.missing.default
+                translate.missingText()
               }}
             </td>
           </tr>
           <tr>
-            <td>{{ language.common_lang.reference }}</td>
+            <td>{{ translate.commonText('reference') }}</td>
             <td>
-              {{
-                post.receiver_org[0].ref ?? language.common_lang.missing.default
-              }}
+              {{ post.receiver_org[0].ref ?? translate.missingText() }}
             </td>
           </tr>
           <tr>
-            <td>{{ language.common_lang.narrative }}</td>
+            <td>{{ translate.commonText('narrative') }}</td>
             <td>
               <div
                 v-for="(narrative, k) in post.receiver_org[0].narrative"
@@ -196,17 +181,15 @@
                 }"
               >
                 <div class="language mb-1.5">
-                  ({{ language.common_lang.language }}
+                  ({{ translate.commonText('language') }}
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : language.common_lang.missing.default
+                      : translate.missingText()
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{
-                    narrative.narrative ?? language.common_lang.missing.default
-                  }}
+                  {{ narrative.narrative ?? translate.missingText() }}
                 </div>
               </div>
             </td>
@@ -220,6 +203,7 @@
 <script setup lang="ts">
 import { defineProps, inject } from 'vue';
 import moment from 'moment';
+import { Translate } from 'Composable/translationHelper';
 
 defineProps({
   data: {
@@ -239,6 +223,6 @@ function formatDate(date: Date) {
   return moment(date).format('LL');
 }
 
-const language = window['globalLang'];
+const translate = new Translate();
 const types = inject('types') as Types;
 </script>

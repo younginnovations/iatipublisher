@@ -44,14 +44,14 @@
           <BtnComponent
             v-if="publishStep == 0"
             class="bg-white px-6 uppercase"
-            :text="language.button_lang.go_back"
+            :text="translate.button('go_back')"
             type=""
             @click="publishValue = false"
           />
           <BtnComponent
             v-if="publishStep == 0"
             class="space"
-            :text="language.button_lang.continue"
+            :text="translate.button('continue')"
             type="primary"
             @click="stepPlusOne"
           />
@@ -60,19 +60,14 @@
           <BtnComponent
             v-if="publishStep == 0"
             class="bg-white px-6 uppercase"
-            :text="language.button_lang.continue_anyway"
+            :text="translate.button('continue_anyway')"
             type=""
             @click="stepPlusOne"
           />
           <BtnComponent
             v-if="publishStep == 0"
             class="space"
-            :text="
-              language.button_lang.add_element.replace(
-                ':element',
-                language.common_lang.missing.data
-              )
-            "
+            :text="translate.button('add_element', 'common.missing.date')"
             type="primary"
             @click="publishValue = false"
           />
@@ -81,7 +76,7 @@
         <BtnComponent
           v-if="publishStep === 1 || publishStep === 2"
           class="bg-white px-6 uppercase"
-          :text="language.button_lang.go_back"
+          :text="translate.button('go_back')"
           type=""
           @click="stepMinusOne"
         />
@@ -90,7 +85,7 @@
         <BtnComponent
           v-if="publishStep === 1"
           class="space"
-          :text="language.button_lang.continue"
+          :text="translate.button('continue')"
           type="primary"
           @click="validatorFunction"
         />
@@ -99,7 +94,7 @@
         <BtnComponent
           v-if="publishStep === 2"
           class="space"
-          :text="language.button_lang.publish"
+          :text="translate.button('publish')"
           type="primary"
           @click="publishFunction"
         />
@@ -108,7 +103,7 @@
         <BtnComponent
           v-if="publishStep === 3 || publishStep === 4"
           class="bg-white px-6 uppercase"
-          :text="language.button_lang.publish_anyway"
+          :text="translate.button('publish_anyway')"
           type=""
           @click="publishFunction"
         />
@@ -116,7 +111,7 @@
         <BtnComponent
           v-if="publishStep === 3 || publishStep === 4"
           class="space"
-          :text="language.button_lang.fix_issues"
+          :text="translate.button('fix_issues')"
           type="primary"
           @click="resetPublishStep"
         />
@@ -150,8 +145,9 @@ import Loader from 'Components/sections/ProgressLoader.vue';
 
 // Vuex Store
 import { detailStore } from 'Store/activities/show';
+import { Translate } from 'Composable/translationHelper';
 
-const language = window['globalLang'];
+const translate = new Translate();
 const props = defineProps({
   type: { type: String, default: 'primary' },
   linkedToIati: { type: Boolean, required: true },
@@ -214,7 +210,7 @@ const loader = ref(false);
 const coreElementStatus = coreCompleted.value;
 
 // Dynamic text for loader
-const loaderText = ref(language.common_lang.please_wait);
+const loaderText = ref(translate.commonText('please_wait'));
 
 // reset step to zero after closing modal
 const resetPublishStep = () => {
@@ -237,16 +233,16 @@ const publishStateChange = computed(() => {
 
   // different content for step 1 based on coreElement status
   if (coreElementStatus) {
-    title = language.common_lang.core_completed_title;
-    description = language.common_lang.core_completed_description;
+    title = translate.commonText('core_completed_title');
+    description = translate.commonText('core_completed_description');
   } else {
-    title = language.common_lang.core_not_completed_title;
-    description = language.common_lang.core_not_completed_description;
+    title = translate.commonText('core_not_completed_title');
+    description = translate.commonText('core_not_completed_description');
     icon = 'warning-fill';
   }
 
-  //creating a shorter variable so that building error description for case 3 and 4 becomes easire
-  let s = language.common_lang.sticky.common;
+  //creating a shorter variable so that building error description for case 3 and 4 becomes easier
+  let s = translate.getStickyObject('common');
 
   switch (publishStep.value) {
     // first step
@@ -258,28 +254,28 @@ const publishStateChange = computed(() => {
       break;
     //second step
     case 1:
-      publishState.title = language.common_lang.sticky.title_1;
-      publishState.description = language.common_lang.sticky.description_1;
+      publishState.title = translate.stickyText('title_1');
+      publishState.description = translate.stickyText('description_1');
       publishState.icon = `shield`;
       publishState.alertState = false;
       break;
     // case 2 is for success validation
     case 2:
-      publishState.title = language.common_lang.sticky.title_2;
-      publishState.description = language.common_lang.sticky.description_2;
+      publishState.title = translate.stickyText('title_2');
+      publishState.description = translate.stickyText('description_2');
       publishState.icon = `tick`;
       publishState.alertState = true;
       break;
     //case 3 is for validation with critical errors
     case 3:
-      publishState.title = language.common_lang.sticky.title_3;
+      publishState.title = translate.stickyText('title_3');
       publishState.description = `<p><b>${err.criticalNumber} ${s.critical} ${s.errors}</b>, <b>${err.errorNumber} ${s.errors}</b> ${s.and} <b>${err.warningNumber} ${s.warnings}</b> ${s.warnings}. ${s.critical}</p><p>${s.has_atleast_one_critical_error}</p><p>${s.we_highly_recommend}</p>`;
       publishState.icon = `warning-fill`;
       publishState.alertState = false;
       break;
     // case 4 is for validation without critical errors
     case 4:
-      publishState.title = language.common_lang.sticky.title_3;
+      publishState.title = translate.stickyText('title_3');
       publishState.description = `<p><b>${err.errorNumber}  ${s.errors}</b>  ${s.and} <b>${err.warningNumber}  ${s.warnings}</b>  ${s.were_found}.  ${s.view_information}</p><p>${s.we_highly_recommend}</p>`;
       publishState.icon = `warning-fill`;
       publishState.alertState = false;
@@ -324,7 +320,9 @@ const validatorFunction = () => {
     }, 500);
   }
 
-  loaderText.value = `${language.common_lang.validating} ${language.common_lang.activity}`;
+  loaderText.value = `${translate.commonText(
+    'validating'
+  )} ${translate.commonText('activity')}`;
 
   axios.post(`/activity/${id}/validateActivity`).then((res) => {
     const response = res.data;
@@ -391,7 +389,9 @@ const publishFunction = () => {
     loader.value = true;
   }, 500);
 
-  loaderText.value = `${language.common_lang.publishing} ${language.common_lang.activity}`;
+  loaderText.value = `${translate.commonText(
+    'publishing'
+  )} ${translate.commonText('activity')}`;
   resetPublishStep();
   publishStep.value = 0;
 
@@ -414,12 +414,12 @@ const publishStatus = reactive({
 
 const btnText = computed(() => {
   if (publishStatus.linked_to_iati && publishStatus.status === 'draft') {
-    return language.button_lang.republish;
+    return translate.button('republish');
   } else if (
     !publishStatus.linked_to_iati &&
     publishStatus.status === 'draft'
   ) {
-    return language.button_lang.publish;
+    return translate.button('publish');
   } else {
     return '';
   }

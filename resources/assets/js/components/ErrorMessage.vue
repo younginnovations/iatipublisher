@@ -25,7 +25,7 @@
               class="mr-2 grow-0 text-base text-salmon-50"
             ></svg-vue>
             <span class="text-sm font-bold text-n-50">
-              {{ errorCount + ' ' + language.common_lang.alerts }}
+              {{ errorCount + ' ' + translate.commonText('alerts') }}
             </span>
           </div>
           <div
@@ -34,7 +34,7 @@
           >
             <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
             <span class="text-sm font-bold text-n-50">{{
-              language.common_lang.account_not_verified
+              translate.commonText('account_not_verified')
             }}</span>
           </div>
           <div
@@ -48,7 +48,7 @@
           >
             <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
             <span class="text-sm font-bold text-bluecoral">{{
-              language.common_lang.complete_your_setup
+              translate.commonText('complete_your_setup')
             }}</span>
           </div>
           <div
@@ -57,7 +57,7 @@
           >
             <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
             <span class="text-sm font-bold text-n-50">{{
-              language.common_lang.publisher_is_inactive
+              translate.commonText('publisher_is_inactive')
             }}</span>
           </div>
         </div>
@@ -68,8 +68,8 @@
           >
             {{
               show
-                ? language.common_lang.show_less
-                : language.common_lang.show_more
+                ? translate.commonText('show_less')
+                : translate.commonText('show_more')
             }}
           </button>
         </div>
@@ -95,21 +95,23 @@
           <div class="alert__container">
             <div class="alert__content">
               <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
-              <span>{{ language.common_lang.account_not_verified }}</span>
+              <span>{{ translate.commonText('account_not_verified') }}</span>
             </div>
 
             <div class="ml-5 text-left">
               <p>
-                {{ language.common_lang.account_not_verified_desc_p1 }}
+                {{ translate.commonText('account_not_verified_desc_p1') }}
                 <span
                   ><a
                     class="cursor-pointer border-b-2 border-b-bluecoral font-bold text-bluecoral hover:border-b-spring-50"
                     @click="resendVerificationEmail()"
-                    >{{ language.common_lang.account_not_verified_desc_p2 }}</a
+                    >{{
+                      translate.commonText('account_not_verified_desc_p2')
+                    }}</a
                   ></span
                 >
                 <span
-                  v-html="language.common_lang.account_not_verified_desc_p3"
+                  v-html="translate.commonText('account_not_verified_desc_p3')"
                 />
               </p>
             </div>
@@ -136,25 +138,26 @@
           <div class="alert__container">
             <div class="alert__content">
               <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
-              <span>{{ language.common_lang.complete_your_setup }}</span>
+              <span>{{ translate.commonText('complete_your_setup') }}</span>
             </div>
             <div class="ml-5">
               <p
-                v-html="language.common_lang.complete_your_setup_description"
+                v-html="translate.commonText('complete_your_setup_description')"
               ></p>
               <div v-if="!errorData.publisher_setting" class="alert__message">
                 <svg-vue icon="red-cross" class="text-[7px]"></svg-vue>
                 <p>
-                  {{ language.common_lang.update_registry_information }} -
-                  {{ language.common_lang.api_key_and_publisher_id
+                  {{ translate.commonText('update_registry_information') }} -
+                  {{ translate.commonText('api_key_and_publisher_id')
                   }}<span v-if="!errorData.token_status"
-                    >. {{ language.common_lang.enter_correct_api_token }}.</span
+                    >.
+                    {{ translate.commonText('enter_correct_api_token') }}.</span
                   >
                 </p>
               </div>
               <div v-if="!errorData.default_setting" class="alert__message">
                 <svg-vue icon="red-cross" class="text-[7px]"></svg-vue>
-                <p>{{ language.common_lang.update_default_values }}</p>
+                <p>{{ translate.commonText('update_default_values') }}</p>
               </div>
             </div>
           </div>
@@ -176,11 +179,11 @@
           <div class="alert__container">
             <div class="alert__content">
               <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
-              <span>{{ language.common_lang.publisher_is_inactive }}</span>
+              <span>{{ translate.commonText('publisher_is_inactive') }}</span>
             </div>
 
             <div class="ml-5 text-left">
-              <p>{{ language.common_lang.publisher_is_not_active }}</p>
+              <p>{{ translate.commonText('publisher_is_not_active') }}</p>
             </div>
           </div>
         </div>
@@ -194,6 +197,7 @@ import { defineProps, ref, reactive, onMounted, inject } from 'vue';
 import { TransitionRoot } from '@headlessui/vue';
 import Loader from '../components/Loader.vue';
 import axios from 'axios';
+import { Translate } from 'Composable/translationHelper';
 
 defineProps({
   isEmpty: {
@@ -203,7 +207,7 @@ defineProps({
   },
 });
 
-const language = window['globalLang'];
+const translate = new Translate();
 const show = ref(false);
 const hasErrors = ref(false);
 const errorCount = ref(0);

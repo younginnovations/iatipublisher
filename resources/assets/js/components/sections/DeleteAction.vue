@@ -15,69 +15,45 @@
       <div class="title mb-6 flex">
         <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
         <b v-if="props.itemType === 'result'">
-          {{
-            capitalize(
-              language.button_lang.delete_element.replace(
-                ':element',
-                capitalize(language.common_lang.result)
-              )
-            )
-          }}
+          {{ capitalize(translate.button('delete_element', 'common.result')) }}
         </b>
         <b v-else-if="props.itemType === 'indicator'">
           {{
-            capitalize(
-              language.button_lang.delete_element.replace(
-                ':element',
-                capitalize(language.common_lang.indicator)
-              )
-            )
+            capitalize(translate.button('delete_element', 'common.indicator'))
           }}
         </b>
         <b v-else-if="props.itemType === 'period'">
-          {{
-            capitalize(
-              language.button_lang.delete_element.replace(
-                ':element',
-                capitalize(language.common_lang.period)
-              )
-            )
-          }}
+          {{ capitalize(translate.button('delete_element', 'common.period')) }}
         </b>
         <b v-else-if="props.itemType === 'transaction'">
           {{
-            capitalize(
-              language.button_lang.delete_element.replace(
-                ':element',
-                capitalize(language.common_lang.transaction)
-              )
-            )
+            capitalize(translate.button('delete_element', 'common.transaction'))
           }}
         </b>
-        <b v-else>{{ language.button_lang.delete }}</b>
+        <b v-else>{{ translate.button('delete') }}</b>
       </div>
       <div class="rounded-lg bg-rose p-4">
         <p v-if="props.itemType === 'result'">
-          {{ language.common_lang.delete_confirmation_default }}
-          {{ language.common_lang.result }} ?
-          {{ language.common_lang.related_indicator_period_deleted }}
+          {{ translate.commonText('delete_confirmation_default') }}
+          {{ translate.commonText('result') }} ?
+          {{ translate.commonText('related_indicator_period_deleted') }}
         </p>
         <p v-else-if="props.itemType === 'indicator'">
-          {{ language.common_lang.delete_confirmation_default }}
-          {{ language.common_lang.indicator }} ?
-          {{ language.common_lang.related_period_deleted }}
+          {{ translate.commonText('delete_confirmation_default') }}
+          {{ translate.commonText('indicator') }} ?
+          {{ translate.commonText('related_period_deleted') }}
         </p>
         <p v-else-if="props.itemType === 'period'">
-          {{ language.common_lang.delete_confirmation_default }}
-          {{ language.common_lang.period }} ?
+          {{ translate.commonText('delete_confirmation_default') }}
+          {{ translate.commonText('period') }} ?
         </p>
         <p v-else-if="props.itemType === 'transaction'">
-          {{ language.common_lang.delete_confirmation_default }}
-          {{ language.common_lang.transaction }} ?
+          {{ translate.commonText('delete_confirmation_default') }}
+          {{ translate.commonText('transaction') }} ?
         </p>
         <p v-else>
-          {{ language.common_lang.delete_confirmation_default }}
-          {{ language.common_lang.module }} ?
+          {{ translate.commonText('delete_confirmation_default') }}
+          {{ translate.commonText('module') }} ?
         </p>
       </div>
     </div>
@@ -85,13 +61,13 @@
       <div class="inline-flex">
         <BtnComponent
           class="bg-white px-6 uppercase"
-          :text="language.button_lang.go_back"
+          :text="translate.button('go_back')"
           type=""
           @click="deleteValue = false"
         />
         <BtnComponent
           class="space"
-          :text="language.button_lang.delete"
+          :text="translate.button('delete')"
           type="primary"
           @click="deleteFunction"
         />
@@ -109,14 +85,15 @@ import axios from 'axios';
 //component
 import BtnComponent from 'Components/ButtonComponent.vue';
 import Modal from 'Components/PopupModal.vue';
+import { Translate } from 'Composable/translationHelper';
 
-const language = window['globalLang'];
 // props
 const props = defineProps({
   itemId: { type: [Number, String], required: true },
   itemType: { type: String, required: true },
 });
 
+const translate = new Translate();
 // toggle state for modal popup
 let [deleteValue, deleteToggle] = useToggle();
 

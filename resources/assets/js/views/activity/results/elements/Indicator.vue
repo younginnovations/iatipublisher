@@ -8,7 +8,7 @@
         <div class="title flex grow items-center">
           <svg-vue class="mr-1.5 text-xl text-bluecoral" icon="bill"></svg-vue>
           <div class="title text-sm font-bold">
-            {{ language.common_lang.indicator }}
+            {{ translate.commonText('indicator') }}
           </div>
           <!--          <div class="status ml-2.5 flex text-xs leading-5 text-crimson-50">-->
           <!--            <b class="mr-2 text-base leading-3">.</b>-->
@@ -17,23 +17,13 @@
         </div>
         <div class="icons flex items-center">
           <Btn
-            :text="
-              language.button_lang.add_element.replace(
-                ':element',
-                language.common_lang.indicator
-              )
-            "
+            :text="translate.button('add_element', 'common.indicator')"
             icon="add"
             :link="`/result/${result.id}/indicator/create`"
             class="mr-2.5"
           />
           <Btn
-            :text="
-              language.button_lang.show_element.replace(
-                ':element',
-                language.common_lang.full_indicator
-              )
-            "
+            :text="translate.button('show_element', 'common.full_indicator')"
             icon=""
             design="bgText"
             :link="`/result/${result.id}/indicator`"
@@ -71,10 +61,7 @@
                   <span class="flex">
                     <Btn
                       :text="
-                        language.button_lang.view_element.replace(
-                          ':element',
-                          language.common_lang.indicator
-                        )
+                        translate.button('view_element', 'common.indicator')
                       "
                       icon="eye"
                       :link="`/result/${result.id}/indicator/${post.id}`"
@@ -82,22 +69,14 @@
                     />
                     <Btn
                       :text="
-                        language.button_lang.edit_element.replace(
-                          ':element',
-                          language.common_lang.indicator
-                        )
+                        translate.button('edit_element', 'common.indicator')
                       "
                       icon="edit"
                       :link="`/result/${result.id}/indicator/${post.id}/edit`"
                     />
                   </span>
                   <Btn
-                    :text="
-                      language.button_lang.add_element.replace(
-                        ':element',
-                        language.common_lang.period
-                      )
-                    "
+                    :text="translate.button('add_element', 'common.period')"
                     icon="edit"
                     :link="`/indicator/${post.id}/period/create`"
                     class="mr-2.5"
@@ -109,7 +88,7 @@
                   <table class="mb-3">
                     <tbody>
                       <tr>
-                        <td>{{ language.common_lang.indicator_title }}</td>
+                        <td>{{ translate.commonText('indicator_title') }}</td>
                         <td>
                           <template
                             v-for="(title, t) in post.indicator.title[0]
@@ -125,11 +104,11 @@
                               }"
                             >
                               <div class="language mb-1">
-                                ({{ language.common_lang.language }}:
+                                ({{ translate.commonText('language') }}:
                                 {{
                                   type.language[title.language]
                                     ? type.language[title.language]
-                                    : language.common_lang.missing.default
+                                    : translate.missingText()
                                 }})
                               </div>
                               <div class="description text-xs">
@@ -141,19 +120,21 @@
                       </tr>
 
                       <tr v-if="post.indicator.measure">
-                        <td>{{ language.common_lang.measure }}</td>
+                        <td>{{ translate.commonText('measure') }}</td>
                         <td>
                           {{ type.indicatorMeasure[post.indicator.measure] }}
                         </td>
                       </tr>
 
                       <tr v-if="post.indicator.aggregation_status">
-                        <td>{{ language.common_lang.aggregation_status }}</td>
+                        <td>
+                          {{ translate.commonText('aggregation_status') }}
+                        </td>
                         <td>{{ post.indicator.aggregation_status != 0 }}</td>
                       </tr>
 
                       <tr>
-                        <td>{{ language.common_lang.description }}</td>
+                        <td>{{ translate.commonText('description') }}</td>
                         <td>
                           <template
                             v-for="(description, d) in post.indicator
@@ -171,11 +152,11 @@
                               }"
                             >
                               <div class="language mb-1">
-                                ({{ language.common_lang.language }}:
+                                ({{ translate.commonText('language') }}:
                                 {{
                                   type.language[description.language]
                                     ? type.language[description.language]
-                                    : language.common_lang.missing.default
+                                    : translate.missingText()
                                 }})
                               </div>
                               <div class="description text-xs">
@@ -187,7 +168,7 @@
                       </tr>
 
                       <tr>
-                        <td>{{ language.common_lang.reference }}</td>
+                        <td>{{ translate.commonText('reference') }}</td>
                         <td>
                           <div
                             v-for="(ref, r) in post.indicator.reference"
@@ -198,22 +179,17 @@
                             }"
                           >
                             <span>
-                              {{ language.common_lang.vocabulary }}:
+                              {{ translate.commonText('vocabulary') }}:
+                              {{ ref.vocabulary ?? translate.missingText() }},
+                            </span>
+                            <span>
+                              {{ translate.commonText('code') }}:
                               {{
-                                ref.vocabulary ??
-                                language.common_lang.missing.default
+                                ref.code ? ref.code : translate.missingText()
                               }},
                             </span>
                             <span>
-                              {{ language.common_lang.code }}:
-                              {{
-                                ref.code
-                                  ? ref.code
-                                  : language.common_lang.missing.default
-                              }},
-                            </span>
-                            <span>
-                              {{ language.common_lang.indicator_uri }}:
+                              {{ translate.commonText('indicator_uri') }}:
                               <a
                                 v-if="ref.indicator_uri"
                                 :href="ref.indicator_uri"
@@ -222,24 +198,24 @@
                               >
                                 {{ ref.indicator_uri }}</a
                               >
-                              <span v-else>{{
-                                language.common_lang.missing.default
-                              }}</span>
+                              <span v-else>
+                                {{ translate.missingText() }}
+                              </span>
                             </span>
                           </div>
                         </td>
                       </tr>
 
                       <tr>
-                        <td>{{ language.common_lang.document_link }}</td>
+                        <td>{{ translate.commonText('document_link') }} }}</td>
                         <td>
                           {{ countDocumentLink(post.indicator.document_link) }}
-                          {{ language.common_lang.documents }}
+                          {{ translate.commonText('documents') }}
                         </td>
                       </tr>
 
                       <tr>
-                        <td>{{ language.common_lang.baseline }}</td>
+                        <td>{{ translate.commonText('baseline') }}</td>
                         <td>
                           <div
                             v-for="(base, b) in post.indicator.baseline"
@@ -251,38 +227,38 @@
                           >
                             <div>
                               <span>
-                                {{ language.common_lang.year }}:
+                                {{ translate.commonText('year') }}:
                                 <template v-if="base.year">
                                   {{ base.year }}
                                 </template>
                                 <template v-else>{{
-                                  language.common_lang.missing.default
+                                  translate.missingText()
                                 }}</template>
                                 ,
                               </span>
                               <span>
-                                {{ language.common_lang.date }}:
+                                {{ translate.commonText('date') }}:
                                 <template v-if="base.date">
                                   {{ base.date }}
                                 </template>
                                 <template v-else>{{
-                                  language.common_lang.missing.default
+                                  translate.missingText()
                                 }}</template>
                                 ,
                               </span>
                               <span>
-                                {{ language.common_lang.value }}:
+                                {{ translate.commonText('value') }}:
                                 <template v-if="base.value">
                                   {{ base.value }}
                                 </template>
                                 <template v-else>{{
-                                  language.common_lang.missing.default
+                                  translate.missingText()
                                 }}</template>
                               </span>
                             </div>
                             <div class="flex">
                               <div>
-                                {{ language.common_lang.location }}:&nbsp;
+                                {{ translate.commonText('location') }}:&nbsp;
                               </div>
                               <div>
                                 <div
@@ -297,7 +273,7 @@
                                     {{ loc.reference }}
                                   </template>
                                   <template v-else>{{
-                                    language.common_lang.missing.default
+                                    translate.missingText()
                                   }}</template>
                                 </div>
                               </div>
@@ -305,7 +281,7 @@
 
                             <div class="flex">
                               <div>
-                                {{ language.common_lang.dimension }}:&nbsp;
+                                {{ translate.commonText('dimension') }}:&nbsp;
                               </div>
                               <div class="description">
                                 <div
@@ -321,9 +297,7 @@
                                         {{ dim.name }}
                                       </template>
                                       <template v-else>
-                                        {{
-                                          language.common_lang.missing.default
-                                        }}
+                                        {{ translate.missingText() }}
                                       </template>
                                       &nbsp;
                                     </span>
@@ -332,9 +306,7 @@
                                         ({{ dim.value }})
                                       </template>
                                       <template v-else>
-                                        ({{
-                                          language.common_lang.missing.default
-                                        }})
+                                        ({{ translate.missingText() }})
                                       </template>
                                     </span>
                                   </div>
@@ -344,7 +316,7 @@
 
                             <div class="flex">
                               <div>
-                                {{ language.common_lang.comment }}:&nbsp;
+                                {{ translate.commonText('comment') }}:&nbsp;
                               </div>
                               <div class="description">
                                 <div
@@ -363,21 +335,17 @@
                                         {{ com.narrative }}
                                       </template>
                                       <template v-else>
-                                        {{
-                                          language.common_lang.missing.default
-                                        }}
+                                        {{ translate.missingText() }}
                                       </template>
                                       &nbsp;
                                     </span>
                                     <span>
-                                      ({{ language.common_lang.language }}:
+                                      ({{ translate.commonText('language') }}:
                                       <template v-if="com.language">
                                         {{ type.language[com.language] }})
                                       </template>
                                       <template v-else>
-                                        {{
-                                          language.common_lang.missing.default
-                                        }})
+                                        {{ translate.missingText() }})
                                       </template>
                                     </span>
                                   </div>
@@ -387,11 +355,12 @@
 
                             <div class="flex">
                               <div>
-                                {{ language.common_lang.document_link }}:&nbsp;
+                                {{ translate.commonText('document_link') }}
+                                }}:&nbsp;
                               </div>
                               <div>
                                 {{ countDocumentLink(base.document_link) }}
-                                {{ language.common_lang.document }}
+                                {{ translate.commonText('document') }}
                               </div>
                             </div>
                           </div>
@@ -405,13 +374,10 @@
                             <NotYet
                               :link="`/indicator/${post.id}/period/create`"
                               :description="
-                                language.button_lang.not_yet_added_period
+                                translate.button('not_yet_added_period')
                               "
                               :btn-text="
-                                language.button_lang.add_element.replace(
-                                  ':element',
-                                  language.common_lang.period
-                                )
+                                translate.button('add_element', 'common.period')
                               "
                               class="w-[442px]"
                             />
@@ -428,7 +394,7 @@
                       <tr>
                         <td>
                           <div class="category">
-                            {{ language.common_lang.period }}
+                            {{ translate.commonText('period') }}
                             {{ Number(key) + 1 }}
                           </div>
                         </td>
@@ -457,9 +423,9 @@
                             <div class="flex shrink-0 grow justify-between">
                               <Btn
                                 :text="
-                                  language.button_lang.view_element.replace(
-                                    ':element',
-                                    language.common_lang.period
+                                  translate.button(
+                                    'view_element',
+                                    'common.period'
                                   )
                                 "
                                 icon="eye"
@@ -468,9 +434,9 @@
                               />
                               <Btn
                                 :text="
-                                  language.button_lang.edit_element.replace(
-                                    ':element',
-                                    language.common_lang.period
+                                  translate.button(
+                                    'edit_element',
+                                    'common.period'
                                   )
                                 "
                                 icon="edit"
@@ -481,7 +447,7 @@
                         </td>
                       </tr>
                       <tr>
-                        <td>{{ language.common_lang.target_value }}</td>
+                        <td>{{ translate.commonText('target_value') }}</td>
                         <td>
                           <template
                             v-for="(tar, t) in item.period.target"
@@ -500,7 +466,7 @@
                               <div class="location_reference flex">
                                 <div>
                                   {{
-                                    language.common_lang.location_reference
+                                    translate.commonText('location_reference')
                                   }}:&nbsp;
                                 </div>
                                 <div>
@@ -518,9 +484,7 @@
                                           {{ loc.reference }}
                                         </template>
                                         <template v-else>
-                                          {{
-                                            language.common_lang.missing.default
-                                          }}
+                                          {{ translate.missingText() }}
                                         </template>
                                       </span>
                                     </div>
@@ -530,7 +494,7 @@
 
                               <div class="dimension flex">
                                 <div>
-                                  {{ language.common_lang.dimension }}:&nbsp;
+                                  {{ translate.commonText('dimension') }}:&nbsp;
                                 </div>
                                 <div>
                                   <div
@@ -546,9 +510,7 @@
                                         {{ dim.name }}
                                       </template>
                                       <template v-else>
-                                        {{
-                                          language.common_lang.missing.default
-                                        }}
+                                        {{ translate.missingText() }}
                                       </template>
                                     </span>
                                     <span>
@@ -556,9 +518,7 @@
                                         ({{ dim.value }})
                                       </template>
                                       <template v-else>
-                                        ({{
-                                          language.common_lang.missing.default
-                                        }})
+                                        ({{ translate.missingText() }})
                                       </template>
                                     </span>
                                   </div>
@@ -567,7 +527,7 @@
 
                               <div class="flex">
                                 <div>
-                                  {{ language.common_lang.comment }}:&nbsp;
+                                  {{ translate.commonText('comment') }}:&nbsp;
                                 </div>
                                 <div>
                                   <div
@@ -585,21 +545,20 @@
                                         </template>
                                         <template v-else>
                                           {{
-                                            language.common_lang.missing.default
+                                            translate.missingText()
                                           }}</template
                                         >
                                         &nbsp;
                                       </span>
                                       <span>
-                                        ({{ language.common_lang.language }}:
+                                        (
+                                        {{ translate.commonText('language') }}:
                                         <template v-if="com.language">
                                           {{ type.language[com.language] }})
                                         </template>
                                         <template v-else>
-                                          {{
-                                            language.common_lang.missing
-                                              .default
-                                          }})
+                                          {{ translate.missingText() }}
+                                          )
                                         </template>
                                       </span>
                                     </div>
@@ -612,7 +571,7 @@
                       </tr>
 
                       <tr>
-                        <td>{{ language.common_lang.actual_value }}</td>
+                        <td>{{ translate.commonText('actual_value') }}</td>
                         <td>
                           <template
                             v-for="(tar, t) in item.period.actual"
@@ -631,7 +590,7 @@
                               <div class="location_reference flex">
                                 <div>
                                   {{
-                                    language.common_lang.location_reference
+                                    translate.commonText('location_reference')
                                   }}:&nbsp;
                                 </div>
                                 <div>
@@ -649,9 +608,7 @@
                                           {{ loc.reference }}
                                         </template>
                                         <template v-else>
-                                          {{
-                                            language.common_lang.missing.default
-                                          }}
+                                          {{ translate.missingText() }}
                                         </template>
                                       </span>
                                     </div>
@@ -661,7 +618,7 @@
 
                               <div class="dimension flex">
                                 <div>
-                                  {{ language.common_lang.dimension }}:&nbsp;
+                                  {{ translate.commonText('dimension') }}:&nbsp;
                                 </div>
                                 <div>
                                   <div
@@ -677,9 +634,7 @@
                                         {{ dim.name }}
                                       </template>
                                       <template v-else>
-                                        {{
-                                          language.common_lang.missing.default
-                                        }}</template
+                                        {{ translate.missingText() }}</template
                                       >
                                     </span>
                                     <span>
@@ -687,9 +642,7 @@
                                         ({{ dim.value }})
                                       </template>
                                       <template v-else>
-                                        ({{
-                                          language.common_lang.missing.default
-                                        }})
+                                        ({{ translate.missingText() }})
                                       </template>
                                     </span>
                                   </div>
@@ -698,7 +651,7 @@
 
                               <div class="flex">
                                 <div>
-                                  {{ language.common_lang.comment }}:&nbsp;
+                                  {{ translate.commonText('comment') }}:&nbsp;
                                 </div>
                                 <div>
                                   <div
@@ -716,21 +669,20 @@
                                         </template>
                                         <template v-else>
                                           {{
-                                            language.common_lang.missing.default
+                                            translate.missingText()
                                           }}</template
                                         >
                                         &nbsp;
                                       </span>
                                       <span>
-                                        ({{ language.common_lang.language }}:
+                                        (
+                                        {{ translate.commonText('language') }}:
                                         <template v-if="com.language">
                                           {{ type.language[com.language] }})
                                         </template>
                                         <template v-else>
-                                          {{
-                                            language.common_lang.missing
-                                              .default
-                                          }})
+                                          {{ translate.missingText() }}
+                                          )
                                         </template>
                                       </span>
                                     </div>
@@ -770,6 +722,7 @@ import Btn from 'Components/buttons/Link.vue';
 
 // helper function
 import { countDocumentLink } from 'Composable/utils';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ResultIndicator',
@@ -793,7 +746,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     let { result } = toRefs(props);
 
     const indicatorData = result.value.indicators.reverse();
@@ -803,7 +756,7 @@ export default defineComponent({
       dateFormat,
       getActivityTitle,
       countDocumentLink,
-      language,
+      translate,
     };
   },
 });

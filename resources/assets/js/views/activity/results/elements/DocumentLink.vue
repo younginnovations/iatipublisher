@@ -11,16 +11,16 @@
           <table class="mb-3">
             <tbody>
               <tr>
-                <td>{{ language.common_lang.title }}</td>
+                <td>{{ translate.commonText('title') }}</td>
                 <td>
                   <template v-for="(na, n) in post.title[0].narrative" :key="n">
                     <div class="title-content mb-1.5">
                       <div class="language mb-1">
-                        ({{ language.common_lang.language }}:
+                        ({{ translate.commonText('language') }}:
                         {{
                           type.language[na.language]
                             ? type.language[na.language]
-                            : language.common_lang.missing.default
+                            : translate.missingText()
                         }})
                       </div>
                       <div
@@ -34,7 +34,7 @@
               </tr>
 
               <tr v-if="post.url">
-                <td>{{ language.common_lang.document_link }}</td>
+                <td>{{ translate.commonText('document_link') }} }}</td>
                 <td>
                   <a
                     class="w-[800px] !max-w-[50%] overflow-x-hidden text-ellipsis whitespace-nowrap"
@@ -46,18 +46,14 @@
               </tr>
 
               <tr>
-                <td>{{ language.common_lang.format }}</td>
+                <td>{{ translate.commonText('format') }}</td>
                 <td>
-                  {{
-                    post.format
-                      ? post.format
-                      : language.common_lang.missing.default
-                  }}
+                  {{ post.format ? post.format : translate.missingText() }}
                 </td>
               </tr>
 
               <tr>
-                <td>{{ language.common_lang.description }}</td>
+                <td>{{ translate.commonText('description') }}</td>
                 <td>
                   <template
                     v-for="(na, n) in post.description[0].narrative"
@@ -65,11 +61,11 @@
                   >
                     <div class="description-content mb-1.5">
                       <div class="language mb-1">
-                        ({{ language.common_lang.language }}:
+                        ({{ translate.commonText('language') }}:
                         {{
                           type.language[na.language]
                             ? type.language[na.language]
-                            : language.common_lang.missing.default
+                            : translate.missingText()
                         }})
                       </div>
                       <div class="description text-xs">
@@ -81,14 +77,14 @@
               </tr>
 
               <tr>
-                <td>{{ language.common_lang.category }}</td>
+                <td>{{ translate.commonText('category') }}</td>
                 <td>
                   <template v-for="(cat, c) in post.category" :key="c">
                     <div class="mb-1 text-xs">
                       {{
                         type.documentCategory[cat.code]
                           ? type.documentCategory[cat.code]
-                          : language.common_lang.missing.default
+                          : translate.missingText()
                       }}
                     </div>
                   </template>
@@ -96,12 +92,12 @@
               </tr>
 
               <tr v-if="post.language.length > 0">
-                <td>{{ language.common_lang.language }}</td>
+                <td>{{ translate.commonText('language') }}</td>
                 <td>
                   <div class="text-xs">
                     {{
                       post.language[0].language === null
-                        ? language.common_lang.missing.default
+                        ? translate.missingText()
                         : post.language
                             .map((entry) => type.language[entry.language])
                             .join(', ')
@@ -111,13 +107,13 @@
               </tr>
 
               <tr>
-                <td>{{ language.common_lang.document_date }}</td>
+                <td>{{ translate.commonText('document_date') }}</td>
                 <td>
                   <div class="text-xs">
                     {{
                       post.document_date[0].date
                         ? post.document_date[0].date
-                        : language.common_lang.missing.default
+                        : translate.missingText()
                     }}
                   </div>
                 </td>
@@ -132,6 +128,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ResultDocumentLink',
@@ -149,9 +146,9 @@ export default defineComponent({
   setup(props) {
     let { data } = toRefs(props);
     const dlData = data.value;
-    const language = window['globalLang'];
+    const translate = new Translate();
 
-    return { dlData, language };
+    return { dlData, translate };
   },
 });
 </script>

@@ -8,7 +8,7 @@
     <div class="subelement rounded-tl-lg border-l border-spring-50 pb-11">
       <label
         class="control-label flex rounded-tl-lg rounded-tr-lg border-t border-r border-spring-50 py-4 px-6 text-sm font-bold leading-relaxed"
-        >{{ language.commoon_lang.description }}</label
+        >{{ translate.commonText('description') }}</label
       >
       <div class="multi-form relative">
         <div
@@ -17,7 +17,7 @@
           <div class="form-field max-w-half basis-6/12">
             <div class="form-field-label">
               <label for=""
-                >{{ language.commoon_lang.type
+                >{{ translate.commonText('type')
                 }}<span class="text-salmon-40"> *</span></label
               >
             </div>
@@ -30,18 +30,20 @@
                 tabindex="-1"
               >
                 <option value="">
-                  {{ language.common_lang.placeholder.select_a_value }}
+                  {{ translate.commonText('placeholder.select_a_value') }}
                 </option>
                 <option data-select2-id="select2-data-2-e15l" value="1">
-                  1 - {{ language.common_lang.general }}
+                  1 - {{ translate.commonText('general') }}
                 </option>
                 <option value="2">
-                  2 - {{ language.common_lang.objectives }}
+                  2 - {{ translate.commonText('objectives') }}
                 </option>
                 <option value="3">
-                  3 - {{ language.common_lang.target_groups }} Groups
+                  3 - {{ translate.commonText('target_groups') }}
                 </option>
-                <option value="4">4 - {{ language.common_lang.other }}</option>
+                <option value="4">
+                  4 - {{ translate.commonText('other') }}
+                </option>
               </select>
             </div>
           </div>
@@ -54,12 +56,12 @@
           <span class="mr-1.5 text-lg">
             <svg-vue icon="add-more" />
           </span>
-          {{ language.common_lang.add_narrative_in_other_lang }}
+          {{ translate.commonText('add_narrative_in_other_lang') }}
         </button>
         <div class="subelement rounded-tl-lg border-l border-spring-50 pb-11">
           <label
             class="control-label flex rounded-tl-lg rounded-tr-lg border-t border-r border-spring-50 py-4 px-6 text-sm font-bold leading-relaxed"
-            >{{ language.common_lang.narrative }}</label
+            >{{ translate.commonText('narrative') }}</label
           >
           <div class="form-child-body relative">
             <div
@@ -68,7 +70,7 @@
               <div class="form-field max-w-half basis-6/12">
                 <div class="form-field-label">
                   <label for=""
-                    >{{ language.common_lang.type
+                    >{{ translate.commonText('type')
                     }}<span class="text-salmon-40"> *</span></label
                   >
                 </div>
@@ -91,7 +93,7 @@ Education and psychosocial support to children in Aleppo Governorate</textarea
                 <div>
                   <select>
                     <option value="">
-                      {{ language.common_lang.placeholder.select_a_value }}
+                      {{ translate.commonText('placeholder.select_a_value') }}
                     </option>
                     <option value="aa">Afar</option>
                     <option value="ab">Abkhazian</option>
@@ -114,21 +116,22 @@ Education and psychosocial support to children in Aleppo Governorate</textarea
       <span class="mr-1.5 text-lg">
         <svg-vue icon="add-more" />
       </span>
-      {{ language.common_lang.add_additional_description }}
+      {{ translate.commonText('add_additional_description') }}
     </button>
   </form>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 export default defineComponent({
   name: 'DescriptionForm',
   components: {},
   props: {},
   setup() {
-    const language = window['globalLang'];
+    const translate = new Translate();
 
-    return { language };
+    return { translate };
   },
 });
 </script>

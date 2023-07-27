@@ -12,14 +12,14 @@
             <div class="inline-flex min-h-[48px] grow items-center">
               <h4 class="ellipsis__title relative mr-4 font-bold">
                 <span class="ellipsis__title overflow-hidden">
-                  {{ language.common_lang.import_activity }}
+                  {{ translate.commonText('import_activity') }}
                 </span>
               </h4>
               <div class="tooltip-btn">
                 <button class="">
                   <svg-vue icon="question-mark" />
                   <span>{{
-                    language.activities_lang.what_is_activity.label
+                    translate.textFromKey('activities.what_is_activity.label')
                   }}</span>
                 </button>
                 <div class="tooltip-btn__content z-[1]">
@@ -27,25 +27,32 @@
                     <div
                       class="mb-1.5 text-caption-c1 font-bold text-bluecoral"
                     >
-                      {{ language.activities_lang.what_is_activity.label }}
+                      {{
+                        translate.textFromKey(
+                          'activities.what_is_activity.label'
+                        )
+                      }}
                     </div>
                     <!-- eslint-disable vue/no-v-html -->
                     <p
                       v-html="
-                        language.activities_lang.what_is_activity.description
-                          .one
+                        translate.textFromKey(
+                          'what_is_activity.description.one'
+                        )
                       "
                     ></p>
                     <p
                       v-html="
-                        language.activities_lang.what_is_activity.description
-                          .two
+                        translate.textFromKey(
+                          'what_is_activity.description.two'
+                        )
                       "
                     ></p>
                     <p
                       v-html="
-                        language.activities_lang.what_is_activity.description
-                          .three
+                        translate.textFromKey(
+                          'what_is_activity.description.three'
+                        )
                       "
                     ></p>
                     <!--eslint-enable-->
@@ -75,7 +82,7 @@
           <p
             class="border-b border-n-30 p-4 text-sm font-bold uppercase text-n-50"
           >
-            {{ language.common_lang.import_activities_from_csv }}
+            {{ translate.commonText('import_activities_from_csv') }}
           </p>
           <div class="p-6">
             <div class="mb-4 rounded border border-n-30 px-4 py-3">
@@ -92,7 +99,7 @@
               <BtnComponent
                 class="!border-red !border"
                 type="primary"
-                :text="language.button_lang.upload_file"
+                :text="translate.button('upload_file')"
                 icon="upload-file"
                 @click="uploadFile"
               />
@@ -100,12 +107,12 @@
                 <button class="relative text-sm text-bluecoral">
                   <svg-vue :icon="'download'" class="mr-1" />
                   <span @click="downloadExcel">{{
-                    language.common_lang.download_csv_template
+                    translate.commonText('download_csv_template')
                   }}</span>
                 </button>
                 <HoverText
                   :hover-text="
-                    language.common_lang.download_csv_template_description
+                    translate.commonText('download_csv_template_description')
                   "
                   name=""
                   class="hover-text import-activity"
@@ -132,16 +139,17 @@ import BtnComponent from 'Components/ButtonComponent.vue';
 import HoverText from 'Components/HoverText.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 import axios from 'axios';
+import { Translate } from 'Composable/translationHelper';
 
-const language = window['globalLang'];
+const translate = new Translate();
 const file = ref(),
   error = ref(''),
   loader = ref(false),
-  loaderText = ref(language.common_lang.please_wait);
+  loaderText = ref(translate.commonText('please_wait'));
 
 function uploadFile() {
   loader.value = true;
-  loaderText.value = language.common_lang.uploading_csv_xml_file;
+  loaderText.value = translate.commonText('uploading_csv_xml_file');
   let activity = file.value.files.length ? file.value.files[0] : '';
   const config = {
     headers: {
@@ -165,8 +173,9 @@ function uploadFile() {
       }
     })
     .catch(() => {
-      error.value =
-        language.common_lang.error_has_occurred_while_uploading_file;
+      error.value = translate.commonText(
+        'error_has_occurred_while_uploading_file'
+      );
       loader.value = false;
     });
 }

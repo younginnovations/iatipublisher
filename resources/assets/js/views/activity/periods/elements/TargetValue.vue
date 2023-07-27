@@ -6,42 +6,44 @@
           <tr>
             <td>
               <span class="category flex">{{
-                language.common_lang.target_value
+                translate.commonText('target_value')
               }}</span>
             </td>
             <td>
               <div :class="elementSpacing">
-                {{ tValue.value ?? language.common_lang.missing.default }}
+                {{ tValue.value ?? translate.missingText() }}
               </div>
 
               <div class="flex" :class="elementSpacing">
-                <div>{{ language.common_lang.location_reference }}:&nbsp;</div>
+                <div>
+                  {{ translate.commonText('location_reference') }}:&nbsp;
+                </div>
                 <div>
                   {{
                     getLocation(tValue.location)
                       ? getLocation(tValue.location)
-                      : language.common_lang.missing.default
+                      : translate.missingText()
                   }}
                 </div>
               </div>
 
               <div class="flex" :class="elementSpacing">
-                <div>{{ language.common_lang.dimension }}:&nbsp;</div>
+                <div>{{ translate.commonText('dimension') }}:&nbsp;</div>
                 <div>
                   <div
                     v-for="(dim, d) in tValue.dimension"
                     :key="d"
                     class="dimension"
                   >
-                    {{ dim.name ?? language.common_lang.missing.default }} ({{
-                      dim.value ?? language.common_lang.missing.default
+                    {{ dim.name ?? translate.missingText() }} ({{
+                      dim.value ?? translate.missingText()
                     }})
                   </div>
                 </div>
               </div>
 
               <div class="flex" :class="elementSpacing">
-                <div>{{ language.common_lang.comment }}:&nbsp;</div>
+                <div>{{ translate.commonText('comment') }}:&nbsp;</div>
                 <div>
                   <div
                     v-for="(com, c) in tValue.comment[0].narrative"
@@ -52,18 +54,16 @@
                     }"
                   >
                     <div class="language mb-1.5">
-                      ({{ language.common_lang.language }}:
+                      ({{ translate.commonText('language') }}:
                       {{
                         com.language
                           ? dlType.language[com.language]
-                          : language.common_lang.missing.default
+                          : translate.missingText()
                       }})
                     </div>
                     <div class="w-[500px] max-w-full">
                       {{
-                        com.narrative
-                          ? com.narrative
-                          : language.common_lang.missing.default
+                        com.narrative ? com.narrative : translate.missingText()
                       }}
                     </div>
                   </div>
@@ -78,7 +78,7 @@
           <tr>
             <td colspan="2">
               <div class="category flex">
-                {{ language.common_lang.document_link }}
+                {{ translate.commonText('document_link') }} }}
               </div>
               <div class="divider my-4 h-px w-full border-b border-n-20"></div>
             </td>
@@ -102,6 +102,7 @@ import { DocumentLink } from 'Activity/indicators/elements/Index';
 
 //composable
 import { getLocation } from 'Composable/utils';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'TargetValue',
@@ -113,7 +114,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     let { data } = toRefs(props);
 
     // vue inject
@@ -131,7 +132,7 @@ export default defineComponent({
       getLocation,
       // languageType,
       dlType,
-      language,
+      translate,
     };
   },
 });

@@ -10,21 +10,21 @@
     <div class="language mb-1.5">
       ({{
         post.language
-          ? `${language.common_lang.language}: ${type.languages[post.language]}`
-          : language.common_lang.missing.element.replace(
-              ':element',
-              language.common_lang.language
-            )
+          ? `${translate.commonText('language')}: ${
+              type.languages[post.language]
+            }`
+          : translate.missingText('language')
       }})
     </div>
     <div class="description text-sm">
-      {{ post.narrative ?? language.common_lang.missing.narrative }}
+      {{ post.narrative ?? translate.missingText('narrative') }}
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'TransactionDescription',
@@ -49,11 +49,11 @@ export default defineComponent({
       };
     }
 
-    const language = window['globalLang'];
+    const translate = new Translate();
     let { data } = toRefs(props);
     const tdData = data.value as Narratives;
     const type = inject('types');
-    return { tdData, type, language };
+    return { tdData, type, translate };
   },
 });
 </script>

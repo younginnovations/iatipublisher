@@ -15,27 +15,20 @@
         <table class="mb-3">
           <tbody>
             <tr>
-              <td>{{ language.common_lang.code }}</td>
+              <td>{{ translate.commonText('code') }}</td>
               <td>
                 <span v-if="cou.region_vocabulary === '1'">{{
                   cou.region_code
                     ? type.regionCode[cou.region_code]
-                    : language.common_lang.missing.element.replace(
-                        ':element',
-                        language.common_lang.code
-                      )
+                    : translate.missingText('code')
                 }}</span>
-                <span v-else>{{
-                  cou.custom_code ??
-                  language.common_lang.missing.element.replace(
-                    ':element',
-                    language.common_lang.code
-                  )
-                }}</span>
+                <span v-else>
+                  {{ cou.custom_code ?? translate.missingText('code') }}</span
+                >
               </td>
             </tr>
             <tr v-if="cou.vocabulary_uri">
-              <td>{{ language.common_lang.vocabulary_uri }}</td>
+              <td>{{ translate.commonText('vocabulary_uri') }}</td>
               <td>
                 <a target="_blank" :href="cou.vocabulary_uri">{{
                   cou.vocabulary_uri
@@ -43,7 +36,7 @@
               </td>
             </tr>
             <tr>
-              <td>{{ language.common_lang.description }}</td>
+              <td>{{ translate.commonText('description') }}</td>
               <td>
                 <div
                   v-for="(sd, i) in cou.narrative"
@@ -57,17 +50,14 @@
                     (
                     {{
                       sd.language
-                        ? `${language.common_lang.language}: ${
+                        ? `${translate.commonText('language')}: ${
                             type.languages[sd.language]
                           }`
-                        : language.common_lang.missing.element.replace(
-                            ':element',
-                            language.common_lang.language
-                          )
+                        : translate.missingText('language')
                     }})
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? language.common_lang.missing.narrative }}
+                    {{ sd.narrative ?? translate.missingText('narrative') }}
                   </div>
                 </div>
               </td>
@@ -81,6 +71,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'TransactionRecipientRegion',
@@ -92,7 +83,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const { data } = toRefs(props);
 
     interface ArrayObject {
@@ -112,7 +103,7 @@ export default defineComponent({
     }
 
     const type = inject('types') as TypesInterface;
-    return { country, type, language };
+    return { country, type, translate };
   },
 });
 </script>

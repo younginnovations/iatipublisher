@@ -9,15 +9,11 @@
       {{
         types.transactionType[
           trans.transaction.transaction_type[0].transaction_type_code
-        ] ??
-        language.common_lang.missing.element.replace(
-          ':element',
-          language.common_lang.transaction_type
-        )
+        ] ?? translate.missingText('transaction_type')
       }}
       <div class="ml-2">
         <Btn
-          :text="language.button_lang.edit"
+          :text="translate.button('edit')"
           icon="edit"
           :link="`/activity/${trans.activity_id}/transaction/${trans.id}/edit`"
         />
@@ -31,12 +27,12 @@
         {{
           val.amount
             ? Number(val.amount).toLocaleString()
-            : language.common_lang.missing.value
+            : translate.missingText('element', 'common.value')
         }}
         {{ val.currency }}
         {{
           dateFormat(val.date, 'MMMM DD, YYYY')
-            ? `- ${language.common_lang.valued_at.toLowerCase()}` +
+            ? `- ${translate.commonText('valued_at').toLowerCase()}` +
               ' ' +
               dateFormat(val.date, 'MMMM DD, YYYY')
             : ''
@@ -50,6 +46,7 @@
 import { defineComponent, inject } from 'vue';
 import dateFormat from 'Composable/dateFormat';
 import Btn from 'Components/buttons/Link.vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ActivityTransactions',
@@ -68,10 +65,10 @@ export default defineComponent({
       languages: [];
     }
 
-    const language = window['globalLang'];
+    const translate = new Translate();
     const types = inject('types') as Types;
 
-    return { types, dateFormat, language };
+    return { types, dateFormat, translate };
   },
 });
 </script>

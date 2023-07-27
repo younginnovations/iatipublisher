@@ -41,9 +41,11 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, toRefs, ref, watch } from 'vue';
+import { defineProps, toRefs, ref, watch, capitalize } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
-const language = window['globalLang'];
+// eslint-disable-next-line no-undef
+const translate = new Translate();
 
 //props
 const props = defineProps({
@@ -107,12 +109,8 @@ const accordionToggle = (e: Event) => {
 };
 
 const updateErrorCountMessage = () => {
-  let translatedType = language.common_lang.sticky.common[type.value];
-  errorType.value =
-    errors.value.length +
-    ' ' +
-    translatedType.charAt(0).toUpperCase() +
-    translatedType.slice(1);
+  let translatedType = translate.stickyText(type.value, 'common');
+  errorType.value = errors.value.length + ' ' + capitalize(translatedType);
 };
 
 updateErrorCountMessage();

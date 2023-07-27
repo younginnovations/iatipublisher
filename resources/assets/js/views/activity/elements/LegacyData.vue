@@ -7,33 +7,30 @@
   >
     <div class="mb-1 text-sm">
       <div v-if="post.legacy_name">{{ post.legacy_name }}</div>
-      <span v-else class="italic">{{
-        language.common_lang.missing.element.replace(
-          ':element',
-          language.common_lang.name
-        )
-      }}</span>
+      <span v-else class="italic">
+        {{ translate.missingText('name') }}
+      </span>
     </div>
     <div class="ml-5">
       <table>
         <tr>
-          <td>{{ language.common_lang.value }}</td>
+          <td>{{ translate.commonText('value') }}</td>
           <td v-if="post.value">
             <span class="description">{{ post.value }}</span>
           </td>
           <td v-else class="italic">
-            {{ language.common_lang.missing.default }}
+            {{ translate.missingText() }}
           </td>
         </tr>
       </table>
       <table>
         <tr>
-          <td>{{ language.common_lang.iati_equivalent }}</td>
+          <td>{{ translate.commonText('iati_equivalent') }}</td>
           <td v-if="post.iati_equivalent">
             <span class="description">{{ post.iati_equivalent }}</span>
           </td>
           <td v-else class="italic">
-            {{ language.common_lang.missing.default }}
+            {{ translate.missingText() }}
           </td>
         </tr>
       </table>
@@ -43,6 +40,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ActivitySector',
@@ -53,8 +51,8 @@ export default defineComponent({
     },
   },
   setup() {
-    const language = window['globalLang'];
-    return { language };
+    const translate = new Translate();
+    return { translate };
   },
 });
 </script>

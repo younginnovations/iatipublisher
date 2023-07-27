@@ -24,16 +24,20 @@
             <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
               <div class="flex">
                 <a class="whitespace-nowrap font-bold" href="/activities">
-                  {{ language.activity_lang.your_activities_label }}
+                  {{
+                    translate.textFromKey(
+                      'activity_detail.your_activities_label'
+                    )
+                  }}
                 </a>
                 <span class="separator mx-4"> / </span>
                 <div class="breadcrumb__title">
                   <span
                     class="breadcrumb__title last w-[200px] overflow-hidden text-ellipsis text-n-30"
-                    >{{ pageTitle ?? language.common_lang.untitled }}</span
+                    >{{ pageTitle ?? translate.commonText('untitled') }}</span
                   >
                   <span class="ellipsis__title--hover">{{
-                    pageTitle ? pageTitle : language.common_lang.untitled
+                    pageTitle ? pageTitle : translate.commonText('untitled')
                   }}</span>
                 </div>
               </div>
@@ -52,10 +56,14 @@
               <div class="inline-flex min-h-[48px] grow flex-wrap items-center">
                 <h4 class="ellipsis__title relative text-2xl font-bold">
                   <span class="ellipsis__title overflow-hidden">
-                    {{ pageTitle ? pageTitle : language.common_lang.untitled }}
+                    {{
+                      pageTitle ? pageTitle : translate.commonText('untitled')
+                    }}
                   </span>
                   <span class="ellipsis__title--hover">
-                    {{ pageTitle ? pageTitle : language.common_lang.untitled }}
+                    {{
+                      pageTitle ? pageTitle : translate.commonText('untitled')
+                    }}
                   </span>
                 </h4>
               </div>
@@ -74,9 +82,7 @@
               <ErrorPopUp
                 v-if="errorData.visibility"
                 :message="errorData.message"
-                :title="
-                  language.common_lang.error.activity_could_not_be_published
-                "
+                :title="translate.error('activity_could_not_be_published')"
                 @close-popup="
                   () => {
                     errorData.visibility = false;
@@ -131,11 +137,11 @@
             <div class="activities__card progress mr-1">
               <div class="mb-2 flex items-center justify-between">
                 <span class="mr-2">{{
-                  language.common_lang.publishing_progress
+                  translate.commonText('publishing_progress')
                 }}</span>
                 <HoverText
                   :hover-text="
-                    language.common_lang.the_iati_standard_contains_wide
+                    translate.commonText('the_iati_standard_contains_wide')
                   "
                   name=""
                   class="hover-text"
@@ -143,13 +149,15 @@
                 />
               </div>
               <ProgressBar :percent="progress" class="mb-3" />
-              <span>{{ language.activity_lang.complete_all_core_label }}</span>
+              <span>{{
+                translate.textFromKey('complete_all_core_label')
+              }}</span>
             </div>
             <div class="activities__card elements">
               <div class="mb-7 flex items-center justify-between">
-                <span>{{ language.common_lang.elements }}</span>
+                <span>{{ translate.commonText('elements') }}</span>
                 <HoverText
-                  :hover-text="language.common_lang.each_element_represents"
+                  :hover-text="translate.commonText('each_element_represents')"
                   name=""
                   class="hover-text"
                 />
@@ -157,10 +165,10 @@
               <div class="mb-3 flex justify-between">
                 <div class="flex items-center space-x-1">
                   <svg-vue icon="core" />
-                  <span>{{ language.common_lang.core }}</span>
+                  <span>{{ translate.commonText('core') }}</span>
                 </div>
                 <HoverText
-                  :hover-text="language.common_lang.core_elements_include"
+                  :hover-text="translate.commonText('core_elements_include')"
                   name=""
                   class="hover-text"
                 />
@@ -168,11 +176,13 @@
               <div class="flex justify-between">
                 <div class="flex items-center space-x-1">
                   <svg-vue class="text-spring-50" icon="double-tick" />
-                  <span>{{ language.common_lang.completed }}</span>
+                  <span>{{ translate.commonText('completed') }}</span>
                 </div>
                 <HoverText
                   :hover-text="
-                    language.common_lang.cannot_publish_activity_until_mandatory
+                    translate.commonText(
+                      'cannot_publish_activity_until_mandatory'
+                    )
                   "
                   name=""
                   class="hover-text"
@@ -214,11 +224,11 @@
               <div class="activities__card progress mr-1">
                 <div class="mb-2 flex items-center justify-between">
                   <span class="mr-2">{{
-                    language.common_lang.publishing_progress
+                    translate.commonText('publishing_progress')
                   }}</span>
                   <HoverText
                     :hover-text="
-                      language.common_lang.the_iati_standard_contains_wide
+                      translate.commonText('the_iati_standard_contains_wide')
                     "
                     name=""
                     class="hover-text"
@@ -227,14 +237,16 @@
                 </div>
                 <ProgressBar :percent="progress" class="mb-3" />
                 <span>{{
-                  language.activity_lang.complete_all_core_label
+                  translate.textFromKey('complete_all_core_label')
                 }}</span>
               </div>
               <div class="activities__card elements">
                 <div class="mb-7 flex items-center justify-between">
-                  <span>{{ language.common_lang.elements }}</span>
+                  <span>{{ translate.commonText('elements') }}</span>
                   <HoverText
-                    :hover-text="language.common_lang.each_element_represents"
+                    :hover-text="
+                      translate.commonText('each_element_represents')
+                    "
                     name=""
                     class="hover-text"
                   />
@@ -242,10 +254,10 @@
                 <div class="mb-3 flex justify-between">
                   <div class="flex items-center space-x-1">
                     <svg-vue icon="core" />
-                    <span>{{ language.common_lang.core }}</span>
+                    <span>{{ translate.commonText('core') }}</span>
                   </div>
                   <HoverText
-                    :hover-text="language.common_lang.core_elements_include"
+                    :hover-text="translate.commonText('core_elements_include')"
                     name=""
                     class="hover-text"
                   />
@@ -253,12 +265,13 @@
                 <div class="flex justify-between">
                   <div class="flex items-center space-x-1">
                     <svg-vue class="text-spring-50" icon="double-tick" />
-                    <span>{{ language.common_lang.completed }}</span>
+                    <span>{{ translate.commonText('completed') }}</span>
                   </div>
                   <HoverText
                     :hover-text="
-                      language.common_lang
-                        .cannot_publish_activity_until_mandatory
+                      translate.commonText(
+                        'cannot_publish_activity_until_mandatory'
+                      )
                     "
                     name=""
                     class="hover-text"
@@ -279,7 +292,7 @@
             >
               <svg-vue class="mr-0.5 text-base" icon="setting"></svg-vue>
               <span class="whitespace-nowrap">{{
-                language.activity_lang.uc_override_this_activity_label
+                translate.textFromKey('uc_override_this_activity_label')
               }}</span>
             </a>
           </div>
@@ -299,8 +312,9 @@
                   <HoverText
                     :name="formatTitle(toSnakeCase(post.label))"
                     :hover-text="
-                      language.common_lang
-                        .cannot_publish_activity_until_mandatory
+                      translate.commonText(
+                        'cannot_publish_activity_until_mandatory'
+                      )
                     "
                     icon_size="text-tiny"
                   />
@@ -402,6 +416,7 @@ import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
 // Vuex Store
 import { detailStore } from 'Store/activities/show';
 import { useStore } from 'Store/activities/index';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   components: {
@@ -469,7 +484,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const { types, coreCompleted } = toRefs(props);
     let removed = sessionStorage.getItem('removed');
 
@@ -649,9 +664,12 @@ export default defineComponent({
     );
 
     function formatTitle(title: string) {
-      const translatedTitle = language.activity_lang[title]?.label;
+      console.log(title);
+      const translatedTitle =
+        translate.textFromKey(`activity_detail.${title}.label`) ??
+        title.replace(/_/gi, ' ');
 
-      return capitalize(translatedTitle ?? title.replace(/_/gi, ' '));
+      return capitalize(translatedTitle);
     }
 
     const toastMessage = reactive({
@@ -696,7 +714,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: language.activities_lang.your_activities,
+        title: translate.textFromKey('activities.your_activities'),
         link: '/activities',
       },
       {
@@ -757,7 +775,7 @@ export default defineComponent({
       istopVisible,
       screenWidth,
       width,
-      language,
+      translate,
       toSnakeCase,
     };
   },

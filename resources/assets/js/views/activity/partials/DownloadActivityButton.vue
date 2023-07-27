@@ -6,7 +6,7 @@
       class="button secondary-btn font-bold"
       @click="toggle"
     >
-      <svg-vue icon="download-file" /> {{ language.button_lang.download_all }}
+      <svg-vue icon="download-file" /> {{ translate.button('download_all') }}
       <svg-vue icon="dropdown-arrow" class="text-blue-coral !text-[6px]" />
     </button>
     <button
@@ -30,12 +30,7 @@
             :class="liClass"
             @click="downloadCsv(store.state.selectedActivities.length)"
             >{{
-              capitalize(
-                language.button_lang.download_element.replace(
-                  ':element',
-                  language.common_lang.csv
-                )
-              )
+              capitalize(translate.button('download_element', 'common.csv'))
             }}</a
           >
         </li>
@@ -45,25 +40,13 @@
             :class="liClass"
             @click="downloadXml(store.state.selectedActivities.length)"
             >{{
-              capitalize(
-                language.button_lang.download_element.replace(
-                  ':element',
-                  language.common_lang.xml
-                )
-              )
+              capitalize(translate.button('download_element', 'common.xml'))
             }}</a
           >
         </li>
         <li>
           <a href="#" :class="liClass" @click="checkDownload">
-            {{
-              capitalize(
-                language.button_lang.download_element.replace(
-                  ':element',
-                  language.common_lang.xls
-                )
-              )
-            }}
+            {{ capitalize(translate.button('download_element', 'common.xls')) }}
           </a>
         </li>
       </ul>
@@ -78,23 +61,20 @@
       "
     >
       <p class="text-sm font-bold">
-        {{ language.button_lang.download_xml_confirmation }}
+        {{ translate.button('download_xml_confirmation') }}
       </p>
 
       <div class="mb-4 h-40 overflow-y-auto rounded-lg bg-rose p-4 text-sm">
         <div class="mb-2 flex justify-between">
           <div class="text-xs font-bold">
-            {{ language.common_lang.error_message }}
+            {{ translate.commonText('error_message') }}
           </div>
           <a
             class="top-1 right-3 cursor-pointer text-xs font-bold"
             @click="downloadError('error', message)"
             >{{
               capitalize(
-                language.button_lang.download_element.replace(
-                  ':element',
-                  language.common_lang.error_message
-                )
+                translate.button('download_element', 'common.error_message')
               )
             }}</a
           >
@@ -111,19 +91,14 @@
             }
           "
         >
-          {{ language.button_lang.go_back }}
+          {{ translate.button('go_back') }}
         </button>
         <button
           class="rounded bg-bluecoral px-4 py-3 font-bold text-white"
           @click="downloadErrorxml(store.state.selectedActivities.length)"
         >
           {{
-            capitalize(
-              language.button_lang.download_element.replace(
-                ':element',
-                language.common_lang.anyway
-              )
-            )
+            capitalize(translate.button('download_element', 'common.anyway'))
           }}
         </button>
       </div>
@@ -170,7 +145,7 @@
             class="primary-btn"
             @click="downloadXls(store.state.selectedActivities.length)"
           >
-            {{ language.button_lang.continue }}
+            {{ translate.button('continue') }}
           </button>
         </div>
       </div>
@@ -196,14 +171,11 @@
         </div>
         <div class="flex justify-end space-x-5">
           <button class="ghost-btn" @click="downloadingInProcess = false">
-            {{ language.button_lang.go_back }}
+            {{ translate.button('go_back') }}
           </button>
           <button class="primary-btn" @click="downloadAnyway">
             {{
-              language.button_lang.download_element.replace(
-                ':element',
-                language.common_lang.anyway
-              )
+              capitalize(translate.button('download_element', 'common.anyway'))
             }}
           </button>
         </div>
@@ -229,6 +201,7 @@ import Toast from '../../../components/ToastMessage.vue';
 import Modal from 'Components/PopupModal.vue';
 
 import axios from 'axios';
+import { Translate } from 'Composable/translationHelper';
 
 /**
  *  Global State
@@ -243,7 +216,7 @@ export default defineComponent({
     Modal,
   },
   setup() {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const state = reactive({
       isVisible: false,
     });
@@ -475,7 +448,7 @@ export default defineComponent({
       downloadingInProcess,
       isLoading,
       downloadAnyway,
-      language,
+      translate,
     };
   },
   methods: { capitalize },

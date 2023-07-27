@@ -3,16 +3,14 @@
     {{
       flowData[0].flow_type
         ? type.flowType[flowData[0].flow_type]
-        : language.common_lang.missing.element.replace(
-            ':element',
-            language.common_lang.flow_type
-          )
+        : translate.missingText('flow_type')
     }}
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'TransactionFlowType',
@@ -24,7 +22,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const { data } = toRefs(props);
 
     interface ArrayObject {
@@ -32,7 +30,7 @@ export default defineComponent({
     }
     const flowData = data.value as ArrayObject;
     const type = inject('types');
-    return { flowData, type, language };
+    return { flowData, type, translate };
   },
 });
 </script>

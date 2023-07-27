@@ -28,7 +28,7 @@
           class="rounded bg-bluecoral py-2 px-5 font-semibold text-white"
           @click="close"
         >
-          {{ language.button_lang.close }}
+          {{ translate.button('close') }}
         </button>
       </div>
     </div>
@@ -42,8 +42,9 @@ import {
   onMounted,
   onUnmounted,
 } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
-const language = window['globalLang'];
+const translate = new Translate();
 const emit = defineEmits(['close-popup']);
 const props = defineProps({
   message: {

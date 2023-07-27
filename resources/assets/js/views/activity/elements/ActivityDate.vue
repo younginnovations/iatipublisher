@@ -9,23 +9,17 @@
         <span v-if="post.type" class="font-bold">{{
           types.activityDate[post.type]
         }}</span>
-        <span v-else class="text-sm font-bold italic">{{
-          language.common_lang.missing.element.replace(
-            ':element',
-            language.common_lang.type
-          )
-        }}</span>
+        <span v-else class="text-sm font-bold italic">
+          {{ translate.missingText('type') }}</span
+        >
       </div>
       <div>
         <span v-if="post.date" class="text-sm font-normal">{{
           formatDate(post.date)
         }}</span>
-        <span v-else class="text-sm italic">{{
-          language.common_lang.missing.element.replace(
-            ':element',
-            language.common_lang.date
-          )
-        }}</span>
+        <span v-else class="text-sm italic">
+          {{ translate.missingText('type') }}</span
+        >
       </div>
     </div>
     <div
@@ -36,20 +30,20 @@
     >
       <table class="ml-5">
         <tr class="multiline">
-          <td>{{ language.common_lang.narrative }}</td>
+          <td>{{ translate.commonText('narrative') }}</td>
           <td>
             <div v-if="item.narrative" class="flex flex-col">
               <span v-if="item.language" class="language top">
-                ({{ language.common_lang.language }}:
+                ({{ translate.commonText('language') }}:
                 {{ types.languages[item.language] }})
               </span>
               <span v-if="item.narrative" class="description">
                 {{ item.narrative }}
               </span>
             </div>
-            <span v-else class="italic">{{
-              language.common_lang.missing.default
-            }}</span>
+            <span v-else class="italic">
+              {{ translate.missingText() }}
+            </span>
           </td>
         </tr>
       </table>
@@ -61,6 +55,7 @@
 import { defineComponent, inject } from 'vue';
 
 import moment from 'moment';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ActivityDate',
@@ -77,14 +72,14 @@ export default defineComponent({
       languages: [];
     }
 
-    const language = window['globalLang'];
+    const translate = new Translate();
     const types = inject('types') as Types;
 
     function formatDate(date: Date) {
       return moment(date).format('LL');
     }
 
-    return { types, formatDate, language };
+    return { types, formatDate, translate };
   },
 });
 </script>

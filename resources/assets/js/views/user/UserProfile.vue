@@ -29,13 +29,12 @@
               }
             "
           >
-            <svg-vue icon="edit" class="mr-1 text-base"></svg-vue
-            ><span class="text-xs uppercase">{{
-              language.button_lang.edit_element.replace(
-                ':element',
-                language.admin.header.your_profile
-              )
-            }}</span>
+            <svg-vue icon="edit" class="mr-1 text-base"></svg-vue>
+            <span class="text-xs uppercase">
+              {{
+                translate.button('edit_element', 'admin.header.your_profile')
+              }}
+            </span>
           </button>
         </div>
       </div>
@@ -52,12 +51,12 @@
       >
         <div class="popup-model h-auto" @keyup.enter="updatePassword">
           <div class="mb-4 text-2xl font-bold text-bluecoral">
-            {{ language.user_lang.change_password }}
+            {{ translate.textFromKey('user.change_password') }}
           </div>
           <div>
             <div class="mb-5 flex flex-col gap-2">
               <label class="text-sm text-n-50"
-                >{{ language.register_lang.password.confirm }}
+                >{{ translate.registerText('password.confirm') }}
                 <span class="text-[red]"> * </span>
               </label>
               <span class="relative max-w-[calc(50%_-_12px)]">
@@ -92,8 +91,8 @@
           </div>
           <div class="mb-5 flex space-x-6">
             <div class="flex w-full flex-col gap-2">
-              <label class="text-sm text-n-50"
-                >{{ language.register_lang.password.new }}
+              <label class="text-sm text-n-50">
+                {{ translate.registerText('password.new') }}
                 <span class="text-[red]"> * </span>
               </label>
               <span class="relative">
@@ -126,7 +125,7 @@
             </div>
             <div class="flex w-full flex-col gap-2">
               <label class="text-sm text-n-50"
-                >{{ language.register_lang.password.confirm }}
+                >{{ translate.registerText('password.confirm') }}
                 <span class="text-[red]"> * </span>
               </label>
               <span class="relative">
@@ -167,10 +166,10 @@
                 }
               "
             >
-              {{ language.button_lang.cancel }}
+              {{ translate.button('cancel') }}
             </button>
             <button class="primary-btn !px-10" @click="updatePassword">
-              {{ language.button_lang.save }}
+              {{ translate.button('save') }}
             </button>
           </div>
         </div>
@@ -188,17 +187,14 @@
           <div class="mb-4 text-2xl font-bold text-bluecoral">
             {{
               capitalize(
-                language.button_lang.edit_element.replace(
-                  ':element',
-                  language.admin.header.your_profile
-                )
+                translate.button('edit_element', 'admin.header.your_profile')
               )
             }}
           </div>
           <div class="grid grid-cols-2 gap-6">
             <div class="col-span-2 flex flex-col items-start gap-2">
               <label class="text-sm text-n-50"
-                >{{ language.register_lang.fullname.label
+                >{{ translate.registerText('fullname.label')
                 }}<span class="text-[red]"> * </span></label
               >
               <input
@@ -221,7 +217,7 @@
             </div>
             <div class="flex flex-col items-start gap-2">
               <label class="text-sm text-n-50"
-                >{{ language.register_lang.username.label
+                >{{ translate.registerText('username.label')
                 }}<span class="text-[red]"> * </span></label
               >
               <input
@@ -245,7 +241,7 @@
 
             <div class="flex flex-col items-start gap-2">
               <label class="text-sm text-n-50"
-                >{{ language.user_lang.email
+                >{{ translate.textFromKey('user.email')
                 }}<span class="text-[red]"> * </span></label
               >
               <input
@@ -273,7 +269,7 @@
               class="flex flex-col items-start gap-2"
             >
               <label class="text-sm text-n-50"
-                >{{ language.user_lang.language_preference
+                >{{ translate.textFromKey('user.language_preference')
                 }}<span class="text-[red]">*</span></label
               >
               <Multiselect
@@ -300,10 +296,10 @@
                 }
               "
             >
-              {{ language.button_lang.cancel }}
+              {{ translate.button('cancel') }}
             </button>
             <button class="primary-btn !px-10" @click="updateProfile">
-              {{ language.button_lang.save }}
+              {{ translate.button('save') }}
             </button>
           </div>
         </div>
@@ -312,7 +308,7 @@
         <span class="inline-flex items-center space-x-2">
           <span><svg-vue icon="user-profile" class="text-base"></svg-vue></span>
           <h6 class="text-sm font-bold">
-            {{ language.user_lang.your_information }}
+            {{ translate.textFromKey('user.your_information') }}
           </h6></span
         >
         <div class="inline-flex">
@@ -328,7 +324,7 @@
             >
               <!-- <svg-vue icon=""></svg-vue> -->
 
-              {{ language.user_lang.change_your_password }}
+              {{ translate.textFromKey('user.change_your_password') }}
             </a>
           </div>
         </div>
@@ -336,7 +332,7 @@
 
       <div class="flex space-x-2 border-b border-n-20 py-6">
         <div class="text-base font-bold text-n-40">
-          {{ language.common_lang.name }}
+          {{ translate.commonText('name') }}
         </div>
         <div class="max-w-[60vw] overflow-x-hidden text-ellipsis text-base">
           {{ userData['full_name'] }}
@@ -344,13 +340,13 @@
       </div>
       <div class="flex space-x-2 border-b border-n-20 py-6">
         <div class="text-base font-bold text-n-40">
-          {{ language.user_lang.user_name }}
+          {{ translate.textFromKey('user.user_name') }}
         </div>
         <div class="text-base">{{ userData['username'] }}</div>
       </div>
       <div class="flex space-x-2 border-b border-n-20 py-6">
         <div class="text-base font-bold text-n-40">
-          {{ language.user_lang.language_preference }}
+          {{ translate.textFromKey('user.language_preference') }}
         </div>
         <div class="text-base">
           {{ languagePreference[userData['language_preference']] }}
@@ -358,7 +354,7 @@
       </div>
       <div class="flex space-x-2 py-6">
         <div class="text-base font-bold text-n-40">
-          {{ language.user_lang.email }}
+          {{ translate.textFromKey('user.email') }}
         </div>
         <div>
           <a>{{ userData['email'] }}</a>
@@ -366,14 +362,14 @@
             v-if="!userData['email_verified_at']"
             class="mt-1 max-w-[550px] text-n-40"
           >
-            {{ language.user_lang.you_havent_verified_email_yet }}.
-            {{ language.common_lang.account_not_verified_desc_p1 }},
+            {{ translate.textFromKey('user.you_havent_verified_email_yet') }}.
+            {{ translate.commonText('account_not_verified_desc_p1') }},
             <a
               class="cursor-pointer font-bold underline"
               @click="resendVerificationEmail()"
-              >{{ language.common_lang.account_not_verified_desc_p2 }}</a
+              >{{ translate.commonText('account_not_verified_desc_p2') }}</a
             >
-            {{ language.user_lang.if_you_havent_received }}.
+            {{ translate.textFromKey('user.if_you_havent_received') }}.
           </div>
         </div>
       </div>
@@ -382,7 +378,7 @@
         class="flex space-x-2 border-b border-n-20 py-6"
       >
         <div class="text-base font-bold text-n-40">
-          {{ language.common_lang.organisation }}
+          {{ translate.commonText('organisation') }}
         </div>
         <div class="text-base">
           {{ userData['organization_name'] }}
@@ -393,10 +389,12 @@
         class="flex space-x-2 border-b border-n-20 py-6"
       >
         <div class="text-base font-bold text-n-40">
-          {{ language.user_lang.role }}
+          {{ translate.textFromKey('user.role') }}
         </div>
         <div class="text-base">
-          {{ language.user_lang.user_roles[userData['user_role']] }}
+          {{
+            translate.textFromKey(`user.user_roles.${userData['user_role']}`)
+          }}
         </div>
       </div>
     </div>
@@ -411,8 +409,9 @@ import PopupModal from 'Components/PopupModal.vue';
 import encrypt from 'Composable/encryption';
 import Multiselect from '@vueform/multiselect';
 import { watchIgnorable } from '@vueuse/core';
+import { Translate } from 'Composable/translationHelper';
 
-const language = window['globalLang'];
+const translate = new Translate();
 
 const props = defineProps({
   user: { type: Object, required: true },

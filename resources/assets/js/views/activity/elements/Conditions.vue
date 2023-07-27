@@ -2,14 +2,14 @@
   <div>
     <div v-if="data.condition_attached == '1'" class="elements-detail">
       <div class="category">
-        <span>{{ language.common_lang.attached }} - </span>
+        <span>{{ translate.commonText('attached') }} - </span>
         <span>
-          <span v-if="data.condition_attached == '0'">{{
-            language.common_lang.no
-          }}</span>
-          <span v-else-if="data.condition_attached == '1'">{{
-            language.common_lang.yes
-          }}</span>
+          <span v-if="data.condition_attached == '0'">
+            {{ translate.commonText('no') }}
+          </span>
+          <span v-else-if="data.condition_attached == '1'">
+            {{ translate.commonText('yes') }}
+          </span>
         </span>
       </div>
       <div
@@ -21,12 +21,9 @@
           <div v-if="post.condition_type">
             {{ types.conditionType[post.condition_type] }}
           </div>
-          <span v-else class="italic">{{
-            language.common_lang.missing.element.replace(
-              ':element',
-              language.common_lang.type
-            )
-          }}</span>
+          <span v-else class="italic">
+            {{ translate.missingText('type') }}
+          </span>
         </div>
         <table class="ml-5">
           <tbody>
@@ -36,11 +33,11 @@
               class="multiline"
               :class="{ 'mb-4': i !== post.narrative.length - 1 }"
             >
-              <td>{{ language.common_lang.narrative }}</td>
+              <td>{{ translate.commonText('narrative') }}</td>
               <td>
                 <div v-if="item.narrative" class="flex flex-col">
                   <span v-if="item.language" class="language top"
-                    >({{ language.common_lang.language }}:
+                    >({{ translate.commonText('language') }}:
                     {{ types.languages[item.language] }})</span
                   >
                   <span v-if="item.narrative" class="description">{{
@@ -48,7 +45,7 @@
                   }}</span>
                 </div>
                 <span v-else class="italic">{{
-                  language.common_lang.attached
+                  translate.commonText('attached')
                 }}</span>
               </td>
             </tr>
@@ -57,7 +54,7 @@
       </div>
     </div>
     <span v-else class="text-sm italic">{{
-      language.common_lang.conditions_not_attached
+      translate.commonText('conditions_not_attached')
     }}</span>
   </div>
 </template>
@@ -65,6 +62,7 @@
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
 import dateFormat from 'Composable/dateFormat';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ActivityConditions',
@@ -80,10 +78,10 @@ export default defineComponent({
       languages: [];
     }
 
-    const language = window['globalLang'];
+    const translate = new Translate();
     const types = inject('types') as Types;
 
-    return { types, dateFormat, language };
+    return { types, dateFormat, translate };
   },
 });
 </script>

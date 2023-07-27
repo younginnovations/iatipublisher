@@ -2,7 +2,7 @@
   <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      :title="language.common_lang.periods_list"
+      :title="translate.commonText('periods_list')"
       :back-link="indicatorLink"
     >
       <div class="flex items-center space-x-3">
@@ -14,12 +14,7 @@
         />
         <a :href="`${periodLink}/create`">
           <Btn
-            :text="
-              language.button_lang.add_element.replace(
-                ':element',
-                language.common_lang.period
-              )
-            "
+            :text="translate.button('add_element', 'common.period')"
             icon="plus"
             type="primary"
           />
@@ -33,15 +28,15 @@
           <tr class="bg-n-10 text-left">
             <th id="transaction_type" scope="col">
               <span>
-                {{ language.elements_common_lang.start_date }} -
-                {{ language.elements_common_lang.end_date }}
+                {{ translate.element('start_date') }} -
+                {{ translate.element('end_date') }}
               </span>
             </th>
             <th id="code" scope="col" width="190px">
               <span>Period number</span>
             </th>
             <th id="action" scope="col" width="177px">
-              <span>{{ language.common_lang.action }}</span>
+              <span>{{ translate.commonText('action') }}</span>
             </th>
           </tr>
         </thead>
@@ -60,13 +55,13 @@
                 {{
                   pe.period.period_start[0].date
                     ? dateFormat(pe.period.period_start[0].date)
-                    : language.common_lang.missing.default
+                    : translate.missingText()
                 }}
                 -
                 {{
                   pe.period.period_end[0].date
                     ? dateFormat(pe.period.period_end[0].date)
-                    : language.common_lang.missing.default
+                    : translate.missingText()
                 }}
               </a>
             </td>
@@ -85,8 +80,8 @@
           <td colspan="5" class="text-center">
             {{
               createCapitalizedSentence(
-                language.common_lang.periods,
-                language.common_lang.missing.not_found
+                translate.commonText('periods'),
+                translate.missingText('not_found')
               )
             }}
           </td>
@@ -125,6 +120,7 @@ import DeleteAction from 'Components/sections/DeleteAction.vue';
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
 import { createCapitalizedSentence } from 'Composable/utils';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'PeriodList',
@@ -154,7 +150,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const { activity, parentData } = toRefs(props);
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
@@ -199,7 +195,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: language.activities_lang.your_activities,
+        title: translate.textFromKey('activities.your_activities'),
         link: '/activity',
       },
       {
@@ -215,7 +211,7 @@ export default defineComponent({
         link: indicatorLink,
       },
       {
-        title: language.common_lang.periods_list,
+        title: translate.commonText('periods_list'),
         link: '',
       },
     ];
@@ -265,7 +261,7 @@ export default defineComponent({
       indicatorId,
       toastData,
       handleNavigate,
-      language,
+      translate,
     };
   },
   methods: { createCapitalizedSentence },

@@ -5,75 +5,84 @@
       <section class="rounded bg-white py-4 shadow-textbox sm:py-8">
         <article class="py-4 px-6 sm:py-6 sm:px-12">
           <p class="text-base">
-            {{ language.iati_standard.iati_standard_description.one }}
+            {{ translate.iatiStandardText('iati_standard_description.one') }}
           </p>
         </article>
         <article class="py-4 px-6 sm:py-6 sm:px-12">
           <h3 class="my-2 text-2xl font-bold text-bluecoral">
-            1. {{ language.iati_standard.organisation_data_header }}
+            1. {{ translate.iatiStandardText('organisation_data_header') }}
           </h3>
           <p class="text-base">
             {{
-              language.iati_standard.organisation_data_description.one
-                .list_items.header
+              translate.iatiStandardText(
+                'organisation_data_description.one.list_items.header'
+              )
             }}
           </p>
           <ul class="mt-4 ml-4 list-disc text-base text-bluecoral">
             <li class="text-base">
               <span class="text-black">
                 {{
-                  language.iati_standard.organisation_data_description.one
-                    .list_items.one
+                  translate.iatiStandardText(
+                    'organisation_data_description.one.list_items.one'
+                  )
                 }}
               </span>
             </li>
             <li class="text-base">
               <span class="text-black">
                 {{
-                  language.iati_standard.organisation_data_description.one
-                    .list_items.two
+                  translate.iatiStandardText(
+                    'organisation_data_description.one.list_items.two'
+                  )
                 }}
               </span>
             </li>
             <li class="text-base">
               <span class="text-black">
                 {{
-                  language.iati_standard.organisation_data_description.one
-                    .list_items.three
+                  translate.iatiStandardText(
+                    'organisation_data_description.one.list_items.three'
+                  )
                 }}
               </span>
             </li>
             <li class="text-base">
               <span class="text-black">
                 {{
-                  language.iati_standard.organisation_data_description.one
-                    .list_items.four
+                  translate.iatiStandardText(
+                    'organisation_data_description.one.list_items.four'
+                  )
                 }}
               </span>
             </li>
             <li class="text-base">
               <span class="text-black">
                 {{
-                  language.iati_standard.organisation_data_description.one
-                    .list_items.five
+                  translate.iatiStandardText(
+                    'organisation_data_description.one.list_items.five'
+                  )
                 }}
               </span>
             </li>
           </ul>
           <p class="mt-4 text-base">
             <a target="_blank" rel="noopener noreferrer" href="/organisation">
-              {{ language.iati_standard.organisation_data_description.two }}
+              {{
+                translate.iatiStandardText('organisation_data_description.two')
+              }}
             </a>
           </p>
         </article>
         <article class="py-4 px-6 sm:py-6 sm:px-12">
           <h3 class="my-2 text-2xl font-bold text-bluecoral">
-            2. {{ language.iati_standard.activity_data_header }}
+            2. {{ translate.iatiStandardText('activity_data_header') }}
           </h3>
           <p class="text-base">
             {{
-              language.iati_standard.activity_data_description.one.list_items
-                .header
+              translate.iatiStandardText(
+                'activity_data_description.one.list_items.header'
+              )
             }}
           </p>
           <ul class="my-4 ml-4 list-disc text-base text-bluecoral">
@@ -81,8 +90,9 @@
               <span
                 class="text-black"
                 v-html="
-                  language.iati_standard.activity_data_description.one
-                    .list_items.one
+                  translate.iatiStandardText(
+                    'activity_data_description.one.list_items.one'
+                  )
                 "
               >
               </span>
@@ -91,8 +101,9 @@
               <span
                 class="text-black"
                 v-html="
-                  language.iati_standard.activity_data_description.one
-                    .list_items.two
+                  translate.iatiStandardText(
+                    'activity_data_description.one.list_items.two'
+                  )
                 "
               >
               </span>
@@ -101,8 +112,9 @@
               <span
                 class="text-black"
                 v-html="
-                  language.iati_standard.activity_data_description.one
-                    .list_items.three
+                  translate.iatiStandardText(
+                    'activity_data_description.one.list_items.three'
+                  )
                 "
               >
               </span>
@@ -111,8 +123,9 @@
               <span
                 class="text-black"
                 v-html="
-                  language.iati_standard.activity_data_description.one
-                    .list_items.four
+                  translate.iatiStandardText(
+                    'activity_data_description.one.list_items.four'
+                  )
                 "
               >
               </span>
@@ -121,8 +134,9 @@
               <span
                 class="text-black"
                 v-html="
-                  language.iati_standard.activity_data_description.one
-                    .list_items.five
+                  translate.iatiStandardText(
+                    'activity_data_description.one.list_items.five'
+                  )
                 "
               >
               </span>
@@ -131,8 +145,9 @@
               <span
                 class="text-black"
                 v-html="
-                  language.iati_standard.activity_data_description.one
-                    .list_items.six
+                  translate.iatiStandardText(
+                    'activity_data_description.one.list_items.six'
+                  )
                 "
               >
               </span>
@@ -141,42 +156,55 @@
               <span
                 class="text-black"
                 v-html="
-                  language.iati_standard.activity_data_description.one
-                    .list_items.seven
+                  translate.iatiStandardText(
+                    'activity_data_description.one.list_items.seven'
+                  )
                 "
               >
               </span>
             </li>
           </ul>
           <h6 class="text-lg font-bold text-bluecoral">
-            {{ language.iati_standard.publishing_data_either_header }}
+            {{ translate.iatiStandardText('publishing_data_either_header') }}
           </h6>
 
           <p class="my-4 text-base">
-            {{ language.iati_standard.publishing_data_either_description.one }}
-          </p>
-          <p class="my-4 text-base">
-            {{ language.iati_standard.publishing_data_either_description.two }}
+            {{
+              translate.iatiStandardText(
+                'publishing_data_either_description.one'
+              )
+            }}
           </p>
           <p class="my-4 text-base">
             {{
-              language.iati_standard.publishing_data_either_description.three
+              translate.iatiStandardText(
+                'publishing_data_either_description.two'
+              )
+            }}
+          </p>
+          <p class="my-4 text-base">
+            {{
+              translate.iatiStandardText(
+                'publishing_data_either_description.three'
+              )
             }}
           </p>
           <p class="my-4 text-base">
             <a target="_blank" rel="noopener noreferrer" href="/organisation">
               {{
-                language.iati_standard.publishing_data_either_description.four
+                translate.iatiStandardText(
+                  'publishing_data_either_description.four'
+                )
               }}
             </a>
           </p>
         </article>
         <article class="py-4 px-6 sm:py-6 sm:px-12">
           <h3 class="my-2 text-2xl font-bold text-bluecoral">
-            {{ language.iati_standard.download_pdf_header }}
+            {{ translate.iatiStandardText('download_pdf_header') }}
           </h3>
           <p class="text-base">
-            {{ language.iati_standard.download_pdf_description.one }}
+            {{ translate.iatiStandardText('download_pdf_description.one') }}
           </p>
           <a
             target="_blank"
@@ -184,7 +212,7 @@
             class="my-2 cursor-pointer"
             @click="downloadManual('organization')"
           >
-            [{{ language.iati_standard.download_pdf_description.two }}]
+            [{{ translate.iatiStandardText('download_pdf_description.two') }}]
           </a>
           <br />
           <a
@@ -193,15 +221,19 @@
             class="my-2 cursor-pointer"
             @click="downloadManual('activity')"
           >
-            [{{ language.iati_standard.download_pdf_description.three }}]
+            [{{ translate.iatiStandardText('download_pdf_description.three') }}]
           </a>
         </article>
         <article class="py-4 px-6 sm:py-6 sm:px-12">
           <h3 class="my-2 text-2xl font-bold text-bluecoral">
-            {{ language.iati_standard.iati_standard_reference_header }}
+            {{ translate.iatiStandardText('iati_standard_reference_header') }}
           </h3>
           <p class="text-base">
-            {{ language.iati_standard.iati_standard_reference_description.one }}
+            {{
+              translate.iatiStandardText(
+                'iati_standard_reference_description.one'
+              )
+            }}
           </p>
           <a
             target="_blank"
@@ -210,7 +242,9 @@
             class="my-2"
           >
             <u>{{
-              language.iati_standard.iati_standard_reference_description.two
+              translate.iatiStandardText(
+                'iati_standard_reference_description.two'
+              )
             }}</u>
           </a>
           <br />
@@ -221,7 +255,9 @@
             class="my-2"
           >
             <u>{{
-              language.iati_standard.iati_standard_reference_description.three
+              translate.iatiStandardText(
+                'iati_standard_reference_description.three'
+              )
             }}</u>
           </a>
         </article>
@@ -231,8 +267,9 @@
 </template>
 <script lang="ts" setup>
 import axios from 'axios';
+import { Translate } from 'Composable/translationHelper';
 
-const language = window['globalLang'];
+const translate = new Translate();
 
 function downloadManual(type: string) {
   let fileName = {

@@ -10,11 +10,11 @@
       <table class="mb-3">
         <tbody>
           <tr>
-            <td>{{ language.common_lang.code }}</td>
+            <td>{{ translate.commonText('code') }}</td>
             <td>{{ ref.code }}</td>
           </tr>
           <tr>
-            <td>{{ language.common_lang.vocabulary_uri }}</td>
+            <td>{{ translate.commonText('vocabulary_uri') }}</td>
             <td>
               <a
                 v-if="ref.vocabulary_uri"
@@ -22,7 +22,7 @@
                 :href="ref.vocabulary_uri"
                 >{{ ref.vocabulary_uri }}</a
               >
-              <span v-else>{{ language.common_lang.missing.default }}</span>
+              <span v-else>{{ translate.missingText() }}</span>
             </td>
           </tr>
         </tbody>
@@ -33,6 +33,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ResultReference',
@@ -59,10 +60,10 @@ export default defineComponent({
       };
     }
 
-    const language = window['globalLang'];
+    const translate = new Translate();
     let { data } = toRefs(props);
     const referenceData = data.value as ReferenceArray;
-    return { referenceData, language };
+    return { referenceData, translate };
   },
 });
 </script>

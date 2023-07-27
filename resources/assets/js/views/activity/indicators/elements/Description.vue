@@ -1,6 +1,6 @@
 <template>
   <tr>
-    <td>{{ language.common_lang.description }}</td>
+    <td>{{ translate.commonText('description') }}</td>
     <td>
       <template v-for="(description, t) in descriptionData.narrative" :key="t">
         <div
@@ -10,9 +10,11 @@
           }"
         >
           <div class="text-n-30">
-            ({{ language.common_lang.language }}:
+            ({{ translate.commonText('language') }}:
             {{
-              description.language ? descType[description.language] : 'Missing'
+              description.language
+                ? descType[description.language]
+                : translate.missingText()
             }})
           </div>
           <div class="description text-xs">
@@ -26,6 +28,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'IndicatorDescription',
@@ -41,10 +44,10 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     let { data } = toRefs(props);
     const descriptionData = data.value;
-    return { descriptionData, language };
+    return { descriptionData, translate };
   },
 });
 </script>

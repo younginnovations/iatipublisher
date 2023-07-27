@@ -6,19 +6,17 @@
     <div class="section__container">
       <div class="section__title">
         <h2 class="text-2xl md:text-4xl">
-          {{ language.register_lang.create_iati_publisher_header }}
+          {{ translate.registerText('create_iati_publisher_header') }}}
         </h2>
-        <p>
-          {{ language.register_lang.create_iati_publisher_subheader }}
-        </p>
+        <p>{{ translate.registerText('create_iati_publisher_subheader') }}}</p>
       </div>
       <div class="section__wrapper flex justify-center">
         <EmailVerification v-if="checkStep('5')" :email="formData['email']" />
         <div v-else class="form input__field" @keyup.enter="goToNextForm">
           <aside class="mb-4 block border-b border-b-n-10 pb-4 xl:hidden">
             <span class="text-base font-bold"
-              >{{ language.button_lang.step }} {{ getCurrentStep() }}
-              {{ language.button_lang.out_of }} 5</span
+              >{{ translate.button('step') }} {{ getCurrentStep() }}
+              {{ translate.button('out_of') }} 5</span
             >
             <ul class="relative mt-3 text-sm text-n-40">
               <li
@@ -69,7 +67,7 @@
             >
               <p class="mb-2 flex font-bold">
                 <svg-vue class="mr-2 text-xl" icon="warning" />
-                {{ language.common_lang.error.default }}:
+                {{ translate.error('default') }}:
               </p>
               <div class="ml-8 xl:mr-1">
                 <ul class="list-disc">
@@ -170,16 +168,16 @@
               @click="goToPreviousForm()"
             >
               <svg-vue class="mr-3 cursor-pointer" icon="left-arrow" />
-              {{ language.button_lang.go_back }}
+              {{ translate.button('go_back') }}
             </button>
             <span
               v-if="checkStep(1)"
               class="pb-4 text-sm font-normal text-n-40 sm:pb-0"
-              >{{ language.common_lang.already_have_account }}
+              >{{ translate.commonText('already_have_account') }}
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
-                >{{ language.button_lang.sign_in }}.</a
+                >{{ translate.button('sign_in') }}.</a
               ></span
             >
             <button
@@ -187,26 +185,29 @@
               class="btn btn-next"
               @click="goToNextForm()"
             >
-              {{ language.button_lang.next_step }}
+              {{ translate.button('next_step') }}
               <svg-vue class="text-2xl" icon="right-arrow" />
             </button>
           </div>
           <div v-if="checkStep(2)" class="mt-6 text-center">
             <span class="text-sm font-normal text-n-40"
-              >{{ language.common_lang.already_have_account }}
+              >{{ translate.commonText('already_have_account') }}
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
-                >{{ language.button_lang.sign_in }}.</a
+                >{{ translate.button('sign_in') }}.</a
               ></span
             >
           </div>
         </div>
 
         <aside class="register__sidebar hidden xl:block">
-          <span class="text-base font-bold"
-            >Step {{ getCurrentStep() }} out of 5</span
-          >
+          <span class="text-base font-bold">
+            {{ translate.button('step') }}
+            {{ getCurrentStep() }}
+            {{ translate.button('out_of') }}
+            5
+          </span>
           <ul class="relative mt-6 text-sm text-n-40">
             <li
               v-for="(form, key, i) in registerForm"
@@ -256,6 +257,7 @@ import HoverText from './../../components/HoverText.vue';
 import Multiselect from '@vueform/multiselect';
 import Loader from '../../components/Loader.vue';
 import encrypt from 'Composable/encryption';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   components: {
@@ -273,7 +275,7 @@ export default defineComponent({
   },
 
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const step = ref(1);
     const publisherExists = ref(true);
     const isLoaderVisible = ref(false);
@@ -392,123 +394,137 @@ export default defineComponent({
      */
     const registerForm = reactive({
       1: {
-        title: language.register_lang.publisher_information.label,
+        title: translate.registerText('publisher_information.label'),
         is_complete: false,
-        description: language.register_lang.publisher_information.description,
-        hover_text: language.register_lang.publisher_information.hover_text,
+        description: translate.registerText(
+          'publisher_information.description'
+        ),
+        hover_text: translate.registerText('publisher_information.hover_text'),
         fields: {
           publisher_name: {
-            label: language.register_lang.publisher_name.label,
+            label: translate.registerText('publisher_name.label'),
             name: 'publisher_name',
-            placeholder: language.register_lang.publisher_name.placeholder,
+            placeholder: translate.registerText('publisher_name.placeholder'),
             id: 'publisher-name',
             required: true,
-            hover_text: language.register_lang.publisher_name.hover_text,
+            hover_text: translate.registerText('publisher_name.hover_text'),
             type: 'text',
             class: 'col-span-2 mb-4 lg:mb-2',
             help_text: '',
           },
           publisher_id: {
-            label: language.register_lang.publisher_id.label,
+            label: translate.registerText('publisher_id.label'),
             name: 'publisher_id',
-            placeholder: language.register_lang.publisher_id.placeholder,
+            placeholder: translate.registerText('publisher_id.placeholder'),
             id: 'publisher-id',
             required: true,
-            hover_text: language.register_lang.publisher_id.hover_text,
+            hover_text: translate.registerText('publisher_id.hover_text'),
             type: 'text',
             class: 'mb-4 lg:mb-2',
             help_text: '',
           },
           country: {
-            label: language.register_lang.country.label,
+            label: translate.registerText('country.label'),
             name: 'country',
-            placeholder: language.register_lang.country.placeholder,
+            placeholder: translate.registerText('country.placeholder'),
             id: 'country_select',
             required: false,
             type: 'select',
-            hover_text: language.register_lang.country.hover_text,
+            hover_text: translate.registerText('country.hover_text'),
             options: props.types.country,
             class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
           registration_agency: {
-            label: language.register_lang.org_registration_agency.label,
+            label: translate.registerText('org_registration_agency.label'),
             name: 'registration_agency',
-            placeholder:
-              language.register_lang.org_registration_agency.placeholder,
+            placeholder: translate.registerText(
+              'org_registration_agency.placeholder'
+            ),
             id: 'registration-agency',
             required: true,
-            hover_text:
-              language.register_lang.org_registration_agency.hover_text,
+            hover_text: translate.registerText(
+              'org_registration_agency.hover_text'
+            ),
             type: 'select',
             options: registration_agency,
             class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
           registration_number: {
-            label: language.register_lang.registration_number.label,
+            label: translate.registerText('registration_number.label'),
             name: 'registration_number',
-            placeholder: language.register_lang.registration_number.placeholder,
+            placeholder: translate.registerText(
+              'registration_number.placeholder'
+            ),
             id: 'registration-number',
             required: true,
-            hover_text: language.register_lang.registration_number.hover_text,
+            hover_text: translate.registerText(
+              'registration_number.hover_text'
+            ),
             type: 'text',
             class: 'mb-4 lg:mb-2',
-            help_text: `${language.register_lang.for_eg} 123456`,
+            help_text: `${translate.registerText('for_eg')} 123456`,
           },
           identifier: {
-            label: language.register_lang.iati_org_identifier.label,
+            label: translate.registerText('iati_org_identifier.label'),
             name: 'identifier',
             placeholder: '',
             id: 'identifier',
             required: true,
-            hover_text: language.register_lang.iati_org_identifier.hover_text,
+            hover_text: translate.registerText(
+              'iati_org_identifier.hover_text'
+            ),
             type: 'text',
             class: 'mb-4 lg:mb-6',
-            help_text: language.register_lang.iati_org_identifier.help_text,
+            help_text: translate.registerText('iati_org_identifier.help_text'),
           },
           publisher_type: {
-            label: language.register_lang.publisher_type.label,
+            label: translate.registerText('publisher_type.label'),
             name: 'publisher_type',
-            placeholder: language.register_lang.publisher_type.placeholder,
+            placeholder: translate.registerText('publisher_type.placeholder'),
             id: 'publisher-type',
             required: true,
-            hover_text: language.register_lang.publisher_type.hover_text,
+            hover_text: translate.registerText('publisher_type.hover_text'),
             type: 'select',
             options: props.types.publisherType,
             class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
           license_id: {
-            label: language.register_lang.data_license.label,
+            label: translate.registerText('data_license.label'),
             name: 'license_id',
-            placeholder: language.register_lang.data_license.placeholder,
+            placeholder: translate.registerText('data_license.placeholder'),
             id: 'data-license',
             required: true,
-            hover_text: language.register_lang.data_license.hover_text,
+            hover_text: translate.registerText('data_license.hover_text'),
             type: 'select',
             options: props.types.dataLicense,
             class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
           image_url: {
-            label: language.register_lang.publisher_logo_url.label,
+            label: translate.registerText('publisher_logo_url.label'),
             name: 'image_url',
-            placeholder: `${language.register_lang.for_eg} http://mylogo.com `,
+            placeholder: `${translate.registerText(
+              'for_eg'
+            )}: http://mylogo.com `,
             id: 'publisher-logo-url',
             required: false,
-            hover_text: language.register_lang.publisher_logo_url.hover_text,
+            hover_text: translate.registerText('publisher_logo_url.hover_text'),
             type: 'text',
             class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
           description: {
-            label: language.register_lang.organisation_desc.label,
+            label: translate.registerText('organisation_desc.label'),
             name: 'description',
-            placeholder: language.register_lang.organisation_desc.placeholder,
+            placeholder: translate.registerText(
+              'organisation_desc.placeholder'
+            ),
             id: 'organization-description',
             required: false,
-            hover_text: language.register_lang.organisation_desc.hover_text,
+            hover_text: translate.registerText('organisation_desc.hover_text'),
             type: 'textarea',
             class: 'mb-4 col-span-2 lg:mb-2 relative',
             help_text: '',
@@ -516,93 +532,100 @@ export default defineComponent({
         },
       },
       2: {
-        title: language.register_lang.contact_info.title,
+        title: translate.registerText('contact_info.title'),
         is_complete: false,
-        description: language.register_lang.publisher_information.description,
+        description: translate.registerText(
+          'publisher_information.description'
+        ),
         fields: {
           contact_email: {
-            label: language.register_lang.contact.label,
+            label: translate.registerText('contact.label'),
             name: 'contact_email',
             placeholder: '',
             id: 'contact-email',
             required: true,
-            hover_text: language.register_lang.contact.hover_text,
+            hover_text: translate.registerText('contact.hover_text'),
             type: 'text',
             class: 'mb-4  lg:mb-6',
           },
           website: {
-            label: language.register_lang.website.label,
+            label: translate.registerText('website.label'),
             name: 'website',
-            placeholder: `${language.register_lang.for_eg} http://mywebsite.com`,
+            placeholder: `${translate.registerText(
+              'for_eg'
+            )} http://mywebsite.com`,
             id: 'website',
             required: false,
-            hover_text: language.register_lang.website.hover_text,
+            hover_text: translate.registerText('website.hover_text'),
             type: 'text',
             class: 'mb-4 lg:mb-6',
           },
           address: {
-            label: language.register_lang.address.label,
+            label: translate.registerText('address.label'),
             name: 'address',
-            placeholder: language.register_lang.address.placeholder,
+            placeholder: translate.registerText('address.placeholder'),
             id: 'address',
             required: false,
-            hover_text: language.register_lang.address.hover_text,
+            hover_text: translate.registerText('address.hover_text'),
             type: 'textarea',
             class: 'mb-4 col-span-2 lg:mb-6',
           },
         },
       },
       3: {
-        title: language.register_lang.publishing_additional_info.title,
+        title: translate.registerText('publishing_additional_info.title'),
         is_complete: false,
-        description:
-          language.register_lang.publishing_additional_info.description,
+        description: translate.registerText(
+          'publishing_additional_info.description'
+        ),
         fields: {
           source: {
-            label: language.register_lang.source.label,
+            label: translate.registerText('source.label'),
             name: 'source',
-            placeholder: language.register_lang.source.placeholder,
+            placeholder: translate.registerText('source.placeholder'),
             id: 'contact-email',
             required: true,
-            hover_text: language.register_lang.source.hover_text,
+            hover_text: translate.registerText('source.hover_text'),
             type: 'select',
             options: props.types.source,
             class: 'mb-4 lg:mb-6',
           },
           record_exclusions: {
-            label: language.register_lang.record_exclusions.label,
+            label: translate.registerText('record_exclusions.label'),
             name: 'record_exclusions',
-            placeholder: language.register_lang.record_exclusions.placeholder,
+            placeholder: translate.registerText(
+              'record_exclusions.placeholder'
+            ),
             id: 'record-exclusions',
             required: false,
-            hover_text: language.register_lang.record_exclusions.hover_text,
+            hover_text: translate.registerText('record_exclusions.hover_text'),
             type: 'textarea',
             class: 'mb-4  col-span-2 lg:mb-6',
           },
         },
       },
       4: {
-        title: language.register_lang.administrator_information.label,
+        title: translate.registerText('administrator_information.label'),
         is_complete: false,
-        description:
-          language.register_lang.administrator_information
-            .iati_register_description,
+        description: translate.registerText(
+          'administrator_information.iati_register_description'
+        ),
         fields: {
           username: {
-            label: language.register_lang.username.label,
+            label: translate.registerText('username.label'),
             name: 'username',
-            placeholder: language.register_lang.username.placeholder,
+            placeholder: translate.registerText('username.placeholder'),
             id: 'username',
             required: true,
-            hover_text: language.register_lang.username.hover_text,
+            hover_text: translate.registerText('username.hover_text'),
             type: 'text',
             class: 'mb-4 lg:mb-2',
             help_text: '',
           },
           full_name: {
-            label: language.register_lang.fullname.label,
+            label: translate.registerText('fullname.label'),
             name: 'full_name',
-            placeholder: language.register_lang.fullname.placeholder,
+            placeholder: translate.registerText('fullname.placeholder'),
             id: 'full-name',
             hover_text: '',
             required: true,
@@ -610,9 +633,9 @@ export default defineComponent({
             class: 'col-start-1 mb-4 lg:mb-2',
           },
           email: {
-            label: language.register_lang.email_address.label,
+            label: translate.registerText('email_address.label'),
             name: 'email',
-            placeholder: language.register_lang.email_address.placeholder,
+            placeholder: translate.registerText('email_address.placeholder'),
             id: 'email',
             required: true,
             hover_text: '',
@@ -620,31 +643,31 @@ export default defineComponent({
             class: 'mb-4 lg:mb-2',
           },
           password: {
-            label: language.register_lang.password.label,
+            label: translate.registerText('password.label'),
             name: 'password',
-            placeholder: language.register_lang.password.placeholder,
+            placeholder: translate.registerText('password.placeholder'),
             id: 'password',
             required: true,
-            help_text: language.register_lang.password.help_text,
+            help_text: translate.registerText('password.help_text'),
             type: 'password',
             class: 'mb-4 lg:mb-2',
           },
           password_confirmation: {
-            label: language.register_lang.password.confirm,
+            label: translate.registerText('password.confirm'),
             name: 'password_confirmation',
-            placeholder: language.register_lang.password.placeholder,
+            placeholder: translate.registerText('password.placeholder'),
             id: 'password-confirmation',
             required: true,
-            help_text: language.register_lang.password.confirm_help,
+            help_text: translate.registerText('password.confirm_help'),
             type: 'password',
             class: 'mb-4 lg:mb-6',
           },
         },
       },
       5: {
-        title: language.register_lang.email_verification.title,
+        title: translate.registerText('email_verification.title'),
         is_complete: false,
-        description: language.register_lang.email_verification.description,
+        description: translate.registerText('email_verification.description'),
       },
     });
 
@@ -940,7 +963,7 @@ export default defineComponent({
       step,
       resize,
       textarea,
-      language,
+      translate,
     };
   },
 });

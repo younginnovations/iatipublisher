@@ -275,7 +275,8 @@ return array (
     'your_api_key_is_not_valid' => 'Votre clé API est invalide ou vide.',
     'organisation_data_is_not_published' => 'Les données de votre organisation ne sont pas publiées.',
     'the_publisher_id_is_not_verified_in_iati_registry' => 'L’identifiant du signataire n’est pas vérifié dans le registre de l’IITA.',
-    'some_activities_have_failed_to_publish' => 'Certaines activités n’ont pas pu être publiées. Rafraîchir pour voir les changements.',
+    'some_activities_have_failed_to_publish_refresh_to_see_changes' => 'Certaines activités n’ont pas pu être publiées. Rafraîchir pour voir les changements.',
+    'some_activities_have_failed_to_publish' => 'Certaines activités n’ont pas pu être publiées.',
     'couldnt_delete_the_activity' => 'L’activité n’a pas pu être supprimée en raison d’une erreur du système.',
     'activity_has_been_published_successfully' => 'L’activité a été publiée avec succès, actualisez pour voir les modifications',
     'error_has_occured_while_uploading_file' => 'Une erreur s’est produite lors du téléversement du fichier',
@@ -347,5 +348,6 @@ return array (
   'receiver_activity_id'=>'ID activité bénéficiaire',
   'import_activities_from_xls' => 'IMPORTER ACTIVITÉS DE XLS',
   'xls' => 'XLS',
-  'to' => 'à'
+  'to' => 'à',
+  'retry'=>'Recommencez'
 );

@@ -49,12 +49,12 @@
             :class="data.languageNavLiClasses"
           >
             <a
+              :id="language.id"
               :class="[
                 { nav__pointer: language.active },
                 data.languageNavAnchorClasses,
               ]"
               :href="language.permalink"
-              :id="language.id"
             >
               <span>{{ language.language }}</span>
             </a>
@@ -69,18 +69,18 @@
             :key="index"
             :class="[
               data.menuNavLiClasses,
-              translation.web_lang.active === 'fr' ? 'px-3' : 'px-4',
+              translate.webText('active') === 'fr' ? 'px-3' : 'px-4',
             ]"
             :style="
-              translation.web_lang.active === 'fr'
+              translate.webText('active') === 'fr'
                 ? { 'text-align': 'center' }
                 : {}
             "
           >
             <a
               v-if="
-                menu.name !== translation.common_lang.add_import_activity &&
-                menu.name !== translation.common_lang.logs.default
+                menu.name !== translate.commonText('add_import_activity') &&
+                menu.name !== translate.logText('default')
               "
               :class="[
                 { nav__pointer: menu.active },
@@ -91,7 +91,7 @@
               <span>{{ menu.name }} </span>
             </a>
             <div
-              v-if="menu.name === translation.common_lang.add_import_activity"
+              v-if="menu.name === translate.commonText('add_import_activity')"
               :class="[
                 { nav__pointer: menu.active },
                 data.menuNavAnchorClasses,
@@ -113,7 +113,7 @@
 
                 <div
                   v-if="
-                    menu.name === translation.common_lang.add_import_activity
+                    menu.name === translate.commonText('add_import_activity')
                   "
                   style="visibility: hidden"
                   class="button__dropdown add-import-dropdown absolute top-full z-50 w-56 -translate-y-3 bg-white p-2 text-left shadow-dropdown duration-300"
@@ -125,7 +125,7 @@
                         class="cursor-pointer"
                         :class="liClass"
                         @click="modalValue = true"
-                        >{{ translation.common_lang.add_activity_manually }}
+                        >{{ translate.commonText('add_activity_manually') }}
                       </a>
                     </li>
                     <li>
@@ -134,7 +134,7 @@
                         href="/import"
                         :class="liClass"
                         >{{
-                          translation.common_lang.import_activities_from_csv
+                          translate.commonText('import_activities_from_csv')
                         }}</a
                       >
                     </li>
@@ -144,7 +144,7 @@
                         href="/import/xls"
                         :class="liClass"
                         >{{
-                          translation.common_lang.import_activities_from_xls
+                          translate.commonText('import_activities_from_xls')
                         }}</a
                       >
                     </li>
@@ -167,7 +167,7 @@
                       id="header-add-activity-manually"
                       class="cursor-pointer text-white"
                       @click="modalValue = true"
-                      >{{ translation.common_lang.add_activity_manually }}
+                      >{{ translate.commonText('add_activity_manually') }}
                     </a>
                   </li>
                   <li>
@@ -176,7 +176,7 @@
                       class="cursor-pointer text-white"
                       href="/import"
                       >{{
-                        translation.common_lang.import_activities_from_csv
+                        translate.commonText('import_activities_from_csv')
                       }}</a
                     >
                   </li>
@@ -186,7 +186,7 @@
                       class="cursor-pointer text-white"
                       href="/import/xls"
                       >{{
-                        translation.common_lang.import_activities_from_xls
+                        translate.commonText('import_activities_from_xls')
                       }}</a
                     >
                   </li>
@@ -195,35 +195,35 @@
             </div>
 
             <div
-              v-if="menu.name === translation.common_lang.logs.default"
+              v-if="menu.name === translate.logText('default')"
               class="button__dropdown invisible absolute left-4 top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left opacity-0 shadow-dropdown outline transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
             >
               <ul class="flex-col">
                 <li>
                   <a href="#" :class="liClass">{{
-                    translation.common_lang.logs.users
+                    translate.logText('users')
                   }}</a>
                 </li>
                 <li>
                   <a href="#" :class="liClass">{{
-                    translation.common_lang.logs.api
+                    translate.logText('api')
                   }}</a>
                 </li>
                 <li>
                   <a href="/log-viewer" :class="liClass">{{
-                    translation.common_lang.logs.error
+                    translate.logText('error')
                   }}</a>
                 </li>
                 <li>
                   <a href="/import" :class="liClass">{{
-                    translation.common_lang.logs.system
+                    translate.logText('system')
                   }}</a>
                 </li>
               </ul>
             </div>
 
             <span
-              v-if="menu.name === translation.common_lang.logs.default"
+              v-if="menu.name === translate.logText('default')"
               :class="[
                 { nav__pointer: menu.active },
                 data.menuNavAnchorClasses,
@@ -232,28 +232,28 @@
               <span class="add-import"
                 >{{ menu.name }}
                 <div
-                  v-if="menu.name === translation.common_lang.logs.default"
+                  v-if="menu.name === translate.logText('default')"
                   class="button__dropdown add-import-dropdown absolute top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left shadow-dropdown transition-all duration-300"
                 >
                   <ul class="flex-col">
                     <li>
                       <a href="#" class="cursor-pointer" :class="liClass">{{
-                        translation.common_lang.logs.users
+                        translate.logText('users')
                       }}</a>
                     </li>
                     <li>
                       <a href="#" :class="liClass">{{
-                        translation.common_lang.logs.api
+                        translate.logText('api')
                       }}</a>
                     </li>
                     <li>
                       <a href="/log-viewer" :class="liClass">{{
-                        translation.common_lang.logs.error
+                        translate.logText('error')
                       }}</a>
                     </li>
                     <li>
                       <a href="/system-version" :class="liClass">{{
-                        translation.common_lang.logs.system
+                        translate.logText('system')
                       }}</a>
                     </li>
                   </ul>
@@ -262,23 +262,23 @@
             </span>
 
             <div
-              v-if="menu.name === translation.common_lang.add_import_activity"
+              v-if="menu.name === translate.commonText('add_import_activity')"
               class="button__dropdown invisible absolute left-4 top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left opacity-0 shadow-dropdown outline transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
             >
               <ul class="flex-col">
                 <li>
                   <a :class="liClass" @click="modalValue = true">{{
-                    translation.common_lang.add_activity_manually
+                    translate.commonText('add_activity_manually')
                   }}</a>
                 </li>
                 <li>
                   <a href="/import" :class="liClass">{{
-                    translation.common_lang.import_activities_from_csv
+                    translate.commonText('import_activities_from_csv')
                   }}</a>
                 </li>
                 <li>
                   <a id="header-import-xls" href="/import/xls" :class="liClass">
-                    {{ translation.common_lang.import_activities_from_xls }}
+                    {{ translate.commonText('import_activities_from_xls') }}
                   </a>
                 </li>
               </ul>
@@ -298,7 +298,7 @@
             v-model="searchValue"
             class="search__input mr-3.5"
             type="text"
-            :placeholder="translation.admin.header.search_activity"
+            :placeholder="translate.adminText('search_activity')"
             @keyup.enter="searchFunction('/activities')"
           />
           <input
@@ -306,7 +306,7 @@
             v-model="searchValue"
             class="search__input mr-3.5"
             type="text"
-            :placeholder="translation.admin.header.search_organisation"
+            :placeholder="translate.adminText('search_organisation')"
             @keyup.enter="searchFunction('/list-organisations')"
           />
           <svg-vue icon="search" />
@@ -347,13 +347,13 @@
               >
                 <a class="flex w-full space-x-4" href="/profile">
                   <svg-vue class="mx-1 text-base" icon="user" />
-                  <span>{{ translation.admin.header.your_profile }}</span>
+                  <span>{{ translate.adminText('your_profile') }}</span>
                 </a>
               </li>
               <li class="dropdown__list flex" @click="logout">
                 <svg-vue class="mr-3 ml-1" icon="logout"></svg-vue>
                 <button class="text-sm">
-                  {{ translation.admin.header.logout }}
+                  {{ translate.adminText('logout') }}
                 </button>
               </li>
             </ul>
@@ -387,13 +387,13 @@
               >
                 <a class="flex w-full space-x-4" href="/profile">
                   <svg-vue class="mx-1 text-base" icon="user" />
-                  <span>{{ translation.admin.header.your_profile }}</span>
+                  <span>{{ translate.adminText('your_profile') }}</span>
                 </a>
               </li>
               <li class="dropdown__list flex" @click="logout">
                 <svg-vue class="mr-3 ml-1" icon="logout"></svg-vue>
                 <button class="text-sm">
-                  {{ translation.admin.header.logout }}
+                  {{ translate.adminText('logout') }}
                 </button>
               </li>
             </ul>
@@ -428,6 +428,7 @@ import axios from 'axios';
 import { useToggle, useStorage } from '@vueuse/core';
 import CreateModal from '../views/activity/CreateModal.vue';
 import Toast from './ToastMessage.vue';
+import { Translate } from 'Composable/translationHelper';
 const store = detailStore();
 
 const props = defineProps({
@@ -445,7 +446,7 @@ const props = defineProps({
   hasAdminBar: { type: Number || Boolean, default: false },
 });
 
-const translation = window['globalLang'];
+const translate = new Translate();
 const showUserDropdown = ref(false);
 const showActivityDropdown = ref(false);
 const toastVisibility = ref(false);
@@ -468,44 +469,44 @@ const data = reactive({
       language: 'EN',
       permalink: '/lang/en',
       id: 'language-en',
-      active: translation.web_lang.active === 'en',
+      active: translate.webText('active') === 'en',
     },
     {
       language: 'FR',
       permalink: '/lang/fr',
       id: 'language-fr',
-      active: translation.web_lang.active === 'fr',
+      active: translate.webText('active') === 'fr',
     },
     {
       language: 'ES',
       permalink: '/lang/es',
       id: 'language-es',
-      active: translation.web_lang.active === 'es',
+      active: translate.webText('active') === 'es',
     },
   ],
   org_menus: [
     {
-      name: translation.admin.header.activity_data,
+      name: translate.adminText('activity_data'),
       permalink: '/activities',
       active: true,
     },
     {
-      name: translation.admin.header.organisation_data,
+      name: translate.adminText('organisation_data'),
       permalink: '/organisation',
       active: false,
     },
     {
-      name: translation.admin.header.settings,
+      name: translate.adminText('settings'),
       permalink: '/setting',
       active: false,
     },
     {
-      name: translation.common_lang.add_import_activity,
+      name: translate.commonText('add_import_activity'),
       permalink: '#',
       active: false,
     },
     {
-      name: translation.common_lang.users,
+      name: translate.commonText('users'),
       permalink: '/users',
       active: false,
     },
@@ -517,13 +518,13 @@ const data = reactive({
       active: false,
     },
     {
-      name: translation.common_lang.org_list,
+      name: translate.commonText('org_list'),
       permalink: '/list-organisations',
       active: false,
     },
 
     {
-      name: translation.common_lang.users,
+      name: translate.commonText('users'),
       permalink: '/users',
       active: false,
     },

@@ -1,12 +1,11 @@
 <template>
-  {{
-    date[0].date ? dateFormat(date[0].date) : language.common_lang.missing.date
-  }}
+  {{ date[0].date ? dateFormat(date[0].date) : translate.missingText('date') }}
 </template>
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
 import dateFormat from './../../../../composable/dateFormat';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'TransactionDate',
@@ -18,14 +17,14 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const { data } = toRefs(props);
 
     interface ArrayObject {
       [index: number]: { date: Date };
     }
     const date = data.value as ArrayObject;
-    return { date, dateFormat, language };
+    return { date, dateFormat, translate };
   },
 });
 </script>

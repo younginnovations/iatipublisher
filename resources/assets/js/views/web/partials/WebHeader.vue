@@ -15,13 +15,13 @@
             >
               <li class="flex">
                 <span class="mr-2 pt-5 pb-5 uppercase xl:pt-0"
-                  >{{ language.web_lang.language }}:</span
+                  >{{ translate.webText('language') }}:</span
                 >
                 <ul class="flex items-center justify-center">
                   <li class="nav__links language-hover">
                     <a
                       :class="
-                        language.web_lang.active === 'en'
+                        translate.webText('active') === 'en'
                           ? 'nav__active links__active'
                           : ''
                       "
@@ -32,7 +32,7 @@
                   <li class="nav__links language-hover">
                     <a
                       :class="
-                        language.web_lang.active === 'fr'
+                        translate.webText('active') === 'fr'
                           ? 'nav__active links__active'
                           : ''
                       "
@@ -43,7 +43,7 @@
                   <li class="nav__links language-hover">
                     <a
                       :class="
-                        language.web_lang.active === 'es'
+                        translate.webText('active') === 'es'
                           ? 'nav__active links__active'
                           : ''
                       "
@@ -57,44 +57,48 @@
               <li>
                 <ul class="flex flex-col xl:flex-row">
                   <li class="nav__links active dropdown">
-                    <a href="/about">{{ language.web_lang.about }}</a>
+                    <a href="/about">{{ translate.webText('about') }}</a>
                     <NavDropdown
-                      :name="language.web_lang.about"
-                      :text="language.web_lang.header.about_hover_text"
-                      :btn-text="language.button_lang.learn_more"
+                      :name="translate.webText('about')"
+                      :text="translate.webText('header.about_hover_text')"
+                      :btn-text="translate.button('learn_more')"
                       btn-link="/about"
                     />
                   </li>
                   <li class="nav__links active dropdown">
                     <a href="/publishing-checklist">{{
-                      language.web_lang.publishing_checklist
+                      translate.webText('publishing_checklist')
                     }}</a>
                     <NavDropdown
-                      :name="language.web_lang.publishing_checklist"
+                      :name="translate.webText('publishing_checklist')"
                       :text="
-                        language.web_lang.header.publishing_checklist_hover_text
+                        translate.webText(
+                          'header.publishing_checklist_hover_text'
+                        )
                       "
-                      :btn-text="language.button_lang.read_more"
+                      :btn-text="translate.button('read_more')"
                       btn-link="/publishing-checklist"
                     />
                   </li>
                   <li class="nav__links active dropdown relative">
                     <a href="/iati-standard">{{
-                      language.web_lang.iati_standard
+                      translate.webText('iati_standard')
                     }}</a>
                     <NavDropdown
-                      :name="language.web_lang.iati_standard"
-                      :text="language.web_lang.header.iati_standard_hover_text"
-                      :btn-text="language.button_lang.see_all_data_fields"
+                      :name="translate.webText('iati_standard')"
+                      :text="
+                        translate.webText('header.iati_standard_hover_text')
+                      "
+                      :btn-text="translate.button('see_all_data_fields')"
                       btn-link="/iati-standard"
                     />
                   </li>
                   <li class="nav__links active dropdown">
-                    <a href="/support">{{ language.web_lang.support }}</a>
+                    <a href="/support">{{ translate.webText('support') }}</a>
                     <NavDropdown
-                      :name="language.web_lang.support"
-                      :text="language.web_lang.header.support_hover_text"
-                      :btn-text="language.button_lang.read_more"
+                      :name="translate.webText('support')"
+                      :text="translate.webText('header.support_hover_text')"
+                      :btn-text="translate.button('read_more')"
                       btn-link="/support"
                     />
                   </li>
@@ -128,8 +132,12 @@
           >
             {{
               superAdmin
-                ? `${language.common_lang.go_to} ${language.common_lang.org_list}`
-                : `${language.common_lang.go_to} ${language.activity_lang.your_activities_label}`
+                ? `${translate.commonText('go_to')} ${translate.commonText(
+                    'org_list'
+                  )}`
+                : `${translate.commonText('go_to')} ${translate.textFromKey(
+                    'activities.your_activities'
+                  )}`
             }}
             <svg-vue class="text-2xl" icon="right-arrow" />
           </a>
@@ -142,6 +150,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, onUnmounted } from 'vue';
 import NavDropdown from '../../../components/NavDropdown.vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   components: {
@@ -159,8 +168,8 @@ export default defineComponent({
     onUnmounted(() => {
       document.body.classList.remove('no-nav');
     });
-    const language = window['globalLang'];
-    return { language };
+    const translate = new Translate();
+    return { translate };
   },
 });
 </script>

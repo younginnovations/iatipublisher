@@ -3,7 +3,7 @@
     <Loader v-if="isLoaderVisible" />
     <div class="my-4 flex justify-between">
       <h4 class="mr-4 text-3xl font-bold xl:text-heading-4">
-        {{ language.user_lang.users }}
+        {{ translate.textFromKey('user.users') }}
       </h4>
       <div class="inline-flex flex-col items-end justify-end gap-2 md:flex-row">
         <Toast
@@ -22,7 +22,7 @@
           @click="downloadAll"
         >
           <svg-vue icon="download-file" />
-          {{ checklist.length === 0 ? language.button_lang.download_all : '' }}
+          {{ checklist.length === 0 ? translate.button('download_all') : '' }}
         </button>
         <button
           v-if="userRole !== 'general_user'"
@@ -36,12 +36,12 @@
           "
         >
           <svg-vue class="text-base" icon="plus-outlined" />{{
-            language.button_lang.add_a_new
+            translate.button('add_a_new')
           }}
           {{
             userRole === 'admin'
-              ? language.user_lang.users
-              : language.user_lang.user_roles.iati_admin
+              ? translate.textFromKey('user.users')
+              : translate.textFromKey('user.user_roles.iati_admin')
           }}
         </button>
       </div>
@@ -64,19 +64,19 @@
           <div class="mb-5 text-2xl font-bold text-bluecoral">
             {{
               addUserForm
-                ? language.button_lang.add_a_new
-                : language.button_lang.edit
+                ? translate.button('add_a_new')
+                : translate.button('edit')
             }}
             {{
               userRole === 'admin'
-                ? language.user_lang.users
-                : language.user_lang.user_roles.iati_admin
+                ? translate.textFromKey('user.users')
+                : translate.textFromKey('user.user_roles.iati_admin')
             }}
           </div>
           <div class="grid grid-cols-2 gap-6">
             <div class="col-span-2 flex flex-col items-start gap-2">
               <label class="text-sm text-n-50">
-                {{ language.register_lang.fullname.label }}
+                {{ translate.registerText('fullname.label') }}
                 <span class="text-crimson-50"> * </span></label
               >
               <input
@@ -95,7 +95,7 @@
 
             <div class="flex flex-col items-start gap-2">
               <label class="text-sm text-n-50"
-                >{{ language.register_lang.username.label
+                >{{ translate.registerText('username.label')
                 }}<span class="text-crimson-50"> *</span></label
               >
               <input
@@ -113,7 +113,7 @@
             </div>
             <div class="flex flex-col items-start gap-2">
               <label class="text-sm text-n-50"
-                >{{ language.user_lang.email
+                >{{ translate.textFromKey('user.email')
                 }}<span class="text-crimson-50"> * </span></label
               >
               <input
@@ -136,7 +136,7 @@
               class="flex flex-col items-start gap-2"
             >
               <label class="text-sm text-n-50"
-                >{{ language.user_lang.status
+                >{{ translate.textFromKey('user.status')
                 }}<span class="text-crimson-50"> * </span></label
               >
               <Multiselect
@@ -156,7 +156,7 @@
               class="flex flex-col items-start gap-2"
             >
               <label class="text-sm text-n-50"
-                >{{ language.user_lang.role
+                >{{ translate.textFromKey('user.role')
                 }}<span class="text-crimson-50"> * </span></label
               >
               <Multiselect
@@ -173,7 +173,7 @@
 
             <div class="flex flex-col items-start gap-2">
               <label class="text-sm text-n-50"
-                >{{ language.register_lang.password.new
+                >{{ translate.registerText('password.new')
                 }}<span v-if="!editUserForm" class="text-crimson-50">
                   *
                 </span></label
@@ -193,7 +193,7 @@
             </div>
             <div class="flex flex-col items-start gap-2">
               <label class="text-sm text-n-50">
-                {{ language.register_lang.password.confirm }}
+                {{ translate.registerText('password.confirm') }}
                 <span v-if="!editUserForm" class="text-crimson-50"> * </span>
               </label>
 
@@ -224,13 +224,13 @@
                 }
               "
             >
-              {{ language.button_lang.cancel }}
+              {{ translate.button('cancel') }}
             </button>
             <button
               class="primary-btn !px-10"
               @click="addUserForm ? createUser() : updateUser()"
             >
-              {{ language.button_lang.save }}
+              {{ translate.button('save') }}
             </button>
           </div>
         </div>
@@ -245,16 +245,17 @@
       >
         <div class="title mb-6 flex">
           <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
-          <b class="uppercase">{{
-            language.button_lang.delete_element.replace(
-              ':element',
-              language.user_lang.user
-            )
-          }}</b>
+          <b class="uppercase">
+            {{ translate.button('delete_element', 'user.user') }}
+          </b>
         </div>
         <p class="rounded-lg bg-rose p-4">
-          {{ language.user_lang.delete_confirmation.replace(':element', ':')
-          }}<b> {{ deleteUsername }}</b> ?
+          {{
+            translate
+              .textFromKey('user.delete_confirmation')
+              .replace(':element', ':')
+          }}
+          <b> {{ deleteUsername }}</b> ?
         </p>
         <div class="mt-6 flex justify-end space-x-2">
           <button
@@ -265,10 +266,10 @@
               }
             "
           >
-            {{ language.button_lang.cancel }}
+            {{ translate.button('cancel') }}
           </button>
           <button class="primary-btn !px-10" @click="deleteUser(deleteId)">
-            {{ language.button_lang.delete }}
+            {{ translate.button('delete') }}
           </button>
         </div>
       </PopupModal>
@@ -283,26 +284,21 @@
       >
         <div class="title mb-6 flex">
           <b class="first-letter:uppercase">
-            {{
-              language.button_lang.make_element.replace(
-                ':element',
-                language.user_lang.user.toLowerCase()
-              )
-            }}
+            {{ translate.button('make_element', 'user.user').toLowerCase() }}
             {{
               statusValue
-                ? language.user_lang.inactive
-                : language.user_lang.active
+                ? translate.textFromKey('user.inactive')
+                : translate.textFromKey('user.active')
             }}
           </b>
         </div>
         <p class="rounded-lg bg-rose p-4">
-          {{ language.button_lang.make_confirmation.replace(':element', ' ') }}
+          {{ translate.button('make_confirmation').replace(':element', ' ') }}
           <b> {{ statusUsername }}</b>
           {{
             statusValue
-              ? language.user_lang.inactive
-              : language.user_lang.active
+              ? translate.textFromKey('user.inactive')
+              : translate.textFromKey('user.active')
           }}
           ?
         </p>
@@ -315,13 +311,13 @@
               }
             "
           >
-            {{ language.button_lang.cancel }}
+            {{ translate.button('cancel') }}
           </button>
           <button
             class="primary-btn !px-10"
             @click="toggleUserStatus(statusId)"
           >
-            {{ language.common_lang.yes }}
+            {{ translate.commonText('yes') }}
           </button>
         </div>
       </PopupModal>
@@ -337,7 +333,7 @@
               id="organization-filter"
               v-model="filter.organization"
               :options="organizations"
-              :placeholder="language.common_lang.organisation"
+              :placeholder="translate.commonText('organisation')"
               :searchable="true"
               mode="multiple"
               :taggable="true"
@@ -356,7 +352,7 @@
               id="role-filter"
               v-model="filter.roles"
               :options="roles"
-              :placeholder="language.user_lang.role"
+              :placeholder="translate.textFromKey('user.role')"
               :searchable="true"
               mode="multiple"
               :close-on-select="false"
@@ -375,7 +371,7 @@
               id="status-filter"
               v-model="filter.status"
               :options="status"
-              :placeholder="language.user_lang.status"
+              :placeholder="translate.textFromKey('user.status')"
               :searchable="true"
             />
           </span>
@@ -405,7 +401,7 @@
             <input
               v-model="filter.q"
               type="text"
-              :placeholder="language.user_lang.search_for_users"
+              :placeholder="translate.textFromKey('user.search_for_users')"
             />
           </div>
         </div>
@@ -416,7 +412,7 @@
         class="mb-4 flex max-w-full flex-wrap items-center gap-2"
       >
         <span class="text-sm font-bold uppercase text-n-40">
-          {{ language.user_lang.filtered_by }}:
+          {{ translate.textFromKey('user.filtered_by') }}:
         </span>
 
         <span
@@ -428,7 +424,7 @@
             :key="index"
             class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
           >
-            <span class="text-n-40">{{ language.common_lang.org }}:</span
+            <span class="text-n-40">{{ translate.commonText('org') }}:</span
             ><span
               class="max-w-[500px] overflow-x-hidden text-ellipsis whitespace-nowrap"
               >{{ textBubbledata(item, 'org') }}</span
@@ -446,7 +442,8 @@
             :key="index"
             class="flex items-center space-x-1 rounded-full border border-n-30 px-2 py-1 text-xs"
           >
-            <span class="text-n-40">{{ language.user_lang.roles }}:</span
+            <span class="text-n-40"
+              >{{ translate.textFromKey('user.roles') }}:</span
             ><span>{{ textBubbledata(item, 'roles') }}</span>
             <svg-vue
               class="mx-2 mt-1 cursor-pointer text-xs"
@@ -461,7 +458,8 @@
             :key="index"
             class="flex items-center space-x-1 rounded-full border border-n-30 py-1 px-2 text-xs"
           >
-            <span class="text-n-40">{{ language.user_lang.status }}:</span
+            <span class="text-n-40"
+              >{{ translate.textFromKey('user.status') }}:</span
             ><span>{{ textBubbledata(item, 'status') }}</span>
             <svg-vue
               class="mx-2 mt-1 cursor-pointer text-xs"
@@ -507,7 +505,7 @@
             }
           "
         >
-          {{ language.user_lang.clear_filter }}
+          {{ translate.textFromKey('user.clear_filter') }}
         </button>
       </div>
       <p class="py-1">Total Number of Users: {{ totalUser }}</p>
@@ -537,11 +535,11 @@
                     />
                   </span>
 
-                  <span>{{ language.user_lang.users }}</span>
+                  <span>{{ translate.textFromKey('user.users') }}</span>
                 </span>
               </th>
               <th id="measure" scope="col" style="width: 210px">
-                <span>{{ language.user_lang.email }}</span>
+                <span>{{ translate.textFromKey('user.email') }}</span>
               </th>
 
               <th id="title" scope="col">
@@ -566,15 +564,15 @@
                     />
                   </span>
 
-                  <span>{{ language.common_lang.organisation_name }}</span>
+                  <span>{{ translate.commonText('organisation_name') }}</span>
                 </span>
               </th>
 
               <th id="title" scope="col">
-                <span>{{ language.user_lang.user_role }}</span>
+                <span>{{ translate.textFromKey('user.user_role') }}</span>
               </th>
               <th>
-                <span>{{ language.user_lang.status }}</span>
+                <span>{{ translate.textFromKey('user.status') }}</span>
               </th>
               <th
                 id="aggregation_status"
@@ -610,7 +608,7 @@
                 scope="col"
                 width="190px"
               >
-                <span>{{ language.user_lang.action }}</span>
+                <span>{{ translate.textFromKey('user.action') }}</span>
               </th>
               <th id="cb" scope="col">
                 <span class="cursor-pointer">
@@ -681,15 +679,15 @@
               <td :class="user['status'] ? 'text-spring-50' : 'text-n-40'">
                 {{
                   user['status']
-                    ? language.user_lang.active
-                    : language.user_lang.inactive
+                    ? translate.textFromKey('user.active')
+                    : translate.textFromKey('user.inactive')
                 }}
               </td>
               <td>
                 {{
                   user['last_logged_in']
                     ? formatDate(user['last_logged_in'])
-                    : language.common_lang.missing.not_available
+                    : translate.missingText('not_available')
                 }}
               </td>
               <td
@@ -740,7 +738,7 @@
               <div colspan="5" class="spin"></div>
             </td>
             <td v-else colspan="8" class="text-center">
-              {{ language.user_lang.user_not_found }}
+              {{ translate.textFromKey('user.user_not_found') }}
             </td>
           </tbody>
         </table>
@@ -769,7 +767,7 @@ import Pagination from 'Components/TablePagination.vue';
 import { watchIgnorable } from '@vueuse/core';
 import DateRangeWidget from 'Components/DateRangeWidget.vue';
 
-const language = window['globalLang'];
+const translate = new Translate();
 const props = defineProps({
   organizations: { type: Object, required: true },
   status: { type: Object, required: true },
@@ -845,6 +843,7 @@ const formError = reactive({
   password_confirmation: '',
 });
 import { kebabCaseToSnakecase } from 'Composable/utils';
+import { Translate } from 'Composable/translationHelper';
 
 const isFilterApplied = computed(() => {
   return (

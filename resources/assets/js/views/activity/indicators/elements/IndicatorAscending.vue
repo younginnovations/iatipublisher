@@ -1,13 +1,13 @@
 <template>
   <tr>
-    <td>{{ language.common_lang.ascending }}</td>
+    <td>{{ translate.commonText('ascending') }}</td>
     <td>
       {{
         parseInt(data)
-          ? language.common_lang.true
+          ? translate.commonText('true')
           : data
-          ? language.common_lang.false
-          : language.common_lang.missing.default
+          ? translate.commonText('false')
+          : translate.missingText()
       }}
     </td>
   </tr>
@@ -15,6 +15,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'IndicatorAscending',
@@ -26,8 +27,8 @@ export default defineComponent({
     },
   },
   setup() {
-    const language = window['globalLang'];
-    return { language };
+    const translate = new Translate();
+    return { translate };
   },
 });
 </script>

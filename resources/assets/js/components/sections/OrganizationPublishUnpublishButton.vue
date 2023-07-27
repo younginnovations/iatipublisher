@@ -39,18 +39,13 @@
         <BtnComponent
           v-if="!mandatoryElementStatus"
           class="bg-white px-6 uppercase"
-          :text="
-            language.button_lang.add_element.replace(
-              ':element',
-              language.common_lang.missing.data
-            )
-          "
+          :text="translate.button('add_element', 'common.missing.data')"
           type=""
           @click="publishValue = false"
         />
         <BtnComponent
           class="space"
-          :text="language.button_lang.continue"
+          :text="translate.button('continue')"
           type="primary"
           @click="publishFunction"
         />
@@ -61,7 +56,7 @@
   <BtnComponent
     v-if="publishStatus.is_published"
     class="ml-4"
-    :text="language.button_lang.unpublish"
+    :text="translate.button('unpublish')"
     type="primary"
     icon="cancel-cloud"
     @click="unpublishValue = true"
@@ -74,30 +69,25 @@
           icon="cancel-cloud"
         />
         <b
-          >{{ language.button_lang.unpublish }}
-          {{ language.common_lang.organisation }}</b
+          >{{ translate.button('unpublish') }}
+          {{ translate.commonText('organisation') }}</b
         >
       </div>
       <div class="rounded-lg bg-rose p-4">
-        {{
-          language.button_lang.unpublish_confirmation.replace(
-            ':element',
-            language.common_lang.organisation
-          )
-        }}?
+        {{ translate.button('unpublish_confirmation', 'common.organisation') }}?
       </div>
     </div>
     <div class="flex justify-end">
       <div class="inline-flex">
         <BtnComponent
           class="bg-white px-6 uppercase"
-          :text="language.button_lang.go_back"
+          :text="translate.button('go_back')"
           type=""
           @click="unpublishValue = false"
         />
         <BtnComponent
           class="space"
-          :text="language.button_lang.unpublish"
+          :text="translate.button('unpublish')"
           type="primary"
           @click="unPublishFunction"
         />
@@ -113,15 +103,16 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, computed, inject } from 'vue';
+import { reactive, ref, computed, inject, capitalize } from 'vue';
 import { useToggle } from '@vueuse/core';
 import axios from 'axios';
 //component
 import BtnComponent from 'Components/ButtonComponent.vue';
 import Modal from 'Components/PopupModal.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
+import { Translate } from 'Composable/translationHelper';
 
-const language = window['globalLang'];
+const translate = new Translate();
 // toggle state for modal popup
 let [publishValue, publishToggle] = useToggle();
 let [unpublishValue, unpublishToggle] = useToggle();
@@ -132,7 +123,7 @@ const loader = ref(false);
 // true for completed and false for not completed
 const mandatoryElementStatus = inject('mandatoryCompleted') as boolean;
 // Dynamic text for loader
-const loaderText = ref(language.common_lang.please_wait);
+const loaderText = ref(translate.commonText('please_wait'));
 // computed function to change content of modal
 const publishStateChange = computed(() => {
   const publishState = reactive({
@@ -143,13 +134,16 @@ const publishStateChange = computed(() => {
   });
   // different content for step 1 based on coreElement status
   if (mandatoryElementStatus) {
-    publishState.title = language.common_lang.core_completed_title;
-    publishState.description = language.common_lang.core_completed_description;
+    publishState.title = translate.commonText('core_completed_title');
+    publishState.description = translate.commonText(
+      'core_completed_description'
+    );
     publishState.icon = 'tick';
   } else {
-    publishState.title = language.common_lang.core_completed_title;
-    publishState.description =
-      language.common_lang.core_not_completed_description;
+    publishState.title = translate.commonText('core_completed_title');
+    publishState.description = translate.commonText(
+      'core_not_completed_description'
+    );
     publishState.icon = 'warning-fill';
   }
   return publishState;
@@ -183,7 +177,7 @@ const checkPublish = () => {
 
 const publishFunction = () => {
   loader.value = true;
-  loaderText.value = language.common_lang.publishing;
+  loaderText.value = translate.commonText('publishing');
   publishValue.value = false;
 
   axios.post(`/organisation/publish`).then((res) => {
@@ -198,7 +192,7 @@ const publishFunction = () => {
     }, 2000);
     if (response.success) {
       publishStatus.is_published = true;
-      publishStatus.status = language.events_lang.published;
+      publishStatus.status = translate.event('published');
     }
   });
 };
@@ -206,9 +200,7 @@ const unPublishFunction = () => {
   unpublishValue.value = false;
 
   loader.value = true;
-  loaderText.value =
-    language.common_lang.unpublishing.charAt(0).toUpperCase() +
-    language.common_lang.unpublishing.slice(1);
+  loaderText.value = capitalize(translate.event('unpublishing'));
   axios.post(`/organisation/unpublish`).then((res) => {
     const response = res.data;
     toastData.message = response.message;
@@ -232,9 +224,9 @@ const publishStatus = inject('publishStatus') as PublishStatusTypeface;
 
 const btnText = computed(() => {
   if (publishStatus.is_published && publishStatus.status === 'draft') {
-    return language.button_lang.republish;
+    return translate.button('republish');
   } else {
-    return language.button_lang.publish;
+    return translate.button('publish');
   }
 });
 </script>

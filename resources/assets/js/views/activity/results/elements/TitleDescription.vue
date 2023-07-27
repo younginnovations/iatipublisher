@@ -8,7 +8,7 @@
     }"
   >
     <div class="language mb-1.5">
-      ({{ translation.web_lang.language }}: {{ type[post.language] }})
+      ({{ translate.webText('language') }}: {{ type[post.language] }})
     </div>
     <div class="max-w-[887px] text-sm">
       {{ post.narrative }}
@@ -18,6 +18,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ResultTD',
@@ -48,8 +49,8 @@ export default defineComponent({
 
     let { data } = toRefs(props);
     const tdData = data.value as Narratives;
-    const translation = window['globalLang'];
-    return { tdData, translation };
+    const translate = new Translate();
+    return { tdData, translate };
   },
 });
 </script>

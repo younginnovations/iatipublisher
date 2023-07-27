@@ -3,13 +3,19 @@
     <Loader v-if="loaderVisibility" />
     <div class="setting input__field">
       <span class="text-xs font-bold text-n-40">{{
-        language.activity_default_lang.override_default_values.label
+        translate.textFromKey(
+          'activities_default.override_default_values.label'
+        )
       }}</span>
       <div class="flex items-center justify-between">
         <div class="mt-4 mb-6 flex items-center">
           <a :href="`/activity/${activityId}`"><svg-vue icon="left-arrow" /></a>
           <h2 class="ml-3 text-heading-4 font-bold text-n-50">
-            {{ language.activity_default_lang.override_default_values.label }}
+            {{
+              translate.textFromKey(
+                'activities_default.override_default_values.label'
+              )
+            }}
           </h2>
         </div>
         <div class="flex w-full justify-end lg:w-[auto]">
@@ -22,20 +28,30 @@
       </div>
       <div class="setting__container overflow-x-hidden">
         <div class="mb-8 text-xs text-n-40">
-          {{ language.activity_default_lang.override_default_values.text }}
+          {{
+            translate.textFromKey(
+              'activities_default.override_default_values.text'
+            )
+          }}
         </div>
         <div class="register mt-4">
           <div class="register__container mb-0">
             <div>
               <div class="flex justify-between">
                 <label for="default-currency">{{
-                  language.activity_default_lang.currency.label
+                  translate.textFromKey('activities_default.currency.label')
                 }}</label>
                 <button>
                   <HoverText
-                    :name="language.activity_default_lang.currency.hover_header"
+                    :name="
+                      translate.textFromKey(
+                        'activities_default.currency.hover_header'
+                      )
+                    "
                     :hover-text="
-                      language.activity_default_lang.currency.hover_text
+                      translate.textFromKey(
+                        'activities_default.currency.hover_text'
+                      )
                     "
                     :show-iati-reference="true"
                   />
@@ -46,7 +62,9 @@
                 v-model="defaultValues.default_currency"
                 class="vue__select"
                 :placeholder="
-                  language.activity_default_lang.currency.placeholder
+                  translate.textFromKey(
+                    'activities_default.currency.placeholder'
+                  )
                 "
                 :options="currencies"
                 :searchable="true"
@@ -65,20 +83,28 @@
                 v-if="defaultErrors.default_currency.length === 0"
                 class="text-xs text-n-40"
               >
-                {{ language.activity_default_lang.currency.help_text }}
+                {{
+                  translate.textFromKey('activities_default.currency.help_text')
+                }}
               </p>
             </div>
 
             <div>
               <div class="flex justify-between">
                 <label for="default-currency">{{
-                  language.activity_default_lang.language.label
+                  translate.textFromKey('activities_default.language.label')
                 }}</label>
                 <button>
                   <HoverText
-                    :name="language.activity_default_lang.language.hover_header"
+                    :name="
+                      translate.textFromKey(
+                        'activities_default.language.hover_header'
+                      )
+                    "
                     :hover-text="
-                      language.activity_default_lang.language.hover_text
+                      translate.textFromKey(
+                        'activities_default.language.hover_text'
+                      )
                     "
                     :show-iati-reference="true"
                   />
@@ -89,7 +115,9 @@
                 v-model="defaultValues.default_language"
                 class="vue__select"
                 :placeholder="
-                  language.activity_default_lang.language.placeholder
+                  translate.textFromKey(
+                    'activities_default.language.placeholder'
+                  )
                 "
                 :searchable="true"
                 :options="props.languages"
@@ -108,23 +136,29 @@
                 v-if="defaultErrors.default_language.length === 0"
                 class="text-xs text-n-40"
               >
-                {{ language.activity_default_lang.language.help_text }}
+                {{
+                  translate.textFromKey('activities_default.language.help_text')
+                }}
               </p>
             </div>
 
             <div>
               <div class="flex justify-between">
                 <label for="default-hierarchy">{{
-                  language.activity_default_lang.hierarchy.label
+                  translate.textFromKey('activities_default.hierarchy.label')
                 }}</label>
                 <button>
                   <HoverText
                     width="w-64"
                     :name="
-                      language.activity_default_lang.hierarchy.hover_header
+                      translate.textFromKey(
+                        'activities_default.hierarchy.hover_header'
+                      )
                     "
                     :hover-text="
-                      language.activity_default_lang.hierarchy.hover_text
+                      translate.textFromKey(
+                        'activities_default.hierarchy.hover_text'
+                      )
                     "
                     :show-iati-reference="true"
                   />
@@ -136,7 +170,9 @@
                 class="register__input mb-2"
                 type="text"
                 :placeholder="
-                  language.activity_default_lang.hierarchy.placeholder
+                  translate.textFromKey(
+                    'activities_default.hierarchy.placeholder'
+                  )
                 "
               />
               <div v-if="defaultErrors.hierarchy.length > 0">
@@ -153,25 +189,33 @@
                 v-if="defaultErrors.hierarchy.length === 0"
                 class="text-xs text-n-40"
               >
-                {{ language.activity_default_lang.hierarchy.help_text }}
+                {{
+                  translate.textFromKey(
+                    'activities_default.hierarchy.help_text'
+                  )
+                }}
               </p>
             </div>
 
             <div>
               <div class="flex justify-between">
                 <label for="default-currency">{{
-                  language.activity_default_lang.budget_not_provided.label
+                  translate.textFromKey(
+                    'activities_default.budget_not_provided.label'
+                  )
                 }}</label>
                 <button>
                   <HoverText
                     width="w-72"
                     :name="
-                      language.activity_default_lang.budget_not_provided
-                        .hover_header
+                      translate.textFromKey(
+                        'activities_default.budget_not_provided.hover_header'
+                      )
                     "
                     :hover-text="
-                      language.activity_default_lang.budget_not_provided
-                        .hover_text
+                      translate.textFromKey(
+                        'activities_default.budget_not_provided.hover_text'
+                      )
                     "
                   />
                 </button>
@@ -181,7 +225,9 @@
                 v-model="defaultValues.budget_not_provided"
                 class="vue__select"
                 :placeholder="
-                  language.activity_default_lang.budget_not_provided.placeholder
+                  translate.textFromKey(
+                    'activities_default.budget_not_provided.placeholder'
+                  )
                 "
                 :options="budgetNotProvided"
                 :searchable="true"
@@ -201,16 +247,20 @@
             <div>
               <div class="flex justify-between">
                 <label for="default-currency">{{
-                  language.activity_default_lang.humanitarian.label
+                  translate.textFromKey('activities_default.humanitarian.label')
                 }}</label>
                 <button>
                   <HoverText
                     width="w-72"
                     :name="
-                      language.activity_default_lang.humanitarian.hover_header
+                      translate.textFromKey(
+                        'activities_default.humanitarian.hover_header'
+                      )
                     "
                     :hover-text="
-                      language.activity_default_lang.humanitarian.hover_text
+                      translate.textFromKey(
+                        'activities_default.humanitarian.hover_text'
+                      )
                     "
                     :show-iati-reference="true"
                   />
@@ -221,7 +271,9 @@
                 v-model="defaultValues.humanitarian"
                 class="vue__select"
                 :placeholder="
-                  language.activity_default_lang.humanitarian.placeholder
+                  translate.textFromKey(
+                    'activities_default.humanitarian.placeholder'
+                  )
                 "
                 :options="humanitarian"
                 :searchable="true"
@@ -246,10 +298,14 @@
     >
       <div class="flex items-center justify-end">
         <a class="ghost-btn mr-8" :href="`/activity/${activityId}`">{{
-          language.activity_default_lang.cancel_label
+          translate.textFromKey('activities_default.cancel_label')
         }}</a>
         <button class="primary-btn save-btn" @click="submitForm()">
-          {{ language.activity_default_lang.save_default_values_label }}
+          {{
+            translate.textFromKey(
+              'activities_default.save_default_values_label'
+            )
+          }}
         </button>
       </div>
     </div>
@@ -263,8 +319,9 @@ import axios from 'axios';
 
 import Loader from 'Components/Loader.vue';
 import Toast from 'Components/ToastMessage.vue';
+import { Translate } from 'Composable/translationHelper';
 
-const language = window['globalLang'];
+const translate = new Translate();
 
 /**
  * Props

@@ -2,7 +2,7 @@
   <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      :title="language.common_lang.result_list"
+      :title="translate.commonText('result_list')"
       :back-link="activityLink"
     >
       <div class="flex items-center space-x-3">
@@ -14,12 +14,7 @@
         />
         <a :href="`${activityLink}/result/create`">
           <Btn
-            :text="
-              language.button_lang.add_element.replace(
-                ':element',
-                language.common_lang.result
-              )
-            "
+            :text="translate.button('add_element', 'common.result')"
             icon="plus"
             type="primary"
           />
@@ -33,19 +28,19 @@
         <thead>
           <tr class="bg-n-10 text-left">
             <th id="transaction_type" scope="col">
-              <span>{{ language.common_lang.title }}</span>
+              <span>{{ translate.commonText('title') }}</span>
             </th>
             <th id="transaction_type" scope="col">
               <span>Result Number</span>
             </th>
             <th id="transaction_value" scope="col" width="190px">
-              <span>{{ language.common_lang.result_type }}</span>
+              <span>{{ translate.commonText('result_type') }}</span>
             </th>
             <th id="transaction_date" scope="col" width="208px">
-              <span>{{ language.common_lang.aggregation_status }}</span>
+              <span>{{ translate.commonText('aggregation_status') }}</span>
             </th>
             <th id="action" scope="col" width="177px">
-              <span>{{ language.common_lang.action }}</span>
+              <span>{{ translate.commonText('action') }}</span>
             </th>
           </tr>
         </thead>
@@ -75,8 +70,7 @@
               @click="handleNavigate(`${activityLink}/result/${result.id}`)"
             >
               {{
-                types.resultType[result.result.type] ??
-                language.common_lang.missing.default
+                types.resultType[result.result.type] ?? translate.missingText()
               }}
             </td>
             <td
@@ -85,10 +79,10 @@
             >
               {{
                 parseInt(result.result.aggregation_status)
-                  ? 'True'
+                  ? translate.commonText('false')
                   : result.result.aggregation_status
-                  ? language.common_lang.false
-                  : language.common_lang.missing.default
+                  ? translate.commonText('false')
+                  : translate.missingText()
               }}
             </td>
             <td>
@@ -108,8 +102,8 @@
           <td colspan="5" class="text-center">
             {{
               createCapitalizedSentence(
-                language.elements_common_lang.results,
-                language.common_lang.missing.not_found
+                translate.elementLabel('results'),
+                translate.missingText('not_found')
               )
             }}
           </td>
@@ -149,6 +143,7 @@ import DeleteAction from 'Components/sections/DeleteAction.vue';
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
 import { createCapitalizedSentence } from '../../../composable/utils';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ResultsList',
@@ -178,7 +173,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const { activity } = toRefs(props);
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
@@ -214,7 +209,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: language.activities_lang.your_activities,
+        title: translate.textFromKey('activities.your_activities'),
         link: '/activities',
       },
       {
@@ -222,7 +217,7 @@ export default defineComponent({
         link: activityLink,
       },
       {
-        title: language.common_lang.result_list,
+        title: translate.commonText('result_list'),
         link: '',
       },
     ];
@@ -270,7 +265,7 @@ export default defineComponent({
       getActivityTitle,
       fetchListings,
       handleNavigate,
-      language,
+      translate,
     };
   },
   methods: { createCapitalizedSentence },

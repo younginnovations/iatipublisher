@@ -405,7 +405,7 @@
                     }-arrow`"
                   />
                 </span>
-                <span>{{ language.common_lang.activities }}</span>
+                <span>{{ translate.commonText('activities') }}</span>
               </a>
             </th>
             <th id="publisher_type" scope="col" style="width: 173px">
@@ -459,7 +459,7 @@
         </thead>
         <tbody>
           <tr v-if="organisationData.status === 'fetching'">
-            <td colspan="4">{{ language.common_lang.fetching_data }}</td>
+            <td colspan="4">{{ translate.commonText('fetching_data') }}</td>
           </tr>
           <tr v-else-if="organisationData.status === 'failed to retrieve data'">
             <td colspan="4">Failed to retrieve data...</td>
@@ -473,13 +473,12 @@
                 <div v-if="data.name" class="ellipsis relative">
                   <span class="ellipsis overflow-hidden">
                     {{
-                      data?.name[0]?.narrative ??
-                      language.common_lang.missing.name
+                      data?.name[0]?.narrative ?? translate.missingText('name')
                     }}
                   </span>
                 </div>
 
-                <div v-else>{{ language.common_lang.missing.name }}</div>
+                <div v-else>{{ translate.missingText('name') }}</div>
                 <div class="group relative">
                   <div
                     class="w-full overflow-x-hidden text-ellipsis text-blue-40"
@@ -556,7 +555,7 @@
                 {{
                   data.last_logged_in
                     ? dateFormat(data.last_logged_in, 'MMMM, DD,YYYY')
-                    : language.common_lang.missing.not_available
+                    : translate.missingText('not_available')
                 }}
               </div>
             </td>
@@ -564,7 +563,7 @@
               <div>
                 <div class="px-1">
                   {{ data.all_activities_count }}
-                  {{ language.common_lang.activities_nocase }}
+                  {{ translate.commonText('activities_nocase') }}
                 </div>
                 <div class="text-xs">
                   {{
@@ -574,7 +573,7 @@
                           data['latest_updated_activity'].updated_at,
                           'MMMM, DD, YYYY'
                         )
-                      : language.common_lang.missing.not_available
+                      : translate.missingText('not_available')
                   }}
                 </div>
               </div>
@@ -626,6 +625,7 @@ import {
 } from 'vue';
 import axios from 'axios';
 import MultiSelectWithSearch from 'Components/MultiSelectWithSearch.vue';
+import { Translate } from 'Composable/translationHelper';
 
 import dateFormat from 'Composable/dateFormat';
 import {
@@ -673,7 +673,7 @@ export default defineComponent({
       text: string;
     }
 
-    const language = window['globalLang'];
+    const translate = new Translate();
     const loader = inject('loader') as LoaderInterface;
     const dateDropdown = ref();
     const clearDate = ref(false);
@@ -897,7 +897,7 @@ export default defineComponent({
     // display/hide validator loader
     const proxyUser = (id: number) => {
       loader.status = true;
-      loader.text = language.button_lang.proxy_login;
+      loader.text = translate.button('proxy_login');
       const endpoint = `/proxy-organisation/${id}`;
 
       axios.get(endpoint).then((res) => {
@@ -1066,14 +1066,14 @@ export default defineComponent({
           license = license?.trim();
           return license
             ? map[license]
-            : language.common_lang.missing.not_available;
+            : translate.missingText('not_available');
         }
 
         return data[key]
           ? map[data[key]]
-          : language.common_lang.missing.not_available;
+          : translate.missingText('not_available');
       }
-      return language.common_lang.missing.not_available;
+      return translate.missingText('not_available');
     };
 
     return {
@@ -1114,7 +1114,7 @@ export default defineComponent({
       totalOrganisation,
       countriesWithPrefix,
       generateLabel,
-      language,
+      translate,
     };
   },
 });

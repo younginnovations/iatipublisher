@@ -56,10 +56,7 @@
             ></svg-vue>
           </template>
           <div class="title text-sm font-bold">
-            {{
-              translation.elements_common_lang[title] ??
-              replaceUnderscore(title)
-            }}
+            {{ translate.element(title) ?? replaceUnderscore(title) }}
           </div>
           <div
             class="status ml-2.5 flex text-xs leading-5"
@@ -69,8 +66,8 @@
             }"
           >
             <b class="mr-2 text-base leading-3">.</b>
-            <span v-if="status">{{ translation.common_lang.completed }}</span>
-            <span v-else>{{ translation.common_lang.not_completed }}</span>
+            <span v-if="status">{{ translate.commonText('completed') }}</span>
+            <span v-else>{{ translate.commonText('not_completed') }}</span>
           </div>
         </div>
         <div class="icons flex flex-row-reverse items-center">
@@ -81,16 +78,13 @@
           >
             <svg-vue class="mr-0.5 text-xs" icon="edit"></svg-vue>
             <span class="hidden text-[10px] lg:block">{{
-              translation.button_lang.edit
+              translate.button('edit')
             }}</span>
           </a>
 
           <HoverText
             v-if="tooltip"
-            :name="
-              translation.elements_common_lang[title.toString()] ??
-              title.toString().replace(/_/g, '-')
-            "
+            :name="translate.elementFromElementName(title.toString())"
             :hover-text="tooltip"
             :show-iati-reference="true"
             class="text-n-40"
@@ -123,7 +117,7 @@
           <div v-for="(post, i) in data.content" :key="i" class="title-content">
             <div v-if="post.narrative" class="flex flex-col">
               <span v-if="post.language" class="language mb-1.5">
-                ({{ translation.common_lang.language }}:
+                ({{ translate.commonText('language') }}:
                 {{ types?.languages[post.language] }})
               </span>
               <span v-if="post.narrative" class="max-w-[887px] text-sm">
@@ -131,7 +125,7 @@
               </span>
             </div>
             <span v-else class="text-sm italic">{{
-              translation.common_lang.missing.title
+              translate.missingText('title')
             }}</span>
             <div v-if="i !== data.content.length - 1" class="mb-4"></div>
           </div>
@@ -186,12 +180,13 @@ import {
   TotalExpenditure,
   DocumentLink,
 } from 'Organisation/elements/Index';
+import { Translate } from 'Composable/translationHelper';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import Modal from 'Components/PopupModal.vue';
 import { useToggle } from '@vueuse/core';
 import axios from 'axios';
 
-const translation = window['globalLang'];
+const translate = new Translate();
 const props = defineProps({
   data: {
     type: Object,

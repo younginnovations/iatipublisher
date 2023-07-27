@@ -13,23 +13,23 @@
           class="mr-1 mt-0.5 text-lg text-spring-50"
           icon="download-file"
         />
-        <b>{{ language.common_lang.download_file }}</b>
+        <b>{{ translate.commonText('download_file') }}</b>
       </div>
       <div class="rounded-lg bg-mint p-4">
-        {{ language.common_lang.click_the_download }}
+        {{ translate.commonText('click_the_download') }}
       </div>
     </div>
     <div class="flex justify-end">
       <div class="inline-flex">
         <BtnComponent
           class="bg-white px-6 uppercase"
-          :text="language.button_lang.go_back"
+          :text="translate.button('go_back')"
           type=""
           @click="downloadValue = false"
         />
         <BtnComponent
           class="space"
-          :text="language.button_lang_lang.download"
+          :text="translate.button('download')"
           type="primary"
           @click="downloadFunction()"
         />
@@ -51,9 +51,9 @@ import axios from 'axios';
 //component
 import BtnComponent from 'Components/ButtonComponent.vue';
 import Modal from 'Components/PopupModal.vue';
-import Loader from 'Components/sections/ProgressLoader.vue';
+import { Translate } from 'Composable/translationHelper';
 
-const language = window['globalLang'];
+const translate = new Translate();
 
 // toggle state for modal popup
 let [downloadValue, downloadToggle] = useToggle();
@@ -69,7 +69,7 @@ interface LoaderTypeface {
 
 const loader: LoaderTypeface = reactive({
   value: false,
-  text: language.common_lang.please_wait,
+  text: translate.commonText('please_wait'),
 });
 
 // call api for unpublishing
@@ -82,7 +82,7 @@ const toastMessage = inject('toastMessage') as ToastMessageTypeface;
 
 const downloadFunction = () => {
   loader.value = true;
-  loader.text = language.common_lang.downloading;
+  loader.text = translate.button('downloading');
 
   axios.delete(`/activity/${id}`).then((res) => {
     const response = res.data;

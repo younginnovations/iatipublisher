@@ -275,7 +275,8 @@ return array (
     'your_api_key_is_not_valid' => 'Your API Key is not valid or it is empty.',
     'organisation_data_is_not_published' => 'Your Organisation data is not published.',
     'the_publisher_id_is_not_verified_in_iati_registry' => 'The Publisher ID is not verified in IATI Registry.',
-    'some_activities_have_failed_to_publish' => 'Some activities have failed to publish. Refresh to see changes.',
+    'some_activities_have_failed_to_publish_refresh_to_see_changes' => 'Some activities have failed to publish. Refresh to see changes.',
+    'some_activities_have_failed_to_publish' => 'Some activities have failed to publish.',
     'couldnt_delete_the_activity' => 'Couldn\'t delete the activity title due to system error.',
     'activity_has_been_published_successfully' => 'Activity has been published successfully, refresh to see changes',
     'error_has_occured_while_uploading_file' => 'Error has occurred while uploading file',
@@ -348,4 +349,5 @@ return array (
   'import_activities_from_xls' => 'IMPORT ACTIVITIES FROM .XLS',
   'xls' => 'XLS',
   'to' => 'to',
+  'retry'=>'Retry'
 );

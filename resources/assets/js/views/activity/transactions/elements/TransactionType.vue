@@ -2,15 +2,13 @@
   {{
     code[0].transaction_type_code
       ? type.transactionType[code[0].transaction_type_code]
-      : language.common_lang.missing.element.replace(
-          ':element',
-          language.common_lang.code
-        )
+      : translate.missingText('code')
   }}
 </template>
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'TransactionType',
@@ -22,7 +20,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const { data } = toRefs(props);
 
     interface ArrayObject {
@@ -31,7 +29,7 @@ export default defineComponent({
     const code = data.value as ArrayObject;
 
     const type = inject('types');
-    return { code, type, language };
+    return { code, type, translate };
   },
 });
 </script>

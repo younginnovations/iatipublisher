@@ -6,20 +6,24 @@
     <Loader v-if="loaderVisibility" />
 
     <h5 class="title mb-5 flex text-xl font-bold text-bluecoral sm:text-2xl">
-      {{ language.activities_lang.add_a_tittle_and_identifier_label }}
+      {{
+        translate.textFromKey('activities.add_a_tittle_and_identifier_label')
+      }}
     </h5>
     <div class="manual-import overflow-hidden">
       <div class="input__field">
         <div class="mb-5">
           <div class="form-group-title-container">
             <HoverText
-              :name="language.elements_common_lang.title"
-              :hover-text="language.elements_lang.activities.title.hover_text"
+              :name="translate.element('title')"
+              :hover-text="
+                translate.textFromKey('elements.activities.title.hover_text')
+              "
               position="right"
               :show-iati-reference="true"
             />
             <p class="form-group-title">
-              {{ language.elements_common_lang.title }}
+              {{ translate.element('title') }}
             </p>
           </div>
           <div class="form-group">
@@ -27,14 +31,15 @@
               <div>
                 <div class="label-field">
                   <label class="label" for="narrative"
-                    >{{ language.elements_common_lang.narrative }}
+                    >{{ translate.element('narrative') }}
                     <span class="required-icon"> *</span>
                   </label>
                   <HoverText
-                    :name="language.elements_common_lang.narrative"
+                    :name="translate.element('narrative')"
                     :hover-text="
-                      language.elements_lang.activities.title.narrative
-                        .hover_text
+                      translate.textFromKey(
+                        'elements.activities.title.narrative.hover_text'
+                      )
                     "
                     :show-iati-reference="true"
                   />
@@ -46,9 +51,7 @@
                     error__input: errorData.narrative != '',
                   }"
                   type="text"
-                  :placeholder="
-                    language.elements_common_lang.type_narrative_here
-                  "
+                  :placeholder="translate.element('type_narrative_here')"
                 />
                 <span
                   v-if="errorData.narrative != ''"
@@ -61,14 +64,15 @@
               <div>
                 <div class="label-field">
                   <label class="label" for=""
-                    >{{ language.elements_common_lang.language }}
+                    >{{ translate.element('language') }}
                     <span class="required-icon"> *</span>
                   </label>
                   <HoverText
-                    :name="language.elements_common_lang.language"
+                    :name="translate.element('language')"
                     :hover-text="
-                      language.elements_common_lang
-                        .a_code_specifying_text_org_document_link_title_narrative
+                      translate.element(
+                        'a_code_specifying_text_org_document_link_title_narrative'
+                      )
                     "
                     :show-iati-reference="true"
                   />
@@ -82,7 +86,7 @@
                   }"
                   :searchable="true"
                   :options="languages"
-                  :placeholder="language.elements_common_lang.select_language"
+                  :placeholder="translate.element('select_language')"
                 />
 
                 <span
@@ -95,8 +99,7 @@
 
                 <span v-else class="text-xs font-normal text-n-40"
                   >{{
-                    language.elements_common_lang
-                      .your_default_language_assumed_no_that
+                    translate.element('your_default_language_assumed_no_that')
                   }}
                 </span>
               </div>
@@ -106,15 +109,17 @@
         <div>
           <div class="form-group-title-container">
             <HoverText
-              :name="language.elements_common_lang.iati_identifier"
+              :name="translate.element('iati_identifier')"
               position="right"
               :hover-text="
-                language.elements_lang.activities.iati_identifier.hover_text
+                translate.textFromKey(
+                  'elements.activities.iati_identifier.hover_text'
+                )
               "
               :show-iati-reference="true"
             />
             <p class="form-group-title">
-              {{ language.elements_common_lang.iati_identifier }}
+              {{ translate.element('iati_identifier') }}
             </p>
           </div>
           <div class="form-group">
@@ -122,7 +127,7 @@
               <div>
                 <div class="label-field">
                   <label class="label" for=""
-                    >{{ language.elements_common_lang.activity_identifier }}
+                    >{{ translate.element('activity_identifier') }}
                     <span class="required-icon"> *</span>
                   </label>
                 </div>
@@ -133,9 +138,7 @@
                     error__input: errorData.activity_identifier != '',
                   }"
                   type="text"
-                  :placeholder="
-                    language.elements_common_lang.type_identifier_here
-                  "
+                  :placeholder="translate.element('type_identifier_here')"
                 />
                 <span
                   v-if="errorData.activity_identifier != ''"
@@ -146,15 +149,16 @@
                 </span>
                 <span v-else class="text-xs font-normal text-n-40"
                   >{{
-                    language.elements_lang.activities.activity_identifier
-                      .shorter_help_text
+                    translate.textFromKey(
+                      'elements.activities.activity_identifier.shorter_help_text'
+                    )
                   }}
                 </span>
               </div>
               <div>
                 <div class="label-field">
                   <label class="label" for=""
-                    >{{ language.elements_common_lang.iati_identifier }}
+                    >{{ translate.element('iati_identifier') }}
                     <span class="required-icon"> *</span>
                   </label>
                 </div>
@@ -181,7 +185,7 @@
                 </span>
 
                 <span v-else class="text-xs font-normal text-n-40"
-                  >{{ language.common_lang.this_is_autogenerated }}
+                  >{{ translate.commonText('this_is_autogenerated') }}
                 </span>
               </div>
             </div>
@@ -192,13 +196,13 @@
             <BtnComponent
               class="mx-3 bg-white px-3 uppercase"
               type=""
-              :text="language.button_lang.cancel"
+              :text="translate.button('cancel')"
               @click="closeModal"
             />
             <BtnComponent
               class="space"
               type="primary"
-              :text="language.button_lang.save"
+              :text="translate.button('save')"
               @click="storeActivity()"
             />
           </div>
@@ -216,6 +220,7 @@ import Multiselect from '@vueform/multiselect';
 import HoverText from '../../components/HoverText.vue';
 import Loader from '../../components/Loader.vue';
 import axios from 'axios';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   components: {
@@ -238,7 +243,7 @@ export default defineComponent({
       [key: string]: string;
     }
 
-    const language = window['globalLang'];
+    const translate = new Translate();
     const formData: ObjectType = reactive({
       narrative: '',
       language: '',
@@ -304,7 +309,7 @@ export default defineComponent({
       organization,
       closeModal,
       storeActivity,
-      language,
+      translate,
     };
   },
 });

@@ -10,9 +10,9 @@
       />
       <div>
         <b
-          >{{ language.common_lang.critical_error_found }}
+          >{{ translate.commonText('critical_error_found') }}
           {{ data.critical.length }}
-          {{ language.common_lang.activities_nocase }}.</b
+          {{ translate.commonText('activities_nocase') }}.</b
         >
         {{ criticalMessage }}
       </div>
@@ -35,9 +35,9 @@
       />
       <div>
         <b
-          >{{ language.common_lang.errors_and_warnings_found }}
+          >{{ translate.commonText('errors_and_warnings_found') }}
           {{ data.errors.length }}
-          {{ language.common_lang.activities_nocase }}.</b
+          {{ translate.commonText('activities_nocase') }}.</b
         >
         {{ warningMessage }}
       </div>
@@ -72,15 +72,16 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 import ErrorItem from './ErrorItem.vue';
+import { Translate } from 'Composable/translationHelper';
 
-const language = window['globalLang'];
+const translate = new Translate();
 defineProps({
   data: { type: Object, required: true },
 });
 
-const criticalMessage = language.common_lang.message.critical;
+const criticalMessage = translate.commonText('message.critical');
 
-const warningMessage = language.common_lang.message.warning;
+const warningMessage = translate.commonText('message.warning');
 
-const noErrorMessage = language.common_lang.message.no_error;
+const noErrorMessage = translate.commonText('message.no_error');
 </script>

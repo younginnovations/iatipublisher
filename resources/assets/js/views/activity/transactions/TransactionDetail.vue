@@ -25,8 +25,8 @@
       :title="`${
         transactionData.reference && transactionData.reference !== ''
           ? transactionData.reference
-          : language.common_lang.untitled
-      } - ${language.common_lang.transaction_detail}`"
+          : translate.commonText('untitled')
+      } - ${translate.commonText('transaction_detail')}`"
       :back-link="`${activityLink}/transaction`"
     >
       <div class="flex items-center space-x-3">
@@ -37,12 +37,7 @@
           class="mr-3"
         />
         <Btn
-          :text="
-            language.button_lang.edit_element.replace(
-              ':element',
-              language.common_lang.transaction
-            )
-          "
+          :text="translate.button('edit_element', 'common.transaction')"
           :link="`${activityLink}/transaction/${transaction.id}/edit`"
           icon="edit"
         />
@@ -103,7 +98,7 @@
                   class="mr-2 text-base"
                 ></svg-vue>
                 <span :class="isMandatoryIcon(r) ? '' : 'pl-6'">{{
-                  language.elements_common_lang[r] ?? r
+                  translate.element(r) ?? r
                 }}</span>
               </a>
             </li>
@@ -164,6 +159,7 @@ import Toast from 'Components/ToastMessage.vue';
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
 import TransactionElement from './TransactionElement.vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'TransactionDetail',
@@ -196,7 +192,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const { activity, transaction } = toRefs(props);
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-relaxed mb-2 shadow-default';
@@ -252,7 +248,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: language.activities_lang.your_activities,
+        title: translate.textFromKey('activities.your_activities'),
         link: '/activity',
       },
       {
@@ -260,7 +256,7 @@ export default defineComponent({
         link: activityLink,
       },
       {
-        title: language.common_lang.transaction,
+        title: translate.commonText('transaction'),
         link: '',
       },
     ];
@@ -300,7 +296,7 @@ export default defineComponent({
       isMandatoryIcon,
       showSidebar,
       istopVisible,
-      language,
+      translate,
     };
   },
 });

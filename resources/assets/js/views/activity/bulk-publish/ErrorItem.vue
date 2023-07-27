@@ -20,7 +20,7 @@
         class="mr-2 flex shrink-0 cursor-pointer"
         @click="accordionToggle"
       >
-        <span class="text-xs">{{ language.common_lang.show_more }}</span>
+        <span class="text-xs">{{ translate.commonText('show_more') }}</span>
         <span>
           <svg-vue
             class="text-xl text-blue-50 transition-transform duration-500"
@@ -51,7 +51,7 @@
           class="inline-flex items-center"
         >
           <span class="mr-1 grow">{{
-            language.common_lang.view_errors_or_warning
+            translate.commonText('view_errors_or_warning')
           }}</span>
           <svg-vue class="shrink-0" icon="external"></svg-vue>
         </a>
@@ -61,13 +61,14 @@
 </template>
 <script setup lang="ts">
 import { defineProps, inject, ref } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 defineProps({
   data: { type: Object, required: true },
   message: { type: String, default: '' },
 });
 
-const language = window['globalLang'];
+const translate = new Translate();
 const selectedActivities = inject('selectedActivities') as number[];
 
 const toggle = ref(false);
@@ -102,7 +103,7 @@ const accordionToggle = (e: Event) => {
 
 const errorCount = (errors) => {
   let errorCount = '';
-  const sc = language.common_lang.sticky.common;
+  const sc = translate.getStickyObject('common');
   if (errors?.warning) {
     errorCount = `${errors?.error} ${sc.errors} ${sc.and} ${errors?.warning} ${sc.warnings}
      ${sc.were_found}.`;

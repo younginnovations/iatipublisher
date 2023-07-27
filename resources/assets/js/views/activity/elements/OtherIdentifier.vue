@@ -9,20 +9,12 @@
         <span v-if="identifier.reference_type">{{
           types.otherIdentifierType[identifier.reference_type]
         }}</span>
-        <span v-else class="italic">{{
-          language.common_lang.missing.element.replace(
-            ':element',
-            language.common_lang.type
-          )
-        }}</span>
+        <span v-else class="italic">{{ translate.missingText('type') }}</span>
       </div>
       <div class="text-sm">
         <span v-if="identifier.reference">{{ identifier.reference }}</span>
         <span v-else class="italic">{{
-          language.common_lang.missing.element.replace(
-            ':element',
-            language.common_lang.reference
-          )
+          translate.missingText('element', 'common.reference')
         }}</span>
       </div>
       <div>
@@ -36,16 +28,16 @@
               <tbody>
                 <tr>
                   <td>
-                    {{ language.common_lang.owner_organisation_reference }}
+                    {{ translate.commonText('owner_organisation_reference') }}
                   </td>
                   <td v-if="post.ref">{{ post.ref }}</td>
                   <td v-else class="italic">
-                    {{ language.common_lang.missing.default }}
+                    {{ translate.missingText() }}
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    {{ language.common_lang.owner_organisation_narrative }}
+                    {{ translate.commonText('owner_organisation_narrative') }}
                   </td>
                   <td>
                     <div
@@ -56,7 +48,7 @@
                     >
                       <div v-if="n.narrative" class="flex flex-col">
                         <span v-if="n.language" class="language top"
-                          >({{ language.common_lang.language }}:
+                          >({{ translate.commonText('language') }}:
                           {{ types.languages[n.language] }})</span
                         >
                         <span v-if="n.narrative" class="description">{{
@@ -64,7 +56,7 @@
                         }}</span>
                       </div>
                       <span v-else class="italic">{{
-                        language.common_lang.missing.default
+                        translate.missingText()
                       }}</span>
                     </div>
                   </td>
@@ -80,6 +72,7 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'OtherIdentifier',
@@ -95,8 +88,8 @@ export default defineComponent({
       languages: [];
     }
     const types = inject('types') as Types;
-    const language = window['globalLang'];
-    return { types, language };
+    const translate = new Translate();
+    return { types, translate };
   },
 });
 </script>

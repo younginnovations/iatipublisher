@@ -4,18 +4,18 @@
       <table class="mb-3">
         <tbody>
           <tr>
-            <td>{{ language.common_lang.organiser_identifier_code }}</td>
+            <td>{{ translate.commonText('organiser_identifier_code') }}</td>
             <td>
               <div class="text-sm">
                 {{
                   PoData[0].organization_identifier_code ??
-                  language.common_lang.missing.default
+                  translate.missingText()
                 }}
               </div>
             </td>
           </tr>
           <tr>
-            <td>{{ language.common_lang.description }}</td>
+            <td>{{ translate.commonText('description') }}</td>
             <td>
               <div
                 v-for="(po, i) in PoData[0].narrative"
@@ -29,37 +29,36 @@
                   (
                   {{
                     po.language
-                      ? `${language.common_lang.language}: ${
+                      ? `${translate.commonText('language')}: ${
                           type.languages[po.language]
                         }`
-                      : `${language.common_lang.language}:${language.common_lang.missing.default}`
+                      : `${translate.commonText(
+                          'language'
+                        )}:${translate.missingText()}`
                   }})
                 </div>
                 <div class="text-sm">
-                  {{ po.narrative ?? language.common_lang.missing.narrative }}
+                  {{ po.narrative ?? translate.missingText('narrative') }}
                 </div>
               </div>
             </td>
           </tr>
           <tr>
-            <td>{{ language.common_lang.provider_activity_id }}</td>
+            <td>{{ translate.commonText('provider_activity_id') }}</td>
             <td>
               <div class="text-sm">
-                {{
-                  PoData[0].provider_activity_id ??
-                  language.common_lang.missing.default
-                }}
+                {{ PoData[0].provider_activity_id ?? translate.missingText() }}
               </div>
             </td>
           </tr>
           <tr>
-            <td>{{ language.common_lang.type }}</td>
+            <td>{{ translate.commonText('type') }}</td>
             <td>
               <div class="text-sm">
                 {{
                   PoData[0].type
                     ? type.organizationType[PoData[0].type]
-                    : language.common_lang.missing.default
+                    : translate.missingText()
                 }}
               </div>
             </td>
@@ -72,6 +71,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'TransactionProviderOrganisation',
@@ -83,7 +83,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const { data } = toRefs(props);
 
     interface ArrayObject {
@@ -101,7 +101,7 @@ export default defineComponent({
       languages: [];
     }
     const type = inject('types') as TypesInterface;
-    return { PoData, type, language };
+    return { PoData, type, translate };
   },
 });
 </script>

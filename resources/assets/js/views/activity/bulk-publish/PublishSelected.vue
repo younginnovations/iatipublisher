@@ -4,7 +4,7 @@
     <BtnComponent
       v-if="store.state.selectedActivities.length > 0"
       type="secondary"
-      :text="language.button_lang.publish_selected"
+      :text="translate.button('publish_selected')"
       icon="approved-cloud"
       @click="checkPublish"
     />
@@ -18,14 +18,17 @@
         <div class="popup mb-4">
           <div class="title mb-6 flex items-center text-sm">
             <svg-vue class="mr-1 text-lg text-crimson-40" icon="shield" />
-            <b>{{ language.common_lang.publishing_alert }}</b>
+            <b>{{ translate.commonText('publishing_alert') }}</b>
           </div>
           <div class="rounded-lg bg-eggshell p-4">
             <div class="text-sm leading-normal">
-              {{ language.common_lang.activities_already_published_will_not }}
               {{
-                language.common_lang
-                  .changes_made_to_published_will_be_republished
+                translate.commonText('activities_already_published_will_not')
+              }}
+              {{
+                translate.commonText(
+                  'changes_made_to_published_will_be_republished'
+                )
               }}
             </div>
           </div>
@@ -34,13 +37,13 @@
           <div class="inline-flex">
             <BtnComponent
               class="bg-white px-6 uppercase"
-              :text="language.button_lang.cancel"
+              :text="translate.button('cancel')"
               type=""
               @click="resetPublishStep()"
             />
             <BtnComponent
               class="space"
-              :text="language.button_lang.continue"
+              :text="translate.button('continue')"
               type="primary"
               @click="verifyCoreElements()"
             />
@@ -52,9 +55,9 @@
         <div class="eligible-activities mb-6 text-sm leading-relaxed">
           <div class="title mb-6 flex">
             <svg-vue icon="tick" class="mr-1 mt-0.5 text-lg text-spring-50" />
-            <b>{{ language.common_lang.core_completed_title }}</b>
+            <b>{{ translate.commonText('core_completed_title') }}</b>
           </div>
-          {{ language.common_lang.publishing_alert }}
+          {{ translate.commonText('publishing_alert') }}
 
           <div class="rounded-lg bg-mint px-6">
             <div
@@ -76,7 +79,7 @@
               </div>
             </div>
             <div v-else class="py-6">
-              {{ language.common_lang.missing.no_activities_found }}
+              {{ translate.missingText('no_activities_found') }}
             </div>
           </div>
         </div>
@@ -87,7 +90,7 @@
               icon="warning-fill"
               class="mr-1 mt-0.5 text-lg text-crimson-40"
             />
-            <b>{{ language.common_lang.core_completed_title }}</b>
+            <b>{{ translate.commonText('core_completed_title') }}</b>
           </div>
 
           <div class="rounded-lg bg-rose px-6">
@@ -114,7 +117,7 @@
               </div>
             </div>
             <div v-else class="py-6">
-              {{ language.common_lang.missing.no_activities_found }}
+              {{ translate.missingText('no_activities_found') }}
             </div>
           </div>
         </div>
@@ -127,13 +130,13 @@
               "
               class="bg-white px-6 uppercase"
               type=""
-              :text="language.button_lang.continue_anyway"
+              :text="translate.button('continue_anyway')"
               @click="validateActivities()"
             />
             <BtnComponent
               class="space"
               type="primary"
-              :text="language.button_lang.go_back"
+              :text="translate.button('go_back')"
               @click="resetPublishStep()"
             />
           </div>
@@ -147,7 +150,7 @@
             <BtnComponent
               class="bg-white px-6 uppercase"
               type=""
-              :text="language.button_lang.cancel"
+              :text="translate.button('cancel')"
               @click="resetPublishStep()"
             />
             <BtnComponent
@@ -156,7 +159,9 @@
                 'pointer-events-none': selectedActivities.length === 0,
               }"
               type="primary"
-              :text="`${language.common_lang.publishing} (${selectedActivities.length}) ${language.common_lang.activities}`"
+              :text="`${translate.commonText('publishing')} (${
+                selectedActivities.length
+              }) ${translate.commonText('activities')}`"
               @click="startBulkPublish()"
             />
           </div>
@@ -190,7 +195,7 @@
       <h3 class="mb-4 text-lg font-medium">
         <svg-vue icon="tick" class="mr-2 inline text-spring-50"></svg-vue>
         <span class="font-bold">{{
-          language.common_lang.cancellation_successful
+          translate.commonText('cancellation_successful')
         }}</span>
       </h3>
       <div class="fw-bold rounded-lg bg-spring-30 px-3 py-2 text-white">
@@ -201,13 +206,13 @@
           class="rounded py-3 px-5 font-semibold uppercase text-n-40 hover:bg-bluecoral hover:text-white"
           @click="closeCancelledDetailsPopup"
         >
-          {{ language.button_lang.continue_selecting }}
+          {{ translate.button('continue_selecting') }}
         </button>
         <button
           class="rounded bg-bluecoral py-3 px-5 font-semibold uppercase text-white"
           @click="publishAfterCancel"
         >
-          {{ language.button_lang.publish }}
+          {{ translate.button('publish') }}
         </button>
       </div>
     </Modal>
@@ -245,12 +250,13 @@ import PageLoader from 'Components/Loader.vue';
 // Vuex Store
 import { useStore } from 'Store/activities/index';
 import BulkPublishingErrorPopup from 'Components/BulkPublishingErrorPopup.vue';
+import { Translate } from 'Composable/translationHelper';
 
 defineProps({
   type: { type: String, default: 'primary' },
 });
 
-const language = window['globalLang'];
+const translate = new Translate();
 /**
  *  Global State
  */
@@ -271,7 +277,7 @@ const published = ref(false);
 const loader = ref(false);
 
 // Dynamic text for loader
-const loaderText = ref(language.common_lang.please_wait);
+const loaderText = ref(translate.commonText('please_wait'));
 
 /*States for Bulk publish cancellation flow*/
 const showCancelConfirmationPopup = ref(false);
@@ -360,7 +366,7 @@ let coreCompletedActivities: Ref<actTypeface[]> = ref([]),
 
 const verifyCoreElements = () => {
   loader.value = true;
-  loaderText.value = language.common_lang.verifying_core_elements;
+  loaderText.value = translate.commonText('verifying_core_elements');
   const activities = store.state.selectedActivities.join(', ');
 
   axios
@@ -406,7 +412,7 @@ onMounted(() => {
 });
 const validateActivities = () => {
   loader.value = true;
-  loaderText.value = language.common_lang.validating_activities;
+  loaderText.value = translate.commonText('validating_activities');
   const activities = store.state.selectedActivities.join(', ');
 
   axios
@@ -453,7 +459,7 @@ const startBulkPublish = () => {
   store.dispatch('updateStartBulkPublish', true);
 
   loader.value = true;
-  loaderText.value = language.common_lang.starting_to_publish;
+  loaderText.value = translate.commonText('starting_to_publish');
   pa.value.publishingActivities = {};
 
   axios

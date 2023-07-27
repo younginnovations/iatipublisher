@@ -1,6 +1,6 @@
 <template>
   <tr>
-    <td>{{ language.common_lang.title }}</td>
+    <td>{{ translate.commonText('title') }}</td>
     <td>
       <template v-for="(title, t) in titleData.narrative" :key="t">
         <div
@@ -10,13 +10,11 @@
           }"
         >
           <div class="language mb-1 text-n-30">
-            ({{ language.common_lang.language }}:
-            {{
-              titleType[title.language] ?? language.common_lang.missing.default
-            }})
+            ({{ translate.commonText('language') }}:
+            {{ titleType[title.language] ?? translate.missingText() }})
           </div>
           <div class="description text-xs">
-            {{ title.narrative ?? language.common_lang.missing.default }}
+            {{ title.narrative ?? translate.missingText() }}
           </div>
         </div>
       </template>
@@ -26,6 +24,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'IndicatorTitle',
@@ -41,10 +40,10 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     let { data } = toRefs(props);
     const titleData = data.value;
-    return { titleData, language };
+    return { titleData, translate };
   },
 });
 </script>

@@ -10,15 +10,16 @@
     <span class="mr-5">{{ props.message }}</span>
     <a href="" class="inline-flex items-center uppercase" :class="className2">
       <svg-vue icon="redo" class="mr-1" />
-      <span>{{ language.common_lang.refresh }}</span>
+      <span>{{ translate.commonText('refresh') }}</span>
     </a>
   </div>
 </template>
 
 <script setup lang="ts">
 import { defineProps, ref } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
-const language = window['globalLang'];
+const translate = new Translate();
 const props = defineProps({
   message: { type: String, required: true },
   type: { type: Boolean, required: true },

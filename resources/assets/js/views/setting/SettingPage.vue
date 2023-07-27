@@ -3,13 +3,13 @@
     <Loader v-if="loaderVisibility" />
     <div class="setting input__field">
       <span class="text-xs font-bold text-n-40">{{
-        language.settings_lang.settings_label
+        translate.textFromKey('settings.settings_label')
       }}</span>
       <div class="flex items-center justify-between">
         <div class="my-2 flex items-center sm:mt-4 sm:mb-6">
           <a href="/activities"><svg-vue icon="left-arrow" /></a>
           <h2 class="ml-3 text-heading-5 font-bold text-n-50 sm:text-heading-4">
-            {{ language.settings_lang.settings_label }}
+            {{ translate.textFromKey('settings.settings_label') }}
           </h2>
         </div>
         <div>
@@ -32,7 +32,7 @@
             }"
             @click="toggleTab('publish')"
           >
-            {{ language.settings_lang.publishing_settings_label }}
+            {{ translate.textFromKey('settings.publishing_settings_label') }}
           </button>
           <button
             class="tab-btn"
@@ -41,7 +41,7 @@
             }"
             @click="toggleTab('default')"
           >
-            {{ language.settings_lang.default_values_label }}
+            {{ translate.textFromKey('settings.default_values_label') }}
           </button>
         </div>
         <SettingPublishingForm
@@ -73,7 +73,7 @@
           :class="userRole !== 'admin' && 'cursor-not-allowed'"
           class="ghost-btn mr-4 sm:mr-8"
           href="/activities"
-          >{{ language.button_lang.cancel }}</a
+          >{{ translate.button('cancel') }}</a
         >
         <button
           :class="userRole !== 'admin' && 'cursor-not-allowed'"
@@ -82,8 +82,8 @@
         >
           {{
             tab === 'publish'
-              ? language.button_lang.save_publishing_settings
-              : language.button_lang.save_default_values
+              ? translate.button('save_publishing_settings')
+              : translate.button('save_default_values')
           }}
         </button>
       </div>
@@ -100,6 +100,7 @@ import SettingDefaultForm from './SettingDefaultForm.vue';
 import SettingPublishingForm from './SettingPublishingForm.vue';
 import Loader from '../../components/Loader.vue';
 import Toast from 'Components/ToastMessage.vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   components: {
@@ -157,7 +158,7 @@ export default defineComponent({
   },
 
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const tab = ref('publish');
     const store = useStore();
     const loaderVisibility = ref(false);
@@ -350,7 +351,7 @@ export default defineComponent({
       toastType,
       toggleTab,
       submitForm,
-      language,
+      translate,
     };
   },
 });

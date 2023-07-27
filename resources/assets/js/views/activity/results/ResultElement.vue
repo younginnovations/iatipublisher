@@ -11,7 +11,7 @@
       <div class="mb-4 flex">
         <div class="title flex grow">
           <div class="title text-sm font-bold">
-            {{ translation.elements_common_lang[elementName] }}
+            {{ translate.elementLabel(elementName) }}
           </div>
         </div>
         <div class="icons flex items-center">
@@ -29,10 +29,10 @@
         <template v-else-if="elementName === 'aggregation_status'">
           <span class="text-sm capitalize">{{
             parseInt(data)
-              ? translation.common_lang.true
+              ? translate.commonText('true')
               : data
-              ? translation.common_lang.false
-              : translation.common_lang.missing.default
+              ? translate.commonText('false')
+              : translate.missingText()
           }}</span>
         </template>
 
@@ -65,6 +65,7 @@ import {
   Reference,
   ResultType,
 } from './elements/Index';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ActivityElement',
@@ -109,14 +110,14 @@ export default defineComponent({
       resultType = types.value.resultType,
       resultVocabulary = types.value.resultVocabulary,
       language = types.value.language;
-    const translation = window['globalLang'];
+    const translate = new Translate();
 
     return {
       elementData,
       resultType,
       resultVocabulary,
       language,
-      translation,
+      translate,
     };
   },
 });

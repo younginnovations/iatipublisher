@@ -229,7 +229,7 @@ return array (
   'valued_at' => 'valorado el',
   'in_node' => 'empty value',
   'publish' => 'Publicar',
-    'comment'=>'comment',
+  'comment'=>'comment',
   'missing' =>
   array (
     'default' => 'Falta',
@@ -275,7 +275,8 @@ return array (
     'your_api_key_is_not_valid' => 'Su clave de API no es válida o está vacía.',
     'organisation_data_is_not_published' => 'Los datos de su organización no se han publicado.',
     'the_publisher_id_is_not_verified_in_iati_registry' => 'El identificador de IATI Publisher no se verifica en el Registro de la IATI.',
-    'some_activities_have_failed_to_publish' => 'Ha fallado la publicación de algunas actividades. Actualice para ver los cambios.',
+    'some_activities_have_failed_to_publish_refresh_to_see_changes' => 'Ha fallado la publicación de algunas actividades. Actualice para ver los cambios.',
+    'some_activities_have_failed_to_publish' => 'Ha fallado la publicación de algunas actividades.',
     'couldnt_delete_the_activity' => 'No fue posible eliminar el título de la actividad debido a un error del sistema.',
     'activity_has_been_published_successfully' => 'Se ha publicado correctamente la actividad, actualice para ver los cambios.',
     'error_has_occured_while_uploading_file' => 'Se ha producido un error al cargar el archivo',
@@ -347,5 +348,6 @@ return array (
   'receiver_activity_id'=>'ID Actividad receptor',
   'import_activities_from_xls' => 'IMPORTAR ACTIVIDADES DE XLS',
   'xls' => 'XLS',
-  'to'=> 'a'
+  'to'=> 'a',
+  'retry'=>'Rever'
 );

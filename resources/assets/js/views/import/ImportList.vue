@@ -6,7 +6,7 @@
           <nav aria-label="breadcrumbs" class="breadcrumb">
             <div class="flex">
               <a class="whitespace-nowrap font-bold" href="/activities">
-                {{ language.activities_lang.your_activities }}
+                {{ translate.textFromKey('activities.your_activities') }}
               </a>
             </div>
           </nav>
@@ -18,14 +18,14 @@
             <div class="inline-flex min-h-[48px] grow flex-wrap items-center">
               <h4 class="ellipsis__title relative mr-4 font-bold">
                 <span class="ellipsis__title overflow-hidden">
-                  {{ language.common_lang.import_activiy }}
+                  {{ translate.commonText('import_activity') }}
                 </span>
               </h4>
               <div class="tooltip-btn">
                 <button class="">
                   <svg-vue icon="question-mark" />
                   <span>{{
-                    language.activities_lang.what_is_activity.label
+                    translate.textFromKey('activities.what_is_activity.label')
                   }}</span>
                 </button>
                 <div class="tooltip-btn__content z-[1]">
@@ -33,12 +33,17 @@
                     <div
                       class="mb-1.5 text-caption-c1 font-bold text-bluecoral"
                     >
-                      {{ language.activities_lang.what_is_activity.label }}
+                      {{
+                        translate.textFromKey(
+                          'activities.what_is_activity.label'
+                        )
+                      }}
                     </div>
                     <p>
                       {{
-                        language.activities_lang.what_is_activity.description
-                          .one
+                        translate.textFromKey(
+                          'activities.what_is_activity.description.one'
+                        )
                       }}
                     </p>
                   </div>
@@ -55,7 +60,9 @@
                   v-if="selectedActivities.length > 0"
                   class="mr-3.5"
                   type="primary"
-                  :text="`${language.button_lang.import} (${selectedCount}/${activitiesLength})`"
+                  :text="`${translate.button(
+                    'import'
+                  )} (${selectedCount}/${activitiesLength})`"
                   icon="download-file"
                   @click="importActivities"
                 />
@@ -73,13 +80,13 @@
           <tr class="bg-n-10">
             <th id="title" scope="col">
               <span
-                >{{ language.common_lang.activities }}
-                {{ language.common_lang.title }}</span
+                >{{ translate.commonText('activities') }}
+                {{ translate.commonText('title') }}</span
               >
             </th>
             <th id="status" scope="col">
               <span class="block text-left">{{
-                language.common_lang.status
+                translate.commonText('status')
               }}</span>
             </th>
             <th id="cb" scope="col">
@@ -129,15 +136,16 @@ import Loader from 'Components/sections/ProgressLoader.vue';
 import Placeholder from './ImportPlaceholder.vue';
 import ListElement from './ListElement.vue';
 import axios from 'axios';
+import { Translate } from 'Composable/translationHelper';
 
-const language = window['globalLang'];
+const translate = new Translate();
 let activities = reactive({});
 const selectedActivities: Array<string> = reactive([]);
 const selectedCount = ref(0);
 const activitiesLength = ref(0);
 const loader = ref(false);
 const selectAll = ref(false);
-const loaderText = ref(language.common_lang.please_wait);
+const loaderText = ref(translate.commonText('please_wait'));
 const tableRow = ref({});
 const tableWidth = ref({});
 
@@ -153,7 +161,7 @@ onUnmounted(() => {
 onMounted(() => {
   window.addEventListener('resize', getDimensions);
   loader.value = true;
-  loaderText.value = language.common_lang.please_wait;
+  loaderText.value = translate.commonText('please_wait');
   let count = 0;
   timer = setInterval(() => {
     axios
@@ -223,7 +231,7 @@ function selectAllActivities() {
 }
 
 function importActivities() {
-  loaderText.value = language.common_lang.importing_csv_xml_file;
+  loaderText.value = translate.commonText('importing_csv_xml_file');
   loader.value = true;
 
   axios

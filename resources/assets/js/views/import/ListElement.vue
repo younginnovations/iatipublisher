@@ -6,7 +6,7 @@
         >{{
           activity['data']['title'][0]['narrative']
             ? activity['data']['title'][0]['narrative']
-            : language.common_lang.missing.default
+            : translate.missingText()
         }}</span
       >
 
@@ -18,8 +18,8 @@
         <span class="flex items-center space-x-2">
           <svg-vue class="text-crimson-40" icon="alert" />
           <span>
-            {{ language.common_lang.show }} {{ countErrors() }}
-            {{ language.button_lang.issues }}</span
+            {{ translate.commonText('show') }} {{ countErrors() }}
+            {{ translate.button('issues') }}</span
           >
         </span>
 
@@ -49,8 +49,8 @@
               <svg-vue class="text-crimson-40" icon="alert" />
               <span>
                 {{ errorLength('critical') }}
-                {{ language.common_lang.sticky.common.critical }}
-                {{ language.common_lang.sticky.common.errors }}</span
+                {{ translate.stickyText('critical', 'common') }}
+                {{ translate.stickyText('errors', 'common') }}</span
               >
             </span>
 
@@ -61,7 +61,7 @@
             />
           </div>
           <div class="error-help">
-            ({{ language.common_lang.activity_contains_critical_errors }})
+            ({{ translate.commonText('activity_contains_critical_errors') }})
           </div>
           <div class="critical-dropdown-container">
             <div class="critical-dropdown">
@@ -101,7 +101,7 @@
               <svg-vue class="text-crimson-40" icon="alert" />
               <span
                 >{{ errorLength('error') }}
-                {{ language.common_lang.sticky.common.errors }}</span
+                {{ translate.stickyText('errors', 'common') }}</span
               >
             </span>
             <svg-vue
@@ -111,7 +111,9 @@
             />
           </div>
           <div class="error-help">
-            ({{ language.common_lang.activities_with_error_will_be_uploaded }})
+            ({{
+              translate.commonText('activities_with_error_will_be_uploaded')
+            }})
           </div>
           <div class="error-dropdown-container">
             <div class="error-dropdown">
@@ -147,7 +149,7 @@
             <span class="flex items-center space-x-2">
               <svg-vue icon="alert" class="text-camel-40" /><span>
                 {{ errorLength('warning') }}
-                {{ language.common_lang.sticky.common.warnings }}</span
+                {{ translate.stickyText('warnings', 'common') }}</span
               >
             </span>
             <svg-vue
@@ -157,7 +159,7 @@
             />
           </div>
           <div class="error-help bg-eggshell">
-            ({{ language.common_lang.field_with_warning_will_be_uploaded }})
+            ({{ translate.commonText('field_with_warning_will_be_uploaded') }})
           </div>
           <div class="warning-dropdown-container">
             <div class="warning-dropdown">
@@ -206,13 +208,13 @@
   <td>
     <span class="text-sm leading-relaxed">{{
       !activity['existence']
-        ? language.common_lang.new
-        : language.common_lang.existing
+        ? translate.commonText('new')
+        : translate.commonText('existing')
     }}</span>
   </td>
 
   <td class="check-column" @click="(event: Event) => event.stopPropagation()">
-    <label class="sr-only" for=""> {{ language.common_lang.select }} </label>
+    <label class="sr-only" for=""> {{ translate.commonText('select') }} </label>
     <label
       v-if="Object.keys(activity['errors']).indexOf('critical') === -1"
       class="checkbox"
@@ -233,8 +235,9 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, ref, watch, reactive } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
-const language = window['globalLang'];
+const translate = new Translate();
 const props = defineProps({
   activity: {
     type: Object,

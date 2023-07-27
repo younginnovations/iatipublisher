@@ -12,33 +12,34 @@
         <span>{{
           reporting_org.type
             ? types?.organizationType[reporting_org.type]
-            : translation.common_lang.missing.type
+            : translate.missingText('type')
         }}</span>
       </div>
       <table>
         <tbody>
           <tr>
-            <td>{{ translation.common_lang.reference }}</td>
+            <td>{{ translate.commonText('reference') }}</td>
             <td>
               {{
-                reporting_org.ref ?? translation.common_lang.missing.reference
+                reporting_org.ref ??
+                translate.missingText('element', 'common.reference')
               }}
             </td>
           </tr>
           <tr>
-            <td>{{ translation.common_lang.secondary_reporter }}</td>
+            <td>{{ translate.commonText('secondary_reporter') }}</td>
             <td>
               {{
                 parseInt(reporting_org.secondary_reporter)
                   ? 'True'
                   : reporting_org.secondary_reporter === '0'
                   ? 'False'
-                  : 'Missing'
+                  : translate.missingText()
               }}
             </td>
           </tr>
           <tr>
-            <td>{{ translation.common_lang.narrative }}</td>
+            <td>{{ translate.commonText('narrative') }}</td>
             <td>
               <div
                 v-for="(narrative, j) in reporting_org.narrative"
@@ -51,16 +52,17 @@
                 <div class="language mb-1.5">
                   ({{
                     narrative.language
-                      ? `${translation.common_lang.language}: ${
+                      ? `${translate.commonText('language')}: ${
                           types?.languages[narrative.language]
                         }`
-                      : `${translation.common_lang.language} : ${translation.common_lang.missing.default}`
+                      : `${translate.commonText(
+                          'language'
+                        )} : ${translate.missingText()}`
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
                   {{
-                    narrative.narrative ??
-                    translation.common_lang.missing.narrative
+                    narrative.narrative ?? translate.missingText('narrative')
                   }}
                 </div>
               </div>
@@ -74,6 +76,7 @@
 
 <script setup lang="ts">
 import { defineProps, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 defineProps({
   content: { type: Object, required: true },
@@ -84,6 +87,6 @@ interface TypesInterface {
   organizationType: [];
 }
 
-const translation = window['globalLang'];
+const translate = new Translate();
 const types = inject('orgTypes') as TypesInterface;
 </script>

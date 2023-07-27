@@ -6,9 +6,11 @@
     <Loader v-if="isLoaderVisible"></Loader>
 
     <div class="right__container flex w-full flex-col" @keyup.enter="login">
-      <h2 class="mb-2 hidden sm:block">{{ language.web_lang.sign_in }}.</h2>
-      <span class="text-n-40">{{
-        language.home.sign_in_section.welcome_back_label
+      <h2 class="home-translated-text mb-2 hidden sm:block">
+        {{ translate.webText('sign_in') }}.
+      </h2>
+      <span class="home-translated-text text-n-40">{{
+        translate.textFromKey('home.sign_in_section.welcome_back_label')
       }}</span>
       <div
         v-if="
@@ -28,28 +30,30 @@
         <div class="flex space-x-2">
           <svg-vue class="text-spring-50" icon="tick" />
           <span class="flex flex-col space-y-2">
-            <span class="text-sm font-bold text-n-50">{{
-              language.register_lang.password.updated
+            <span class="home-translated-text text-sm font-bold text-n-50">{{
+              translate.registerText('password.updated')
             }}</span>
-            <span class="text-sm text-n-50"
-              >{{ language.register_lang.password.use_new }}.</span
+            <span class="home-translated-text text-sm text-n-50"
+              >{{ translate.registerText('password.use_new') }}.</span
             >
           </span>
         </div>
       </div>
       <div class="relative mt-6 mb-4 flex flex-col text-sm text-bluecoral">
-        <label for="Username">{{
-          language.home.sign_in_section.username_label
+        <label for="Username" class="home-translated-text">{{
+          translate.textFromKey('home.sign_in_section.username_label')
         }}</label>
         <input
           id="username"
           v-model="formData.username"
-          class="username input sm:h-16"
+          class="username input home-translated-text-placeholder sm:h-16"
           :class="{
             error_input: errorData.username,
           }"
           type="text"
-          :placeholder="language.home.sign_in_section.username_placeholder"
+          :placeholder="
+            translate.textFromKey('home.sign_in_section.username_placeholder')
+          "
         />
         <svg-vue class="absolute top-12 left-5 text-xl sm:left-6" icon="user" />
         <span
@@ -61,18 +65,20 @@
         </span>
       </div>
       <div class="relative mb-4 flex flex-col text-sm text-bluecoral">
-        <label for="Password">{{
-          language.home.sign_in_section.password_label
+        <label for="Password" class="home-translated-text">{{
+          translate.textFromKey('home.sign_in_section.password_label')
         }}</label>
         <input
           id="password"
           v-model="formData.password"
-          class="password input sm:h-16"
+          class="password input home-translated-text-placeholder sm:h-16"
           :class="{
             error__input: errorData.password || errorData.username,
           }"
           type="password"
-          :placeholder="language.home.sign_in_section.password_placeholder"
+          :placeholder="
+            translate.textFromKey('home.sign_in_section.password_placeholder')
+          "
         />
         <svg-vue
           class="absolute top-12 left-5 text-xl sm:left-6"
@@ -82,18 +88,25 @@
           errorData.password
         }}</span>
       </div>
-      <p class="mb-6 text-sm text-n-40">
-        {{ language.home.sign_in_section.forgot_password_label }}
+      <p class="home-translated-text mb-6 text-sm text-n-40">
+        {{
+          translate.textFromKey('home.sign_in_section.forgot_password_label')
+        }}
         <span
           ><a
-            class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
+            class="home-translated-text border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
             href="/password/email"
-            >{{ language.button_lang.reset }}.</a
+            >{{ translate.button('reset') }}.</a
           ></span
         >
       </p>
-      <button id="btn" type="submit" class="btn" @click="login">
-        {{ language.button_lang.sign_in }}
+      <button
+        id="btn"
+        type="submit"
+        class="btn home-translated-text-btn"
+        @click="login"
+      >
+        {{ translate.button('sign_in') }}
         <svg-vue class="" icon="right-arrow" />
       </button>
     </div>
@@ -105,6 +118,7 @@ import { defineComponent, reactive, ref } from 'vue';
 import axios from 'axios';
 import Loader from 'Components/Loader.vue';
 import encrypt from 'Composable/encryption';
+import { Translate } from 'Composable/translationHelper';
 export default defineComponent({
   components: {
     Loader,
@@ -122,7 +136,7 @@ export default defineComponent({
     },
   },
   setup() {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const formData = reactive({
       username: '',
       password: '',
@@ -167,7 +181,7 @@ export default defineComponent({
       errorData,
       isLoaderVisible,
       login,
-      language,
+      translate,
     };
   },
 });

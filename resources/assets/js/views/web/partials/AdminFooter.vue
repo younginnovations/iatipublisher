@@ -19,18 +19,20 @@
 
           <div class="footer__links">
             <span class="font-bold text-n-10">{{
-              language.web_lang.iati_publisher
+              translate.webText('iati_publisher')
             }}</span>
             <ul class="mt-2 flex flex-col">
               <li>
                 <a :href="superAdmin ? '/list-organisations' : '/activities'">{{
                   superAdmin
-                    ? language.common_lang.org_list
-                    : language.activity_lang.your_activities_label
+                    ? translate.commonText('org_list')
+                    : translate.textFromKey(
+                        'activity_detail.your_activities_label'
+                      )
                 }}</a>
               </li>
               <li>
-                <a href="/about">{{ language.web_lang.about }}</a>
+                <a href="/about">{{ translate.webText('about ') }}</a>
               </li>
               <li>
                 <a
@@ -38,45 +40,47 @@
                   rel="noopener noreferrer"
                   class="cursor-pointer"
                   @click="downloadManual('user')"
-                  >{{ language.user_lang.user_manual }} V1.0</a
+                  >{{ translate.textFromKey('user.user_manual') }} V1.0</a
                 >
               </li>
             </ul>
           </div>
           <div class="footer__links">
             <span class="font-bold text-n-10">{{
-              language.web_lang.iati_standard
+              translate.webText('iati_standard')
             }}</span>
             <ul class="mt-2 flex flex-col">
               <li>
                 <a href="/iati-standard">{{
-                  language.web_lang.iati_standard
+                  translate.webText('iati_standard')
                 }}</a>
               </li>
               <li>
                 <a href="/publishing-checklist">{{
-                  language.web_lang.publishing_checklist
+                  translate.webText('publishing_checklist')
                 }}</a>
               </li>
               <li>
-                <a href="/support">{{ language.web_lang.support }}</a>
+                <a href="/support">{{ translate.webText('support ') }}</a>
               </li>
             </ul>
           </div>
           <div class="footer__links lg:justify-self-end">
             <div class="text-xs leading-5">
-              <p>{{ language.web_lang.footer.part_of_iati_unified_label }}</p>
-              <p>{{ language.web_lang.footer.code_licensed_under_label }}</p>
+              <p>
+                {{ translate.webText('footer.part_of_iati_unified_label') }}
+              </p>
+              <p>{{ translate.webText('footer.code_licensed_under_label') }}</p>
               <p>
                 {{
-                  language.web_lang.footer.documentation_licensed_under_label
+                  translate.webText('footer.documentation_licensed_under_label')
                 }}
               </p>
             </div>
             <div class="my-5 flex items-center space-x-2 text-n-10">
               <svg-vue class="text-2xl" icon="headphone" />
               <span class="text-xs font-bold uppercase">{{
-                language.web_lang.footer.any_questions_contact_label
+                translate.webText('footer.any_questions_contact_label')
               }}</span>
             </div>
             <ul>
@@ -96,7 +100,7 @@
       <div class="footer__container grid gap-3 sm:grid-cols-2">
         <span class="flex items-center text-n-30">
           <svg-vue class="mr-1 text-base" icon="copyright" />
-          {{ language.web_lang.footer.copyright_label }}</span
+          {{ translate.webText('footer.copyright_label') }}</span
         >
         <div class="flex sm:justify-end">
           <a
@@ -117,12 +121,13 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 import axios from 'axios';
+import { Translate } from 'Composable/translationHelper';
 
 defineProps({
   superAdmin: { type: Boolean, required: false, default: false },
 });
 
-const language = window['globalLang'];
+const translate = new Translate();
 
 function downloadManual(type: string) {
   let fileName = {

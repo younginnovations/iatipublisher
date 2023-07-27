@@ -2,7 +2,7 @@
   <div v-for="(post, i) in data.content" :key="i" class="title-content">
     <div v-if="post.narrative" class="flex flex-col">
       <span v-if="post.language" class="language mb-1.5">
-        ({{ language.common_lang.language }}:
+        ({{ translate.commonText('language') }}:
         {{ types.languages[post.language] }})
       </span>
       <span v-if="post.narrative" class="max-w-[887px] text-sm">
@@ -10,10 +10,7 @@
       </span>
     </div>
     <span v-else class="text-sm italic">{{
-      language.common_lang.missing.element.replace(
-        ':element',
-        language.common_lang.title
-      )
+      translate.missingText('element', 'common.title')
     }}</span>
     <div v-if="i !== data.content.length - 1" class="mb-4"></div>
   </div>
@@ -21,6 +18,7 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ActivityTitle',
@@ -35,9 +33,9 @@ export default defineComponent({
     interface Types {
       languages: [];
     }
-    const language = window['globalLang'];
+    const translate = new Translate();
     const types = inject('types') as Types;
-    return { types, language };
+    return { types, translate };
   },
 });
 </script>

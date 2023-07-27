@@ -2,31 +2,35 @@
   <div>
     <div class="registry__info">
       <div class="mb-4 text-sm font-bold text-n-50">
-        {{ language.settings_lang.default_values.label }}
+        {{ translate.textFromKey('settings.default_values.label') }}
       </div>
       <div class="mb-4 flex items-center text-xs text-n-50">
         <button>
           <HoverText
-            :name="language.settings_lang.default_values.label"
-            :hover-text="language.settings_lang.default_values.hover_text"
+            :name="translate.textFromKey('settings.default_values.label')"
+            :hover-text="
+              translate.textFromKey('settings.default_values.hover_text')
+            "
           />
         </button>
       </div>
     </div>
     <span class="text-sm font-bold text-n-50">{{
-      language.settings_lang.default_for_all_data_label
+      translate.textFromKey('settings.default_for_all_data_label')
     }}</span>
     <div class="register mt-4 mb-6">
       <div class="register__container mb-0">
         <div>
           <div class="flex justify-between">
             <label for="default-currency">{{
-              language.settings_lang.default_currency.label
+              translate.textFromKey('settings.default_currency.label')
             }}</label>
             <button>
               <HoverText
-                :name="language.settings_lang.default_currency.label"
-                :hover-text="language.settings_lang.default_currency.hover_text"
+                :name="translate.textFromKey('settings.default_currency.label')"
+                :hover-text="
+                  translate.textFromKey('settings.default_currency.hover_text')
+                "
                 :show-iati-reference="true"
               />
             </button>
@@ -36,7 +40,9 @@
             v-model="defaultForm.default_currency"
             :disabled="userRole !== 'admin' ? true : false"
             class="vue__select"
-            :placeholder="language.settings_lang.default_currency.placeholder"
+            :placeholder="
+              translate.textFromKey('settings.default_currency.placeholder')
+            "
             :options="props.currencies"
             :searchable="true"
             @click="updateStore('default_currency')"
@@ -46,18 +52,20 @@
           </span>
 
           <p v-if="!defaultError.default_currency">
-            {{ language.settings_lang.default_currency.help_text }}
+            {{ translate.textFromKey('settings.default_currency.help_text') }}
           </p>
         </div>
         <div>
           <div class="flex justify-between">
             <label for="default-language">{{
-              language.settings_lang.default_language.label
+              translate.textFromKey('settings.default_language.label')
             }}</label>
             <button>
               <HoverText
-                :name="language.settings_lang.default_language.label"
-                :hover-text="language.settings_lang.default_language.hover_text"
+                :name="translate.textFromKey('settings.default_language.label')"
+                :hover-text="
+                  translate.textFromKey('settings.default_language.hover_text')
+                "
                 :show-iati-reference="true"
               />
             </button>
@@ -70,7 +78,9 @@
               error__input: defaultError.default_language,
             }"
             :disabled="userRole !== 'admin' ? true : false"
-            :placeholder="language.settings_lang.default_language.placeholder"
+            :placeholder="
+              translate.textFromKey('settings.default_language.placeholder')
+            "
             :searchable="true"
             :options="props.languages"
             @click="updateStore('default_language')"
@@ -80,27 +90,29 @@
           </span>
 
           <p v-if="!defaultError.default_language">
-            {{ language.settings_lang.default_language.help_text }}
+            {{ translate.textFromKey('settings.default_language.help_text') }}
           </p>
         </div>
       </div>
     </div>
     <span class="text-sm font-bold text-n-50">{{
-      language.settings_lang.default_for_activity_label
+      translate.textFromKey('settings.default_for_activity_label')
     }}</span>
     <div class="register mt-4">
       <div class="register__container">
         <div>
           <div class="flex justify-between">
             <label for="default-hierarchy">{{
-              language.settings_lang.default_hierarchy.label
+              translate.textFromKey('settings.default_hierarchy.label')
             }}</label>
             <button>
               <HoverText
                 width="w-64"
-                :name="language.settings_lang.default_hierarchy.label"
+                :name="
+                  translate.textFromKey('settings.default_hierarchy.label')
+                "
                 :hover-text="
-                  language.settings_lang.default_hierarchy.hover_text
+                  translate.textFromKey('settings.default_hierarchy.hover_text')
                 "
                 :show-iati-reference="true"
               />
@@ -112,29 +124,35 @@
             :disabled="userRole !== 'admin' ? true : false"
             class="register__input mb-2"
             type="text"
-            :placeholder="language.settings_lang.default_hierarchy.placeholder"
+            :placeholder="
+              translate.textFromKey('settings.default_hierarchy.placeholder')
+            "
             @input="updateStore('hierarchy')"
           />
           <span v-if="defaultError.hierarchy" class="error" role="alert">
             {{ defaultError.hierarchy }}
           </span>
           <p v-if="!defaultError.hierarchy">
-            {{ language.settings_lang.default_hierarchy.help_text }}
+            {{ translate.textFromKey('settings.default_hierarchy.help_text') }}
           </p>
         </div>
         <!--  Default Hierarchy      -->
         <div>
           <div class="flex justify-between">
             <label for="budget-not-provided">{{
-              language.settings_lang.budget_not_provided.label
+              translate.textFromKey('settings.budget_not_provided.label')
             }}</label>
 
             <button>
               <HoverText
                 width="w-72"
-                :name="language.settings_lang.budget_not_provided.label"
+                :name="
+                  translate.textFromKey('settings.budget_not_provided.label')
+                "
                 :hover-text="
-                  language.settings_lang.budget_not_provided.hover_text
+                  translate.textFromKey(
+                    'settings.budget_not_provided.hover_text'
+                  )
                 "
               />
             </button>
@@ -148,7 +166,7 @@
               error__input: defaultError.budget_not_provided,
             }"
             :placeholder="
-              language.settings_lang.budget_not_provided.placeholder
+              translate.textFromKey('settings.budget_not_provided.placeholder')
             "
             :options="props.budgetNotProvided"
             :searchable="true"
@@ -166,14 +184,16 @@
         <div>
           <div class="flex justify-between">
             <label for="humanitarian">{{
-              language.settings_lang.humanitarian.label
+              translate.textFromKey('settings.humanitarian.label')
             }}</label>
 
             <button>
               <HoverText
                 width="w-72"
-                :name="language.settings_lang.humanitarian.label"
-                :hover-text="language.settings_lang.humanitarian.hover_text"
+                :name="translate.textFromKey('settings.humanitarian.label')"
+                :hover-text="
+                  translate.textFromKey('settings.humanitarian.hover_text')
+                "
                 :show-iati-reference="true"
               />
             </button>
@@ -186,7 +206,9 @@
             :class="{
               error__input: defaultError.humanitarian,
             }"
-            :placeholder="language.settings_lang.humanitarian.placeholder"
+            :placeholder="
+              translate.textFromKey('settings.humanitarian.placeholder')
+            "
             :options="props.humanitarian"
             :searchable="true"
             @click="updateStore('humanitarian')"
@@ -195,7 +217,7 @@
             {{ defaultError.humanitarian }}
           </span>
           <p v-if="!defaultError.humanitarian">
-            {{ language.settings_lang.humanitarian.help_text }}
+            {{ translate.textFromKey('settings.humanitarian.help_text') }}
           </p>
         </div>
         <!--  Humanitarian      -->
@@ -425,6 +447,7 @@ import Multiselect from '@vueform/multiselect';
 import { useStore } from '../../store';
 import { ActionTypes } from '../../store/setting/actions';
 import HoverText from './../../components/HoverText.vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   components: {
@@ -471,7 +494,7 @@ export default defineComponent({
   },
 
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const userRole = inject('userRole');
     const store = useStore();
 
@@ -496,7 +519,7 @@ export default defineComponent({
       defaultForm,
       defaultError,
       updateStore,
-      language,
+      translate,
     };
   },
 });

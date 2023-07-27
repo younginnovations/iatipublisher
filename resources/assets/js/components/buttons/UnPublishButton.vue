@@ -1,7 +1,7 @@
 <template>
   <BtnComponent
     class=""
-    :text="language.button_lang.unpublish"
+    :text="translate.button('unpublish')"
     :type="type"
     icon="cancel-cloud"
     @click="unpublishValue = true"
@@ -13,31 +13,26 @@
           class="mr-1 mt-0.5 text-lg text-crimson-40"
           icon="cancel-cloud"
         />
-        <b
-          >{{ language.button_lang.unpublish }}
-          {{ language.common_lang.activity }}</b
-        >
+        <b>
+          {{ translate.button('unpublish') }}
+          {{ translate.commonText('activity') }}
+        </b>
       </div>
       <div class="rounded-lg bg-rose p-4">
-        {{
-          language.button_lang.unpublish_confirmation.replace(
-            ':element',
-            language.common_lang.activity
-          )
-        }}?
+        {{ translate.button('unpublish_confirmation', 'common.activity') }}?
       </div>
     </div>
     <div class="flex justify-end">
       <div class="inline-flex">
         <BtnComponent
           class="bg-white px-6 uppercase"
-          :text="language.button_lang.go_back"
+          :text="translate.button('go_back')"
           type=""
           @click="unpublishValue = false"
         />
         <BtnComponent
           class="space"
-          :text="language.button_lang.unpublish"
+          :text="translate.button('unpublish')"
           type="primary"
           @click="unPublishFunction"
         />
@@ -63,8 +58,9 @@ import Loader from 'Components/sections/ProgressLoader.vue';
 
 // Vuex Store
 import { detailStore } from 'Store/activities/show';
+import { Translate } from 'Composable/translationHelper';
 
-const language = window['globalLang'];
+const translate = new Translate();
 const props = defineProps({
   type: { type: String, default: 'primary' },
   activityId: { type: Number, required: true },
@@ -89,7 +85,7 @@ interface LoaderTypeface {
 
 const loader: LoaderTypeface = reactive({
   value: false,
-  text: language.common_lang.please_wait,
+  text: translate.commonText('please_wait'),
 });
 
 // call api for unpublishing
@@ -120,7 +116,7 @@ const unPublishFunction = () => {
     loader.value = true;
   }, 500);
 
-  loader.text = language.common_lang.unpublishing;
+  loader.text = translate.event('unpublishing');
 
   axios.post(`/activity/${id}/unpublish`).then((res) => {
     const response = res.data;

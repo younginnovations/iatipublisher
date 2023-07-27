@@ -7,8 +7,9 @@
   >
     <div class="bulk-head flex items-center justify-between bg-eggshell p-4">
       <div class="grow text-sm font-bold leading-normal">
-        {{ language.common_lang.publishing }}
-        {{ activities && Object.keys(activities).length }} activities
+        {{ translate.event('publishing') }}
+        {{ activities && Object.keys(activities).length }}
+        {{ translate.commonText('activities') }}
       </div>
       <div class="flex shrink-0">
         <div
@@ -16,9 +17,9 @@
           @click="retryPublishing"
         >
           <svg-vue class="mr-1" icon="redo" />
-          <span class="text-xs uppercase">{{
-            language.common_lang.retry
-          }}</span>
+          <span class="text-xs uppercase">
+            {{ translate.commonText('retry') }}</span
+          >
         </div>
         <div
           v-if="completed === 'completed'"
@@ -70,6 +71,8 @@ import {
 import axios from 'axios';
 import { detailStore } from 'Store/activities/show';
 import { useStore } from 'Store/activities/index';
+import { Translate } from 'Composable/translationHelper';
+
 const singleStore = useStore();
 const emit = defineEmits(['close']);
 const store = detailStore();
@@ -107,7 +110,7 @@ interface actElements {
   status: string;
 }
 
-const language = window['globalLang'];
+const translate = new Translate();
 //inject
 let paStorage = inject('paStorage') as paInterface;
 
@@ -305,8 +308,9 @@ const failedActivities = (nestedObject: actElements) => {
     hasFailedActivities.ids = failedActivitiesID;
     hasFailedActivities.data = failedActivitiesData as actElements;
     refreshToastMsg.refreshMessageType = false;
-    refreshToastMsg.refreshMessage =
-      language.common_lang.error.some_activities_have_failed_to_publish;
+    refreshToastMsg.refreshMessage = translate.error(
+      'some_activities_have_failed_to_publish_refresh_to_see_changes'
+    );
   } else {
     hasFailedActivities.status = false;
     hasFailedActivities.ids = [];

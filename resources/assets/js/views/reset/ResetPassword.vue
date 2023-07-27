@@ -2,8 +2,8 @@
   <div class="mt-14">
     <Loader v-if="loaderVisibility" />
     <div class="reset reset__password" @keyup.enter="reset">
-      <h2>{{ language.common_lang.reset_password }}</h2>
-      <p class="mb-4">{{ language.common_lang.enter_new_password }}</p>
+      <h2>{{ translate.commonText('reset_password') }}</h2>
+      <p class="mb-4">{{ translate.commonText('enter_new_password') }}</p>
       <div class="text-center">
         <span v-if="errorData.email !== ''" class="error" role="alert">
           {{ errorData.email }}
@@ -16,7 +16,7 @@
         }"
       >
         <label class="text-sm font-bold text-bluecoral" for="password">{{
-          language.common_lang.new_password
+          translate.commonText('new_password')
         }}</label>
         <input
           id="new_password"
@@ -26,7 +26,7 @@
             error__input: errorData.password !== '',
           }"
           type="password"
-          :placeholder="language.common_lang.enter_new_password_placeholder"
+          :placeholder="translate.commonText('enter_new_password_placeholder')"
         />
         <svg-vue class="lock-icon text-xl" icon="pw-lock" />
         <span v-if="errorData.password !== ''" class="error" role="alert">
@@ -37,7 +37,7 @@
         <label
           class="text-sm font-bold text-bluecoral"
           for="password_confirmation"
-          >{{ language.common_lang.repeat_password }}</label
+          >{{ translate.commonText('repeat_password') }}</label
         >
         <input
           id="repeat_password"
@@ -49,7 +49,7 @@
               (errorData.password && formData.password !== '') !== '',
           }"
           type="password"
-          :placeholder="language.common_lang.reenter_password_placeholder"
+          :placeholder="translate.commonText('reenter_password_placeholder')"
         />
         <svg-vue class="lock-icon text-xl" icon="pw-lock" />
         <span
@@ -61,7 +61,7 @@
         </span>
       </div>
       <button type="submit" class="btn reset-btn" @click="reset()">
-        {{ language.common_lang.reset_password }}
+        {{ translate.commonText('reset_password') }}
       </button>
     </div>
   </div>
@@ -71,6 +71,7 @@ import { defineComponent, reactive, ref } from 'vue';
 import axios from 'axios';
 import Loader from 'Components/Loader.vue';
 import encrypt from 'Composable/encryption';
+import { Translate } from 'Composable/translationHelper';
 export default defineComponent({
   components: {
     Loader,
@@ -86,7 +87,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const loaderVisibility = ref(false);
     const formData = reactive({
       email: props.email,
@@ -156,7 +157,7 @@ export default defineComponent({
       formData,
       errorData,
       reset,
-      language,
+      translate,
     };
   },
 });

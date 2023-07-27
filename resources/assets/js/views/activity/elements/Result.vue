@@ -8,10 +8,7 @@
         <div class="title flex grow items-center">
           <svg-vue class="mr-1.5 text-xl text-bluecoral" icon="bill"></svg-vue>
           <div class="title text-sm font-bold">
-            {{
-              language.elements_common_lang[title.toString()] ??
-              title.toString().replace(/_/g, '-')
-            }}
+            {{ translate.elementFromElementName(title.toString()) }}
           </div>
           <div
             class="status ml-2.5 flex text-xs leading-5"
@@ -21,29 +18,21 @@
             }"
           >
             <b class="mr-2 text-base leading-3">.</b>
-            <span v-if="completed">{{ language.common_lang.completed }}</span>
-            <span v-else>{{ language.common_lang.not_completed }}</span>
+            <span v-if="completed">{{
+              translate.commonText('completed')
+            }}</span>
+            <span v-else>{{ translate.commonText('not_completed') }}</span>
           </div>
         </div>
         <div class="icons flex items-center">
           <Btn
-            :text="
-              language.button_lang.add_element.replace(
-                ':element',
-                language.common_lang.new_result
-              )
-            "
+            :text="translate.button('add_element', 'common.new_result')"
             icon="add"
             :link="`/activity/${activityId}/${title}/create`"
             class="mr-2.5"
           />
           <Btn
-            :text="
-              language.button_lang.show_element.replace(
-                ':element',
-                language.common_lang.full_result
-              )
-            "
+            :text="translate.button('show_element', 'common.full_result')"
             icon=""
             design="bgText"
             :link="`/activity/${activityId}/${title}`"
@@ -75,23 +64,13 @@
                   </div>
                   <div class="flex shrink-0">
                     <Btn
-                      :text="
-                        language.button_lang.view_element.replace(
-                          ':element',
-                          language.common_lang.result
-                        )
-                      "
+                      :text="translate.button('view_element', 'common.result')"
                       icon="eye"
                       :link="`/activity/${activityId}/${title}/${result.id}`"
                       class="mr-2.5"
                     />
                     <Btn
-                      :text="
-                        language.button_lang.edit_element.replace(
-                          ':element',
-                          language.common_lang.result
-                        )
-                      "
+                      :text="translate.button('edit_element', 'common.result')"
                       icon="edit"
                       :link="`/activity/${activityId}/${title}/${result.id}/edit`"
                     />
@@ -102,27 +81,28 @@
                   <table class="mb-3">
                     <tbody>
                       <tr>
-                        <td>{{ language.common_lang.result_type }}</td>
+                        <td>{{ translate.commonText('result_type') }}</td>
                         <td>
                           <div>
                             {{
-                              types.resultType[result.result.type] ?? 'Missing'
+                              types.resultType[result.result.type] ??
+                              translate.missingText()
                             }}
                           </div>
                         </td>
                       </tr>
                       <tr>
-                        <td>{{ language.common_lang.description }}</td>
+                        <td>{{ translate.commonText('description') }}</td>
                         <td>
                           <div class="description-content">
                             <div class="language mb-1.5">
-                              ({{ language.common_lang.language }}:
+                              ({{ translate.commonText('language') }}:
                               {{
                                 getActivityTitle(
                                   result.result.description[0].narrative,
                                   currentLanguage
                                 ) === 'Untitled'
-                                  ? language.common_lang.missing.default
+                                  ? translate.missingText()
                                   : types.languages[
                                       result?.result?.description?.[0]
                                         ?.narrative?.[0]?.language ??
@@ -149,10 +129,10 @@
                             <NotYet
                               :link="`/${title}/${result.id}/indicator/create`"
                               :description="
-                                language.button_lang.not_yet_added_period
+                                translate.button('not_yet_added_period')
                               "
                               :btn-text="
-                                language.button_lang.not_yet_added_period_btn
+                                translate.button('not_yet_added_period_btn')
                               "
                             />
                           </div>
@@ -170,14 +150,14 @@
                       class="head flex items-center border-b border-n-20 px-6 py-2"
                     >
                       <div class="grow text-xs font-bold text-n-50">
-                        {{ language.common_lang.indicator }}
+                        {{ translate.commonText('indicator') }}
                       </div>
                       <div class="inline-flex shrink-0">
                         <Btn
                           :text="
-                            language.button_lang.add_element.replace(
-                              ':element',
-                              language.common_lang.new_indicator
+                            translate.button(
+                              'add_element',
+                              'common.new_indicator'
                             )
                           "
                           icon="add"
@@ -186,9 +166,9 @@
                         />
                         <Btn
                           :text="
-                            language.button_lang.show_element.replace(
-                              ':element',
-                              language.common_lang.full_indicator
+                            translate.button(
+                              'show_element',
+                              'common.full_indicator'
                             )
                           "
                           icon=""
@@ -214,16 +194,17 @@
                               <div class="mr-4">
                                 {{
                                   indicator.indicator.title[0].narrative[0]
-                                    .narrative ?? 'untitled'
+                                    .narrative ??
+                                  translate.commonText('untitled')
                                 }}
                               </div>
                               <div class="flex shrink-0 grow justify-between">
                                 <span class="flex">
                                   <Btn
                                     :text="
-                                      language.button_lang.view_element.replace(
-                                        ':element',
-                                        language.common_lang.indicator
+                                      translate.button(
+                                        'view_element',
+                                        'common.indicator'
                                       )
                                     "
                                     icon="eye"
@@ -232,9 +213,9 @@
                                   />
                                   <Btn
                                     :text="
-                                      language.button_lang.edit_element.replace(
-                                        ':element',
-                                        language.common_lang.indicator
+                                      translate.button(
+                                        'edit_element',
+                                        'common.indicator'
                                       )
                                     "
                                     :link="`/${title}/${result.id}/indicator/${indicator.id}/edit`"
@@ -243,9 +224,9 @@
                                 </span>
                                 <Btn
                                   :text="
-                                    language.button_lang.add_element.replace(
-                                      ':element',
-                                      language.common_lang.period
+                                    translate.button(
+                                      'add_element',
+                                      'common.period'
                                     )
                                   "
                                   icon="add"
@@ -256,7 +237,9 @@
                             <table>
                               <tbody>
                                 <tr>
-                                  <td>{{ language.common_lang.baseline }}:</td>
+                                  <td>
+                                    {{ translate.commonText('baseline') }}:
+                                  </td>
                                   <td>
                                     <div
                                       v-for="(baseline, b) in indicator
@@ -272,27 +255,21 @@
                                     >
                                       <div class="description text-xs">
                                         <span>
-                                          {{ language.common_lang.value }}:
+                                          {{ translate.commonText('value') }}:
                                           <template v-if="baseline.value">
                                             {{ baseline.value }},
                                           </template>
                                           <template v-else>
-                                            {{
-                                              language.common_lang.missing
-                                                .default
-                                            }},
+                                            {{ translate.missingText() }},
                                           </template>
                                         </span>
                                         <span>
-                                          {{ language.common_lang.date }}:
+                                          {{ translate.commonText('date') }}:
                                           <template v-if="baseline.date">
                                             {{ baseline.date }}
                                           </template>
                                           <template v-else>
-                                            {{
-                                              language.common_lang.missing
-                                                .default
-                                            }}
+                                            {{ translate.missingText() }}
                                           </template>
                                         </span>
                                       </div>
@@ -300,7 +277,7 @@
                                   </td>
                                 </tr>
                                 <tr v-if="indicator.periods.length > 0">
-                                  <td>{{ language.common_lang.period }}:</td>
+                                  <td>{{ translate.commonText('period') }}:</td>
                                   <td>
                                     <div class="inline-flex gap-4">
                                       <div>
@@ -340,7 +317,7 @@
                                           </div>
                                           <div class="ml-2">
                                             <Btn
-                                              :text="language.button_lang.edit"
+                                              :text="translate.button('edit')"
                                               icon="edit"
                                               :link="`/indicator/${indicator.id}/period/${period.id}/edit`"
                                             />
@@ -351,8 +328,7 @@
                                         <Btn
                                           class="-mt-1"
                                           :text="
-                                            language.button_lang
-                                              .show_full_period
+                                            translate.button('show_full_period')
                                           "
                                           icon=""
                                           design="bgText"
@@ -369,8 +345,9 @@
                                       <NotYet
                                         :link="`/indicator/${indicator.id}/period/create`"
                                         :description="
-                                          language.button_lang
-                                            .not_yet_added_period
+                                          translate.button(
+                                            'not_yet_added_period'
+                                          )
                                         "
                                       />
                                     </div>
@@ -408,6 +385,7 @@ import NotYet from 'Components/sections/HaveNotAddedYet.vue';
 // composable
 import getActivityTitle from 'Composable/title';
 import dateFormat from 'Composable/dateFormat';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ActivityResult',
@@ -448,7 +426,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const language = window['globalLang'];
+    const translate = new Translate();
     const format = 'MMMM DD, YYYY';
 
     const { data } = toRefs(props);
@@ -464,7 +442,7 @@ export default defineComponent({
       getActivityTitle,
       currentLanguage,
       dateFormat,
-      language,
+      translate,
     };
   },
 });

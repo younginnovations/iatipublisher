@@ -35,15 +35,16 @@
         v-if="hasFailedActivities?.ids?.length > 0"
         class="text-sm font-medium text-crimson-50"
       >
-        Some activities have failed to publish.
+        {{ translate.error('some_activities_have_failed_to_publish') }}
       </div>
       <div v-else class="text-sm text-n-40">
-        {{ language.common_lang.publishing }}
+        {{ translate.commonText('publishing') }}
         <span
           >{{ completedActivities }}/{{ Object.keys(activities).length }}</span
         >
-        {{ language.elements_common_lang.activities }}
-        {{ language.common_lang.to }} {{ language.common_lang.iati_registry }}
+        {{ translate.element('activities') }}
+        {{ translate.commonText('to') }}
+        {{ translate.commonText('iati_registry') }}
       </div>
     </div>
     <div v-else class="rounded-t-lg bg-white">
@@ -51,9 +52,9 @@
         class="flex justify-between rounded-t-lg bg-eggshell py-4 px-6 text-sm font-bold"
       >
         <h6>
-          {{ language.common_lang.publishing }}
+          {{ translate.commonText('publishing') }}
           {{ bulkPublishLength != 0 ? bulkPublishLength : '' }}
-          {{ language.elements_common_lang.activities }}
+          {{ translate.element('activities') }}
         </h6>
         <div
           v-if="hasFailedActivities?.ids?.length > 0"
@@ -107,9 +108,11 @@ import {
   defineEmits,
   onUnmounted,
 } from 'vue';
-import { useStore } from 'Store/activities/index';
+import { useStore } from 'Store/activities';
 import axios from 'axios';
 import { isJson } from 'Composable/utils';
+import { Translate } from 'Composable/translationHelper';
+
 const store = useStore();
 let pa = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
@@ -127,7 +130,7 @@ interface RefreshToastMsgTypeface {
   refreshMessage: string;
 }
 
-const language = window['globalLang'];
+const translate = new Translate();
 const bulkPublishLength = ref(0);
 const openModel = ref(false);
 let paStorage = ref(store.state.bulkpublishActivities);
@@ -199,12 +202,14 @@ const bulkPublishStatus = () => {
             if (hasFailedActivities?.ids?.length > 0) {
               refreshToastMsg.visibility = true;
               refreshToastMsg.refreshMessageType = false;
-              refreshToastMsg.refreshMessage =
-                language.common_lang.error.some_activities_have_failed_to_publish;
+              refreshToastMsg.refreshMessage = translate.error(
+                'some_activities_have_failed_to_publish_refresh_to_see_changes'
+              );
             } else {
               refreshToastMsg.visibility = true;
-              refreshToastMsg.refreshMessage =
-                language.common_lang.error.activity_has_been_published_successfully;
+              refreshToastMsg.refreshMessage = translate.error(
+                'activity_has_been_published_successfully'
+              );
               setTimeout(() => {
                 refreshToastMsg.visibility = false;
               }, 10000);
@@ -263,8 +268,9 @@ const failedActivities = (nestedObject: actElements) => {
     hasFailedActivities.ids = failedActivitiesID;
     hasFailedActivities.data = failedActivitiesData as actElements;
     refreshToastMsg.refreshMessageType = false;
-    refreshToastMsg.refreshMessage =
-      language.common_lang.error.some_activities_have_failed_to_publish;
+    refreshToastMsg.refreshMessage = translate.error(
+      'some_activities_have_failed_to_publish_refresh_to_see_changes'
+    );
   } else {
     hasFailedActivities.status = false;
     hasFailedActivities.ids = [];

@@ -1,7 +1,7 @@
 <?php
 return array (
   'default' => 'Falta',
-  'element' => 'Falta :event',
+  'element' => 'Falta :element',
   'type' => 'Falta el tipo',
   'date' => 'Falta la fecha',
   'narrative' => 'Falta la descripción',
@@ -16,10 +16,10 @@ return array (
   'reference_role' => 'Falta el rol de la referencia',
   'transaction_type' => 'Falta el tipo de transacción',
   'language' => 'Falta el idioma',
-  'disbursement' => 'Falta el código del canal de los desembolsos',
+  'disbursement_channel_code' => 'Falta el código del canal de los desembolsos',
   'finance_type' => 'Falta el tipo de financiación',
   'flow_type' => 'Falta el tipo de flujo',
-  'tied_status' => 'Falta el código del estado de condicionamiento',
+  'tied_status_code' => 'Falta el código del estado de condicionamiento',
   'amount' => 'Falta el importe',
   'url' => 'Falta la URL',
   'category' => 'Falta la categoría',
@@ -38,4 +38,10 @@ return array (
   'xml_parser_1868' => 'El elemento “:element” no contiene el código necesario de :element.',
   'xml_parser_1871' => 'El elemento “:element” no contiene el :sub-element necesario.',
   'xml_parser_default' => 'El elemento “:element” no contiene el/la :element necesario/a.',
+  'data' => 'Datos incompletos',
+  'no_content' => 'Sin contenido',
+  'periods_not_found' => 'No se encontraron los períodos',
+  'result_not_found' => 'No se encontró el resultado',
+  'not_found' => 'no se encontró',
+  'no_activities_found' => 'No se encontraron actividades',
 );
