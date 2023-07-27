@@ -37,21 +37,21 @@
                     <p
                       v-html="
                         translate.textFromKey(
-                          'what_is_activity.description.one'
+                          'activities.what_is_activity.description.one'
                         )
                       "
                     ></p>
                     <p
                       v-html="
                         translate.textFromKey(
-                          'what_is_activity.description.two'
+                          'activities.what_is_activity.description.two'
                         )
                       "
                     ></p>
                     <p
                       v-html="
                         translate.textFromKey(
-                          'what_is_activity.description.three'
+                          'activities.what_is_activity.description.three'
                         )
                       "
                     ></p>

@@ -3,9 +3,7 @@
     <Loader v-if="loaderVisibility" />
     <div class="setting input__field">
       <span class="text-xs font-bold text-n-40">{{
-        translate.textFromKey(
-          'activities_default.override_default_values.label'
-        )
+        translate.textFromKey('activity_default.override_default_values.label')
       }}</span>
       <div class="flex items-center justify-between">
         <div class="mt-4 mb-6 flex items-center">
@@ -13,7 +11,7 @@
           <h2 class="ml-3 text-heading-4 font-bold text-n-50">
             {{
               translate.textFromKey(
-                'activities_default.override_default_values.label'
+                'activity_default.override_default_values.label'
               )
             }}
           </h2>
@@ -30,7 +28,7 @@
         <div class="mb-8 text-xs text-n-40">
           {{
             translate.textFromKey(
-              'activities_default.override_default_values.text'
+              'activity_default.override_default_values.text'
             )
           }}
         </div>
@@ -39,18 +37,18 @@
             <div>
               <div class="flex justify-between">
                 <label for="default-currency">{{
-                  translate.textFromKey('activities_default.currency.label')
+                  translate.textFromKey('activity_default.currency.label')
                 }}</label>
                 <button>
                   <HoverText
                     :name="
                       translate.textFromKey(
-                        'activities_default.currency.hover_header'
+                        'activity_default.currency.hover_header'
                       )
                     "
                     :hover-text="
                       translate.textFromKey(
-                        'activities_default.currency.hover_text'
+                        'activity_default.currency.hover_text'
                       )
                     "
                     :show-iati-reference="true"
@@ -62,9 +60,7 @@
                 v-model="defaultValues.default_currency"
                 class="vue__select"
                 :placeholder="
-                  translate.textFromKey(
-                    'activities_default.currency.placeholder'
-                  )
+                  translate.textFromKey('activity_default.currency.placeholder')
                 "
                 :options="currencies"
                 :searchable="true"
@@ -84,7 +80,7 @@
                 class="text-xs text-n-40"
               >
                 {{
-                  translate.textFromKey('activities_default.currency.help_text')
+                  translate.textFromKey('activity_default.currency.help_text')
                 }}
               </p>
             </div>
@@ -92,18 +88,18 @@
             <div>
               <div class="flex justify-between">
                 <label for="default-currency">{{
-                  translate.textFromKey('activities_default.language.label')
+                  translate.textFromKey('activity_default.language.label')
                 }}</label>
                 <button>
                   <HoverText
                     :name="
                       translate.textFromKey(
-                        'activities_default.language.hover_header'
+                        'activity_default.language.hover_header'
                       )
                     "
                     :hover-text="
                       translate.textFromKey(
-                        'activities_default.language.hover_text'
+                        'activity_default.language.hover_text'
                       )
                     "
                     :show-iati-reference="true"
@@ -115,9 +111,7 @@
                 v-model="defaultValues.default_language"
                 class="vue__select"
                 :placeholder="
-                  translate.textFromKey(
-                    'activities_default.language.placeholder'
-                  )
+                  translate.textFromKey('activity_default.language.placeholder')
                 "
                 :searchable="true"
                 :options="props.languages"
@@ -137,7 +131,7 @@
                 class="text-xs text-n-40"
               >
                 {{
-                  translate.textFromKey('activities_default.language.help_text')
+                  translate.textFromKey('activity_default.language.help_text')
                 }}
               </p>
             </div>
@@ -145,19 +139,19 @@
             <div>
               <div class="flex justify-between">
                 <label for="default-hierarchy">{{
-                  translate.textFromKey('activities_default.hierarchy.label')
+                  translate.textFromKey('activity_default.hierarchy.label')
                 }}</label>
                 <button>
                   <HoverText
                     width="w-64"
                     :name="
                       translate.textFromKey(
-                        'activities_default.hierarchy.hover_header'
+                        'activity_default.hierarchy.hover_header'
                       )
                     "
                     :hover-text="
                       translate.textFromKey(
-                        'activities_default.hierarchy.hover_text'
+                        'activity_default.hierarchy.hover_text'
                       )
                     "
                     :show-iati-reference="true"
@@ -171,7 +165,7 @@
                 type="text"
                 :placeholder="
                   translate.textFromKey(
-                    'activities_default.hierarchy.placeholder'
+                    'activity_default.hierarchy.placeholder'
                   )
                 "
               />
@@ -190,9 +184,7 @@
                 class="text-xs text-n-40"
               >
                 {{
-                  translate.textFromKey(
-                    'activities_default.hierarchy.help_text'
-                  )
+                  translate.textFromKey('activity_default.hierarchy.help_text')
                 }}
               </p>
             </div>
@@ -201,7 +193,7 @@
               <div class="flex justify-between">
                 <label for="default-currency">{{
                   translate.textFromKey(
-                    'activities_default.budget_not_provided.label'
+                    'activity_default.budget_not_provided.label'
                   )
                 }}</label>
                 <button>
@@ -209,12 +201,12 @@
                     width="w-72"
                     :name="
                       translate.textFromKey(
-                        'activities_default.budget_not_provided.hover_header'
+                        'activity_default.budget_not_provided.hover_header'
                       )
                     "
                     :hover-text="
                       translate.textFromKey(
-                        'activities_default.budget_not_provided.hover_text'
+                        'activity_default.budget_not_provided.hover_text'
                       )
                     "
                   />
@@ -226,7 +218,7 @@
                 class="vue__select"
                 :placeholder="
                   translate.textFromKey(
-                    'activities_default.budget_not_provided.placeholder'
+                    'activity_default.budget_not_provided.placeholder'
                   )
                 "
                 :options="budgetNotProvided"
@@ -247,19 +239,19 @@
             <div>
               <div class="flex justify-between">
                 <label for="default-currency">{{
-                  translate.textFromKey('activities_default.humanitarian.label')
+                  translate.textFromKey('activity_default.humanitarian.label')
                 }}</label>
                 <button>
                   <HoverText
                     width="w-72"
                     :name="
                       translate.textFromKey(
-                        'activities_default.humanitarian.hover_header'
+                        'activity_default.humanitarian.hover_header'
                       )
                     "
                     :hover-text="
                       translate.textFromKey(
-                        'activities_default.humanitarian.hover_text'
+                        'activity_default.humanitarian.hover_text'
                       )
                     "
                     :show-iati-reference="true"
@@ -272,7 +264,7 @@
                 class="vue__select"
                 :placeholder="
                   translate.textFromKey(
-                    'activities_default.humanitarian.placeholder'
+                    'activity_default.humanitarian.placeholder'
                   )
                 "
                 :options="humanitarian"
@@ -298,13 +290,11 @@
     >
       <div class="flex items-center justify-end">
         <a class="ghost-btn mr-8" :href="`/activity/${activityId}`">{{
-          translate.textFromKey('activities_default.cancel_label')
+          translate.textFromKey('activity_default.cancel_label')
         }}</a>
         <button class="primary-btn save-btn" @click="submitForm()">
           {{
-            translate.textFromKey(
-              'activities_default.save_default_values_label'
-            )
+            translate.textFromKey('activity_default.save_default_values_label')
           }}
         </button>
       </div>

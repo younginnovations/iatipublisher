@@ -7,7 +7,7 @@
       <div class="mb-4 flex">
         <div class="title flex grow items-center">
           <svg-vue class="mr-1.5 text-xl text-bluecoral" icon="bill"></svg-vue>
-          <div class="title text-sm font-bold">
+          <div class="title result-translate-text text-sm font-bold">
             {{ translate.elementFromElementName(title.toString()) }}
           </div>
           <div
@@ -18,10 +18,12 @@
             }"
           >
             <b class="mr-2 text-base leading-3">.</b>
-            <span v-if="completed">{{
+            <span v-if="completed" class="result-translate-text">{{
               translate.commonText('completed')
             }}</span>
-            <span v-else>{{ translate.commonText('not_completed') }}</span>
+            <span v-else class="result-translate-text">{{
+              translate.commonText('not_completed')
+            }}</span>
           </div>
         </div>
         <div class="icons flex items-center">
@@ -81,9 +83,11 @@
                   <table class="mb-3">
                     <tbody>
                       <tr>
-                        <td>{{ translate.commonText('result_type') }}</td>
+                        <td class="result-translate-text">
+                          {{ translate.commonText('result_type') }}
+                        </td>
                         <td>
-                          <div>
+                          <div class="result-translate-text">
                             {{
                               types.resultType[result.result.type] ??
                               translate.missingText()
@@ -92,7 +96,9 @@
                         </td>
                       </tr>
                       <tr>
-                        <td>{{ translate.commonText('description') }}</td>
+                        <td class="result-translate-text">
+                          {{ translate.commonText('description') }}
+                        </td>
                         <td>
                           <div class="description-content">
                             <div class="language mb-1.5">
@@ -149,7 +155,9 @@
                     <div
                       class="head flex items-center border-b border-n-20 px-6 py-2"
                     >
-                      <div class="grow text-xs font-bold text-n-50">
+                      <div
+                        class="result-translate-text grow text-xs font-bold text-n-50"
+                      >
                         {{ translate.commonText('indicator') }}
                       </div>
                       <div class="inline-flex shrink-0">
@@ -237,7 +245,7 @@
                             <table>
                               <tbody>
                                 <tr>
-                                  <td>
+                                  <td class="result-translate-text">
                                     {{ translate.commonText('baseline') }}:
                                   </td>
                                   <td>
@@ -254,7 +262,7 @@
                                       }"
                                     >
                                       <div class="description text-xs">
-                                        <span>
+                                        <span class="result-translate-text">
                                           {{ translate.commonText('value') }}:
                                           <template v-if="baseline.value">
                                             {{ baseline.value }},
@@ -277,7 +285,9 @@
                                   </td>
                                 </tr>
                                 <tr v-if="indicator.periods.length > 0">
-                                  <td>{{ translate.commonText('period') }}:</td>
+                                  <td class="result-translate-text">
+                                    {{ translate.commonText('period') }}:
+                                  </td>
                                   <td>
                                     <div class="inline-flex gap-4">
                                       <div>

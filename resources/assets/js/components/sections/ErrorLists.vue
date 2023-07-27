@@ -109,7 +109,8 @@ const accordionToggle = (e: Event) => {
 };
 
 const updateErrorCountMessage = () => {
-  let translatedType = translate.stickyText(type.value, 'common');
+  let translatedType = translate.stickyText(type?.value, 'common');
+  console.log('type?.value', type?.value);
   errorType.value = errors.value.length + ' ' + capitalize(translatedType);
 };
 

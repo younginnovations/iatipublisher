@@ -27,7 +27,7 @@
       <a
         v-if="link"
         :href="link"
-        class="inline-block font-bold text-bluecoral"
+        class="translate-text-hover-learn-more inline-block font-bold text-bluecoral"
         >{{ translate.button('learn_more') }}</a
       >
     </div>

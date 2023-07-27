@@ -5,7 +5,7 @@
     :class="[{ '!cursor-not-allowed': activityLength }, btnType]"
   >
     <svg-vue v-if="icon" :icon="icon" />
-    <span v-if="text">{{ text }} </span>
+    <span v-if="text" class="translate-text-btn">{{ text }} </span>
   </button>
 </template>
 

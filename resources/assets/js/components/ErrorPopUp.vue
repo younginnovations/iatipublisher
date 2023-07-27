@@ -25,7 +25,7 @@
       </ul>
       <div class="mt-4 flex flex-row-reverse">
         <button
-          class="rounded bg-bluecoral py-2 px-5 font-semibold text-white"
+          class="translate-text-btn rounded bg-bluecoral py-2 px-5 font-semibold text-white"
           @click="close"
         >
           {{ translate.button('close') }}

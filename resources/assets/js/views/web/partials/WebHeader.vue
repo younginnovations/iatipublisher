@@ -60,7 +60,7 @@
                     <a href="/about">{{ translate.webText('about') }}</a>
                     <NavDropdown
                       :name="translate.webText('about')"
-                      :text="translate.webText('header.about_hover_text')"
+                      :text="translate.webText('about_hover_text')"
                       :btn-text="translate.button('learn_more')"
                       btn-link="/about"
                     />
@@ -86,9 +86,7 @@
                     }}</a>
                     <NavDropdown
                       :name="translate.webText('iati_standard')"
-                      :text="
-                        translate.webText('header.iati_standard_hover_text')
-                      "
+                      :text="translate.webText('iati_standard_hover_text')"
                       :btn-text="translate.button('see_all_data_fields')"
                       btn-link="/iati-standard"
                     />
@@ -97,7 +95,7 @@
                     <a href="/support">{{ translate.webText('support') }}</a>
                     <NavDropdown
                       :name="translate.webText('support')"
-                      :text="translate.webText('header.support_hover_text')"
+                      :text="translate.webText('support_hover_text')"
                       :btn-text="translate.button('read_more')"
                       btn-link="/support"
                     />

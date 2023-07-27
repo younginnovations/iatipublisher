@@ -39,13 +39,29 @@
                         )
                       }}
                     </div>
-                    <p>
-                      {{
+                    <!-- eslint-disable vue/no-v-html -->
+                    <p
+                      v-html="
                         translate.textFromKey(
                           'activities.what_is_activity.description.one'
                         )
-                      }}
-                    </p>
+                      "
+                    ></p>
+                    <p
+                      v-html="
+                        translate.textFromKey(
+                          'activities.what_is_activity.description.two'
+                        )
+                      "
+                    ></p>
+                    <p
+                      v-html="
+                        translate.textFromKey(
+                          'activities.what_is_activity.description.three'
+                        )
+                      "
+                    ></p>
+                    <!--eslint-enable-->
                   </div>
                 </div>
               </div>

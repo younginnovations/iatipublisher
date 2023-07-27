@@ -10,10 +10,18 @@
       <svg-vue icon="folder" class="text-[94px]" />
     </div>
     <h5 class="mb-[5px] text-heading-5 font-bold leading-9">
-      {{ translate.textFromKey('activities.no_activity_has_been_added_label') }}
+      {{
+        translate.textFromKey(
+          'activity_detail.no_activity_has_been_added_label'
+        )
+      }}
     </h5>
     <div class="mb-[17px] text-caption-c1 leading-5 text-n-50">
-      {{ translate.textFromKey('activities.click_on_button_to_add_new_label') }}
+      {{
+        translate.textFromKey(
+          'activity_detail.click_on_button_to_add_new_label'
+        )
+      }}
     </div>
     <ActivityButton />
   </div>

@@ -1,26 +1,50 @@
 <?php
 return array (
   'your_activities_label' => 'Sus actividades',
-  'identification' => 
+  'identification' =>
   array (
     'label' => 'Identificación',
     'uppercase' => 'IDENTIFICACIÓN',
   ),
-  'basic_activity_information' => 
+  'basic_activity_information' =>
   array (
     'label' => 'Información básica de la actividad',
     'uppercase' => 'INFORMACIÓN BÁSICA DE LA ACTIVIDAD',
   ),
-  'classifications' => 
+  'classifications' =>
   array (
     'label' => 'Clasificaciones',
     'uppercase' => 'CLASIFICACIONES',
   ),
-  'financial' => 
+  'financial' =>
   array (
     'label' => 'Información financiera',
     'uppercase' => 'INFORMACIÓN FINANCIERA',
   ),
+  'participating_organisations' => [
+      'label' => 'Participating Organisations',
+      'uppercase' => 'PARTICIPATING ORGANISATIONS',
+  ],
+  'geopolitical_information'=>[
+      'label' => 'Geopolitical Information',
+      'uppercase' => 'GEOPOLITICAL INFORMATION',
+  ],
+  'humanitarian'=>[
+      'label' => 'Humanitarian',
+      'uppercase' => 'HUMANITARIAN',
+  ],
+  'related_documents'=>[
+      'label' => 'Related Documents',
+      'uppercase' => 'RELATED DOCUMENTS',
+  ],
+  'relations'=>[
+      'label' => 'Relations',
+      'uppercase' => 'RELATIONS',
+  ],
+  'performance'=>[
+      'label' => 'Performance',
+      'uppercase' => 'PERFORMANCE',
+  ],
   'complete_all_core_label' => 'Complete todos los elementos básicos para obtener una puntuación de 100%.',
   'search_elements_placeholder' => 'Buscar elementos',
   'all_elements_label' => 'Todos los elementos',

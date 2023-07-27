@@ -136,7 +136,7 @@ export class Translate {
   }
 
   webText(key) {
-    return this.translate(this.lang.web_lang, key);
+    return this.lang.web_lang[key];
   }
 
   adminText(key, parentKey = 'header') {
@@ -221,8 +221,11 @@ export class Translate {
   }
 
   translate(translationSource, key) {
-    const keys = this.explode(key);
+    if (key === 'about' || key === 'support') {
+      console.log(key, translationSource, 'okok');
+    }
 
+    const keys = this.explode(key);
     for (const innerKey of keys) {
       translationSource = translationSource[innerKey];
     }

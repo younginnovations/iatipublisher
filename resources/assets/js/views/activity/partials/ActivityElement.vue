@@ -3,13 +3,13 @@
     <div class="mb-4">
       <div class="title mb-6 flex">
         <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
-        <b>{{
+        <b class="translate-text-modal">{{
           capitalize(
             translate.button('delete_element', 'common.element').toLowerCase()
           )
         }}</b>
       </div>
-      <div class="rounded-lg bg-rose p-4">
+      <div class="translate-text-modal rounded-lg bg-rose p-4">
         {{
           capitalize(
             translate
@@ -66,7 +66,7 @@
             ></svg-vue>
           </template>
 
-          <div class="title text-sm font-bold">
+          <div class="title translate-text text-sm font-bold">
             {{ translate.elementFromElementName(title.toString()) }}
           </div>
 
@@ -230,7 +230,7 @@
               <span v-if="post.default_aid_type_vocabulary">{{
                 types.aidTypeVocabulary[post.default_aid_type_vocabulary]
               }}</span>
-              <span v-else class="italic">{{
+              <span v-else class="translate-text-element italic">{{
                 translate.missingText('vocabulary')
               }}</span>
             </div>
@@ -239,7 +239,7 @@
               <span v-if="post.earmarking_category">{{
                 types.earmarkingCategory[post.earmarking_category]
               }}</span>
-              <span v-else class="italic">
+              <span v-else class="translate-text-element italic">
                 {{ translate.missingText('code') }}
               </span>
             </div>
@@ -251,7 +251,7 @@
               <span v-if="post.earmarking_modality">{{
                 types.earmarkingModality[post.earmarking_modality]
               }}</span>
-              <span v-else class="italic">
+              <span v-else class="translate-text-element italic">
                 {{ translate.missingText('code') }}
               </span>
             </div>
@@ -263,7 +263,7 @@
               <span v-if="post.cash_and_voucher_modalities">{{
                 types.cashandVoucherModalities[post.cash_and_voucher_modalities]
               }}</span>
-              <span v-else class="italic">
+              <span v-else class="translate-text-element italic">
                 {{ translate.missingText('code') }}
               </span>
             </div>
@@ -272,7 +272,7 @@
               <span v-if="post.default_aid_type">{{
                 types.aidType[post.default_aid_type]
               }}</span>
-              <span v-else class="italic">
+              <span v-else class="translate-text-element italic">
                 {{ translate.missingText('code') }}
               </span>
             </div>
@@ -283,14 +283,18 @@
       <!-- Country Budget Items -->
       <template v-else-if="title === 'country_budget_items'">
         <div class="category">
-          <span>{{ translate.commonText('vocabulary') }} - </span>
+          <span class="translate-text-element"
+            >{{ translate.commonText('vocabulary') }} -
+          </span>
           <span>
             <span v-if="data.content.country_budget_vocabulary">{{
               props.types.budgetIdentifierVocabulary[
                 data.content.country_budget_vocabulary
               ]
             }}</span>
-            <span v-else class="italic">{{ translate.missingText() }}</span>
+            <span v-else class="translate-text-element italic">{{
+              translate.missingText()
+            }}</span>
           </span>
         </div>
         <div
@@ -309,13 +313,17 @@
               </span>
               <span>({{ roundFloat(post.percentage) }}%)</span>
             </div>
-            <span v-else class="italic">{{ translate.missingText() }}</span>
+            <span v-else class="translate-text-element italic">{{
+              translate.missingText()
+            }}</span>
           </div>
           <div v-else class="text-sm">
             <span v-if="post.code">{{
               types.budgetIdentifier[post.code]
             }}</span>
-            <span v-else class="italic">{{ translate.missingText() }}</span>
+            <span v-else class="translate-text-element italic">{{
+              translate.missingText()
+            }}</span>
             <span v-if="post.percentage">
               ({{ roundFloat(post.percentage) }} %)</span
             >
@@ -330,7 +338,7 @@
             >
               <table>
                 <tr class="multiline">
-                  <td>{{ translate.commonText('description') }}</td>
+                  <td class="">{{ translate.commonText('description') }}</td>
                   <td>
                     <div v-if="narrative.narrative" class="flex flex-col">
                       <span v-if="narrative.language" class="language top"
@@ -339,7 +347,7 @@
                       >
                       <span class="description">{{ narrative.narrative }}</span>
                     </div>
-                    <span v-else class="italic">{{
+                    <span v-else class="translate-text-element italic">{{
                       translate.missingText()
                     }}</span>
                   </td>
@@ -367,7 +375,7 @@
             <span v-if="post.budget_type">{{
               types.budgetType[post.budget_type]
             }}</span>
-            <span v-else class="italic">{{
+            <span v-else class="translate-text-element italic">{{
               translate.commonText('type')
             }}</span>
           </div>
@@ -387,7 +395,7 @@
                   {{ formatDate(item.value_date) }})</span
                 >
               </div>
-              <span v-else class="italic">
+              <span v-else class="translate-text-element italic">
                 {{ translate.missingText('element', 'common.budget_value') }}
               </span>
             </div>
@@ -400,9 +408,11 @@
             >
               <table>
                 <tr>
-                  <td>{{ translate.commonText('period_start') }}</td>
+                  <td class="translate-text-element">
+                    {{ translate.commonText('period_start') }}
+                  </td>
                   <td v-if="item.date">{{ formatDate(item.date) }}</td>
-                  <td v-else class="italic">
+                  <td v-else class="translate-text-element italic">
                     {{ translate.missingText() }}
                   </td>
                 </tr>
@@ -415,9 +425,11 @@
             >
               <table>
                 <tr>
-                  <td>{{ translate.commonText('period_end') }}</td>
+                  <td class="translate-text-element">
+                    {{ translate.commonText('period_end') }}
+                  </td>
                   <td v-if="item.date">{{ formatDate(item.date) }}</td>
-                  <td v-else class="italic">
+                  <td v-else class="translate-text-element italic">
                     {{ translate.missingText() }}
                   </td>
                 </tr>
@@ -425,12 +437,14 @@
             </div>
             <table>
               <tr>
-                <td>{{ translate.commonText('status') }}</td>
+                <td class="translate-text-element">
+                  {{ translate.commonText('status') }}
+                </td>
                 <td>
                   <span v-if="post.budget_status">{{
                     types.budgetStatus[post.budget_status]
                   }}</span>
-                  <span v-else class="italic">{{
+                  <span v-else class="translate-text-element italic">{{
                     translate.missingText()
                   }}</span>
                 </td>
@@ -457,19 +471,23 @@
             <div v-if="post.url" class="max-w-[887px] text-sm">
               <a :href="post.url" target="_blank">{{ post.url }}</a>
             </div>
-            <span v-else class="italic">URL {{ translate.missingText() }}</span>
+            <span v-else class="translate-text-element italic"
+              >URL {{ translate.missingText() }}</span
+            >
           </div>
           <div class="ml-5">
             <div>
               <div v-for="(language, i) in post.language" :key="i">
                 <table>
                   <tr>
-                    <td>{{ translate.commonText('language') }}</td>
+                    <td translate-text-element>
+                      {{ translate.commonText('language') }}
+                    </td>
                     <td>
                       <span v-if="language.code">{{
                         types.languages[language.code]
                       }}</span>
-                      <span v-else class="italic">{{
+                      <span v-else class="translate-text-element italic">{{
                         translate.missingText()
                       }}</span>
                     </td>
@@ -479,12 +497,14 @@
               <div v-for="(document_date, i) in post.document_date" :key="i">
                 <table>
                   <tr>
-                    <td>{{ translate.commonText('date') }}</td>
+                    <td class="translate-text-element">
+                      {{ translate.commonText('date') }}
+                    </td>
                     <td>
                       <span v-if="document_date.date">{{
                         formatDate(document_date.date)
                       }}</span>
-                      <span v-else class="italic">{{
+                      <span v-else class="translate-text-element italic">{{
                         translate.missingText()
                       }}</span>
                     </td>
@@ -510,7 +530,7 @@
                           {{ narrative.narrative }}
                         </span>
                       </div>
-                      <span v-else class="italic">{{
+                      <span v-else class="translate-text-element italic">{{
                         translate.missingText()
                       }}</span>
                     </td>
@@ -521,12 +541,14 @@
             <div v-for="(category, i) in post.category" :key="i">
               <table>
                 <tr>
-                  <td>{{ translate.commonText('category') }}</td>
+                  <td class="translate-text-element">
+                    {{ translate.commonText('category') }}
+                  </td>
                   <td>
                     <span v-if="category.code">{{
                       types.documentCategory[category.code]
                     }}</span>
-                    <span v-else class="italic">{{
+                    <span v-else class="translate-text-element italic">{{
                       translate.missingText()
                     }}</span>
                   </td>
@@ -537,7 +559,7 @@
               <tr>
                 <td>{{ translate.commonText('format') }}</td>
                 <td v-if="post.format">{{ post.format }}</td>
-                <td v-else class="italic">
+                <td v-else class="translate-text-element italic">
                   {{ translate.missingText() }}
                 </td>
               </tr>
@@ -546,7 +568,9 @@
               <div v-for="(narrative, j) in description.narrative" :key="j">
                 <table>
                   <tr class="multiline">
-                    <td>{{ translate.commonText('description') }}</td>
+                    <td class="translate-text-element">
+                      {{ translate.commonText('description') }}
+                    </td>
                     <td>
                       <div v-if="narrative.narrative" class="flex flex-col">
                         <span v-if="narrative.language" class="language"
@@ -555,7 +579,7 @@
                         >
                         <span>{{ narrative.narrative }}</span>
                       </div>
-                      <span v-else class="italic">{{
+                      <span v-else class="translate-text-element italic">{{
                         translate.missingText()
                       }}</span>
                     </td>
@@ -590,7 +614,9 @@
             <span v-if="data.content">{{
               props.types.activityStatus[data.content]
             }}</span>
-            <span v-else class="italic">{{ translate.missingText() }}</span>
+            <span v-else class="translate-text-element italic">{{
+              translate.missingText()
+            }}</span>
           </template>
 
           <!-- Activity Scope -->
@@ -598,7 +624,9 @@
             <span v-if="data.content">{{
               props.types.activityScope[data.content]
             }}</span>
-            <span v-else class="italic">{{ translate.missingText() }}</span>
+            <span v-else class="translate-text-element italic">{{
+              translate.missingText()
+            }}</span>
           </template>
 
           <!-- Collaboration Type -->
@@ -606,7 +634,9 @@
             <span v-if="data.content">{{
               props.types.collaborationType[data.content]
             }}</span>
-            <span v-else class="italic">{{ translate.missingText() }}</span>
+            <span v-else class="translate-text-element italic">{{
+              translate.missingText()
+            }}</span>
           </template>
 
           <!-- Default Flow Type -->
@@ -614,7 +644,9 @@
             <span v-if="data.content">{{
               props.types.flowType[data.content]
             }}</span>
-            <span v-else class="italic">{{ translate.missingText() }}</span>
+            <span v-else class="translate-text-element italic">{{
+              translate.missingText()
+            }}</span>
           </template>
 
           <!-- Default Tied Status -->
@@ -622,7 +654,9 @@
             <span v-if="data.content">{{
               props.types.tiedStatus[data.content]
             }}</span>
-            <span v-else class="italic">{{ translate.missingText() }}</span>
+            <span v-else class="translate-text-element italic">{{
+              translate.missingText()
+            }}</span>
           </template>
 
           <!-- Capital Spend -->
@@ -630,7 +664,9 @@
             <span v-if="data.content.toString()"
               >{{ data.content.toString() }}%</span
             >
-            <span v-else class="italic">{{ translate.missingText() }}</span>
+            <span v-else class="translate-text-element italic">{{
+              translate.missingText()
+            }}</span>
           </template>
 
           <!-- Default Finance Type -->
@@ -638,11 +674,15 @@
             <span v-if="data.content">
               {{ props.types.financeType[data.content] }}</span
             >
-            <span v-else class="italic">{{ translate.missingText() }}</span>
+            <span v-else class="translate-text-element italic">{{
+              translate.missingText()
+            }}</span>
           </template>
 
           <template v-else>
-            <span>{{ translate.missingText('no_content') }}</span>
+            <span class="translate-text-element">{{
+              translate.missingText('no_content')
+            }}</span>
           </template>
         </div>
       </template>

@@ -23,7 +23,10 @@
           <div>
             <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
               <div class="flex">
-                <a class="whitespace-nowrap font-bold" href="/activities">
+                <a
+                  class="listing-translate-text whitespace-nowrap font-bold"
+                  href="/activities"
+                >
                   {{
                     translate.textFromKey(
                       'activity_detail.your_activities_label'
@@ -33,10 +36,10 @@
                 <span class="separator mx-4"> / </span>
                 <div class="breadcrumb__title">
                   <span
-                    class="breadcrumb__title last w-[200px] overflow-hidden text-ellipsis text-n-30"
+                    class="breadcrumb__title last listing-translate-text w-[200px] overflow-hidden text-ellipsis text-n-30"
                     >{{ pageTitle ?? translate.commonText('untitled') }}</span
                   >
-                  <span class="ellipsis__title--hover">{{
+                  <span class="ellipsis__title--hover listing-translate-text">{{
                     pageTitle ? pageTitle : translate.commonText('untitled')
                   }}</span>
                 </div>
@@ -55,12 +58,14 @@
               </div>
               <div class="inline-flex min-h-[48px] grow flex-wrap items-center">
                 <h4 class="ellipsis__title relative text-2xl font-bold">
-                  <span class="ellipsis__title overflow-hidden">
+                  <span
+                    class="ellipsis__title listing-translate-text overflow-hidden"
+                  >
                     {{
                       pageTitle ? pageTitle : translate.commonText('untitled')
                     }}
                   </span>
-                  <span class="ellipsis__title--hover">
+                  <span class="ellipsis__title--hover listing-translate-text">
                     {{
                       pageTitle ? pageTitle : translate.commonText('untitled')
                     }}
@@ -136,7 +141,7 @@
           <div id="progress" class="mb-1 flex">
             <div class="activities__card progress mr-1">
               <div class="mb-2 flex items-center justify-between">
-                <span class="mr-2">{{
+                <span class="listing-translate-text mr-2">{{
                   translate.commonText('publishing_progress')
                 }}</span>
                 <HoverText
@@ -149,23 +154,27 @@
                 />
               </div>
               <ProgressBar :percent="progress" class="mb-3" />
-              <span>{{
-                translate.textFromKey('complete_all_core_label')
+              <span class="listing-translate-text">{{
+                translate.textFromKey('activity_detail.complete_all_core_label')
               }}</span>
             </div>
             <div class="activities__card elements">
               <div class="mb-7 flex items-center justify-between">
-                <span>{{ translate.commonText('elements') }}</span>
+                <span class="listing-translate-text">{{
+                  translate.commonText('elements')
+                }}</span>
                 <HoverText
                   :hover-text="translate.commonText('each_element_represents')"
                   name=""
-                  class="hover-text"
+                  class="hover-text listing-translate-text"
                 />
               </div>
               <div class="mb-3 flex justify-between">
                 <div class="flex items-center space-x-1">
                   <svg-vue icon="core" />
-                  <span>{{ translate.commonText('core') }}</span>
+                  <span class="listing-translate-text">{{
+                    translate.commonText('core')
+                  }}</span>
                 </div>
                 <HoverText
                   :hover-text="translate.commonText('core_elements_include')"
@@ -176,7 +185,9 @@
               <div class="flex justify-between">
                 <div class="flex items-center space-x-1">
                   <svg-vue class="text-spring-50" icon="double-tick" />
-                  <span>{{ translate.commonText('completed') }}</span>
+                  <span class="listing-translate-text">{{
+                    translate.commonText('completed')
+                  }}</span>
                 </div>
                 <HoverText
                   :hover-text="
@@ -223,7 +234,7 @@
             <div class="mb-1 flex">
               <div class="activities__card progress mr-1">
                 <div class="mb-2 flex items-center justify-between">
-                  <span class="mr-2">{{
+                  <span class="listing-translate-text mr-2">{{
                     translate.commonText('publishing_progress')
                   }}</span>
                   <HoverText
@@ -236,13 +247,17 @@
                   />
                 </div>
                 <ProgressBar :percent="progress" class="mb-3" />
-                <span>{{
-                  translate.textFromKey('complete_all_core_label')
+                <span class="listing-translate-text">{{
+                  translate.textFromKey(
+                    'activity_detail.complete_all_core_label'
+                  )
                 }}</span>
               </div>
               <div class="activities__card elements">
                 <div class="mb-7 flex items-center justify-between">
-                  <span>{{ translate.commonText('elements') }}</span>
+                  <span class="listing-translate-text">{{
+                    translate.commonText('elements')
+                  }}</span>
                   <HoverText
                     :hover-text="
                       translate.commonText('each_element_represents')
@@ -254,7 +269,9 @@
                 <div class="mb-3 flex justify-between">
                   <div class="flex items-center space-x-1">
                     <svg-vue icon="core" />
-                    <span>{{ translate.commonText('core') }}</span>
+                    <span class="listing-translate-text">{{
+                      translate.commonText('core')
+                    }}</span>
                   </div>
                   <HoverText
                     :hover-text="translate.commonText('core_elements_include')"
@@ -265,7 +282,9 @@
                 <div class="flex justify-between">
                   <div class="flex items-center space-x-1">
                     <svg-vue class="text-spring-50" icon="double-tick" />
-                    <span>{{ translate.commonText('completed') }}</span>
+                    <span class="listing-translate-text">{{
+                      translate.commonText('completed')
+                    }}</span>
                   </div>
                   <HoverText
                     :hover-text="
@@ -291,8 +310,10 @@
               class="mb-4 flex items-center text-xs font-bold uppercase leading-normal text-n-50"
             >
               <svg-vue class="mr-0.5 text-base" icon="setting"></svg-vue>
-              <span class="whitespace-nowrap">{{
-                translate.textFromKey('uc_override_this_activity_label')
+              <span class="listing-translate-text whitespace-nowrap">{{
+                translate.textFromKey(
+                  'activity_detail.uc_override_this_activity_label'
+                )
               }}</span>
             </a>
           </div>
@@ -307,7 +328,9 @@
               class="tab-btn-anchor"
             >
               <button :disabled="post.status == 'disabled'" class="tab-btn">
-                <span>{{ formatTitle(toSnakeCase(post.label)) }}</span>
+                <span class="listing-translate-text">{{
+                  formatTitle(toSnakeCase(post.label))
+                }}</span>
                 <span class="hover__text">
                   <HoverText
                     :name="formatTitle(toSnakeCase(post.label))"
@@ -327,7 +350,7 @@
               <div
                 class="elements-title relative mx-3 mt-3 mb-1 flex w-full items-center text-sm uppercase text-n-40"
               >
-                <div :id="key" class="mr-4 shrink-0">
+                <div :id="key" class="listing-translate-text mr-4 shrink-0">
                   {{ formatTitle(key) }}
                 </div>
               </div>

@@ -65,21 +65,19 @@
           <div class="footer__links lg:justify-self-end">
             <div class="text-xs leading-5">
               <p>
-                {{ translate.webText('footer.part_of_iati_unified_label') }}
+                {{ translate.webText('part_of_iati_unified_label') }}
               </p>
               <p>
-                {{ translate.webText('footer.code_licensed_under_label') }}
+                {{ translate.webText('code_licensed_under_label') }}
               </p>
               <p>
-                {{
-                  translate.webText('footer.documentation_licensed_under_label')
-                }}
+                {{ translate.webText('documentation_licensed_under_label') }}
               </p>
             </div>
             <div class="my-5 flex items-center space-x-2 text-n-10">
               <svg-vue class="text-2xl" icon="headphone" />
               <span class="text-xs font-bold uppercase">{{
-                translate.webText('footer.any_questions_contact_label')
+                translate.webText('any_questions_contact_label')
               }}</span>
             </div>
             <ul>
@@ -99,7 +97,7 @@
       <div class="footer__container grid gap-3 sm:grid-cols-2">
         <span class="flex items-center text-n-30">
           <svg-vue class="mr-1 text-base" icon="copyright" />
-          {{ translate.webText('footer.copyright_label') }}</span
+          {{ translate.webText('copyright_label') }}</span
         >
         <div class="flex sm:justify-end">
           <a
