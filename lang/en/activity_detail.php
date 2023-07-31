@@ -21,7 +21,7 @@ return array (
     'label' => 'Financial',
     'uppercase' => 'FINANCIAL',
   ),
-  'participating_organisations' => [
+  'participating_organizations' => [
       'label' => 'Participating Organisations',
       'uppercase' => 'PARTICIPATING ORGANISATIONS',
   ],
