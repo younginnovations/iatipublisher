@@ -321,7 +321,7 @@ return array (
   'send_email' =>
   array (
     'verify_email_address' => 'Verificar dirección de correo electrónico',
-    'greeting' => 'Hola',
+    'hello' => 'Hola',
     'welcome_to_iati' => 'Le damos la bienvenida a IATI Publisher. ',
     'verify_that_you_have_created_the_account' => 'Su correo electrónico ha sido utilizado para crear una nueva cuenta en ella. ',
     'update_the_password_of_your_account' => 'Haga clic en el botón de abajo para verificar que ha creado una cuenta para IATI Publisher.',

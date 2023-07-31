@@ -321,7 +321,7 @@ return array (
   'send_email' =>
   array (
     'verify_email_address' => 'Verify Email Address',
-    'greeting' => 'Hello',
+    'hello' => 'Hello',
     'welcome_to_iati' => 'Welcome to IATI Publisher. Your email has been used to create a new account here.',
     'verify_that_you_have_created_the_account' => 'Please click the button below to verify that you have created the account in it.',
     'update_the_password_of_your_account' => 'Please click the button below to update the password of your account.',
