@@ -297,7 +297,14 @@
 .language-hover:hover {
   @apply nav__active links__active;
   a {
-    // color: white !important;
+    color: white !important;
+  }
+}
+.web-header {
+  .language-hover:hover {
+    a {
+      color: #2a2f30 !important;
+    }
   }
 }
 
