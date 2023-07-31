@@ -2,12 +2,6 @@
   @apply relative z-auto flex h-11 w-11 cursor-pointer items-center justify-center overflow-hidden rounded duration-300;
   z-index: 120;
 
-  &.active {
-    span {
-      @apply bg-n-10;
-    }
-  }
-
   span {
     @apply pointer-events-none absolute h-1 w-10 rounded-lg duration-300;
   }
@@ -17,19 +11,7 @@
     width: 30px;
     transform: translateY(-15px);
   }
-  &.active {
-    span:nth-child(1) {
-      width: 40px;
-      transform: rotate(45deg) translateZ(0);
-    }
-    span:nth-child(2) {
-      transform: translateX(60px);
-    }
-    span:nth-child(3) {
-      width: 40px;
-      transform: translateY(4px) rotate(315deg);
-    }
-  }
+
   span:nth-child(3) {
     top: 18px;
     left: 2px;
@@ -42,16 +24,5 @@
 
   @media screen and (max-width: 1420px) {
     display: block;
-  }
-}
-
-.home-burger-menu.active {
-  @media screen and (min-width: 640px) {
-    translate: -350% -140%;
-  }
-  translate: -490% -90%;
-
-  @media screen and (max-width: 440px) {
-    translate: -380% -90%;
   }
 }

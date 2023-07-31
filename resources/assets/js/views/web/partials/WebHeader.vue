@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper smooth relative bg-bluecoral sm:h-72">
+  <div class="wrapper web-header smooth relative bg-bluecoral sm:h-72">
     <div class="mx-3 sm:mx-10 xl:mx-24 xl:px-1">
       <header class="header relative z-10 grid">
         <nav
@@ -13,8 +13,19 @@
               id="nav-list"
               class="nav__list flex justify-between pt-10 uppercase leading-5 xl:flex-row-reverse"
             >
-              <li class="flex">
-                <span class="mr-2 pt-5 pb-5 uppercase xl:pt-0"
+              <span
+                id="hamburger-cross"
+                class="absolute top-3 left-8 cursor-pointer xl:hidden"
+              >
+                <svg-vue
+                  class="text-3xl text-white"
+                  icon="hamburger-cross"
+                ></svg-vue>
+              </span>
+              <li
+                class="border-bottom mb-4 flex border-b pb-4 xl:mb-0 xl:border-b-transparent xl:pb-0"
+              >
+                <span class="mr-2 hidden pt-5 pb-5 uppercase xl:block xl:pt-0"
                   >{{ translate.webText('language') }}:</span
                 >
                 <ul class="flex items-center justify-center">
@@ -55,7 +66,7 @@
               </li>
 
               <li>
-                <ul class="flex flex-col xl:flex-row">
+                <ul class="flex flex-col items-start xl:flex-row">
                   <li class="nav__links active dropdown">
                     <a href="/about">{{ translate.webText('about') }}</a>
                     <NavDropdown
@@ -116,7 +127,7 @@
           </div>
         </nav>
         <div
-          class="header__title mt-6 flex flex-wrap items-center justify-between gap-2 border-l-4 border-l-turquoise py-2 px-4 sm:py-5 sm:px-6"
+          class="header__title flex flex-wrap items-center justify-between gap-2 border-l-4 border-l-turquoise py-2 px-4 sm:py-5 sm:px-6 xl:mt-6"
         >
           <h1
             class="text-xl font-bold normal-case text-white sm:text-4xl sm:text-heading-2"
@@ -171,3 +182,8 @@ export default defineComponent({
   },
 });
 </script>
+<style scoped lang="scss">
+.border-bottom {
+  border-color: rgba(255, 255, 255, 0.24);
+}
+</style>

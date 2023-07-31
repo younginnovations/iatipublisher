@@ -2,6 +2,12 @@ import $ from 'jquery';
 import jQuery from 'jquery';
 
 jQuery(function () {
+  console.log(';inside');
+  // $('#hamburger-cross').on('click', function () {
+  //   console.log('abc');
+  //   // $('#elementToRemoveClass').removeClass('example-class');
+  // });
+
   $('body').on('click', '#hamburger', () => {
     $('#nav-list').toggleClass('nav-active');
     $('#hamburger').toggleClass('active');
@@ -12,6 +18,7 @@ jQuery(function () {
 
   // close the navMenu by clicking outside
   $('body').on('click', (e) => {
+    console.log('outside click');
     if (e.target.classList[0] == 'menu-overlay') {
       $('#nav-list').removeClass('nav-active');
       $('#hamburger').removeClass('active');
