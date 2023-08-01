@@ -563,7 +563,6 @@ function ToggleModel() {
 const toggleActivityDropdown = () => {
   showActivityDropdown.value = !showActivityDropdown.value;
   activityDropdownHeight.value = dropDownElement.value?.[0]?.clientHeight;
-  // dropDownElement.value?.[0]?.clientHeight
   setTimeout(function () {
     activityDropdownHeight.value = '';
   }, 10);
