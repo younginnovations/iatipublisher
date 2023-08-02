@@ -119,7 +119,7 @@
           <td colspan="5" class="text-center">
             {{
               createCapitalizedSentence(
-                translate.element(indicators),
+                translate.element('indicators'),
                 translate.missing('not_found')
               )
             }}

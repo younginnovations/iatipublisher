@@ -171,7 +171,7 @@
           class="add_indicator flex w-full rounded border border-dashed border-n-40 bg-white px-4 py-3 text-xs leading-normal"
         >
           <div class="grow text-left italic">
-            {{ translate.commonText('not_yet_added_indicator') }}
+            {{ translate.button('not_yet_added_indicator') }}
           </div>
           <div
             class="flex shrink-0 items-center font-bold uppercase text-bluecoral"
