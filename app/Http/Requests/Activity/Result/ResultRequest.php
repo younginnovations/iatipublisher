@@ -175,6 +175,7 @@ class ResultRequest extends ActivityBaseRequest
         } else {
             $params = $this->route()->parameters();
             $hasResultId = array_key_exists('resultId', $params);
+            $resultId = $hasResultId ? Arr::get($params, 'resultId') : $resultId;
         }
 
         foreach ($formFields as $referenceIndex => $reference) {
@@ -203,8 +204,8 @@ class ResultRequest extends ActivityBaseRequest
                     $rules[sprintf('%s.code', $referenceForm)][] = $codePresent ? 'indicator_ref_code_present' : false;
                     $rules[sprintf('%s.vocabulary', $referenceForm)][] = $vocabularyPresent ? 'indicator_ref_vocabulary_present' : false;
                 } else {
-                    $rules[sprintf('%s.code', $referenceForm)] = Arr::get($reference, 'code', false) ? 'indicator_ref_code_present' : false;
-                    $rules[sprintf('%s.vocabulary', $referenceForm)] = Arr::get($reference, 'vocabulary', false) ? 'indicator_ref_vocabulary_present' : false;
+                    $rules[sprintf('%s.code', $referenceForm)] = $hasResultId && $resultService->indicatorHasRefCode($resultId) ? 'indicator_ref_code_present' : false;
+                    $rules[sprintf('%s.vocabulary', $referenceForm)] = $hasResultId && $resultService->indicatorHasRefVocabulary($resultId) ? 'indicator_ref_vocabulary_present' : false;
                 }
             }
         }

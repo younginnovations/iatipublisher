@@ -28,6 +28,7 @@ class IndicatorRequest extends ActivityBaseRequest
     public function rules(): array
     {
         $data = request()->except(['_token']);
+        $data['url'] = $this->getRequestUri();
         $totalRules = [
             $this->getWarningForIndicator($data),
             $this->getErrorsForIndicator($data),
@@ -62,6 +63,10 @@ class IndicatorRequest extends ActivityBaseRequest
     public function getWarningForIndicator(array $formFields, bool $fileUpload = false, array $result = [], $resultId = null): array
     {
         $rules = [];
+
+        if (!$fileUpload) {
+            $resultId = (int) (Arr::get($this->route()->parameters(), 'id'));
+        }
 
         $tempRules = [
             $this->getWarningForNarrative(Arr::get($formFields, 'title', []), 'title.0'),
@@ -204,8 +209,8 @@ class IndicatorRequest extends ActivityBaseRequest
                     $rules[sprintf('%s.code', $referenceForm)][] = $codePresent ? 'result_ref_code_present' : false;
                     $rules[sprintf('%s.vocabulary', $referenceForm)][] = $vocabularyPresent ? 'result_ref_vocabulary_present' : false;
                 } else {
-                    $rules[sprintf('%s.code', $referenceForm)][] = Arr::get($result, 'code', false) ? 'result_ref_code_present' : false;
-                    $rules[sprintf('%s.vocabulary', $referenceForm)][] = Arr::get($result, 'vocabulary', false) ? 'result_ref_vocabulary_present' : false;
+                    $rules[sprintf('%s.code', $referenceForm)][] = $resultService->resultHasRefCode($resultId) ? 'result_ref_code_present' : false;
+                    $rules[sprintf('%s.vocabulary', $referenceForm)][] = $resultService->resultHasRefVocabulary($resultId) ? 'result_ref_vocabulary_present' : false;
                 }
             }
         }
