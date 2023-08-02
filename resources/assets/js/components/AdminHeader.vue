@@ -105,8 +105,8 @@
                 <span>{{ menu.name }}</span>
                 <span>
                   <svg-vue
-                    :class="{ 'rotate-180': showActivityDropdown }"
-                    class="text-[8px] duration-200"
+                    :class="{ 'rotate-180': rotateDropdownIcon }"
+                    class="text-[6px] duration-200"
                     icon="dropdown-arrow"
                   />
                 </span>
@@ -116,7 +116,7 @@
                     menu.name === translate.commonText('add_import_activity')
                   "
                   style="visibility: hidden"
-                  class="button__dropdown add-import-dropdown absolute top-full z-50 w-56 -translate-y-3 bg-white p-2 text-left shadow-dropdown duration-300"
+                  class="button__dropdown add-import-dropdown absolute left-0 top-full z-50 w-56 !-translate-x-4 bg-white p-2 text-left shadow-dropdown duration-300"
                 >
                   <ul class="flex flex-col">
                     <li>
@@ -559,6 +559,9 @@ function ToggleModel() {
   modalToggle();
   window.localStorage.removeItem('openAddModel');
 }
+const rotateDropdownIcon = computed(() => {
+  return showActivityDropdown.value && window.innerWidth < 1420;
+});
 
 const toggleActivityDropdown = () => {
   showActivityDropdown.value = !showActivityDropdown.value;

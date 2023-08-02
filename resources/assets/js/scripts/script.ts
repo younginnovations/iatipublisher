@@ -10,6 +10,15 @@ jQuery(function () {
     $('#activity-menu-overlay').toggleClass('menu-overlay');
   });
 
+  // close the navMenu when add activity model opens
+  $('body').on('click', '#header-add-activity-manually', () => {
+    $('#nav-list').removeClass('nav-active');
+    $('#hamburger').removeClass('active');
+    $('body').removeClass('overflow-hidden');
+    $('#menu-overlay').removeClass('menu-overlay');
+    $('#activity-menu-overlay').removeClass('menu-overlay');
+  });
+
   // close the navMenu by clicking outside
   $('body').on('click', (e) => {
     if (e.target.classList[0] == 'menu-overlay') {
