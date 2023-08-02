@@ -10,7 +10,7 @@
       </span>
     </div>
     <span v-else class="text-sm italic">{{
-      translate.missingText('element', 'common.title')
+      translate.missing('element', 'common.title')
     }}</span>
     <div v-if="i !== data.content.length - 1" class="mb-4"></div>
   </div>

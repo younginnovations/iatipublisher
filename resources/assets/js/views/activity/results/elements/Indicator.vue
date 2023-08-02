@@ -108,7 +108,7 @@
                                 {{
                                   type.language[title.language]
                                     ? type.language[title.language]
-                                    : translate.missingText()
+                                    : translate.missing()
                                 }})
                               </div>
                               <div class="description text-xs">
@@ -156,7 +156,7 @@
                                 {{
                                   type.language[description.language]
                                     ? type.language[description.language]
-                                    : translate.missingText()
+                                    : translate.missing()
                                 }})
                               </div>
                               <div class="description text-xs">
@@ -180,13 +180,11 @@
                           >
                             <span>
                               {{ translate.commonText('vocabulary') }}:
-                              {{ ref.vocabulary ?? translate.missingText() }},
+                              {{ ref.vocabulary ?? translate.missing() }},
                             </span>
                             <span>
                               {{ translate.commonText('code') }}:
-                              {{
-                                ref.code ? ref.code : translate.missingText()
-                              }},
+                              {{ ref.code ? ref.code : translate.missing() }},
                             </span>
                             <span>
                               {{ translate.commonText('indicator_uri') }}:
@@ -199,7 +197,7 @@
                                 {{ ref.indicator_uri }}</a
                               >
                               <span v-else>
-                                {{ translate.missingText() }}
+                                {{ translate.missing() }}
                               </span>
                             </span>
                           </div>
@@ -207,7 +205,7 @@
                       </tr>
 
                       <tr>
-                        <td>{{ translate.commonText('document_link') }} }}</td>
+                        <td>{{ translate.commonText('document_link') }}</td>
                         <td>
                           {{ countDocumentLink(post.indicator.document_link) }}
                           {{ translate.commonText('documents') }}
@@ -232,7 +230,7 @@
                                   {{ base.year }}
                                 </template>
                                 <template v-else>{{
-                                  translate.missingText()
+                                  translate.missing()
                                 }}</template>
                                 ,
                               </span>
@@ -242,7 +240,7 @@
                                   {{ base.date }}
                                 </template>
                                 <template v-else>{{
-                                  translate.missingText()
+                                  translate.missing()
                                 }}</template>
                                 ,
                               </span>
@@ -252,7 +250,7 @@
                                   {{ base.value }}
                                 </template>
                                 <template v-else>{{
-                                  translate.missingText()
+                                  translate.missing()
                                 }}</template>
                               </span>
                             </div>
@@ -273,7 +271,7 @@
                                     {{ loc.reference }}
                                   </template>
                                   <template v-else>{{
-                                    translate.missingText()
+                                    translate.missing()
                                   }}</template>
                                 </div>
                               </div>
@@ -297,7 +295,7 @@
                                         {{ dim.name }}
                                       </template>
                                       <template v-else>
-                                        {{ translate.missingText() }}
+                                        {{ translate.missing() }}
                                       </template>
                                       &nbsp;
                                     </span>
@@ -306,7 +304,7 @@
                                         ({{ dim.value }})
                                       </template>
                                       <template v-else>
-                                        ({{ translate.missingText() }})
+                                        ({{ translate.missing() }})
                                       </template>
                                     </span>
                                   </div>
@@ -335,7 +333,7 @@
                                         {{ com.narrative }}
                                       </template>
                                       <template v-else>
-                                        {{ translate.missingText() }}
+                                        {{ translate.missing() }}
                                       </template>
                                       &nbsp;
                                     </span>
@@ -345,7 +343,7 @@
                                         {{ type.language[com.language] }})
                                       </template>
                                       <template v-else>
-                                        {{ translate.missingText() }})
+                                        {{ translate.missing() }})
                                       </template>
                                     </span>
                                   </div>
@@ -484,7 +482,7 @@
                                           {{ loc.reference }}
                                         </template>
                                         <template v-else>
-                                          {{ translate.missingText() }}
+                                          {{ translate.missing() }}
                                         </template>
                                       </span>
                                     </div>
@@ -510,7 +508,7 @@
                                         {{ dim.name }}
                                       </template>
                                       <template v-else>
-                                        {{ translate.missingText() }}
+                                        {{ translate.missing() }}
                                       </template>
                                     </span>
                                     <span>
@@ -518,7 +516,7 @@
                                         ({{ dim.value }})
                                       </template>
                                       <template v-else>
-                                        ({{ translate.missingText() }})
+                                        ({{ translate.missing() }})
                                       </template>
                                     </span>
                                   </div>
@@ -544,9 +542,7 @@
                                           {{ com.narrative }}
                                         </template>
                                         <template v-else>
-                                          {{
-                                            translate.missingText()
-                                          }}</template
+                                          {{ translate.missing() }}</template
                                         >
                                         &nbsp;
                                       </span>
@@ -557,7 +553,7 @@
                                           {{ type.language[com.language] }})
                                         </template>
                                         <template v-else>
-                                          {{ translate.missingText() }}
+                                          {{ translate.missing() }}
                                           )
                                         </template>
                                       </span>
@@ -608,7 +604,7 @@
                                           {{ loc.reference }}
                                         </template>
                                         <template v-else>
-                                          {{ translate.missingText() }}
+                                          {{ translate.missing() }}
                                         </template>
                                       </span>
                                     </div>
@@ -634,7 +630,7 @@
                                         {{ dim.name }}
                                       </template>
                                       <template v-else>
-                                        {{ translate.missingText() }}</template
+                                        {{ translate.missing() }}</template
                                       >
                                     </span>
                                     <span>
@@ -642,7 +638,7 @@
                                         ({{ dim.value }})
                                       </template>
                                       <template v-else>
-                                        ({{ translate.missingText() }})
+                                        ({{ translate.missing() }})
                                       </template>
                                     </span>
                                   </div>
@@ -668,9 +664,7 @@
                                           {{ com.narrative }}
                                         </template>
                                         <template v-else>
-                                          {{
-                                            translate.missingText()
-                                          }}</template
+                                          {{ translate.missing() }}</template
                                         >
                                         &nbsp;
                                       </span>
@@ -681,7 +675,7 @@
                                           {{ type.language[com.language] }})
                                         </template>
                                         <template v-else>
-                                          {{ translate.missingText() }}
+                                          {{ translate.missing() }}
                                           )
                                         </template>
                                       </span>

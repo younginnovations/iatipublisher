@@ -1,6 +1,6 @@
 <template>
   <div class="text-sm">
-    {{ type[typeData] ?? translate.missingText() }}
+    {{ type[typeData] ?? translate.missing() }}
   </div>
 </template>
 

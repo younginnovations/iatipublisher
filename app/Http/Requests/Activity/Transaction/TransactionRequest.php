@@ -307,9 +307,9 @@ class TransactionRequest extends ActivityBaseRequest
 
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('value.%s', $valueIndex);
-            $messages[sprintf('%s.amount.numeric', $valueForm)] = translateRequestMessage('amount_field_symbol', 'must_be_a_number');
-            $messages[sprintf('%s.date.before', $valueForm)] = translateRequestMessage('value_date_symbol', 'must_not_be_future');
-            $messages[sprintf('%s.date.date', $valueForm)] = translateRequestMessage('value_date_field_symbol', 'must_be_a_valid_date');
+            $messages[sprintf('%s.amount.numeric', $valueForm)] = translateRequestMessage('the_@amount_field', 'must_be_a_number');
+            $messages[sprintf('%s.date.before', $valueForm)] = translateRequestMessage('the_@value_date', 'must_not_be_future');
+            $messages[sprintf('%s.date.date', $valueForm)] = translateRequestMessage('the_@value_date_field', 'must_be_a_valid_date');
         }
 
         return $messages;

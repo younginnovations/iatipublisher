@@ -11,7 +11,7 @@
             </td>
             <td>
               <div :class="elementSpacing">
-                {{ tValue.value ?? translate.missingText() }}
+                {{ tValue.value ?? translate.missing() }}
               </div>
 
               <div class="flex" :class="elementSpacing">
@@ -22,7 +22,7 @@
                   {{
                     getLocation(tValue.location)
                       ? getLocation(tValue.location)
-                      : translate.missingText()
+                      : translate.missing()
                   }}
                 </div>
               </div>
@@ -35,8 +35,8 @@
                     :key="d"
                     class="dimension"
                   >
-                    {{ dim.name ?? translate.missingText() }} ({{
-                      dim.value ?? translate.missingText()
+                    {{ dim.name ?? translate.missing() }} ({{
+                      dim.value ?? translate.missing()
                     }})
                   </div>
                 </div>
@@ -56,9 +56,7 @@
                     <div>
                       <span>
                         {{
-                          com.narrative
-                            ? com.narrative
-                            : translate.missingText()
+                          com.narrative ? com.narrative : translate.missing()
                         }}
                         &nbsp;
                       </span>
@@ -67,7 +65,7 @@
                         {{
                           com.language
                             ? dlType.language[com.language]
-                            : translate.missingText()
+                            : translate.missing()
                         }})
                       </span>
                     </div>
@@ -83,7 +81,7 @@
           <tr>
             <td colspan="2">
               <div class="category flex">
-                {{ translate.commonText('document_link') }} }}
+                {{ translate.commonText('document_link') }}
               </div>
               <div class="divider my-4 h-px w-full border-b border-n-20"></div>
             </td>

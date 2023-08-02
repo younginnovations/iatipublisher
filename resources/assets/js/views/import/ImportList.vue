@@ -25,7 +25,9 @@
                 <button class="">
                   <svg-vue icon="question-mark" />
                   <span>{{
-                    translate.textFromKey('activities.what_is_activity.label')
+                    translate.textFromKey(
+                      'activities.what_is_an_activity.label'
+                    )
                   }}</span>
                 </button>
                 <div class="tooltip-btn__content z-[1]">
@@ -35,7 +37,7 @@
                     >
                       {{
                         translate.textFromKey(
-                          'activities.what_is_activity.label'
+                          'activities.what_is_an_activity.label'
                         )
                       }}
                     </div>
@@ -43,21 +45,21 @@
                     <p
                       v-html="
                         translate.textFromKey(
-                          'activities.what_is_activity.description.one'
+                          'activities.what_is_an_activity.description.one'
                         )
                       "
                     ></p>
                     <p
                       v-html="
                         translate.textFromKey(
-                          'activities.what_is_activity.description.two'
+                          'activities.what_is_an_activity.description.two'
                         )
                       "
                     ></p>
                     <p
                       v-html="
                         translate.textFromKey(
-                          'activities.what_is_activity.description.three'
+                          'activities.what_is_an_activity.description.three'
                         )
                       "
                     ></p>

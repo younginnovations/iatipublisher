@@ -68,8 +68,8 @@ class StatusRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => translateRequestMessage('activity_status', 'doesnt_exist'),
-            'size'      => translateRequestMessage('activity_status', 'cannot_have_more_than_one'),
+            'in'        => translateRequestMessage('the_activity_status', 'doesnt_exist'),
+            'size'      => translateRequestMessage('the_activity_status', 'cannot_have_more_than_one'),
         ];
     }
 }

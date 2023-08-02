@@ -146,7 +146,7 @@
             {{
               createCapitalizedSentence(
                 translate.element('transactions'),
-                translate.missingText('not_found')
+                translate.missing('not_found')
               )
             }}
           </td>

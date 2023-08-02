@@ -147,11 +147,11 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
 
         foreach ($formFields as $budgetItemIndex => $budgetItem) {
             $budgetItemForm = sprintf('budget_item.%s', $budgetItemIndex);
-            $messages[sprintf('%s.code.in', $budgetItemForm)] = translateRequestMessage('budget_item', 'code_is_invalid');
-            $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'numeric')] = translateRequestMessage('budget_percentage', 'must_be_a_number');
-            $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'max')] = translateRequestMessage('budget_percentage', 'cannot_be_greater_than_100');
-            $messages[sprintf('%s.percentage.sum', $budgetItemForm)] = translateRequestMessage('the_sum_of_budget');
-            $messages[sprintf('%s.percentage.total', $budgetItemForm)] = translateRequestMessage('budget_percentage', 'should_be_100');
+            $messages[sprintf('%s.code.in', $budgetItemForm)] = translateRequestMessage('the_budget_item', 'code_is_invalid');
+            $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'numeric')] = translateRequestMessage('the_budget_percentage', 'must_be_a_number');
+            $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'max')] = translateRequestMessage('the_budget_percentage', 'cannot_be_greater_than_100');
+            $messages[sprintf('%s.percentage.sum', $budgetItemForm)] = translateRequestMessage('sum_of_percentage_with_budget_items_must_add_up_to_100');
+            $messages[sprintf('%s.percentage.total', $budgetItemForm)] = translateRequestMessage('the_budget_percentage', 'should_be_100');
 
             foreach ($this->getBudgetItemDescriptionMessages($budgetItem['description'], $budgetItemForm) as $budgetItemDescriptionIndex => $budgetItemDescriptionNarrativeMessages) {
                 $messages[$budgetItemDescriptionIndex] = $budgetItemDescriptionNarrativeMessages;

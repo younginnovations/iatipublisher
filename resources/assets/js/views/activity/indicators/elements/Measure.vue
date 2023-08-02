@@ -2,7 +2,7 @@
   <tr>
     <td>{{ translate.commonText('measure') }}</td>
     <td>
-      {{ measureData ? measureType[measureData] : translate.missingText() }}
+      {{ measureData ? measureType[measureData] : translate.missing() }}
     </td>
   </tr>
 </template>

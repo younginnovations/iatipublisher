@@ -191,7 +191,7 @@ class SectorRequest extends ActivityBaseRequest
             $messages[sprintf('%s.vocabulary_uri.url', $sectorForm)] = translateRequestMessage('sector', 'must_be_valid_vocal_url');
             $messages[sprintf('%s.percentage.numeric', $sectorForm)] = translateRequestMessage('sector', 'percent_field_must_be_a_number');
             $messages[sprintf('%s.percentage.in', $sectorForm)] = translateRequestMessage('percentage_must_be_100_or_empty');
-            $messages[sprintf('%s.percentage.sector_total_percent', $sectorForm)] = translateRequestMessage('the_total_percent_100');
+            $messages[sprintf('%s.percentage.sector_total_percent', $sectorForm)] = translateRequestMessage('the_total_percentage_within_a_vocabulary_must_be_100');
 
             $messageNarratives = $this->getMessagesForNarrative($sector['narrative'], $sectorForm);
 

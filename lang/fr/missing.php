@@ -44,4 +44,5 @@ return array (
   'result_not_found' => 'Résultat non trouvé',
   'not_found' => 'non trouvé',
   'no_activities_found' => 'Aucune activité trouvée',
+  'percentage' => 'Pourcentage manquant'
 );

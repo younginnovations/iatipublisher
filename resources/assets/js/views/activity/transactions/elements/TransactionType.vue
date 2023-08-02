@@ -2,7 +2,7 @@
   {{
     code[0].transaction_type_code
       ? type.transactionType[code[0].transaction_type_code]
-      : translate.missingText('code')
+      : translate.missing('code')
   }}
 </template>
 

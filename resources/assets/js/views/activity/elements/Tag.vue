@@ -9,26 +9,24 @@
       <span v-if="post.tag_vocabulary">{{
         types.tagVocabulary[post.tag_vocabulary]
       }}</span>
-      <span v-else class="italic">{{
-        translate.missingText('vocabulary')
-      }}</span>
+      <span v-else class="italic">{{ translate.missing('vocabulary') }}</span>
     </div>
     <div class="max-w-[887px] text-sm">
       <span v-if="post.tag_vocabulary === '1' || post.tag_vocabulary === '99'">
         <span v-if="post.tag_text">{{ post.tag_text }}</span>
-        <span v-else class="italic">{{ translate.missingText() }}</span>
+        <span v-else class="italic">{{ translate.missing() }}</span>
       </span>
       <span v-if="post.tag_vocabulary === '2'">
         <span v-if="post.goals_tag_code">{{
           types.sdgGoals[post.goals_tag_code]
         }}</span>
-        <span v-else class="italic">{{ translate.missingText() }}</span>
+        <span v-else class="italic">{{ translate.missing() }}</span>
       </span>
       <span v-if="post.tag_vocabulary === '3'">
         <span v-if="post.targets_tag_code">{{
           types.sdgTarget[post.targets_tag_code]
         }}</span>
-        <span v-else class="italic">{{ translate.missingText() }}</span>
+        <span v-else class="italic">{{ translate.missing() }}</span>
       </span>
     </div>
     <table class="ml-5">
@@ -43,7 +41,7 @@
             >
               {{ post.vocabulary_uri }}
             </a>
-            <span v-else class="italic">{{ translate.missingText() }}</span>
+            <span v-else class="italic">{{ translate.missing() }}</span>
           </td>
         </tr>
         <tr
@@ -61,7 +59,7 @@
                 >
                 <span class="description">{{ narrative.narrative }}</span>
               </div>
-              <span v-else class="italic">{{ translate.missingText() }}</span>
+              <span v-else class="italic">{{ translate.missing() }}</span>
             </div>
           </td>
         </tr>

@@ -12,7 +12,7 @@
         {{
           recipient_org_budget.status
             ? types?.budgetType[recipient_org_budget.status]
-            : translate.missingText('status')
+            : translate.missing('status')
         }}
       </div>
       <div class="flex text-sm">
@@ -20,7 +20,7 @@
           {{ Number(recipient_org_budget.value['0'].amount).toLocaleString() }}
           {{ recipient_org_budget.value['0'].currency }}
         </span>
-        <span v-else> {{ translate.missingText('budget_line') }}</span>
+        <span v-else> {{ translate.missing('budget_line') }}</span>
       </div>
     </div>
     <div class="elements-detail mb-4">
@@ -45,7 +45,7 @@
                   ? `${translate.commonText('reference')} - ${
                       recipient_org.ref
                     }`
-                  : translate.missingText('element', 'common.reference')
+                  : translate.missing('element', 'common.reference')
               }}
               <div
                 v-for="(narrative, narrative_index) in recipient_org.narrative"
@@ -65,14 +65,12 @@
                           }`
                         : `${translate.commonText(
                             'language'
-                          )} : ${translate.missingText()}`
+                          )} : ${translate.missing()}`
                     }}
                     )
                   </div>
                   <div class="w-[500px] max-w-full">
-                    {{
-                      narrative.narrative ?? translate.missingText('narrative')
-                    }}
+                    {{ narrative.narrative ?? translate.missing('narrative') }}
                   </div>
                 </div>
               </div>
@@ -84,7 +82,7 @@
               {{
                 formatDate(
                   recipient_org_budget.value['0'].value_date ??
-                    translate.missingText('value_date')
+                    translate.missing('value_date')
                 )
               }}
             </td>
@@ -95,14 +93,14 @@
               {{
                 formatDate(
                   recipient_org_budget.period_start['0'].date ??
-                    translate.missingText('period_start')
+                    translate.missing('period_start')
                 )
               }}
               -
               {{
                 formatDate(
                   recipient_org_budget.period_end['0'].date ??
-                    translate.missingText('period_end')
+                    translate.missing('period_end')
                 )
               }}
             </td>
@@ -131,7 +129,7 @@
                 {{
                   budget_line.value['0'].amount
                     ? Number(budget_line.value[0].amount).toLocaleString()
-                    : translate.missingText('budget')
+                    : translate.missing('budget')
                 }}
                 {{ budget_line.value['0'].currency }}
               </span>
@@ -144,7 +142,7 @@
                     <td>
                       {{
                         budget_line.ref ??
-                        translate.missingText('element', 'common.reference')
+                        translate.missing('element', 'common.reference')
                       }}
                     </td>
                   </tr>
@@ -153,7 +151,7 @@
                     <td>
                       {{
                         formatDate(budget_line.value['0'].value_date) ??
-                        translate.missingText('value_date')
+                        translate.missing('value_date')
                       }}
                     </td>
                   </tr>
@@ -176,13 +174,13 @@
                                 }`
                               : `${translate.commonText(
                                   'language'
-                                )} : ${translate.missingText()}`
+                                )} : ${translate.missing()}`
                           }})
                         </div>
                         <div class="w-[500px] max-w-full">
                           {{
                             narrative.narrative ??
-                            translate.missingText('narrative')
+                            translate.missing('narrative')
                           }}
                         </div>
                       </div>
@@ -217,6 +215,6 @@ const translate = new Translate();
 const types = inject('orgTypes') as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format('LL') : translate.missingText('date');
+  return date ? moment(date).format('LL') : translate.missing('date');
 }
 </script>

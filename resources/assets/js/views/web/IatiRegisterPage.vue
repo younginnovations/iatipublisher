@@ -6,9 +6,9 @@
     <div class="section__container">
       <div class="section__title">
         <h2 class="text-2xl md:text-4xl">
-          {{ translate.registerText('create_iati_publisher_header') }}}
+          {{ translate.registerText('create_iati_publisher_header') }}
         </h2>
-        <p>{{ translate.registerText('create_iati_publisher_subheader') }}}</p>
+        <p>{{ translate.registerText('create_iati_publisher_subheader') }}</p>
       </div>
       <div class="section__wrapper flex justify-center">
         <EmailVerification v-if="checkStep('5')" :email="formData['email']" />

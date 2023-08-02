@@ -10,7 +10,7 @@
           types.activityDate[post.type]
         }}</span>
         <span v-else class="text-sm font-bold italic">
-          {{ translate.missingText('type') }}</span
+          {{ translate.missing('type') }}</span
         >
       </div>
       <div>
@@ -18,7 +18,7 @@
           formatDate(post.date)
         }}</span>
         <span v-else class="text-sm italic">
-          {{ translate.missingText('type') }}</span
+          {{ translate.missing('type') }}</span
         >
       </div>
     </div>
@@ -42,7 +42,7 @@
               </span>
             </div>
             <span v-else class="italic">
-              {{ translate.missingText() }}
+              {{ translate.missing() }}
             </span>
           </td>
         </tr>

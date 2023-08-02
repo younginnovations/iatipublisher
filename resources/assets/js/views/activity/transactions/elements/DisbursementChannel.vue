@@ -3,7 +3,7 @@
     {{
       code[0].disbursement_channel_code
         ? type.disbursementChannel[code[0].disbursement_channel_code]
-        : translate.missingText('disbursement_channel_code')
+        : translate.missing('disbursement_channel_code')
     }}
   </div>
 </template>

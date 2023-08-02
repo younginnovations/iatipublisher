@@ -48,7 +48,7 @@
                 ? translate.commonText('false')
                 : data === '1'
                 ? translate.commonText('true')
-                : translate.missingText()
+                : translate.missing()
             }}
           </div>
         </template>
@@ -90,7 +90,7 @@
         </template>
         <template v-else>
           <div class="text-sm">
-            {{ data ?? translate.missingText() }}
+            {{ data ?? translate.missing() }}
           </div>
         </template>
       </div>

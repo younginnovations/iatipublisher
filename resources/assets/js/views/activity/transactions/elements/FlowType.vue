@@ -3,7 +3,7 @@
     {{
       flowData[0].flow_type
         ? type.flowType[flowData[0].flow_type]
-        : translate.missingText('flow_type')
+        : translate.missing('flow_type')
     }}
   </div>
 </template>

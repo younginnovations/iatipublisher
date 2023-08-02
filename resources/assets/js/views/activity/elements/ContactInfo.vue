@@ -8,7 +8,7 @@
     <div class="category text-sm font-bold">
       <span v-if="post.type">{{ types.contactType[post.type] }}</span>
       <span v-else class="italic">
-        {{ translate.missingText('type') }}
+        {{ translate.missing('type') }}
       </span>
     </div>
 
@@ -31,11 +31,11 @@
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : translate.missingText()
+                      : translate.missing()
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? translate.missingText() }}
+                  {{ narrative.narrative ?? translate.missing() }}
                 </div>
               </div>
             </td>
@@ -56,11 +56,11 @@
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : translate.missingText()
+                      : translate.missing()
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? translate.missingText() }}
+                  {{ narrative.narrative ?? translate.missing() }}
                 </div>
               </div>
             </td>
@@ -82,11 +82,11 @@
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : translate.missingText()
+                      : translate.missing()
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? translate.missingText() }}
+                  {{ narrative.narrative ?? translate.missing() }}
                 </div>
               </div>
             </td>
@@ -107,11 +107,11 @@
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : translate.missingText()
+                      : translate.missing()
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? translate.missingText() }}
+                  {{ narrative.narrative ?? translate.missing() }}
                 </div>
               </div>
             </td>
@@ -128,7 +128,7 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ email_value.email ?? translate.missingText() }}
+                  {{ email_value.email ?? translate.missing() }}
                 </div>
               </div>
             </td>
@@ -145,7 +145,7 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ tel.telephone ?? translate.missingText() }}
+                  {{ tel.telephone ?? translate.missing() }}
                 </div>
               </div>
             </td>
@@ -162,7 +162,7 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ w.website ?? translate.missingText() }}
+                  {{ w.website ?? translate.missing() }}
                 </div>
               </div>
             </td>
@@ -187,13 +187,12 @@
                     {{
                       narrative.language
                         ? types.languages[narrative.language]
-                        : translate.missingText()
+                        : translate.missing()
                     }})
                   </div>
                   <div class="w-[500px] max-w-full">
                     {{
-                      narrative.narrative ??
-                      translate.missingText('not_available')
+                      narrative.narrative ?? translate.missing('not_available')
                     }}
                   </div>
                 </div>

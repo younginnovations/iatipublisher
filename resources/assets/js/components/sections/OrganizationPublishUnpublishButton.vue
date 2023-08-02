@@ -39,7 +39,7 @@
         <BtnComponent
           v-if="!mandatoryElementStatus"
           class="bg-white px-6 uppercase"
-          :text="translate.button('add_element', 'common.missing.data')"
+          :text="translate.button('add_element', 'missing.data')"
           type=""
           @click="publishValue = false"
         />
@@ -134,15 +134,15 @@ const publishStateChange = computed(() => {
   });
   // different content for step 1 based on coreElement status
   if (mandatoryElementStatus) {
-    publishState.title = translate.commonText('core_completed_title');
+    publishState.title = translate.commonText('core_elements_completed');
     publishState.description = translate.commonText(
-      'core_completed_description'
+      'congratulations_all_the_core_elements_are_complete'
     );
     publishState.icon = 'tick';
   } else {
-    publishState.title = translate.commonText('core_completed_title');
+    publishState.title = translate.commonText('core_elements_completed');
     publishState.description = translate.commonText(
-      'core_not_completed_description'
+      'there_is_missing_data_in_some_of_the_core_elements'
     );
     publishState.icon = 'warning-fill';
   }

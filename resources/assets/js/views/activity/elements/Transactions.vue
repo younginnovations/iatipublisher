@@ -9,7 +9,7 @@
       {{
         types.transactionType[
           trans.transaction.transaction_type[0].transaction_type_code
-        ] ?? translate.missingText('transaction_type')
+        ] ?? translate.missing('transaction_type')
       }}
       <div class="ml-2">
         <Btn
@@ -27,7 +27,7 @@
         {{
           val.amount
             ? Number(val.amount).toLocaleString()
-            : translate.missingText('element', 'common.value')
+            : translate.missing('element', 'common.value')
         }}
         {{ val.currency }}
         {{

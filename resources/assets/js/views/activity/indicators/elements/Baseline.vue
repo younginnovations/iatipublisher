@@ -15,7 +15,7 @@
             <template v-if="base.year">
               {{ base.year }}
             </template>
-            <template v-else>{{ translate.missingText() }}</template>
+            <template v-else>{{ translate.missing() }}</template>
             ,
           </span>
           <span>
@@ -23,7 +23,7 @@
             <template v-if="base.date">
               {{ base.date }}
             </template>
-            <template v-else>{{ translate.missingText() }}</template>
+            <template v-else>{{ translate.missing() }}</template>
             ,
           </span>
           <span>
@@ -31,7 +31,7 @@
             <template v-if="base.value">
               {{ base.value }}
             </template>
-            <template v-else>{{ translate.missingText() }}</template>
+            <template v-else>{{ translate.missing() }}</template>
           </span>
         </div>
 
@@ -41,7 +41,7 @@
             {{
               location(base.location)
                 ? location(base.location)
-                : translate.missingText()
+                : translate.missing()
             }}
           </div>
         </div>
@@ -66,13 +66,13 @@
             >
               <div>
                 <div class="description">
-                  {{ com.narrative ? com.narrative : translate.missingText() }}
+                  {{ com.narrative ? com.narrative : translate.missing() }}
                   <span class="text-n-30">
                     ({{ translate.commonText('language') }}:
                     {{
                       com.language
                         ? baseType.language[com.language]
-                        : translate.missingText()
+                        : translate.missing()
                     }})</span
                   >
                 </div>
@@ -83,7 +83,7 @@
 
         <div>
           <div class="mb-2.5 flex">
-            <div>{{ translate.commonText('document_link') }} }}:&nbsp;</div>
+            <div>{{ translate.commonText('document_link') }}:&nbsp;</div>
             <div></div>
           </div>
           <div class="divider mb-4 h-px w-full border-b border-n-20"></div>
@@ -193,8 +193,8 @@ export default defineComponent({
       let dimensions: string[] = [];
 
       dimensions = data.map((item) => {
-        const name = item.name ?? translate.missingText(),
-          value = item.value ?? translate.missingText();
+        const name = item.name ?? translate.missing(),
+          value = item.value ?? translate.missing();
         return `${translate.commonText(
           'code'
         )} - ${name}, ${translate.commonText('value')} - (${value})`;

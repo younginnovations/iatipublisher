@@ -3,7 +3,7 @@
     {{
       tsData[0].tied_status_code
         ? type.tiedStatusType[tsData[0].tied_status_code]
-        : translate.missingText('tied_status_code')
+        : translate.missing('tied_status_code')
     }}
   </div>
 </template>

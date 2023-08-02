@@ -11,7 +11,7 @@
         {{
           recipient_region_budget.status
             ? types?.budgetType[recipient_region_budget.status]
-            : translate.missingText('status')
+            : translate.missing('status')
         }}
       </div>
       <div class="flex text-sm">
@@ -21,7 +21,7 @@
           }}
           {{ recipient_region_budget.value['0'].currency }}
         </span>
-        <span v-else> {{ translate.missingText('budget_line') }}</span>
+        <span v-else> {{ translate.missing('budget_line') }}</span>
       </div>
       <div class="ml-4">
         <table>
@@ -39,7 +39,7 @@
                   types?.regionVocabulary[
                     recipient_region_budget.recipient_region['0']
                       .region_vocabulary
-                  ] ?? translate.missingText('vocabulary')
+                  ] ?? translate.missing('vocabulary')
                 }}
               </td>
             </tr>
@@ -66,7 +66,7 @@
                 >
               </td>
               <td v-else>
-                {{ translate.missingText('vocabulary_uri') }}
+                {{ translate.missing('vocabulary_uri') }}
               </td>
             </tr>
             <tr>
@@ -110,14 +110,13 @@
                             }`
                           : `${translate.commonText(
                               'language'
-                            )} : ${translate.missingText()}`
+                            )} : ${translate.missing()}`
                       }}
                       )
                     </div>
                     <div class="w-[500px] max-w-full">
                       {{
-                        narrative.narrative ??
-                        translate.missingText('narrative')
+                        narrative.narrative ?? translate.missing('narrative')
                       }}
                     </div>
                   </div>
@@ -159,7 +158,7 @@
                 {{
                   budget_line.value['0'].amount
                     ? Number(budget_line.value[0].amount).toLocaleString()
-                    : translate.missingText('budget')
+                    : translate.missing('budget')
                 }}
                 {{ budget_line.value['0'].currency }}
               </span>
@@ -174,7 +173,7 @@
                     <td>
                       {{
                         budget_line.ref ??
-                        translate.missingText('element', 'common.reference')
+                        translate.missing('element', 'common.reference')
                       }}
                     </td>
                   </tr>
@@ -203,13 +202,13 @@
                                 }`
                               : `${translate.commonText(
                                   'language'
-                                )} : ${translate.missingText()}`
+                                )} : ${translate.missing()}`
                           }})
                         </div>
                         <div class="w-[500px] max-w-full">
                           {{
                             narrative.narrative ??
-                            translate.missingText('narrative')
+                            translate.missing('narrative')
                           }}
                         </div>
                       </div>
@@ -245,6 +244,6 @@ const translate = new Translate();
 const types = inject('orgTypes') as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format('LL') : translate.missingText('date');
+  return date ? moment(date).format('LL') : translate.missing('date');
 }
 </script>

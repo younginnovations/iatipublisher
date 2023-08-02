@@ -361,8 +361,8 @@ class IndicatorRequest extends ActivityBaseRequest
             $messages[sprintf('%s.year.date_format', $baselineForm)] = translateRequestMessage('year_field_symbol', 'is_not_valid');
             $messages[sprintf('%s.year.in', $baselineForm)] = translateRequestMessage('year_field_symbol', 'should_be_baseline');
             $messages[sprintf('%s.year.digits', $baselineForm)] = translateRequestMessage('year_field_symbol', 'must_be_4_digits');
-            $messages[sprintf('%s.value.numeric', $baselineForm)] = translateRequestMessage('value_field_symbol', 'must_be_a_number');
-            $messages[sprintf('%s.value.gte', $baselineForm)] = translateRequestMessage('value_field_symbol', 'must_be_greater_equal_0');
+            $messages[sprintf('%s.value.numeric', $baselineForm)] = translateRequestMessage('the_@value_field', 'must_be_a_number');
+            $messages[sprintf('%s.value.gte', $baselineForm)] = translateRequestMessage('the_@value_field', 'must_be_greater_equal_0');
 
             $narrativeMessages = $this->getMessagesForNarrative($baseline['comment'][0]['narrative'], sprintf('%s.comment.0', $baselineForm));
 

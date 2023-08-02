@@ -22,7 +22,7 @@
                 :href="ref.vocabulary_uri"
                 >{{ ref.vocabulary_uri }}</a
               >
-              <span v-else>{{ translate.missingText() }}</span>
+              <span v-else>{{ translate.missing() }}</span>
             </td>
           </tr>
         </tbody>

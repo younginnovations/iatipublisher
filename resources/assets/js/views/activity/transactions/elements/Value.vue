@@ -8,7 +8,7 @@
       {{
         value[0].amount
           ? Number(value[0].amount).toLocaleString()
-          : translate.missingText('amount')
+          : translate.missing('the_amount')
       }}
     </span>
     <span v-if="value[0].amount" class="mb-5">{{ value[0].currency }}</span>

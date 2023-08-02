@@ -11,7 +11,7 @@
                   {{
                     getActivityTitle(post.title[0].narrative, 'en')
                       ? getActivityTitle(post.title[0].narrative, 'en')
-                      : translate.missingText()
+                      : translate.missing()
                   }}
                 </div>
                 <div class="ml-4">
@@ -33,30 +33,30 @@
                               {{
                                 na.language
                                   ? type.language[na.language]
-                                  : translate.missingText()
+                                  : translate.missing()
                               }})
                             </div>
                             <div class="description text-xs">
-                              {{ na.narrative ?? translate.missingText() }}
+                              {{ na.narrative ?? translate.missing() }}
                             </div>
                           </div>
                         </td>
                       </tr>
 
                       <tr>
-                        <td>{{ translate.commonText('document_link') }} }}</td>
+                        <td>{{ translate.commonText('document_link') }}</td>
                         <td>
                           <a v-if="post.url" target="_blank" :href="post.url">{{
                             post.url
                           }}</a>
-                          <span v-else>{{ translate.missingText() }}</span>
+                          <span v-else>{{ translate.missing() }}</span>
                         </td>
                       </tr>
 
                       <tr>
                         <td>{{ translate.commonText('format') }}</td>
                         <td>
-                          {{ post.format ?? translate.missingText() }}
+                          {{ post.format ?? translate.missing() }}
                         </td>
                       </tr>
 
@@ -77,11 +77,11 @@
                               {{
                                 na.language
                                   ? type.language[na.language]
-                                  : translate.missingText()
+                                  : translate.missing()
                               }})
                             </div>
                             <div class="description text-xs">
-                              {{ na.narrative ?? translate.missingText() }}
+                              {{ na.narrative ?? translate.missing() }}
                             </div>
                           </div>
                         </td>
@@ -99,7 +99,7 @@
                             {{
                               cat.code
                                 ? type.documentCategory[cat.code]
-                                : translate.missingText()
+                                : translate.missing()
                             }}
                           </div>
                         </td>
@@ -116,7 +116,7 @@
                                       (entry) => type.language[entry.language]
                                     )
                                     .join(', ')
-                                : translate.missingText()
+                                : translate.missing()
                             }}
                           </div>
                         </td>
@@ -127,8 +127,7 @@
                         <td>
                           <div class="text-xs">
                             {{
-                              post.document_date[0].date ??
-                              translate.missingText()
+                              post.document_date[0].date ?? translate.missing()
                             }}
                           </div>
                         </td>

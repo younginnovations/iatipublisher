@@ -12,11 +12,11 @@
           {{
             total_expenditure.value['0'].amount
               ? Number(total_expenditure.value[0].amount).toLocaleString()
-              : translate.missingText('budget')
+              : translate.missing('budget')
           }}
           {{ total_expenditure.value['0'].currency }}
         </span>
-        <span v-else> {{ translate.missingText('expenditure_amount') }}</span>
+        <span v-else> {{ translate.missing('expenditure_amount') }}</span>
       </div>
       <div class="ml-4">
         <table>
@@ -64,7 +64,7 @@
               </span>
               <span v-else>
                 {{ translate.commonText('expense_line') }}
-                {{ translate.missingText() }}
+                {{ translate.missing() }}
               </span>
             </div>
             <div class="ml-4">
@@ -75,7 +75,7 @@
                     <td>
                       {{
                         expense_line.ref ??
-                        translate.missingText('element', 'common.reference')
+                        translate.missing('element', 'common.reference')
                       }}
                     </td>
                   </tr>
@@ -104,13 +104,13 @@
                                 }`
                               : `${translate.commonText(
                                   'language'
-                                )} : ${translate.missingText('language')}`
+                                )} : ${translate.missing('language')}`
                           }})
                         </div>
                         <div class="w-[500px] max-w-full">
                           {{
                             narrative.narrative ??
-                            translate.missingText('narrative')
+                            translate.missing('narrative')
                           }}
                         </div>
                       </div>
@@ -146,6 +146,6 @@ const translate = new Translate();
 const types = inject('orgTypes') as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format('LL') : translate.missingText('date');
+  return date ? moment(date).format('LL') : translate.missing('date');
 }
 </script>

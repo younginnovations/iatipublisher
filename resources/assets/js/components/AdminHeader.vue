@@ -529,7 +529,7 @@ const data = reactive({
       active: false,
     },
     // {
-    //   name: transaltion.common_lang.logs.default,
+    //   name: transaltion.common.logs.default,
     //   permalink: '/system-version',
     //   active: false,
     // },

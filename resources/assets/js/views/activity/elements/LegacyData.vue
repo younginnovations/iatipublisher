@@ -8,7 +8,7 @@
     <div class="mb-1 text-sm">
       <div v-if="post.legacy_name">{{ post.legacy_name }}</div>
       <span v-else class="italic">
-        {{ translate.missingText('name') }}
+        {{ translate.missing('name') }}
       </span>
     </div>
     <div class="ml-5">
@@ -19,7 +19,7 @@
             <span class="description">{{ post.value }}</span>
           </td>
           <td v-else class="italic">
-            {{ translate.missingText() }}
+            {{ translate.missing() }}
           </td>
         </tr>
       </table>
@@ -30,7 +30,7 @@
             <span class="description">{{ post.iati_equivalent }}</span>
           </td>
           <td v-else class="italic">
-            {{ translate.missingText() }}
+            {{ translate.missing() }}
           </td>
         </tr>
       </table>

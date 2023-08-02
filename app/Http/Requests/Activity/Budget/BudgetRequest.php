@@ -327,10 +327,10 @@ class BudgetRequest extends ActivityBaseRequest
                 $messages[$key] = $valueMessage;
             }
 
-            $messages[$budgetForm . '.budget_type.in'] = translateRequestMessage('budget', 'type_is_invalid');
-            $messages[$budgetForm . '.budget_status.in'] = translateRequestMessage('budget', 'status_is_invalid');
+            $messages[$budgetForm . '.budget_type.in'] = translateRequestMessage('the_budget', 'type_is_invalid');
+            $messages[$budgetForm . '.budget_status.in'] = translateRequestMessage('the_budget', 'status_is_invalid');
             $messages[$budgetForm . '.period_end.0.date.before'] = translateRequestMessage('period_end_iso', 'must_be_within_a_year');
-            $messages[$budgetForm . '.period_end.0.date.period_start_end'] = translateRequestMessage('budget_period', 'must_not_be_longer_than_1_year');
+            $messages[$budgetForm . '.period_end.0.date.period_start_end'] = translateRequestMessage('the_budget_period', 'must_not_be_longer_than_1_year');
         }
 
         return $messages;
@@ -351,7 +351,7 @@ class BudgetRequest extends ActivityBaseRequest
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date'] = translateRequestMessage('iso_field', 'must_be_a_valid_date');
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date_greater_than'] = translateRequestMessage('iso_field', 'date_must_be_greater');
-            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.period_start_end'] = translateRequestMessage('budget_period', 'must_not_be_longer_than_1_year');
+            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.period_start_end'] = translateRequestMessage('the_budget_period', 'must_not_be_longer_than_1_year');
         }
 
         return $messages;
@@ -392,9 +392,9 @@ class BudgetRequest extends ActivityBaseRequest
 
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('%s.budget_value.%s', $formBase, $valueIndex);
-            $messages[sprintf('%s.amount.numeric', $valueForm)] = translateRequestMessage('amount_field', 'must_be_a_number');
-            $messages[sprintf('%s.amount.min', $valueForm)] = translateRequestMessage('amount_field', 'must_not_be_negative');
-            $messages[sprintf('%s.value_date.date', $valueForm)] = translateRequestMessage('value_date_field', 'must_be_a_valid_date');
+            $messages[sprintf('%s.amount.numeric', $valueForm)] = translateRequestMessage('the_amount_field', 'must_be_a_number');
+            $messages[sprintf('%s.amount.min', $valueForm)] = translateRequestMessage('the_amount_field', 'must_not_be_negative');
+            $messages[sprintf('%s.value_date.date', $valueForm)] = translateRequestMessage('the_value_date_field', 'must_be_a_valid_date');
         }
 
         return $messages;

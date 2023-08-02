@@ -14,7 +14,7 @@
             {{
               description.language
                 ? descType[description.language]
-                : translate.missingText()
+                : translate.missing()
             }})
           </div>
           <div class="description text-xs">

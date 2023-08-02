@@ -12,7 +12,7 @@
         <a v-if="document_link.url" :href="document_link.url" target="_blank">
           {{ document_link.url }}
         </a>
-        <span v-else class="italic">{{ translate.missingText('url') }}</span>
+        <span v-else class="italic">{{ translate.missing('url') }}</span>
       </div>
       <div class="ml-4">
         <table>
@@ -36,7 +36,7 @@
                           }`
                         : `${translate.commonText(
                             'language'
-                          )} : ${translate.missingText()}`
+                          )} : ${translate.missing()}`
                     }})
                   </span>
                   <div v-if="narrative.narrative" class="flex flex-col">
@@ -44,9 +44,7 @@
                       {{ narrative.narrative }}
                     </span>
                   </div>
-                  <span v-else class="italic">{{
-                    translate.missingText()
-                  }}</span>
+                  <span v-else class="italic">{{ translate.missing() }}</span>
                 </div>
               </td>
             </tr>
@@ -70,13 +68,11 @@
                           }`
                         : `${translate.commonText(
                             'language'
-                          )} : ${translate.missingText()}`
+                          )} : ${translate.missing()}`
                     }})
                   </div>
                   <div class="w-[500px] max-w-full">
-                    {{
-                      narrative.narrative ?? translate.missingText('narrative')
-                    }}
+                    {{ narrative.narrative ?? translate.missing('narrative') }}
                   </div>
                 </div>
               </td>
@@ -93,7 +89,7 @@
                       document_link.language
                         .map((entry) => types.languages[entry.language])
                         .join(', ') === ''
-                        ? translate.missingText('language')
+                        ? translate.missing('language')
                         : document_link.language
                             .map((entry) => types.languages[entry.language])
                             .join(', ')
@@ -108,7 +104,7 @@
                 {{ document_link.format }}
               </td>
               <td v-else class="italic">
-                {{ translate.missingText() }}
+                {{ translate.missing() }}
               </td>
             </tr>
             <tr>
@@ -126,12 +122,10 @@
                     {{
                       category.code
                         ? types?.documentCategory[category.code]
-                        : translate.missingText('category')
+                        : translate.missing('category')
                     }}
                   </span>
-                  <span v-else class="italic">{{
-                    translate.missingText()
-                  }}</span>
+                  <span v-else class="italic">{{ translate.missing() }}</span>
                 </div>
               </td>
             </tr>
@@ -145,9 +139,7 @@
                   <span v-if="document_date.date">
                     {{ formatDate(document_date.date) }}
                   </span>
-                  <span v-else class="italic">{{
-                    translate.missingText()
-                  }}</span>
+                  <span v-else class="italic">{{ translate.missing() }}</span>
                 </div>
               </td>
             </tr>
@@ -164,7 +156,7 @@
                     {{
                       recipient_country.code
                         ? `${types?.country[recipient_country.code]}`
-                        : translate.missingText()
+                        : translate.missing()
                     }}
                   </div>
                   <div
@@ -183,13 +175,12 @@
                             } `
                           : `${translate.commonText(
                               'language'
-                            )} : ${translate.missingText()}`
+                            )} : ${translate.missing()}`
                       }})
                     </div>
                     <div class="w-[500px] max-w-full">
                       {{
-                        narrative.narrative ??
-                        translate.missingText('narrative')
+                        narrative.narrative ?? translate.missing('narrative')
                       }}
                     </div>
                   </div>
@@ -224,6 +215,6 @@ const translate = new Translate();
 const types = inject('orgTypes') as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format('LL') : 'Date Missing';
+  return date ? moment(date).format('LL') : translate.missing('date');
 }
 </script>

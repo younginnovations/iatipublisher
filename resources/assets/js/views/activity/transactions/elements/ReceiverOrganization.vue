@@ -8,8 +8,7 @@
             <td>
               <div class="text-sm">
                 {{
-                  PoData[0].organization_identifier_code ??
-                  translate.missingText()
+                  PoData[0].organization_identifier_code ?? translate.missing()
                 }}
               </div>
             </td>
@@ -31,11 +30,11 @@
                       ? `${translate.commonText('language')}: ${
                           type.languages[po.language]
                         }`
-                      : translate.missingText('language')
+                      : translate.missing('language')
                   }})
                 </div>
                 <div class="text-sm">
-                  {{ po.narrative ?? translate.missingText('narrative') }}
+                  {{ po.narrative ?? translate.missing('narrative') }}
                 </div>
               </div>
             </td>
@@ -44,7 +43,7 @@
             <td>{{ translate.commonText('receiver_activity_id') }}</td>
             <td>
               <div class="text-sm">
-                {{ PoData[0].receiver_activity_id ?? translate.missingText() }}
+                {{ PoData[0].receiver_activity_id ?? translate.missing() }}
               </div>
             </td>
           </tr>
@@ -55,7 +54,7 @@
                 {{
                   PoData[0].type
                     ? type.organizationType[PoData[0].type]
-                    : translate.missingText()
+                    : translate.missing()
                 }}
               </div>
             </td>

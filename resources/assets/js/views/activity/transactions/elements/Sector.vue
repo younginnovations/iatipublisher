@@ -12,7 +12,7 @@
         <span>{{
           sec.sector_vocabulary
             ? type.sectorVocabulary[sec.sector_vocabulary]
-            : translate.missingText('vocabulary')
+            : translate.missing('vocabulary')
         }}</span>
       </div>
       <div class="ml-4">
@@ -23,34 +23,32 @@
               <td>
                 <div class="text-sm">
                   <span v-if="sec.text">
-                    {{ sec.text ?? translate.missingText() }}
+                    {{ sec.text ?? translate.missing() }}
                   </span>
                   <span v-else-if="sec.code">
                     {{
-                      sec.code
-                        ? type.sectorCode[sec.code]
-                        : translate.missingText()
+                      sec.code ? type.sectorCode[sec.code] : translate.missing()
                     }}
                   </span>
                   <span v-else-if="sec.category_code">
                     {{
                       sec.category_code
                         ? type.sectorCategory[sec.category_code]
-                        : translate.missingText()
+                        : translate.missing()
                     }}
                   </span>
                   <span v-else-if="sec.sdg_goal">
                     {{
                       sec.sdg_goal
                         ? type.unsdgGoals[sec.sdg_goal]
-                        : translate.missingText()
+                        : translate.missing()
                     }}
                   </span>
                   <span v-else-if="sec.sdg_target">
                     {{
                       sec.sdg_target
                         ? type.unsdgTargets[sec.sdg_target]
-                        : translate.missingText()
+                        : translate.missing()
                     }}
                   </span>
                 </div>
@@ -69,7 +67,7 @@
                       {{ sec.vocabulary_uri }}
                     </a>
                   </span>
-                  <span v-else>{{ translate.missingText() }}</span>
+                  <span v-else>{{ translate.missing() }}</span>
                 </div>
               </td>
             </tr>
@@ -91,11 +89,11 @@
                         ? `${translate.commonText('language')}: ${
                             type.languages[sd.language]
                           }`
-                        : translate.missingText('language')
+                        : translate.missing('language')
                     }})
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? translate.missingText('narrative') }}
+                    {{ sd.narrative ?? translate.missing('narrative') }}
                   </div>
                 </div>
               </td>

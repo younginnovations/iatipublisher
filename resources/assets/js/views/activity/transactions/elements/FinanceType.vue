@@ -3,7 +3,7 @@
     {{
       financeData[0].finance_type
         ? type.financeType[financeData[0].finance_type]
-        : translate.missingText('finance_type')
+        : translate.missing('finance_type')
     }}
   </div>
 </template>

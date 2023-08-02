@@ -22,7 +22,7 @@
             {{ types.conditionType[post.condition_type] }}
           </div>
           <span v-else class="italic">
-            {{ translate.missingText('type') }}
+            {{ translate.missing('type') }}
           </span>
         </div>
         <table class="ml-5">

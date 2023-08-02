@@ -55,7 +55,7 @@
         <div class="eligible-activities mb-6 text-sm leading-relaxed">
           <div class="title mb-6 flex">
             <svg-vue icon="tick" class="mr-1 mt-0.5 text-lg text-spring-50" />
-            <b>{{ translate.commonText('core_completed_title') }}</b>
+            <b>{{ translate.commonText('core_elements_completed') }}</b>
           </div>
           {{ translate.commonText('publishing_alert') }}
 
@@ -79,7 +79,7 @@
               </div>
             </div>
             <div v-else class="py-6">
-              {{ translate.missingText('no_activities_found') }}
+              {{ translate.missing('no_activities_found') }}
             </div>
           </div>
         </div>
@@ -90,7 +90,7 @@
               icon="warning-fill"
               class="mr-1 mt-0.5 text-lg text-crimson-40"
             />
-            <b>{{ translate.commonText('core_completed_title') }}</b>
+            <b>{{ translate.commonText('core_elements_completed') }}</b>
           </div>
 
           <div class="rounded-lg bg-rose px-6">
@@ -117,7 +117,7 @@
               </div>
             </div>
             <div v-else class="py-6">
-              {{ translate.missingText('no_activities_found') }}
+              {{ translate.missing('no_activities_found') }}
             </div>
           </div>
         </div>

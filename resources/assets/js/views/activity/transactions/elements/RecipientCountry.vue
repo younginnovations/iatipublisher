@@ -32,11 +32,11 @@
                         ? `${translate.commonText('language')}: ${
                             type.languages[sd.language]
                           }`
-                        : translate.missingText('language')
+                        : translate.missing('language')
                     }})
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? translate.missingText('narrative') }}
+                    {{ sd.narrative ?? translate.missing('narrative') }}
                   </div>
                 </div>
               </td>

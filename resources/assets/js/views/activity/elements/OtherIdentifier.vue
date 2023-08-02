@@ -9,12 +9,12 @@
         <span v-if="identifier.reference_type">{{
           types.otherIdentifierType[identifier.reference_type]
         }}</span>
-        <span v-else class="italic">{{ translate.missingText('type') }}</span>
+        <span v-else class="italic">{{ translate.missing('type') }}</span>
       </div>
       <div class="text-sm">
         <span v-if="identifier.reference">{{ identifier.reference }}</span>
         <span v-else class="italic">{{
-          translate.missingText('element', 'common.reference')
+          translate.missing('element', 'common.reference')
         }}</span>
       </div>
       <div>
@@ -32,7 +32,7 @@
                   </td>
                   <td v-if="post.ref">{{ post.ref }}</td>
                   <td v-else class="italic">
-                    {{ translate.missingText() }}
+                    {{ translate.missing() }}
                   </td>
                 </tr>
                 <tr>
@@ -56,7 +56,7 @@
                         }}</span>
                       </div>
                       <span v-else class="italic">{{
-                        translate.missingText()
+                        translate.missing()
                       }}</span>
                     </div>
                   </td>

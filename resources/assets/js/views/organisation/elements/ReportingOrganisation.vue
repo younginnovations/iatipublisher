@@ -12,7 +12,7 @@
         <span>{{
           reporting_org.type
             ? types?.organizationType[reporting_org.type]
-            : translate.missingText('type')
+            : translate.missing('type')
         }}</span>
       </div>
       <table>
@@ -22,7 +22,7 @@
             <td>
               {{
                 reporting_org.ref ??
-                translate.missingText('element', 'common.reference')
+                translate.missing('element', 'common.reference')
               }}
             </td>
           </tr>
@@ -34,7 +34,7 @@
                   ? 'True'
                   : reporting_org.secondary_reporter === '0'
                   ? 'False'
-                  : translate.missingText()
+                  : translate.missing()
               }}
             </td>
           </tr>
@@ -57,13 +57,11 @@
                         }`
                       : `${translate.commonText(
                           'language'
-                        )} : ${translate.missingText()}`
+                        )} : ${translate.missing()}`
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{
-                    narrative.narrative ?? translate.missingText('narrative')
-                  }}
+                  {{ narrative.narrative ?? translate.missing('narrative') }}
                 </div>
               </div>
             </td>

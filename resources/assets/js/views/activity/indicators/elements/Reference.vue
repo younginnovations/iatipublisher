@@ -12,13 +12,12 @@
         <span>
           {{ translate.commonText('vocabulary') }}:
           {{
-            refType.indicatorVocabulary[ref.vocabulary] ??
-            translate.missingText()
+            refType.indicatorVocabulary[ref.vocabulary] ?? translate.missing()
           }},
         </span>
         <span>
           {{ translate.commonText('code') }}:
-          {{ ref.code ?? translate.missingText() }},
+          {{ ref.code ?? translate.missing() }},
         </span>
         <span v-if="ref.indicator_uri">
           {{ translate.commonText('indicator_uri') }}:

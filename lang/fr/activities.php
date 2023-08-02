@@ -1,7 +1,7 @@
 <?php
 return array (
   'your_activities' => 'Vos activités',
-  'what_is_activity' =>
+  'what_is_an_activity' =>
   array (
     'label' => 'Qu’est-ce qu’une activité ?',
     'description' =>

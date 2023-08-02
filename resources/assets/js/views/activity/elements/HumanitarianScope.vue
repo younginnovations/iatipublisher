@@ -7,10 +7,10 @@
   >
     <div class="category">
       <span v-if="post.type">
-        {{ types.humanitarianScopeType[post.type] ?? translate.missingText() }}
+        {{ types.humanitarianScopeType[post.type] ?? translate.missing() }}
       </span>
       <span v-else>
-        {{ translate.missingText('vocabulary') }}
+        {{ translate.missing('vocabulary') }}
       </span>
     </div>
     <div class="ml-5">
@@ -21,11 +21,11 @@
             <td>
               {{
                 types.humanitarianScopeVocabulary[post.vocabulary] ??
-                translate.missingText()
+                translate.missing()
               }}
               {{
                 types.humanitarianScopeVocabulary[post.vocabulary] ??
-                translate.missingText()
+                translate.missing()
               }}
             </td>
           </tr>
@@ -39,13 +39,13 @@
               >
                 {{ post.vocabulary_uri }}
               </a>
-              <span v-else class="italic">{{ translate.missingText() }}</span>
+              <span v-else class="italic">{{ translate.missing() }}</span>
             </td>
           </tr>
           <tr>
             <td>{{ translate.commonText('code') }}</td>
             <td>
-              {{ post.code ?? translate.missingText() }}
+              {{ post.code ?? translate.missing() }}
             </td>
           </tr>
           <tr>
@@ -62,11 +62,11 @@
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : translate.missingText()
+                      : translate.missing()
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? translate.missingText() }}
+                  {{ narrative.narrative ?? translate.missing() }}
                 </div>
               </div>
             </td>

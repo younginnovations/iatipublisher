@@ -66,8 +66,8 @@ class ScopeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => translateRequestMessage('activity_scope', 'doesnt_exist'),
-            'size'      => translateRequestMessage('activity_scope', 'cannot_have_more_than_one'),
+            'in'        => translateRequestMessage('the_activity_scope', 'doesnt_exist'),
+            'size'      => translateRequestMessage('the_activity_scope', 'cannot_have_more_than_one'),
         ];
     }
 }

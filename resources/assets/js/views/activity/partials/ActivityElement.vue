@@ -231,7 +231,7 @@
                 types.aidTypeVocabulary[post.default_aid_type_vocabulary]
               }}</span>
               <span v-else class="translate-text-element italic">{{
-                translate.missingText('vocabulary')
+                translate.missing('vocabulary')
               }}</span>
             </div>
 
@@ -240,7 +240,7 @@
                 types.earmarkingCategory[post.earmarking_category]
               }}</span>
               <span v-else class="translate-text-element italic">
-                {{ translate.missingText('code') }}
+                {{ translate.missing('code') }}
               </span>
             </div>
 
@@ -252,7 +252,7 @@
                 types.earmarkingModality[post.earmarking_modality]
               }}</span>
               <span v-else class="translate-text-element italic">
-                {{ translate.missingText('code') }}
+                {{ translate.missing('code') }}
               </span>
             </div>
 
@@ -264,7 +264,7 @@
                 types.cashandVoucherModalities[post.cash_and_voucher_modalities]
               }}</span>
               <span v-else class="translate-text-element italic">
-                {{ translate.missingText('code') }}
+                {{ translate.missing('code') }}
               </span>
             </div>
 
@@ -273,7 +273,7 @@
                 types.aidType[post.default_aid_type]
               }}</span>
               <span v-else class="translate-text-element italic">
-                {{ translate.missingText('code') }}
+                {{ translate.missing('code') }}
               </span>
             </div>
           </div>
@@ -293,7 +293,7 @@
               ]
             }}</span>
             <span v-else class="translate-text-element italic">{{
-              translate.missingText()
+              translate.missing()
             }}</span>
           </span>
         </div>
@@ -314,7 +314,7 @@
               <span>({{ roundFloat(post.percentage) }}%)</span>
             </div>
             <span v-else class="translate-text-element italic">{{
-              translate.missingText()
+              translate.missing()
             }}</span>
           </div>
           <div v-else class="text-sm">
@@ -322,12 +322,14 @@
               types.budgetIdentifier[post.code]
             }}</span>
             <span v-else class="translate-text-element italic">{{
-              translate.missingText()
+              translate.missing()
             }}</span>
             <span v-if="post.percentage">
               ({{ roundFloat(post.percentage) }} %)</span
             >
-            <span v-else class="italic">(Percentage Missing)</span>
+            <span v-else class="italic"
+              >({{ translate.missing('percentage') }})</span
+            >
           </div>
           <template v-for="(item, i) in post.description" :key="i">
             <div
@@ -348,7 +350,7 @@
                       <span class="description">{{ narrative.narrative }}</span>
                     </div>
                     <span v-else class="translate-text-element italic">{{
-                      translate.missingText()
+                      translate.missing()
                     }}</span>
                   </td>
                 </tr>
@@ -396,7 +398,7 @@
                 >
               </div>
               <span v-else class="translate-text-element italic">
-                {{ translate.missingText('element', 'common.budget_value') }}
+                {{ translate.missing('element', 'common.budget_value') }}
               </span>
             </div>
           </div>
@@ -413,7 +415,7 @@
                   </td>
                   <td v-if="item.date">{{ formatDate(item.date) }}</td>
                   <td v-else class="translate-text-element italic">
-                    {{ translate.missingText() }}
+                    {{ translate.missing() }}
                   </td>
                 </tr>
               </table>
@@ -430,7 +432,7 @@
                   </td>
                   <td v-if="item.date">{{ formatDate(item.date) }}</td>
                   <td v-else class="translate-text-element italic">
-                    {{ translate.missingText() }}
+                    {{ translate.missing() }}
                   </td>
                 </tr>
               </table>
@@ -445,7 +447,7 @@
                     types.budgetStatus[post.budget_status]
                   }}</span>
                   <span v-else class="translate-text-element italic">{{
-                    translate.missingText()
+                    translate.missing()
                   }}</span>
                 </td>
               </tr>
@@ -471,9 +473,9 @@
             <div v-if="post.url" class="max-w-[887px] text-sm">
               <a :href="post.url" target="_blank">{{ post.url }}</a>
             </div>
-            <span v-else class="translate-text-element italic"
-              >URL {{ translate.missingText() }}</span
-            >
+            <span v-else class="translate-text-element italic">{{
+              translate.missing('url')
+            }}</span>
           </div>
           <div class="ml-5">
             <div>
@@ -488,7 +490,7 @@
                         types.languages[language.code]
                       }}</span>
                       <span v-else class="translate-text-element italic">{{
-                        translate.missingText()
+                        translate.missing()
                       }}</span>
                     </td>
                   </tr>
@@ -505,7 +507,7 @@
                         formatDate(document_date.date)
                       }}</span>
                       <span v-else class="translate-text-element italic">{{
-                        translate.missingText()
+                        translate.missing()
                       }}</span>
                     </td>
                   </tr>
@@ -531,7 +533,7 @@
                         </span>
                       </div>
                       <span v-else class="translate-text-element italic">{{
-                        translate.missingText()
+                        translate.missing()
                       }}</span>
                     </td>
                   </tr>
@@ -549,7 +551,7 @@
                       types.documentCategory[category.code]
                     }}</span>
                     <span v-else class="translate-text-element italic">{{
-                      translate.missingText()
+                      translate.missing()
                     }}</span>
                   </td>
                 </tr>
@@ -560,7 +562,7 @@
                 <td>{{ translate.commonText('format') }}</td>
                 <td v-if="post.format">{{ post.format }}</td>
                 <td v-else class="translate-text-element italic">
-                  {{ translate.missingText() }}
+                  {{ translate.missing() }}
                 </td>
               </tr>
             </table>
@@ -580,7 +582,7 @@
                         <span>{{ narrative.narrative }}</span>
                       </div>
                       <span v-else class="translate-text-element italic">{{
-                        translate.missingText()
+                        translate.missing()
                       }}</span>
                     </td>
                   </tr>
@@ -615,7 +617,7 @@
               props.types.activityStatus[data.content]
             }}</span>
             <span v-else class="translate-text-element italic">{{
-              translate.missingText()
+              translate.missing()
             }}</span>
           </template>
 
@@ -625,7 +627,7 @@
               props.types.activityScope[data.content]
             }}</span>
             <span v-else class="translate-text-element italic">{{
-              translate.missingText()
+              translate.missing()
             }}</span>
           </template>
 
@@ -635,7 +637,7 @@
               props.types.collaborationType[data.content]
             }}</span>
             <span v-else class="translate-text-element italic">{{
-              translate.missingText()
+              translate.missing()
             }}</span>
           </template>
 
@@ -645,7 +647,7 @@
               props.types.flowType[data.content]
             }}</span>
             <span v-else class="translate-text-element italic">{{
-              translate.missingText()
+              translate.missing()
             }}</span>
           </template>
 
@@ -655,7 +657,7 @@
               props.types.tiedStatus[data.content]
             }}</span>
             <span v-else class="translate-text-element italic">{{
-              translate.missingText()
+              translate.missing()
             }}</span>
           </template>
 
@@ -665,7 +667,7 @@
               >{{ data.content.toString() }}%</span
             >
             <span v-else class="translate-text-element italic">{{
-              translate.missingText()
+              translate.missing()
             }}</span>
           </template>
 
@@ -675,13 +677,13 @@
               {{ props.types.financeType[data.content] }}</span
             >
             <span v-else class="translate-text-element italic">{{
-              translate.missingText()
+              translate.missing()
             }}</span>
           </template>
 
           <template v-else>
             <span class="translate-text-element">{{
-              translate.missingText('no_content')
+              translate.missing('no_content')
             }}</span>
           </template>
         </div>

@@ -11,7 +11,7 @@
       <div class="category flex">
         {{
           types?.budgetType[total_budget.total_budget_status] ??
-          translate.missingText('budget_line')
+          translate.missing('budget_line')
         }}
       </div>
       <div class="flex text-sm">
@@ -28,12 +28,12 @@
             <td>
               {{
                 formatDate(total_budget.period_start['0'].date) ??
-                translate.missingText('period_start')
+                translate.missing('period_start')
               }}
               -
               {{
                 formatDate(total_budget.period_end['0'].date) ??
-                translate.missingText('period_end')
+                translate.missing('period_end')
               }}
             </td>
           </tr>
@@ -42,7 +42,7 @@
             <td>
               {{
                 formatDate(total_budget.value['0'].value_date) ??
-                translate.missingText('value_date')
+                translate.missing('value_date')
               }}
             </td>
           </tr>
@@ -79,7 +79,7 @@
                     <td>
                       {{
                         budget_line.ref ??
-                        translate.missingText('element', 'common.reference')
+                        translate.missing('element', 'common.reference')
                       }}
                     </td>
                   </tr>
@@ -88,7 +88,7 @@
                     <td>
                       {{
                         formatDate(budget_line.value['0'].value_date) ??
-                        translate.missingText('value_date')
+                        translate.missing('value_date')
                       }}
                     </td>
                   </tr>
@@ -111,13 +111,13 @@
                                 }`
                               : `${translate.commonText(
                                   'language'
-                                )} : ${translate.missingText()}`
+                                )} : ${translate.missing()}`
                           }})
                         </div>
                         <div class="w-[500px] max-w-full">
                           {{
                             narrative.narrative ??
-                            translate.missingText('narrative')
+                            translate.missing('narrative')
                           }}
                         </div>
                       </div>
@@ -152,6 +152,6 @@ const translate = new Translate();
 const types = inject('orgTypes') as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format('LL') : translate.missingText('date');
+  return date ? moment(date).format('LL') : translate.missing('date');
 }
 </script>

@@ -127,7 +127,7 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
         foreach ($formFields as $plannedDisbursementIndex => $plannedDisbursement) {
             $plannedDisbursementForm = sprintf('planned_disbursement.%s', $plannedDisbursementIndex);
-            $messages[sprintf('%s.planned_disbursement_type.in', $plannedDisbursementForm)] = translateRequestMessage('planned_disb', 'type_is_invalid');
+            $messages[sprintf('%s.planned_disbursement_type.in', $plannedDisbursementForm)] = translateRequestMessage('the_planned_disbursement', 'type_is_invalid');
 
             $periodStartMessages = $this->getMessagesForPeriodStart($plannedDisbursement['period_start'], $plannedDisbursementForm);
 
@@ -226,8 +226,8 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
         foreach ($formFields as $providerOrgIndex => $providerOrg) {
             $providerOrgForm = sprintf('%s.provider_org.%s', $formBase, $providerOrgIndex);
-            $message[sprintf('%s.type.in', $providerOrgForm)] = translateRequestMessage('planned_disb_pro', 'type_is_invalid');
-            $message[sprintf('%s.ref.not_regex', $providerOrgForm)] = translateRequestMessage('planned_disb_pro_ref', 'shouldnt_contain_symbol');
+            $message[sprintf('%s.type.in', $providerOrgForm)] = translateRequestMessage('the_planned_disbursement_provider_org', 'type_is_invalid');
+            $message[sprintf('%s.ref.not_regex', $providerOrgForm)] = translateRequestMessage('the_planned_disbursement_provider_org_ref', 'shouldnt_contain_symbol');
 
             foreach ($this->getMessagesForNarrative($providerOrg['narrative'], $providerOrgForm) as $providerOrgNarrativeIndex => $providerOrgNarrativeMessages) {
                 $message[$providerOrgNarrativeIndex] = $providerOrgNarrativeMessages;
@@ -301,8 +301,8 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
         foreach ($formFields as $receiverOrgIndex => $receiverOrg) {
             $receiverOrgForm = sprintf('%s.receiver_org.%s', $formBase, $receiverOrgIndex);
-            $message[sprintf('%s.type.in', $receiverOrgForm)] = translateRequestMessage('planned_disb_rec', 'type_is_invalid');
-            $message[sprintf('%s.ref.not_regex', $receiverOrgForm)] = translateRequestMessage('planned_disb_rec_ref', 'shouldnt_contain_symbol');
+            $message[sprintf('%s.type.in', $receiverOrgForm)] = translateRequestMessage('the_planned_disbursement_receiver_org', 'type_is_invalid');
+            $message[sprintf('%s.ref.not_regex', $receiverOrgForm)] = translateRequestMessage('the_planned_disbursement_receiver_org_ref', 'shouldnt_contain_symbol');
 
             foreach ($this->getMessagesForNarrative($receiverOrg['narrative'], $receiverOrgForm) as $receiverOrgNarrativeIndex => $receiverOrgNarrativeMessages) {
                 $message[$receiverOrgNarrativeIndex] = $receiverOrgNarrativeMessages;
@@ -326,11 +326,11 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
 
         foreach ($formFields as $valueIndex => $value) {
             $valueForm = sprintf('%s.value.%s', $formBase, $valueIndex);
-            $messages[sprintf('%s.amount.required', $valueForm)] = translateRequestMessage('alt_amount_field', 'is_required');
-            $messages[sprintf('%s.amount.numeric', $valueForm)] = translateRequestMessage('alt_amount_field', 'must_be_a_number');
-            $messages[sprintf('%s.amount.min', $valueForm)] = translateRequestMessage('alt_amount_field', 'must_not_be_negative');
-            $messages[sprintf('%s.currency.in', $valueForm)] = translateRequestMessage('value', 'currency_is_invalid');
-            $messages[sprintf('%s.value_date.required', $valueForm)] = translateRequestMessage('alt_value_date', 'is_a_required_field');
+            $messages[sprintf('%s.amount.required', $valueForm)] = translateRequestMessage('amount_field', 'is_required');
+            $messages[sprintf('%s.amount.numeric', $valueForm)] = translateRequestMessage('amount_field', 'must_be_a_number');
+            $messages[sprintf('%s.amount.min', $valueForm)] = translateRequestMessage('amount_field', 'must_not_be_negative');
+            $messages[sprintf('%s.currency.in', $valueForm)] = translateRequestMessage('the_value', 'currency_is_invalid');
+            $messages[sprintf('%s.value_date.required', $valueForm)] = translateRequestMessage('value_date', 'is_a_required_field');
             $messages[sprintf('%s.value_date.date', $valueForm)] = translateRequestMessage('the_alt_value_date', 'must_be_a_valid_date');
         }
 
@@ -389,9 +389,9 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
         $messages = [];
         foreach ($formFields as $periodStartKey => $periodStartVal) {
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.required'] = trans('validation.required', ['attribute' => trans('elementForm.period_start')]);
-            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = translateRequestMessage('alt_period_end', 'must_be_a_date');
-            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date_greater_than'] = translateRequestMessage('alt_period_end', 'date_must_be_greater');
-            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.period_start_end'] = translateRequestMessage('planned_disb_period', 'must_not_be_longer_than_3_months');
+            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = translateRequestMessage('period_end', 'must_be_a_date');
+            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date_greater_than'] = translateRequestMessage('period_end', 'date_must_be_greater');
+            $messages[$formBase . '.period_start.' . $periodStartKey . '.date.period_start_end'] = translateRequestMessage('the_planned_disbursement_period', 'must_not_be_longer_than_3_months');
             $messages[$formBase . '.period_start.' . $periodStartKey . '.date.date'] = translateRequestMessage('period_start', 'must_be_a_date');
         }
 
@@ -456,11 +456,11 @@ class PlannedDisbursementRequest extends ActivityBaseRequest
         $messages = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.required'] = translateRequestMessage('alt_period_end', 'is_a_required_field');
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = translateRequestMessage('alt_period_end', 'must_be_a_date_field');
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after_or_equal'] = translateRequestMessage('alt_period_end', 'must_be_a_date_after_period');
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date_greater_than'] = translateRequestMessage('alt_period_end', 'date_must_be_greater');
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.period_start_end'] = translateRequestMessage('planned_disb_period', 'must_not_be_longer_than_3_months');
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.required'] = translateRequestMessage('period_end', 'is_a_required_field');
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = translateRequestMessage('period_end', 'must_be_a_date_field');
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after_or_equal'] = translateRequestMessage('period_end', 'must_be_a_date_after_period');
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date_greater_than'] = translateRequestMessage('period_end', 'date_must_be_greater');
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.period_start_end'] = translateRequestMessage('the_planned_disbursement_period', 'must_not_be_longer_than_3_months');
         }
 
         return $messages;

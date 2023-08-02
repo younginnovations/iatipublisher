@@ -70,7 +70,7 @@ class ActivityCreateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'activity_identifier.not_in' => translateRequestMessage('activity', 'identifier_already_exists'),
+            'activity_identifier.not_in' => translateRequestMessage('the_activity', 'identifier_already_exists'),
         ];
     }
 }

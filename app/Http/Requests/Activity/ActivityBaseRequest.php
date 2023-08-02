@@ -423,8 +423,8 @@ class ActivityBaseRequest extends FormRequest
         $messages = [];
 
         foreach ($formFields as $periodStartKey => $periodStartVal) {
-            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = translateRequestMessage('alt_period_end', 'must_be_a_date');
-            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date_greater_than'] = translateRequestMessage('alt_period_end', 'date_must_be_greater');
+            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date'] = translateRequestMessage('period_end', 'must_be_a_date');
+            $messages[$formBase . '.period_end.' . $periodStartKey . '.date.date_greater_than'] = translateRequestMessage('period_end', 'date_must_be_greater');
         }
 
         return $messages;
@@ -466,10 +466,10 @@ class ActivityBaseRequest extends FormRequest
         $messages = [];
 
         foreach ($formFields as $periodEndKey => $periodEndVal) {
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.required'] = translateRequestMessage('alt_period_end', 'is_a_required_field');
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = translateRequestMessage('alt_period_end', 'must_be_a_date_field');
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = translateRequestMessage('alt_period_end', 'date_must_be_greater');
-            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date_greater_than'] = translateRequestMessage('alt_period_end', 'date_must_be_greater');
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.required'] = translateRequestMessage('period_end', 'is_a_required_field');
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date'] = translateRequestMessage('period_end', 'must_be_a_date_field');
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.after'] = translateRequestMessage('period_end', 'date_must_be_greater');
+            $messages[$formBase . '.period_end.' . $periodEndKey . '.date.date_greater_than'] = translateRequestMessage('period_end', 'date_must_be_greater');
         }
 
         return $messages;

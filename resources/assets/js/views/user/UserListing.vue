@@ -687,7 +687,7 @@
                 {{
                   user['last_logged_in']
                     ? formatDate(user['last_logged_in'])
-                    : translate.missingText('not_available')
+                    : translate.missing('not_available')
                 }}
               </td>
               <td

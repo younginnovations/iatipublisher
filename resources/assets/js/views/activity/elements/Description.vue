@@ -8,7 +8,7 @@
       <span v-if="post.type">
         {{ types.descriptionType[post.type] }}
       </span>
-      <span v-else class="italic">{{ translate.missingText('type') }}</span>
+      <span v-else class="italic">{{ translate.missing('type') }}</span>
     </div>
     <div
       v-for="(item, i) in post.narrative"
@@ -25,9 +25,7 @@
           {{ item.narrative }}
         </span>
       </div>
-      <span v-else class="italic">{{
-        translate.missingText('narrative')
-      }}</span>
+      <span v-else class="italic">{{ translate.missing('narrative') }}</span>
     </div>
   </div>
 </template>

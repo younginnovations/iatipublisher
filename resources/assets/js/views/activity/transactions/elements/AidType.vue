@@ -10,8 +10,7 @@
     >
       <div class="category">
         <span>{{
-          type.aidTypeVocabulary[at.aid_type_vocabulary] ??
-          translate.missingText()
+          type.aidTypeVocabulary[at.aid_type_vocabulary] ?? translate.missing()
         }}</span>
       </div>
       <div class="ml-4">
@@ -36,7 +35,7 @@
                 <span v-else-if="at.earmarking_modality">
                   {{ type.earMarkingModality[at.earmarking_modality] }}
                 </span>
-                <span v-else> {{ translate.missingText() }} </span>
+                <span v-else> {{ translate.missing() }} </span>
               </div>
             </td>
           </tr>

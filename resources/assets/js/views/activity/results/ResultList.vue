@@ -69,9 +69,7 @@
               class="cursor-pointer"
               @click="handleNavigate(`${activityLink}/result/${result.id}`)"
             >
-              {{
-                types.resultType[result.result.type] ?? translate.missingText()
-              }}
+              {{ types.resultType[result.result.type] ?? translate.missing() }}
             </td>
             <td
               class="cursor-pointer capitalize"
@@ -82,7 +80,7 @@
                   ? translate.commonText('false')
                   : result.result.aggregation_status
                   ? translate.commonText('false')
-                  : translate.missingText()
+                  : translate.missing()
               }}
             </td>
             <td>
@@ -103,7 +101,7 @@
             {{
               createCapitalizedSentence(
                 translate.elementLabel('results'),
-                translate.missingText('not_found')
+                translate.missing('not_found')
               )
             }}
           </td>

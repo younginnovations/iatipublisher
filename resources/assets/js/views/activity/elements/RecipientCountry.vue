@@ -11,7 +11,7 @@
           >({{ roundFloat(participating_org.percentage) }}%)</span
         >
       </div>
-      <span v-else class="italic">{{ translate.missingText() }}</span>
+      <span v-else class="italic">{{ translate.missing() }}</span>
     </div>
 
     <div
@@ -27,9 +27,7 @@
         </span>
         <span>{{ item.narrative }}</span>
       </div>
-      <span v-else class="italic">{{
-        translate.missingText('narrative')
-      }}</span>
+      <span v-else class="italic">{{ translate.missing('narrative') }}</span>
     </div>
   </div>
 </template>

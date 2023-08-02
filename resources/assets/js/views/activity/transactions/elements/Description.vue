@@ -13,11 +13,11 @@
           ? `${translate.commonText('language')}: ${
               type.languages[post.language]
             }`
-          : translate.missingText('language')
+          : translate.missing('language')
       }})
     </div>
     <div class="description text-sm">
-      {{ post.narrative ?? translate.missingText('narrative') }}
+      {{ post.narrative ?? translate.missing('narrative') }}
     </div>
   </div>
 </template>

@@ -143,7 +143,7 @@ class ReportingOrgRequest extends ActivityBaseRequest
         $reportingOrganizationForm = sprintf('reporting_org.%s', $reportingOrganizationIndex);
 
         $messages[$reportingOrganizationForm . '.ref.must_match'] = translateRequestMessage('the_reference_of_reporting_org_must_match');
-        $messages[$reportingOrganizationForm . '.ref.not_regex'] = translateRequestMessage('reference_format', 'organisation_is_invalid');
+        $messages[$reportingOrganizationForm . '.ref.not_regex'] = translateRequestMessage('the_reference_format', 'organisation_is_invalid');
         $messages[$reportingOrganizationForm . '.type.must_match'] = translateRequestMessage('the_type_of_reporting_org_must_match');
         $messages[$reportingOrganizationForm . '.type.in'] = translateRequestMessage('type_for', 'organisation_is_invalid');
 

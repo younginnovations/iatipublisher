@@ -33,6 +33,7 @@ export class Translate {
     'user',
     'validation',
     'web',
+    'sticky',
   ];
 
   constructor() {
@@ -40,7 +41,7 @@ export class Translate {
   }
 
   button(buttonKey: string, elementKey = '') {
-    const baseMessage = this.lang.button_lang[buttonKey];
+    const baseMessage = this.lang.buttons[buttonKey];
 
     if (!elementKey) {
       return baseMessage;
@@ -52,17 +53,15 @@ export class Translate {
   }
 
   event(key: string): string {
-    return this.lang.events_lang[key] ?? key;
+    return this.lang.events[key] ?? key;
   }
 
   element(key, parentKey = 'elements_common') {
-    const sourceKey = this.mappedKeyForSource(parentKey);
-
-    return this.lang[sourceKey][key];
+    return this.lang[parentKey][key];
   }
 
   error(errorKey, elementKey = '') {
-    const baseMessage = this.lang.common_lang.error[errorKey];
+    const baseMessage = this.lang.common.error[errorKey];
 
     if (!elementKey) {
       return baseMessage;
@@ -74,43 +73,36 @@ export class Translate {
   }
 
   commonText(key: string): string {
-    let translatedString = this.lang.common_lang;
+    let translatedString = this.lang.common;
     const keys = this.explode(key);
 
     for (const innerKey of keys) {
       translatedString = translatedString[innerKey] ?? key;
     }
 
-    if (typeof translatedString !== 'string') {
-      console.log(key, translatedString, 'commonText');
-    }
     return translatedString;
   }
 
   elementLabel(key) {
-    let translatedString = this.lang.element_labels_lang;
+    let translatedString = this.lang.element_labels;
     const keys = this.explode(key);
 
     for (const innerKey of keys) {
       translatedString = translatedString[innerKey] ?? key;
     }
 
-    if (typeof translatedString !== 'string') {
-      console.log(key, translatedString, 'elementLabel');
-    }
     return translatedString;
   }
 
   elementFromElementName(elementName) {
     return (
-      this.lang.elements_common_lang[elementName] ??
-      elementName.replace(/_/g, '-')
+      this.lang.elements_common[elementName] ?? elementName.replace(/_/g, '-')
     );
   }
 
-  missingText(key = '', element = '') {
+  missing(key = '', element = '') {
     if (key) {
-      let baseMessage = this.lang.missing_lang[key];
+      let baseMessage = this.lang.missing[key];
 
       if (element) {
         element = this.textFromKey(element);
@@ -120,23 +112,23 @@ export class Translate {
       return baseMessage;
     }
 
-    return this.lang.missing_lang.default;
+    return this.lang.missing.default;
   }
 
   stickyText(key, outerKey = ''): string {
     if (outerKey) {
-      return this.lang.common_lang.sticky[outerKey][key];
+      return this.lang.sticky[outerKey][key];
     }
 
-    return this.lang.common_lang.sticky[key];
+    return this.lang.sticky[key];
   }
 
   logText(key) {
-    return this.lang.common_lang.logs[key];
+    return this.lang.common.logs[key];
   }
 
   webText(key) {
-    return this.lang.web_lang[key];
+    return this.lang.web[key];
   }
 
   adminText(key, parentKey = 'header') {
@@ -144,7 +136,7 @@ export class Translate {
   }
 
   registerText(key) {
-    return this.translate(this.lang.register_lang, key);
+    return this.translate(this.lang.register, key);
   }
 
   aboutText(key) {
@@ -161,10 +153,10 @@ export class Translate {
 
   getStickyObject(innerKey = '') {
     if (innerKey) {
-      return this.lang.common_lang.sticky[innerKey];
+      return this.lang.sticky[innerKey];
     }
 
-    return this.lang.common_lang.sticky;
+    return this.lang.sticky;
   }
 
   public textFromKey(elementKey): string {
@@ -175,7 +167,7 @@ export class Translate {
       const leadingKey = elementKeysArray[0];
 
       if (this.languageSources.includes(leadingKey)) {
-        value = this.lang[this.mappedKeyForSource(leadingKey)];
+        value = this.lang[leadingKey];
         elementKeysArray.shift();
 
         for (const elementKey of elementKeysArray) {
@@ -189,49 +181,13 @@ export class Translate {
     return value[elementKey];
   }
 
-  private mappedKeyForSource(source: string): string {
-    const map = {
-      web: 'web_lang',
-      home: 'home',
-      about: 'about',
-      publishing_checklist: 'publishing_checklist',
-      iati_standard: 'iati_standard',
-      support: 'support',
-      password_recovery: 'password_recovery',
-      email_verification: 'email_verification',
-      register: 'register_lang',
-      elements_common: 'elements_common_lang',
-      common: 'common_lang',
-      buttons: 'button_lang',
-      user: 'user_lang',
-      validation: 'validation_lang',
-      admin: 'admin',
-      activities: 'activities_lang',
-      activity_detail: 'activity_lang',
-      activity_default: 'activity_default_lang',
-      settings: 'settings_lang',
-      elements: 'elements_lang',
-      organisation: 'org_lang',
-      events: 'events_lang',
-      misc: 'misc_lang',
-      element_labels: 'element_labels_lang',
-    };
-
-    return map[source];
-  }
-
   translate(translationSource, key) {
-    if (key === 'about' || key === 'support') {
-      console.log(key, translationSource, 'okok');
-    }
-
     const keys = this.explode(key);
+
     for (const innerKey of keys) {
       translationSource = translationSource[innerKey];
     }
-    if (typeof translationSource !== 'string') {
-      console.log(key, translationSource, 'translate');
-    }
+
     return translationSource;
   }
 

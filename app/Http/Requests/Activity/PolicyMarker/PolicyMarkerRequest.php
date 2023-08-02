@@ -106,9 +106,9 @@ class PolicyMarkerRequest extends ActivityBaseRequest
 
         foreach ($formFields as $policyMarkerIndex => $policyMarker) {
             $policyMarkerForm = sprintf('policy_marker.%s', $policyMarkerIndex);
-            $messages[sprintf('%s.policy_marker_vocabulary.in', $policyMarkerForm)] = translateRequestMessage('policy_marker', 'vocabulary_is_invalid');
-            $messages[sprintf('%s.significance.in', $policyMarkerForm)] = translateRequestMessage('policy_marker', 'significance_is_invalid');
-            $messages[sprintf('%s.policy_marker.in', $policyMarkerForm)] = translateRequestMessage('policy_marker', 'code_is_invalid');
+            $messages[sprintf('%s.policy_marker_vocabulary.in', $policyMarkerForm)] = translateRequestmessage('the_policy_marker', 'vocabulary_is_invalid');
+            $messages[sprintf('%s.significance.in', $policyMarkerForm)] = translateRequestmessage('the_policy_marker', 'significance_is_invalid');
+            $messages[sprintf('%s.policy_marker.in', $policyMarkerForm)] = translateRequestmessage('the_policy_marker', 'code_is_invalid');
             $messages[sprintf('%s.vocabulary_uri.url', $policyMarkerForm)] = translateRequestMessage('vocab_url_field_symbol', 'must_be_valid_url');
 
             foreach ($this->getMessagesForNarrative($policyMarker['narrative'], $policyMarkerForm) as $policyMarkerNarrativeIndex => $narrativeMessages) {

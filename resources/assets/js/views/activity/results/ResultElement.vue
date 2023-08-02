@@ -32,7 +32,7 @@
               ? translate.commonText('true')
               : data
               ? translate.commonText('false')
-              : translate.missingText()
+              : translate.missing()
           }}</span>
         </template>
 

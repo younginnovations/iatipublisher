@@ -10,7 +10,7 @@
         types.organisationRole[participating_org.organization_role]
       }}</span>
       <span v-else class="italic">{{
-        translate.missingText('organisation_role')
+        translate.missing('organisation_role')
       }}</span>
     </div>
 
@@ -18,9 +18,7 @@
       <span v-if="participating_org.narrative['0'].narrative">{{
         participating_org.narrative['0'].narrative
       }}</span>
-      <span v-else class="italic">{{
-        translate.missingText('narrative')
-      }}</span>
+      <span v-else class="italic">{{ translate.missing('narrative') }}</span>
     </div>
 
     <div class="ml-5">
@@ -42,7 +40,7 @@
                   narrative.narrative
                 }}</span>
               </div>
-              <span v-else class="italic">{{ translate.missingText() }}</span>
+              <span v-else class="italic">{{ translate.missing() }}</span>
             </div>
           </td>
         </tr>
@@ -52,7 +50,7 @@
             {{ types.organizationType[participating_org.type] }}
           </td>
           <td v-else class="italic">
-            {{ translate.missingText() }}
+            {{ translate.missing() }}
           </td>
         </tr>
         <tr>
@@ -61,7 +59,7 @@
             {{ types.organisationRole[participating_org.organization_role] }}
           </td>
           <td v-else class="italic">
-            {{ translate.missingText() }}
+            {{ translate.missing() }}
           </td>
         </tr>
         <tr>
@@ -70,7 +68,7 @@
             {{ participating_org.ref }}
           </td>
           <td v-else class="italic">
-            {{ translate.missingText() }}
+            {{ translate.missing() }}
           </td>
         </tr>
         <tr>
@@ -80,7 +78,7 @@
               <span v-if="participating_org.identifier">{{
                 participating_org.identifier
               }}</span>
-              <span v-else class="italic">{{ translate.missingText() }}</span>
+              <span v-else class="italic">{{ translate.missing() }}</span>
             </div>
           </td>
         </tr>

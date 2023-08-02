@@ -99,7 +99,7 @@
                   ? translate.commonText('true')
                   : indicator.indicator.aggregation_status
                   ? translate.commonText('false')
-                  : translate.missingText()
+                  : translate.missing()
               }}
             </td>
             <td>
@@ -120,7 +120,7 @@
             {{
               createCapitalizedSentence(
                 translate.element(indicators),
-                translate.missingText('not_found')
+                translate.missing('not_found')
               )
             }}
           </td>

@@ -114,7 +114,7 @@ class BulkPublishingController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('common.core_completed_title', 'checking')]);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('common.core_elements_completed', 'checking')]);
         }
     }
 

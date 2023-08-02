@@ -6,7 +6,7 @@
         >{{
           activity['data']['title'][0]['narrative']
             ? activity['data']['title'][0]['narrative']
-            : translate.missingText()
+            : translate.missing()
         }}</span
       >
 

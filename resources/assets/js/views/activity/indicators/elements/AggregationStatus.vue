@@ -7,7 +7,7 @@
           ? translate.commonText('true')
           : data
           ? translate.commonText('false')
-          : translate.missingText()
+          : translate.missing()
       }}
     </td>
   </tr>

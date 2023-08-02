@@ -20,7 +20,7 @@
                         {{
                           type.language[na.language]
                             ? type.language[na.language]
-                            : translate.missingText()
+                            : translate.missing()
                         }})
                       </div>
                       <div
@@ -34,7 +34,7 @@
               </tr>
 
               <tr v-if="post.url">
-                <td>{{ translate.commonText('document_link') }} }}</td>
+                <td>{{ translate.commonText('document_link') }}</td>
                 <td>
                   <a
                     class="w-[800px] !max-w-[50%] overflow-x-hidden text-ellipsis whitespace-nowrap"
@@ -48,7 +48,7 @@
               <tr>
                 <td>{{ translate.commonText('format') }}</td>
                 <td>
-                  {{ post.format ? post.format : translate.missingText() }}
+                  {{ post.format ? post.format : translate.missing() }}
                 </td>
               </tr>
 
@@ -65,7 +65,7 @@
                         {{
                           type.language[na.language]
                             ? type.language[na.language]
-                            : translate.missingText()
+                            : translate.missing()
                         }})
                       </div>
                       <div class="description text-xs">
@@ -84,7 +84,7 @@
                       {{
                         type.documentCategory[cat.code]
                           ? type.documentCategory[cat.code]
-                          : translate.missingText()
+                          : translate.missing()
                       }}
                     </div>
                   </template>
@@ -97,7 +97,7 @@
                   <div class="text-xs">
                     {{
                       post.language[0].language === null
-                        ? translate.missingText()
+                        ? translate.missing()
                         : post.language
                             .map((entry) => type.language[entry.language])
                             .join(', ')
@@ -113,7 +113,7 @@
                     {{
                       post.document_date[0].date
                         ? post.document_date[0].date
-                        : translate.missingText()
+                        : translate.missing()
                     }}
                   </div>
                 </td>

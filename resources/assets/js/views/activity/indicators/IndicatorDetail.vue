@@ -219,7 +219,7 @@
                   <table class="mb-2">
                     <tr>
                       <td class="pl-4">
-                        {{ translate.commonText('document_link') }} }}
+                        {{ translate.commonText('document_link') }}
                       </td>
                     </tr>
                   </table>

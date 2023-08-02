@@ -90,7 +90,7 @@
                           <div class="result-translate-text">
                             {{
                               types.resultType[result.result.type] ??
-                              translate.missingText()
+                              translate.missing()
                             }}
                           </div>
                         </td>
@@ -108,7 +108,7 @@
                                   result.result.description[0].narrative,
                                   currentLanguage
                                 ) === 'Untitled'
-                                  ? translate.missingText()
+                                  ? translate.missing()
                                   : types.languages[
                                       result?.result?.description?.[0]
                                         ?.narrative?.[0]?.language ??
@@ -268,7 +268,7 @@
                                             {{ baseline.value }},
                                           </template>
                                           <template v-else>
-                                            {{ translate.missingText() }},
+                                            {{ translate.missing() }},
                                           </template>
                                         </span>
                                         <span>
@@ -277,7 +277,7 @@
                                             {{ baseline.date }}
                                           </template>
                                           <template v-else>
-                                            {{ translate.missingText() }}
+                                            {{ translate.missing() }}
                                           </template>
                                         </span>
                                       </div>

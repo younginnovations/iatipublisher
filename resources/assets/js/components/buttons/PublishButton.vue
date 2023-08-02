@@ -67,7 +67,7 @@
           <BtnComponent
             v-if="publishStep == 0"
             class="space"
-            :text="translate.button('add_element', 'common.missing.date')"
+            :text="translate.button('add_element', 'missing.data')"
             type="primary"
             @click="publishValue = false"
           />
@@ -233,11 +233,15 @@ const publishStateChange = computed(() => {
 
   // different content for step 1 based on coreElement status
   if (coreElementStatus) {
-    title = translate.commonText('core_completed_title');
-    description = translate.commonText('core_completed_description');
+    title = translate.commonText('core_elements_completed');
+    description = translate.commonText(
+      'congratulations_all_the_core_elements_are_complete'
+    );
   } else {
-    title = translate.commonText('core_not_completed_title');
-    description = translate.commonText('core_not_completed_description');
+    title = translate.commonText('core_elements_not_complete');
+    description = translate.commonText(
+      'there_is_missing_data_in_some_of_the_core_elements'
+    );
     icon = 'warning-fill';
   }
 
@@ -254,29 +258,35 @@ const publishStateChange = computed(() => {
       break;
     //second step
     case 1:
-      publishState.title = translate.stickyText('title_1');
-      publishState.description = translate.stickyText('description_1');
+      publishState.title = translate.stickyText(
+        'activity_will_be_validated_before_publishing'
+      );
+      publishState.description = translate.stickyText(
+        'this_activity_will_be_first_validated_before_publishing_the_activity_to_the_iati_registry'
+      );
       publishState.icon = `shield`;
       publishState.alertState = false;
       break;
     // case 2 is for success validation
     case 2:
-      publishState.title = translate.stickyText('title_2');
-      publishState.description = translate.stickyText('description_2');
+      publishState.title = translate.stickyText('iati_validation');
+      publishState.description = translate.stickyText(
+        'congratulations_no_errors_were_found'
+      );
       publishState.icon = `tick`;
       publishState.alertState = true;
       break;
     //case 3 is for validation with critical errors
     case 3:
-      publishState.title = translate.stickyText('title_3');
-      publishState.description = `<p><b>${err.criticalNumber} ${s.critical} ${s.errors}</b>, <b>${err.errorNumber} ${s.errors}</b> ${s.and} <b>${err.warningNumber} ${s.warnings}</b> ${s.warnings}. ${s.critical}</p><p>${s.has_atleast_one_critical_error}</p><p>${s.we_highly_recommend}</p>`;
+      publishState.title = translate.stickyText('iati_validation_issue');
+      publishState.description = `<p><b>${err.criticalNumber} ${s.critical} ${s.errors}</b>, <b>${err.errorNumber} ${s.errors}</b> ${s.and} <b>${err.warningNumber} ${s.warnings}</b> ${s.warnings}. ${s.critical}</p><p>${s.has_atleast_one_critical_error}</p><p>${s.we_highly_recommend_you_fix_these_issues}</p>`;
       publishState.icon = `warning-fill`;
       publishState.alertState = false;
       break;
     // case 4 is for validation without critical errors
     case 4:
-      publishState.title = translate.stickyText('title_3');
-      publishState.description = `<p><b>${err.errorNumber}  ${s.errors}</b>  ${s.and} <b>${err.warningNumber}  ${s.warnings}</b>  ${s.were_found}.  ${s.view_information}</p><p>${s.we_highly_recommend}</p>`;
+      publishState.title = translate.stickyText('iati_validation_issue');
+      publishState.description = `<p><b>${err.errorNumber}  ${s.errors}</b>  ${s.and} <b>${err.warningNumber}  ${s.warnings}</b>  ${s.were_found}.  ${s.view_information_about_these}</p><p>${s.we_highly_recommend_you_fix_these_issues}</p>`;
       publishState.icon = `warning-fill`;
       publishState.alertState = false;
       break;

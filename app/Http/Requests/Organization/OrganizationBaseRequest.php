@@ -279,11 +279,11 @@ class OrganizationBaseRequest extends FormRequest
 
         foreach ($formFields as $valueKey => $valueVal) {
             $valueForm = $formBase . '.value.' . $valueKey;
-            $messages[$valueForm . '.amount.required'] = translateRequestMessage('amount_field', 'is_required');
-            $messages[$valueForm . '.amount.numeric'] = translateRequestMessage('amount', 'must_be_numeric');
-            $messages[$valueForm . '.amount.min'] = translateRequestMessage('amount', 'must_not_be_negative');
-            $messages[$valueForm . '.value_date.required'] = translateRequestMessage('value_date_field_symbol', 'is_required');
-            $messages[$valueForm . '.value_date.date'] = translateRequestMessage('value_date_symbol', 'must_be_a_date');
+            $messages[$valueForm . '.amount.required'] = translateRequestMessage('the_amount_field', 'is_required');
+            $messages[$valueForm . '.amount.numeric'] = translateRequestMessage('the_amount', 'must_be_numeric');
+            $messages[$valueForm . '.amount.min'] = translateRequestMessage('the_amount', 'must_not_be_negative');
+            $messages[$valueForm . '.value_date.required'] = translateRequestMessage('the_@value_date_field', 'is_required');
+            $messages[$valueForm . '.value_date.date'] = translateRequestMessage('the_@value_date', 'must_be_a_date');
         }
 
         return $messages;
@@ -472,13 +472,13 @@ class OrganizationBaseRequest extends FormRequest
         $messages = [];
 
         foreach ($formField as $budgetLineIndex => $budgetLine) {
-            $messages[sprintf('%s.value.%s.amount.required_with', $formBase, $budgetLineIndex)] = translateRequestMessage('amount_field', 'is_required_with_val');
-            $messages[sprintf('%s.value.%s.amount.numeric', $formBase, $budgetLineIndex)] = translateRequestMessage('amount_field', 'must_be_a_number');
-            $messages[sprintf('%s.value.%s.amount.min', $formBase, $budgetLineIndex)] = translateRequestMessage('amount_field', 'must_not_be_negative');
-            $messages[sprintf('%s.value.%s.value_date.date', $formBase, $budgetLineIndex)] = translateRequestMessage('value_date_symbol', 'must_be_a_date');
-            $messages[sprintf('%s.value.%s.value_date.required_with', $formBase, $budgetLineIndex)] = translateRequestMessage('value_date_symbol', 'is_required_with_val');
-            $messages[sprintf('%s.value.%s.value_date.after_or_equal', $formBase, $budgetLineIndex)] = translateRequestMessage('value_date_symbol', 'must_be_between');
-            $messages[sprintf('%s.value.%s.value_date.before_or_equal', $formBase, $budgetLineIndex)] = translateRequestMessage('value_date_symbol', 'must_be_between');
+            $messages[sprintf('%s.value.%s.amount.required_with', $formBase, $budgetLineIndex)] = translateRequestMessage('the_amount_field', 'is_required_with_val');
+            $messages[sprintf('%s.value.%s.amount.numeric', $formBase, $budgetLineIndex)] = translateRequestMessage('the_amount_field', 'must_be_a_number');
+            $messages[sprintf('%s.value.%s.amount.min', $formBase, $budgetLineIndex)] = translateRequestMessage('the_amount_field', 'must_not_be_negative');
+            $messages[sprintf('%s.value.%s.value_date.date', $formBase, $budgetLineIndex)] = translateRequestMessage('the_@value_date', 'must_be_a_date');
+            $messages[sprintf('%s.value.%s.value_date.required_with', $formBase, $budgetLineIndex)] = translateRequestMessage('the_@value_date', 'is_required_with_val');
+            $messages[sprintf('%s.value.%s.value_date.after_or_equal', $formBase, $budgetLineIndex)] = translateRequestMessage('the_@value_date', 'must_be_between');
+            $messages[sprintf('%s.value.%s.value_date.before_or_equal', $formBase, $budgetLineIndex)] = translateRequestMessage('the_@value_date', 'must_be_between');
         }
 
         return $messages;

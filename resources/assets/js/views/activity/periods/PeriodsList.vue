@@ -55,13 +55,13 @@
                 {{
                   pe.period.period_start[0].date
                     ? dateFormat(pe.period.period_start[0].date)
-                    : translate.missingText()
+                    : translate.missing()
                 }}
                 -
                 {{
                   pe.period.period_end[0].date
                     ? dateFormat(pe.period.period_end[0].date)
-                    : translate.missingText()
+                    : translate.missing()
                 }}
               </a>
             </td>
@@ -81,7 +81,7 @@
             {{
               createCapitalizedSentence(
                 translate.commonText('periods'),
-                translate.missingText('not_found')
+                translate.missing('not_found')
               )
             }}
           </td>

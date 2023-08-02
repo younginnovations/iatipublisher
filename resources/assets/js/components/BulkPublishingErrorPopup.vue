@@ -30,7 +30,11 @@
         </span>
       </li>
     </ul>
-    {{ translate.commonText('please_wait_for_previous_to_complete') }}
+    {{
+      translate.commonText(
+        'please_wait_for_the_previous_bulk_publish_to_complete'
+      )
+    }}
   </div>
 </template>
 

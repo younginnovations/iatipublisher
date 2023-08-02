@@ -1,5 +1,5 @@
 <template>
-  {{ date[0].date ? dateFormat(date[0].date) : translate.missingText('date') }}
+  {{ date[0].date ? dateFormat(date[0].date) : translate.missing('date') }}
 </template>
 
 <script lang="ts">

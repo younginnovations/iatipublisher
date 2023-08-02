@@ -10,7 +10,7 @@
           types.relatedActivityType[post.relationship_type]
         }}</span>
         <span v-else class="italic">{{
-          translate.missingText('element', 'common.type')
+          translate.missing('element', 'common.type')
         }}</span>
       </div>
       <div>
@@ -18,7 +18,7 @@
           post.activity_identifier
         }}</span>
         <span v-else class="italic">{{
-          translate.missingText('element', 'common.reference')
+          translate.missing('element', 'common.reference')
         }}</span>
       </div>
     </div>

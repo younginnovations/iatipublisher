@@ -472,13 +472,11 @@
               <div>
                 <div v-if="data.name" class="ellipsis relative">
                   <span class="ellipsis overflow-hidden">
-                    {{
-                      data?.name[0]?.narrative ?? translate.missingText('name')
-                    }}
+                    {{ data?.name[0]?.narrative ?? translate.missing('name') }}
                   </span>
                 </div>
 
-                <div v-else>{{ translate.missingText('name') }}</div>
+                <div v-else>{{ translate.missing('name') }}</div>
                 <div class="group relative">
                   <div
                     class="w-full overflow-x-hidden text-ellipsis text-blue-40"
@@ -555,7 +553,7 @@
                 {{
                   data.last_logged_in
                     ? dateFormat(data.last_logged_in, 'MMMM, DD,YYYY')
-                    : translate.missingText('not_available')
+                    : translate.missing('not_available')
                 }}
               </div>
             </td>
@@ -573,7 +571,7 @@
                           data['latest_updated_activity'].updated_at,
                           'MMMM, DD, YYYY'
                         )
-                      : translate.missingText('not_available')
+                      : translate.missing('not_available')
                   }}
                 </div>
               </div>
@@ -1064,16 +1062,12 @@ export default defineComponent({
         if (key == 'data_license') {
           let license = data[key];
           license = license?.trim();
-          return license
-            ? map[license]
-            : translate.missingText('not_available');
+          return license ? map[license] : translate.missing('not_available');
         }
 
-        return data[key]
-          ? map[data[key]]
-          : translate.missingText('not_available');
+        return data[key] ? map[data[key]] : translate.missing('not_available');
       }
-      return translate.missingText('not_available');
+      return translate.missing('not_available');
     };
 
     return {

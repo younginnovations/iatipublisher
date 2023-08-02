@@ -9,7 +9,7 @@
       <span>
         {{
           types.budgetType[post.planned_disbursement_type] ??
-          translate.missingText('type')
+          translate.missing('type')
         }}
       </span>
     </div>
@@ -28,7 +28,7 @@
                   ? Number(post.value[0].amount).toLocaleString() +
                     ' ' +
                     types.currency[post.value[0].currency]
-                  : translate.missingText()
+                  : translate.missing()
               }}
             </td>
           </tr>
@@ -38,7 +38,7 @@
               {{
                 post.value[0].value_date
                   ? formatDate(post.value[0].value_date)
-                  : translate.missingText()
+                  : translate.missing()
               }}
             </td>
           </tr>
@@ -49,7 +49,7 @@
                 {{
                   post.period_start[0].date
                     ? formatDate(post.period_start[0].date)
-                    : translate.missingText('type')
+                    : translate.missing('type')
                 }}
               </span>
             </td>
@@ -61,7 +61,7 @@
                 {{
                   post.period_end[0].date
                     ? formatDate(post.period_end[0].date)
-                    : translate.missingText('type')
+                    : translate.missing('type')
                 }}
               </span>
             </td>
@@ -72,7 +72,7 @@
     <div v-if="post.provider_org" class="mb-4 ml-5">
       <div class="category">
         <span>
-          {{ translate.elementLabel('activities.provider_org_spaced ') }}
+          {{ translate.elementLabel('activities.provider_org_spaced') }}
         </span>
       </div>
       <table class="ml-5">
@@ -86,7 +86,7 @@
               {{
                 post.provider_org[0].type
                   ? types.organizationType[post.provider_org[0].type]
-                  : translate.missingText()
+                  : translate.missing()
               }}
             </td>
           </tr>
@@ -94,15 +94,14 @@
             <td>{{ translate.commonText('reference') }}</td>
             <td>
               {{
-                post.provider_org[0].provider_activity_id ??
-                translate.missingText()
+                post.provider_org[0].provider_activity_id ?? translate.missing()
               }}
             </td>
           </tr>
           <tr>
             <td>{{ translate.commonText('reference') }}</td>
             <td>
-              {{ post.provider_org[0].ref ?? translate.missingText() }}
+              {{ post.provider_org[0].ref ?? translate.missing() }}
             </td>
           </tr>
           <tr>
@@ -117,15 +116,15 @@
                 }"
               >
                 <div class="language mb-1.5">
-                  ({{ translate.commonText('language') }}
+                  ({{ translate.commonText('language') }}:
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : translate.missingText()
+                      : translate.missing()
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? translate.missingText() }}
+                  {{ narrative.narrative ?? translate.missing() }}
                 </div>
               </div>
             </td>
@@ -147,7 +146,7 @@
               {{
                 post.receiver_org[0].type
                   ? types.organizationType[post.receiver_org[0].type]
-                  : translate.missingText()
+                  : translate.missing()
               }}
             </td>
           </tr>
@@ -158,15 +157,14 @@
             </td>
             <td>
               {{
-                post.receiver_org[0].receiver_activity_id ??
-                translate.missingText()
+                post.receiver_org[0].receiver_activity_id ?? translate.missing()
               }}
             </td>
           </tr>
           <tr>
             <td>{{ translate.commonText('reference') }}</td>
             <td>
-              {{ post.receiver_org[0].ref ?? translate.missingText() }}
+              {{ post.receiver_org[0].ref ?? translate.missing() }}
             </td>
           </tr>
           <tr>
@@ -181,15 +179,15 @@
                 }"
               >
                 <div class="language mb-1.5">
-                  ({{ translate.commonText('language') }}
+                  ({{ translate.commonText('language') }}:
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : translate.missingText()
+                      : translate.missing()
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? translate.missingText() }}
+                  {{ narrative.narrative ?? translate.missing() }}
                 </div>
               </div>
             </td>

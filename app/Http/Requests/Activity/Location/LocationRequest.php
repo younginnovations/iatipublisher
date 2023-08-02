@@ -471,8 +471,8 @@ class LocationRequest extends ActivityBaseRequest
 
         $pointForm = sprintf('%s.point.0', $formBase);
         $positionForm = sprintf('%s.pos.0', $pointForm);
-        $messages[sprintf('%s.latitude.numeric', $positionForm)] = translateRequestMessage('pos_latitude', 'must_be_numeric');
-        $messages[sprintf('%s.longitude.numeric', $positionForm)] = translateRequestMessage('pos_longitude', 'must_be_numeric');
+        $messages[sprintf('%s.latitude.numeric', $positionForm)] = translateRequestMessage('the_pos_latitude', 'must_be_numeric');
+        $messages[sprintf('%s.longitude.numeric', $positionForm)] = translateRequestMessage('the_pos_longitude', 'must_be_numeric');
 
         return $messages;
     }

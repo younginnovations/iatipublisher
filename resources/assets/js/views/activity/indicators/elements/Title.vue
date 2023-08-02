@@ -11,10 +11,10 @@
         >
           <div class="language mb-1 text-n-30">
             ({{ translate.commonText('language') }}:
-            {{ titleType[title.language] ?? translate.missingText() }})
+            {{ titleType[title.language] ?? translate.missing() }})
           </div>
           <div class="description text-xs">
-            {{ title.narrative ?? translate.missingText() }}
+            {{ title.narrative ?? translate.missing() }}
           </div>
         </div>
       </template>
