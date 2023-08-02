@@ -704,7 +704,15 @@ trait RegistersValidationRules
             return false;
         });
 
+        $this->extendImplicit('result_ref_vocabulary_present', function () {
+            return false;
+        });
+
         $this->extendImplicit('indicator_ref_code_present', function () {
+            return false;
+        });
+
+        $this->extendImplicit('indicator_ref_vocabulary_present', function () {
             return false;
         });
 
