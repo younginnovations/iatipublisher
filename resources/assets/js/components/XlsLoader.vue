@@ -10,7 +10,9 @@
     <div class="mb-5 flex items-start justify-between">
       <h6 v-if="maximize && xlsFailed" class="font-bold">Upload Failed</h6>
 
-      <h6 v-if="maximize && !xlsFailed" class="font-bold">Upload in progess</h6>
+      <h6 v-if="maximize && !xlsFailed" class="font-bold">
+        Upload in progress
+      </h6>
       <div v-if="maximize" class="flex items-center space-x-3">
         <button
           class="text-xs font-bold uppercase text-bluecoral"
