@@ -95,7 +95,7 @@ class BulkPublishingController extends Controller
 
                 return response()->json([
                     'success' => false,
-                    'message' => translateCommon('another_bulk_publishing_in_progress'),
+                    'message' => translateCommon('another_bulk_publish_in_progress'),
                     'data' => $pubishingStatus['publishingData'],
                     'in_progress' => $pubishingStatus['inProgress'],
                 ]);
@@ -202,7 +202,7 @@ class BulkPublishingController extends Controller
 
                 return response()->json([
                     'success' => false,
-                    'message' => translateCommon('another_bulk_publishing_in_progress'),
+                    'message' => translateCommon('another_bulk_publish_in_progress'),
                     'data' => $pubishingStatus['publishingData'],
                     'in_progress' => $pubishingStatus['inProgress'],
                 ]);
@@ -321,7 +321,7 @@ class BulkPublishingController extends Controller
 
                 return response()->json([
                     'success' => false,
-                    'message' => translateCommon('another_bulk_publishing_in_progress'),
+                    'message' => translateCommon('another_bulk_publish_in_progress'),
                     'data' => $pubishingStatus['publishingData'],
                     'in_progress' => $pubishingStatus['inProgress'],
                 ]);
