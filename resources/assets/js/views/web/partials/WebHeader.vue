@@ -11,11 +11,11 @@
           <div class="basis-4/6">
             <ul
               id="nav-list"
-              class="nav__list flex justify-between pt-10 uppercase leading-5 1xl:flex-row-reverse"
+              class="nav__list reverse-on-large-screen flex justify-between pt-10 uppercase leading-5"
             >
               <span
                 id="hamburger-cross"
-                class="absolute top-3 left-8 cursor-pointer 1xl:hidden"
+                class="hide-on-lagre-screen absolute top-3 left-8 cursor-pointer"
               >
                 <svg-vue
                   class="text-3xl text-white"
@@ -23,9 +23,10 @@
                 ></svg-vue>
               </span>
               <li
-                class="border-bottom mb-4 flex border-b pb-4 1xl:mb-0 1xl:border-b-transparent 1xl:pb-0"
+                class="border-bottom space-bottom-large-screen flex border-b 1xl:border-b-transparent"
               >
-                <span class="mr-2 hidden pt-5 pb-5 uppercase 1xl:block 1xl:pt-0"
+                <span
+                  class="hide-on-small-screen mr-2 pt-5 pb-5 uppercase 1xl:pt-0"
                   >{{ translate.webText('language') }}:</span
                 >
                 <ul class="flex items-center justify-center">
@@ -66,7 +67,7 @@
               </li>
 
               <li>
-                <ul class="flex flex-col items-start 1xl:flex-row">
+                <ul class="row-on-large-screen flex flex-col items-start">
                   <li class="nav__links active dropdown">
                     <a href="/about">{{ translate.webText('about') }}</a>
                     <NavDropdown
@@ -119,7 +120,7 @@
           <div id="menu-overlay"></div>
           <div
             id="hamburger"
-            class="hamburger home-burger-menu mb-4 scale-90 1xl:hidden 1xl:outline"
+            class="hamburger home-burger-menu hide-on-lagre-screen mb-4 scale-90"
           >
             <span class="bg-bluecoral" />
             <span class="bg-bluecoral" />
@@ -183,5 +184,39 @@ export default defineComponent({
 <style scoped lang="scss">
 .border-bottom {
   border-color: rgba(255, 255, 255, 0.24);
+}
+.hide-on-lagre-screen {
+  visibility: hidden;
+  @media (max-width: 1415px) {
+    visibility: visible;
+  }
+}
+
+.hide-on-small-screen {
+  display: block;
+  @media (max-width: 1415px) {
+    display: none;
+  }
+}
+.reverse-on-large-screen {
+  flex-direction: row-reverse;
+  @media (max-width: 1415px) {
+    flex-direction: column;
+  }
+}
+.row-on-large-screen {
+  flex-direction: row;
+  @media (max-width: 1415px) {
+    flex-direction: column;
+  }
+}
+
+.space-bottom-large-screen {
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+  @media (max-width: 1415px) {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+  }
 }
 </style>

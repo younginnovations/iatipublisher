@@ -38,9 +38,16 @@
   font-style: normal;
   white-space: pre-wrap;
   display: block;
+  a {
+    @apply text-n-50;
+    font-size: 12px;
+  }
 
   a:hover {
     @apply text-n-50;
+    @media screen and (max-width: 1415px) {
+      @apply text-white;
+    }
   }
 
   .read__more {
@@ -54,18 +61,16 @@
   }
 
   a {
-    @apply text-white;
+    @apply text-n-50;
     padding-bottom: 24px;
+    @media screen and (max-width: 1415px) {
+      @apply text-white;
+    }
   }
 }
 @media screen and (min-width: 1415px) {
   .nav__links {
     padding: 0px 8px 20px;
-
-    a {
-      @apply text-n-50;
-      font-size: 12px;
-    }
 
     &::after {
       position: absolute;
@@ -153,7 +158,11 @@
 }
 
 #menu-overlay {
-  @apply 1xl:hidden;
+  @apply hidden;
+
+  @media screen and (max-width: 1415px) {
+    @apply block;
+  }
 }
 
 #activity-menu-overlay {
