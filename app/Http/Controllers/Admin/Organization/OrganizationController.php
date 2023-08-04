@@ -144,7 +144,7 @@ class OrganizationController extends Controller
         $filtered_agency = [];
 
         foreach ($registration_agency as $key => $value) {
-            if (in_array(str_split($key, 2)[0], [$country_code, 'XI', 'XR'], true)) {
+            if (in_array(str_split($key, 2)[0], [$country_code, 'XM', 'XI', 'XR'], true)) {
                 $filtered_agency[$key] = $value;
             }
         }
