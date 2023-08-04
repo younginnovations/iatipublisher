@@ -11,11 +11,11 @@
           <div class="basis-4/6">
             <ul
               id="nav-list"
-              class="nav__list flex justify-between pt-10 uppercase leading-5 xl:flex-row-reverse"
+              class="nav__list flex justify-between pt-10 uppercase leading-5 1xl:flex-row-reverse"
             >
               <span
                 id="hamburger-cross"
-                class="absolute top-3 left-8 cursor-pointer xl:hidden"
+                class="absolute top-3 left-8 cursor-pointer 1xl:hidden"
               >
                 <svg-vue
                   class="text-3xl text-white"
@@ -23,9 +23,9 @@
                 ></svg-vue>
               </span>
               <li
-                class="border-bottom mb-4 flex border-b pb-4 xl:mb-0 xl:border-b-transparent xl:pb-0"
+                class="border-bottom mb-4 flex border-b pb-4 1xl:mb-0 1xl:border-b-transparent 1xl:pb-0"
               >
-                <span class="mr-2 hidden pt-5 pb-5 uppercase xl:block xl:pt-0"
+                <span class="mr-2 hidden pt-5 pb-5 uppercase 1xl:block 1xl:pt-0"
                   >{{ translate.webText('language') }}:</span
                 >
                 <ul class="flex items-center justify-center">
@@ -66,7 +66,7 @@
               </li>
 
               <li>
-                <ul class="flex flex-col items-start xl:flex-row">
+                <ul class="flex flex-col items-start 1xl:flex-row">
                   <li class="nav__links active dropdown">
                     <a href="/about">{{ translate.webText('about') }}</a>
                     <NavDropdown
@@ -77,9 +77,9 @@
                     />
                   </li>
                   <li class="nav__links active dropdown">
-                    <a href="/publishing-checklist">{{
-                      translate.webText('publishing_checklist')
-                    }}</a>
+                    <a class="-mb-8 inline-block" href="/publishing-checklist">
+                      {{ translate.webText('publishing_checklist') }}
+                    </a>
                     <NavDropdown
                       :name="translate.webText('publishing_checklist')"
                       :text="
@@ -119,7 +119,7 @@
           <div id="menu-overlay"></div>
           <div
             id="hamburger"
-            class="hamburger home-burger-menu mb-4 scale-90 xl:hidden"
+            class="hamburger home-burger-menu mb-4 scale-90 1xl:hidden 1xl:outline"
           >
             <span class="bg-bluecoral" />
             <span class="bg-bluecoral" />
@@ -127,11 +127,9 @@
           </div>
         </nav>
         <div
-          class="header__title flex flex-wrap items-center justify-between gap-2 border-l-4 border-l-turquoise py-2 px-4 sm:py-5 sm:px-6 xl:mt-6"
+          class="header__title mt-4 flex flex-wrap items-center justify-between gap-2 border-l-4 border-l-turquoise py-2 px-4 sm:py-5 sm:px-6 xl:mt-6"
         >
-          <h1
-            class="text-xl font-bold normal-case text-white sm:text-4xl sm:text-heading-2"
-          >
+          <h1 class="text-xl font-bold normal-case text-white sm:text-4xl">
             {{ title }}
           </h1>
           <a

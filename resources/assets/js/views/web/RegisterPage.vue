@@ -688,14 +688,14 @@ export default defineComponent({
 
 .section {
   &__container {
-    @media screen and (min-width: 1280px) {
+    @media screen and (min-width: 1415px) {
       max-width: 1206px;
     }
     max-width: 865px;
     margin: auto;
 
     .feedback {
-      @media screen and (min-width: 1280px) {
+      @media screen and (min-width: 1415px) {
         width: 702px;
       }
 

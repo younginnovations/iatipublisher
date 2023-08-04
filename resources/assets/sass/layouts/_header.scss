@@ -14,7 +14,7 @@
   }
 }
 .header {
-  max-width: 1166px;
+  max-width: 1400px;
   margin: auto;
 }
 .nav__active::after {
@@ -34,7 +34,10 @@
   position: relative;
   padding: 20px 8px;
   font-weight: normal;
+  text-align: left;
   font-style: normal;
+  white-space: pre-wrap;
+  display: block;
 
   a:hover {
     @apply text-n-50;
@@ -55,7 +58,7 @@
     padding-bottom: 24px;
   }
 }
-@media screen and (min-width: 1280px) {
+@media screen and (min-width: 1415px) {
   .nav__links {
     padding: 0px 8px 20px;
 
@@ -81,7 +84,7 @@
   }
 }
 .dropdown__content {
-  @apply invisible absolute right-0 top-7 hidden h-56 bg-white py-7 px-8 opacity-0 duration-300 xl:block;
+  @apply invisible absolute right-0 top-7 hidden h-56 bg-white py-7 px-8 opacity-0 duration-300 1xl:block;
   width: 424px;
   height: auto;
   line-height: 22px;
@@ -95,7 +98,7 @@
   }
 }
 .nav__list {
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 1415px) {
     position: fixed;
     top: 0;
     left: 0;
@@ -150,7 +153,7 @@
 }
 
 #menu-overlay {
-  @apply xl:hidden;
+  @apply 1xl:hidden;
 }
 
 #activity-menu-overlay {
@@ -308,7 +311,7 @@
   }
 }
 
-@media screen and (max-width: 1280px) {
+@media screen and (max-width: 1415px) {
   .web-header {
     .nav__links {
       padding: 8px;
