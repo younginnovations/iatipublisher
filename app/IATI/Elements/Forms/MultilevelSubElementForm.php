@@ -52,6 +52,8 @@ class MultilevelSubElementForm extends BaseForm
                             'element_criteria' => $this->getData(sprintf('sub_elements.%s.element_criteria', $name)),
                             'hover_text' => $this->getData(sprintf('sub_elements.%s.hover_text', $name)) ?? '',
                             'help_text' => $this->getData(sprintf('sub_elements.%s.help_text', $name)) ?? '',
+                            'helper_text' => $this->getData(sprintf('sub_elements.%s.helper_text', $name)) ?? '',
+
                             'wrapper' => [
                                 'class' => 'multi-form relative',
                             ],

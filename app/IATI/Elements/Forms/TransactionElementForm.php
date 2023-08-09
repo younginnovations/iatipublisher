@@ -87,6 +87,7 @@ class TransactionElementForm extends BaseForm
                 'element_criteria'  => $this->getData(sprintf('sub_elements.%s.element_criteria', $name)),
                 'hover_text' => $this->getData(sprintf('sub_elements.%s.hover_text', $name)) ?? '',
                 'help_text' => $this->getData(sprintf('sub_elements.%s.help_text', $name)) ?? '',
+                'helper_text' => $this->getData(sprintf('sub_elements.%s.helper_text', $name)) ?? '',
                 'info_text' => $this->getData(sprintf('sub_elements.%s.info_text', $name)) ?? '',
                 'warning_info_text' => $this->getData(sprintf('sub_elements.%s.warning_info_text', $name)) ?? '',
                 'label' => false,

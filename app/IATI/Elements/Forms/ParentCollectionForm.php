@@ -42,6 +42,7 @@ class ParentCollectionForm extends BaseForm
                     'element_criteria' => $field['element_criteria'] ?? '',
                     'hover_text' => Arr::get($field, 'hover_text', ''),
                     'help_text' => Arr::get($field, 'help_text', ''),
+                    'helper_text' => Arr::get($field, 'helper_text', ''),
                     'info_text' => Arr::get($field, 'info_text', ''),
                     'wrapper' => [
                         'class' => 'multi-form relative',

@@ -61,6 +61,7 @@
 
           <Status :data="completed" />
         </div>
+
         <div class="icons flex items-center">
           <template v-if="title == 'transactions'">
             <Btn
@@ -110,7 +111,23 @@
           />
         </div>
       </div>
-
+      <div
+        v-if="title === 'reporting_org'"
+        class="my-2 flex space-x-2 rounded-lg bg-eggshell py-2 px-4"
+      >
+        <svg-vue
+          icon="exclamation-warning"
+          class="h-6 -translate-y-1.5"
+        ></svg-vue>
+        <div class="text-xs font-normal text-n-50">
+          This reporting-org is inherited from organisation reporting-org. To
+          edit fields other than secondary reporter, please refer to the
+          <a class="cursor-pointer" href="/organisation/reporting_org"
+            >reporting organisation</a
+          >
+          form present in organisation.
+        </div>
+      </div>
       <div
         v-if="title === 'transactions' && data.warning_info_text !== ''"
         class="mb-4 flex items-center rounded-md bg-eggshell pt-2 pr-4 pb-2 pl-4 text-xs"
