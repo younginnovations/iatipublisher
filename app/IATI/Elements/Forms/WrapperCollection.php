@@ -53,7 +53,6 @@ class WrapperCollection extends Form
                             'hover_text' => Arr::get($field, 'hover_text', ''),
                             'help_text' => Arr::get($field, 'help_text', ''),
                             'helper_text' => Arr::get($field, 'helper_text', ''),
-
                             'wrapper'         => [
                                 'class' => 'form-field-group form-child-body xl:flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6',
                             ],

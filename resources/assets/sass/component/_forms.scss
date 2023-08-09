@@ -122,6 +122,17 @@ form {
       background: url('/images/add-more-green.svg') no-repeat center;
     }
   }
+  .add_more.freeze {
+    i {
+      width: 18px;
+      height: 18px;
+      background: url('/images/add-more-grey.svg') no-repeat center;
+    }
+    &::before,
+    &::after {
+      border-color: rgba(var(--n-30));
+    }
+  }
   .subelement {
     &.border-l > label {
       border-left: 0;
@@ -321,4 +332,10 @@ aside {
   font-size: 12px;
   line-height: 18px;
   font-weight: 400;
+}
+
+.freeze {
+  .delete.delete-item {
+    background-color: rgba(var(--n-20));
+  }
 }

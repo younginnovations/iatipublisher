@@ -95,7 +95,6 @@
         "required": true,
         "criteria": "mandatory",
         "add_more": true,
-        "freeze": true,
         "attr": {
           "row": 4
         },
