@@ -356,7 +356,7 @@ export default defineComponent({
       const agencies = props.types.registrationAgency;
 
       if (formData.country) {
-        const uncategorized = ['XI', 'XR'];
+        const uncategorized = props.types.uncategorizedRegistrationAgencyPrefix;
 
         return Object.fromEntries(
           Object.entries(agencies).filter(

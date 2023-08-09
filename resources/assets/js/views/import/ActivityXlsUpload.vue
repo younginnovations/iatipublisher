@@ -786,7 +786,6 @@ const cancelImport = () => {
 
 const pollingForXlsStatus = () => {
   const checkStatus = setInterval(function () {
-    console.log('polling', xlsData);
     axios.get('/import/xls/status').then((res) => {
       if (res.data.data?.message === 'Started') {
         //reset

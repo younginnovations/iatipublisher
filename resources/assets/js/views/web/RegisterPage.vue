@@ -271,6 +271,10 @@ export default defineComponent({
       type: [String, Object],
       required: true,
     },
+    uncategorizedOrganisationRegistrationAgency: {
+      type: [Object],
+      required: true,
+    },
   },
 
   setup(props) {
@@ -333,7 +337,7 @@ export default defineComponent({
       const agencies = agency.value;
 
       if (formData.country) {
-        const uncategorized = ['XI', 'XR'];
+        const uncategorized = props.uncategorizedOrganisationRegistrationAgency;
 
         return Object.fromEntries(
           Object.entries(agencies).filter(

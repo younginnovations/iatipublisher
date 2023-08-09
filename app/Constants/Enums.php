@@ -152,4 +152,13 @@ abstract class Enums
         'indicator',
         'period',
     ];
+
+    /*
+     * Enums for organisation-registration-agency that are not country dependent
+     */
+    const UNCATEGORIZED_ORGANISATION_AGENCY_PREFIX = [
+        'XM',
+        'XI',
+        'XR',
+    ];
 }

@@ -188,7 +188,6 @@ export default defineComponent({
     watch(
       () => store.state.startXlsDownload,
       (value) => {
-        console.log('polling watcher triggered');
         if (value) {
           checkDownloadStatus();
         }

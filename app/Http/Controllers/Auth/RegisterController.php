@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
+use App\Constants\Enums;
 use App\Http\Controllers\Controller;
 use App\IATI\Models\User\Role;
 use App\IATI\Services\ApiLog\ApiLogService;
@@ -246,8 +247,9 @@ class RegisterController extends Controller
         try {
             $countries = getCodeListArray('Country', 'OrganizationArray');
             $registration_agencies = getCodeList('OrganizationRegistrationAgency', 'Organization');
+            $uncategorizedRegistrationAgencyPrefix = Enums::UNCATEGORIZED_ORGANISATION_AGENCY_PREFIX;
 
-            return view('web.register', compact('countries', 'registration_agencies'));
+            return view('web.register', compact('countries', 'registration_agencies', 'uncategorizedRegistrationAgencyPrefix'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

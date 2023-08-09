@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Organization;
 
+use App\Constants\Enums;
 use App\Http\Controllers\Controller;
 use App\IATI\Models\Organization\Organization;
 use App\IATI\Services\Organization\OrganizationService;
@@ -135,16 +136,20 @@ class OrganizationController extends Controller
     /**
      * Returns list of registration agency specific to a country.
      *
+     * @param $country_code
+     *
      * @return array
+     *
      * @throws \JsonException
      */
     public function getRegistrationAgency($country_code): array
     {
         $registration_agency = getCodeList('OrganizationRegistrationAgency', 'Organization');
         $filtered_agency = [];
+        $validOrganisationRegistrationAgency = array_merge([$country_code], Enums::UNCATEGORIZED_ORGANISATION_AGENCY_PREFIX);
 
         foreach ($registration_agency as $key => $value) {
-            if (in_array(str_split($key, 2)[0], [$country_code, 'XM', 'XI', 'XR'], true)) {
+            if (in_array(str_split($key, 2)[0], $validOrganisationRegistrationAgency, true)) {
                 $filtered_agency[$key] = $value;
             }
         }
