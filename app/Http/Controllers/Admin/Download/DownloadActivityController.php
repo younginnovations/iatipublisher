@@ -98,6 +98,10 @@ class DownloadActivityController extends Controller
 
             $csvData = $this->downloadActivityService->getCsvData($activities);
 
+            foreach ($csvData as $index => $data) {
+                $csvData[$index]['Humanitarian Scope Vocabulary'] = $csvData[$index]['Humanitarian Scope Vocabulary'] . ' ';
+            }
+
             $this->auditService->auditEvent($activities, 'download', 'csv');
 
             return $this->csvGenerator->generateWithHeaders(getTimeStampedText($filename), $csvData, $headers);
