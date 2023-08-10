@@ -7,11 +7,15 @@ namespace App\Http\Controllers\Admin\Organization;
 use App\Http\Controllers\Controller;
 use App\IATI\Models\Organization\Organization;
 use App\IATI\Services\Organization\OrganizationService;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 /**
@@ -151,8 +155,6 @@ class OrganizationController extends Controller
     /**
      * Get Publisher status.
      *
-     * @param array $data
-     *
      * @return JsonResponse
      */
     public function getPublisherStatus(): JsonResponse
@@ -173,6 +175,34 @@ class OrganizationController extends Controller
                 'success' => false,
                 'message' => $e->getMessage(),
             ]);
+        }
+    }
+
+    /**
+     * Deletes organisation element.
+     *
+     * @param $element
+     *
+     * @return Application|ResponseFactory|Response
+     */
+    public function deleteElement($element): Response|Application|ResponseFactory
+    {
+        try {
+            DB::beginTransaction();
+            if (!$this->organizationService->deleteElement(auth()->user()?->organization_id, $element)) {
+                return response(['status' => false, 'message' => 'Error has occurred while deleting organisation element.']);
+            }
+
+            DB::commit();
+            $message = sprintf('The %s element deleted successfully.', str_replace('_', '-', $element));
+            Session::put('success', $message);
+
+            return response(['status' => true, 'message' => $message]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            logger()->error($e->getMessage());
+
+            return response(['status' => false, 'message' => 'Error has occurred while deleting organisation element.']);
         }
     }
 }

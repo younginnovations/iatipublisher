@@ -1,5 +1,33 @@
 <template>
   <div class="activities__content--element px-3 py-3" :class="layout">
+    <Modal :modal-active="deleteValue" width="583" @close="deleteToggle">
+      <div class="mb-4">
+        <div class="title mb-6 flex">
+          <svg-vue class="mr-1 mt-0.5 text-lg text-crimson-40" icon="delete" />
+          <b>Delete element</b>
+        </div>
+        <div class="rounded-lg bg-rose p-4">
+          Are you sure you want to delete this element?
+        </div>
+      </div>
+      <div class="flex justify-end">
+        <div class="inline-flex">
+          <BtnComponent
+            class="bg-white px-6 uppercase"
+            text="Go Back"
+            type=""
+            @click="deleteValue = false"
+          />
+          <BtnComponent
+            class="space"
+            text="Delete"
+            type="primary"
+            @click="deleteElement(title)"
+          />
+        </div>
+      </div>
+    </Modal>
+
     <div class="rounded-lg bg-white p-4">
       <div class="mb-4 flex">
         <div :id="title" class="title flex grow text-n-50">
@@ -64,6 +92,15 @@
             class="mr-1.5"
             icon="core"
           ></svg-vue>
+
+          <a
+            v-if="userRole === 'admin'"
+            class="edit-button mx-2.5 flex items-center text-xs font-bold uppercase hover:cursor-pointer"
+            @click="deleteValue = true"
+          >
+            <svg-vue class="mr-0.5 text-base" icon="delete"></svg-vue>
+            <span class="hidden text-[10px] lg:block">Delete</span>
+          </a>
         </div>
       </div>
       <div class="divider mb-4 h-px w-full bg-n-20"></div>
@@ -138,6 +175,10 @@ import {
   TotalExpenditure,
   DocumentLink,
 } from 'Organisation/elements/Index';
+import BtnComponent from 'Components/ButtonComponent.vue';
+import Modal from 'Components/PopupModal.vue';
+import { useToggle } from '@vueuse/core';
+import axios from 'axios';
 
 const props = defineProps({
   data: {
@@ -189,5 +230,40 @@ const replaceUnderscore = (string) => {
   let regex = /_/g;
   let result = string.replace(regex, '-');
   return result;
+};
+
+let [deleteValue, deleteToggle] = useToggle();
+interface ToastDataTypeface {
+  message: string;
+  type: boolean;
+  visibility: boolean;
+}
+const toastData = inject('toastData') as ToastDataTypeface;
+
+const deleteElement = (element) => {
+  deleteValue.value = false;
+  window.scrollTo(0, 0);
+  axios
+    .delete(`/organisation/${element}`)
+    .then((res) => {
+      const response = res.data;
+
+      if (response.status) {
+        setTimeout(() => {
+          location.reload();
+        }, 300);
+      }
+      if (!response.status) {
+        toastData.message = response.message;
+        toastData.type = response.status;
+        toastData.visibility = true;
+      }
+    })
+    .catch(() => {
+      toastData.message =
+        "Couldn't delete the organisation element due to system error.";
+      toastData.type = false;
+      toastData.visibility = true;
+    });
 };
 </script>

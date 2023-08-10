@@ -313,7 +313,7 @@ class OrganizationElementCompleteService
             $data = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
         }
 
-        if (!is_string($data)) {
+        if ($data && !is_string($data)) {
             foreach ($data as $key => &$datum) {
                 if (is_array($datum)) {
                     $this->setOrganizationDefaultValues($datum, $organization);
