@@ -142,8 +142,8 @@ class DownloadActivityService
      */
     public function getOrganizationPublisherId(): ?string
     {
-        $publisherId = null;
-        $organization = auth()->user()->organization;
+        $organization = auth()->user()->organization ?? false;
+        $publisherId = $organization ? $organization->publisher_id : null;
 
         if ($organization && $organization->settings) {
             $publisherInfo = $organization->settings->publishing_info;
