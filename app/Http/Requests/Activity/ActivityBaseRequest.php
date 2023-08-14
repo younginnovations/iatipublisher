@@ -678,9 +678,9 @@ class ActivityBaseRequest extends FormRequest
 
         foreach ($formFields as $documentCategoryIndex => $documentCategory) {
             $messages[sprintf('%s.document_date.%s.date.date', $formIndex, $documentCategoryIndex)]
-                = translateRequestMessage('iso_field_symbol', 'must_be_a_proper_date');
+                = translateRequestMessage('iso_date_field_symbol', 'must_be_a_proper_date');
             $messages[sprintf('%s.document_date.%s.date.date_greater_than', $formIndex, $documentCategoryIndex)]
-                = translateRequestMessage('iso_field_symbol', 'date_must_be_greater');
+                = translateRequestMessage('iso_date_field_symbol', 'date_must_be_greater');
         }
 
         return $messages;

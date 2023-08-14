@@ -68,7 +68,7 @@ return array (
   'indicator_aggregation' => 'El estado de agregación del indicador :suffix',
   'indicator_uri_symbol' => 'El campo del @indicator-uri :suffix',
   'iso_date_symbol' => 'La @iso-date :suffix',
-  'iso_field_symbol' => 'El campo de @iso-date :suffix',
+  'iso_date_field_symbol' => 'El campo de @iso-date :suffix',
   'iso_field' => 'El campo de la fecha-iso :suffix',
   'language_code_symbol' => 'El campo del @code de idioma :suffix',
   'language_field' => 'El campo de idioma :suffix',
