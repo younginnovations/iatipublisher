@@ -94,7 +94,7 @@
           ></svg-vue>
 
           <a
-            v-if="userRole === 'admin'"
+            v-if="userRole === 'admin' && !notDeletableElements.includes(title)"
             class="edit-button mx-2.5 flex items-center text-xs font-bold uppercase hover:cursor-pointer"
             @click="deleteValue = true"
           >
@@ -232,6 +232,7 @@ const replaceUnderscore = (string) => {
   return result;
 };
 
+let notDeletableElements = ['organisation_identifier', 'name', 'reporting_org'];
 let [deleteValue, deleteToggle] = useToggle();
 interface ToastDataTypeface {
   message: string;

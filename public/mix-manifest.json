@@ -1,10 +1,10 @@
 {
-    "/js/app.js": "/js/app.js?id=f858718a7bdbe4fba04e8ac7c3ef1dcc",
-    "/js/script.js": "/js/script.js?id=4920eb85d84da1e87cb71769c04a12a2",
-    "/js/webportal-script.js": "/js/webportal-script.js?id=f9c23d4bccd261db9414465886315f45",
-    "/js/formbuilder.js": "/js/formbuilder.js?id=96f1b9dd5890b8ff09e613117dd94592",
-    "/manifest.js": "/manifest.js?id=3ed1124c8f4dcb98acc36de67cb80349",
-    "/css/webportal-app.css": "/css/webportal-app.css?id=ab1aac667c4b171aa29f4b0619fcb6b8",
-    "/css/app.css": "/css/app.css?id=e58bd60373508a4612d9d9149b69e595",
-    "/js/vendor.js": "/js/vendor.js?id=a2b55d447dfd8b187ce74d02597deb8a"
+    "/js/app.js": "/js/app.js",
+    "/js/script.js": "/js/script.js",
+    "/js/webportal-script.js": "/js/webportal-script.js",
+    "/js/formbuilder.js": "/js/formbuilder.js",
+    "/manifest.js": "/manifest.js",
+    "/css/webportal-app.css": "/css/webportal-app.css",
+    "/css/app.css": "/css/app.css",
+    "/js/vendor.js": "/js/vendor.js"
 }
