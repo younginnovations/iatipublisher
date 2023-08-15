@@ -36,7 +36,7 @@
           "
         >
           <svg-vue class="text-base" icon="plus-outlined" />{{
-            translate.button('add_a_new')
+            capitalize(translate.button('add_a_new'))
           }}
           {{
             userRole === 'admin'
@@ -64,7 +64,7 @@
           <div class="mb-5 text-2xl font-bold text-bluecoral">
             {{
               addUserForm
-                ? translate.button('add_a_new')
+                ? capitalize(translate.button('add_a_new'))
                 : translate.button('edit')
             }}
             {{
@@ -755,7 +755,15 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, reactive, ref, computed, watch, onMounted } from 'vue';
+import {
+  defineProps,
+  reactive,
+  ref,
+  computed,
+  watch,
+  onMounted,
+  capitalize,
+} from 'vue';
 import Loader from '../../components/Loader.vue';
 import Toast from 'Components/ToastMessage.vue';
 import axios from 'axios';
