@@ -117,6 +117,7 @@ trait MigrateActivityResultsTrait
             $iatiResult = $this->resultService->create([
                 'activity_id' => $iatiActivity->id,
                 'result'      => $result,
+                'result_code' => sprintf('%d%s', $aidStreamResultId, time()),
                 'created_at'  => $created_at,
                 'updated_at'  => $updated_at,
                 'migrated_from_aidstream'=> true,

@@ -105,7 +105,7 @@ class Organization extends Model implements Auditable
      */
     public function activities(): HasMany
     {
-        return $this->hasMany(ActivityPublished::class, 'org_id', 'id');
+        return $this->hasMany(ActivityPublished::class, 'organization_id', 'id');
     }
 
     /**
