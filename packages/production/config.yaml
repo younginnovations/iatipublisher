@@ -22,7 +22,7 @@ data:
   DB_SSLMODE: 'require'
   DB_SSLROOTCERT: './ca-certificate.crt'
 
-  AIDSTREAM_DB_HOST: "private-aidstream-postgresql-do-user-4025190-0.b.db.ondigitalocean.com"
+  AIDSTREAM_DB_HOST: "private-yi-prod-postgres-do-user-4025190-0.b.db.ondigitalocean.com"
   AIDSTREAM_DB_PORT: "25060"
   AIDSTREAM_DB_DATABASE: "aidstream_prod"
 

@@ -16,59 +16,59 @@ trait MigrateResultIndicatorTrait
      */
     protected array $emptyIndicatorTemplate
         = [
-            'measure'            => null,
-            'ascending'          => null,
+            'measure' => null,
+            'ascending' => null,
             'aggregation_status' => null,
-            'title'              => [
+            'title' => [
                 [
                     'narrative' => [
                         [
                             'narrative' => null,
-                            'language'  => null,
+                            'language' => null,
                         ],
                     ],
                 ],
             ],
-            'description'        => [
+            'description' => [
                 [
                     'narrative' => [
                         [
                             'narrative' => null,
-                            'language'  => null,
+                            'language' => null,
                         ],
                     ],
                 ],
             ],
-            'document_link'      => [
+            'document_link' => [
                 [
-                    'url'           => null,
-                    'format'        => null,
-                    'title'         => [
+                    'url' => null,
+                    'format' => null,
+                    'title' => [
                         [
                             'narrative' => [
                                 [
                                     'narrative' => null,
-                                    'language'  => null,
+                                    'language' => null,
                                 ],
                             ],
                         ],
                     ],
-                    'description'   => [
+                    'description' => [
                         [
                             'narrative' => [
                                 [
                                     'narrative' => null,
-                                    'language'  => null,
+                                    'language' => null,
                                 ],
                             ],
                         ],
                     ],
-                    'category'      => [
+                    'category' => [
                         [
                             'code' => null,
                         ],
                     ],
-                    'language'      => [
+                    'language' => [
                         [
                             'language' => null,
                         ],
@@ -80,63 +80,63 @@ trait MigrateResultIndicatorTrait
                     ],
                 ],
             ],
-            'reference'          => [
+            'reference' => [
                 [
                     'vocabulary' => null,
-                    'code'       => null,
+                    'code' => null,
                 ],
             ],
-            'baseline'           => [
+            'baseline' => [
                 [
-                    'year'          => null,
-                    'date'          => null,
-                    'value'         => null,
-                    'comment'       => [
+                    'year' => null,
+                    'date' => null,
+                    'value' => null,
+                    'comment' => [
                         [
                             'narrative' => [
                                 [
                                     'narrative' => null,
-                                    'language'  => null,
+                                    'language' => null,
                                 ],
                             ],
                         ],
                     ],
-                    'dimension'     => [
+                    'dimension' => [
                         [
-                            'name'  => null,
+                            'name' => null,
                             'value' => null,
                         ],
                     ],
                     'document_link' => [
                         [
-                            'url'           => null,
-                            'format'        => null,
-                            'title'         => [
+                            'url' => null,
+                            'format' => null,
+                            'title' => [
                                 [
                                     'narrative' => [
                                         [
                                             'narrative' => null,
-                                            'language'  => null,
+                                            'language' => null,
                                         ],
                                     ],
                                 ],
                             ],
-                            'description'   => [
+                            'description' => [
                                 [
                                     'narrative' => [
                                         [
                                             'narrative' => null,
-                                            'language'  => null,
+                                            'language' => null,
                                         ],
                                     ],
                                 ],
                             ],
-                            'category'      => [
+                            'category' => [
                                 [
                                     'code' => null,
                                 ],
                             ],
-                            'language'      => [
+                            'language' => [
                                 [
                                     'language' => null,
                                 ],
@@ -148,7 +148,7 @@ trait MigrateResultIndicatorTrait
                             ],
                         ],
                     ],
-                    'location'      => [
+                    'location' => [
                         [
                             'reference' => null,
                         ],
@@ -178,8 +178,9 @@ trait MigrateResultIndicatorTrait
                 foreach ($aidstreamIndicators as $aidstreamIndicator) {
                     $this->logInfo('Migrating result indicator for result id: ' . $aidstreamResultId) . ' with indicator id: ' . $aidstreamIndicator->id;
                     $newIatiIndicator = [
-                        'result_id'  => $iatiResultId,
-                        'indicator'  => $this->getNewIndicatorData($aidstreamIndicator, $iatiOrganization),
+                        'result_id' => $iatiResultId,
+                        'indicator' => $this->getNewIndicatorData($aidstreamIndicator, $iatiOrganization),
+                        'indicator_code' => sprintf('%d%s', $aidstreamIndicator->id, time()),
                         'migrated_from_aidstream' => true,
                         'created_at' => $aidstreamIndicator->created_at,
                         'updated_at' => $aidstreamIndicator->updated_at,
@@ -276,21 +277,21 @@ trait MigrateResultIndicatorTrait
 
         foreach ($aidstreamDocumentLinks as $documentLink) {
             $newDocumentLinks[] = [
-                'url'           => !empty($documentLink->url) ? $this->replaceDocumentLinkUrl($documentLink->url, $iatiOrganization->id) : null,
-                'format'        => $documentLink->format,
-                'title'         => !is_null($documentLink->title) ? json_decode(
+                'url' => !empty($documentLink->url) ? $this->replaceDocumentLinkUrl($documentLink->url, $iatiOrganization->id) : null,
+                'format' => $documentLink->format,
+                'title' => !is_null($documentLink->title) ? json_decode(
                     $documentLink->title,
                     true,
                     512,
                     JSON_THROW_ON_ERROR
                 ) : $emptyTemplate[0]['title'],
-                'description'   => !is_null($documentLink->description) ? json_decode(
+                'description' => !is_null($documentLink->description) ? json_decode(
                     $documentLink->description,
                     true,
                     512,
                     JSON_THROW_ON_ERROR
                 ) : $emptyTemplate[0]['description'],
-                'category'      => (!is_null($documentLink->category) && !empty(
+                'category' => (!is_null($documentLink->category) && !empty(
                     json_decode(
                         $documentLink->category,
                         true,
@@ -303,7 +304,7 @@ trait MigrateResultIndicatorTrait
                     512,
                     JSON_THROW_ON_ERROR
                 ) : $emptyTemplate[0]['category'],
-                'language'      => (!is_null($documentLink->language) && !empty(
+                'language' => (!is_null($documentLink->language) && !empty(
                     json_decode(
                         $documentLink->language,
                         true,
@@ -351,7 +352,7 @@ trait MigrateResultIndicatorTrait
         foreach ($aidstreamReferences as $key => $reference) {
             $newReferences[$key] = [
                 'vocabulary' => $reference->vocabulary,
-                'code'       => $reference->code,
+                'code' => $reference->code,
             ];
 
             if ($reference->vocabulary === '99') {
@@ -394,16 +395,16 @@ trait MigrateResultIndicatorTrait
 
         foreach ($aidstreamBaselines as $key => $baseline) {
             $newBaselines[$key] = [
-                'year'          => $baseline->year,
-                'date'          => $baseline->iso_date,
-                'value'         => $baseline->value,
-                'comment'       => !is_null($baseline->comments) ? json_decode(
+                'year' => $baseline->year,
+                'date' => $baseline->iso_date,
+                'value' => $baseline->value,
+                'comment' => !is_null($baseline->comments) ? json_decode(
                     $baseline->comments,
                     true,
                     512,
                     JSON_THROW_ON_ERROR
                 ) : $emptyTemplate[0]['comment'],
-                'dimension'     => $this->getDimensionData($baseline->dimension, $emptyTemplate[0]['dimension']),
+                'dimension' => $this->getDimensionData($baseline->dimension, $emptyTemplate[0]['dimension']),
                 'document_link' => $this->getResultIndicatorDocumentLinkData(
                     'baseline_document_links',
                     'baseline_id',
@@ -411,7 +412,7 @@ trait MigrateResultIndicatorTrait
                     $emptyTemplate[0]['document_link'],
                     $iatiOrganization
                 ),
-                'location'      => $this->getLocationData($baseline->location, $emptyTemplate[0]['location']),
+                'location' => $this->getLocationData($baseline->location, $emptyTemplate[0]['location']),
             ];
         }
 
@@ -450,7 +451,7 @@ trait MigrateResultIndicatorTrait
 
         foreach ($dimensionValues as $data) {
             $newDimension[] = [
-                'name'  => $data->name,
+                'name' => $data->name,
                 'value' => $data->value,
             ];
         }

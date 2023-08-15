@@ -184,6 +184,7 @@ trait MigrateIndicatorPeriodTrait
                     $newIatiPeriod = [
                         'indicator_id' => $iatiIndicatorId,
                         'period'       => $this->getNewPeriodData($aidstreamPeriod, $iatiOrganization),
+                        'period_code' => sprintf('%d%s', $aidstreamPeriod->id, time()),
                         'migrated_from_aidstream' => true,
                         'created_at'   => $aidstreamPeriod->created_at,
                         'updated_at'   => $aidstreamPeriod->updated_at,
