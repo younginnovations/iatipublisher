@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -97,9 +98,10 @@ class DownloadActivityController extends Controller
             }
 
             $csvData = $this->downloadActivityService->getCsvData($activities);
+            $humanitarianScopeVocabularyArray = getCodeList('HumanitarianScopeVocabulary', 'Activity', false);
 
             foreach ($csvData as $index => $data) {
-                $csvData[$index]['Humanitarian Scope Vocabulary'] = $csvData[$index]['Humanitarian Scope Vocabulary'] . ' ';
+                $csvData[$index]['Humanitarian Scope Vocabulary'] = $this->getCompleteHumanitarianScopeVocabulary($humanitarianScopeVocabularyArray, $csvData[$index]['Humanitarian Scope Vocabulary']);
             }
 
             $this->auditService->auditEvent($activities, 'download', 'csv');
@@ -324,5 +326,21 @@ class DownloadActivityController extends Controller
         }
 
         return $queryParams;
+    }
+
+    /**
+     * Returns complete Humanitarian scope vocabulary
+     * Example 1-2-Glide.
+     *
+     * @param array $humanitarianScopeVocabularyArray
+     * @param string $humanitarianScopeNumericIndex
+     *
+     * @return string
+     */
+    private function getCompleteHumanitarianScopeVocabulary(array $humanitarianScopeVocabularyArray, string $humanitarianScopeNumericIndex):string
+    {
+        $humanitarianScopeString = Arr::get($humanitarianScopeVocabularyArray, $humanitarianScopeNumericIndex);
+
+        return "{$humanitarianScopeNumericIndex}-{$humanitarianScopeString}";
     }
 }

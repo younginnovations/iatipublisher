@@ -8,6 +8,7 @@ use App\CsvImporter\CsvReader\CsvReader;
 use App\CsvImporter\Queue\Jobs\ImportActivity;
 use App\Imports\CsvToArrayWithHeaders;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Arr;
 use Maatwebsite\Excel\Facades\Excel;
 
 /**
@@ -46,8 +47,28 @@ class Processor
         file_put_contents($file->getPathName(), $str);
         $csv = Excel::toCollection(new CsvToArrayWithHeaders, $file)->first()->toArray();
 
+        foreach ($csv as $index => $csvDatum) {
+            $csv[$index]['humanitarian_scope_vocabulary'] = $this->getValidHumanitarianScopeVocabulary($csvDatum);
+        }
+
         $this->dispatch(
             new ImportActivity(new CsvProcessor($csv), $filename, $activityIdentifiers, $organizationReportingOrg)
         );
+    }
+
+    /**
+     * Returns humanitarian_scope_vocabulary code from complete humanitarian_scope_vocabulary string of csv.
+     *
+     * @param array $csvDatum
+     *
+     * @return string
+     */
+    public function getValidHumanitarianScopeVocabulary(array $csvDatum): string
+    {
+        $humanitarianScopeVocabulary = Arr::get($csvDatum, 'humanitarian_scope_vocabulary');
+        $explodedItems = explode('-', $humanitarianScopeVocabulary);
+        array_pop($explodedItems);
+
+        return implode('-', $explodedItems) ?? '-';
     }
 }
