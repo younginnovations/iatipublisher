@@ -458,7 +458,6 @@
           <language code="ae"/>
           <document-date iso-date="2023-01-08"/>
         </document-link>
-        <reference vocabulary="3"/>
         <baseline year="2023" iso-date="2023-01-04" value="1234">
           <location ref="Reiciendis quo moles"/>
           <dimension name="description"/>
@@ -977,7 +976,6 @@
           <language code="ae"/>
           <document-date iso-date="2023-01-16"/>
         </document-link>
-        <reference vocabulary="2"/>
         <baseline year="2023" iso-date="2023-01-09" value="1234">
           <location ref="Aut consequatur com"/>
           <dimension name="Melanie Sloan"/>
