@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="registry__info">
-      <div class="mb-4 text-sm font-bold text-n-50">
+      <div class="translate-text mb-4 text-sm font-bold text-n-50">
         {{ translate.textFromKey('settings.registry_information.label') }}
       </div>
       <div class="mb-4 flex items-center text-xs text-n-50">
@@ -20,7 +20,7 @@
         <div>
           <div class="relative">
             <div class="flex justify-between">
-              <label for="publisher-id">{{
+              <label for="publisher-id" class="translate-text">{{
                 translate.textFromKey('settings.publisher_id.label')
               }}</label>
               <button>
@@ -56,7 +56,7 @@
         <div>
           <div class="relative">
             <div class="flex justify-between">
-              <label for="api-token"
+              <label for="api-token" class="translate-text"
                 >{{ translate.textFromKey('settings.api_token.label') }}
               </label>
               <button>
@@ -105,7 +105,7 @@
       </div>
       <button
         :class="userRole !== 'admin' && 'cursor-not-allowed'"
-        class="primary-btn verify-btn"
+        class="primary-btn verify-btn translate-text"
         @click="submitPublishing"
       >
         {{ translate.button('verify') }}
