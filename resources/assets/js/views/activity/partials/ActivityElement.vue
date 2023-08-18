@@ -819,7 +819,7 @@ function deleteElement(id, element) {
       }
     })
     .catch(() => {
-      toastData.message = translate.commonText('couldnt_delete_the_activity');
+      toastData.message = translate.error('couldnt_delete_the_activity');
       toastData.type = false;
       toastData.visibility = true;
     });
