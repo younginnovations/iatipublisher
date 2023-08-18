@@ -67,7 +67,10 @@ class Processor
     {
         $humanitarianScopeVocabulary = Arr::get($csvDatum, 'humanitarian_scope_vocabulary');
         $explodedItems = explode('-', $humanitarianScopeVocabulary);
-        array_pop($explodedItems);
+
+        if (count($explodedItems) > 2) {
+            array_pop($explodedItems);
+        }
 
         return implode('-', $explodedItems) ?? '-';
     }
