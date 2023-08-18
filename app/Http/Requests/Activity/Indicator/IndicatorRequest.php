@@ -28,7 +28,6 @@ class IndicatorRequest extends ActivityBaseRequest
     public function rules(): array
     {
         $data = request()->except(['_token']);
-        $data['url'] = $this->getRequestUri();
         $totalRules = [
             $this->getWarningForIndicator($data),
             $this->getErrorsForIndicator($data),
