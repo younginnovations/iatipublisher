@@ -176,7 +176,7 @@ function uploadFile() {
     })
     .catch(() => {
       error.value = translate.commonText(
-        'error_has_occurred_while_uploading_file'
+        'error_has_occured_while_uploading_file'
       );
       loader.value = false;
     });
