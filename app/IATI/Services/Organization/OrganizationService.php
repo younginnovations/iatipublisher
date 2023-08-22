@@ -303,4 +303,17 @@ class OrganizationService
 
         return $rawPaginatedData;
     }
+
+    /**
+     * Update organisation element to null. (basically deleting the element).
+     *
+     * @param $id
+     * @param $element
+     *
+     * @return bool
+     */
+    public function deleteElement($id, $element): bool
+    {
+        return $this->organizationRepo->update($id, [$element => null]);
+    }
 }

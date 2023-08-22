@@ -68,6 +68,9 @@ class OrganizationPublishedService
     /**
      * Updates organization published table.
      *
+     * @param $organization_id
+     * @param $status
+     *
      * @return void
      */
     public function updateStatus($organization_id, $status): void

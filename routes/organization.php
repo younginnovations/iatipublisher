@@ -53,4 +53,5 @@ Route::group(['middleware' => ['can:crud_organization']], static function () {
     Route::post('organisation/publish', [OrganizationWorkflowController::class, 'publish'])->name('organisation.publish');
     Route::post('organisation/unpublish', [OrganizationWorkflowController::class, 'unPublish'])->name('organisation.unPublish');
     Route::get('organisation/checks-for-organisation-publish', [OrganizationWorkflowController::class, 'checksForOrganizationPublish'])->name('organisation.checks_for_publish');
+    Route::delete('organisation/{element}', [OrganizationController::class, 'deleteElement'])->name('organisation.delete_element');
 });
