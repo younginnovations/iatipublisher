@@ -188,6 +188,12 @@ class OrganizationController extends Controller
     public function deleteElement($element): Response|Application|ResponseFactory
     {
         try {
+            $notDeletableElements = ['organisation_identifier', 'name', 'reporting_org'];
+
+            if (in_array($element, $notDeletableElements)) {
+                return response(['status' => false, 'message' => "The element '${element}' can not be deleted."]);
+            }
+
             DB::beginTransaction();
             if (!$this->organizationService->deleteElement(auth()->user()?->organization_id, $element)) {
                 return response(['status' => false, 'message' => 'Error has occurred while deleting organisation element.']);
