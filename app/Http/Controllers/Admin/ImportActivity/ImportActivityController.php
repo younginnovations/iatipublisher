@@ -61,6 +61,11 @@ class ImportActivityController extends Controller
     public string $xml_data_storage_path;
 
     /**
+     * @var array|string[]
+     */
+    private array $validFileTypes = ['xml', 'csv'];
+
+    /**
      * ActivityController Constructor.
      *
      * @param ActivityService  $activityService
@@ -116,28 +121,32 @@ class ImportActivityController extends Controller
             $filetype = $file->extension();
             Session::put('import_filetype', $filetype);
 
-            if ($filetype === 'xml') {
-                if ($this->importXmlService->store($file)) {
-                    $user = Auth::user();
-                    $this->importXmlService->startImport($file->getClientOriginalName(), $user->id, $user->organization_id);
-                }
-            } else {
-                if ($this->importCsvService->isCsvFileEmpty($file)) {
-                    $response = ['success' => false, 'errors' =>['activity' => 'The file is empty. Please upload file with activities.']];
+            if (in_array($filetype, $this->validFileTypes)) {
+                if ($filetype === 'xml') {
+                    if ($this->importXmlService->store($file)) {
+                        $user = Auth::user();
+                        $this->importXmlService->startImport($file->getClientOriginalName(), $user->id, $user->organization_id);
+                    }
+                } else {
+                    if ($this->importCsvService->isCsvFileEmpty($file)) {
+                        $response = ['success' => false, 'errors' =>['activity' => 'The file is empty. Please upload file with activities.']];
 
-                    return response()->json($response);
+                        return response()->json($response);
+                    }
+
+                    $this->importCsvService->clearOldImport();
+
+                    if ($this->importCsvService->storeCsv($file)) {
+                        $filename = str_replace(' ', '', $file->getClientOriginalName());
+                        $this->importCsvService->startImport($filename)
+                            ->fireCsvUploadEvent($filename);
+                    }
                 }
 
-                $this->importCsvService->clearOldImport();
-
-                if ($this->importCsvService->storeCsv($file)) {
-                    $filename = str_replace(' ', '', $file->getClientOriginalName());
-                    $this->importCsvService->startImport($filename)
-                        ->fireCsvUploadEvent($filename);
-                }
+                return response()->json(['success' => true, 'message' => 'Uploaded successfully', 'type' => $filetype]);
             }
 
-            return response()->json(['success' => true, 'message' => 'Uploaded successfully', 'type' => $filetype]);
+            return response()->json(['success' => false, 'message' => 'Invalid file type detected.', 'type' => $filetype]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
