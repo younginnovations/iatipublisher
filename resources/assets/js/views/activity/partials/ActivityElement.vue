@@ -119,14 +119,12 @@
           icon="exclamation-warning"
           class="h-6 -translate-y-1.5"
         ></svg-vue>
-        <div class="text-xs font-normal text-n-50">
-          This reporting-org is inherited from organisation reporting-org. To
-          edit fields other than secondary reporter, please refer to the
-          <a class="cursor-pointer" href="/organisation/reporting_org"
-            >reporting organisation</a
-          >
-          form present in organisation.
-        </div>
+
+        <!-- eslint-disable vue/no-v-html -->
+        <div
+          class="text-xs font-normal text-n-50"
+          v-html="elements['reporting_org']['helper_text']"
+        ></div>
       </div>
       <div
         v-if="title === 'transactions' && data.warning_info_text !== ''"
@@ -690,6 +688,7 @@ interface ToastDataTypeface {
   visibility: boolean;
 }
 const toastData = inject('toastData') as ToastDataTypeface;
+const elements = inject('elements') as object;
 
 let layout = 'basis-full  lg:basis-6/12';
 if (props.width === 'full') {
