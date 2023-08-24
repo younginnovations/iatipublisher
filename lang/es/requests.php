@@ -247,7 +247,7 @@ return array (
   'error_has_occured_while_trying_to_fetch_iati_api_log' => 'Se ha producido un error al obtener el registro de API de la IATI.',
   'failed_opening_system_version_page' => 'Se ha producido un error al abrir la página de versión del sistema.',
   'sector_defined_in_transactions' => 'El sector ya se ha declarado a nivel de la transacción. ',
-  'reference _must_match_org_identifier' => 'La referencia de la organización-notificadora debe coincidir con el identificador-organización.',
+  'reference_must_match_org_identifier' => 'La referencia de la organización-notificadora debe coincidir con el identificador-organización.',
   'percentage_must_be_100_or_empty' => 'El porcentaje debe ser 100 o se debe dejar en blanco, en cuyo caso se asume que equivale a 100.',
   'the_reference_of_reporting_org_must_match' => 'La referencia de organización-notificadora debe coincidir con la referencia de organización-notificadora de la organización',
   'the_type_of_reporting_org_must_match' => 'El tipo de organización-notificadora debe coincidir con el tipo de organización-notificadora de la organización',

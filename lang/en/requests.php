@@ -247,7 +247,7 @@ return array (
   'error_has_occured_while_trying_to_fetch_iati_api_log' => 'Error has occurred while fetching IATI api log',
   'failed_opening_system_version_page' => 'Failed opening System Version page.',
   'sector_defined_in_transactions' => 'Sector already defined in Transactions.',
-  'reference _must_match_org_identifier' => 'The reference of reporting-org must match the organisation-identifier.',
+  'reference_must_match_org_identifier' => 'The reference of reporting-org must match the organisation-identifier.',
   'percentage_must_be_100_or_empty' => 'The percentage must be 100% or left empty, which is assumed as 100%.',
   'the_reference_of_reporting_org_must_match' => 'The reference of reporting-org must match reference of reporting-org in organisation',
   'the_type_of_reporting_org_must_match' => 'The type of reporting-org must match type of reporting-org in organisation',

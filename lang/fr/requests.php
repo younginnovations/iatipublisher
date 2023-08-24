@@ -247,7 +247,7 @@ return array (
   'error_has_occured_while_trying_to_fetch_iati_api_log' => 'Une erreur s’est produite lors de la récupération du journal d’API de l’IITA',
   'failed_opening_system_version_page' => 'Échec de l’ouverture de la page Version du système.',
   'sector_defined_in_transactions' => 'Le secteur a déjà été déclaré au niveau des transactions. ',
-  'reference _must_match_org_identifier' => 'La référence de l’organisation déclarante doit correspondre à l’identifiant de l’organisation.',
+  'reference_must_match_org_identifier' => 'La référence de l’organisation déclarante doit correspondre à l’identifiant de l’organisation.',
   'percentage_must_be_100_or_empty' => 'Le pourcentage doit être de 100 %. Un champ laissé vide correspond à un pourcentage de 100 %.',
   'the_reference_of_reporting_org_must_match' => 'La référence de l’organisation déclarante doit correspondre à la référence de l’organisation déclarante de l’organisation',
   'the_type_of_reporting_org_must_match' => 'Le type d’organisation déclarante doit correspondre au type d’organisation déclarante de l’organisation',
