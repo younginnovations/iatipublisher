@@ -34,6 +34,11 @@
                         <p>' . $options['options']['hover_text'] . '</p>
                     </div>
                 </div>' : '';
+            $helper_text= (isset($options['options']['helper_text']) && $options['options']['helper_text']!=='')?('<div class="bg-eggshell flex space-x-2 my-2 py-2 px-4 rounded-lg">
+                        <svg-vue icon="exclamation-warning" class="h-6 -translate-y-1.5"></svg-vue>
+                        <div class=" font-normal text-n-50 text-xs">' . $options['options']['helper_text'] .' </div> 
+                    </div>'): '';
+            
             $label = strtolower(str_replace(' ', '-', $options['label']));
             $error = '';
             $errorSection = '';
@@ -62,12 +67,15 @@
                 $errorSection = '<section class="collection_error">' . $error . '</section>';
             }
 
-            $collectionLabel = '<div class="title-container w-full" > <div class="flex justify-between items-center w-full" >' .
-                $label .
-                '<div class="flex items-center">' .
-                $help_text . $hover_text .
-                '</div>' .
-                '</div>' . $errorSection. '</div>';
+            $collectionLabel = '<div class="w-full">
+                <div class="title-container w-full" > <div class="flex justify-between items-center w-full" >' .
+                    $label .
+                    '<div class="flex items-center">' .
+                    $help_text . $hover_text .
+                    '</div>' .
+                    '</div>' . $errorSection. '</div>' 
+                    . $helper_text .
+                '</div>';
             ?>
 
             <?php if (isset($options['options']['element_criteria']) && $options['options']['element_criteria'] === 'mandatory'): ?>

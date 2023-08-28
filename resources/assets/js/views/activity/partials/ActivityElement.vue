@@ -61,6 +61,7 @@
 
           <Status :data="completed" />
         </div>
+
         <div class="icons flex items-center">
           <template v-if="title == 'transactions'">
             <Btn
@@ -110,7 +111,21 @@
           />
         </div>
       </div>
+      <div
+        v-if="title === 'reporting_org'"
+        class="my-2 flex space-x-2 rounded-lg bg-eggshell py-2 px-4"
+      >
+        <svg-vue
+          icon="exclamation-warning"
+          class="h-6 -translate-y-1.5"
+        ></svg-vue>
 
+        <!-- eslint-disable vue/no-v-html -->
+        <div
+          class="text-xs font-normal text-n-50"
+          v-html="elements['reporting_org']['helper_text']"
+        ></div>
+      </div>
       <div
         v-if="title === 'transactions' && data.warning_info_text !== ''"
         class="mb-4 flex items-center rounded-md bg-eggshell pt-2 pr-4 pb-2 pl-4 text-xs"
@@ -673,6 +688,7 @@ interface ToastDataTypeface {
   visibility: boolean;
 }
 const toastData = inject('toastData') as ToastDataTypeface;
+const elements = inject('elements') as object;
 
 let layout = 'basis-full  lg:basis-6/12';
 if (props.width === 'full') {

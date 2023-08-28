@@ -45,6 +45,7 @@
     "add_more": false,
     "help_text": "This is your IATI Organisation Identifier (it is the unique ID that was generated for your organisation when you registered).<a target='_blank' href='https://iatistandard.org/en/guidance/publishing-data/registering-and-managing-your-organisation-account/how-to-create-your-iati-organisation-identifier/'>For more information.</a>",
     "hover_text": "The organisation issuing the report. May be a primary source (reporting on its own activity as donor, implementing agency, etc) or a secondary source (reporting on the activities of another organisation).</br></br>Specifying the @ref attribute is mandatory. May contain the organisation name as content.    <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/organisation-standard/iati-organisations/iati-organisation/reporting-org/'>For more information</a>",
+    "helper_text": "Reporting Organisation data is managed via the <a href='/organisation'> Organisation Tab </a> , except for value Secondary Reporter which can be managed at each activity",
     "attributes": {
       "ref": {
         "name": "ref",
@@ -3443,7 +3444,7 @@
             "name": "document_link",
             "label": "document link",
             "add_more": true,
-           "element_criteria": "",
+            "element_criteria": "",
             "hover_text": "A link to an online, publicly accessible web page or document expanding on the result. <a target='_blank' href='https://iatistandard.org/en/iati-standard/203/activity-standard/iati-activities/iati-activity/result/indicator/baseline/document-link/'>For more information</a>",
             "help_text": "You may provide more information about the indicator baseline by providing a link to an online, publicly accessible web page or document.",
             "attributes": {

@@ -663,6 +663,7 @@ export default defineComponent({
     provide('errorData', errorData);
     provide('importActivityError', props.importActivityError);
     provide('activityId', props.activity.id);
+    provide('elements', props.elements);
 
     indexStore.dispatch('updateSelectedActivities', [activity.value.id]);
 

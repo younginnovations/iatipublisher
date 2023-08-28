@@ -52,6 +52,7 @@ class WrapperCollectionForm extends Form
                             'element_criteria' => Arr::get($field, 'element_criteria', ''),
                             'hover_text' => Arr::get($field, 'hover_text', ''),
                             'help_text' => Arr::get($field, 'help_text', ''),
+                            'helper_text' => Arr::get($field, 'helper_text', ''),
                             'wrapper'         => [
                                 'class' => ((Arr::get($data, 'attributes', null) && isset($field['name']) && strtolower(
                                     $field['name']
@@ -189,6 +190,7 @@ class WrapperCollectionForm extends Form
                     'element_criteria' => Arr::get($field, 'element_criteria', ''),
                     'hover_text' => Arr::get($field, 'hover_text', ''),
                     'help_text' => Arr::get($field, 'help_text', ''),
+                    'helper_text' => Arr::get($field, 'helper_text', ''),
                     'wrapper'         => [
                         'class' => 'wrapped-child-body',
                     ],

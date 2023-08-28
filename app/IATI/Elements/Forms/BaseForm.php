@@ -42,6 +42,7 @@ class BaseForm extends Form
                         'element_criteria' => Arr::get($field, 'element_criteria', ''),
                         'hover_text' => Arr::get($field, 'hover_text', ''),
                         'help_text' => Arr::get($field, 'help_text', ''),
+                        'helper_text' => Arr::get($field, 'helper_text', ''),
                         'wrapper'         => [
                             'class' => 'wrapped-child-body',
                         ],
@@ -93,7 +94,7 @@ class BaseForm extends Form
                             ) === 'narrative') ? 'form-field-group form-child-body xl:flex flex-wrap rounded-tl-lg rounded-br-lg border-y border-r border-spring-50 p-6' : 'form-field-group form-child-body xl:flex flex-wrap rounded-br-lg border-y border-r border-spring-50 p-6'),
                         ],
                         'dynamic_wrapper' => [
-                            'class' => ((isset($field['add_more']) && $field['add_more']) || Arr::get(
+                            'class' => (((isset($field['add_more']) && $field['add_more']) || Arr::get(
                                 $element,
                                 'add_more_attributes',
                                 false
@@ -101,7 +102,7 @@ class BaseForm extends Form
                                 (!Arr::get($element, 'attributes', null) && strtolower(
                                     $field['name']
                                 ) === 'narrative' ? 'border-l border-spring-50 pb-11' : 'subelement rounded-tl-lg border-l border-spring-50 pb-11')
-                                : 'subelement rounded-tl-lg border-l border-spring-50 mb-6',
+                                : 'subelement rounded-tl-lg border-l border-spring-50 mb-6') . (Arr::get($field, 'read_only', false) ? ' freeze' : ''),
                         ],
                     ],
                 ]
@@ -113,7 +114,7 @@ class BaseForm extends Form
                 $this->add('add_to_collection_' . $name, 'button', [
                     'label' => sprintf('add additional %s', str_replace('_', ' ', Arr::get($element, 'attributes', null) ? ($field['name'] ?? $name) : $element['name'])),
                     'attr'  => [
-                        'class'     => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral ',
+                        'class'     => 'add_to_collection add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral ' . (Arr::get($field, 'read_only', false) ? ' freeze' : ''),
                         'form_type' => !empty(Arr::get($this->getData(), 'name', null)) ? sprintf(
                             '%s_%s',
                             Arr::get($this->getData(), 'name', ''),
@@ -233,7 +234,7 @@ class BaseForm extends Form
 
             ],
             'wrapper'     => [
-                'class' => 'form-field basis-auto w-full xl:basis-6/12 attribute',
+                'class' => 'form-field basis-auto w-full xl:basis-6/12 attribute' . (Arr::get($field, 'read_only', false) ? ' freeze' : ''),
             ],
         ];
 
