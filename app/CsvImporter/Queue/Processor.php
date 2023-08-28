@@ -38,17 +38,21 @@ class Processor
      * @param $file
      * @param $filename
      * @param $activityIdentifiers
+     * @param $organizationReportingOrg
      *
      * @return void
+     *
+     * @throws \JsonException
      */
     public function pushIntoQueue($file, $filename, $activityIdentifiers, $organizationReportingOrg): void
     {
         $str = mb_convert_encoding(file_get_contents($file->getPathName()), 'UTF-8');
         file_put_contents($file->getPathName(), $str);
         $csv = Excel::toCollection(new CsvToArrayWithHeaders, $file)->first()->toArray();
+        $humanitarianScopeVocabularyArray = getCodeList('HumanitarianScopeVocabulary', 'Activity');
 
         foreach ($csv as $index => $csvDatum) {
-            $csv[$index]['humanitarian_scope_vocabulary'] = $this->getValidHumanitarianScopeVocabulary($csvDatum);
+            $csv[$index]['humanitarian_scope_vocabulary'] = $this->getValidHumanitarianScopeVocabulary($humanitarianScopeVocabularyArray, $csvDatum);
         }
 
         $this->dispatch(
@@ -59,19 +63,21 @@ class Processor
     /**
      * Returns humanitarian_scope_vocabulary code from complete humanitarian_scope_vocabulary string of csv.
      *
+     * @param $humanitarianScopeVocabularyArray
      * @param array $csvDatum
      *
      * @return string
      */
-    public function getValidHumanitarianScopeVocabulary(array $csvDatum): string
+    public function getValidHumanitarianScopeVocabulary($humanitarianScopeVocabularyArray, array $csvDatum): string
     {
-        $humanitarianScopeVocabulary = Arr::get($csvDatum, 'humanitarian_scope_vocabulary');
-        $explodedItems = explode('-', $humanitarianScopeVocabulary);
+        $humanitarianScopeVocabulary = Arr::get($csvDatum, 'humanitarian_scope_vocabulary', '');
 
-        if (count($explodedItems) > 2) {
-            array_pop($explodedItems);
+        if ($humanitarianScopeVocabulary) {
+            $humanitarianScopeVocabularyArray = array_flip($humanitarianScopeVocabularyArray);
+
+            return Arr::get($humanitarianScopeVocabularyArray, $humanitarianScopeVocabulary, $humanitarianScopeVocabulary);
         }
 
-        return implode('-', $explodedItems) ?? '-';
+        return '';
     }
 }
