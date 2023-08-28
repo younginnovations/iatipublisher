@@ -37,6 +37,7 @@ use App\Http\Requests\Activity\Status\StatusRequest;
 use App\Http\Requests\Activity\Tag\TagRequest;
 use App\Http\Requests\Activity\Title\TitleRequest;
 use App\Http\Requests\Activity\Transaction\TransactionRequest;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
 
 /**
@@ -399,6 +400,8 @@ trait WarningValidationRules
      * @param array $activity
      *
      * @return array
+     *
+     * @throws BindingResolutionException
      */
     protected function warningForResult(array $activity): array
     {

@@ -108,9 +108,8 @@ class SettingController extends Controller
             $message = $publisherData['publisher_verification'] ?
                 ($publisherData['token_verification'] ? 'API token verified successfully' : 'API token incorrect. Please enter valid API token.')
                 : 'API token incorrect. Please make sure that your publisher is approved in IATI Registry.';
-            $success = $publisherData['publisher_verification'] && $publisherData['token_verification'];
 
-            return response()->json(['success' => $success, 'message' => $message, 'data' => $publisherData]);
+            return response()->json(['success' => true, 'message' => $message, 'data' => $publisherData]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 

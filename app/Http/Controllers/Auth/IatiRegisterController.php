@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
+use App\Constants\Enums;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Web\IatiRegister\IatiRegisterFormRequest;
 use App\IATI\Models\User\Role;
@@ -296,6 +297,7 @@ class IatiRegisterController extends Controller
                 'publisherType' => getCodeList('OrganizationType', 'Organization'),
                 'dataLicense' => getCodeList('DataLicense', 'Activity', false),
                 'source' => getCodeList('Source', 'Activity', false),
+                'uncategorizedRegistrationAgencyPrefix' => Enums::UNCATEGORIZED_ORGANISATION_AGENCY_PREFIX,
             ];
 
             return view('web.iati_register', compact('types'));

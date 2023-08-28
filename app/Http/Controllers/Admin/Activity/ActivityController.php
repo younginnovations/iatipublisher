@@ -175,7 +175,7 @@ class ActivityController extends Controller
             $status['reporting_org'] = $activity->organization->element_status['reporting_org'] ?? false;
             $activity->element_status = $status;
             $progress = $this->activityService->activityPublishingProgress($activity);
-            $coreCompleted = $activity->element_status;
+            $coreCompleted = isCoreElementCompleted($activity->element_status);
             $validatorResponse = $this->activityValidatorResponseService->getValidatorResponse($id);
             $importActivityError = $this->importActivityErrorService->getImportActivityError($id);
             $organization_identifier = $activity->organization->identifier;

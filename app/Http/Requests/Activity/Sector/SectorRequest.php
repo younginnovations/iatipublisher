@@ -156,6 +156,12 @@ class SectorRequest extends ActivityBaseRequest
             } elseif (!empty($groupedPercentSector[$sector['sector_vocabulary']]['total']) && $groupedPercentSector[$sector['sector_vocabulary']]['total'] !== 100.0) {
                 $rules[$sectorForm . '.percentage'] = 'in:' . 100.0;
             }
+
+            $narrativeRules = $this->getWarningForNarrative($sector['narrative'], $sectorForm);
+
+            foreach ($narrativeRules as $key => $item) {
+                $rules[$key] = $item;
+            }
         }
 
         return $rules;

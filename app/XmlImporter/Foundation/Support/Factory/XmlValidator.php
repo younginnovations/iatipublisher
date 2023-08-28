@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\XmlImporter\Foundation\Support\Factory;
 
 use App\Http\Requests\Activity\Identifier\IdentifierRequest;
+use App\Http\Requests\Activity\ReportingOrg\ReportingOrgRequest;
 use App\Http\Requests\Activity\Title\TitleRequest;
 use App\XmlImporter\Foundation\Support\Factory\Traits\ErrorValidationRules;
 use App\XmlImporter\Foundation\Support\Factory\Traits\ValidationMessages;
 use App\XmlImporter\Foundation\Support\Factory\Traits\WarningValidationRules;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
+use JsonException;
 
 /**
  * Class XmlValidator.
@@ -47,6 +50,7 @@ class XmlValidator
      * Returns warnings for xml uploaded activity.
      *
      * @return array
+     * @throws BindingResolutionException
      */
     public function rules(): array
     {
@@ -154,12 +158,14 @@ class XmlValidator
      * Returns critical rules for xml uploaded activity.
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function criticalRules(): array
     {
         $activity = $this->activity;
         $rules = [];
-        $reportingOrgRequest = new \App\Http\Requests\Activity\ReportingOrg\ReportingOrgRequest();
+        $reportingOrgRequest = new ReportingOrgRequest();
         $reportingOrgRequest->reportingOrganisationInOrganisation($this->organizationReportingOrg);
 
         $tempRules = [
@@ -242,6 +248,9 @@ class XmlValidator
      * @param bool $isIdentifierValid
      *
      * @return array
+     *
+     * @throws JsonException
+     * @throws BindingResolutionException
      */
     public function validateActivity(bool $isDuplicate, bool $isIdentifierValid): array
     {

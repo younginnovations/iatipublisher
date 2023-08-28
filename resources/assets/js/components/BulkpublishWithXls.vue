@@ -134,7 +134,7 @@ const publishingActivities = reactive(
   paStorage.value.publishingActivities['activities']
 );
 const completed = ref();
-defineEmits(['close']);
+const emit = defineEmits(['close', 'toggle']);
 
 let refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
 let activities = ref();
@@ -306,6 +306,10 @@ watch(
     setDataToLocalstorage();
     getDataFromLocalstorage();
   }
+);
+watch(
+  () => openModel.value,
+  (value) => emit('toggle', value)
 );
 const getDataFromLocalstorage = () => {
   activities.value = localStorage.getItem('bulkPublishActivities');

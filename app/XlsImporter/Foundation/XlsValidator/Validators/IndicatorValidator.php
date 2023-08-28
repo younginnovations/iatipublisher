@@ -7,6 +7,8 @@ namespace App\XlsImporter\Foundation\XlsValidator\Validators;
 use App\Http\Requests\Activity\Indicator\IndicatorRequest;
 use App\XlsImporter\Foundation\Factory\Validation;
 use App\XlsImporter\Foundation\XlsValidator\ValidatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class IndicatorValidator.
@@ -83,12 +85,13 @@ class IndicatorValidator implements ValidatorInterface
      * Returns warnings for xml uploaded indicator.
      *
      * @return array
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function rules(): array
     {
-        $rules = (new IndicatorRequest())->getWarningForIndicator($this->indicator, true, [], $this->resultId);
-
-        return $rules;
+        return (new IndicatorRequest())->getWarningForIndicator($this->indicator, true, [], $this->resultId);
     }
 
     /**
@@ -98,9 +101,7 @@ class IndicatorValidator implements ValidatorInterface
      */
     public function errorRules(): array
     {
-        $rules = (new IndicatorRequest())->getErrorsForIndicator($this->indicator, true);
-
-        return $rules;
+        return (new IndicatorRequest())->getErrorsForIndicator($this->indicator, true);
     }
 
     /**

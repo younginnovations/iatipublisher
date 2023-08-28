@@ -273,7 +273,7 @@
       v-if="
         xlsData || (downloading && !downloadCompleted) || publishingActivities
       "
-      :total-count="totalCount"
+      :total-count="(totalCount as number)"
       :processed-count="processedCount"
       :xls-failed="xlsFailed"
       :activity-name="activityName"
@@ -562,11 +562,6 @@ const downloading = ref(false);
 
 const pa: Ref<paType> = useStorage('vue-use-local-storage', {
   publishingActivities: localStorage.getItem('publishingActivities') ?? {},
-});
-
-onMounted(() => {
-  fetchActivities(1);
-  checkXlsstatus();
 });
 
 watch(

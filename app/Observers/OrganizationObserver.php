@@ -128,6 +128,7 @@ class OrganizationObserver
     public function removeElements($organizationElements)
     {
         $ignorableElements = [
+            'identifier',
             'iati_status',
             'status',
             'is_published',

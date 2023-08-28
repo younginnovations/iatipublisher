@@ -700,12 +700,20 @@ trait RegistersValidationRules
      */
     public function indicatorValidation(): void
     {
-        $this->extendImplicit('result_ref_code_present', function ($attributes, $values, $parameters) {
-            return (bool) Arr::get($parameters, 0, false);
+        $this->extendImplicit('result_ref_code_present', function () {
+            return false;
         });
 
-        $this->extendImplicit('indicator_ref_code_present', function ($attributes, $values, $parameters) {
-            return (bool) Arr::get($parameters, 0, false);
+        $this->extendImplicit('result_ref_vocabulary_present', function () {
+            return false;
+        });
+
+        $this->extendImplicit('indicator_ref_code_present', function () {
+            return false;
+        });
+
+        $this->extendImplicit('indicator_ref_vocabulary_present', function () {
+            return false;
         });
 
         $this->extend('qualitative_empty', function () {

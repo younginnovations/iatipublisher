@@ -7,6 +7,7 @@ namespace App\XlsImporter\Foundation\XlsValidator\Validators;
 use App\Http\Requests\Activity\Result\ResultRequest;
 use App\XlsImporter\Foundation\Factory\Validation;
 use App\XlsImporter\Foundation\XlsValidator\ValidatorInterface;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
 /**
  * Class XlsValidator.
@@ -61,10 +62,13 @@ class ResultValidator implements ValidatorInterface
      * Validation of result.
      *
      * @return array
+     *
+     * @throws BindingResolutionException
+     * @throws \JsonException
      */
     public function validateData(): array
     {
-        $errors = [
+        return [
             'critical' => $this->factory->initialize($this->result, $this->criticalRules(), $this->messages())
                 ->passes()
                 ->withErrors(),
@@ -75,14 +79,14 @@ class ResultValidator implements ValidatorInterface
                 ->passes()
                 ->withErrors(),
         ];
-
-        return $errors;
     }
 
     /**
      * Returns warnings for xls uploaded activity.
      *
      * @return array
+     *
+     * @throws BindingResolutionException
      */
     public function rules(): array
     {
@@ -93,6 +97,8 @@ class ResultValidator implements ValidatorInterface
      * Returns error rules for xls uploaded activity.
      *
      * @return array
+     *
+     * @throws \JsonException
      */
     public function errorRules(): array
     {
