@@ -50,6 +50,7 @@ class Processor
         file_put_contents($file->getPathName(), $str);
         $csv = Excel::toCollection(new CsvToArrayWithHeaders, $file)->first()->toArray();
         $humanitarianScopeVocabularyArray = getCodeList('HumanitarianScopeVocabulary', 'Activity');
+        $humanitarianScopeVocabularyArray = array_flip($humanitarianScopeVocabularyArray);
 
         foreach ($csv as $index => $csvDatum) {
             $csv[$index]['humanitarian_scope_vocabulary'] = $this->getValidHumanitarianScopeVocabulary($humanitarianScopeVocabularyArray, $csvDatum);
@@ -73,8 +74,6 @@ class Processor
         $humanitarianScopeVocabulary = Arr::get($csvDatum, 'humanitarian_scope_vocabulary', '');
 
         if ($humanitarianScopeVocabulary) {
-            $humanitarianScopeVocabularyArray = array_flip($humanitarianScopeVocabularyArray);
-
             return Arr::get($humanitarianScopeVocabularyArray, $humanitarianScopeVocabulary, $humanitarianScopeVocabulary);
         }
 
