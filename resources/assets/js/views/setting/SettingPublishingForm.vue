@@ -28,7 +28,7 @@
             </div>
             <input
               id="publisher-id"
-              class="register__input mb-2"
+              class="register__input mb-2 hover:cursor-not-allowed"
               :class="{
                 error__input: publishingError.publisher_id,
               }"

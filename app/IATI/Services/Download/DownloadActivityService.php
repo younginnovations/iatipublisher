@@ -138,22 +138,13 @@ class DownloadActivityService
     /**
      * Get organization publisher id.
      *
-     * @return null|string
+     * @return string
      */
-    public function getOrganizationPublisherId(): ?string
+    public function getOrganizationPublisherId(): string
     {
-        $publisherId = null;
         $organization = auth()->user()->organization;
 
-        if ($organization && $organization->settings) {
-            $publisherInfo = $organization->settings->publishing_info;
-
-            if ($publisherInfo) {
-                $publisherId = Arr::get($publisherInfo, 'publisher_id', 'Not Available');
-            }
-        }
-
-        return $publisherId;
+        return $organization->publisher_id;
     }
 
     /**
