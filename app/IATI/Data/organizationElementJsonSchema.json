@@ -102,7 +102,7 @@
         "required": true,
         "criteria": "mandatory",
         "hover_text": "elements.organisation.reporting_org.reference.hover_text",
-        "help_text": "elements.organisation.reporting_org.reference.help_text",
+        "help_text": "elements.organisation.reporting_org.reference.help_text"
       },
       "type": {
         "name": "type",

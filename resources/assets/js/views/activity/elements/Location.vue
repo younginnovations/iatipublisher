@@ -261,7 +261,7 @@
         <table class="w-full">
           <tr>
             <td>
-              {{ translate.commonText('feature_designation').proper_class }}
+              {{ translate.commonText('feature_designation') }}
             </td>
             <td>
               <span v-if="item.code">{{ types.locationType[item.code] }}</span>
