@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace App\IATI\Services\Workflow;
 
+use App\IATI\Repositories\Activity\ValidationStatusRepository;
 use App\IATI\Repositories\ApiLog\ApiLogRepository;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\BulkPublishingStatusService;
 use App\IATI\Services\Validator\ActivityValidatorResponseService;
 use App\IATI\Traits\IatiValidatorResponseTrait;
+use App\Jobs\RegistryValidatorJob;
+use App\XlsImporter\Foundation\Factory\Validation;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 /**
@@ -47,6 +51,11 @@ class BulkPublishingService
     protected ApiLogRepository $apiLogRepo;
 
     /**
+     * @var ValidationStatusRepository
+     */
+    protected ValidationStatusRepository $validationStatusRepository;
+
+    /**
      * BulkPublishingService Constructor.
      *
      * @param ActivityService $activityService
@@ -60,13 +69,15 @@ class BulkPublishingService
         ActivityWorkflowService $activityWorkflowService,
         ActivityValidatorResponseService $validatorService,
         BulkPublishingStatusService $publishingStatusService,
-        ApiLogRepository $apiLogRepo
+        ApiLogRepository $apiLogRepo,
+        ValidationStatusRepository $validationStatusRepository
     ) {
         $this->activityService = $activityService;
         $this->activityWorkflowService = $activityWorkflowService;
         $this->validatorService = $validatorService;
         $this->publishingStatusService = $publishingStatusService;
         $this->apiLogRepo = $apiLogRepo;
+        $this->validationStatusRepository = $validationStatusRepository;
     }
 
     /**
@@ -120,33 +131,22 @@ class BulkPublishingService
      * @param $activityIds
      *
      * @return array
-     * @throws GuzzleException
-     * @throws \JsonException
      */
     public function validateActivitiesOnIATI($activityIds): array
     {
-        $totalResponse = [];
+        $user = Auth::user();
+        $activityTitle = [];
 
         foreach ($activityIds as $activityId) {
             $activity = $this->activityService->getActivity($activityId);
 
             if ($activity && $activity->status === 'draft') {
-                $response = $this->validateWithException($activity);
-                $this->apiLogRepo->store(generateApiInfo('POST', env('IATI_VALIDATOR_ENDPOINT'), ['form_params' => json_encode($activity)], json_encode($response)));
-
-                if (!Arr::get($response, 'success', true)) {
-                    logger()->error('Error has occurred while validating activity with id' . $activityId);
-                } else {
-                    $totalResponse[$activity->id] = [
-                        'activity_id' => $activity->id,
-                        'title' => Arr::get($activity->title, '0.narrative', 'Not Available') ?: 'Not Available',
-                        'response' => $response,
-                    ];
-                }
+                $activityTitle[] = $activity->default_title_narrative;
+                RegistryValidatorJob::dispatch($activity, $user);
             }
         }
 
-        return $this->modifyResponse($totalResponse);
+        return $activityTitle;
     }
 
     /**
@@ -385,5 +385,75 @@ class BulkPublishingService
     public function deleteBulkPublishingStatus($organizationId): bool
     {
         return $this->publishingStatusService->deleteBulkPublishingStatus($organizationId);
+    }
+
+    /**
+     * Returns validation status of all activity.
+     *
+     * @param array $activityIds
+     *
+     * @return array
+     */
+    public function getActivityValidationStatus(array $activityIds): array
+    {
+        return $this->validationStatusRepository->getActivitiesValidationStatus($activityIds);
+    }
+
+    /**
+     * Get activities validation responses.
+     *
+     * @param array $activityIds
+     *
+     * @return array
+     */
+    public function getValidationResponses(array $activityIds): array
+    {
+        $totalResponse = [];
+        $responses = $this->validationStatusRepository->getActivitiesValidationResponse($activityIds);
+
+        if (!empty($responses) && count($responses)) {
+            foreach ($responses as $response) {
+                $response = json_decode($response, true);
+                $totalResponse[$response['activity_id']] = $response;
+            }
+        }
+
+        return $totalResponse;
+    }
+
+    /**
+     * Checks if there is previous validation.
+     *
+     * @return array
+     */
+    public function checkOngoingValidationStatus(): array
+    {
+        return $this->validationStatusRepository->checkOngoingValidationStatus();
+    }
+
+    /**
+     * Returns validation status regardless of it status.
+     *
+     * @return bool
+     */
+    public function checkPreviousValidationStatusPending(): bool
+    {
+        $count = $this->validationStatusRepository->checkPreviousValidationStatusPending();
+
+        if ($count) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Deletes validation status.
+     *
+     * @return int
+     */
+    public function deleteValidationResponses(): int
+    {
+        return $this->validationStatusRepository->deleteValidationResponses();
     }
 }

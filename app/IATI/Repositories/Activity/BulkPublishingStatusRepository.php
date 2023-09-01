@@ -89,7 +89,7 @@ class BulkPublishingStatusRepository extends Repository
     public function ongoingActivityPublishingStatus($organizationId): ?object
     {
         return $this->model->where('organization_id', $organizationId)
-            ->where('status', 'created')
+            ->whereIn('status', ['created', 'processing'])
             ->get();
     }
 

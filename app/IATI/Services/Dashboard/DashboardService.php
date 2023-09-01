@@ -121,7 +121,12 @@ class DashboardService
     {
         $latestUpdatedActivity = ($this->activityRepo->find($this->activityRepo->getLastUpdatedActivity()->id))->toArray();
         $latestUpdateOrganization = ($this->activityRepo->getLastUpdatedActivity())->organization->toArray();
-        $userId = $this->userRepo->findBy('organization_id', $latestUpdateOrganization['id'])->id;
+
+        $userId = $this->userRepo->applyConditions([
+            ['organization_id', '=', $latestUpdateOrganization['id']],
+            ['status', '=', true],
+            ['deleted_at', '=', null],
+        ])?->id;
 
         return [
             'totalCount' => $this->activityRepo->all()->count(),

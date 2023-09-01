@@ -63,6 +63,7 @@ import {
   inject,
   onUnmounted,
   defineEmits,
+  provide,
 } from 'vue';
 import axios from 'axios';
 import { detailStore } from 'Store/activities/show';
@@ -73,7 +74,6 @@ const store = detailStore();
 const xlsData = ref(false);
 const downloading = ref(false);
 const downloadCompleted = ref(false);
-
 const isLoading = ref(false);
 
 interface RefreshToastMsgTypeface {

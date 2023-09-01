@@ -14,7 +14,7 @@ use App\Jobs\BulkPublishActivities;
 use Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Psr\Container\ContainerExceptionInterface;
@@ -127,7 +127,7 @@ class BulkPublishingController extends Controller
     {
         try {
             DB::beginTransaction();
-
+            $hasUploadedCache = Cache::get('activity-validation-' . auth()->user()->id);
             $message = $this->activityWorkflowService->getPublishErrorMessage(auth()->user()->organization);
 
             if (!empty($message)) {
@@ -139,14 +139,18 @@ class BulkPublishingController extends Controller
             $activityIds = json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR);
 
             if (!empty($activityIds)) {
-                $validationResponse = $this->bulkPublishingService->validateActivitiesOnIATI($activityIds);
+                if ($hasUploadedCache || count($this->bulkPublishingService->checkOngoingValidationStatus())) {
+                    return response()->json([
+                        'success'   =>  false,
+                        'message'   =>  'Another Activity Validation already in progress.',
+                    ]);
+                }
+                Cache::forget('activity-validation-delete');
+                Cache::put('activity-validation-' . auth()->user()->id, true, now()->addMinutes(2));
+                $activityTitle = $this->bulkPublishingService->validateActivitiesOnIATI($activityIds);
                 DB::commit();
 
-                if (!Arr::get($validationResponse, 'success', true)) {
-                    return response()->json(['success' => false, 'message' => 'Activities validation failed.']);
-                }
-
-                return response()->json(['success' => true, 'message' => 'Activities validated successfully.', 'data' => $validationResponse]);
+                return response()->json(['success' => true, 'message' => 'Validating Activities.', 'activities' => $activityTitle, 'total' => count($activityTitle)]);
             }
 
             return response()->json(['success' => false, 'message' => 'No activities selected.']);
@@ -173,7 +177,7 @@ class BulkPublishingController extends Controller
         try {
             DB::beginTransaction();
             $organization = auth()->user()->organization;
-
+            Cache::forget('activity-validation-' . auth()->user()->id);
             $message = $this->activityWorkflowService->getPublishErrorMessage($organization);
 
             if (!empty($message)) {
@@ -205,6 +209,7 @@ class BulkPublishingController extends Controller
                 $response = $this->bulkPublishingService->generateInitialBulkPublishingResponse($activities);
                 $this->publishingStatusService->storeProcessingActivities($activities, $response['organization_id'], $response['job_batch_uuid']);
                 dispatch(new BulkPublishActivities($activities, $organization, $organization->settings, $response['organization_id'], $response['job_batch_uuid']));
+                $this->bulkPublishingService->deleteValidationResponses();
                 DB::commit();
 
                 return response()->json(['success' => true, 'message' => 'Bulk publishing started', 'data' => $response]);
@@ -324,6 +329,33 @@ class BulkPublishingController extends Controller
     }
 
     /**
+     * Performs required checks for validating activity.
+     *
+     * @return JsonResponse
+     */
+    public function checksForActivityBulkValidation(): JsonResponse
+    {
+        try {
+            $hasUploadedCache = Cache::get('activity-validation-' . auth()->user()->id);
+            $ongoingValidationActivities = $this->bulkPublishingService->checkOngoingValidationStatus();
+
+            if ($hasUploadedCache || count($ongoingValidationActivities)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Another bulk validation is already in progress.',
+                    'activities' => count($ongoingValidationActivities) ? json_encode($ongoingValidationActivities) : null,
+                ]);
+            }
+
+            return response()->json(['success' => true, 'message' => 'Activities are ready to validate.', 'status' => 'completed']);
+        } catch (\Exception $e) {
+            logger()->error($e->getMessage());
+
+            return response()->json(['success' => false, 'message' => 'Error has occurred while checking activity.']);
+        }
+    }
+
+    /**
      * Checks if activity with publishing in bulk publish status is published or draft in activities table
      * Updates it and returns msg.
      *
@@ -345,6 +377,79 @@ class BulkPublishingController extends Controller
             DB::rollBack();
 
             return response()->json(['success' => false, 'message' => 'Failed to delete bulk publishing status']);
+        }
+    }
+
+    /**
+     * Returns activity validation status.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getValidationStatus(Request $request): JsonResponse
+    {
+        try {
+            $activityIds = json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR);
+
+            if (!empty($activityIds)) {
+                $response = $this->bulkPublishingService->getActivityValidationStatus($activityIds);
+                $hasFailedStatus = in_array('failed', $response);
+
+                return response()->json(['success' => !$hasFailedStatus, 'data' => $response, 'total' => count($response)]);
+            }
+
+            return response()->json(['success' => false, 'message' => 'Activity not selected.']);
+        } catch (\Exception | \Throwable $e) {
+            logger()->error($e);
+
+            return response()->json(['success' => false, 'message' => 'Error has occurred while fetching validation status.']);
+        }
+    }
+
+    /**
+     * Get Validation responses of activites.
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getValidationResponse(Request $request): JsonResponse
+    {
+        try {
+            $activityIds = json_decode($request->get('activities'), true, 512, JSON_THROW_ON_ERROR);
+
+            if (!empty($activityIds)) {
+                $response = $this->bulkPublishingService->getValidationResponses($activityIds);
+
+                return response()->json(['success' => true, 'data' => $response]);
+            }
+
+            return response()->json(['success' => false, 'message' => 'Activity not selected.']);
+        } catch (\Exception | \Throwable $exception) {
+            logger()->error($exception);
+
+            return response()->json(['success' => false, 'message' => 'Error has occurred while fetching validation response.']);
+        }
+    }
+
+    /**
+     * Deletes validation status.
+     *
+     * @return JsonResponse
+     */
+    public function deleteValidationStatus(): JsonResponse
+    {
+        try {
+            $this->bulkPublishingService->deleteValidationResponses();
+            Cache::put('activity-validation-delete', true);
+            Cache::forget('activity-validation-' . auth()->user()->id);
+
+            return response()->json(['success' => true, 'message' => 'Successfully Deleted.']);
+        } catch (\Exception | \Throwable $exception) {
+            logger()->error($exception);
+
+            return response()->json(['success' => false, 'message' => 'Error has occurred while deleting validation status.']);
         }
     }
 }

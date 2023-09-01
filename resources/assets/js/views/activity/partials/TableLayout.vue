@@ -140,6 +140,7 @@
                 :core-completed="datum.coreCompleted"
                 type="outline"
                 :activity-id="datum['id']"
+                :publish="false"
               />
             </div>
           </td>
@@ -173,7 +174,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
+import { defineProps, onMounted, watch } from 'vue';
 import moment from 'moment';
 import { useToggle } from '@vueuse/core';
 
@@ -187,10 +188,16 @@ import UnPublish from 'Components/buttons/UnPublishButton.vue';
 
 const [selectAllValue, selectAllToggle] = useToggle();
 
-defineProps({
+const props = defineProps({
   data: { type: Object, required: true },
   loader: { type: Boolean, required: false },
 });
+console.log(props.data, 'for id');
+
+// onMounted(() => {
+//   console.log(props.data.data, 'table layout');
+//   store.dispatch('updateActivityList', props.data.data);
+// });
 
 const store = useStore();
 

@@ -1,61 +1,76 @@
 <template>
-  <div class="relative h-[80px] rounded-t-lg bg-eggshell p-6">
-    <button
-      v-if="xlsDownloadStatus === 'completed'"
-      class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 rounded-full bg-white p-[1px]"
-      @click="cancelDownload"
-    >
-      <svg-vue class="text-sm" icon="cross-icon" />
-    </button>
-    <div
-      v-if="xlsDownloadStatus != 'failed'"
-      class="mb-3 flex h-1 w-full justify-start rounded-full bg-spring-10"
-    >
+  <div>
+    <h3 class="pb-2 text-base font-bold leading-6 text-n-50">Downloading</h3>
+    <div class="relative rounded-lg border border-n-20 bg-white p-4">
+      <button
+        v-if="xlsDownloadStatus === 'completed'"
+        class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 rounded-full bg-white p-[1px]"
+        @click="cancelDownload"
+      >
+        <svg-vue class="text-sm" icon="cross-icon" />
+      </button>
+
       <div
-        :style="{ width: percentageWidth + '%' }"
-        class="h-full rounded-full bg-spring-50"
-      ></div>
-    </div>
-    <div v-else class="flex justify-between space-x-4">
-      <div class="flex space-x-2">
-        <span class="text-sm text-n-40">Preparing activities for download</span>
-        <span class="text-sm italic text-n-30">Failed</span>
+        v-if="xlsDownloadStatus != 'failed'"
+        class="flex justify-between space-x-5"
+      >
+        <p
+          v-if="
+            xlsDownloadStatus != 'completed' && xlsDownloadStatus != 'cancelled'
+          "
+          class="text-sm text-n-40"
+        >
+          Preparing {{ fileCount ? fileCount : 0 }}/4 files for download
+        </p>
+        <p v-if="xlsDownloadStatus == 'cancelled'" class="text-sm text-n-40">
+          Preparing for Cancel
+        </p>
+        <p v-if="xlsDownloadStatus == 'completed'" class="text-sm text-n-40">
+          Zip File is Ready
+        </p>
+
+        <spinnerLoader
+          v-if="
+            xlsDownloadStatus != 'completed' || xlsDownloadStatus === 'failed'
+          "
+        />
+        <button
+          v-if="xlsDownloadStatus == 'completed'"
+          class="text-xs font-bold uppercase text-spring-50 hover:text-spring-50"
+          @click="downloadFile"
+        >
+          download
+        </button>
       </div>
-      <button
-        class="text-xs font-bold uppercase text-bluecoral hover:text-bluecoral"
-        @click="showRetryDownloadModel = true"
-      >
-        retry
-      </button>
-    </div>
 
-    <div
-      v-if="xlsDownloadStatus != 'failed'"
-      class="flex justify-between space-x-5"
-    >
-      <p
-        v-if="
-          xlsDownloadStatus != 'completed' && xlsDownloadStatus != 'cancelled'
-        "
-        class="text-sm text-n-40"
+      <div
+        v-if="xlsDownloadStatus != 'failed'"
+        class="mt-3 flex items-center space-x-2"
       >
-        Preparing {{ fileCount ? fileCount : 0 }}/4 files for download
-      </p>
-      <p v-if="xlsDownloadStatus == 'cancelled'" class="text-sm text-n-40">
-        Preparing for Cancel
-      </p>
-      <p v-if="xlsDownloadStatus == 'completed'" class="text-sm text-n-40">
-        Zip File is Ready
-      </p>
-
-      <spinnerLoader v-if="xlsDownloadStatus != 'completed'" />
-      <button
-        v-if="xlsDownloadStatus == 'completed'"
-        class="text-xs font-bold uppercase text-spring-50 hover:text-spring-50"
-        @click="downloadFile"
-      >
-        download
-      </button>
+        <div class="flex h-1 w-full justify-start rounded-full bg-spring-10">
+          <div
+            :style="{ width: percentageWidth + '%' }"
+            class="h-full rounded-full bg-spring-50"
+          ></div>
+        </div>
+        <span class="text-sm text-[#344054]">
+          {{ Math.trunc(percentageWidth) }}%
+        </span>
+      </div>
+      <div v-else class="flex justify-between space-x-4">
+        <div class="flex space-x-2">
+          <span class="text-sm text-n-40"
+            >Preparing activities for download</span
+          >
+          <span class="text-sm italic text-n-30">Failed</span>
+        </div>
+        <button
+          class="text-xs font-bold uppercase text-bluecoral hover:text-bluecoral"
+          @click="showRetryDownloadModel = true"
+        >
+          retry
+        </button>
+      </div>
     </div>
   </div>
   <Modal :modal-active="showRetryDownloadModel" width="583">
@@ -79,15 +94,6 @@ const store = useStore();
 const showRetryDownloadModel = ref();
 const isLoading = ref();
 
-onMounted(() => {
-  const supportButton: HTMLElement = document.querySelector(
-    '#launcher'
-  ) as HTMLElement;
-
-  if (supportButton !== null) {
-    supportButton.style.transform = 'translatey(-50px)';
-  }
-});
 const downloadFile = () => {
   store.dispatch('updateCompleteXlsDownload', true);
   store.dispatch('updateCancelDownload', true);

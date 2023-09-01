@@ -71,6 +71,14 @@
                 :type="toastData.type"
                 class="mr-3 whitespace-nowrap"
               />
+
+              <!-- refresh toast message -->
+              <RefreshToastMessage
+                v-if="refreshToastMsg.visibility"
+                :message="refreshToastMsg.refreshMessage"
+                :type="refreshToastMsg.refreshMessageType"
+                class="mr-3 whitespace-nowrap"
+              />
               <ErrorPopUp
                 v-if="errorData.visibility"
                 :message="errorData.message"
@@ -344,6 +352,7 @@
         </div>
       </div>
     </div>
+    <XlsUploadIndicator />
   </div>
 </template>
 
@@ -357,9 +366,13 @@ import {
   computed,
   onUnmounted,
   ref,
+  Ref,
   watch,
 } from 'vue';
 import { useToggle, watchIgnorable } from '@vueuse/core';
+
+import { useStorage } from '@vueuse/core';
+import axios from 'axios';
 
 // components
 import { Result } from './elements/Index';
@@ -372,6 +385,8 @@ import Errors from 'Components/sections/StickyErrors.vue';
 import Toast from 'Components/ToastMessage.vue';
 import ErrorPopUp from 'Components/ErrorPopUp.vue';
 import getActivityTitle from 'Composable/title';
+import XlsUploadIndicator from 'Components/XlsUploadIndicator.vue';
+import RefreshToastMessage from 'Activity/bulk-publish/RefreshToast.vue';
 
 // Activity Components
 import Elements from 'Activity/partials/ActivitiesElements.vue';
@@ -395,7 +410,9 @@ export default defineComponent({
     DeleteButton,
     PreviouslyPublished,
     ErrorPopUp,
+    XlsUploadIndicator,
     Toast,
+    RefreshToastMessage,
   },
   props: {
     elements: {
@@ -448,6 +465,27 @@ export default defineComponent({
     },
   },
   setup(props) {
+    interface paType {
+      publishingActivities: {
+        organization_id?: string;
+        job_batch_uuid?: string;
+        activities?: object;
+        status?: string;
+        message?: string;
+      };
+    }
+
+    const refreshToastMsg = reactive({
+      visibility: false,
+      refreshMessageType: true,
+      refreshMessage:
+        'Activity has been published successfully, refresh to see changes',
+    });
+
+    const pa: Ref<paType> = useStorage('vue-use-local-storage', {
+      publishingActivities: localStorage.getItem('publishingActivities') ?? {},
+    });
+
     const { types, coreCompleted } = toRefs(props);
     let removed = sessionStorage.getItem('removed');
 
@@ -456,6 +494,8 @@ export default defineComponent({
     const showSidebar = ref(false);
     const positionY = ref(0);
     const screenWidth = ref(0);
+    const publishingActivities = ref();
+
     const toastData = reactive({
       visibility: false,
       message: '',
@@ -492,6 +532,8 @@ export default defineComponent({
     });
     onMounted(() => {
       window.onload = () => {
+        publishingActivities.value = pa.value?.publishingActivities;
+
         if (removed) {
           toastData.type = true;
           toastData.visibility = true;
@@ -508,6 +550,43 @@ export default defineComponent({
         toastData.message = props.toast.message;
       }
     });
+    watch(
+      () => indexStore?.state?.startBulkPublish,
+      async () => {
+        await bulkPublishStatus();
+
+        console.log(
+          localStorage.getItem('vue-use-local-storage'),
+          'watchers triggered needed'
+        );
+        publishingActivities.value = pa.value?.publishingActivities;
+      },
+      { deep: true }
+    );
+
+    const bulkPublishStatus = async () => {
+      pa.value = { publishingActivities: {} };
+      let count = 0;
+      const checkStatus = setInterval(() => {
+        axios.get(`/activities/bulk-publish-status`).then((res) => {
+          const response = res.data;
+          if ('data' in response) {
+            // saving in local storage
+            pa.value.publishingActivities.activities = response.data.activities;
+            pa.value.publishingActivities.status = response.data.status;
+            pa.value.publishingActivities.message = response.data.message;
+
+            clearInterval(checkStatus);
+          }
+        });
+        if (count > 5) {
+          clearInterval(checkStatus);
+        }
+
+        count++;
+      }, 1000);
+    };
+
     const calcWidth = (event) => {
       screenWidth.value = event.target.innerWidth;
       if (screenWidth.value > 1024) {
@@ -664,6 +743,8 @@ export default defineComponent({
     provide('importActivityError', props.importActivityError);
     provide('activityId', props.activity.id);
     provide('elements', props.elements);
+    provide('activities', publishingActivities as Ref);
+    provide('refreshToastMsg', refreshToastMsg);
 
     indexStore.dispatch('updateSelectedActivities', [activity.value.id]);
 
@@ -709,6 +790,7 @@ export default defineComponent({
       groupedData,
       activities,
       deleteValue,
+      XlsUploadIndicator,
       deleteToggle,
       downloadValue,
       downloadToggle,
@@ -727,6 +809,8 @@ export default defineComponent({
       toggleSidebar,
       istopVisible,
       screenWidth,
+      refreshToastMsg,
+      publishingActivities,
       width,
     };
   },

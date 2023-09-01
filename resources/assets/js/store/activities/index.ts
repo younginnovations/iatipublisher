@@ -11,6 +11,9 @@ interface StateInterface {
   closeXlsModel: boolean;
   bulkpublishActivities: object;
   startBulkPublish: boolean;
+  startValidation: boolean;
+  validatingActivities: string;
+  validatingActivitiesNames: string[];
 }
 
 const state = {
@@ -18,11 +21,14 @@ const state = {
   bulkPublishLength: 0,
   cancelUpload: false,
   startBulkPublish: false,
+  startValidation: false,
+  validatingActivities: '',
   maximizeXls: true,
   startXlsDownload: false,
   completeXlsDownload: false,
   cancelDownload: false,
   closeXlsModel: false,
+  validatingActivitiesNames: [],
   bulkpublishActivities: {
     publishingActivities: {
       activities: { activity_id: 0, activity_title: '', status: '' },
@@ -44,6 +50,14 @@ const mutations = {
   mutateCloseXlsModel: function (state: StateInterface, payload: boolean) {
     state.closeXlsModel = payload;
   },
+
+  mutateValidatingActivitiesNames: function (
+    state: StateInterface,
+    payload: string[]
+  ) {
+    state.validatingActivitiesNames = payload;
+  },
+
   mutateBulkPublishLength: function (state: StateInterface, payload: number) {
     state.bulkPublishLength = payload;
   },
@@ -74,6 +88,15 @@ const mutations = {
   mutateStartBulkPublish: function (state: StateInterface, payload: boolean) {
     state.startBulkPublish = payload;
   },
+  mutateStartValidation: function (state: StateInterface, payload: boolean) {
+    state.startValidation = payload;
+  },
+  mutateValidatingActivities: function (
+    state: StateInterface,
+    payload: string
+  ) {
+    state.validatingActivities = payload;
+  },
 };
 
 interface CommitFunction {
@@ -87,6 +110,14 @@ const actions = {
   ) {
     commit('mutateSelectedActivities', payload);
   },
+
+  updateValidatingActivitiesNames: function (
+    { commit }: CommitFunction,
+    payload: string[]
+  ) {
+    commit('mutateValidatingActivitiesNames', payload);
+  },
+
   updateCloseXlsModel: function ({ commit }: CommitFunction, payload: boolean) {
     commit('mutateCloseXlsModel', payload);
   },
@@ -131,6 +162,18 @@ const actions = {
     payload: boolean
   ) {
     commit('mutateStartBulkPublish', payload);
+  },
+  updateStartValidation: function (
+    { commit }: CommitFunction,
+    payload: boolean
+  ) {
+    commit('mutateStartValidation', payload);
+  },
+  updateValidatingActivities: function (
+    { commit }: CommitFunction,
+    payload: string
+  ) {
+    commit('mutateValidatingActivities', payload);
   },
 };
 

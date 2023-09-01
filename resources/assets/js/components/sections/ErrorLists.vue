@@ -18,7 +18,7 @@
     <div class="errors__list">
       <ul>
         <li v-for="(error, e) in errors" :key="e" class="errors__item">
-          <div v-if="error.response.length > 1">
+          <div v-if="error?.response?.length > 1">
             {{ error.message }}
             <ul class="errors__element">
               <li v-for="(element, index) in error.response" :key="index">
@@ -28,7 +28,7 @@
               </li>
             </ul>
           </div>
-          <div v-else-if="error.response.length === 1">
+          <div v-else-if="error?.response?.length === 1">
             <a :href="error.response['0'].iati_path">{{ error.message }}</a>
           </div>
           <div v-else>
@@ -106,7 +106,7 @@ const accordionToggle = (e: Event) => {
 
 const updateErrorCountMessage = () => {
   errorType.value =
-    errors.value.length +
+    errors?.value?.length +
     ' ' +
     type.value.charAt(0).toUpperCase() +
     type.value.slice(1);

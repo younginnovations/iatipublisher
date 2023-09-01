@@ -261,7 +261,6 @@ export default defineComponent({
           xlsDownloadStatus.value = res.data.status;
           downloadApiUrl.value = res.data.url;
           downloading.value = !!res.data.status;
-
           if (
             xlsDownloadStatus.value === 'completed' ||
             xlsDownloadStatus.value === 'failed' ||
@@ -272,6 +271,7 @@ export default defineComponent({
         });
       }, 3000);
     };
+
     watch(
       () => store.state.closeXlsModel,
       () => {
@@ -361,7 +361,6 @@ export default defineComponent({
       refreshMessage:
         'Activity has been published successfully, refresh to see changes',
     });
-
     /**
      * Provide
      */

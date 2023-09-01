@@ -179,7 +179,7 @@
 <script lang="ts">
 import { useStore } from 'Store/activities/index';
 
-import { reactive, defineComponent, ref, onMounted } from 'vue';
+import { reactive, defineComponent, ref, onMounted, provide } from 'vue';
 import CreateModal from '../CreateModal.vue';
 import { useToggle } from '@vueuse/core';
 import Toast from '../../../components/ToastMessage.vue';

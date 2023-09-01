@@ -1,93 +1,120 @@
 <template>
-  <div
-    v-if="activities"
-    :class="!openModel ? 'h-[80px]' : ''"
-    class="relative w-[300px] rounded-t-lg bg-eggshell duration-200"
-  >
-    <button
-      class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 rounded-full bg-white p-[1px]"
-      @click="
-        () => {
-          $emit('close');
-        }
-      "
-    >
-      <svg-vue icon="cross-icon" class="text-sm" />
-    </button>
-
-    <svg-vue
-      :class="{ 'rotate-180': !openModel, '': openModel }"
-      class="absolute right-2.5 top-6 cursor-pointer text-[7px] text-bluecoral duration-200"
-      icon="dropdown-arrow"
-      @click="openModel = !openModel"
-    />
-    <div v-if="!openModel" class="rounded-t-lg bg-eggshell p-6">
-      <div
-        v-if="hasFailedActivities?.ids?.length === 0"
-        class="mb-3 mr-2 flex h-1 justify-start rounded-full bg-spring-10"
-      >
-        <div
-          :style="{ width: percentageWidth + '%' }"
-          class="h-full rounded-full bg-spring-50"
-        ></div>
-      </div>
-      <div
+  <div v-if="activities">
+    <h3 class="pb-2 text-base font-bold leading-6 text-n-50">Publishing</h3>
+    <div class="relative w-full rounded-lg bg-white duration-200">
+      <button
         v-if="hasFailedActivities?.ids?.length > 0"
-        class="text-sm font-medium text-crimson-50"
+        class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 rounded-full bg-white p-[1px]"
+        @click="
+          () => {
+            $emit('close');
+          }
+        "
       >
-        Some activities have failed to publish.
-      </div>
-      <div v-else class="text-sm text-n-40">
-        Publishing
-        <span
-          >{{ completedActivities }}/{{ Object.keys(activities).length }}</span
-        >
-        activities to IATI registry
-      </div>
-    </div>
-    <div v-else class="rounded-t-lg bg-white">
-      <div
-        class="flex justify-between rounded-t-lg bg-eggshell py-4 px-6 text-sm font-bold"
-      >
-        <h6>
-          Publishing
+        <svg-vue class="text-sm" icon="cross-icon" />
+      </button>
+      <div class="rounded-lg border border-n-20 bg-white p-4">
+        <div class="flex items-center justify-between pb-4">
+          <h3 class="flex items-center space-x-2 text-sm text-n-50">
+            <span>Multiple Activities </span
+            ><span
+              class="flex h-6 w-6 items-center justify-center rounded-full bg-lagoon-10 text-lagoon-50"
+              >{{
+                bulkPublishLength > 0
+                  ? bulkPublishLength
+                  : activities && Object.keys(activities).length
+              }}
+            </span>
+          </h3>
+          <button
+            class="rounded-full bg-white p-[1px]"
+            @click="
+              () => {
+                $emit('close');
+              }
+            "
+          >
+            <svg-vue icon="delete" class="text-sm text-n-40" />
+          </button>
+        </div>
 
-          {{ bulkPublishLength != 0 ? bulkPublishLength : '' }} activities
-        </h6>
+        <div
+          v-if="hasFailedActivities?.ids?.length === 0"
+          class="mb-3 flex items-center"
+        >
+          <div
+            class="mr-2 flex h-1 flex-1 justify-start rounded-full bg-spring-10"
+          >
+            <div
+              :style="{ width: percentageWidth + '%' }"
+              class="h-full rounded-full bg-spring-50"
+            ></div>
+          </div>
+          <span class="text-sm text-[#344054]">
+            {{ Math.trunc(percentageWidth) }}%
+          </span>
+        </div>
+
         <div
           v-if="hasFailedActivities?.ids?.length > 0"
-          class="retry mr-2 flex cursor-pointer items-center text-crimson-50"
-          @click="retryPublishing"
+          class="py-2 text-sm font-medium text-crimson-50"
         >
-          <svg-vue class="mr-1" icon="redo" />
-          <span class="text-xs uppercase">Retry</span>
+          Some activities have failed to publish.
         </div>
-      </div>
-      <div
-        class="bulk-activities max-h-[240px] overflow-y-auto overflow-x-hidden py-2 px-6 transition-all duration-500"
-      >
-        <div>
-          <div
-            v-for="(value, name, index) in activities"
-            :key="index"
-            class="item flex py-3"
+
+        <div class="flex items-center justify-between">
+          <button
+            class="space-x-1.5 text-sm leading-[22px] text-blue-50"
+            @click="openModel = !openModel"
           >
-            <div class="activity-title grow pr-2 text-sm leading-normal">
-              {{ value['activity_title'] }}
-            </div>
-            <div class="shrink-0 text-xl">
-              <svg-vue
-                v-if="value['status'] === 'completed'"
-                class="text-spring-50"
-                icon="tick"
-              />
-              <svg-vue
-                v-else-if="value['status'] === 'failed'"
-                class="text-crimson-50"
-                icon="times-circle"
-              />
-              <span v-else class="rolling"></span>
-            </div>
+            <span v-text="!openModel ? 'Show details' : 'Hide details'" />
+            <svg-vue
+              :class="{ 'rotate-180': openModel }"
+              class="cursor-pointer text-[7px] text-bluecoral duration-200"
+              icon="dropdown-arrow"
+            />
+          </button>
+
+          <div
+            v-if="hasFailedActivities?.ids?.length > 0"
+            class="retry flex cursor-pointer items-center text-crimson-50"
+            @click="retryPublishing"
+          >
+            <svg-vue class="mr-1" icon="redo" />
+            <span class="text-xs uppercase">Retry</span>
+          </div>
+        </div>
+
+        <div v-if="openModel">
+          <div
+            class="bulk-activities max-h-[240px] overflow-y-auto overflow-x-hidden pt-3 transition-all duration-500"
+          >
+            <ul class="space-y-3">
+              <li
+                v-for="(value, name, index) in activities"
+                :key="index"
+                class="item flex"
+              >
+                <div
+                  class="activity-title grow pr-2 text-sm leading-normal text-n-40"
+                >
+                  {{ value['activity_title'] }}
+                </div>
+                <div class="shrink-0 text-xl">
+                  <svg-vue
+                    v-if="value['status'] === 'completed'"
+                    class="text-spring-50"
+                    icon="tick"
+                  />
+                  <svg-vue
+                    v-else-if="value['status'] === 'failed'"
+                    class="text-crimson-50"
+                    icon="times-circle"
+                  />
+                  <span v-else class="rolling"></span>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -128,13 +155,19 @@ interface RefreshToastMsgTypeface {
 
 const bulkPublishLength = ref(0);
 const openModel = ref(false);
-let paStorage = ref(store.state.bulkpublishActivities);
+const paStorage = ref({
+  publishingActivities: {
+    status: {},
+    activities: {},
+    message: {},
+  },
+});
 
 const publishingActivities = reactive(
-  paStorage.value.publishingActivities['activities']
+  paStorage.value.publishingActivities?.['activities']
 );
 const completed = ref();
-const emit = defineEmits(['close', 'toggle']);
+const emit = defineEmits(['close', 'toggle', 'activityPublishedData']);
 
 let refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
 let activities = ref();
@@ -146,23 +179,121 @@ let hasFailedActivities = reactive({
 });
 
 onMounted(() => {
-  completed.value = paStorage.value.publishingActivities.status ?? 'processing';
+  paStorage.value = store.state.bulkpublishActivities;
+
+  completed.value =
+    paStorage?.value?.publishingActivities?.status ?? 'processing';
   bulkPublishStatus();
 });
 
-const bulkPublishStatus = () => {
-  axios.get(`/activities/bulk-publish-status`).then((res) => {
+const pollingForBulkpublishData = () => {
+  bulkPublishLength.value = store.state.bulkPublishLength;
+  const intervalID = setInterval(() => {
+    console.log('bulkpublish polling');
+    axios.get(`/activities/bulk-publish-status`).then((res) => {
+      const response = res.data;
+
+      if (!response.publishing) {
+        clearInterval(intervalID);
+      }
+      if ('data' in response) {
+        activities.value = response.data.activities;
+        completed.value = response.data.status;
+        emit('activityPublishedData', response.data);
+        // saving in local storage
+        paStorage.value = {
+          publishingActivities: {
+            activities: response.data.activities,
+            status: response.data.status,
+            message: response.data.message,
+          },
+        };
+
+        if (completed.value === 'completed') {
+          clearInterval(intervalID);
+
+          failedActivities(paStorage.value.publishingActivities.activities);
+          if (hasFailedActivities?.ids?.length > 0) {
+            refreshToastMsg.visibility = true;
+            refreshToastMsg.refreshMessageType = false;
+            refreshToastMsg.refreshMessage =
+              'Some activities have failed to publish. Refresh to see changes.';
+          } else {
+            refreshToastMsg.visibility = true;
+            refreshToastMsg.refreshMessage =
+              'Activity has been published successfully, refresh to see changes';
+            setTimeout(() => {
+              refreshToastMsg.visibility = false;
+            }, 10000);
+          }
+        }
+      } else {
+        completed.value = 'completed';
+      }
+    });
+  }, 3000);
+};
+watch(
+  () => store.state.startBulkPublish,
+  (value) => {
+    console.log('store.state.startBulkPublish changed', value);
+  }
+);
+
+const bulkPublishStatus = async () => {
+  let count = 0;
+  const checkStatus = setInterval(() => {
+    axios.get(`/activities/bulk-publish-status`).then((res) => {
+      const response = res.data;
+      if ('data' in response) {
+        activities.value = response.data.activities;
+        completed.value = response.data.status;
+        emit('activityPublishedData', response.data);
+        // saving in local storage
+
+        paStorage.value = {
+          publishingActivities: {
+            activities: response.data.activities,
+            status: response.data.status,
+            message: response.data.message,
+          },
+        };
+
+        if (response.data.status !== 'completed') {
+          pollingForBulkpublishData();
+        }
+        clearInterval(checkStatus);
+      } else {
+        completed.value = 'completed';
+      }
+    });
+    if (count > 5) {
+      clearInterval(checkStatus);
+    }
+
+    count++;
+  }, 1000);
+
+  await axios.get(`/activities/bulk-publish-status`).then((res) => {
     const response = res.data;
+    if (!response.publishing) {
+      emit('close');
+    }
+
+    console.log('initial response', response);
 
     if ('data' in response) {
       activities.value = response.data.activities;
       completed.value = response.data.status;
-
+      emit('activityPublishedData', response.data);
       // saving in local storage
-      paStorage.value.publishingActivities.activities =
-        response.data.activities;
-      paStorage.value.publishingActivities.status = response.data.status;
-      paStorage.value.publishingActivities.message = response.data.message;
+      paStorage.value = {
+        publishingActivities: {
+          activities: response.data.activities,
+          status: response.data.status,
+          message: response.data.message,
+        },
+      };
 
       if (response.data.status !== 'completed') {
         pollingForBulkpublishData();
@@ -171,49 +302,6 @@ const bulkPublishStatus = () => {
       completed.value = 'completed';
     }
   });
-
-  const pollingForBulkpublishData = () => {
-    const intervalID = setInterval(() => {
-      axios.get(`/activities/bulk-publish-status`).then((res) => {
-        const response = res.data;
-
-        if (!response.publishing) {
-          clearInterval(intervalID);
-        }
-        if ('data' in response) {
-          activities.value = response.data.activities;
-          completed.value = response.data.status;
-
-          // saving in local storage
-          paStorage.value.publishingActivities.activities =
-            response.data.activities;
-          paStorage.value.publishingActivities.status = response.data.status;
-          paStorage.value.publishingActivities.message = response.data.message;
-
-          if (completed.value === 'completed') {
-            clearInterval(intervalID);
-
-            failedActivities(paStorage.value.publishingActivities.activities);
-            if (hasFailedActivities?.ids?.length > 0) {
-              refreshToastMsg.visibility = true;
-              refreshToastMsg.refreshMessageType = false;
-              refreshToastMsg.refreshMessage =
-                'Some activities have failed to publish. Refresh to see changes.';
-            } else {
-              refreshToastMsg.visibility = true;
-              refreshToastMsg.refreshMessage =
-                'Activity has been published successfully, refresh to see changes';
-              setTimeout(() => {
-                refreshToastMsg.visibility = false;
-              }, 10000);
-            }
-          }
-        } else {
-          completed.value = 'completed';
-        }
-      });
-    }, 3000);
-  };
 };
 
 const retryPublishing = () => {
@@ -242,7 +330,7 @@ const retryPublishing = () => {
   });
 };
 
-const failedActivities = (nestedObject: actElements) => {
+const failedActivities = (nestedObject: object) => {
   const failedActivitiesID = [] as number[];
   const asArrayData = nestedObject && Object.entries(nestedObject);
 
@@ -275,19 +363,20 @@ const completedActivities = computed(() => {
   for (
     let i = 0;
     i <
-    (paStorage.value?.publishingActivities['activities'] &&
-      Object.values(paStorage.value?.publishingActivities['activities'])
+    (paStorage.value?.publishingActivities?.['activities'] &&
+      Object.values(paStorage?.value?.publishingActivities?.['activities'])
         .length);
     i++
   ) {
     if (
       Object.values(
-        paStorage.value.publishingActivities['activities'] as object
+        paStorage?.value?.publishingActivities?.['activities'] as object
       )[i]['status'] === 'completed'
     ) {
       count++;
     }
   }
+  console.log('computed activitites', count);
 
   return count;
 });
@@ -332,6 +421,16 @@ const emptybulkPublishStatus = () => {
     delete publishingActivities[status];
   }
 };
+
+watch(
+  () => store.state.startBulkPublish,
+  (value) => {
+    if (value) {
+      console.log('start bulk publish watcher');
+      bulkPublishStatus();
+    }
+  }
+);
 
 watch(
   () => store.state.bulkPublishLength,

@@ -179,6 +179,18 @@ abstract class Repository implements RepositoryInterface
     }
 
     /**
+     * allows multiple where condition.
+     *
+     * @param array $conditions
+     *
+     * @return Model|null
+     */
+    public function applyConditions(array $conditions): ?Model
+    {
+        return $this->model->where($conditions)->first();
+    }
+
+    /**
      * Insert one or multiple data and returns their id.
      *
      * @param       $data
