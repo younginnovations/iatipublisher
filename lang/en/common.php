@@ -318,5 +318,6 @@ return array (
   'import_activities_from_xls' => 'IMPORT ACTIVITIES FROM .XLS',
   'xls' => 'XLS',
   'to' => 'to',
-  'retry'=>'Retry'
+  'retry'=>'Retry',
+  'administrative'=>'Administrative'
 );

@@ -49,7 +49,7 @@
               (errorData.password && formData.password !== '') !== '',
           }"
           type="password"
-          :placeholder="translate.commonText('reenter_password_placeholder')"
+          :placeholder="translate.commonText('reenter_password')"
         />
         <svg-vue class="lock-icon text-xl" icon="pw-lock" />
         <span

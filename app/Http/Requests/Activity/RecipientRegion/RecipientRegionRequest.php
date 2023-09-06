@@ -149,6 +149,10 @@ class RecipientRegionRequest extends ActivityBaseRequest
             return false;
         });
 
+        Validator::extend('single_allocated_region_total_mismatch', function () {
+            return false;
+        });
+
         Validator::extend('sum_greater_than', function () {
             return false;
         });

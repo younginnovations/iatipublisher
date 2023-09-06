@@ -330,5 +330,6 @@ return array (
   'import_activities_from_xls' => 'IMPORTAR ACTIVIDADES DE XLS',
   'xls' => 'XLS',
   'to'=> 'a',
-  'retry'=>'Rever'
+  'retry'=>'Rever',
+    'administrative'=>'Administrativo'
 );
