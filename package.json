@@ -67,7 +67,7 @@
     "crypto-js": "^4.1.1",
     "moment": "^2.29.4",
     "select2": "^4.1.0-rc.0",
-    "ts-loader": "^9.4.3",
+    "ts-loader": "^9.4.4",
     "typescript": "^4.9.5",
     "vue-apexcharts": "^1.6.2",
     "vue-skeletor": "^1.0.6",
