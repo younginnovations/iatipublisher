@@ -2,17 +2,22 @@
   <tr>
     <td>Measure</td>
     <td>
-      {{ measureData ? measureType[measureData] : 'Missing' }}
+      <ConditionalTextDisplay
+        :success-text="measureType[measureData]"
+        :condition="measureData"
+        failure-text="measure"
+      />
     </td>
   </tr>
 </template>
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
 
 export default defineComponent({
   name: 'IndicatorMeasure',
-  components: {},
+  components: { ConditionalTextDisplay },
   props: {
     data: {
       type: String,

@@ -106,7 +106,7 @@
                                   ) === 'Untitled'
                                 "
                               >
-                                <MissingDataItem />
+                                <MissingDataItem />)
                               </span>
                               <span>
                                 {{
@@ -236,7 +236,7 @@
                                             {{ baseline.value }},
                                           </template>
                                           <template v-else>
-                                            <MissingDataItem />,
+                                            <MissingDataItem item="value" />,
                                           </template>
                                         </span>
                                         <span>
@@ -245,7 +245,7 @@
                                             {{ baseline.date }}
                                           </template>
                                           <template v-else>
-                                            <MissingDataItem />
+                                            <MissingDataItem item="date" />
                                           </template>
                                         </span>
                                       </div>
@@ -275,19 +275,24 @@
                                               :href="`/indicator/${indicator.id}/period/${period.id}`"
                                             >
                                               {{
-                                                dateFormat(
-                                                  period.period.period_start[0]
-                                                    .date,
-                                                  format
-                                                )
+                                                period.period.period_start[0]
+                                                  .date
+                                                  ? dateFormat(
+                                                      period.period
+                                                        .period_start[0].date,
+                                                      format
+                                                    )
+                                                  : 'Missing'
                                               }}
                                               -
                                               {{
-                                                dateFormat(
-                                                  period.period.period_end[0]
-                                                    .date,
-                                                  format
-                                                )
+                                                period.period.period_end[0].date
+                                                  ? dateFormat(
+                                                      period.period
+                                                        .period_end[0].date,
+                                                      format
+                                                    )
+                                                  : 'Missing'
                                               }}
                                             </a>
                                           </div>

@@ -11,9 +11,20 @@
       >
         <span>
           Vocabulary:
-          {{ refType.indicatorVocabulary[ref.vocabulary] ?? 'Missing' }},
+          <ConditionalTextDisplay
+            :success-text="refType.indicatorVocabulary[ref.vocabulary]"
+            :condition="refType.indicatorVocabulary[ref.vocabulary]"
+            failure-text="vocabulary"
+          />,
         </span>
-        <span> Code: {{ ref.code ?? 'Missing' }}, </span>
+        <span>
+          Code:
+          <ConditionalTextDisplay
+            :success-text="ref.code"
+            :condition="ref.code"
+            failure-text="code"
+          />,
+        </span>
         <span v-if="ref.indicator_uri">
           Indicator URI:
           <a target="_blank" :href="ref.indicator_uri">
@@ -27,10 +38,11 @@
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
 
 export default defineComponent({
   name: 'IndicatorReference',
-  components: {},
+  components: { ConditionalTextDisplay },
   props: {
     data: {
       type: Object,

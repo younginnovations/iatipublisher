@@ -32,11 +32,21 @@
                 :href="`/indicator/${id.indicator}/period/${item.id}`"
               >
                 {{
-                  dateFormat(item.period.period_start[0].date, 'MMMM DD, YYYY')
+                  item.period.period_start[0].date
+                    ? dateFormat(
+                        item.period.period_start[0].date,
+                        'MMMM DD, YYYY'
+                      )
+                    : 'Missing'
                 }}
                 -
                 {{
-                  dateFormat(item.period.period_end[0].date, 'MMMM DD, YYYY')
+                  item.period.period_end[0].date
+                    ? dateFormat(
+                        item.period.period_end[0].date,
+                        'MMMM DD, YYYY'
+                      )
+                    : 'Missing'
                 }}
               </a>
             </div>

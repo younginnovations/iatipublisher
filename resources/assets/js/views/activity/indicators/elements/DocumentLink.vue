@@ -30,14 +30,17 @@
                           >
                             <div class="language mb-1">
                               (Language:
-                              {{
-                                na.language
-                                  ? type.language[na.language]
-                                  : 'Missing'
-                              }})
+                              <ConditionalTextDisplay
+                                :success-text="type.language[na.language]"
+                                :condition="na.language"
+                              />)
                             </div>
                             <div class="description text-xs">
-                              {{ na.narrative ?? 'Missing' }}
+                              <ConditionalTextDisplay
+                                :success-text="na.narrative"
+                                :condition="na.narrative"
+                                failure-text="narrative"
+                              />
                             </div>
                           </div>
                         </td>
@@ -49,13 +52,21 @@
                           <a v-if="post.url" target="_blank" :href="post.url">{{
                             post.url
                           }}</a>
-                          <span v-else>Missing</span>
+                          <span v-else
+                            ><MissingDataItem item="document link"
+                          /></span>
                         </td>
                       </tr>
 
                       <tr>
                         <td>Format</td>
-                        <td>{{ post.format ?? 'Missing' }}</td>
+                        <td>
+                          <ConditionalTextDisplay
+                            :success-text="post.format"
+                            :condition="post.format"
+                            failure-text="format"
+                          />
+                        </td>
                       </tr>
 
                       <tr>
@@ -72,14 +83,17 @@
                           >
                             <div class="language mb-1">
                               (Language:
-                              {{
-                                na.language
-                                  ? type.language[na.language]
-                                  : 'Missing'
-                              }})
+                              <ConditionalTextDisplay
+                                :success-text="type.language[na.narrative]"
+                                :condition="na.narrative"
+                              />)
                             </div>
                             <div class="description text-xs">
-                              {{ na.narrative ?? 'Missing' }}
+                              <ConditionalTextDisplay
+                                :success-text="na.narrative"
+                                :condition="na.narrative"
+                                failure-text="narrative"
+                              />
                             </div>
                           </div>
                         </td>
@@ -94,11 +108,11 @@
                             class="text-xs"
                             :class="{ 'mb-1': post.category.length - 1 != c }"
                           >
-                            {{
-                              cat.code
-                                ? type.documentCategory[cat.code]
-                                : 'Missing'
-                            }}
+                            <ConditionalTextDisplay
+                              :success-text="type.documentCategory[cat.code]"
+                              :condition="cat.code"
+                              failure-text="category"
+                            />
                           </div>
                         </td>
                       </tr>
@@ -107,15 +121,15 @@
                         <td>Language</td>
                         <td>
                           <div class="text-xs">
-                            {{
-                              post.language[0].language
-                                ? post.language
-                                    .map(
-                                      (entry) => type.language[entry.language]
-                                    )
-                                    .join(', ')
-                                : 'Missing'
-                            }}
+                            <ConditionalTextDisplay
+                              :success-text="
+                                post.language
+                                  .map((entry) => type.language[entry.language])
+                                  .join(', ')
+                              "
+                              :condition="post.language[0].language"
+                              failure-text="language"
+                            />
                           </div>
                         </td>
                       </tr>
@@ -124,7 +138,11 @@
                         <td>Document Date</td>
                         <td>
                           <div class="text-xs">
-                            {{ post.document_date[0].date ?? 'Missing' }}
+                            <ConditionalTextDisplay
+                              :success-text="post.document_date[0].date"
+                              :condition="post.document_date[0].date"
+                              failure-text="document date"
+                            />
                           </div>
                         </td>
                       </tr>
@@ -145,10 +163,12 @@ import { defineComponent, toRefs } from 'vue';
 
 //composable
 import getActivityTitle from 'Composable/title';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
+import MissingDataItem from 'Components/MissingDataItem.vue';
 
 export default defineComponent({
   name: 'IndicatorDocumentLink',
-  components: {},
+  components: { MissingDataItem, ConditionalTextDisplay },
   props: {
     data: {
       type: Array,

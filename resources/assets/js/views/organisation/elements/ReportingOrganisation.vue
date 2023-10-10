@@ -20,19 +20,28 @@
           <tr>
             <td>Reference</td>
             <td>
-              {{ reporting_org.ref ?? 'Reference Missing' }}
+              <ConditionalTextDisplay
+                :success-text="reporting_org.ref"
+                :condition="reporting_org.ref"
+                failure-text="reference"
+              />
             </td>
           </tr>
           <tr>
             <td>Secondary Reporter</td>
             <td>
-              {{
-                parseInt(reporting_org.secondary_reporter)
-                  ? 'True'
-                  : reporting_org.secondary_reporter === '0'
-                  ? 'False'
-                  : 'Missing'
-              }}
+              <ConditionalTextDisplay
+                :condition="parseInt(reporting_org.secondary_reporter)"
+                success-text="True"
+                :failure-text="
+                  reporting_org.secondary_reporter === '0'
+                    ? 'False'
+                    : 'secondary reporter'
+                "
+                :show-failure-text-as-plain-text="
+                  reporting_org.secondary_reporter === '0'
+                "
+              />
             </td>
           </tr>
           <tr>
@@ -47,14 +56,18 @@
                 }"
               >
                 <div class="language mb-1.5">
-                  ({{
-                    narrative.language
-                      ? `Language: ${types?.languages[narrative.language]}`
-                      : 'Language : Missing'
-                  }})
+                  (Language:
+                  <ConditionalTextDisplay
+                    :condition="narrative.language && types.languages"
+                    :success-text="types.languages[narrative.language]"
+                  />)
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Narrative Missing' }}
+                  <ConditionalTextDisplay
+                    :condition="narrative.narrative"
+                    :success-text="narrative.narrative"
+                    failure-text="narrative"
+                  />
                 </div>
               </div>
             </td>
@@ -67,6 +80,7 @@
 
 <script setup lang="ts">
 import { defineProps, inject } from 'vue';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
 
 defineProps({
   content: { type: Object, required: true },

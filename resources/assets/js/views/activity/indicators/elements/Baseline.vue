@@ -15,7 +15,9 @@
             <template v-if="base.year">
               {{ base.year }}
             </template>
-            <template v-else>Missing</template>
+            <template v-else>
+              <MissingDataItem item="year" />
+            </template>
             ,
           </span>
           <span>
@@ -23,7 +25,9 @@
             <template v-if="base.date">
               {{ base.date }}
             </template>
-            <template v-else>Missing</template>
+            <template v-else>
+              <MissingDataItem item="date" />
+            </template>
             ,
           </span>
           <span>
@@ -31,21 +35,37 @@
             <template v-if="base.value">
               {{ base.value }}
             </template>
-            <template v-else>Missing</template>
+            <template v-else>
+              <MissingDataItem item="value" />
+            </template>
           </span>
         </div>
 
         <div class="flex" :class="elementSpacing">
           <div>Location:&nbsp;</div>
           <div>
-            {{ location(base.location) ? location(base.location) : 'Missing' }}
+            <ConditionalTextDisplay
+              :success-text="location(base.location)"
+              :condition="location(base.location)"
+              failure-text="location"
+            />
           </div>
         </div>
 
         <div class="flex" :class="elementSpacing">
           <div>Dimension:&nbsp;</div>
           <div class="description">
-            {{ dimensions(base.dimension) }}
+            Code:
+            <ConditionalTextDisplay
+              :success-text="base.dimension[0].name"
+              :condition="base.dimension[0].name"
+              failure-text="name"
+            />, Value:
+            <ConditionalTextDisplay
+              :success-text="base.dimension[0].value"
+              :condition="base.dimension[0].value"
+              failure-text="value"
+            />
           </div>
         </div>
 
@@ -62,15 +82,17 @@
             >
               <div>
                 <div class="description">
-                  {{ com.narrative ? com.narrative : 'Missing' }}
+                  <ConditionalTextDisplay
+                    :success-text="com.narrative"
+                    :condition="com.narrative"
+                  />
                   <span class="text-n-30">
                     (Language:
-                    {{
-                      com.language
-                        ? baseType.language[com.language]
-                        : 'Missing'
-                    }})</span
-                  >
+                    <ConditionalTextDisplay
+                      :success-text="baseType.language[com.language]"
+                      :condition="com.language"
+                    />)
+                  </span>
                 </div>
               </div>
             </div>
@@ -98,10 +120,12 @@
 import { defineComponent, toRefs } from 'vue';
 import { DocumentLink } from './Index';
 import { countDocumentLink } from 'Composable/utils';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
+import MissingDataItem from 'Components/MissingDataItem.vue';
 
 export default defineComponent({
   name: 'IndicatorBaseline',
-  components: { DocumentLink },
+  components: { MissingDataItem, ConditionalTextDisplay, DocumentLink },
   props: {
     data: {
       type: Array,
@@ -180,6 +204,7 @@ export default defineComponent({
     const dimensions = (data: Dimension[]) => {
       let dimensions: string[] = [];
 
+      console.log(data);
       dimensions = data.map((item) => {
         const name = item.name ?? 'Missing',
           value = item.value ?? 'Missing';

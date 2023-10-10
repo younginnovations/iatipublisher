@@ -26,15 +26,18 @@
                   }"
                 >
                   <div class="language mb-1.5">
-                    (
-                    {{
-                      sd.language
-                        ? `Language: ${type.languages[sd.language]}`
-                        : 'Language Missing'
-                    }})
+                    (Language:
+                    <ConditionalTextDisplay
+                      :success-text="type.languages[sd.language]"
+                      :condition="sd.language"
+                    />)
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? 'Narrative Missing' }}
+                    <ConditionalTextDisplay
+                      :success-text="sd.narrative"
+                      :condition="sd.narrative"
+                      failure-text="narrative"
+                    />
                   </div>
                 </div>
               </td>
@@ -48,10 +51,11 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
 
 export default defineComponent({
   name: 'TransactionRecipientCountry',
-  components: {},
+  components: { ConditionalTextDisplay },
   props: {
     data: {
       type: [Object, String],

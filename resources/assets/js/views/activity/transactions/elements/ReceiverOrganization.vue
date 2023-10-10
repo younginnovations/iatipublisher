@@ -7,7 +7,11 @@
             <td>Organisation Identifier Code</td>
             <td>
               <div class="text-sm">
-                {{ PoData[0].organization_identifier_code ?? 'Missing' }}
+                <ConditionalTextDisplay
+                  :success-text="PoData[0].organization_identifier_code"
+                  :condition="PoData[0].organization_identifier_code"
+                  failure-text="organisation identifier code"
+                />
               </div>
             </td>
           </tr>
@@ -23,14 +27,18 @@
                 }"
               >
                 <div class="language mb-1.5">
-                  ({{
-                    po.language
-                      ? `Language: ${type.languages[po.language]}`
-                      : 'Language Missing'
-                  }})
+                  (Language:
+                  <ConditionalTextDisplay
+                    :success-text="type.languages[po.language]"
+                    :condition="po.language"
+                  />)
                 </div>
                 <div class="text-sm">
-                  {{ po.narrative ?? 'Narrative Missing' }}
+                  <ConditionalTextDisplay
+                    :success-text="po.narrative"
+                    :condition="po.narrative"
+                    failure-text="narrative"
+                  />
                 </div>
               </div>
             </td>
@@ -39,7 +47,11 @@
             <td>Receiver Activity ID</td>
             <td>
               <div class="text-sm">
-                {{ PoData[0].receiver_activity_id ?? 'Missing' }}
+                <ConditionalTextDisplay
+                  :success-text="PoData[0].receiver_activity_id"
+                  :condition="PoData[0].receiver_activity_id"
+                  failure-text="receiver activity id"
+                />
               </div>
             </td>
           </tr>
@@ -47,11 +59,11 @@
             <td>Type</td>
             <td>
               <div class="text-sm">
-                {{
-                  PoData[0].type
-                    ? type.organizationType[PoData[0].type]
-                    : 'Missing'
-                }}
+                <ConditionalTextDisplay
+                  :success-text="PoData[0].type"
+                  :condition="type.organizationType[PoData[0].type]"
+                  failure-text="type"
+                />
               </div>
             </td>
           </tr>
@@ -63,10 +75,11 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
 
 export default defineComponent({
   name: 'TransactionReceiverOrganisation',
-  components: {},
+  components: { ConditionalTextDisplay },
   props: {
     data: {
       type: [Object, String],

@@ -26,24 +26,31 @@
           <tr>
             <td>Period</td>
             <td>
-              {{
-                formatDate(total_budget.period_start['0'].date) ??
-                'Period Start Date Missing'
-              }}
-              -
-              {{
-                formatDate(total_budget.period_end['0'].date) ??
-                'Period End Date Missing'
-              }}
+              <div>
+                <ConditionalTextDisplay
+                  :condition="total_budget.period_start['0'].date"
+                  :success-text="
+                    formatDate(total_budget.period_start['0'].date)
+                  "
+                  failure-text="period start"
+                />
+                -
+                <ConditionalTextDisplay
+                  :condition="total_budget.period_end['0'].date"
+                  :success-text="formatDate(total_budget.period_end['0'].date)"
+                  failure-text="period end"
+                />
+              </div>
             </td>
           </tr>
           <tr>
             <td>Value date</td>
             <td>
-              {{
-                formatDate(total_budget.value['0'].value_date) ??
-                'Value Date Missing'
-              }}
+              <ConditionalTextDisplay
+                :condition="total_budget.value['0'].value_date"
+                :success-text="formatDate(total_budget.value['0'].value_date)"
+                failure-text="value date"
+              />
             </td>
           </tr>
         </tbody>
@@ -75,16 +82,23 @@
                   <tr>
                     <td>Reference</td>
                     <td>
-                      {{ budget_line.ref ?? 'Reference Missing' }}
+                      <ConditionalTextDisplay
+                        :condition="budget_line.ref"
+                        :success-text="budget_line.ref"
+                        failure-text="reference"
+                      />
                     </td>
                   </tr>
                   <tr>
                     <td>Value Date</td>
                     <td>
-                      {{
-                        formatDate(budget_line.value['0'].value_date) ??
-                        'Value Date Missing'
-                      }}
+                      <ConditionalTextDisplay
+                        :condition="budget_line.value['0'].value_date"
+                        :success-text="
+                          formatDate(budget_line.value['0'].value_date)
+                        "
+                        failure-text="value date"
+                      />
                     </td>
                   </tr>
                   <tr>
@@ -99,16 +113,18 @@
                         }"
                       >
                         <div class="language mb-1.5">
-                          ({{
-                            narrative.language
-                              ? `Language: ${
-                                  types?.languages[narrative.language]
-                                }`
-                              : 'Language : Missing'
-                          }})
+                          (Language:
+                          <ConditionalTextDisplay
+                            :condition="types.languages && narrative.language"
+                            :success-text="types.languages[narrative.language]"
+                          />)
                         </div>
                         <div class="w-[500px] max-w-full">
-                          {{ narrative.narrative ?? 'Narrative Missing' }}
+                          <ConditionalTextDisplay
+                            :condition="narrative.narrative"
+                            :success-text="narrative.narrative"
+                            failure-text="narrative"
+                          />
                         </div>
                       </div>
                     </td>
@@ -126,6 +142,7 @@
 <script setup lang="ts">
 import { defineProps, inject } from 'vue';
 import moment from 'moment';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
 
 defineProps({
   content: { type: Object, required: true },
@@ -140,6 +157,6 @@ interface TypesInterface {
 const types = inject('orgTypes') as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format('LL') : 'Date Missing';
+  return moment(date).format('LL');
 }
 </script>

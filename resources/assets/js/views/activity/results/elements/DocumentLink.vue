@@ -17,11 +17,10 @@
                     <div class="title-content mb-1.5">
                       <div class="language mb-1">
                         (Language:
-                        {{
-                          type.language[na.language]
-                            ? type.language[na.language]
-                            : 'Missing'
-                        }})
+                        <ConditionalTextDisplay
+                          :success-text="type.language[na.language]"
+                          :condition="type.language[na.language]"
+                        />)
                       </div>
                       <div
                         class="description !w-[800px] !max-w-[50%] overflow-x-hidden text-ellipsis whitespace-nowrap text-xs"
@@ -47,7 +46,13 @@
 
               <tr>
                 <td>Format</td>
-                <td>{{ post.format ? post.format : 'Missing' }}</td>
+                <td>
+                  <ConditionalTextDisplay
+                    :success-text="post.format"
+                    :condition="post.format"
+                    failure-text="format"
+                  />
+                </td>
               </tr>
 
               <tr>
@@ -60,11 +65,10 @@
                     <div class="description-content mb-1.5">
                       <div class="language mb-1">
                         (Language:
-                        {{
-                          type.language[na.language]
-                            ? type.language[na.language]
-                            : 'Missing'
-                        }})
+                        <ConditionalTextDisplay
+                          :success-text="type.language[na.language]"
+                          :condition="type.language[na.language]"
+                        />)
                       </div>
                       <div class="description text-xs">
                         {{ na.narrative }}
@@ -79,11 +83,11 @@
                 <td>
                   <template v-for="(cat, c) in post.category" :key="c">
                     <div class="mb-1 text-xs">
-                      {{
-                        type.documentCategory[cat.code]
-                          ? type.documentCategory[cat.code]
-                          : 'Missing'
-                      }}
+                      <ConditionalTextDisplay
+                        :success-text="type.documentCategory[cat.code]"
+                        :condition="type.documentCategory[cat.code]"
+                        failure-text="category"
+                      />
                     </div>
                   </template>
                 </td>
@@ -93,13 +97,15 @@
                 <td>Language</td>
                 <td>
                   <div class="text-xs">
-                    {{
-                      post.language[0].language === null
-                        ? 'Missing'
-                        : post.language
-                            .map((entry) => type.language[entry.language])
-                            .join(', ')
-                    }}
+                    <ConditionalTextDisplay
+                      :success-text="
+                        post.language
+                          .map((entry) => type.language[entry.language])
+                          .join(', ')
+                      "
+                      :condition="post.language[0].language !== null"
+                      failure-text="language"
+                    />
                   </div>
                 </td>
               </tr>
@@ -108,11 +114,11 @@
                 <td>Document Date</td>
                 <td>
                   <div class="text-xs">
-                    {{
-                      post.document_date[0].date
-                        ? post.document_date[0].date
-                        : 'Missing'
-                    }}
+                    <ConditionalTextDisplay
+                      :success-text="post.document_date[0].date"
+                      :condition="post.document_date[0].date"
+                      failure-text="document date"
+                    />
                   </div>
                 </td>
               </tr>
@@ -126,10 +132,11 @@
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
 
 export default defineComponent({
   name: 'ResultDocumentLink',
-  components: {},
+  components: { ConditionalTextDisplay },
   props: {
     data: {
       type: [Object, String],

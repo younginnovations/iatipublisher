@@ -99,11 +99,10 @@
                             >
                               <div class="language mb-1">
                                 (Language:
-                                {{
-                                  type.language[title.language]
-                                    ? type.language[title.language]
-                                    : 'Missing'
-                                }})
+                                <ConditionalTextDisplay
+                                  :success-text="type.language[title.language]"
+                                  :condition="type.language[title.language]"
+                                />)
                               </div>
                               <div class="description text-xs">
                                 {{ title.narrative }}
@@ -145,11 +144,14 @@
                             >
                               <div class="language mb-1">
                                 (Language:
-                                {{
-                                  type.language[description.language]
-                                    ? type.language[description.language]
-                                    : 'Missing'
-                                }})
+                                <ConditionalTextDisplay
+                                  :success-text="
+                                    type.language[description.language]
+                                  "
+                                  :condition="
+                                    type.language[description.language]
+                                  "
+                                />)
                               </div>
                               <div class="description text-xs">
                                 {{ description.narrative }}
@@ -171,10 +173,20 @@
                             }"
                           >
                             <span>
-                              Vocabulary: {{ ref.vocabulary ?? 'Missing' }},
+                              Vocabulary:
+                              <ConditionalTextDisplay
+                                :success-text="ref.vocabulary"
+                                :condition="ref.vocabulary"
+                                failure-text="vocabulary"
+                              />,
                             </span>
                             <span>
-                              Code: {{ ref.code ? ref.code : 'Missing' }},
+                              Code:
+                              <ConditionalTextDisplay
+                                :success-text="ref.code"
+                                :condition="ref.code"
+                                failure-text="code"
+                              />,
                             </span>
                             <span>
                               Indicator URI:
@@ -186,7 +198,9 @@
                               >
                                 {{ ref.indicator_uri }}</a
                               >
-                              <span v-else>Mising</span>
+                              <span v-else>
+                                <MissingDataItem item="indicator uri" />
+                              </span>
                             </span>
                           </div>
                         </td>
@@ -217,7 +231,9 @@
                                 <template v-if="base.year">
                                   {{ base.year }}
                                 </template>
-                                <template v-else>Missing</template>
+                                <template v-else
+                                  ><MissingDataItem item="year"
+                                /></template>
                                 ,
                               </span>
                               <span>
@@ -225,7 +241,9 @@
                                 <template v-if="base.date">
                                   {{ base.date }}
                                 </template>
-                                <template v-else>Missing</template>
+                                <template v-else
+                                  ><MissingDataItem item="date"
+                                /></template>
                                 ,
                               </span>
                               <span>
@@ -233,7 +251,9 @@
                                 <template v-if="base.value">
                                   {{ base.value }}
                                 </template>
-                                <template v-else>Missing</template>
+                                <template v-else
+                                  ><MissingDataItem item="value"
+                                /></template>
                               </span>
                             </div>
                             <div class="flex">
@@ -250,7 +270,9 @@
                                   <template v-if="loc.reference">
                                     {{ loc.reference }}
                                   </template>
-                                  <template v-else>Missing</template>
+                                  <template v-else
+                                    ><MissingDataItem item="location"
+                                  /></template>
                                 </div>
                               </div>
                             </div>
@@ -270,14 +292,18 @@
                                       <template v-if="dim.name">
                                         {{ dim.name }}
                                       </template>
-                                      <template v-else> Missing </template>
+                                      <template v-else>
+                                        <MissingDataItem />
+                                      </template>
                                       &nbsp;
                                     </span>
                                     <span>
                                       <template v-if="dim.value">
                                         ({{ dim.value }})
                                       </template>
-                                      <template v-else> (Missing) </template>
+                                      <template v-else>
+                                        (<MissingDataItem />)
+                                      </template>
                                     </span>
                                   </div>
                                 </div>
@@ -302,7 +328,9 @@
                                       <template v-if="com.narrative">
                                         {{ com.narrative }}
                                       </template>
-                                      <template v-else> Missing </template>
+                                      <template v-else>
+                                        <MissingDataItem item="comment" />
+                                      </template>
                                       &nbsp;
                                     </span>
                                     <span>
@@ -310,7 +338,9 @@
                                       <template v-if="com.language">
                                         {{ type.language[com.language] }})
                                       </template>
-                                      <template v-else> Missing) </template>
+                                      <template v-else>
+                                        <MissingDataItem />)
+                                      </template>
                                     </span>
                                   </div>
                                 </div>
@@ -425,7 +455,11 @@
                                         <template v-if="loc.reference">
                                           {{ loc.reference }}
                                         </template>
-                                        <template v-else> Missing </template>
+                                        <template v-else>
+                                          <MissingDataItem
+                                            item="location reference"
+                                          />
+                                        </template>
                                       </span>
                                     </div>
                                   </div>
@@ -447,13 +481,17 @@
                                       <template v-if="dim.name">
                                         {{ dim.name }}
                                       </template>
-                                      <template v-else> Missing </template>
+                                      <template v-else>
+                                        <MissingDataItem />
+                                      </template>
                                     </span>
                                     <span>
                                       <template v-if="dim.value">
                                         ({{ dim.value }})
                                       </template>
-                                      <template v-else> (Missing) </template>
+                                      <template v-else>
+                                        (<MissingDataItem item="value" />)
+                                      </template>
                                     </span>
                                   </div>
                                 </div>
@@ -475,7 +513,9 @@
                                         <template v-if="com.narrative">
                                           {{ com.narrative }}
                                         </template>
-                                        <template v-else> Missing </template>
+                                        <template v-else>
+                                          <MissingDataItem item="comment" />
+                                        </template>
                                         &nbsp;
                                       </span>
                                       <span>
@@ -483,7 +523,9 @@
                                         <template v-if="com.language">
                                           {{ type.language[com.language] }})
                                         </template>
-                                        <template v-else> Missing) </template>
+                                        <template v-else>
+                                          <MissingDataItem />)
+                                        </template>
                                       </span>
                                     </div>
                                   </div>
@@ -527,7 +569,11 @@
                                         <template v-if="loc.reference">
                                           {{ loc.reference }}
                                         </template>
-                                        <template v-else> Missing </template>
+                                        <template v-else>
+                                          <MissingDataItem
+                                            item="location reference"
+                                          />
+                                        </template>
                                       </span>
                                     </div>
                                   </div>
@@ -549,13 +595,17 @@
                                       <template v-if="dim.name">
                                         {{ dim.name }}
                                       </template>
-                                      <template v-else> Missing </template>
+                                      <template v-else>
+                                        <MissingDataItem />
+                                      </template>
                                     </span>
                                     <span>
                                       <template v-if="dim.value">
                                         ({{ dim.value }})
                                       </template>
-                                      <template v-else> (Missing) </template>
+                                      <template v-else>
+                                        (<MissingDataItem item="value" />)
+                                      </template>
                                     </span>
                                   </div>
                                 </div>
@@ -577,7 +627,9 @@
                                         <template v-if="com.narrative">
                                           {{ com.narrative }}
                                         </template>
-                                        <template v-else> Missing </template>
+                                        <template v-else>
+                                          <MissingDataItem item="comment" />
+                                        </template>
                                         &nbsp;
                                       </span>
                                       <span>
@@ -585,7 +637,9 @@
                                         <template v-if="com.language">
                                           {{ type.language[com.language] }})
                                         </template>
-                                        <template v-else> Missing) </template>
+                                        <template v-else>
+                                          <MissingDataItem />)
+                                        </template>
                                       </span>
                                     </div>
                                   </div>
@@ -624,10 +678,14 @@ import Btn from 'Components/buttons/Link.vue';
 
 // helper function
 import { countDocumentLink } from 'Composable/utils';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
+import MissingDataItem from 'Components/MissingDataItem.vue';
 
 export default defineComponent({
   name: 'ResultIndicator',
   components: {
+    MissingDataItem,
+    ConditionalTextDisplay,
     NotYet,
     Btn,
   },
