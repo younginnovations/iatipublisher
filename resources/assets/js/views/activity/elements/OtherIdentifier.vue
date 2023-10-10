@@ -27,7 +27,9 @@
                 <tr>
                   <td>Owner Organisation Reference</td>
                   <td v-if="post.ref">{{ post.ref }}</td>
-                  <td v-else class="italic">Missing</td>
+                  <td v-else class="italic">
+                    <MissingDataItem item="owner organisation reference" />
+                  </td>
                 </tr>
                 <tr>
                   <td>Owner Organisation Narrative</td>
@@ -46,7 +48,9 @@
                           n.narrative
                         }}</span>
                       </div>
-                      <span v-else class="italic">Missing</span>
+                      <span v-else class="italic">
+                        <MissingDataItem item="owner organisation narrative" />
+                      </span>
                     </div>
                   </td>
                 </tr>
@@ -61,9 +65,11 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
+import MissingDataItem from 'Components/MissingDataItem.vue';
 
 export default defineComponent({
   name: 'OtherIdentifier',
+  components: { MissingDataItem },
   props: {
     data: {
       type: Object,

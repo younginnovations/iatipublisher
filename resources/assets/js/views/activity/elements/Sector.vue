@@ -15,7 +15,7 @@
       <div>
         <div v-if="post.sector_vocabulary == 1">
           <span v-if="post.code">{{ types.sectorCode[post.code] }}</span>
-          <span v-else class="italic">Missing</span>
+          <span v-else class="italic">Vocabulary Missing</span>
         </div>
         <div v-else-if="post.sector_vocabulary == 2">
           <span v-if="post.category_code">{{
@@ -58,7 +58,9 @@
                 >
                 <span class="description">{{ narrative.narrative }}</span>
               </div>
-              <span v-else class="italic">Missing</span>
+              <span v-else class="italic">
+                <MissingDataItem item="narrative" />
+              </span>
             </div>
           </td>
         </tr>
@@ -75,7 +77,9 @@
               :href="post.vocabulary_uri"
               >{{ post.vocabulary_uri }}</a
             >
-            <span v-else class="italic">Missing</span>
+            <span v-else class="italic">
+              <MissingDataItem item="vocabulary uri" />
+            </span>
           </td>
         </tr>
       </table>
@@ -85,9 +89,11 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
+import MissingDataItem from 'Components/MissingDataItem.vue';
 
 export default defineComponent({
   name: 'ActivitySector',
+  components: { MissingDataItem },
   props: {
     data: {
       type: Object,

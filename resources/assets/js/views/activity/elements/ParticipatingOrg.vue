@@ -37,7 +37,9 @@
                   narrative.narrative
                 }}</span>
               </div>
-              <span v-else class="italic">Missing</span>
+              <span v-else class="italic">
+                <MissingDataItem item="organisation name" />
+              </span>
             </div>
           </td>
         </tr>
@@ -46,21 +48,27 @@
           <td v-if="participating_org.type">
             {{ types.organizationType[participating_org.type] }}
           </td>
-          <td v-else class="italic">Missing</td>
+          <td v-else class="italic">
+            <MissingDataItem item="organisation type" />
+          </td>
         </tr>
         <tr>
           <td>Organisation Role</td>
           <td v-if="participating_org.organization_role">
             {{ types.organisationRole[participating_org.organization_role] }}
           </td>
-          <td v-else class="italic">Missing</td>
+          <td v-else class="italic">
+            <MissingDataItem item="organisation role" />
+          </td>
         </tr>
         <tr>
           <td>Ref</td>
           <td v-if="participating_org.ref">
             {{ participating_org.ref }}
           </td>
-          <td v-else class="italic">Missing</td>
+          <td v-else class="italic">
+            <MissingDataItem item="ref" />
+          </td>
         </tr>
         <tr>
           <td>Activity Id</td>
@@ -69,7 +77,9 @@
               <span v-if="participating_org.identifier">{{
                 participating_org.identifier
               }}</span>
-              <span v-else class="italic">Missing</span>
+              <span v-else class="italic">
+                <MissingDataItem item="activity id" />
+              </span>
             </div>
           </td>
         </tr>
@@ -86,9 +96,11 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
+import MissingDataItem from 'Components/MissingDataItem.vue';
 
 export default defineComponent({
   name: 'ActivityParticipatingOrg',
+  components: { MissingDataItem },
   props: {
     data: {
       type: Object,

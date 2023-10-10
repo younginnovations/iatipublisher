@@ -82,9 +82,13 @@
                         <td>Result Type</td>
                         <td>
                           <div>
-                            {{
-                              types.resultType[result.result.type] ?? 'Missing'
-                            }}
+                            <ConditionalTextDisplay
+                              :condition="types.resultType[result.result.type]"
+                              :success-text="
+                                types.resultType[result.result.type]
+                              "
+                              failure-text="result type"
+                            />
                           </div>
                         </td>
                       </tr>
@@ -94,18 +98,25 @@
                           <div class="description-content">
                             <div class="language mb-1.5">
                               (Language:
-                              {{
-                                getActivityTitle(
-                                  result.result.description[0].narrative,
-                                  currentLanguage
-                                ) === 'Untitled'
-                                  ? 'Missing'
-                                  : types.languages[
-                                      result?.result?.description?.[0]
-                                        ?.narrative?.[0]?.language ??
-                                        defaultLanguage
-                                    ]
-                              }})
+                              <span
+                                v-if="
+                                  getActivityTitle(
+                                    result.result.description[0].narrative,
+                                    currentLanguage
+                                  ) === 'Untitled'
+                                "
+                              >
+                                <MissingDataItem />
+                              </span>
+                              <span>
+                                {{
+                                  types.languages[
+                                    result?.result?.description?.[0]
+                                      ?.narrative?.[0]?.language ??
+                                      defaultLanguage
+                                  ]
+                                }}
+                              </span>
                             </div>
                             <div class="w-[500px] max-w-full">
                               {{
@@ -220,17 +231,22 @@
                                       <div class="description text-xs">
                                         <span>
                                           Value:
+
                                           <template v-if="baseline.value">
                                             {{ baseline.value }},
                                           </template>
-                                          <template v-else> Missing, </template>
+                                          <template v-else>
+                                            <MissingDataItem />,
+                                          </template>
                                         </span>
                                         <span>
                                           Date:
                                           <template v-if="baseline.date">
                                             {{ baseline.date }}
                                           </template>
-                                          <template v-else> Missing </template>
+                                          <template v-else>
+                                            <MissingDataItem />
+                                          </template>
                                         </span>
                                       </div>
                                     </div>
@@ -339,10 +355,14 @@ import NotYet from 'Components/sections/HaveNotAddedYet.vue';
 // composable
 import getActivityTitle from 'Composable/title';
 import dateFormat from 'Composable/dateFormat';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
+import MissingDataItem from 'Components/MissingDataItem.vue';
 
 export default defineComponent({
   name: 'ActivityResult',
   components: {
+    MissingDataItem,
+    ConditionalTextDisplay,
     Btn,
     NotYet,
   },

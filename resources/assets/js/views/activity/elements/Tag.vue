@@ -41,7 +41,9 @@
             >
               {{ post.vocabulary_uri }}
             </a>
-            <span v-else class="italic">Missing</span>
+            <span v-else class="italic">
+              <MissingDataItem item="vocabulary uri" />
+            </span>
           </td>
         </tr>
         <tr
@@ -58,7 +60,9 @@
                 >
                 <span class="description">{{ narrative.narrative }}</span>
               </div>
-              <span v-else class="italic">Missing</span>
+              <span v-else class="italic">
+                <MissingDataItem item="narrative" />
+              </span>
             </div>
           </td>
         </tr>
@@ -70,9 +74,11 @@
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
 import dateFormat from 'Composable/dateFormat';
+import MissingDataItem from 'Components/MissingDataItem.vue';
 
 export default defineComponent({
   name: 'ActivityTag',
+  components: { MissingDataItem },
   props: {
     data: {
       type: Object,

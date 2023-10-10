@@ -286,17 +286,19 @@
               </span>
               <span>({{ roundFloat(post.percentage) }}%)</span>
             </div>
-            <span v-else class="italic">Missing</span>
+            <span v-else class="italic">Code Missing</span>
           </div>
           <div v-else class="text-sm">
             <span v-if="post.code">{{
               types.budgetIdentifier[post.code]
             }}</span>
-            <span v-else class="italic">Missing</span>
+            <span v-else class="italic">Code Missing</span>
             <span v-if="post.percentage">
               ({{ roundFloat(post.percentage) }} %)</span
             >
-            <span v-else class="italic">(Percentage Missing)</span>
+            <span v-else class="italic">
+              (<MissingDataItem item="percentage" />)
+            </span>
           </div>
           <template v-for="(item, i) in post.description" :key="i">
             <div
@@ -316,7 +318,9 @@
                       >
                       <span class="description">{{ narrative.narrative }}</span>
                     </div>
-                    <span v-else class="italic">Missing</span>
+                    <span v-else class="italic"
+                      ><MissingDataItem item="description"
+                    /></span>
                   </td>
                 </tr>
               </table>
@@ -372,7 +376,9 @@
                 <tr>
                   <td>Period Start</td>
                   <td v-if="item.date">{{ formatDate(item.date) }}</td>
-                  <td v-else class="italic">Missing</td>
+                  <td v-else class="italic">
+                    <MissingDataItem item="period start" />
+                  </td>
                 </tr>
               </table>
             </div>
@@ -385,7 +391,9 @@
                 <tr>
                   <td>Period end</td>
                   <td v-if="item.date">{{ formatDate(item.date) }}</td>
-                  <td v-else class="italic">Missing</td>
+                  <td v-else class="italic">
+                    <MissingDataItem item="period end" />
+                  </td>
                 </tr>
               </table>
             </div>
@@ -396,7 +404,9 @@
                   <span v-if="post.budget_status">{{
                     types.budgetStatus[post.budget_status]
                   }}</span>
-                  <span v-else class="italic">Missing</span>
+                  <span v-else class="italic"
+                    ><MissingDataItem item="status"
+                  /></span>
                 </td>
               </tr>
             </table>
@@ -433,7 +443,9 @@
                       <span v-if="language.code">{{
                         types.languages[language.code]
                       }}</span>
-                      <span v-else class="italic">Missing</span>
+                      <span v-else class="italic"
+                        ><MissingDataItem item="language"
+                      /></span>
                     </td>
                   </tr>
                 </table>
@@ -446,7 +458,9 @@
                       <span v-if="document_date.date">{{
                         formatDate(document_date.date)
                       }}</span>
-                      <span v-else class="italic">Missing</span>
+                      <span v-else class="italic"
+                        ><MissingDataItem item="date"
+                      /></span>
                     </td>
                   </tr>
                 </table>
@@ -470,7 +484,9 @@
                           {{ narrative.narrative }}
                         </span>
                       </div>
-                      <span v-else class="italic">Missing</span>
+                      <span v-else class="italic"
+                        ><MissingDataItem item="title"
+                      /></span>
                     </td>
                   </tr>
                 </table>
@@ -484,7 +500,9 @@
                     <span v-if="category.code">{{
                       types.documentCategory[category.code]
                     }}</span>
-                    <span v-else class="italic">Missing</span>
+                    <span v-else class="italic"
+                      ><MissingDataItem item="category"
+                    /></span>
                   </td>
                 </tr>
               </table>
@@ -493,7 +511,7 @@
               <tr>
                 <td>Format</td>
                 <td v-if="post.format">{{ post.format }}</td>
-                <td v-else class="italic">Missing</td>
+                <td v-else class="italic"><MissingDataItem item="format" /></td>
               </tr>
             </table>
             <div v-for="(description, i) in post.description" :key="i">
@@ -509,7 +527,9 @@
                         >
                         <span>{{ narrative.narrative }}</span>
                       </div>
-                      <span v-else class="italic">Missing</span>
+                      <span v-else class="italic"
+                        ><MissingDataItem item="description"
+                      /></span>
                     </td>
                   </tr>
                 </table>
@@ -639,6 +659,7 @@ import Status from 'Components/status/ElementStatus.vue';
 import HoverText from 'Components/HoverText.vue';
 import Modal from 'Components/PopupModal.vue';
 import BtnComponent from 'Components/ButtonComponent.vue';
+import MissingDataItem from 'Components/MissingDataItem.vue';
 
 // toggle state for modal popup
 let [deleteValue, deleteToggle] = useToggle();

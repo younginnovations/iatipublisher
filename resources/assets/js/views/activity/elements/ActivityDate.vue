@@ -36,7 +36,9 @@
                 {{ item.narrative }}
               </span>
             </div>
-            <span v-else class="italic">Missing</span>
+            <span v-else class="italic">
+              <MissingDataItem item="narrative" />
+            </span>
           </td>
         </tr>
       </table>
@@ -48,10 +50,11 @@
 import { defineComponent, inject } from 'vue';
 
 import moment from 'moment';
+import MissingDataItem from 'Components/MissingDataItem.vue';
 
 export default defineComponent({
   name: 'ActivityDate',
-  components: {},
+  components: { MissingDataItem },
   props: {
     data: {
       type: Object,

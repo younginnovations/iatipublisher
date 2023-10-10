@@ -20,14 +20,18 @@
               <span v-if="post.region_code">{{
                 types.region[post.region_code]
               }}</span>
-              <span v-else>Missing</span>
+              <span v-else>
+                <MissingDataItem item="region code" />
+              </span>
             </td>
           </tr>
           <tr v-else>
             <td>Custom Code</td>
             <td>
               <span v-if="post.custom_code">{{ post.custom_code }}</span>
-              <span v-else>Missing</span>
+              <span v-else>
+                <MissingDataItem item="custom code" />
+              </span>
             </td>
           </tr>
           <tr>
@@ -36,7 +40,9 @@
               <span v-if="post.percentage">
                 ({{ roundFloat(post.percentage) }}%)
               </span>
-              <span v-else>Missing</span>
+              <span v-else>
+                <MissingDataItem item="percentage" />
+              </span>
             </td>
           </tr>
           <tr v-if="post.region_vocabulary == '99'">
@@ -49,7 +55,9 @@
               >
                 {{ post.vocabulary_uri }}
               </a>
-              <span v-else>Missing</span>
+              <span v-else>
+                <MissingDataItem item="vocabulary uri" />
+              </span>
             </td>
           </tr>
           <tr>
@@ -63,14 +71,17 @@
               >
                 <div class="language mb-1.5">
                   (Language:
-                  {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : 'Missing'
-                  }})
+                  <ConditionalTextDisplay
+                    :condition="narrative.language"
+                    :success-text="types.languages[narrative.language]"
+                  />)
                 </div>
                 <div class="w-[500px] max-w-full text-xs">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  <ConditionalTextDisplay
+                    :condition="narrative.narrative"
+                    :success-text="narrative.narrative"
+                    failure-text="narrative"
+                  />
                 </div>
               </div>
             </td>
@@ -83,6 +94,8 @@
 
 <script setup lang="ts">
 import { defineProps, inject } from 'vue';
+import MissingDataItem from 'Components/MissingDataItem.vue';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
 
 defineProps({
   data: {
