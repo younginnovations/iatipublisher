@@ -4658,6 +4658,15 @@
       "status": "active"
     },
     {
+      "code": "YE-CR",
+      "category": "YE",
+      "url": "https:\/\/gov-id-finder.codeforiati.org\/countries\/YE\/",
+      "name": "Commercial Registry",
+      "description": "Commercial Registry",
+      "public-database": "https:\/\/gov-id-finder.codeforiati.org\/countries\/YE\/",
+      "status": "active"
+    },
+    {
       "code": "YE-MSAL",
       "category": "YE",
       "url": "http:\/\/www.yemen.gov.ye\/portal\/mosal\/%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3%D9%8A%D8%A9\/tabid\/2201\/Default.aspx",
