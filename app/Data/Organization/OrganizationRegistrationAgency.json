@@ -3560,6 +3560,15 @@
       "status": "active"
     },
     {
+      "code": "PS-TIN",
+      "category": "PS",
+      "url": "http://www.pmof.ps/",
+      "name": "Tax Identifier Number, Palestine",
+      "description": "The Palestinian National Authority's Ministry of Finance issues a certificate with taxpayer registration data (ÿ®ŸäÿßŸÜÿßÿ™ ÿ™ÿ≥ÿ¨ŸäŸÑ ÿØÿßŸÅÿπŸä ÿßŸÑÿ∂ÿ±ÿßÿ¶ÿ®). The number (ÿßŸÑÿ±ŸÇŸÖ) is the Tax Identification Number for the given organisation. \n",
+      "public-database": null,
+      "status": "active"
+    },
+    {
       "code": "PT-COA",
       "category": "PT",
       "url": "https:\/\/gov-id-finder.codeforiati.org\/countries\/PT\/",
