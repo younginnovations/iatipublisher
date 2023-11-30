@@ -189,7 +189,6 @@ onMounted(() => {
 const pollingForBulkpublishData = () => {
   bulkPublishLength.value = store.state.bulkPublishLength;
   const intervalID = setInterval(() => {
-    console.log('bulkpublish polling');
     axios.get(`/activities/bulk-publish-status`).then((res) => {
       const response = res.data;
 
@@ -233,12 +232,6 @@ const pollingForBulkpublishData = () => {
     });
   }, 3000);
 };
-watch(
-  () => store.state.startBulkPublish,
-  (value) => {
-    console.log('store.state.startBulkPublish changed', value);
-  }
-);
 
 const bulkPublishStatus = async () => {
   let count = 0;
@@ -279,8 +272,6 @@ const bulkPublishStatus = async () => {
     if (!response.publishing) {
       emit('close');
     }
-
-    console.log('initial response', response);
 
     if ('data' in response) {
       activities.value = response.data.activities;
@@ -376,7 +367,6 @@ const completedActivities = computed(() => {
       count++;
     }
   }
-  console.log('computed activitites', count);
 
   return count;
 });
@@ -426,7 +416,6 @@ watch(
   () => store.state.startBulkPublish,
   (value) => {
     if (value) {
-      console.log('start bulk publish watcher');
       bulkPublishStatus();
     }
   }

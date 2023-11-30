@@ -192,12 +192,6 @@ const props = defineProps({
   data: { type: Object, required: true },
   loader: { type: Boolean, required: false },
 });
-console.log(props.data, 'for id');
-
-// onMounted(() => {
-//   console.log(props.data.data, 'table layout');
-//   store.dispatch('updateActivityList', props.data.data);
-// });
 
 const store = useStore();
 

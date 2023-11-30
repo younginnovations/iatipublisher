@@ -555,10 +555,6 @@ export default defineComponent({
       async () => {
         await bulkPublishStatus();
 
-        console.log(
-          localStorage.getItem('vue-use-local-storage'),
-          'watchers triggered needed'
-        );
         publishingActivities.value = pa.value?.publishingActivities;
       },
       { deep: true }

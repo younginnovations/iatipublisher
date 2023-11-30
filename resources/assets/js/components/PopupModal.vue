@@ -74,7 +74,6 @@ export default defineComponent({
     watch(
       () => props.modalActive,
       (modalActive) => {
-        console.log(modalActive, 'watchers triggered');
         if (modalActive) {
           document.documentElement.style.overflow = 'hidden';
           const checkSupportButton = setInterval(() => {
@@ -84,7 +83,6 @@ export default defineComponent({
 
             if (supportButton !== null) {
               supportButton.style.display = 'none';
-              console.log('hide supp');
 
               clearInterval(checkSupportButton);
             }

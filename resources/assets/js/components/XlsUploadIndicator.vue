@@ -182,10 +182,6 @@ const checkValidation = async () => {
       const response = res.data;
       validationRunning.value = !response.success;
 
-      console.log(
-        'see here',
-        Object.values(JSON.parse(response.activities)).join('|')
-      );
       localStorage.setItem(
         'validatingActivitiesNames',
         response.activities &&
@@ -324,7 +320,6 @@ onUnmounted(() => {
   const supportButton: HTMLElement = document.querySelector(
     '#launcher'
   ) as HTMLElement;
-  console.log('unmounted');
 
   if (supportButton !== null) {
     supportButton.style.transform = 'translate(0px ,0px)';
@@ -376,7 +371,6 @@ watch(
   () => parentElementRef.value,
   (value) => {
     if (value == null) {
-      console.log('translate normal');
       const checkSupportButton = setInterval(() => {
         const supportButton: HTMLElement = document.querySelector(
           '#launcher'
@@ -458,7 +452,6 @@ const completeActivityCount = computed(() => {
     activityPublishedData?.value?.status === 'completed' &&
     showBulkpublish.value
   ) {
-    console.log(activityPublishedData?.value?.status, 'this');
     count++;
   }
 

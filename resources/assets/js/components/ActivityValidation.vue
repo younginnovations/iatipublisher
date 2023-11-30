@@ -133,13 +133,14 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['stopValidation', 'proceed']);
+
+//setting percentage of validation progressbar , to maintain consistency when page is reloaded or navigated
 const localStoragePercent = ref(localStorage.getItem('validationPercent'));
 const showValidatingList = ref(false);
 const hasError = ref(false);
 
 //setting data from local storage to vuex ,to preserve state when window is reloaded
 onMounted(() => {
-  console.log(props.errorTab, 'errortab mounted');
   let showPopup = Boolean(localStorage.getItem('activityValidating'));
   if (showPopup) {
     store.dispatch('updateStartValidation', true);

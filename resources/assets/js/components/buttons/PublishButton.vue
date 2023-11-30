@@ -521,7 +521,6 @@ const btnText = computed(() => {
 watch(
   () => validationStore.state.startBulkPublish,
   (value) => {
-    console.log('validationStore.state.startBulkPublish', value, props.publish);
     if (value && props.publish) {
       startBulkPublish();
     }

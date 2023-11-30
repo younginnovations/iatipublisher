@@ -438,9 +438,6 @@ onMounted(() => {
 });
 
 const stopValidating = async () => {
-  const activities = store.state.selectedActivities.join(',');
-  console.log(store.state, 'stop validation');
-
   await axios.get(`activities/delete-validation-status`).then(() => {
     store.dispatch('updateStartValidation', false);
     store.dispatch('updateValidatingActivities', '');
@@ -459,7 +456,6 @@ const startValidation = async () => {
     .then((res) => {
       const response = res.data;
       store.dispatch('updateValidatingActivitiesNames', response.activities);
-      console.log(response.activities.join('|'), 'initial data');
 
       localStorage.setItem(
         'validatingActivitiesNames',
@@ -483,14 +479,12 @@ const startValidation = async () => {
 
 const validateActivities = async () => {
   resetPublishStep();
-  console.log('here');
   let validatorSuccess = false;
   let publishingSuccess = false;
 
   await axios.get(`activities/checks-for-activity-bulk-publish`).then((res) => {
     const response = res.data;
     publishingSuccess = response.success;
-    console.log(response, 'bulk publish check');
   });
 
   await axios
@@ -498,14 +492,7 @@ const validateActivities = async () => {
     .then((res) => {
       const response = res.data;
       validatorSuccess = response.success;
-      console.log(response, 'validation api');
     });
-
-  console.log(
-    !validatorSuccess || !publishingSuccess,
-    publishingSuccess,
-    validatorSuccess
-  );
 
   if (!validatorSuccess || !publishingSuccess) {
     showExistingProcessModal.value = true;
@@ -537,7 +524,6 @@ const pa: Ref<paType> = useStorage('vue-use-local-storage', {
 
 const startBulkPublish = () => {
   store.dispatch('updateStartBulkPublish', true);
-  console.log('start bulk called');
   loaderText.value = 'Starting to publish';
   pa.value.publishingActivities = {};
 
@@ -606,11 +592,9 @@ watch(
         const supportButton: HTMLElement = document.querySelector(
           '#launcher'
         ) as HTMLElement;
-        console.log('inside set interval');
 
         if (supportButton !== null) {
           supportButton.classList.add('!hidden');
-          console.log('inside support button check', supportButton);
 
           clearInterval(checkSupportButton);
         }
@@ -623,7 +607,6 @@ watch(
 
         if (supportButton !== null) {
           supportButton.classList.remove('!hidden');
-          console.log('inside support button check to remove', supportButton);
 
           clearInterval(checkSupportButton);
         }
