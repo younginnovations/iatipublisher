@@ -4685,6 +4685,15 @@
       "status": "active"
     },
     {
+      "code": "YE-CR",
+      "category": "YE",
+      "url": "https://moit-ye.com/",
+      "name": "Commercial Registry, Yemen",
+      "description": "The Yemen Ministry of Industry and Trade manages the commercial registry of trade names for corporations and sole traders.",
+      "public-database": "https://moit.gov.ye/tn-searc/index.php",
+      "status": "active"
+    },
+    {
       "code": "YT-COA",
       "category": "YT",
       "url": "https:\/\/gov-id-finder.codeforiati.org\/countries\/YT\/",
