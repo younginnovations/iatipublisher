@@ -271,7 +271,6 @@ import axios from 'axios';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import Modal from 'Components/PopupModal.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
-import ValidationErrors from './ValidationErrors.vue';
 import PageLoader from 'Components/Loader.vue';
 
 // Vuex Store

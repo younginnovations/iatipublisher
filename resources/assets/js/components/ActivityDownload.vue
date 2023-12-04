@@ -84,7 +84,7 @@
   </Modal>
 </template>
 <script setup lang="ts">
-import { inject, computed, onMounted, ref, Ref } from 'vue';
+import { inject, computed, ref, Ref } from 'vue';
 import spinnerLoader from './spinnerLoader.vue';
 import Modal from 'Components/PopupModal.vue';
 

@@ -84,7 +84,6 @@ import {
   onMounted,
   computed,
   Ref,
-  onUpdated,
 } from 'vue';
 import axios from 'axios';
 import { useStore } from 'Store/activities/index';

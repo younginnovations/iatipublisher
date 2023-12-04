@@ -141,6 +141,7 @@ const hasError = ref(false);
 
 //setting data from local storage to vuex ,to preserve state when window is reloaded
 onMounted(() => {
+  //to check if validation need to be show of not when navigated or refreshed
   let showPopup = Boolean(localStorage.getItem('activityValidating'));
   if (showPopup) {
     store.dispatch('updateStartValidation', true);

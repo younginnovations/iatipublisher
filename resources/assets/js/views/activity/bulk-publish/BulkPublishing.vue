@@ -63,7 +63,6 @@ import {
   inject,
   onUnmounted,
   defineEmits,
-  provide,
 } from 'vue';
 import axios from 'axios';
 import { detailStore } from 'Store/activities/show';

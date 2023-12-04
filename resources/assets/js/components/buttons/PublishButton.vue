@@ -42,9 +42,9 @@
   <Modal
     :modal-active="publishValue"
     width="583"
+    class="outline"
     @close="publishToggle"
     @reset="resetPublishStep"
-    class="outline"
   >
     <div class="popup mb-4">
       <div class="title mb-6 flex items-center text-sm">
