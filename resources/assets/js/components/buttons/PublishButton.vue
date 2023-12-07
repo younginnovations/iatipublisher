@@ -62,7 +62,8 @@
         class="rounded-lg bg-mint p-4"
         :class="{
           'bg-mint': publishStateChange.alertState,
-          'bg-[#FFF1F0]': !publishStateChange.alertState,
+          'bg-[#FFF1F0]': !publishStateChange.alertState && publishStep !== 1,
+          '!bg-eggshell': !publishStateChange.alertState && publishStep === 1,
         }"
       >
         <div
@@ -119,6 +120,7 @@
           v-if="publishStep === 1"
           class="space"
           text="Continue"
+          :is-loading="showModalButtonLoader"
           type="primary"
           @click="validatorFunction"
         />
@@ -191,6 +193,8 @@ const props = defineProps({
   publish: { type: Boolean, required: false, default: true },
 });
 const showExistingProcessModal = ref(false);
+const showModalButtonLoader = ref(false);
+
 const { linkedToIati, status, coreCompleted, activityId } = toRefs(props);
 
 onUpdated(() => {
@@ -375,6 +379,11 @@ const stopBulkpublish = async () => {
 const startValidation = async () => {
   showExistingProcessModal.value = false;
   await stopValidating();
+
+  validationStore.dispatch('updateStartValidation', true);
+  validationStore.dispatch('updateValidatingActivities', props.activityId);
+  localStorage.setItem('validatingActivities', props.activityId.toString());
+
   await stopBulkpublish();
 
   axios
@@ -394,16 +403,16 @@ const startValidation = async () => {
       if (!response.success) {
         resetPublishStep();
       }
-    })
-    .finally(() => {
-      validationStore.dispatch('updateStartValidation', true);
-      validationStore.dispatch('updateValidatingActivities', props.activityId);
-      localStorage.setItem('validatingActivities', props.activityId.toString());
     });
+  // .finally(() => {
+  //   validationStore.dispatch('updateStartValidation', true);
+  //   validationStore.dispatch('updateValidatingActivities', props.activityId);
+  //   localStorage.setItem('validatingActivities', props.activityId.toString());
+  // });
 };
 
 const validatorFunction = async () => {
-  resetPublishStep();
+  showModalButtonLoader.value = true;
   let validatorSuccess = false;
   let publishingSuccess = false;
 
@@ -426,6 +435,8 @@ const validatorFunction = async () => {
   } else {
     startValidation();
   }
+  resetPublishStep();
+  showModalButtonLoader.value = false;
 };
 
 // call api for publishing

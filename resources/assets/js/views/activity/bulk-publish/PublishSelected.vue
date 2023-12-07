@@ -64,12 +64,6 @@
         <div class="flex justify-end">
           <div class="inline-flex">
             <BtnComponent
-              class="bg-white px-6 uppercase"
-              text="Cancel"
-              type=""
-              @click="resetPublishStep()"
-            />
-            <BtnComponent
               class="space"
               text="Continue"
               type="primary"
@@ -85,7 +79,6 @@
             <svg-vue icon="tick" class="mr-1 mt-0.5 text-lg text-spring-50" />
             <b>Core Elements Complete</b>
           </div>
-          Publishing alert
 
           <div class="rounded-lg bg-mint px-6">
             <div
@@ -173,11 +166,22 @@
       <template v-else-if="bulkPublishStep === 3">
         <div class="title mb-6 flex items-center text-sm">
           <svg-vue class="mr-1 text-lg text-crimson-40" icon="shield" />
-          <b>Activity will be validated before publishing</b>
+          <b
+            >{{
+              store.state.selectedActivities.length > 1
+                ? 'Activities'
+                : 'Activity'
+            }}
+            will be validated before publishing</b
+          >
         </div>
         <div class="mb-8 bg-rose p-4 text-sm">
-          This activity will be validated before being published to the IATI
-          Registry.
+          {{
+            store.state.selectedActivities.length > 1
+              ? 'These activities'
+              : 'This Activity'
+          }}
+          will be validated before being published to the IATI Registry.
         </div>
         <div class="flex justify-end">
           <div class="inline-flex">
@@ -191,6 +195,7 @@
               class="space"
               type="primary"
               text="Continue"
+              :is-loading="showModalButtonLoader"
               @click="validateActivities()"
             />
           </div>
@@ -291,6 +296,8 @@ let [publishAlertValue, publishAlertToggle] = useToggle();
 
 // state for step of the flow
 const bulkPublishStep = ref(1);
+const showModalButtonLoader = ref(false);
+
 const bulkPublishStatus = reactive({});
 const isLoading = ref(false);
 const startPublish = ref(false);
@@ -446,9 +453,15 @@ const stopValidating = async () => {
 };
 
 const startValidation = async () => {
-  await stopValidating();
-  await cancelBulkPublish();
   const activities = store.state.selectedActivities.join(',');
+
+  await stopValidating();
+  store.dispatch('updateStartValidation', true);
+  store.dispatch('updateValidatingActivities', activities);
+  localStorage.setItem('validatingActivities', activities);
+  store.dispatch('updateStartBulkPublish', false);
+  await cancelBulkPublish();
+
   showExistingProcessModal.value = false;
   axios
     .post(`/activities/validate-activities?activities=[${activities}]`)
@@ -467,19 +480,19 @@ const startValidation = async () => {
         resetPublishStep();
         displayToast(response.message, response.success);
       }
-    })
-    .finally(() => {
-      store.dispatch('updateStartValidation', true);
-      store.dispatch('updateValidatingActivities', activities);
-      localStorage.setItem('validatingActivities', activities);
-      store.dispatch('updateStartBulkPublish', false);
     });
+  // .finally(() => {
+  //   store.dispatch('updateStartValidation', true);
+  //   store.dispatch('updateValidatingActivities', activities);
+  //   localStorage.setItem('validatingActivities', activities);
+  //   store.dispatch('updateStartBulkPublish', false);
+  // });
 };
 
 const validateActivities = async () => {
-  resetPublishStep();
   let validatorSuccess = false;
   let publishingSuccess = false;
+  showModalButtonLoader.value = true;
 
   await axios.get(`activities/checks-for-activity-bulk-publish`).then((res) => {
     const response = res.data;
@@ -498,6 +511,8 @@ const validateActivities = async () => {
   } else {
     startValidation();
   }
+  showModalButtonLoader.value = false;
+  resetPublishStep();
 };
 
 /**
