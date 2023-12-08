@@ -175,7 +175,7 @@
             will be validated before publishing</b
           >
         </div>
-        <div class="mb-8 bg-rose p-4 text-sm">
+        <div class="mb-8 bg-eggshell p-4 text-sm">
           {{
             store.state.selectedActivities.length > 1
               ? 'These activities'
