@@ -2,65 +2,18 @@
   <div>
     <h3 class="pb-2 text-base font-bold leading-6 text-n-50">Publishing</h3>
     <div class="relative w-full rounded-lg bg-white duration-200">
-      <button
-        v-if="hasFailedActivities?.ids?.length > 0"
-        class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 rounded-full bg-white p-[1px]"
-        @click="
-          () => {
-            $emit('close');
-          }
-        "
-      >
-        <svg-vue class="text-sm" icon="cross-icon" />
-      </button>
       <div class="rounded-lg border border-n-20 bg-white p-4">
         <div class="flex items-center justify-between pb-4">
           <h3 class="flex items-center space-x-2 text-sm text-n-50">
             <span>Multiple Activities </span
             ><span
               class="flex h-6 w-6 items-center justify-center rounded-full bg-lagoon-10 text-lagoon-50"
-              >{{
-                bulkPublishLength > 0
-                  ? bulkPublishLength
-                  : activities && Object.keys(activities).length
-              }}
+              >0
             </span>
           </h3>
-          <button
-            class="rounded-full bg-white p-[1px]"
-            @click="
-              () => {
-                $emit('close');
-              }
-            "
-          >
-            <svg-vue icon="delete" class="text-sm text-n-40" />
-          </button>
         </div>
 
-        <div
-          v-if="hasFailedActivities?.ids?.length === 0"
-          class="mb-3 flex items-center"
-        >
-          <div
-            class="mr-2 flex h-1 flex-1 justify-start rounded-full bg-spring-10"
-          >
-            <div
-              :style="{ width: percentageWidth + '%' }"
-              class="h-full rounded-full bg-spring-50"
-            ></div>
-          </div>
-          <span class="text-sm text-[#344054]">
-            {{ Math.trunc(percentageWidth) }}%
-          </span>
-        </div>
-
-        <div
-          v-if="hasFailedActivities?.ids?.length > 0"
-          class="py-2 text-sm font-medium text-crimson-50"
-        >
-          Some activities have failed to publish.
-        </div>
+        <ShimmerLoading />
 
         <div class="flex items-center justify-between">
           <button
@@ -74,53 +27,16 @@
               icon="dropdown-arrow"
             />
           </button>
-
-          <div
-            v-if="hasFailedActivities?.ids?.length > 0"
-            class="retry flex cursor-pointer items-center text-crimson-50"
-            @click="retryPublishing"
-          >
-            <svg-vue class="mr-1" icon="redo" />
-            <span class="text-xs uppercase">Retry</span>
-          </div>
         </div>
 
         <div v-if="openModel">
-          <div
-            class="bulk-activities max-h-[240px] overflow-y-auto overflow-x-hidden pt-3 transition-all duration-500"
-          >
-            <ul class="space-y-3">
-              <li
-                v-for="(value, name, index) in activities"
-                :key="index"
-                class="item flex"
-              >
-                <div
-                  class="activity-title grow pr-2 text-sm leading-normal text-n-40"
-                >
-                  {{ value['activity_title'] }}
-                </div>
-                <div class="shrink-0 text-xl">
-                  <svg-vue
-                    v-if="value['status'] === 'completed'"
-                    class="text-spring-50"
-                    icon="tick"
-                  />
-                  <svg-vue
-                    v-else-if="value['status'] === 'failed'"
-                    class="text-crimson-50"
-                    icon="times-circle"
-                  />
-                  <span v-else class="rolling"></span>
-                </div>
-              </li>
-            </ul>
-          </div>
+          <ShimmerLoading />
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { useStorage } from '@vueuse/core';
 import {
@@ -186,9 +102,7 @@ let hasFailedActivities = reactive({
 });
 
 onMounted(() => {
-  setTimeout(() => {
-    emit('hideLoader');
-  }, 50);
+  emit('hideLoader');
 
   paStorage.value = store.state.bulkpublishActivities;
 
@@ -423,10 +337,6 @@ const setDataToLocalstorage = () => {
     JSON.stringify(paStorage.value)
   );
 };
-
-onUnmounted(() => {
-  store.dispatch('updateStartBulkPublish', false);
-});
 
 const emptybulkPublishStatus = () => {
   for (const status in publishingActivities) {

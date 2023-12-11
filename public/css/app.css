@@ -2595,13 +2595,13 @@ video {
   --tw-text-opacity: 1;
   color: rgba(var(--lagoon-50), var(--tw-text-opacity));
 }
-.text-crimson-50 {
-  --tw-text-opacity: 1;
-  color: rgba(var(--crimson-50), var(--tw-text-opacity));
-}
 .text-blue-50 {
   --tw-text-opacity: 1;
   color: rgba(var(--bluecoral-50), var(--tw-text-opacity));
+}
+.text-crimson-50 {
+  --tw-text-opacity: 1;
+  color: rgba(var(--crimson-50), var(--tw-text-opacity));
 }
 .text-salmon-40 {
   --tw-text-opacity: 1;

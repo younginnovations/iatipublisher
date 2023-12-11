@@ -48,13 +48,14 @@
       />
       <BulkpublishWithXls
         v-if="
-          showBulkpublishLoader ||
-          (showBulkpublish && activities && Object.keys(activities).length > 0)
+          showBulkpublish && activities && Object.keys(activities).length > 0
         "
         key="bulkpublish"
         @close="closeBulkpublish"
         @activity-published-data="handleActivityPublishedData"
+        @hide-loader="hideBulkpublishLoader"
       />
+      <BulkpublishLoaderCard v-if="showBulkpublishLoader" />
 
       <ActivityDownload
         v-if="downloading && !downloadCompleted && !cancelDownload"
@@ -82,6 +83,8 @@ import ActivityDownload from './ActivityDownload.vue';
 import XlsLoader from './XlsLoader.vue';
 import BulkpublishWithXls from './BulkpublishWithXls.vue';
 import ActivityValidation from './ActivityValidation.vue';
+import BulkpublishLoaderCard from './BulkpublishLoaderCard.vue';
+
 import {
   defineProps,
   ref,
@@ -94,6 +97,7 @@ import {
 } from 'vue';
 import axios from 'axios';
 import { useStore } from 'Store/activities/index';
+
 const store = useStore();
 const showXlsStatus = ref(true);
 const validationStats = ref({ complete: 0, total: 0, failed: 0 });
@@ -185,8 +189,9 @@ onMounted(async () => {
 });
 
 const proceedValidation = () => {
-  console.log('proceed validation');
   showBulkpublishLoader.value = true;
+  console.log('proceed validation', showBulkpublishLoader.value);
+
   cancelValidationPolling();
 };
 
@@ -238,6 +243,7 @@ watch(
 watch(
   () => store?.state?.startBulkPublish,
   (value) => {
+    console.log('fron watcher');
     showBulkpublish.value = value;
   },
   { deep: true }
@@ -314,6 +320,7 @@ watch(
   () => [store.state.startValidation, validationRunning.value],
   () => {
     if (store.state.startValidation || validationRunning.value) {
+      console.log('start validation');
       showBulkpublish.value = false;
     }
   }
@@ -489,22 +496,19 @@ const completeActivityCount = computed(() => {
 
   return count;
 });
+const hideBulkpublishLoader = () => {
+  showBulkpublishLoader.value = false;
+  console.log('emitted');
+};
 
 const handleActivityPublishedData = (data) => {
   activityPublishedData.value = data;
 };
 
 watch(
-  [showBulkpublish, activities],
-  () => {
-    console.log(activities.value);
-    if (
-      showBulkpublish.value &&
-      activities.value &&
-      Object.keys(activities.value).length > 0
-    ) {
-      showBulkpublishLoader.value = false;
-    }
+  () => showBulkpublishLoader.value,
+  (value) => {
+    console.log(value, 'watcher');
   },
   { deep: true }
 );
