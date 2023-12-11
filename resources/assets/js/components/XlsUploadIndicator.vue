@@ -1,6 +1,7 @@
 <template>
   <div
     v-if="
+      showBulkpublishLoader ||
       (showBulkpublish && activities && Object.keys(activities).length > 0) ||
       (downloading && !downloadCompleted && !cancelDownload) ||
       (xlsData && showXlsStatus) ||
@@ -18,9 +19,14 @@
         <div
           class="flex items-center justify-center rounded-full bg-spring-10 py-1 px-2 text-xs text-spring-50"
         >
-          <span class="font-bold"
-            >{{ completeActivityCount }}/{{ processingActivityCount }}</span
-          >
+          <span class="flex font-bold"
+            >{{ completeActivityCount }}/
+            <ShimmerLoading
+              v-if="showBulkpublishLoader"
+              class="!mx-1 !h-2.5 !w-3"
+            />
+            <span v-else>{{ processingActivityCount }}</span>
+          </span>
         </div>
       </div>
       <button @click="() => (minimize = !minimize)">
@@ -38,11 +44,12 @@
         :validation-names="validationNames"
         :error-tab="showValidationError"
         @stop-validation="cancelValidationPolling"
-        @proceed="cancelValidationPolling"
+        @proceed="proceedValidation"
       />
       <BulkpublishWithXls
         v-if="
-          showBulkpublish && activities && Object.keys(activities).length > 0
+          showBulkpublishLoader ||
+          (showBulkpublish && activities && Object.keys(activities).length > 0)
         "
         key="bulkpublish"
         @close="closeBulkpublish"
@@ -93,6 +100,7 @@ const validationStats = ref({ complete: 0, total: 0, failed: 0 });
 const validationNames = ref<string[]>([]);
 
 import { useStorage, useElementSize } from '@vueuse/core';
+import ShimmerLoading from './ShimmerLoading.vue';
 
 const downloadCompleted = ref(false);
 const showValidationError = ref(false);
@@ -100,6 +108,8 @@ const validationRunning = ref(false);
 
 const cancelDownload = ref(false);
 const showBulkpublish = ref(true);
+const showBulkpublishLoader = ref(false);
+
 const parentElementRef = ref(null);
 const { height } = useElementSize(parentElementRef);
 const minimize = ref(false);
@@ -173,6 +183,12 @@ onMounted(async () => {
   );
   await checkValidation();
 });
+
+const proceedValidation = () => {
+  console.log('proceed validation');
+  showBulkpublishLoader.value = true;
+  cancelValidationPolling();
+};
 
 const checkValidation = async () => {
   await axios
@@ -477,4 +493,19 @@ const completeActivityCount = computed(() => {
 const handleActivityPublishedData = (data) => {
   activityPublishedData.value = data;
 };
+
+watch(
+  [showBulkpublish, activities],
+  () => {
+    console.log(activities.value);
+    if (
+      showBulkpublish.value &&
+      activities.value &&
+      Object.keys(activities.value).length > 0
+    ) {
+      showBulkpublishLoader.value = false;
+    }
+  },
+  { deep: true }
+);
 </script>

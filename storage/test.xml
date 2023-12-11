@@ -28,6 +28,7 @@
       <organisation>
         <narrative xml:lang="en">DanChurchAid</narrative>
       </organisation>
+<<<<<<< HEAD
       <job-title>
         <narrative xml:lang="en">SQM Data Manager</narrative>
       </job-title>
@@ -59,5 +60,40 @@
       <disbursement-channel code="2"/>
     </transaction>
     <related-activity ref="DK-CVR-36980214-DANIDA-SPA-2018-2021-CIV" type="1"/>
+=======
+      <department>
+        <narrative xml:lang="en">Finance</narrative>
+      </department>
+      <person-name>
+        <narrative xml:lang="en">Vivek Patel</narrative>
+      </person-name>
+      <job-title>
+        <narrative xml:lang="en">Project Accountant</narrative>
+      </job-title>
+      <email>vivek.patel@adamsmithinternational.com</email>
+    </contact-info>
+    <recipient-country code="PK" percentage="100"/>
+    <recipient-region code="679" percentage="0" vocabulary="1"/>
+    <location>
+      <name>
+        <narrative xml:lang="en">Pakistan</narrative>
+      </name>
+      <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+        <pos> </pos>
+      </point>
+    </location>
+    <sector code="15140" vocabulary="1"/>
+    <policy-marker vocabulary="1" code="3"/>
+    <collaboration-type code="1"/>
+    <default-flow-type code="10"/>
+    <default-finance-type code="110"/>
+    <default-aid-type code="D02" vocabulary="1"/>
+    <default-tied-status code="5"/>
+    <budget type="1" status="2">
+      <period-start iso-date="2021-06-01"/>
+      <period-end iso-date="2022-03-31"/>
+      <value currency="GBP" value-date="2021-06-01">1992016</value>
+    </budget>
+>>>>>>> 96e8652e (shimmer loader adeadded)
   </iati-activity>
 </iati-activities>
