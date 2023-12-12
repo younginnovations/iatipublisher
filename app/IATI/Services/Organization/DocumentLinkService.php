@@ -7,6 +7,7 @@ namespace App\IATI\Services\Organization;
 use App\IATI\Elements\Builder\ParentCollectionFormCreator;
 use App\IATI\Models\Organization\Organization;
 use App\IATI\Repositories\Organization\OrganizationRepository;
+use App\IATI\Traits\DataSanitizeTrait;
 use App\IATI\Traits\OrganizationXmlBaseElements;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -17,7 +18,7 @@ use Kris\LaravelFormBuilder\Form;
  */
 class DocumentLinkService
 {
-    use OrganizationXmlBaseElements;
+    use OrganizationXmlBaseElements, DataSanitizeTrait;
 
     /**
      * @var ParentCollectionFormCreator
@@ -83,7 +84,7 @@ class DocumentLinkService
             }
         }
 
-        return $this->organizationRepository->update($id, ['document_link' => $documentLink['document_link']]);
+        return $this->organizationRepository->update($id, ['document_link' => $this->sanitizeData($documentLink['document_link'])]);
     }
 
     /**
