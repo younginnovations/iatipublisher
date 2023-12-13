@@ -47,7 +47,7 @@ class IatiRegisterFormRequest extends FormRequest
                 break;
             case '2':
                 $rules = [
-                    'contact_email' => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'max:255'],
+                    'contact_email' => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,}$/ix', 'max:255'],
                     'website' => ['nullable', 'url'],
                 ];
                 break;
@@ -60,7 +60,7 @@ class IatiRegisterFormRequest extends FormRequest
                 $rules = [
                     'username'              => ['required', 'max:255', 'string', 'regex:/^[a-z]([0-9a-z-_])*$/', 'unique:users,username'],
                     'full_name'             => ['required', 'string', 'max:255'],
-                    'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'max:255', 'unique:users,email'],
+                    'email'                 => ['required', 'string', 'email', 'regex:/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,}$/ix', 'max:255', 'unique:users,email'],
                     'password'              => ['required', 'string', 'min:6', 'max:255', 'confirmed'],
                     'password_confirmation' => ['required', 'string', 'min:6', 'max:255'],
                 ];
