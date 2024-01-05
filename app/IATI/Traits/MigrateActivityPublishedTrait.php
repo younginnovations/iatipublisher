@@ -495,6 +495,8 @@ trait MigrateActivityPublishedTrait
                 'https://aidstream.org/files/documents',
                 'http://www.aidstream.org/files/documents',
                 'http://aidstream.org/files/documents',
+                'https://aidstream.s3.us-west-2.amazonaws.com/documents',
+                'https://www.aidstream.s3.us-west-2.amazonaws.com/documents',
             ],
             awsUrl("document-link/{$iatiOrganizationId}"),
             $contents
