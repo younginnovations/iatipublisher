@@ -192,7 +192,7 @@ trait MigrateDocumentFileTrait
         if ($url) {
             $parsedUrl = parse_url($url);
 
-            if (isset($parsedUrl['host']) && in_array($parsedUrl['host'], ['www.aidstream.org', 'aidstream.org'])) {
+            if (isset($parsedUrl['host']) && in_array($parsedUrl['host'], ['www.aidstream.org', 'aidstream.org', 'www.aidstream.s3.us-west-2.amazonaws.com', 'aidstream.s3.us-west-2.amazonaws.com'])) {
                 $explodedPath = explode('/', $parsedUrl['path']);
                 $fileName = end($explodedPath);
                 $path = '/document-link/' . $iatiOrganizationId . '/' . $fileName;
