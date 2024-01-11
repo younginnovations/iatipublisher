@@ -805,10 +805,19 @@ class ElementCompleteService
             foreach ($results as $result) {
                 $resultData[] = $result['result'];
                 $indicators = $result['indicators'];
+                $resultReference = Arr::get($result['result'], 'reference');
 
                 if (!empty($indicators)) {
                     foreach ($indicators as $indicator) {
-                        $indicatorData[] = $indicator['indicator'];
+                        $indicatorValue = $indicator['indicator'];
+
+                        if (is_array_value_empty(Arr::get($indicatorValue, 'reference'))) {
+                            $indicatorValue['reference'] = $resultReference;
+                        } else {
+                            $resultLastKey = array_key_last($resultData);
+                            $resultData[$resultLastKey]['reference'] = Arr::get($indicatorValue, 'reference');
+                        }
+                        $indicatorData[] = $indicatorValue;
                         $periods = $indicator['periods'];
 
                         if (!empty($periods)) {
@@ -838,9 +847,9 @@ class ElementCompleteService
         [$resultData, $indicatorData, $periodData] = $this->getFormattedResults($activity);
 
         if (
-            (is_variable_null($periodData) || !$this->isPeriodElementCompleted($periodData))
+            (is_variable_null($periodData) || !$this->isPeriodElementCompleted($periodData)) || !$this->isResultElementDataCompleted($resultData)
             || (is_variable_null($indicatorData) || !$this->isIndicatorElementCompleted($indicatorData))
-            || (is_variable_null($resultData) || !$this->isResultElementDataCompleted($resultData))
+            || (is_variable_null($resultData))
         ) {
             return false;
         }
