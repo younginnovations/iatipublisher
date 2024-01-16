@@ -14,7 +14,9 @@
         <span v-if="item.code">
           {{ types.geographicLocationReach[item.code] }}
         </span>
-        <span v-else class="italic">Location Reach Missing</span>
+        <span v-else class="italic">{{
+          translate.missing('location_reached')
+        }}</span>
       </div>
     </div>
     <div
@@ -31,19 +33,22 @@
         <div v-if="narrative.narrative" class="flex flex-col-reverse space-x-1">
           <span>{{ narrative.narrative }}</span>
           <span v-if="narrative.language" class="italic text-n-30"
-            >(Language: {{ types.languages[narrative.language] }})</span
+            >({{ translate.commonText('language') }}:
+            {{ types.languages[narrative.language] }})</span
           >
         </div>
-        <span v-else class="italic">Name Missing</span>
+        <span v-else class="italic"> {{ translate.missing('name') }}</span>
       </div>
     </div>
     <div class="ml-5">
       <table>
         <tr>
-          <td>Reference</td>
+          <td>{{ translate.commonText('reference') }}</td>
           <td class="text-sm">
             <span v-if="post.ref">{{ post.ref }}</span>
-            <span v-else class="italic">Missing</span>
+            <span v-else class="italic">
+              {{ translate.missing() }}
+            </span>
           </td>
         </tr>
       </table>
@@ -56,18 +61,22 @@
       >
         <table class="w-full">
           <tr>
-            <td>Location Id</td>
+            <td>{{ translate.commonText('location_id') }}</td>
             <td>
               <div class="flex space-x-1">
                 <div class="value">
                   <span v-if="item.vocabulary"
                     >{{ types.geographicVocabulary[item.vocabulary] }},
                   </span>
-                  <span v-else class="italic">(Vocabulary Missing)</span>
+                  <span v-else class="italic"
+                    >({{ translate.missing('vocabulary') }})
+                  </span>
                 </div>
                 <div>
-                  <span v-if="item.code">code {{ item.code }}</span>
-                  <span v-else class="italic">(Code Missing)</span>
+                  <span v-if="item.code"
+                    >{{ translate.commonText('code') }} {{ item.code }}</span
+                  >
+                  <span v-else class="italic">({{ translate.missing() }})</span>
                 </div>
               </div>
             </td>
@@ -86,15 +95,16 @@
         >
           <table class="w-full">
             <tr class="multiline">
-              <td>Description</td>
+              <td>{{ translate.commonText('description') }}</td>
               <td>
                 <div v-if="narrative.narrative" class="flex flex-col">
                   <span v-if="narrative.language" class="language top"
-                    >(Language: {{ types.languages[narrative.language] }})</span
+                    >({{ translate.commonText('language') }}:
+                    {{ types.languages[narrative.language] }})</span
                   >
                   <span class="description">{{ narrative.narrative }}</span>
                 </div>
-                <span v-else class="italic">Missing</span>
+                <span v-else class="italic">{{ translate.missing() }}</span>
               </td>
             </tr>
           </table>
@@ -112,15 +122,16 @@
         >
           <table class="w-full">
             <tr class="multiline">
-              <td>Activity Description</td>
+              <td>{{ translate.commonText('activity_description') }}</td>
               <td>
                 <div v-if="narrative.narrative" class="flex flex-col">
                   <span v-if="narrative.language" class="language top"
-                    >(Language: {{ types.languages[narrative.language] }})</span
+                    >({{ translate.commonText('language') }}:
+                    {{ types.languages[narrative.language] }})</span
                   >
                   <span class="description">{{ narrative.narrative }}</span>
                 </div>
-                <span v-else class="italic">Missing</span>
+                <span v-else class="italic">{{ translate.missing() }}</span>
               </td>
             </tr>
           </table>
@@ -133,25 +144,35 @@
       >
         <table class="w-full">
           <tr>
-            <td>Administrative</td>
+            <td>{{ translate.commonText('administrative') }}</td>
             <td>
               <div class="flex">
                 <div>
                   <span v-if="item.vocabulary"
-                    >Vocabulary -
+                    >{{ translate.commonText('vocabulary') }} -
                     {{ types.geographicVocabulary[item.vocabulary] }}
                   </span>
-                  <span v-else class="italic">(Vocabulary Missing)</span>
+                  <span v-else class="italic"
+                    >({{ translate.missing('vocabulary') }})</span
+                  >
                 </div>
                 <div>
                   <span v-if="item.code"
-                    >, code {{ types.country[item.code] }}</span
+                    >, {{ translate.commonText('code') }}
+                    {{ types.country[item.code] }}</span
                   >
-                  <span v-else class="ml-1 italic"> (Code Missing)</span>
+                  <span v-else class="ml-1 italic">
+                    ({{ translate.missing('code') }})</span
+                  >
                 </div>
                 <div>
-                  <span v-if="item.level">, level {{ item.level }}</span>
-                  <span v-else class="ml-1 italic"> (Level Missing)</span>
+                  <span v-if="item.level"
+                    >, {{ translate.commonText('level') }}
+                    {{ item.level }}</span
+                  >
+                  <span v-else class="ml-1 italic">
+                    ({{ translate.missing('level') }})</span
+                  >
                 </div>
               </div>
             </td>
@@ -165,25 +186,33 @@
         :class="{ 'mb-4': i !== post.point.length - 1 }"
       >
         <table class="w-full">
+          <td>{{ translate.commonText('point') }}</td>
           <tr>
-            <td>Point</td>
             <td>
               <div class="flex space-x-1">
                 <div>
                   <span v-if="item.srs_name">({{ item.srs_name }})</span>
-                  <span v-else class="italic"> (SRS Name Missing)</span>
+                  <span v-else class="italic">
+                    ({{ translate.missing('srs_name') }})</span
+                  >
                 </div>
                 <div>
                   <span v-if="item.pos[0].latitude">
-                    latitude {{ item.pos[0].latitude }},
+                    {{ translate.commonText('latitude') }}
+                    {{ item.pos[0].latitude }},
                   </span>
-                  <span v-else class="italic"> (Latitude Missing)</span>
+                  <span v-else class="italic">
+                    ({{ translate.missing('latitude') }})
+                  </span>
                 </div>
                 <div>
                   <span v-if="item.pos[0].longitude"
-                    >longitude {{ item.pos[0].longitude }}</span
+                    >{{ translate.commonText('longitude') }}
+                    {{ item.pos[0].longitude }}</span
                   >
-                  <span v-else class="italic"> (Longitude Missing)</span>
+                  <span v-else class="italic">
+                    ({{ translate.missing('longitude') }})</span
+                  >
                 </div>
               </div>
             </td>
@@ -197,12 +226,12 @@
       >
         <table class="w-full">
           <tr>
-            <td>Exactness</td>
+            <td>{{ translate.commonText('exactness') }}</td>
             <td>
               <span v-if="item.code">{{
                 types.geographicExactness[item.code]
               }}</span>
-              <span v-else class="italic">Missing</span>
+              <span v-else class="italic">{{ translate.missing() }}</span>
             </td>
           </tr>
         </table>
@@ -214,12 +243,12 @@
       >
         <table class="w-full">
           <tr>
-            <td>Location Class</td>
+            <td>{{ translate.commonText('location_class') }}</td>
             <td>
               <span v-if="item.code">{{
                 types.geographicLocationClass[item.code]
               }}</span>
-              <span v-else class="italic">Missing</span>
+              <span v-else class="italic">{{ translate.missing() }}</span>
             </td>
           </tr>
         </table>
@@ -231,10 +260,12 @@
       >
         <table class="w-full">
           <tr>
-            <td>Feature Designation</td>
+            <td>
+              {{ translate.commonText('feature_designation') }}
+            </td>
             <td>
               <span v-if="item.code">{{ types.locationType[item.code] }}</span>
-              <span v-else class="italic">Missing</span>
+              <span v-else class="italic">{{ translate.missing() }}</span>
             </td>
           </tr>
         </table>
@@ -245,6 +276,7 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ActivityLocation',
@@ -265,8 +297,9 @@ export default defineComponent({
       locationType: [];
       languages: [];
     }
+    const translate = new Translate();
     const types = inject('types') as Types;
-    return { types };
+    return { types, translate };
   },
 });
 </script>

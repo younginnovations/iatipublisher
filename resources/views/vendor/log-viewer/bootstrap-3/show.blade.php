@@ -112,7 +112,7 @@
                         {{ $entries->appends(compact('query'))->render() }}
 
                         <span class="label label-info pull-right">
-                            {{ __('Page :current of :last', ['current' => $entries->currentPage(), 'last' => $entries->lastPage()]) }}
+                            {{ trans('Page :current of :last', ['current' => $entries->currentPage(), 'last' => $entries->lastPage()]) }}
                         </span>
                     </div>
                 @endif

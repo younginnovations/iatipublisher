@@ -16,7 +16,7 @@ class ActivityCreateRequest extends FormRequest
     /**
      * @var ActivityService
      */
-    protected $activityService;
+    protected ActivityService $activityService;
 
     /**
      * ActivityCreateRequest constructor.
@@ -70,7 +70,7 @@ class ActivityCreateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'activity_identifier.not_in' => 'The activity identifier already exists.',
+            'activity_identifier.not_in' => translateRequestMessage('the_activity', 'identifier_already_exists'),
         ];
     }
 }

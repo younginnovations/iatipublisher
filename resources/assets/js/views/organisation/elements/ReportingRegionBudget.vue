@@ -11,7 +11,7 @@
         {{
           recipient_region_budget.status
             ? types?.budgetType[recipient_region_budget.status]
-            : 'Status Missing'
+            : translate.missing('status')
         }}
       </div>
       <div class="flex text-sm">
@@ -21,25 +21,25 @@
           }}
           {{ recipient_region_budget.value['0'].currency }}
         </span>
-        <span v-else> Budget Amount Missing</span>
+        <span v-else> {{ translate.missing('budget_line') }}</span>
       </div>
       <div class="ml-4">
         <table>
           <tbody>
             <tr>
-              <td>Value date</td>
+              <td>{{ translate.commonText('value_date') }}</td>
               <td>
                 {{ formatDate(recipient_region_budget.value['0'].value_date) }}
               </td>
             </tr>
             <tr>
-              <td>Vocabulary</td>
+              <td>{{ translate.commonText('vocabulary') }}</td>
               <td>
                 {{
                   types?.regionVocabulary[
                     recipient_region_budget.recipient_region['0']
                       .region_vocabulary
-                  ] ?? 'Vocabulary Missing'
+                  ] ?? translate.missing('vocabulary')
                 }}
               </td>
             </tr>
@@ -49,7 +49,7 @@
                   .region_vocabulary === '99'
               "
             >
-              <td>Vocabulary URI</td>
+              <td>{{ translate.commonText('vocabulary_uri') }}</td>
               <td
                 v-if="
                   recipient_region_budget.recipient_region['0'].vocabulary_uri
@@ -65,10 +65,12 @@
                   }}</a
                 >
               </td>
-              <td v-else>Vocabulary URI Missing</td>
+              <td v-else>
+                {{ translate.missing('vocabulary_uri') }}
+              </td>
             </tr>
             <tr>
-              <td>Code</td>
+              <td>{{ translate.commonText('code') }}</td>
               <td>
                 {{
                   recipient_region_budget.recipient_region['0']
@@ -76,14 +78,14 @@
                     ? types.region[
                         recipient_region_budget.recipient_region['0']
                           .region_code
-                      ] ?? 'Code Missing'
+                      ] ?? translate.commonText('code')
                     : recipient_region_budget.recipient_region['0'].code ??
-                      'Code Missing'
+                      translate.commonText('code')
                 }}
               </td>
             </tr>
             <tr>
-              <td>Narrative</td>
+              <td>{{ translate.commonText('narrative') }}</td>
               <td>
                 <div
                   v-for="(narrative, i) in recipient_region_budget
@@ -103,20 +105,26 @@
                       (
                       {{
                         narrative.language
-                          ? `Language: ${types?.languages[narrative.language]}`
-                          : 'Language : Missing'
+                          ? `${translate.commonText('language')}: ${
+                              types?.languages[narrative.language]
+                            }`
+                          : `${translate.commonText(
+                              'language'
+                            )} : ${translate.missing()}`
                       }}
                       )
                     </div>
                     <div class="w-[500px] max-w-full">
-                      {{ narrative.narrative ?? 'Narrative Missing' }}
+                      {{
+                        narrative.narrative ?? translate.missing('narrative')
+                      }}
                     </div>
                   </div>
                 </div>
               </td>
             </tr>
             <tr>
-              <td>Period</td>
+              <td>{{ translate.commonText('period') }}</td>
               <td>
                 {{ formatDate(recipient_region_budget.period_start['0'].date) }}
                 -
@@ -130,7 +138,9 @@
 
     <div class="indicator overflow-hidden rounded-t-lg border border-n-20">
       <div class="head flex items-center border-b border-n-20 px-6 py-2">
-        <span class="text-xs font-bold text-n-50">Budget line</span>
+        <span class="text-xs font-bold text-n-50">{{
+          translate.commonText('budget_line')
+        }}</span>
       </div>
       <div
         v-for="(budget_line, j) in recipient_region_budget.budget_line"
@@ -148,7 +158,7 @@
                 {{
                   budget_line.value['0'].amount
                     ? Number(budget_line.value[0].amount).toLocaleString()
-                    : 'Budget Missing'
+                    : translate.missing('budget')
                 }}
                 {{ budget_line.value['0'].currency }}
               </span>
@@ -157,39 +167,49 @@
               <table>
                 <tbody>
                   <tr>
-                    <td class="pr-20 text-n-40">Reference</td>
+                    <td class="pr-20 text-n-40">
+                      {{ translate.commonText('reference') }}
+                    </td>
                     <td>
-                      {{ budget_line.ref ?? 'Reference Missing' }}
+                      {{
+                        budget_line.ref ??
+                        translate.missing('element', 'common.reference')
+                      }}
                     </td>
                   </tr>
                   <tr>
-                    <td>Value Date</td>
+                    <td>{{ translate.commonText('value_date') }}</td>
                     <td>
                       {{ formatDate(budget_line.value['0'].value_date) }}
                     </td>
                   </tr>
                   <tr>
-                    <td>Narrative</td>
+                    <td>{{ translate.commonText('narrative') }}</td>
                     <td>
                       <div
                         v-for="(narrative, k) in budget_line.narrative"
                         :key="k"
                         class="description-content"
                         :class="{
-                          'mb-4': k != budget_line.narrative.length - 1,
+                          'mb-4': k !== budget_line.narrative.length - 1,
                         }"
                       >
                         <div class="language mb-1.5">
                           ({{
                             narrative.language
-                              ? `Language: ${
+                              ? `${translate.commonText('language')}: ${
                                   types?.languages[narrative.language]
                                 }`
-                              : 'Language : Missing'
+                              : `${translate.commonText(
+                                  'language'
+                                )} : ${translate.missing()}`
                           }})
                         </div>
                         <div class="w-[500px] max-w-full">
-                          {{ narrative.narrative ?? 'Narrative Missing' }}
+                          {{
+                            narrative.narrative ??
+                            translate.missing('narrative')
+                          }}
                         </div>
                       </div>
                     </td>
@@ -207,6 +227,7 @@
 <script setup lang="ts">
 import { defineProps, inject } from 'vue';
 import moment from 'moment';
+import { Translate } from 'Composable/translationHelper';
 
 defineProps({
   content: { type: Object, required: true },
@@ -219,9 +240,10 @@ interface TypesInterface {
   region: [];
 }
 
+const translate = new Translate();
 const types = inject('orgTypes') as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format('LL') : 'Date Missing';
+  return date ? moment(date).format('LL') : translate.missing('date');
 }
 </script>

@@ -31,6 +31,8 @@ class DefaultFlowTypeRequest extends ActivityBaseRequest
      * @param $default_flow_type
      *
      * @return array
+     *
+     * @throws \JsonException
      */
     public function getErrorsForDefaultFlowType($default_flow_type = null): array
     {
@@ -48,8 +50,6 @@ class DefaultFlowTypeRequest extends ActivityBaseRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @param $default_flow_type
-     *
      * @return array
      */
     public function getWarningForDefaultFlowType(): array
@@ -65,8 +65,8 @@ class DefaultFlowTypeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => 'The default flow type does not exist.',
-            'size'      => 'The default flow type cannot have more than one value.',
+            'in'        => translateRequestMessage('default_flow', 'doesnt_exist'),
+            'size'      => translateRequestMessage('default_flow', 'cannot_have_more_than_one'),
         ];
     }
 }

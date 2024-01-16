@@ -5,21 +5,18 @@
     <Loader v-if="isLoaderVisible" />
     <div class="section__container">
       <div class="section__title">
-        <h2 class="text-2xl font-bold md:text-4xl">
-          Create IATI Publisher Account and IATI Registry Account
+        <h2 class="text-2xl md:text-4xl">
+          {{ translate.registerText('create_iati_publisher_header') }}
         </h2>
-
-        <p>
-          Register your organisation to start your IATI publishing journey by
-          creating accounts in IATI publisher and IATI Registry at once.
-        </p>
+        <p>{{ translate.registerText('create_iati_publisher_subheader') }}</p>
       </div>
       <div class="section__wrapper flex justify-center">
         <EmailVerification v-if="checkStep('5')" :email="formData['email']" />
         <div v-else class="form input__field" @keyup.enter="goToNextForm">
           <aside class="mb-4 block border-b border-b-n-10 pb-4 xl:hidden">
             <span class="text-base font-bold"
-              >Step {{ getCurrentStep() }} out of 5</span
+              >{{ translate.button('step') }} {{ getCurrentStep() }}
+              {{ translate.button('out_of') }} 5</span
             >
             <ul class="relative mt-3 text-sm text-n-40">
               <li
@@ -70,7 +67,7 @@
             >
               <p class="mb-2 flex font-bold">
                 <svg-vue class="mr-2 text-xl" icon="warning" />
-                Error:
+                {{ translate.error('default') }}:
               </p>
               <div class="ml-8 xl:mr-1">
                 <ul class="list-disc">
@@ -171,16 +168,16 @@
               @click="goToPreviousForm()"
             >
               <svg-vue class="mr-3 cursor-pointer" icon="left-arrow" />
-              Go back
+              {{ translate.button('go_back') }}
             </button>
             <span
               v-if="checkStep(1)"
               class="pb-4 text-sm font-normal text-n-40 sm:pb-0"
-              >Already have an account?
+              >{{ translate.commonText('already_have_account') }}
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
-                >Sign In.</a
+                >{{ translate.button('sign_in') }}.</a
               ></span
             >
             <button
@@ -188,26 +185,29 @@
               class="btn btn-next"
               @click="goToNextForm()"
             >
-              Next Step
+              {{ translate.button('next_step') }}
               <svg-vue class="text-2xl" icon="right-arrow" />
             </button>
           </div>
           <div v-if="checkStep(2)" class="mt-6 text-center">
             <span class="text-sm font-normal text-n-40"
-              >Already have an account?
+              >{{ translate.commonText('already_have_account') }}
               <a
                 class="border-b-2 border-b-transparent font-bold text-bluecoral hover:border-b-2 hover:border-b-turquoise hover:text-bluecoral"
                 href="/"
-                >Sign In.</a
+                >{{ translate.button('sign_in') }}.</a
               ></span
             >
           </div>
         </div>
 
         <aside class="register__sidebar hidden xl:block">
-          <span class="text-base font-bold"
-            >Step {{ getCurrentStep() }} out of 5</span
-          >
+          <span class="text-base font-bold">
+            {{ translate.button('step') }}
+            {{ getCurrentStep() }}
+            {{ translate.button('out_of') }}
+            5
+          </span>
           <ul class="relative mt-6 text-sm text-n-40">
             <li
               v-for="(form, key, i) in registerForm"
@@ -257,6 +257,7 @@ import HoverText from './../../components/HoverText.vue';
 import Multiselect from '@vueform/multiselect';
 import Loader from '../../components/Loader.vue';
 import encrypt from 'Composable/encryption';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   components: {
@@ -274,6 +275,7 @@ export default defineComponent({
   },
 
   setup(props) {
+    const translate = new Translate();
     const step = ref(1);
     const publisherExists = ref(true);
     const isLoaderVisible = ref(false);
@@ -392,131 +394,137 @@ export default defineComponent({
      */
     const registerForm = reactive({
       1: {
-        title: 'Publisher Information',
+        title: translate.registerText('publisher_information.label'),
         is_complete: false,
-        description:
-          'This information will be used to create a Publisher in IATI Publisher',
-        hover_text:
-          "We refer to organisations who publish IATI data as 'Publishers'. Before publishing data, all organisations need their own 'Publisher Account' on the IATI Registry (iatiregistry.org). Enter your organisation's data here and we'll create your organisation's Publisher Account for you. These details will also be saved here in IATI Publisher. ",
+        description: translate.registerText(
+          'publisher_information.description'
+        ),
+        hover_text: translate.registerText('publisher_information.hover_text'),
         fields: {
           publisher_name: {
-            label: 'Publisher Name',
+            label: translate.registerText('publisher_name.label'),
             name: 'publisher_name',
-            placeholder: 'Type your organisation name here',
+            placeholder: translate.registerText('publisher_name.placeholder'),
             id: 'publisher-name',
             required: true,
-            hover_text: 'The name of your organisation publishing the data.',
+            hover_text: translate.registerText('publisher_name.hover_text'),
             type: 'text',
             class: 'col-span-2 mb-4 lg:mb-2',
             help_text: '',
           },
           publisher_id: {
-            label: 'Publisher ID',
+            label: translate.registerText('publisher_id.label'),
             name: 'publisher_id',
-            placeholder: 'Type your organisation ID here',
+            placeholder: translate.registerText('publisher_id.placeholder'),
             id: 'publisher-id',
             required: true,
-            hover_text:
-              "Provide a unique ID for your organisation. It must be at least two characters long and use lower case letters. You can include letters, numbers and also - (dash) and _ (underscore). Where possible use a short abbreviation of your organisation's name, for example: 'nef_mali' for Near East Foundation Mali.",
+            hover_text: translate.registerText('publisher_id.hover_text'),
             type: 'text',
             class: 'mb-4 lg:mb-2',
             help_text: '',
           },
           country: {
-            label: 'Country',
+            label: translate.registerText('country.label'),
             name: 'country',
-            placeholder: 'Select a Country',
+            placeholder: translate.registerText('country.placeholder'),
             id: 'country_select',
             required: false,
             type: 'select',
-            hover_text: 'Add the location of your organisation.',
+            hover_text: translate.registerText('country.hover_text'),
             options: props.types.country,
             class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
           registration_agency: {
-            label: 'Organisation Registration Agency',
+            label: translate.registerText('org_registration_agency.label'),
             name: 'registration_agency',
-            placeholder: 'Select an Organisation Registration Agency',
+            placeholder: translate.registerText(
+              'org_registration_agency.placeholder'
+            ),
             id: 'registration-agency',
             required: true,
-            hover_text:
-              "Select the agency in your country where your organisation is registered. If you do not know this information please email <a href='mailto:support@iatistandard.org' target='_blank'>support@iatistandard.org</a>",
+            hover_text: translate.registerText(
+              'org_registration_agency.hover_text'
+            ),
             type: 'select',
             options: registration_agency,
             class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
           registration_number: {
-            label: 'Registration Number',
+            label: translate.registerText('registration_number.label'),
             name: 'registration_number',
-            placeholder: 'Type your Registration Number here',
+            placeholder: translate.registerText(
+              'registration_number.placeholder'
+            ),
             id: 'registration-number',
             required: true,
-            hover_text:
-              "Provide the registration number for your organisation that has been provided by organisation registration agency. If you do not know this please email <a href='mailto:support@iatistandard.org' target='_blank'>support@iatistandard.org</a>.",
+            hover_text: translate.registerText(
+              'registration_number.hover_text'
+            ),
             type: 'text',
             class: 'mb-4 lg:mb-2',
-            help_text: 'for e.g. 123456',
+            help_text: `${translate.registerText('for_eg')} 123456`,
           },
           identifier: {
-            label: 'IATI Organisational Identifier',
+            label: translate.registerText('iati_org_identifier.label'),
             name: 'identifier',
             placeholder: '',
             id: 'identifier',
             required: true,
-            hover_text:
-              'The Organisation Identifier is a unique code for your organisation. This is genereated from the Organisation Registration Agency and Registration Number. For more information read:  <a href="http://iatistandard.org/en/guidance/preparing-organisation/organisation-account/how-to-create-your-iati-organisation-identifier/" target="_blank">How to create your IATI organisation identifier.</a>',
+            hover_text: translate.registerText(
+              'iati_org_identifier.hover_text'
+            ),
             type: 'text',
             class: 'mb-4 lg:mb-6',
-            help_text:
-              'This is autogenerated, please make sure to fill the above fields correctly.',
+            help_text: translate.registerText('iati_org_identifier.help_text'),
           },
           publisher_type: {
-            label: 'Publisher Type',
+            label: translate.registerText('publisher_type.label'),
             name: 'publisher_type',
-            placeholder: 'Select a publisher type ',
+            placeholder: translate.registerText('publisher_type.placeholder'),
             id: 'publisher-type',
             required: true,
-            hover_text:
-              'Select the type that best describes your organisation.  <a href="https://iatistandard.org/en/iati-standard/203/codelists/organisationtype/" target="_blank"> Read more on Organisation types.</a>',
+            hover_text: translate.registerText('publisher_type.hover_text'),
             type: 'select',
             options: props.types.publisherType,
             class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
           license_id: {
-            label: 'Data License',
+            label: translate.registerText('data_license.label'),
             name: 'license_id',
-            placeholder: 'Select a Data License',
+            placeholder: translate.registerText('data_license.placeholder'),
             id: 'data-license',
             required: true,
-            hover_text:
-              " Select the License under which your data is being published. IATI is an open data standard and requires you to make your data available under an open licence so it can be freely used. One of the most frequently used licenses is Creative Commons Attribution. <a href='https://iatistandard.org/en/guidance/standard-overview/preparing-your-organisation-data-publication/how-to-license-your-data/' target='_blank' > For more information read: How to license your data.</a>",
+            hover_text: translate.registerText('data_license.hover_text'),
             type: 'select',
             options: props.types.dataLicense,
             class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
           image_url: {
-            label: 'Publisher Logo Url',
+            label: translate.registerText('publisher_logo_url.label'),
             name: 'image_url',
-            placeholder: 'For e.g. http://mylogo.com ',
+            placeholder: `${translate.registerText(
+              'for_eg'
+            )}: http://mylogo.com `,
             id: 'publisher-logo-url',
             required: false,
-            hover_text:
-              " Provide a link to an image to your organisation's logo (Optimum size: 200 x 120 px)",
+            hover_text: translate.registerText('publisher_logo_url.hover_text'),
             type: 'text',
             class: 'mb-4 lg:mb-2 relative',
             help_text: '',
           },
           description: {
-            label: 'Organization Description',
+            label: translate.registerText('organisation_desc.label'),
             name: 'description',
-            placeholder: 'Type Description here',
+            placeholder: translate.registerText(
+              'organisation_desc.placeholder'
+            ),
             id: 'organization-description',
             required: false,
-            hover_text: ' Provide a short description about your organisation.',
+            hover_text: translate.registerText('organisation_desc.hover_text'),
             type: 'textarea',
             class: 'mb-4 col-span-2 lg:mb-2 relative',
             help_text: '',
@@ -524,97 +532,100 @@ export default defineComponent({
         },
       },
       2: {
-        title: 'Contact Information',
+        title: translate.registerText('contact_info.title'),
         is_complete: false,
-        description:
-          'This information will be used to create a Publisher in IATI Publisher',
+        description: translate.registerText(
+          'publisher_information.description'
+        ),
         fields: {
           contact_email: {
-            label: 'Contact Email',
+            label: translate.registerText('contact.label'),
             name: 'contact_email',
             placeholder: '',
             id: 'contact-email',
             required: true,
-            hover_text:
-              'Please add a contact email address for your organisation. Please note that IATI is an open data standard and the email provided here will be visible to others on the IATI Registry.',
+            hover_text: translate.registerText('contact.hover_text'),
             type: 'text',
             class: 'mb-4  lg:mb-6',
           },
           website: {
-            label: 'Website',
+            label: translate.registerText('website.label'),
             name: 'website',
-            placeholder: 'For e.g. http://mywebsite.com',
+            placeholder: `${translate.registerText(
+              'for_eg'
+            )} http://mywebsite.com`,
             id: 'website',
             required: false,
-            hover_text: "Add the URL to your organisation's website.",
+            hover_text: translate.registerText('website.hover_text'),
             type: 'text',
             class: 'mb-4 lg:mb-6',
           },
           address: {
-            label: 'Address',
+            label: translate.registerText('address.label'),
             name: 'address',
-            placeholder: 'Type address here',
+            placeholder: translate.registerText('address.placeholder'),
             id: 'address',
             required: false,
-            hover_text: 'Provide a contact address for your organisation.',
+            hover_text: translate.registerText('address.hover_text'),
             type: 'textarea',
             class: 'mb-4 col-span-2 lg:mb-6',
           },
         },
       },
       3: {
-        title: 'Publishing Aditional Information',
+        title: translate.registerText('publishing_additional_info.title'),
         is_complete: false,
-        description:
-          'This information will be used to create an admin account in IATI Publisher',
+        description: translate.registerText(
+          'publishing_additional_info.description'
+        ),
         fields: {
           source: {
-            label: 'Source',
+            label: translate.registerText('source.label'),
             name: 'source',
-            placeholder: 'Select a Source',
+            placeholder: translate.registerText('source.placeholder'),
             id: 'contact-email',
             required: true,
-            hover_text:
-              "Select an option:<br>Primary - your organisation is publishing its own or (associated organisations') data <br>Secondary - your organisation is reproducing data on the activities of another organisation",
+            hover_text: translate.registerText('source.hover_text'),
             type: 'select',
             options: props.types.source,
             class: 'mb-4 lg:mb-6',
           },
           record_exclusions: {
-            label: 'Record Exclusions',
+            label: translate.registerText('record_exclusions.label'),
             name: 'record_exclusions',
-            placeholder: 'Type Record Exclusions here',
+            placeholder: translate.registerText(
+              'record_exclusions.placeholder'
+            ),
             id: 'record-exclusions',
             required: false,
-            hover_text:
-              "Does your organisation have an exclusion policy that provide details on what data that it cannot publish? For example an organisation may not be able to publish data because of political sensitivity issues or if information is commercially restricted. Please provide details here about what data your organisation needs to exclude (if any), and a URL to your organisation's exclusion policy (if it has one).<a href='https://iatistandard.org/en/guidance/standard-overview/preparing-your-organisation-data-publication/information-and-data-you-cant-publish-exclusions/' target='_blank'> For more information read: Information and data you can't publish (exclusions)</a>",
+            hover_text: translate.registerText('record_exclusions.hover_text'),
             type: 'textarea',
             class: 'mb-4  col-span-2 lg:mb-6',
           },
         },
       },
       4: {
-        title: 'Administrator Information',
+        title: translate.registerText('administrator_information.label'),
         is_complete: false,
-        description:
-          'Provide your information to create an admin account here on IATI Publisher and IATI Registry at once.',
+        description: translate.registerText(
+          'administrator_information.iati_register_description'
+        ),
         fields: {
           username: {
-            label: 'Username',
+            label: translate.registerText('username.label'),
             name: 'username',
-            placeholder: 'Type username here',
+            placeholder: translate.registerText('username.placeholder'),
             id: 'username',
             required: true,
-            hover_text:
-              'You will need this later to login into IATI Publisher.',
+            hover_text: translate.registerText('username.hover_text'),
             type: 'text',
             class: 'mb-4 lg:mb-2',
             help_text: '',
           },
           full_name: {
-            label: 'Full Name',
+            label: translate.registerText('fullname.label'),
             name: 'full_name',
-            placeholder: 'Type your full name here',
+            placeholder: translate.registerText('fullname.placeholder'),
             id: 'full-name',
             hover_text: '',
             required: true,
@@ -622,9 +633,9 @@ export default defineComponent({
             class: 'col-start-1 mb-4 lg:mb-2',
           },
           email: {
-            label: 'Email Address',
+            label: translate.registerText('email_address.label'),
             name: 'email',
-            placeholder: 'Type valid email here',
+            placeholder: translate.registerText('email_address.placeholder'),
             id: 'email',
             required: true,
             hover_text: '',
@@ -632,32 +643,31 @@ export default defineComponent({
             class: 'mb-4 lg:mb-2',
           },
           password: {
-            label: 'Password',
+            label: translate.registerText('password.label'),
             name: 'password',
-            placeholder: 'Type password here',
+            placeholder: translate.registerText('password.placeholder'),
             id: 'password',
             required: true,
-            help_text: 'Minimum length: 6 characters',
+            help_text: translate.registerText('password.help_text'),
             type: 'password',
             class: 'mb-4 lg:mb-2',
           },
           password_confirmation: {
-            label: 'Confirm Password',
+            label: translate.registerText('password.confirm'),
             name: 'password_confirmation',
-            placeholder: 'Type password here',
+            placeholder: translate.registerText('password.placeholder'),
             id: 'password-confirmation',
             required: true,
-            help_text: 'Should match the password above',
+            help_text: translate.registerText('password.confirm_help'),
             type: 'password',
             class: 'mb-4 lg:mb-6',
           },
         },
       },
       5: {
-        title: 'Email Verification',
+        title: translate.registerText('email_verification.title'),
         is_complete: false,
-        description:
-          'Please verify and activate your IATI Publisher account through your provided email',
+        description: translate.registerText('email_verification.description'),
       },
     });
 
@@ -953,6 +963,7 @@ export default defineComponent({
       step,
       resize,
       textarea,
+      translate,
     };
   },
 });
@@ -967,14 +978,14 @@ export default defineComponent({
 
 .section {
   &__container {
-    @media screen and (min-width: 1280px) {
+    @media screen and (min-width: 1415px) {
       max-width: 1206px;
     }
     max-width: 865px;
     margin: auto;
 
     .feedback {
-      @media screen and (min-width: 1280px) {
+      @media screen and (min-width: 1415px) {
         width: 702px;
       }
 

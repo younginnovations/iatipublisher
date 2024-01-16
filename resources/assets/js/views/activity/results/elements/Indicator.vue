@@ -7,7 +7,9 @@
       <div class="mb-4 flex">
         <div class="title flex grow items-center">
           <svg-vue class="mr-1.5 text-xl text-bluecoral" icon="bill"></svg-vue>
-          <div class="title text-sm font-bold">Indicator</div>
+          <div class="title text-sm font-bold">
+            {{ translate.commonText('indicator') }}
+          </div>
           <!--          <div class="status ml-2.5 flex text-xs leading-5 text-crimson-50">-->
           <!--            <b class="mr-2 text-base leading-3">.</b>-->
           <!--            <span>not completed</span>-->
@@ -15,13 +17,13 @@
         </div>
         <div class="icons flex items-center">
           <Btn
-            text="Add Indicator"
+            :text="translate.button('add_element', 'common.indicator')"
             icon="add"
             :link="`/result/${result.id}/indicator/create`"
             class="mr-2.5"
           />
           <Btn
-            text="Show full indicator list"
+            :text="translate.button('show_element', 'common.full_indicator')"
             icon=""
             design="bgText"
             :link="`/result/${result.id}/indicator`"
@@ -58,19 +60,23 @@
                 <div class="flex shrink-0 grow justify-between">
                   <span class="flex">
                     <Btn
-                      text="View Indicator"
+                      :text="
+                        translate.button('view_element', 'common.indicator')
+                      "
                       icon="eye"
                       :link="`/result/${result.id}/indicator/${post.id}`"
                       class="mr-2.5"
                     />
                     <Btn
-                      text="Edit Indicator"
+                      :text="
+                        translate.button('edit_element', 'common.indicator')
+                      "
                       icon="edit"
                       :link="`/result/${result.id}/indicator/${post.id}/edit`"
                     />
                   </span>
                   <Btn
-                    text="Add Period"
+                    :text="translate.button('add_element', 'common.period')"
                     icon="edit"
                     :link="`/indicator/${post.id}/period/create`"
                     class="mr-2.5"
@@ -82,7 +88,7 @@
                   <table class="mb-3">
                     <tbody>
                       <tr>
-                        <td>Indicator Title</td>
+                        <td>{{ translate.commonText('indicator_title') }}</td>
                         <td>
                           <template
                             v-for="(title, t) in post.indicator.title[0]
@@ -98,11 +104,11 @@
                               }"
                             >
                               <div class="language mb-1">
-                                (Language:
+                                ({{ translate.commonText('language') }}:
                                 {{
                                   type.language[title.language]
                                     ? type.language[title.language]
-                                    : 'Missing'
+                                    : translate.missing()
                                 }})
                               </div>
                               <div class="description text-xs">
@@ -114,19 +120,21 @@
                       </tr>
 
                       <tr v-if="post.indicator.measure">
-                        <td>Measure</td>
+                        <td>{{ translate.commonText('measure') }}</td>
                         <td>
                           {{ type.indicatorMeasure[post.indicator.measure] }}
                         </td>
                       </tr>
 
                       <tr v-if="post.indicator.aggregation_status">
-                        <td>Aggregation Status</td>
+                        <td>
+                          {{ translate.commonText('aggregation_status') }}
+                        </td>
                         <td>{{ post.indicator.aggregation_status != 0 }}</td>
                       </tr>
 
                       <tr>
-                        <td>Description</td>
+                        <td>{{ translate.commonText('description') }}</td>
                         <td>
                           <template
                             v-for="(description, d) in post.indicator
@@ -144,11 +152,11 @@
                               }"
                             >
                               <div class="language mb-1">
-                                (Language:
+                                ({{ translate.commonText('language') }}:
                                 {{
                                   type.language[description.language]
                                     ? type.language[description.language]
-                                    : 'Missing'
+                                    : translate.missing()
                                 }})
                               </div>
                               <div class="description text-xs">
@@ -160,7 +168,7 @@
                       </tr>
 
                       <tr>
-                        <td>Reference</td>
+                        <td>{{ translate.commonText('reference') }}</td>
                         <td>
                           <div
                             v-for="(ref, r) in post.indicator.reference"
@@ -171,13 +179,15 @@
                             }"
                           >
                             <span>
-                              Vocabulary: {{ ref.vocabulary ?? 'Missing' }},
+                              {{ translate.commonText('vocabulary') }}:
+                              {{ ref.vocabulary ?? translate.missing() }},
                             </span>
                             <span>
-                              Code: {{ ref.code ? ref.code : 'Missing' }},
+                              {{ translate.commonText('code') }}:
+                              {{ ref.code ? ref.code : translate.missing() }},
                             </span>
                             <span>
-                              Indicator URI:
+                              {{ translate.commonText('indicator_uri') }}:
                               <a
                                 v-if="ref.indicator_uri"
                                 :href="ref.indicator_uri"
@@ -186,22 +196,24 @@
                               >
                                 {{ ref.indicator_uri }}</a
                               >
-                              <span v-else>Mising</span>
+                              <span v-else>
+                                {{ translate.missing() }}
+                              </span>
                             </span>
                           </div>
                         </td>
                       </tr>
 
                       <tr>
-                        <td>Document Link</td>
+                        <td>{{ translate.commonText('document_link') }}</td>
                         <td>
                           {{ countDocumentLink(post.indicator.document_link) }}
-                          documents
+                          {{ translate.commonText('documents') }}
                         </td>
                       </tr>
 
                       <tr>
-                        <td>Baseline</td>
+                        <td>{{ translate.commonText('baseline') }}</td>
                         <td>
                           <div
                             v-for="(base, b) in post.indicator.baseline"
@@ -213,31 +225,39 @@
                           >
                             <div>
                               <span>
-                                Year:
+                                {{ translate.commonText('year') }}:
                                 <template v-if="base.year">
                                   {{ base.year }}
                                 </template>
-                                <template v-else>Missing</template>
+                                <template v-else>{{
+                                  translate.missing()
+                                }}</template>
                                 ,
                               </span>
                               <span>
-                                Date:
+                                {{ translate.commonText('date') }}:
                                 <template v-if="base.date">
                                   {{ base.date }}
                                 </template>
-                                <template v-else>Missing</template>
+                                <template v-else>{{
+                                  translate.missing()
+                                }}</template>
                                 ,
                               </span>
                               <span>
-                                Value:
+                                {{ translate.commonText('value') }}:
                                 <template v-if="base.value">
                                   {{ base.value }}
                                 </template>
-                                <template v-else>Missing</template>
+                                <template v-else>{{
+                                  translate.missing()
+                                }}</template>
                               </span>
                             </div>
                             <div class="flex">
-                              <div>Location:&nbsp;</div>
+                              <div>
+                                {{ translate.commonText('location') }}:&nbsp;
+                              </div>
                               <div>
                                 <div
                                   v-for="(loc, l) in base.location"
@@ -250,13 +270,17 @@
                                   <template v-if="loc.reference">
                                     {{ loc.reference }}
                                   </template>
-                                  <template v-else>Missing</template>
+                                  <template v-else>{{
+                                    translate.missing()
+                                  }}</template>
                                 </div>
                               </div>
                             </div>
 
                             <div class="flex">
-                              <div>Dimension:&nbsp;</div>
+                              <div>
+                                {{ translate.commonText('dimension') }}:&nbsp;
+                              </div>
                               <div class="description">
                                 <div
                                   v-for="(dim, d) in base.dimension"
@@ -270,14 +294,18 @@
                                       <template v-if="dim.name">
                                         {{ dim.name }}
                                       </template>
-                                      <template v-else> Missing </template>
+                                      <template v-else>
+                                        {{ translate.missing() }}
+                                      </template>
                                       &nbsp;
                                     </span>
                                     <span>
                                       <template v-if="dim.value">
                                         ({{ dim.value }})
                                       </template>
-                                      <template v-else> (Missing) </template>
+                                      <template v-else>
+                                        ({{ translate.missing() }})
+                                      </template>
                                     </span>
                                   </div>
                                 </div>
@@ -285,7 +313,9 @@
                             </div>
 
                             <div class="flex">
-                              <div>Comment:&nbsp;</div>
+                              <div>
+                                {{ translate.commonText('comment') }}:&nbsp;
+                              </div>
                               <div class="description">
                                 <div
                                   v-for="(com, c) in base.comment[0].narrative"
@@ -302,15 +332,19 @@
                                       <template v-if="com.narrative">
                                         {{ com.narrative }}
                                       </template>
-                                      <template v-else> Missing </template>
+                                      <template v-else>
+                                        {{ translate.missing() }}
+                                      </template>
                                       &nbsp;
                                     </span>
                                     <span>
-                                      (Language:
+                                      ({{ translate.commonText('language') }}:
                                       <template v-if="com.language">
                                         {{ type.language[com.language] }})
                                       </template>
-                                      <template v-else> Missing) </template>
+                                      <template v-else>
+                                        {{ translate.missing() }})
+                                      </template>
                                     </span>
                                   </div>
                                 </div>
@@ -318,10 +352,13 @@
                             </div>
 
                             <div class="flex">
-                              <div>Document Link:&nbsp;</div>
+                              <div>
+                                {{ translate.commonText('document_link') }}
+                                }}:&nbsp;
+                              </div>
                               <div>
                                 {{ countDocumentLink(base.document_link) }}
-                                document
+                                {{ translate.commonText('document') }}
                               </div>
                             </div>
                           </div>
@@ -334,8 +371,12 @@
                           <div class="mt-3">
                             <NotYet
                               :link="`/indicator/${post.id}/period/create`"
-                              description="You haven't added any periods yet."
-                              btn-text="Add period"
+                              :description="
+                                translate.button('not_yet_added_period')
+                              "
+                              :btn-text="
+                                translate.button('add_element', 'common.period')
+                              "
                               class="w-[442px]"
                             />
                           </div>
@@ -351,7 +392,8 @@
                       <tr>
                         <td>
                           <div class="category">
-                            Period {{ Number(key) + 1 }}
+                            {{ translate.commonText('period') }}
+                            {{ Number(key) + 1 }}
                           </div>
                         </td>
                         <td>
@@ -378,13 +420,23 @@
                             </div>
                             <div class="flex shrink-0 grow justify-between">
                               <Btn
-                                text="View Period"
+                                :text="
+                                  translate.button(
+                                    'view_element',
+                                    'common.period'
+                                  )
+                                "
                                 icon="eye"
                                 :link="`/indicator/${post.id}/period/${item.id}`"
                                 class="mr-2.5"
                               />
                               <Btn
-                                text="Edit Period"
+                                :text="
+                                  translate.button(
+                                    'edit_element',
+                                    'common.period'
+                                  )
+                                "
                                 icon="edit"
                                 :link="`/indicator/${post.id}/period/${item.id}/edit`"
                               />
@@ -393,7 +445,7 @@
                         </td>
                       </tr>
                       <tr>
-                        <td>Target Value</td>
+                        <td>{{ translate.commonText('target_value') }}</td>
                         <td>
                           <template
                             v-for="(tar, t) in item.period.target"
@@ -410,7 +462,11 @@
                               </div>
 
                               <div class="location_reference flex">
-                                <div>Location Reference:&nbsp;</div>
+                                <div>
+                                  {{
+                                    translate.commonText('location_reference')
+                                  }}:&nbsp;
+                                </div>
                                 <div>
                                   <div
                                     v-for="(loc, l) in tar.location"
@@ -425,7 +481,9 @@
                                         <template v-if="loc.reference">
                                           {{ loc.reference }}
                                         </template>
-                                        <template v-else> Missing </template>
+                                        <template v-else>
+                                          {{ translate.missing() }}
+                                        </template>
                                       </span>
                                     </div>
                                   </div>
@@ -433,7 +491,9 @@
                               </div>
 
                               <div class="dimension flex">
-                                <div>Dimension:&nbsp;</div>
+                                <div>
+                                  {{ translate.commonText('dimension') }}:&nbsp;
+                                </div>
                                 <div>
                                   <div
                                     v-for="(dim, d) in tar.dimension"
@@ -447,20 +507,26 @@
                                       <template v-if="dim.name">
                                         {{ dim.name }}
                                       </template>
-                                      <template v-else> Missing </template>
+                                      <template v-else>
+                                        {{ translate.missing() }}
+                                      </template>
                                     </span>
                                     <span>
                                       <template v-if="dim.value">
                                         ({{ dim.value }})
                                       </template>
-                                      <template v-else> (Missing) </template>
+                                      <template v-else>
+                                        ({{ translate.missing() }})
+                                      </template>
                                     </span>
                                   </div>
                                 </div>
                               </div>
 
                               <div class="flex">
-                                <div>Comment:&nbsp;</div>
+                                <div>
+                                  {{ translate.commonText('comment') }}:&nbsp;
+                                </div>
                                 <div>
                                   <div
                                     v-for="(com, c) in tar.comment[0].narrative"
@@ -475,15 +541,21 @@
                                         <template v-if="com.narrative">
                                           {{ com.narrative }}
                                         </template>
-                                        <template v-else> Missing </template>
+                                        <template v-else>
+                                          {{ translate.missing() }}</template
+                                        >
                                         &nbsp;
                                       </span>
                                       <span>
-                                        (Language:
+                                        (
+                                        {{ translate.commonText('language') }}:
                                         <template v-if="com.language">
                                           {{ type.language[com.language] }})
                                         </template>
-                                        <template v-else> Missing) </template>
+                                        <template v-else>
+                                          {{ translate.missing() }}
+                                          )
+                                        </template>
                                       </span>
                                     </div>
                                   </div>
@@ -495,7 +567,7 @@
                       </tr>
 
                       <tr>
-                        <td>Actual Value</td>
+                        <td>{{ translate.commonText('actual_value') }}</td>
                         <td>
                           <template
                             v-for="(tar, t) in item.period.actual"
@@ -512,7 +584,11 @@
                               </div>
 
                               <div class="location_reference flex">
-                                <div>Location Reference:&nbsp;</div>
+                                <div>
+                                  {{
+                                    translate.commonText('location_reference')
+                                  }}:&nbsp;
+                                </div>
                                 <div>
                                   <div
                                     v-for="(loc, l) in tar.location"
@@ -527,7 +603,9 @@
                                         <template v-if="loc.reference">
                                           {{ loc.reference }}
                                         </template>
-                                        <template v-else> Missing </template>
+                                        <template v-else>
+                                          {{ translate.missing() }}
+                                        </template>
                                       </span>
                                     </div>
                                   </div>
@@ -535,7 +613,9 @@
                               </div>
 
                               <div class="dimension flex">
-                                <div>Dimension:&nbsp;</div>
+                                <div>
+                                  {{ translate.commonText('dimension') }}:&nbsp;
+                                </div>
                                 <div>
                                   <div
                                     v-for="(dim, d) in tar.dimension"
@@ -549,20 +629,26 @@
                                       <template v-if="dim.name">
                                         {{ dim.name }}
                                       </template>
-                                      <template v-else> Missing </template>
+                                      <template v-else>
+                                        {{ translate.missing() }}</template
+                                      >
                                     </span>
                                     <span>
                                       <template v-if="dim.value">
                                         ({{ dim.value }})
                                       </template>
-                                      <template v-else> (Missing) </template>
+                                      <template v-else>
+                                        ({{ translate.missing() }})
+                                      </template>
                                     </span>
                                   </div>
                                 </div>
                               </div>
 
                               <div class="flex">
-                                <div>Comment:&nbsp;</div>
+                                <div>
+                                  {{ translate.commonText('comment') }}:&nbsp;
+                                </div>
                                 <div>
                                   <div
                                     v-for="(com, c) in tar.comment[0].narrative"
@@ -577,15 +663,21 @@
                                         <template v-if="com.narrative">
                                           {{ com.narrative }}
                                         </template>
-                                        <template v-else> Missing </template>
+                                        <template v-else>
+                                          {{ translate.missing() }}</template
+                                        >
                                         &nbsp;
                                       </span>
                                       <span>
-                                        (Language:
+                                        (
+                                        {{ translate.commonText('language') }}:
                                         <template v-if="com.language">
                                           {{ type.language[com.language] }})
                                         </template>
-                                        <template v-else> Missing) </template>
+                                        <template v-else>
+                                          {{ translate.missing() }}
+                                          )
+                                        </template>
                                       </span>
                                     </div>
                                   </div>
@@ -624,6 +716,7 @@ import Btn from 'Components/buttons/Link.vue';
 
 // helper function
 import { countDocumentLink } from 'Composable/utils';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ResultIndicator',
@@ -647,11 +740,18 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     let { result } = toRefs(props);
 
     const indicatorData = result.value.indicators.reverse();
 
-    return { indicatorData, dateFormat, getActivityTitle, countDocumentLink };
+    return {
+      indicatorData,
+      dateFormat,
+      getActivityTitle,
+      countDocumentLink,
+      translate,
+    };
   },
 });
 </script>

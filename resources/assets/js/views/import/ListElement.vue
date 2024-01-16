@@ -6,7 +6,7 @@
         >{{
           activity['data']['title'][0]['narrative']
             ? activity['data']['title'][0]['narrative']
-            : 'Missing'
+            : translate.missing()
         }}</span
       >
 
@@ -17,7 +17,10 @@
       >
         <span class="flex items-center space-x-2">
           <svg-vue class="text-crimson-40" icon="alert" />
-          <span> Show {{ countErrors() }} Issues</span>
+          <span>
+            {{ translate.commonText('show') }} {{ countErrors() }}
+            {{ translate.button('issues') }}</span
+          >
         </span>
 
         <svg-vue
@@ -44,7 +47,11 @@
           >
             <span class="flex items-center space-x-2">
               <svg-vue class="text-crimson-40" icon="alert" />
-              <span> {{ errorLength('critical') }} Critical errors</span>
+              <span>
+                {{ errorLength('critical') }}
+                {{ translate.stickyText('critical', 'common') }}
+                {{ translate.stickyText('errors', 'common') }}</span
+              >
             </span>
 
             <svg-vue
@@ -54,8 +61,7 @@
             />
           </div>
           <div class="error-help">
-            (The activity contains critical errors and thus cannot be uploaded
-            to the system.)
+            ({{ translate.commonText('activity_contains_critical_errors') }})
           </div>
           <div class="critical-dropdown-container">
             <div class="critical-dropdown">
@@ -93,7 +99,10 @@
           >
             <span class="flex items-center space-x-2">
               <svg-vue class="text-crimson-40" icon="alert" />
-              <span>{{ errorLength('error') }} Errors</span>
+              <span
+                >{{ errorLength('error') }}
+                {{ translate.stickyText('errors', 'common') }}</span
+              >
             </span>
             <svg-vue
               icon="dropdown-arrow"
@@ -102,10 +111,9 @@
             />
           </div>
           <div class="error-help">
-            (The activity with the errors will be uploaded to our system, but
-            the field containing the error will be removed. You will need to
-            refill these fields with correct data once the activity is uploaded
-            to our system.)
+            ({{
+              translate.commonText('activities_with_error_will_be_uploaded')
+            }})
           </div>
           <div class="error-dropdown-container">
             <div class="error-dropdown">
@@ -140,7 +148,8 @@
           <div class="flex items-center justify-between bg-eggshell p-3 pb-0.5">
             <span class="flex items-center space-x-2">
               <svg-vue icon="alert" class="text-camel-40" /><span>
-                {{ errorLength('warning') }} Warnings</span
+                {{ errorLength('warning') }}
+                {{ translate.stickyText('warnings', 'common') }}</span
               >
             </span>
             <svg-vue
@@ -150,9 +159,7 @@
             />
           </div>
           <div class="error-help bg-eggshell">
-            (The field with warnings will be uploaded to our system. These
-            fields contain data that are against the rules of the IATI Validator
-            and will cause validation errors while publishing.)
+            ({{ translate.commonText('field_with_warning_will_be_uploaded') }})
           </div>
           <div class="warning-dropdown-container">
             <div class="warning-dropdown">
@@ -200,12 +207,14 @@
 
   <td>
     <span class="text-sm leading-relaxed">{{
-      !activity['existence'] ? 'New' : 'Existing'
+      !activity['existence']
+        ? translate.commonText('new')
+        : translate.commonText('existing')
     }}</span>
   </td>
 
   <td class="check-column" @click="(event: Event) => event.stopPropagation()">
-    <label class="sr-only" for=""> Select </label>
+    <label class="sr-only" for=""> {{ translate.commonText('select') }} </label>
     <label
       v-if="Object.keys(activity['errors']).indexOf('critical') === -1"
       class="checkbox"
@@ -226,7 +235,9 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits, ref, watch, reactive } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
+const translate = new Translate();
 const props = defineProps({
   activity: {
     type: Object,

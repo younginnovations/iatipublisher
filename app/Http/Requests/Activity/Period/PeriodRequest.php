@@ -48,12 +48,12 @@ class PeriodRequest extends ActivityBaseRequest
      * @param array $formFields
      * @param bool $fileUpload
      * @param array $indicator
-     * @param array $periodBase
+     * @param $periodBase
      * @param $indicatorId
      *
-     * @throws BindingResolutionException
-     *
      * @return array
+     *
+     *@throws BindingResolutionException
      */
     public function getWarningForPeriod(array $formFields, bool $fileUpload = false, array $indicator = [], $periodBase = [], $indicatorId = null): array
     {
@@ -81,9 +81,7 @@ class PeriodRequest extends ActivityBaseRequest
      * @param array $formFields
      * @param bool $fileUpload
      * @param array $indicator
-     * @param array $periodBase
-     *
-     * @throws BindingResolutionException
+     * @param $periodBase
      *
      * @return array
      */
@@ -180,6 +178,7 @@ class PeriodRequest extends ActivityBaseRequest
      *
      * @param $formFields
      * @param $periodType
+     * @param $periodBase
      *
      * @return array
      */
@@ -204,6 +203,7 @@ class PeriodRequest extends ActivityBaseRequest
      *
      * @param $formFields
      * @param $periodType
+     * @param $periodBase
      *
      * @return array
      */
@@ -240,14 +240,14 @@ class PeriodRequest extends ActivityBaseRequest
                 $periodType,
                 $periodStartKey
             )]
-                = 'The @date field must be a proper date.';
+                = translateRequestMessage('date_field_symbol', 'must_be_a_proper_date');
 
             $messages[sprintf(
                 '%s.%s.date.after',
                 $periodType,
                 $periodStartKey
             )]
-                = 'The @iso-date field of period end must be a date after @iso-field of period start';
+                = translateRequestMessage('the_@iso_date_field_of_period_end_must_be_date_after_@iso_field_of_period_start');
 
             $messages[sprintf(
                 '%s.%s.date.date_greater_than',
@@ -261,7 +261,7 @@ class PeriodRequest extends ActivityBaseRequest
                 $periodType,
                 $periodStartKey
             )]
-                = 'The @iso-date field of period end and @iso-date of period start must not have difference of more than a year';
+                = translateRequestMessage('the_@iso_date_field_of_period_end_and_@iso_date_of_period_start_must_not_have_difference_of_more_than_a_year');
         }
 
         return $messages;
@@ -331,8 +331,6 @@ class PeriodRequest extends ActivityBaseRequest
      * @param $fileUpload
      * @param $indicator
      *
-     * @throws BindingResolutionException
-     *
      * @return array
      */
     protected function getErrorsForTarget($formFields, $valueType, $fileUpload, $indicator): array
@@ -388,7 +386,7 @@ class PeriodRequest extends ActivityBaseRequest
         foreach ($formFields as $targetIndex => $target) {
             $targetForm = sprintf('%s.%s', $valueType, $targetIndex);
 
-            $messages[sprintf('%s.%s.value.numeric', $valueType, $targetIndex)] = 'The @value field must be numeric.';
+            $messages[sprintf('%s.%s.value.numeric', $valueType, $targetIndex)] = translateRequestMessage('the_@value_field', 'must_be_numeric');
 
             $narrativeMessages = $this->getMessagesForNarrative($target['comment'][0]['narrative'], sprintf('%s.comment.0', $targetForm));
 
@@ -403,9 +401,9 @@ class PeriodRequest extends ActivityBaseRequest
             }
 
             if ($indicatorMeasureType['non_qualitative']) {
-                $messages[sprintf('%s.%s.value', $valueType, $targetIndex)] = 'Value must be filled when the indicator measure is non-qualitative.';
+                $messages[sprintf('%s.%s.value', $valueType, $targetIndex)] = translateRequestMessage('value_must_be_filled_when_the_indicator_measure_is_non_qualitative');
             } elseif ($indicatorMeasureType['qualitative'] && !empty($target['value'])) {
-                $messages[sprintf('%s.%s.value.qualitative_empty', $valueType, $targetIndex)] = 'Value must be omitted when the indicator measure is qualitative.';
+                $messages[sprintf('%s.%s.value.qualitative_empty', $valueType, $targetIndex)] = translateRequestMessage('value_must_be_omitted_when_the_indicator_measure_is_qualitative');
             }
         }
 

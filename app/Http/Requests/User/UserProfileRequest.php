@@ -59,9 +59,9 @@ class UserProfileRequest extends FormRequest
         $form_type = $this->get('form_type');
 
         if ($form_type === 'password') {
-            $messages['publisher_id.regex'] = 'The publisher id is invalid. The publisher id must be at least two characters long and lower case. It can include letters, numbers and also - (dash) and _ (underscore).';
+            $messages['publisher_id.regex'] = trans('user.publisher_id_is_invalid');
         } else {
-            $messages['username.regex'] = 'The username is invalid. Username must be purely lowercase alphabets followed by alphanumeric(ascii) characters and these symbols:-_';
+            $messages['username.regex'] = trans('username_is_invalid');
         }
 
         return $messages;

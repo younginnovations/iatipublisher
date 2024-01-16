@@ -42,9 +42,10 @@ class GeneralController extends Controller
                 ]);
             }
 
+            $currentLocale = app()->getLocale() ?? 'en';
             $fileFormat = getCodeList('FileFormat', 'Activity');
-            $extensions = array_flip(json_decode(file_get_contents(app_path('Data/Activity/Extension.json')), true, 512, JSON_THROW_ON_ERROR));
-            $additionalExtensions = json_decode(file_get_contents(app_path('Data/Activity/AdditionalExtension.json')), true, 512, JSON_THROW_ON_ERROR);
+            $extensions = array_flip(json_decode(file_get_contents(app_path("Data/$currentLocale/Activity/Extension.json")), true, 512, JSON_THROW_ON_ERROR));
+            $additionalExtensions = json_decode(file_get_contents(app_path("Data/$currentLocale/Activity/AdditionalExtension.json")), true, 512, JSON_THROW_ON_ERROR);
             $fileFragment = $type === 'url' ? Arr::get(parse_url($fileUrl), 'path', null) : $fileUrl;
             $fileExtension = $fileFragment ? pathinfo($fileFragment, PATHINFO_EXTENSION) : null;
 

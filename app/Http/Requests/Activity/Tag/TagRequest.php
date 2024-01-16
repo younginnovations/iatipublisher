@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Tag;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use JsonException;
 
 /**
  * Class TagRequest.
@@ -62,6 +63,7 @@ class TagRequest extends ActivityBaseRequest
      * @param array $formFields
      *
      * @return array
+     * @throws JsonException
      */
     public function getErrorsForTag(array $formFields): array
     {
@@ -95,10 +97,10 @@ class TagRequest extends ActivityBaseRequest
 
         foreach ($formFields as $tagIndex => $tag) {
             $tagForm = sprintf('tag.%s', $tagIndex);
-            $messages[sprintf('%s.tag_vocabulary.in', $tagForm)] = 'The tag vocabulary is invalid.';
-            $messages[sprintf('%s.goals_tag_code.in', $tagForm)] = 'The tag SDG code is invalid';
-            $messages[sprintf('%s.targets_tag_code.in', $tagForm)] = 'The tag SDG targets code is invalid.';
-            $messages[sprintf('%s.vocabulary_uri.url', $tagForm)] = 'The @vocabulary-uri field must be a valid url.';
+            $messages[sprintf('%s.tag_vocabulary.in', $tagForm)] = translateRequestMessage('tag', 'vocabulary_is_invalid');
+            $messages[sprintf('%s.goals_tag_code.in', $tagForm)] = translateRequestMessage('sdg', 'code_is_invalid');
+            $messages[sprintf('%s.targets_tag_code.in', $tagForm)] = translateRequestMessage('sdg_targets', 'code_is_invalid');
+            $messages[sprintf('%s.vocabulary_uri.url', $tagForm)] = translateRequestMessage('vocab_url_field_symbol', 'must_be_valid_url');
 
             foreach ($this->getMessagesForNarrative($tag['narrative'], $tagForm) as $tagNarrativeIndex => $narrativeMessages) {
                 $messages[$tagNarrativeIndex] = $narrativeMessages;

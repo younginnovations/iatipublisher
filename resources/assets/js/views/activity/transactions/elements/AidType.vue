@@ -10,13 +10,13 @@
     >
       <div class="category">
         <span>{{
-          type.aidTypeVocabulary[at.aid_type_vocabulary] ?? 'Missing'
+          type.aidTypeVocabulary[at.aid_type_vocabulary] ?? translate.missing()
         }}</span>
       </div>
-      <div clas="ml-4">
+      <div class="ml-4">
         <table class="mb-3">
           <tr>
-            <td>Code</td>
+            <td>{{ translate.commonText('code') }}</td>
             <td>
               <div class="text-sm">
                 <span v-if="at.aid_type_code">
@@ -35,7 +35,7 @@
                 <span v-else-if="at.earmarking_modality">
                   {{ type.earMarkingModality[at.earmarking_modality] }}
                 </span>
-                <span v-else> Missing </span>
+                <span v-else> {{ translate.missing() }} </span>
               </div>
             </td>
           </tr>
@@ -47,6 +47,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'TransactionAidType',
@@ -58,6 +59,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     const { data } = toRefs(props);
 
     interface ArrayObject {
@@ -81,6 +83,7 @@ export default defineComponent({
     return {
       atData,
       type,
+      translate,
     };
   },
 });

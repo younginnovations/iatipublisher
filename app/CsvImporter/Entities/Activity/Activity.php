@@ -22,6 +22,11 @@ class Activity extends Csv
     protected array $organizationReportingOrg;
 
     /**
+     * @var string
+     */
+    public string $locale;
+
+    /**
      * Activity constructor.
      *
      * @param $rows
@@ -49,7 +54,7 @@ class Activity extends Csv
     public function process(): static
     {
         foreach ($this->getRows() as $row) {
-            $this->initialize($row, $this->activityIdentifiers, $this->organizationReportingOrg)
+            $this->initialize($row, $this->activityIdentifiers, $this->organizationReportingOrg, $this->locale)
                  ->process()
                  ->validate()
                  ->validateUnique($this->csvRows)

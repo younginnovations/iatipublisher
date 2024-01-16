@@ -2,7 +2,7 @@
   <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      title="Indicator List"
+      :title="translate.commonText('indicator_list')"
       :back-link="`${resultLink}`"
     >
       <div class="flex items-center space-x-3">
@@ -13,7 +13,11 @@
           class="mr-3"
         />
         <a :href="`${indicatorLink}/create`">
-          <Btn text="Add Indicator" icon="plus" type="primary" />
+          <Btn
+            :text="translate.button('add_element', 'common.indicator')"
+            icon="plus"
+            type="primary"
+          />
         </a>
       </div>
     </PageTitle>
@@ -23,19 +27,19 @@
         <thead>
           <tr class="bg-n-10">
             <th id="title" scope="col">
-              <span>Title</span>
+              <span>{{ translate.commonText('title') }}</span>
             </th>
             <th id="code" scope="col" width="190px">
               <span>Indicator number</span>
             </th>
             <th id="measure" scope="col" width="190px">
-              <span>Measure</span>
+              <span>{{ translate.commonText('measure') }}</span>
             </th>
             <th id="aggregation_status" scope="col" width="208px">
-              <span>Aggregation Status</span>
+              <span>{{ translate.commonText('aggregation_status') }}</span>
             </th>
             <th id="action" scope="col" width="190px">
-              <span>Action</span>
+              <span>{{ translate.commonText('action') }}</span>
             </th>
           </tr>
         </thead>
@@ -92,10 +96,10 @@
             >
               {{
                 parseInt(indicator.indicator.aggregation_status)
-                  ? 'True'
+                  ? translate.commonText('true')
                   : indicator.indicator.aggregation_status
-                  ? 'False'
-                  : 'Missing'
+                  ? translate.commonText('false')
+                  : translate.missing()
               }}
             </td>
             <td>
@@ -112,7 +116,14 @@
           </tr>
         </tbody>
         <tbody v-else>
-          <td colspan="5" class="text-center">Indicators not found</td>
+          <td colspan="5" class="text-center">
+            {{
+              createCapitalizedSentence(
+                translate.element('indicators'),
+                translate.missing('not_found')
+              )
+            }}
+          </td>
         </tbody>
       </table>
     </div>
@@ -148,6 +159,11 @@ import DeleteAction from 'Components/sections/DeleteAction.vue';
 // composable
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
+import {
+  snakeCaseToSentenceCase,
+  createCapitalizedSentence,
+} from '../../../composable/utils';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'IndicatorList',
@@ -181,6 +197,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     const { activity, parentData } = toRefs(props);
 
     const activityId = activity.value.id,
@@ -219,7 +236,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
+        title: translate.textFromKey('activities.your_activities'),
         link: '/activities',
       },
       {
@@ -231,7 +248,7 @@ export default defineComponent({
         link: `/activity/${activityId}/result/${resultId}`,
       },
       {
-        title: 'Indicator List',
+        title: translate.commonText('indicator_list'),
         link: '',
       },
     ];
@@ -283,7 +300,9 @@ export default defineComponent({
       toastData,
       resultId,
       handleNavigate,
+      translate,
     };
   },
+  methods: { snakeCaseToSentenceCase, createCapitalizedSentence },
 });
 </script>

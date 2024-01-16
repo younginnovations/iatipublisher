@@ -88,8 +88,8 @@ class CapitalSpendCsvTest extends CsvBaseTest
        $rows = $this->invalid_data();
        $errors = $this->getErrors($rows);
        $flattenErrors = Arr::flatten($errors);
-       $this->assertContains('The capital spend must be a number between 0 and 100', $flattenErrors);
+       $this->assertContains('The capital spend must be a number between 0 and 100.', $flattenErrors);
        $this->assertContains('The capital spend cannot have more than one value.', $flattenErrors);
-       $this->assertContains('The capital spend must be a number', $flattenErrors);
+       $this->assertContains('The capital spend must be a number.', $flattenErrors);
    }
 }

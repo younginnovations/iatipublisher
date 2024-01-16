@@ -46,8 +46,9 @@ class TagCsvTest extends CsvBaseTest
        $errors = $this->getErrors($rows);
        $flattenErrors = Arr::flatten($errors);
 
+//       dd($flattenErrors);
        $this->assertContains('The tag vocabulary is invalid.', $flattenErrors);
-       $this->assertContains('The tag SDG code is invalid', $flattenErrors);
+       $this->assertContains('The tag SDG code is invalid.', $flattenErrors);
        $this->assertContains('The tag SDG targets code is invalid.', $flattenErrors);
        $this->assertContains('The @vocabulary-uri field must be a valid url.', $flattenErrors);
    }

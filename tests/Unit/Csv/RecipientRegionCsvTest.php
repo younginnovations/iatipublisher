@@ -62,6 +62,7 @@ class RecipientRegionCsvTest extends CsvBaseTest
         $rows = $this->country_20_region_60_multiple_data();
         $errors = $this->getErrors($rows);
         $flattenErrors = Arr::flatten($errors);
+
         $this->assertContains('The sum of recipient country and recipient region of a specific vocabulary must be 100%', $flattenErrors);
     }
 
@@ -222,10 +223,10 @@ class RecipientRegionCsvTest extends CsvBaseTest
         $errors = $this->getErrors($rows);
         $flattenErrors = Arr::flatten($errors);
 
-        $this->assertContains('Recipient Country’s percentage is already 100%. The sum of the percentages of Recipient Country and Recipient Region must be 100%', $flattenErrors);
+        $this->assertContains('Recipient Country’s percentage is already 100%. The sum of the percentages of Recipient Country and Recipient Region must be 100%.', $flattenErrors);
         $this->assertContains('The recipient region vocabulary uri must be a valid url.', $flattenErrors);
         $this->assertContains('The recipient region percentage field must be a number.', $flattenErrors);
-        $this->assertContains('The recipient country percentage must be at least 0. ', $flattenErrors);
+        $this->assertContains('The recipient country percentage must be atleast 0.', $flattenErrors);
     }
 
     /**

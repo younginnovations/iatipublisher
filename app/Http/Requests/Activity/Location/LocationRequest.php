@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Location;
 
 use App\Http\Requests\Activity\ActivityBaseRequest;
+use JsonException;
 
 /**
  * Class LocationRequest.
@@ -69,6 +70,8 @@ class LocationRequest extends ActivityBaseRequest
      * @param $formFields
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getErrorsForLocation($formFields): array
     {
@@ -88,7 +91,7 @@ class LocationRequest extends ActivityBaseRequest
                 $this->getErrorsForLocationDescription($location['description'], $locationForm),
                 $this->getErrorsForActivityDescription($location['activity_description'], $locationForm),
                 $this->getErrorsForAdministrative($location['administrative'], $locationForm),
-                $this->getErrorsForPoing($location['point'], $locationForm),
+                $this->getErrorsForPoint($location['point'], $locationForm),
             ];
 
             foreach ($tempRules as $tempRule) {
@@ -103,7 +106,9 @@ class LocationRequest extends ActivityBaseRequest
 
     /**
      * returns messages for location form.
+     *
      * @param $formFields
+     *
      * @return array
      */
     public function getMessagesForLocation($formFields): array
@@ -112,11 +117,11 @@ class LocationRequest extends ActivityBaseRequest
 
         foreach ($formFields as $locationIndex => $location) {
             $locationForm = 'location.' . $locationIndex;
-            $messages[sprintf('%s.ref.not_regex', $locationForm)] = 'The location reference field shouldn\'t contain the symbols /, &, | or ?.';
-            $messages[sprintf('%s.location_reach.0.code.in', $locationForm)] = 'The location reach code is invalid.';
-            $messages[sprintf('%s.exactness.0.code.in', $locationForm)] = 'The location exactness is invalid.';
-            $messages[sprintf('%s.location_class.0.code.in', $locationForm)] = 'The location class is invalid.';
-            $messages[sprintf('%s.feature_designation.0.code.in', $locationForm)] = 'The location feature designation is invalid.';
+            $messages[sprintf('%s.ref.not_regex', $locationForm)] = translateRequestMessage('location_ref_field', 'shouldnt_contain_symbol');
+            $messages[sprintf('%s.location_reach.0.code.in', $locationForm)] = translateRequestMessage('location_reach', 'code_is_invalid');
+            $messages[sprintf('%s.exactness.0.code.in', $locationForm)] = translateRequestMessage('location', 'exactness_is_invalid');
+            $messages[sprintf('%s.location_class.0.code.in', $locationForm)] = translateRequestMessage('location', 'class_is_invalid');
+            $messages[sprintf('%s.feature_designation.0.code.in', $locationForm)] = translateRequestMessage('location_feature', 'designation_is_invalid');
             $tempMessages = [
                 $this->getMessagesForLocationId($location['location_id'], $locationForm),
                 $this->getMessagesForName($location['name'], $locationForm),
@@ -143,6 +148,8 @@ class LocationRequest extends ActivityBaseRequest
      * @param $formBase
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getWarningForLocationId($formFields, $formBase): array
     {
@@ -170,7 +177,7 @@ class LocationRequest extends ActivityBaseRequest
 
         foreach ($formFields as $locationIdIndex => $locationId) {
             $locationIdForm = sprintf('%s.location_id.%s', $formBase, $locationIdIndex);
-            $messages[sprintf('%s.vocabulary.in', $locationIdForm)] = 'The location id vocabulary is invalid.';
+            $messages[sprintf('%s.vocabulary.in', $locationIdForm)] = translateRequestMessage('location_id', 'vocabulary_is_invalid');
         }
 
         return $messages;
@@ -389,6 +396,8 @@ class LocationRequest extends ActivityBaseRequest
      * @param $formBase
      *
      * @return array
+     *
+     * @throws JsonException
      */
     public function getErrorsForAdministrative($formFields, $formBase): array
     {
@@ -418,10 +427,10 @@ class LocationRequest extends ActivityBaseRequest
 
         foreach ($formFields as $administrativeIndex => $administrative) {
             $administrativeForm = sprintf('%s.administrative.%s', $formBase, $administrativeIndex);
-            $messages[sprintf('%s.vocabulary.in', $administrativeForm)] = 'The location administrative vocabulary is invalid.';
-            $messages[sprintf('%s.code.in', $administrativeForm)] = 'The location administrative code is invalid.';
-            $messages[sprintf('%s.level.min', $administrativeForm)] = 'The location administrative level must not have negative value.';
-            $messages[sprintf('%s.level.integer', $administrativeForm)] = 'The location administrative level must be an integer.';
+            $messages[sprintf('%s.vocabulary.in', $administrativeForm)] = translateRequestMessage('location_admin', 'vocabulary_is_invalid');
+            $messages[sprintf('%s.code.in', $administrativeForm)] = translateRequestMessage('location_admin', 'code_is_invalid');
+            $messages[sprintf('%s.level.min', $administrativeForm)] = translateRequestMessage('location_admin_level', 'must_not_be_negative');
+            $messages[sprintf('%s.level.integer', $administrativeForm)] = translateRequestMessage('location_admin_level', 'must_be_an_integer');
         }
 
         return $messages;
@@ -435,7 +444,7 @@ class LocationRequest extends ActivityBaseRequest
      *
      * @return array
      */
-    public function getErrorsForPoing($formFields, $formBase): array
+    public function getErrorsForPoint($formFields, $formBase): array
     {
         $rules = [];
         $pointForm = sprintf('%s.point.0', $formBase);
@@ -462,8 +471,8 @@ class LocationRequest extends ActivityBaseRequest
 
         $pointForm = sprintf('%s.point.0', $formBase);
         $positionForm = sprintf('%s.pos.0', $pointForm);
-        $messages[sprintf('%s.latitude.numeric', $positionForm)] = 'The pos latitude must be numeric';
-        $messages[sprintf('%s.longitude.numeric', $positionForm)] = 'The pos longitude must be numeric';
+        $messages[sprintf('%s.latitude.numeric', $positionForm)] = translateRequestMessage('the_pos_latitude', 'must_be_numeric');
+        $messages[sprintf('%s.longitude.numeric', $positionForm)] = translateRequestMessage('the_pos_longitude', 'must_be_numeric');
 
         return $messages;
     }

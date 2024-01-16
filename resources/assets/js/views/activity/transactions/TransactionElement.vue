@@ -11,7 +11,7 @@
       <div class="mb-4 flex">
         <div class="title flex grow">
           <div class="title text-sm font-bold">
-            {{ elementName.toString().replace(/_/g, '-') }}
+            {{ translate.elementFromElementName(elementName) }}
           </div>
         </div>
         <div class="icons flex items-center">
@@ -43,7 +43,13 @@
 
         <template v-else-if="elementName === 'humanitarian'">
           <div class="text-sm">
-            {{ data === '0' ? 'False' : data === '1' ? 'True' : 'Missing' }}
+            {{
+              data === '0'
+                ? translate.commonText('false')
+                : data === '1'
+                ? translate.commonText('true')
+                : translate.missing()
+            }}
           </div>
         </template>
 
@@ -83,7 +89,9 @@
           <TiedStatus :data="elementData" />
         </template>
         <template v-else>
-          <div class="text-sm">{{ data ?? 'Missing' }}</div>
+          <div class="text-sm">
+            {{ data ?? translate.missing() }}
+          </div>
         </template>
       </div>
     </div>
@@ -110,6 +118,7 @@ import {
   FinanceType,
   TiedStatus,
 } from './elements/Index';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ActivityElement',
@@ -159,6 +168,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     let { data, types } = toRefs(props),
       elementData = data.value;
 
@@ -180,6 +190,7 @@ export default defineComponent({
       elementData,
       getLanguages,
       dateFormat,
+      translate,
     };
   },
 });

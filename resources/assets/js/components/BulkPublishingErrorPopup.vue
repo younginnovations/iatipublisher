@@ -1,10 +1,12 @@
 <template>
   <h3 class="mb-4 text-lg font-medium">
     <svg-vue icon="alert" class="mr-2 inline text-crimson-40"></svg-vue>
-    <span class="font-bold">Another Bulk publish in progress</span>
+    <span class="font-bold">{{
+      translate.commonText('another_bulk_publish_in_progress')
+    }}</span>
   </h3>
   <div class="fw-bold list-disc rounded-md bg-salmon-10 p-3 font-medium">
-    Activities being published:
+    {{ translate.commonText('activities_being_published') }}
     <ul class="list-disc rounded-md bg-salmon-10 p-3 font-medium">
       <li
         v-for="(activity, index) in bulkPublishStatus"
@@ -28,15 +30,20 @@
         </span>
       </li>
     </ul>
-    Please wait for previous bulk publish to complete or cancel previous bulk
-    publish to continue this bulk publish.
+    {{
+      translate.commonText(
+        'please_wait_for_the_previous_bulk_publish_to_complete'
+      )
+    }}
   </div>
 </template>
 
 <script lang="ts" setup>
 import { onUnmounted, onMounted, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 const bulkPublishStatus = inject('bulkPublishStatus') as object;
+const translate = new Translate();
 
 onMounted(() => {
   document.documentElement.style.overflow = 'hidden';

@@ -11,14 +11,14 @@
                   {{
                     getActivityTitle(post.title[0].narrative, 'en')
                       ? getActivityTitle(post.title[0].narrative, 'en')
-                      : 'Missing'
+                      : translate.missing()
                   }}
                 </div>
                 <div class="ml-4">
                   <table>
                     <tbody>
                       <tr>
-                        <td>Title</td>
+                        <td>{{ translate.commonText('title') }}</td>
                         <td>
                           <div
                             v-for="(na, n) in post.title[0].narrative"
@@ -29,37 +29,39 @@
                             }"
                           >
                             <div class="language mb-1">
-                              (Language:
+                              ({{ translate.commonText('language') }}:
                               {{
                                 na.language
                                   ? type.language[na.language]
-                                  : 'Missing'
+                                  : translate.missing()
                               }})
                             </div>
                             <div class="description text-xs">
-                              {{ na.narrative ?? 'Missing' }}
+                              {{ na.narrative ?? translate.missing() }}
                             </div>
                           </div>
                         </td>
                       </tr>
 
                       <tr>
-                        <td>Document Link</td>
+                        <td>{{ translate.commonText('document_link') }}</td>
                         <td>
                           <a v-if="post.url" target="_blank" :href="post.url">{{
                             post.url
                           }}</a>
-                          <span v-else>Missing</span>
+                          <span v-else>{{ translate.missing() }}</span>
                         </td>
                       </tr>
 
                       <tr>
-                        <td>Format</td>
-                        <td>{{ post.format ?? 'Missing' }}</td>
+                        <td>{{ translate.commonText('format') }}</td>
+                        <td>
+                          {{ post.format ?? translate.missing() }}
+                        </td>
                       </tr>
 
                       <tr>
-                        <td>Description</td>
+                        <td>{{ translate.commonText('description') }}</td>
                         <td>
                           <div
                             v-for="(na, n) in post.description[0].narrative"
@@ -71,22 +73,22 @@
                             }"
                           >
                             <div class="language mb-1">
-                              (Language:
+                              ({{ translate.commonText('language') }}:
                               {{
                                 na.language
                                   ? type.language[na.language]
-                                  : 'Missing'
+                                  : translate.missing()
                               }})
                             </div>
                             <div class="description text-xs">
-                              {{ na.narrative ?? 'Missing' }}
+                              {{ na.narrative ?? translate.missing() }}
                             </div>
                           </div>
                         </td>
                       </tr>
 
                       <tr v-if="post.category.length > 0">
-                        <td>Category</td>
+                        <td>{{ translate.commonText('category') }}</td>
                         <td>
                           <div
                             v-for="(cat, c) in post.category"
@@ -97,14 +99,14 @@
                             {{
                               cat.code
                                 ? type.documentCategory[cat.code]
-                                : 'Missing'
+                                : translate.missing()
                             }}
                           </div>
                         </td>
                       </tr>
 
                       <tr v-if="post.language.length > 0">
-                        <td>Language</td>
+                        <td>{{ translate.commonText('language') }}</td>
                         <td>
                           <div class="text-xs">
                             {{
@@ -114,17 +116,19 @@
                                       (entry) => type.language[entry.language]
                                     )
                                     .join(', ')
-                                : 'Missing'
+                                : translate.missing()
                             }}
                           </div>
                         </td>
                       </tr>
 
                       <tr>
-                        <td>Document Date</td>
+                        <td>{{ translate.commonText('document_date') }}</td>
                         <td>
                           <div class="text-xs">
-                            {{ post.document_date[0].date ?? 'Missing' }}
+                            {{
+                              post.document_date[0].date ?? translate.missing()
+                            }}
                           </div>
                         </td>
                       </tr>
@@ -145,6 +149,7 @@ import { defineComponent, toRefs } from 'vue';
 
 //composable
 import getActivityTitle from 'Composable/title';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'IndicatorDocumentLink',
@@ -165,6 +170,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     let { data } = toRefs(props);
 
     /**
@@ -200,7 +206,7 @@ export default defineComponent({
 
     const dlData = data.value as DocumentLink[];
 
-    return { dlData, getActivityTitle };
+    return { dlData, getActivityTitle, translate };
   },
 });
 </script>

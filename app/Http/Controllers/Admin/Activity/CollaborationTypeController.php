@@ -53,7 +53,8 @@ class CollaborationTypeController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering activity collaboration-type form.');
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('responses.activity_collaboration_type', 'rendering', 'form'));
         }
     }
 
@@ -71,14 +72,14 @@ class CollaborationTypeController extends Controller
             $activityCollaborationType = $request->get('collaboration_type') !== null ? (int) $request->get('collaboration_type') : null;
 
             if (!$this->collaborationTypeService->update($id, $activityCollaborationType)) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity collaboration-type.');
+                return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('responses.activity_collaboration_type', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Activity collaboration-type updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', translateElementSuccessfully('activity_collaboration_type', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity collaboration type.');
+            return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('responses.activity_collaboration_type', 'updating'));
         }
     }
 }

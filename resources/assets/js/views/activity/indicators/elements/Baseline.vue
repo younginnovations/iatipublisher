@@ -1,6 +1,6 @@
 <template>
   <tr>
-    <td>Baseline</td>
+    <td>{{ translate.commonText('baseline') }}</td>
     <td>
       <div
         v-for="(base, b) in baseline"
@@ -11,46 +11,50 @@
       >
         <div :class="elementSpacing">
           <span>
-            Year:
+            {{ translate.commonText('year') }}:
             <template v-if="base.year">
               {{ base.year }}
             </template>
-            <template v-else>Missing</template>
+            <template v-else>{{ translate.missing() }}</template>
             ,
           </span>
           <span>
-            Date:
+            {{ translate.commonText('date') }}:
             <template v-if="base.date">
               {{ base.date }}
             </template>
-            <template v-else>Missing</template>
+            <template v-else>{{ translate.missing() }}</template>
             ,
           </span>
           <span>
-            Value:
+            {{ translate.commonText('value') }}:
             <template v-if="base.value">
               {{ base.value }}
             </template>
-            <template v-else>Missing</template>
+            <template v-else>{{ translate.missing() }}</template>
           </span>
         </div>
 
         <div class="flex" :class="elementSpacing">
-          <div>Location:&nbsp;</div>
+          <div>{{ translate.commonText('location') }}:&nbsp;</div>
           <div>
-            {{ location(base.location) ? location(base.location) : 'Missing' }}
+            {{
+              location(base.location)
+                ? location(base.location)
+                : translate.missing()
+            }}
           </div>
         </div>
 
         <div class="flex" :class="elementSpacing">
-          <div>Dimension:&nbsp;</div>
+          <div>{{ translate.commonText('dimension') }}:&nbsp;</div>
           <div class="description">
             {{ dimensions(base.dimension) }}
           </div>
         </div>
 
         <div class="flex" :class="elementSpacing">
-          <div>Comment:&nbsp;</div>
+          <div>{{ translate.commonText('comment') }}:&nbsp;</div>
           <div>
             <div
               v-for="(com, c) in base.comment[0].narrative"
@@ -62,13 +66,13 @@
             >
               <div>
                 <div class="description">
-                  {{ com.narrative ? com.narrative : 'Missing' }}
+                  {{ com.narrative ? com.narrative : translate.missing() }}
                   <span class="text-n-30">
-                    (Language:
+                    ({{ translate.commonText('language') }}:
                     {{
                       com.language
                         ? baseType.language[com.language]
-                        : 'Missing'
+                        : translate.missing()
                     }})</span
                   >
                 </div>
@@ -79,7 +83,7 @@
 
         <div>
           <div class="mb-2.5 flex">
-            <div>Document Link:&nbsp;</div>
+            <div>{{ translate.commonText('document_link') }}:&nbsp;</div>
             <div></div>
           </div>
           <div class="divider mb-4 h-px w-full border-b border-n-20"></div>
@@ -98,6 +102,7 @@
 import { defineComponent, toRefs } from 'vue';
 import { DocumentLink } from './Index';
 import { countDocumentLink } from 'Composable/utils';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'IndicatorBaseline',
@@ -145,6 +150,7 @@ export default defineComponent({
       year: number;
     }
 
+    const translate = new Translate();
     const baseline = data.value as BaselineElements[];
 
     /**
@@ -167,7 +173,13 @@ export default defineComponent({
       locations = locations.slice(0, -1);
 
       if (locations.length > 0) {
-        return locations.join(', ') + ' ' + 'and' + ' ' + lastLocation;
+        return (
+          locations.join(', ') +
+          ' ' +
+          translate.stickyText('and', 'common') +
+          ' ' +
+          lastLocation
+        );
       } else {
         return lastLocation;
       }
@@ -181,9 +193,11 @@ export default defineComponent({
       let dimensions: string[] = [];
 
       dimensions = data.map((item) => {
-        const name = item.name ?? 'Missing',
-          value = item.value ?? 'Missing';
-        return `code - ${name}, value - ${value}`;
+        const name = item.name ?? translate.missing(),
+          value = item.value ?? translate.missing();
+        return `${translate.commonText(
+          'code'
+        )} - ${name}, ${translate.commonText('value')} - (${value})`;
       });
 
       return dimensions.join('; ');
@@ -194,6 +208,7 @@ export default defineComponent({
       dimensions,
       elementSpacing,
       countDocumentLink,
+      translate,
     };
   },
 });

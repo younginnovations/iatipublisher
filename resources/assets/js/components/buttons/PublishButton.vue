@@ -44,14 +44,14 @@
           <BtnComponent
             v-if="publishStep == 0"
             class="bg-white px-6 uppercase"
-            text="Go Back"
+            :text="translate.button('go_back')"
             type=""
             @click="publishValue = false"
           />
           <BtnComponent
             v-if="publishStep == 0"
             class="space"
-            text="Continue"
+            :text="translate.button('continue')"
             type="primary"
             @click="stepPlusOne"
           />
@@ -60,14 +60,14 @@
           <BtnComponent
             v-if="publishStep == 0"
             class="bg-white px-6 uppercase"
-            text="Continue Anyway"
+            :text="translate.button('continue_anyway')"
             type=""
             @click="stepPlusOne"
           />
           <BtnComponent
             v-if="publishStep == 0"
             class="space"
-            text="Add Missing Data"
+            :text="translate.button('add_element', 'missing.data')"
             type="primary"
             @click="publishValue = false"
           />
@@ -76,7 +76,7 @@
         <BtnComponent
           v-if="publishStep === 1 || publishStep === 2"
           class="bg-white px-6 uppercase"
-          text="Go Back"
+          :text="translate.button('go_back')"
           type=""
           @click="stepMinusOne"
         />
@@ -85,7 +85,7 @@
         <BtnComponent
           v-if="publishStep === 1"
           class="space"
-          text="Continue"
+          :text="translate.button('continue')"
           type="primary"
           @click="validatorFunction"
         />
@@ -94,7 +94,7 @@
         <BtnComponent
           v-if="publishStep === 2"
           class="space"
-          text="Publish"
+          :text="translate.button('publish')"
           type="primary"
           @click="publishFunction"
         />
@@ -103,7 +103,7 @@
         <BtnComponent
           v-if="publishStep === 3 || publishStep === 4"
           class="bg-white px-6 uppercase"
-          text="Publish Anyway"
+          :text="translate.button('publish_anyway')"
           type=""
           @click="publishFunction"
         />
@@ -111,7 +111,7 @@
         <BtnComponent
           v-if="publishStep === 3 || publishStep === 4"
           class="space"
-          text="Fix issues"
+          :text="translate.button('fix_issues')"
           type="primary"
           @click="resetPublishStep"
         />
@@ -145,7 +145,9 @@ import Loader from 'Components/sections/ProgressLoader.vue';
 
 // Vuex Store
 import { detailStore } from 'Store/activities/show';
+import { Translate } from 'Composable/translationHelper';
 
+const translate = new Translate();
 const props = defineProps({
   type: { type: String, default: 'primary' },
   linkedToIati: { type: Boolean, required: true },
@@ -208,7 +210,7 @@ const loader = ref(false);
 const coreElementStatus = coreCompleted.value;
 
 // Dynamic text for loader
-const loaderText = ref('Please Wait');
+const loaderText = ref(translate.commonText('please_wait'));
 
 // reset step to zero after closing modal
 const resetPublishStep = () => {
@@ -231,15 +233,20 @@ const publishStateChange = computed(() => {
 
   // different content for step 1 based on coreElement status
   if (coreElementStatus) {
-    title = 'Core Elements Complete';
-    description =
-      'Congratulations! All the core elements are complete. Continue to Validate this activity.';
+    title = translate.commonText('core_elements_completed');
+    description = translate.commonText(
+      'congratulations_all_the_core_elements_are_complete'
+    );
   } else {
-    title = 'Core Elements not complete';
-    description =
-      '<p>There is missing data in some of the core elements. We highly recommend that you complete these data fields to help ensure your data is useful.</p><p>Do you want to continue anyway and run checks on (validate) this data.</p>';
+    title = translate.commonText('core_elements_not_complete');
+    description = translate.commonText(
+      'there_is_missing_data_in_some_of_the_core_elements'
+    );
     icon = 'warning-fill';
   }
+
+  //creating a shorter variable so that building error description for case 3 and 4 becomes easier
+  let s = translate.getStickyObject('common');
 
   switch (publishStep.value) {
     // first step
@@ -251,29 +258,35 @@ const publishStateChange = computed(() => {
       break;
     //second step
     case 1:
-      publishState.title = `Activity will be validated before publishing`;
-      publishState.description = `This activity will be first validated before publishing the activity to the IATI Registry. `;
+      publishState.title = translate.stickyText(
+        'activity_will_be_validated_before_publishing'
+      );
+      publishState.description = translate.stickyText(
+        'this_activity_will_be_first_validated_before_publishing_the_activity_to_the_iati_registry'
+      );
       publishState.icon = `shield`;
       publishState.alertState = false;
       break;
     // case 2 is for success validation
     case 2:
-      publishState.title = `IATI Validation`;
-      publishState.description = `<p>Congratulations! No errors were found. Publish your data now.</p><p>This data will be available on the IATI Datastore and other data portals/tools/software that use IATI data.</p>`;
+      publishState.title = translate.stickyText('iati_validation');
+      publishState.description = translate.stickyText(
+        'congratulations_no_errors_were_found'
+      );
       publishState.icon = `tick`;
       publishState.alertState = true;
       break;
     //case 3 is for validation with critical errors
     case 3:
-      publishState.title = `IATI Validation Issue`;
-      publishState.description = `<p><b>${err.criticalNumber} critical errors</b>, <b>${err.errorNumber} errors</b> and <b>${err.warningNumber} warnings</b> were found. View information about these errors/warnings at the top of the activity page.</p><p>As your data has at least one critical error, it will not be available on the IATI Datastore and may not be available on other data portals/tools/software that use IATI data.</p><p>We highly recommend you fix these issue(s) before publishing your activity to improve the quality and usefulness of your data.</p>`;
+      publishState.title = translate.stickyText('iati_validation_issue');
+      publishState.description = `<p><b>${err.criticalNumber} ${s.critical} ${s.errors}</b>, <b>${err.errorNumber} ${s.errors}</b> ${s.and} <b>${err.warningNumber} ${s.warnings}</b> ${s.warnings}. ${s.critical}</p><p>${s.has_atleast_one_critical_error}</p><p>${s.we_highly_recommend_you_fix_these_issues}</p>`;
       publishState.icon = `warning-fill`;
       publishState.alertState = false;
       break;
     // case 4 is for validation without critical errors
     case 4:
-      publishState.title = `IATI Validation Issue`;
-      publishState.description = `<p><b>${err.errorNumber} errors</b> and <b>${err.warningNumber} warnings</b> were found. View information about these errors/warnings at the top of the activity page.</p><p>We highly recommend you fix these issue(s) before publishing your activity to improve the quality and usefulness of your data.</p>`;
+      publishState.title = translate.stickyText('iati_validation_issue');
+      publishState.description = `<p><b>${err.errorNumber}  ${s.errors}</b>  ${s.and} <b>${err.warningNumber}  ${s.warnings}</b>  ${s.were_found}.  ${s.view_information_about_these}</p><p>${s.we_highly_recommend_you_fix_these_issues}</p>`;
       publishState.icon = `warning-fill`;
       publishState.alertState = false;
       break;
@@ -317,7 +330,9 @@ const validatorFunction = () => {
     }, 500);
   }
 
-  loaderText.value = 'Validating Activity';
+  loaderText.value = `${translate.commonText(
+    'validating'
+  )} ${translate.commonText('activity')}`;
 
   axios.post(`/activity/${id}/validateActivity`).then((res) => {
     const response = res.data;
@@ -384,8 +399,12 @@ const publishFunction = () => {
     loader.value = true;
   }, 500);
 
-  loaderText.value = 'Publishing Activity';
+  loaderText.value = `${translate.commonText(
+    'publishing'
+  )} ${translate.commonText('activity')}`;
+  resetPublishStep();
   publishStep.value = 0;
+
   axios.post(`/activity/${id}/publish`).then((res) => {
     const response = res.data;
     store.dispatch('updateUnPublished', response.success);
@@ -405,12 +424,12 @@ const publishStatus = reactive({
 
 const btnText = computed(() => {
   if (publishStatus.linked_to_iati && publishStatus.status === 'draft') {
-    return 'Republish';
+    return translate.button('republish');
   } else if (
     !publishStatus.linked_to_iati &&
     publishStatus.status === 'draft'
   ) {
-    return 'Publish';
+    return translate.button('publish');
   } else {
     return '';
   }

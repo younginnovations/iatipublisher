@@ -1,3 +1,4 @@
+<!-- eslint-disable -->
 <template>
   <div class="page-title mb-4">
     <div class="flex gap-4 md:items-end">
@@ -5,45 +6,53 @@
         <div class="mb-2 text-caption-c1 text-n-40 xl:mb-4">
           <nav aria-label="breadcrumbs" class="breadcrumb">
             <p>
-              <span class="last font-bold">Your Activities</span>
+              <span class="last font-bold">{{
+                translate.textFromKey('activities.your_activities')
+              }}</span>
             </p>
           </nav>
         </div>
         <div class="inline-flex flex-col space-y-2 md:flex-row md:items-center">
           <h4 class="mr-4 text-3xl font-bold xl:text-heading-4">
-            Your Activities
+            {{ translate.textFromKey('activities.your_activities') }}
           </h4>
           <div class="tooltip-btn">
             <button class="">
               <svg-vue icon="question-mark" />
-              <span>What is an activity?</span>
+              <span>{{
+                translate.textFromKey('activities.what_is_an_activity.label')
+              }}</span>
             </button>
             <div class="tooltip-btn__content z-[1]">
               <div class="content">
                 <div class="mb-1.5 text-caption-c1 font-bold text-bluecoral">
-                  What is an activity?
+                  {{
+                    translate.textFromKey(
+                      'activities.what_is_an_activity.label'
+                    )
+                  }}
                 </div>
-                <p>
-                  You need to provide data about your organisation's development
-                  and humanitarian 'activities'. The unit of work described by
-                  an 'activity' is determined by the organisation that is
-                  publishing the data. For example, an activity could be a donor
-                  government providing US$ 50 million to a recipient country's
-                  government to implement basic education over 5 years. Or an
-                  activity could be an NGO spending US$ 500,000 to deliver clean
-                  drinking water to 1000 households over 6 months.
-                  <br />
-                  Therefore your organisation will need to determine how it will
-                  divide its work internally into activities. Read the
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="/publishing-checklist"
-                    class="text-bluecoral"
-                    ><b>Publishing Checklist</b></a
-                  >
-                  for more information.
-                </p>
+                <p
+                  v-html="
+                    translate.textFromKey(
+                      'activities.what_is_an_activity.description.one'
+                    )
+                  "
+                ></p>
+                <p
+                  v-html="
+                    translate.textFromKey(
+                      'activities.what_is_an_activity.description.two'
+                    )
+                  "
+                ></p>
+                <p
+                  v-html="
+                    translate.textFromKey(
+                      'activities.what_is_an_activity.description.three'
+                    )
+                  "
+                ></p>
               </div>
             </div>
           </div>
@@ -63,7 +72,7 @@
         <ErrorPopUp
           v-if="errorData.visibility"
           :message="errorData.message"
-          title="Activity couldn’t be published because"
+          :title="translate.error('activity_could_not_be_published')"
           @close-popup="
             () => {
               errorData.visibility = false;
@@ -109,6 +118,7 @@ import DeleteButton from 'Components/buttons/DeleteButton.vue';
 // Vuex Store
 import { useStore } from 'Store/activities/index';
 import ErrorPopUp from 'Components/ErrorPopUp.vue';
+import { Translate } from 'Composable/translationHelper';
 
 interface RefreshToastMsgTypeface {
   visibility: boolean;
@@ -122,6 +132,7 @@ interface ToastInterface {
   type: boolean;
 }
 
+const translate = new Translate();
 const refreshToastMsg = inject('refreshToastMsg') as RefreshToastMsgTypeface;
 const toastMessage = inject('toastData') as ToastInterface;
 const errorData = inject('errorData') as ToastInterface;

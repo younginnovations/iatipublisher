@@ -8,9 +8,9 @@
     }"
   >
     <div class="language mb-1.5">
-      (Language: {{ type[post.language] ? type[post.language] : 'Missing' }})
+      ({{ translate.webText('language') }}: {{ type[post.language] }})
     </div>
-    <div class="w-[800px] max-w-[80%] overflow-x-hidden text-ellipsis text-sm">
+    <div class="max-w-[887px] text-sm">
       {{ post.narrative }}
     </div>
   </div>
@@ -18,6 +18,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ResultTD',
@@ -48,7 +49,8 @@ export default defineComponent({
 
     let { data } = toRefs(props);
     const tdData = data.value as Narratives;
-    return { tdData };
+    const translate = new Translate();
+    return { tdData, translate };
   },
 });
 </script>

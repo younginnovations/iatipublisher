@@ -9,7 +9,11 @@
         class="mr-1 mt-0.5 shrink-0 text-lg text-crimson-40"
       />
       <div>
-        <b>Critical error found in {{ data.critical.length }} activities.</b>
+        <b
+          >{{ translate.commonText('critical_error_found') }}
+          {{ data.critical.length }}
+          {{ translate.commonText('activities_nocase') }}.</b
+        >
         {{ criticalMessage }}
       </div>
     </div>
@@ -30,7 +34,11 @@
         class="mr-1 mt-0.5 shrink-0 text-lg text-camel-40"
       />
       <div>
-        <b>Errors and Warning found in {{ data.errors.length }} activities.</b>
+        <b
+          >{{ translate.commonText('errors_and_warnings_found') }}
+          {{ data.errors.length }}
+          {{ translate.commonText('activities_nocase') }}.</b
+        >
         {{ warningMessage }}
       </div>
     </div>
@@ -64,14 +72,16 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 import ErrorItem from './ErrorItem.vue';
+import { Translate } from 'Composable/translationHelper';
 
+const translate = new Translate();
 defineProps({
   data: { type: Object, required: true },
 });
 
-const criticalMessage = `Data will not be available on the IATI Datastore and may not be available on other data portals/tools/software that use IATI data. We highly recommend you fix these issue(s) before publishing.`;
+const criticalMessage = translate.commonText('message.critical');
 
-const warningMessage = `We highly recommend you fix these issue(s) before publishing your activity to improve the quality and usefulness of your data.`;
+const warningMessage = translate.commonText('message.warning');
 
-const noErrorMessage = `<b>Congratulations! No errors were found.</b> Publish your data now. This data will be available on the IATI Datastore and other data portals/tools/ software that use IATI data.`;
+const noErrorMessage = translate.commonText('message.no_error');
 </script>

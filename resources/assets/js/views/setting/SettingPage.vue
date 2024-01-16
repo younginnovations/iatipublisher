@@ -2,12 +2,16 @@
   <section class="section-wrapper">
     <Loader v-if="loaderVisibility" />
     <div class="setting input__field">
-      <span class="text-xs font-bold text-n-40">Settings</span>
+      <span class="translate-text text-xs font-bold text-n-40">{{
+        translate.textFromKey('settings.settings_label')
+      }}</span>
       <div class="flex items-center justify-between">
         <div class="my-2 flex items-center sm:mt-4 sm:mb-6">
           <a href="/activities"><svg-vue icon="left-arrow" /></a>
-          <h2 class="ml-3 text-heading-5 font-bold text-n-50 sm:text-heading-4">
-            Settings
+          <h2
+            class="translate-text ml-3 text-heading-5 font-bold text-n-50 sm:text-heading-4"
+          >
+            {{ translate.textFromKey('settings.settings_label') }}
           </h2>
         </div>
         <div>
@@ -24,22 +28,22 @@
       >
         <div class="flex">
           <button
-            class="tab-btn mr-2"
+            class="tab-btn translate-text mr-2"
             :class="{
               active__tab: tab === 'publish',
             }"
             @click="toggleTab('publish')"
           >
-            Publishing Settings
+            {{ translate.textFromKey('settings.publishing_settings_label') }}
           </button>
           <button
-            class="tab-btn"
+            class="tab-btn translate-text"
             :class="{
               active__tab: tab === 'default',
             }"
             @click="toggleTab('default')"
           >
-            Default Values
+            {{ translate.textFromKey('settings.default_values_label') }}
           </button>
         </div>
         <SettingPublishingForm
@@ -69,19 +73,19 @@
       <div class="flex items-center justify-end">
         <a
           :class="userRole !== 'admin' && 'cursor-not-allowed'"
-          class="ghost-btn mr-4 sm:mr-8"
+          class="ghost-btn translate-text mr-4 sm:mr-8"
           href="/activities"
-          >Cancel</a
+          >{{ translate.button('cancel') }}</a
         >
         <button
           :class="userRole !== 'admin' && 'cursor-not-allowed'"
-          class="primary-btn save-btn"
+          class="primary-btn save-btn translate-text"
           @click="submitForm('setting/store/publisher')"
         >
           {{
             tab === 'publish'
-              ? 'Save publishing setting'
-              : 'Save default values'
+              ? translate.button('save_publishing_settings')
+              : translate.button('save_default_values')
           }}
         </button>
       </div>
@@ -98,6 +102,7 @@ import SettingDefaultForm from './SettingDefaultForm.vue';
 import SettingPublishingForm from './SettingPublishingForm.vue';
 import Loader from '../../components/Loader.vue';
 import Toast from 'Components/ToastMessage.vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   components: {
@@ -155,6 +160,7 @@ export default defineComponent({
   },
 
   setup(props) {
+    const translate = new Translate();
     const tab = ref('publish');
     const store = useStore();
     const loaderVisibility = ref(false);
@@ -347,6 +353,7 @@ export default defineComponent({
       toastType,
       toggleTab,
       submitForm,
+      translate,
     };
   },
 });

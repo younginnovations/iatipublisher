@@ -9,7 +9,9 @@
         <input
           v-model="elements.search"
           class="panel__input"
-          placeholder="Search elements to add/edit"
+          :placeholder="
+            translate.textFromKey('activity_detail.search_elements_placeholder')
+          "
           type="text"
         />
       </div>
@@ -42,28 +44,28 @@
               @click="dropdownFilter('')"
             >
               <svg-vue class="mr-1 text-lg" icon="box" />
-              <span>All Elements</span>
+              <span>{{ translate.commonText('all_elements') }}</span>
             </li>
             <li
               class="flex py-1.5 px-3.5 hover:bg-white"
               @click="dropdownFilter('core')"
             >
               <svg-vue class="mr-1 text-lg" icon="core" />
-              <span>Core</span>
+              <span>{{ translate.commonText('core') }}</span>
             </li>
             <li
               class="flex py-1.5 px-3.5 hover:bg-white"
               @click="dropdownFilter('completed')"
             >
               <svg-vue class="mr-1 text-lg" icon="double-tick" />
-              <span>Completed</span>
+              <span>{{ translate.commonText('completed') }}</span>
             </li>
             <li
               class="flex py-1.5 px-3.5 hover:bg-white"
               @click="dropdownFilter('not_completed')"
             >
               <svg-vue class="ml-1 !mr-1.5" icon="red-cross"></svg-vue>
-              <span>Not Completed</span>
+              <span>{{ translate.commonText('not_completed') }}</span>
             </li>
           </ul>
         </div>
@@ -113,7 +115,7 @@
             ></svg-vue>
           </template>
           <div class="title mt-1 text-xs">
-            {{ index.toString().replace(/_/g, '-') }}
+            {{ translate.elementFromElementName(index.toString()) }}
           </div>
         </a>
       </template>
@@ -126,7 +128,9 @@ import { computed, defineProps, reactive, onMounted, ref, toRefs } from 'vue';
 import { useToggle } from '@vueuse/core';
 
 import { activityCoreElements } from 'Composable/coreElements';
+import { Translate } from 'Composable/translationHelper';
 
+const translate = new Translate();
 const props = defineProps({
   data: {
     type: Object,
@@ -161,7 +165,8 @@ const asArrayData = Object.entries(data.value);
 const filteredElements = computed(() => {
   const filtered = asArrayData.filter(([key, value]) => {
     if (!elements.status) {
-      return key
+      return translate
+        .element(key)
         .toLowerCase()
         .includes(
           elements.search.toLowerCase().replace('_', '').replace('-', '_')

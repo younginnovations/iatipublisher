@@ -12,17 +12,17 @@
           {{
             total_expenditure.value['0'].amount
               ? Number(total_expenditure.value[0].amount).toLocaleString()
-              : 'Budget Missing'
+              : translate.missing('budget')
           }}
           {{ total_expenditure.value['0'].currency }}
         </span>
-        <span v-else> Expenditure Amount Missing</span>
+        <span v-else> {{ translate.missing('expenditure_amount') }}</span>
       </div>
       <div class="ml-4">
         <table>
           <tbody>
             <tr>
-              <td>Period</td>
+              <td>{{ translate.commonText('period') }}</td>
               <td>
                 {{ formatDate(total_expenditure.period_start['0'].date) }}
                 -
@@ -30,7 +30,7 @@
               </td>
             </tr>
             <tr>
-              <td>Value date</td>
+              <td>{{ translate.commonText('value_date') }}</td>
               <td>
                 {{ formatDate(total_expenditure.value['0'].value_date) }}
               </td>
@@ -42,7 +42,9 @@
 
     <div class="indicator overflow-hidden rounded-t-lg border border-n-20">
       <div class="head flex items-center border-b border-n-20 px-6 py-2">
-        <span class="text-xs font-bold text-n-50">Expense line</span>
+        <span class="text-xs font-bold text-n-50">{{
+          translate.commonText('expense_line')
+        }}</span>
       </div>
       <div
         v-for="(expense_line, j) in total_expenditure.expense_line"
@@ -60,25 +62,31 @@
                 {{ Number(expense_line.value['0'].amount).toLocaleString() }}
                 {{ expense_line.value['0'].currency }}
               </span>
-              <span v-else> Expense Line Missing </span>
+              <span v-else>
+                {{ translate.commonText('expense_line') }}
+                {{ translate.missing() }}
+              </span>
             </div>
             <div class="ml-4">
               <table>
                 <tbody>
                   <tr>
-                    <td>Reference</td>
+                    <td>{{ translate.commonText('reference') }}</td>
                     <td>
-                      {{ expense_line.ref ?? 'Reference Missing' }}
+                      {{
+                        expense_line.ref ??
+                        translate.missing('element', 'common.reference')
+                      }}
                     </td>
                   </tr>
                   <tr>
-                    <td>Value Date</td>
+                    <td>{{ translate.commonText('value_date') }}</td>
                     <td>
                       {{ formatDate(expense_line.value['0'].value_date) }}
                     </td>
                   </tr>
                   <tr>
-                    <td>Narrative</td>
+                    <td>{{ translate.commonText('narrative') }}</td>
                     <td>
                       <div
                         v-for="(narrative, k) in expense_line.narrative"
@@ -91,14 +99,19 @@
                         <div class="language mb-1.5">
                           ({{
                             narrative.language
-                              ? `Language: ${
+                              ? `${translate.commonText('language')}: ${
                                   types?.languages[narrative.language]
                                 }`
-                              : 'Language : Missing'
+                              : `${translate.commonText(
+                                  'language'
+                                )} : ${translate.missing('language')}`
                           }})
                         </div>
                         <div class="w-[500px] max-w-full">
-                          {{ narrative.narrative ?? 'Narrative Missing' }}
+                          {{
+                            narrative.narrative ??
+                            translate.missing('narrative')
+                          }}
                         </div>
                       </div>
                     </td>
@@ -116,6 +129,7 @@
 <script setup lang="ts">
 import { defineProps, inject } from 'vue';
 import moment from 'moment';
+import { Translate } from 'Composable/translationHelper';
 
 defineProps({
   content: { type: Object, required: true },
@@ -128,9 +142,10 @@ interface TypesInterface {
   country: [];
 }
 
+const translate = new Translate();
 const types = inject('orgTypes') as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format('LL') : 'Date Missing';
+  return date ? moment(date).format('LL') : translate.missing('date');
 }
 </script>

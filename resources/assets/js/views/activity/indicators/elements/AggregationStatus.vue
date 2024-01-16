@@ -1,14 +1,21 @@
 <template>
   <tr>
-    <td>Aggregation Status</td>
+    <td>{{ translate.commonText('aggregation_status') }}</td>
     <td class="capitalize">
-      {{ parseInt(data) ? 'True' : data ? 'False' : 'Missing' }}
+      {{
+        parseInt(data)
+          ? translate.commonText('true')
+          : data
+          ? translate.commonText('false')
+          : translate.missing()
+      }}
     </td>
   </tr>
 </template>
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'IndicatorAggregationStatus',
@@ -20,9 +27,10 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     let { data } = toRefs(props);
     const statusData = data.value;
-    return { statusData };
+    return { statusData, translate };
   },
 });
 </script>

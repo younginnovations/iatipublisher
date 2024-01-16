@@ -55,7 +55,7 @@ class UserUpdateRequest extends FormRequest
      */
     public function messages(): array
     {
-        $messages['username.regex'] = 'The username is invalid. Username must be purely lowercase alphabets followed by alphanumeric(ascii) characters and these symbols:-_';
+        $messages['username.regex'] = trans('user.user_name_is_invalid');
 
         return $messages;
     }

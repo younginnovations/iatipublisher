@@ -6,7 +6,9 @@
 
 <script setup lang="ts">
 import { defineProps, toRefs } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
+const translate = new Translate();
 const props = defineProps({
   data: { type: Boolean, required: true },
 });
@@ -14,5 +16,7 @@ const props = defineProps({
 const { data } = toRefs(props);
 
 let color = data.value ? 'text-spring-50' : 'text-crimson-50',
-  text = data.value ? 'completed' : 'not completed';
+  text = data.value
+    ? translate.commonText('completed')
+    : translate.commonText('not_completed');
 </script>

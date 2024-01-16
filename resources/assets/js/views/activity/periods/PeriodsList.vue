@@ -2,7 +2,7 @@
   <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      title="Periods List"
+      :title="translate.commonText('periods_list')"
       :back-link="indicatorLink"
     >
       <div class="flex items-center space-x-3">
@@ -13,7 +13,11 @@
           class="mr-3"
         />
         <a :href="`${periodLink}/create`">
-          <Btn text="Add Period" icon="plus" type="primary" />
+          <Btn
+            :text="translate.button('add_element', 'common.period')"
+            icon="plus"
+            type="primary"
+          />
         </a>
       </div>
     </PageTitle>
@@ -23,13 +27,16 @@
         <thead>
           <tr class="bg-n-10 text-left">
             <th id="transaction_type" scope="col">
-              <span>Start Date - End Date</span>
+              <span>
+                {{ translate.element('start_date') }} -
+                {{ translate.element('end_date') }}
+              </span>
             </th>
             <th id="code" scope="col" width="190px">
               <span>Period number</span>
             </th>
             <th id="action" scope="col" width="177px">
-              <span>Action</span>
+              <span>{{ translate.commonText('action') }}</span>
             </th>
           </tr>
         </thead>
@@ -48,13 +55,13 @@
                 {{
                   pe.period.period_start[0].date
                     ? dateFormat(pe.period.period_start[0].date)
-                    : 'Missing'
+                    : translate.missing()
                 }}
                 -
                 {{
                   pe.period.period_end[0].date
                     ? dateFormat(pe.period.period_end[0].date)
-                    : 'Missing'
+                    : translate.missing()
                 }}
               </a>
             </td>
@@ -70,7 +77,14 @@
           </tr>
         </tbody>
         <tbody v-else>
-          <td colspan="5" class="text-center">Periods not found</td>
+          <td colspan="5" class="text-center">
+            {{
+              createCapitalizedSentence(
+                translate.commonText('periods'),
+                translate.missing('not_found')
+              )
+            }}
+          </td>
         </tbody>
       </table>
     </div>
@@ -105,6 +119,8 @@ import DeleteAction from 'Components/sections/DeleteAction.vue';
 // composable
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
+import { createCapitalizedSentence } from 'Composable/utils';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'PeriodList',
@@ -134,6 +150,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     const { activity, parentData } = toRefs(props);
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
@@ -178,7 +195,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
+        title: translate.textFromKey('activities.your_activities'),
         link: '/activity',
       },
       {
@@ -194,7 +211,7 @@ export default defineComponent({
         link: indicatorLink,
       },
       {
-        title: 'Periods List',
+        title: translate.commonText('periods_list'),
         link: '',
       },
     ];
@@ -205,6 +222,7 @@ export default defineComponent({
         Object.assign(periodsData, response.data);
         isEmpty.value = response.data.data.length ? false : true;
       });
+
       if (props.toast.message !== '') {
         toastData.type = props.toast.type;
         toastData.visibility = true;
@@ -243,7 +261,9 @@ export default defineComponent({
       indicatorId,
       toastData,
       handleNavigate,
+      translate,
     };
   },
+  methods: { createCapitalizedSentence },
 });
 </script>

@@ -53,7 +53,8 @@ class DefaultFinanceTypeController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering default-finance-type form.');
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.default_finance_type', 'rendering', 'form'));
         }
     }
 
@@ -71,14 +72,14 @@ class DefaultFinanceTypeController extends Controller
             $activityDefaultFinanceType = $request->get('default_finance_type') !== null ? (int) $request->get('default_finance_type') : null;
 
             if (!$this->defaultFinanceTypeService->update($id, $activityDefaultFinanceType)) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default-finance-type.');
+                return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.default_finance_type', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Default-finance-type updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', translateElementSuccessfully('default_finance_type', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default-finance-type.');
+            return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.default_finance_type', 'updating'));
         }
     }
 }

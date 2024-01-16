@@ -46,7 +46,8 @@ class TotalBudgetController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while opening organization reporting_org form.');
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('responses.org_reporting_org', 'opening', 'form'));
         }
     }
 
@@ -61,14 +62,17 @@ class TotalBudgetController extends Controller
     {
         try {
             if (!$this->totalBudgetService->update(Auth::user()->organization_id, $request->all())) {
-                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization total-budget.');
+                return redirect()->route('admin.organisation.index')
+                    ->with('error', translateErrorHasOccurred('responses.org_total_budget', 'updating'));
             }
 
-            return redirect()->route('admin.organisation.index')->with('success', 'Organization total-budget updated successfully.');
+            return redirect()->route('admin.organisation.index')
+                ->with('success', translateElementSuccessfully('responses.org_total_budget', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization total-budget.');
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('responses.org_total_budget', 'updating'));
         }
     }
 }

@@ -2,7 +2,7 @@
   <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      title="Result List"
+      :title="translate.commonText('result_list')"
       :back-link="activityLink"
     >
       <div class="flex items-center space-x-3">
@@ -13,7 +13,11 @@
           class="mr-3"
         />
         <a :href="`${activityLink}/result/create`">
-          <Btn text="Add Result" icon="plus" type="primary" />
+          <Btn
+            :text="translate.button('add_element', 'common.result')"
+            icon="plus"
+            type="primary"
+          />
         </a>
       </div>
     </PageTitle>
@@ -24,19 +28,19 @@
         <thead>
           <tr class="bg-n-10 text-left">
             <th id="transaction_type" scope="col">
-              <span>Title</span>
+              <span>{{ translate.commonText('title') }}</span>
             </th>
             <th id="transaction_type" scope="col">
               <span>Result Number</span>
             </th>
             <th id="transaction_value" scope="col" width="190px">
-              <span>RESULT TYPE</span>
+              <span>{{ translate.commonText('result_type') }}</span>
             </th>
             <th id="transaction_date" scope="col" width="208px">
-              <span>AGGREGATION STATUS</span>
+              <span>{{ translate.commonText('aggregation_status') }}</span>
             </th>
             <th id="action" scope="col" width="177px">
-              <span>Action</span>
+              <span>{{ translate.commonText('action') }}</span>
             </th>
           </tr>
         </thead>
@@ -65,7 +69,7 @@
               class="cursor-pointer"
               @click="handleNavigate(`${activityLink}/result/${result.id}`)"
             >
-              {{ types.resultType[result.result.type] ?? 'Missing' }}
+              {{ types.resultType[result.result.type] ?? translate.missing() }}
             </td>
             <td
               class="cursor-pointer capitalize"
@@ -73,10 +77,10 @@
             >
               {{
                 parseInt(result.result.aggregation_status)
-                  ? 'True'
+                  ? translate.commonText('false')
                   : result.result.aggregation_status
-                  ? 'False'
-                  : 'Missing'
+                  ? translate.commonText('false')
+                  : translate.missing()
               }}
             </td>
             <td>
@@ -93,7 +97,14 @@
           </tr>
         </tbody>
         <tbody v-else>
-          <td colspan="5" class="text-center">Results not found</td>
+          <td colspan="5" class="text-center">
+            {{
+              createCapitalizedSentence(
+                translate.elementLabel('results'),
+                translate.missing('not_found')
+              )
+            }}
+          </td>
         </tbody>
       </table>
     </div>
@@ -129,6 +140,8 @@ import DeleteAction from 'Components/sections/DeleteAction.vue';
 // composable
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
+import { createCapitalizedSentence } from '../../../composable/utils';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ResultsList',
@@ -158,6 +171,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     const { activity } = toRefs(props);
     const activityId = activity.value.id,
       activityTitle = activity.value.title,
@@ -193,7 +207,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
+        title: translate.textFromKey('activities.your_activities'),
         link: '/activities',
       },
       {
@@ -201,7 +215,7 @@ export default defineComponent({
         link: activityLink,
       },
       {
-        title: 'Result List',
+        title: translate.commonText('result_list'),
         link: '',
       },
     ];
@@ -249,7 +263,9 @@ export default defineComponent({
       getActivityTitle,
       fetchListings,
       handleNavigate,
+      translate,
     };
   },
+  methods: { createCapitalizedSentence },
 });
 </script>

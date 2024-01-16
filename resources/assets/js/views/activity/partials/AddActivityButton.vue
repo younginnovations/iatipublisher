@@ -6,7 +6,7 @@
       @click="toggle"
     >
       <svg-vue icon="plus" />
-      <span>Add Activity</span>
+      <span>{{ translate.button('add_activity') }}</span>
       <div
         v-if="state.isVisible"
         class="button__dropdown absolute right-0 top-full z-10 w-56 bg-white p-2 text-left shadow-dropdown"
@@ -18,18 +18,18 @@
               href="#"
               :class="liClass"
               @click="modalValue = true"
-              >Add activity manually</a
+              >{{ translate.commonText('add_activity_manually') }}</a
             >
           </li>
           <li>
-            <a id="import-activity" href="/import" :class="liClass"
-              >Import activities from .csv/.xml</a
-            >
+            <a id="import-activity" href="/import" :class="liClass">{{
+              translate.commonText('import_activities_from_csv')
+            }}</a>
           </li>
           <li>
-            <a id="import-xls" href="/import/xls" :class="liClass"
-              >Import activities from .XLS</a
-            >
+            <a id="import-xls" href="/import/xls" :class="liClass">
+              {{ translate.commonText('import_activities_from_xls') }}
+            </a>
           </li>
         </ul>
       </div>
@@ -46,6 +46,7 @@
 import { reactive, defineComponent, ref, onMounted } from 'vue';
 import CreateModal from '../CreateModal.vue';
 import { useToggle } from '@vueuse/core';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'AddActivityButton',
@@ -53,6 +54,7 @@ export default defineComponent({
     CreateModal,
   },
   setup() {
+    const translate = new Translate();
     const state = reactive({
       isVisible: false,
     });
@@ -90,6 +92,7 @@ export default defineComponent({
       modalToggle,
       toggleModel,
       dropdownBtn,
+      translate,
     };
   },
 });

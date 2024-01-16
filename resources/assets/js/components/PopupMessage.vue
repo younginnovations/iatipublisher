@@ -3,19 +3,21 @@
     <div class="modal-inner">
       <div class="mb-4 flex items-center space-x-1">
         <svg-vue icon="alert" class="text-crimson-40"></svg-vue>
-        <span class="text-sm font-bold text-n-50"
-          >Mandatory fields not completed</span
-        >
+        <span class="text-sm font-bold text-n-50">{{
+          translate.commonText('mandatory_field_not_filled')
+        }}</span>
       </div>
       <div class="mb-4 rounded-lg bg-rose p-4 text-sm text-n-50">
         <p>
-          Some mandatory fields have not been completed. You will not be able to
-          publish your activity until all the mandatory fields have been filled.
+          {{ translate.commonText('some_mandatory_fields_not_completed') }}
+          {{ translate.commonText('cannot_publish_activity_until_mandatory') }}
         </p>
       </div>
       <div class="flex justify-end space-x-5">
-        <button class="ghost-btn">Go back</button>
-        <button class="primary-btn">Continue anyway</button>
+        <button class="ghost-btn">{{ translate.button('go_back') }}</button>
+        <button class="primary-btn">
+          {{ translate.button('continue_anyway') }}
+        </button>
       </div>
     </div>
   </Modal>
@@ -24,6 +26,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Modal from './PopupModal.vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   components: {
@@ -36,8 +39,10 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     return {
       props,
+      translate,
     };
   },
 });

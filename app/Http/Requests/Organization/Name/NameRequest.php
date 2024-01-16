@@ -31,9 +31,9 @@ class NameRequest extends OrganizationBaseRequest
      */
     public function messages(): array
     {
-        $messages['narrative.unique_lang'] = 'The @xml:lang field must be unique.';
-        $messages['narrative.0.narrative.required'] = 'The narrative is required.';
-        $messages['narrative.unique_default_lang'] = 'The @xml:lang field must be unique.';
+        $messages['narrative.unique_lang'] = translateRequestMessage('xml_lang_field_symbol', 'must_be_unique');
+        $messages['narrative.0.narrative.required'] = translateRequestMessage('narrative', 'is_required');
+        $messages['narrative.unique_default_lang'] = translateRequestMessage('xml_lang_field_symbol', 'must_be_unique');
 
         return $messages;
     }

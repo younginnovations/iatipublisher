@@ -50,7 +50,8 @@ class DocumentLinkController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while opening organization document-link form.');
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('responses.org_document_link', 'opening', 'form'));
         }
     }
 
@@ -65,14 +66,17 @@ class DocumentLinkController extends Controller
     {
         try {
             if (!$this->documentLinkService->update(Auth::user()->organization_id, $request->all())) {
-                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization document-link.');
+                return redirect()->route('admin.organisation.index')
+                    ->with('error', translateErrorHasOccurred('responses.org_document_link', 'updating'));
             }
 
-            return redirect()->route('admin.organisation.index')->with('success', 'Organization document-link updated successfully.');
+            return redirect()->route('admin.organisation.index')
+                ->with('success', translateElementSuccessfully('responses.org_document_link', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization document-link.');
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('responses.org_document_link', 'updating'));
         }
     }
 }

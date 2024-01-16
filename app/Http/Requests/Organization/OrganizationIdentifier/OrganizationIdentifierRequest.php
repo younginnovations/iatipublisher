@@ -32,7 +32,7 @@ class OrganizationIdentifierRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'registration_number.not_regex' => 'The registration_number format is invalid.',
+            'registration_number.not_regex' => translateRequestMessage('registration_number', 'is_invalid'),
         ];
     }
 }

@@ -17,8 +17,8 @@ class CapitalSpendXmlTest extends XmlBaseTest
     {
         $rows = $this->invalid_data();
         $flattenErrors = $this->getErrors($rows);
-        $this->assertContains('The capital spend must be a number between 0 and 100', $flattenErrors);
-        $this->assertContains('The capital spend must be a number', $flattenErrors);
+        $this->assertContains('The capital spend must be a number between 0 and 100.', $flattenErrors);
+        $this->assertContains('The capital spend must be a number.', $flattenErrors);
     }
 
     /**

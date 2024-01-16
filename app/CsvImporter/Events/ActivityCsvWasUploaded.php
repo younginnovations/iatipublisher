@@ -19,12 +19,19 @@ class ActivityCsvWasUploaded
     public string $filename;
 
     /**
+     * @var string
+     */
+    public string $locale;
+
+    /**
      * Create a new event instance.
      *
      * @param $filename
+     * @param $locale
      */
-    public function __construct($filename)
+    public function __construct($filename, $locale)
     {
         $this->filename = $filename;
+        $this->locale = $locale;
     }
 }

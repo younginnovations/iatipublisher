@@ -22,7 +22,7 @@
     </div>
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      title="Result Detail"
+      :title="translate.commonText('result_detail')"
       :back-link="`${activityLink}/result`"
     >
       <div class="flex items-center space-x-3">
@@ -33,7 +33,11 @@
           class="mr-3"
         />
         <a :href="`${activityLink}/result/create`">
-          <Btn text="Edit Result" :link="`${resultLink}/edit`" icon="edit" />
+          <Btn
+            :text="translate.button('edit_element', 'common.result')"
+            :link="`${resultLink}/edit`"
+            icon="edit"
+          />
         </a>
       </div>
     </PageTitle>
@@ -79,7 +83,7 @@
           <li v-if="hasIndicators">
             <a v-smooth-scroll href="#indicator" :class="linkClasses">
               <!-- <svg-vue icon="moon" class="mr-2 text-base"></svg-vue> -->
-              indicator
+              {{ translate.elementLabel('indicator') }}
             </a>
           </li>
           <li v-if="!hasIndicators">
@@ -89,7 +93,7 @@
               class="border border-dashed border-n-40"
             >
               <svg-vue icon="add" class="mr-2 text-n-40"></svg-vue>
-              add indicator
+              {{ translate.button('add_element', 'element_labels.indicator') }}
             </a>
           </li>
         </ul>
@@ -104,13 +108,13 @@
             <li v-for="(rData, r, ri) in resultsData" :key="ri">
               <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
                 <!-- <svg-vue icon="moon" class="mr-2 text-base"></svg-vue> -->
-                {{ r }}
+                {{ translate.elementLabel(r) ?? r }}
               </a>
             </li>
             <li v-if="hasIndicators">
               <a v-smooth-scroll href="#indicator" :class="linkClasses">
                 <!-- <svg-vue icon="moon" class="mr-2 text-base"></svg-vue> -->
-                indicator
+                {{ translate.commonText('indicator_nocase') }}
               </a>
             </li>
             <li v-if="!hasIndicators">
@@ -120,7 +124,7 @@
                 class="border border-dashed border-n-40"
               >
                 <svg-vue icon="add" class="mr-2 text-n-40"></svg-vue>
-                add indicator
+                {{ translate.commonText('add_indicator_nocase') }}
               </a>
             </li>
           </ul>
@@ -167,13 +171,15 @@
           class="add_indicator flex w-full rounded border border-dashed border-n-40 bg-white px-4 py-3 text-xs leading-normal"
         >
           <div class="grow text-left italic">
-            You haven't added any indicator yet.
+            {{ translate.button('not_yet_added_indicator') }}
           </div>
           <div
             class="flex shrink-0 items-center font-bold uppercase text-bluecoral"
           >
             <svg-vue icon="add" class="mr-1 shrink-0 text-base"></svg-vue>
-            <span class="grow text-[10px]">Add new indicator</span>
+            <span class="grow text-[10px]">{{
+              translate.button('add_element', 'common.new_indicator')
+            }}</span>
           </div>
         </a>
       </div>
@@ -203,6 +209,7 @@ import Toast from 'Components/ToastMessage.vue';
 //composable
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ResultDetail',
@@ -237,6 +244,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
     const positionY = ref(0);
@@ -267,7 +275,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
+        title: translate.textFromKey('activities.your_activities'),
         link: '/activities',
       },
       {
@@ -334,6 +342,7 @@ export default defineComponent({
       toastData,
       showSidebar,
       istopVisible,
+      translate,
     };
   },
 });

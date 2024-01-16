@@ -35,7 +35,7 @@ class ActivityDefaultController extends Controller
     /**
      * Activity default values edit form.
      *
-     * @param $id
+     * @param $activityId
      *
      * @return View|RedirectResponse
      */
@@ -56,7 +56,7 @@ class ActivityDefaultController extends Controller
 
             return redirect()->route('admin.activity.show', $activityId)->with(
                 'error',
-                'Error has occurred while rendering default values form.'
+                translateErrorHasOccurred('elements_common.default_values', 'rendering', 'form')
             );
         }
     }
@@ -73,11 +73,11 @@ class ActivityDefaultController extends Controller
         try {
             $setting = $this->activityDefaultService->getActivityDefaultValues($activityId);
 
-            return response()->json(['success' => true, 'message' => 'Default values fetched successfully', 'data' => $setting]);
+            return response()->json(['success' => true, 'message' => translateElementSuccessfully('default_values', 'fetched'), 'data' => $setting]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('responses.the_data', 'fetching')]);
         }
     }
 
@@ -98,12 +98,12 @@ class ActivityDefaultController extends Controller
 
             DB::commit();
 
-            return response()->json(['success' => true, 'message' => 'Activity default values updated successfully']);
+            return response()->json(['success' => true, 'message' => translateElementSuccessfully('activity_default_values', 'updated')]);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while updating data']);
+            return response()->json(['success' => false, 'message' =>translateErrorHasOccurred('responses.the_data', 'updating')]);
         }
     }
 }

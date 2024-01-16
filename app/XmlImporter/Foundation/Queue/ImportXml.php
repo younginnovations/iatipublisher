@@ -29,7 +29,16 @@ class ImportXml extends Job
      * @var
      */
     protected $iatiIdentifiers;
+
+    /**
+     * @var
+     */
     private $organizationReportingOrg;
+
+    /**
+     * @var
+     */
+    public $locale;
 
     /**
      * ImportXml constructor.
@@ -39,8 +48,10 @@ class ImportXml extends Job
      * @param $userId
      * @param $filename
      * @param $iatiIdentifiers
+     * @param $organizationReportingOrg
+     * @param $locale
      */
-    public function __construct($organizationId, $orgRef, $userId, $filename, $iatiIdentifiers, $organizationReportingOrg)
+    public function __construct($organizationId, $orgRef, $userId, $filename, $iatiIdentifiers, $organizationReportingOrg, $locale)
     {
         $this->organizationId = $organizationId;
         $this->orgRef = $orgRef;
@@ -48,6 +59,7 @@ class ImportXml extends Job
         $this->userId = $userId;
         $this->iatiIdentifiers = $iatiIdentifiers;
         $this->organizationReportingOrg = $organizationReportingOrg;
+        $this->locale = $locale;
     }
 
     /**
@@ -57,6 +69,7 @@ class ImportXml extends Job
     {
         try {
             $xmlImportQueue = app()->make(XmlQueueProcessor::class);
+            $xmlImportQueue->locale = $this->locale;
             $xmlImportQueue->import($this->filename, $this->organizationId, $this->orgRef, $this->userId, $this->iatiIdentifiers, $this->organizationReportingOrg);
 
             $this->delete();

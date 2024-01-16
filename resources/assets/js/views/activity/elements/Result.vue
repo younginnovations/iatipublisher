@@ -7,8 +7,8 @@
       <div class="mb-4 flex">
         <div class="title flex grow items-center">
           <svg-vue class="mr-1.5 text-xl text-bluecoral" icon="bill"></svg-vue>
-          <div class="title text-sm font-bold">
-            {{ title.toString().replace(/_/g, '-') }}
+          <div class="title result-translate-text text-sm font-bold">
+            {{ translate.elementFromElementName(title.toString()) }}
           </div>
           <div
             class="status ml-2.5 flex text-xs leading-5"
@@ -18,19 +18,23 @@
             }"
           >
             <b class="mr-2 text-base leading-3">.</b>
-            <span v-if="completed">completed</span>
-            <span v-else>not completed</span>
+            <span v-if="completed" class="result-translate-text">{{
+              translate.commonText('completed')
+            }}</span>
+            <span v-else class="result-translate-text">{{
+              translate.commonText('not_completed')
+            }}</span>
           </div>
         </div>
         <div class="icons flex items-center">
           <Btn
-            text="Add New Result"
+            :text="translate.button('add_element', 'common.new_result')"
             icon="add"
             :link="`/activity/${activityId}/${title}/create`"
             class="mr-2.5"
           />
           <Btn
-            text="Show full result list"
+            :text="translate.button('show_element', 'common.full_result')"
             icon=""
             design="bgText"
             :link="`/activity/${activityId}/${title}`"
@@ -62,13 +66,13 @@
                   </div>
                   <div class="flex shrink-0">
                     <Btn
-                      text="View Result"
+                      :text="translate.button('view_element', 'common.result')"
                       icon="eye"
                       :link="`/activity/${activityId}/${title}/${result.id}`"
                       class="mr-2.5"
                     />
                     <Btn
-                      text="Edit Result"
+                      :text="translate.button('edit_element', 'common.result')"
                       icon="edit"
                       :link="`/activity/${activityId}/${title}/${result.id}/edit`"
                     />
@@ -79,31 +83,37 @@
                   <table class="mb-3">
                     <tbody>
                       <tr>
-                        <td>Result Type</td>
+                        <td class="result-translate-text">
+                          {{ translate.commonText('result_type') }}
+                        </td>
                         <td>
-                          <div>
+                          <div class="result-translate-text">
                             {{
-                              types.resultType[result.result.type] ?? 'Missing'
+                              types.resultType[result.result.type] ??
+                              translate.missing()
                             }}
                           </div>
                         </td>
                       </tr>
                       <tr>
-                        <td>Description</td>
+                        <td class="result-translate-text">
+                          {{ translate.commonText('description') }}
+                        </td>
                         <td>
                           <div class="description-content">
                             <div class="language mb-1.5">
-                              (Language:
+                              ({{ translate.commonText('language') }}:
                               {{
                                 getActivityTitle(
                                   result.result.description[0].narrative,
                                   currentLanguage
                                 ) === 'Untitled'
-                                  ? 'Missing'
+                                  ? translate.missing()
                                   : types.languages[
                                       result?.result?.description?.[0]
                                         ?.narrative?.[0]?.language ??
-                                        defaultLanguage
+                                        defaultLanguage ??
+                                        'en'
                                     ]
                               }})
                             </div>
@@ -124,8 +134,12 @@
                           <div>
                             <NotYet
                               :link="`/${title}/${result.id}/indicator/create`"
-                              description="You haven't added any indicator yet."
-                              btn-text="Add new indicator"
+                              :description="
+                                translate.button('not_yet_added_period')
+                              "
+                              :btn-text="
+                                translate.button('not_yet_added_period_btn')
+                              "
                             />
                           </div>
                         </td>
@@ -141,18 +155,30 @@
                     <div
                       class="head flex items-center border-b border-n-20 px-6 py-2"
                     >
-                      <div class="grow text-xs font-bold text-n-50">
-                        Indicator
+                      <div
+                        class="result-translate-text grow text-xs font-bold text-n-50"
+                      >
+                        {{ translate.commonText('indicator') }}
                       </div>
                       <div class="inline-flex shrink-0">
                         <Btn
-                          text="Add New Indicator"
+                          :text="
+                            translate.button(
+                              'add_element',
+                              'common.new_indicator'
+                            )
+                          "
                           icon="add"
                           :link="`/${title}/${result.id}/indicator/create`"
                           class="mr-2.5"
                         />
                         <Btn
-                          text="Show full indicator list"
+                          :text="
+                            translate.button(
+                              'show_element',
+                              'common.full_indicator'
+                            )
+                          "
                           icon=""
                           design="bgText"
                           :link="`/${title}/${result.id}/indicator`"
@@ -176,25 +202,41 @@
                               <div class="mr-4">
                                 {{
                                   indicator.indicator.title[0].narrative[0]
-                                    .narrative ?? 'untitled'
+                                    .narrative ??
+                                  translate.commonText('untitled')
                                 }}
                               </div>
                               <div class="flex shrink-0 grow justify-between">
                                 <span class="flex">
                                   <Btn
-                                    text="View Indicator"
+                                    :text="
+                                      translate.button(
+                                        'view_element',
+                                        'common.indicator'
+                                      )
+                                    "
                                     icon="eye"
                                     :link="`/${title}/${result.id}/indicator/${indicator.id}`"
                                     class="mr-2.5"
                                   />
                                   <Btn
-                                    text="Edit Indicator"
+                                    :text="
+                                      translate.button(
+                                        'edit_element',
+                                        'common.indicator'
+                                      )
+                                    "
                                     :link="`/${title}/${result.id}/indicator/${indicator.id}/edit`"
                                     class="mr-2.5"
                                   />
                                 </span>
                                 <Btn
-                                  text="Add Period"
+                                  :text="
+                                    translate.button(
+                                      'add_element',
+                                      'common.period'
+                                    )
+                                  "
                                   icon="add"
                                   :link="`/indicator/${indicator.id}/period/create`"
                                 />
@@ -203,7 +245,9 @@
                             <table>
                               <tbody>
                                 <tr>
-                                  <td>Baseline:</td>
+                                  <td class="result-translate-text">
+                                    {{ translate.commonText('baseline') }}:
+                                  </td>
                                   <td>
                                     <div
                                       v-for="(baseline, b) in indicator
@@ -218,26 +262,32 @@
                                       }"
                                     >
                                       <div class="description text-xs">
-                                        <span>
-                                          Value:
+                                        <span class="result-translate-text">
+                                          {{ translate.commonText('value') }}:
                                           <template v-if="baseline.value">
                                             {{ baseline.value }},
                                           </template>
-                                          <template v-else> Missing, </template>
+                                          <template v-else>
+                                            {{ translate.missing() }},
+                                          </template>
                                         </span>
                                         <span>
-                                          Date:
+                                          {{ translate.commonText('date') }}:
                                           <template v-if="baseline.date">
                                             {{ baseline.date }}
                                           </template>
-                                          <template v-else> Missing </template>
+                                          <template v-else>
+                                            {{ translate.missing() }}
+                                          </template>
                                         </span>
                                       </div>
                                     </div>
                                   </td>
                                 </tr>
                                 <tr v-if="indicator.periods.length > 0">
-                                  <td>Period:</td>
+                                  <td class="result-translate-text">
+                                    {{ translate.commonText('period') }}:
+                                  </td>
                                   <td>
                                     <div class="inline-flex gap-4">
                                       <div>
@@ -277,7 +327,7 @@
                                           </div>
                                           <div class="ml-2">
                                             <Btn
-                                              text="Edit"
+                                              :text="translate.button('edit')"
                                               icon="edit"
                                               :link="`/indicator/${indicator.id}/period/${period.id}/edit`"
                                             />
@@ -287,7 +337,9 @@
                                       <div class="shrink-0">
                                         <Btn
                                           class="-mt-1"
-                                          text="Show full period list"
+                                          :text="
+                                            translate.button('show_full_period')
+                                          "
                                           icon=""
                                           design="bgText"
                                           :link="`/indicator/${indicator.id}/period`"
@@ -302,7 +354,11 @@
                                     <div>
                                       <NotYet
                                         :link="`/indicator/${indicator.id}/period/create`"
-                                        description="You haven't added any period yet."
+                                        :description="
+                                          translate.button(
+                                            'not_yet_added_period'
+                                          )
+                                        "
                                       />
                                     </div>
                                   </td>
@@ -339,6 +395,7 @@ import NotYet from 'Components/sections/HaveNotAddedYet.vue';
 // composable
 import getActivityTitle from 'Composable/title';
 import dateFormat from 'Composable/dateFormat';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ActivityResult',
@@ -379,6 +436,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     const format = 'MMMM DD, YYYY';
 
     const { data } = toRefs(props);
@@ -394,6 +452,7 @@ export default defineComponent({
       getActivityTitle,
       currentLanguage,
       dateFormat,
+      translate,
     };
   },
 });

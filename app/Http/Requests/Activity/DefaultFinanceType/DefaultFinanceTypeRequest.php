@@ -63,8 +63,8 @@ class DefaultFinanceTypeRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'in'        => 'The default finance type does not exist.',
-            'size'      => 'The default finance type cannot have more than one value.',
+            'in'        => translateRequestMessage('default_finance', 'doesnt_exist'),
+            'size'      => translateRequestMessage('default_finance', 'cannot_have_more_than_one'),
         ];
     }
 }

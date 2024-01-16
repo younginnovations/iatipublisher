@@ -22,7 +22,7 @@
     </div>
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      :title="`${indicatorTitle} - Indicator Detail`"
+      :title="`${indicatorTitle} - ${translate.commonText('indicator_detail')}`"
       :back-link="`${indicatorLink}`"
     >
       <div class="flex justify-end">
@@ -34,19 +34,19 @@
         />
         <!-- <Status class="mr-2.5" :data="false" /> -->
         <Btn
-          text="Add Indicator"
+          :text="translate.button('add_element', 'common.indicator')"
           icon="add"
           :link="`${indicatorLink}/create`"
           class="mr-2.5"
         />
         <Btn
-          text="Add Period"
+          :text="translate.button('add_element', 'common.period')"
           icon="add"
           :link="`/indicator/${indicator.id}/period/create`"
           class="mr-2.5"
         />
         <Btn
-          text="Edit Indicator"
+          :text="translate.button('edit_element', 'common.period')"
           :link="`${indicatorLink}/${indicator.id}/edit`"
         />
       </div>
@@ -118,7 +118,7 @@
             <li v-for="(rData, r, ri) in indicatorData" :key="ri">
               <a v-smooth-scroll :href="`#${String(r)}`" :class="linkClasses">
                 <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
-                {{ r }}
+                {{ translate.element(r) ?? r }}
               </a>
             </li>
 
@@ -129,12 +129,15 @@
                 class="border border-dashed border-n-40"
               >
                 <svg-vue icon="add" class="mr-2 text-n-40"></svg-vue>
-                add period
+                {{
+                  translate.button('add_element', 'common.period').toLowerCase()
+                }}
               </a>
             </li>
             <li v-else>
               <a v-smooth-scroll href="#period" :class="linkClasses">
-                period
+                <svg-vue icon="core" class="mr-2 text-base"></svg-vue>
+                {{ translate.button('period_nocase') }}
               </a>
             </li>
           </ul>
@@ -215,7 +218,9 @@
                 <div class="item elements-detail wider">
                   <table class="mb-2">
                     <tr>
-                      <td class="pl-4">Document Link:</td>
+                      <td class="pl-4">
+                        {{ translate.commonText('document_link') }}
+                      </td>
                     </tr>
                   </table>
                 </div>
@@ -272,6 +277,7 @@ import {
 
 //composable
 import getActivityTitle from 'Composable/title';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'IndicatorDetail',
@@ -320,6 +326,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
 
@@ -377,7 +384,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
+        title: translate.textFromKey('activities.your_activities'),
         link: '/activities',
       },
       {
@@ -442,6 +449,7 @@ export default defineComponent({
       showSidebar,
       istopVisible,
       countDocumentLink,
+      translate,
     };
   },
 });

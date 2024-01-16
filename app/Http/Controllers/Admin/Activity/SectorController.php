@@ -51,7 +51,8 @@ class SectorController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening activity sector form.');
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.activity_sector', 'opening', 'form'));
         }
     }
 
@@ -67,14 +68,17 @@ class SectorController extends Controller
     {
         try {
             if (!$this->sectorService->update($id, $request->all())) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity sector.');
+                return redirect()->route('admin.activity.show', $id)
+                    ->with('error', translateErrorHasOccurred('elements_common.activity_sector', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Activity sector updated successfully.');
+            return redirect()->route('admin.activity.show', $id)
+                ->with('success', translateElementSuccessfully('activity_sector', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity sector.');
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.activity_sector', 'updating'));
         }
     }
 
@@ -84,9 +88,8 @@ class SectorController extends Controller
      *
      * @param $activity
      *
-     * @throws JsonException
-     *
      * @return array
+     * @throws JsonException
      */
     public function getSectorManipulatedElementSchema($activity): array
     {

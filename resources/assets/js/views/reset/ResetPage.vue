@@ -3,22 +3,31 @@
     <Loader v-if="loaderVisibility" />
     <div class="reset" @keyup.enter="reset">
       <div class="mb-4 flex flex-col sm:mb-8">
-        <h2>Password Recovery</h2>
+        <h2>
+          {{
+            translate.textFromKey('password_recovery.password_recovery_header')
+          }}
+        </h2>
         <p>
-          Please enter your email, we will send you a link to reset your
-          password
+          {{
+            translate.textFromKey(
+              'password_recovery.password_recovery_description'
+            )
+          }}
         </p>
       </div>
 
       <div class="reset__content">
-        <label class="text-sm font-bold text-bluecoral" for="email"
-          >Email</label
-        >
+        <label class="text-sm font-bold text-bluecoral" for="email">{{
+          translate.textFromKey('password_recovery.email_label')
+        }}</label>
         <input
           id="email"
           v-model="formData.email"
           type="email"
-          placeholder="Enter your email address"
+          :placeholder="
+            translate.textFromKey('password_recovery.email_placeholder')
+          "
           class="input"
           :class="{
             error__input: emailError != '',
@@ -30,7 +39,7 @@
         </span>
       </div>
       <button type="submit" class="btn reset-btn" @click="reset()">
-        Send password reset link
+        {{ translate.button('send_password_reset') }}
       </button>
     </div>
   </div>
@@ -40,12 +49,14 @@
 import { defineComponent, ref, reactive } from 'vue';
 import Loader from '../../components/Loader.vue';
 import axios from 'axios';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   components: {
     Loader,
   },
   setup() {
+    const translate = new Translate();
     const formData = reactive({
       email: '',
     });
@@ -87,6 +98,7 @@ export default defineComponent({
       loaderVisibility,
       emailError,
       reset,
+      translate,
     };
   },
 });

@@ -25,10 +25,10 @@
       </ul>
       <div class="mt-4 flex flex-row-reverse">
         <button
-          class="rounded bg-bluecoral py-2 px-5 font-semibold text-white"
+          class="translate-text-btn rounded bg-bluecoral py-2 px-5 font-semibold text-white"
           @click="close"
         >
-          Close
+          {{ translate.button('close') }}
         </button>
       </div>
     </div>
@@ -42,7 +42,9 @@ import {
   onMounted,
   onUnmounted,
 } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
+const translate = new Translate();
 const emit = defineEmits(['close-popup']);
 const props = defineProps({
   message: {

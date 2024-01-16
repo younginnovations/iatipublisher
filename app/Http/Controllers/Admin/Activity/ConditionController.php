@@ -53,7 +53,8 @@ class ConditionController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering activity condition form.');
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('responses.activity_condition', 'rendering', 'form'));
         }
     }
 
@@ -71,14 +72,14 @@ class ConditionController extends Controller
             $activityCondition = $request->except(['_token', '_method']);
 
             if (!$this->conditionService->update($id, $activityCondition)) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity condition.');
+                return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('responses.activity_condition', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Activity condition updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', translateElementSuccessfully('activity_condition', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity condition.');
+            return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('responses.activity_condition', 'updating'));
         }
     }
 }

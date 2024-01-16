@@ -74,7 +74,7 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
     public function getMessagesForCountryBudgetItem(array $formFields): array
     {
         $messages = $this->getBudgetItemMessages(Arr::get($formFields, 'budget_item', []));
-        $messages['country_budget_vocabulary.in'] = 'The country budget item vocabulary is invalid.';
+        $messages['country_budget_vocabulary.in'] = translateRequestMessage('country_budget_item', 'vocabulary_is_invalid');
 
         return $messages;
     }
@@ -147,11 +147,11 @@ class CountryBudgetItemRequest extends ActivityBaseRequest
 
         foreach ($formFields as $budgetItemIndex => $budgetItem) {
             $budgetItemForm = sprintf('budget_item.%s', $budgetItemIndex);
-            $messages[sprintf('%s.code.in', $budgetItemForm)] = 'The budget item code in invalid.';
-            $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'numeric')] = 'The budget item percentage field must be a number.';
-            $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'max')] = 'The budget item percentage field cannot be greater than 100.';
-            $messages[sprintf('%s.percentage.sum', $budgetItemForm)] = 'The sum of percentage with budget items must add up to 100.';
-            $messages[sprintf('%s.percentage.total', $budgetItemForm)] = 'The budget item percentage field should be 100 when there is only one budget item.';
+            $messages[sprintf('%s.code.in', $budgetItemForm)] = translateRequestMessage('the_budget_item', 'code_is_invalid');
+            $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'numeric')] = translateRequestMessage('the_budget_percentage', 'must_be_a_number');
+            $messages[sprintf('%s.percentage.%s', $budgetItemForm, 'max')] = translateRequestMessage('the_budget_percentage', 'cannot_be_greater_than_100');
+            $messages[sprintf('%s.percentage.sum', $budgetItemForm)] = translateRequestMessage('sum_of_percentage_with_budget_items_must_add_up_to_100');
+            $messages[sprintf('%s.percentage.total', $budgetItemForm)] = translateRequestMessage('the_budget_percentage', 'should_be_100');
 
             foreach ($this->getBudgetItemDescriptionMessages($budgetItem['description'], $budgetItemForm) as $budgetItemDescriptionIndex => $budgetItemDescriptionNarrativeMessages) {
                 $messages[$budgetItemDescriptionIndex] = $budgetItemDescriptionNarrativeMessages;

@@ -9,7 +9,7 @@
       @click="previousPage"
     >
       <svg-vue icon="arrow-left"></svg-vue>
-      <span class="">Prev</span>
+      <span class="translate-text-btn">{{ translate.button('prev') }}</span>
     </a>
 
     <span v-if="data.last_page < 6" class="flex"
@@ -75,7 +75,7 @@
       }"
       @click="nextPage"
     >
-      <span class="">Next</span>
+      <span class="translate-text-btn">{{ translate.button('next') }}</span>
       <svg-vue icon="arrow-right" />
     </a>
   </nav>
@@ -83,6 +83,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref, watch } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'PaginationComponent',
@@ -100,6 +101,7 @@ export default defineComponent({
   },
   emits: ['fetchActivities'],
   setup(props, { emit }) {
+    const translate = new Translate();
     const active_page = ref(1);
     const last_pagelist = ref();
     const mid_pagelist = ref();
@@ -175,6 +177,7 @@ export default defineComponent({
       changePage,
       lastpages,
       midpages,
+      translate,
     };
   },
 });

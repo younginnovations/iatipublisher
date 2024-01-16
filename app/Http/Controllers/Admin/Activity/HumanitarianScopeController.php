@@ -50,7 +50,8 @@ class HumanitarianScopeController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering humanitarian-scope form.');
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.humanitarian_scope', 'rendering', 'form'));
         }
     }
 
@@ -66,14 +67,14 @@ class HumanitarianScopeController extends Controller
     {
         try {
             if ($this->humanitarianScopeService->update($id, $request->except(['_token', '_method']))) {
-                return redirect()->route('admin.activity.show', $id)->with('success', 'Humanitarian-scope updated successfully.');
+                return redirect()->route('admin.activity.show', $id)->with('success', translateElementSuccessfully('humanitarian_scope', 'updated'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating humanitarian-scope.');
+            return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.humanitarian_scope', 'updating'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating humanitarian-scope.');
+            return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.humanitarian_scope', 'updating'));
         }
     }
 }

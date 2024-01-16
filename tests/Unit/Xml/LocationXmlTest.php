@@ -25,10 +25,10 @@ class LocationXmlTest extends XmlBaseTest
         $this->assertContains('The location id vocabulary is invalid.', $flattenErrors);
         $this->assertContains('The location administrative vocabulary is invalid.', $flattenErrors);
         $this->assertContains('The location administrative code is invalid.', $flattenErrors);
-        $this->assertContains('The location administrative level must not have negative value.', $flattenErrors);
+        $this->assertContains('The location administrative level must not be in negative.', $flattenErrors);
         $this->assertContains('The location administrative level must be an integer.', $flattenErrors);
-        $this->assertContains('The pos latitude must be numeric', $flattenErrors);
-        $this->assertContains('The pos longitude must be numeric', $flattenErrors);
+        $this->assertContains('The pos latitude must be numeric.', $flattenErrors);
+        $this->assertContains('The pos longitude must be numeric.', $flattenErrors);
     }
 
     /**

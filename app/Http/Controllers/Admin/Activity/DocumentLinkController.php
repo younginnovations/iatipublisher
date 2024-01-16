@@ -61,7 +61,8 @@ class DocumentLinkController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering document-link form.');
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.document_link', 'rendering', 'form'));
         }
     }
 
@@ -82,12 +83,12 @@ class DocumentLinkController extends Controller
             $this->documentLinkService->update($id, $documentLink);
             $this->db->commit();
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Document-link updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', translateElementSuccessfully('document_link', 'updated'));
         } catch (\Exception $e) {
             $this->db->rollBack();
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating document-link.');
+            return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.document_link', 'updating'));
         }
     }
 }

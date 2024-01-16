@@ -53,7 +53,8 @@ class DefaultAidTypeController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering default-aid-type form.');
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.default_aid_type', 'rendering', 'form'));
         }
     }
 
@@ -70,14 +71,14 @@ class DefaultAidTypeController extends Controller
             $activityDefaultAidType = $request->all();
 
             if (!$this->defaultAidTypeService->update($id, $activityDefaultAidType)) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default-aid-type.');
+                return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.default_aid_type', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Default-aid-type updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', translateElementSuccessfully('default_aid_type', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating default aid type.');
+            return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.default_aid_type', 'updating'));
         }
     }
 }

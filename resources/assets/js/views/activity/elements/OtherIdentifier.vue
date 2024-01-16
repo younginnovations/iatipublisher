@@ -9,11 +9,13 @@
         <span v-if="identifier.reference_type">{{
           types.otherIdentifierType[identifier.reference_type]
         }}</span>
-        <span v-else class="italic">Type Missing</span>
+        <span v-else class="italic">{{ translate.missing('type') }}</span>
       </div>
       <div class="text-sm">
         <span v-if="identifier.reference">{{ identifier.reference }}</span>
-        <span v-else class="italic">Reference Missing</span>
+        <span v-else class="italic">{{
+          translate.missing('element', 'common.reference')
+        }}</span>
       </div>
       <div>
         <div class="tb-content ml-5">
@@ -25,12 +27,18 @@
             <table>
               <tbody>
                 <tr>
-                  <td>Owner Organisation Reference</td>
+                  <td>
+                    {{ translate.commonText('owner_organisation_reference') }}
+                  </td>
                   <td v-if="post.ref">{{ post.ref }}</td>
-                  <td v-else class="italic">Missing</td>
+                  <td v-else class="italic">
+                    {{ translate.missing() }}
+                  </td>
                 </tr>
                 <tr>
-                  <td>Owner Organisation Narrative</td>
+                  <td>
+                    {{ translate.commonText('owner_organisation_narrative') }}
+                  </td>
                   <td>
                     <div
                       v-for="(n, k) in post.narrative"
@@ -40,13 +48,16 @@
                     >
                       <div v-if="n.narrative" class="flex flex-col">
                         <span v-if="n.language" class="language top"
-                          >(Language: {{ types.languages[n.language] }})</span
+                          >({{ translate.commonText('language') }}:
+                          {{ types.languages[n.language] }})</span
                         >
                         <span v-if="n.narrative" class="description">{{
                           n.narrative
                         }}</span>
                       </div>
-                      <span v-else class="italic">Missing</span>
+                      <span v-else class="italic">{{
+                        translate.missing()
+                      }}</span>
                     </div>
                   </td>
                 </tr>
@@ -61,6 +72,7 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'OtherIdentifier',
@@ -76,7 +88,8 @@ export default defineComponent({
       languages: [];
     }
     const types = inject('types') as Types;
-    return { types };
+    const translate = new Translate();
+    return { types, translate };
   },
 });
 </script>

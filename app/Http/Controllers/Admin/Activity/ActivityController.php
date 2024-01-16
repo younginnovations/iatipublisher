@@ -107,7 +107,12 @@ class ActivityController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while fetching activities.']);
+            return response()->json(
+                [
+                    'success' => false,
+                    'error'   => translateErrorHasOccurred('elements_common.activities', 'fetching'),
+                ]
+            );
         }
     }
 
@@ -137,17 +142,23 @@ class ActivityController extends Controller
             $this->db->beginTransaction();
             $activity = $this->activityService->store($input);
             $this->db->commit();
-            Session::put('success', 'Activity has been created successfully.');
+            Session::put('success', translateElementHasBeenSuccessfully('activity', 'created'));
 
             return response()->json([
                 'success' => true,
-                'message' => 'Activity created successfully.',
-                'data' => $activity,
+                'message' => translateElementSuccessfully('activity', 'created'),
+                'data'    => $activity,
             ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while saving activity.', 'data' => []]);
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => translateErrorHasOccurred('elements_common.activity', 'saving'),
+                    'data'    => [],
+                ]
+            );
         }
     }
 
@@ -163,14 +174,18 @@ class ActivityController extends Controller
         try {
             $toast = generateToastData();
             $activity = $this->activityService->getActivity($id);
-            $elements = $this->getElementJsonSchema($activity);
+            $elements = translateJsonValues($this->getElementJsonSchema($activity));
             $elementGroups = readElementGroup();
             $types = $this->getActivityDetailDataType();
             $results = $this->resultService->getActivityResultsWithIndicatorsAndPeriods($activity->id);
             $hasIndicatorPeriod = $this->resultService->checkResultIndicatorPeriod($results);
             $transactions = $this->transactionService->getActivityTransactions($activity->id);
             $status = $activity->element_status;
-            $status['transactions'] = $transactions->count() === 0 ? false : Arr::get($status, 'transactions', false);
+            $status['transactions'] = $transactions->count() === 0 ? false : Arr::get(
+                $status,
+                'transactions',
+                false
+            );
             $status['result'] = $results->count() === 0 ? false : Arr::get($status, 'result', false);
             $status['reporting_org'] = $activity->organization->element_status['reporting_org'] ?? false;
             $activity->element_status = $status;
@@ -194,7 +209,11 @@ class ActivityController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.index')->with('error', 'Error has occurred while opening activity detail page.');
+            return redirect()->route('admin.activities.index')
+                ->with(
+                    'error',
+                    translateErrorHasOccurred('elements_common.activity_detail', 'opening', 'page')
+                );
         }
     }
 
@@ -281,19 +300,29 @@ class ActivityController extends Controller
             $activity = $this->activityService->getActivity($activityId);
 
             if ($activity->linked_to_iati) {
-                Session::put('error', 'Activity must be un-published before deleting.');
+                Session::put('error', translateResponses('activity_must_be_unpublished_before_deleting'));
 
-                return response()->json(['success' => false, 'message' => 'Activity must be un-published before deleting.']);
+                return response()->json(['success' => false, 'message' => translateResponses('activity_must_be_unpublished_before_deleting')]);
             }
 
             if ($this->activityService->deleteActivity($activity)) {
-                Session::put('success', 'Activity has been deleted successfully.');
+                Session::put('success', translateElementHasBeenSuccessfully('activities', 'deleted'));
 
-                return response()->json(['success' => true, 'message' => 'Activity has been deleted successfully.']);
+                return response()->json(
+                    [
+                        'success' => true,
+                        'message' => translateElementHasBeenSuccessfully('activities', 'deleted'),
+                    ]
+                );
             }
 
-            return response()->json(['success' => false, 'message' => 'Activity delete failed.']);
-        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'success' => false,
+                    'message' => translateElementFailed('activity', 'delete'),
+                ]
+            );
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json(['success' => false, 'message' => $e->getMessage()]);
@@ -335,7 +364,7 @@ class ActivityController extends Controller
      * Returns paginated activities for vue component.
      *
      * @param Request $request
-     * @param int     $page
+     * @param int $page
      *
      * @return JsonResponse
      */
@@ -346,13 +375,13 @@ class ActivityController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Activities fetched successfully',
-                'data' => $activities,
+                'message' => translateElementSuccessfully('activities', 'fetched'),
+                'data'    => $activities,
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('responses.the_data', 'fetching')]);
         }
     }
 
@@ -369,16 +398,16 @@ class ActivityController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Languages fetched successfully',
-                'data' => [
-                    'languages' => $languages,
+                'message' => translateElementSuccessfully('language', 'fetched'),
+                'data'    => [
+                    'languages'    => $languages,
                     'organization' => $organization,
                 ],
             ]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('responses.the_data', 'fetching')]);
         }
     }
 

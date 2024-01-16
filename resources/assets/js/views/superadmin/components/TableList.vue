@@ -405,7 +405,7 @@
                     }-arrow`"
                   />
                 </span>
-                <span>Activities</span>
+                <span>{{ translate.commonText('activities') }}</span>
               </a>
             </th>
             <th id="publisher_type" scope="col" style="width: 173px">
@@ -459,7 +459,7 @@
         </thead>
         <tbody>
           <tr v-if="organisationData.status === 'fetching'">
-            <td colspan="4">Fetching Data...</td>
+            <td colspan="4">{{ translate.commonText('fetching_data') }}</td>
           </tr>
           <tr v-else-if="organisationData.status === 'failed to retrieve data'">
             <td colspan="4">Failed to retrieve data...</td>
@@ -472,11 +472,11 @@
               <div>
                 <div v-if="data.name" class="ellipsis relative">
                   <span class="ellipsis overflow-hidden">
-                    {{ data?.name[0]?.narrative ?? 'Name Missing' }}
+                    {{ data?.name[0]?.narrative ?? translate.missing('name') }}
                   </span>
                 </div>
 
-                <div v-else>Name Missing</div>
+                <div v-else>{{ translate.missing('name') }}</div>
                 <div class="group relative">
                   <div
                     class="w-full overflow-x-hidden text-ellipsis text-blue-40"
@@ -553,14 +553,15 @@
                 {{
                   data.last_logged_in
                     ? dateFormat(data.last_logged_in, 'MMMM, DD,YYYY')
-                    : 'Not Available'
+                    : translate.missing('not_available')
                 }}
               </div>
             </td>
             <td class="text-n-40">
               <div>
                 <div class="px-1">
-                  {{ data.all_activities_count }} activities
+                  {{ data.all_activities_count }}
+                  {{ translate.commonText('activities_nocase') }}
                 </div>
                 <div class="text-xs">
                   {{
@@ -570,7 +571,7 @@
                           data['latest_updated_activity'].updated_at,
                           'MMMM, DD, YYYY'
                         )
-                      : 'Not available'
+                      : translate.missing('not_available')
                   }}
                 </div>
               </div>
@@ -622,6 +623,7 @@ import {
 } from 'vue';
 import axios from 'axios';
 import MultiSelectWithSearch from 'Components/MultiSelectWithSearch.vue';
+import { Translate } from 'Composable/translationHelper';
 
 import dateFormat from 'Composable/dateFormat';
 import {
@@ -669,6 +671,7 @@ export default defineComponent({
       text: string;
     }
 
+    const translate = new Translate();
     const loader = inject('loader') as LoaderInterface;
     const dateDropdown = ref();
     const clearDate = ref(false);
@@ -892,7 +895,7 @@ export default defineComponent({
     // display/hide validator loader
     const proxyUser = (id: number) => {
       loader.status = true;
-      loader.text = 'Proxy Login';
+      loader.text = translate.button('proxy_login');
       const endpoint = `/proxy-organisation/${id}`;
 
       axios.get(endpoint).then((res) => {
@@ -1059,12 +1062,12 @@ export default defineComponent({
         if (key == 'data_license') {
           let license = data[key];
           license = license?.trim();
-          return license ? map[license] : 'Not available';
+          return license ? map[license] : translate.missing('not_available');
         }
 
-        return data[key] ? map[data[key]] : 'Not available';
+        return data[key] ? map[data[key]] : translate.missing('not_available');
       }
-      return 'Not available';
+      return translate.missing('not_available');
     };
 
     return {
@@ -1105,6 +1108,7 @@ export default defineComponent({
       totalOrganisation,
       countriesWithPrefix,
       generateLabel,
+      translate,
     };
   },
 });

@@ -23,17 +23,24 @@
           <div>
             <nav aria-label="breadcrumbs" class="rank-math-breadcrumb">
               <div class="flex">
-                <a class="whitespace-nowrap font-bold" href="/activities">
-                  Your Activities
+                <a
+                  class="listing-translate-text whitespace-nowrap font-bold"
+                  href="/activities"
+                >
+                  {{
+                    translate.textFromKey(
+                      'activity_detail.your_activities_label'
+                    )
+                  }}
                 </a>
                 <span class="separator mx-4"> / </span>
                 <div class="breadcrumb__title">
                   <span
-                    class="breadcrumb__title last w-[200px] overflow-hidden text-ellipsis text-n-30"
-                    >{{ pageTitle ?? 'Untitled' }}</span
+                    class="breadcrumb__title last listing-translate-text w-[200px] overflow-hidden text-ellipsis text-n-30"
+                    >{{ pageTitle ?? translate.commonText('untitled') }}</span
                   >
-                  <span class="ellipsis__title--hover">{{
-                    pageTitle ? pageTitle : 'Untitled'
+                  <span class="ellipsis__title--hover listing-translate-text">{{
+                    pageTitle ? pageTitle : translate.commonText('untitled')
                   }}</span>
                 </div>
               </div>
@@ -51,11 +58,17 @@
               </div>
               <div class="inline-flex min-h-[48px] grow flex-wrap items-center">
                 <h4 class="ellipsis__title relative text-2xl font-bold">
-                  <span class="ellipsis__title overflow-hidden">
-                    {{ pageTitle ? pageTitle : 'Untitled' }}
+                  <span
+                    class="ellipsis__title listing-translate-text overflow-hidden"
+                  >
+                    {{
+                      pageTitle ? pageTitle : translate.commonText('untitled')
+                    }}
                   </span>
-                  <span class="ellipsis__title--hover">
-                    {{ pageTitle ? pageTitle : 'Untitled' }}
+                  <span class="ellipsis__title--hover listing-translate-text">
+                    {{
+                      pageTitle ? pageTitle : translate.commonText('untitled')
+                    }}
                   </span>
                 </h4>
               </div>
@@ -74,7 +87,7 @@
               <ErrorPopUp
                 v-if="errorData.visibility"
                 :message="errorData.message"
-                title="Activity couldn’t be published because"
+                :title="translate.error('activity_could_not_be_published')"
                 @close-popup="
                   () => {
                     errorData.visibility = false;
@@ -128,33 +141,43 @@
           <div id="progress" class="mb-1 flex">
             <div class="activities__card progress mr-1">
               <div class="mb-2 flex items-center justify-between">
-                <span class="mr-2">Publishing Progress</span>
+                <span class="listing-translate-text mr-2">{{
+                  translate.commonText('publishing_progress')
+                }}</span>
                 <HoverText
-                  hover-text="The IATI Standard contains a wide range of data elements and your organisation is encouraged to (at least) publish data in elements marked as “Core”."
+                  :hover-text="
+                    translate.commonText('the_iati_standard_contains_wide')
+                  "
                   name=""
                   class="hover-text"
                   position="right"
                 />
               </div>
               <ProgressBar :percent="progress" class="mb-3" />
-              <span>Complete all core elements to get 100% score</span>
+              <span class="listing-translate-text">{{
+                translate.textFromKey('activity_detail.complete_all_core_label')
+              }}</span>
             </div>
             <div class="activities__card elements">
               <div class="mb-7 flex items-center justify-between">
-                <span>Elements</span>
+                <span class="listing-translate-text">{{
+                  translate.commonText('elements')
+                }}</span>
                 <HoverText
-                  hover-text="Each “Element” represents a basic unit of information in the IATI Standard. Click on each element listed below and complete all data fields contained in the element. For each element, you will find its technical definition, which is labelled as “IATI Standard Reference” and helpful guidance on the data you are required to provide."
+                  :hover-text="translate.commonText('each_element_represents')"
                   name=""
-                  class="hover-text"
+                  class="hover-text listing-translate-text"
                 />
               </div>
               <div class="mb-3 flex justify-between">
                 <div class="flex items-center space-x-1">
                   <svg-vue icon="core" />
-                  <span>Core</span>
+                  <span class="listing-translate-text">{{
+                    translate.commonText('core')
+                  }}</span>
                 </div>
                 <HoverText
-                  hover-text="Core elements include the IATI Standard's “mandatory and recommended” elements and it is important to provide this data to ensure your data is usable and useful."
+                  :hover-text="translate.commonText('core_elements_include')"
                   name=""
                   class="hover-text"
                 />
@@ -162,10 +185,16 @@
               <div class="flex justify-between">
                 <div class="flex items-center space-x-1">
                   <svg-vue class="text-spring-50" icon="double-tick" />
-                  <span>Completed</span>
+                  <span class="listing-translate-text">{{
+                    translate.commonText('completed')
+                  }}</span>
                 </div>
                 <HoverText
-                  hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                  :hover-text="
+                    translate.commonText(
+                      'cannot_publish_activity_until_mandatory'
+                    )
+                  "
                   name=""
                   class="hover-text"
                 />
@@ -205,22 +234,34 @@
             <div class="mb-1 flex">
               <div class="activities__card progress mr-1">
                 <div class="mb-2 flex items-center justify-between">
-                  <span class="mr-2">Publishing Progress</span>
+                  <span class="listing-translate-text mr-2">{{
+                    translate.commonText('publishing_progress')
+                  }}</span>
                   <HoverText
-                    hover-text="The IATI Standard contains a wide range of data elements and your organisation is encouraged to (at least) publish data in elements marked as “Core”."
+                    :hover-text="
+                      translate.commonText('the_iati_standard_contains_wide')
+                    "
                     name=""
                     class="hover-text"
                     position="right"
                   />
                 </div>
                 <ProgressBar :percent="progress" class="mb-3" />
-                <span>Complete all core elements to get 100% score</span>
+                <span class="listing-translate-text">{{
+                  translate.textFromKey(
+                    'activity_detail.complete_all_core_label'
+                  )
+                }}</span>
               </div>
               <div class="activities__card elements">
                 <div class="mb-7 flex items-center justify-between">
-                  <span>Elements</span>
+                  <span class="listing-translate-text">{{
+                    translate.commonText('elements')
+                  }}</span>
                   <HoverText
-                    hover-text="Each “Element” represents a basic unit of information in the IATI Standard. Click on each element listed below and complete all data fields contained in the element. For each element, you will find its technical definition, which is labelled as “IATI Standard Reference” and helpful guidance on the data you are required to provide."
+                    :hover-text="
+                      translate.commonText('each_element_represents')
+                    "
                     name=""
                     class="hover-text"
                   />
@@ -228,10 +269,12 @@
                 <div class="mb-3 flex justify-between">
                   <div class="flex items-center space-x-1">
                     <svg-vue icon="core" />
-                    <span>Core</span>
+                    <span class="listing-translate-text">{{
+                      translate.commonText('core')
+                    }}</span>
                   </div>
                   <HoverText
-                    hover-text="Core elements include the IATI Standard's “mandatory and recommended” elements and it is important to provide this data to ensure your data is usable and useful."
+                    :hover-text="translate.commonText('core_elements_include')"
                     name=""
                     class="hover-text"
                   />
@@ -239,10 +282,16 @@
                 <div class="flex justify-between">
                   <div class="flex items-center space-x-1">
                     <svg-vue class="text-spring-50" icon="double-tick" />
-                    <span>Completed</span>
+                    <span class="listing-translate-text">{{
+                      translate.commonText('completed')
+                    }}</span>
                   </div>
                   <HoverText
-                    hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                    :hover-text="
+                      translate.commonText(
+                        'cannot_publish_activity_until_mandatory'
+                      )
+                    "
                     name=""
                     class="hover-text"
                   />
@@ -261,9 +310,11 @@
               class="mb-4 flex items-center text-xs font-bold uppercase leading-normal text-n-50"
             >
               <svg-vue class="mr-0.5 text-base" icon="setting"></svg-vue>
-              <span class="whitespace-nowrap"
-                >Override this activity's default values
-              </span>
+              <span class="listing-translate-text whitespace-nowrap">{{
+                translate.textFromKey(
+                  'activity_detail.uc_override_this_activity_label'
+                )
+              }}</span>
             </a>
           </div>
           <div
@@ -277,11 +328,17 @@
               class="tab-btn-anchor"
             >
               <button :disabled="post.status == 'disabled'" class="tab-btn">
-                <span>{{ post.label }}</span>
+                <span class="listing-translate-text">{{
+                  formatTitle(toSnakeCase(post.label))
+                }}</span>
                 <span class="hover__text">
                   <HoverText
-                    :name="post.label"
-                    hover-text="You cannot publish an activity until all the mandatory fields have been filled."
+                    :name="formatTitle(toSnakeCase(post.label))"
+                    :hover-text="
+                      translate.commonText(
+                        'cannot_publish_activity_until_mandatory'
+                      )
+                    "
                     icon_size="text-tiny"
                   />
                 </span>
@@ -293,7 +350,7 @@
               <div
                 class="elements-title relative mx-3 mt-3 mb-1 flex w-full items-center text-sm uppercase text-n-40"
               >
-                <div :id="key" class="mr-4 shrink-0">
+                <div :id="key" class="listing-translate-text mr-4 shrink-0">
                   {{ formatTitle(key) }}
                 </div>
               </div>
@@ -330,7 +387,7 @@
                     :data="element"
                     :types="types"
                     :default-language="
-                      activityProps.default_field_values.default_language
+                      activityProps.default_field_values?.default_language
                     "
                     :title="String(name)"
                     :activity-id="activity.id"
@@ -358,6 +415,7 @@ import {
   onUnmounted,
   ref,
   watch,
+  capitalize,
 } from 'vue';
 import { useToggle, watchIgnorable } from '@vueuse/core';
 
@@ -381,6 +439,7 @@ import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
 // Vuex Store
 import { detailStore } from 'Store/activities/show';
 import { useStore } from 'Store/activities/index';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   components: {
@@ -448,6 +507,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     const { types, coreCompleted } = toRefs(props);
     let removed = sessionStorage.getItem('removed');
 
@@ -627,7 +687,12 @@ export default defineComponent({
     );
 
     function formatTitle(title: string) {
-      return title.replace(/_/gi, ' ');
+      console.log(title);
+      const translatedTitle =
+        translate.textFromKey(`activity_detail.${title}.label`) ??
+        title.replace(/_/gi, ' ');
+
+      return capitalize(translatedTitle);
     }
 
     const toastMessage = reactive({
@@ -672,7 +737,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
+        title: translate.textFromKey('activities.your_activities'),
         link: '/activities',
       },
       {
@@ -705,6 +770,11 @@ export default defineComponent({
       store.dispatch('updateShowPublished', false);
     }
 
+    const toSnakeCase = (sentence: string) => {
+      const words = sentence.split(' ');
+      return words.map((word) => word.toLowerCase()).join('_');
+    };
+
     return {
       groupedData,
       activities,
@@ -728,6 +798,8 @@ export default defineComponent({
       istopVisible,
       screenWidth,
       width,
+      translate,
+      toSnakeCase,
     };
   },
 });

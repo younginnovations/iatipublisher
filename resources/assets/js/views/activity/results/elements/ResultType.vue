@@ -1,9 +1,12 @@
 <template>
-  <div class="text-sm">{{ type[typeData] ?? 'Missing' }}</div>
+  <div class="text-sm">
+    {{ type[typeData] ?? translate.missing() }}
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ResultType',
@@ -18,9 +21,10 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     let { data } = toRefs(props);
     const typeData = data.value;
-    return { typeData };
+    return { typeData, translate };
   },
 });
 </script>

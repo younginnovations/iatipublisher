@@ -87,7 +87,10 @@ class UserController extends Controller
     {
         try {
             $organizations = $this->organizationService->pluckAllOrganizations();
-            $status = getUserStatus();
+            $status = array_map(function ($item) {
+                return trans('user.' . strtolower($item));
+            }, getUserStatus());
+
             $roles = $this->userService->getRoles();
             $userRole = Auth::user()->role->role;
             $oldestDates = $this->dashboardService->getOldestDate('user');
@@ -96,7 +99,8 @@ class UserController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->back()->with('error', 'Error has occurred while rendering user listing page');
+            return redirect()->back()
+                ->with('error', translateErrorHasOccurred('user.user_listing', 'rendering', 'page'));
         }
     }
 
@@ -116,12 +120,12 @@ class UserController extends Controller
             $this->userService->store($formData);
             $this->db->commit();
 
-            return response()->json(['success' => true, 'message' => 'New user successfully created.']);
+            return response()->json(['success' => true, 'message' => translateElementSuccessfully('user.new_user', 'created')]);
         } catch (\Exception $e) {
             $this->db->rollback();
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while creating user.']);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('user.user', 'creating')]);
         }
     }
 
@@ -145,12 +149,12 @@ class UserController extends Controller
             $this->userService->update($id, $formData);
             $this->db->commit();
 
-            return response()->json(['success' => true, 'message' => 'User has been updated successfully.']);
+            return response()->json(['success' => true, 'message' => translateElementSuccessfully('user.user', 'updated')]);
         } catch (\Exception $e) {
             $this->db->rollback();
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while updating user.']);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('user.user', 'updating')]);
         }
     }
 
@@ -164,14 +168,14 @@ class UserController extends Controller
     {
         try {
             if ($this->userService->delete($id)) {
-                return response()->json(['success' => true, 'message' => 'User has been deleted successfully.']);
+                return response()->json(['success' => true, 'message' => translateElementSuccessfully('user.user', 'deleted')]);
             }
 
-            return response()->json(['success' => false, 'message' => 'The user cannot be deleted.']);
+            return response()->json(['success' => false, 'message' => trans('user.cannot_be_deleted')]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while deleting user.']);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('user.user', 'deleting')]);
         }
     }
 
@@ -187,7 +191,7 @@ class UserController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'User status successfully retrieved.',
+                'message' => translateElementSuccessfully('responses.user_status', 'retrieved'),
                 'data' => ['account_verified' => $status],
             ]);
         } catch (\Exception $e) {
@@ -212,7 +216,7 @@ class UserController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Verification email successfully sent.',
+                'message' => translateElementSuccessfully('responses.verification_email', 'sent'),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
@@ -241,7 +245,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.index')->with('error', 'Error while rendering setting page');
+            return redirect()->route('admin.activities.index')->with('error', translateErrorHasOccurred('settings.settings_label', 'rendering', 'page'));
         }
     }
 
@@ -261,7 +265,7 @@ class UserController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Paginated users fetched successfully.',
+                'message' => trans('user.paginated_users_fetched'),
                 'data' => $users,
             ]);
         } catch (\Exception $e) {
@@ -269,7 +273,7 @@ class UserController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error occurred while trying to get paginated user.',
+                'message' => trans('user.error_occurred_while'),
             ]);
         }
     }
@@ -344,21 +348,21 @@ class UserController extends Controller
             $formData = $request->only(['current_password', 'password']);
 
             if (!Hash::check($formData['current_password'], Auth::user()->getAuthPassword())) {
-                return response()->json(['success' => false, 'errors' => ['current_password' => ['Please enter correct current password']]]);
+                return response()->json(['success' => false, 'errors' => ['current_password' => [trans('register.correct_current')]]]);
             }
 
             $this->userService->updatePassword(Auth::user()->id, $formData);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Password updated successfully.',
+                'message' => translateElementSuccessfully('register.password.label', 'updated'),
             ]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error occurred while updating password.',
+                'message' => translateErrorHasOccurred('register.password.label', 'updating'),
             ]);
         }
     }
@@ -380,9 +384,13 @@ class UserController extends Controller
             $this->userService->update(Auth::user()->id, $formData);
             $this->db->commit();
 
+            $currentLanguage = app()->getLocale();
+            session()->put('locale', Arr::get($formData, 'language_preference', $currentLanguage));
+            app()->setLocale(Arr::get($formData, 'language_preference', $currentLanguage));
+
             return response()->json([
                 'success' => true,
-                'message' => 'User profile updated successfully.',
+                'message' => translateElementSuccessfully('user.user_profile', 'updated'),
             ]);
         } catch (\Exception $e) {
             $this->db->rollback();
@@ -390,7 +398,7 @@ class UserController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error occurred while updating user profile.',
+                'message' => translateErrorHasOccurred('user.user_profile', 'updating'),
             ]);
         }
     }
@@ -408,16 +416,21 @@ class UserController extends Controller
             $user = $this->userService->getUser($id);
 
             if ($this->userService->toggleUserStatus($id)) {
-                return response()->json(['success' => true, 'message' => $user->status ? 'User has been deactivated successfully.' : 'User has been activated successfully.']);
+                return response()->json([
+                    'success' => true,
+                    'message' => $user->status
+                        ? translateElementSuccessfully('user.user', 'deactivated')
+                        : translateElementSuccessfully('user.user', 'activated'),
+                ]);
             }
 
-            return response()->json(['success' => false, 'message' => 'The status of this user cannot be changed.']);
+            return response()->json(['success' => false, 'message' => trans('user.status_cannot_be_changed')]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error has occurred while trying to toggle user status',
+                'message' => translateErrorHasOccurred('responses.user_status', 'toggle'),
             ]);
         }
     }

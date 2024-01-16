@@ -1,0 +1,82 @@
+{
+  "attributes": {
+    "name": "DataLicense",
+    "complete": "1",
+    "embedded": "0",
+    "category-codelist": null
+  },
+  "metadata": {
+    "name": "DataLicense",
+    "description": "",
+    "category": "Non-Core",
+    "url": ""
+  },
+  "DataLicense": [
+    {
+      "code": "odc-pddl",
+      "name": "Open Data Commons Public Domain Dedication and Licence (PDDL)",
+      "description": "Open Data Commons Public Domain Dedication and Licence (PDDL)",
+      "status": "active"
+    },
+    {
+      "code": "odc-odbl",
+      "name": "Open Data Commons Open Database Licence (ODbL)",
+      "description": "Open Data Commons Open Database Licence (ODbL)",
+      "status": "active"
+    },
+    {
+      "code": "odc-by",
+      "name": "Open Data Commons Attribution Licence",
+      "description": "Open Data Commons Attribution Licence",
+      "status": "active"
+    },
+    {
+      "code": "cc-zero",
+      "name": "Creative Commons CCZero",
+      "description": "Creative Commons CCZero",
+      "status": "active"
+    },
+    {
+      "code": "cc-by",
+      "name": "Creative Commons Attribution",
+      "description": "Creative Commons Attribution",
+      "status": "active"
+    },
+    {
+      "code": "cc-by-sa",
+      "name": "Creative Commons Attribution Share-Alike",
+      "description": "Creative Commons Attribution Share-Alike",
+      "status": "active"
+    },
+    {
+      "code": "gfdl",
+      "name": "GNU Free Documentation License",
+      "description": "GNU Free Documentation License",
+      "status": "active"
+    },
+    {
+      "code": "other-open",
+      "name": "Other (Open)",
+      "description": "Other (Open)",
+      "status": "active"
+    },
+    {
+      "code": "other-pd",
+      "name": "Other (Public Domain)",
+      "description": "Other (Public Domain)",
+      "status": "active"
+    },
+    {
+      "code": "other-at",
+      "name": "Other (Attribution)",
+      "description": "Other (Attribution)",
+      "status": "active"
+    },
+    {
+      "code": "uk-ogl",
+      "name": "UK Open Government Licence (OGL)",
+      "description": "UK Open Government Licence (OGL)",
+      "status": "active"
+    }
+  ]
+}

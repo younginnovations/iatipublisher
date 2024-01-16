@@ -44,13 +44,15 @@ class DescriptionController extends Controller
             $element = getElementSchema('description');
             $activity = $this->descriptionService->getActivityData($id);
             $form = $this->descriptionService->formGenerator($id);
-            $data = ['title' => $element['label'], 'name' => 'description'];
+
+            $data = ['title' =>$element['label'], 'name' => 'description'];
 
             return view('admin.activity.description.edit', compact('form', 'activity', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering activity description form.');
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.activity_description', 'rendering', 'form'));
         }
     }
 
@@ -69,14 +71,14 @@ class DescriptionController extends Controller
             $activityDescription = $request->all();
 
             if (!$this->descriptionService->update($activityDescription, $activityData)) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating description.');
+                return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.description', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Description updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', translateElementSuccessfully('description', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating description.');
+            return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.description', 'updating'));
         }
     }
 }

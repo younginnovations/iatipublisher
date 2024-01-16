@@ -41,7 +41,7 @@ class ResultElementForm extends BaseForm
                     'content' => '<div class="bg-white" id=' . $name . '>
 
                     <div class="title flex items-center mb-4">
-                        <div class="text-sm shrink-0 uppercase text-n-40 font-bold">' . $name . '</div>
+                        <div class="text-sm shrink-0 uppercase text-n-40 font-bold">' . trans("elements_common.$name") . '</div>
                         <div class="line grow h-px border-b border-n-40 ml-4"></div>
                     </div>
                     </div>',
@@ -78,11 +78,9 @@ class ResultElementForm extends BaseForm
                 );
 
                 if (Arr::get($sub_element, 'add_more', false) || Arr::get($sub_element, 'add_more_attributes', false)) {
+                    $element = $this->getData(sprintf('sub_elements.%s.name', $name));
                     $this->add('add_to_collection_' . $sub_element['name'], 'button', [
-                        'label' => sprintf(
-                            'add additional %s',
-                            str_replace('_', ' ', $this->getData(sprintf('sub_elements.%s.name', $name)))
-                        ),
+                        'label' => getLabelForAddAdditional($element),
                         'attr'  => [
                             'class'     => 'add_to_parent add_more button relative -translate-y-1/2 pl-3.5 text-xs font-bold uppercase leading-normal text-spring-50 text-bluecoral',
                             'form_type' => $sub_element['name'],

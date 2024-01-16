@@ -3,13 +3,14 @@
     {{
       flowData[0].flow_type
         ? type.flowType[flowData[0].flow_type]
-        : 'Flow Type Missing'
+        : translate.missing('flow_type')
     }}
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'TransactionFlowType',
@@ -21,6 +22,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     const { data } = toRefs(props);
 
     interface ArrayObject {
@@ -28,7 +30,7 @@ export default defineComponent({
     }
     const flowData = data.value as ArrayObject;
     const type = inject('types');
-    return { flowData, type };
+    return { flowData, type, translate };
   },
 });
 </script>

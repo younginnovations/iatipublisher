@@ -18,14 +18,17 @@
       ]"
     >
       <div v-if="showIatiReference" class="mb-2 italic text-bluecoral">
-        IATI standard reference
+        {{ translate.commonText('iati_standard_reference') }}
       </div>
       <span class="font-bold text-bluecoral">{{ name }}</span>
       <!-- eslint-disable vue/no-v-html -->
       <p v-html="hoverText" />
       <!--eslint-enable-->
-      <a v-if="link" :href="link" class="inline-block font-bold text-bluecoral"
-        >Learn more</a
+      <a
+        v-if="link"
+        :href="link"
+        class="translate-text-hover-learn-more inline-block font-bold text-bluecoral"
+        >{{ translate.button('learn_more') }}</a
       >
     </div>
   </div>
@@ -33,6 +36,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   props: {
@@ -70,6 +74,10 @@ export default defineComponent({
       required: false,
       default: false,
     },
+  },
+  setup() {
+    const translate = new Translate();
+    return { translate };
   },
 });
 </script>

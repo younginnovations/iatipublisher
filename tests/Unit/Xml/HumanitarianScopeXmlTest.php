@@ -19,9 +19,9 @@ class HumanitarianScopeXmlTest extends XmlBaseTest
         $flattenErrors = $this->getErrors($rows);
         $this->assertContains('The humanitarian scope type is invalid.', $flattenErrors);
         $this->assertContains('The humanitarian scope vocabulary is invalid.', $flattenErrors);
-        $this->assertContains('The humanitarian scope vocabulary-uri must be a proper url.', $flattenErrors);
+        $this->assertContains('The humanitarian scope vocabulary uri must be a valid url.', $flattenErrors);
         $this->assertContains('The @xml:lang field is invalid.', $flattenErrors);
-        $this->assertContains('The narrative field is required with @xml:lang field.', $flattenErrors);
+        $this->assertContains('The Narrative field is required with @xml:lang field.', $flattenErrors);
     }
 
     /**

@@ -14,10 +14,13 @@
             icon="warning-fill"
           ></svg-vue>
           <div class="font-bold">
-            {{ errorData.length + importErrorlength }} Issues found
+            {{ errorData.length + importErrorlength }}
+            {{ translate.commonText('issues_found') }}
           </div>
         </div>
-        <button class="validation__toggle" @click="errorToggle()">Show</button>
+        <button class="validation__toggle" @click="errorToggle()">
+          {{ translate.commonText('show') }}
+        </button>
       </div>
     </div>
     <div
@@ -39,7 +42,7 @@
             "
             @click="issueType = 'validator'"
           >
-            IATI Validator Issues
+            {{ translate.button('iati_validator_issues') }}
           </div>
           <div
             v-if="importErrors"
@@ -51,7 +54,7 @@
             "
             @click="issueType = 'upload'"
           >
-            Uploaded file Issues
+            {{ translate.button('upload_file_issues') }}
           </div>
         </div>
         <div class="flex items-center space-x-2">
@@ -61,7 +64,9 @@
             @click="deleteErrors"
           >
             <svg-vue class="text-sm text-bluecoral" icon="delete"></svg-vue>
-            <span class="mt-1 ml-0.5 text-bluecoral">REMOVE</span>
+            <span class="mt-1 ml-0.5 text-bluecoral">
+              {{ translate.button('remove') }}
+            </span>
           </button>
           <button
             class="validation__toggle text-bluecoral"
@@ -112,7 +117,9 @@ import { useToggle } from '@vueuse/core';
 import ErrorLists from 'Components/sections/ErrorLists.vue';
 import UploadedErrors from 'Components/sections/UploadedErrors.vue';
 import axios from 'axios';
+import { Translate } from 'Composable/translationHelper';
 
+const translate = new Translate();
 const props = defineProps({
   errorData: { type: Array, required: true },
 });

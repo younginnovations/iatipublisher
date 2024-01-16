@@ -9,33 +9,33 @@
       <span v-if="post.sector_vocabulary">{{
         types.sectorVocabulary[post.sector_vocabulary]
       }}</span>
-      <span v-else class="italic">Vocabulary Missing</span>
+      <span v-else class="italic">{{ translate.missing('vocabulary') }}</span>
     </div>
     <div class="mb-1 flex space-x-1 text-sm">
       <div>
         <div v-if="post.sector_vocabulary == 1">
           <span v-if="post.code">{{ types.sectorCode[post.code] }}</span>
-          <span v-else class="italic">Missing</span>
+          <span v-else class="italic">{{ translate.missing() }}</span>
         </div>
         <div v-else-if="post.sector_vocabulary == 2">
           <span v-if="post.category_code">{{
             types.sectorCategory[post.category_code]
           }}</span>
-          <span v-else class="italic">Missing</span>
+          <span v-else class="italic">{{ translate.missing() }}</span>
         </div>
         <div v-else-if="post.sector_vocabulary == 7">
           <span v-if="post.sdg_goal">{{ types.sdgGoals[post.sdg_goal] }}</span>
-          <span v-else class="italic">Missing</span>
+          <span v-else class="italic">{{ translate.missing() }}</span>
         </div>
         <div v-else-if="post.sector_vocabulary == 8">
           <span v-if="post.sdg_target">{{
             types.sdgTarget[post.sdg_target]
           }}</span>
-          <span v-else class="italic">Missing</span>
+          <span v-else class="italic">{{ translate.missing() }}</span>
         </div>
         <div v-else>
           <span v-if="post.text">{{ post.text }}</span>
-          <span v-else class="italic">Missing</span>
+          <span v-else class="italic">{{ translate.missing() }}</span>
         </div>
       </div>
       <span v-if="post.percentage" class="text-sm"
@@ -45,7 +45,7 @@
     <div class="country_budget_items ml-5">
       <table>
         <tr class="multiline">
-          <td>Narrative</td>
+          <td>{{ translate.commonText('narrative') }}</td>
           <td>
             <div
               v-for="(narrative, k) in post.narrative"
@@ -54,11 +54,12 @@
             >
               <div v-if="narrative.narrative" class="flex flex-col">
                 <span v-if="narrative.language" class="language top"
-                  >(Language: {{ types.languages[narrative.language] }})</span
+                  >({{ translate.commonText('language') }}:
+                  {{ types.languages[narrative.language] }})</span
                 >
                 <span class="description">{{ narrative.narrative }}</span>
               </div>
-              <span v-else class="italic">Missing</span>
+              <span v-else class="italic">{{ translate.missing() }}</span>
             </div>
           </td>
         </tr>
@@ -67,7 +68,7 @@
             post.sector_vocabulary === '98' || post.sector_vocabulary === '99'
           "
         >
-          <td>Vocabulary URI</td>
+          <td>{{ translate.commonText('vocabulary_uri') }}</td>
           <td>
             <a
               v-if="post.vocabulary_uri"
@@ -75,7 +76,7 @@
               :href="post.vocabulary_uri"
               >{{ post.vocabulary_uri }}</a
             >
-            <span v-else class="italic">Missing</span>
+            <span v-else class="italic">{{ translate.missing() }}</span>
           </td>
         </tr>
       </table>
@@ -85,6 +86,7 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ActivitySector',
@@ -104,13 +106,14 @@ export default defineComponent({
       languages: [];
     }
 
+    const translate = new Translate();
     const types = inject('types') as Types;
 
     function roundFloat(num: string) {
       return parseFloat(num).toFixed(2);
     }
 
-    return { types, roundFloat };
+    return { types, roundFloat, translate };
   },
 });
 </script>

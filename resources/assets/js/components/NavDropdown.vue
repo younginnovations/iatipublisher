@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="dropdown__content z-50">
-      <div class="flex flex-col">
+      <div class="flex flex-col normal-case">
         <strong class="text-sm font-bold text-n-50">{{ props.name }}</strong>
         <p class="mt-2 mb-4 text-sm text-n-50">
           {{ props.text }}

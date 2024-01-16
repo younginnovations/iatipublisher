@@ -4,38 +4,46 @@
       <table class="mb-3 w-full">
         <tbody>
           <tr>
-            <td><span class="category flex">Actual Value</span></td>
+            <td>
+              <span class="category flex">{{
+                translate.commonText('actual_value')
+              }}</span>
+            </td>
             <td>
               <div :class="elementSpacing">
-                {{ tValue.value ?? 'Missing' }}
+                {{ tValue.value ?? translate.missing() }}
               </div>
 
               <div class="flex" :class="elementSpacing">
-                <div>Location Reference:&nbsp;</div>
+                <div>
+                  {{ translate.commonText('location_reference') }}:&nbsp;
+                </div>
                 <div>
                   {{
                     getLocation(tValue.location)
                       ? getLocation(tValue.location)
-                      : 'Missing'
+                      : translate.missing()
                   }}
                 </div>
               </div>
 
               <div class="flex" :class="elementSpacing">
-                <div>Dimension:&nbsp;</div>
+                <div>{{ translate.commonText('dimension') }}:&nbsp;</div>
                 <div>
                   <div
                     v-for="(dim, d) in tValue.dimension"
                     :key="d"
                     class="dimension"
                   >
-                    {{ dim.name ?? 'Missing' }} ({{ dim.value ?? 'Missing' }})
+                    {{ dim.name ?? translate.missing() }} ({{
+                      dim.value ?? translate.missing()
+                    }})
                   </div>
                 </div>
               </div>
 
               <div class="flex" :class="elementSpacing">
-                <div>Comment:&nbsp;</div>
+                <div>{{ translate.commonText('comment') }}:&nbsp;</div>
                 <div>
                   <div
                     v-for="(com, c) in tValue.comment[0].narrative"
@@ -47,15 +55,17 @@
                   >
                     <div>
                       <span>
-                        {{ com.narrative ? com.narrative : 'Missing' }}
+                        {{
+                          com.narrative ? com.narrative : translate.missing()
+                        }}
                         &nbsp;
                       </span>
                       <span>
-                        (Language:
+                        ({{ translate.commonText('language') }}:
                         {{
                           com.language
                             ? dlType.language[com.language]
-                            : 'Missing'
+                            : translate.missing()
                         }})
                       </span>
                     </div>
@@ -70,7 +80,9 @@
         <tbody>
           <tr>
             <td colspan="2">
-              <div class="category flex">Document Link</div>
+              <div class="category flex">
+                {{ translate.commonText('document_link') }}
+              </div>
               <div class="divider my-4 h-px w-full border-b border-n-20"></div>
             </td>
           </tr>
@@ -89,6 +101,7 @@ import { DocumentLink } from 'Activity/indicators/elements/Index';
 
 //composable
 import { getLocation } from 'Composable/utils';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ActualValue',
@@ -100,6 +113,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     let { data } = toRefs(props);
 
     // vue inject
@@ -115,6 +129,7 @@ export default defineComponent({
       location,
       getLocation,
       dlType,
+      translate,
     };
   },
 });

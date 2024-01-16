@@ -19,7 +19,7 @@ class ConditionXmlTest extends XmlBaseTest
         $flattenErrors = $this->getErrors($rows);
         $this->assertContains('The condition type is invalid.', $flattenErrors);
         $this->assertContains('The @xml:lang field is invalid.', $flattenErrors);
-        $this->assertContains('The narrative field is required with @xml:lang field.', $flattenErrors);
+        $this->assertContains('The Narrative field is required with @xml:lang field.', $flattenErrors);
     }
 
     /**

@@ -1,7 +1,9 @@
 <template>
   <div class="bg-paper px-10 pt-4 pb-[71px]">
     <div class="my-4 flex justify-between">
-      <h4 class="mr-4 text-3xl font-bold xl:text-heading-4">Organisations</h4>
+      <h4 class="mr-4 text-3xl font-bold xl:text-heading-4">
+        {{ translate.commonText('organisations') }}
+      </h4>
       <div class="inline-flex items-center">
         <Toast
           v-if="toastMessage.visibility"
@@ -36,7 +38,10 @@ import { reactive, provide, defineProps } from 'vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
 import Toast from 'Components/ToastMessage.vue';
 import TableList from './components/TableList.vue';
+import { Translate } from 'Composable/translationHelper';
 
+const translate = new Translate();
+// ref
 const props = defineProps({
   countries: { type: Object, required: true },
   setupCompleteness: { type: Object, required: true },
@@ -51,7 +56,7 @@ const props = defineProps({
 
 const loader = reactive({
   status: false,
-  text: 'Please Wait',
+  text: translate.commonText('please_wait'),
 });
 
 const toastMessage = reactive({

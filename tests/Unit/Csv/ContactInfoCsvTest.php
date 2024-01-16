@@ -96,10 +96,10 @@ class ContactInfoCsvTest extends CsvBaseTest
 
         $this->assertContains('The contact info type is invalid.', $flattenErrors);
         $this->assertContains('The contact info telephone number is invalid.', $flattenErrors);
-        $this->assertContains('The contact info telephone number must have atleast 7 digits.', $flattenErrors);
+        $this->assertContains('The contact info telephone number must be atleast 7 digits.', $flattenErrors);
         $this->assertContains('The contact info telephone number must not have more than 20 digits.', $flattenErrors);
         $this->assertContains('The contact info email must be valid. The contact info email format is invalid.', $flattenErrors);
-        $this->assertContains('The contact info website url must be valid url.', $flattenErrors);
+        $this->assertContains('The contact info website url must be a valid url.', $flattenErrors);
     }
 
     /**

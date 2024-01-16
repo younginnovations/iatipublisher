@@ -60,7 +60,7 @@ class BaseFormCreator
             ],
             'buttons' => [
                 'clear'    => [
-                    'label'     => 'Cancel',
+                    'label'     => translateButton('cancel'),
                     'attr'      => [
                         'type'      => 'anchor',
                         'class'     => 'ghost-btn mr-8',
@@ -69,7 +69,7 @@ class BaseFormCreator
                 ],
 
                 'submit'    => [
-                    'label'     => 'Save and Exit',
+                    'label'     => translateButton('save_and_exit'),
                     'attr'      => [
                         'type'      => 'submit',
                         'class'     => 'primary-btn save-btn',

@@ -53,7 +53,8 @@ class CountryBudgetItemController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering country-budget-item form.');
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.country_budget_items', 'rendering', 'form'));
         }
     }
 
@@ -71,14 +72,14 @@ class CountryBudgetItemController extends Controller
             $activityCountryBudgetItem = $request->except(['_token', '_method']);
 
             if (!$this->countryBudgetItemService->update($id, $activityCountryBudgetItem)) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating country-budget-item.');
+                return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.country_budget_items', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Country-budget-item updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', translateElementSuccessfully('country_budget_items', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating country-budget-item.');
+            return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.country_budget_items', 'updating'));
         }
     }
 }

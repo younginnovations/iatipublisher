@@ -22,7 +22,7 @@
     </div>
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      title="Period Detail"
+      :title="translate.commonText('period_detail')"
       :back-link="`${periodLink}`"
     >
       <div class="flex justify-end">
@@ -34,12 +34,15 @@
         />
         <!-- <Status class="mr-2.5" :data="false" /> -->
         <Btn
-          text="Add Period"
+          :text="translate.button('add_element', 'common.period')"
           icon="add"
           :link="`${periodLink}/create`"
           class="mr-2.5"
         />
-        <Btn text="Edit Period" :link="`${periodLink}/${period.id}/edit`" />
+        <Btn
+          :text="translate.button('edit_element', 'common.period')"
+          :link="`${periodLink}/${period.id}/edit`"
+        />
       </div>
     </PageTitle>
     <div class="-mt-6 mb-8 ml-[26px] text-n-40">
@@ -77,13 +80,13 @@
             <li>
               <a v-smooth-scroll href="#target" :class="linkClasses">
                 <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
-                target
+                {{ translate.commonText('target').toLowerCase() }}
               </a>
             </li>
             <li>
               <a v-smooth-scroll href="#actual" :class="linkClasses">
                 <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
-                actual
+                {{ translate.commonText('actual').toLowerCase() }}
               </a>
             </li>
           </ul>
@@ -99,13 +102,13 @@
               <li>
                 <a v-smooth-scroll href="#target" :class="linkClasses">
                   <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
-                  target
+                  {{ translate.commonText('target').toLowerCase() }}
                 </a>
               </li>
               <li>
                 <a v-smooth-scroll href="#actual" :class="linkClasses">
                   <!-- <svg-vue icon="core" class="mr-2 text-base"></svg-vue> -->
-                  actual
+                  {{ translate.commonText('actual').toLowerCase() }}
                 </a>
               </li>
             </ul>
@@ -153,6 +156,7 @@ import { TargetValue, ActualValue } from './elements/Index';
 //composable
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'PeriodDetail',
@@ -193,6 +197,7 @@ export default defineComponent({
     const positionY = ref(0);
     const screenWidth = ref(0);
 
+    const translate = new Translate();
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-normal mb-2 shadow-default';
     let { period, activity, parentData, types } = toRefs(props);
@@ -240,7 +245,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
+        title: translate.textFromKey('activities.your_activities'),
         link: '/activities',
       },
       {
@@ -256,7 +261,7 @@ export default defineComponent({
         link: indicatorLink,
       },
       {
-        title: 'Period',
+        title: translate.commonText('period'),
         link: '',
       },
     ];
@@ -308,6 +313,7 @@ export default defineComponent({
       periodLink,
       toastData,
       showSidebar,
+      translate,
       istopVisible,
     };
   },

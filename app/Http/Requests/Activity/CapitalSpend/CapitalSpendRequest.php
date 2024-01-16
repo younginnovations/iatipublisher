@@ -63,9 +63,9 @@ class CapitalSpendRequest extends ActivityBaseRequest
     public function messages(): array
     {
         return [
-            'numeric'   => 'The capital spend must be a number',
-            'between'   => 'The capital spend must be a number between 0 and 100',
-            'size'      => 'The capital spend cannot have more than one value.',
+            'numeric'   => translateRequestMessage('capital_spend', 'must_be_a_number'),
+            'between'   => translateRequestMessage('capital_spend', 'must_be_a_number_between_0_100'),
+            'size'      => translateRequestMessage('capital_spend', 'cannot_have_more_than_one'),
         ];
     }
 }

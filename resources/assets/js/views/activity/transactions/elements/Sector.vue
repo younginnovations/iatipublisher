@@ -12,39 +12,43 @@
         <span>{{
           sec.sector_vocabulary
             ? type.sectorVocabulary[sec.sector_vocabulary]
-            : 'Vocabulary Missing'
+            : translate.missing('vocabulary')
         }}</span>
       </div>
       <div class="ml-4">
         <table class="mb-3">
           <tbody>
             <tr>
-              <td>Code</td>
+              <td>{{ translate.commonText('code') }}</td>
               <td>
                 <div class="text-sm">
                   <span v-if="sec.text">
-                    {{ sec.text ?? 'Missing' }}
+                    {{ sec.text ?? translate.missing() }}
                   </span>
                   <span v-else-if="sec.code">
-                    {{ sec.code ? type.sectorCode[sec.code] : 'Missing' }}
+                    {{
+                      sec.code ? type.sectorCode[sec.code] : translate.missing()
+                    }}
                   </span>
                   <span v-else-if="sec.category_code">
                     {{
                       sec.category_code
                         ? type.sectorCategory[sec.category_code]
-                        : 'Missing'
+                        : translate.missing()
                     }}
                   </span>
                   <span v-else-if="sec.sdg_goal">
                     {{
-                      sec.sdg_goal ? type.unsdgGoals[sec.sdg_goal] : 'Missing'
+                      sec.sdg_goal
+                        ? type.unsdgGoals[sec.sdg_goal]
+                        : translate.missing()
                     }}
                   </span>
                   <span v-else-if="sec.sdg_target">
                     {{
                       sec.sdg_target
                         ? type.unsdgTargets[sec.sdg_target]
-                        : 'Missing'
+                        : translate.missing()
                     }}
                   </span>
                 </div>
@@ -55,7 +59,7 @@
                 sec.sector_vocabulary === '98' || sec.sector_vocabulary === '99'
               "
             >
-              <td>Vocabulary URI</td>
+              <td>{{ translate.commonText('vocabulary_uri') }}</td>
               <td>
                 <div class="text-sm">
                   <span v-if="sec.vocabulary_uri">
@@ -63,12 +67,12 @@
                       {{ sec.vocabulary_uri }}
                     </a>
                   </span>
-                  <span v-else> Missing</span>
+                  <span v-else>{{ translate.missing() }}</span>
                 </div>
               </td>
             </tr>
             <tr>
-              <td>Description</td>
+              <td>{{ translate.commonText('description') }}</td>
               <td>
                 <div
                   v-for="(sd, i) in sec.narrative"
@@ -82,12 +86,14 @@
                     (
                     {{
                       sd.language
-                        ? `Language: ${type.languages[sd.language]}`
-                        : 'Language Missing'
+                        ? `${translate.commonText('language')}: ${
+                            type.languages[sd.language]
+                          }`
+                        : translate.missing('language')
                     }})
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? 'Narrative Missing' }}
+                    {{ sd.narrative ?? translate.missing('narrative') }}
                   </div>
                 </div>
               </td>
@@ -101,6 +107,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'TransactionSector',
@@ -112,6 +119,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     const { data } = toRefs(props);
 
     interface Sector {
@@ -141,6 +149,7 @@ export default defineComponent({
     return {
       sector,
       type,
+      translate,
     };
   },
 });

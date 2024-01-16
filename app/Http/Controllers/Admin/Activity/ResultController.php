@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Activity\Result\ResultRequest;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Services\Activity\ResultService;
+use Exception;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -33,7 +34,7 @@ class ResultController extends Controller
     /**
      * ResultController Constructor.
      *
-     * @param ResultService   $resultService
+     * @param ResultService $resultService
      * @param ActivityService $activityService
      */
     public function __construct(
@@ -60,13 +61,11 @@ class ResultController extends Controller
             $toast = generateToastData();
 
             return view('admin.activity.result.index', compact('activity', 'results', 'types', 'toast'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.result.index', $activityId)->with(
-                'error',
-                'Error has occurred while rendering activity transactions listing.'
-            );
+            return redirect()->route('admin.activity.result.index', $activityId)
+                ->with('error', translateErrorHasOccurred('responses.activity_transactions_listing', 'rendering', 'form'));
         }
     }
 
@@ -85,13 +84,13 @@ class ResultController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Results fetched successfully',
-                'data'    => $result,
+                'message' => translateElementSuccessfully('results', 'fetched'),
+                'data' => $result,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('responses.the_data', 'fetching')]);
         }
     }
 
@@ -111,13 +110,11 @@ class ResultController extends Controller
             $data = ['title' => $element['label'], 'name' => 'result'];
 
             return view('admin.activity.result.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.result.index', $id)->with(
-                'error',
-                'Error has occurred while rendering activity result form.'
-            );
+            return redirect()->route('admin.activity.result.index', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.result', 'rendering', 'form'));
         }
     }
 
@@ -135,20 +132,16 @@ class ResultController extends Controller
             $resultData = $request->except(['_token']);
             $result = $this->resultService->create([
                 'activity_id' => $activityId,
-                'result'      => $resultData,
+                'result' => $resultData,
             ]);
 
-            return redirect()->route('admin.activity.result.show', [$activityId, $result['id']])->with(
-                'success',
-                'Activity result created successfully.'
-            );
-        } catch (\Exception $e) {
+            return redirect()->route('admin.activity.result.show', [$activityId, $result['id']])
+                ->with('success', translateElementSuccessfully('activity_result', 'created'));
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.result.index', $activityId)->with(
-                'error',
-                'Error has occurred while creating activity result.'
-            );
+            return redirect()->route('admin.activity.result.index', $activityId)
+                ->with('error', translateErrorHasOccurred('responses.activity_result', 'creating'));
         }
     }
 
@@ -166,17 +159,15 @@ class ResultController extends Controller
             $toast = generateToastData();
             $activity = $this->activityService->getActivity($activityId);
             $result = $this->resultService->getResultWithIndicatorAndPeriod($resultId, $activityId);
-            $element = getElementSchema('result');
+            $element = translateJsonValues(getElementSchema('result'));
             $types = getResultTypes();
 
             return view('admin.activity.result.detail', compact('activity', 'result', 'types', 'toast', 'element'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.result.index', $activityId)->with(
-                'error',
-                'Error has occurred while rending result detail page.'
-            );
+            return redirect()->route('admin.activity.result.index', $activityId)
+                ->with('error', translateErrorHasOccurred('responses.result_detail', 'rendering', 'page'));
         }
     }
 
@@ -197,13 +188,14 @@ class ResultController extends Controller
             $data = ['title' => $element['label'], 'name' => 'result'];
 
             return view('admin.activity.result.edit', compact('form', 'activity', 'data'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.result.index', $activityId)->with(
-                'error',
-                'Error has occurred while rendering activity result form.'
-            );
+            return redirect()->route('admin.activity.result.index', $activityId)
+                ->with(
+                    'error',
+                    translateErrorHasOccurred('responses.activity_result', 'rendering')
+                );
         }
     }
 
@@ -222,23 +214,17 @@ class ResultController extends Controller
             $resultData = $request->except(['_method', '_token']);
 
             if (!$this->resultService->update($resultId, ['activity_id' => $activityId, 'result' => $resultData])) {
-                return redirect()->route('admin.activity.result.index', $activityId)->with(
-                    'error',
-                    'Error has occurred while updating activity result.'
-                );
+                return redirect()->route('admin.activity.result.index', $activityId)
+                    ->with('error', translateErrorHasOccurred('responses.activity_result', 'updating'));
             }
 
-            return redirect()->route('admin.activity.result.show', [$activityId, $resultId])->with(
-                'success',
-                'Activity result updated successfully.'
-            );
-        } catch (\Exception $e) {
+            return redirect()->route('admin.activity.result.show', [$activityId, $resultId])
+                ->with('success', translateElementSuccessfully('activity_result', 'updated'));
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.result.index', $activityId)->with(
-                'error',
-                'Error has occurred while updating activity result.'
-            );
+            return redirect()->route('admin.activity.result.index', $activityId)
+                ->with('error', translateErrorHasOccurred('responses.activity_result', 'updating'));
         }
     }
 
@@ -254,20 +240,20 @@ class ResultController extends Controller
     {
         try {
             $this->resultService->deleteResult($resultId);
-            Session::flash('success', 'Result Deleted Successfully');
+            Session::flash('success', translateElementSuccessfully('result', 'deleted'));
 
             return response()->json([
-                'status'      => true,
-                'msg'         => 'Result Deleted Successfully',
+                'status' => true,
+                'msg' => translateElementSuccessfully('result', 'deleted'),
                 'activity_id' => $id,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             logger()->error($e->getMessage());
-            Session::flash('error', 'Result Delete Error');
+            Session::flash('error', translateElementDeleteError('elements_common.result'));
 
             return response()->json([
-                'status'      => true,
-                'msg'         => 'Result Delete Error',
+                'status' => true,
+                'msg' => translateElementDeleteError('elements_common.result'),
                 'activity_id' => $id,
             ], 400);
         }

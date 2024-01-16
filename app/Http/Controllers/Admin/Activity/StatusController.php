@@ -50,7 +50,8 @@ class StatusController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening activity title form.');
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('responses.activity_title', 'opening', 'form'));
         }
     }
 
@@ -68,16 +69,16 @@ class StatusController extends Controller
             $activityStatus = $request->get('activity_status') !== null ? (int) $request->get('activity_status') : null;
 
             if (!$this->statusService->update($id, $activityStatus)) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity status.');
+                return redirect()->route('admin.activity.show', $id)
+                                        ->with('error', translateErrorHasOccurred('elements_common.activity_status', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Activity status updated successfully.');
+            return redirect()->route('admin.activity.show', $id)
+                                ->with('success', translateElementSuccessfully('activity_status', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(
-                ['success' => false, 'error' => 'Error has occurred while updating activity status.']
-            );
+            return response()->json(['success' => false, 'error' => translateErrorHasOccurred('elements_common.activity_status', 'updating')]);
         }
     }
 }

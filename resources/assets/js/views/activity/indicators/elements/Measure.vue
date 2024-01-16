@@ -1,14 +1,15 @@
 <template>
   <tr>
-    <td>Measure</td>
+    <td>{{ translate.commonText('measure') }}</td>
     <td>
-      {{ measureData ? measureType[measureData] : 'Missing' }}
+      {{ measureData ? measureType[measureData] : translate.missing() }}
     </td>
   </tr>
 </template>
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'IndicatorMeasure',
@@ -24,9 +25,10 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     let { data } = toRefs(props);
     const measureData = data.value;
-    return { measureData };
+    return { measureData, translate };
   },
 });
 </script>

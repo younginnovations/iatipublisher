@@ -9,30 +9,30 @@
       <span v-if="post.tag_vocabulary">{{
         types.tagVocabulary[post.tag_vocabulary]
       }}</span>
-      <span v-else class="italic">Vocabulary Missing</span>
+      <span v-else class="italic">{{ translate.missing('vocabulary') }}</span>
     </div>
     <div class="max-w-[887px] text-sm">
       <span v-if="post.tag_vocabulary === '1' || post.tag_vocabulary === '99'">
         <span v-if="post.tag_text">{{ post.tag_text }}</span>
-        <span v-else class="italic">Missing</span>
+        <span v-else class="italic">{{ translate.missing() }}</span>
       </span>
       <span v-if="post.tag_vocabulary === '2'">
         <span v-if="post.goals_tag_code">{{
           types.sdgGoals[post.goals_tag_code]
         }}</span>
-        <span v-else class="italic">Missing</span>
+        <span v-else class="italic">{{ translate.missing() }}</span>
       </span>
       <span v-if="post.tag_vocabulary === '3'">
         <span v-if="post.targets_tag_code">{{
           types.sdgTarget[post.targets_tag_code]
         }}</span>
-        <span v-else class="italic">Missing</span>
+        <span v-else class="italic">{{ translate.missing() }}</span>
       </span>
     </div>
     <table class="ml-5">
       <tbody>
         <tr v-if="post.tag_vocabulary === '99'">
-          <td>Vocabulary URI</td>
+          <td>{{ translate.commonText('vocabulary_uri') }}</td>
           <td>
             <a
               v-if="post.vocabulary_uri"
@@ -41,7 +41,7 @@
             >
               {{ post.vocabulary_uri }}
             </a>
-            <span v-else class="italic">Missing</span>
+            <span v-else class="italic">{{ translate.missing() }}</span>
           </td>
         </tr>
         <tr
@@ -49,16 +49,17 @@
           class="multiline"
           :class="{ 'mb-4': k !== post.narrative.length - 1 }"
         >
-          <td>Narrative</td>
+          <td>{{ translate.commonText('narrative') }}</td>
           <td>
             <div v-for="(narrative, k) in post.narrative" :key="k">
               <div v-if="narrative.narrative" class="flex flex-col">
                 <span v-if="narrative.language" class="language top"
-                  >(Language: {{ types.languages[narrative.language] }})</span
+                  >({{ translate.commonText('language') }}:
+                  {{ types.languages[narrative.language] }})</span
                 >
                 <span class="description">{{ narrative.narrative }}</span>
               </div>
-              <span v-else class="italic">Missing</span>
+              <span v-else class="italic">{{ translate.missing() }}</span>
             </div>
           </td>
         </tr>
@@ -70,6 +71,7 @@
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
 import dateFormat from 'Composable/dateFormat';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ActivityTag',
@@ -87,9 +89,10 @@ export default defineComponent({
       languages: [];
     }
 
+    const translate = new Translate();
     const types = inject('types') as Types;
 
-    return { types, dateFormat };
+    return { types, dateFormat, translate };
   },
 });
 </script>

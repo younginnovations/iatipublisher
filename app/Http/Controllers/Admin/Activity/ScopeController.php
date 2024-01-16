@@ -50,7 +50,8 @@ class ScopeController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening activity-scope form.');
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.activity_scope', 'opening', 'form'));
         }
     }
 
@@ -68,14 +69,17 @@ class ScopeController extends Controller
             $activityScope = $request->get('activity_scope') !== null ? (int) $request->get('activity_scope') : null;
 
             if (!$this->scopeService->update($id, $activityScope)) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity-scope.');
+                return redirect()->route('admin.activity.show', $id)
+                    ->with('error', translateErrorHasOccurred('elements_common.activity_scope', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Activity-scope updated successfully.');
+            return redirect()->route('admin.activity.show', $id)
+                ->with('success', translateElementSuccessfully('activity_scope', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating activity-scope.');
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.activity_scope', 'updating'));
         }
     }
 }

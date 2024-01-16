@@ -15,7 +15,7 @@
         <table class="mb-3">
           <tbody>
             <tr>
-              <td>Description</td>
+              <td>{{ translate.commonText('description') }}</td>
               <td>
                 <div
                   v-for="(sd, i) in cou.narrative"
@@ -29,12 +29,14 @@
                     (
                     {{
                       sd.language
-                        ? `Language: ${type.languages[sd.language]}`
-                        : 'Language Missing'
+                        ? `${translate.commonText('language')}: ${
+                            type.languages[sd.language]
+                          }`
+                        : translate.missing('language')
                     }})
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? 'Narrative Missing' }}
+                    {{ sd.narrative ?? translate.missing('narrative') }}
                   </div>
                 </div>
               </td>
@@ -48,6 +50,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'TransactionRecipientCountry',
@@ -59,6 +62,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     const { data } = toRefs(props);
 
     interface ArrayObject {
@@ -75,7 +79,7 @@ export default defineComponent({
     }
 
     const type = inject('types') as TypesInterface;
-    return { country, type };
+    return { country, type, translate };
   },
 });
 </script>

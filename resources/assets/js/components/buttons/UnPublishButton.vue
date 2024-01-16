@@ -1,7 +1,7 @@
 <template>
   <BtnComponent
     class=""
-    text="Unpublish"
+    :text="translate.button('unpublish')"
     :type="type"
     icon="cancel-cloud"
     @click="unpublishValue = true"
@@ -13,23 +13,26 @@
           class="mr-1 mt-0.5 text-lg text-crimson-40"
           icon="cancel-cloud"
         />
-        <b>Unpublish activity</b>
+        <b class="translate-text-btn">
+          {{ translate.button('unpublish') }}
+          {{ translate.commonText('activity') }}
+        </b>
       </div>
-      <div class="rounded-lg bg-rose p-4">
-        Are you sure you want to unpublish this activity?
+      <div class="translate-text-btn rounded-lg bg-rose p-4">
+        {{ translate.button('unpublish_confirmation', 'common.activity') }}?
       </div>
     </div>
     <div class="flex justify-end">
       <div class="inline-flex">
         <BtnComponent
           class="bg-white px-6 uppercase"
-          text="Go Back"
+          :text="translate.button('go_back')"
           type=""
           @click="unpublishValue = false"
         />
         <BtnComponent
           class="space"
-          text="Unpublish"
+          :text="translate.button('unpublish')"
           type="primary"
           @click="unPublishFunction"
         />
@@ -55,7 +58,9 @@ import Loader from 'Components/sections/ProgressLoader.vue';
 
 // Vuex Store
 import { detailStore } from 'Store/activities/show';
+import { Translate } from 'Composable/translationHelper';
 
+const translate = new Translate();
 const props = defineProps({
   type: { type: String, default: 'primary' },
   activityId: { type: Number, required: true },
@@ -80,7 +85,7 @@ interface LoaderTypeface {
 
 const loader: LoaderTypeface = reactive({
   value: false,
-  text: 'Please Wait',
+  text: translate.commonText('please_wait'),
 });
 
 // call api for unpublishing
@@ -111,7 +116,7 @@ const unPublishFunction = () => {
     loader.value = true;
   }, 500);
 
-  loader.text = 'Unpublishing';
+  loader.text = translate.event('unpublishing');
 
   axios.post(`/activity/${id}/unpublish`).then((res) => {
     const response = res.data;

@@ -35,7 +35,7 @@ class ActivityCsvUpload
      */
     public function handle(ActivityCsvWasUploaded $event): bool
     {
-        $this->importCsvService->process($event->filename);
+        $this->importCsvService->process($event->filename, $event->locale);
 
         return true;
     }

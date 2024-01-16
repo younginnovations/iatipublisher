@@ -4,15 +4,17 @@
       <table class="mb-3">
         <tbody>
           <tr>
-            <td>Organisation Identifier Code</td>
+            <td>{{ translate.commonText('organiser_identifier_code') }}</td>
             <td>
               <div class="text-sm">
-                {{ PoData[0].organization_identifier_code ?? 'Missing' }}
+                {{
+                  PoData[0].organization_identifier_code ?? translate.missing()
+                }}
               </div>
             </td>
           </tr>
           <tr>
-            <td>Description</td>
+            <td>{{ translate.commonText('description') }}</td>
             <td>
               <div
                 v-for="(po, i) in PoData[0].narrative"
@@ -26,32 +28,36 @@
                   (
                   {{
                     po.language
-                      ? `Language: ${type.languages[po.language]}`
-                      : 'Language: Missing'
+                      ? `${translate.commonText('language')}: ${
+                          type.languages[po.language]
+                        }`
+                      : `${translate.commonText(
+                          'language'
+                        )}:${translate.missing()}`
                   }})
                 </div>
                 <div class="text-sm">
-                  {{ po.narrative ?? 'Narrative Missing' }}
+                  {{ po.narrative ?? translate.missing('narrative') }}
                 </div>
               </div>
             </td>
           </tr>
           <tr>
-            <td>Provider Activity ID</td>
+            <td>{{ translate.commonText('provider_activity_id') }}</td>
             <td>
               <div class="text-sm">
-                {{ PoData[0].provider_activity_id ?? 'Missing' }}
+                {{ PoData[0].provider_activity_id ?? translate.missing() }}
               </div>
             </td>
           </tr>
           <tr>
-            <td>Type</td>
+            <td>{{ translate.commonText('type') }}</td>
             <td>
               <div class="text-sm">
                 {{
                   PoData[0].type
                     ? type.organizationType[PoData[0].type]
-                    : 'Missing'
+                    : translate.missing()
                 }}
               </div>
             </td>
@@ -64,6 +70,7 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'TransactionProviderOrganisation',
@@ -75,6 +82,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     const { data } = toRefs(props);
 
     interface ArrayObject {
@@ -92,7 +100,7 @@ export default defineComponent({
       languages: [];
     }
     const type = inject('types') as TypesInterface;
-    return { PoData, type };
+    return { PoData, type, translate };
   },
 });
 </script>

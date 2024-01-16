@@ -21,7 +21,7 @@ class OtherIdentifierXmlTest extends XmlBaseTest
         $this->assertContains("The other identifier reference field shouldn't contain the symbols /, &, | or ?.", $flattenErrors);
         $this->assertContains("The owner org reference field shouldn't contain the symbols /, &, | or ?.", $flattenErrors);
         $this->assertContains('The @xml:lang field is invalid.', $flattenErrors);
-        $this->assertContains('The narrative field is required with @xml:lang field.', $flattenErrors);
+        $this->assertContains('The Narrative field is required with @xml:lang field.', $flattenErrors);
     }
 
     /**

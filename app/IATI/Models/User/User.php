@@ -144,11 +144,10 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
     {
         VerifyEmail::toMailUsing(function ($notifiable, $url) {
             return (new MailMessage)
-                ->subject('Verify Email Address')
-                ->greeting('Hello ' . $notifiable->full_name)
-                ->line('Welcome to IATI Publisher. Your email has been used to create a new account here.
-                Please click the button below to verify that you have created the account in it.')
-                ->action('Verify Email Address', $url);
+                ->subject(translateCommon('send_email.verify_email_address'))
+                ->greeting(translateCommon('send_email.hello') . ' ' . $notifiable->full_name)
+                ->line(translateCommon('send_email.welcome_to_iati') . ' ' . translateCommon('send_email.verify_that_you_have_created_the_account'))
+                ->action(translateCommon('send_email.verify_email_address'), $url);
         });
     }
 
@@ -160,9 +159,8 @@ class User extends Authenticatable implements MustVerifyEmail, Auditable
     public static function sendNewUserEmail($user): void
     {
         $mailDetails = [
-            'greeting' => 'Hello ' . $user->username,
-            'message' => 'Welcome to IATI Publisher. Your email has been used to create a new account here.
-            Please click the button below to update the password of your account.',
+            'greeting' => translateCommon('send_email.hello') . ' ' . $user->username,
+            'message' => translateCommon('send_email.welcome_to_iati') . ' ' . translateCommon('send_email.update_the_password_of_your_account'),
             'password_update' => true,
             'token' => app('auth.password.broker')->createToken($user),
         ];

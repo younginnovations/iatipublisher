@@ -37,7 +37,6 @@
         type="image/x-icon" />
 
 
-
 </head>
 <body  class="overflow-x-hidden" >
     <div id="app">
@@ -63,6 +62,36 @@
         </main>
         <admin-footer v-bind:super-admin={{ (int) isSuperAdmin() }}></admin-footer>
     </div>
+<script>
+    window.globalLang = {
+        'validation': {!! json_encode(trans('validation'), JSON_THROW_ON_ERROR) !!},
+        'web': {!! json_encode(trans('web'), JSON_THROW_ON_ERROR) !!},
+        'admin': {!! json_encode(trans('admin'), JSON_THROW_ON_ERROR) !!},
+        'activities': {!! json_encode(trans('activities'), JSON_THROW_ON_ERROR) !!},
+        'activity_detail': {!! json_encode(trans('activity_detail'), JSON_THROW_ON_ERROR) !!},
+        'activity_default': {!! json_encode(trans('activity_default'), JSON_THROW_ON_ERROR) !!},
+        'register': {!! json_encode(trans('register'), JSON_THROW_ON_ERROR) !!},
+        'settings': {!! json_encode(trans('settings'), JSON_THROW_ON_ERROR) !!},
+        'user': {!! json_encode(trans('user'), JSON_THROW_ON_ERROR) !!},
+        'elements': {!! json_encode(trans('elements'), JSON_THROW_ON_ERROR) !!},
+        'elements_common': {!! json_encode(trans('elements_common'), JSON_THROW_ON_ERROR) !!},
+        'organisation': {!! json_encode(trans('organisation'), JSON_THROW_ON_ERROR) !!},
+        'common': {!! json_encode(trans('common'), JSON_THROW_ON_ERROR) !!},
+        'buttons': {!! json_encode(trans('buttons'), JSON_THROW_ON_ERROR) !!},
+        'events': {!! json_encode(trans('events'), JSON_THROW_ON_ERROR) !!},
+        'home': {!! json_encode(trans('home'), JSON_THROW_ON_ERROR) !!},
+        'about': {!! json_encode(trans('about'), JSON_THROW_ON_ERROR) !!},
+        'publishing_checklist': {!! json_encode(trans('publishing_checklist'), JSON_THROW_ON_ERROR) !!},
+        'iati_standard': {!! json_encode(trans('iati_standard'), JSON_THROW_ON_ERROR) !!},
+        'support': {!! json_encode(trans('support'), JSON_THROW_ON_ERROR) !!},
+        'password_recovery': {!! json_encode(trans('password_recovery'), JSON_THROW_ON_ERROR) !!},
+        'email_verification': {!! json_encode(trans('email_verification'), JSON_THROW_ON_ERROR) !!},
+        'element_labels': {!! json_encode(trans('element_labels'), JSON_THROW_ON_ERROR) !!},
+        'missing': {!!json_encode(trans('missing'), JSON_THROW_ON_ERROR) !!},
+        'sticky': {!!json_encode(trans('sticky'), JSON_THROW_ON_ERROR) !!}
+    };
+</script>
+
     <script defer src="{{ mix('/manifest.js') }}"></script>
     <script defer src="{{ mix('/js/vendor.js') }}"></script>
     <script defer src="{{ mix('/js/app.js') }}"></script>

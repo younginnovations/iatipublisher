@@ -7,23 +7,30 @@
   >
     <div class="category">
       <span v-if="post.type">
-        {{ types.humanitarianScopeType[post.type] ?? 'Missing' }}
+        {{ types.humanitarianScopeType[post.type] ?? translate.missing() }}
       </span>
-      <span v-else>Vocabulary Missing</span>
+      <span v-else>
+        {{ translate.missing('vocabulary') }}
+      </span>
     </div>
     <div class="ml-5">
       <table>
         <tbody>
           <tr>
-            <td>Vocabulary</td>
+            <td>{{ translate.commonText('vocabulary') }}</td>
             <td>
               {{
-                types.humanitarianScopeVocabulary[post.vocabulary] ?? 'Missing'
+                types.humanitarianScopeVocabulary[post.vocabulary] ??
+                translate.missing()
+              }}
+              {{
+                types.humanitarianScopeVocabulary[post.vocabulary] ??
+                translate.missing()
               }}
             </td>
           </tr>
           <tr v-if="post.vocabulary === '99'">
-            <td>Vocabulary URI</td>
+            <td>{{ translate.commonText('vocabulary_uri') }}</td>
             <td>
               <a
                 v-if="post.vocabulary_uri"
@@ -32,17 +39,17 @@
               >
                 {{ post.vocabulary_uri }}
               </a>
-              <span v-else class="italic">Missing</span>
+              <span v-else class="italic">{{ translate.missing() }}</span>
             </td>
           </tr>
           <tr>
-            <td>Code</td>
+            <td>{{ translate.commonText('code') }}</td>
             <td>
-              {{ post.code ?? 'Missing' }}
+              {{ post.code ?? translate.missing() }}
             </td>
           </tr>
           <tr>
-            <td>Narrative</td>
+            <td>{{ translate.commonText('narrative') }}</td>
             <td>
               <div
                 v-for="(narrative, k) in post.narrative"
@@ -51,15 +58,15 @@
                 :class="{ 'mb-4': k !== post.narrative.length - 1 }"
               >
                 <div class="language mb-1.5">
-                  (Language:
+                  ({{ translate.commonText('language') }}:
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : 'Missing'
+                      : translate.missing()
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  {{ narrative.narrative ?? translate.missing() }}
                 </div>
               </div>
             </td>
@@ -72,6 +79,7 @@
 
 <script setup lang="ts">
 import { defineProps, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 defineProps({
   data: {
@@ -86,5 +94,6 @@ interface Types {
   humanitarianScopeType: [];
 }
 
+const translate = new Translate();
 const types = inject('types') as Types;
 </script>

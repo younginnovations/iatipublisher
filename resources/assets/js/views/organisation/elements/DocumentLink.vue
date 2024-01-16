@@ -12,13 +12,13 @@
         <a v-if="document_link.url" :href="document_link.url" target="_blank">
           {{ document_link.url }}
         </a>
-        <span v-else class="italic">URL Missing</span>
+        <span v-else class="italic">{{ translate.missing('url') }}</span>
       </div>
       <div class="ml-4">
         <table>
           <tbody>
             <tr>
-              <td>Title</td>
+              <td>{{ translate.commonText('title') }}</td>
               <td>
                 <div
                   v-for="(narrative, j) in document_link.title['0'].narrative"
@@ -31,8 +31,12 @@
                   <span v-if="narrative.language" class="language">
                     ({{
                       narrative.language
-                        ? `Language: ${types?.languages[narrative.language]}`
-                        : 'Language : Missing'
+                        ? `${translate.commonText('language')}: ${
+                            types?.languages[narrative.language]
+                          }`
+                        : `${translate.commonText(
+                            'language'
+                          )} : ${translate.missing()}`
                     }})
                   </span>
                   <div v-if="narrative.narrative" class="flex flex-col">
@@ -40,12 +44,12 @@
                       {{ narrative.narrative }}
                     </span>
                   </div>
-                  <span v-else class="italic">Missing</span>
+                  <span v-else class="italic">{{ translate.missing() }}</span>
                 </div>
               </td>
             </tr>
             <tr>
-              <td>Description</td>
+              <td>{{ translate.commonText('description') }}</td>
               <td>
                 <div
                   v-for="(narrative, j) in document_link.description['0']
@@ -59,18 +63,22 @@
                   <div class="language mb-1.5">
                     ({{
                       narrative.language
-                        ? `Language: ${types?.languages[narrative.language]}`
-                        : 'Language : Missing'
+                        ? `${translate.commonText('language')}: ${
+                            types?.languages[narrative.language]
+                          }`
+                        : `${translate.commonText(
+                            'language'
+                          )} : ${translate.missing()}`
                     }})
                   </div>
                   <div class="w-[500px] max-w-full">
-                    {{ narrative.narrative ?? 'Narrative Missing' }}
+                    {{ narrative.narrative ?? translate.missing('narrative') }}
                   </div>
                 </div>
               </td>
             </tr>
             <tr>
-              <td>Language</td>
+              <td>{{ translate.commonText('language') }}</td>
               <td>
                 <div
                   class="item"
@@ -81,7 +89,7 @@
                       document_link.language
                         .map((entry) => types.languages[entry.language])
                         .join(', ') === ''
-                        ? 'Language Missing'
+                        ? translate.missing('language')
                         : document_link.language
                             .map((entry) => types.languages[entry.language])
                             .join(', ')
@@ -91,14 +99,16 @@
               </td>
             </tr>
             <tr>
-              <td>Format</td>
+              <td>{{ translate.commonText('format') }}</td>
               <td v-if="document_link.format">
                 {{ document_link.format }}
               </td>
-              <td v-else class="italic">Missing</td>
+              <td v-else class="italic">
+                {{ translate.missing() }}
+              </td>
             </tr>
             <tr>
-              <td>Category</td>
+              <td>{{ translate.commonText('category') }}</td>
               <td>
                 <div
                   v-for="(category, i) in document_link.category"
@@ -112,15 +122,15 @@
                     {{
                       category.code
                         ? types?.documentCategory[category.code]
-                        : 'Category Missing'
+                        : translate.missing('category')
                     }}
                   </span>
-                  <span v-else class="italic">Missing</span>
+                  <span v-else class="italic">{{ translate.missing() }}</span>
                 </div>
               </td>
             </tr>
             <tr>
-              <td>Document Date</td>
+              <td>{{ translate.commonText('document_date') }}</td>
               <td>
                 <div
                   v-for="(document_date, i) in document_link.document_date"
@@ -129,12 +139,12 @@
                   <span v-if="document_date.date">
                     {{ formatDate(document_date.date) }}
                   </span>
-                  <span v-else class="italic">Missing</span>
+                  <span v-else class="italic">{{ translate.missing() }}</span>
                 </div>
               </td>
             </tr>
             <tr>
-              <td>Recipient Country</td>
+              <td>{{ translate.commonText('recipient_country') }}</td>
               <td>
                 <div
                   v-for="(
@@ -146,7 +156,7 @@
                     {{
                       recipient_country.code
                         ? `${types?.country[recipient_country.code]}`
-                        : 'Missing'
+                        : translate.missing()
                     }}
                   </div>
                   <div
@@ -160,12 +170,18 @@
                     <div class="language mb-1.5">
                       ({{
                         narrative.language
-                          ? `Language: ${types?.languages[narrative.language]} `
-                          : 'Language : Missing'
+                          ? `${translate.commonText('language')}: ${
+                              types?.languages[narrative.language]
+                            } `
+                          : `${translate.commonText(
+                              'language'
+                            )} : ${translate.missing()}`
                       }})
                     </div>
                     <div class="w-[500px] max-w-full">
-                      {{ narrative.narrative ?? 'Narrative Missing' }}
+                      {{
+                        narrative.narrative ?? translate.missing('narrative')
+                      }}
                     </div>
                   </div>
                 </div>
@@ -181,6 +197,7 @@
 <script setup lang="ts">
 import { defineProps, inject } from 'vue';
 import moment from 'moment';
+import { Translate } from 'Composable/translationHelper';
 
 defineProps({
   content: { type: Object, required: true },
@@ -194,9 +211,10 @@ interface TypesInterface {
   documentCategory: [];
 }
 
+const translate = new Translate();
 const types = inject('orgTypes') as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format('LL') : 'Date Missing';
+  return date ? moment(date).format('LL') : translate.missing('date');
 }
 </script>

@@ -1,11 +1,11 @@
+<!-- eslint-disable -->
 <template>
   <div
     v-if="hasErrors"
     class="relative bg-white duration-300"
     :class="{
-      'h-[55px]': !show,
-      'mb-5  ': !isEmpty || !show,
-      'mb-10 h-[full] pb-4 ': show,
+      'mb-5': !isEmpty || !show,
+      'mb-10': show,
     }"
   >
     <Loader v-if="isLoaderVisible" />
@@ -25,7 +25,7 @@
               class="mr-2 grow-0 text-base text-salmon-50"
             ></svg-vue>
             <span class="text-sm font-bold text-n-50">
-              {{ errorCount + ' Alerts' }}
+              {{ errorCount + ' ' + translate.commonText('alerts') }}
             </span>
           </div>
           <div
@@ -33,9 +33,9 @@
             :class="show ? 'text-show' : 'text-hide'"
           >
             <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
-            <span class="text-sm font-bold text-n-50"
-              >Account not verified</span
-            >
+            <span class="text-sm font-bold text-n-50">{{
+              translate.commonText('account_not_verified')
+            }}</span>
           </div>
           <div
             v-if="!errorData.publisher_setting || !errorData.default_setting"
@@ -47,18 +47,18 @@
             "
           >
             <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
-            <span class="text-sm font-bold text-bluecoral"
-              >Complete your setup</span
-            >
+            <span class="text-sm font-bold text-bluecoral">{{
+              translate.commonText('complete_your_setup')
+            }}</span>
           </div>
           <div
             v-if="!errorData.publisher_active"
             :class="show ? 'text-show' : 'text-hide'"
           >
             <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
-            <span class="text-sm font-bold text-n-50"
-              >Publisher is Inactive</span
-            >
+            <span class="text-sm font-bold text-n-50">{{
+              translate.commonText('publisher_is_inactive')
+            }}</span>
           </div>
         </div>
         <div>
@@ -66,7 +66,11 @@
             class="text-sm leading-relaxed text-bluecoral"
             @click="show = !show"
           >
-            Show {{ show ? 'less' : 'more' }}
+            {{
+              show
+                ? translate.commonText('show_less')
+                : translate.commonText('show_more')
+            }}
           </button>
         </div>
       </div>
@@ -91,27 +95,24 @@
           <div class="alert__container">
             <div class="alert__content">
               <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
-              <span>Account not verified</span>
+              <span>{{ translate.commonText('account_not_verified') }}</span>
             </div>
 
             <div class="ml-5 text-left">
               <p>
-                Please check for verification email sent to you and verify your
-                account,
+                {{ translate.commonText('account_not_verified_desc_p1') }}
                 <span
                   ><a
                     class="cursor-pointer border-b-2 border-b-bluecoral font-bold text-bluecoral hover:border-b-spring-50"
                     @click="resendVerificationEmail()"
-                    >resend verification email</a
+                    >{{
+                      translate.commonText('account_not_verified_desc_p2')
+                    }}</a
                   ></span
                 >
-                if you haven’t received your verification email. Contact
                 <span
-                  ><a target="_blank" href="mailto:support@iatistandard.org"
-                    >support@iatistandard.org</a
-                  ></span
-                >
-                for further assistance.
+                  v-html="translate.commonText('account_not_verified_desc_p3')"
+                />
               </p>
             </div>
           </div>
@@ -137,30 +138,26 @@
           <div class="alert__container">
             <div class="alert__content">
               <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
-              <span>Complete your setup</span>
+              <span>{{ translate.commonText('complete_your_setup') }}</span>
             </div>
             <div class="ml-5">
-              <p>
-                Please
-                <span
-                  ><a href="/setting" target="_blank"
-                    >complete your setup</a
-                  ></span
-                >
-                in order to enable complete features of IATI publisher tool.
-              </p>
+              <p
+                v-html="translate.commonText('complete_your_setup_description')"
+              ></p>
               <div v-if="!errorData.publisher_setting" class="alert__message">
                 <svg-vue icon="red-cross" class="text-[7px]"></svg-vue>
                 <p>
-                  Update registry information - API Key & Publisher ID<span
-                    v-if="!errorData.token_status"
-                    >. Please enter correct API token.</span
+                  {{ translate.commonText('update_registry_information') }} -
+                  {{ translate.commonText('api_key_and_publisher_id')
+                  }}<span v-if="!errorData.token_status"
+                    >.
+                    {{ translate.commonText('enter_correct_api_token') }}.</span
                   >
                 </p>
               </div>
               <div v-if="!errorData.default_setting" class="alert__message">
                 <svg-vue icon="red-cross" class="text-[7px]"></svg-vue>
-                <p>Update default values</p>
+                <p>{{ translate.commonText('update_default_values') }}</p>
               </div>
             </div>
           </div>
@@ -182,11 +179,11 @@
           <div class="alert__container">
             <div class="alert__content">
               <svg-vue icon="red-dot" class="text-[6px]"></svg-vue>
-              <span>Publisher is Inactive</span>
+              <span>{{ translate.commonText('publisher_is_inactive') }}</span>
             </div>
 
             <div class="ml-5 text-left">
-              <p>The publisher is not active at IATI Registry.</p>
+              <p>{{ translate.commonText('publisher_is_not_active') }}</p>
             </div>
           </div>
         </div>
@@ -200,6 +197,7 @@ import { defineProps, ref, reactive, onMounted, inject } from 'vue';
 import { TransitionRoot } from '@headlessui/vue';
 import Loader from '../components/Loader.vue';
 import axios from 'axios';
+import { Translate } from 'Composable/translationHelper';
 
 defineProps({
   isEmpty: {
@@ -209,6 +207,7 @@ defineProps({
   },
 });
 
+const translate = new Translate();
 const show = ref(false);
 const hasErrors = ref(false);
 const errorCount = ref(0);
@@ -228,6 +227,8 @@ const errorData = reactive({
 });
 const isLoaderVisible = ref(false);
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable @typescript-eslint/no-unused-vars
 function resendVerificationEmail() {
   isLoaderVisible.value = true;
 

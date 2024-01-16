@@ -49,7 +49,8 @@ class TotalExpenditureController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while opening organization total-expenditure form.');
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('responses.org_total_expenditure', 'opening', 'form'));
         }
     }
 
@@ -64,14 +65,17 @@ class TotalExpenditureController extends Controller
     {
         try {
             if (!$this->totalExpenditureService->update(Auth::user()->organization_id, $request->all())) {
-                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization total-expenditure.');
+                return redirect()->route('admin.organisation.index')
+                    ->with('error', translateErrorHasOccurred('responses.org_total_expenditure', 'updating'));
             }
 
-            return redirect()->route('admin.organisation.index')->with('success', 'Organization total-expenditure updated successfully.');
+            return redirect()->route('admin.organisation.index')
+                ->with('success', translateElementSuccessfully('responses.org_total_expenditure', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization total-expenditure.');
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('responses.org_total_expenditure', 'updating'));
         }
     }
 }

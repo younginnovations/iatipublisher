@@ -54,7 +54,8 @@ class ContactInfoController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while rendering contact-info controller item form.');
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('responses.contact_info_controller', 'rendering', 'form'));
         }
     }
 
@@ -72,14 +73,14 @@ class ContactInfoController extends Controller
             $activityCountryBudgetItem = $request->except(['_token', '_method']);
 
             if (!$this->contactInfoService->update($id, $activityCountryBudgetItem)) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating contact-info.');
+                return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.contact_info', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Contact-info updated successfully.');
+            return redirect()->route('admin.activity.show', $id)->with('success', translateElementSuccessfully('contact_info', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating contact-info.');
+            return redirect()->route('admin.activity.show', $id)->with('error', translateErrorHasOccurred('elements_common.contact_info', 'updating'));
         }
     }
 }

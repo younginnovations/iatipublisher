@@ -10,10 +10,18 @@
       <svg-vue icon="folder" class="text-[94px]" />
     </div>
     <h5 class="mb-[5px] text-heading-5 font-bold leading-9">
-      No activity has been added yet.
+      {{
+        translate.textFromKey(
+          'activity_detail.no_activity_has_been_added_label'
+        )
+      }}
     </h5>
     <div class="mb-[17px] text-caption-c1 leading-5 text-n-50">
-      Click on the button below to add a new activity
+      {{
+        translate.textFromKey(
+          'activity_detail.click_on_button_to_add_new_label'
+        )
+      }}
     </div>
     <ActivityButton />
   </div>
@@ -22,6 +30,7 @@
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
 import ActivityButton from './AddActivityButton.vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'EmptyActivity',
@@ -29,11 +38,12 @@ export default defineComponent({
     ActivityButton,
   },
   setup() {
+    const translate = new Translate();
     const state = reactive({
       dismiss: true,
     });
 
-    return { state };
+    return { state, translate };
   },
 });
 </script>

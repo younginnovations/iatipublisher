@@ -73,9 +73,9 @@ class ActivityWorkflowController extends Controller
             DB::beginTransaction();
             $this->activityWorkflowService->publishActivity($activity);
             DB::commit();
-            Session::put('success', 'Activity has been published successfully.');
+            Session::put('success', translateElementHasBeenSuccessfully('elements_common.activity', 'published'));
 
-            return response()->json(['success' => true, 'message' => 'Activity has been published successfully.']);
+            return response()->json(['success' => true, 'message' => translateElementHasBeenSuccessfully('elements_common.activity', 'published')]);
         } catch (PublisherNotFound $message) {
             DB::rollBack();
             logger()->error($message->getMessage());
@@ -85,9 +85,9 @@ class ActivityWorkflowController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
-            Session::put('error', 'Error has occurred while publishing activity.');
+            Session::put('error', translateErrorHasOccurred('elements_common.activity', 'publishing'));
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while publishing activity.']);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('elements_common.activity', 'publishing')]);
         }
     }
 
@@ -105,23 +105,23 @@ class ActivityWorkflowController extends Controller
             $activity = $this->activityWorkflowService->findActivity($id);
 
             if (!$activity->linked_to_iati) {
-                Session::put('error', 'This activity has not been published to un-publish.');
+                Session::put('error', translateResponses('activity_not_been_published_to_unpublish'));
 
-                return response()->json(['success' => false, 'message' => 'This activity has not been published to un-publish.']);
+                return response()->json(['success' => false, 'message' => translateResponses('activity_not_been_published_to_unpublish')]);
             }
 
             $this->activityWorkflowService->unpublishActivity($activity);
             DB::commit();
             $this->activityWorkflowService->deletePublishedFile($activity);
-            Session::put('success', 'Activity has been un-published successfully.');
+            Session::put('success', translateElementHasBeenSuccessfully('elements_common.activity', 'unpublished'));
 
-            return response()->json(['success' => true, 'message' => 'Activity has been un-published successfully.']);
+            return response()->json(['success' => true, 'message' => translateElementHasBeenSuccessfully('elements_common.activity', 'unpublished')]);
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e->getMessage());
-            Session::put('error', 'Error has occurred while un-publishing activity.');
+            Session::put('error', translateErrorHasOccurred('elements_common.activity', 'unpublishing'));
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while un-publishing activity.']);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('elements_common.activity', 'unpublishing')]);
         }
     }
 
@@ -154,7 +154,7 @@ class ActivityWorkflowController extends Controller
                 return response()->json($response);
             }
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while validating activity.']);
+            return response()->json(['success' => false, 'error' => translateErrorHasOccurred('elements_common.activity', 'validating')]);
         } catch (BadResponseException $ex) {
             if ($ex->getCode() === 422) {
                 $response = $ex->getResponse()->getBody()->getContents();
@@ -167,11 +167,11 @@ class ActivityWorkflowController extends Controller
                 }
             }
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while validating activity.']);
+            return response()->json(['success' => false, 'error' => translateErrorHasOccurred('elements_common.activity', 'validating')]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'error' => 'Error has occurred while validating activity.']);
+            return response()->json(['success' => false, 'error' => translateErrorHasOccurred('elements_common.activity', 'validating')]);
         }
     }
 
@@ -189,11 +189,11 @@ class ActivityWorkflowController extends Controller
                 return response()->json(['success' => false, 'message' => $message]);
             }
 
-            return response()->json(['success' => true, 'message' => 'Activity is ready to be published.']);
+            return response()->json(['success' => true, 'message' => translateResponses('activity_ready_to_publish')]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error has occurred while checking activity.']);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('elements_common.activity', 'events.checking')]);
         }
     }
 }

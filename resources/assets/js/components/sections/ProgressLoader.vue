@@ -9,7 +9,7 @@
       <div
         class="progress_bar__state"
         :data-start="text"
-        data-end="Almost there!"
+        :data-end="translate.commonText('almost_there')"
       ></div>
     </div>
   </div>
@@ -17,6 +17,9 @@
 
 <script setup lang="ts">
 import { defineProps, onMounted, onUnmounted } from 'vue';
+import { Translate } from 'Composable/translationHelper';
+
+const translate = new Translate();
 
 defineProps({
   text: {

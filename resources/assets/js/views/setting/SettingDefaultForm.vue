@@ -1,26 +1,36 @@
 <template>
   <div>
     <div class="registry__info">
-      <div class="mb-4 text-sm font-bold text-n-50">Default Values</div>
+      <div class="translate-text mb-4 text-sm font-bold text-n-50">
+        {{ translate.textFromKey('settings.default_values.label') }}
+      </div>
       <div class="mb-4 flex items-center text-xs text-n-50">
         <button>
           <HoverText
-            name="Default Values"
-            hover-text="These values will be automatically added to your data files."
+            :name="translate.textFromKey('settings.default_values.label')"
+            :hover-text="
+              translate.textFromKey('settings.default_values.hover_text')
+            "
           />
         </button>
       </div>
     </div>
-    <span class="text-sm font-bold text-n-50">Default for all data</span>
+    <span class="translate-text text-sm font-bold text-n-50">{{
+      translate.textFromKey('settings.default_for_all_data_label')
+    }}</span>
     <div class="register mt-4 mb-6">
       <div class="register__container mb-0">
         <div>
           <div class="flex justify-between">
-            <label for="default-currency">Default Currency</label>
+            <label for="default-currency translate-text">{{
+              translate.textFromKey('settings.default_currency.label')
+            }}</label>
             <button>
               <HoverText
-                name="Default Currency"
-                hover-text="The currency in which you report your financial transactions. You can later manually change the currency on individual transactions and budgets if required."
+                :name="translate.textFromKey('settings.default_currency.label')"
+                :hover-text="
+                  translate.textFromKey('settings.default_currency.hover_text')
+                "
                 :show-iati-reference="true"
               />
             </button>
@@ -30,7 +40,9 @@
             v-model="defaultForm.default_currency"
             :disabled="userRole !== 'admin' ? true : false"
             class="vue__select"
-            placeholder="Select from dropdown"
+            :placeholder="
+              translate.textFromKey('settings.default_currency.placeholder')
+            "
             :options="props.currencies"
             :searchable="true"
             @click="updateStore('default_currency')"
@@ -39,18 +51,21 @@
             {{ defaultError.default_currency }}
           </span>
 
-          <p v-if="!defaultError.default_currency">
-            If you do not set your default currency, you have to choose and
-            select currency manually for all the financial transactions.
+          <p v-if="!defaultError.default_currency" class="translate-text">
+            {{ translate.textFromKey('settings.default_currency.help_text') }}
           </p>
         </div>
         <div>
           <div class="flex justify-between">
-            <label for="default-language">Default Language</label>
+            <label for="default-language" class="translate-text">{{
+              translate.textFromKey('settings.default_language.label')
+            }}</label>
             <button>
               <HoverText
-                name="Default Language"
-                hover-text="The language in which you provide data on your activities. You can later manually change the language on individual text if required."
+                :name="translate.textFromKey('settings.default_language.label')"
+                :hover-text="
+                  translate.textFromKey('settings.default_language.hover_text')
+                "
                 :show-iati-reference="true"
               />
             </button>
@@ -63,36 +78,46 @@
               error__input: defaultError.default_language,
             }"
             :disabled="userRole !== 'admin' ? true : false"
-            placeholder="Select language from dropdown"
+            :placeholder="
+              translate.textFromKey('settings.default_language.placeholder')
+            "
             :searchable="true"
             :options="props.languages"
             @click="updateStore('default_language')"
           />
-          <span v-if="defaultError.default_language" class="error" role="alert">
+          <span
+            v-if="defaultError.default_language"
+            class="error translate-text"
+            role="alert"
+          >
             {{ defaultError.default_language }}
           </span>
 
-          <p v-if="!defaultError.default_language">
-            If you do not set your default language, you have to choose and
-            select language for all the narrative text in activity and
-            organisation.
+          <p v-if="!defaultError.default_language" class="translate-text">
+            {{ translate.textFromKey('settings.default_language.help_text') }}
           </p>
         </div>
       </div>
     </div>
-    <span class="text-sm font-bold text-n-50">Default for activity data</span>
+    <span class="translate-text text-sm font-bold text-n-50">{{
+      translate.textFromKey('settings.default_for_activity_label')
+    }}</span>
     <div class="register mt-4">
       <div class="register__container">
         <div>
           <div class="flex justify-between">
-            <label for="default-hierarchy">Default Hierarchy</label>
+            <label for="default-hierarchy" class="translate-text">{{
+              translate.textFromKey('settings.default_hierarchy.label')
+            }}</label>
             <button>
               <HoverText
                 width="w-64"
-                name="Default Hierarchy"
-                hover-text="If you are reporting both programmes (parent activities) and projects (child activities),
-                choose the hierarchical level that most of your activities are at. e.g. parent activity = 1; child activity = 2.
-                <br>If all your activities are at the same level i.e. you have no child activities, then choose 1."
+                :name="
+                  translate.textFromKey('settings.default_hierarchy.label')
+                "
+                :hover-text="
+                  translate.textFromKey('settings.default_hierarchy.hover_text')
+                "
                 :show-iati-reference="true"
               />
             </button>
@@ -103,28 +128,36 @@
             :disabled="userRole !== 'admin' ? true : false"
             class="register__input mb-2"
             type="text"
-            placeholder="Type default hierarchy here"
+            :placeholder="
+              translate.textFromKey('settings.default_hierarchy.placeholder')
+            "
             @input="updateStore('hierarchy')"
           />
           <span v-if="defaultError.hierarchy" class="error" role="alert">
             {{ defaultError.hierarchy }}
           </span>
-          <p v-if="!defaultError.hierarchy">
-            If hierarchy is not reported then 1 is assumed. If multiple levels
-            are reported then, to avoid double counting, financial transactions
-            should only be reported at the lowest hierarchical level.
+          <p v-if="!defaultError.hierarchy" class="translate-text">
+            {{ translate.textFromKey('settings.default_hierarchy.help_text') }}
           </p>
         </div>
         <!--  Default Hierarchy      -->
         <div>
           <div class="flex justify-between">
-            <label for="budget-not-provided">Budget Not Provided</label>
+            <label for="budget-not-provided" class="translate-text">{{
+              translate.textFromKey('settings.budget_not_provided.label')
+            }}</label>
 
             <button>
               <HoverText
                 width="w-72"
-                name="Budget Not Provided"
-                hover-text="A code indicating the reason why this activity does not contain any iati-activity/budget elements. The attribute MUST only be used when no budget elements are present."
+                :name="
+                  translate.textFromKey('settings.budget_not_provided.label')
+                "
+                :hover-text="
+                  translate.textFromKey(
+                    'settings.budget_not_provided.hover_text'
+                  )
+                "
               />
             </button>
           </div>
@@ -136,7 +169,9 @@
             :class="{
               error__input: defaultError.budget_not_provided,
             }"
-            placeholder="Select budget not provided type here"
+            :placeholder="
+              translate.textFromKey('settings.budget_not_provided.placeholder')
+            "
             :options="props.budgetNotProvided"
             :searchable="true"
             @click="updateStore('budget_not_provided')"
@@ -152,13 +187,17 @@
         <!--  Budget Not Provided      -->
         <div>
           <div class="flex justify-between">
-            <label for="humanitarian">Humanitarian</label>
+            <label for="humanitarian" class="translate-text">{{
+              translate.textFromKey('settings.humanitarian.label')
+            }}</label>
 
             <button>
               <HoverText
                 width="w-72"
-                name="Humanitarian"
-                hover-text="Add a 'Humanitarian Flag' to every activity that your organisation publishes data on. This means that your organisation identifies all their activities as wholly or partially addressing a humanitarian crisis or multiple crises. You can later manually add or remove a Humanitarian Flag on individual activities if required."
+                :name="translate.textFromKey('settings.humanitarian.label')"
+                :hover-text="
+                  translate.textFromKey('settings.humanitarian.hover_text')
+                "
                 :show-iati-reference="true"
               />
             </button>
@@ -171,22 +210,30 @@
             :class="{
               error__input: defaultError.humanitarian,
             }"
-            placeholder="Select Humanitarian here"
+            :placeholder="
+              translate.textFromKey('settings.humanitarian.placeholder')
+            "
             :options="props.humanitarian"
             :searchable="true"
             @click="updateStore('humanitarian')"
           />
-          <span v-if="defaultError.humanitarian" class="error" role="alert">
+          <span
+            v-if="defaultError.humanitarian"
+            class="error translate-text"
+            role="alert"
+          >
             {{ defaultError.humanitarian }}
           </span>
-          <p v-if="!defaultError.humanitarian">
-            If not selected, it will be set to 'Yes' in all the activities.
+          <p v-if="!defaultError.humanitarian" class="translate-text">
+            {{ translate.textFromKey('settings.humanitarian.help_text') }}
           </p>
         </div>
         <!--  Humanitarian      -->
         <div>
           <div class="flex justify-between">
-            <label for="default-hierarchy">Linked Data URI</label>
+            <label for="default-hierarchy" class="translate-text"
+              >Linked Data URI</label
+            >
             <button>
               <HoverText
                 width="w-64"
@@ -212,7 +259,7 @@
         <!--  Linked Data Uri      -->
         <div>
           <div class="flex justify-between">
-            <label for="default-collaboration-type"
+            <label for="default-collaboration-type" class="translate-text"
               >Default Collaboration Type</label
             >
             <button>
@@ -244,7 +291,10 @@
           >
             {{ defaultError.default_collaboration_type }}
           </span>
-          <p v-if="!defaultError.default_collaboration_type">
+          <p
+            v-if="!defaultError.default_collaboration_type"
+            class="translate-text"
+          >
             If selected, then default collaboration type will be automatically
             populated in activity when created.
           </p>
@@ -252,7 +302,9 @@
         <!--  Default Collaboration Type  -->
         <div>
           <div class="flex justify-between">
-            <label for="default-collaboration-type">Default Flow Type</label>
+            <label for="default-collaboration-type" class="translate-text"
+              >Default Flow Type</label
+            >
             <button>
               <HoverText
                 width="w-72"
@@ -282,7 +334,7 @@
           >
             {{ defaultError.default_flow_type }}
           </span>
-          <p v-if="!defaultError.default_flow_type">
+          <p v-if="!defaultError.default_flow_type" class="translate-text">
             If selected, then default flow type will be automatically populated
             in activity when created.
           </p>
@@ -290,7 +342,9 @@
         <!--  Default Flow Type  -->
         <div>
           <div class="flex justify-between">
-            <label for="default-collaboration-type">Default Finance Type</label>
+            <label for="default-collaboration-type" class="translate-text"
+              >Default Finance Type</label
+            >
             <button>
               <HoverText
                 width="w-72"
@@ -320,7 +374,7 @@
           >
             {{ defaultError.default_finance_type }}
           </span>
-          <p v-if="!defaultError.default_finance_type">
+          <p v-if="!defaultError.default_finance_type" class="translate-text">
             If selected, then default finance type will be automatically
             populated in activity when created.
           </p>
@@ -328,7 +382,9 @@
         <!--  Default Finance Type  -->
         <div>
           <div class="flex justify-between">
-            <label for="default-collaboration-type">Default Aid Type</label>
+            <label for="default-collaboration-type" class="translate-text"
+              >Default Aid Type</label
+            >
             <button>
               <HoverText
                 width="w-72"
@@ -354,7 +410,7 @@
           <span v-if="defaultError.default_aid_type" class="error" role="alert">
             {{ defaultError.default_aid_type }}
           </span>
-          <p v-if="!defaultError.default_aid_type">
+          <p v-if="!defaultError.default_aid_type" class="translate-text">
             If selected, then default aid type will be automatically populated
             in activity when created. Also, Vocabulary type "OECD DAC" will be
             chosen by default.
@@ -363,7 +419,9 @@
         <!--  Default Aid Type   -->
         <div>
           <div class="flex justify-between">
-            <label for="default-tied-status">Default Tied Status</label>
+            <label for="default-tied-status" class="translate-text"
+              >Default Tied Status</label
+            >
             <button>
               <HoverText
                 width="w-72"
@@ -393,7 +451,7 @@
           >
             {{ defaultError.default_tied_status }}
           </span>
-          <p v-if="!defaultError.default_tied_status">
+          <p v-if="!defaultError.default_tied_status" class="translate-text">
             If selected, then default tied status will be automatically
             populated in activity when created.
           </p>
@@ -410,6 +468,7 @@ import Multiselect from '@vueform/multiselect';
 import { useStore } from '../../store';
 import { ActionTypes } from '../../store/setting/actions';
 import HoverText from './../../components/HoverText.vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   components: {
@@ -456,6 +515,7 @@ export default defineComponent({
   },
 
   setup(props) {
+    const translate = new Translate();
     const userRole = inject('userRole');
     const store = useStore();
 
@@ -480,6 +540,7 @@ export default defineComponent({
       defaultForm,
       defaultError,
       updateStore,
+      translate,
     };
   },
 });

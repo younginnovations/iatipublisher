@@ -38,16 +38,18 @@
         "
       ></div>
     </div>
-    <div id="nav-list" class="activity-nav-menu flex w-full justify-between">
+    <div id="nav-list" class="activity-nav-menu flex w-full">
       <!-- commented to temporarily hide language buttons , remove width later -->
-      <nav class="w-[85px] justify-end">
-        <!-- <ul class="flex">
+      <!-- Need to fix flex direction for smaller screens @momik -->
+      <nav>
+        <ul class="activity-nav-list language-nav-list space-x-4">
           <li
             v-for="(language, index) in data.languages"
             :key="index"
             :class="data.languageNavLiClasses"
           >
             <a
+              :id="language.id"
               :class="[
                 { nav__pointer: language.active },
                 data.languageNavAnchorClasses,
@@ -57,20 +59,28 @@
               <span>{{ language.language }}</span>
             </a>
           </li>
-        </ul> -->
-      </nav>
-      <nav>
-        <ul class="activity-nav-list -mx-4">
+        </ul>
+
+        <ul class="activity-nav-list activity-list -mx-4 !text-xs">
           <li
             v-for="(menu, index) in data[
               superAdmin ? 'superadmin_menus' : 'org_menus'
             ]"
             :key="index"
-            :class="data.menuNavLiClasses"
+            :class="[
+              data.menuNavLiClasses,
+              translate.webText('active') === 'fr' ? 'px-3' : 'px-4',
+            ]"
+            :style="
+              translate.webText('active') === 'fr'
+                ? { 'text-align': 'center' }
+                : {}
+            "
           >
             <a
               v-if="
-                menu.name !== 'Add / Import Activity' && menu.name !== 'Logs'
+                menu.name !== translate.commonText('add_import_activity') &&
+                menu.name !== translate.logText('default')
               "
               :class="[
                 { nav__pointer: menu.active },
@@ -78,38 +88,54 @@
               ]"
               :href="menu.permalink"
             >
-              <span class="">{{ menu.name }}</span>
+              <span>{{ menu.name }} </span>
             </a>
-            <span
-              v-if="menu.name === 'Add / Import Activity'"
+            <div
+              v-if="menu.name === translate.commonText('add_import_activity')"
               :class="[
                 { nav__pointer: menu.active },
                 data.menuNavAnchorClasses,
               ]"
+              class="dropdown-trigger-container"
             >
-              <span class="add-import"
-                >{{ menu.name }}
+              <div
+                class="add-import flex w-full items-center space-x-4"
+                @click="toggleActivityDropdown"
+              >
+                <span>{{ menu.name }}</span>
+                <span>
+                  <svg-vue
+                    :class="{ 'rotate-180': rotateDropdownIcon }"
+                    class="text-[6px] duration-200"
+                    icon="dropdown-arrow"
+                  />
+                </span>
+
                 <div
-                  v-if="menu.name === 'Add / Import Activity'"
+                  v-if="
+                    menu.name === translate.commonText('add_import_activity')
+                  "
                   style="visibility: hidden"
-                  class="button__dropdown add-import-dropdown absolute top-full z-50 w-56 -translate-y-3 bg-white p-2 text-left shadow-dropdown duration-300"
+                  class="button__dropdown add-import-dropdown absolute left-0 top-full z-50 w-56 !-translate-x-4 bg-white p-2 text-left shadow-dropdown duration-300"
                 >
-                  <ul class="flex-col">
+                  <ul class="flex flex-col">
                     <li>
                       <a
                         id="header-add-activity-manually"
                         class="cursor-pointer"
                         :class="liClass"
                         @click="modalValue = true"
-                        >Add activity manually</a
-                      >
+                        >{{ translate.commonText('add_activity_manually') }}
+                      </a>
                     </li>
                     <li>
                       <a
                         id="header-import-activity"
                         href="/import"
                         :class="liClass"
-                        >Import activities from .csv/.xml</a
+                        >{{
+                          translate.commonText('import_activities_from_csv')
+                        }}</a
                       >
                     </li>
                     <li>
@@ -117,36 +143,87 @@
                         id="header-import-xls"
                         href="/import/xls"
                         :class="liClass"
-                        >Import activities from .XLS</a
+                        >{{
+                          translate.commonText('import_activities_from_xls')
+                        }}</a
                       >
                     </li>
                   </ul>
                 </div>
-              </span>
-            </span>
+              </div>
+              <div
+                ref="dropDownElement"
+                :class="[showActivityDropdown ? 'h-auto ' : 'h-0 !py-0']"
+                :style="{
+                  height: `${
+                    showActivityDropdown ? activityDropdownHeight : '0px'
+                  }`,
+                }"
+                class="add-import-sidebar-dropdown px-2 duration-200"
+              >
+                <ul class="flex flex-col space-y-3.5 text-left">
+                  <li>
+                    <a
+                      id="header-add-activity-manually"
+                      class="cursor-pointer text-white"
+                      @click="modalValue = true"
+                      >{{ translate.commonText('add_activity_manually') }}
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      id="header-import-activity"
+                      class="cursor-pointer text-white"
+                      href="/import"
+                      >{{
+                        translate.commonText('import_activities_from_csv')
+                      }}</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      id="header-import-xls"
+                      class="cursor-pointer text-white"
+                      href="/import/xls"
+                      >{{
+                        translate.commonText('import_activities_from_xls')
+                      }}</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
 
             <div
-              v-if="menu.name === 'Logs'"
+              v-if="menu.name === translate.logText('default')"
               class="button__dropdown invisible absolute left-4 top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left opacity-0 shadow-dropdown outline transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
             >
               <ul class="flex-col">
                 <li>
-                  <a href="#" :class="liClass">User Logs</a>
+                  <a href="#" :class="liClass">{{
+                    translate.logText('users')
+                  }}</a>
                 </li>
                 <li>
-                  <a href="#" :class="liClass">API Logs</a>
+                  <a href="#" :class="liClass">{{
+                    translate.logText('api')
+                  }}</a>
                 </li>
                 <li>
-                  <a href="/log-viewer" :class="liClass">Error Logs</a>
+                  <a href="/log-viewer" :class="liClass">{{
+                    translate.logText('error')
+                  }}</a>
                 </li>
                 <li>
-                  <a href="/import" :class="liClass">System Details</a>
+                  <a href="/import" :class="liClass">{{
+                    translate.logText('system')
+                  }}</a>
                 </li>
               </ul>
             </div>
 
             <span
-              v-if="menu.name === 'Logs'"
+              v-if="menu.name === translate.logText('default')"
               :class="[
                 { nav__pointer: menu.active },
                 data.menuNavAnchorClasses,
@@ -155,25 +232,29 @@
               <span class="add-import"
                 >{{ menu.name }}
                 <div
-                  v-if="menu.name === 'Logs'"
+                  v-if="menu.name === translate.logText('default')"
                   class="button__dropdown add-import-dropdown absolute top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left shadow-dropdown transition-all duration-300"
                 >
                   <ul class="flex-col">
                     <li>
-                      <a href="#" class="cursor-pointer" :class="liClass"
-                        >User Logs</a
-                      >
+                      <a href="#" class="cursor-pointer" :class="liClass">{{
+                        translate.logText('users')
+                      }}</a>
                     </li>
                     <li>
-                      <a href="#" :class="liClass">API Logs</a>
+                      <a href="#" :class="liClass">{{
+                        translate.logText('api')
+                      }}</a>
                     </li>
                     <li>
-                      <a href="/log-viewer" :class="liClass">Error Logs</a>
+                      <a href="/log-viewer" :class="liClass">{{
+                        translate.logText('error')
+                      }}</a>
                     </li>
                     <li>
-                      <a href="/system-version" :class="liClass"
-                        >System Details</a
-                      >
+                      <a href="/system-version" :class="liClass">{{
+                        translate.logText('system')
+                      }}</a>
                     </li>
                   </ul>
                 </div>
@@ -181,24 +262,24 @@
             </span>
 
             <div
-              v-if="menu.name === 'Add / Import Activities'"
+              v-if="menu.name === translate.commonText('add_import_activity')"
               class="button__dropdown invisible absolute left-4 top-full z-10 w-56 -translate-y-3 bg-white p-2 text-left opacity-0 shadow-dropdown outline transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
             >
               <ul class="flex-col">
                 <li>
-                  <a :class="liClass" @click="modalValue = true"
-                    >Add activity manually</a
-                  >
+                  <a :class="liClass" @click="modalValue = true">{{
+                    translate.commonText('add_activity_manually')
+                  }}</a>
                 </li>
                 <li>
-                  <a href="/import" :class="liClass"
-                    >Import activities from .csv/.xml</a
-                  >
+                  <a href="/import" :class="liClass">{{
+                    translate.commonText('import_activities_from_csv')
+                  }}</a>
                 </li>
                 <li>
-                  <a id="header-import-xls" href="/import/xls" :class="liClass"
-                    >Import activities from .XLS</a
-                  >
+                  <a id="header-import-xls" href="/import/xls" :class="liClass">
+                    {{ translate.commonText('import_activities_from_xls') }}
+                  </a>
                 </li>
               </ul>
             </div>
@@ -217,7 +298,7 @@
             v-model="searchValue"
             class="search__input mr-3.5"
             type="text"
-            placeholder="Search activity..."
+            :placeholder="translate.adminText('search_activity')"
             @keyup.enter="searchFunction('/activities')"
           />
           <input
@@ -225,7 +306,7 @@
             v-model="searchValue"
             class="search__input mr-3.5"
             type="text"
-            placeholder="Search organisation..."
+            :placeholder="translate.adminText('search_organisation')"
             @keyup.enter="searchFunction('/list-organisations')"
           />
           <svg-vue icon="search" />
@@ -264,14 +345,16 @@
                 class="dropdown__list border-b border-b-n-20"
                 @click="redirectProfile"
               >
-                <a class="flex w-full space-x-4" href="/profile"
-                  ><svg-vue class="mx-1 text-base" icon="user" />
-                  <span>Your Profile</span></a
-                >
+                <a class="flex w-full space-x-4" href="/profile">
+                  <svg-vue class="mx-1 text-base" icon="user" />
+                  <span>{{ translate.adminText('your_profile') }}</span>
+                </a>
               </li>
               <li class="dropdown__list flex" @click="logout">
                 <svg-vue class="mr-3 ml-1" icon="logout"></svg-vue>
-                <button class="text-sm">Logout</button>
+                <button class="text-sm">
+                  {{ translate.adminText('logout') }}
+                </button>
               </li>
             </ul>
           </div>
@@ -302,14 +385,16 @@
                 class="dropdown__list border-b border-b-n-20"
                 @click="redirectProfile"
               >
-                <a class="flex w-full space-x-4" href="/profile"
-                  ><svg-vue class="mx-1 text-base" icon="user" />
-                  <span>Your Profile</span></a
-                >
+                <a class="flex w-full space-x-4" href="/profile">
+                  <svg-vue class="mx-1 text-base" icon="user" />
+                  <span>{{ translate.adminText('your_profile') }}</span>
+                </a>
               </li>
               <li class="dropdown__list flex" @click="logout">
                 <svg-vue class="mr-3 ml-1" icon="logout"></svg-vue>
-                <button class="text-sm">Logout</button>
+                <button class="text-sm">
+                  {{ translate.adminText('logout') }}
+                </button>
               </li>
             </ul>
           </div>
@@ -343,6 +428,7 @@ import axios from 'axios';
 import { useToggle, useStorage } from '@vueuse/core';
 import CreateModal from '../views/activity/CreateModal.vue';
 import Toast from './ToastMessage.vue';
+import { Translate } from 'Composable/translationHelper';
 const store = detailStore();
 
 const props = defineProps({
@@ -360,10 +446,13 @@ const props = defineProps({
   hasAdminBar: { type: Number || Boolean, default: false },
 });
 
+const translate = new Translate();
 const showUserDropdown = ref(false);
-
+const showActivityDropdown = ref(false);
 const toastVisibility = ref(false);
 const isLoading = ref(false);
+const dropDownElement = ref<HTMLElement | null>(null);
+const activityDropdownHeight: Ref<number | string> = ref(0);
 
 const showSidebar = ref(false);
 const toastMessage = ref('');
@@ -371,50 +460,53 @@ const toastType = ref(false);
 const data = reactive({
   languageNavLiClasses: 'flex',
   languageNavAnchorClasses:
-    'flex text-white items-center uppercase nav__pointer-hover px-1.5',
-  menuNavLiClasses: 'flex px-4 relative',
+    'flex text-white items-center uppercase nav__pointer-hover px-1',
+  menuNavLiClasses: 'flex relative',
   menuNavAnchorClasses:
     'flex text-white items-center uppercase nav__pointer-hover',
   languages: [
     {
       language: 'EN',
-      permalink: '#',
-      active: true,
+      permalink: '/lang/en',
+      id: 'language-en',
+      active: translate.webText('active') === 'en',
     },
     {
       language: 'FR',
-      permalink: '#',
-      active: false,
+      permalink: '/lang/fr',
+      id: 'language-fr',
+      active: translate.webText('active') === 'fr',
     },
     {
       language: 'ES',
-      permalink: '#',
-      active: false,
+      permalink: '/lang/es',
+      id: 'language-es',
+      active: translate.webText('active') === 'es',
     },
   ],
   org_menus: [
     {
-      name: 'Activity DATA',
+      name: translate.adminText('activity_data'),
       permalink: '/activities',
       active: true,
     },
     {
-      name: 'Organisation DATA',
+      name: translate.adminText('organisation_data'),
       permalink: '/organisation',
       active: false,
     },
     {
-      name: 'Settings',
+      name: translate.adminText('settings'),
       permalink: '/setting',
       active: false,
     },
     {
-      name: 'Add / Import Activity',
+      name: translate.commonText('add_import_activity'),
       permalink: '#',
       active: false,
     },
     {
-      name: 'Users',
+      name: translate.commonText('users'),
       permalink: '/users',
       active: false,
     },
@@ -426,18 +518,18 @@ const data = reactive({
       active: false,
     },
     {
-      name: 'Organisation List',
+      name: translate.commonText('org_list'),
       permalink: '/list-organisations',
       active: false,
     },
 
     {
-      name: 'Users',
+      name: translate.commonText('users'),
       permalink: '/users',
       active: false,
     },
     // {
-    //   name: 'Logs',
+    //   name: transaltion.common.logs.default,
     //   permalink: '/system-version',
     //   active: false,
     // },
@@ -467,6 +559,20 @@ function ToggleModel() {
   modalToggle();
   window.localStorage.removeItem('openAddModel');
 }
+const rotateDropdownIcon = computed(() => {
+  return showActivityDropdown.value && window.innerWidth < 1420;
+});
+
+const toggleActivityDropdown = () => {
+  showActivityDropdown.value = !showActivityDropdown.value;
+  activityDropdownHeight.value = dropDownElement.value?.[0]?.clientHeight;
+  setTimeout(function () {
+    activityDropdownHeight.value = '';
+  }, 10);
+  setTimeout(() => {
+    activityDropdownHeight.value = 'auto';
+  }, 200);
+};
 
 watch(
   () => showSidebar.value,
@@ -582,33 +688,54 @@ onUnmounted(() => {
 <style src="@vueform/multiselect/themes/default.css"></style>
 
 <style lang="scss" scoped>
+.add-import-sidebar-dropdown {
+  overflow-y: hidden;
+  padding: 14px 8px;
+
+  @media (min-width: 1420px) {
+    display: none;
+  }
+}
+
 .activity__header {
   top: 0px;
   z-index: 100;
 
   nav {
     display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+    @media screen and (max-width: 1420px) {
+      flex-direction: column;
+      justify-content: center;
+    }
 
     a:hover {
       @apply text-white;
     }
+
     ul {
       @apply flex;
     }
   }
+
   .add-btn {
     @media screen and (max-width: 375px) {
       display: none;
     }
   }
+
   .user-nav {
     @apply flex items-center;
   }
 }
+
 .toast {
-  @apply absolute  left-2/4 z-50;
+  @apply absolute left-2/4 z-50;
   transform: translate(-50%, -50%);
 }
+
 .profile__dropdown {
   @apply invisible absolute right-3 z-20 bg-white text-left text-sm text-bluecoral opacity-0 shadow-dropdown duration-300 sm:right-10;
   top: 50px;
@@ -621,22 +748,27 @@ onUnmounted(() => {
 
   li {
     @apply flex items-center space-x-3 p-3 sm:p-4;
+
     a:hover {
       @apply text-bluecoral;
     }
+
     .user-profile {
       font-size: 26px;
     }
   }
+
   .dropdown__list {
     @apply bg-n-10 hover:bg-n-20 hover:text-bluecoral;
+
     a {
       @apply capitalize;
     }
   }
 }
+
 .profile__dropdown--touch {
-  @apply absolute  right-10 z-20 bg-white text-left text-sm text-bluecoral shadow-dropdown  duration-300;
+  @apply absolute right-10 z-20 bg-white text-left text-sm text-bluecoral shadow-dropdown duration-300;
   top: 50px;
   width: 265px;
   box-shadow: 4px 4px 40px rgba(0, 50, 76, 0.2);
@@ -647,41 +779,60 @@ onUnmounted(() => {
 
   li {
     @apply flex items-center space-x-3 p-3 sm:p-4;
+
     a:hover {
       @apply text-bluecoral;
     }
+
     .user-profile {
       font-size: 26px;
     }
   }
+
   .dropdown__list {
     @apply bg-n-10 hover:bg-n-20 hover:text-bluecoral;
+
     a {
       @apply capitalize;
     }
   }
 }
+
 .dropdown-btn:hover,
 .dropdown-btn:active {
   .profile__dropdown {
     @apply visible opacity-100;
     transform: translateY(10px);
   }
+
   .dropdown__arrow {
     transform: rotate(180deg);
   }
 }
+
 .add-import {
   cursor: pointer;
 }
+
 .add-import-dropdown {
   visibility: hidden;
   opacity: 0;
 }
+
+.dropdown-trigger-container {
+  display: block;
+
+  @media (min-width: 1420px) {
+    display: flex;
+  }
+}
+
 .add-import:hover .add-import-dropdown {
-  visibility: visible !important;
-  opacity: 1 !important;
-  transform: translateY(0);
+  @media (min-width: 1420px) {
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: translateY(0);
+  }
 }
 
 .spinner {

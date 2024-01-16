@@ -7,14 +7,16 @@
   >
     <div class="category text-sm font-bold">
       <span v-if="post.type">{{ types.contactType[post.type] }}</span>
-      <span v-else class="italic">Type Missing</span>
+      <span v-else class="italic">
+        {{ translate.missing('type') }}
+      </span>
     </div>
 
     <div class="ml-5">
       <table>
         <tbody>
           <tr>
-            <td>Organization</td>
+            <td>{{ translate.commonText('organisation') }}</td>
             <td>
               <div
                 v-for="(narrative, k) in post.organisation[0].narrative"
@@ -25,21 +27,21 @@
                 }"
               >
                 <div class="language mb-1.5">
-                  (Language:
+                  ({{ translate.commonText('language') }}:
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : 'Missing'
+                      : translate.missing()
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  {{ narrative.narrative ?? translate.missing() }}
                 </div>
               </div>
             </td>
           </tr>
           <tr>
-            <td>Person Name</td>
+            <td>{{ translate.commonText('person_name') }}</td>
             <td>
               <div
                 v-for="(narrative, k) in post.person_name[0].narrative"
@@ -50,22 +52,22 @@
                 }"
               >
                 <div class="language mb-1.5">
-                  (Language:
+                  ({{ translate.commonText('language') }}:
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : 'Missing'
+                      : translate.missing()
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  {{ narrative.narrative ?? translate.missing() }}
                 </div>
               </div>
             </td>
           </tr>
 
           <tr>
-            <td>Department</td>
+            <td>{{ translate.commonText('department') }}</td>
             <td>
               <div
                 v-for="(narrative, k) in post.department[0].narrative"
@@ -76,21 +78,21 @@
                 }"
               >
                 <div class="language mb-1.5">
-                  (Language:
+                  ({{ translate.commonText('language') }}:
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : 'Missing'
+                      : translate.missing()
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  {{ narrative.narrative ?? translate.missing() }}
                 </div>
               </div>
             </td>
           </tr>
           <tr>
-            <td>Job Title</td>
+            <td>{{ translate.commonText('job_title') }}</td>
             <td>
               <div
                 v-for="(narrative, k) in post.job_title[0].narrative"
@@ -101,21 +103,21 @@
                 }"
               >
                 <div class="language mb-1.5">
-                  (Language:
+                  ({{ translate.commonText('language') }}:
                   {{
                     narrative.language
                       ? types.languages[narrative.language]
-                      : 'Missing'
+                      : translate.missing()
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  {{ narrative.narrative ?? translate.missing() }}
                 </div>
               </div>
             </td>
           </tr>
           <tr>
-            <td>Email</td>
+            <td>{{ translate.commonText('email') }}l</td>
             <td>
               <div
                 v-for="(email_value, k) in post.email"
@@ -126,13 +128,13 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ email_value.email ?? 'Missing' }}
+                  {{ email_value.email ?? translate.missing() }}
                 </div>
               </div>
             </td>
           </tr>
           <tr>
-            <td>Telephone</td>
+            <td>{{ translate.commonText('telephone') }}</td>
             <td>
               <div
                 v-for="(tel, k) in post.telephone"
@@ -143,13 +145,13 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ tel.telephone ?? 'Missing' }}
+                  {{ tel.telephone ?? translate.missing() }}
                 </div>
               </div>
             </td>
           </tr>
           <tr>
-            <td>Website</td>
+            <td>{{ translate.commonText('website') }}</td>
             <td>
               <div
                 v-for="(w, k) in post.website"
@@ -160,13 +162,13 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ w.website ?? 'Missing' }}
+                  {{ w.website ?? translate.missing() }}
                 </div>
               </div>
             </td>
           </tr>
           <tr>
-            <td>Mailing Address</td>
+            <td>{{ translate.commonText('mailing_address') }}</td>
             <td>
               <div
                 v-for="(address, address_index) in post.mailing_address"
@@ -181,15 +183,17 @@
                   class="description-content"
                 >
                   <div class="language mb-1.5">
-                    (Language:
+                    ({{ translate.commonText('language') }}:
                     {{
                       narrative.language
                         ? types.languages[narrative.language]
-                        : 'Missing'
+                        : translate.missing()
                     }})
                   </div>
                   <div class="w-[500px] max-w-full">
-                    {{ narrative.narrative ?? 'Missing' }}
+                    {{
+                      narrative.narrative ?? translate.missing('not_available')
+                    }}
                   </div>
                 </div>
               </div>
@@ -203,6 +207,7 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ActivityContactInfo',
@@ -218,9 +223,10 @@ export default defineComponent({
       contactType: [];
       languages: [];
     }
+    const translate = new Translate();
     const types = inject('types') as Types;
 
-    return { types };
+    return { types, translate };
   },
 });
 </script>

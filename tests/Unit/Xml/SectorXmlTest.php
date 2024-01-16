@@ -17,7 +17,8 @@ class SectorXmlTest extends XmlBaseTest
     {
         $rows = $this->vocabulary_same_empty_percentage_data();
         $flattenErrors = $this->getErrors($rows);
-        $this->assertContains('The sum of percentages of same vocabulary must be equal to 100%', $flattenErrors);
+
+        $this->assertContains('The total percentage within a vocabulary must be 100%.', $flattenErrors);
     }
 
     /**
@@ -211,12 +212,12 @@ class SectorXmlTest extends XmlBaseTest
         $rows = $this->get_invalid_data();
         $flattenErrors = $this->getErrors($rows);
         $this->assertContains('The sector code is invalid.', $flattenErrors);
-        $this->assertContains('The sector vocabulary-uri field must be a valid url.', $flattenErrors);
+        $this->assertContains('The sector vocabulary uri must be a valid url.', $flattenErrors);
         $this->assertContains('The sector vocabulary is invalid.', $flattenErrors);
         $this->assertContains('The sector percentage field must be a number.', $flattenErrors);
     }
 
-    /**
+    /**s
      * Invalid data.
      *
      * @return array

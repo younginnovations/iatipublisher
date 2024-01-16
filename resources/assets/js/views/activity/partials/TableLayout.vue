@@ -4,7 +4,9 @@
       <thead>
         <tr class="bg-n-10">
           <th id="title" scope="col">
-            <span>Activity Title</span>
+            <span class="activity-translate-text">{{
+              translate.commonText('activity_title')
+            }}</span>
           </th>
           <th id="publishing-progress" scope="col" class="progress-bar-header">
             <a
@@ -14,7 +16,9 @@
               <span class="sorting-indicator" :class="sortingDirection()">
                 <svg-vue :icon="`${sortingDirection()}-arrow`" />
               </span>
-              <span class="">Publishing Progress</span>
+              <span class="activity-translate-text">{{
+                translate.commonText('publishing_progress')
+              }}</span>
             </a>
           </th>
           <th id="date" scope="col">
@@ -25,14 +29,20 @@
               <span class="sorting-indicator" :class="sortingDirection()">
                 <svg-vue :icon="`${sortingDirection()}-arrow`" />
               </span>
-              <span>Updated On</span>
+              <span class="activity-translate-text">{{
+                translate.commonText('updated_on')
+              }}</span>
             </a>
           </th>
           <th id="status" scope="col">
-            <span class="hidden">Status</span>
+            <span class="activity-translate-text hidden">{{
+              translate.commonText('status')
+            }}</span>
           </th>
           <th id="publish" scope="col">
-            <span class="hidden">Publish</span>
+            <span class="activity-translate-text hidden">{{
+              translate.commonText('publish')
+            }}</span>
           </th>
           <th id="cb" scope="col">
             <span
@@ -64,20 +74,20 @@
               <div class="ellipsis relative w-full">
                 <a
                   :href="'/activity/' + datum['id']"
-                  class="ellipsis w-full !max-w-full overflow-hidden text-n-50"
+                  class="ellipsis translate-text-link w-full !max-w-full overflow-hidden text-n-50"
                   >{{
                     datum['default_title_narrative'] &&
                     datum['default_title_narrative'] !== ''
                       ? datum['default_title_narrative']
-                      : 'Untitled'
+                      : translate.commonText('untitled')
                   }}</a
                 >
                 <div class="w-52">
-                  <span class="ellipsis__title--hover">{{
+                  <span class="ellipsis__title--hover translate-text-hover">{{
                     datum['default_title_narrative'] &&
                     datum['default_title_narrative'] !== ''
                       ? datum['default_title_narrative']
-                      : 'Untitled'
+                      : translate.commonText('untitled')
                   }}</span>
                 </div>
               </div>
@@ -121,7 +131,13 @@
                   "
                 />
               </span>
-              <span class="text-sm leading-relaxed">{{ datum['status'] }}</span>
+              <span class="activity-translate-text text-sm leading-relaxed">
+                {{
+                  translate.textFromKey(
+                    `activities.status_labels.${datum['status']}`
+                  )
+                }}</span
+              >
             </button>
           </td>
 
@@ -148,8 +164,10 @@
             class="check-column"
             @click="(event: Event) => event.stopPropagation()"
           >
-            <label class="sr-only" for="">
-              Select "{{ datum['default_title_narrative'] }}"
+            <label class="translate-text sr-only" for="">
+              {{ translate.commonText('select') }} "{{
+                datum['default_title_narrative']
+              }}"
             </label>
             <label class="checkbox">
               <input
@@ -166,7 +184,9 @@
         <td v-if="loader" colspan="5" class="text-center">
           <div colspan="5" class="spin"></div>
         </td>
-        <td v-else colspan="5" class="text-center">Activities not found</td>
+        <td v-else colspan="5" class="translate-text text-center">
+          {{ translate.commonText('activities_not_found') }}
+        </td>
       </tbody>
     </table>
   </div>
@@ -183,8 +203,9 @@ import { useStore } from 'Store/activities/index';
 import PreviouslyPublished from 'Components/status/PreviouslyPublished.vue';
 import Publish from 'Components/buttons/PublishButton.vue';
 import UnPublish from 'Components/buttons/UnPublishButton.vue';
+import { Translate } from 'Composable/translationHelper';
 // import Shimmer from "Components/ShimmerLoading.vue";
-
+const translate = new Translate();
 const [selectAllValue, selectAllToggle] = useToggle();
 
 defineProps({

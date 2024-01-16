@@ -13,31 +13,34 @@
         <span>{{
           reporting_org.type
             ? types?.organizationType[reporting_org.type]
-            : 'Type Missing'
+            : translate.missing('type')
         }}</span>
       </div>
       <table>
         <tbody>
           <tr>
-            <td>Reference</td>
-            <td>
-              {{ reporting_org.ref ?? 'Reference Missing' }}
-            </td>
-          </tr>
-          <tr>
-            <td>Secondary Reporter</td>
+            <td>{{ translate.commonText('reference') }}</td>
             <td>
               {{
-                parseInt(reporting_org.secondary_reporter)
-                  ? 'True'
-                  : reporting_org.secondary_reporter
-                  ? 'False'
-                  : 'Missing'
+                reporting_org.ref ??
+                translate.missing('element', 'common.reference')
               }}
             </td>
           </tr>
           <tr>
-            <td>Narrative</td>
+            <td>{{ translate.commonText('secondary_reporter') }}</td>
+            <td>
+              {{
+                parseInt(reporting_org.secondary_reporter)
+                  ? translate.commonText('true')
+                  : reporting_org.secondary_reporter
+                  ? translate.commonText('false')
+                  : translate.missing()
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td>{{ translate.commonText('narrative') }}</td>
             <td>
               <div
                 v-for="(narrative, j) in reporting_org.narrative"
@@ -50,12 +53,16 @@
                 <div class="language mb-1.5">
                   ({{
                     narrative.language
-                      ? `Language: ${types?.languages[narrative.language]}`
-                      : 'Language : Missing'
+                      ? `${translate.commonText('language')}: ${
+                          types?.languages[narrative.language]
+                        }`
+                      : `${translate.commonText(
+                          'language'
+                        )} : ${translate.missing()}`
                   }})
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Narrative Missing' }}
+                  {{ narrative.narrative ?? translate.missing('narrative') }}
                 </div>
               </div>
             </td>
@@ -68,6 +75,7 @@
 
 <script setup lang="ts">
 import { defineProps, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 defineProps({
   data: { type: Object, required: true },
@@ -78,5 +86,6 @@ interface Types {
   organizationType: [];
 }
 
+const translate = new Translate();
 const types = inject('types') as Types;
 </script>

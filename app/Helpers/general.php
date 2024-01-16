@@ -5,6 +5,8 @@ declare(strict_types=1);
 use App\IATI\Models\User\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -55,7 +57,9 @@ if (!function_exists('readElementGroup')) {
      */
     function readElementGroup(): array
     {
-        return readJsonFile('Data/Activity/ElementGroup.json');
+        $currentLang = App::currentLocale();
+
+        return readJsonFile("Data/$currentLang/Activity/ElementGroup.json");
     }
 }
 
@@ -361,7 +365,8 @@ if (!function_exists('getCodeList')) {
      */
     function getCodeList($listName, $listType, bool $code = true): array
     {
-        $filePath = app_path("Data/$listType/$listName.json");
+        $currentLang = App::currentLocale();
+        $filePath = app_path("Data/$currentLang/$listType/$listName.json");
         $codeListFromFile = file_get_contents($filePath);
         $codeLists = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
         $codeList = $codeLists[$listName];
@@ -387,7 +392,8 @@ if (!function_exists('getCodeListArray')) {
      */
     function getCodeListArray($listName, $listType, bool $code = true): array
     {
-        $filePath = app_path("Data/$listType/$listName.php");
+        $currentLang = App::currentLocale();
+        $filePath = app_path("Data/$currentLang/$listType/$listName.php");
         $codeListFromFile = include $filePath;
         $data = [];
 
@@ -411,7 +417,9 @@ if (!function_exists('getList')) {
      */
     function getList(string $filePath, bool $code = true): array
     {
-        $filePath = app_path("Data/$filePath");
+        $currentLang = App::currentLocale();
+        $filePath = app_path("Data/$currentLang/$filePath");
+
         $codeListFromFile = file_get_contents($filePath);
         $codeLists = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
         $codeList = last($codeLists);
@@ -695,7 +703,7 @@ function getCsvHeaderCount(): int
     return 69;
 }
 
-if (!function_exists('get_user_status')) {
+if (!function_exists('getUserStatus')) {
     /**
      * Returns user status types.
      *
@@ -710,7 +718,7 @@ if (!function_exists('get_user_status')) {
     }
 }
 
-if (!function_exists('get_language_preference')) {
+if (!function_exists('getLanguagePreference')) {
     /**
      * Returns language preference types.
      *
@@ -726,7 +734,7 @@ if (!function_exists('get_language_preference')) {
     }
 }
 
-if (!function_exists('get_user_csv_header')) {
+if (!function_exists('getUserCsvHeader')) {
     /**
      * Returns user download csv header.
      *
@@ -738,11 +746,13 @@ if (!function_exists('get_user_csv_header')) {
     }
 }
 
-if (!function_exists('get_time_stamped_text')) {
+if (!function_exists('getTimeStampedText')) {
     /**
      * Returns filename with ymdhis.
      *
-     * @return array
+     * @param string $filename
+     *
+     * @return string
      */
     function getTimeStampedText(string $filename): string
     {
@@ -754,7 +764,10 @@ if (!function_exists('generateApiInfo')) {
     /**
      * Generates api log info for API logging.
      *
-     * @param $request
+     * @param      $method
+     * @param      $requestURI
+     * @param      $requestOption
+     * @param null $response
      *
      * @return array
      */
@@ -782,7 +795,7 @@ if (!function_exists('mergeRules')) {
     /**
      * Generates api log info for API logging.
      *
-     * @param $request
+     * @param $totalRules
      *
      * @return array
      */
@@ -814,7 +827,7 @@ if (!function_exists('unsetErrorFields')) {
     /**
      * unset fields from imported activity that contains critical error.
      *
-     * @param $request
+     * @param $importContent
      *
      * @return array
      */

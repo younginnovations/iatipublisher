@@ -9,20 +9,22 @@
       <span v-if="participating_org.organization_role">{{
         types.organisationRole[participating_org.organization_role]
       }}</span>
-      <span v-else class="italic">Organization Role Missing</span>
+      <span v-else class="italic">{{
+        translate.missing('organisation_role')
+      }}</span>
     </div>
 
     <div class="mb-4 text-sm">
       <span v-if="participating_org.narrative['0'].narrative">{{
         participating_org.narrative['0'].narrative
       }}</span>
-      <span v-else class="italic">Narrative Missing</span>
+      <span v-else class="italic">{{ translate.missing('narrative') }}</span>
     </div>
 
     <div class="ml-5">
       <table class="w-full">
         <tr class="multiline">
-          <td>Organisation Name</td>
+          <td>{{ translate.commonText('organisation_name') }}</td>
           <td>
             <div
               v-for="(narrative, i) in participating_org.narrative"
@@ -31,50 +33,57 @@
             >
               <div v-if="narrative.narrative" class="flex flex-col">
                 <span v-if="narrative.language" class="language top"
-                  >(Language: {{ types.languages[narrative.language] }})</span
+                  >({{ translate.commonText('language') }}
+                  {{ types.languages[narrative.language] }})</span
                 >
                 <span v-if="narrative.narrative" class="description">{{
                   narrative.narrative
                 }}</span>
               </div>
-              <span v-else class="italic">Missing</span>
+              <span v-else class="italic">{{ translate.missing() }}</span>
             </div>
           </td>
         </tr>
         <tr>
-          <td>Organisation Type</td>
+          <td>{{ translate.commonText('organisation_type') }}</td>
           <td v-if="participating_org.type">
             {{ types.organizationType[participating_org.type] }}
           </td>
-          <td v-else class="italic">Missing</td>
+          <td v-else class="italic">
+            {{ translate.missing() }}
+          </td>
         </tr>
         <tr>
-          <td>Organisation Role</td>
+          <td>{{ translate.commonText('organisation_role') }}</td>
           <td v-if="participating_org.organization_role">
             {{ types.organisationRole[participating_org.organization_role] }}
           </td>
-          <td v-else class="italic">Missing</td>
+          <td v-else class="italic">
+            {{ translate.missing() }}
+          </td>
         </tr>
         <tr>
-          <td>Ref</td>
+          <td>{{ translate.commonText('ref') }}</td>
           <td v-if="participating_org.ref">
             {{ participating_org.ref }}
           </td>
-          <td v-else class="italic">Missing</td>
+          <td v-else class="italic">
+            {{ translate.missing() }}
+          </td>
         </tr>
         <tr>
-          <td>Activity Id</td>
+          <td>{{ translate.commonText('activity_id') }}</td>
           <td>
             <div>
               <span v-if="participating_org.identifier">{{
                 participating_org.identifier
               }}</span>
-              <span v-else class="italic">Missing</span>
+              <span v-else class="italic">{{ translate.missing() }}</span>
             </div>
           </td>
         </tr>
         <tr v-if="participating_org.crs_channel_code">
-          <td>CRS Channel Code</td>
+          <td>{{ translate.commonText('crs_channel_code') }}</td>
           <td>
             {{ types.crsChannelCode[participating_org.crs_channel_code] }}
           </td>
@@ -86,6 +95,7 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ActivityParticipatingOrg',
@@ -102,9 +112,10 @@ export default defineComponent({
       crsChannelCode: [];
       languages: [];
     }
+    const translate = new Translate();
     const types = inject('types') as Types;
 
-    return { types };
+    return { types, translate };
   },
 });
 </script>

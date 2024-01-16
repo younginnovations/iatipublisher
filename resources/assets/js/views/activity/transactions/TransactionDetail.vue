@@ -25,8 +25,8 @@
       :title="`${
         transactionData.reference && transactionData.reference !== ''
           ? transactionData.reference
-          : 'Untitled'
-      } - Transaction detail`"
+          : translate.commonText('untitled')
+      } - ${translate.commonText('transaction_detail')}`"
       :back-link="`${activityLink}/transaction`"
     >
       <div class="flex items-center space-x-3">
@@ -37,7 +37,7 @@
           class="mr-3"
         />
         <Btn
-          text="Edit Transaction"
+          :text="translate.button('edit_element', 'common.transaction')"
           :link="`${activityLink}/transaction/${transaction.id}/edit`"
           icon="edit"
         />
@@ -97,7 +97,9 @@
                   icon="core"
                   class="mr-2 text-base"
                 ></svg-vue>
-                <span :class="isMandatoryIcon(r) ? '' : 'pl-6'">{{ r }}</span>
+                <span :class="isMandatoryIcon(r) ? '' : 'pl-6'">{{
+                  translate.element(r) ?? r
+                }}</span>
               </a>
             </li>
           </ul>
@@ -157,6 +159,7 @@ import Toast from 'Components/ToastMessage.vue';
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
 import TransactionElement from './TransactionElement.vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'TransactionDetail',
@@ -189,6 +192,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     const { activity, transaction } = toRefs(props);
     const linkClasses =
       'flex items-center w-full bg-white rounded p-2 text-sm text-n-50 font-bold leading-relaxed mb-2 shadow-default';
@@ -244,7 +248,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
+        title: translate.textFromKey('activities.your_activities'),
         link: '/activity',
       },
       {
@@ -252,7 +256,7 @@ export default defineComponent({
         link: activityLink,
       },
       {
-        title: 'Transaction',
+        title: translate.commonText('transaction'),
         link: '',
       },
     ];
@@ -292,6 +296,7 @@ export default defineComponent({
       isMandatoryIcon,
       showSidebar,
       istopVisible,
+      translate,
     };
   },
 });

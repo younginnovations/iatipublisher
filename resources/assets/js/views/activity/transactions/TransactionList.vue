@@ -2,7 +2,7 @@
   <div class="relative bg-paper px-5 pt-4 pb-[71px] xl:px-10">
     <PageTitle
       :breadcrumb-data="breadcrumbData"
-      title="Transaction List"
+      :title="translate.commonText('transaction_list')"
       :back-link="activityLink"
     >
       <div class="flex items-center space-x-3">
@@ -13,7 +13,11 @@
           class="mr-3"
         />
         <a :href="`${activityLink}/transaction/create`">
-          <Btn text="Add Transaction" icon="plus" type="primary" />
+          <Btn
+            :text="translate.button('add_element', 'common.transaction')"
+            icon="plus"
+            type="primary"
+          />
         </a>
       </div>
     </PageTitle>
@@ -24,16 +28,28 @@
         <thead>
           <tr class="bg-n-10">
             <th id="internal_ref" scope="col">
-              <span>Internal Ref</span>
+              <span
+                >{{ translate.commonText('internal') }}
+                {{ translate.commonText('ref') }}</span
+              >
             </th>
             <th id="transaction_type" scope="col">
-              <span>Transaction Type</span>
+              <span
+                >{{ translate.commonText('transaction') }}
+                {{ translate.commonText('type') }}</span
+              >
             </th>
             <th id="transaction_value" scope="col">
-              <span>Transaction Value</span>
+              <span
+                >{{ translate.commonText('transaction') }}
+                {{ translate.commonText('value') }}</span
+              >
             </th>
             <th id="transaction_date" scope="col">
-              <span>Transaction Date</span>
+              <span
+                >{{ translate.commonText('transaction') }}
+                {{ translate.commonText('date') }}</span
+              >
             </th>
             <!--            <th id="status" scope="col">-->
             <!--              <a-->
@@ -47,7 +63,7 @@
             <!--              </a>-->
             <!--            </th>-->
             <th id="action" scope="col">
-              <span>Action</span>
+              <span>{{ translate.commonText('action') }}</span>
             </th>
           </tr>
         </thead>
@@ -126,7 +142,14 @@
           </tr>
         </tbody>
         <tbody v-else>
-          <td colspan="5" class="text-center">Transanctions not found</td>
+          <td colspan="5" class="text-center">
+            {{
+              createCapitalizedSentence(
+                translate.element('transactions'),
+                translate.missing('not_found')
+              )
+            }}
+          </td>
         </tbody>
       </table>
     </div>
@@ -155,6 +178,8 @@ import DeleteAction from 'Components/sections/DeleteAction.vue';
 import dateFormat from 'Composable/dateFormat';
 import getActivityTitle from 'Composable/title';
 import { useToggle } from '@vueuse/core';
+import { createCapitalizedSentence } from '../../../composable/utils';
+import { Translate } from 'Composable/translationHelper';
 
 // toggle state for modal popup
 let [deleteValue, deleteToggle] = useToggle();
@@ -187,6 +212,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const translate = new Translate();
     const { activity } = toRefs(props);
     const activityId = activity.value.id,
       activityTitle = getActivityTitle(activity.value.title, 'en'),
@@ -257,7 +283,7 @@ export default defineComponent({
      */
     const breadcrumbData = [
       {
-        title: 'Your Activities',
+        title: translate.textFromKey('activities.your_activities'),
         link: '/activities',
       },
       {
@@ -265,7 +291,7 @@ export default defineComponent({
         link: activityLink,
       },
       {
-        title: 'Transaction List',
+        title: translate.commonText('transaction_list'),
         link: '',
       },
     ];
@@ -281,7 +307,9 @@ export default defineComponent({
       deleteValue,
       deleteToggle,
       handleNavigate,
+      translate,
     };
   },
+  methods: { createCapitalizedSentence },
 });
 </script>

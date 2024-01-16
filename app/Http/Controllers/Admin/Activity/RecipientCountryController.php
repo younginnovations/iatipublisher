@@ -61,7 +61,8 @@ class RecipientCountryController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while opening recipient-country form.');
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.recipient_country', 'opening', 'form'));
         }
     }
 
@@ -77,14 +78,17 @@ class RecipientCountryController extends Controller
     {
         try {
             if (!$this->recipientCountryService->update($id, $request->all())) {
-                return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating recipient-country.');
+                return redirect()->route('admin.activity.show', $id)
+                    ->with('error', translateErrorHasOccurred('elements_common.recipient_country', 'updating'));
             }
 
-            return redirect()->route('admin.activity.show', $id)->with('success', 'Recipient-country updated successfully.');
+            return redirect()->route('admin.activity.show', $id)
+                ->with('success', translateElementSuccessfully('recipient_country', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activity.show', $id)->with('error', 'Error has occurred while updating recipient-country.');
+            return redirect()->route('admin.activity.show', $id)
+                ->with('error', translateErrorHasOccurred('elements_common.recipient_country', 'updating'));
         }
     }
 
@@ -94,9 +98,8 @@ class RecipientCountryController extends Controller
      *
      * @param $activity
      *
-     * @throws JsonException
-     *
      * @return array
+     * @throws JsonException
      */
     public function getRecipientCountryManipulatedElementSchema($activity): array
     {

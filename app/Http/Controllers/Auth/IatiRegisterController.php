@@ -33,7 +33,7 @@ class IatiRegisterController extends Controller
     |--------------------------------------------------------------------------
     |
     | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
+    | validation and creation. By default, this controller uses a trait to
     | provide this functionality without requiring any additional code.
     |
     */
@@ -111,7 +111,7 @@ class IatiRegisterController extends Controller
                 ]);
             }
 
-            return response()->json(['success' => true, 'message' => 'Publisher verified successfully', 'data' => $publisherCheck]);
+            return response()->json(['success' => true, 'message' => translateElementSuccessfully('elements_common.publisher', 'deleted'), 'data' => $publisherCheck]);
         } catch (ClientException $e) {
             logger()->error($e->getMessage());
 
@@ -123,7 +123,7 @@ class IatiRegisterController extends Controller
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'errors' => 'Error has occurred while verifying the publisher.']);
+            return response()->json(['success' => false, 'errors' => translateErrorHasOccurred('elements_common.publisher', 'verifying')]);
         }
     }
 
@@ -139,11 +139,11 @@ class IatiRegisterController extends Controller
     public function verifyContactInfo(IatiRegisterFormRequest $request): JsonResponse|RedirectResponse
     {
         try {
-            return response()->json(['success' => true, 'message' => 'Contact info successfully verified']);
+            return response()->json(['success' => true, 'message' => translateElementSuccessfully('elements_common.contact_info', 'verified')]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => true, 'message' => 'Error occurred while verifying contact info']);
+            return response()->json(['success' => true, 'message' => translateErrorHasOccurred('elements_common.contact_info', 'verifying')]);
         }
     }
 
@@ -159,11 +159,11 @@ class IatiRegisterController extends Controller
     public function verifyAdditionalInfo(IatiRegisterFormRequest $request): JsonResponse|RedirectResponse
     {
         try {
-            return response()->json(['success' => true, 'message' => 'Additional Information successfully verified.']);
+            return response()->json(['success' => true, 'message' => translateElementSuccessfully('responses.additional_info', 'verified')]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => true, 'message' => 'Error occurred while verifying additional info.']);
+            return response()->json(['success' => true, 'message' => translateErrorHasOccurred('responses.additional_info', 'verifying')]);
         }
     }
 
@@ -227,11 +227,11 @@ class IatiRegisterController extends Controller
             event(new Registered($createUser['user']));
             Session::put('role_id', app(Role::class)->getOrganizationAdminId());
 
-            return response()->json(['success' => true, 'message' => 'User registered successfully']);
+            return response()->json(['success' => true, 'message' => translateElementSuccessfully('responses.user', 'registered')]);
         } catch (Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error has occured while trying to register user. Please try again later.']);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('responses.register_user', 'trying_to') . ' ' . translateResponses('try_again')]);
         }
     }
 
@@ -280,6 +280,8 @@ class IatiRegisterController extends Controller
             return ['success' => true, 'user' => $user];
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
+
+            return [];
         }
     }
 

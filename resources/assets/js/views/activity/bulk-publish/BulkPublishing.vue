@@ -7,7 +7,9 @@
   >
     <div class="bulk-head flex items-center justify-between bg-eggshell p-4">
       <div class="grow text-sm font-bold leading-normal">
-        Publishing {{ activities && Object.keys(activities).length }} activities
+        {{ translate.event('publishing') }}
+        {{ activities && Object.keys(activities).length }}
+        {{ translate.commonText('activities') }}
       </div>
       <div class="flex shrink-0">
         <div
@@ -15,7 +17,9 @@
           @click="retryPublishing"
         >
           <svg-vue class="mr-1" icon="redo" />
-          <span class="text-xs uppercase">Retry</span>
+          <span class="text-xs uppercase">
+            {{ translate.commonText('retry') }}</span
+          >
         </div>
         <div
           v-if="completed === 'completed'"
@@ -67,6 +71,8 @@ import {
 import axios from 'axios';
 import { detailStore } from 'Store/activities/show';
 import { useStore } from 'Store/activities/index';
+import { Translate } from 'Composable/translationHelper';
+
 const singleStore = useStore();
 const emit = defineEmits(['close']);
 const store = detailStore();
@@ -104,6 +110,7 @@ interface actElements {
   status: string;
 }
 
+const translate = new Translate();
 //inject
 let paStorage = inject('paStorage') as paInterface;
 
@@ -199,7 +206,7 @@ onUnmounted(() => {
 
 const checkXlsstatus = () => {
   axios.get('/import/xls/progress_status').then((res) => {
-    xlsData.value = Object.keys(res.data.status).length > 0;
+    xlsData.value = res.data.status && Object.keys(res.data.status).length > 0;
   });
 };
 const checkDownloadStatus = () => {
@@ -301,8 +308,9 @@ const failedActivities = (nestedObject: actElements) => {
     hasFailedActivities.ids = failedActivitiesID;
     hasFailedActivities.data = failedActivitiesData as actElements;
     refreshToastMsg.refreshMessageType = false;
-    refreshToastMsg.refreshMessage =
-      'Some activities have failed to publish. Refresh to see changes.';
+    refreshToastMsg.refreshMessage = translate.error(
+      'some_activities_have_failed_to_publish_refresh_to_see_changes'
+    );
   } else {
     hasFailedActivities.status = false;
     hasFailedActivities.ids = [];

@@ -6,7 +6,7 @@
           <nav aria-label="breadcrumbs" class="breadcrumb">
             <div class="flex">
               <a class="whitespace-nowrap font-bold" href="/activities">
-                Your Activities
+                {{ translate.textFromKey('activities.your_activities') }}
               </a>
             </div>
           </nav>
@@ -18,43 +18,52 @@
             <div class="inline-flex min-h-[48px] grow flex-wrap items-center">
               <h4 class="ellipsis__title relative mr-4 font-bold">
                 <span class="ellipsis__title overflow-hidden">
-                  Import Activity
+                  {{ translate.commonText('import_activity') }}
                 </span>
               </h4>
               <div class="tooltip-btn">
                 <button class="">
                   <svg-vue icon="question-mark" />
-                  <span>What is an activity?</span>
+                  <span>{{
+                    translate.textFromKey(
+                      'activities.what_is_an_activity.label'
+                    )
+                  }}</span>
                 </button>
-                <div class="tooltip-btn__content z-[50]">
+                <div class="tooltip-btn__content z-[1]">
                   <div class="content">
                     <div
                       class="mb-1.5 text-caption-c1 font-bold text-bluecoral"
                     >
-                      What is an activity?
+                      {{
+                        translate.textFromKey(
+                          'activities.what_is_an_activity.label'
+                        )
+                      }}
                     </div>
-                    <p>
-                      You need to provide data about your organisation's
-                      development and humanitarian 'activities'. The unit of
-                      work described by an 'activity' is determined by the
-                      organisation that is publishing the data. For example, an
-                      activity could be a donor government providing US$ 50
-                      million to a recipient country's government to implement
-                      basic education over 5 years. Or an activity could be an
-                      NGO spending US$ 500,000 to deliver clean drinking water
-                      to 1000 households over 6 months.
-                      <br />
-                      Therefore your organisation will need to determine how it
-                      will divide its work internally into activities. Read the
-                      <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href="/publishing-checklist"
-                        class="text-bluecoral"
-                        ><b>Publishing Checklist</b></a
-                      >
-                      for more information.
-                    </p>
+                    <!-- eslint-disable vue/no-v-html -->
+                    <p
+                      v-html="
+                        translate.textFromKey(
+                          'activities.what_is_an_activity.description.one'
+                        )
+                      "
+                    ></p>
+                    <p
+                      v-html="
+                        translate.textFromKey(
+                          'activities.what_is_an_activity.description.two'
+                        )
+                      "
+                    ></p>
+                    <p
+                      v-html="
+                        translate.textFromKey(
+                          'activities.what_is_an_activity.description.three'
+                        )
+                      "
+                    ></p>
+                    <!--eslint-enable-->
                   </div>
                 </div>
               </div>
@@ -69,7 +78,9 @@
                   v-if="selectedActivities.length > 0"
                   class="mr-3.5"
                   type="primary"
-                  :text="`Import (${selectedCount}/${activitiesLength})`"
+                  :text="`${translate.button(
+                    'import'
+                  )} (${selectedCount}/${activitiesLength})`"
                   icon="download-file"
                   @click="importActivities"
                 />
@@ -86,10 +97,15 @@
         <thead>
           <tr class="bg-n-10">
             <th id="title" scope="col">
-              <span>Activity Title</span>
+              <span
+                >{{ translate.commonText('activities') }}
+                {{ translate.commonText('title') }}</span
+              >
             </th>
             <th id="status" scope="col">
-              <span class="block text-left">Status</span>
+              <span class="block text-left">{{
+                translate.commonText('status')
+              }}</span>
             </th>
             <th id="cb" scope="col">
               <span class="cursor-pointer">
@@ -138,14 +154,16 @@ import Loader from 'Components/sections/ProgressLoader.vue';
 import Placeholder from './ImportPlaceholder.vue';
 import ListElement from './ListElement.vue';
 import axios from 'axios';
+import { Translate } from 'Composable/translationHelper';
 
+const translate = new Translate();
 let activities = reactive({});
 const selectedActivities: Array<string> = reactive([]);
 const selectedCount = ref(0);
 const activitiesLength = ref(0);
 const loader = ref(false);
 const selectAll = ref(false);
-const loaderText = ref('Please Wait');
+const loaderText = ref(translate.commonText('please_wait'));
 const tableRow = ref({});
 const tableWidth = ref({});
 
@@ -161,7 +179,7 @@ onUnmounted(() => {
 onMounted(() => {
   window.addEventListener('resize', getDimensions);
   loader.value = true;
-  loaderText.value = 'Please Wait';
+  loaderText.value = translate.commonText('please_wait');
   let count = 0;
   timer = setInterval(() => {
     axios
@@ -231,7 +249,7 @@ function selectAllActivities() {
 }
 
 function importActivities() {
-  loaderText.value = 'Importing .csv/.xml file';
+  loaderText.value = translate.commonText('importing_csv_xml_file');
   loader.value = true;
 
   axios

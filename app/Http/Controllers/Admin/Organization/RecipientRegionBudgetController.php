@@ -49,7 +49,8 @@ class RecipientRegionBudgetController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while opening organization recipient-region-budget form.');
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('responses.org_recipient_region_budget', 'opening', 'form'));
         }
     }
 
@@ -64,14 +65,17 @@ class RecipientRegionBudgetController extends Controller
     {
         try {
             if (!$this->recipientRegionBudgetService->update(Auth::user()->organization_id, $request->all())) {
-                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization recipient-region-budget.');
+                return redirect()->route('admin.organisation.index')
+                    ->with('error', translateErrorHasOccurred('responses.org_recipient_region_budget', 'updating'));
             }
 
-            return redirect()->route('admin.organisation.index')->with('success', 'Organization recipient-region-budget updated successfully.');
+            return redirect()->route('admin.organisation.index')
+                ->with('success', translateElementSuccessfully('responses.org_recipient_region_budget', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization recipient-region-budget.');
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('responses.org_recipient_region_budget', 'updating'));
         }
     }
 }

@@ -5,8 +5,8 @@
       <div>
         <NotYet
           :link="`/indicator/${id.indicator}/period/create`"
-          description="You haven't added any periods yet."
-          btn-text="Add period"
+          :description="translate.button('not_yet_added_period')"
+          :btn-text="translate.button('add_element', 'common.period')"
           class="max-w-[442px]"
         />
       </div>
@@ -14,7 +14,7 @@
   </tr>
 
   <tr v-else>
-    <td>Periods</td>
+    <td>{{ translate.commonText('periods') }}</td>
     <td>
       <div class="inline-flex gap-4">
         <div>
@@ -42,7 +42,7 @@
             </div>
             <div class="ml-2">
               <Btn
-                text="Edit"
+                :text="translate.button('edit')"
                 icon="edit"
                 :link="`/indicator/${id.indicator}/period/${item.id}/edit`"
               />
@@ -51,7 +51,7 @@
         </div>
         <div class="shrink-0">
           <Btn
-            text="Show full period list"
+            :text="translate.button('show_full_period')"
             icon=""
             design="bgText"
             :link="`/indicator/${id.indicator}/period`"
@@ -68,6 +68,7 @@ import { defineComponent, inject } from 'vue';
 
 import dateFormat from 'Composable/dateFormat';
 import Btn from 'Components/buttons/Link.vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'IndicatorPeriod',
@@ -86,8 +87,9 @@ export default defineComponent({
       result: string;
       indicator: string;
     }
+    const translate = new Translate();
     const id = inject('parentData') as ParentData;
-    return { id, dateFormat };
+    return { id, dateFormat, translate };
   },
 });
 </script>

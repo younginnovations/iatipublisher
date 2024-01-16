@@ -18,44 +18,68 @@
           </div>
 
           <div class="footer__links">
-            <span class="font-bold text-n-10">IATI Publisher</span>
+            <span class="font-bold text-n-10">{{
+              translate.webText('iati_publisher')
+            }}</span>
             <ul class="mt-2 flex flex-col">
               <li>
                 <a :href="superAdmin ? '/list-organisations' : '/activities'">{{
-                  superAdmin ? 'Organisation List' : 'Your Activities'
+                  superAdmin
+                    ? translate.commonText('org_list')
+                    : translate.textFromKey(
+                        'activity_detail.your_activities_label'
+                      )
                 }}</a>
               </li>
-              <li><a href="/about">About</a></li>
+              <li>
+                <a href="/about">{{ translate.webText('about') }}</a>
+              </li>
               <li>
                 <a
                   target="_blank"
                   rel="noopener noreferrer"
                   class="cursor-pointer"
                   @click="downloadManual('user')"
-                  >User Manual V1.0</a
+                  >{{ translate.textFromKey('user.user_manual') }} V1.0</a
                 >
               </li>
             </ul>
           </div>
           <div class="footer__links">
-            <span class="font-bold text-n-10">IATI Standard</span>
+            <span class="font-bold text-n-10">{{
+              translate.webText('iati_standard')
+            }}</span>
             <ul class="mt-2 flex flex-col">
-              <li><a href="/iati-standard">IATI Standard</a></li>
-              <li><a href="/publishing-checklist">Publishing Checklist</a></li>
-              <li><a href="/support">Support</a></li>
+              <li>
+                <a href="/iati-standard">{{
+                  translate.webText('iati_standard')
+                }}</a>
+              </li>
+              <li>
+                <a href="/publishing-checklist">{{
+                  translate.webText('publishing_checklist')
+                }}</a>
+              </li>
+              <li>
+                <a href="/support">{{ translate.webText('support') }}</a>
+              </li>
             </ul>
           </div>
           <div class="footer__links lg:justify-self-end">
             <div class="text-xs leading-5">
-              <p>Part of the IATI Unified Platform</p>
-              <p>Code licensed under the GNU AGPL.</p>
-              <p>Documentation licensed under CC BY 3.0</p>
+              <p>
+                {{ translate.webText('part_of_iati_unified_label') }}
+              </p>
+              <p>{{ translate.webText('code_licensed_under_label') }}</p>
+              <p>
+                {{ translate.webText('documentation_licensed_under_label') }}
+              </p>
             </div>
             <div class="my-5 flex items-center space-x-2 text-n-10">
               <svg-vue class="text-2xl" icon="headphone" />
-              <span class="text-xs font-bold uppercase"
-                >Any questions? Contact Support</span
-              >
+              <span class="text-xs font-bold uppercase">{{
+                translate.webText('any_questions_contact_label')
+              }}</span>
             </div>
             <ul>
               <li>
@@ -74,7 +98,7 @@
       <div class="footer__container grid gap-3 sm:grid-cols-2">
         <span class="flex items-center text-n-30">
           <svg-vue class="mr-1 text-base" icon="copyright" />
-          Copyright IATI 2022. All rights reserved.</span
+          {{ translate.webText('copyright_label') }}</span
         >
         <div class="flex sm:justify-end">
           <a
@@ -95,10 +119,13 @@
 <script setup lang="ts">
 import { defineProps } from 'vue';
 import axios from 'axios';
+import { Translate } from 'Composable/translationHelper';
 
 defineProps({
   superAdmin: { type: Boolean, required: false, default: false },
 });
+
+const translate = new Translate();
 
 function downloadManual(type: string) {
   let fileName = {

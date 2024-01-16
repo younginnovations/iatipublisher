@@ -7,25 +7,31 @@
   >
     <div class="mb-1 text-sm">
       <div v-if="post.legacy_name">{{ post.legacy_name }}</div>
-      <span v-else class="italic">Name Missing</span>
+      <span v-else class="italic">
+        {{ translate.missing('name') }}
+      </span>
     </div>
     <div class="ml-5">
       <table>
         <tr>
-          <td>Value</td>
+          <td>{{ translate.commonText('value') }}</td>
           <td v-if="post.value">
             <span class="description">{{ post.value }}</span>
           </td>
-          <td v-else class="italic">Missing</td>
+          <td v-else class="italic">
+            {{ translate.missing() }}
+          </td>
         </tr>
       </table>
       <table>
         <tr>
-          <td>Iati-Equivalent</td>
+          <td>{{ translate.commonText('iati_equivalent') }}</td>
           <td v-if="post.iati_equivalent">
             <span class="description">{{ post.iati_equivalent }}</span>
           </td>
-          <td v-else class="italic">Missing</td>
+          <td v-else class="italic">
+            {{ translate.missing() }}
+          </td>
         </tr>
       </table>
     </div>
@@ -34,6 +40,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'ActivitySector',
@@ -44,7 +51,8 @@ export default defineComponent({
     },
   },
   setup() {
-    return {};
+    const translate = new Translate();
+    return { translate };
   },
 });
 </script>

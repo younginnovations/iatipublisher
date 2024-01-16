@@ -20,7 +20,7 @@
         class="mr-2 flex shrink-0 cursor-pointer"
         @click="accordionToggle"
       >
-        <span class="text-xs">Show more</span>
+        <span class="text-xs">{{ translate.commonText('show_more') }}</span>
         <span>
           <svg-vue
             class="text-xl text-blue-50 transition-transform duration-500"
@@ -50,7 +50,9 @@
           target="_blank"
           class="inline-flex items-center"
         >
-          <span class="mr-1 grow">View the errors and warnings in detail</span>
+          <span class="mr-1 grow">{{
+            translate.commonText('view_errors_or_warning')
+          }}</span>
           <svg-vue class="shrink-0" icon="external"></svg-vue>
         </a>
       </div>
@@ -59,12 +61,14 @@
 </template>
 <script setup lang="ts">
 import { defineProps, inject, ref } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 defineProps({
   data: { type: Object, required: true },
   message: { type: String, default: '' },
 });
 
+const translate = new Translate();
 const selectedActivities = inject('selectedActivities') as number[];
 
 const toggle = ref(false);
@@ -99,11 +103,12 @@ const accordionToggle = (e: Event) => {
 
 const errorCount = (errors) => {
   let errorCount = '';
+  const sc = translate.getStickyObject('common');
   if (errors?.warning) {
-    errorCount = `${errors?.error} errors and ${errors?.warning} warnings
-     were found.`;
+    errorCount = `${errors?.error} ${sc.errors} ${sc.and} ${errors?.warning} ${sc.warnings}
+     ${sc.were_found}.`;
   } else {
-    errorCount = `${errors?.critical} critical errors were found.`;
+    errorCount = `${errors?.critical} ${sc.critical} ${sc.errors} ${sc.were_found}.`;
   }
 
   return errorCount;

@@ -69,7 +69,8 @@ class SettingController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.activities.index')->with('error', 'Error while rendering setting page');
+            return redirect()->route('admin.activities.index')
+                ->with('error', translateErrorHasOccurred('responses.setting', 'rendering'));
         }
     }
 
@@ -81,11 +82,11 @@ class SettingController extends Controller
         try {
             $setting = $this->settingService->getSetting();
 
-            return response()->json(['success' => true, 'message' => 'Settings fetched successfully', 'data' => $setting]);
+            return response()->json(['success' => true, 'message' =>  translateElementSuccessfully('settings', 'fetched'), 'data' => $setting]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while fetching the data']);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('responses.the_data', 'fetching')]);
         }
     }
 
@@ -105,15 +106,18 @@ class SettingController extends Controller
             $publisherData['publisher_id'] = Auth::user()->organization->publisher_id;
             $publisherData['publisher_verification'] = ($this->verifyPublisher($publisherData))['validation'];
             $publisherData['token_verification'] = ($this->verifyApi($publisherData))['validation'];
-            $message = $publisherData['publisher_verification'] ?
-                ($publisherData['token_verification'] ? 'API token verified successfully' : 'API token incorrect. Please enter valid API token.')
-                : 'API token incorrect. Please make sure that your publisher is approved in IATI Registry.';
+            $message = $publisherData['publisher_verification']
+                ? ($publisherData['token_verification']
+                    ? translateElementSuccessfully('api_token', 'verified')
+                    : translateResponses('api_token_incorrect') . ' ' . translateResponses('enter_valid_api_token'))
+                : translateResponses('api_token_incorrect') . ' ' . translateResponses('make_sure_publisher_is_approved');
+            $success = $publisherData['publisher_verification'] && $publisherData['token_verification'];
 
-            return response()->json(['success' => true, 'message' => $message, 'data' => $publisherData]);
+            return response()->json(['success' => $success, 'message' => $message, 'data' => $publisherData]);
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while verify publisher']);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('elements_common.publisher', 'verifying')]);
         }
     }
 
@@ -143,13 +147,13 @@ class SettingController extends Controller
 
                 $this->db->commit();
 
-                return response()->json(['success' => true, 'message' => 'Publisher setting stored successfully', 'data' => $publisherData]);
+                return response()->json(['success' => true, 'message' => translateElementSuccessfully('publisher_settings', 'stored'), 'data' => $publisherData]);
             }
 
             return response()->json(
                 [
                     'success' => false,
-                    'message' => 'Error occurred while verifying data',
+                    'message' => translateErrorHasOccurred('responses.the_data', 'verifying'),
                     'data'    => $publisherData,
                     'error'   => ['token' => $token_verification, 'publisher_verification' => $publisher_verification],
                 ]
@@ -157,7 +161,7 @@ class SettingController extends Controller
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while storing setting']);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('responses.setting', 'storing')]);
         }
     }
 
@@ -178,12 +182,12 @@ class SettingController extends Controller
 
             $this->db->commit();
 
-            return response()->json(['success' => true, 'message' => 'Default setting stored successfully', 'data' => $setting]);
+            return response()->json(['success' => true, 'message' => translateElementSuccessfully('default_settings', 'stored'), 'data' => $setting]);
         } catch (\Exception $e) {
             $this->db->rollBack();
             logger()->error($e->getMessage());
 
-            return response()->json(['success' => false, 'message' => 'Error occurred while storing setting']);
+            return response()->json(['success' => false, 'message' => translateErrorHasOccurred('responses.setting', 'storing')]);
         }
     }
 
@@ -276,7 +280,7 @@ class SettingController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Setting status successfully retrieved.',
+                'message' => translateElementSuccessfully('setting_status', 'retrieved'),
                 'data' => $status,
             ]);
         } catch (\Exception $e) {

@@ -1,6 +1,6 @@
 @extends('web.layouts.app')
 
-@section('title', 'Publishing Checklist')
+@section('title', trans('publishing_checklist.publishing_checklist'))
 
 @section('content')
 <publishing-checklist></publishing-checklist>

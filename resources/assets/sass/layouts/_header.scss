@@ -14,7 +14,7 @@
   }
 }
 .header {
-  max-width: 1166px;
+  max-width: 1400px;
   margin: auto;
 }
 .nav__active::after {
@@ -34,10 +34,20 @@
   position: relative;
   padding: 20px 8px;
   font-weight: normal;
+  text-align: left;
   font-style: normal;
+  white-space: pre-wrap;
+  display: block;
+  a {
+    @apply text-n-50;
+    font-size: 12px;
+  }
 
   a:hover {
     @apply text-n-50;
+    @media screen and (max-width: 1415px) {
+      @apply text-white;
+    }
   }
 
   .read__more {
@@ -51,18 +61,16 @@
   }
 
   a {
-    @apply text-white;
+    @apply text-n-50;
     padding-bottom: 24px;
+    @media screen and (max-width: 1415px) {
+      @apply text-white;
+    }
   }
 }
-@media screen and (min-width: 1280px) {
+@media screen and (min-width: 1415px) {
   .nav__links {
     padding: 0px 8px 20px;
-
-    a {
-      @apply text-n-50;
-      font-size: 12px;
-    }
 
     &::after {
       position: absolute;
@@ -81,7 +89,7 @@
   }
 }
 .dropdown__content {
-  @apply invisible absolute right-0 top-7 hidden h-56 bg-white py-7 px-8 opacity-0 duration-300 xl:block;
+  @apply invisible absolute right-0 top-7 hidden h-56 bg-white py-7 px-8 opacity-0 duration-300 1xl:block;
   width: 424px;
   height: auto;
   line-height: 22px;
@@ -95,19 +103,20 @@
   }
 }
 .nav__list {
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 1415px) {
     position: fixed;
     top: 0;
-    right: 0;
+    left: 0;
     flex-direction: column;
-    justify-content: center;
+    justify-content: start;
     width: 300px;
     height: 100vh;
-    padding: 30px;
+    padding: 65px 30px;
+
     @apply bg-bluecoral text-white;
     font-size: 16px;
     text-align: center;
-    transform: translateX(105%);
+    transform: translateX(-105%);
     transition: 0.3s;
     z-index: 110;
     filter: drop-shadow(-0px 0px 8px #000);
@@ -116,7 +125,7 @@
       a {
         @apply text-white;
         position: relative;
-        padding-bottom: 24px;
+        padding: 0 0 24px 6px;
 
         &:hover {
           @apply text-white;
@@ -124,12 +133,13 @@
 
         &::after {
           position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          height: 4px;
-          transform: scale(0, 1);
+          top: -4px;
+          left: -6px;
+          width: 4px;
+          height: 60%;
+          transform: scale(1, 0);
           transition: 0.3s;
+          border-radius: 100px;
           content: '';
           @apply bg-turquoise;
         }
@@ -148,11 +158,15 @@
 }
 
 #menu-overlay {
-  @apply xl:hidden;
+  @apply hidden;
+
+  @media screen and (max-width: 1415px) {
+    @apply block;
+  }
 }
 
 #activity-menu-overlay {
-  @media screen and (min-width: 1190px) {
+  @media screen and (min-width: 1420px) {
     @apply hidden;
   }
 }
@@ -168,13 +182,13 @@
   transition: all 0.3s ease;
 }
 .activity-nav-menu {
-  @media screen and (max-width: 1190px) {
+  @media screen and (max-width: 1420px) {
     position: fixed;
     top: 0;
     left: 0;
     width: 300px;
     height: 100vh;
-    padding: 30px;
+    padding: 100px 30px;
     @apply bg-bluecoral text-white;
     font-size: 16px;
     text-align: center;
@@ -183,11 +197,77 @@
     transition: 0.3s;
     z-index: 100;
     flex-direction: column;
-    justify-content: start;
     filter: drop-shadow(0px 0px 8px #000);
 
     .activity-nav-list {
-      @apply mt-56 flex flex-col space-y-9;
+      @apply flex flex-col gap-y-4 pl-4 text-sm;
+      .nav__pointer,
+      .nav__pointer-hover {
+        @apply relative;
+        &:after {
+          content: '';
+          @apply absolute bottom-0 left-0 h-1 w-full scale-x-0 scale-y-100 rounded-sm bg-turquoise transition-all duration-500;
+
+          @media screen and (max-width: 1420px) {
+            @apply -bottom-2  h-1 w-full;
+          }
+        }
+
+        &:hover:after {
+          @apply scale-x-100;
+        }
+      }
+      .nav__pointer:after {
+        @apply scale-x-100;
+      }
+    }
+
+    .activity-nav-list.activity-list {
+      .nav__pointer,
+      .nav__pointer-hover {
+        @apply relative;
+        &:after {
+          content: '';
+
+          @media screen and (max-width: 1420px) {
+            @apply top-0 -left-4 h-4 w-1;
+          }
+        }
+
+        &:hover:after {
+          @apply scale-x-100;
+        }
+      }
+      .nav__pointer:after {
+        @apply scale-x-100;
+      }
+    }
+    .activity-nav-list.language-nav-list {
+      flex-direction: row;
+      margin-bottom: 20px;
+      padding-bottom: 28px;
+      padding-left: 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.24);
+
+      .nav__pointer,
+      .nav__pointer-hover {
+        @apply relative;
+        &:after {
+          content: '';
+          @apply absolute bottom-0 left-0 h-1 w-full scale-x-0 scale-y-100 rounded-sm bg-turquoise transition-all duration-500;
+
+          @media screen and (max-width: 1420px) {
+            @apply -bottom-2  h-1 w-full;
+          }
+        }
+
+        &:hover:after {
+          @apply scale-x-100;
+        }
+      }
+      .nav__pointer:after {
+        @apply scale-x-100;
+      }
     }
   }
 }
@@ -203,8 +283,8 @@
       content: '';
       @apply absolute bottom-0 left-0 h-1 w-full scale-x-0 scale-y-100 rounded-sm bg-turquoise transition-all duration-500;
 
-      @media screen and (max-width: 1190px) {
-        @apply -bottom-3;
+      @media screen and (max-width: 1420px) {
+        @apply -left-4 h-4 w-1;
       }
     }
 
@@ -221,7 +301,30 @@
 .activity-nav {
   @apply flex grow;
 
-  @media screen and (min-width: 1190px) {
+  @media screen and (min-width: 1420px) {
     @apply justify-end;
+  }
+}
+
+.language-hover:hover {
+  @apply nav__active links__active;
+  a {
+    color: white !important;
+  }
+}
+.web-header {
+  .language-hover:hover {
+    a {
+      color: #2a2f30 !important;
+    }
+  }
+}
+
+@media screen and (max-width: 1415px) {
+  .web-header {
+    .nav__links {
+      padding: 8px;
+      font-size: 12px;
+    }
   }
 }

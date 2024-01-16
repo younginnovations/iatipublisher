@@ -24,7 +24,7 @@ class NameController extends Controller
     /**
      * NameController Constructor.
      *
-     * @param NameService    $nameService
+     * @param NameService $nameService
      */
     public function __construct(NameService $nameService)
     {
@@ -43,13 +43,14 @@ class NameController extends Controller
             $element = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
             $organization = $this->nameService->getOrganizationData($id);
             $form = $this->nameService->formGenerator($id);
-            $data = ['title'=> $element['name']['label'], 'name'=>'name'];
+            $data = ['title' => $element['name']['label'], 'name' => 'name'];
 
             return view('admin.organisation.forms.name.name', compact('form', 'organization', 'data'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while opening organization name form.');
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('common.organisation_name', 'opening'));
         }
     }
 
@@ -64,14 +65,17 @@ class NameController extends Controller
     {
         try {
             if (!$this->nameService->update(Auth::user()->organization_id, $request->all())) {
-                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization name.');
+                return redirect()->route('admin.organisation.index')
+                    ->with('error', translateErrorHasOccurred('common.organisation_name', 'updating'));
             }
 
-            return redirect()->route('admin.organisation.index')->with('success', 'Organization name updated successfully.');
+            return redirect()->route('admin.organisation.index')
+                ->with('success', translateElementSuccessfully('common.organisation_name', 'updated'));
         } catch (\Exception $e) {
             logger()->error($e->getMessage());
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization name.');
+            return redirect()->route('admin.organisation.index')
+                ->with('error', translateErrorHasOccurred('common.organisation_name', 'updating'));
         }
     }
 }

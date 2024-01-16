@@ -1,14 +1,21 @@
 <template>
   <tr>
-    <td>Ascending</td>
+    <td>{{ translate.commonText('ascending') }}</td>
     <td>
-      {{ parseInt(data) ? 'True' : data ? 'False' : 'Missing' }}
+      {{
+        parseInt(data)
+          ? translate.commonText('true')
+          : data
+          ? translate.commonText('false')
+          : translate.missing()
+      }}
     </td>
   </tr>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { Translate } from 'Composable/translationHelper';
 
 export default defineComponent({
   name: 'IndicatorAscending',
@@ -18,6 +25,10 @@ export default defineComponent({
       type: String,
       required: true,
     },
+  },
+  setup() {
+    const translate = new Translate();
+    return { translate };
   },
 });
 </script>
