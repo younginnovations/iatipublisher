@@ -436,30 +436,30 @@ class DashboardService
         return $params;
     }
 
-     /**
-      * Returns oldest created_at date.
-      *
-      * @param string $select
-      *
-      * @return array
-      */
-     public function getOldestDate(string $select = '*'): array
-     {
-         $userDate = $this->userRepo->getOldestData()?->created_at->format('Y-m-d') ?? '';
-         $activityDate = $this->activityRepo->getOldestData()?->created_at->format('Y-m-d') ?? '';
-         $publisherDate = $this->organizationRepo->getOldestData()?->created_at->format('Y-m-d') ?? '';
+    /**
+     * Returns oldest created_at date.
+     *
+     * @param string $select
+     *
+     * @return array
+     */
+    public function getOldestDate(string $select = '*'): array
+    {
+        $userDate = $this->userRepo->getOldestData()?->created_at->format('Y-m-d') ?? '';
+        $activityDate = $this->activityRepo->getOldestData()?->created_at->format('Y-m-d') ?? '';
+        $publisherDate = $this->organizationRepo->getOldestData()?->created_at->format('Y-m-d') ?? '';
 
-         return match ($select) {
-             'publisher' => [$publisherDate],
-             'activity' => [$activityDate],
-             'user' => [$userDate],
-             default => [
-                 'user' => $userDate,
-                 'activity' => $activityDate,
-                 'publisher' => $publisherDate,
-             ],
-         };
-     }
+        return match ($select) {
+            'publisher' => [$publisherDate],
+            'activity' => [$activityDate],
+            'user' => [$userDate],
+            default => [
+                'user' => $userDate,
+                'activity' => $activityDate,
+                'publisher' => $publisherDate,
+            ],
+        };
+    }
 
     /**
      * Sorts assoc array by order by and direction.

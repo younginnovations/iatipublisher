@@ -74,7 +74,13 @@ class ActivityIdentifierService
      */
     public function update($id, $activityIdentifier): bool
     {
-        return $this->activityRepository->update($id, ['iati_identifier' => $activityIdentifier]);
+        $isPublished = $this->activityRepository->find($id, ['linked_to_iati'])['linked_to_iati'];
+
+        if (!$isPublished) {
+            return $this->activityRepository->update($id, ['iati_identifier' => $activityIdentifier]);
+        }
+
+        return false;
     }
 
     /**
@@ -90,7 +96,14 @@ class ActivityIdentifierService
         $element = getElementSchema('iati_identifier');
         $model['activity_identifier'] = $this->getActivityIdentifierData($id);
         $this->baseFormCreator->url = route('admin.activity.identifier.update', [$id]);
+        $activity = $this->activityRepository->find($id, ['linked_to_iati']);
+        $showCancelOrSaveButton = true;
 
-        return $this->baseFormCreator->editForm($model['activity_identifier'], $element, 'PUT', '/activity/' . $id);
+        if ($activity->linked_to_iati) {
+            $element['attributes']['activity_identifier']['read_only'] = true;
+            $showCancelOrSaveButton = false;
+        }
+
+        return $this->baseFormCreator->editForm($model['activity_identifier'], $element, 'PUT', '/activity/' . $id, $showCancelOrSaveButton);
     }
 }
