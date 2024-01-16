@@ -120,4 +120,18 @@ class ResultObserver
             $result->saveQuietly();
         }
     }
+
+    /**
+     * Handle the Result "deleted" event.
+     *
+     * @param Result $result
+     *
+     * @return void
+     * @throws \JsonException
+     */
+    public function deleted(Result $result): void
+    {
+        $this->updateActivityElementStatus($result);
+        $this->resetActivityStatus($result);
+    }
 }

@@ -82,4 +82,19 @@ class PeriodObserver
 
         $period->saveQuietly();
     }
+
+    /**
+     * Handle the Period "deleted" event.
+     *
+     * @param Period $period
+     *
+     * @return void
+     * @throws \JsonException
+     */
+    public function deleted(Period $period): void
+    {
+        $resultObserver = new ResultObserver();
+        $resultObserver->updateActivityElementStatus($period->indicator->result);
+        $resultObserver->resetActivityStatus($period->indicator->result);
+    }
 }
