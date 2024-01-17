@@ -802,13 +802,13 @@ class ElementCompleteService
         $periodData = [];
 
         if (!empty($results)) {
-            foreach ($results as $result) {
+            foreach ($results as $resultKey => $result) {
                 $resultData[] = $result['result'];
                 $indicators = $result['indicators'];
                 $resultReference = Arr::get($result['result'], 'reference');
 
                 if (!empty($indicators)) {
-                    foreach ($indicators as $indicator) {
+                    foreach ($indicators as $indicatorKey => $indicator) {
                         $indicatorValue = $indicator['indicator'];
 
                         if (is_array_value_empty(Arr::get($indicatorValue, 'reference'))) {
@@ -821,11 +821,18 @@ class ElementCompleteService
                         $periods = $indicator['periods'];
 
                         if (!empty($periods)) {
+                            $resultData[$resultKey] = $result['result'];
+                            $indicatorData[$indicatorKey] = $indicatorValue;
+
                             foreach ($periods as $period) {
                                 $periodData[] = $period['period'];
                             }
+                        } else {
+                            $resultData = [];
                         }
                     }
+                } else {
+                    $resultData = [];
                 }
             }
         }
