@@ -46,6 +46,7 @@ class MakeResultCompleteCommand extends Command
                     $elementStatus['result'] = $elementCompleteService->isResultElementCompleted($activityObj);
                     $activityObj->element_status = $elementStatus;
                     $activityObj->complete_percentage = $elementCompleteService->calculateCompletePercentage($activityObj->element_status);
+                    $activityObj->timestamps = false;
                     $activityObj->saveQuietly();
                     $this->info('Activity: ' . $activity->id);
                 }
