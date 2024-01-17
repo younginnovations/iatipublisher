@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\IATI\Models\User\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -51,11 +52,10 @@ if (!function_exists('readElementGroup')) {
      * Reads ElementGroup json file.
      *
      * @return array
-     * @throws JsonException
      */
     function readElementGroup(): array
     {
-        return readJsonFile('Data/Activity/ElementGroup.json');
+        return json_decode(Cache::get('AppData/Data/Activity/ElementGroup.json'), true);
     }
 }
 
@@ -361,8 +361,8 @@ if (!function_exists('getCodeList')) {
      */
     function getCodeList($listName, $listType, bool $code = true): array
     {
-        $filePath = app_path("Data/$listType/$listName.json");
-        $codeListFromFile = file_get_contents($filePath);
+        $filePath = "AppData/Data/$listType/$listName.json";
+        $codeListFromFile = Cache::get($filePath);
         $codeLists = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
         $codeList = $codeLists[$listName];
         $data = [];
@@ -387,8 +387,8 @@ if (!function_exists('getCodeListArray')) {
      */
     function getCodeListArray($listName, $listType, bool $code = true): array
     {
-        $filePath = app_path("Data/$listType/$listName.php");
-        $codeListFromFile = include $filePath;
+        $content = Cache::get("AppData/Data/$listType/$listName.json");
+        $codeListFromFile = json_decode($content);
         $data = [];
 
         foreach ($codeListFromFile as $key => $value) {
@@ -411,8 +411,7 @@ if (!function_exists('getList')) {
      */
     function getList(string $filePath, bool $code = true): array
     {
-        $filePath = app_path("Data/$filePath");
-        $codeListFromFile = file_get_contents($filePath);
+        $codeListFromFile = Cache::get("AppData/Data/$filePath");
         $codeLists = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
         $codeList = last($codeLists);
         $data = [];

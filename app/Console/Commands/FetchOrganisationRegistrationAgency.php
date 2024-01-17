@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use JsonException;
 use PHPUnit\Exception;
 
 /**
  * Used in cronjob to run every day at 12:00 AM.
+ *
+ * This is for issue 1342: https://github.com/younginnovations/iatipublisher/issues/1342
  *
  * @class FetchOrganisationRegistrationAgency
  */
@@ -28,7 +31,7 @@ class FetchOrganisationRegistrationAgency extends Command
      *
      * @var string
      */
-    protected $description = 'Fetches and creates new app/Data/Organization/OrganizationRegistrationAgency.json daily.';
+    protected $description = 'Fetches and updates json file on S3 AppData/Data/Organization/OrganizationRegistrationAgency.json daily. On successc';
 
     /**
      * Execute the console command.
@@ -40,14 +43,14 @@ class FetchOrganisationRegistrationAgency extends Command
     public function handle()
     {
         try {
-            $this->info('Attempting to fetch from org-id website...');
-            logger()->info('Attempting to fetch from org-id website...');
+            $this->info(' Attempting to fetch from org-id website...');
+            logger()->info(' Attempting to fetch from org-id website...');
 
             $endpoint = 'http://org-id.guide/download.json';
             $response = Http::get($endpoint);
 
-            $this->info('Attempting to write new json...');
-            logger()->info('Attempting to write new json...');
+            $this->info(' Attempting to write new json...');
+            logger()->info(' Attempting to write new json...');
 
             if ($response->successful()) {
                 $jsonValue = $response->json()['lists'];
@@ -65,13 +68,24 @@ class FetchOrganisationRegistrationAgency extends Command
                 ];
 
                 $newJsonString = json_encode($newJson, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-                $filePath = 'app/Data/Organization/OrganizationRegistrationAgency.json';
+                $filePath = 'AppData/Data/Organization/OrganizationRegistrationAgency.json';
 
-                file_put_contents($filePath, $newJsonString);
+                if (awsUploadFile($filePath, $newJsonString)) {
+                    Cache::put($filePath, $newJsonString);
+
+                    $this->info(' Completed.');
+                    logger()->info(' Completed.');
+                } else {
+                    $this->info(' Failed to upload file to S3.');
+                    logger()->info(' Failed to upload file to S3.');
+                }
+            } else {
+                $this->info('Org-id response failed');
+                logger()->info('Org-id response failed');
             }
 
-            $this->info('Completed.');
-            logger()->info('Completed.');
+            $this->info(' Completed.');
+            logger()->info(' Completed.');
         } catch (Exception $e) {
             logger()->error($e);
         }

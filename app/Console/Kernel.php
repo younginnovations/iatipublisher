@@ -15,6 +15,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+        // TODO: Change this to every day instead of every 10 minutes after testing.
+        $schedule->command('command:FetchOrganisationRegistrationAgency')->everyMinute();
     }
 
     /**

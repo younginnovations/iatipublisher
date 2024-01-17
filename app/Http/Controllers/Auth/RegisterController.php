@@ -245,7 +245,7 @@ class RegisterController extends Controller
     public function showRegistrationForm(): \Illuminate\View\View|RedirectResponse
     {
         try {
-            $countries = getCodeListArray('Country', 'OrganizationArray');
+            $countries = getCodeList('Country', 'Organization');
             $registration_agencies = getCodeList('OrganizationRegistrationAgency', 'Organization');
             $uncategorizedRegistrationAgencyPrefix = Enums::UNCATEGORIZED_ORGANISATION_AGENCY_PREFIX;
 

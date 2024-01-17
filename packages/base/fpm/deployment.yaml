@@ -43,7 +43,7 @@ spec:
         image: ghcr.io/younginnovations/iatipublisher/fpm_server
         imagePullPolicy: IfNotPresent
         command: [ "/bin/sh","-c" ]
-        args: ["php artisan optimize:clear; php-fpm"]
+        args: ["php artisan optimize:clear && php artisan command:SetAppDataJsonCache && php artisan command:FetchOrganisationRegistrationAgency; php-fpm"]
         ports:
         - containerPort: 9000
         volumeMounts:

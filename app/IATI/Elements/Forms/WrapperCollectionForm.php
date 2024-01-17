@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Elements\Forms;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -150,8 +151,7 @@ class WrapperCollectionForm extends Form
      */
     public function getCodeList(string $filePath, bool $code = true): array
     {
-        $filePath = app_path("Data/$filePath");
-        $codeListFromFile = file_get_contents($filePath);
+        $codeListFromFile = Cache::get("AppData/Data/$filePath");
         $codeLists = json_decode($codeListFromFile, true);
         $codeList = last($codeLists);
         $data = [];

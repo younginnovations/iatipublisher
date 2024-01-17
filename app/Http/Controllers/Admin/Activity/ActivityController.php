@@ -100,7 +100,7 @@ class ActivityController extends Controller
     public function index(): View|JsonResponse
     {
         try {
-            $languages = getCodeListArray('Languages', 'ActivityArray');
+            $languages = getCodeList('Language', 'Activity');
             $toast = generateToastData();
 
             return view('admin.activity.index', compact('languages', 'toast'));
@@ -364,7 +364,7 @@ class ActivityController extends Controller
     public function getLanguagesOrganization(): JsonResponse
     {
         try {
-            $languages = getCodeListArray('Languages', 'ActivityArray');
+            $languages = getCodeList('Language', 'Activity');
             $organization = Auth::user()->organization;
 
             return response()->json([
@@ -391,7 +391,7 @@ class ActivityController extends Controller
     public function getActivityDetailDataType(): array
     {
         return [
-            'languages' => getCodeListArray('Languages', 'ActivityArray', false),
+            'languages' => getCodeList('Language', 'Activity', false),
             'activityDate' => getCodeList('ActivityDateType', 'Activity', false),
             'activityScope' => getCodeList('ActivityScope', 'Activity', false),
             'activityStatus' => getCodeList('ActivityStatus', 'Activity', false),

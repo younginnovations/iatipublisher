@@ -16,6 +16,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -79,7 +80,7 @@ class OrganizationController extends Controller
             $toast['message'] = Session::has('error') ? Session::get('error') : (Session::get('success') ? Session::get('success') : '');
             $toast['type'] = Session::has('error') ? 'error' : 'success';
             $elements = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
-            $elementGroups = json_decode(file_get_contents(app_path('Data/Organization/OrganisationElementsGroup.json')), true, 512, JSON_THROW_ON_ERROR);
+            $elementGroups = json_decode(Cache::get('AppData/Data/Organization/OrganisationElementsGroup.json'), true, 512, JSON_THROW_ON_ERROR);
             $types = $this->organizationService->getOrganizationTypes();
             $organization = $this->organizationService->getOrganizationData(Auth::user()->organization_id);
             $progress = $this->organizationService->organizationMandatoryCompletePercentage($organization);
@@ -136,16 +137,21 @@ class OrganizationController extends Controller
     /**
      * Returns list of registration agency specific to a country.
      *
-     * @param $country_code
+     * @param bool|string $country_code
      *
      * @return array
      *
      * @throws \JsonException
      */
-    public function getRegistrationAgency($country_code): array
+    public function getRegistrationAgency(bool|string $country_code = false): array
     {
         $registration_agency = getCodeList('OrganizationRegistrationAgency', 'Organization');
         $filtered_agency = [];
+
+        if (!$country_code) {
+            return ['message' => 'Filtered Agency successfully fetched', 'data' => $registration_agency];
+        }
+
         $validOrganisationRegistrationAgency = array_merge([$country_code], Enums::UNCATEGORIZED_ORGANISATION_AGENCY_PREFIX);
 
         foreach ($registration_agency as $key => $value) {
