@@ -4,17 +4,20 @@
       <div
         v-if="modalActive"
         :class="{ '!p-0': noPadding }"
-        class="modal fixed top-0 left-0 z-[200] flex h-screen w-screen items-center justify-center p-4 sm:p-8"
+        class="modal fixed top-0 left-0 z-[999998] flex h-screen w-screen items-center justify-center p-4 sm:p-8"
       >
         <Transition name="modal-animation-inner">
-          <div class="flex h-full w-full items-center justify-center">
+          <div
+            v-if="modalActive"
+            class="flex h-full w-full items-center justify-center"
+          >
             <div
               class="modal-backdrop absolute top-0 left-0 h-full w-full bg-n-50 opacity-50"
               @click="close"
             />
             <div
               v-if="modalActive"
-              :style="`max-width:${width}px;`"
+              :style="`max-width:${width}px; `"
               :class="{ '!p-0': noPadding }"
               class="modal-inner relative max-h-full w-full overflow-x-hidden rounded-lg bg-white p-4 sm:p-8"
             >
@@ -28,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watch } from 'vue';
+import { defineComponent, watch, onUnmounted, onMounted } from 'vue';
 export default defineComponent({
   name: 'PopupModal',
   props: {
@@ -49,13 +52,57 @@ export default defineComponent({
   },
   emits: ['close', 'reset'],
   setup(props, { emit }) {
+    onMounted(() => {
+      if (props.modalActive) {
+        const supportButton: HTMLElement = document.querySelector(
+          '#launcher'
+        ) as HTMLElement;
+
+        if (supportButton !== null) {
+          supportButton.style.display = 'none';
+        }
+      }
+    });
+
+    onUnmounted(() => {
+      const supportButton: HTMLElement = document.querySelector(
+        '#launcher'
+      ) as HTMLElement;
+
+      if (supportButton !== null) {
+        supportButton.style.display = 'block';
+      }
+    });
+
     watch(
       () => props.modalActive,
       (modalActive) => {
         if (modalActive) {
           document.documentElement.style.overflow = 'hidden';
+          const checkSupportButton = setInterval(() => {
+            const supportButton: HTMLElement = document.querySelector(
+              '#launcher'
+            ) as HTMLElement;
+
+            if (supportButton !== null) {
+              supportButton.style.display = 'none';
+
+              clearInterval(checkSupportButton);
+            }
+          }, 10);
         } else {
           document.documentElement.style.overflow = 'auto';
+          const checkSupportButton = setInterval(() => {
+            const supportButton: HTMLElement = document.querySelector(
+              '#launcher'
+            ) as HTMLElement;
+
+            if (supportButton !== null) {
+              supportButton.style.display = 'block';
+
+              clearInterval(checkSupportButton);
+            }
+          }, 10);
         }
       }
     );

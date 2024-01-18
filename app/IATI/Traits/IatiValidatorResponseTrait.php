@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\IATI\Traits;
 
+use App\IATI\Elements\Xml\XmlGenerator;
 use App\IATI\Services\Activity\ActivityService;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * IatiValidatorResponseTrait.
@@ -37,20 +39,44 @@ trait IatiValidatorResponseTrait
      */
     public function addElementOnIatiValidatorResponse($response, $activity): array
     {
+        $xmlGenerator = app()->make(XmlGenerator::class);
         $response = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
         $errors = $response['errors'];
         $updatedErrors = [];
 
+        $xmlFile = awsGetFile("xmlValidation/$activity->org_id/activity_$activity->id.xml");
+        $xml = simplexml_load_string((string) $xmlFile);
+        $xmlString = $xml->asXML();
+
         if (!empty($errors)) {
+            logger()->info('Getting validation errors');
             foreach ($errors as $error) {
-                $updatedErrors[] = $this->getValidatorErrors($activity, $error);
+                $updatedErrors[] = $this->getValidatorErrors($activity, $error, $xml, $xmlString);
             }
 
             $response['errors'] = $updatedErrors;
+            logger()->info('Clearing XML Validaton on s3');
             $this->clearXmlValidationOnS3($activity);
+            $this->clearCache($activity);
         }
 
         return $response;
+    }
+
+    /**
+     * Clears cache after completing the job.
+     *
+     * @param $activity
+     *
+     * @return void
+     */
+    public function clearCache($activity): void
+    {
+        Cache::forget("activity_file_$activity->id");
+        Cache::forget("activity_xml_$activity->id");
+        Cache::forget("activity_nodes_$activity->id");
+        Cache::forget("activity_mapper_$activity->id");
+        Cache::forget("activity_mapper_$activity->id");
     }
 
     /**
@@ -61,7 +87,7 @@ trait IatiValidatorResponseTrait
      *
      * @return array
      */
-    public function getValidatorErrors($activity, $error): array
+    public function getValidatorErrors($activity, $error, $xml, $xmlString): array
     {
         $errorMessage = $error['message'];
         $details = $error['details'];
@@ -69,7 +95,8 @@ trait IatiValidatorResponseTrait
         if (isset($details[0])) {
             foreach ($error['details'] as $key => $detailedError) {
                 if (isset($detailedError['error']['line'])) {
-                    $detailWithErrorLine = $this->getDetailWithErrorLineResponse($detailedError, $activity);
+                    logger()->info('details 0');
+                    $detailWithErrorLine = $this->getDetailWithErrorLineResponse($detailedError, $activity, $xml, $xmlString);
                     $error['response'][$key]['iati_path'] = $detailWithErrorLine['iati_path'];
                     $error['response'][$key]['message'] = $detailWithErrorLine['message'];
                 }
@@ -77,25 +104,30 @@ trait IatiValidatorResponseTrait
         } elseif (isset($details['caseContext']['paths']) && !empty($details['caseContext']['paths'])) {
             foreach ($error['details']['caseContext']['paths'] as $caseContext => $detailedErrors) {
                 if (isset($detailedErrors['lineNumber'])) {
-                    $caseContextErrorResponse = $this->getCaseContextErrorResponse($detailedErrors, $activity, $errorMessage);
+                    logger()->info('case context path');
+                    $caseContextErrorResponse = $this->getCaseContextErrorResponse($detailedErrors, $activity, $errorMessage, $xml, $xmlString);
                     $error['response'][$caseContext]['iati_path'] = $caseContextErrorResponse['iati_path'];
                     $error['response'][$caseContext]['message'] = $caseContextErrorResponse['message'];
                 }
             }
         } elseif (!empty($details['caseContext']['less']) || !empty($details['caseContext']['start'])) {
-            $getCaseContextStartErrorResponse = $this->getCaseContextStartErrorResponse($error, $activity, $errorMessage);
+            logger()->info('case context less and start');
+            $getCaseContextStartErrorResponse = $this->getCaseContextStartErrorResponse($error, $activity, $errorMessage, $xml, $xmlString);
             $error['response'][0]['iati_path'] = $getCaseContextStartErrorResponse['iati_path'];
             $error['response'][0]['message'] = $getCaseContextStartErrorResponse['message'];
         } elseif (isset($details['xpathContext']['lineNumber'])) {
-            $errorResponse = $this->getXpathContextWithLineNumberErrorResponse($error, $activity, $errorMessage);
+            logger()->info('xpath context line number');
+            $errorResponse = $this->getXpathContextWithLineNumberErrorResponse($error, $activity, $errorMessage, $xml, $xmlString);
             $error['response'][0]['iati_path'] = $errorResponse['iati_path'];
             $error['response'][0]['message'] = $errorResponse['message'];
         } elseif (isset($error['details']['xpath'])) {
+            logger()->info('details xpath');
             $lastSegment = str_replace('//iati-activity/', '', $error['details']['xpath']);
             $lastSegment = in_array($lastSegment, ['@budget-not-provided', '@humanitarian', '@hierarchy']) ? 'default_values' : $lastSegment;
             $error['response'][0]['iati_path'] = checkUrlExists("/activity/$activity->id/$lastSegment") ? "/activity/$activity->id/$lastSegment" : "/activity/$activity->id";
             $error['response'][0]['message'] = "activity>$activity->id";
         } else {
+            logger()->info('else part');
             $error['response'][0]['iati_path'] = "/activity/$activity->id";
             $error['response'][0]['message'] = "activity>$activity->id";
         }
@@ -108,10 +140,14 @@ trait IatiValidatorResponseTrait
      *
      * @param $nodePath
      *
-     * @return string
+     * @return string|null
      */
-    public function getErrorLocation($nodePath): String
+    public function getErrorLocation($nodePath): ?String
     {
+        if (empty($nodePath)) {
+            return null;
+        }
+
         if (strpos($nodePath, 'edit')) {
             $stringBetween = getStringBetween($nodePath, '/', '/edit');
         } else {
@@ -132,10 +168,10 @@ trait IatiValidatorResponseTrait
      * @throws BindingResolutionException
      * @throws \JsonException
      */
-    public function getDetailWithErrorLineResponse($detailedError, $activity): array
+    public function getDetailWithErrorLineResponse($detailedError, $activity, $xml, $xmlString): array
     {
         $lineNumber = $detailedError['error']['line'];
-        $nodePath = $this->getNodeByLineNumber($lineNumber + 1, $activity);
+        $nodePath = $this->getNodeByLineNumber($lineNumber + 1, $activity, $xml, $xmlString);
         $errorLocation = $this->getErrorLocation($nodePath);
 
         return [
@@ -150,16 +186,18 @@ trait IatiValidatorResponseTrait
      * @param $detailedErrors
      * @param $activity
      * @param $errorMessage
+     * @param $xml
+     * @param $xmlString
      *
      * @return array
      *
      * @throws BindingResolutionException
      * @throws \JsonException
      */
-    public function getCaseContextErrorResponse($detailedErrors, $activity, $errorMessage): array
+    public function getCaseContextErrorResponse($detailedErrors, $activity, $errorMessage, $xml, $xmlString): array
     {
         $lineNumber = $detailedErrors['lineNumber'];
-        $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
+        $nodePath = $this->getNodeByLineNumber($lineNumber, $activity, $xml, $xmlString);
 
         if ($lineNumber <= 3 && preg_match('(default currency|default language|default hierarchy|budget not provided|humanitarian)', $errorMessage)) {
             $nodePath = "/activity/$activity->id/default_values";
@@ -186,11 +224,11 @@ trait IatiValidatorResponseTrait
      * @throws BindingResolutionException
      * @throws \JsonException
      */
-    public function getCaseContextStartErrorResponse($error, $activity, $errorMessage): array
+    public function getCaseContextStartErrorResponse($error, $activity, $errorMessage, $xml, $xmlString): array
     {
         $detailedErrors = $error['details']['caseContext']['less'] ?? $error['details']['caseContext']['start'];
         $lineNumber = $detailedErrors['lineNumber'];
-        $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
+        $nodePath = $this->getNodeByLineNumber($lineNumber, $activity, $xml, $xmlString);
 
         if ($lineNumber <= 3 && preg_match('(default currency|default language|default hierarchy|budget not provided|humanitarian)', $errorMessage)) {
             $nodePath = "/activity/$activity->id/default_values";
@@ -217,10 +255,10 @@ trait IatiValidatorResponseTrait
      * @throws BindingResolutionException
      * @throws \JsonException
      */
-    public function getXpathContextWithLineNumberErrorResponse($error, $activity, $errorMessage): array
+    public function getXpathContextWithLineNumberErrorResponse($error, $activity, $errorMessage, $xml, $xmlString): array
     {
         $lineNumber = $error['details']['xpathContext']['lineNumber'];
-        $nodePath = $this->getNodeByLineNumber($lineNumber, $activity);
+        $nodePath = $this->getNodeByLineNumber($lineNumber, $activity, $xml, $xmlString);
 
         if ($lineNumber <= 3 && preg_match('(default currency|default language|default hierarchy|budget not provided|humanitarian)', $errorMessage)) {
             $nodePath = "/activity/$activity->id/default_values";
@@ -253,34 +291,41 @@ trait IatiValidatorResponseTrait
      *
      * @param $lineNumber
      * @param $activity
-     *
+     * @param $xml
+     * @param $xmlString
      * @return string|null
      *
-     * @throws \JsonException
      * @throws BindingResolutionException
+     * @throws \JsonException
      */
-    public function getNodeByLineNumber($lineNumber, $activity): ?string
+    public function getNodeByLineNumber($lineNumber, $activity, $xml, $xmlString): ?string
     {
-        $xmlFile = awsGetFile("xmlValidation/$activity->org_id/activity_$activity->id.xml");
-        $xml = simplexml_load_string((string) $xmlFile);
-        $xmlString = $xml->asXML();
         $xmlLines = explode("\n", $xmlString);
 
         if ($lineNumber >= 1 && $lineNumber <= count($xmlLines)) {
             $parentNode = [];
 
-            foreach ($xml->xpath('//iati-activity/* | //iati-activity//@*') as $node) {
-                $nodeName = $node->getName();
-                $childNodePath = $node->xpath("//$nodeName/*");
-                $parentNode[str_replace('/iati-activities/iati-activity/', '', dom_import_simplexml($node)->getNodePath())] = dom_import_simplexml($node)->getLineNo();
+            if (!Cache::has("activity_nodes_$activity->id")) {
+                $xpathNodes = $xml->xpath('//iati-activity');
 
-                if (!empty($childNodePath)) {
-                    foreach ($childNodePath as $childNode) {
-                        $domImportSimpleXml = dom_import_simplexml($childNode);
-                        $parentNode[str_replace('/iati-activities/iati-activity/', '', $domImportSimpleXml->getNodePath())] = $domImportSimpleXml->getLineNo();
+                foreach ($xpathNodes as $node) {
+                    $nodeName = $node->getName();
+                    $childNodePath = $node->xpath("//$nodeName/*");
+                    $domNode = dom_import_simplexml($node);
+                    $parentNode[str_replace('/iati-activities/iati-activity/', '', $domNode->getNodePath())] = $domNode->getLineNo();
+
+                    if (!empty($childNodePath)) {
+                        foreach ($childNodePath as $childNode) {
+                            $domImportSimpleXml = dom_import_simplexml($childNode);
+                            $parentNode[str_replace('/iati-activities/iati-activity/', '', $domImportSimpleXml->getNodePath())] = $domImportSimpleXml->getLineNo();
+                        }
                     }
                 }
+
+                Cache::put("activity_nodes_$activity->id", $parentNode, now()->addMinutes(15));
             }
+
+            $parentNode = Cache::get("activity_nodes_$activity->id");
             asort($parentNode);
             $parentNode = array_flip($parentNode);
             $targetNode = $parentNode[$lineNumber] ?? null;
@@ -323,7 +368,13 @@ trait IatiValidatorResponseTrait
         }, $path);
         $explodedPath = explode('/', $subtractedPath);
         $firstElementName = str_replace('-', '_', preg_replace('/[^a-zA-Z-]/', '', $explodedPath[0]));
-        $activityMapperFile = awsGetFile("xmlValidation/$activity->org_id/activity_mapper_$activityId.xml");
+
+        $activityMapperFile = Cache::has("activity_mapper_$activityId")
+            ? Cache::get("activity_mapper_$activityId")
+            : Cache::remember("activity_mapper_$activityId", now()->addMinutes(15), function () use ($activity, $activityId) {
+                return awsGetFile("xmlValidation/$activity->org_id/activity_mapper_$activityId.xml");
+            });
+
         $activityTransactionResultMapper = json_decode($activityMapperFile, true, 512, JSON_THROW_ON_ERROR);
         $getId = [];
         $urlPath = [];

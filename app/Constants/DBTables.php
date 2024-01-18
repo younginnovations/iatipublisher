@@ -63,4 +63,9 @@ abstract class DBTables
      * For Migration File.
      */
     public const DOWNLOAD_STATUS = 'download_status';
+
+    /**
+     * For Validating Activity in IATI Registry.
+     */
+    public const VALIDATION_STATUS = 'validation_status';
 }

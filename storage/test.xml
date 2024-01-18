@@ -1,63 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<iati-activities version="2.03" generated-datetime="2023-09-12T09:46:47+00:00">
-  <iati-activity last-updated-datetime="2023-09-12T09:46:48+00:00" xml:lang="En" default-currency="DKK" hierarchy="2" budget-not-provided="2">
-    <iati-identifier>DK-CVR-36980214-1010375-40</iati-identifier>
-    <reporting-org type="21" ref="DK-CVR-36980214" secondary-reporter="0">
-      <narrative xml:lang="da">Folkekirkens Nødhjælp</narrative>
-      <narrative xml:lang="en">DanChurchAid</narrative>
+<iati-activities version="2.03" generated-datetime="2023-12-12T03:56:11+00:00">
+  <iati-activity last-updated-datetime="2023-12-12T03:56:12+00:00" xml:lang="en" default-currency="GBP" hierarchy="1">
+    <iati-identifier>GB-COH-2732176-000218</iati-identifier>
+    <reporting-org type="70" ref="GB-COH-2732176" secondary-reporter="0">
+      <narrative xml:lang="en">Adam Smith International</narrative>
     </reporting-org>
     <title>
-      <narrative xml:lang="en">Building Resilience through Adoption of Small Stock (BREAST)</narrative>
+      <narrative xml:lang="en">Public Resource Management in Somalia Phase 2 (PREMIS2)</narrative>
     </title>
-    <description type="4">
-      <narrative xml:lang="en">Unavailable at the moment</narrative>
-    </description>
-    <participating-org ref="DK-CVR-36980214" type="21" role="1" activity-id="DK-CVR-36980214-1010375-40">
-      <narrative xml:lang="en">DanChurchAid</narrative>
+    <participating-org ref="GB-GOV-1" type="10" role="1">
+      <narrative xml:lang="en">UK - Foreign, Commonwealth and Development Office</narrative>
     </participating-org>
-    <participating-org ref="DK-CVR-36980214" type="21" role="2" activity-id="DK-CVR-36980214-1010375-40">
-      <narrative xml:lang="en">DanChurchAid</narrative>
-    </participating-org>
-    <participating-org ref="DK-CVR-36980214" type="21" role="4" activity-id="DK-CVR-36980214-1010375-40">
-      <narrative xml:lang="en">DanChurchAid</narrative>
-    </participating-org>
-    <activity-status code="4"/>
-    <activity-date type="2" iso-date="2021-07-01"/>
-    <activity-date type="3" iso-date="2021-12-31"/>
-    <contact-info type="1">
-      <organisation>
-        <narrative xml:lang="en">DanChurchAid</narrative>
-      </organisation>
+    <activity-status code="2"/>
+    <activity-date type="2" iso-date="2022-10-10">
+      <narrative xml:lang="en">The project is currently in its inception phase until 31st January 2023. The implemetation phase runs until October 31st 2025</narrative>
+    </activity-date>
+    <contact-info type="2">
+      <person-name>
+        <narrative xml:lang="en">Jane Kiplagat</narrative>
+      </person-name>
       <job-title>
-        <narrative xml:lang="en">SQM Data Manager</narrative>
+        <narrative xml:lang="en">Manager</narrative>
       </job-title>
-      <telephone>4533152800</telephone>
-      <email>iati@dca.dk</email>
-      <website>https://www.noedhjaelp.dk/</website>
-      <mailing-address>
-        <narrative xml:lang="en">Folkekirkens Nødhjælp, Meldahlsgade 3, DK-1613 Copenhagen</narrative>
-      </mailing-address>
+      <telephone>+254729850634</telephone>
+      <email>Jane.Kiplagat@adamsmithinternational.com</email>
     </contact-info>
-    <activity-scope code="4"/>
-    <recipient-country code="KE" percentage="100"/>
-    <sector code="43010" vocabulary="1" vocabulary-uri="https://iatistandard.org/en/iati-standard/203/codelists/sector/">
-      <narrative xml:lang="en">Multisector aid</narrative>
+    <recipient-country code="SO" percentage="100"/>
+    <recipient-region code="1027" percentage="0" vocabulary="1"/>
+    <location>
+      <location-reach code="1"/>
+      <name>
+        <narrative xml:lang="en">Somalia</narrative>
+      </name>
+      <point srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+        <pos> </pos>
+      </point>
+    </location>
+    <sector code="15120" percentage="100" vocabulary="1">
+      <narrative xml:lang="en">The project also supports 15114 Domestic Revenue Mobilisation</narrative>
     </sector>
-    <sector code="111" percentage="100" vocabulary="99" vocabulary-uri="https://www.danchurchaid.org/how-we-work/goals-and-strategy">
-      <narrative xml:lang="en">Build Resilient Communities</narrative>
-    </sector>
-    <transaction ref="1010375-40-1">
-      <transaction-type code="4"/>
-      <transaction-date iso-date="2021-12-31"/>
-      <value currency="DKK" value-date="2021-12-31">899999.96</value>
-      <disbursement-channel code="2"/>
-    </transaction>
-    <transaction ref="1010375-40-2">
-      <transaction-type code="4"/>
-      <transaction-date iso-date="2021-12-31"/>
-      <value currency="DKK" value-date="2021-12-31">63000</value>
-      <disbursement-channel code="2"/>
-    </transaction>
-    <related-activity ref="DK-CVR-36980214-DANIDA-SPA-2018-2021-CIV" type="1"/>
+    <policy-marker vocabulary="1" code="3" significance="3"/>
+    <collaboration-type code="1"/>
+    <default-flow-type code="10"/>
+    <default-finance-type code="110"/>
+    <default-aid-type code="D02" vocabulary="1"/>
+    <default-tied-status code="5"/>
+    <budget type="1" status="2">
+      <period-start iso-date="2022-10-10"/>
+      <period-end iso-date="2023-03-31"/>
+      <value currency="GBP" value-date="2022-12-21">8932739</value>
+    </budget>
   </iati-activity>
 </iati-activities>

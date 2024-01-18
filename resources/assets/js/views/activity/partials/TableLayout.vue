@@ -140,6 +140,7 @@
                 :core-completed="datum.coreCompleted"
                 type="outline"
                 :activity-id="datum['id']"
+                :publish="false"
               />
             </div>
           </td>

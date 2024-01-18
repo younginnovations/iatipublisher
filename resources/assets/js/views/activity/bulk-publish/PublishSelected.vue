@@ -8,8 +8,42 @@
       icon="approved-cloud"
       @click="checkPublish"
     />
+
     <Modal
-      :modal-active="publishAlertValue"
+      :modal-active="showExistingProcessModal"
+      width="583"
+      @close="showExistingProcessModal = false"
+    >
+      <div class="popup mb-4">
+        <div class="title mb-6 flex items-center text-sm">
+          <svg-vue class="mr-1 text-lg text-spring-50" icon="warning" />
+          <b>Another Activity is currently being published</b>
+        </div>
+        <div class="rounded-lg bg-[#FFF1F0] p-4">
+          <div class="text-sm leading-normal">
+            Please wait for previous bulk publish to complete or cancel previous
+            bulk publish to continue this bulk publish.
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-between space-x-2">
+        <BtnComponent
+          class="bg-white px-6 uppercase"
+          text="Cancel Previous Bulk publish"
+          type=""
+          @click="startValidation"
+        />
+        <BtnComponent
+          class="bg-white px-6 uppercase"
+          text="Wait for completion"
+          type="primary"
+          @click="showExistingProcessModal = false"
+        />
+      </div>
+    </Modal>
+
+    <Modal
+      :modal-active="publishAlertValue && !showExistingProcessModal"
       :width="popUpWidthChange"
       @close="publishAlertToggle"
       @reset="resetPublishStep"
@@ -30,12 +64,6 @@
         <div class="flex justify-end">
           <div class="inline-flex">
             <BtnComponent
-              class="bg-white px-6 uppercase"
-              text="Cancel"
-              type=""
-              @click="resetPublishStep()"
-            />
-            <BtnComponent
               class="space"
               text="Continue"
               type="primary"
@@ -51,7 +79,6 @@
             <svg-vue icon="tick" class="mr-1 mt-0.5 text-lg text-spring-50" />
             <b>Core Elements Complete</b>
           </div>
-          Publishing alert
 
           <div class="rounded-lg bg-mint px-6">
             <div
@@ -121,7 +148,11 @@
               class="bg-white px-6 uppercase"
               type=""
               text="Continue Anyway"
-              @click="validateActivities()"
+              @click="
+                () => {
+                  bulkPublishStep = 3;
+                }
+              "
             />
             <BtnComponent
               class="space"
@@ -132,25 +163,40 @@
           </div>
         </div>
       </template>
-
       <template v-else-if="bulkPublishStep === 3">
-        <ValidationErrors :data="validationErrors" />
+        <div class="title mb-6 flex items-center text-sm">
+          <svg-vue class="mr-1 text-lg text-crimson-40" icon="shield" />
+          <b
+            >{{
+              store.state.selectedActivities.length > 1
+                ? 'Activities'
+                : 'Activity'
+            }}
+            will be validated before publishing</b
+          >
+        </div>
+        <div class="mb-8 bg-eggshell p-4 text-sm">
+          {{
+            store.state.selectedActivities.length > 1
+              ? 'These activities'
+              : 'This Activity'
+          }}
+          will be validated before being published to the IATI Registry.
+        </div>
         <div class="flex justify-end">
           <div class="inline-flex">
             <BtnComponent
               class="bg-white px-6 uppercase"
               type=""
-              text="Cancel"
+              text="Go back"
               @click="resetPublishStep()"
             />
             <BtnComponent
               class="space"
-              :class="{
-                'pointer-events-none': selectedActivities.length === 0,
-              }"
               type="primary"
-              :text="`Publish (${selectedActivities.length}) Activities`"
-              @click="startBulkPublish()"
+              text="Continue"
+              :is-loading="showModalButtonLoader"
+              @click="validateActivities()"
             />
           </div>
         </div>
@@ -230,7 +276,6 @@ import axios from 'axios';
 import BtnComponent from 'Components/ButtonComponent.vue';
 import Modal from 'Components/PopupModal.vue';
 import Loader from 'Components/sections/ProgressLoader.vue';
-import ValidationErrors from './ValidationErrors.vue';
 import PageLoader from 'Components/Loader.vue';
 
 // Vuex Store
@@ -251,9 +296,12 @@ let [publishAlertValue, publishAlertToggle] = useToggle();
 
 // state for step of the flow
 const bulkPublishStep = ref(1);
+const showModalButtonLoader = ref(false);
+
 const bulkPublishStatus = reactive({});
 const isLoading = ref(false);
 const startPublish = ref(false);
+const showExistingProcessModal = ref(false);
 
 const published = ref(false);
 
@@ -325,6 +373,7 @@ const checkPublish = () => {
       } else {
         if (response?.in_progress) {
           emptybulkPublishStatus();
+
           Object.assign(bulkPublishStatus, response.data.activities);
           showCancelConfirmationModal();
         } else {
@@ -350,7 +399,7 @@ let coreCompletedActivities: Ref<actTypeface[]> = ref([]),
 const verifyCoreElements = () => {
   loader.value = true;
   loaderText.value = 'Verifying Core Elements';
-  const activities = store.state.selectedActivities.join(', ');
+  const activities = store.state.selectedActivities.join(',');
 
   axios
     .get(`/activities/core-elements-completed?activities=[${activities}]`)
@@ -393,28 +442,77 @@ onMounted(() => {
       Object.assign(pa.value?.publishingActivities, res.data?.data);
     });
 });
-const validateActivities = () => {
-  loader.value = true;
-  loaderText.value = 'Validating Activity';
-  const activities = store.state.selectedActivities.join(', ');
 
+const stopValidating = async () => {
+  await axios.get(`activities/delete-validation-status`).then(() => {
+    store.dispatch('updateStartValidation', false);
+    store.dispatch('updateValidatingActivities', '');
+    localStorage.removeItem('validatingActivities');
+    localStorage.removeItem('activityValidating');
+  });
+};
+
+const startValidation = async () => {
+  const activities = store.state.selectedActivities.join(',');
+
+  await stopValidating();
+  store.dispatch('updateStartValidation', true);
+  store.dispatch('updateValidatingActivities', activities);
+  localStorage.setItem('validatingActivities', activities);
+  store.dispatch('updateStartBulkPublish', false);
+  await cancelBulkPublish();
+
+  showExistingProcessModal.value = false;
   axios
     .post(`/activities/validate-activities?activities=[${activities}]`)
     .then((res) => {
       const response = res.data;
+      store.dispatch('updateValidatingActivitiesNames', response.activities);
+
+      localStorage.setItem(
+        'validatingActivitiesNames',
+        response.activities.join('|')
+      );
 
       if (response.success) {
-        bulkPublishStep.value = 3;
         validationErrors.value = response.data;
       } else {
         resetPublishStep();
         displayToast(response.message, response.success);
       }
-
-      setTimeout(() => {
-        loader.value = false;
-      }, 2000);
     });
+  // .finally(() => {
+  //   store.dispatch('updateStartValidation', true);
+  //   store.dispatch('updateValidatingActivities', activities);
+  //   localStorage.setItem('validatingActivities', activities);
+  //   store.dispatch('updateStartBulkPublish', false);
+  // });
+};
+
+const validateActivities = async () => {
+  let validatorSuccess = false;
+  let publishingSuccess = false;
+  showModalButtonLoader.value = true;
+
+  await axios.get(`activities/checks-for-activity-bulk-publish`).then((res) => {
+    const response = res.data;
+    publishingSuccess = response.success;
+  });
+
+  await axios
+    .get(`activities/checks-for-activity-bulk-validation`)
+    .then((res) => {
+      const response = res.data;
+      validatorSuccess = response.success;
+    });
+
+  if (!validatorSuccess || !publishingSuccess) {
+    showExistingProcessModal.value = true;
+  } else {
+    startValidation();
+  }
+  showModalButtonLoader.value = false;
+  resetPublishStep();
 };
 
 /**
@@ -440,17 +538,16 @@ const pa: Ref<paType> = useStorage('vue-use-local-storage', {
 
 const startBulkPublish = () => {
   store.dispatch('updateStartBulkPublish', true);
-
-  loader.value = true;
   loaderText.value = 'Starting to publish';
   pa.value.publishingActivities = {};
 
   axios
     .get(
-      `activities/start-bulk-publish?activities=[${selectedActivities.value}]`
+      `activities/start-bulk-publish?activities=[${store.state.validatingActivities}]`
     )
     .then((res) => {
       store.dispatch('updateStartBulkPublish', true);
+      store.dispatch('updateValidatingActivities', '');
 
       startPublish.value = true;
 
@@ -501,11 +598,56 @@ watch(
   { deep: true }
 );
 
+watch(
+  () => bulkPublishStep.value,
+  () => {
+    if (bulkPublishStep.value === 2 || bulkPublishStep.value === 3) {
+      const checkSupportButton = setInterval(() => {
+        const supportButton: HTMLElement = document.querySelector(
+          '#launcher'
+        ) as HTMLElement;
+
+        if (supportButton !== null) {
+          supportButton.classList.add('!hidden');
+
+          clearInterval(checkSupportButton);
+        }
+      }, 10);
+    } else {
+      const checkSupportButton = setInterval(() => {
+        const supportButton: HTMLElement = document.querySelector(
+          '#launcher'
+        ) as HTMLElement;
+
+        if (supportButton !== null) {
+          supportButton.classList.remove('!hidden');
+
+          clearInterval(checkSupportButton);
+        }
+      }, 10);
+    }
+  }
+);
+
+watch(
+  () => store.state.startBulkPublish,
+  (value) => {
+    if (value) {
+      startBulkPublish();
+    }
+  },
+  { deep: true }
+);
+const cancelBulkPublish = async () => {
+  await axios.get('activities/cancel-bulk-publish');
+};
+
 /*Cancels on-going bulk publish*/
 const cancelOtherBulkPublish = () => {
   loaderText.value = 'Cancelling Bulk Publish';
   loader.value = true;
   closeCancelConfirmationModal();
+  store.dispatch('updateStartBulkPublish', false);
 
   axios.get('activities/cancel-bulk-publish').then((res) => {
     if (res.data.success) {

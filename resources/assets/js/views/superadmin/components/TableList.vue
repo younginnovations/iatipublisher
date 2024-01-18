@@ -634,6 +634,7 @@ import Pagination from 'Components/TablePagination.vue';
 import Multiselect from '@vueform/multiselect';
 import { watchIgnorable } from '@vueuse/core';
 import DateRangeWidget from 'Components/DateRangeWidget.vue';
+import { useStore } from 'Store/activities/index';
 
 export default defineComponent({
   name: 'TableList',
@@ -673,6 +674,8 @@ export default defineComponent({
     const dateDropdown = ref();
     const clearDate = ref(false);
     const dateType = ref('All Time');
+
+    const store = useStore();
 
     //typeface
     interface organizationInterface {
@@ -899,6 +902,11 @@ export default defineComponent({
         const response = res.data;
 
         if (response.success) {
+          localStorage.removeItem('validatingActivitiesNames');
+          // localStorage.removeItem('validatingActivities');
+          localStorage.removeItem('activityValidating');
+          store.dispatch('updateStartValidation', false);
+
           setTimeout(() => {
             window.location.replace('/activities');
           }, 1000);

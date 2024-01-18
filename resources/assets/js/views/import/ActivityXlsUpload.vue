@@ -620,11 +620,11 @@ watch(
   }
 );
 
-const checkDownloadStatus = () => {
+const checkDownloadStatus = async () => {
   downloading.value = false;
 
-  const checkDownload = setInterval(function () {
-    axios.get('/activities/download-xls-progress-status').then((res) => {
+  const checkDownload = setInterval(async function () {
+    await axios.get('/activities/download-xls-progress-status').then((res) => {
       fileCount.value = res.data.file_count;
       xlsDownloadStatus.value = res.data.status;
       downloadApiUrl.value = res.data.url;

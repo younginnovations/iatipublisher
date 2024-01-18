@@ -8,8 +8,41 @@
     @click="checkPublish"
   />
   <Modal
+    :modal-active="showExistingProcessModal"
+    width="583"
+    @close="showExistingProcessModal = false"
+  >
+    <div class="popup mb-4">
+      <div class="title mb-6 flex items-center text-sm">
+        <svg-vue class="mr-1 text-lg text-spring-50" icon="warning" />
+        <b>Another Activity is currently being published</b>
+      </div>
+      <div class="rounded-lg bg-[#FFF1F0] p-4">
+        <div class="text-sm leading-normal">
+          Please wait for previous bulk publish to complete or cancel previous
+          bulk publish to continue this bulk publish.
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-between space-x-2">
+      <BtnComponent
+        class="bg-white px-6 uppercase"
+        text="Cancel Previous Bulk publish"
+        type=""
+        @click="startValidation"
+      />
+      <BtnComponent
+        class="bg-white px-6 uppercase"
+        text="Wait for completion"
+        type="primary"
+        @click="showExistingProcessModal = false"
+      />
+    </div>
+  </Modal>
+  <Modal
     :modal-active="publishValue"
     width="583"
+    class="outline"
     @close="publishToggle"
     @reset="resetPublishStep"
   >
@@ -23,13 +56,14 @@
           }"
           :icon="publishStateChange.icon"
         />
-        <b>{{ publishStateChange.title }}</b>
+        <b>{{ publishStateChange.title }} </b>
       </div>
       <div
         class="rounded-lg bg-mint p-4"
         :class="{
           'bg-mint': publishStateChange.alertState,
-          'bg-[#FFF1F0]': !publishStateChange.alertState,
+          'bg-[#FFF1F0]': !publishStateChange.alertState && publishStep !== 1,
+          '!bg-eggshell': !publishStateChange.alertState && publishStep === 1,
         }"
       >
         <div
@@ -86,6 +120,7 @@
           v-if="publishStep === 1"
           class="space"
           text="Continue"
+          :is-loading="showModalButtonLoader"
           type="primary"
           @click="validatorFunction"
         />
@@ -134,8 +169,10 @@ import {
   toRefs,
   computed,
   inject,
+  watch,
+  Ref,
 } from 'vue';
-import { useToggle } from '@vueuse/core';
+import { useStorage, useToggle } from '@vueuse/core';
 import axios from 'axios';
 
 //component
@@ -145,6 +182,7 @@ import Loader from 'Components/sections/ProgressLoader.vue';
 
 // Vuex Store
 import { detailStore } from 'Store/activities/show';
+import { useStore } from 'Store/activities/index';
 
 const props = defineProps({
   type: { type: String, default: 'primary' },
@@ -152,7 +190,10 @@ const props = defineProps({
   status: { type: String, required: true },
   coreCompleted: { type: Boolean, required: true },
   activityId: { type: Number, required: true },
+  publish: { type: Boolean, required: false, default: true },
 });
+const showExistingProcessModal = ref(false);
+const showModalButtonLoader = ref(false);
 
 const { linkedToIati, status, coreCompleted, activityId } = toRefs(props);
 
@@ -188,6 +229,7 @@ onUpdated(() => {
  *  Global State
  */
 const store = detailStore();
+const validationStore = useStore();
 
 //activity id
 const id = activityId.value;
@@ -300,55 +342,101 @@ interface Err {
   errorNumber: number;
   warningNumber: number;
 }
+
+interface paType {
+  publishingActivities: {
+    organization_id?: string;
+    job_batch_uuid?: string;
+    activities?: object;
+    status?: string;
+    message?: string;
+  };
+}
+const pa: Ref<paType> = useStorage('vue-use-local-storage', {
+  publishingActivities: localStorage.getItem('publishingActivities') ?? {},
+});
 let err: Err = reactive({
   criticalNumber: 0,
   errorNumber: 0,
   warningNumber: 0,
 });
 
+const stopValidating = async () => {
+  await axios.get(`/activities/delete-validation-status`).then(() => {
+    validationStore.dispatch('updateStartValidation', false);
+    validationStore.dispatch('updateValidatingActivities', '');
+    // localStorage.removeItem('validatingActivities');
+    localStorage.removeItem('activityValidating');
+  });
+};
+
+const stopBulkpublish = async () => {
+  await axios.get('/activities/cancel-bulk-publish');
+};
+
 // call api for validation
 
-const validatorFunction = () => {
-  publishValue.value = false;
+const startValidation = async () => {
+  showExistingProcessModal.value = false;
+  await stopValidating();
 
-  if (!publishValue.value) {
-    setTimeout(function () {
-      loader.value = true;
-    }, 500);
-  }
+  validationStore.dispatch('updateStartValidation', true);
+  validationStore.dispatch('updateValidatingActivities', props.activityId);
+  localStorage.setItem('validatingActivities', props.activityId.toString());
 
-  loaderText.value = 'Validating Activity';
+  await stopBulkpublish();
 
-  axios.post(`/activity/${id}/validateActivity`).then((res) => {
-    const response = res.data;
-    const errors = response.errors;
+  axios
+    .post(`/activities/validate-activities?activities=[${props.activityId}]`)
+    .then((res) => {
+      const response = res.data;
 
-    if (response.success === false) {
-      location.reload();
-    }
+      validationStore.dispatch(
+        'updateValidatingActivitiesNames',
+        response.activities
+      );
+      localStorage.setItem(
+        'validatingActivitiesNames',
+        response.activities.join('|')
+      );
 
-    if (errors.length > 0) {
-      store.dispatch('updatePublishErrors', errors);
-
-      //identify error types
-      const crit = response.summary.critical;
-      (err.criticalNumber = crit),
-        (err.errorNumber = response.summary.error),
-        (err.warningNumber = response.summary.warning);
-
-      if (crit > 0) {
-        publishStep.value = 3;
-      } else {
-        publishStep.value = 4;
+      if (!response.success) {
+        resetPublishStep();
       }
-    } else {
-      publishStep.value = 2;
-    }
+    });
+  // .finally(() => {
+  //   validationStore.dispatch('updateStartValidation', true);
+  //   validationStore.dispatch('updateValidatingActivities', props.activityId);
+  //   localStorage.setItem('validatingActivities', props.activityId.toString());
+  // });
+};
 
-    setTimeout(() => {
-      loader.value = false;
-    }, 2000);
-  });
+const validatorFunction = async () => {
+  showModalButtonLoader.value = true;
+  let validatorSuccess = false;
+  let publishingSuccess = false;
+
+  await axios
+    .get(`/activities/checks-for-activity-bulk-publish`)
+    .then((res) => {
+      const response = res.data;
+      publishingSuccess = response.success;
+    });
+
+  await axios
+    .get(`/activities/checks-for-activity-bulk-validation`)
+    .then((res) => {
+      const response = res.data;
+      validatorSuccess = response.success;
+    });
+
+  if (!validatorSuccess || !publishingSuccess) {
+    showExistingProcessModal.value = true;
+  } else {
+    startValidation();
+  }
+  resetPublishStep();
+  showModalButtonLoader.value = false;
 };
 
 // call api for publishing
@@ -364,15 +452,18 @@ const errorData = inject('errorData') as DataTypeface;
  * check publish status
  */
 const checkPublish = () => {
-  axios.get(`/activities/checks-for-activity-publish`).then((res) => {
+  axios.get(`/activities/checks-for-activity-bulk-publish`).then((res) => {
     const response = res.data;
-
     if (response.success === true) {
       publishValue.value = true;
     } else {
-      errorData.message = response.message;
-      errorData.type = response.success;
-      errorData.visibility = true;
+      if (response?.in_progress) {
+        showExistingProcessModal.value = true;
+      } else {
+        errorData.message = response.message;
+        errorData.type = response.success;
+        errorData.visibility = true;
+      }
     }
   });
 };
@@ -380,24 +471,46 @@ const checkPublish = () => {
 const publishFunction = () => {
   publishValue.value = false;
 
-  setTimeout(function () {
-    loader.value = true;
-  }, 500);
-
   loaderText.value = 'Publishing Activity';
-  publishStep.value = 0;
-  axios.post(`/activity/${id}/publish`).then((res) => {
+  // publishStep.value = 0;
+  axios.get(`/activities/start-bulk-publish?activities=[${id}]`).then((res) => {
     const response = res.data;
     store.dispatch('updateUnPublished', response.success);
     store.dispatch('updateShowPublished', !response.success);
+
     setTimeout(() => {
       location.reload();
     }, 1000);
   });
 };
 
-// publish-republish
+const startBulkPublish = async () => {
+  let responseData = false;
+  await axios
+    .get(
+      `/activities/start-bulk-publish?activities=[${
+        localStorage.getItem('validatingActivities') ?? id
+      }]`
+    )
+    .then((res) => {
+      const response = res.data;
 
+      if (response.success) {
+        pa.value.publishingActivities = response.data;
+        responseData = response.data;
+      }
+    })
+    .then(() => {
+      validationStore.dispatch('updateBulkpublishActivities', responseData);
+      validationStore.dispatch('updateStartBulkPublish', true);
+    });
+
+  // setTimeout(() => {
+  //   location.reload();
+  // }, 1000);
+};
+
+// publish-republish
 const publishStatus = reactive({
   linked_to_iati: linkedToIati.value,
   status: status.value,
@@ -415,4 +528,13 @@ const btnText = computed(() => {
     return '';
   }
 });
+
+watch(
+  () => validationStore.state.startBulkPublish,
+  (value) => {
+    if (value && props.publish) {
+      startBulkPublish();
+    }
+  }
+);
 </script>
