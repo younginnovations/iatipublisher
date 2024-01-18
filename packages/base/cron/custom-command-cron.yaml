@@ -21,7 +21,7 @@ spec:
             command:
             - /bin/sh
             - -c
-            - php artisan command:FetchOrganisationRegistrationAgency
+            - php artisan schedule:run
             envFrom:
               - configMapRef:
                   name: iatipublisher
