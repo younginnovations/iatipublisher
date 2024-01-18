@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<iati-activities version="2.03" generated-datetime="2023-09-12T09:46:47+00:00">
+  <iati-activity last-updated-datetime="2023-09-12T09:46:48+00:00" xml:lang="En" default-currency="DKK" hierarchy="2" budget-not-provided="2">
+    <iati-identifier>DK-CVR-36980214-1010375-40</iati-identifier>
+    <reporting-org type="21" ref="DK-CVR-36980214" secondary-reporter="0">
+      <narrative xml:lang="da">Folkekirkens Nødhjælp</narrative>
+      <narrative xml:lang="en">DanChurchAid</narrative>
+    </reporting-org>
+    <title>
+      <narrative xml:lang="en">Building Resilience through Adoption of Small Stock (BREAST)</narrative>
+    </title>
+    <description type="4">
+      <narrative xml:lang="en">Unavailable at the moment</narrative>
+    </description>
+    <participating-org ref="DK-CVR-36980214" type="21" role="1" activity-id="DK-CVR-36980214-1010375-40">
+      <narrative xml:lang="en">DanChurchAid</narrative>
+    </participating-org>
+    <participating-org ref="DK-CVR-36980214" type="21" role="2" activity-id="DK-CVR-36980214-1010375-40">
+      <narrative xml:lang="en">DanChurchAid</narrative>
+    </participating-org>
+    <participating-org ref="DK-CVR-36980214" type="21" role="4" activity-id="DK-CVR-36980214-1010375-40">
+      <narrative xml:lang="en">DanChurchAid</narrative>
+    </participating-org>
+    <activity-status code="4"/>
+    <activity-date type="2" iso-date="2021-07-01"/>
+    <activity-date type="3" iso-date="2021-12-31"/>
+    <contact-info type="1">
+      <organisation>
+        <narrative xml:lang="en">DanChurchAid</narrative>
+      </organisation>
+      <job-title>
+        <narrative xml:lang="en">SQM Data Manager</narrative>
+      </job-title>
+      <telephone>4533152800</telephone>
+      <email>iati@dca.dk</email>
+      <website>https://www.noedhjaelp.dk/</website>
+      <mailing-address>
+        <narrative xml:lang="en">Folkekirkens Nødhjælp, Meldahlsgade 3, DK-1613 Copenhagen</narrative>
+      </mailing-address>
+    </contact-info>
+    <activity-scope code="4"/>
+    <recipient-country code="KE" percentage="100"/>
+    <sector code="43010" vocabulary="1" vocabulary-uri="https://iatistandard.org/en/iati-standard/203/codelists/sector/">
+      <narrative xml:lang="en">Multisector aid</narrative>
+    </sector>
+    <sector code="111" percentage="100" vocabulary="99" vocabulary-uri="https://www.danchurchaid.org/how-we-work/goals-and-strategy">
+      <narrative xml:lang="en">Build Resilient Communities</narrative>
+    </sector>
+    <transaction ref="1010375-40-1">
+      <transaction-type code="4"/>
+      <transaction-date iso-date="2021-12-31"/>
+      <value currency="DKK" value-date="2021-12-31">899999.96</value>
+      <disbursement-channel code="2"/>
+    </transaction>
+    <transaction ref="1010375-40-2">
+      <transaction-type code="4"/>
+      <transaction-date iso-date="2021-12-31"/>
+      <value currency="DKK" value-date="2021-12-31">63000</value>
+      <disbursement-channel code="2"/>
+    </transaction>
+    <related-activity ref="DK-CVR-36980214-DANIDA-SPA-2018-2021-CIV" type="1"/>
+  </iati-activity>
+</iati-activities>

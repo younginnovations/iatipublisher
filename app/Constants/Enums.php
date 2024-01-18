@@ -161,4 +161,6 @@ abstract class Enums
         'XI',
         'XR',
     ];
+
+    const IATI_XML_VERSION = '2.03';
 }

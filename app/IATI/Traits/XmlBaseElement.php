@@ -23,19 +23,58 @@ trait XmlBaseElement
         $narrativeData = [];
 
         if ($narratives) {
-            foreach ($narratives as $narrative) {
-                if ($narrative != '') {
-                    $narrativeData[] = [
-                        '@value' => Arr::get($narrative, 'narrative', null),
-                        '@attributes' => [
-                            'xml:lang' => Arr::get($narrative, 'language', null),
-                        ],
-                    ];
-                }
-            }
+            $narrativeData = iterator_to_array($this->getNarrative($narratives));
+            // foreach ($narratives as $narrative) {
+            //     if ($narrative != '') {
+            //         $narrativeData[] = [
+            //             '@value' => Arr::get($narrative, 'narrative', null),
+            //             '@attributes' => [
+            //                 'xml:lang' => Arr::get($narrative, 'language', null),
+            //             ],
+            //         ];
+            //     }
+            // }
         }
 
         return $narrativeData;
+    }
+
+    protected function getNarrative($narratives)
+    {
+        foreach ($narratives as $narrative) {
+            // if ($narrative != '') {
+            $narrativeData = [
+                '@value' => Arr::get($narrative, 'narrative', null),
+                '@attributes' => [
+                    'xml:lang' => Arr::get($narrative, 'language', null),
+                ],
+            ];
+
+            yield $narrativeData;
+            // }
+        }
+    }
+
+    protected function category($categories)
+    {
+        foreach ($categories as $value) {
+            $category = [
+                '@attributes' => ['code' => Arr::get($value, 'code', null)],
+            ];
+
+            yield $category;
+        }
+    }
+
+    protected function language($languages)
+    {
+        foreach ($languages as $value) {
+            $language = [
+                '@attributes' => ['code' => Arr::get($value, 'language', null)],
+            ];
+
+            yield $language;
+        }
     }
 
     /**
@@ -51,21 +90,21 @@ trait XmlBaseElement
 
         if (count($documentLinks)) {
             foreach ($documentLinks as $documentLink) {
-                $categories = [];
+                // $categories = [];
 
-                foreach (Arr::get($documentLink, 'category', []) as $value) {
-                    $categories[] = [
-                        '@attributes' => ['code' => Arr::get($value, 'code', null)],
-                    ];
-                }
+                // foreach (Arr::get($documentLink, 'category', []) as $value) {
+                //     $categories[] =[
+                //         '@attributes' => ['code' => Arr::get($value, 'code', null)],
+                //     ];
+                // }
 
-                $languages = [];
+                // $languages = [];
 
-                foreach (Arr::get($documentLink, 'language', []) as $language) {
-                    $languages[] = [
-                        '@attributes' => ['code' => Arr::get($language, 'language', null)],
-                    ];
-                }
+                // foreach (Arr::get($documentLink, 'language', []) as $language) {
+                //     $languages[] = [
+                //         '@attributes' => ['code' => Arr::get($language, 'language', null)],
+                //     ];
+                // }
 
                 $documentLinkData[] = [
                     '@attributes' => [
@@ -78,8 +117,8 @@ trait XmlBaseElement
                     'description' => [
                         'narrative' => $this->buildNarrative(Arr::get($documentLink, 'description.0.narrative', [])),
                     ],
-                    'category' => $categories,
-                    'language'      => $languages,
+                    'category' => iterator_to_array($this->category(Arr::get($documentLink, 'category', []))),
+                    'language' => iterator_to_array($this->category(Arr::get($documentLink, 'language', []))),
                     'document-date' => [
                         '@attributes' => [
                             'iso-date' => Arr::get($documentLink, 'document_date.0.date', null),

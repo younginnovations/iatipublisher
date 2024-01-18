@@ -27,6 +27,16 @@ class BulkPublishActivities implements ShouldQueue
     protected object $activities;
 
     /**
+     * @var object
+     */
+    protected object $organization;
+
+    /**
+     * @var object
+     */
+    protected object $settings;
+
+    /**
      * @var int
      */
     protected int $organizationId;
@@ -55,14 +65,18 @@ class BulkPublishActivities implements ShouldQueue
      * Create a new job instance.
      *
      * @param $activities
+     * @param $organization
+     * @param $settings
      * @param $organizationId
      * @param $uuid
      *
      * @return void
      */
-    public function __construct($activities, $organizationId, $uuid)
+    public function __construct($activities, $organization, $settings, $organizationId, $uuid)
     {
         $this->activities = $activities;
+        $this->organization = $organization;
+        $this->settings = $settings;
         $this->organizationId = $organizationId;
         $this->uuid = $uuid;
     }
@@ -89,12 +103,11 @@ class BulkPublishActivities implements ShouldQueue
                     $publishFile = true;
                 }
 
-                if ($this->publishingStatusService->updateActivityStatus($activity->id, $this->uuid, 'processing')) {
-                    $this->publishActivity($activity, $publishFile);
-                }
-
+                $this->publishingStatusService->updateActivityStatus($activity->id, $this->uuid, 'processing');
                 $counter++;
             }
+
+            $this->publishActivities($this->activities, $this->organization, $this->settings, $publishFile);
         }
     }
 
@@ -117,20 +130,28 @@ class BulkPublishActivities implements ShouldQueue
     /**
      * Publishes activity and updates publish status table.
      *
-     * @param $activity
+     * @param $activities
+     * @param $organization
+     * @param $settings
      * @param $publishFile
      *
      * @return void
      */
-    public function publishActivity($activity, $publishFile): void
+    public function publishActivities($activities, $organization, $settings, $publishFile): void
     {
         try {
-            $this->activityWorkflowService->publishActivity($activity, $publishFile);
-            $this->publishingStatusService->updateActivityStatus($activity->id, $this->uuid, 'completed');
+            $this->activityWorkflowService->publishActivities($activities, $organization, $settings, $publishFile);
+
+            foreach ($activities as $activity) {
+                $this->publishingStatusService->updateActivityStatus($activity->id, $this->uuid, 'completed');
+            }
         } catch (\Exception $e) {
+            logger()->error($e);
             awsUploadFile('error-bulk-publish.log', $e->getMessage());
-            $this->activityService->updatePublishedStatus($activity, 'draft', false);
-            $this->publishingStatusService->updateActivityStatus($activity->id, $this->uuid, 'failed');
+            foreach ($activities as $activity) {
+                $this->activityService->updatePublishedStatus($activity, 'draft', false);
+                $this->publishingStatusService->updateActivityStatus($activity->id, $this->uuid, 'failed');
+            }
         }
     }
 
@@ -143,7 +164,7 @@ class BulkPublishActivities implements ShouldQueue
     {
         try {
             app(BulkPublishingStatusRepository::class)->failStuckActivities($this->organizationId);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             awsUploadFile('error-bulk-publish.log', $e->getMessage());
         }
     }
