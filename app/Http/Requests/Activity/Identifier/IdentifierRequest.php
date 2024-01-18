@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Activity\Identifier;
 
 use App\IATI\Services\Activity\ActivityService;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -33,9 +34,12 @@ class IdentifierRequest extends FormRequest
     /**
      * Return critical rules for identifier.
      *
-     * @param $fileUpload
+     * @param bool $fileUpload
+     * @param string $elementName
      *
-     * @return void
+     * @return array
+     *
+     * @throws BindingResolutionException
      */
     public function getErrorsForIdentifier(bool $fileUpload = false, $elementName = ''): array
     {

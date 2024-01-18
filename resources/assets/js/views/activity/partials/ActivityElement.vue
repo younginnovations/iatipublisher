@@ -80,7 +80,7 @@
           </template>
           <div v-else class="mr-2.5 flex gap-2.5">
             <Btn
-              v-if="!(title === 'iati_identifier' && isPublished)"
+              v-if="!(title === 'iati_identifier' && hasEverBeenPublished)"
               text="Edit"
               :link="`/activity/${activityId}/${title}`"
               class="edit-button"
@@ -680,7 +680,7 @@ const props = defineProps({
     required: false,
     default: '',
   },
-  isPublished: {
+  hasEverBeenPublished: {
     type: Boolean,
     required: false,
     default: false,

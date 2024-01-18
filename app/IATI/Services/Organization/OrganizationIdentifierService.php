@@ -137,7 +137,7 @@ class OrganizationIdentifierService
     }
 
     /**
-     * Updates activity->reporting_org when there's change in organaisation identifier.
+     * Updates activity->reporting_org when there's change in organization identifier.
      *
      * @param $id
      *
@@ -148,5 +148,17 @@ class OrganizationIdentifierService
         $orgReportingOrg = $this->organizationRepository->find($id)->reporting_org[0];
 
         return $this->activityRepository->syncReportingOrg($id, $orgReportingOrg);
+    }
+
+    /**
+     * Updates Organization identifier for activities where 'has_ever_been_published === false'.
+     *
+     * @param $organization
+     *
+     * @return bool
+     */
+    public function syncActivityIdentifierForNeverPublishedActivities($organization): bool
+    {
+        return $this->activityRepository->syncActivityIdentifierForNeverPublishedActivities($organization);
     }
 }

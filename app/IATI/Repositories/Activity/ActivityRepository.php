@@ -53,7 +53,7 @@ class ActivityRepository extends Repository
      *
      * @param       $organizationId
      * @param array $queryParams
-     * @param int   $page
+     * @param int $page
      *
      * @return Collection|LengthAwarePaginator
      */
@@ -115,6 +115,7 @@ class ActivityRepository extends Repository
         return (bool) $this->model->where('id', $activity->id)->update([
             'status' => $status,
             'linked_to_iati' => $linkedToIati,
+            'has_ever_been_published' => true,
         ]);
     }
 
@@ -760,6 +761,93 @@ class ActivityRepository extends Repository
             'complete' => $completeQuery->groupBy('status')->get()->toArray(),
             'incomplete' => $incompleteQuery->groupBy('status')->get()->toArray(),
         ];
+    }
+
+    /**
+     * Note By: PG-Momik.
+     *
+     * Summary:
+     *  Sync Organization identifier for 'draft' activities.
+     *  Basically we need to update N activities and update their 'iati_identifier' column.
+     *  But the problem is that there is no simple way to bulk update same column but with different values.
+     *  We can update via a foreach loop, but that will just result N update queries being fired. Not optimal solution.
+     *  So we leverage, SQL's CASE WHEN statement to add conditions when updating .
+     *  By using that we can bulk update in 1 query. Optimal solution.
+     *  'upsert()' will not work in this case.
+     *
+     * The idea here is to:
+     *  Prepare the new data for each activity
+     *  Use case when id = $id and set update value.
+     *  Execute update command.
+     *
+     * Weird syntax:
+     *  A1. Apparently I need to use 'jsonb_set' to set each json property individually. Syntax constraint.
+     *  A2. Values need to be wrapped in double inverted commas. Syntax constraint.
+     *  A3. Need to use query params (?) just to avoid sql injection. Security constraint.
+     *
+     * Example raw query:
+     *  EX1. UPDATE activities
+     *    SET iati_identifier =
+     *      CASE
+     *         WHEN id = 1 THEN jsonb_set('{}'::jsonb, '{activity_identifier}', '"momik"') || jsonb_set('{}'::jsonb, '{iati_identifier_text}', '"Example-org-identifier-momik"') || jsonb_set('{}'::jsonb, '{present_organization_identifier}', '"Example-org-identifier"') || jsonb_set('{}'::jsonb, '{updated_at}', '"2024-01-19 07:17:00"')
+     *         WHEN id = 2 THEN jsonb_set('{}'::jsonb, '{activity_identifier}', '"shr"') || jsonb_set('{}'::jsonb, '{iati_identifier_text}', '"Example-org-identifier-shr"') || jsonb_set('{}'::jsonb, '{present_organization_identifier}', '"Example-org-identifier"') || jsonb_set('{}'::jsonb, '{updated_at}', '"2024-01-19 07:17:00"')
+     *      END
+     *    WHERE id IN (1, 2);
+     *
+     * @param $organization
+     *
+     * @return bool
+     */
+    public function syncActivityIdentifierForNeverPublishedActivities($organization): bool
+    {
+        $baseQueryForOrganizationActivities = $this->model->where('org_id', $organization->id);
+        $queryForNeverPublishedActivities = function ($query) {
+            $query->where('has_ever_been_published', false);
+        };
+
+        $syncableActivitiesCount = $baseQueryForOrganizationActivities
+            ->where($queryForNeverPublishedActivities)
+            ->count();
+
+        if ($syncableActivitiesCount > 0) {
+            $activities = $baseQueryForOrganizationActivities
+                ->where($queryForNeverPublishedActivities)
+                ->get(['id', 'iati_identifier'])
+                ->pluck('iati_identifier', 'id');
+
+            $cases = [];
+            $params = [];
+            $ids = [];
+            $now = Carbon::now()->toDateTimeString();
+
+            foreach ($activities as $id => $iatiIdentifier) {
+                $id = (int) $id;
+
+                /*
+                 * Note By: PG-Momik
+                 *
+                 * DO NOT CHANGE THE ORDER OF ASSIGNMENT
+                 * Since we're using unnamed query param placeholders (?), order is needed.
+                 */
+                $params[] = $id;
+                /*A2*/ $params[] = '"' . $iatiIdentifier['activity_identifier'] . '"';
+                /*A2*/ $params[] = '"' . $organization->identifier . '-' . $iatiIdentifier['activity_identifier'] . '"';
+                /*A2*/ $params[] = '"' . $organization->identifier . '"';
+                /*A2*/ $params[] = '"' . $now . '"';
+
+                /*A1, A3, EX1*/ $case = "WHEN id = ? THEN jsonb_set('{}'::jsonb, '{activity_identifier}', ?) || jsonb_set('{}'::jsonb, '{iati_identifier_text}', ?) || jsonb_set('{}'::jsonb, '{present_organization_identifier}', ?) || jsonb_set('{}'::jsonb, '{updated_at}', ?)";
+                $cases[] = $case;
+                $ids[] = $id;
+            }
+
+            $ids = implode(',', $ids);
+            $cases = implode(' ', $cases);
+            $query = "UPDATE activities SET iati_identifier = CASE $cases END WHERE id IN ($ids)";
+
+            return (bool) DB::update($query, $params);
+        }
+
+        return true;
     }
 
     /**

@@ -74,6 +74,7 @@ class Activity extends Model implements Auditable
         'complete_percentage',
         'created_at',
         'updated_at',
+        'has_ever_been_published',
     ];
 
     /**

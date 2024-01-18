@@ -150,7 +150,19 @@ class ActivityWorkflowService
             $this->publisherService->publishFile($publishingInfo, $activityPublished, $organization);
         }
 
-        $this->activityService->updatePublishedStatus($activity, 'published', true);
+        $organizationIdentifier = $activity->organization->identifier;
+        $iatiIdentifier = [
+            'activity_identifier'  => $activity->activity_identifier,
+            'iati_identifier_text' => $organizationIdentifier . '-' . $activity->activity_identifier,
+            'present_organization_identifier' => $organizationIdentifier,
+        ];
+
+        $this->activityService->updateActivity($activity->id, [
+            'status'                  => 'published',
+            'linked_to_iati'          => true,
+            'iati_identifier'         => $iatiIdentifier,
+            'has_ever_been_published' => true,
+        ]);
         $this->activitySnapshotService->createOrUpdateActivitySnapshot($activity);
     }
 

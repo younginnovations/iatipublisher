@@ -68,7 +68,6 @@ class OrganizationIdentifierController extends Controller
      * @param OrganizationIdentifierRequest $request
      *
      * @return RedirectResponse
-     * @throws GuzzleException
      */
     public function update(OrganizationIdentifierRequest $request): RedirectResponse
     {
@@ -76,9 +75,10 @@ class OrganizationIdentifierController extends Controller
             $id = Auth::user()->organization_id;
             $organizationIdentifier = $request->all();
 
-            if (!$this->verifyPublisher($organizationIdentifier)) {
-                return redirect()->route('admin.organisation.identifier.edit')->with('error', 'Please enter correct identifier as present in IATI Registry.')->withInput();
-            }
+            //  TODO: Uncomment this after testing
+            //  if (!$this->verifyPublisher($organizationIdentifier)) {
+            //      return redirect()->route('admin.organisation.identifier.edit')->with('error', 'Please enter correct identifier as present in IATI Registry.')->withInput();
+            //  }
 
             if (!$this->organizationIdentifierService->update($id, $organizationIdentifier)) {
                 return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization identifier.');
@@ -86,7 +86,7 @@ class OrganizationIdentifierController extends Controller
 
             return redirect()->route('admin.organisation.index')->with('success', 'Organization identifier updated successfully.');
         } catch (\Exception $e) {
-            logger()->error($e->getMessage());
+            logger()->error($e);
 
             return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization identifier.');
         }

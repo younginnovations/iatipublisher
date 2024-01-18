@@ -13,6 +13,7 @@ use App\IATI\Repositories\Organization\OrganizationRepository;
 use App\IATI\Traits\FillDefaultValuesTrait;
 use App\Imports\CsvToArray;
 use Exception;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Arr;
@@ -185,28 +186,36 @@ class ImportCsvService
      * @param      $activities
      *
      * @return void
+     *
+     * @throws BindingResolutionException
      * @throws \JsonException
      */
     public function create($activities): void
     {
-        $organizationId = Auth::user()->organization_id;
-        $userId = Auth::user()->id;
+        $authUser = Auth::user();
+        $organizationId = $authUser->organization_id;
+        $userId = $authUser->id;
         $file = awsGetFile(sprintf('%s/%s/%s/%s', $this->csv_data_storage_path, $organizationId, $userId, self::VALID_CSV_FILE));
         $contents = json_decode($file, true, 512, JSON_THROW_ON_ERROR);
+        $organizationIdentifier = $authUser->organization->identifier;
 
-        $organizationIdentifier = Arr::get(
-            $this->organizationRepo->getOrganizationData($organizationId)->toArray(),
-            'reporting_org.0.reporting_organization_identifier'
-        );
+        logger($this->organizationRepo->getOrganizationData($organizationId));
 
         foreach ($activities as $value) {
             $activity = unsetErrorFields($contents[$value]);
-            $activity['data']['organization_id'] = $organizationId;
             $iati_identifier_text = $organizationIdentifier . '-' . Arr::get($activity, 'data.identifier.activity_identifier');
+            $activity['data']['organization_id'] = $organizationId;
             $activity['data']['identifier']['iati_identifier_text'] = $iati_identifier_text;
+            $activity['data']['identifier']['present_organization_identifier'] = $organizationIdentifier;
 
             if (Arr::get($activity, 'existence', false) && $this->activityRepo->getActivityWithIdentifier($organizationId, Arr::get($activity, 'data.identifier.activity_identifier'))) {
                 $oldActivity = $this->activityRepo->getActivityWithIdentifier($organizationId, Arr::get($activity, 'data.identifier.activity_identifier'));
+
+                if ($oldActivity['has_ever_been_published']) {
+                    $activity['data']['identifier']['iati_identifier_text'] = $oldActivity['iati_identifier']['iati_identifier_text'];
+                    $activity['data']['identifier']['present_organization_identifier'] = $oldActivity['iati_identifier']['present_organization_identifier'];
+                }
+
                 $this->activityRepo->updateActivity($oldActivity->id, Arr::get($activity, 'data'));
                 $this->transactionRepo->deleteTransaction($oldActivity->id);
 

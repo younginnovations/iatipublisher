@@ -74,7 +74,7 @@ class Processor
         $humanitarianScopeVocabulary = Arr::get($csvDatum, 'humanitarian_scope_vocabulary', '');
 
         if ($humanitarianScopeVocabulary) {
-            return Arr::get($humanitarianScopeVocabularyArray, $humanitarianScopeVocabulary, $humanitarianScopeVocabulary);
+            return (string) Arr::get($humanitarianScopeVocabularyArray, $humanitarianScopeVocabulary, $humanitarianScopeVocabulary);
         }
 
         return '';
