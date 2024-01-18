@@ -39,16 +39,7 @@
 
 <script setup lang="ts">
 import { useStorage } from '@vueuse/core';
-import {
-  onMounted,
-  watch,
-  computed,
-  ref,
-  reactive,
-  inject,
-  defineEmits,
-  onUnmounted,
-} from 'vue';
+import { onMounted, watch, ref, reactive, inject, defineEmits } from 'vue';
 import { useStore } from 'Store/activities/index';
 import axios from 'axios';
 import { isJson } from 'Composable/utils';
@@ -220,32 +211,6 @@ const bulkPublishStatus = async () => {
   });
 };
 
-const retryPublishing = () => {
-  //reset required states
-  completed.value = 'processing';
-
-  for (const key in hasFailedActivities.data) {
-    hasFailedActivities.data[key].status = 'processing';
-  }
-
-  activities.value = hasFailedActivities.data;
-
-  // api endpoint call
-  const endpoint = `/activities/start-bulk-publish?activities=[${hasFailedActivities.ids}]`;
-  hasFailedActivities.status = false;
-  hasFailedActivities.ids = [];
-  hasFailedActivities.data = {} as actElements;
-
-  axios.get(endpoint).then((res) => {
-    const response = res.data;
-
-    if (response.success) {
-      paStorage.value.publishingActivities = response.data;
-      bulkPublishStatus();
-    }
-  });
-};
-
 const failedActivities = (nestedObject: object) => {
   const failedActivitiesID = [] as number[];
   const asArrayData = nestedObject && Object.entries(nestedObject);
@@ -273,38 +238,6 @@ const failedActivities = (nestedObject: object) => {
     hasFailedActivities.data = {} as actElements;
   }
 };
-
-const completedActivities = computed(() => {
-  let count = 0;
-  for (
-    let i = 0;
-    i <
-    (paStorage.value?.publishingActivities?.['activities'] &&
-      Object.values(paStorage?.value?.publishingActivities?.['activities'])
-        .length);
-    i++
-  ) {
-    if (
-      Object.values(
-        paStorage?.value?.publishingActivities?.['activities'] as object
-      )[i]['status'] === 'completed'
-    ) {
-      count++;
-    }
-  }
-  console.log('computed activitites', count);
-
-  return count;
-});
-
-const percentageWidth = computed(() => {
-  return (
-    (completedActivities.value /
-      (pa.value?.publishingActivities['activities'] &&
-        Object.keys(pa.value?.publishingActivities['activities']).length)) *
-    100
-  );
-});
 
 watch(
   () => [activities.value, bulkPublishLength.value],

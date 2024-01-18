@@ -136,7 +136,6 @@ import {
 import { useStore } from 'Store/activities/index';
 import axios from 'axios';
 import { isJson } from 'Composable/utils';
-import ShimmerLoading from './ShimmerLoading.vue';
 
 const store = useStore();
 let pa = useStorage('vue-use-local-storage', {

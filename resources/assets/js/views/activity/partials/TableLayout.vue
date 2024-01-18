@@ -188,7 +188,7 @@ import UnPublish from 'Components/buttons/UnPublishButton.vue';
 
 const [selectAllValue, selectAllToggle] = useToggle();
 
-const props = defineProps({
+defineProps({
   data: { type: Object, required: true },
   loader: { type: Boolean, required: false },
 });
