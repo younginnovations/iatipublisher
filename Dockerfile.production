@@ -47,7 +47,7 @@ RUN npm install && \
 
 RUN ./getNodeInfo.sh
 
-FROM php:8.1-alpine as cli
+FROM php:8-alpine as cli
 
 ARG PHP_EXTS
 ARG PHP_PECL_EXTS
