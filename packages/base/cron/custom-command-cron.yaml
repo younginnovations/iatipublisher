@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: iati-custom-command-cron
+  labels:
+    tier: backend
+    layer: cron
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: iatipublisher
+          imagePullSecrets:
+            - name: github-credentials
+          containers:
+          - name: iati-custom-command-cron
+            image: ghcr.io/younginnovations/iatipublisher/cli
+            imagePullPolicy: IfNotPresent
+            command:
+            - /bin/sh
+            - -c
+            - php artisan schedule:run
+            envFrom:
+              - configMapRef:
+                  name: iatipublisher
+              - secretRef:
+                  name: iatipublisher
+            volumeMounts:
+            - name: iati-persistent-storage
+              mountPath: /opt/apps/laravel-in-kubernetes/storage/logs
+          restartPolicy: OnFailure
+          volumes:
+          - name: iati-persistent-storage
+            persistentVolumeClaim:
+              claimName: iati-pv-claim
