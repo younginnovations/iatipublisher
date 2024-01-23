@@ -1,18 +1,24 @@
 <template>
   <tr>
     <td>Aggregation Status</td>
-    <td class="capitalize">
-      {{ parseInt(data) ? 'True' : data ? 'False' : 'Missing' }}
+    <td>
+      <ConditionalTextDisplay
+        success-text="True"
+        :condition="parseInt(data)"
+        :show-failure-text-as-plain-text="!!data"
+        :failure-text="data ? 'False' : 'aggregation status'"
+      />
     </td>
   </tr>
 </template>
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
 
 export default defineComponent({
   name: 'IndicatorAggregationStatus',
-  components: {},
+  components: { ConditionalTextDisplay },
   props: {
     data: {
       type: String,

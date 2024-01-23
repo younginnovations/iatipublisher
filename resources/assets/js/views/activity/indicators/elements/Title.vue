@@ -10,10 +10,18 @@
           }"
         >
           <div class="language mb-1 text-n-30">
-            (Language: {{ titleType[title.language] ?? 'Missing' }})
+            (Language:
+            <ConditionalTextDisplay
+              :success-text="titleType[title.language]"
+              :condition="titleType[title.language]"
+            />)
           </div>
           <div class="description text-xs">
-            {{ title.narrative ?? 'Missing' }}
+            <ConditionalTextDisplay
+              :success-text="title.narrative"
+              :condition="title.narrative"
+              failure-text="title"
+            />
           </div>
         </div>
       </template>
@@ -23,10 +31,11 @@
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
 
 export default defineComponent({
   name: 'IndicatorTitle',
-  components: {},
+  components: { ConditionalTextDisplay },
   props: {
     data: {
       type: Object,

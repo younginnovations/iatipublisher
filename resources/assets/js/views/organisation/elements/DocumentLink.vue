@@ -29,18 +29,20 @@
                   }"
                 >
                   <span v-if="narrative.language" class="language">
-                    ({{
-                      narrative.language
-                        ? `Language: ${types?.languages[narrative.language]}`
-                        : 'Language : Missing'
-                    }})
+                    (Language:
+                    <ConditionalTextDisplay
+                      :success-text="types.languages[narrative.language]"
+                      :condition="narrative.language && types.languages"
+                    />)
                   </span>
                   <div v-if="narrative.narrative" class="flex flex-col">
                     <span>
                       {{ narrative.narrative }}
                     </span>
                   </div>
-                  <span v-else class="italic">Missing</span>
+                  <span v-else class="italic">
+                    <MissingDataItem item="title" />
+                  </span>
                 </div>
               </td>
             </tr>
@@ -57,14 +59,18 @@
                   }"
                 >
                   <div class="language mb-1.5">
-                    ({{
-                      narrative.language
-                        ? `Language: ${types?.languages[narrative.language]}`
-                        : 'Language : Missing'
-                    }})
+                    (Language:
+                    <ConditionalTextDisplay
+                      :success-text="types.languages[narrative.language]"
+                      :condition="narrative.language && types.languages"
+                    />)
                   </div>
                   <div class="w-[500px] max-w-full">
-                    {{ narrative.narrative ?? 'Narrative Missing' }}
+                    <ConditionalTextDisplay
+                      :success-text="narrative.narrative"
+                      :condition="narrative.narrative"
+                      failure-text="description"
+                    />
                   </div>
                 </div>
               </td>
@@ -77,15 +83,19 @@
                   :class="{ 'mb-1.5': i != document_link.language.length - 1 }"
                 >
                   <span>
-                    {{
-                      document_link.language
-                        .map((entry) => types.languages[entry.language])
-                        .join(', ') === ''
-                        ? 'Language Missing'
-                        : document_link.language
-                            .map((entry) => types.languages[entry.language])
-                            .join(', ')
-                    }}
+                    <ConditionalTextDisplay
+                      :condition="
+                        document_link.language
+                          .map((entry) => types.languages[entry.language])
+                          .join(', ') != ''
+                      "
+                      :success-text="
+                        document_link.language
+                          .map((entry) => types.languages[entry.language])
+                          .join(', ')
+                      "
+                      failure-text="language"
+                    />
                   </span>
                 </div>
               </td>
@@ -95,7 +105,9 @@
               <td v-if="document_link.format">
                 {{ document_link.format }}
               </td>
-              <td v-else class="italic">Missing</td>
+              <td v-else class="italic">
+                <MissingDataItem item="format" />
+              </td>
             </tr>
             <tr>
               <td>Category</td>
@@ -109,13 +121,15 @@
                   }"
                 >
                   <span v-if="category.code">
-                    {{
-                      category.code
-                        ? types?.documentCategory[category.code]
-                        : 'Category Missing'
-                    }}
+                    <ConditionalTextDisplay
+                      :success-text="types.documentCategory[category.code]"
+                      :condition="category.code && types.documentCategory"
+                      failure-text="category"
+                    />
                   </span>
-                  <span v-else class="italic">Missing</span>
+                  <span v-else class="italic">
+                    <MissingDataItem item="category" />
+                  </span>
                 </div>
               </td>
             </tr>
@@ -129,7 +143,9 @@
                   <span v-if="document_date.date">
                     {{ formatDate(document_date.date) }}
                   </span>
-                  <span v-else class="italic">Missing</span>
+                  <span v-else class="italic">
+                    <MissingDataItem item="document date" />
+                  </span>
                 </div>
               </td>
             </tr>
@@ -143,11 +159,11 @@
                   :key="i"
                 >
                   <div class="mb-1.5 text-xs">
-                    {{
-                      recipient_country.code
-                        ? `${types?.country[recipient_country.code]}`
-                        : 'Missing'
-                    }}
+                    <ConditionalTextDisplay
+                      :success-text="types.country[recipient_country.code]"
+                      :condition="recipient_country.code && types.country"
+                      failure-text="recipient country"
+                    />
                   </div>
                   <div
                     v-for="(narrative, j) in recipient_country.narrative"
@@ -158,14 +174,18 @@
                     }"
                   >
                     <div class="language mb-1.5">
-                      ({{
-                        narrative.language
-                          ? `Language: ${types?.languages[narrative.language]} `
-                          : 'Language : Missing'
-                      }})
+                      (Language:
+                      <ConditionalTextDisplay
+                        :success-text="types.languages[narrative.language]"
+                        :condition="narrative.language && types.languages"
+                      />)
                     </div>
                     <div class="w-[500px] max-w-full">
-                      {{ narrative.narrative ?? 'Narrative Missing' }}
+                      <ConditionalTextDisplay
+                        :success-text="narrative.narrative"
+                        :condition="narrative.narrative"
+                        failure-text="narrative"
+                      />
                     </div>
                   </div>
                 </div>
@@ -181,6 +201,8 @@
 <script setup lang="ts">
 import { defineProps, inject } from 'vue';
 import moment from 'moment';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
+import MissingDataItem from 'Components/MissingDataItem.vue';
 
 defineProps({
   content: { type: Object, required: true },

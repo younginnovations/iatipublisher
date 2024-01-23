@@ -37,7 +37,9 @@
                     item.narrative
                   }}</span>
                 </div>
-                <span v-else class="italic">Missing</span>
+                <span v-else class="italic">
+                  <MissingDataItem item="narrative" />
+                </span>
               </td>
             </tr>
           </tbody>
@@ -51,9 +53,11 @@
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
 import dateFormat from 'Composable/dateFormat';
+import MissingDataItem from 'Components/MissingDataItem.vue';
 
 export default defineComponent({
   name: 'ActivityConditions',
+  components: { MissingDataItem },
   props: {
     data: {
       type: Object,

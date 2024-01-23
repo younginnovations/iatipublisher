@@ -26,14 +26,17 @@
               >
                 <div class="language mb-1.5">
                   (Language:
-                  {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : 'Missing'
-                  }})
+                  <ConditionalTextDisplay
+                    :condition="narrative.language"
+                    :success-text="types.languages[narrative.language]"
+                  />)
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  <ConditionalTextDisplay
+                    :condition="narrative.narrative"
+                    :success-text="narrative.narrative"
+                    failure-text="organisation"
+                  />
                 </div>
               </div>
             </td>
@@ -51,14 +54,17 @@
               >
                 <div class="language mb-1.5">
                   (Language:
-                  {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : 'Missing'
-                  }})
+                  <ConditionalTextDisplay
+                    :condition="narrative.language"
+                    :success-text="types.languages[narrative.language]"
+                  />)
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  <ConditionalTextDisplay
+                    :condition="narrative.narrative"
+                    :success-text="narrative.narrative"
+                    failure-text="person name"
+                  />
                 </div>
               </div>
             </td>
@@ -77,14 +83,17 @@
               >
                 <div class="language mb-1.5">
                   (Language:
-                  {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : 'Missing'
-                  }})
+                  <ConditionalTextDisplay
+                    :condition="narrative.language"
+                    :success-text="types.languages[narrative.language]"
+                  />)
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  <ConditionalTextDisplay
+                    :condition="narrative.narrative"
+                    :success-text="narrative.narrative"
+                    failure-text="department"
+                  />
                 </div>
               </div>
             </td>
@@ -102,14 +111,17 @@
               >
                 <div class="language mb-1.5">
                   (Language:
-                  {{
-                    narrative.language
-                      ? types.languages[narrative.language]
-                      : 'Missing'
-                  }})
+                  <ConditionalTextDisplay
+                    :condition="narrative.language"
+                    :success-text="types.languages[narrative.language]"
+                  />)
                 </div>
                 <div class="w-[500px] max-w-full">
-                  {{ narrative.narrative ?? 'Missing' }}
+                  <ConditionalTextDisplay
+                    :condition="narrative.narrative"
+                    :success-text="narrative.narrative"
+                    failure-text="job title"
+                  />
                 </div>
               </div>
             </td>
@@ -126,7 +138,11 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ email_value.email ?? 'Missing' }}
+                  <ConditionalTextDisplay
+                    :condition="email_value.email"
+                    :success-text="email_value.email"
+                    failure-text="email"
+                  />
                 </div>
               </div>
             </td>
@@ -143,7 +159,11 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ tel.telephone ?? 'Missing' }}
+                  <ConditionalTextDisplay
+                    :condition="tel.telephone"
+                    :success-text="tel.telephone"
+                    failure-text="telephone"
+                  />
                 </div>
               </div>
             </td>
@@ -160,7 +180,11 @@
                 }"
               >
                 <div class="w-[500px] max-w-full">
-                  {{ w.website ?? 'Missing' }}
+                  <ConditionalTextDisplay
+                    :condition="w.website"
+                    :success-text="w.website"
+                    failure-text="website"
+                  />
                 </div>
               </div>
             </td>
@@ -182,14 +206,17 @@
                 >
                   <div class="language mb-1.5">
                     (Language:
-                    {{
-                      narrative.language
-                        ? types.languages[narrative.language]
-                        : 'Missing'
-                    }})
+                    <ConditionalTextDisplay
+                      :condition="narrative.language"
+                      :success-text="types.languages[narrative.language]"
+                    />)
                   </div>
                   <div class="w-[500px] max-w-full">
-                    {{ narrative.narrative ?? 'Missing' }}
+                    <ConditionalTextDisplay
+                      :condition="narrative.narrative"
+                      :success-text="narrative.narrative"
+                      failure-text="mailing address"
+                    />
                   </div>
                 </div>
               </div>
@@ -203,10 +230,11 @@
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
 
 export default defineComponent({
   name: 'ActivityContactInfo',
-  components: {},
+  components: { ConditionalTextDisplay },
   props: {
     data: {
       type: Object,

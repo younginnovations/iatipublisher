@@ -16,7 +16,9 @@
           <td v-if="post.value">
             <span class="description">{{ post.value }}</span>
           </td>
-          <td v-else class="italic">Missing</td>
+          <td v-else class="italic">
+            <MissingDataItem item="value" />
+          </td>
         </tr>
       </table>
       <table>
@@ -25,7 +27,9 @@
           <td v-if="post.iati_equivalent">
             <span class="description">{{ post.iati_equivalent }}</span>
           </td>
-          <td v-else class="italic">Missing</td>
+          <td v-else class="italic">
+            <MissingDataItem item="iati-equivalent" />
+          </td>
         </tr>
       </table>
     </div>
@@ -34,9 +38,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import MissingDataItem from 'Components/MissingDataItem.vue';
 
 export default defineComponent({
   name: 'ActivitySector',
+  components: { MissingDataItem },
   props: {
     data: {
       type: Object,

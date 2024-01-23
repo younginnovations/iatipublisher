@@ -11,7 +11,7 @@
           >({{ roundFloat(participating_org.percentage) }}%)</span
         >
       </div>
-      <span v-else class="italic">Missing</span>
+      <span v-else class="italic">Country Code Missing</span>
     </div>
 
     <div
@@ -26,16 +26,20 @@
         </span>
         <span>{{ item.narrative }}</span>
       </div>
-      <span v-else class="italic">Narrative Missing</span>
+      <span v-else class="italic">
+        <MissingDataItem item="narrative" />
+      </span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, inject } from 'vue';
+import MissingDataItem from 'Components/MissingDataItem.vue';
 
 export default defineComponent({
   name: 'ActivityRecipientCountry',
+  components: { MissingDataItem },
   props: {
     data: {
       type: Object,

@@ -40,11 +40,11 @@
           <tr>
             <td>Recipient Org</td>
             <td>
-              {{
-                recipient_org.ref
-                  ? `Reference - ${recipient_org.ref}`
-                  : 'Reference Missing'
-              }}
+              <ConditionalTextDisplay
+                :condition="recipient_org.ref"
+                :success-text="recipient_org.ref"
+                failure-text="reference"
+              />
               <div
                 v-for="(narrative, narrative_index) in recipient_org.narrative"
                 :key="narrative_index"
@@ -55,16 +55,18 @@
               >
                 <div class="description-content">
                   <div class="language mb-1.5">
-                    (
-                    {{
-                      narrative.language
-                        ? `Language: ${types?.languages[narrative.language]}`
-                        : 'Language : Missing'
-                    }}
-                    )
+                    (Language:
+                    <ConditionalTextDisplay
+                      :condition="narrative.language && types.languages"
+                      :success-text="types.languages[narrative.language]"
+                    />)
                   </div>
                   <div class="w-[500px] max-w-full">
-                    {{ narrative.narrative ?? 'Narrative Missing' }}
+                    <ConditionalTextDisplay
+                      :condition="narrative.narrative"
+                      :success-text="narrative.narrative"
+                      failure-text="narrative"
+                    />
                   </div>
                 </div>
               </div>
@@ -73,30 +75,35 @@
           <tr>
             <td>Value Date</td>
             <td>
-              {{
-                formatDate(
-                  recipient_org_budget.value['0'].value_date ??
-                    'Value Date Missing'
-                )
-              }}
+              <ConditionalTextDisplay
+                :condition="recipient_org_budget.value['0'].value_date"
+                :success-text="
+                  formatDate(recipient_org_budget.value['0'].value_date)
+                "
+                failure-text="value date"
+              />
             </td>
           </tr>
           <tr>
             <td>Period</td>
             <td>
-              {{
-                formatDate(
-                  recipient_org_budget.period_start['0'].date ??
-                    'Period Start Missing'
-                )
-              }}
-              -
-              {{
-                formatDate(
-                  recipient_org_budget.period_end['0'].date ??
-                    'Period End Missing'
-                )
-              }}
+              <div>
+                <ConditionalTextDisplay
+                  :condition="recipient_org_budget.period_start['0'].date"
+                  :success-text="
+                    formatDate(recipient_org_budget.period_start['0'].date)
+                  "
+                  failure-text="period start"
+                />
+                -
+                <ConditionalTextDisplay
+                  :condition="recipient_org_budget.period_end['0'].date"
+                  :success-text="
+                    formatDate(recipient_org_budget.period_end['0'].date)
+                  "
+                  failure-text="period end"
+                />
+              </div>
             </td>
           </tr>
         </table>
@@ -118,11 +125,13 @@
           <div class="elements-detail grow">
             <div class="category flex">
               <span>
-                {{
-                  budget_line.value['0'].amount
-                    ? Number(budget_line.value[0].amount).toLocaleString()
-                    : 'Budget Missing'
-                }}
+                <ConditionalTextDisplay
+                  :condition="budget_line.value['0'].amount"
+                  :success-text="
+                    Number(budget_line.value[0].amount).toLocaleString()
+                  "
+                  failure-text="budget"
+                />
                 {{ budget_line.value['0'].currency }}
               </span>
             </div>
@@ -132,16 +141,23 @@
                   <tr>
                     <td>Reference</td>
                     <td>
-                      {{ budget_line.ref ?? 'Reference Missing' }}
+                      <ConditionalTextDisplay
+                        :condition="budget_line.ref"
+                        :success-text="budget_line.ref"
+                        failure-text="reference"
+                      />
                     </td>
                   </tr>
                   <tr>
                     <td>Value date</td>
                     <td>
-                      {{
-                        formatDate(budget_line.value['0'].value_date) ??
-                        'Value Date Missing'
-                      }}
+                      <ConditionalTextDisplay
+                        :condition="budget_line.value['0'].value_date"
+                        :success-text="
+                          formatDate(budget_line.value['0'].value_date)
+                        "
+                        failure-text="value date"
+                      />
                     </td>
                   </tr>
                   <tr>
@@ -156,16 +172,18 @@
                         }"
                       >
                         <div class="language mb-1.5">
-                          ({{
-                            narrative.language
-                              ? `Language: ${
-                                  types?.languages[narrative.language]
-                                }`
-                              : 'Language : Missing'
-                          }})
+                          (Language:
+                          <ConditionalTextDisplay
+                            :condition="types.languages && narrative.language"
+                            :success-text="types.languages[narrative.language]"
+                          />)
                         </div>
                         <div class="w-[500px] max-w-full">
-                          {{ narrative.narrative ?? 'Narrative Missing' }}
+                          <ConditionalTextDisplay
+                            :condition="narrative.narrative"
+                            :success-text="narrative.narrative"
+                            failure-text="narrative"
+                          />
                         </div>
                       </div>
                     </td>
@@ -183,6 +201,7 @@
 <script setup lang="ts">
 import { defineProps, inject } from 'vue';
 import moment from 'moment';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
 
 defineProps({
   content: { type: Object, required: true },
@@ -197,6 +216,6 @@ interface TypesInterface {
 const types = inject('orgTypes') as TypesInterface;
 
 function formatDate(date: Date) {
-  return date ? moment(date).format('LL') : 'Date Missing';
+  return moment(date).format('LL');
 }
 </script>

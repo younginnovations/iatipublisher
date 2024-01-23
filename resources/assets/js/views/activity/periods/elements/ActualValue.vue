@@ -7,17 +7,20 @@
             <td><span class="category flex">Actual Value</span></td>
             <td>
               <div :class="elementSpacing">
-                {{ tValue.value ?? 'Missing' }}
+                <ConditionalTextDisplay
+                  :success-text="tValue.value"
+                  :condition="tValue.value"
+                />
               </div>
 
               <div class="flex" :class="elementSpacing">
                 <div>Location Reference:&nbsp;</div>
                 <div>
-                  {{
-                    getLocation(tValue.location)
-                      ? getLocation(tValue.location)
-                      : 'Missing'
-                  }}
+                  <ConditionalTextDisplay
+                    :success-text="getLocation(tValue.location)"
+                    :condition="getLocation(tValue.location)"
+                    failure-text="location reference"
+                  />
                 </div>
               </div>
 
@@ -29,7 +32,15 @@
                     :key="d"
                     class="dimension"
                   >
-                    {{ dim.name ?? 'Missing' }} ({{ dim.value ?? 'Missing' }})
+                    <ConditionalTextDisplay
+                      :success-text="dim.name"
+                      :condition="dim.name"
+                    />
+                    (<ConditionalTextDisplay
+                      :success-text="dim.value"
+                      :condition="dim.value"
+                      failure-text="value"
+                    />)
                   </div>
                 </div>
               </div>
@@ -47,16 +58,19 @@
                   >
                     <div>
                       <span>
-                        {{ com.narrative ? com.narrative : 'Missing' }}
+                        <ConditionalTextDisplay
+                          :success-text="com.narrative"
+                          :condition="com.narrative"
+                          failure-text="comment"
+                        />
                         &nbsp;
                       </span>
                       <span>
                         (Language:
-                        {{
-                          com.language
-                            ? dlType.language[com.language]
-                            : 'Missing'
-                        }})
+                        <ConditionalTextDisplay
+                          :success-text="dlType.language[com.language]"
+                          :condition="com.language"
+                        />)
                       </span>
                     </div>
                   </div>
@@ -89,10 +103,11 @@ import { DocumentLink } from 'Activity/indicators/elements/Index';
 
 //composable
 import { getLocation } from 'Composable/utils';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
 
 export default defineComponent({
   name: 'ActualValue',
-  components: { DocumentLink },
+  components: { ConditionalTextDisplay, DocumentLink },
   props: {
     data: {
       type: Object,

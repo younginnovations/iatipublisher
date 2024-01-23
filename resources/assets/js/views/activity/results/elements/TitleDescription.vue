@@ -8,7 +8,11 @@
     }"
   >
     <div class="language mb-1.5">
-      (Language: {{ type[post.language] ? type[post.language] : 'Missing' }})
+      (Language:
+      <ConditionalTextDisplay
+        :success-text="type[post.language]"
+        :condition="type[post.language]"
+      />)
     </div>
     <div class="w-[800px] max-w-[80%] overflow-x-hidden text-ellipsis text-sm">
       {{ post.narrative }}
@@ -18,10 +22,11 @@
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
 
 export default defineComponent({
   name: 'ResultTD',
-  components: {},
+  components: { ConditionalTextDisplay },
   props: {
     data: {
       type: [Object, String],

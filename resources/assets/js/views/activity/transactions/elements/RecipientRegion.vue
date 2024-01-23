@@ -17,12 +17,20 @@
             <tr>
               <td>Code</td>
               <td>
-                <span v-if="cou.region_vocabulary === '1'">{{
-                  cou.region_code
-                    ? type.regionCode[cou.region_code]
-                    : 'Code Missing'
-                }}</span>
-                <span v-else>{{ cou.custom_code ?? 'Code Missing' }}</span>
+                <span v-if="cou.region_vocabulary === '1'">
+                  <ConditionalTextDisplay
+                    :success-text="type.regionCode[cou.region_code]"
+                    :condition="cou.region_code"
+                    failure-text="code"
+                  />
+                </span>
+                <span v-else>
+                  <ConditionalTextDisplay
+                    :success-text="cou.custom_code"
+                    :condition="cou.custom_code"
+                    failure-text="code"
+                  />
+                </span>
               </td>
             </tr>
             <tr v-if="cou.vocabulary_uri">
@@ -45,15 +53,18 @@
                   }"
                 >
                   <div class="language mb-1.5">
-                    (
-                    {{
-                      sd.language
-                        ? `Language: ${type.languages[sd.language]}`
-                        : 'Language Missing'
-                    }})
+                    (Language:
+                    <ConditionalTextDisplay
+                      :success-text="type.languages[sd.language]"
+                      :condition="sd.language"
+                    />)
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? 'Narrative Missing' }}
+                    <ConditionalTextDisplay
+                      :success-text="sd.narrative"
+                      :condition="sd.narrative"
+                      failure-text="narrative"
+                    />
                   </div>
                 </div>
               </td>
@@ -67,10 +78,11 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
 
 export default defineComponent({
   name: 'TransactionRecipientRegion',
-  components: {},
+  components: { ConditionalTextDisplay },
   props: {
     data: {
       type: [Object, String],

@@ -23,29 +23,39 @@
               <td>
                 <div class="text-sm">
                   <span v-if="sec.text">
-                    {{ sec.text ?? 'Missing' }}
+                    <ConditionalTextDisplay
+                      :success-text="sec.text"
+                      :condition="sec.text"
+                      failure-text="code"
+                    />
                   </span>
                   <span v-else-if="sec.code">
-                    {{ sec.code ? type.sectorCode[sec.code] : 'Missing' }}
+                    <ConditionalTextDisplay
+                      :success-text="sec.code"
+                      :condition="type.sectorCode[sec.code]"
+                      failure-text="code"
+                    />
                   </span>
                   <span v-else-if="sec.category_code">
-                    {{
-                      sec.category_code
-                        ? type.sectorCategory[sec.category_code]
-                        : 'Missing'
-                    }}
+                    <ConditionalTextDisplay
+                      :success-text="sec.category_code"
+                      :condition="type.sectorCategory[sec.category_code]"
+                      failure-text="code"
+                    />
                   </span>
                   <span v-else-if="sec.sdg_goal">
-                    {{
-                      sec.sdg_goal ? type.unsdgGoals[sec.sdg_goal] : 'Missing'
-                    }}
+                    <ConditionalTextDisplay
+                      :success-text="sec.sdg_goal"
+                      :condition="type.unsdgGoals[sec.sdg_goal]"
+                      failure-text="code"
+                    />
                   </span>
                   <span v-else-if="sec.sdg_target">
-                    {{
-                      sec.sdg_target
-                        ? type.unsdgTargets[sec.sdg_target]
-                        : 'Missing'
-                    }}
+                    <ConditionalTextDisplay
+                      :success-text="sec.sdg_target"
+                      :condition="type.unsdgTargets[sec.sdg_target]"
+                      failure-text="code"
+                    />
                   </span>
                 </div>
               </td>
@@ -63,7 +73,9 @@
                       {{ sec.vocabulary_uri }}
                     </a>
                   </span>
-                  <span v-else> Missing</span>
+                  <span v-else>
+                    <MissingDataItem item="vocabulary uri" />
+                  </span>
                 </div>
               </td>
             </tr>
@@ -79,15 +91,18 @@
                   }"
                 >
                   <div class="language mb-1.5">
-                    (
-                    {{
-                      sd.language
-                        ? `Language: ${type.languages[sd.language]}`
-                        : 'Language Missing'
-                    }})
+                    (Language:
+                    <ConditionalTextDisplay
+                      :success-text="type.languages[sd.language]"
+                      :condition="sd.language"
+                    />)
                   </div>
                   <div class="text-sm">
-                    {{ sd.narrative ?? 'Narrative Missing' }}
+                    <ConditionalTextDisplay
+                      :success-text="sd.narrative"
+                      :condition="sd.narrative"
+                      failure-text="narrative"
+                    />
                   </div>
                 </div>
               </td>
@@ -101,10 +116,12 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
+import MissingDataItem from 'Components/MissingDataItem.vue';
 
 export default defineComponent({
   name: 'TransactionSector',
-  components: {},
+  components: { MissingDataItem, ConditionalTextDisplay },
   props: {
     data: {
       type: [Object, String],

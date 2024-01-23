@@ -11,7 +11,13 @@
         <tbody>
           <tr>
             <td>Code</td>
-            <td>{{ ref.code ? ref.code : 'Missing' }}</td>
+            <td>
+              <ConditionalTextDisplay
+                :success-text="ref.code"
+                :condition="ref.code"
+                failure-text="code"
+              />
+            </td>
           </tr>
           <tr>
             <td>Vocabulary URI</td>
@@ -22,7 +28,7 @@
                 :href="ref.vocabulary_uri"
                 >{{ ref.vocabulary_uri }}</a
               >
-              <span v-else>Missing</span>
+              <span v-else><MissingDataItem item="vocabulary uri" /></span>
             </td>
           </tr>
         </tbody>
@@ -33,10 +39,12 @@
 
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
+import ConditionalTextDisplay from 'Components/ConditionalTextDisplay.vue';
+import MissingDataItem from 'Components/MissingDataItem.vue';
 
 export default defineComponent({
   name: 'ResultReference',
-  components: {},
+  components: { MissingDataItem, ConditionalTextDisplay },
   props: {
     data: {
       type: [Object, String],

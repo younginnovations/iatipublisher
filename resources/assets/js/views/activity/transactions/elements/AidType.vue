@@ -35,7 +35,7 @@
                 <span v-else-if="at.earmarking_modality">
                   {{ type.earMarkingModality[at.earmarking_modality] }}
                 </span>
-                <span v-else> Missing </span>
+                <span v-else> <MissingDataItem item="code" /> </span>
               </div>
             </td>
           </tr>
@@ -47,10 +47,11 @@
 
 <script lang="ts">
 import { defineComponent, toRefs, inject } from 'vue';
+import MissingDataItem from 'Components/MissingDataItem.vue';
 
 export default defineComponent({
   name: 'TransactionAidType',
-  components: {},
+  components: { MissingDataItem },
   props: {
     data: {
       type: [Object, String],
