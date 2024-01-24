@@ -821,7 +821,6 @@ class ElementCompleteService
                         $periods = $indicator['periods'];
 
                         if (!empty($periods)) {
-                            $resultData[$resultKey] = $result['result'];
                             $indicatorData[$indicatorKey] = $indicatorValue;
 
                             foreach ($periods as $period) {
