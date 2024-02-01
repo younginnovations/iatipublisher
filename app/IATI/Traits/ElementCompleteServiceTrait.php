@@ -244,15 +244,15 @@ trait ElementCompleteServiceTrait
      */
     public function isSubElementDataCompleted($mandatorySubElements, $data): bool
     {
-        if (is_variable_null($data)) {
-            return false;
-        }
-
         if (empty($mandatorySubElements)) {
             return true;
         }
 
         if (empty($data)) {
+            return false;
+        }
+
+        if (is_variable_null($data)) {
             return false;
         }
 

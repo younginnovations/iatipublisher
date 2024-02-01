@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Arr;
+
 if (!function_exists('trimInput')) {
     /**
      * trim an input.
@@ -168,7 +170,7 @@ if (!function_exists('is_variable_null')) {
     }
 }
 
-if (!function_exists('is_array_value_null')) {
+if (!function_exists('is_array_value_empty')) {
     /**
      * Checks if array | nested array values are null or empty string.
      *

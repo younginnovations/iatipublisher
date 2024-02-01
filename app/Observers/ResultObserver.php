@@ -41,7 +41,6 @@ class ResultObserver
         $activityObj = $result->activity;
         $elementStatus = $activityObj->element_status;
         $elementStatus['result'] = $this->elementCompleteService->isResultElementCompleted($activityObj);
-
         $activityObj->element_status = $elementStatus;
         $activityObj->complete_percentage = $this->elementCompleteService->calculateCompletePercentage($activityObj->element_status);
 
@@ -120,5 +119,19 @@ class ResultObserver
         } else {
             $result->saveQuietly();
         }
+    }
+
+    /**
+     * Handle the Result "deleted" event.
+     *
+     * @param Result $result
+     *
+     * @return void
+     * @throws \JsonException
+     */
+    public function deleted(Result $result): void
+    {
+        $this->updateActivityElementStatus($result);
+        $this->resetActivityStatus($result);
     }
 }

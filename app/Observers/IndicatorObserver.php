@@ -82,4 +82,19 @@ class IndicatorObserver
             $indicator->saveQuietly();
         }
     }
+
+    /**
+     * Handle the Indicator "deleted" event.
+     *
+     * @param Indicator $indicator
+     *
+     * @return void
+     * @throws \JsonException
+     */
+    public function deleted(Indicator $indicator): void
+    {
+        $resultObserver = new ResultObserver();
+        $resultObserver->updateActivityElementStatus($indicator->result);
+        $resultObserver->resetActivityStatus($indicator->result);
+    }
 }
