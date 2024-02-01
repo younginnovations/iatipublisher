@@ -323,6 +323,7 @@
                     :completed="status[name] ?? false"
                     :tooltip="element.hover_text"
                     :warning_info_text="element.warning_info_text ?? ''"
+                    :is-published="publishStatus.linked_to_iati"
                     class="elements-card"
                   />
                 </template>

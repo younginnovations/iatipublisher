@@ -80,6 +80,7 @@
           </template>
           <div v-else class="mr-2.5 flex gap-2.5">
             <Btn
+              v-if="!(title === 'iati_identifier' && isPublished)"
               text="Edit"
               :link="`/activity/${activityId}/${title}`"
               class="edit-button"
@@ -678,6 +679,11 @@ const props = defineProps({
     type: String,
     required: false,
     default: '',
+  },
+  isPublished: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 });
 

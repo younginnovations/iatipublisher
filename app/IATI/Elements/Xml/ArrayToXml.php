@@ -81,12 +81,14 @@ class ArrayToXml
             if (isset($arr['@value'])) {
                 $node->appendChild($xml->createTextNode(self::bool2str($arr['@value'])));
                 unset($arr['@value']);    //remove the key from the array once done.
+
                 //return from recursion, as a note with value cannot have child nodes.
                 return $node;
             } else {
                 if (isset($arr['@cdata'])) {
                     $node->appendChild($xml->createCDATASection(self::bool2str($arr['@cdata'])));
                     unset($arr['@cdata']);    //remove the key from the array once done.
+
                     //return from recursion, as a note with cdata cannot have child nodes.
                     return $node;
                 }
