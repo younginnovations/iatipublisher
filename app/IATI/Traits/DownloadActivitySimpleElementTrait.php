@@ -203,7 +203,7 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getActualStartDate($activityArray, $rowIndex): ?string
     {
-        return $this->getActivityDate(Arr::get($activityArray, 'activity_date', []), '2');
+        return $this->getActivityDate(Arr::get($activityArray, 'activity_date', []), '2', $activityArray['iati_identifier']['activity_identifier']);
     }
 
     /**
@@ -216,7 +216,7 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getActualEndDate($activityArray, $rowIndex): ?string
     {
-        return $this->getActivityDate(Arr::get($activityArray, 'activity_date', []), '4');
+        return $this->getActivityDate(Arr::get($activityArray, 'activity_date', []), '4', $activityArray['iati_identifier']['activity_identifier']);
     }
 
     /**
@@ -229,7 +229,7 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getPlannedStartDate($activityArray, $rowIndex): ?string
     {
-        return $this->getActivityDate(Arr::get($activityArray, 'activity_date', []), '1');
+        return $this->getActivityDate(Arr::get($activityArray, 'activity_date', []), '1', $activityArray['iati_identifier']['activity_identifier']);
     }
 
     /**
@@ -242,7 +242,7 @@ trait DownloadActivitySimpleElementTrait
      */
     public function getPlannedEndDate($activityArray, $rowIndex): ?string
     {
-        return $this->getActivityDate(Arr::get($activityArray, 'activity_date', []), '3');
+        return $this->getActivityDate(Arr::get($activityArray, 'activity_date', []), '3', $activityArray['iati_identifier']['activity_identifier']);
     }
 
     /**

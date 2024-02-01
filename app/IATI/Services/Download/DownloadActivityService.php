@@ -109,7 +109,6 @@ class DownloadActivityService
     public function getCsvData($activities): array
     {
         $data = [];
-
         foreach ($activities as $activity) {
             $activityArrayData = $this->getActivityArrayData($activity->toArray());
 
@@ -158,7 +157,6 @@ class DownloadActivityService
     {
         $data = [];
         $count = $this->getElementCount($activityArray);
-
         $headers = $this->getCsvHeaderArray('Activity', 'other_fields_transaction');
 
         for ($i = 0; $i < $count; $i++) {
@@ -219,15 +217,20 @@ class DownloadActivityService
      *
      * @param $activityDates
      * @param $type
+     * @param $activityIdentifier
      *
      * @return string|null
      */
-    public function getActivityDate($activityDates, $type): ?string
+    public function getActivityDate($activityDates, $type, $activityIdentifier): ?string
     {
+        if (!isset($this->insertedDates[$activityIdentifier])) {
+            $this->insertedDates[$activityIdentifier] = [];
+        }
+
         if (!empty($activityDates) && is_array($activityDates) && count($activityDates)) {
             foreach ($activityDates as $key => $activityDate) {
-                if (Arr::get($activityDate, 'type', '') === $type && !in_array($key, $this->insertedDates, true)) {
-                    $this->insertedDates[] = $key;
+                if (Arr::get($activityDate, 'type', '') === $type && !in_array($key, $this->insertedDates[$activityIdentifier], true)) {
+                    $this->insertedDates[$activityIdentifier][] = $key;
 
                     return (string) Arr::get($activityDate, 'date', '');
                 }
