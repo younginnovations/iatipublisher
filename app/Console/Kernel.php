@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
@@ -15,8 +17,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // TODO: Change this to every day instead of every 10 minutes after testing.
-        $schedule->command('command:FetchOrganisationRegistrationAgency')->everyMinute();
+        $schedule->command('command:FetchOrganisationRegistrationAgency')->dailyAt('00:00');
     }
 
     /**

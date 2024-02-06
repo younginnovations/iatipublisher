@@ -12,8 +12,9 @@ use PHPUnit\Exception;
 
 /**
  * Used in cronjob to run every day at 12:00 AM.
- *
- * This is for issue 1342: https://github.com/younginnovations/iatipublisher/issues/1342
+ * Fetches and updates json file on S3 AppData/Data/Organization/OrganizationRegistrationAgency.json daily.
+ * On success, updates redis cache value with key AppData/Data/Organization/OrganizationRegistrationAgency.json.
+ * This is for issue 1342: https://github.com/younginnovations/iatipublisher/issues/1342.
  *
  * @class FetchOrganisationRegistrationAgency
  */
@@ -31,7 +32,7 @@ class FetchOrganisationRegistrationAgency extends Command
      *
      * @var string
      */
-    protected $description = 'Fetches and updates json file on S3 AppData/Data/Organization/OrganizationRegistrationAgency.json daily. On successc';
+    protected $description = 'Fetches and updates json file on S3 AppData/Data/Organization/OrganizationRegistrationAgency.json daily. On success, updates redis cache value with key AppData/Data/Organization/OrganizationRegistrationAgency.json.';
 
     /**
      * Execute the console command.
