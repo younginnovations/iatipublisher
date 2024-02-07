@@ -247,7 +247,6 @@ class XmlGenerator
     }
 
     /**
-     * 2298
      * Generates single activity and combines xml file and publishes to IATI.
      */
     public function generateActivityXml($activity, $transaction, $result, $settings, $organization): ?DomDocument
@@ -277,6 +276,7 @@ class XmlGenerator
      * @param $activityData
      * @param $settings
      * @param $organization
+     * @param bool $refreshTimestamp
      *
      * @return void
      *
@@ -284,7 +284,7 @@ class XmlGenerator
      *
      * @throws Exception
      */
-    public function generateActivitiesXml($activityData, $settings, $organization): void
+    public function generateActivitiesXml($activityData, $settings, $organization, bool $refreshTimestamp = true): void
     {
         $publishingInfo = $settings->publishing_info;
         $publisherId = Arr::get($publishingInfo, 'publisher_id', 'Not Available');
@@ -292,7 +292,7 @@ class XmlGenerator
 
         foreach ($activityData as $activity) {
             $publishedActivity = sprintf('%s-%s.xml', $publisherId, $activity->id);
-            $activityCompleteXml = $this->getXml($activity, $activity->transactions ?? [], $activity->results ?? [], $settings, $organization);
+            $activityCompleteXml = $this->getXml($activity, $activity->transactions ?? [], $activity->results ?? [], $settings, $organization, $refreshTimestamp);
             $innerActivityXml = $activityCompleteXml->getElementsByTagName('iati-activity')->item(0);
             $innerActivityXml = $activityCompleteXml->saveXML($innerActivityXml);
             $activityIdentifier = $organization->identifier . '-' . $activity->iati_identifier['activity_identifier'];
@@ -305,7 +305,7 @@ class XmlGenerator
         if (count($innerActivityXmlArray)) {
             $filename = sprintf('%s-%s.xml', $publisherId, 'activities');
             $this->savePublishedFiles($filename, $activity->org_id, $publishedFiles);
-            $this->appendMultipleInnerActivityXmlToMergedXml($innerActivityXmlArray, $settings);
+            $this->appendMultipleInnerActivityXmlToMergedXml($innerActivityXmlArray, $settings, $refreshTimestamp);
         }
     }
 
@@ -403,11 +403,12 @@ class XmlGenerator
      * @param $result
      * @param $settings
      * @param $organization
+     * @param bool $refreshTimestamp
      *
      * @return DomDocument|null
      * @throws JsonException
      */
-    public function getXml($activity, $transaction, $result, $settings, $organization): ?DomDocument
+    public function getXml($activity, $transaction, $result, $settings, $organization, bool $refreshTimestamp = true): ?DomDocument
     {
         $defaultValues = $activity->default_field_values;
 
@@ -419,7 +420,9 @@ class XmlGenerator
         $xmlData = [];
         $xmlData['@attributes'] = [
             'version' => Enums::IATI_XML_VERSION,
-            'generated-datetime' => gmdate('c'),
+            'generated-datetime' => $refreshTimestamp
+                ? gmdate('c')
+                : $organization->publishedFiles->first()->updated_at->toISOString(),
         ];
 
         $xmlData['iati-activity'] = $this->getXmlData($activity, $transaction, $result, $organization);
@@ -638,7 +641,7 @@ class XmlGenerator
     }
 
     /**
-     * Appends generated/new XML content to merged xml and uploads to S3.
+     * Appends generated/new XML content to merged xml and uploads to S3. [Deprecated].
      *
      * @throws Exception
      */
@@ -706,11 +709,13 @@ class XmlGenerator
      *
      * @param array $innerActivityXmlArray
      * @param $settings
+     * @param bool $refreshTimestamp
+     *
      * @return void
      *
      * @throws Exception
      */
-    public function appendMultipleInnerActivityXmlToMergedXml(array $innerActivityXmlArray, $settings): void
+    public function appendMultipleInnerActivityXmlToMergedXml(array $innerActivityXmlArray, $settings, bool $refreshTimestamp = true): void
     {
         $mergedXml = $this->getMergedXmlFromS3($settings);
         $existingActivityIdentifierList = $this->extractIatiIdentifierFromMergedXml($mergedXml);
@@ -733,7 +738,7 @@ class XmlGenerator
         $mergedXml = new DOMDocument();
         $mergedXml->loadXML($mergedXmlAsString);
 
-        $this->putMergedXmlToS3($mergedXml, $settings);
+        $this->putMergedXmlToS3($mergedXml, $settings, $refreshTimestamp);
     }
 
     /**
@@ -771,13 +776,17 @@ class XmlGenerator
      *
      * @param DOMDocument $content
      * @param $settings
+     * @param bool $refreshTimestamp
      *
      * @return void
      */
-    private function putMergedXmlToS3(DOMDocument $content, $settings): void
+    private function putMergedXmlToS3(DOMDocument $content, $settings, bool $refreshTimestamp = true): void
     {
         $iatiActivitiesXml = $content->getElementsByTagName('iati-activities')->item(0);
-        $iatiActivitiesXml->setAttribute('generated-datetime', gmdate('c'));
+
+        if ($refreshTimestamp) {
+            $iatiActivitiesXml->setAttribute('generated-datetime', gmdate('c'));
+        }
 
         $publisherId = Arr::get($settings, 'publishing_info.publisher_id', false);
         $filename = "$publisherId-activities.xml";
