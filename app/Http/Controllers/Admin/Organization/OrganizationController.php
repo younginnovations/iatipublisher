@@ -80,7 +80,9 @@ class OrganizationController extends Controller
             $toast['message'] = Session::has('error') ? Session::get('error') : (Session::get('success') ? Session::get('success') : '');
             $toast['type'] = Session::has('error') ? 'error' : 'success';
             $elements = json_decode(file_get_contents(app_path('IATI/Data/organizationElementJsonSchema.json')), true, 512, JSON_THROW_ON_ERROR);
-            $elementGroups = json_decode(Cache::get('AppData/Data/Organization/OrganisationElementsGroup.json'), true, 512, JSON_THROW_ON_ERROR);
+            $completePath = 'AppData/Data/Organization/OrganisationElementsGroup.json';
+            $jsonContent = Cache::get($completePath) ?? file_get_contents(public_path($completePath));
+            $elementGroups = json_decode($jsonContent, true, 512, JSON_THROW_ON_ERROR);
             $types = $this->organizationService->getOrganizationTypes();
             $organization = $this->organizationService->getOrganizationData(Auth::user()->organization_id);
             $progress = $this->organizationService->organizationMandatoryCompletePercentage($organization);

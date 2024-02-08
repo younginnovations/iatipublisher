@@ -55,7 +55,9 @@ if (!function_exists('readElementGroup')) {
      */
     function readElementGroup(): array
     {
-        return json_decode(Cache::get('AppData/Data/Activity/ElementGroup.json'), true);
+        $completePath = 'AppData/Data/Activity/ElementGroup.json';
+
+        return json_decode(Cache::get($completePath) ?? file_get_contents(public_path($completePath)), true);
     }
 }
 
@@ -361,8 +363,8 @@ if (!function_exists('getCodeList')) {
      */
     function getCodeList($listName, $listType, bool $code = true): array
     {
-        $filePath = "AppData/Data/$listType/$listName.json";
-        $codeListFromFile = Cache::get($filePath);
+        $completePath = "AppData/Data/$listType/$listName.json";
+        $codeListFromFile = Cache::get($completePath) ?? file_get_contents(public_path($completePath));
         $codeLists = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
         $codeList = $codeLists[$listName];
         $data = [];
@@ -387,7 +389,8 @@ if (!function_exists('getCodeListArray')) {
      */
     function getCodeListArray($listName, $listType, bool $code = true): array
     {
-        $content = Cache::get("AppData/Data/$listType/$listName.json");
+        $completePath = "AppData/Data/$listType/$listName.json";
+        $content = Cache::get($completePath) ?? file_get_contents(public_path($completePath));
         $codeListFromFile = json_decode($content);
         $data = [];
 
@@ -411,7 +414,8 @@ if (!function_exists('getList')) {
      */
     function getList(string $filePath, bool $code = true): array
     {
-        $codeListFromFile = Cache::get("AppData/Data/$filePath");
+        $completePath = "AppData/Data/$filePath";
+        $codeListFromFile = Cache::get($completePath) ?? file_get_contents(public_path($completePath));
         $codeLists = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
         $codeList = last($codeLists);
         $data = [];
