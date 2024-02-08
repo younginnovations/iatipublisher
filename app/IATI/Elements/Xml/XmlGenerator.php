@@ -292,7 +292,7 @@ class XmlGenerator
 
         foreach ($activityData as $activity) {
             $publishedActivity = sprintf('%s-%s.xml', $publisherId, $activity->id);
-            $activityCompleteXml = $this->getXml($activity, $activity->transaction ?? [], $activity->results ?? [], $settings, $organization);
+            $activityCompleteXml = $this->getXml($activity, $activity->transactions ?? [], $activity->results ?? [], $settings, $organization);
             $innerActivityXml = $activityCompleteXml->getElementsByTagName('iati-activity')->item(0);
             $innerActivityXml = $activityCompleteXml->saveXML($innerActivityXml);
             $activityIdentifier = $organization->identifier . '-' . $activity->iati_identifier['activity_identifier'];
