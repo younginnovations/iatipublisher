@@ -204,12 +204,20 @@ class ImportXlsService
         foreach ($activities as $value) {
             $activity = unsetErrorFields($contents[$value]);
             $activityData = Arr::get($activity, 'data', []);
+
             $organizationId = Auth::user()->organization->id;
             $existingId = Arr::get($activity, 'existing', false);
 
             if ($existingId || $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'))) {
+                $oldActivity = $this->activityRepository->find($existingId);
                 $activityData = $this->fillActivityData($activityData);
                 $activityData['upload_medium'] = 'xls';
+
+                if ($oldActivity['has_ever_been_published']) {
+                    $activityData['iati_identifier']['iati_identifier_text'] = $oldActivity['iati_identifier']['iati_identifier_text'];
+                    $activityData['iati_identifier']['present_organization_identifier'] = $oldActivity['iati_identifier']['present_organization_identifier'];
+                }
+
                 $this->activityRepository->update($existingId, $activityData);
                 $this->transactionRepository->deleteTransaction($existingId);
                 $this->saveTransactions(Arr::get($activityData, 'transactions', []), $existingId);
@@ -221,13 +229,18 @@ class ImportXlsService
                 }
             } else {
                 $activityService = app()->make(ActivityService::class);
+                $organizationIdentifier = Auth::user()->organization->identifier;
                 $defaultValues = $activityService->getDefaultValues();
+
                 $activityData['org_id'] = $organizationId;
                 $activityData['upload_medium'] = 'xls';
                 $activityData['collaboration_type'] = isset($defaultValues['default_collaboration_type']) && !empty($defaultValues['default_collaboration_type']) ? (int) $defaultValues['default_collaboration_type'] : null;
                 $activityData['default_flow_type'] = isset($defaultValues['default_flow_type']) && !empty($defaultValues['default_flow_type']) ? (int) $defaultValues['default_flow_type'] : null;
                 $activityData['default_finance_type'] = isset($defaultValues['default_finance_type']) && !empty($defaultValues['default_finance_type']) ? (int) $defaultValues['default_finance_type'] : null;
                 $activityData['default_tied_status'] = isset($defaultValues['default_tied_status']) && !empty($defaultValues['default_tied_status']) ? (int) $defaultValues['default_tied_status'] : null;
+
+                $activityData['iati_identifier']['iati_identifier_text'] = $organizationIdentifier . '-' . $activityData['iati_identifier']['activity_identifier'];
+                $activityData['iati_identifier']['present_organization_identifier'] = $organizationIdentifier;
 
                 if (isset($defaultValues['default_aid_type']) && !empty($defaultValues['default_aid_type'])) {
                     $activityData['default_aid_type'] = [

@@ -179,11 +179,6 @@ class ActivityController extends Controller
             $validatorResponse = $this->activityValidatorResponseService->getValidatorResponse($id);
             $importActivityError = $this->importActivityErrorService->getImportActivityError($id);
             $organization_identifier = $activity->organization->identifier;
-            $activity->iati_identifier = [
-                'activity_identifier' => $activity->iati_identifier['activity_identifier'],
-                'iati_identifier_text' => $activity->organization->identifier . '-' . $activity->iati_identifier['activity_identifier'],
-            ];
-
             $iatiValidatorResponse = $validatorResponse->response ?? null;
             $importActivityError = $importActivityError->error ?? null;
 

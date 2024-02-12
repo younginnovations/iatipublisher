@@ -323,7 +323,9 @@
                     :completed="status[name] ?? false"
                     :tooltip="element.hover_text"
                     :warning_info_text="element.warning_info_text ?? ''"
-                    :is-published="publishStatus.linked_to_iati"
+                    :has-ever-been-published="
+                      publishStatus.has_ever_been_published
+                    "
                     class="elements-card"
                   />
                 </template>
@@ -729,6 +731,7 @@ export default defineComponent({
     const publishStatus: PublishStatusTypeface = reactive({
       linked_to_iati: activityProps.linked_to_iati,
       status: activityProps.status,
+      has_ever_been_published: activityProps.has_ever_been_published,
     });
 
     // vue provides

@@ -24,6 +24,7 @@ class ActivityFactory extends Factory
             'iati_identifier' => [
                 'activity_identifier'  => 'SYRZ000041',
                 'iati_identifier_text' => 'CZ-ICO-25755277-SYRZ000041',
+                'present_organization_identifier' => 'CZ-ICO-25755277',
             ],
             'title'           => [
                 [

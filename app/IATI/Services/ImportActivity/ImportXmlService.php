@@ -185,11 +185,17 @@ class ImportXmlService
         foreach ($activities as $value) {
             $activity = unsetErrorFields($contents[$value]);
             $activityData = Arr::get($activity, 'data', []);
+
             $organizationId = Auth::user()->organization->id;
             $defaultFieldValues = Arr::get($activityData, 'default_field_values.0', []);
 
             if (Arr::get($activity, 'existence', false) && $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'))) {
                 $oldActivity = $this->activityRepository->getActivityWithIdentifier($organizationId, Arr::get($activityData, 'iati_identifier.activity_identifier'));
+
+                if ($oldActivity['has_ever_been_published']) {
+                    $activityData['iati_identifier']['iati_identifier_text'] = $oldActivity['iati_identifier']['iati_identifier_text'];
+                    $activityData['iati_identifier']['present_organization_identifier'] = $oldActivity['iati_identifier']['present_organization_identifier'];
+                }
 
                 $this->activityRepository->importXmlActivities($oldActivity->id, $activityData);
                 $this->transactionRepository->deleteTransaction($oldActivity->id);
@@ -203,6 +209,10 @@ class ImportXmlService
                     $this->importActivityErrorRepo->deleteImportError($oldActivity->id);
                 }
             } else {
+                $organizationIdentifier = Auth::user()->organization->identifier;
+                $activityData['iati_identifier']['iati_identifier_text'] = $organizationIdentifier . '-' . $activityData['iati_identifier']['activity_identifier'];
+                $activityData['iati_identifier']['present_organization_identifier'] = $organizationIdentifier;
+
                 $storeActivity = $this->activityRepository->importXmlActivities(null, $activityData);
 
                 $this->saveTransactions(Arr::get($activityData, 'transactions'), $storeActivity->id, $defaultFieldValues);
@@ -269,7 +279,7 @@ class ImportXmlService
                     $savedResult = $this->resultRepository->store([
                         'activity_id' => $activityId,
                         'result' => $result,
-                        'default_field_values'=>$defaultValues,
+                        'default_field_values' => $defaultValues,
                     ]);
 
                     foreach ($indicators as $indicator) {
@@ -281,7 +291,7 @@ class ImportXmlService
                         $savedIndicator = $this->indicatorRepository->store([
                             'result_id' => $savedResult['id'],
                             'indicator' => $indicator,
-                            'default_field_values'=>$defaultValues,
+                            'default_field_values' => $defaultValues,
                         ]);
 
                         if (!empty($periods)) {

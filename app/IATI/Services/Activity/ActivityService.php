@@ -108,19 +108,26 @@ class ActivityService
      */
     public function store($input): Model
     {
+        $authUser = auth()->user();
+        $activityIdentifierOnly = $input['activity_identifier'];
+        $presentOrganizationIdentifier = $authUser->organization->identifier;
+        $iatiIdentifierText = $presentOrganizationIdentifier . '-' . $activityIdentifierOnly;
+
         $activity_identifier = [
-            'activity_identifier' => $input['activity_identifier'],
+            'activity_identifier'             => $activityIdentifierOnly,
+            'iati_identifier_text'            => $iatiIdentifierText,
+            'present_organization_identifier' => $presentOrganizationIdentifier,
         ];
 
         $activity_title = [
             [
                 'narrative' => $input['narrative'],
-                'language' => $input['language'],
+                'language'  => $input['language'],
             ],
         ];
 
         $defaultElementStatus = getDefaultElementStatus();
-        $budgetNotProvided = Auth::user()->organization->settings->activity_default_values['budget_not_provided'] ?? '';
+        $budgetNotProvided = $authUser->organization->settings->activity_default_values['budget_not_provided'] ?? '';
         $defaultElementStatus['budget'] = $budgetNotProvided === '1' || $defaultElementStatus['budget'];
         $defaultValues = $this->getDefaultValues();
         $defaultAidType = null;
@@ -142,10 +149,10 @@ class ActivityService
             'default_finance_type' => isset($defaultValues['default_finance_type']) && !empty($defaultValues['default_finance_type']) ? (int) $defaultValues['default_finance_type'] : null,
             'default_aid_type' => $defaultAidType,
             'default_tied_status' => isset($defaultValues['default_tied_status']) && !empty($defaultValues['default_tied_status']) ? (int) $defaultValues['default_tied_status'] : null,
-            'org_id' => Auth::user()->organization_id,
+            'org_id' => $authUser->organization_id,
             'element_status' => $defaultElementStatus,
             'default_field_values' => $this->getDefaultValues(),
-            'reporting_org' => Auth::user()->organization->reporting_org,
+            'reporting_org' => $authUser->organization->reporting_org,
         ]);
     }
 
@@ -754,5 +761,18 @@ class ActivityService
     public function getActivitityWithRelationsById($activityId): ?Model
     {
         return $this->activityRepository->getActivitityWithRelationsById($activityId);
+    }
+
+    /**
+     * Updates activity.
+     *
+     * @param $activityId
+     * @param $data
+     *
+     * @return bool
+     */
+    public function updateActivity($activityId, $data): bool
+    {
+        return $this->activityRepository->update($activityId, $data);
     }
 }

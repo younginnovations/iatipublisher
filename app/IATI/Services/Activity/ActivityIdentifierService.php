@@ -46,10 +46,7 @@ class ActivityIdentifierService
     {
         $activity = $this->activityRepository->find($activity_id);
 
-        return [
-            'activity_identifier' => $activity->iati_identifier['activity_identifier'],
-            'iati_identifier_text' => $activity->organization->identifier . '-' . $activity->iati_identifier['activity_identifier'],
-        ];
+        return $activity->iati_identifier;
     }
 
     /**
@@ -74,9 +71,11 @@ class ActivityIdentifierService
      */
     public function update($id, $activityIdentifier): bool
     {
-        $isPublished = $this->activityRepository->find($id, ['linked_to_iati'])['linked_to_iati'];
+        $hasEverBeenPublished = $this->activityRepository->find($id, ['has_ever_been_published'])['has_ever_been_published'];
 
-        if (!$isPublished) {
+        if (!$hasEverBeenPublished) {
+            $activityIdentifier['present_organization_identifier'] = auth()->user()->organization->identifier;
+
             return $this->activityRepository->update($id, ['iati_identifier' => $activityIdentifier]);
         }
 
@@ -96,10 +95,10 @@ class ActivityIdentifierService
         $element = getElementSchema('iati_identifier');
         $model['activity_identifier'] = $this->getActivityIdentifierData($id);
         $this->baseFormCreator->url = route('admin.activity.identifier.update', [$id]);
-        $activity = $this->activityRepository->find($id, ['linked_to_iati']);
+        $activity = $this->activityRepository->find($id, ['has_ever_been_published']);
         $showCancelOrSaveButton = true;
 
-        if ($activity->linked_to_iati) {
+        if ($activity['has_ever_been_published']) {
             $element['attributes']['activity_identifier']['read_only'] = true;
             $showCancelOrSaveButton = false;
         }
