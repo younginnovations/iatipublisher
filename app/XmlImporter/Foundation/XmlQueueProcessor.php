@@ -111,7 +111,9 @@ class XmlQueueProcessor
             $this->filename = $filename;
             $contents = awsGetFile(sprintf('%s/%s/%s/%s', $this->xml_file_storage_path, $this->orgId, $this->userId, $filename));
             awsUploadFile(sprintf('%s/%s/%s/%s', $this->xml_data_storage_path, $this->orgId, $this->userId, 'status.json'), json_encode(['success' => true, 'message' => 'Processing'], JSON_THROW_ON_ERROR));
-
+//            cache::put('org-agenfy', $contents);
+//
+//            cache::get9'oreg'
             if ($this->xmlServiceProvider->isValidAgainstSchema($contents)) {
                 $xmlData = $this->xmlServiceProvider->load($contents);
                 $this->xmlProcessor->process($xmlData, $userId, $orgId, $orgRef, $dbIatiIdentifiers, $organizationReportingOrg);

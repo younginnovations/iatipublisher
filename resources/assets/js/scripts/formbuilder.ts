@@ -441,35 +441,35 @@ $(function () {
   $('#organisation_identifier').attr('disabled', 'disabled');
 
   function updateRegistrationAgency(country: JQuery) {
-    if (country.val()) {
-      $.ajax({ url: '/organisation/agency/' + country.val() }).then(
-        (response) => {
-          const current_val =
-            $('#organization_registration_agency').val() ?? '';
-          let val = false;
+    $.ajax({ url: '/organisation/agency/' + country.val() }).then(
+      (response) => {
+        const current_val = $('#organization_registration_agency').val() ?? '';
+        let val = false;
 
-          $('#organization_registration_agency').empty();
+        $('#organization_registration_agency').empty();
 
-          for (const data in response.data) {
-            if (data === current_val) {
-              val = true;
-            }
-
-            $('#organization_registration_agency')
-              .append(new Option(response.data[data], data, true, true))
-              .val('')
-              .trigger('change');
+        for (const data in response.data) {
+          if (data === current_val) {
+            val = true;
           }
 
           $('#organization_registration_agency')
-            .val(val ? current_val : '')
+            .append(new Option(response.data[data], data, true, true))
+            .val('')
             .trigger('change');
         }
-      );
-    }
+
+        $('#organization_registration_agency')
+          .val(val ? current_val : '')
+          .trigger('change');
+      }
+    );
   }
 
   $('body').on('select2:select', '#organization_country', function () {
+    updateRegistrationAgency($(this));
+  });
+  $('body').on('select2:clear', '#organization_country', function () {
     updateRegistrationAgency($(this));
   });
 

@@ -54,7 +54,7 @@ class SettingController extends Controller
     public function index(): Factory|View|Application|RedirectResponse
     {
         try {
-            $currencies = getCodeListArray('Currency', 'OrganizationArray');
+            $currencies = getCodeList('Currency', 'Organization');
             $languages = getCodeList('Language', 'Organization');
             $humanitarian = trans('setting.humanitarian_types');
             $budgetNotProvided = getCodeList('BudgetNotProvided', 'Activity');

@@ -42,7 +42,7 @@ class ActivityDefaultController extends Controller
     public function edit($activityId): View|RedirectResponse
     {
         try {
-            $currencies = getCodeListArray('Currency', 'OrganizationArray');
+            $currencies = getCodeList('Currency', 'Organization');
             $languages = getCodeList('Language', 'Organization');
             $humanitarian = trans('setting.humanitarian_types');
             $budgetNotProvided = getCodeList('BudgetNotProvided', 'Activity');

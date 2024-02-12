@@ -30,7 +30,7 @@ Route::group(['middleware' => ['can:view_organization']], static function () {
 });
 
 Route::group(['middleware' => ['can:crud_organization']], static function () {
-    Route::get('/organisation/agency/{country}', [OrganizationController::class, 'getRegistrationAgency'])->name('organisation.get.agency');
+    Route::get('/organisation/agency/{country?}', [OrganizationController::class, 'getRegistrationAgency'])->name('organisation.get.agency');
     Route::get('organisation/name', [NameController::class, 'edit'])->name('organisation.name.edit');
     Route::get('organisation/name', [NameController::class, 'edit'])->name('organisation.name.edit');
     Route::put('organisation/name', [NameController::class, 'update'])->name('organisation.name.update');
