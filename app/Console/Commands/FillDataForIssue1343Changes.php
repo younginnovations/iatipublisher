@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\IATI\Models\Organization\Organization;
@@ -7,6 +9,9 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use PHPUnit\Exception;
 
+/**
+ * @class FillDataForIssue1343Changes
+ */
 class FillDataForIssue1343Changes extends Command
 {
     /**

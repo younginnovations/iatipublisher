@@ -199,8 +199,6 @@ class ImportCsvService
         $contents = json_decode($file, true, 512, JSON_THROW_ON_ERROR);
         $organizationIdentifier = $authUser->organization->identifier;
 
-        logger($this->organizationRepo->getOrganizationData($organizationId));
-
         foreach ($activities as $value) {
             $activity = unsetErrorFields($contents[$value]);
             $iati_identifier_text = $organizationIdentifier . '-' . Arr::get($activity, 'data.identifier.activity_identifier');
