@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\IATI\Models\User\Role;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
@@ -981,5 +982,39 @@ if (!function_exists('strReplaceLastOccurrence')) {
         }
 
         return $subject;
+    }
+}
+
+if (!function_exists('getTimestampFromSingleXml')) {
+    /**
+     * Returns timestamp from xml file or last updated at if xml not exists.
+     *
+     * @param string $publisherId
+     * @param App\IATI\Models\Activity\Activity $activity
+     *
+     * @return string
+     */
+    function getTimestampFromSingleXml(string $publisherId, App\IATI\Models\Activity\Activity $activity): string
+    {
+        $xmlName = "$publisherId-$activity->id.xml";
+        $xmlPath = "xml/activityXmlFiles/$xmlName";
+
+        if (awsHasFile($xmlPath)) {
+            $xmlString = awsGetFile($xmlPath);
+
+            if ($xmlString) {
+                $xmlContent = new SimpleXMLElement($xmlString);
+
+                $lastUpdatedDatetime = (string) $xmlContent->xpath('//iati-activity/@last-updated-datetime')[0];
+
+                if ($lastUpdatedDatetime) {
+                    $carbonDate = Carbon::parse($lastUpdatedDatetime);
+
+                    return $carbonDate->toIso8601String();
+                }
+            }
+        }
+
+        return $activity->updated_at->toIso8601String();
     }
 }

@@ -208,7 +208,9 @@ class BulkPublishingController extends Controller
 
                 $response = $this->bulkPublishingService->generateInitialBulkPublishingResponse($activities);
                 $this->publishingStatusService->storeProcessingActivities($activities, $response['organization_id'], $response['job_batch_uuid']);
+
                 dispatch(new BulkPublishActivities($activities, $organization, $organization->settings, $response['organization_id'], $response['job_batch_uuid']));
+
                 $this->bulkPublishingService->deleteValidationResponses();
                 DB::commit();
 
