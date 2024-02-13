@@ -359,7 +359,7 @@ class FixPublishedXmlsForIssue1363Changes extends Command
      */
     private function sendReportEmail($filePath): void
     {
-        $toEmails = ['momik.shrestha@yipl.com.np', 'sarina.sindurakar@yipl.com.np', 'aasish.magar@yipl.com.np'];
+        $toEmails = ['momik.shrestha@yipl.com.np', 'sarina.sindurakar@yipl.com.np', 'aashish.magar@yipl.com.np'];
         $subject = 'Broken org report';
 
         Mail::send([], [], function ($message) use ($toEmails, $subject, $filePath) {
