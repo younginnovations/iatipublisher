@@ -455,12 +455,15 @@ trait MigrateActivityTrait
     {
         $newActivity = [];
         $this->activityUsesCustomVocab = false;
+        $activityIdentifier = Arr::get(json_decode($aidstreamActivity->identifier, true, 512, JSON_THROW_ON_ERROR), 'activity_identifier', null);
+        $orgReportingOrg = json_decode($aidStreamOrganization->reporting_org);
+        $organizationIdentifier = $orgReportingOrg[0]->reporting_organization_identifier;
+        $iatiIdentifierText = "$organizationIdentifier-$activityIdentifier";
+
         $newActivity['iati_identifier'] = $aidstreamActivity->identifier ? [
-            'activity_identifier' => Arr::get(
-                json_decode($aidstreamActivity->identifier, true, 512, JSON_THROW_ON_ERROR),
-                'activity_identifier',
-                null
-            ),
+            'activity_identifier' => $activityIdentifier,
+            'present_organization_identifier' => $organizationIdentifier,
+            'iati_identifier_text' => $iatiIdentifierText,
         ] : null;
         $newActivity['other_identifier'] = $aidstreamActivity ? $this->getActivityOtherIdentifier(
             $aidstreamActivity->other_identifier
@@ -576,6 +579,7 @@ trait MigrateActivityTrait
             $aidstreamActivity->default_field_values
         ) : null;
         $newActivity['linked_to_iati'] = $aidstreamActivity && $aidstreamActivity->published_to_registry;
+        $newActivity['has_ever_been_published'] = $aidstreamActivity && $aidstreamActivity->published_to_registry;
         $newActivity['tag'] = $aidstreamActivity ? $this->getActivityTagData($aidstreamActivity->tag) : null;
         $newActivity['element_status'] = null; // Will be updated by observer
         $newActivity['created_at'] = $aidstreamActivity ? $aidstreamActivity->created_at : null;
