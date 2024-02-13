@@ -23,13 +23,13 @@ use SimpleXMLElement;
  * [!!WARNING!!] This is a one time use command.
  *
  * This command does the following:
- * - Fetch all activities published on and after Dec-18. (Dec-18 is the date branch 1269 was merged and sent to production.)
- * - Unpublish all activities from registry.
+ * - Fetch all activities published on and after Dec-1, 2023. (Dec is the month, branch 1269 was merged and sent to production.)
  * - Generate new single xmls for each activity and store them to s3.
+ * - Backup merged xmls
+ * - Generate report
  * - Fix merged xml that is published to registry:
  *      - Remove bugged activity nodes.
  *      - Append fixed activity node.
- * - Publish merged xml to registry.
  *
  * @class FixPublishedXmlsForIssue1363Changes
  */
