@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<iati-activities version="2.03" generated-datetime="2024-02-07T10:47:30+00:00">
-  <iati-activity last-updated-datetime="2024-02-07T10:47:32+00:00" xml:lang="en" default-currency="DKK" hierarchy="1">
+<iati-activities version="2.03" generated-datetime="2024-02-13T06:43:05+00:00">
+  <iati-activity last-updated-datetime="2024-02-13T06:43:06+00:00" xml:lang="en" default-currency="DKK" hierarchy="1">
     <iati-identifier>DK-CVR-18243717-MALI-SPAII-PILOT-2022</iati-identifier>
     <reporting-org type="21" ref="DK-CVR-18243717" secondary-reporter="0">
       <narrative xml:lang="en">ActionAid Denmark (Mellemfolkeligt Samvirke)</narrative>

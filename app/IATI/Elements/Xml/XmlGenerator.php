@@ -422,7 +422,7 @@ class XmlGenerator
             'version' => Enums::IATI_XML_VERSION,
             'generated-datetime' => $refreshTimestamp
                 ? gmdate('c')
-                : $activity->updated_at->toISOString(),
+                : getTimestampFromSingleXml($organization->publisher_id, $activity),
         ];
 
         $xmlData['iati-activity'] = $this->getXmlData($activity, $transaction, $result, $organization);

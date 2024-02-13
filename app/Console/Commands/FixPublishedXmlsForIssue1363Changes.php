@@ -11,6 +11,9 @@ use App\IATI\Models\Organization\Organization;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Mail;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use SimpleXMLElement;
 
 /**
@@ -59,26 +62,22 @@ class FixPublishedXmlsForIssue1363Changes extends Command
     public function handle()
     {
         try {
-            $affectedOrganizationAndActivities = $this->affectedOrganizationAndActivities();
-            $possiblyAffectedMergedXml = $this->affectedOrganizationXml($affectedOrganizationAndActivities->keys());
+            $assumedAffectedOrgAndActivities = $this->affectedOrganizationAndActivities();
+            $assumedMergedXmlsMappedToOrgId = $this->affectedOrganizationXml($assumedAffectedOrgAndActivities->keys());
 
-            $returnVal = $this->extractAllActivityTransactionsReferences($affectedOrganizationAndActivities);
+            $returnVal = $this->extractAllActivityTransactionsReferences($assumedAffectedOrgAndActivities);
             $allOrganizationTransactionReferences = Arr::get($returnVal, 'organizationTransactionRefs');
             $activityIdsMappedToIdentifier = Arr::get($returnVal, 'activityIdsMappedToIdentifier');
-            $brokenOrgs = $this->getAllAffectedOrganizationsWithBrokenActivityId($possiblyAffectedMergedXml, $activityIdsMappedToIdentifier, $allOrganizationTransactionReferences);
 
-            logger('$affectedOrganizationAndActivities');
-            logger($affectedOrganizationAndActivities);
-            logger('$possiblyAffectedMergedXml');
-            logger($possiblyAffectedMergedXml);
-            logger('$allOrganizationTransactionReferences');
-            logger($allOrganizationTransactionReferences);
-            logger('$activityIdsMappedToIdentifier');
-            logger($activityIdsMappedToIdentifier);
-            logger('$brokenOrgs');
-            logger($brokenOrgs);
+            $backupMergedFiles = $this->backupMergedFiles($assumedMergedXmlsMappedToOrgId);
 
-            if ($this->backupMergedFiles($possiblyAffectedMergedXml)) {
+            $confirmedActivitiesMappedToOrgId = $this->getAllAffectedOrganizationsWithBrokenActivityId(
+                $assumedMergedXmlsMappedToOrgId,
+                $activityIdsMappedToIdentifier,
+                $allOrganizationTransactionReferences
+            );
+
+            if ($backupMergedFiles) {
                 echo 'Do you want to continue? (yes/no): ';
                 $confirmation = trim(fgets(STDIN));
 
@@ -86,30 +85,9 @@ class FixPublishedXmlsForIssue1363Changes extends Command
                     echo "Operation aborted.\n";
                     exit;
                 } else {
-                    //                    foreach ($affectedMergedXmlFiles as $orgId => $mergedXmlFile) {
-                    //                        if (awsHasFile("xml/mergedActivityXml/$mergedXmlFile")) {
-                    //                            $mergedXmlContent = awsGetFile("xml/mergedActivityXml/$mergedXmlFile");
-                    //                            $xml              = new SimpleXMLElement($mergedXmlContent);
-                    //
-                    //                            $transactions         = $xml->xpath('//transaction');
-                    //                            $refValuesInMergedXml = [];
-                    //
-                    //                            foreach ($transactions as $transaction) {
-                    //                                $refValuesInMergedXml[$orgId][] = (string)$transaction['ref'];
-                    //                            }
-                    //
-                    //                            $mergedXmlHasMissingTransaction = array_diff($allOrganizationTransactionReferences[$orgId], $refValuesInMergedXml[$orgId]);
-                    //
-                    //                            logger('$mergedXmlHasMissingTransaction');
-                    //                            logger($mergedXmlHasMissingTransaction);
-                    //                            if (!empty($mergedXmlHasMissingTransaction)) {
-                    //                                $orgsThatNeedFixing[] = $orgId;
-                    //                            }
-                    //                        }
-                    //                    }
-
-                    //                  foreach ($affectedOrganizationAndActivities as $orgId => $activities) {
-                    foreach ($brokenOrgs as $orgId => $activityIds) {
+                    logger('$confirmedActivitiesMappedToOrgId');
+                    logger($confirmedActivitiesMappedToOrgId);
+                    foreach ($confirmedActivitiesMappedToOrgId as $orgId => $activityIds) {
                         $activities = Activity::whereIn('id', $activityIds)->get();
                         $organization = Organization::find($orgId);
                         $settings = $organization->settings;
@@ -200,49 +178,6 @@ class FixPublishedXmlsForIssue1363Changes extends Command
     }
 
     /**
-     * Return activity ids mapped to org id.
-     *
-     * @param $possiblyAffectedMergedXml
-     * @param $activityIdsMappedToIdentifier
-     * @param $allOrganizationTransactionReferences
-     *
-     * @return array
-     *
-     * @throws Exception
-     */
-    private function getAllAffectedOrganizationsWithBrokenActivityId($possiblyAffectedMergedXml, $activityIdsMappedToIdentifier, $allOrganizationTransactionReferences): array
-    {
-        $brokenOrg = [];
-
-        foreach ($allOrganizationTransactionReferences as $orgId => $possiblyAffectedActivityIdentifiers) {
-            $filename = $possiblyAffectedMergedXml[$orgId];
-
-            if (awsHasFile("xml/mergedActivityXml/$filename")) {
-                $mergedXmlFromS3 = awsGetFile("xml/mergedActivityXml/$filename");
-                $mergedXmlFromS3 = new SimpleXMLElement($mergedXmlFromS3);
-
-                foreach ($possiblyAffectedActivityIdentifiers as $activityIdentifier => $transactionRefs) {
-                    $xpathExpression = "//iati-activity[iati-identifier='$activityIdentifier']";
-                    $activityWithinXml = $mergedXmlFromS3->xpath($xpathExpression);
-
-                    if (!empty($activityWithinXml)) {
-                        $activityWithinXml = $activityWithinXml[0];
-                        $transactionCount = count($activityWithinXml->transaction);
-
-                        if ($transactionCount !== count($transactionRefs)) {
-                            $brokenOrg[$orgId][] = $activityIdsMappedToIdentifier[$activityIdentifier];
-                        }
-                    }
-                }
-            } else {
-                logger("Couldn't find merged file for: $orgId");
-            }
-        }
-
-        return $brokenOrg;
-    }
-
-    /**
      * Create backups of merged xmls.
      *
      * @param array $affectedMergedXmlFiles
@@ -279,5 +214,158 @@ class FixPublishedXmlsForIssue1363Changes extends Command
         logger()->info($message);
 
         return true;
+    }
+
+    /**
+     * Return activity ids mapped to org id.
+     *
+     * @param $possiblyAffectedMergedXml
+     * @param $activityIdsMappedToIdentifier
+     * @param $allOrganizationTransactionReferences
+     *
+     * @return array
+     *
+     * @throws Exception
+     */
+    private function getAllAffectedOrganizationsWithBrokenActivityId($possiblyAffectedMergedXml, $activityIdsMappedToIdentifier, $allOrganizationTransactionReferences): array
+    {
+        logger()->info('Resolving all affected organizations with broken activity id');
+        $this->info('Resolving all affected organizations with broken activity id');
+
+        $brokenOrg = [];
+        $dataFrame = [];
+
+        $headers = ['Org Id', 'Publisher Id', 'Activity Id', 'Activity Title', 'Activity Identifier Text in DB', 'Activity Identifier Text in XML', 'Transaction Count in DB', 'Transaction Count in XML', 'Is Broken', 'Last updated at in XML'];
+        $dataFrame[] = $headers;
+
+        foreach ($allOrganizationTransactionReferences as $orgId => $possiblyAffectedActivityIdentifiers) {
+            logger()->info("Iterating over Organization: $orgId");
+            $this->info("Iterating over Organization: $orgId");
+
+            $filename = $possiblyAffectedMergedXml[$orgId];
+            $organization = Organization::find($orgId);
+
+            if (awsHasFile("xml/mergedActivityXml/$filename")) {
+                logger()->info('Has merged file');
+                $this->info('Has merged file');
+
+                $mergedXmlFromS3 = awsGetFile("xml/mergedActivityXml/$filename");
+                $mergedXmlFromS3 = new SimpleXMLElement($mergedXmlFromS3);
+
+                foreach ($possiblyAffectedActivityIdentifiers as $activityIdentifier => $transactionRefs) {
+                    logger()->info("Iterating over Activity: $activityIdentifier");
+                    $this->info("Iterating over Activity: $activityIdentifier");
+
+                    $activityId = $activityIdsMappedToIdentifier[$activityIdentifier];
+                    $activity = Activity::find($activityId);
+
+                    $xpathExpression = "//iati-activity[iati-identifier='$activityIdentifier']";
+                    $activityWithinXml = $mergedXmlFromS3->xpath($xpathExpression);
+
+                    if (!empty($activityWithinXml)) {
+                        $activityWithinXml = $activityWithinXml[0];
+                        $transactionCountInXml = count($activityWithinXml->transaction);
+
+                        $isBroken = ($transactionCountInXml !== count($transactionRefs)) ? 1 : 0;
+
+                        if ($isBroken) {
+                            $brokenOrg[$orgId][] = $activityId;
+                        }
+
+                        $rowVal = [
+                            $orgId,
+                            $organization->publisher_id,
+                            $activityId,
+                            $activity->title[0]['narrative'],
+                            $activity->iati_identifier['iati_identifier_text'],
+                            $activityIdentifier,
+                            count($activity->transactions),
+                            $transactionCountInXml,
+                            $isBroken ? 'yes' : 'no',
+                            getTimestampFromSingleXml($organization->publisher_id, $activity),
+                        ];
+                    } else {
+                        $rowVal = [
+                            $orgId,
+                            $organization->publisher_id,
+                            $activityId,
+                            $activity->title[0]['narrative'],
+                            $activity->iati_identifier['iati_identifier_text'],
+                            'Activity with identifier not found.',
+                            count($activity->transactions),
+                            '---',
+                            'yes',
+                            getTimestampFromSingleXml($organization->publisher_id, $activity),
+                        ];
+                    }
+
+                    $dataFrame[] = $rowVal;
+                }
+            } else {
+                logger("Couldn't find merged file for: $orgId");
+                $dataFrame[] = [
+                    $orgId,
+                    $organization->publisher_id,
+                    'Merged file not found.',
+                    '---',
+                    '---',
+                    '---',
+                    '---',
+                    '---',
+                    'yes',
+                    getTimestampFromSingleXml($organization->publisher_id, $activity),
+                ];
+            }
+        }
+
+        $this->generateReport($dataFrame);
+
+        logger()->info('Resolved all affected organizations with broken activity id');
+        $this->info('Resolved all affected organizations with broken activity id');
+
+        return $brokenOrg;
+    }
+
+    /**
+     * Generate report.
+     *
+     * @param array $dataFrame
+     *
+     * @return void
+     */
+    private function generateReport(array $dataFrame): void
+    {
+        logger()->info('Generating report...');
+        $this->info('Generating report...');
+
+        $xlsFilePath = public_path('broken_org_report' . now()->toString() . '.xlsx');
+        $spreadsheet = new Spreadsheet();
+        $spreadsheet->getActiveSheet()->fromArray($dataFrame, null, 'A1');
+        $xlsWriter = new Xlsx($spreadsheet);
+        $xlsWriter->save($xlsFilePath);
+
+        logger()->info('Generated report...');
+        $this->info('Generated report...');
+
+        $this->sendReportEmail($xlsFilePath);
+    }
+
+    /**
+     * Send email with report attached.
+     *
+     * @param $filePath
+     *
+     * @return void
+     */
+    private function sendReportEmail($filePath): void
+    {
+        $toEmails = ['momik.shrestha@yipl.com.np', 'sarina.sindurakar@yipl.com.np', 'aasish.magar@yipl.com.np'];
+        $subject = 'Broken org report';
+
+        Mail::send([], [], function ($message) use ($toEmails, $subject, $filePath) {
+            $message->to($toEmails)
+                ->subject($subject)
+                ->attach($filePath);
+        });
     }
 }
