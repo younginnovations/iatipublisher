@@ -418,15 +418,15 @@ class XmlGenerator
 
         $this->setServices();
         $xmlData = [];
+        $timestamp = $refreshTimestamp ? gmdate('c') : getTimestampFromSingleXml($organization->publisher_id, $activity);
+
         $xmlData['@attributes'] = [
             'version' => Enums::IATI_XML_VERSION,
-            'generated-datetime' => $refreshTimestamp
-                ? gmdate('c')
-                : getTimestampFromSingleXml($organization->publisher_id, $activity),
+            'generated-datetime' =>$timestamp,
         ];
 
         $xmlData['iati-activity'] = $this->getXmlData($activity, $transaction, $result, $organization);
-        $xmlData['iati-activity']['@attributes'] = $this->getXmlAttributes($defaultValues);
+        $xmlData['iati-activity']['@attributes'] = $this->getXmlAttributes($defaultValues, $timestamp);
 
         return $this->arrayToXml->createXml('iati-activities', $xmlData);
     }
@@ -435,12 +435,14 @@ class XmlGenerator
      * Returns non empty xml attributes.
      *
      * @param $defaultValues
+     * @param null|string $timestamp
+     *
      * @return array
      */
-    public function getXmlAttributes($defaultValues): array
+    public function getXmlAttributes($defaultValues, null|string $timestamp = null): array
     {
         $data = [
-            'last-updated-datetime' => gmdate('c', time()),
+            'last-updated-datetime' => $timestamp ?? gmdate('c', time()),
             'xml:lang' => Arr::get($defaultValues, 'default_language', null),
             'default-currency' => Arr::get($defaultValues, 'default_currency', null),
             'humanitarian' => Arr::get($defaultValues, 'humanitarian', 1),

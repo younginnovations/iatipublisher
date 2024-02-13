@@ -85,8 +85,6 @@ class FixPublishedXmlsForIssue1363Changes extends Command
                     echo "Operation aborted.\n";
                     exit;
                 } else {
-                    logger('$confirmedActivitiesMappedToOrgId');
-                    logger($confirmedActivitiesMappedToOrgId);
                     foreach ($confirmedActivitiesMappedToOrgId as $orgId => $activityIds) {
                         $activities = Activity::whereIn('id', $activityIds)->get();
                         $organization = Organization::find($orgId);
