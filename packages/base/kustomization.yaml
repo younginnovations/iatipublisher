@@ -10,3 +10,4 @@ resources:
 - queue-workers/deployment.yaml
 - webserver/deployment.yaml
 - webserver/service.yaml
+- cron/fix-storage-permission.yaml
