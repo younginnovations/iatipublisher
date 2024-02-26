@@ -176,11 +176,10 @@ trait MigrateActivityTransactionTrait
 
                 foreach ($iatiTransactions as $index => $iatiTransaction) {
                     $tempTransactionField = json_decode($iatiTransaction['transaction'], true);
-                    $iatiTransaction['transaction'] = json_encode($this->populateDefaultFields($tempTransactionField, $defaultValues));
-                    $iatiTransactions[$index] = $iatiTransaction;
+                    $iatiTransaction['transaction'] = $this->populateDefaultFields($tempTransactionField, $defaultValues);
+                    $this->transactionService->create($iatiTransaction);
                 }
 
-                $this->transactionService->insert($iatiTransactions);
                 $this->logInfo('Completed migrating activity transactions for activity id ' . $aidstreamActivityId);
             }
         });
