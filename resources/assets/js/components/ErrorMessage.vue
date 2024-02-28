@@ -160,7 +160,10 @@
               </div>
               <div v-if="!errorData.default_setting" class="alert__message">
                 <svg-vue icon="red-cross" class="text-[7px]"></svg-vue>
-                <p>Update default values</p>
+                <p>
+                  Complete default values (currency, language and recommended
+                  defaults for activity data).
+                </p>
               </div>
             </div>
           </div>
@@ -264,7 +267,9 @@ onMounted(async () => {
         errorData.publisher_setting = response?.data?.publisher_status;
         errorData.token_status = response?.data?.token_status;
         errorData.account_verified = user_response.data.account_verified;
-        errorData.publisher_active = org_response.data.publisher_active;
+        errorData.publisher_active =
+          org_response.data?.publisher_active ?? false;
+
         let groupedError = [
           'default_setting',
           'publisher_setting',
