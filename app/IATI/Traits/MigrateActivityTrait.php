@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\IATI\Traits;
 
 use App\Exceptions\PublishException;
+use App\IATI\Models\Activity\Activity;
 use App\IATI\Models\User\Role;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use DOMException;

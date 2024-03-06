@@ -249,7 +249,7 @@ class Activity extends Model implements Auditable
             }
         }
 
-        if (empty($value) && empty($this->recipient_region)) {
+        if (is_array_value_empty($value) && empty($this->recipient_country)) {
             $elementStatus['recipient_country'] = false;
         }
 
@@ -281,7 +281,7 @@ class Activity extends Model implements Auditable
             }
         }
 
-        if (empty($value) && empty($this->recipient_region)) {
+        if (is_array_value_empty($value) && empty($this->recipient_region)) {
             $elementStatus['recipient_region'] = false;
         }
 
