@@ -131,9 +131,11 @@ class SetAppDataJsonCache extends Command
         foreach ($flattenedFilePaths as $filePath) {
             $cacheKey = "AppData/Data/$filePath";
 
-            Cache::rememberForever($cacheKey, function () use ($cacheKey) {
-                return awsGetFile($cacheKey);
-            });
+            if (Cache::get($cacheKey)) {
+                Cache::forget($cacheKey);
+            }
+
+            Cache::forever($cacheKey, awsGetFile($cacheKey));
         }
 
         $message = 'AppData cache set at: ' . now()->toDateTimeString();

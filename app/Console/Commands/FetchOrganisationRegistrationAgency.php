@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use JsonException;
@@ -74,6 +75,7 @@ class FetchOrganisationRegistrationAgency extends Command
                 if (awsUploadFile($filePath, $newJsonString)) {
                     file_put_contents(public_path($filePath), $newJsonString);
                     Cache::put($filePath, $newJsonString, now()->addHours(24));
+                    Artisan::call('command:SetAppDataJsonCache');
 
                     $this->info(' Completed.');
                     logger()->info(' Completed.');
