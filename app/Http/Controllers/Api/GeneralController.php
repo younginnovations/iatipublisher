@@ -9,7 +9,6 @@ use Arr;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 /**
  * Class GeneralController.
@@ -45,10 +44,10 @@ class GeneralController extends Controller
 
             $fileFormat = getCodeList('FileFormat', 'Activity');
             $completePath = 'AppData/Data/Activity/Extension.json';
-            $jsonContent = Cache::get($completePath) ?? file_get_contents(public_path($completePath));
+            $jsonContent = getJsonFromSource($completePath);
             $extensions = array_flip(json_decode($jsonContent, true, 512, JSON_THROW_ON_ERROR));
             $completePath = 'AppData/Data/Activity/AdditionalExtension.json';
-            $jsonContent = Cache::get($completePath) ?? file_get_contents(public_path($completePath));
+            $jsonContent = getJsonFromSource($completePath);
             $additionalExtensions = json_decode($jsonContent, true, 512, JSON_THROW_ON_ERROR);
             $fileFragment = $type === 'url' ? Arr::get(parse_url($fileUrl), 'path', null) : $fileUrl;
             $fileExtension = $fileFragment ? pathinfo($fileFragment, PATHINFO_EXTENSION) : null;

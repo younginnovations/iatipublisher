@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\IATI\Elements\Forms;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Cache;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -190,7 +189,7 @@ class BaseForm extends Form
     public function getCodeList(string $filePath, bool $code = true): array
     {
         $completePath = "AppData/Data/$filePath";
-        $codeListFromFile = Cache::get($completePath) ?? file_get_contents(public_path($completePath));
+        $codeListFromFile = getJsonFromSource($completePath);
         $codeLists = json_decode($codeListFromFile, true, 512, JSON_THROW_ON_ERROR);
         $codeList = last($codeLists);
         $data = [];
