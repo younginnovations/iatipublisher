@@ -62,6 +62,7 @@ class Organization extends Model implements Auditable
         'migrated_from_aidstream',
         'created_at',
         'updated_at',
+        'old_identifiers',
     ];
 
     /**
@@ -79,6 +80,7 @@ class Organization extends Model implements Auditable
         'name' => 'json',
         'element_status' => 'json',
         'is_published' => 'boolean',
+        'old_identifiers' => 'json',
     ];
 
     /**

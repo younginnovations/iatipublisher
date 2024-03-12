@@ -69,6 +69,7 @@ class OrganizationIdentifierController extends Controller
      * @param OrganizationIdentifierRequest $request
      *
      * @return RedirectResponse
+     * @throws GuzzleException
      */
     public function update(OrganizationIdentifierRequest $request): RedirectResponse
     {
@@ -76,26 +77,26 @@ class OrganizationIdentifierController extends Controller
             $id = Auth::user()->organization_id;
             $organizationIdentifier = $request->all();
 
-//            if (!$this->verifyPublisher($organizationIdentifier)) {
-//                return redirect()->route('admin.organisation.identifier.edit')->with('error', 'Please enter correct identifier as present in IATI Registry.')->withInput();
-//            }
+            if (!$this->verifyPublisher($organizationIdentifier)) {
+                return redirect()->route('admin.organisation.identifier.edit')->with('error', 'Please enter the correct identifier to match your IATI Registry account.')->withInput();
+            }
 
             DB::beginTransaction();
 
             if ($this->organizationIdentifierService->update($id, $organizationIdentifier)) {
                 DB::commit();
 
-                return redirect()->route('admin.organisation.index')->with('success', 'Organization identifier updated successfully.');
+                return redirect()->route('admin.organisation.index')->with('success', 'Organisation identifier updated successfully.');
             }
 
             DB::rollBack();
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization identifier.');
+            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organisation identifier.');
         } catch (\Exception $e) {
             DB::rollBack();
             logger()->error($e);
 
-            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization identifier.');
+            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organisation identifier.');
         }
     }
 

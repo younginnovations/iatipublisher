@@ -107,14 +107,15 @@ class XmlGeneratorService
      *
      * @param DomDocument $generatedXmlContent
      * @param $settings
+     * @param string $targetIdentifier
      *
      * @return void
      *
      * @throws Exception
      */
-    public function appendCompleteActivityXmlToMergedXml(DomDocument $generatedXmlContent, $settings): void
+    public function appendCompleteActivityXmlToMergedXml(DomDocument $generatedXmlContent, $settings, $activity, $organization): void
     {
-        $this->xmlGenerator->appendCompleteActivityXmlToMergedXml($generatedXmlContent, $settings);
+        $this->xmlGenerator->appendCompleteActivityXmlToMergedXml($generatedXmlContent, $settings, $activity, $organization);
     }
 
     /**

@@ -142,6 +142,33 @@ class ActivityService
             ];
         }
 
+        $orgOldIdentifiers = $authUser->organization->old_identifiers;
+        $activityOtherIdentifiers = null;
+
+        if (!empty($orgOldIdentifiers)) {
+            $activityOtherIdentifiers = [];
+
+            foreach ($orgOldIdentifiers as $oldIdentifier) {
+                $appendableOtherIdentifier = [
+                    'reference'      => $oldIdentifier['identifier'],
+                    'reference_type' => 'B1',
+                    'owner_org'      => [
+                        [
+                            'ref'       => null,
+                            'narrative' => [
+                                [
+                                    'narrative' => null,
+                                    'language'  => null,
+                                ],
+                            ],
+                        ],
+                    ],
+                ];
+
+                $activityOtherIdentifiers[] = $appendableOtherIdentifier;
+            }
+        }
+
         return $this->activityRepository->store([
             'iati_identifier' => $activity_identifier,
             'title' => $activity_title,
@@ -154,6 +181,7 @@ class ActivityService
             'element_status' => $defaultElementStatus,
             'default_field_values' => $this->getDefaultValues(),
             'reporting_org' => $authUser->organization->reporting_org,
+            'other_identifier' => $activityOtherIdentifiers,
         ]);
     }
 

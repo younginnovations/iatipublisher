@@ -9,6 +9,7 @@ use App\IATI\Models\Organization\Organization;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use Illuminate\Database\Eloquent\Model;
+use JsonException;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -80,12 +81,12 @@ class OrganizationIdentifierService
      * @param $organizationIdentifiers
      *
      * @return bool
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function update($id, $organizationIdentifiers): bool
     {
         $organization = $this->organizationRepository->find($id);
-        $olderOrgInfo = $organization;
+        $olderOrgInfo = clone $organization;
         $reportingOrg = $organization->reporting_org;
         $reportingOrg[0]['ref'] = $organizationIdentifiers['organization_registration_agency'] . '-' . $organizationIdentifiers['registration_number'];
 
@@ -99,6 +100,31 @@ class OrganizationIdentifierService
 
         $organization->fill($organizationIdentifiers);
         $hasChanged = $organization->isDirty('identifier');
+
+        if ($hasChanged) {
+            $appendableObject = [
+                'identifier' => $olderOrgInfo->identifier,
+                'updated_at' => now(),
+            ];
+            $allOldIdentifiers = $olderOrgInfo->old_identifiers;
+            $alreadyExists = false;
+
+            foreach ($allOldIdentifiers as $index => $oldIdentifier) {
+                if ($oldIdentifier && isset($oldIdentifier['identifier']) && $oldIdentifier['identifier'] === $olderOrgInfo->identifier) {
+                    $alreadyExists = true;
+                    $oldIdentifier['updated_at'] = now();
+                    $allOldIdentifiers[$index] = $oldIdentifier;
+
+                    break;
+                }
+            }
+
+            if (!$alreadyExists) {
+                $allOldIdentifiers[] = $appendableObject;
+            }
+
+            $organization->old_identifiers = $allOldIdentifiers;
+        }
 
         $organization->save();
 
@@ -119,7 +145,7 @@ class OrganizationIdentifierService
      * @param $id
      *
      * @return Form
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function formGenerator($id): Form
     {
@@ -178,6 +204,8 @@ class OrganizationIdentifierService
      * @param $organization
      *
      * @return bool
+     *
+     * @throws JsonException
      */
     public function syncActivityIdentifierForNeverPublishedActivities($organization): bool
     {
@@ -191,7 +219,7 @@ class OrganizationIdentifierService
      *
      * @return bool
      *
-     * @throws \JsonException
+     * @throws JsonException
      */
     private function syncOtherIdentifierForEverPublishedActivities(Organization $organization): bool
     {
