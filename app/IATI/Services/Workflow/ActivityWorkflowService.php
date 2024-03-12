@@ -139,7 +139,7 @@ class ActivityWorkflowService
         );
 
         if ($generatedXmlContent) {
-            $this->xmlGeneratorService->appendCompleteActivityXmlToMergedXml($generatedXmlContent, $settings);
+            $this->xmlGeneratorService->appendCompleteActivityXmlToMergedXml($generatedXmlContent, $settings, $activity, $organization);
         } else {
             throw new \Exception('Failed appending new activity to merged xml.');
         }

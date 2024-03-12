@@ -9,6 +9,7 @@ use App\IATI\Models\Organization\Organization;
 use App\IATI\Repositories\Activity\ActivityRepository;
 use App\IATI\Repositories\Organization\OrganizationRepository;
 use Illuminate\Database\Eloquent\Model;
+use JsonException;
 use Kris\LaravelFormBuilder\Form;
 
 /**
@@ -80,10 +81,12 @@ class OrganizationIdentifierService
      * @param $organizationIdentifiers
      *
      * @return bool
+     * @throws JsonException
      */
     public function update($id, $organizationIdentifiers): bool
     {
         $organization = $this->organizationRepository->find($id);
+        $olderOrgInfo = clone $organization;
         $reportingOrg = $organization->reporting_org;
         $reportingOrg[0]['ref'] = $organizationIdentifiers['organization_registration_agency'] . '-' . $organizationIdentifiers['registration_number'];
 
@@ -98,7 +101,42 @@ class OrganizationIdentifierService
         $organization->fill($organizationIdentifiers);
         $hasChanged = $organization->isDirty('identifier');
 
-        return $organization->save() && (!$hasChanged || $this->syncActivityReportingOrgFromIdentifier($id));
+        if ($hasChanged) {
+            $appendableObject = [
+                'identifier' => $olderOrgInfo->identifier,
+                'updated_at' => now(),
+            ];
+            $allOldIdentifiers = $olderOrgInfo->old_identifiers;
+            $alreadyExists = false;
+
+            foreach ($allOldIdentifiers as $index => $oldIdentifier) {
+                if ($oldIdentifier && isset($oldIdentifier['identifier']) && $oldIdentifier['identifier'] === $olderOrgInfo->identifier) {
+                    $alreadyExists = true;
+                    $oldIdentifier['updated_at'] = now();
+                    $allOldIdentifiers[$index] = $oldIdentifier;
+
+                    break;
+                }
+            }
+
+            if (!$alreadyExists) {
+                $allOldIdentifiers[] = $appendableObject;
+            }
+
+            $organization->old_identifiers = $allOldIdentifiers;
+        }
+
+        $organization->save();
+
+        if ($hasChanged) {
+            $syncedActivityIdentifier = $this->syncActivityIdentifierForNeverPublishedActivities($organization);
+            $syncedOtherIdentifier = $this->syncOtherIdentifierForEverPublishedActivities($olderOrgInfo);
+            $syncedReportingOrg = $this->syncActivityReportingOrgFromIdentifier($id);
+
+            return $syncedActivityIdentifier && $syncedOtherIdentifier && $syncedReportingOrg;
+        }
+
+        return true;
     }
 
     /**
@@ -107,7 +145,7 @@ class OrganizationIdentifierService
      * @param $id
      *
      * @return Form
-     * @throws \JsonException
+     * @throws JsonException
      */
     public function formGenerator($id): Form
     {
@@ -119,7 +157,17 @@ class OrganizationIdentifierService
         $model['registration_number'] = $organization['registration_number'];
         $this->baseFormCreator->url = route('admin.organisation.identifier.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['organisation_identifier'], 'PUT', '/organisation');
+        return $this->baseFormCreator->editForm(
+            $model,
+            $element['organisation_identifier'],
+            'PUT',
+            '/organisation',
+            true,
+            additonalInfo: [
+                'formId'   => 'save-and-exit-organization-identifier-form',
+                'submitId' => 'save-and-exit-button',
+            ]
+        );
     }
 
     /**
@@ -156,9 +204,41 @@ class OrganizationIdentifierService
      * @param $organization
      *
      * @return bool
+     *
+     * @throws JsonException
      */
     public function syncActivityIdentifierForNeverPublishedActivities($organization): bool
     {
         return $this->activityRepository->syncActivityIdentifierForNeverPublishedActivities($organization);
+    }
+
+    /**
+     * Updates other_identifier field of activities where has_ever_been_published === true.
+     *
+     * @param Organization $organization
+     *
+     * @return bool
+     *
+     * @throws JsonException
+     */
+    private function syncOtherIdentifierForEverPublishedActivities(Organization $organization): bool
+    {
+        $appendableOtherIdentifier = [
+            'reference'      => $organization->identifier,
+            'reference_type' => 'B1',
+            'owner_org'      => [
+                [
+                    'ref'       => null,
+                    'narrative' => [
+                        [
+                            'narrative' => null,
+                            'language'  => null,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        return $this->activityRepository->syncOtherIdentifierOfOrganizationActivities($organization, $appendableOtherIdentifier);
     }
 }

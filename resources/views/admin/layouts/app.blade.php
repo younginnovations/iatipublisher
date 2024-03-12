@@ -82,6 +82,8 @@
             }
         };
     </script>
+
+    @yield('additional-scripts')
 </body>
 
 </html>
