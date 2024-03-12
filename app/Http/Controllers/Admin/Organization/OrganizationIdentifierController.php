@@ -13,6 +13,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class OrganizationIdentifierController.
@@ -75,16 +76,23 @@ class OrganizationIdentifierController extends Controller
             $id = Auth::user()->organization_id;
             $organizationIdentifier = $request->all();
 
-            if (!$this->verifyPublisher($organizationIdentifier)) {
-                return redirect()->route('admin.organisation.identifier.edit')->with('error', 'Please enter correct identifier as present in IATI Registry.')->withInput();
+//            if (!$this->verifyPublisher($organizationIdentifier)) {
+//                return redirect()->route('admin.organisation.identifier.edit')->with('error', 'Please enter correct identifier as present in IATI Registry.')->withInput();
+//            }
+
+            DB::beginTransaction();
+
+            if ($this->organizationIdentifierService->update($id, $organizationIdentifier)) {
+                DB::commit();
+
+                return redirect()->route('admin.organisation.index')->with('success', 'Organization identifier updated successfully.');
             }
 
-            if (!$this->organizationIdentifierService->update($id, $organizationIdentifier)) {
-                return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization identifier.');
-            }
+            DB::rollBack();
 
-            return redirect()->route('admin.organisation.index')->with('success', 'Organization identifier updated successfully.');
+            return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization identifier.');
         } catch (\Exception $e) {
+            DB::rollBack();
             logger()->error($e);
 
             return redirect()->route('admin.organisation.index')->with('error', 'Error has occurred while updating organization identifier.');

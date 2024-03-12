@@ -6,6 +6,7 @@ namespace App\IATI\Repositories\Activity;
 
 use App\Constants\Enums;
 use App\IATI\Models\Activity\Activity;
+use App\IATI\Models\Organization\Organization;
 use App\IATI\Repositories\Repository;
 use App\IATI\Services\Activity\ActivityService;
 use App\IATI\Traits\FillDefaultValuesTrait;
@@ -879,5 +880,42 @@ class ActivityRepository extends Repository
             ->whereDate('activities.created_at', '>=', $queryParams['start_date'])
             ->whereDate('activities.created_at', '<=', $queryParams['end_date'])
             ->get()->toArray();
+    }
+
+    /**
+     * @param Organization $organization
+     * @param array $appendableOtherIdentifier
+     *
+     * @return bool
+     *
+     * @throws \JsonException
+     */
+    public function syncOtherIdentifierOfOrganizationActivities(Organization $organization, array $appendableOtherIdentifier): bool
+    {
+        $activities = $this->model
+            ->where('org_id', $organization->id)
+            ->where('has_ever_been_published', true)
+            ->get();
+
+        if (count($activities) > 0) {
+            foreach ($activities as $index => $activity) {
+                $rawActivity = $activity->getAttributes();
+
+                if ($rawActivity['other_identifier']) {
+                    $rawActivity['other_identifier'] = json_decode($rawActivity['other_identifier'], true);
+                } else {
+                    $rawActivity['other_identifier'] = [];
+                }
+
+                $rawActivity['other_identifier'][] = $appendableOtherIdentifier;
+                $rawActivity['other_identifier'] = json_encode($rawActivity['other_identifier'], JSON_THROW_ON_ERROR);
+
+                $activities[$index] = $rawActivity;
+            }
+
+            return (bool) $this->model->upsert($activities->toArray(), 'id', ['other_identifier']);
+        }
+
+        return true;
     }
 }

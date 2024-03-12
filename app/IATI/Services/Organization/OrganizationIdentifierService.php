@@ -80,10 +80,12 @@ class OrganizationIdentifierService
      * @param $organizationIdentifiers
      *
      * @return bool
+     * @throws \JsonException
      */
     public function update($id, $organizationIdentifiers): bool
     {
         $organization = $this->organizationRepository->find($id);
+        $olderOrgInfo = $organization;
         $reportingOrg = $organization->reporting_org;
         $reportingOrg[0]['ref'] = $organizationIdentifiers['organization_registration_agency'] . '-' . $organizationIdentifiers['registration_number'];
 
@@ -98,7 +100,17 @@ class OrganizationIdentifierService
         $organization->fill($organizationIdentifiers);
         $hasChanged = $organization->isDirty('identifier');
 
-        return $organization->save() && (!$hasChanged || $this->syncActivityReportingOrgFromIdentifier($id));
+        $organization->save();
+
+        if ($hasChanged) {
+            $syncedActivityIdentifier = $this->syncActivityIdentifierForNeverPublishedActivities($organization);
+            $syncedOtherIdentifier = $this->syncOtherIdentifierForEverPublishedActivities($olderOrgInfo);
+            $syncedReportingOrg = $this->syncActivityReportingOrgFromIdentifier($id);
+
+            return $syncedActivityIdentifier && $syncedOtherIdentifier && $syncedReportingOrg;
+        }
+
+        return true;
     }
 
     /**
@@ -119,7 +131,17 @@ class OrganizationIdentifierService
         $model['registration_number'] = $organization['registration_number'];
         $this->baseFormCreator->url = route('admin.organisation.identifier.update', [$id]);
 
-        return $this->baseFormCreator->editForm($model, $element['organisation_identifier'], 'PUT', '/organisation');
+        return $this->baseFormCreator->editForm(
+            $model,
+            $element['organisation_identifier'],
+            'PUT',
+            '/organisation',
+            true,
+            additonalInfo: [
+                'formId'   => 'save-and-exit-organization-identifier-form',
+                'submitId' => 'save-and-exit-button',
+            ]
+        );
     }
 
     /**
@@ -160,5 +182,35 @@ class OrganizationIdentifierService
     public function syncActivityIdentifierForNeverPublishedActivities($organization): bool
     {
         return $this->activityRepository->syncActivityIdentifierForNeverPublishedActivities($organization);
+    }
+
+    /**
+     * Updates other_identifier field of activities where has_ever_been_published === true.
+     *
+     * @param Organization $organization
+     *
+     * @return bool
+     *
+     * @throws \JsonException
+     */
+    private function syncOtherIdentifierForEverPublishedActivities(Organization $organization): bool
+    {
+        $appendableOtherIdentifier = [
+            'reference'      => $organization->identifier,
+            'reference_type' => 'B1',
+            'owner_org'      => [
+                [
+                    'ref'       => null,
+                    'narrative' => [
+                        [
+                            'narrative' => null,
+                            'language'  => null,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        return $this->activityRepository->syncOtherIdentifierOfOrganizationActivities($organization, $appendableOtherIdentifier);
     }
 }
