@@ -45,6 +45,7 @@
         <SettingPublishingForm
           v-if="tab === 'publish'"
           :organization="props.organization"
+          :initial-api-call-completed="initialApiCallCompleted"
           @keyup.enter="submitForm"
           @submit-publishing="submitForm"
         />
@@ -155,12 +156,14 @@ export default defineComponent({
   },
 
   setup(props) {
+    let toastTimeoutId;
+    let initialApiCallCompleted = ref(false);
     const tab = ref('publish');
     const store = useStore();
     const loaderVisibility = ref(false);
     const toastVisibility = ref(false);
     const toastMessage = ref('');
-    const toastType = ref(false);
+    const toastType = ref<boolean | string>(false);
 
     const publishingForm = computed(() => store.state.publishingForm);
 
@@ -185,6 +188,7 @@ export default defineComponent({
 
     onMounted(async () => {
       const { data } = await axios.get('/setting/data');
+      initialApiCallCompleted.value = true;
       const settingData = data.data;
 
       if (settingData) {
@@ -242,6 +246,7 @@ export default defineComponent({
         updateStore('UPDATE_DEFAULT_ERROR', data, '');
       }
       loaderVisibility.value = true;
+      clearTimeout(toastTimeoutId);
 
       axios
         .post('/setting/store/default', defaultForm.value)
@@ -249,7 +254,10 @@ export default defineComponent({
           const response = res.data;
           loaderVisibility.value = false;
           toastVisibility.value = true;
-          setTimeout(() => (toastVisibility.value = false), 5000);
+          toastTimeoutId = setTimeout(
+            () => (toastVisibility.value = false),
+            5000
+          );
           toastMessage.value = response.message;
           toastType.value = response.success;
 
@@ -272,6 +280,7 @@ export default defineComponent({
 
     function submitPublishing(url: string) {
       loaderVisibility.value = true;
+      clearTimeout(toastTimeoutId);
 
       for (const data in publishingError.value) {
         updateStore('UPDATE_PUBLISHING_ERROR', data, '');
@@ -300,20 +309,37 @@ export default defineComponent({
             );
 
             updateStore(
+              'UPDATE_PUBLISHING_FORM',
+              'token_status',
+              response.data.token_status
+            );
+
+            updateStore(
               'UPDATE_PUBLISHER_INFO',
               'isVerificationRequested',
               true
             );
 
-            toastType.value =
-              response.data.publisher_verification &&
-              response.data.token_verification;
+            if (url === 'setting/verify') {
+              if (response.data.token_status.toLowerCase() === 'pending') {
+                toastType.value = 'warning';
+              } else if (
+                response.data.token_status.toLowerCase() === 'correct'
+              ) {
+                toastType.value = true;
+              } else {
+                toastType.value = false;
+              }
+            }
           }
 
+          toastTimeoutId = setTimeout(() => {
+            toastVisibility.value = false;
+          }, 5000);
+
+          toastMessage.value = response.message;
           loaderVisibility.value = false;
           toastVisibility.value = true;
-          setTimeout(() => (toastVisibility.value = false), 5000);
-          toastMessage.value = response.message;
         })
         .catch((error) => {
           const { errors } = error.response.data;
@@ -347,6 +373,7 @@ export default defineComponent({
       toastType,
       toggleTab,
       submitForm,
+      initialApiCallCompleted,
     };
   },
 });
